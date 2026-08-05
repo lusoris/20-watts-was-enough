@@ -178,6 +178,19 @@ manipulation, fragmentation, migration burden, and rollback time.
 
 ## Promotion rule
 
+### Interaction stability and recovery gate
+
+For human-facing conventions, compare adaptive presentation with a polished
+stable interface and a user-adaptable baseline. Preserve location or other
+operational invariants where possible; expose version, changed mapping,
+effective action, undo/compensation, resumption state, and rollback. Preference,
+trust, acceptance, comprehension, correctness, and accessibility are separate
+outcomes ([C-401](../../research/claims.md#c-401),
+[C-406](../../research/claims.md#c-406),
+[C-409](../../research/claims.md#c-409),
+[C-411](../../research/claims.md#c-411)–[C-414](../../research/claims.md#c-414)).
+
+
 Advance only if the candidate improves transfer or adaptation under genuine
 requirement or population drift while reducing silent semantic failure, and
 does so beyond the complete fixed-protocol null at equal end-to-end budget.

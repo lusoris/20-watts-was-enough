@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A human–computer-interaction and human-factors audit separating initiative,
+  interruption, mode, automation bias, trust/reliance, explanation, shared
+  control, recovery, display, cognitive load, accessibility, and adaptation.
+- Twenty-one scoped HCI claims (`C-396`–`C-416`), forty-one centralized
+  sources, an editable recoverable-initiative diagram, and new effective-human-
+  authority test gates in Candidates 009, 011, 012, and 015.
 - A social-choice and institutional-governance audit separating formal,
   empirical, and normative claims across aggregation, strategy, delegation,
   polycentricity, veto, agenda, capture, amendment, participation, and lock-in.

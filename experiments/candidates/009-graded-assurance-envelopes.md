@@ -245,6 +245,18 @@ Candidate 009 is not distinct if this composed stack matches outcomes and cost.
 
 ## Promotion criteria
 
+### Human-facing assurance gate
+
+When a person reviews, authorizes, interrupts, or recovers an action, record
+actual and pending mode, effective authority, changed state, response deadline,
+checkpoint/compensation path, acknowledgement, resumption cue, and expiry.
+Explanation, confidence, approval, and audit visibility remain separate from
+proof, provenance, comprehension, executable control, and verified recovery
+([C-399](../../research/claims.md#c-399)–[C-416](../../research/claims.md#c-416)).
+Test at least one assistive-technology/accessibility stratum and charge
+training, review, interruption, and rework.
+
+
 Advance only if, at equal lifecycle budget:
 
 1. A3 reduces unsafe admissions and collateral incidents beyond the complete

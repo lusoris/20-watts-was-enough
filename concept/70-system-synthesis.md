@@ -140,6 +140,66 @@ duties, append-only lineage, runtime assurance, and mature incident/change
 management. If those match the result—or if every module shares one loss and
 directly verifiable state—the institutional composition is removed.
 
+### A person in the loop must have an executable control path
+
+A visible approval step does not establish oversight. Effective mixed control
+requires a person to receive relevant state before the response deadline,
+understand the current and pending mode well enough for the task, hold actual
+authority over the consequential effect, execute an intervention, and observe
+whether the intended state changed. Explanation, confidence, trust, reliance,
+agreement, preference, and correctness stay separate.
+
+Each machine-initiated or shared-control transition can therefore carry a
+recoverable initiative record:
+
+1. initiator, reason, urgency, and calibrated uncertainty;
+2. actual mode, pending mode, enabled effects, and response deadline;
+3. effective human and machine authority, including silent arbitration;
+4. intended action, observed state delta, and provenance;
+5. acknowledgement or rejection and whether it changed execution;
+6. checkpoint, undo, compensation, or safe-stop boundary;
+7. resumption cue, pending goals, and assumptions that may have gone stale;
+8. verified recovery result, expiry, and longitudinal-learning link; and
+9. accessibility and assistive-technology conditions under which the path was
+   tested.
+
+```mermaid
+flowchart LR
+    G["Human goal + constraints"] --> I["Initiator · reason · uncertainty"]
+    I --> A["Actual/pending mode + effective authority"]
+    A --> X["Bounded action on system/world state"]
+    X --> O["Observed state delta + provenance"]
+    O --> B["Human belief · acknowledgement"]
+    B --> D{"Continue, intervene, defer, or abstain?"}
+    D --> A
+    X --> R["Checkpoint · undo/compensate · resumption cue"]
+    R --> B
+    R --> M["Outcome · recovery verification · expiry"]
+    M --> I
+```
+
+Editable source:
+[recoverable-initiative.mmd](../assets/diagrams/recoverable-initiative.mmd).
+
+Human time is part of lifecycle cost. For interruptions $j=1,\ldots,n$,
+
+$$
+T_{\mathrm{complete}}=T_{\mathrm{active}}+
+\sum_{j=1}^{n}\left(T_{\mathrm{interrupt},j}+
+T_{\mathrm{resume},j}+T_{\mathrm{rework},j}\right),
+$$
+
+with every term measured in seconds under a declared coding rule. Error
+severity, stress, frustration, workload, training, and person-minutes remain
+separate outcomes; throughput alone cannot erase them.
+
+The bounded evidence in
+[C-396](../research/claims.md#c-396)–[C-416](../research/claims.md#c-416)
+supports specific interruption, mode, automation-bias, recovery, accessibility,
+and adaptive-interface constraints. The combined record is still speculative,
+so it refines Candidates 009, 011, 012, and 015 rather than becoming another
+registry principle.
+
 ### State ownership
 
 | State | Owner | Normal write path | Normal readers |
@@ -417,6 +477,7 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
 | Communication and convention lifecycle | C-268–C-281 | constituent mechanisms established or scoped; versioned repairable composition speculative |
 | Cumulative inheritance across turnover | C-343–C-367 | bounded constituents established or scoped; population advantage unvalidated |
 | Institutional authority and rule repair | C-368–C-395 | formal constraints and bounded evidence; multi-level composition speculative |
+| Human initiative, authority, and recovery | C-396–C-416 | bounded HCI effects; combined record speculative |
 | Complete integrated system | none | unvalidated project synthesis |
 
 ## Speculative extensions
@@ -453,6 +514,10 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
 - Governance vocabulary hides an ordinary optimizer, or veto, delegation,
   amendment, and participation add gridlock, capture, concentration, churn, or
   oversight cost without improving task-native or protected outcomes.
+- A nominal human approval, explanation, or confidence display is credited as
+  assurance even though state is stale, the mode is misunderstood, authority
+  is ineffective, intervention arrives late, or recovery cannot change the
+  world state.
 - The architecture accumulates mechanisms faster than experiments can reject
   them.
 
@@ -476,6 +541,10 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
 8. Multi-level authority improves an applicable task-native or protected-harm
    frontier beyond the complete ordinary governance stack after gridlock,
    capture, concentration, human attention, and lifecycle cost—or it is merged.
-9. The integrated system occupies a better quality–risk–latency–energy frontier
+9. A recoverable initiative record predicts failures beyond polished mode
+   labels, previews, confirmations, undo/history, logs, runtime assurance, and
+   user testing on consequential and accessibility-stratified tasks—or only
+   its individually supported fields remain.
+10. The integrated system occupies a better quality–risk–latency–energy frontier
    than every component ablation and the strongest ordinary controller,
    scheduler, cache, and router baselines.

@@ -72,6 +72,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
   scoped local action, spillover escalation, typed veto and appeal, ordinary
   rule repair, expiring emergency authority, compatibility, and rollback for
   Candidate 020.
+- `diagrams/recoverable-initiative.mmd` keeps initiative, actual and pending
+  mode, effective authority, state change, acknowledgement, intervention,
+  checkpoint, recovery, resumption, and expiry in one inspectable loop.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

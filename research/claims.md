@@ -5995,3 +5995,295 @@ describes the exact statement here, not a broader interpretation.
   mature incident/change management in two independent task families.
 - **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
   [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-396
+
+- **Statement:** Interruption duration and demand can increase resumption time
+  in controlled tasks.
+- **Status:** established.
+- **Primary sources:** `altmann2002memory`, `trafton2003preparing`,
+  `monk2008interruption`.
+- **Rationale:** Controlled studies identify goal-memory and resumption costs
+  under specified tasks and interruption protocols.
+- **Open issue:** Effect size under long-horizon AI-assisted work and repeated
+  consequential interruptions remains unknown.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-397
+
+- **Statement:** Preserved output speed or quality does not imply zero
+  interruption cost; stress, frustration, time pressure, or effort can rise.
+- **Status:** established.
+- **Primary source:** `mark2008interrupted`.
+- **Rationale:** The bounded experiment found compensatory work patterns and
+  subjective cost despite faster completion.
+- **Open issue:** Longitudinal adaptation and organizational consequences need
+  direct measurement.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-398
+
+- **Statement:** Breakpoint-aware notification can reduce some interruption
+  costs in studied tasks.
+- **Status:** plausible.
+- **Primary source:** `iqbal2008notification`.
+- **Rationale:** Timing notifications around estimated task boundaries improved
+  selected outcomes in a controlled setting.
+- **Open issue:** Urgency, a latest safe delivery time, and breakpoint
+  misclassification can reverse the benefit.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-399
+
+- **Statement:** Complex supervisory automation can produce mode errors and
+  automation surprise.
+- **Status:** established.
+- **Primary sources:** `sarter1995mode`, `sarter1997teamplay`.
+- **Rationale:** Field-derived and analytical evidence identifies mismatches
+  between actual automation mode, expected behavior, and operator belief.
+- **Open issue:** Incidence and remedies depend on control logic, telemetry,
+  training, timing, and operational context.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-400
+
+- **Statement:** Very reliable but imperfect automation can reduce monitoring
+  and induce omission or commission errors in bounded tasks.
+- **Status:** established.
+- **Primary sources:** `parasuraman1993complacency`, `mosier1998automationbias`,
+  `skitka1999automation`.
+- **Rationale:** Controlled studies show missed events and following of wrong
+  automated cues under specified reliability and workload.
+- **Open issue:** Error visibility, incentives, verification opportunities,
+  workload, and reliability history moderate the effect.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-401
+
+- **Statement:** Trust, reliance, agreement, correctness, calibration, and
+  preference are empirically distinct variables.
+- **Status:** established.
+- **Primary sources:** `muir1996trust`, `dzindolet2003trust`,
+  `pop2015calibration`.
+- **Rationale:** Attitudes, behaviors, and task outcomes can vary independently
+  and require separate measurements.
+- **Open issue:** Eliciting trust can perturb the reliance behavior it is meant
+  to predict.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-402
+
+- **Statement:** Explanations can increase acceptance of automated advice
+  without improving discrimination between correct and incorrect advice or
+  human–AI complementarity.
+- **Status:** established.
+- **Primary sources:** `dzindolet2003trust`, `bansal2021whole`.
+- **Rationale:** Bounded experiments separate acceptance effects from joint
+  decision performance.
+- **Open issue:** Explanation forms that support time-bounded verification
+  rather than persuasion remain task-dependent.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-403
+
+- **Statement:** A model that is easier for users to simulate need not make its
+  large errors easier to detect and correct.
+- **Status:** established.
+- **Primary source:** `poursabzi2021interpretability`.
+- **Rationale:** The studied transparent linear models improved some subjective
+  or simulation measures while hindering correction of large mistakes.
+- **Open issue:** Counterfactual verification under realistic time and domain
+  complexity needs separate testing.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-404
+
+- **Statement:** Cognitive forcing can reduce overreliance in bounded human–AI
+  tasks while adding friction and reducing preference.
+- **Status:** established.
+- **Primary source:** `bucinca2021trust`.
+- **Rationale:** Requiring independent thought before advice use changes both
+  error and interaction cost.
+- **Open issue:** Forcing must target consequential error opportunities without
+  imposing persistent or unequal burden.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-405
+
+- **Statement:** Shared control can assist continuous tasks but introduces
+  arbitration, intent-estimation, and authority-transition failure modes.
+- **Status:** plausible.
+- **Primary sources:** `dragan2013policy`, `mulder2012haptics`.
+- **Rationale:** Domain-specific control studies show both assistance and new
+  coupling problems.
+- **Open issue:** Constrained switching may outperform continuous blending when
+  intent or authority is uncertain.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-406
+
+- **Statement:** Rapid incremental reversible actions with visible effects can
+  reduce representational distance in suitable tasks.
+- **Status:** plausible.
+- **Primary sources:** `shneiderman1983direct`, `hutchins1985direct`.
+- **Rationale:** Direct-manipulation theory predicts lower translation burden
+  when action objects and consequences remain visible.
+- **Open issue:** Typed, form, batch, abstract, high-precision, and accessible
+  operation are strong competing interfaces.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-407
+
+- **Statement:** Undo and erase telemetry can reveal severe usability failures
+  not captured by self-report.
+- **Status:** established.
+- **Primary source:** `akers2009undo`.
+- **Rationale:** Recovery behavior provides an observable trace of user
+  correction under bounded software tasks.
+- **Open issue:** Harmless exploration, local undo, external compensation, and
+  verified world-state recovery must remain distinct.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-408
+
+- **Statement:** Ecological-interface displays can improve difficult fault
+  diagnosis when the work-domain model and training support them, while also
+  inducing unnecessary intervention.
+- **Status:** plausible.
+- **Primary sources:** `vicente1992ecological`,
+  `christoffersen1998ecological`, `borst2017ecological`.
+- **Rationale:** The framework and bounded studies show benefit moderated by
+  task, representation, training, and display-induced behavior.
+- **Open issue:** A constraint display does not protect against a wrong or stale
+  work-domain model.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-409
+
+- **Statement:** Progressive disclosure can aid mental-model formation in some
+  transparency tasks while changing which errors users see and how they judge
+  the system.
+- **Status:** plausible.
+- **Primary source:** `springer2020progressive`.
+- **Rationale:** Staging information changes comprehension and perception under
+  the studied interface conditions.
+- **Open issue:** Consequential current mode, authority, uncertainty, pending
+  effect, and recovery state may never be safely hidden.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-410
+
+- **Statement:** Cognitive-load effects depend on integration, redundancy,
+  prior knowledge, representation, and task rather than one universal threshold.
+- **Status:** established.
+- **Primary sources:** `sweller1988load`, `chandler1991load`.
+- **Rationale:** Instructional experiments and theory separate interacting
+  sources of load.
+- **Open issue:** Translation to live mixed-initiative control requires
+  task-specific outcome and burden measures.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md).
+
+### C-411
+
+- **Statement:** Ability-based generated interfaces improved performance for
+  sampled motor-impaired users in studied tasks.
+- **Status:** established.
+- **Primary sources:** `wobbrock2011ability`, `gajos2008ability`.
+- **Rationale:** The work replaces average-user assumptions with measured
+  ability and bounded interface generation.
+- **Open issue:** Replication must span disability, assistive technology,
+  device, task, language, and long-term use.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-412
+
+- **Statement:** An automatically adapting interface can be slower than a
+  stable static interface, while a user-adaptable alternative can be preferred.
+- **Status:** established.
+- **Primary source:** `findlater2004menus`.
+- **Rationale:** Spatial instability and prediction error can outweigh adaptive
+  ranking benefits.
+- **Open issue:** Expertise, layout stability, rare actions, and prediction
+  accuracy condition the result.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-413
+
+- **Statement:** Stability-preserving salience adaptation can avoid some costs
+  of spatially changing menus.
+- **Status:** established.
+- **Primary source:** `findlater2009ephemeral`.
+- **Rationale:** Changing visual emphasis while keeping locations stable
+  separates adaptation from remapping cost in the studied tasks.
+- **Open issue:** Rare critical actions, assistive technologies, retention, and
+  cross-device consistency remain untested boundaries.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-414
+
+- **Statement:** WCAG 2.2 is a useful accessibility-conformance floor, not proof
+  of usability, safety, equity, or task success.
+- **Status:** established.
+- **Primary source:** `w3c2024wcag22`.
+- **Rationale:** The authoritative standard defines testable success criteria
+  and explicitly does not cover every user need.
+- **Open issue:** Release gates also need representative task testing with
+  disabled users and assistive technologies.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-415
+
+- **Statement:** Nominal human approval is not effective control without timely
+  observation, adequate comprehension, real authority, sufficient response
+  time, and an executable recovery path.
+- **Status:** plausible.
+- **Primary sources:** synthesis of [C-396](#c-396)–[C-414](#c-414); no single
+  study validates the complete contract.
+- **Rationale:** A person can appear in the workflow while every operative edge
+  needed to change the outcome is missing or stale.
+- **Open issue:** Compare nominal approval with effective-authority designs
+  under bounded response windows and irreversible effects.
+- **Used by:** [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-416
+
+- **Statement:** A recoverable initiative contract carrying initiator, reason,
+  uncertainty, actual and pending mode, effective authority, state delta,
+  checkpoint, acknowledgement, resumption cue, recovery result, and expiry may
+  predict cross-layer failures beyond isolated UI metrics.
+- **Status:** speculative.
+- **Primary sources:** no direct validation; constituent evidence is bounded by
+  [C-396](#c-396)–[C-415](#c-415).
+- **Rationale:** The contract composes initiative, observation, authority,
+  interruption, recovery, and longitudinal change without treating a human as
+  free assurance.
+- **Open issue:** It must beat polished stable interfaces, explicit mode labels,
+  previews, confirmation, undo, logs, runtime assurance, and user testing on a
+  consequential task and an accessibility stratum.
+- **Used by:** [HCI audit](audits/2026-08-05-hci-human-factors.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).

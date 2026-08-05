@@ -226,13 +226,15 @@ adding citations:
 | databases and storage | transactions, isolation, real-time ordering, replication, access paths, caches, compaction, reclamation, replay, temporal coordinates, coded repair, and tiering remain distinct; Candidates 017 and 018 retain only finite semantic preservation and task/evidence value beyond mature storage nulls |
 | cultural evolution and archaeology | generation, transmission, evaluation, retention, governance, accessible model diversity, path dependence, and archaeological formation remain distinct; Candidate 019 tests only the residual population-level inheritance advantage across turnover |
 | social choice and institutional governance | theorem assumptions, empirical effects, and authorized normative commitments remain separate; aggregation, strategy, delegation, veto, agenda, capture, amendment, participation, and path dependence refine Candidates 008/011/012/015/016; Candidate 020 tests only the applicable multi-level composition |
+| human–computer interaction and human factors | nominal human presence, trust, transparency, explanation, preference, and adaptation are not assurance; effective initiative binds timely state, actual/pending mode, executable authority, state delta, recovery, resumption, expiry, accessibility, and full human cost into Candidates 009/011/012/015 |
 
 The active and next breadth queue is selected by expected ability to split,
 merge, reject, or re-baseline a current mechanism:
 
 | Field cluster | Mechanism question | Expected decision |
 | --- | --- | --- |
-| human–computer interaction and human factors | which mixed-initiative, interruption, mode-awareness, trust, shared-control, interface, error-recovery, and accessibility mechanisms alter authority and recovery contracts? | test P-002/P-003/P-006/P-007/P-009/P-011/P-013 and Candidates 009/011/012/015 against mature interface and control practice |
+| mechanical, civil, and process engineering | which passive stability, redundancy, structural-health, reserve, plant-wide control, recycle, separation, safety-instrumented, and maintenance mechanisms change topology, authority, or lifecycle contracts? | test P-005/P-006/P-009/P-010/P-012 and Candidates 001/003/005/006/009/011/012/014 against mature engineering practice |
+| developmental biology and morphogenesis | which positional, competence-window, commitment, regeneration, sculpting, and canalization mechanisms survive ordinary staged optimization, local signaling, pruning, repair, and lineage nulls? | test P-002/P-003/P-005/P-006/P-009/P-012 and Candidates 001/005/006/017/018 without mistaking growth for learning |
 
 This queue is revised whenever an audit changes a principle, null model, or
 experiment. Breadth alone does not close a row.

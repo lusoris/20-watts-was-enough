@@ -239,6 +239,20 @@ Reject the candidate if:
 
 ## Promotion rule
 
+### Effective-authority and handoff gate
+
+Do not credit “human authority” from an approval control alone. Fault injection
+must test whether the person observes actual and pending mode before the
+deadline, correctly identifies current authority, can execute the intervention,
+sees the resulting state delta, and can recover or compensate when reversal is
+impossible. Include stale displays, silent automation override, automation
+surprise, inaccessible controls, interruption, and expired emergency authority
+([C-399](../../research/claims.md#c-399),
+[C-400](../../research/claims.md#c-400),
+[C-405](../../research/claims.md#c-405),
+[C-415](../../research/claims.md#c-415)–[C-416](../../research/claims.md#c-416)).
+
+
 Passing the grid simulator does not establish transfer. The candidate must
 predict useful authority changes from measured latency, integrity, headroom,
 and coordination, beat the strongest applicable controller in two distinct

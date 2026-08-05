@@ -179,6 +179,16 @@ Reject the composition if:
 
 ## Promotion rule
 
+### Interruption and resumption gate
+
+Live response must count interruption duration, resumption latency, rework,
+stress/effort measures, and person-minutes rather than treating acknowledgement
+as effective intervention. A human responder must receive timely actual and
+pending mode, effective authority, changed state, executable containment or
+recovery, a resumption cue, and evidence that the intended state changed
+([C-396](../../research/claims.md#c-396)–[C-416](../../research/claims.md#c-416)).
+
+
 The candidate remains a composition of existing principles unless the link
 between live response and versioned learning produces a reproducible frontier
 gain across at least two materially different fault topologies. A failure

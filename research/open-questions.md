@@ -161,3 +161,13 @@ project choice.
   policy-as-code, independent evaluation, lineage, and mature incident/change
   management at equal total cost? See
   [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+- **OQ-040:** Does a recoverable initiative record predict consequential
+  cross-layer failures beyond polished stable interfaces, explicit mode and
+  authority labels, previews, confirmations, undo/history, runtime assurance,
+  logs, and measured user testing after interruption, resumption, training,
+  accessibility, human attention, and recovery costs are charged? See
+  [C-416](claims.md#c-416) and Candidates
+  [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [015](../experiments/candidates/015-versioned-repairable-conventions.md).

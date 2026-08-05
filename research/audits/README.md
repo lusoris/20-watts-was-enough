@@ -32,6 +32,7 @@ failed deduplications that would be lost in the shorter claim ledger.
 | 2026-08-05 | [Databases and storage systems](2026-08-05-databases-storage.md) | transaction, ordering, replication, access, cache, compaction, reclamation, replay, temporal, repair, and placement contracts become mandatory memory nulls; Candidates 017 and 018 test semantic compaction and value-aware tiering |
 | 2026-08-05 | [Cultural evolution and archaeological inference](2026-08-05-cultural-evolution-archaeology.md) | separates generation, transmission, evaluation, retention, governance, accessible model diversity, path dependence, and transformed material evidence; Candidate 019 tests cumulative inheritance across turnover |
 | 2026-08-05 | [Social choice and institutional governance](2026-08-05-social-choice-institutions.md) | formal aggregation limits, strategy, delegation, polycentricity, veto, agenda, capture, amendment, participation, and path dependence refine governance contracts; Candidate 020 tests the residual composition |
+| 2026-08-05 | [Human–computer interaction and human factors](2026-08-05-hci-human-factors.md) | mixed initiative, interruption, modes, automation bias, reliance, shared control, direct manipulation, recovery, ecological displays, disclosure, load, accessibility, and adaptation refine effective-authority and recovery gates |
 
 An audit does not itself promote a principle. Major observations receive stable
 `C-` claims, candidate mechanisms are deduplicated against the
