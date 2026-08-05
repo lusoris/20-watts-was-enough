@@ -7,6 +7,22 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A semiconductor-device and circuit-reliability audit spanning hierarchical
+  variation, yield, accelerated qualification, aging, electrothermal coupling,
+  radiation, fault geometry, correction, adaptive margins, analog and
+  in-memory drift, endurance, fabrication, and lifecycle burden.
+- Fifty-two scoped semiconductor claims (`C-1002`–`C-1053`), sixty-five new
+  centralized references plus three deduplicated records, Fixture F-008, its
+  mission-profile mathematical contract and editable diagram, and a dedicated
+  reliability chapter; no principle or candidate was added.
+- An acoustics, hearing, auditory-scene-analysis, and echolocation audit that
+  binds calibrated pressure and time, propagation, nonlinear filtering,
+  binaural geometry, reverberation, grouping, masking, separation, active
+  emission, receiver action, exposure, and lifecycle cost.
+- Forty-six scoped acoustic claims (`C-1054`–`C-1099`), forty-seven new
+  centralized references, Fixture F-009, its operator/action mathematical
+  contract and editable diagram, and a dedicated active-acoustic-inference
+  chapter; no principle or candidate was added.
 - A sports-expertise, adaptive-performance, and team-coordination audit that
   keeps anticipation, physical interception, practice, retention, transfer,
   useful exploration, pacing, readiness, staged return, coordination, shared

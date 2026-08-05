@@ -32,17 +32,24 @@ and resource control. Continue with
 opportunity, action, intervention, and history contract. Then use
 [representative adaptive performance](22-representative-adaptive-performance.md)
 to keep acquisition, transfer, resource state, risk, recovery, coordination,
-and selection inside the comparison boundary, and
+and selection inside the comparison boundary;
+[active acoustic inference](23-active-acoustic-inference.md) for a worked
+physical modality with nonlinear multirate sensing, receiver action, active
+emission, masking, and mature signal-processing nulls; and
 [operator-qualified sensing](24-operator-qualified-sensing.md) to connect a
 physical measurement, its ambiguity and calibration, active acquisition,
-retention, and optical/digital routing.
+retention, and optical/digital routing. The
+[mission-profile reliability chapter](26-reliability-under-mission-profiles.md)
+then carries those decisions into physical variation, degradation, correction,
+repair, repurposing, and lifetime accounting.
 
 ## Reading paths
 
-- **Architecture first:** 01 → 10 → 20 → 22 → 24 → 30 → 40 → 50 → 60 → 70.
+- **Architecture first:** 01 → 10 → 20 → 22 → 23 → 24 → 26 → 30 → 40 → 50 →
+  60 → 70.
 - **Evidence and deduplication:** 00 → 05 → 07 → the relevant mechanism
   chapter → its linked claim range and fixture.
-- **Evaluation first:** 80 → 22 or 24 → the linked mathematical contract and
-  hostile fixture → 90.
+- **Evaluation first:** 80 → 22, 23, 24, or 26 → the linked mathematical
+  contract and hostile fixture → 90.
 - **One mechanism at a time:** open any chapter, follow its stable `C-` claims,
   then inspect only the candidates and experiments listed in that chapter.

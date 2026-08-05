@@ -51,7 +51,9 @@ state. See [decision 0005](decisions/0005-rendered-private-edition.md).
 | [Structural growth and routing](concept/10-neurogenesis-and-routing.md) | How does a persistent capability gap create, test, specialize, merge, protect, or retire conditional modules? |
 | [Sensorimotor grounding](concept/20-sensorimotor-grounding.md) | Which event, clock, opportunity, action, intervention, history, language, uncertainty, and provenance contracts ground a world model? |
 | [Representative adaptive performance](concept/22-representative-adaptive-performance.md) | How are learning, transfer, fatigue, risk, recovery, coordination, and selection compared under the conditions in which action is actually possible? |
+| [Active acoustic inference](concept/23-active-acoustic-inference.md) | How do calibrated sound, timing, propagation, masking, spatial action, active emission, separation, and exposure form one operator-qualified inference loop? |
 | [Operator-qualified sensing](concept/24-operator-qualified-sensing.md) | What could a physical measurement resolve, what remains prior-dependent, when is another observation worth its cost, and which substrate should execute the transform? |
+| [Reliability under mission profiles](concept/26-reliability-under-mission-profiles.md) | How should variable physical components be characterized, operated, protected, repaired, repurposed, or retired across real stress histories? |
 | [Sparse predictive compute](concept/30-sparse-predictive-compute.md) | How do event, context, and resource loops price the next computation or observation? |
 | [Memory and consolidation](concept/40-memory-and-consolidation.md) | How does an episode become a retained skill, external fact, weakened trace, or deletion? |
 | [Maturity and structural consolidation](concept/50-grokking-and-pruning.md) | When should a structure be protected, reopened, compacted, or retired? |
