@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A soft/active-matter audit separating passive relaxation, continuous fixed
+  drive, external feedback, and adaptive policy across flocking, nematics,
+  phase separation, jamming, granular flow, and colloidal assembly.
+- Eighteen scoped physical-order claims (`C-463`–`C-480`), twenty-two
+  centralized sources, and an editable phase-field compilation lifecycle;
+  the only held residue becomes Track E in Candidate 006 and chapter 60.
 - An aerospace, maritime, and safety-critical-autonomy audit separating
   stabilization, navigation integrity, operational envelopes, fault stages,
   degraded behavior, fallback, authority, assurance, maintenance, and inquiry.

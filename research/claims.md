@@ -6889,3 +6889,227 @@ describes the exact statement here, not a broader interpretation.
 - **Open issue:** Reopen only for a distinct state, information path, cost,
   failure boundary, and equal-budget win.
 - **Used by:** [cross-domain chapter](../concept/07-cross-domain-convergence.md).
+
+### C-463
+
+- **Statement:** A fixed local alignment rule with noise can generate ordered
+  collective motion in the Vicsek model.
+- **Status:** established.
+- **Primary source:** `vicsek1995phase`.
+- **Rationale:** The implemented nonequilibrium particle model exhibits an
+  order transition without centralized control.
+- **Open issue:** Model order does not establish representation, task value, or
+  learning.
+- **Used by:** [soft/active-matter audit](audits/2026-08-05-soft-active-matter.md).
+
+### C-464
+
+- **Statement:** A nonequilibrium hydrodynamic flocking model can sustain two-
+  dimensional long-range order under its assumptions.
+- **Status:** established.
+- **Primary source:** `toner1995birds`.
+- **Rationale:** The theoretical result derives ordered phases for a scoped
+  continuum model.
+- **Open issue:** It is not a universal mechanism of animal coordination or an
+  adaptive policy.
+- **Used by:** [soft/active-matter audit](audits/2026-08-05-soft-active-matter.md).
+
+### C-465
+
+- **Statement:** Studied starling flocks were more consistent with interaction
+  over a roughly fixed number of topological neighbors than a fixed metric radius.
+- **Status:** plausible.
+- **Primary source:** `ballerini2008topological`.
+- **Rationale:** Field reconstruction supports a bounded topological-neighbor
+  description.
+- **Open issue:** The inference is observational and species-, condition-, and
+  reconstruction-specific.
+- **Used by:** [soft/active-matter audit](audits/2026-08-05-soft-active-matter.md),
+  [adaptive-topology Candidate 001](../experiments/candidates/001-adaptive-topology.md).
+
+### C-466
+
+- **Statement:** A fixed local-rule group model can exhibit hysteresis, spatial
+  sorting, and configuration-dependent history effects.
+- **Status:** established.
+- **Primary source:** `couzin2002collective`.
+- **Rationale:** Model state and nonlinear interaction can preserve path effects
+  without symbolic or durable memory.
+- **Open issue:** Calling physical hysteresis “memory” must not imply semantic
+  retrieval or policy learning.
+- **Used by:** [soft/active-matter audit](audits/2026-08-05-soft-active-matter.md).
+
+### C-467
+
+- **Statement:** ATP-driven microtubule–kinesin assemblies can generate active
+  flows and liquid-crystalline structures.
+- **Status:** established.
+- **Primary source:** `sanchez2012active`.
+- **Rationale:** A prepared material continuously converts chemical free energy
+  into organized motion.
+- **Open issue:** Fuel preparation, consumption, geometry, control, and lifetime
+  belong to the system boundary.
+- **Used by:** [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-468
+
+- **Statement:** Active stress can qualitatively alter defect annihilation,
+  separation, and proliferation in modeled active nematics.
+- **Status:** plausible.
+- **Primary sources:** `simha2002instabilities`, `giomi2013defects`.
+- **Rationale:** Nonequilibrium stress changes defect dynamics under specific
+  coefficients, sign conventions, geometries, and continuum models.
+- **Open issue:** A topological defect is not automatically an encoded error,
+  verifier, or recovery operation.
+- **Used by:** [soft/active-matter audit](audits/2026-08-05-soft-active-matter.md).
+
+### C-469
+
+- **Statement:** Self-propelled particles can phase-separate without alignment
+  or attractive pair forces in specified models and experiments.
+- **Status:** established.
+- **Primary sources:** `tailleur2008runtumble`, `fily2012phase`,
+  `buttinoni2013clustering`.
+- **Rationale:** Motility and density feedback can generate clustering under
+  continuous drive and scoped boundary conditions.
+- **Open issue:** The result does not establish relevance-aware allocation,
+  intelligence, or task adaptation.
+- **Used by:** [soft/active-matter audit](audits/2026-08-05-soft-active-matter.md).
+
+### C-470
+
+- **Statement:** Clustering or phase separation is not by itself evidence of
+  collective intelligence or task-aware allocation.
+- **Status:** disputed.
+- **Primary sources:** minimal mechanisms in `tailleur2008runtumble`,
+  `fily2012phase`, and `buttinoni2013clustering`.
+- **Rationale:** Visually organized states arise without an independent task
+  signal, evaluator, or adaptive update.
+- **Open issue:** An intelligence claim needs separately measured sensing,
+  representation, action selection, outcome, and learning.
+- **Used by:** [cross-domain chapter](../concept/07-cross-domain-convergence.md).
+
+### C-471
+
+- **Statement:** DNA-binding specificity and confinement can program reversible
+  or geometry-selected colloidal assembly.
+- **Status:** established.
+- **Primary sources:** `mirkin1996dna`, `alivisatos1996nanocrystal`,
+  `manoharan2003packing`.
+- **Rationale:** Physical interactions and boundary conditions select
+  structures without online task evaluation.
+- **Open issue:** Design, synthesis, annealing, yield, readout, and reset remain
+  external lifecycle work.
+- **Used by:** [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-472
+
+- **Statement:** Jamming thresholds and scaling in frictionless soft-particle
+  models depend on protocol and definition.
+- **Status:** established.
+- **Primary sources:** `ohern2003jamming`, `donev2004comment`.
+- **Rationale:** Preparation, interaction, finite size, order, and chosen
+  observable change the reported transition.
+- **Open issue:** No universal jamming point or general compute recipe follows.
+- **Used by:** [soft/active-matter audit](audits/2026-08-05-soft-active-matter.md).
+
+### C-473
+
+- **Statement:** A shape-controlled rigidity transition exists in the cited
+  confluent-tissue vertex model at constant density.
+- **Status:** plausible.
+- **Primary source:** `bi2015rigidity`.
+- **Rationale:** The model exhibits a scoped transition controlled by cell-shape
+  parameters.
+- **Open issue:** It is not a universal tissue law or an adaptive AI mechanism.
+- **Used by:** [soft/active-matter audit](audits/2026-08-05-soft-active-matter.md).
+
+### C-474
+
+- **Statement:** Dense granular flows and vibrated clogging can be described by
+  scoped constitutive variables and transition surfaces.
+- **Status:** established.
+- **Primary sources:** `pouliquen1999scaling`, `jop2006constitutive`,
+  `caitano2021clogging`.
+- **Rationale:** Flow and arrest depend on geometry, friction, rate, packing,
+  and drive regime.
+- **Open issue:** Jamming, clogging, and criticality must not be conflated across
+  apparatuses or used as generic efficiency guarantees.
+- **Used by:** [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-475
+
+- **Statement:** Light-driven colloids can repeatedly assemble and disassemble
+  dynamic clusters.
+- **Status:** established.
+- **Primary source:** `palacci2013crystals`.
+- **Rationale:** Optical/chemical drive maintains reversible dynamic structures.
+- **Open issue:** Continuous drive and externally set conditions are required;
+  no policy update is demonstrated.
+- **Used by:** [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-476
+
+- **Statement:** Real-time observation and external feedback can create
+  effective interactions among active particles.
+- **Status:** established.
+- **Primary sources:** `khadka2018information`, `lavergne2019perception`.
+- **Rationale:** Cameras, computation, and actuated illumination implement a
+  feedback-controlled material.
+- **Open issue:** The external sensor, processor, communication, field generator,
+  and thermal cost are part of the system.
+- **Used by:** [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-477
+
+- **Statement:** Topological charge alone does not implement semantic error
+  correction, verification, or fault tolerance.
+- **Status:** disputed.
+- **Primary sources:** physical boundaries in `simha2002instabilities` and
+  `giomi2013defects`; no coding evidence.
+- **Rationale:** Physical topology constrains state, while error correction also
+  needs an encoded symbol set, noise model, decoder, and recovery guarantee.
+- **Open issue:** A future device must expose all four before using the term.
+- **Used by:** [cross-domain chapter](../concept/07-cross-domain-convergence.md).
+
+### C-478
+
+- **Statement:** Particle-scale mechanical power is not wall-plug or lifecycle
+  power.
+- **Status:** established.
+- **Primary sources:** dimensional boundary and apparatus in
+  `khadka2018information`, `lavergne2019perception`.
+- **Rationale:** Drive, fuel preparation, pumps, cameras, compute, fields,
+  transduction, reset, fabrication, and thermal management can dominate.
+- **Open issue:** Every physical-compute claim needs one measured end-to-end
+  boundary.
+- **Used by:** [energy chapter](../concept/80-energy-model.md),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-479
+
+- **Statement:** None of the audited fixed-rule soft/active-matter systems
+  demonstrates policy learning from task-success evidence.
+- **Status:** established.
+- **Primary sources:** mechanism boundary across [C-463](#c-463)–[C-478](#c-478).
+- **Rationale:** Passive relaxation, continuous fixed drive, and external fixed
+  feedback can all produce complex order without endogenous policy updates.
+- **Open issue:** Reopen for an explicit update rule, outcome signal, held-out
+  adaptation, and complete resource boundary.
+- **Used by:** [soft/active-matter audit](audits/2026-08-05-soft-active-matter.md).
+
+### C-480
+
+- **Statement:** A reversible phase or interaction field may economically
+  compile a mature local coordination skill.
+- **Status:** speculative.
+- **Primary sources:** no direct validation; physical constituents are bounded
+  by [C-467](#c-467), [C-471](#c-471), and [C-474](#c-474)–[C-476](#c-476).
+- **Rationale:** A stable high-frequency local mapping may remove recurrent
+  sensing, transport, decision, or actuation work when embodied in matter.
+- **Open issue:** It must beat passive mechanics, analog control, FPGA/ASIC, and
+  conventional distributed control after drive, transduction, reset,
+  fabrication, drift, shadow, fallback, and retirement costs.
+- **Used by:** [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md),
+  [hardening chapter](../concept/60-hardening-and-factual-memory.md).

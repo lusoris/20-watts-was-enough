@@ -185,3 +185,9 @@ project choice.
   sensing, reserve, communication, training, assurance, latency, and energy
   costs? See
   [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+- **OQ-043:** Can a reversible physical phase or interaction field compile a
+  mature repeated local coordination mapping and beat passive mechanics,
+  analog feedback, FPGA/ASIC, and distributed digital control after complete
+  drive, sensing, compute, transduction, readout, fabrication, reset, drift,
+  shadow, fallback, and retirement costs? See
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).

@@ -81,6 +81,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/asynchronous-authority-transfer.mmd` keeps effect scope, epoch,
   readiness, fallback reachability, atomic owner change, timeout, rejection,
   recovery, and postcondition verification in one state machine.
+- `diagrams/phase-field-compilation.mmd` follows a mature local mapping through
+  physical classification, fabrication/programming, execution, readout,
+  health/shadow checks, reprogramming, fallback, and retirement.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

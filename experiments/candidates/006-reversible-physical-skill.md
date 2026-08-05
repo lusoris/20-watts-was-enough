@@ -158,6 +158,45 @@ energy, deadlock rate, assembly yield, tile-loss recovery, and reversal cost.
 The physical mechanism contributes only if local interaction reduces global
 state or communication while meeting the same topology and recovery contract.
 
+### Track E — reversible phase or interaction-field compilation
+
+Compile one stable, high-frequency, spatially local coordination mapping into
+a reversible physical phase or interaction field. Before comparison, classify
+the substrate as passive relaxation, continuously driven fixed dynamics,
+feedback-controlled matter, or genuinely adaptive matter. The last label
+requires an explicit outcome-driven policy update
+([C-463](../../research/claims.md#c-463)–[C-480](../../research/claims.md#c-480)).
+
+Compare the complete device with tuned passive mechanics, analog feedback,
+FPGA/ASIC, distributed digital control, and a digital shadow that receives the
+same sensing and calibration. Count fuel, light/field generation, pumps,
+sensing, communication, computation, transduction, readout, reset, fabrication,
+yield loss, drift, health probes, fallback, and retirement. Particle-scale
+mechanical power is diagnostic only.
+
+```mermaid
+flowchart LR
+    M["Mature repeated local mapping"] --> Q{"Physical target qualified?"}
+    Q -->|"no"| D["Keep digital / analog / fixed mechanics"]
+    Q -->|"yes"| C["Classify passive · driven · feedback · adaptive"]
+    C --> P["Design · fabricate · program · calibrate"]
+    P --> F["Phase / interaction field executes mapping"]
+    F --> O["Readout + qualified task outcome"]
+    O --> H["Health probe + digital shadow"]
+    H --> R{"Drift, damage, or task change?"}
+    R -->|"no"| F
+    R -->|"repairable"| P
+    R -->|"unsafe / uneconomic"| B["Fallback · retire · recycle"]
+    B --> D
+```
+
+Editable source:
+[phase-field-compilation.mmd](../../assets/diagrams/phase-field-compilation.mmd).
+
+Retire the specialization if the digital shadow performs the real control
+continuously, reset is destructive, system-level drive dominates, or an
+ordinary hardware/control baseline ties the lifecycle frontier.
+
 ## Lifecycle accounting
 
 For $N$ deployed uses,

@@ -114,6 +114,20 @@ mechanical logic and physical learning ([C-115](../research/claims.md#c-115),
 ([C-120](../research/claims.md#c-120)). These observations extend the set of
 possible deployment substrates; they do not bypass the qualification gates.
 
+A physical pattern is classified before it is credited with computation:
+
+| Class | What changes state | External boundary | Learning claim |
+| --- | --- | --- | --- |
+| passive | relaxation or fluctuation under fixed energy landscape and boundaries | preparation, geometry, thermal/gravity/elastic conditions | none |
+| driven fixed | continuous fuel, light, field, vibration, gravity, or flow under fixed interactions | all drive generation and dissipation | none |
+| feedback controlled | explicit observation is converted into intervention | sensor, compute, communication, actuator, and drive | none unless the policy updates |
+| adaptive | outcome evidence changes policy, interaction, morphology, or objective | all preceding costs plus training, validation, memory, and reset | testable |
+
+This separation follows [C-463](../research/claims.md#c-463)–[C-479](../research/claims.md#c-479).
+Flocking, phase separation, defect motion, jamming, or assembly can be useful
+physical operations; visible order alone does not supply a task, evaluator, or
+policy update.
+
 The held systems candidate is a rewritable physical path whose input and output
 remain locally coupled to the environment, while a versioned digital shadow
 preserves its specification, protected tests, calibration envelope, fallback,
@@ -129,6 +143,31 @@ devices, and retirement. [Candidate 006](../experiments/candidates/006-reversibl
 tests whether a measured conversion, transport, recurrence, or command path is
 actually removed and whether break-even occurs before the qualified substrate
 lifetime ends.
+
+```mermaid
+flowchart LR
+    M["Mature repeated local mapping"] --> Q{"Physical target qualified?"}
+    Q -->|"no"| D["Keep digital / analog / fixed mechanics"]
+    Q -->|"yes"| C["Classify passive · driven · feedback · adaptive"]
+    C --> P["Design · fabricate · program · calibrate"]
+    P --> F["Phase / interaction field executes mapping"]
+    F --> O["Readout + qualified task outcome"]
+    O --> H["Health probe + digital shadow"]
+    H --> R{"Drift, damage, or task change?"}
+    R -->|"no"| F
+    R -->|"repairable"| P
+    R -->|"unsafe / uneconomic"| B["Fallback · retire · recycle"]
+    B --> D
+```
+
+Editable source:
+[phase-field-compilation.mmd](../assets/diagrams/phase-field-compilation.mmd).
+
+Candidate 006 now tests [C-480](../research/claims.md#c-480) as one physical-
+phase specialization. Particle-scale power cannot win the comparison; the
+boundary includes fuel or field generation, sensing, control, transduction,
+readout, reset, fabrication yield, health probes, shadow, fallback, and
+retirement.
 
 ### Reusable skills
 
@@ -587,6 +626,8 @@ contract.
 | load shedding, tagged routing, selective extraction, repair/removal ordering, and replacement feedback | [C-087](../research/claims.md#c-087)–[C-096](../research/claims.md#c-096) | scoped cellular mechanisms; the composed systems policy remains a held candidate |
 | morphology, physical reservoirs, mechanical memory/logic, local assembly, and material healing | [C-112](../research/claims.md#c-112)–[C-120](../research/claims.md#c-120) | established in scoped substrates; end-to-end advantage over passive, analog, FPGA/ASIC, and digital nulls remains workload-specific |
 | reversible physical skill compilation | [C-121](../research/claims.md#c-121) | speculative lifecycle systems hypothesis tested by Candidate 006 |
+| soft/active-matter physical order and external feedback | [C-463](../research/claims.md#c-463)–[C-479](../research/claims.md#c-479) | established or plausible in scoped physical systems; no audited task-success learning |
+| phase/interaction-field skill compilation | [C-480](../research/claims.md#c-480) | speculative Candidate-006 specialization |
 | types, contracts, effects, capabilities, proof checking, static analysis, runtime monitoring, transactions, hot update, and provenance | [C-145](../research/claims.md#c-145)–[C-156](../research/claims.md#c-156) | established scoped assurance classes with explicit trusted bases and invalidation boundaries |
 | versioned graded assurance envelopes | [C-157](../research/claims.md#c-157) | speculative systems composition tested by Candidate 009 |
 | automatic reflex discovery and qualification | none | speculative until it beats the null models above |
@@ -620,6 +661,8 @@ contract.
 | rollback is nominal only | $T_{\mathrm{rb}}$, $N_{\mathrm{loss}}$, or recovery tests exceed envelope | block future promotion until recovery is repaired |
 | retrieval savings vanish physically | operations fall while bytes, latency, or joules do not | reject efficiency claim; keep stronger null |
 | escalation becomes an unpriced default | escalation fraction and remote cost rise without risk improvement | recalibrate guard and expose full route cost |
+| ordered phase is credited as intelligence or learning | no independent task signal, evaluator, or outcome-driven update exists | relabel as passive/driven physics and retain it only as a substrate/null |
+| particle-scale power looks excellent while wall energy rises | drive, sensing, compute, transduction, reset, or fabrication dominates | reject the system-efficiency claim and restore the full boundary |
 
 ## Measurable predictions
 
@@ -648,3 +691,7 @@ contract.
 8. Quantized or compiled paths produce an end-to-end physical gain only when
    dispatch, memory movement, validation, retained rollback state, and failed
    promotions amortize within the observed deployment horizon.
+9. A reversible phase or interaction field advances only if it removes a
+   measured repeated digital/transport path and beats passive mechanics,
+   analog control, FPGA/ASIC, and distributed digital control after complete
+   drive, fabrication, sensing, reset, drift, fallback, and retirement cost.
