@@ -644,7 +644,7 @@ composition below, not with one weak classifier:
 ### OLFACT-033 — transient processing can compensate partly for slow MOX recovery
 
 - **Status:** established in one two-metre robot experiment.
-- **Primary source:** [Ishida et al. (2004)](https://doi.org/10.1109/JSEN.2004.839597).
+- **Primary source:** [Ishida et al. (2005)](https://doi.org/10.1109/JSEN.2004.839597).
 - **Observation:** relative output changes and onset/recovery logic supported
   reported source tracking despite semiconductor recovery longer than 60 s.
 - **Boundary:** compare thresholds, derivatives and explicit dynamic-state
@@ -1361,8 +1361,8 @@ composition cannot express.
 - **B-045:** Ishida, H. et al. (1994), gas/odor-source localization with gas and
   anemometric sensors, *Sensors and Actuators A*.
   [DOI](https://doi.org/10.1016/0924-4247%2894%2900829-9).
-- **B-046:** Ishida, H. et al. (2004), “Plume-tracking robots: a new application
-  of chemical sensors,” *IEEE Sensors Journal*.
+- **B-046:** Ishida, H. et al. (2005), “Controlling a Gas/Odor Plume-Tracking
+  Robot Based on Transient Responses of Gas Sensors,” *IEEE Sensors Journal*.
   [DOI](https://doi.org/10.1109/JSEN.2004.839597).
 - **B-047:** Voges, N. et al. (2014), “Reactive searching and infotaxis in odor
   source localization,” *PLOS Computational Biology*.
