@@ -28,7 +28,7 @@ interact without becoming one global update rule.
 ### Runtime path
 
 ```mermaid
-flowchart TB
+flowchart LR
     obs["Multimodal event"] --> enc["Sparse encoders"]
     enc --> state["Predictive shared state"]
     state --> gate{"Surprise · value · risk"}

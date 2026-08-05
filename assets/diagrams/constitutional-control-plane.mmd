@@ -1,4 +1,4 @@
-flowchart TB
+flowchart LR
     O["Authorized objectives · protected invariants"] --> L["Scoped local authority"]
     L --> D["Decision + evidence + affected scope"]
     D --> G{"Within authority and risk envelope?"}
@@ -14,4 +14,3 @@ flowchart TB
     C --> H["Compatibility · rollback · scheduled review"]
     M --> H
     H --> O
-

@@ -30,7 +30,7 @@ and measurable:
 ## Control lifecycle
 
 ```mermaid
-flowchart TB
+flowchart LR
     O["Authorized objectives · protected invariants"] --> L["Scoped local authority"]
     L --> D["Decision + evidence + affected scope"]
     D --> G{"Within authority and risk envelope?"}

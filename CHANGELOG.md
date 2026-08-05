@@ -280,6 +280,13 @@ the exact diff; this file records why the project changed.
   LaTeX, BibTeX, and Mermaid sources without duplicating the documents.
 - A committed production build path and owner-only online publishing policy.
 
+### Changed
+
+- Wide Mermaid diagrams retain a readable 1,120–1,800 px canvas inside an
+  explicitly labeled horizontal scroller instead of being compressed to the
+  prose column; the constitutional control diagram now follows a horizontal
+  reading path.
+
 ## [0.1.0] - 2026-08-05
 
 ### Added

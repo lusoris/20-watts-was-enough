@@ -608,9 +608,8 @@ button {
 }
 
 .diagram {
-  display: grid;
+  display: block;
   min-height: 180px;
-  place-items: center;
   overflow: auto;
   margin: 30px 0;
   padding: 26px;
@@ -619,12 +618,41 @@ button {
   background: #111611;
 }
 
-.diagram svg {
+.diagram-canvas {
+  display: grid;
+  min-width: 100%;
+  place-items: center;
+}
+
+.diagram-canvas svg {
+  display: block;
   max-width: 100%;
   height: auto;
 }
 
+.diagram-wide .diagram-canvas {
+  justify-content: start;
+}
+
+.diagram-wide .diagram-canvas svg {
+  width: var(--diagram-width);
+  max-width: none;
+}
+
+.diagram-caption {
+  position: sticky;
+  left: 0;
+  width: max-content;
+  margin: 0 0 16px;
+  color: #a8b5ad;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+}
+
 .diagram-loading {
+  display: grid;
+  place-items: center;
   color: #8fa097;
   font-family: var(--font-mono);
   font-size: 11px;
