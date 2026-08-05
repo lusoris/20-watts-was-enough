@@ -264,14 +264,17 @@ adding citations:
 | aerospace, maritime, and safety-critical autonomy | stabilization, guidance, navigation, integrity, ODD, envelope protection, redundancy, fault stages, degraded service, fallback, collision avoidance, remote authority, certification, maintenance, and investigation remain distinct; validated asynchronous transfer refines Candidate 012 only |
 | soft and active matter | passive relaxation, continuous fixed drive, external feedback, and adaptive policy remain separate; flocking, phase separation, defects, jamming, and assembly are physical mechanisms or nulls, while reversible phase-field compilation becomes only a Candidate-006 track |
 | mechanical and civil resilience | compliant/passive mechanics, SHM, redundancy, robustness, graceful degradation, damage tolerance, fatigue/fracture, maintenance, max-flow/assignment, and transport recovery remain mature nulls; path-dependent residual capacity becomes a Candidates-005/012/014 test schema only |
+| chemical and process engineering | conservation, nonlinear operation, separation, recycle, heat integration, MPC/RTO, fault stages, safety layers, operability, and plantwide control become mature nulls; only conservation-qualified flowsheet reconfiguration remains as a Candidate-001 stress track |
 
 The active and next breadth queue is selected by expected ability to split,
 merge, reject, or re-baseline a current mechanism:
 
 | Field cluster | Mechanism question | Expected decision |
 | --- | --- | --- |
-| chemical and process engineering | which recycle, separation, heat-integration, plant-wide-control, safety-instrumented, fault-diagnosis, operability, and reconfiguration mechanisms change topology, authority, or lifecycle contracts? | test P-001/P-005/P-006/P-009/P-010/P-012 and Candidates 001/003/005/009/011/012/014 against mature process engineering |
 | developmental biology and morphogenesis | which positional, competence-window, commitment, regeneration, sculpting, and canalization mechanisms survive ordinary staged optimization, local signaling, pruning, repair, and lineage nulls? | test P-002/P-003/P-005/P-006/P-009/P-012 and Candidates 001/005/006/017/018 without mistaking growth for learning |
+| metrology and measurement science | which calibration, traceability, uncertainty, covariance, drift, reference, intercomparison, and decision-rule fields invalidate downstream claims when they change? | refine Candidates 009 and 014 and the energy model against complete measurement-science nulls |
+| microbial and fungal ecology | which transport-explicit shared fields, spatial gradients, cross-feeding, dispersal, damage bypass, and resource translocation add more than ordinary distributed control and network flow? | test P-001/P-005/P-006/P-011/P-013 and Candidates 001/013 without turning association into coordination |
+| animal sensing and embodied control | which active-sensing, observability, passive-dynamics, reflex, impedance, adaptation, and tool-use mechanisms survive POMDP, optimal-control, robotics, and mechanics nulls? | refine sensorimotor contracts and Candidates 002/006/007/012/014 only where a distinct state transition remains |
 
 This queue is revised whenever an audit changes a principle, null model, or
 experiment. Breadth alone does not close a row.

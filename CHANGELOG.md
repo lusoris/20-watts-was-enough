@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A chemical/process-engineering audit separating conservation, nonlinear
+  reaction dynamics, separation, recycle, heat integration, MPC/RTO, fault
+  diagnosis, safety layers, operability, and structural reconfiguration.
+- Eighteen scoped process claims (`C-501`–`C-518`), thirty centralized sources,
+  an editable conservation-qualified reconfiguration diagram, and a physical
+  stress track in Candidate 001 and chapter 10.
 - A mechanical/civil-resilience audit separating compliant/passive physics,
   monitoring, redundancy, robustness, degradation, damage tolerance,
   fatigue/fracture, maintenance, reserve, network flow, and recovery.

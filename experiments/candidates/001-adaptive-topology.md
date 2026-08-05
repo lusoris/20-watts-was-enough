@@ -4,7 +4,7 @@
 **Status:** candidate; not approved as an architecture  
 **Primary principle:** [P-005 — use-dependent topology](../../research/principle-registry.md#p-005--use-dependent-topology)  
 **Adjacent principles:** [P-006 — homeostatic negative feedback](../../research/principle-registry.md#p-006--homeostatic-negative-feedback), [P-007 — prediction-error allocation](../../research/principle-registry.md#p-007--prediction-error-allocation), [P-009 — maintenance plane](../../research/principle-registry.md#p-009--maintenance-plane), [P-010 — structural offloading](../../research/principle-registry.md#p-010--structural-offloading-and-co-design)  
-**Engineering null models:** [engineering analogue audit](../../research/audits/2026-08-05-engineering-analogues.md#p-005--use-dependent-topology)
+**Engineering null models:** [engineering analogue audit](../../research/audits/2026-08-05-engineering-analogues.md#p-005--use-dependent-topology), [chemical and process engineering audit](../../research/audits/2026-08-05-process-engineering.md)
 
 ## Scope and scientific boundary
 
@@ -141,6 +141,78 @@ It is adequate to test routing, structural change, reserve, recurrence, and
 full cost accounting without confounding results with model training. It is
 insufficient to claim improved learning, representation, or inference. Those
 require Stage 2 with real modules and measured hardware energy.
+
+## Process-domain stress track
+
+The logical-network task can hide a structural mistake because bytes can be
+copied or dropped cheaply and a graph edit can be treated as instantaneous.
+Chemical process reconfiguration supplies a stricter complementary track. It
+changes the active unit, stream, and control graph while inventory, stored
+energy, contamination, actuator authority, protection independence, equipment
+condition, reserve, and maintenance state continue to evolve
+([C-501](../../research/claims.md#c-501),
+[C-510](../../research/claims.md#c-510),
+[C-512](../../research/claims.md#c-512)).
+
+```mermaid
+flowchart LR
+    D["Demand, disturbance, and equipment health"] --> S["Versioned sensing and state estimation"]
+    S --> P["Propose unit, stream, or control-graph transition"]
+    P --> G{"Conservation and operability gate"}
+    I["Material inventory + contamination"] --> G
+    E["Stored energy + utilities"] --> G
+    A["Authority + independent protection"] --> G
+    M["Wear + maintenance + reserve"] --> G
+    G -->|"reject"| X["Fixed-graph control or safe state"]
+    G -->|"admit"| C["Shadow · canary · flush · readiness"]
+    C --> T["Bounded flow and authority transfer"]
+    T --> V{"Postcondition + balance closure"}
+    V -->|"pass"| R["New flowsheet version"]
+    V -->|"fail"| B["Isolate · drain · purge · roll back"]
+    B --> V
+```
+
+Editable source:
+[conservation-qualified-reconfiguration.mmd](../../assets/diagrams/conservation-qualified-reconfiguration.mmd).
+
+For component $i$, the transition ledger must close
+
+$$
+\Delta n_i
+= \int_{t_0}^{t_1}
+\left(
+\sum_{j\in\mathcal I}F_jz_{ij}
+-\sum_{j\in\mathcal O}F_jz_{ij}
++V\sum_r\nu_{ir}r_r
+\right)dt + \varepsilon_i,
+$$
+
+where $n_i$ is mol, $F_j$ is mol/s, $z_{ij}$ and $\nu_{ir}$ are
+dimensionless, $V$ is m³, $r_r$ is mol/(m³ s), and $\varepsilon_i$ is the
+declared closure residual in mol. Energy closure uses the same interval and a
+residual in J. A transition is inadmissible when closure uncertainty exceeds a
+preregistered tolerance, any reachable transient leaves the operating or
+protection envelope, ownership is ambiguous, or the rollback path is no longer
+reachable.
+
+The equal-budget comparison is the audit's E-PROC-09 track:
+
+1. fixed installed graph with adaptive flows and tuned MPC/RTO;
+2. fixed graph with ordinary multi-mode supervisory control and planned bypass;
+3. offline reoptimized schedule with executable startup and shutdown sequence;
+4. the held structural policy under identical installed units, reserve,
+   sensors, estimation, controller work, flush material, energy, maintenance,
+   and recovery authority; and
+5. a trace-aware oracle reported only as an unattainable diagnostic ceiling.
+
+Report useful product kg, utility J/kg, off-spec and purge kg, downtime h,
+constraint violations, contamination, transition failures, proof-test and
+maintenance work, and recovery s over paired demand and health traces. Reject
+the process-domain residual if mode selection explains the result, balance
+closure is omitted, graph construction or idle equipment is uncharged, or the
+advantage disappears after one maintenance and one rollback cycle
+([C-516](../../research/claims.md#c-516)). A pass refines H1; it does not create
+a separate principle.
 
 ## Methods
 

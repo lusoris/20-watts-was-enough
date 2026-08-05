@@ -254,6 +254,53 @@ validation work, and wall-clock opportunity. Charge candidate failures and
 discarded births. Otherwise growth buys more search while the null models are
 asked to solve the task in place.
 
+### A topology change carries state
+
+Changing an edge label is not the same as transferring a working system. The
+process-engineering audit makes the missing state visible: an installed path
+may hold inventory, energy, contamination, pending work, actuator authority,
+wear, calibration, maintenance obligations, and shared protection dependencies
+([C-501](../research/claims.md#c-501),
+[C-510](../research/claims.md#c-510)). Two endpoint configurations can both be
+feasible while the path between them is unsafe ([C-512](../research/claims.md#c-512)).
+
+For digital modules, use a typed transition inventory rather than pretending
+that bytes obey material conservation. For state class $k$,
+
+$$
+I_k(t_1)-I_k(t_0)
+= A_k-D_k-X_k+R_k,
+$$
+
+where $I_k$ is bytes present at a named boundary, $A_k$ is admitted bytes,
+$D_k$ is deliberately deleted bytes, $X_k$ is exported bytes, and $R_k$ is
+internally replicated bytes over $[t_0,t_1]$. Each term is bytes and carries a
+provenance, validity, and ownership version. This is an accounting contract,
+not a claim that information is physically conserved
+([C-517](../research/claims.md#c-517)).
+
+```mermaid
+flowchart LR
+    P["Proposed graph version"] --> G{"State, cost, and safety gate"}
+    I["Queued · cached · provisional state"] --> G
+    A["Authority · dependencies · fallback"] --> G
+    G -->|"admit"| T["Shadow and bounded transfer"]
+    G -->|"reject"| K["Keep fixed graph"]
+    T --> V{"Observed postcondition"}
+    V -->|"pass"| N["New active version"]
+    V -->|"fail"| R["Drain and roll back"]
+```
+
+Editable source:
+[conservation-qualified-reconfiguration.mmd](../assets/diagrams/conservation-qualified-reconfiguration.mmd).
+
+[Candidate 001](../experiments/candidates/001-adaptive-topology.md#process-domain-stress-track)
+therefore includes a physical stress track. It must beat fixed-graph adaptive
+control, multi-mode supervisory control, and offline redesign after installed
+reserve, transition state, flushing, downtime, maintenance, and rollback are
+charged. If those nulls tie it, “adaptive topology” describes an implementation
+choice rather than an efficiency mechanism ([C-516](../research/claims.md#c-516)).
+
 ### When the unit of adaptation changes
 
 A cooperating set of modules is not automatically a higher-level unit. The

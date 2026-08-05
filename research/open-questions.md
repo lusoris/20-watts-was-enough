@@ -199,3 +199,9 @@ project choice.
   [005](../experiments/candidates/005-severity-ordered-containment.md),
   [012](../experiments/candidates/012-latency-qualified-authority.md), and
   [014](../experiments/candidates/014-versioned-observation-contract.md).
+- **OQ-045:** Does conservation-qualified flowsheet reconfiguration outperform
+  fixed-graph adaptive flow, multi-mode supervisory control, and offline
+  redesign when installed reserve, material and energy closure, contamination,
+  transition reachability, authority, protection dependencies, maintenance,
+  flushing, downtime, and rollback are charged? See the
+  [Candidate 001 process track](../experiments/candidates/001-adaptive-topology.md#process-domain-stress-track).

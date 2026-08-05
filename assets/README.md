@@ -87,6 +87,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/residual-capacity-contract.mmd` binds load/use history, damage,
   observation support, present and contingency capacity, redistributed demand,
   degraded service, intervention, verification, and next-event reserve.
+- `diagrams/conservation-qualified-reconfiguration.mmd` carries inventory,
+  energy, contamination, authority, protection, maintenance, and reserve state
+  through a gated topology transition and rollback.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

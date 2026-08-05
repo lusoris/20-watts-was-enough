@@ -7377,3 +7377,269 @@ describes the exact statement here, not a broader interpretation.
 - **Used by:** [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
   [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
   [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-501
+
+- **Statement:** Component and energy balances constrain startup, shutdown,
+  fault accommodation, and structural reconfiguration as well as nominal
+  process operation.
+- **Status:** established.
+- **Primary sources:** `aris1958`, `downs1993`.
+- **Rationale:** Changing the active graph does not erase material already in
+  vessels and pipes or energy stored in the process boundary.
+- **Open issue:** Closure quality depends on the declared boundary, sensor
+  calibration, unmeasured loss, and uncertainty.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  [Candidate 001](../experiments/candidates/001-adaptive-topology.md).
+
+### C-502
+
+- **Statement:** Ordinary nonlinear reaction and heat-transfer dynamics can
+  produce multiple steady states and loss of stable operation.
+- **Status:** established.
+- **Primary source:** `aris1958`.
+- **Rationale:** Regime multiplicity is a physical control problem before it is
+  evidence for an adaptive architecture.
+- **Open issue:** Existence and accessibility of regimes are reactor- and
+  parameter-specific.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  Candidates [003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [005](../experiments/candidates/005-severity-ordered-containment.md), and
+  [012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-503
+
+- **Statement:** Recycle can create long dynamic memory, while the process-
+  control “snowball effect” is a separate steady-state amplification of recycle
+  flow and capacity demand under particular control structures.
+- **Status:** established.
+- **Primary sources:** `luyben1993`, `luyben1994`.
+- **Rationale:** Residence, recirculation, and control pairing create different
+  mechanisms and must not be collapsed into generic instability.
+- **Open issue:** The dominant delay and amplification depend on inventory,
+  purge, separation, controller placement, and operating point.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  Candidates [003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-504
+
+- **Statement:** Separation performance trades equipment stages or area,
+  driving force, energy, purity, recovery, inventory, and dynamics.
+- **Status:** established.
+- **Primary sources:** `fenske1932`, `gilliland1940`, `skogestad1997`.
+- **Rationale:** Conversion, yield, selectivity, purity, and recovery are not
+  interchangeable objectives.
+- **Open issue:** The relevant frontier depends on mixture, specification,
+  equipment, pressure, and operating policy.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  Candidates [001](../experiments/candidates/001-adaptive-topology.md),
+  [013](../experiments/candidates/013-deficit-capability-routing.md), and
+  [018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-505
+
+- **Statement:** Pinch analysis identifies heat-recovery targets only for the
+  declared streams, phase assumptions, utilities, and minimum temperature
+  approach.
+- **Status:** established.
+- **Primary source:** `linnhoff1983`.
+- **Rationale:** A heat-recovery target is not a complete lifecycle energy or
+  controllability claim.
+- **Open issue:** Startup, turndown, fouling, bypass, maintenance, and utility
+  system boundaries can change the realized benefit.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  [energy model](../concept/80-energy-model.md).
+
+### C-506
+
+- **Statement:** Tighter heat integration can reduce steady utility demand yet
+  worsen controllability, operating flexibility, startup, or maintenance.
+- **Status:** plausible.
+- **Primary sources:** `linnhoff1983`, `engell2007`.
+- **Rationale:** Reused heat also couples units and removes independent thermal
+  degrees of freedom.
+- **Open issue:** Direction and magnitude are flowsheet-, disturbance-, and
+  lifecycle-specific and require dynamic comparison.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  [Candidate 001](../experiments/candidates/001-adaptive-topology.md).
+
+### C-507
+
+- **Statement:** Model-predictive control already performs repeated constrained
+  prediction and multivariable optimization over process dynamics.
+- **Status:** established.
+- **Primary source:** `qin2003`.
+- **Rationale:** Prediction, receding-horizon choice, and constraint handling do
+  not by themselves distinguish a proposed adaptive system.
+- **Open issue:** Model error, estimator delay, solver deadlines, and changing
+  structure determine whether the null remains adequate.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  Candidates [002](../experiments/candidates/002-multiscale-context-broadcast.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-508
+
+- **Statement:** Process fault management separates detection, isolation,
+  identification, and accommodation; a large residual is not a causal
+  diagnosis.
+- **Status:** established.
+- **Primary sources:** `venkatasubramanian2003a`,
+  `venkatasubramanian2003b`, `venkatasubramanian2003c`.
+- **Rationale:** Each stage requires different evidence and supports different
+  authority.
+- **Open issue:** Multiple faults, policy-induced observation shift, and model
+  misspecification can make origins non-identifiable.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  Candidates [005](../experiments/candidates/005-severity-ordered-containment.md),
+  [007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-509
+
+- **Statement:** Statistical process monitors depend on calibrated reference
+  behavior and can misclassify ordinary mode or policy shifts as faults.
+- **Status:** established.
+- **Primary source:** `macgregor1995`.
+- **Rationale:** A residual inherits the observation model, operating regime,
+  preprocessing, and training support that produced it.
+- **Open issue:** Online adaptation can hide faults as readily as it can reduce
+  false alarms.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  Candidates [007](../experiments/candidates/007-endogenous-observation-surveillance.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-510
+
+- **Statement:** Safety-instrumented-function credibility depends on a managed
+  lifecycle and on actual independence from ordinary control and common-cause
+  dependencies.
+- **Status:** established.
+- **Primary sources:** `iec61511`, `hsefunctional`, `hsebuncefield`.
+- **Rationale:** Shared sensors, logic, power, networks, final elements, or
+  maintenance can defeat a nominally separate protection layer.
+- **Open issue:** Independence and proof-test coverage must be demonstrated for
+  the deployed version, not inferred from a diagram.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [010](../experiments/candidates/010-reset-coupled-staged-verification.md), and
+  [012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-511
+
+- **Statement:** HAZOP is a systematic hazard-discovery procedure, not proof of
+  completeness or a quantitative risk estimate.
+- **Status:** established.
+- **Primary source:** `lawley1974`.
+- **Rationale:** Guideword review can expose deviations without enumerating all
+  causal paths or their probabilities.
+- **Open issue:** Coverage depends on boundaries, team knowledge, documentation,
+  follow-through, and later change.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [011](../experiments/candidates/011-dual-loop-operational-assurance.md), and
+  [020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-512
+
+- **Statement:** Steady-state flexibility over a disturbance set does not
+  establish dynamic reachability or safe transition between feasible states.
+- **Status:** established.
+- **Primary source:** `swaney1985`.
+- **Rationale:** Transient inventory, rate limits, delays, path constraints, and
+  protection actions can make two feasible endpoints unsafe to connect.
+- **Open issue:** A transition certificate needs a time-resolved model and
+  uncertainty boundary.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  Candidates [001](../experiments/candidates/001-adaptive-topology.md),
+  [003](../experiments/candidates/003-recovery-dynamics-fragility.md), and
+  [012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-513
+
+- **Statement:** Plantwide control already separates interacting regulatory,
+  supervisory, optimization, and scheduling decisions across timescales.
+- **Status:** established.
+- **Primary sources:** `morari1980`, `skogestad2000`, `downs1993`.
+- **Rationale:** A hierarchy of fast local loops and slower coordination is a
+  mature engineering null.
+- **Open issue:** Cross-layer model, authority, and objective inconsistency can
+  still cause failures during structural change.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  Candidates [002](../experiments/candidates/002-multiscale-context-broadcast.md),
+  [013](../experiments/candidates/013-deficit-capability-routing.md), and
+  [020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-514
+
+- **Statement:** In process control, self-optimizing control means selecting
+  controlled variables whose constant setpoints incur acceptable economic loss
+  across specified disturbances.
+- **Status:** established.
+- **Primary sources:** `skogestad2000`, `halvorsen2003`.
+- **Rationale:** The term does not mean that the system rewrites its own
+  architecture online.
+- **Open issue:** Candidate controlled variables and disturbance sets still
+  require explicit selection and validation.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md).
+
+### C-515
+
+- **Statement:** Real-time optimization, modifier adaptation, and economic MPC
+  already update economic operation online under model mismatch.
+- **Status:** established.
+- **Primary sources:** `marchetti2009`, `ellis2014`.
+- **Rationale:** Online objective adaptation and constraint-aware control are
+  strong nulls for claims of continual operational optimization.
+- **Open issue:** Convergence, excitation, model validity, and interaction with
+  safety layers remain system-specific.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  Candidates [007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [008](../experiments/candidates/008-contestable-modular-allocation.md), and
+  [013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-516
+
+- **Statement:** Conservation-qualified flowsheet reconfiguration may provide
+  a stronger test of structural adaptation than cost-free digital rewiring.
+- **Status:** plausible.
+- **Primary sources:** no direct comparative validation; constituent constraints
+  are established by [C-501](#c-501), [C-506](#c-506), [C-510](#c-510), and
+  [C-512](#c-512).
+- **Rationale:** The active unit, stream, and control graph must change while
+  material, energy, contamination, authority, wear, maintenance, and reserve
+  state remain accounted for.
+- **Open issue:** It collapses into ordinary multi-mode supervisory control if
+  a complete fixed installation with mode selection matches it at equal cost.
+- **Used by:** [Candidate 001](../experiments/candidates/001-adaptive-topology.md).
+
+### C-517
+
+- **Statement:** Treating queued, cached, provisional, and optimizer state as
+  explicitly accumulated inventory may improve digital lifecycle accounting.
+- **Status:** speculative.
+- **Primary sources:** no direct validation; process conservation motivates the
+  analogy but digital state is not materially conserved.
+- **Rationale:** An inventory ledger forces bytes, provenance, retention,
+  duplication, invalidation, purge, and recovery work into the boundary.
+- **Open issue:** It must predict a failure or efficiency ranking beyond
+  ordinary storage, queueing, lineage, and garbage-collection accounting.
+- **Used by:** [process-engineering audit](audits/2026-08-05-process-engineering.md),
+  Candidates [017](../experiments/candidates/017-contract-preserving-semantic-compaction.md)
+  and [018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-518
+
+- **Statement:** Every abstract process-engineering pattern audited here has a
+  mature control, optimization, diagnosis, safety, or design null; only a
+  conservation-qualified Candidate-001 stress track remains unresolved.
+- **Status:** plausible.
+- **Primary source:** [process-engineering audit](audits/2026-08-05-process-engineering.md).
+- **Rationale:** The audit found no distinct state transition after separating
+  graph structure, controller structure, tuning, operation, and lifecycle.
+- **Open issue:** The breadth conclusion is provisional and can change with new
+  primary evidence or a decisive equal-budget experiment.
+- **Used by:** [principle registry](principle-registry.md),
+  [research roadmap](../concept/90-research-roadmap.md).

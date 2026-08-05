@@ -1,0 +1,19 @@
+flowchart LR
+    D["Demand, disturbance, and equipment health"] --> S["Versioned sensing and state estimation"]
+    S --> P["Propose unit, stream, or control-graph transition"]
+    P --> G{"Conservation and operability gate"}
+
+    I["Material inventory<br/>amount · composition · contamination"] --> G
+    E["Energy and utilities<br/>stored energy · heat · work · cooling"] --> G
+    A["Authority and protection<br/>owner · interlock · SIS independence"] --> G
+    M["Lifecycle state<br/>wear · proof test · maintenance · reserve"] --> G
+
+    G -->|"infeasible"| X["Reject or use fixed-graph control"]
+    G -->|"feasible"| C["Shadow, canary, flush, and readiness checks"]
+    C --> T["Bounded transfer of flow and authority"]
+    T --> V{"Postcondition and balance closure"}
+    V -->|"pass"| R["Admit new active flowsheet version"]
+    V -->|"fail"| B["Isolate, drain, purge, and roll back"]
+    B --> V
+    R --> O["Measure product, waste, utility, downtime, harm, and recovery"]
+    O --> S
