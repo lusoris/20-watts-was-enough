@@ -68,6 +68,10 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/audited-cumulative-inheritance.mmd` keeps generation, transmission,
   newcomer reconstruction, evaluation, external lineage, governance, turnover,
   invalidation, and retirement separate for Candidate 019.
+- `diagrams/constitutional-control-plane.mmd` separates authorized invariants,
+  scoped local action, spillover escalation, typed veto and appeal, ordinary
+  rule repair, expiring emergency authority, compatibility, and rollback for
+  Candidate 020.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

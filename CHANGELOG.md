@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A social-choice and institutional-governance audit separating formal,
+  empirical, and normative claims across aggregation, strategy, delegation,
+  polycentricity, veto, agenda, capture, amendment, participation, and lock-in.
+- Twenty-eight scoped governance claims (`C-368`–`C-395`), twenty-five new
+  centralized sources, Candidate 020, and an editable multi-level authority
+  lifecycle diagram with applicability, null, cost, and retirement gates.
 - A cultural-evolution and archaeological-inference audit separating
   generation, transmission, evaluation, retention, governance, model access,
   path dependence, and transformed material evidence.

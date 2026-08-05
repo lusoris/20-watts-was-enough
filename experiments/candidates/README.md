@@ -21,6 +21,7 @@
 | 017 | [Contract-preserving semantic compaction](017-contract-preserving-semantic-compaction.md) | Can histories shrink while declared query, evidence, uncertainty, rollback, and invalidation contracts survive hidden future tests beyond ordinary storage views and archives? |
 | 018 | [Value- and reconstructability-aware tiering](018-value-reconstructability-aware-tiering.md) | Do task/evidence value and reconstructability improve artifact placement beyond access, size, miss cost, hardware economics, and fault-domain-aware storage? |
 | 019 | [Audited cumulative inheritance](019-audited-cumulative-inheritance.md) | Can populations retain and recombine validated capability across turnover beyond a centralized learner with ordinary versioning, retrieval, search, workflow, and governance at equal cumulative effort? |
+| 020 | [Constitutionalized multi-level control plane](020-constitutional-control-plane.md) | When persistent actors have real private information, incentives, or authorized standing, can scoped authority, typed veto, delegation, contestability, and rule repair beat ordinary systems governance? |
 
 These are pre-implementation contracts, not evidence that a candidate works.
 Passing a simulator stage permits a higher-fidelity test; it does not promote a

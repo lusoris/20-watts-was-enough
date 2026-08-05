@@ -81,6 +81,65 @@ controller can request deeper computation but cannot conceal the resulting
 traffic from the energy ledger. Adaptation can propose; only maintenance can
 promote a change into protected state.
 
+### Governance is activated by a real authority problem
+
+Aggregation rules, delegation, vetoes, constitutions, and participation are
+not useful decorations for ordinary routing. They enter the architecture only
+when persistent actors have decision-relevant private information, can benefit
+from misleading reports, create spillovers across authority boundaries, hold
+externally authorized protected standing, or must repair higher-order rules
+without exposing them to ordinary updates.
+
+When that applicability gate passes, the control plane records more than a
+winning action:
+
+1. the authorized objective and non-tradable invariants;
+2. the actor's identity, scope, evidence, dependencies, and conflicts;
+3. the proposal set, order, fallback, and omitted-alternative coverage;
+4. every delegation edge, concentration measure, revocation, and cycle;
+5. a veto's protected scope, severity, evidence, deadline, appeal, override,
+   and expiry;
+6. the decision and affected local and external interests; and
+7. the rule version, amendment path, emergency authority, checked handoff,
+   compatibility result, and rollback target.
+
+```mermaid
+flowchart TB
+    O["Authorized objectives · protected invariants"] --> L["Scoped local authority"]
+    L --> D["Decision + evidence + affected scope"]
+    D --> G{"Within authority and risk envelope?"}
+    G -->|"yes"| X["Execute · observe · record"]
+    G -->|"spillover / conflict"| E["Escalate to overlapping review center"]
+    E --> V["Typed veto · appeal · deadline · override"]
+    V --> X
+    X --> A["Versioned outcome and decision lineage"]
+    A --> R{"Rule repair required?"}
+    R -->|"no"| L
+    R -->|"ordinary"| C["Propose · test · ratify · stage"]
+    R -->|"emergency"| M["Scoped temporary authority + expiry"]
+    C --> H["Compatibility · rollback · scheduled review"]
+    M --> H
+    H --> O
+```
+
+Editable source:
+[constitutional-control-plane.mmd](../assets/diagrams/constitutional-control-plane.mmd).
+
+The formal and empirical boundaries in
+[C-368](../research/claims.md#c-368)–[C-395](../research/claims.md#c-395)
+forbid several shortcuts: an impossibility theorem does not select a moral
+objective; stability is not quality; participation is not legitimacy;
+popular or expert influence is not automatically capture; and an amendment
+count is not repair. Normative standing and non-tradable harms remain explicit
+authorized inputs.
+
+[Candidate 020](../experiments/candidates/020-constitutional-control-plane.md)
+therefore has a deliberately hostile null: constrained optimization, typed
+IAM and interlocks, policy-as-code, independent evaluation, separation of
+duties, append-only lineage, runtime assurance, and mature incident/change
+management. If those match the result—or if every module shares one loss and
+directly verifiable state—the institutional composition is removed.
+
 ### State ownership
 
 | State | Owner | Normal write path | Normal readers |
@@ -357,6 +416,7 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
 | Endogenous generation and exploration | C-061–C-066 | constituent observations; integrated curriculum speculative |
 | Communication and convention lifecycle | C-268–C-281 | constituent mechanisms established or scoped; versioned repairable composition speculative |
 | Cumulative inheritance across turnover | C-343–C-367 | bounded constituents established or scoped; population advantage unvalidated |
+| Institutional authority and rule repair | C-368–C-395 | formal constraints and bounded evidence; multi-level composition speculative |
 | Complete integrated system | none | unvalidated project synthesis |
 
 ## Speculative extensions
@@ -390,6 +450,9 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
 - A population receives credit for cumulative learning when it only performs
   more parallel search, preserves a headline score while losing rare skills,
   or copies one correlated lineage through every nominally independent agent.
+- Governance vocabulary hides an ordinary optimizer, or veto, delegation,
+  amendment, and participation add gridlock, capture, concentration, churn, or
+  oversight cost without improving task-native or protected outcomes.
 - The architecture accumulates mechanisms faster than experiments can reject
   them.
 
@@ -410,6 +473,9 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
 7. Audited turnover retains and recombines more protected capability than a
    centralized continual learner at equal cumulative learning, coordination,
    storage, migration, and energy cost—or the population mechanism is retired.
-8. The integrated system occupies a better quality–risk–latency–energy frontier
+8. Multi-level authority improves an applicable task-native or protected-harm
+   frontier beyond the complete ordinary governance stack after gridlock,
+   capture, concentration, human attention, and lifecycle cost—or it is merged.
+9. The integrated system occupies a better quality–risk–latency–energy frontier
    than every component ablation and the strongest ordinary controller,
    scheduler, cache, and router baselines.

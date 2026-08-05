@@ -154,3 +154,10 @@ project choice.
   transmission, interpretation, evaluation, coordination, compatibility,
   migration, and failure costs are charged? See
   [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+- **OQ-039:** When persistent actors have real asymmetric information,
+  incentives, spillovers, or externally authorized standing, does scoped
+  multi-level authority with typed veto, revocable delegation, contestable
+  agenda, and versioned rule repair beat constrained optimization, IAM,
+  policy-as-code, independent evaluation, lineage, and mature incident/change
+  management at equal total cost? See
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).

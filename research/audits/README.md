@@ -31,6 +31,7 @@ failed deduplications that would be lost in the shorter claim ledger.
 | 2026-08-05 | [Pathology and rehabilitation](2026-08-05-pathology-rehabilitation.md) | local selection, hidden recurrence, layered tolerance, capacity–load failure, propagation, compensation, dose/timing, reserve, and adverse adaptation refine existing mechanisms; compensation-aware recovery remains an evaluation method |
 | 2026-08-05 | [Databases and storage systems](2026-08-05-databases-storage.md) | transaction, ordering, replication, access, cache, compaction, reclamation, replay, temporal, repair, and placement contracts become mandatory memory nulls; Candidates 017 and 018 test semantic compaction and value-aware tiering |
 | 2026-08-05 | [Cultural evolution and archaeological inference](2026-08-05-cultural-evolution-archaeology.md) | separates generation, transmission, evaluation, retention, governance, accessible model diversity, path dependence, and transformed material evidence; Candidate 019 tests cumulative inheritance across turnover |
+| 2026-08-05 | [Social choice and institutional governance](2026-08-05-social-choice-institutions.md) | formal aggregation limits, strategy, delegation, polycentricity, veto, agenda, capture, amendment, participation, and path dependence refine governance contracts; Candidate 020 tests the residual composition |
 
 An audit does not itself promote a principle. Major observations receive stable
 `C-` claims, candidate mechanisms are deduplicated against the

@@ -5615,3 +5615,383 @@ describes the exact statement here, not a broader interpretation.
   transmission, evaluation, governance, and cumulative budget advantages.
 - **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
   [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-368
+
+- **Statement:** For unrestricted ordinal profiles over at least three
+  alternatives, Arrow's stated aggregation guarantees cannot all coexist.
+- **Status:** established.
+- **Primary source:** `arrow1950difficulty`.
+- **Rationale:** This is a formal impossibility under explicit axioms and a
+  complete, transitive collective ordering.
+- **Open issue:** Restricted domains, cardinal information, randomization,
+  incompleteness, or relaxed axioms change the result.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-369
+
+- **Statement:** Simple majority is characterized on a binary choice domain by
+  May's symmetry, neutrality, and responsiveness conditions.
+- **Status:** established.
+- **Primary source:** `may1952set`.
+- **Rationale:** The formal result identifies majority under its stated binary
+  decision setting.
+- **Open issue:** It does not extend to aggregation over three or more
+  alternatives.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md).
+
+### C-370
+
+- **Statement:** Deterministic unrestricted single-winner choice over at least
+  three outcomes cannot combine the stated non-dictatorship, onto/unanimity,
+  and dominant-strategy truthfulness conditions.
+- **Status:** established.
+- **Primary sources:** `gibbard1973manipulation`,
+  `satterthwaite1975strategy`.
+- **Rationale:** The linked formal results establish existential
+  manipulability under their domains.
+- **Open issue:** They do not show that manipulation is ubiquitous, cheap, or
+  successful under a particular information structure.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-371
+
+- **Statement:** Minimal individual decisiveness can conflict with weak Pareto
+  under unrestricted preferences.
+- **Status:** established.
+- **Primary source:** `sen1970impossibility`.
+- **Rationale:** Sen gives a formal conflict under a specific rights and
+  preference construction.
+- **Open issue:** The theorem neither selects rights nor establishes that every
+  rights system conflicts with collective welfare.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md).
+
+### C-372
+
+- **Statement:** Delegable proxy-choice systems can create cycles, abstention,
+  inconsistency, and concentrated decision weight.
+- **Status:** established.
+- **Primary source:** `christoff2017binary`.
+- **Rationale:** These behaviors arise in explicit formal liquid-democracy
+  models.
+- **Open issue:** Their empirical frequency and consequence depend on domain,
+  identity, resolution, and revocation rules.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-373
+
+- **Statement:** Competence-directed local delegation is not guaranteed to
+  beat direct choice even in a binary truth-tracking model.
+- **Status:** established.
+- **Primary source:** `kahng2018liquid`.
+- **Rationale:** The formal analysis identifies conditions and counterexamples
+  rather than a monotonic delegation benefit.
+- **Open issue:** Truth tracking is not preference aggregation, protected
+  standing, or legitimacy.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-374
+
+- **Statement:** Polycentric governance denotes multiple interacting decision
+  centers; it implies neither automatic fragmentation nor automatic efficiency.
+- **Status:** established.
+- **Primary source:** `ostrom1961organization`.
+- **Rationale:** Performance depends on information locality, spillovers,
+  scale, coordination, and capture.
+- **Open issue:** An AI translation needs overlapping real authority, not
+  ordinary sharding under one complete controller.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-375
+
+- **Statement:** Bolivia's decentralization reform was associated with public
+  investment becoming more responsive to measured local need in the studied
+  setting.
+- **Status:** plausible.
+- **Primary source:** `faguet2004decentralization`.
+- **Rationale:** The study provides context-bounded empirical evidence around a
+  major institutional reform.
+- **Open issue:** The estimate is not a general decentralization effect and may
+  not transfer across capacities, spillovers, or capture conditions.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md).
+
+### C-376
+
+- **Statement:** In veto-player models, adding veto players or increasing their
+  preference distance can shrink the policy winset and increase stability.
+- **Status:** established.
+- **Primary source:** `tsebelis1995decision`.
+- **Rationale:** This is a formal comparative-statics result under the model.
+- **Open issue:** Stability is not welfare, protection, competence, or repair.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-377
+
+- **Statement:** Randomly mandated representation changed public-goods
+  allocation toward represented groups' expressed priorities in studied Indian
+  institutions.
+- **Status:** established.
+- **Primary sources:** `chattopadhyay2004women`, `pande2003mandated`.
+- **Rationale:** Reservation rules provide context-bounded quasi-experimental
+  variation in representation.
+- **Open issue:** The studies do not determine which protected standing or
+  representation rule is normatively authorized elsewhere.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-378
+
+- **Statement:** Public-goods contribution varies with return, repetition,
+  information, communication, monitoring, sanctions, identity, and group
+  design.
+- **Status:** established.
+- **Primary sources:** `andreoni1988free`, `isaac1994group`,
+  `ostrom1992covenants`.
+- **Rationale:** Controlled experiments show strong design dependence rather
+  than a universal cooperation constant.
+- **Open issue:** Laboratory payoffs do not establish moral obligation or
+  population-level transfer.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-379
+
+- **Statement:** Larger groups need not provide public goods less efficiently
+  under every voluntary-contribution treatment.
+- **Status:** established.
+- **Primary source:** `isaac1994group`.
+- **Rationale:** Experimental counterexamples reject a universal negative group-
+  size law.
+- **Open issue:** Marginal return, endowment, information, identity, and
+  repetition remain treatment variables.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md).
+
+### C-380
+
+- **Statement:** Multidimensional majority choice can be agenda-sensitive and
+  unstable under McKelvey's stated conditions.
+- **Status:** established.
+- **Primary source:** `mckelvey1976intransitivities`.
+- **Rationale:** The formal spatial model permits broad reachability through
+  proposal sequences under generic conditions.
+- **Open issue:** Finite menus, restricted domains, deadlines, and institutional
+  rules can sharply limit the result.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-381
+
+- **Statement:** A proposal setter can exploit the reversion or status quo in
+  the Romer–Rosenthal model.
+- **Status:** established.
+- **Primary source:** `romer1978political`.
+- **Rationale:** The formal setter chooses an acceptable proposal relative to a
+  fixed fallback.
+- **Open issue:** The effect depends on proposal rights, preferences, acceptance
+  rule, and reversion state.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-382
+
+- **Statement:** Studied lobbying data contain separable signals of issue
+  expertise and political connection, with a monetary premium for connection in
+  that setting.
+- **Status:** plausible.
+- **Primary source:** `bertrand2014whom`.
+- **Rationale:** The observational design distinguishes measured expertise and
+  connection channels.
+- **Open issue:** Contact, access, and favorable outcomes do not by themselves
+  establish capture or objective divergence.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md).
+
+### C-383
+
+- **Statement:** Regulatory-capture theories predict that organized interests
+  can shape regulation, but their model structure is not direct empirical proof
+  of capture.
+- **Status:** plausible.
+- **Primary sources:** `stigler1971theory`, `peltzman1976general`.
+- **Rationale:** The theories specify incentives and political-market
+  constraints; a case claim still needs purpose, divergence, mechanism, and a
+  credible counterfactual.
+- **Open issue:** Expertise, dependence, connection, and capture must be
+  separately observable.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-384
+
+- **Statement:** Formal amendment difficulty and constitutional length were
+  associated with amendment rate in Lutz's comparative samples.
+- **Status:** plausible.
+- **Primary source:** `lutz1994amendment`.
+- **Rationale:** The result is comparative observational evidence, not an
+  intervention on rule repair.
+- **Open issue:** Amendment frequency is not quality, legitimacy, adaptability,
+  or rights protection.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-385
+
+- **Statement:** Prior amendment practice may explain amendment-rate variation
+  beyond formal rules, but the proposed “amendment culture” measure can be
+  endogenous or circular.
+- **Status:** disputed.
+- **Primary source:** `ginsburg2015amendment`.
+- **Rationale:** The comparative result challenges rule-only measurement while
+  relying partly on prior amendment behavior.
+- **Open issue:** Prospective interventions must separate demand, informal
+  change, courts, replacement, and inherited practice.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md).
+
+### C-386
+
+- **Statement:** Direct plebiscites increased knowledge, satisfaction,
+  perceived benefit, and reported willingness to contribute in the studied
+  49-village experiment, with smaller policy-choice effects.
+- **Status:** established.
+- **Primary source:** `olken2010direct`.
+- **Rationale:** The randomized field design supports bounded treatment effects
+  on the measured outcomes.
+- **Open issue:** Self-report is not actual contribution, normative legitimacy,
+  or external validity.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-387
+
+- **Statement:** Structured deliberation can change participant knowledge and
+  opinions in a recruited probability sample.
+- **Status:** plausible.
+- **Primary source:** `luskin2002considered`.
+- **Rationale:** The study supplies context-bounded evidence under briefing,
+  facilitation, and group interaction.
+- **Open issue:** Selection, attrition, facilitation, influence inequality, and
+  person-time cost can alter outcomes.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-388
+
+- **Statement:** Perceived legitimacy, normative legitimacy, participation,
+  knowledge, compliance, and decision quality are distinct constructs.
+- **Status:** established.
+- **Primary sources:** `olken2010direct`, `luskin2002considered`.
+- **Rationale:** Each construct has a different definition, measurement, and
+  causal relation to a procedure.
+- **Open issue:** None is a validated universal proxy for the others.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-389
+
+- **Statement:** Increasing returns can make institutional timing and sequence
+  consequential when a named reinforcement mechanism changes later reachable
+  states or switching costs.
+- **Status:** plausible.
+- **Primary source:** `pierson2000increasing`.
+- **Rationale:** The mechanism family explains sequence dependence without
+  reducing it to persistence.
+- **Open issue:** A claim needs an alternative path, reversal condition, and
+  evidence that matched final-state controls do not erase the effect.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-390
+
+- **Statement:** Dell estimates persistent contemporary effects near the
+  historical mita boundary and traces candidate land and public-goods channels.
+- **Status:** established.
+- **Primary source:** `dell2010mita`.
+- **Rationale:** The regression-discontinuity design supplies context-bounded
+  quasi-experimental evidence.
+- **Open issue:** Validity depends on boundary assumptions, measured channels,
+  and the studied historical-geographic setting.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md).
+
+### C-391
+
+- **Statement:** Early AI routing, evaluation, protocol, or authority choices
+  can create self-reinforcing concentration.
+- **Status:** speculative.
+- **Primary sources:** none sufficient; mechanism analogues are bounded by
+  `pierson2000increasing` and `dell2010mita`.
+- **Rationale:** Exposure, data, compatibility, and switching-cost feedback can
+  in principle change later alternatives.
+- **Open issue:** Randomized order, matched final conditions, and reinforcement
+  ablations must distinguish path dependence from warm starts.
+- **Used by:** [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-392
+
+- **Statement:** Typed, revocable, logged delegation may improve use of private
+  topic-specific competence.
+- **Status:** speculative.
+- **Primary sources:** no direct AI validation; formal boundaries are in
+  `christoff2017binary` and `kahng2018liquid`.
+- **Rationale:** Delegation can expose local expertise while revocation and caps
+  constrain cycles, concentration, and compromise.
+- **Open issue:** It must beat calibrated competence routing under correlated
+  errors, identity attacks, and equal cost.
+- **Used by:** [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-393
+
+- **Statement:** Evidence-scoped vetoes with appeal, deadline, override, and
+  expiry may reduce rare protected-interest harm without prohibitive gridlock.
+- **Status:** speculative.
+- **Primary sources:** no direct AI validation; formal and empirical boundaries
+  are in `tsebelis1995decision`, `chattopadhyay2004women`, and
+  `pande2003mandated`.
+- **Rationale:** Typed blocking authority may preserve a protected constraint
+  while making delay and status-quo harm observable.
+- **Open issue:** Hard constraints and independent review are mandatory nulls.
+- **Used by:** [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-394
+
+- **Statement:** A versioned constitutional lifecycle may improve the
+  stability–repair frontier under drift, opportunistic rule change, and urgent
+  hazards.
+- **Status:** speculative.
+- **Primary sources:** no direct AI validation; observational boundaries are in
+  `lutz1994amendment` and `ginsburg2015amendment`.
+- **Rationale:** Ordinary update, higher-order amendment, temporary emergency
+  authority, rollback, and retirement become different transitions.
+- **Open issue:** The lifecycle must beat policy-as-code, change management,
+  runtime assurance, and incident governance at equal cost.
+- **Used by:** [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-395
+
+- **Statement:** A constitutionalized multi-level control plane may resist
+  agenda, capture, spillover, protected-interest, and rule-lock-in failures
+  better than ordinary systems governance only when persistent actors have
+  relevant asymmetric information, incentives, or authorized standing.
+- **Status:** speculative.
+- **Primary sources:** no direct AI validation; constituent boundaries are
+  [C-368](#c-368)–[C-394](#c-394).
+- **Rationale:** The candidate composes scoped authority, escalation, typed veto,
+  revocable delegation, lineage, rule repair, and expiring emergency power.
+- **Open issue:** Candidate 020 must beat constrained optimization, IAM,
+  interlocks, policy-as-code, independent evaluation, append-only lineage, and
+  mature incident/change management in two independent task families.
+- **Used by:** [social-choice audit](audits/2026-08-05-social-choice-institutions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
