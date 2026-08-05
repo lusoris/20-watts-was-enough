@@ -49,6 +49,11 @@ may have encountered the same constraint repeatedly. It does not prove that the
 domains evolved independently, that their mechanisms are identical, or that
 the abstraction will improve AI. That is tested, not assumed.
 
+Discovery is deliberately broader than biology. The
+[open-world discovery policy](discovery-policy.md) admits every empirical,
+formal, and engineering science, then applies the same normalization and
+evidence gates to each.
+
 ## Registry summary
 
 | ID | Recurring problem–solution invariant | Supporting domains in current corpus | Disposition |
@@ -66,6 +71,18 @@ the abstraction will improve AI. That is tested, not assumed.
 | P-011 | Form transient coalitions through time-dependent communication | cortical phase coupling, scheduled fabrics, future quorum audit | watch |
 | P-012 | Match memory medium and update rate to information lifetime | fast/slow memory, immune memory, plant priming, external factual stores | use/experiment |
 | P-013 | Coordinate through shared state left in the environment | ant trails, blackboards, logs, external workspaces | experiment |
+
+## Candidates held outside the registry
+
+These mechanisms survived one audit but do not yet have enough cross-domain or
+experimental discrimination to receive a stable `P-` ID.
+
+| Candidate | Nearest bundles | Why held | Discriminating work |
+| --- | --- | --- | --- |
+| Multiscale context broadcast | P-001, P-006, P-008, P-011 | few-to-many temporal decoding appears distinct, but may reduce to FiLM, recurrent gating, or supervisory control | [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md) |
+| Thresholded collective commitment | P-006, P-011 | nonlinear support/opposition/abstention may reduce to robust aggregation or calibrated confidence | quorum comparison defined in the [collective audit](audits/2026-08-05-collective-ecological-resilience.md) |
+| Recovery-based fragility sensing | adjacent to P-006 and P-009 | diagnostic rather than stabilizing loop; may reduce to conventional active system identification | [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md) |
+| Closed endogenous curriculum | P-003, P-004, P-007, P-009, P-012 | currently a composition of existing bundles, not a new invariant | generation–intervention test in the [creativity audit](audits/2026-08-05-endogenous-generation-creativity.md) |
 
 ## P-001 — Selective allocation
 
@@ -119,7 +136,9 @@ response; promote it only after a later signal or recurrence.
 **Manifestations.** Synaptic eligibility traces gated by later modulation
 ([C-019](claims.md#c-019)); transcriptional stress memory in plants
 ([C-026](claims.md#c-026)); episodic capture before consolidation
-([C-008](claims.md#c-008)); caches and write-ahead logs in computing.
+([C-008](claims.md#c-008)); retrieval-sensitive memory windows
+([C-039](claims.md#c-039)); internally generated learned sequences
+([C-061](claims.md#c-061)); caches and write-ahead logs in computing.
 
 **Candidate AI primitive.** Versioned local context marks with explicit decay,
 promotion, rollback, and provenance.
@@ -141,7 +160,10 @@ hypothesis; lottery-ticket pruning ([C-012](claims.md#c-012)); immune affinity
 maturation with reduced mutation in high-affinity lineages
 ([C-028](claims.md#c-028)); developmental/evolutionary search in embodied agents
 ([C-029](claims.md#c-029)); evolved bacterial bet hedging
-([C-032](claims.md#c-032)).
+([C-032](claims.md#c-032)); complement-dependent developmental refinement
+([C-043](claims.md#c-043)); capability-guided assembly and its redundancy
+boundary ([C-056](claims.md#c-056), [C-057](claims.md#c-057)); regulated
+behavioral variability ([C-065](claims.md#c-065)).
 
 **Candidate AI primitive.** Sandboxed adapter or expert populations with
 validation gates, lineage tracking, contraction, and rollback.
@@ -161,8 +183,9 @@ preserve enough exploration or redundancy to recover from change.
 **Manifestations.** Activity-dependent astrocytic synapse elimination
 ([C-021](claims.md#c-021)); flow-adaptive *Physarum* transport
 ([C-027](claims.md#c-027)); self-regulating fungal growth networks
-([C-034](claims.md#c-034)); synaptic plasticity; dynamic expert and network
-routing.
+([C-034](claims.md#c-034)); developmental and memory-related microglial
+elimination ([C-042](claims.md#c-042), [C-043](claims.md#c-043)); synaptic
+plasticity; dynamic expert and network routing.
 
 **Candidate AI primitive.** Reversible capacity updates on an expert graph,
 driven by useful flow rather than magnitude alone.
@@ -204,7 +227,8 @@ additional action or computation where residual uncertainty remains.
 ([C-005](claims.md#c-005)); joint-embedding prediction
 ([C-006](claims.md#c-006)); active sensing ([C-022](claims.md#c-022)); early exit
 ([C-004](claims.md#c-004)); exploratory fungal growth beyond depleted regions
-([C-034](claims.md#c-034)).
+([C-034](claims.md#c-034)); uncertainty-targeted exploratory play
+([C-062](claims.md#c-062)).
 
 **Candidate AI primitive.** Calibrated residual router that can buy another
 layer, modality, sensor action, memory lookup, or human query.
@@ -222,7 +246,9 @@ small interface for global integration.
 
 **Manifestations.** Nonlinear dendritic branches ([C-017](claims.md#c-017));
 cephalopod arm segments ([C-024](claims.md#c-024)); specialized inhibitory cell
-roles ([C-020](claims.md#c-020)); modular experts ([C-003](claims.md#c-003)).
+roles ([C-020](claims.md#c-020)); modular experts ([C-003](claims.md#c-003));
+receiver-specific decoding of a shared signal ([C-048](claims.md#c-048)); and
+capability-complementary community repair ([C-056](claims.md#c-056)).
 
 **Candidate AI primitive.** Hierarchical modules with local state, typed
 interfaces, and explicit cross-compartment budgets.
@@ -243,7 +269,10 @@ fast task path.
 **Manifestations.** Astrocytic regulation of connectivity and remote memory
 ([C-021](claims.md#c-021)); offline replay ([C-010](claims.md#c-010)); sleep as
 the imported metaphor; polarity-dependent reconstruction in planaria
-([C-033](claims.md#c-033)); control planes and garbage collectors in computing.
+([C-033](claims.md#c-033)); selective replay and active forgetting
+([C-036](claims.md#c-036), [C-041](claims.md#c-041),
+[C-042](claims.md#c-042)); adjacent resource allocation
+([C-051](claims.md#c-051)); control planes and garbage collectors in computing.
 
 **Candidate AI primitive.** Auditable lifecycle controller with limited
 actions, shadow evaluation, and rollback.
@@ -263,7 +292,9 @@ sensor/body structure, lower precision, or compiled execution paths.
 ([C-029](claims.md#c-029)); dendritic structure
 ([C-017](claims.md#c-017)); myelination as a biological timing/efficiency lead;
 pruning and quantization ([C-012](claims.md#c-012),
-[C-013](claims.md#c-013)).
+[C-013](claims.md#c-013)); schema-sensitive consolidation
+([C-038](claims.md#c-038)); reversible mature structural constraints and
+resource placement ([C-044](claims.md#c-044), [C-050](claims.md#c-050)).
 
 **Candidate AI primitive.** Reversible structural search followed by compiled
 or physically colocated stable paths.
@@ -280,8 +311,9 @@ components without all components broadcasting continuously.
 slots, or shared environmental state.
 
 **Manifestations.** Transient frequency-specific phase coupling
-([C-030](claims.md#c-030)); scheduled digital fabrics; potential future links
-to quorum sensing and stigmergy after evidence audit.
+([C-030](claims.md#c-030)); sparse directed influence in pigeon flocks
+([C-054](claims.md#c-054)); scheduled digital fabrics. The nonlinear commitment
+rule in fish remains a held candidate rather than being collapsed here.
 
 **Candidate AI primitive.** Learned temporal communication windows with
 bandwidth reservations and asynchronous fallback.
@@ -301,7 +333,10 @@ provenance, and cost; promote or expire it explicitly.
 **Manifestations.** Complementary learning systems
 ([C-008](claims.md#c-008)); replay ([C-010](claims.md#c-010)); plant priming
 ([C-026](claims.md#c-026)); immune lineage memory; retrieval-backed factual
-stores ([C-014](claims.md#c-014)).
+stores ([C-014](claims.md#c-014)); selective replay, schema-sensitive
+consolidation, reconsolidation, and regulated forgetting
+([C-036](claims.md#c-036)–[C-042](claims.md#c-042)); memory-supported imagined
+scene construction ([C-066](claims.md#c-066)).
 
 **Candidate AI primitive.** A versioned memory hierarchy spanning transient
 state, episodic records, slow skills, and externally attributable facts.
@@ -321,7 +356,8 @@ direction without identifying its author.
 **Manifestations.** Pheromone and geometric information in ant trail networks
 ([C-031](claims.md#c-031)); shared blackboards, append-only logs, caches, and
 external workspaces in engineered systems; factual retrieval
-([C-014](claims.md#c-014)) when the store also mediates coordination.
+([C-014](claims.md#c-014)) when the store also mediates coordination; shared
+chemistry that changes ecological admission pressure ([C-055](claims.md#c-055)).
 
 **Candidate AI primitive.** A versioned shared workspace where modules publish
 compact observations, partial results, route pressure, and unresolved questions

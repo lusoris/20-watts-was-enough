@@ -7,6 +7,25 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- An open-world discovery policy treating every empirical, formal, and
+  engineering science as a potential source, organized by shared problem
+  classes and constrained by evidence, deduplication, engineering null models,
+  and rejection tests.
+- A wider domain horizon spanning physical, earth, medical, formal,
+  engineering, and social sciences without lowering the evidence bar.
+- Five dated audits covering memory lifecycle, neural development and global
+  control, collective/ecological resilience, engineering null models, and
+  endogenous generation and creativity.
+- Thirty-one scoped claims (`C-036`–`C-066`) and primary references covering
+  selective replay, active forgetting, reversible plasticity, multiscale
+  modulation, local resource allocation, quorum decisions, ecological
+  fragility, active exploration, imitation, and regulated variability.
+- Three pre-implementation experiment contracts for adaptive topology,
+  multiscale context broadcast, and recovery-based fragility sensing, with
+  equal budgets, conventional baselines, ablations, and hard rejection gates.
+- A dimensioned, constrained memory-lifecycle model separating replay, merge,
+  externalization, weakening, deletion, and deferral actions.
+
 - Canonical modular concept covering the developmental pipeline, runtime
   synthesis, energy model, and research roadmap.
 - Stable evidence ledger, primary-source bibliography, mathematical notation,

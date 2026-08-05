@@ -1,9 +1,11 @@
 # Domain inventory
 
-“Collect everything” is an ongoing research program, not a claim that one
-search pass is exhaustive. This inventory makes coverage and gaps explicit. A
-domain stays here even when all of its useful observations deduplicate into an
-existing principle.
+“Collect everything” is an open-world research program, not a claim that one
+search pass—or this table—is exhaustive. Every empirical, formal, and
+engineering science is admissible. This inventory makes current coverage and
+gaps explicit; the governing method is the
+[open-world discovery policy](discovery-policy.md). A domain stays here even
+when all of its useful observations deduplicate into an existing principle.
 
 ## Audit states
 
@@ -25,8 +27,8 @@ existing principle.
 | Glia and neuroimmune maintenance | pruning, repair, memory coordination, resource support | [P-005](principle-registry.md#p-005--use-dependent-topology), [P-009](principle-registry.md#p-009--maintenance-plane) | partial | microglia, oligodendrocytes, metabolic coupling, causal AI translations |
 | Oscillations and neural timing | transient coalitions and multiplexed communication | [P-011](principle-registry.md#p-011--transient-communication-coalitions) | partial | causal perturbation, cross-frequency coupling, delay compensation |
 | Active perception and sensorimotor control | information-seeking action and local reflex | [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation), [P-007](principle-registry.md#p-007--prediction-error-allocation) | partial | efference copy, saccades, echolocation, electric sensing |
-| Memory, sleep, and replay | multiple timescales and offline consolidation | [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-009](principle-registry.md#p-009--maintenance-plane), [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime) | partial | targeted forgetting, reconsolidation, schema learning, replay selection |
-| Neural development and pruning | excess capacity, critical periods, structural commitment | [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-005](principle-registry.md#p-005--use-dependent-topology) | queued | primary developmental evidence behind the imported analogy |
+| Memory, sleep, and replay | multiple timescales and offline consolidation | [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-009](principle-registry.md#p-009--maintenance-plane), [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime) | partial | interference prediction, safe deletion, version conflict, and non-hippocampal memory systems |
+| Neural development and pruning | excess capacity, critical periods, structural commitment | [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-005](principle-registry.md#p-005--use-dependent-topology) | partial | developmental excess, critical-period diversity, and safe artificial reopening |
 | Cephalopods | peripheral autonomy and degrees-of-freedom reduction | [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation), [P-008](principle-registry.md#p-008--compartmentalized-interaction) | partial | sucker-level sensing, cross-arm coordination, global override |
 | Insect mushroom bodies | expansion, sparse discrimination, associative memory | [P-001](principle-registry.md#p-001--selective-allocation), [P-006](principle-registry.md#p-006--homeostatic-negative-feedback) | partial | multimodal mushroom-body circuits and rapid association |
 | Social insects | stigmergy, quorum, traffic control, collective repair | [P-001](principle-registry.md#p-001--selective-allocation), [P-006](principle-registry.md#p-006--homeostatic-negative-feedback), [P-013](principle-registry.md#p-013--externalized-shared-state) | partial | nest-site quorum, bridge construction, network repair |
@@ -37,28 +39,62 @@ existing principle.
 | Bacteria and microbial collectives | bet hedging, quorum, dormancy, horizontal transfer | [P-004](principle-registry.md#p-004--diversity-selection-and-protection) | partial | primary quorum experiments, biofilms as external memory, phage defense |
 | Regeneration and morphogenesis | target-state repair and positional memory | [P-006](principle-registry.md#p-006--homeostatic-negative-feedback), [P-009](principle-registry.md#p-009--maintenance-plane) | partial | bioelectric target states, salamander limb repair, cancer suppression |
 | Evolution and development | evolvability, canalization, modularity, robustness | [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-010](principle-registry.md#p-010--structural-offloading-and-co-design) | partial | gene-regulatory construction, exaptation, open-ended novelty |
-| Collective animal behavior | local rules, consensus, leadership, fission–fusion | unresolved | queued | fish schools, bird flocks, primate group decisions |
+| Collective animal behavior | local rules, consensus, leadership, fission–fusion | P-011 plus held thresholded-commitment candidate | partial | correlated-error quorum tests, fission–fusion, adversarial capture |
 | Endocrine and hormonal control | low-bandwidth global context and multi-timescale regulation | unresolved | queued | stress axes, circadian control, growth and satiety signals |
-| Vascular and metabolic networks | resource allocation, demand response, redundancy | unresolved | queued | angiogenesis, capillary recruitment, organ-level budgeting |
-| Microbiomes and host ecosystems | cooperative/competitive consortia and regime shifts | unresolved | queued | functional redundancy, colonization resistance, dysbiosis recovery |
-| Ecology | resilience, diversity, succession, niche construction | unresolved | queued | disturbance recovery, portfolio effects, early-warning signals |
+| Vascular and metabolic networks | resource allocation, demand response, redundancy | P-001, P-002, P-009, P-010 | partial | causal remodeling after demand shifts or damage; organ-level budgeting |
+| Microbiomes and host ecosystems | cooperative/competitive consortia and regime shifts | P-004, P-008, P-009, P-013 | partial | expression-aware capability repair, longitudinal recovery, host feedback |
+| Ecology | resilience, diversity, succession, niche construction | P-004, P-006 plus held fragility-sensing candidate | partial | false alarms across transition classes, succession, portfolio effects |
 
 ## Non-biological scientific fields
 
 | Domain | Problem patterns to collect | Likely bundle relation | State | Next pass |
 | --- | --- | --- | --- | --- |
-| Control theory | stability, observability, hierarchical and adaptive control | P-002, P-006, P-007 | queued | identify the standard control analogue for each proposed biological loop |
-| Operations research and queueing | allocation, congestion, reserve capacity, scheduling | P-001, P-005, P-013 | queued | compare ant-inspired routing with established optimal/robust schedulers |
+| Control theory | stability, observability, hierarchical and adaptive control | P-002, P-006, P-007 | partial | nonlinear, switched, robust, and distributed-control null models |
+| Operations research and queueing | allocation, congestion, reserve capacity, scheduling | P-001, P-005, P-013 | partial | equal-cost topology mutation versus robust schedulers and reoptimization |
 | Distributed systems | consensus, failure detection, logs, repair, eventual consistency | P-002, P-009, P-013 | partial | map exact analogues before claiming biological novelty |
-| Information theory | rate–distortion, value of information, coding under constraints | P-001, P-007, P-012 | queued | formalize when another observation or bit of state is worth its energy |
-| Statistical decision theory | uncertainty, exploration, sequential tests, change detection | P-003, P-004, P-007 | queued | distinguish priming and bet hedging from optimal Bayesian baselines |
-| Dynamical systems | attractors, metastability, bifurcation, critical transitions | P-006, P-011 | queued | define stability and switching without metaphor |
+| Information theory | rate–distortion, value of information, coding under constraints | P-001, P-007, P-012 | partial | rate–distortion and information-bottleneck limits under lifecycle energy |
+| Statistical decision theory | uncertainty, exploration, sequential tests, change detection | P-003, P-004, P-007 | partial | robust Bayesian, sequential, and value-of-information baselines |
+| Dynamical systems | attractors, metastability, bifurcation, critical transitions | P-006, P-011 | partial | non-bifurcation failures and reliable active fragility estimation |
 | Network science | adaptive graphs, percolation, robustness, multilayer networks | P-005, P-008, P-011 | partial | common benchmark for neural, fungal, slime-mold, and routing graphs |
 | Error-correcting codes and fault tolerance | redundancy, reconstruction, graceful degradation | P-004, P-009 | queued | compare regeneration metaphors with coding and checkpoint baselines |
-| Thermodynamics and physical computing | energy limits, reversible operations, embodied computation | P-007, P-010 | queued | separate fundamental limits from current hardware overheads |
+| Thermodynamics and physical computing | energy limits, reversible operations, embodied computation | P-007, P-010 | partial | separate Landauer limits, device switching, data movement, and facility cost |
 | Materials and self-assembly | computation in morphology, hysteresis, self-repair | P-006, P-010 | queued | programmable matter, mechanical logic, adaptive materials |
 | Robotics | active sensing, morphology, local control, sim-to-real | P-002, P-007, P-010 | partial | matched embodied experiments for principle bundles |
 | Computer architecture | memory hierarchy, near-memory compute, fabrics, precision | P-001, P-002, P-010, P-012 | partial | identify silicon-native implementation for each accepted invariant |
+
+## Wider field horizon
+
+These fields are explicitly in scope even when their first connection to AI is
+not obvious. Rows are research queues, not claims of useful transfer.
+
+| Domain family | Example fields and systems | Problem patterns to search | State |
+| --- | --- | --- | --- |
+| Molecular and cellular regulation | gene regulation, signaling pathways, organelles, proteostasis | distributed control, error correction, turnover, compartmentalization | queued |
+| Endocrine and whole-body physiology | hormonal axes, circadian systems, metabolism, exercise adaptation | low-bandwidth context, multi-timescale control, resource arbitration | queued |
+| Development and morphogenesis | embryology, tissue patterning, wound repair, metamorphosis | staged commitment, positional state, self-construction, reversible plasticity | partial |
+| Pathology and rehabilitation | cancer, autoimmunity, neurodegeneration, physical rehabilitation | capture, misgeneralization, failure containment, recovery and relearning | queued |
+| Epidemiology and public health | transmission networks, surveillance, intervention policy | sparse sensing, delayed feedback, change detection, robust allocation | queued |
+| Paleobiology and origins | major transitions, extinction, symbiosis, early replication | evolvability, bottlenecks, cooperation, open-ended search | queued |
+| Earth and climate systems | atmosphere, oceans, biogeochemical cycles, tipping elements | multiscale coupling, latent-state inference, regime shift, hysteresis | queued |
+| Geology and geomorphology | fracture networks, rivers, erosion, self-organized landscapes | topology formation, path dependence, transport under changing load | queued |
+| Astronomy and planetary science | orbital systems, stellar populations, remote inference | indirect sensing, filtering, multiscale dynamics, rare-event reasoning | queued |
+| Chemistry and reaction networks | catalysis, autocatalysis, reaction–diffusion, self-assembly | constrained search, local computation, pattern formation, kinetic proofreading | queued |
+| Soft matter and active matter | swarms, colloids, granular media, phase separation | emergent organization, local rules, jamming, state transitions | queued |
+| Materials science | metamaterials, shape-memory matter, self-healing composites | computation in structure, hysteresis, damage sensing, repair | queued |
+| Mechanical and civil engineering | compliant mechanisms, structural health, transport grids | passive control, graceful degradation, reserve capacity, maintenance | queued |
+| Chemical and process engineering | reactors, separation networks, process control | recirculation, stability, fault isolation, energy integration | queued |
+| Aerospace and maritime systems | flight control, autonomy, navigation, redundancy | safety envelopes, local reflex, degraded operation, sensor fusion | queued |
+| Electrical power systems | grids, protection relays, demand response, microgrids | distributed synchronization, cascading failure, islanding, recovery | queued |
+| Security and cryptography | adversarial protocols, zero trust, authentication, secret sharing | distrust, verification, Byzantine failure, bounded information release | queued |
+| Programming languages and verification | types, proofs, contracts, interpreters, runtime checks | compositional guarantees, abstraction, rollback, safe specialization | queued |
+| Databases and storage | transactions, indexing, replication, compaction, garbage collection | memory lifecycle, consistency, locality, maintenance | partial |
+| Human–computer interaction | mixed initiative, interruption, adaptive interfaces | calibrated escalation, shared state, uncertainty communication | queued |
+| Linguistics and communication science | syntax, pragmatics, language change, dialogue | compositional structure, compression, grounding, coordination | queued |
+| Anthropology and archaeology | cultural transmission, material records, distributed practice | external memory, cumulative adaptation, coordination across generations | queued |
+| Economics and market design | prices, auctions, firms, externalities, mechanism design | decentralized allocation, incentives, information aggregation, capture | queued |
+| Social choice and political science | voting, institutions, federation, collective action | quorum, minority protection, delegation, adversarial coordination | queued |
+| Organizational science and safety | high-reliability organizations, incident response, governance | escalation, redundancy, learning from near misses, maintenance culture | queued |
+| Quantitative history and demography | diffusion, collapse, migration, long-run population dynamics | path dependence, resilience, delayed feedback, selection bias | queued |
 
 ## Collection order
 

@@ -20,6 +20,9 @@ before making structures expensive or irreversible.
 - Collect observations by scientific domain, then bundle recurring
   problem–solution invariants in the
   [principle registry](../research/principle-registry.md).
+- Treat every empirical, formal, and engineering science as discoverable under
+  the [open-world policy](../research/discovery-policy.md); exclude leads by
+  weak evidence or failed transfer, not by disciplinary appearance.
 - Maintain an adoption matrix so an existing niche implementation is not
   mistaken for a new principle or for scale-ready evidence.
 - Define task, quality, risk, and energy contracts.
@@ -42,6 +45,16 @@ baseline, ablation, metric, failure test, and declared system boundary.
 - Local eligibility plus delayed modulation versus full global updates.
 - Peripheral autonomy plus exception escalation versus central control.
 - A maintenance plane for reversible replay and pruning decisions.
+- [Adaptive logical topology](../experiments/candidates/001-adaptive-topology.md)
+  versus fixed routing, global reoptimization, and oracle bounds.
+- [Multiscale context broadcast](../experiments/candidates/002-multiscale-context-broadcast.md)
+  versus FiLM, recurrent gates, global tokens, hypernetworks, and supervisory
+  control at a hard communication budget.
+- [Recovery-based fragility sensing](../experiments/candidates/003-recovery-dynamics-fragility.md)
+  versus SLOs, sequential change detection, passive identification, and active
+  system identification.
+- A closed-endogenous-curriculum experiment separating imitation, stochastic
+  proposal generation, targeted intervention, and evaluation.
 
 **Exit gate:** at least one mechanism moves a quality–risk–energy Pareto frontier
 using wall energy, not only theoretical FLOPs.

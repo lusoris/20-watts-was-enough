@@ -47,3 +47,15 @@ project choice.
   discriminate it from a standard router, optimizer, cache, or scheduler?
 - **OQ-016:** Which biological constraints disappear on silicon, and which
   reappear as memory traffic, synchronization, thermal, or reliability limits?
+- **OQ-017:** Does useful artificial creativity require a closed loop of
+  structured generation, intervention, evaluation, and memory update, or can
+  matched-budget stochastic sampling explain the benefit?
+- **OQ-018:** Does receiver-specific temporal decoding of a rate-limited global
+  context signal add anything beyond FiLM, recurrent gates, global tokens,
+  low-rank hypernetworks, or gain-scheduled control?
+- **OQ-019:** Can recovery dynamics warn of hidden fragility across failure
+  classes, or only near smooth local transitions already handled by active
+  system identification?
+- **OQ-020:** How should breadth-first research decide that a field has been
+  sampled enough to move effort toward depth without falsely declaring its
+  remaining mechanisms irrelevant?

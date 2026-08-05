@@ -16,6 +16,16 @@ The analogy breaks if “more neurons” is treated as a reason to allocate an
 arbitrarily dense digital model. Biological growth, digital overparameterization,
 and lottery-ticket results occur under different mechanisms.
 
+Primary developmental interventions sharpen the abstraction. Complement and
+microglia participate causally in activity-sensitive removal of developing
+inputs ([C-043](../research/claims.md#c-043)). Mature extracellular and receptor
+structures can then constrain plasticity, while targeted interventions reopen
+it in specific adult visual-cortex preparations
+([C-044](../research/claims.md#c-044),
+[C-045](../research/claims.md#c-045)). This supports separate **candidate,
+mature, reopened, and reconsolidating** module states—not literal microglia or
+fixed developmental ages.
+
 ## Proposed AI translation
 
 Start with a modular seed containing:
@@ -27,6 +37,12 @@ Start with a modular seed containing:
   memory access; and
 - reserved capacity that can be activated or grown only when existing modules
   fail a novelty and interference test.
+
+Each module also has a reversible maturity state. Maturation may lower its
+update rate, restrict which context signals can alter it, and make structural
+changes require shadow evaluation. Reopening requires evidence of persistent
+error or regime change, a versioned checkpoint, and a reconsolidation test
+before the replacement becomes canonical.
 
 Routing must be learned with three simultaneous pressures:
 
@@ -68,6 +84,9 @@ the feasibility of this separation in specific systems
 - Lottery-ticket experiments establish competitive sparse subnetworks in
   bounded settings under [C-012](../research/claims.md#c-012), not the full
   developmental proposal.
+- Developmental pruning and reversible adult plasticity brakes are established
+  in scoped biological preparations under
+  [C-043](../research/claims.md#c-043)–[C-045](../research/claims.md#c-045).
 - Automatic module growth, multimodal specialization, and stable hierarchical
   routing are speculative integrations.
 
@@ -77,6 +96,8 @@ the feasibility of this separation in specific systems
   across episodes and existing experts show measurable interference.
 - Topology-aware routing that prices cross-device communication explicitly.
 - A reversible “provisional module” state before new capacity becomes permanent.
+- Capability-gap repair that admits complementary modules rather than merely
+  restoring a previous count ([C-056](../research/claims.md#c-056)).
 
 ## Failure modes
 
@@ -85,6 +106,8 @@ the feasibility of this separation in specific systems
 - **Stranded capacity:** rarely selected parameters occupy memory without value.
 - **Premature localization:** a modality is isolated before cross-modal concepts
   form.
+- **Maturity lock-in:** protected modules resist beneficial newcomers or
+  necessary relearning ([C-057](../research/claims.md#c-057)).
 - **False sparsity:** gates are sparse mathematically but implementations still
   load dense tensors or all-to-all communication dominates.
 

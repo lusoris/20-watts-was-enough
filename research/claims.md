@@ -42,6 +42,37 @@ describes the exact statement here, not a broader interpretation.
 | C-033 | Regeneration reads pre-existing positional context | established |
 | C-034 | Fungal networks couple exploratory growth with transport | established |
 | C-035 | Ant traffic recruits reserve routes before throughput collapses | established |
+| C-036 | Assembly-specific replay disruption produces selective memory loss | established |
+| C-037 | Replay allocation is nonuniform and signal-dependent | plausible |
+| C-038 | Prior schema can accelerate consolidation | established |
+| C-039 | Retrieval can reopen a memory-sensitive state | established |
+| C-040 | Prediction error is a universal reconsolidation gate | disputed |
+| C-041 | Dopaminergic activity can regulate active forgetting | established |
+| C-042 | Microglia can mediate active forgetting through synapse removal | established |
+| C-043 | Complement and microglia causally refine developing connectivity | established |
+| C-044 | Removing mature extracellular structure can reopen cortical plasticity | established |
+| C-045 | A local receptor brake can gate response to broad modulation | established |
+| C-046 | Antagonistic broadcasts can sustain distributed behavioral modes | established |
+| C-047 | Broadcast frequency and duration can produce different system responses | established |
+| C-048 | Receiver identity can decode one broadcast on different timescales | established |
+| C-049 | Presynaptic ATP supply is locally coupled to activity | established |
+| C-050 | Resource placement can change local computational dynamics | established |
+| C-051 | Neural activity can recruit adjacent local vascular supply | established |
+| C-052 | Fish groups can use nonlinear quorum-like commitment | established |
+| C-053 | Uncommitted members can reduce confident-minority capture | established |
+| C-054 | Pigeon-flock influence graphs can be sparse and directed | plausible |
+| C-055 | A specialist can enforce admission pressure through shared chemistry | established |
+| C-056 | Capability-gap analysis can guide modular ecological repair | established |
+| C-057 | Functional redundancy predicts reduced newcomer engraftment | plausible |
+| C-058 | Recovery can slow before a controlled biological tipping point | established |
+| C-059 | Statistical warnings preceded a manipulated whole-lake regime shift | established |
+| C-060 | Diversity can move stability dimensions in opposite directions | established |
+| C-061 | Learned hippocampal sequences can be generated without changing external input | established |
+| C-062 | Children can target exploration toward confounded causal evidence | established |
+| C-063 | Pedagogical instruction can narrow spontaneous exploration | established |
+| C-064 | Causal transparency can change imitation versus emulation | established |
+| C-065 | Behavioral variability can be regulated rather than fixed noise | established |
+| C-066 | Hippocampal damage can impair construction of imagined scenes | established |
 
 ## Claims
 
@@ -537,3 +568,473 @@ describes the exact statement here, not a broader interpretation.
 - **Used by:** [comparative biology](comparative-biology.md),
   [P-001](principle-registry.md#p-001--selective-allocation),
   [P-006](principle-registry.md#p-006--homeostatic-negative-feedback).
+
+### C-036
+
+- **Statement:** Closed-loop disruption of replay from a selected hippocampal
+  place-cell assembly produced a selective deficit for the associated spatial
+  memory in the cited rat experiment.
+- **Status:** established for the assembly-specific rodent task studied.
+- **Primary source:** `gridchyn2020replay`; broader ripple intervention context
+  from `girardeau2009ripples`.
+- **Rationale:** The causal content selectivity is stronger evidence than a
+  generic association between sleep and memory. It does not establish replay
+  as necessary for every memory system.
+- **Open issue:** Which artificial memory unit is specific enough to target
+  without repeatedly scanning or replaying the full store.
+- **Used by:** [memory audit](audits/2026-08-05-memory-replay-forgetting.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-037
+
+- **Statement:** In the cited rat and human studies, replay allocation was
+  nonuniform and related to reward or learning, cumulative awake replay and
+  familiarity, or estimated memory weakness; the studies do not identify one
+  universal priority signal.
+- **Status:** established within the individual observational experiments;
+  plausible as a general budget-allocation principle.
+- **Primary sources:** `singer2009rewardreplay`, `huelingorriz2023replay`, and
+  `schapiro2018weakreplay`.
+- **Rationale:** Multiple selective signals argue against uniform replay while
+  also warning against treating reward, novelty, weakness, and surprise as
+  synonyms.
+- **Open issue:** Whether a multi-signal scheduler beats loss-, recency-,
+  interference-, or temporal-difference-prioritized replay at equal cost.
+- **Used by:** [memory audit](audits/2026-08-05-memory-replay-forgetting.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-038
+
+- **Statement:** In a rat paired-associate experiment, previously acquired
+  relational structure allowed new compatible associations learned in one
+  trial to become persistent and rapidly less hippocampus-dependent.
+- **Status:** established for the task and neural interventions studied;
+  plausible as a schema-sensitive consolidation principle.
+- **Primary source:** `tse2007schema`.
+- **Rationale:** The result rejects a fixed consolidation schedule, but it does
+  not justify writing apparently compatible artificial memories into slow
+  weights without validation.
+- **Open issue:** A falsifiable, shortcut-resistant measure of schema fit.
+- **Used by:** [memory audit](audits/2026-08-05-memory-replay-forgetting.md),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-039
+
+- **Statement:** Retrieval of an established auditory fear memory rendered its
+  later expression sensitive to post-retrieval protein-synthesis inhibition in
+  the amygdala in the cited rat experiments.
+- **Status:** established for that fear-conditioning preparation; the scope and
+  boundary conditions of reconsolidation vary by memory and protocol.
+- **Primary source:** `nader2000reconsolidation`.
+- **Rationale:** Retrieval can open a temporary update-sensitive state rather
+  than only reading a permanently fixed record.
+- **Open issue:** How an artificial system should detect, version, test, and
+  roll back a memory-specific write window.
+- **Used by:** [memory audit](audits/2026-08-05-memory-replay-forgetting.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment).
+
+### C-040
+
+- **Statement:** Prediction error was reported as necessary for retrieval-led
+  destabilization of human associative fear memory in one study, but a later
+  preregistered experiment did not replicate the proposed boundary conditions.
+- **Status:** disputed as a precise general gate.
+- **Primary sources:** `sevenster2013prediction` and
+  `stemerding2022reconsolidation`.
+- **Rationale:** Mismatch remains a useful candidate trigger, but the failed
+  replication prevents promotion to a universal memory-update rule.
+- **Open issue:** Whether calibrated surprise identifies safe artificial memory
+  updates better than recency, conflict, or explicit version changes.
+- **Used by:** [memory audit](audits/2026-08-05-memory-replay-forgetting.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-041
+
+- **Statement:** Bidirectional manipulation of ongoing activity in a small set
+  of dopaminergic neurons after olfactory learning changed the rate of
+  appetitive and aversive memory forgetting in *Drosophila*.
+- **Status:** established for the fly circuits and memory tasks studied.
+- **Primary source:** `berry2012forgetting`.
+- **Rationale:** The result establishes regulated active forgetting, not merely
+  passive trace decay, in that preparation.
+- **Open issue:** Which digital forgetting actions improve adaptation without
+  erasing rare, attributable, or safety-critical state.
+- **Used by:** [memory audit](audits/2026-08-05-memory-replay-forgetting.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-042
+
+- **Statement:** In the cited adult-mouse experiments, microglial depletion,
+  inhibition of phagocytosis, or engram-targeted complement inhibition reduced
+  forgetting in the studied contextual fear-memory preparation.
+- **Status:** established for the interventions and memory preparation studied.
+- **Primary source:** `wang2020microgliaforgetting`.
+- **Rationale:** A maintenance cell population can actively weaken memory by
+  complement-dependent synaptic elimination. Literal microglia simulation is
+  neither implied nor required.
+- **Open issue:** Whether an auditable artificial maintenance process can prune
+  memory state more safely and cheaply than passive expiry or retraining.
+- **Used by:** [memory audit](audits/2026-08-05-memory-replay-forgetting.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-043
+
+- **Statement:** During mouse retinogeniculate development, relative activity
+  and C3/CR3 signaling affected microglial engulfment of inputs, eye-specific
+  segregation, and retention of excess synapses.
+- **Status:** established for the developmental preparation and interventions.
+- **Primary source:** `schafer2012microglia`.
+- **Rationale:** A distinct maintenance cell population causally participates
+  in activity-sensitive structural refinement; this is not evidence for a
+  universal pruning rule or percentage.
+- **Open issue:** Whether a separate maintenance actor improves artificial
+  topology contraction after its monitoring and rollback costs are counted.
+- **Used by:** [neurodevelopment audit](audits/2026-08-05-neurodevelopment-global-control.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-044
+
+- **Statement:** Enzymatic degradation of mature extracellular-matrix
+  structures in adult rat visual cortex reopened an ocular-dominance response
+  to monocular deprivation that was normally absent after the critical period.
+- **Status:** established for the cited visual-cortex preparation.
+- **Primary source:** `pizzorusso2002plasticity`.
+- **Rationale:** Mature structure can act as a reversible plasticity constraint;
+  removing it does not guarantee that subsequent change is useful.
+- **Open issue:** How an artificial module can reopen, validate, reconsolidate,
+  and roll back mature structure safely.
+- **Used by:** [neurodevelopment audit](audits/2026-08-05-neurodevelopment-global-control.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-045
+
+- **Statement:** Loss of the Lynx1 brake in adult mouse visual cortex restored
+  a measured form of cholinergic-dependent plasticity, which nicotinic receptor
+  antagonism then abolished.
+- **Status:** established for the genetic, pharmacological, and visual task.
+- **Primary source:** `morishita2010lynx1`.
+- **Rationale:** A broad modulatory input and a receiver-local gate jointly
+  determine whether a mature circuit changes.
+- **Open issue:** Whether module-specific plasticity gates prevent drift better
+  than optimizer schedules or parameter regularization.
+- **Used by:** [neurodevelopment audit](audits/2026-08-05-neurodevelopment-global-control.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback).
+
+### C-046
+
+- **Statement:** In *C. elegans*, causal manipulations identified opposing
+  serotonergic and PDF systems that bias distributed circuits into persistent
+  dwelling or roaming modes.
+- **Status:** established for the organism, manipulations, and behaviors.
+- **Primary source:** `flavell2013opposingstates`.
+- **Rationale:** Low-dimensional, antagonistic signals can coordinate many
+  receivers without carrying a detailed point-to-point command.
+- **Open issue:** Whether rate-limited antagonistic context channels beat
+  ordinary gates, FiLM, or supervisory control at equal communication cost.
+- **Used by:** [neurodevelopment audit](audits/2026-08-05-neurodevelopment-global-control.md),
+  [context-broadcast experiment](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-047
+
+- **Statement:** Optogenetic activation of mouse locus-coeruleus neurons showed
+  that stimulation frequency and duration changed immediate arousal,
+  sustained wakefulness, and locomotion non-monotonically.
+- **Status:** established for the cited acute interventions.
+- **Primary source:** `carter2010locuscoeruleus`.
+- **Rationale:** A broadcast's temporal pattern can carry control information;
+  stronger or longer is not equivalent to a scalar gain increase.
+- **Open issue:** Whether multiple rates add value after their communication,
+  filter-state, and stability costs are charged.
+- **Used by:** [neurodevelopment audit](audits/2026-08-05-neurodevelopment-global-control.md),
+  [context-broadcast experiment](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-048
+
+- **Statement:** In *C. elegans*, combinations and locations of serotonin
+  receptors produced interacting, transient, and sustained responses to
+  activation of one serotonergic source.
+- **Status:** established for the receptor panel, restoration experiments, and
+  measured behaviors.
+- **Primary source:** `dag2023serotonergic`.
+- **Rationale:** Receiver identity and local circuit location can decode the
+  same broadcast differently across timescales.
+- **Open issue:** Whether receiver-specific filters provide benefit beyond a
+  low-rank hypernetwork or per-module recurrent gate.
+- **Used by:** [neurodevelopment audit](audits/2026-08-05-neurodevelopment-global-control.md),
+  [context-broadcast experiment](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-049
+
+- **Statement:** In cultured rat hippocampal neurons, action-potential trains
+  increased presynaptic ATP demand, recruited local production, and made
+  ongoing vesicle cycling sensitive to brief production blockade.
+- **Status:** established for the optical reporter and perturbations used.
+- **Primary source:** `rangaraju2014atp`.
+- **Rationale:** Resource supply can be use-coupled at the site of work rather
+  than represented only by a global average budget.
+- **Open issue:** Whether local compute/energy backpressure improves allocation
+  over a centralized scheduler on actual hardware.
+- **Used by:** [neurodevelopment audit](audits/2026-08-05-neurodevelopment-global-control.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation).
+
+### C-050
+
+- **Statement:** Genetic removal and rescue of syntaphilin changed axonal
+  mitochondrial mobility, density, calcium handling, and short-term synaptic
+  facilitation in the cited mouse-neuron experiments.
+- **Status:** established for the measured cellular system.
+- **Primary source:** `kang2008mitochondria`.
+- **Rationale:** Placement of a resource changes local dynamics, while movement
+  and docking themselves incur costs.
+- **Open issue:** Which state should move to compute, which compute should move
+  to state, and when migration amortizes.
+- **Used by:** [neurodevelopment audit](audits/2026-08-05-neurodevelopment-global-control.md),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-051
+
+- **Statement:** Neural activity and glutamate recruited capillary dilation at
+  pericyte locations in rodent preparations, and sensory-evoked capillary
+  dilation preceded arteriole dilation in vivo.
+- **Status:** established for the cited preparations and pharmacological path;
+  quantitative allocation beyond them remains uncertain.
+- **Primary source:** `hall2014pericytes`.
+- **Rationale:** An adjacent infrastructure layer can translate local demand
+  signals into physical supply changes.
+- **Open issue:** Whether an artificial resource plane can respond locally
+  without unstable oscillation or starving neighboring modules.
+- **Used by:** [neurodevelopment audit](audits/2026-08-05-neurodevelopment-global-control.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-052
+
+- **Statement:** In a controlled Y-maze experiment, larger stickleback groups
+  discounted an isolated replica cue and showed a nonlinear response to added
+  social support; coordinated bad cues could still capture the decision.
+- **Status:** established for the apparatus and fitted response class.
+- **Primary source:** `ward2008quorum`.
+- **Rationale:** The useful candidate is nonlinear support relative to
+  opposition and abstention, not the slogan “majority vote.”
+- **Open issue:** Whether quorum gating beats calibrated confidence clipping
+  under correlated errors and abstentions.
+- **Used by:** [collective audit](audits/2026-08-05-collective-ecological-resilience.md).
+
+### C-053
+
+- **Statement:** In a collective-motion model and golden-shiner experiments,
+  socially responsive fish without a trained directional preference reduced
+  capture by a strongly opinionated minority under studied conflicts.
+- **Status:** established for the model–experiment conditions; not a general
+  theorem about uninformed agents.
+- **Primary source:** `couzin2011uninformed`.
+- **Rationale:** Abstaining participants can change collective gain without
+  injecting an alternative claim or random noise.
+- **Open issue:** Whether this differs materially from confidence calibration or
+  robust aggregation in artificial ensembles.
+- **Used by:** [collective audit](audits/2026-08-05-collective-ecological-resilience.md).
+
+### C-054
+
+- **Statement:** Lagged directional correlations in small homing-pigeon flocks
+  revealed a sparse, directed leader–follower hierarchy associated with spatial
+  position and visual laterality.
+- **Status:** plausible as a causal communication structure because the study
+  inferred influence from telemetry without leader intervention.
+- **Primary source:** `nagy2010pigeons`.
+- **Rationale:** The result supports sparse directed effective connectivity, not
+  a claim that hierarchy is universally efficient.
+- **Open issue:** Whether learned lag graphs reduce communication while
+  tolerating leader failure better than top-$k$ messaging.
+- **Used by:** [collective audit](audits/2026-08-05-collective-ecological-resilience.md),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions).
+
+### C-055
+
+- **Statement:** Reintroducing *Clostridium scindens* after antibiotic exposure
+  enhanced mouse resistance to *C. difficile* through a bile-acid-dependent
+  shared chemical environment.
+- **Status:** established for the mouse intervention and substrate dependence;
+  not a human treatment claim.
+- **Primary source:** `buffie2015microbiome`.
+- **Rationale:** Shared state can alter which behaviors or invaders remain
+  viable, not merely carry a message.
+- **Open issue:** Whether a reversible digital substrate transformation can
+  enforce admission more cheaply than centralized screening.
+- **Used by:** [collective audit](audits/2026-08-05-collective-ecological-resilience.md),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-056
+
+- **Statement:** Genome-guided identification of missing functions and addition
+  of three selected strains repaired colonization resistance in a defined
+  mouse microbial community for the tested *Salmonella* challenge.
+- **Status:** established for the design workflow and mouse model.
+- **Primary source:** `brugiroux2017oligomm`.
+- **Rationale:** Modular repair can select candidates by missing capability
+  rather than count, taxonomic resemblance, or random replacement.
+- **Open issue:** Whether capability-gap expert admission predicts expressed
+  function and beats size-matched search.
+- **Used by:** [collective audit](audits/2026-08-05-collective-ecological-resilience.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-057
+
+- **Statement:** A genomic functional-redundancy measure was negatively
+  associated with donor-strain engraftment in two small reanalyzed human fecal
+  microbiota-transplant datasets.
+- **Status:** plausible as a niche-occupancy mechanism; causal redundancy was
+  not randomized and genomic potential is not expressed function.
+- **Primary source:** `tian2020redundancy`.
+- **Rationale:** Redundant mature capacity may resist harmful and beneficial
+  newcomers, making stability and adaptability opposing objectives.
+- **Open issue:** Whether functional overlap predicts expert admission after
+  controlling capacity, initialization, routing, and optimizer state.
+- **Used by:** [collective audit](audits/2026-08-05-collective-ecological-resilience.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-058
+
+- **Statement:** Recovery from small dilution perturbations slowed and passive
+  autocorrelation rose as a cyanobacterial microcosm approached a controlled
+  photo-inhibition tipping point.
+- **Status:** established for the corrected experiment; not universal for all
+  transitions or software failures.
+- **Primary source:** `veraart2012recovery`.
+- **Rationale:** Return dynamics can reveal weakening restoring forces before a
+  snapshot metric crosses a failure threshold.
+- **Open issue:** Whether bounded active probes add lead time beyond standard
+  system identification at acceptable service and energy cost.
+- **Used by:** [collective audit](audits/2026-08-05-collective-ecological-resilience.md),
+  [fragility experiment](../experiments/candidates/003-recovery-dynamics-fragility.md).
+
+### C-059
+
+- **Statement:** During a three-year predator manipulation of one lake with an
+  adjacent reference, statistical warning signals appeared during food-web
+  reorganization before the manipulated regime transition was complete.
+- **Status:** established for one manipulated and one reference lake; general
+  false-positive rates cannot be inferred.
+- **Primary source:** `carpenter2011lake`.
+- **Rationale:** Recovery/fluctuation diagnostics can survive a distributed,
+  multicomponent field system, but provide no universal threshold.
+- **Open issue:** Whether multivariate service-network diagnostics outperform
+  component SLOs and matched shadow deployments.
+- **Used by:** [collective audit](audits/2026-08-05-collective-ecological-resilience.md),
+  [fragility experiment](../experiments/candidates/003-recovery-dynamics-fragility.md).
+
+### C-060
+
+- **Statement:** In 690 aquatic ciliate microcosms, increased species richness
+  improved temporal stability but reduced resistance to a warming perturbation
+  under the study's measures.
+- **Status:** established for the manipulated communities, duration, and
+  perturbation.
+- **Primary source:** `pennekamp2018stability`.
+- **Rationale:** “Resilience” is a vector; diversity can move stability,
+  resistance, recovery, and adaptability in different directions.
+- **Open issue:** Which raw resilience dimensions and tradeoffs matter for
+  modular AI under shift, faults, and newcomer admission.
+- **Used by:** [collective audit](audits/2026-08-05-collective-ecological-resilience.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-061
+
+- **Statement:** In a learned delayed-choice task, rat hippocampal ensembles
+  expressed ordered sequences without changing external location, and sequence
+  state predicted later choices including errors.
+- **Status:** established for the learned task; not evidence of experience-free
+  or human creativity.
+- **Primary source:** `pastalkova2008sequences`.
+- **Rationale:** Structured endogenous trajectories can be generated from
+  internal and remembered state rather than copied from concurrent input.
+- **Open issue:** Whether internally generated rollouts add useful novelty
+  beyond sampling a learned policy at the same candidate budget.
+- **Used by:** [generation audit](audits/2026-08-05-endogenous-generation-creativity.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment).
+
+### C-062
+
+- **Statement:** Preschoolers preferentially explored toys after observing
+  confounded rather than matched unconfounded evidence and often acted to
+  disambiguate possible causes.
+- **Status:** established for the developmental experiment.
+- **Primary source:** `schulz2007seriousfun`.
+- **Rationale:** A learner can actively create informative observations rather
+  than only absorb or imitate a fixed dataset.
+- **Open issue:** Whether an artificial agent's targeted interventions beat
+  random exploration and value-of-information baselines at matched cost.
+- **Used by:** [generation audit](audits/2026-08-05-endogenous-generation-creativity.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-063
+
+- **Statement:** In two toy studies, pedagogical demonstration caused
+  preschoolers to focus more narrowly on the demonstrated function than
+  several non-pedagogical or interrupted conditions.
+- **Status:** established for the designed tasks; not a general claim that
+  teaching reduces learning.
+- **Primary source:** `bonawitz2011pedagogy`.
+- **Rationale:** Social demonstration changes the learner's inference and can
+  trade off against self-generated discovery.
+- **Open issue:** How training systems should balance high-quality imitation
+  data with preserving uncertainty and affordance search.
+- **Used by:** [generation audit](audits/2026-08-05-endogenous-generation-creativity.md).
+
+### C-064
+
+- **Statement:** Chimpanzees more often omitted demonstrated, causally
+  irrelevant actions when a puzzle box was transparent, while young children
+  copied those actions at high fidelity in both transparent and opaque tasks.
+- **Status:** established for the comparative experiment; not a species-wide
+  ranking of causal reasoning.
+- **Primary source:** `horner2005imitation`.
+- **Rationale:** Action imitation, outcome emulation, and causal inference are
+  separable learning operations.
+- **Open issue:** When should an artificial learner copy a demonstrated process
+  versus infer and reproduce only its causal effect.
+- **Used by:** [generation audit](audits/2026-08-05-endogenous-generation-creativity.md).
+
+### C-065
+
+- **Statement:** Rat choice variability and human motor variability changed
+  systematically with task context or learning and were linked to measured
+  neural or behavioral mechanisms rather than behaving as fixed random noise.
+- **Status:** established within the two task-specific experiments; plausible
+  as a general adaptive-variability principle.
+- **Primary sources:** `tervo2014variability`, `wu2014motorvariability`.
+- **Rationale:** Stochasticity can be a controlled search resource, but more
+  variability is not automatically more creative or more useful.
+- **Open issue:** Whether learned variance control beats fixed-temperature
+  sampling after candidate, failure, and interaction budgets are equalized.
+- **Used by:** [generation audit](audits/2026-08-05-endogenous-generation-creativity.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-066
+
+- **Statement:** Patients with primary bilateral hippocampal damage were
+  markedly impaired relative to controls at constructing coherent new imagined
+  scenes from short verbal cues in the cited study.
+- **Status:** established for the small lesion study; the exact hippocampal
+  boundary and generality remain debated.
+- **Primary source:** `hassabis2007imagination`.
+- **Rationale:** New imagined experience can depend on structured binding of
+  remembered elements, not stochastic recombination alone.
+- **Open issue:** Which separable generator, relational workspace, memory, and
+  evaluator components are causally necessary in an artificial system.
+- **Used by:** [generation audit](audits/2026-08-05-endogenous-generation-creativity.md),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).

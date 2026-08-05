@@ -51,6 +51,14 @@ Editable source: [`../assets/diagrams/system-runtime.mmd`](../assets/diagrams/sy
    gates.
 9. Continue operation with monitoring and the ability to demote hardened paths.
 
+The system may also generate its own learning events: propose a structured
+hypothesis or latent rollout, choose a bounded intervention, evaluate the
+outcome, and retain only validated changes. Evidence for internally generated
+sequences, targeted exploration, controlled variability, and memory-supported
+imagination is scoped in [C-061](../research/claims.md#c-061)–[C-066](../research/claims.md#c-066).
+This **closed endogenous curriculum** is a composition of existing principles,
+not a claim that randomness alone creates useful novelty.
+
 ### State ownership
 
 | State | Owner | Write path | Read path |
@@ -61,6 +69,8 @@ Editable source: [`../assets/diagrams/system-runtime.mmd`](../assets/diagrams/sy
 | Mutable propositions | factual memory | versioned external update | retrieval router |
 | Stable repeated transformation | hardened skill | promotion pipeline | cheap guarded dispatch |
 | Resource and risk policy | budget controller | offline calibration | every gate and route |
+| Low-dimensional operating context | context bus plus receiver-local filters | fast and slow controllers | subscribed modules under a hard bit budget |
+| Lifecycle and fragility state | maintenance plane | replay, probes, regressions, resource telemetry | admission, reopening, pruning, and rollback gates |
 
 ## Efficiency mechanism
 
@@ -81,8 +91,13 @@ Individual ingredients have bounded evidence:
 - early exit [C-004](../research/claims.md#c-004);
 - joint-embedding prediction [C-006](../research/claims.md#c-006);
 - continual-learning protection [C-009](../research/claims.md#c-009);
-- pruning [C-012](../research/claims.md#c-012); and
-- factual retrieval [C-014](../research/claims.md#c-014).
+- pruning [C-012](../research/claims.md#c-012);
+- factual retrieval [C-014](../research/claims.md#c-014);
+- selective memory lifecycle [C-036](../research/claims.md#c-036)–[C-042](../research/claims.md#c-042);
+- scoped developmental and resource control
+  [C-043](../research/claims.md#c-043)–[C-051](../research/claims.md#c-051); and
+- endogenous structured generation and exploration
+  [C-061](../research/claims.md#c-061)–[C-066](../research/claims.md#c-066).
 
 Their integration, control policy, and claimed compounding benefits are
 speculative.
@@ -104,6 +119,10 @@ speculative.
 - Consolidation and monitoring dominate lifecycle energy.
 - Multiple memory tiers disagree without a conflict policy.
 - The architecture accumulates mechanisms whose overhead exceeds their value.
+- “Creativity” degenerates into high-temperature sampling without targeted
+  intervention, evaluation, or valid novelty.
+- A one-dimensional resilience score hides opposing resistance, recovery, and
+  adaptability effects ([C-060](../research/claims.md#c-060)).
 
 ## Measurable predictions
 

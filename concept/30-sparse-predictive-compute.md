@@ -43,6 +43,16 @@ when its calibrated risk estimate satisfies the task-specific bound. Published
 early-exit results establish the mechanism in narrower systems
 ([C-004](../research/claims.md#c-004)).
 
+Two slower control paths remain candidates. First, a rate-limited context bus
+may broadcast a few fast and slow variables that receivers decode with local
+gains and temporal filters; the relevant biological observations are scoped in
+[C-046](../research/claims.md#c-046)–[C-048](../research/claims.md#c-048), and
+the mechanism must beat ordinary gates and control baselines in
+[Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+Second, resource demand can be sensed near work and served by an adjacent
+allocation layer ([C-049](../research/claims.md#c-049)–[C-051](../research/claims.md#c-051)).
+Neither path is free or automatically stable.
+
 ## Efficiency mechanism
 
 The active fraction of layer or module work is
@@ -73,6 +83,9 @@ mathematically identical to dense execution.
   [C-004](../research/claims.md#c-004).
 - Event-driven on-chip learning: feasible on a published substrate under
   [C-015](../research/claims.md#c-015), not proven superior for this project.
+- Multirate broadcast and local physical resource allocation: biologically
+  established observations, speculative AI translations under
+  [C-046](../research/claims.md#c-046)–[C-051](../research/claims.md#c-051).
 
 ## Speculative extensions
 
@@ -82,6 +95,9 @@ mathematically identical to dense execution.
   the whole network in lockstep.
 - Learned escalation from a low-cost reflex path to deliberative modules and
   external tools.
+- Bounded recovery probes that ask whether a seemingly healthy control loop is
+  losing restoring margin, evaluated against conventional system identification
+  in [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md).
 
 ## Failure modes
 
@@ -91,6 +107,9 @@ mathematically identical to dense execution.
 - Asynchronous execution reduces hardware utilization or increases latency
   variance.
 - Predictability becomes a shortcut that ignores slow, important changes.
+- A global context channel silently becomes a dense high-bandwidth router.
+- Resource feedback oscillates, migrates state excessively, or starves a
+  neighboring module.
 
 ## Measurable predictions
 

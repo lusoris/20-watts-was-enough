@@ -23,6 +23,14 @@ ordinary notebook. Preserve uncertainty and history.
    decision record under [`decisions/`](decisions/README.md).
 8. Run `pwsh -File scripts/validate-docs.ps1` before committing.
 
+## Discovery workflow
+
+No scientific field is out of scope merely because it appears unrelated to AI.
+Use the problem-first search, extraction tuple, and promotion gates in
+[`research/discovery-policy.md`](research/discovery-policy.md). A new audit must
+name the strongest conventional engineering null model before its translation
+can influence an architecture or experiment.
+
 ## Live research edition
 
 Run `npm ci` once, then `npm run dev`. The browser reader watches the canonical

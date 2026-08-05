@@ -1,0 +1,8 @@
+# Experiments
+
+This phase specifies experiments but does not implement models or simulators.
+Candidate contracts define the null hypothesis, strongest standard baselines,
+equal-budget boundary, units, ablations, and rejection rule before code can
+make a favored mechanism look inevitable.
+
+See the [candidate index](candidates/README.md).

@@ -49,20 +49,29 @@ system boundary.
 | Constraint-guided repair | Reconstruct missing structure from target invariants and local context | **Explore** | Checkpoints, redundancy, program repair | Module regeneration versus restore and retrain | [C-033](claims.md#c-033) |
 | Frontier–backbone growth | Cheap exploration expands ahead of a stable transport network | **Explore** | Dynamic architecture search and elastic systems | Growth/fusion policy under full communication cost | [C-034](claims.md#c-034) |
 | Congestion-triggered reserve paths | Local inhibition opens capacity before throughput collapses | **Experiment** | Queueing and adaptive load balancing | Tail-latency-aware expert routing | [C-035](claims.md#c-035) |
+| Selective memory lifecycle | Replay, merge, externalize, weaken, or delete memories under explicit budgets | **Experiment** | Prioritized replay, caches, databases, compaction, and forgetting regularizers | Joint retention–adaptation–energy frontier with protected rare/safety state | [C-036](claims.md#c-036)–[C-042](claims.md#c-042) |
+| Reversible mature plasticity | Stable structure can be locally protected and reopened for validated change | **Explore** | Freezing, adapters, rollback, optimizer schedules, and continual-learning regularizers | Reopen–test–reconsolidate cycle versus ordinary fine-tuning | [C-044](claims.md#c-044), [C-045](claims.md#c-045) |
+| Multiscale context broadcast | A few rate-limited signals are decoded with receiver-specific gains and temporal filters | **Experiment** | FiLM, recurrent gates, global tokens, low-rank hypernetworks, gain-scheduled control | [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md) | [C-046](claims.md#c-046)–[C-048](claims.md#c-048) |
+| Local physical resource response | Demand is sensed near work and an adjacent layer changes supply or placement | **Explore** | DVFS, schedulers, locality optimization, NUMA placement, accelerators | Joint quality–tail-latency–joule test including controller and migration cost | [C-049](claims.md#c-049)–[C-051](claims.md#c-051) |
+| Thresholded collective commitment | Nonlinear support, opposition, and abstention gate group commitment | **Watch** | Robust aggregation, calibrated voting, confidence clipping, sequential tests | Quorum versus conventional aggregation under independent and correlated errors | [C-052](claims.md#c-052), [C-053](claims.md#c-053) |
+| Capability-gap repair | Admit the smallest complementary set that closes measured missing functions | **Explore** | Coverage optimization, architecture search, mixture growth, set cover | Function-guided repair versus random and global retraining | [C-056](claims.md#c-056), [C-057](claims.md#c-057) |
+| Recovery-based fragility sensing | Infer hidden loss of restoring margin from bounded perturbations and return dynamics | **Experiment** | SLO dashboards, CUSUM, Page–Hinkley, AR/VAR, RLS and subspace system identification | [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md) | [C-058](claims.md#c-058), [C-059](claims.md#c-059) |
+| Vector resilience accounting | Stability, acute resistance, recovery, adaptability, and admission can oppose each other | **Use now** | Multi-objective reliability and control metrics | Report raw axes before any aggregate score | [C-057](claims.md#c-057), [C-060](claims.md#c-060) |
+| Closed endogenous curriculum | Generate structured hypotheses, intervene selectively, evaluate, and retain validated changes | **Explore** | Active learning, model-based RL, planning, novelty search, self-play | Compositional novelty beyond imitation and stochastic policy sampling at equal interaction cost | [C-061](claims.md#c-061)–[C-066](claims.md#c-066) |
 
 ## Near-term priority
 
-The first comparative experiments should test mechanisms that are both
-measurable and composable:
+The first comparative experiments are specified as versioned contracts:
 
-1. **homeostatic conditional routing:** can a slow controller prevent expert
-   collapse and suppress chronically idle or overactive capacity?
-2. **three-factor local adaptation:** can activity plus a delayed outcome signal
-   update only the responsible modules without full-model backpropagation?
-3. **maintenance plane:** can a separate slow process improve replay selection,
-   pruning, and resource allocation without becoming an opaque second model?
-4. **peripheral autonomy:** can sensor-local policies handle predictable events
-   while a global model receives only novelty, conflict, or uncertainty?
+1. [adaptive logical topology](../experiments/candidates/001-adaptive-topology.md):
+   graph mutation versus fixed-topology routing and reoptimization;
+2. [multiscale context broadcast](../experiments/candidates/002-multiscale-context-broadcast.md):
+   a rate-limited context bus versus established gates and control baselines;
+3. [recovery dynamics](../experiments/candidates/003-recovery-dynamics-fragility.md):
+   latent fragility sensing versus standard telemetry, change detection, and
+   active system identification; and
+4. a smaller closed-endogenous-curriculum contract separating imitation,
+   stochastic generation, targeted intervention, and evaluation.
 
 Each experiment needs a conventional baseline, an ablation of the proposed
 principle, a declared system boundary, and quality–risk–energy measurements.
