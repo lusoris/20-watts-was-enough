@@ -217,3 +217,9 @@ project choice.
   explicit reopening predict safer or more efficient transitions than ordinary
   gates, schedules, staged verification, and versioned migration? See the
   [competence-gated fixture](../concept/10-neurogenesis-and-routing.md#competence-gated-structural-transition).
+- **OQ-048:** When geometry, typed inventory, local uptake, cleanup, and
+  topology change affect service, does a transported shared field outperform
+  typed queues/pub-sub, fixed-graph adaptive routing, backpressure/primal–dual
+  allocation, and stateful make-before-break at equal production, movement,
+  storage, controller, contamination, and lifecycle cost? See the
+  [transported-field fixture](../concept/07-cross-domain-convergence.md#transported-fields-are-not-messages).

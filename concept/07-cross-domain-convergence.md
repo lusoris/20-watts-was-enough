@@ -194,6 +194,77 @@ removed by “pruning” must appear as transport, storage, or output elsewhere
 ([C-239](../research/claims.md#c-239)); and a topology change can reassign or
 destroy service rather than improve it ([C-242](../research/claims.md#c-242)).
 
+### Transported fields are not messages
+
+Microbial signals, metabolites, fungal nutrients, plant hormones, process
+streams, queues, and network packets can all create a local field that later
+receivers use. The common systems object is not “communication in nature.” It
+is a transported, transformed, delayed, and locally decoded quantity whose
+physical path may also change future capacity
+([C-563](../research/claims.md#c-563),
+[C-578](../research/claims.md#c-578),
+[C-580](../research/claims.md#c-580)).
+
+For transported type $k$, use the local balance
+
+$$
+\frac{\partial c_k}{\partial t}
+=D_k\nabla^2c_k
+-\mathbf u\cdot\nabla c_k
++p_k-q_k-r_kc_k,
+$$
+
+where concentration $c_k$ is mol/m³, diffusion coefficient $D_k$ is m²/s,
+velocity $\mathbf u$ is m/s, production and uptake rates $p_k,q_k$ are
+mol/(m³ s), and first-order loss $r_k$ is 1/s. Digital fields use an analogous
+typed byte or item ledger; they do not inherit molecular units or diffusion
+laws. Geometry, boundary conditions, sampling support, and receiver state are
+part of the contract.
+
+```mermaid
+flowchart LR
+    P["Local production, release, or deficit"] --> T["Transport: flow · diffusion · delay · loss"]
+    G["Geometry, topology, and boundaries"] --> T
+    T --> C["Local concentration or typed inventory"]
+    C --> R["Receiver state + uptake + response"]
+    R --> O["Task outcome + local cost"]
+    O --> U["Update source, sink, conductance, or topology"]
+    U --> G
+    C --> A["Accumulate · transform · consume · export · purge"]
+    A --> C
+    F["Damage, contamination, incompatibility"] --> X["Contain · isolate · reroute · regrow"]
+    X --> G
+    O --> V{"Independent validation"}
+    V -->|"useful"| U
+    V -->|"not useful"| D["Decay, disperse, or retire"]
+```
+
+Editable source:
+[transported-field-contract.mmd](../assets/diagrams/transported-field-contract.mmd).
+
+The diagram deliberately spans several fields while retaining their
+differences:
+
+- microbial quorum output depends on production, confinement, flow, loss, and
+  receptor state; it is not a vote count ([C-563](../research/claims.md#c-563),
+  [C-575](../research/claims.md#c-575));
+- cross-feeding can help, harm, or create a weakest-link dependency, so local
+  transfer is not system utility ([C-571](../research/claims.md#c-571));
+- fungal flow can both deliver material and remodel conductance while rapid
+  containment remains distinct from later bypass
+  ([C-577](../research/claims.md#c-577)–[C-581](../research/claims.md#c-581));
+  and
+- distinct symbiotic partners can exchange unequally under conflicting
+  objectives ([C-584](../research/claims.md#c-584)).
+
+The held fixture belongs jointly to P-011/P-013 and existing Candidates 001
+and 013 ([C-585](../research/claims.md#c-585)). It must beat typed pub/sub or
+queues, fixed-graph adaptive routing, backpressure/primal–dual allocation, and
+make-before-break state transfer. Charge production, transport, storage,
+cleanup, contamination, topology edits, failed delivery, reserve, and
+measurement. If geometry and cleanup do not affect the task, use the simpler
+digital primitive.
+
 ## Efficiency mechanism
 
 Deduplication saves two different resources.

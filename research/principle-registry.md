@@ -406,8 +406,11 @@ slots, or shared environmental state.
 
 **Manifestations.** Transient frequency-specific phase coupling
 ([C-030](claims.md#c-030)); sparse directed influence in pigeon flocks
-([C-054](claims.md#c-054)); scheduled digital fabrics. The nonlinear commitment
-rule in fish remains a held candidate rather than being collapsed here.
+([C-054](claims.md#c-054)); geometry-dependent microbial fields and fungal
+transport oscillations whose coding role remains unproven
+([C-563](claims.md#c-563), [C-579](claims.md#c-579)); scheduled digital fabrics.
+The nonlinear commitment rule in fish remains a held candidate rather than
+being collapsed here.
 
 **Candidate AI primitive.** Learned temporal communication windows with
 bandwidth reservations and asynchronous fallback.
@@ -459,7 +462,10 @@ surveillance state whose coverage and attribution remain physical
 ([C-127](claims.md#c-127)); report, outcome, settlement, and commitment records
 used for scoring or contestability ([C-140](claims.md#c-140)–[C-143](claims.md#c-143));
 and transaction/compensation records plus derivation provenance
-([C-154](claims.md#c-154), [C-156](claims.md#c-156)).
+([C-154](claims.md#c-154), [C-156](claims.md#c-156)); and transported microbial
+or fungal fields whose geometry, uptake, transformation, and cleanup remain
+physical ([C-563](claims.md#c-563), [C-571](claims.md#c-571),
+[C-580](claims.md#c-580)).
 
 **Candidate AI primitive.** A versioned shared workspace where modules publish
 compact observations, partial results, route pressure, and unresolved questions

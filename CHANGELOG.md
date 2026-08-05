@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Paired microbial-ecology/biofilm and fungal-network audits that keep
+  signaling, physiology, transport, ecology, lineage selection, symbiosis, and
+  ecosystem consequences at their correct scales.
+- Twenty-three deduplicated shared claims (`C-563`–`C-585`), fifty-nine new
+  centralized sources, an editable transported-field diagram, and typed in-
+  flight inventory tracks in Candidates 001 and 013.
 - A developmental-biology and morphogenesis audit separating signal from
   competence, specification from implementation, and current causal function
   from evolutionary origin across patterning, commitment, sculpting, repair,

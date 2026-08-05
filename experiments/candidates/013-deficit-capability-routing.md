@@ -68,6 +68,26 @@ unless an arm explicitly pays to create or move capability. The second
 constraint is the discriminating local gate: a global deficit signal cannot
 activate a receiver that lacks the requested resource or permitted action.
 
+### Typed inventory and opportunity lifetime
+
+For each resource type $k$, retain separate available inventory $s_{ik}(t)$ in
+task-native units, gross incoming/outgoing flow, transformation loss, expiry,
+and delivered useful amount. A bidirectional gross flow is not net fulfillment,
+and an average system gain cannot hide a harmed or indispensable participant
+([C-571](../../research/claims.md#c-571),
+[C-580](../../research/claims.md#c-580),
+[C-584](../../research/claims.md#c-584)).
+
+Extend the factorial suite with type compatibility, patch lifetime, transport
+delay, intermediate toxicity, leakage, local storage, partner deletion, and
+strategic withholding. Compare typed queues, backpressure, primal–dual shadow
+prices, and the candidate after giving every arm the same type, lifetime, and
+local-feasibility information. Reject the refinement if the local gate is only
+an ordinary feasibility constraint or if the stronger nulls match element-
+specific fulfillment, starvation, messages, dependency concentration, and
+joules. This is the Candidate-013 side of the shared
+[transported-field fixture](../../concept/07-cross-domain-convergence.md#transported-fields-are-not-messages).
+
 ## Task family
 
 Use a modular service and embodied-sensing simulator where:
@@ -176,6 +196,9 @@ feasibility gating, and the existing principle bundles.
 ## Evidence links
 
 - [Plant distributed-control audit](../../research/audits/2026-08-05-plant-distributed-control.md)
+- [Microbial ecology and biofilms audit](../../research/audits/2026-08-05-microbial-ecology-biofilms.md)
+- [Fungal networks and resource allocation audit](../../research/audits/2026-08-05-fungal-networks-resource-allocation.md)
+- [C-563](../../research/claims.md#c-563)–[C-585](../../research/claims.md#c-585)
 - [C-204](../../research/claims.md#c-204)–[C-217](../../research/claims.md#c-217)
 - [P-001](../../research/principle-registry.md#p-001--selective-allocation)
 - [P-005](../../research/principle-registry.md#p-005--use-dependent-topology)

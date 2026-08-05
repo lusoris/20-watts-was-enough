@@ -1,0 +1,1259 @@
+# Primary-source audit: fungal networks and resource allocation
+
+**Audit date:** 2026-08-05
+
+**Scope:** hyphal branching and anastomosis, oscillatory and growth-induced
+transport, nutrient foraging and translocation, source--sink reallocation,
+damage containment and bypass, nuclear heterogeneity, priming and directional
+"memory," plant--fungus exchange, and network remodeling
+
+**Purpose:** candidate evidence for later claim-ledger review. This file does
+not promote a claim, create a stable claim ID, amend the principle registry, or
+create a new experiment candidate.
+
+## Executive result
+
+The strongest fungal evidence is not evidence for a hidden fungal optimizer or
+a fungal nervous system. It is evidence for a **growing transport network whose
+load, inventory, topology, and repair state cannot be cleanly separated**.
+Branching creates reach; anastomosis creates alternative paths and cytoplasmic
+continuity; growth creates source--sink demand and can itself drive mass flow;
+high-use cords can thicken while low-value regions regress; local damage can be
+plugged within seconds in some septate fungi; and later growth can reconnect or
+bypass damaged regions. These transitions are measurable, but they are also
+well described by hydraulics, advection--diffusion, local growth rules,
+network-flow reinforcement, and wound-containment mechanisms.
+
+No new principle or candidate survives this audit. The narrowest residual is:
+
+> **conservation-qualified adaptive topology while real transported inventory
+> remains in flight**: the same local flux that performs useful delivery also
+> changes the future conductance graph through reinforcement, regression,
+> fusion, and growth, while cuts trigger a distinct containment transition.
+
+That residual refines exactly
+[Candidate 001](../../experiments/candidates/001-adaptive-topology.md) and
+[Candidate 013](../../experiments/candidates/013-deficit-capability-routing.md).
+Damage is included as a stress condition and scored with Candidate 005-style
+containment metrics, but the evidence does **not** add a third candidate: rapid
+septal plugging already reduces to local containment, and later bypass reduces
+to Candidate 001 topology change.
+
+The biological findings also impose several negative conclusions:
+
+- oscillation is not evidence of encoded communication unless a decoded
+  variable and causal intervention are shown;
+- bidirectional tracer movement is not equivalent to balanced exchange,
+  reciprocal benefit, or community optimization;
+- mycorrhizal partners are distinct organisms with partly conflicting
+  objectives, not modules of one controller;
+- nucleotype variation is not an ensemble-learning algorithm; drift, bulk
+  flow, bottlenecks, host filtering, and within-syncytium selection are live
+  explanations;
+- persistence, hysteresis, asymmetric regrowth, or priming is not by itself
+  associative memory; and
+- a reticulate graph or post-cut regrowth is not proof of self-repair unless
+  function, cost, and restored service are measured.
+
+## Audit method and promotion gate
+
+Primary experiments, genetic interventions, direct imaging, isotopic tracing,
+and measured network perturbations receive the most weight. Reviews are used
+only to locate mechanisms and disagreement. One recent negative directional-
+memory experiment is retained because the positive evidence is otherwise easy
+to overgeneralize.
+
+For each proposed AI translation, the strongest conventional explanation is
+the null. A fungal mechanism earns distinct status only if it changes a state
+transition, information boundary, or equal-budget performance frontier that is
+not already supplied by:
+
+1. adaptive routing or multicommodity flow on a fixed graph;
+2. periodic graph optimization;
+3. local conductance reinforcement and decay;
+4. pressure-driven flow and advection--diffusion;
+5. source--sink backpressure or primal--dual allocation;
+6. ordinary circuit breaking, isolation, and repair/replacement;
+7. stress acclimation with a decaying physiological state;
+8. population genetics, multilevel selection, and bottleneck models; or
+9. market, contract, or matching models for exchange among distinct actors.
+
+The promotion bar requires preregistered, held-out, equal-budget results in a
+second domain. A fungal observation alone is never evidence that a silicon
+implementation is efficient.
+
+## Mandatory scale separation
+
+| Scale | Biological unit | What can be inferred | What cannot be inferred |
+| --- | --- | --- | --- |
+| Intrahyphal / nuclear | organelles, nuclei, septal compartments, shared cytoplasm | movement, mixing, compartment closure, genotype-frequency change | that nuclei vote, deliberate, or form an optimized expert ensemble |
+| One mycelium | connected hyphae and cords belonging to one fungal individual or compatible syncytium | growth, regression, fusion, translocation, local containment, whole-network redistribution | that every response is centrally planned or cognitively represented |
+| Symbiosis | a fungus and one or more plants, each with its own fitness interests | uptake, transfer, preferential allocation, reciprocal response, exploitation | a single organism-level objective or fair exchange |
+| Community | multiple fungal individuals, plants, bacteria, grazers, and abiotic pathways | competition, facilitation, tracer transfer, decomposition, distributional effects | an ecosystem controller, intentional aid, or a shared global utility |
+
+Anastomosis also needs an identity boundary. Fusion within a compatible young
+colony can increase continuity; fusion between mature or incompatible colonies
+may be absent or restricted. `Connected in an image` is therefore not a stable
+proxy for common control, common genotype, or freely shared resources.
+
+## Evidence map
+
+| Topic | Primary evidence | Scoped inference | Status | Strongest null |
+| --- | --- | --- | --- | --- |
+| Branching and fusion | live-cell CAT imaging; fusion mutants; radiolabeled amino-acid transport | fusion can improve within-colony transport in *Neurospora crassa*; sharing across mature colonies is limited | established in tested strains/conditions | connectivity and hydraulic path length explain the effect |
+| Network architecture | time-lapse weighted graphs of *Phanerochaete velutina* | fungal networks occupy cost--efficiency--resilience tradeoffs and remodel edge weights | established for imaged two-dimensional microcosms | ordinary weighted-network adaptation |
+| Growth-induced flow | observed volume change plus minimum-work flow reconstruction | incompressibility and new-tip demand can generate network-wide mass flow without a separate messaging layer | plausible mechanistic model with partial validation | conservation plus viscous flow |
+| Oscillatory domains | photon-counting / fluorescent nutrient analog imaging | locally synchronized pulsatile domains occur and correlate with transport state | established phenomenon; function uncertain | metabolic oscillation, pressure variation, or measurement proxy dynamics |
+| Foraging / source--sink shift | wood-resource microcosms and $^{32}$P or $^{15}$N tracing | biomass and nutrients can be reallocated toward new or higher-quality resources | established in scoped saprotrophic systems | local uptake plus changing source/sink strength |
+| Damage response | cuts, grazing, imaging, septal-pore mutants | rapid leakage containment and slower topology remodeling are distinct phases | established in some ascomycetes; network-level benefit context-dependent | isolation followed by regrowth / graph repair |
+| Nuclear heterogeneity | tagged nuclei, single-nucleus sequencing, host manipulations | nuclei mix; some fungi carry distinct nucleotypes whose ratios can vary with host/condition | established for tested strains | flow, drift, bottlenecks, competition, and host filtering |
+| Directional memory | transfer-and-regrowth assay in *P. velutina*; negative *Laccaria bicolor* assay | prior asymmetric growth can predict later asymmetric regrowth in one preparation | disputed/generalization unsupported | residual biomass, polarity, viability, and unequal propagule state |
+| Stress priming | controlled heat and drought prime--delay--challenge experiments | prior sublethal stress can transiently alter later growth/activity | plausible to established by isolate; substrate unresolved | acclimation, retained metabolites, damage selection, or growth-state carryover |
+| Plant--fungus trade | partner manipulation and isotope tracing | carbon supply can alter fungal N/P uptake and allocation; exchange can be unequal | established in scoped AM systems | local carbon limitation and ordinary exchange economics |
+| Ecosystem consequence | connected-litter microcosms | fungal reallocation can alter decomposition, N retention, and carbon-use efficiency | plausible and system-specific | species turnover, substrate chemistry, and microbial competition |
+
+## Mechanism synthesis
+
+### 1. Branching, fusion, and reticulate topology
+
+#### Biological observation
+
+Hyphae extend at tips and branch to explore space. In many filamentous fungi,
+specialized or vegetative hyphae can home and fuse. Roca et al. directly imaged
+conidial anastomosis tubes in *N. crassa*, including passage of nuclei and
+microtubules through completed fusions
+([DOI](https://doi.org/10.1128/EC.4.5.911-919.2005)). The result establishes a
+developmentally regulated fusion mechanism; it does not establish that every
+contact fuses or that fusion is always advantageous.
+
+Simonin et al. compared wild type with fusion-deficient and partially
+fusion-deficient *N. crassa*. Labeled nutrient movement was impaired when
+network formation was disrupted, especially in heterogeneous environments,
+while substantial resource sharing between established mature colonies was
+limited ([DOI](https://doi.org/10.1128/EC.00213-12)). This is unusually useful
+causal evidence: it separates the topology intervention from a merely visual
+correlation. It also limits the analogy—within-colony continuity is not an
+open, universal commons.
+
+#### Proposed AI translation
+
+Permit modules to add or retire logical links locally, but treat link creation
+as a lifecycle action with setup, state-transfer, security, idle, and rollback
+cost. The useful abstraction is not “grow like a fungus”; it is **change the
+reachable graph only when expected future traffic amortizes the edit**.
+
+#### Efficiency mechanism
+
+Branching buys spatial coverage. Fusion can reduce path length, create cycles,
+and permit alternative routes. Regression reclaims material. The gain exists
+only when the reduced delivery loss or recovery time exceeds construction and
+maintenance cost.
+
+#### Failure modes and measurable predictions
+
+- Excess fusion spreads faults, incompatible state, or selfish elements.
+- Excess branching creates expensive low-use frontier.
+- Too little reticulation creates bridges and cut vulnerability.
+- A successful implementation must beat fixed-graph adaptive routing and a
+  global graph optimizer after bytes moved and new-link state are charged.
+
+### 2. Flow is both service and state signal
+
+#### Biological observation
+
+Bebber et al. reconstructed weighted networks from cord-forming fungi and
+compared transport efficiency with reference graphs
+([DOI](https://doi.org/10.1098/rspb.2007.0459)). The observed networks balance
+material cost, transport efficiency, and resilience; no single universal
+optimum follows.
+
+Heaton et al. used time-lapse volume changes to infer the unique minimum-work
+currents consistent with observed growth in *P. velutina*. Cords predicted to
+carry larger or faster currents were more likely to thicken later
+([DOI](https://doi.org/10.1098/rspb.2010.0735)). This supports a tight coupling
+between growth demand, incompressible fluid movement, and later conductance.
+It does not prove that flow velocity is sensed as an abstract global message;
+mechanical stress, metabolite delivery, and local growth physiology remain
+possible mediators.
+
+#### Proposed AI translation
+
+Use task-bearing flow itself as a low-cost local statistic for structural
+credit. Reinforce an edge only when its delivered *timely utility*, not raw
+traffic, predicts future value. Keep a separate exploration and reserve budget
+so early accidents do not permanently monopolize topology.
+
+#### Efficiency mechanism
+
+Telemetry is partially piggybacked on work. An edge need not receive a global
+centrality calculation if local delivered flow, loss, and queue state predict
+whether capacity should thicken. The candidate benefit is lower control-plane
+traffic; the risk is feedback lock-in.
+
+#### Failure modes and measurable predictions
+
+- Raw flow rewards loops, attacks, and already-dominant paths.
+- Delayed thickening overshoots under short-lived demand.
+- Regression erases dormant but critical recovery paths.
+- Hysteresis should reduce churn without preventing timely adaptation.
+
+### 3. Oscillatory transport is not automatically a code
+
+#### Biological observation
+
+Tlalka et al. imaged amino-acid analog dynamics and reported locally
+synchronized oscillatory domains in saprotrophic mycelia
+([DOI](https://doi.org/10.1016/j.fgb.2007.02.012)). Oscillation may coordinate
+transport, but the experiment does not identify a message alphabet, receiver,
+decoder, or counterfactual behavioral change caused by phase alone.
+
+An oscillating flux can move substantial material back and forth while
+delivering little net inventory. Conversely, zero-mean flow can enhance mixing
+or dispersion. Any AI analogy must therefore distinguish throughput,
+information, mixing, and synchronization.
+
+#### Proposed AI translation
+
+At most, test local phase scheduling as an alternative to explicit global
+clocks. It belongs beside the entrainable-local-phase track in the
+[endocrine/circadian audit](2026-08-05-endocrine-circadian-control.md), not as a
+fungal principle.
+
+#### Failure modes and measurable predictions
+
+- Phase coherence may be an epiphenomenon of shared pressure or metabolism.
+- Synchronization may increase burst contention.
+- A valid result must show that phase perturbation changes delivery or control
+  after mean flow and energy are matched.
+
+### 4. Resource foraging and source--sink reallocation
+
+#### Biological observation
+
+Wells and Boddy traced soil-derived $^{32}$P uptake and translocation across
+temperature treatments in cord systems
+([DOI](https://doi.org/10.1111/j.1469-8137.1995.tb04299.x)). Harris and Boddy
+showed that arrival of wood resources changed biomass deployment and phosphorus
+allocation; local uptake contributed most, while bidirectional translocation
+also occurred ([DOI](https://doi.org/10.1007/s00248-004-0075-x)). These results
+support conditional allocation, not omniscient routing.
+
+Fukasawa, Savoury, and Boddy found that large newly colonized baits could be
+associated with regression around the old inoculum and later failure to regrow
+from it ([DOI](https://doi.org/10.1038/s41396-019-0536-3)). Boberg et al. found
+N and growth reallocation from older to fresh litter in connected axenic
+systems, with changes to C-use efficiency and N mineralization
+([DOI](https://doi.org/10.1371/journal.pone.0092897)). These are strong examples
+of inventory being moved across changing resource quality, but carbon, N, P,
+water, and viable biomass are not interchangeable currencies.
+
+#### Proposed AI translation
+
+Separate three signals:
+
+1. unmet demand at a sink;
+2. actual local capability or resource availability; and
+3. the amortized lifetime of the opportunity.
+
+This directly refines Candidate 013. A global or intermediate deficit should
+not allocate capacity where the receiver lacks substrate, permission, or time
+to exploit it.
+
+#### Failure modes and measurable predictions
+
+- Strong sinks starve maintenance and future exploration.
+- Local abundance can be consumed before a distant signal arrives.
+- Bidirectional flow can hide net exploitation.
+- The candidate should lose to fresh centralized optimization when global
+  state is cheap and accurate.
+
+### 5. Damage containment, bypass, and repair are different transitions
+
+#### Biological observation
+
+In severed *Penicillium chrysogenum* hyphae, Woronin bodies plugged a growing
+fraction of nearby septal pores within seconds
+([DOI](https://doi.org/10.1016/0147-5975(85)90051-9)). In *N. crassa*, plugged
+septa can later initiate new tips; SO localization was not required for that
+regrowth in the reported comparison. These observations separate:
+
+1. **containment:** stop cytoplasmic loss;
+2. **recovery:** resume growth from a viable boundary; and
+3. **bypass:** create a new route around lost structure.
+
+Donnelly and Boddy found polarized development after repeated damage to
+*P. velutina* systems
+([DOI](https://doi.org/10.1111/j.1574-6941.1998.tb00496.x)). Boddy et al. found
+that grazing responses depended on resource availability: extra cross-links
+and inferred resilience were not a free or universal consequence of attack
+([DOI](https://doi.org/10.1016/j.fgb.2010.01.006)).
+
+#### Proposed AI translation
+
+Use fast local revocation to cap loss, then decide whether ordinary route
+switching suffices, whether a structural bypass should be built, or whether the
+region should be retired. Do not call restored graph connectivity “repair”
+unless task service, hidden state, and future fault tolerance recover.
+
+#### Efficiency mechanism
+
+Fast containment protects remaining inventory before global diagnosis.
+Reticulation can permit immediate rerouting; slower regrowth spends material
+only where failure recurrence or demand makes it worthwhile.
+
+#### Failure modes and measurable predictions
+
+- Plugging contains good traffic as well as leakage.
+- A bypass can preserve throughput while silently losing state consistency.
+- Repeated attack can deplete material and reduce exploration.
+- Results must expose leakage, unavailable time, lost work, repair energy,
+  reserve, and second-hit performance separately.
+
+### 6. Nuclear heterogeneity is a multilevel-selection problem
+
+#### Biological observation
+
+Roper et al. tagged two nuclear populations in *N. crassa* and observed mixing
+flows across a branched, fused syncytium
+([DOI](https://doi.org/10.1073/pnas.1220842110)). Mixing can distribute genetic
+and functional diversity, but it also exposes the organism to competition and
+conflict among nuclei.
+
+The organization of arbuscular-mycorrhizal fungal genomes has been disputed.
+Pawlowska and Taylor reported evidence consistent with homokaryosis in their
+tested isolates ([DOI](https://doi.org/10.1038/nature02290)); Ropars et al.
+later resolved homo- and dikaryon-like organization across *Rhizophagus
+irregularis* isolates ([DOI](https://doi.org/10.1038/nmicrobiol201633)).
+Kokkoris et al. found host-dependent nucleotype ratios in dikaryotic strains
+([DOI](https://doi.org/10.1016/j.cub.2021.01.035)), and Sperschneider et al.
+reported two structurally and epigenetically distinct nuclear genomes with
+condition-dependent abundance and nucleus-specific expression in AMF
+heterokaryons ([DOI](https://doi.org/10.1038/s41564-023-01495-8)).
+
+#### Proposed AI translation
+
+None is promoted. If used as inspiration, treat persistent internal lineages
+as competing replicators with explicit bottlenecks, public goods, audit, and
+retirement—not as free expert diversity. This is already covered by P-004 and
+Candidate 016's conflict-bounded unit test.
+
+#### Failure modes and measurable predictions
+
+- Fast-growing lineages can exploit shared products.
+- Bulk flow can mimic targeted allocation.
+- host-dependent ratios can reflect differential replication or bottlenecking,
+  not active organism-level choice;
+- aggregate performance can hide lineage collapse and loss of future options.
+
+### 7. Priming, polarity, and “memory”
+
+#### Biological observation
+
+Andrade-Linares et al. exposed 19 soil fungal isolates to a mild heat stress,
+varied the delay, then applied a stronger stress. Eight isolates showed a
+priming response, with substantial phylogenetic and temporal heterogeneity
+([DOI](https://doi.org/10.1016/j.funeco.2016.02.002)). Guhr et al. reported
+drought priming in one of two tested saprotrophic fungi
+([DOI](https://doi.org/10.1007/s00248-019-01481-w)). These results establish a
+history-dependent response, not its storage mechanism or cognitive status.
+
+Fukasawa et al.'s transfer assay found that prior bait-side growth predicted
+later bait-side regrowth in *P. velutina*. But the transferred inoculum could
+retain asymmetric viable biomass, organelles, nutrients, wall state, or growth
+polarity. A 2025 *Laccaria bicolor* assay designed to reduce uneven-propagule
+confounds reported no directional-memory evidence
+([DOI](https://doi.org/10.1080/19420889.2025.2580130)). The proper status is
+therefore disputed and organism/protocol-specific.
+
+#### Proposed AI translation
+
+Use a cheap decaying eligibility or preparedness state only if its carrier,
+decay, update cost, and causal benefit are measured. This deduplicates into
+P-003 and P-012 and the
+[memory/replay/forgetting audit](2026-08-05-memory-replay-forgetting.md).
+
+#### Failure modes and measurable predictions
+
+- Selection of surviving cells masquerades as within-cell memory.
+- Retained resource masquerades as information.
+- Slow growth makes “delay” incomparable across isolates.
+- A true directional state must survive biomass equalization, rotation,
+  transfer, viability matching, and reversal tests.
+
+### 8. Fungal--plant exchange is strategic exchange, not organismal routing
+
+#### Biological observation
+
+Kiers et al. manipulated plant and AM-fungal partner quality and found
+preferential allocation consistent with reciprocal rewards
+([DOI](https://doi.org/10.1126/science.1208473)). Fellbaum et al. showed that
+plant carbon availability altered fungal N uptake, transport, and gene
+expression ([DOI](https://doi.org/10.1073/pnas.1118650109)). In common
+mycorrhizal networks, carbon-source strength influenced fungal N and P
+allocation, although shaded hosts were not simply abandoned
+([DOI](https://doi.org/10.1111/nph.12827)). Walder et al. measured strongly
+unequal terms of trade between plant species linked by an AM fungus
+([DOI](https://doi.org/10.1104/pp.112.195727)).
+
+The 2025 travelling-wave study imaged AM-fungal growth tips and fusion in
+two-dimensional culture and linked tip pulses to expanding plant--fungus trade
+fronts ([DOI](https://doi.org/10.1038/s41586-025-08614-x)). It sharpens
+Candidate 001's topology dynamics, but it does not turn symbiosis into one
+controller. This observation is already canonical as
+[C-034](../claims.md#c-034); `FUNG-T26` below is an audit-local cross-reference,
+not a second claim.
+
+#### Proposed AI translation
+
+For modules with real private objectives, measure payment, delivery,
+outside options, strategic reporting, concentration, and exclusion. If modules
+are cooperative software components with shared observability, a market layer
+is unnecessary overhead; ordinary constrained allocation is the null.
+
+#### Failure modes and measurable predictions
+
+- transfer can reward the richest partner and amplify inequality;
+- gross two-way flux can coexist with a highly asymmetric net benefit;
+- partner choice can reduce diversity or strand weak participants;
+- isotope arrival does not identify intent or ultimate fitness effect.
+
+### 9. Ecosystem effects stay at ecosystem scale
+
+Fungal networks alter decomposition, mineral retention, water access, and
+interactions among species. Those effects can be large while no organism
+optimizes community welfare. The relevant result vector includes fungal
+fitness, each plant's growth and reproduction, decomposition rate, nutrient
+retention/loss, community diversity, inequality, and disturbance recovery.
+
+This deduplicates into the
+[microbial ecology and biofilms audit](2026-08-05-microbial-ecology-biofilms.md)
+and the
+[collective/ecological resilience audit](2026-08-05-collective-ecological-resilience.md).
+Average productivity is not a sufficient score, and a tracer pathway is not a
+collective decision.
+
+## Mathematical notes and accounting boundaries
+
+### A. Edge hydraulics
+
+For an idealized cylindrical cord edge $e$ under laminar Newtonian flow,
+
+$$
+Q_e(t)=\frac{\Delta P_e(t)}{R_e(t)},
+\qquad
+R_e(t)=\frac{8\mu_e(t)L_e(t)}{\pi r_e(t)^4}.
+$$
+
+- $Q_e$: volumetric flow, $\mathrm{m^3\,s^{-1}}$;
+- $\Delta P_e$: pressure difference, $\mathrm{Pa}$;
+- $R_e$: hydraulic resistance, $\mathrm{Pa\,s\,m^{-3}}$;
+- $\mu_e$: dynamic viscosity, $\mathrm{Pa\,s}$;
+- $L_e$: edge length, $\mathrm{m}$; and
+- $r_e$: effective lumen radius, $\mathrm{m}$.
+
+This is a null model, not a literal description of every cord. Hyphal bundles
+can contain septa, multiple lumina, active transport, wall exchange, and
+non-Newtonian cytoplasm. The $r^4$ dependence nevertheless makes unmeasured
+diameter a major uncertainty.
+
+### B. Node volume conservation with growth
+
+For node or region $i$ with aqueous volume $V_i$,
+
+$$
+\frac{dV_i}{dt}
+=\sum_{e\in\operatorname{in}(i)}Q_e
+-\sum_{e\in\operatorname{out}(i)}Q_e
++U_i-G_i-L_i.
+$$
+
+- $V_i$: aqueous volume, $\mathrm{m^3}$;
+- $U_i$: environmental water uptake, $\mathrm{m^3\,s^{-1}}$;
+- $G_i$: water incorporated or displaced by net growth, $\mathrm{m^3\,s^{-1}}$;
+- $L_i$: evaporation/leakage/exudation, $\mathrm{m^3\,s^{-1}}$.
+
+Every inferred flow model must state which of $U_i$, $G_i$, and $L_i$ is
+measured, assumed, or fitted. Network-wide response can arise from
+incompressibility without an encoded global signal.
+
+### C. Solute transport
+
+For solute species $s$ in a one-dimensional edge,
+
+$$
+\frac{\partial c_{s,e}}{\partial t}
++\frac{\partial (u_e c_{s,e})}{\partial x}
+=\frac{\partial}{\partial x}
+\left(D_{s,e}\frac{\partial c_{s,e}}{\partial x}\right)
++\sigma_{s,e}-\rho_{s,e}.
+$$
+
+- $c_{s,e}$: concentration, $\mathrm{mol\,m^{-3}}$;
+- $u_e$: axial velocity, $\mathrm{m\,s^{-1}}$;
+- $x$: distance, $\mathrm{m}$;
+- $D_{s,e}$: effective diffusivity/dispersion, $\mathrm{m^2\,s^{-1}}$;
+- $\sigma_{s,e}$ and $\rho_{s,e}$: release and uptake rates per edge volume,
+  $\mathrm{mol\,m^{-3}\,s^{-1}}$.
+
+Radiotracer intensity must not be equated directly with usable delivered
+nutrient without calibration for chemical form, immobilization, decay,
+exchange, and detector support.
+
+### D. Oscillatory versus net delivery
+
+Represent measured edge flow as
+
+$$
+Q_e(t)=\bar Q_e+
+\sum_{k=1}^{K} A_{e,k}\cos(2\pi f_k t+\phi_{e,k}),
+$$
+
+where $\bar Q_e$ and $A_{e,k}$ are in $\mathrm{m^3\,s^{-1}}$, $f_k$ is in
+$\mathrm{Hz}$, $t$ in $\mathrm{s}$, and $\phi_{e,k}$ in radians. Net volume
+over window $T$ is $\int_0^TQ_e(t)dt$ in $\mathrm{m^3}$. Large $A$ with
+$\bar Q=0$ does not prove net source--sink transport; it may still change
+mixing or dispersion, which must be measured separately.
+
+### E. Element-specific inventory closure
+
+For element or currency $s$ inside a declared boundary $\Omega$,
+
+$$
+\frac{dM_{s,\Omega}}{dt}
+=I_{s,\Omega}-O_{s,\Omega}
++P_{s,\Omega}-C_{s,\Omega}-\Lambda_{s,\Omega}.
+$$
+
+- $M_{s,\Omega}$: stored amount, $\mathrm{mol}$ or $\mathrm{kg}$;
+- $I$ and $O$: measured inflow/outflow, $\mathrm{mol\,s^{-1}}$ or
+  $\mathrm{kg\,s^{-1}}$;
+- $P$ and $C$: internal production and consumption in the same rate unit;
+- $\Lambda$: unmeasured loss, immobilization, sampling, or boundary error in
+  the same rate unit.
+
+Carbon, N, P, K, water, ATP, and biomass receive separate ledgers. They may be
+converted only through an explicit stoichiometric or economic model with
+uncertainty.
+
+### F. Source--sink allocation
+
+Let $J_{s\to i}(t)$ be useful delivery of resource $s$ to sink $i$ in
+$\mathrm{mol\,s^{-1}}$. Then
+
+$$
+\sum_{j\in\mathcal S}J_{j\to \Omega}
+=\sum_{i\in\mathcal D}J_{\Omega\to i}
++\frac{dM_{s,\Omega}}{dt}+L_{s,\Omega}.
+$$
+
+$\mathcal S$ and $\mathcal D$ are source and destination sets, and
+$L_{s,\Omega}$ is loss in $\mathrm{mol\,s^{-1}}$. A Candidate 013-inspired
+gate may allocate service $a_i$ only when both deficit $d_i>0$ and local
+capability $g_i=1$:
+
+$$
+a_i(t)=g_i(t)\,\psi(d_i(t-\tau_{\uparrow}),
+q(t-\tau_{\downarrow}),h_i(t)),
+\qquad \sum_i a_i(t)\le B(t).
+$$
+
+- $a_i$, $d_i$, and total budget $B$: declared service units per second;
+- $g_i$: dimensionless binary or calibrated $[0,1]$ capability;
+- $q$: dimensionless or explicitly encoded scarcity context;
+- $h_i$: local state with declared units by component;
+- $\tau_{\uparrow},\tau_{\downarrow}$: seconds.
+
+### G. Topology lifecycle objective
+
+For policy $\pi$ over horizon $T$,
+
+$$
+J_{\pi}=
+L_{\mathrm{task}}+
+\lambda_E E_{\mathrm{life}}+
+\lambda_M M_{\mathrm{life}}+
+\lambda_R L_{\mathrm{risk}},
+$$
+
+with raw axes always reported. $L_{\mathrm{task}}$ and $L_{\mathrm{risk}}$ are
+declared task-loss units; $E_{\mathrm{life}}$ is joules; $M_{\mathrm{life}}$
+is material or provisioned-capacity units; $\lambda_E$ is task-loss per joule;
+$\lambda_M$ is task-loss per material unit; and $\lambda_R$ is dimensionless.
+
+The lifecycle boundary is
+
+$$
+E_{\mathrm{life}}=
+E_{\mathrm{sense}}+E_{\mathrm{transport}}+E_{\mathrm{compute}}
++E_{\mathrm{grow}}+E_{\mathrm{maintain}}+E_{\mathrm{fusion}}
++E_{\mathrm{repair}}+E_{\mathrm{retire}}+E_{\mathrm{idle}}.
+$$
+
+All terms are joules. In a software experiment, `grow` means provisioning and
+state migration; `fusion` means link establishment and compatibility checks.
+
+### H. Damage accounting
+
+For cut or fault event $k$,
+
+$$
+R_k=(\Lambda_k,T_{c,k},T_{r,k},W_{k},E_{k},S_{2,k}),
+$$
+
+where $\Lambda_k$ is leaked/lost inventory in declared units, $T_c$ containment
+latency in seconds, $T_r$ task-service recovery latency in seconds, $W$ lost
+useful work in task units, $E$ recovery energy in joules, and $S_2$ second-hit
+service fraction, dimensionless. A scalar score must not hide this vector.
+
+### I. Nuclear-frequency dynamics
+
+For nucleotype $a$ among $n$ observed nuclei,
+
+$$
+p_a(t)=\frac{n_a(t)}{n(t)},
+\qquad
+\Delta p_a=F_{\mathrm{replication}}+F_{\mathrm{flow}}
++F_{\mathrm{bottleneck}}+F_{\mathrm{sampling}}.
+$$
+
+$p_a$ and each $F$ are dimensionless changes per observation interval. The
+decomposition is conceptual until interventions or lineage-resolved models
+identify its terms. Host-correlated $\Delta p_a$ alone does not establish
+active ratio control.
+
+### J. Priming and directional persistence
+
+For challenge response $y$ in a declared unit,
+
+$$
+\Delta y(\tau)=
+y_{\mathrm{prime+challenge}}(\tau)
+-y_{\mathrm{sham+challenge}}(\tau),
+\qquad
+\Delta y(\tau)=\Delta y_0 e^{-\tau/\tau_m}
+$$
+
+as a falsifiable exponential null. $\tau$ and $\tau_m$ are seconds or hours,
+and $\Delta y$ has the response unit (for example, $\mathrm{mm\,h^{-1}}$ of
+radial growth). Other decay families may fit better, but model selection must
+be preregistered.
+
+Directional persistence can be reported as
+
+$$
+D=\frac{A_{\mathrm{old}}-A_{\mathrm{opposite}}}
+{A_{\mathrm{old}}+A_{\mathrm{opposite}}},
+$$
+
+where both $A$ values are regrowth area in $\mathrm{mm^2}$ over an identical
+window and $D\in[-1,1]$. Biomass, viability, orientation, substrate, and edge
+geometry must be matched before interpreting $D$ as stored direction.
+
+## Cross-domain deduplication
+
+### Against P-001 through P-013
+
+| Principle | Fungal instance | Disposition |
+| --- | --- | --- |
+| [P-001](../principle-registry.md#p-001--selective-allocation) | biomass and nutrient allocation toward active fronts/resources | direct instance; no new principle |
+| [P-002](../principle-registry.md#p-002--local-autonomy-with-exception-escalation) | tip-local growth and rapid septal closure | locality is established; no demonstrated exception protocol |
+| [P-003](../principle-registry.md#p-003--temporary-trace-before-commitment) | stress priming / residual polarity | valid only when state is reversible and decays; memory substrate unresolved |
+| [P-004](../principle-registry.md#p-004--diversity-selection-and-protection) | nuclear/genotypic diversity | already multilevel selection; protection and conflict costs are mandatory |
+| [P-005](../principle-registry.md#p-005--reinforcement-and-decay-of-topology) | thickening used cords, regression, fusion | strongest fungal instance; Candidate 001 already tests distinctiveness |
+| [P-006](../principle-registry.md#p-006--homeostatic-negative-feedback) | sink regulation, resource-dependent response, pore closure/reopening | feedback instance; exact sensors often unresolved |
+| [P-007](../principle-registry.md#p-007--prediction-error-allocation) | exploratory growth toward uncertain resources | no evidence that prediction error, rather than gradients/growth rules, is computed |
+| [P-008](../principle-registry.md#p-008--compartmentalized-interaction) | septa, compatibility gates, organism boundaries | strong boundary example; fusion is conditional, not universal |
+| [P-009](../principle-registry.md#p-009--maintenance-plane) | containment, regrowth, recycling | phases exist, but no separate fungal control plane is established |
+| [P-010](../principle-registry.md#p-010--structural-compilation) | cords encode frequently used paths in material | direct instance; construction and reversibility cost decide value |
+| [P-011](../principle-registry.md#p-011--transient-communication-coalitions) | oscillatory domains | phase domains occur; communication function remains unproved |
+| [P-012](../principle-registry.md#p-012--memory-timescale-matching) | short priming and longer structural persistence | direct instance once carrier and decay are separated |
+| [P-013](../principle-registry.md#p-013--externalized-shared-state) | persistent cords and modified substrate | environment/structure stores state; not evidence of shared intent |
+
+### Against Candidates 001 through 020
+
+| Candidate(s) | Fungal relevance | Audit decision |
+| --- | --- | --- |
+| [001](../../experiments/candidates/001-adaptive-topology.md) | growth, fusion, reinforcement, regression, damage bypass | **refine** with conserved in-flight inventory and separate containment transition |
+| [002](../../experiments/candidates/002-multiscale-context-broadcast.md) | possible global consequence of incompressible flow / oscillation | physical coupling is the null; no broadcast code established |
+| [003](../../experiments/candidates/003-recovery-dynamics-fragility.md) | slowing growth or altered oscillation before failure | no general early-warning result; do not infer fragility sensor |
+| [004](../../experiments/candidates/004-closed-endogenous-curriculum.md) | exploratory foraging | no generator--evaluator--lineage loop shown |
+| [005](../../experiments/candidates/005-severity-ordered-containment.md) | plug, regrow, bypass, retire | use its metrics as stress accounting; no candidate expansion |
+| [006](../../experiments/candidates/006-reversible-physical-skill.md) | morphology as computation/material memory | fungal growth is another physical substrate; reversibility and health probes remain the gate |
+| [007](../../experiments/candidates/007-endogenous-observation-surveillance.md) | growth changes what can later be sensed | observation endogeneity is real but already covered |
+| [008](../../experiments/candidates/008-contestable-modular-allocation.md) | mycorrhizal partner trade | applies only across distinct strategic partners; market null dominates |
+| [009](../../experiments/candidates/009-graded-assurance-envelopes.md) | compatibility before fusion | biological identity checks do not supply a versioned assurance stack |
+| [010](../../experiments/candidates/010-reset-coupled-staged-verification.md) | homing and pre-fusion steps | no distinct verifier with added conditional information demonstrated |
+| [011](../../experiments/candidates/011-dual-loop-operational-assurance.md) | immediate wound response plus later remodeling | no versioned incident-learning loop demonstrated |
+| [012](../../experiments/candidates/012-latency-qualified-authority.md) | pore state changes permitted flow after injury | local gating instance only; not a general authority envelope |
+| [013](../../experiments/candidates/013-deficit-capability-routing.md) | source--sink allocation under local resource and partner carbon | **refine** with element-specific inventory, opportunity lifetime, and strategic partner boundary |
+| [014](../../experiments/candidates/014-versioned-observation-contract.md) | imaging support, tracer chemistry, hidden fine hyphae | measurement warning; no new observation contract |
+| [015](../../experiments/candidates/015-versioned-repairable-conventions.md) | fusion recognition / partner compatibility | biochemical recognition is not a repairable semantic convention |
+| [016](../../experiments/candidates/016-conflict-bounded-unit-transition.md) | nuclei in syncytia; compatible fusion | threat model for within-unit conflict; no new transition criterion |
+| [017](../../experiments/candidates/017-contract-preserving-semantic-compaction.md) | regression/recycling | material reclamation does not preserve arbitrary future semantic queries |
+| [018](../../experiments/candidates/018-value-reconstructability-aware-tiering.md) | retain thick cords, regress low-use paths | topology persistence is not artifact tiering; no new residual |
+| [019](../../experiments/candidates/019-audited-cumulative-inheritance.md) | spores, nuclear lineages | biological heredity lacks the candidate's validation/audit contract |
+| [020](../../experiments/candidates/020-constitutional-control-plane.md) | symbiosis and ecosystem actors | no constitutional authority, standing, or amendment layer |
+
+### Against neighboring audits
+
+- The [plant audit](2026-08-05-plant-distributed-control.md) already separates
+  one organism, symbiosis, and ecosystem, and already holds Candidate 013
+  against backpressure and primal--dual allocation. Fungal evidence adds the
+  fungal-side inventory and topology costs, not a second routing principle.
+- The [microbial/biofilm audit](2026-08-05-microbial-ecology-biofilms.md)
+  already handles gradients, extracellular shared state, spatial structure,
+  cooperation, cheating, and community turnover. Mycelia add long connected
+  hyphae and fusion, not automatic collective cognition.
+- The [collective/ecological audit](2026-08-05-collective-ecological-resilience.md)
+  already requires vector-valued outcomes and participant-level effects.
+  Mycorrhizal transfer therefore remains exchange and externality evidence.
+- The [process-engineering audit](2026-08-05-process-engineering.md) already
+  holds conservation-qualified flowsheet reconfiguration under Candidate 001.
+  Fungi provide a biological test case where transported inventory and graph
+  construction are physically coupled.
+- The [engineering analogues audit](2026-08-05-engineering-analogues.md)
+  already supplies adaptive routing, graph optimization, circuit breaking,
+  repair, and lifecycle accounting nulls.
+- The [memory audit](2026-08-05-memory-replay-forgetting.md) already separates
+  persistence, priming, eligibility, consolidation, retrieval, and durable
+  memory. Fungal “memory” remains inside that taxonomy.
+- The project already records travelling tip-density waves, fusion, and route
+  shortening in [C-034](../claims.md#c-034) and the fungal section of
+  [comparative biology](../comparative-biology.md). This audit narrows the
+  inference and adds falsification boundaries; it does not duplicate the
+  established claim.
+
+## Strongest conventional nulls
+
+1. **Hydraulic null:** pressure differences, incompressibility, and changing
+   sink volume explain network-wide flow without message passing.
+2. **Advection--diffusion null:** tracer redistribution follows flow,
+   diffusion/dispersion, uptake, and immobilization.
+3. **Local growth-rule null:** branching, fusion probability, and regression
+   respond to local substrate, crowding, and developmental state.
+4. **Flow-reinforcement null:** high-flow edges thicken and low-flow edges
+   decay without a global network objective.
+5. **Fixed-graph routing null:** adaptive edge weights and multipath routing
+   obtain the same service without topology edits.
+6. **Global-optimizer null:** periodic capacitated graph optimization matches
+   fungal-inspired local rewiring when given the same stale telemetry.
+7. **Backpressure/primal--dual null:** queue or shadow-price signals already
+   implement demand-responsive allocation.
+8. **Containment null:** septal plugging is a physical circuit breaker; later
+   regrowth is ordinary repair or replacement.
+9. **Residual-state null:** asymmetric regrowth reflects unequal biomass,
+   organelles, nutrients, wall state, or viable tips rather than abstract
+   direction memory.
+10. **Acclimation null:** priming reflects retained proteins/metabolites,
+    damage response, or selected survivors.
+11. **Population-genetic null:** nucleotype shifts follow differential
+    replication, bulk flow, drift, and bottlenecks.
+12. **Exchange-market null:** preferential mycorrhizal allocation follows
+    carbon limitation, local feasibility, and partner returns.
+13. **Pathway-ambiguity null:** plant-to-plant effects arise through roots,
+    diffusion, volatiles, altered microbes, or isotope recycling rather than a
+    continuous common mycorrhizal network.
+14. **Ecosystem-emergence null:** aggregate stability or productivity is a
+    population consequence with no collective controller.
+
+## Equal-budget falsification experiments
+
+Every experiment uses paired seeds/traces, identical admissible observations,
+equal controller compute, message bytes, stored state, active plus reserve
+capacity, training events, and wall-energy boundaries. Provisioning,
+migration, rollback, idle reserve, monitoring, and failed work are charged.
+
+### FUNG-E01 — Flux-coupled topology under recurrent moving sinks
+
+**Arms:** fixed shortest-path/multipath; tuned backpressure; fixed graph with
+adaptive weights; periodic global topology optimizer; local delivered-utility
+reinforcement/decay; the same local rule with hysteretic fusion and retirement;
+offline oracle ceiling.
+
+**Factors:** sink dwell time, recurrence, topology-edit latency, flow noise,
+link cost, and hidden future demand.
+
+**Measurements:** timely utility, tail starvation, joules, bytes, edits,
+migration, churn, reserve, recovery, and regret.
+
+**Kill:** Candidate 001 refinement dies if fixed-graph routing or the global
+optimizer ties the full frontier, or if gain disappears when raw traffic is
+replaced with task-bearing utility.
+
+### FUNG-E02 — In-flight inventory during reconfiguration
+
+Move typed inventory through a network while edges are added, thickened,
+isolated, and retired. Compare quiesce-and-rewire, make-before-break, stateful
+SDN, periodic graph optimization, and local fungal-inspired edits.
+
+**Measurements:** conservation residual, duplicate/lost inventory, deadline
+loss, transition energy, rollback, contamination, and time to steady service.
+
+**Kill:** the residual dies if ordinary make-before-break or stateful routing
+matches it, or if the candidate hides inventory in uncharged buffers.
+
+### FUNG-E03 — Fusion versus fault spread
+
+Sweep cycle density and compatibility-gate error under spatially correlated
+cuts, poisoned state, and selfish traffic. Match total links and spare capacity.
+
+**Measurements:** normal throughput, cut robustness, contamination spread,
+isolation collateral, compatibility-check cost, and second-hit service.
+
+**Kill:** reject “more reticulation is better” if gains vanish after link count
+is matched or if fault spread dominates recovery.
+
+### FUNG-E04 — Oscillatory scheduling intervention
+
+Compare asynchronous work-conserving queues, TDMA, tuned periodic phase
+scheduling, coupled local oscillators, and random phase. Hold mean capacity,
+mean flow, clock bytes, and control energy equal. Apply controlled phase shifts
+without changing mean offered load.
+
+**Measurements:** net delivery, mixing/dispersion proxy, tail latency,
+collision, synchronization energy, and recovery after phase perturbation.
+
+**Kill:** no phase mechanism survives if performance tracks mean flow alone or
+ordinary TDMA/async queues tie it.
+
+### FUNG-E05 — Deficit, capability, and opportunity lifetime
+
+Extend Candidate 013 with resource patches whose chemical/type compatibility
+and lifetime are locally observable but globally stale. Compare centralized,
+backpressure, primal--dual, learned, and deficit-up/context-down/local-gate
+allocators.
+
+**Measurements:** element-specific fulfilled demand, wasted activation,
+starvation, messages, energy, patch expiry loss, strategic over-reporting, and
+inequality.
+
+**Kill:** the refinement dies if the local gate is merely an ordinary
+feasibility constraint or if the same information added to primal--dual control
+matches it.
+
+### FUNG-E06 — Contain, route, regrow, or replace
+
+Inject cuts, leaks, corrupt-but-readable state, and repeated nearby failures.
+Compare immediate rerouting, static isolation, microrestart, repair, rebuild,
+and ordered contain--verify--bypass policies under identical reserve.
+
+**Measurements:** full damage vector $R_k$, including second-hit service and
+state correctness.
+
+**Kill:** no fungal-specific recovery result survives if circuit breaking plus
+ordinary rebuild ties it, or if “repair” restores connectivity but not state.
+
+### FUNG-E07 — Directional memory with state equalization
+
+Use a symmetric fungal or robotic growth preparation. After one-sided resource
+exposure, excise center samples by randomized blinded procedure; equalize wet
+mass, viable tip count, nutrient content, orientation, geometry, and transfer
+delay. Include 0°, 90°, and 180° rotations, sham resources, resource reversal,
+and homogenized/reconstituted controls.
+
+**Measurements:** directional index $D$, growth rate, viability, chemical
+profiles, structural asymmetry, and replication across species/labs.
+
+**Kill:** reject abstract directional memory if $D$ follows retained physical
+orientation/biomass, fails rotation/reversal, or does not replicate.
+
+### FUNG-E08 — Priming carrier and decay
+
+Cross prime type, challenge type, delay, cell division count, transfer,
+protein-synthesis inhibition, metabolite washout, and survivor bottlenecks.
+Compare no-history, matched-damage, retained-state, and learned-state models.
+
+**Measurements:** $\Delta y(\tau)$, viability, metabolome/transcriptome,
+growth-normalized benefit, maintenance cost, and false preparedness under
+mismatched challenge.
+
+**Kill:** classify as acclimation/selection rather than memory if survival or
+retained chemistry fully predicts the effect and no separable state improves a
+future decision.
+
+### FUNG-E09 — Partner exchange without a common objective
+
+Use multiple plant and fungal partners with independently manipulated carbon,
+N, P, access, and outside options. Include mesh/path controls that separate
+hyphae, solutes, roots, volatiles, and microbial communities.
+
+**Measurements:** gross and net element flux, each partner's growth and
+reproduction, payment/delivery response, concentration, weakest-partner loss,
+network maintenance, and path attribution.
+
+**Kill:** reject market-like or routing claims if local carbon/substrate
+availability explains allocation, causal path is ambiguous, or average gain
+hides participant harm.
+
+## Temporary audit claims
+
+These IDs are local to this audit and must not be cited as canonical `C-`
+claims.
+
+| ID | Status | Temporary claim | Evidence / limitation | Affects |
+| --- | --- | --- | --- | --- |
+| FUNG-T01 | established | Hyphal branching and fusion can create a reticulate transport network. | Direct imaging across filamentous fungi; prevalence and regulation vary. | P-005, P-008 |
+| FUNG-T02 | established | Specialized CATs home and fuse during *N. crassa* colony establishment. | Live-cell imaging; species and stage scoped. | P-005 |
+| FUNG-T03 | established | Reducing fusion impairs labeled nutrient translocation inside *N. crassa*, especially in heterogeneous media. | Genetic comparison; pleiotropy remains a concern. | Candidate 001 |
+| FUNG-T04 | established | Mature *N. crassa* colonies share limited resources even when young germlings can fuse/share. | Age/architecture scoped; rejects universal commons. | P-008 |
+| FUNG-T05 | established | Imaged cord networks trade material cost against transport efficiency and resilience. | Two-dimensional microcosms and graph proxies. | P-005, P-010 |
+| FUNG-T06 | plausible | Growth-induced volume change can explain substantial mass flow through incompressibility and viscous transport. | Model fitted to observed growth; uptake/leak boundaries matter. | Candidate 001 |
+| FUNG-T07 | plausible | Local flow may provide a low-cost statistic for later cord reinforcement. | Flow correlated with later thickening; sensor/causal mediator unresolved. | Candidate 001 |
+| FUNG-T08 | established | Oscillatory nutrient-analog domains occur in tested saprotrophic mycelia. | Imaging proxy; function not established. | P-011 |
+| FUNG-T09 | speculative | Oscillatory phase carries decoded coordination information. | No receiver/decoder intervention in cited work. | Candidate 002 |
+| FUNG-T10 | established | Cord-forming fungi can translocate radiolabeled phosphorus over connected systems. | Chemical form and usable delivery require calibration. | P-001 |
+| FUNG-T11 | established | New wood resources can alter biomass deployment and phosphorus allocation. | Resource microcosms; species/competitor effects vary. | Candidates 001, 013 |
+| FUNG-T12 | established | Bidirectional translocation can coexist with dominant local uptake. | Gross direction is not net benefit. | Candidate 013 |
+| FUNG-T13 | plausible | Connected litter resources can increase fungal C-use efficiency by reallocating limiting N. | Axenic microcosm; ecosystem generality limited. | P-001, P-010 |
+| FUNG-T14 | established | Woronin bodies can plug severed septal pores within seconds in a tested ascomycete. | Not universal across fungal phyla. | P-008, Candidate 005 metrics |
+| FUNG-T15 | established | Containment, recovery growth, and network bypass are distinct transitions. | Multiple experiments; functional restoration still must be measured. | Candidates 001, 005 |
+| FUNG-T16 | plausible | Added cross-links after grazing can improve simulated damage resilience when resources permit. | Resource-dependent; resilience partly inferred in silico. | Candidate 001 |
+| FUNG-T17 | established | Nuclei can move and mix across a fused *N. crassa* syncytium. | Tagged-nucleus imaging. | P-004, Candidate 016 |
+| FUNG-T18 | established | AMF genomic organization varies among isolates; some are homo- and others dikaryon-like. | Earlier universal heterokaryosis/homokaryosis claims are too broad. | P-004 |
+| FUNG-T19 | established | Host identity can correlate with nucleotype ratios in tested AMF dikaryons. | Active ratio regulation is not identified. | Candidate 016 |
+| FUNG-T20 | established | Two AMF nuclear genomes can differ structurally, epigenetically, and transcriptionally. | Four publicly available heterokaryons; broader prevalence uncertain. | P-004 |
+| FUNG-T21 | plausible | Mild heat or drought can prime later stress response in some filamentous fungi. | Isolate-specific and transient; carrier unresolved. | P-003, P-012 |
+| FUNG-T22 | disputed | A fungal inoculum stores abstract direction to a prior resource. | One positive *P. velutina* assay; physical-state confounds and negative *Laccaria* result. | P-003, P-012 |
+| FUNG-T23 | established | Plant carbon availability can change AM-fungal N uptake and transport. | Controlled symbiosis; carbon supports metabolism as well as reward. | Candidate 013 |
+| FUNG-T24 | established | Mycorrhizal allocation can preferentially track partner quality/carbon strength. | Scoped experimental systems; not universal fairness. | P-001, Candidate 008 |
+| FUNG-T25 | established | Mycorrhizal exchange can be strongly unequal among plant partners. | Species/system specific; rejects shared-objective shortcut. | Candidate 008 |
+| FUNG-T26 | established | Travelling tip-density waves and fusion accompany growth of imaged AM fungi. | Audit-local restatement of C-034; two-dimensional culture does not establish general cognition. | Candidate 001 |
+| FUNG-T27 | plausible | Fungal reallocation can alter decomposition and nutrient retention at microcosm scale. | Scaling and multispecies interactions remain uncertain. | collective/ecological audit |
+| FUNG-T28 | disputed | Common mycorrhizal networks generally optimize forest community welfare. | Path ambiguity, conflict, unequal trade, and distributional outcomes defeat the claim. | no promotion |
+| FUNG-T29 | audit conclusion | No reviewed result warrants a new stable principle or candidate. | All abstractions reduce to existing bundles and mature nulls. | registry |
+| FUNG-T30 | audit conclusion | Conservation-qualified topology adaptation is the narrowest useful fungal residual. | Must beat fixed routing/global optimization with in-flight inventory charged. | Candidates 001, 013 |
+
+## Quantitative reporting checklist
+
+Before any fungal result enters the canonical claim ledger, report:
+
+- species, strain, developmental stage, symbiotic state, and compatibility;
+- medium/substrate geometry, dimensionality, temperature, moisture, and time;
+- whether the unit is one mycelium, fused genotypes, partners, or community;
+- image resolution and the minimum detectable hypha/cord diameter;
+- edge extraction, diameter calibration, and uncertainty;
+- tracer chemical identity, specific activity, detector support, decay, and
+  whether signal means mobile, stored, or assimilated material;
+- all input, output, storage, respiratory, leakage, and sampling terms;
+- gross and net flux for each element separately;
+- construction, fusion, maintenance, regression, repair, and idle costs;
+- exact damage location/severity and functional recovery definition;
+- biomass, viability, and survivor controls in every memory/priming assay;
+- each symbiotic partner's outcome, not only system mean;
+- preregistered exclusions, sample size, uncertainty interval, and all failed
+  or null replications; and
+- the strongest conventional baseline under the same observations and budget.
+
+## Disposition
+
+**Do not promote a new principle or candidate.** Preserve fungal physiology as
+a high-value domain audit and use it to tighten two existing candidates:
+
+1. **Candidate 001:** require conservation of typed in-flight inventory during
+   topology edits; separate fast containment, route switching, structural
+   bypass, and actual functional repair; charge compatibility, construction,
+   maintenance, regression, and dormant reserve.
+2. **Candidate 013:** maintain separate element/resource ledgers; add local
+   substrate/capability and opportunity-lifetime gates; treat plant--fungus
+   exchange as strategic when objectives differ; report gross and net flows
+   plus inequality.
+
+The residual is killed if fixed-graph adaptive routing, stateful
+make-before-break reconfiguration, periodic graph optimization, or
+backpressure/primal--dual allocation ties the full quality--risk--energy
+frontier. Fungal vocabulary does not lower that bar.
+
+## Audit-local bibliography (primary sources)
+
+These entries are intentionally local. Promotion should move verified entries
+to `research/references.bib` in a separate change.
+
+```bibtex
+@article{bebber2007biological,
+  author = {Bebber, Daniel P. and Hynes, Juliet and Darrah, Peter R. and Boddy, Lynne and Fricker, Mark D.},
+  title = {Biological Solutions to Transport Network Design},
+  journal = {Proceedings of the Royal Society B},
+  year = {2007},
+  volume = {274},
+  pages = {2307--2315},
+  doi = {10.1098/rspb.2007.0459}
+}
+
+@article{heaton2010growth,
+  author = {Heaton, Luke L. M. and L{\'o}pez, Eduardo and Maini, Philip K. and Fricker, Mark D. and Jones, Nick S.},
+  title = {Growth-Induced Mass Flows in Fungal Networks},
+  journal = {Proceedings of the Royal Society B},
+  year = {2010},
+  volume = {277},
+  pages = {3265--3274},
+  doi = {10.1098/rspb.2010.0735}
+}
+
+@article{tlalka2007oscillatory,
+  author = {Tlalka, Monika and Bebber, Daniel P. and Darrah, Peter R. and Watkinson, Sarah C. and Fricker, Mark D.},
+  title = {Emergence of Self-Organised Oscillatory Domains in Fungal Mycelia},
+  journal = {Fungal Genetics and Biology},
+  year = {2007},
+  volume = {44},
+  pages = {1085--1095},
+  doi = {10.1016/j.fgb.2007.02.012}
+}
+
+@article{roca2005cat,
+  author = {Roca, M. Gabriela and Arlt, Jochen and Jeffree, Christopher E. and Read, Nick D.},
+  title = {Cell Biology of Conidial Anastomosis Tubes in Neurospora crassa},
+  journal = {Eukaryotic Cell},
+  year = {2005},
+  volume = {4},
+  pages = {911--919},
+  doi = {10.1128/EC.4.5.911-919.2005}
+}
+
+@article{simonin2012network,
+  author = {Simonin, Anna and Palma-Guerrero, Javier and Fricker, Mark and Glass, N. Louise},
+  title = {Physiological Significance of Network Organization in Fungi},
+  journal = {Eukaryotic Cell},
+  year = {2012},
+  volume = {11},
+  pages = {1345--1352},
+  doi = {10.1128/EC.00213-12}
+}
+
+@article{boddy2010grazing,
+  author = {Boddy, Lynne and Wood, Jonathan and Redman, Emily and Hynes, Juliet and Fricker, Mark D.},
+  title = {Fungal Network Responses to Grazing},
+  journal = {Fungal Genetics and Biology},
+  year = {2010},
+  volume = {47},
+  pages = {522--530},
+  doi = {10.1016/j.fgb.2010.01.006}
+}
+
+@article{donnelly1998damage,
+  author = {Donnelly, Damian P. and Boddy, Lynne},
+  title = {Repeated Damage Results in Polarised Development of Foraging Mycelial Systems of Phanerochaete velutina},
+  journal = {FEMS Microbiology Ecology},
+  year = {1998},
+  volume = {26},
+  pages = {101--108},
+  doi = {10.1111/j.1574-6941.1998.tb00496.x}
+}
+
+@article{collinge1985woronin,
+  author = {Collinge, A. J. and Markham, P.},
+  title = {Woronin Bodies Rapidly Plug Septal Pores of Severed Penicillium chrysogenum Hyphae},
+  journal = {Experimental Mycology},
+  year = {1985},
+  volume = {9},
+  pages = {80--85},
+  doi = {10.1016/0147-5975(85)90051-9}
+}
+
+@article{fleissner2007so,
+  author = {Fleissner, Andr{\'e} and Sarkar, Snigdha and Jacobson, David J. and Roca, M. Gabriela and Read, Nick D. and Glass, N. Louise},
+  title = {The SO Protein Involved in Hyphal Fusion in Neurospora crassa Localizes to Septal Plugs},
+  journal = {Eukaryotic Cell},
+  year = {2007},
+  volume = {6},
+  pages = {84--94},
+  doi = {10.1128/EC.00285-06}
+}
+
+@article{wells1995phosphorus,
+  author = {Wells, J. M. and Boddy, Lynne},
+  title = {Effect of Temperature on Wood Decay and Translocation of Soil-Derived Phosphorus in Mycelial Cord Systems},
+  journal = {New Phytologist},
+  year = {1995},
+  volume = {129},
+  pages = {289--297},
+  doi = {10.1111/j.1469-8137.1995.tb04299.x}
+}
+
+@article{harris2005nutrient,
+  author = {Harris, Melanie J. and Boddy, Lynne},
+  title = {Nutrient Movement and Mycelial Reorganization in Established Systems of Phanerochaete velutina Following Arrival of Colonized Wood Resources},
+  journal = {Microbial Ecology},
+  year = {2005},
+  volume = {50},
+  pages = {141--151},
+  doi = {10.1007/s00248-004-0075-x}
+}
+
+@article{boberg2014reallocation,
+  author = {Boberg, Johanna B. and Finlay, Roger D. and Stenlid, Jan and Ekblad, Alf and Lindahl, Bj{\"o}rn D.},
+  title = {Nitrogen and Carbon Reallocation in Fungal Mycelia during Decomposition of Boreal Forest Litter},
+  journal = {PLOS ONE},
+  year = {2014},
+  volume = {9},
+  pages = {e92897},
+  doi = {10.1371/journal.pone.0092897}
+}
+
+@article{bhattacharjee2022micromodel,
+  author = {Bhattacharjee, Arunima and others},
+  title = {A Mineral-Doped Micromodel Platform Demonstrates Fungal Bridging of Carbon Hot Spots and Hyphal Transport of Mineral-Derived Nutrients},
+  journal = {mSystems},
+  year = {2022},
+  volume = {7},
+  pages = {e00913-22},
+  doi = {10.1128/msystems.00913-22}
+}
+
+@article{fukasawa2020memory,
+  author = {Fukasawa, Yu and Savoury, Melanie and Boddy, Lynne},
+  title = {Ecological Memory and Relocation Decisions in Fungal Mycelial Networks: Responses to Quantity and Location of New Resources},
+  journal = {The ISME Journal},
+  year = {2020},
+  volume = {14},
+  pages = {380--388},
+  doi = {10.1038/s41396-019-0536-3}
+}
+
+@article{fukasawa2024arrangement,
+  author = {Fukasawa, Yu and Hamano, Kosuke and Kaga, Koji and Akai, Daisuke and Takehi, Takayuki},
+  title = {Spatial Resource Arrangement Influences Both Network Structures and Activity of Fungal Mycelia: A Form of Pattern Recognition?},
+  journal = {Fungal Ecology},
+  year = {2024},
+  volume = {72},
+  pages = {101387},
+  doi = {10.1016/j.funeco.2024.101387}
+}
+
+@article{andradelinares2016priming,
+  author = {Andrade-Linares, Diana R. and Veresoglou, Stavros D. and Rillig, Matthias C.},
+  title = {Temperature Priming and Memory in Soil Filamentous Fungi},
+  journal = {Fungal Ecology},
+  year = {2016},
+  volume = {21},
+  pages = {10--15},
+  doi = {10.1016/j.funeco.2016.02.002}
+}
+
+@article{guhr2020drought,
+  author = {Guhr, Alexander and Kircher, Stefan and Spohn, Marie and Rillig, Matthias C.},
+  title = {Drought-Induced Stress Priming in Two Distinct Filamentous Saprotrophic Fungi},
+  journal = {Microbial Ecology},
+  year = {2020},
+  volume = {80},
+  pages = {252--262},
+  doi = {10.1007/s00248-019-01481-w}
+}
+
+@article{aleshnick2025foraging,
+  author = {Aleshnick, Marina and others},
+  title = {An Experimental Approach to Study Foraging Memory in Ectomycorrhizal Mycelium},
+  journal = {Communicative \& Integrative Biology},
+  year = {2025},
+  doi = {10.1080/19420889.2025.2580130}
+}
+
+@article{roper2013nuclear,
+  author = {Roper, Marcus and Simonin, Anna and Hickey, Patrick C. and Leeder, Abby and Glass, N. Louise},
+  title = {Nuclear Dynamics in a Fungal Chimera},
+  journal = {Proceedings of the National Academy of Sciences},
+  year = {2013},
+  volume = {110},
+  pages = {12875--12880},
+  doi = {10.1073/pnas.1220842110}
+}
+
+@article{pawlowska2004organization,
+  author = {Pawlowska, Teresa E. and Taylor, John W.},
+  title = {Organization of Genetic Variation in Individuals of Arbuscular Mycorrhizal Fungi},
+  journal = {Nature},
+  year = {2004},
+  volume = {427},
+  pages = {733--737},
+  doi = {10.1038/nature02290}
+}
+
+@article{ropars2016heterokaryosis,
+  author = {Ropars, Jeanne and others},
+  title = {Evidence for the Sexual Origin of Heterokaryosis in Arbuscular Mycorrhizal Fungi},
+  journal = {Nature Microbiology},
+  year = {2016},
+  volume = {1},
+  pages = {16033},
+  doi = {10.1038/nmicrobiol201633}
+}
+
+@article{kokkoris2021host,
+  author = {Kokkoris, Vasilis and Chagnon, Pierre-Luc and Yildirir, G{\"o}kalp and others},
+  title = {Host Identity Influences Nuclear Dynamics in Arbuscular Mycorrhizal Fungi},
+  journal = {Current Biology},
+  year = {2021},
+  volume = {31},
+  pages = {1531--1538},
+  doi = {10.1016/j.cub.2021.01.035}
+}
+
+@article{sperschneider2023heterokaryons,
+  author = {Sperschneider, Jana and Yildirir, Gokalp and Rizzi, Yanina S. and others},
+  title = {Arbuscular Mycorrhizal Fungi Heterokaryons Have Two Nuclear Populations with Distinct Roles in Host--Plant Interactions},
+  journal = {Nature Microbiology},
+  year = {2023},
+  volume = {8},
+  pages = {2142--2153},
+  doi = {10.1038/s41564-023-01495-8}
+}
+
+@article{kiers2011rewards,
+  author = {Kiers, E. Toby and Duhamel, Marie and Beesetty, Yugandhar and others},
+  title = {Reciprocal Rewards Stabilize Cooperation in the Mycorrhizal Symbiosis},
+  journal = {Science},
+  year = {2011},
+  volume = {333},
+  pages = {880--882},
+  doi = {10.1126/science.1208473}
+}
+
+@article{fellbaum2012carbon,
+  author = {Fellbaum, Carl R. and Gachomo, Emma W. and Beesetty, Yugandhar and others},
+  title = {Carbon Availability Triggers Fungal Nitrogen Uptake and Transport in Arbuscular Mycorrhizal Symbiosis},
+  journal = {Proceedings of the National Academy of Sciences},
+  year = {2012},
+  volume = {109},
+  pages = {2666--2671},
+  doi = {10.1073/pnas.1118650109}
+}
+
+@article{fellbaum2014allocation,
+  author = {Fellbaum, Carl R. and Mensah, Jerry A. and Cloos, Adam J. and others},
+  title = {Fungal Nutrient Allocation in Common Mycorrhizal Networks Is Regulated by the Carbon Source Strength of Individual Host Plants},
+  journal = {New Phytologist},
+  year = {2014},
+  volume = {203},
+  pages = {646--656},
+  doi = {10.1111/nph.12827}
+}
+
+@article{walder2012terms,
+  author = {Walder, Florian and Niemann, Helge and Natarajan, Mathimaran and Lehmann, Moritz F. and Boller, Thomas and Wiemken, Andres},
+  title = {Mycorrhizal Networks: Common Goods of Plants Shared under Unequal Terms of Trade},
+  journal = {Plant Physiology},
+  year = {2012},
+  volume = {159},
+  pages = {789--797},
+  doi = {10.1104/pp.112.195727}
+}
+
+@article{weremijewicz2016competition,
+  author = {Weremijewicz, Joanna and Sternberg, Leonel da S. L. and Janos, David P.},
+  title = {Common Mycorrhizal Networks Amplify Competition by Preferential Mineral Nutrient Allocation to Large Host Plants},
+  journal = {New Phytologist},
+  year = {2016},
+  volume = {212},
+  pages = {461--471},
+  doi = {10.1111/nph.14041}
+}
+
+@article{oyartegalvez2025fungal,
+  author = {Oyarte Galvez, Loreto and others},
+  title = {A Travelling-Wave Strategy for Plant--Fungal Trade},
+  journal = {Nature},
+  year = {2025},
+  volume = {639},
+  pages = {172--180},
+  doi = {10.1038/s41586-025-08614-x}
+}
+```

@@ -96,6 +96,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/competence-gated-transition.mmd` follows a receiver from an
   ineligible state through a finite window, provisional transition, validated
   commitment, protection, explicit reopening, rollback, and retirement.
+- `diagrams/transported-field-contract.mmd` follows local production through
+  geometry-dependent transport, typed inventory, receiver response, validation,
+  topology update, contamination handling, cleanup, and retirement.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

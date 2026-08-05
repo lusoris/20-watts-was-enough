@@ -8238,3 +8238,338 @@ describes the exact statement here, not a broader interpretation.
   [009](../experiments/candidates/009-graded-assurance-envelopes.md),
   [010](../experiments/candidates/010-reset-coupled-staged-verification.md), and
   [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-563
+
+- **Statement:** Microbial quorum-sensing output depends on signal production,
+  transport, loss, geometry, flow, and receiver state rather than cell density
+  alone.
+- **Status:** established.
+- **Primary sources:** `nealson1970luminescence`, `bassler1993intercellular`,
+  `boedicker2009confinement`, `kim2016flow`, `darch2018spatial`.
+- **Rationale:** Confined few-cell and controlled-flow experiments causally
+  separate concentration from a simple population count.
+- **Open issue:** Each signal/receptor system and physical environment has its
+  own response and transport regime.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  [transported-field fixture](../concept/07-cross-domain-convergence.md#transported-fields-are-not-messages).
+
+### C-564
+
+- **Statement:** Enzymatic degradation of an acyl-homoserine-lactone signal
+  attenuated scoped quorum-dependent infection in the studied plant-pathogen
+  system.
+- **Status:** established.
+- **Primary source:** `dong2001quenching`.
+- **Rationale:** Manipulating the transported signal altered a downstream
+  phenotype.
+- **Open issue:** It does not establish universal safety, durability, or
+  resistance-proof intervention.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-565
+
+- **Statement:** Signal or response non-producers can exploit quorum-regulated
+  public output and gain relative fitness under tested conditions.
+- **Status:** established.
+- **Primary source:** `diggle2007cooperation`.
+- **Rationale:** Shared output does not imply aligned incentives or stable
+  cooperation.
+- **Open issue:** Trait, spatial structure, relatedness, and environment change
+  the selection result.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  Candidates [008](../experiments/candidates/008-contestable-modular-allocation.md)
+  and [016](../experiments/candidates/016-conflict-bounded-unit-transition.md).
+
+### C-566
+
+- **Statement:** Oxygen limitation, low activity, and stringent-response state
+  causally contributed to antibiotic tolerance in scoped *Pseudomonas*
+  biofilms and models.
+- **Status:** established.
+- **Primary sources:** `borriello2004oxygen`, `nguyen2011starvation`.
+- **Rationale:** Collective survival can arise from heterogeneous local
+  physiology and transport rather than a single matrix or controller effect.
+- **Open issue:** Quantitative contributions are preparation-, strain-, and
+  drug-specific.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-567
+
+- **Statement:** Biofilm matrix, aggregate geometry, and pore flow can change
+  invasion and competition among microbial lineages.
+- **Status:** established.
+- **Primary sources:** `nadell2015invasion`, `nadell2017flow`.
+- **Rationale:** Physical organization changes access, exposure, and local
+  fitness without implying a global objective.
+- **Open issue:** The sign and mechanism depend on matrix, lineage, flow,
+  nutrient, and spatial scale.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  [principle registry](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-568
+
+- **Statement:** Persister survival can involve reversible phenotypic switching
+  and stochastic drug-activation state, while pretreatment dormancy is not a
+  universal necessary-and-sufficient definition.
+- **Status:** established.
+- **Primary sources:** `balaban2004persistence`, `wakamoto2013dynamic`,
+  `orman2013dormancy`, `goormaghtigh2018toxin`.
+- **Rationale:** Kill dynamics, heritable resistance, metabolic state, and one
+  proposed toxin–antitoxin mechanism remain separable.
+- **Open issue:** Mechanisms and operational persistence definitions vary by
+  strain, drug, assay, and regrowth protocol.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  [memory chapter](../concept/40-memory-and-consolidation.md).
+
+### C-569
+
+- **Statement:** Horizontal-transfer events can be spatially clustered, and
+  classical endpoint plating can undercount or obscure propagation by recent
+  transconjugants.
+- **Status:** established.
+- **Primary sources:** `hausner1999conjugation`, `bourassa2022ice`.
+- **Rationale:** Acquisition, spatial propagation, and later selection are
+  distinct processes.
+- **Open issue:** Transfer does not establish beneficial payload, stable
+  adoption, or recipient fitness.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-570
+
+- **Statement:** Resource level, spatial refuge, and evolving host range can
+  change bacteria–phage coexistence, stability, resistance invasion, and
+  coevolutionary trajectory.
+- **Status:** established.
+- **Primary sources:** `chao1977community`, `bohannan1997enrichment`,
+  `buckling2002coevolution`, `testa2019phage`.
+- **Rationale:** Adaptive adversary dynamics are conditional on ecology and
+  spatial transport, not a fixed attack-response curve.
+- **Open issue:** Refuges can preserve susceptible service or persistent threat;
+  the system objective must be external.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  Candidates [005](../experiments/candidates/005-severity-ordered-containment.md)
+  and [016](../experiments/candidates/016-conflict-bounded-unit-transition.md).
+
+### C-571
+
+- **Statement:** Metabolic cross-feeding can support recipients, reverse sign
+  with chemistry and geometry, slow community turnover, or create a susceptible
+  weakest-link dependency.
+- **Status:** established.
+- **Primary sources:** `giri2021dissimilarity`, `borer2020spatial`,
+  `enke2018microscale`, `adamowicz2018crossfeeding`.
+- **Rationale:** Metabolite transfer, bilateral benefit, total task value, and
+  robustness are different outcomes.
+- **Open issue:** Each intermediate needs mass balance, toxicity, leakage,
+  uptake, partner counterfactuals, and lifecycle cost.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-572
+
+- **Statement:** Resistant minority lineages can alter susceptible-neighbor
+  survival through distinct mechanisms including stress response and public
+  antibiotic deactivation.
+- **Status:** established.
+- **Primary sources:** `lee2010charity`, `yurtsev2013plasmids`,
+  `sorg2016collective`.
+- **Rationale:** Population-average tolerance can hide mechanism, carriage cost,
+  genotype frequency, and participant-specific harm.
+- **Open issue:** Protective range, stability, selection, transfer, and drug
+  chemistry vary across systems.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-573
+
+- **Statement:** Nitric-oxide and c-di-GMP-phosphodiesterase interventions can
+  trigger dispersal in scoped *Pseudomonas* biofilms.
+- **Status:** established.
+- **Primary sources:** `barraud2006nitric`, `roy2012dipa`.
+- **Rationale:** Dispersal is an actively regulated lifecycle transition in the
+  tested systems.
+- **Open issue:** Release is not necessarily safe migration, successful
+  recolonization, or reduced infection.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  [Candidate 001](../experiments/candidates/001-adaptive-topology.md).
+
+### C-574
+
+- **Statement:** Model marine-particle communities underwent rapid reproducible
+  succession shaped by dispersal limitation and facilitation.
+- **Status:** established.
+- **Primary source:** `datta2016succession`.
+- **Rationale:** Time-ordered population replacement can be repeatable without
+  being progress, learning, or cumulative inheritance.
+- **Open issue:** Substrate, inoculum, spatial access, and environment bound the
+  observed sequence.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-575
+
+- **Statement:** Microbial quorum sensing is equivalent to consensus, voting,
+  or independently corroborated commitment.
+- **Status:** disputed.
+- **Primary sources:** transport, confinement, and receiver interventions in
+  [C-563](#c-563) contradict the category equivalence.
+- **Rationale:** Chemical concentration does not require proposals, objections,
+  membership, mutual knowledge, or independent votes.
+- **Open issue:** A particular engineered quorum protocol may add those fields,
+  but then they must be measured explicitly.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-576
+
+- **Statement:** Biofilm structure establishes brain-like representation,
+  global control, or collective cognition.
+- **Status:** disputed.
+- **Primary sources:** no audited intervention supports the equivalence; local
+  transport, physiology, ecology, and selection explain the reported effects.
+- **Rationale:** Spatial niches, shared matrix, tolerance, and succession do not
+  demonstrate representation or a single objective.
+- **Open issue:** Any narrower cognitive claim needs an operational task and
+  causal discrimination against the ecological nulls.
+- **Used by:** [microbial audit](audits/2026-08-05-microbial-ecology-biofilms.md).
+
+### C-577
+
+- **Statement:** Hyphal fusion can improve labeled nutrient translocation within
+  a developing *Neurospora* colony while sharing between established mature
+  colonies remains limited.
+- **Status:** established.
+- **Primary sources:** `roca2005cat`, `simonin2012network`.
+- **Rationale:** Reticulate continuity has a stage- and compatibility-dependent
+  transport effect rather than creating a universal commons.
+- **Open issue:** Pleiotropy, species, substrate geometry, and maturity bound the
+  comparison.
+- **Used by:** [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
+  [Candidate 001](../experiments/candidates/001-adaptive-topology.md).
+
+### C-578
+
+- **Statement:** Imaged fungal cord networks remodel along cost–transport–
+  resilience tradeoffs, and growth-induced volume change can drive substantial
+  network-wide mass flow.
+- **Status:** plausible.
+- **Primary sources:** `bebber2007biological`, `heaton2010growth`.
+- **Rationale:** Conductance, topology, and source–sink growth are coupled by
+  ordinary material transport before any signaling interpretation.
+- **Open issue:** Two-dimensional extraction, uptake/leak boundaries, and causal
+  reinforcement sensors remain uncertain.
+- **Used by:** [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
+  [Candidate 001](../experiments/candidates/001-adaptive-topology.md).
+
+### C-579
+
+- **Statement:** Oscillatory nutrient-analog domains occur in tested saprotrophic
+  mycelia, but decoded coordination information has not been established.
+- **Status:** established.
+- **Primary source:** `tlalka2007oscillatory`.
+- **Rationale:** Oscillation and correlation with transport do not identify a
+  receiver, code, or useful causal phase relation.
+- **Open issue:** Phase intervention at constant mean flow is needed to
+  discriminate scheduling from metabolic or pressure oscillation.
+- **Used by:** [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-580
+
+- **Statement:** Cord-forming fungi can translocate nutrients over connected
+  systems and reallocate biomass or phosphorus toward changed source–sink
+  conditions, while bidirectional gross movement need not imply balanced net
+  benefit.
+- **Status:** established.
+- **Primary sources:** `wells1995phosphorus`, `harris2005nutrient`,
+  `boberg2014reallocation`, `bhattacharjee2022micromodel`.
+- **Rationale:** Each element requires its own production, uptake, storage,
+  transformation, loss, and delivery ledger.
+- **Open issue:** Tracer signal, chemical form, assimilation, respiration, and
+  counterfactual partner outcome must be calibrated separately.
+- **Used by:** [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-581
+
+- **Statement:** Rapid leakage containment, route switching, recovery growth,
+  and structural bypass are distinct fungal damage-response transitions.
+- **Status:** established.
+- **Primary sources:** `donnelly1998damage`, `collinge1985woronin`,
+  `fleissner2007so`, `boddy2010grazing`.
+- **Rationale:** Septal plugging can occur quickly, while restored transport and
+  topology require later work and resources.
+- **Open issue:** Connectivity is not functional recovery; state correctness,
+  second-hit service, and lifecycle cost must be measured.
+- **Used by:** [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
+  Candidates [001](../experiments/candidates/001-adaptive-topology.md) and
+  [005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-582
+
+- **Statement:** Nuclei can mix within fused fungal syncytia, and nucleotype
+  organization or ratios can vary across isolates, hosts, and conditions.
+- **Status:** established.
+- **Primary sources:** `roper2013nuclear`, `pawlowska2004organization`,
+  `ropars2016heterokaryosis`, `kokkoris2021host`,
+  `sperschneider2023heterokaryons`.
+- **Rationale:** Bulk flow, replication, drift, bottlenecks, host filtering, and
+  selection are live explanations before ensemble-learning analogies.
+- **Open issue:** Active ratio regulation and functional consequences remain
+  isolate- and experiment-specific.
+- **Used by:** [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
+  [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md).
+
+### C-583
+
+- **Statement:** Fungal stress priming can be transient and isolate-specific,
+  while abstract directional memory remains disputed after physical-state
+  confounds and a negative generalization test.
+- **Status:** plausible.
+- **Primary sources:** `andradelinares2016priming`, `guhr2020drought`,
+  `fukasawa2020memory`, `fukasawa2024arrangement`.
+- **Rationale:** Retained metabolites, damage, biomass, polarity, viable tips,
+  and selected survivors can reproduce later asymmetry.
+- **Open issue:** Blinded state equalization, rotation, reversal, and replication
+  are required before an abstract-memory claim.
+- **Used by:** [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
+  [memory chapter](../concept/40-memory-and-consolidation.md).
+
+### C-584
+
+- **Statement:** Plant carbon supply and partner quality can change fungal
+  nutrient uptake or allocation, and mycorrhizal exchange can remain strongly
+  unequal among partners.
+- **Status:** established.
+- **Primary sources:** `kiers2011rewards`, `fellbaum2012carbon`,
+  `fellbaum2014allocation`, `walder2012terms`, `weremijewicz2016competition`.
+- **Rationale:** Distinct organisms exchange under local feasibility, metabolic
+  need, and partly conflicting objectives rather than one system utility.
+- **Open issue:** Gross transfer, net fitness, path attribution, reproduction,
+  and network-maintenance cost must remain partner-specific.
+- **Used by:** [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
+  Candidates [008](../experiments/candidates/008-contestable-modular-allocation.md)
+  and [013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-585
+
+- **Statement:** A transport-explicit shared-field contract may improve sparse
+  coordination only when geometry, typed in-flight inventory, local receiver
+  state, cleanup, and topology change are task-relevant.
+- **Status:** speculative.
+- **Primary sources:** no direct systems validation; constituent microbial,
+  fungal, plant, and process constraints are bounded by
+  [C-563](#c-563)–[C-584](#c-584), [C-204](#c-204)–[C-217](#c-217), and
+  [C-501](#c-501)–[C-518](#c-518).
+- **Rationale:** The same field can perform delivery, carry delayed state, alter
+  future conductance, accumulate contamination, and require explicit purge.
+- **Open issue:** Reject it if typed queues/pub-sub, fixed-graph routing,
+  backpressure/primal–dual allocation, or make-before-break reconfiguration
+  matches it at equal information and lifecycle cost.
+- **Used by:** [transported-field fixture](../concept/07-cross-domain-convergence.md#transported-fields-are-not-messages),
+  Candidates [001](../experiments/candidates/001-adaptive-topology.md) and
+  [013](../experiments/candidates/013-deficit-capability-routing.md).

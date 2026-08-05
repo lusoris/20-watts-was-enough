@@ -1,0 +1,17 @@
+flowchart LR
+    P["Local production, release, or deficit"] --> T["Transport<br/>advection · diffusion · flow · loss"]
+    G["Geometry, topology, and boundary conditions"] --> T
+    T --> C["Local concentration or typed inventory"]
+    C --> R["Receiver state + uptake + response"]
+    R --> O["Task outcome + local cost"]
+    O --> U["Update source, sink, conductance, or topology"]
+    U --> G
+
+    C --> A["Accumulate · transform · consume · export · purge"]
+    A --> C
+    F["Damage, contamination, or incompatibility"] --> X["Contain · isolate · reroute · regrow"]
+    X --> G
+
+    O --> V{"Independent validation"}
+    V -->|"useful"| U
+    V -->|"not useful"| D["Decay, disperse, or retire"]

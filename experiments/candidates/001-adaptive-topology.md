@@ -214,6 +214,26 @@ advantage disappears after one maintenance and one rollback cycle
 ([C-516](../../research/claims.md#c-516)). A pass refines H1; it does not create
 a separate principle.
 
+## Transported-inventory topology track
+
+Add a paired task in which typed inventory remains in flight while demand
+sinks move and edges are added, reinforced, isolated, or retired. The same
+delivered flow may update future conductance, but raw traffic is never treated
+as utility. Compare fixed multipath, backpressure, adaptive weights, periodic
+global topology optimization, stateful make-before-break routing, and local
+flow-linked edits at identical links, buffers, controller work, state,
+telemetry, reserve, and energy.
+
+Report type-specific conservation residual, duplicate/lost inventory,
+contamination spread, deadline loss, construction and regression, compatibility
+checks, transition joules, rollback, second-hit service, and recovery. Separate
+rapid containment, route switching, structural bypass, and functional repair
+([C-577](../../research/claims.md#c-577)–[C-581](../../research/claims.md#c-581)).
+Reject the residual if ordinary stateful routing or the global optimizer ties,
+if inventory hides in uncharged buffers, or if geometry and cleanup do not
+change task outcome. This is the Candidate-001 side of the shared
+[transported-field fixture](../../concept/07-cross-domain-convergence.md#transported-fields-are-not-messages).
+
 ## Methods
 
 ### Required standard engineering baselines
