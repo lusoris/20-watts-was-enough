@@ -7,6 +7,26 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- An information-thermodynamics and physical-computation audit separating
+  generalized erasure bounds, finite-time/error/stability work, device and
+  circuit transitions, workload/data movement, facility/cooling, and embodied
+  lifecycle cost.
+- Fifty-two thermodynamics claims (`C-1100`–`C-1151`), sixty-two new
+  centralized references plus ten deduplicated records, Fixture F-010, its
+  boundary-qualified mathematics and editable diagram, and a dedicated
+  physical-computation chapter; no principle or candidate was added.
+- An olfaction, chemical-sensing, and plume-tracking audit covering receptor
+  and sensor operators, mixtures, temporal concentration, active sampling,
+  turbulent transport, adaptation, calibration, poisoning, drift, analytical
+  confirmation, exposure, and lifecycle work.
+- Fifty-two chemical-sensing claims (`C-1152`–`C-1203`), seventy new
+  centralized references plus three deduplicated records, Fixture F-011, its
+  operator-qualified mathematics and editable diagram, and a dedicated active
+  chemical-sensing chapter; no principle or candidate was added.
+- A causal-inference and adaptive-experimentation audit with sixty-four scoped
+  audit-local claims, sixty primary or authoritative references, thirteen
+  equal-budget experiments, and exact routing across the current principles,
+  candidates, and fixtures; central promotion remains pending.
 - A semiconductor-device and circuit-reliability audit spanning hierarchical
   variation, yield, accelerated qualification, aging, electrothermal coupling,
   radiation, fault geometry, correction, adaptive margins, analog and

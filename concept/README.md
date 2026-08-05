@@ -38,18 +38,24 @@ physical modality with nonlinear multirate sensing, receiver action, active
 emission, masking, and mature signal-processing nulls; and
 [operator-qualified sensing](24-operator-qualified-sensing.md) to connect a
 physical measurement, its ambiguity and calibration, active acquisition,
-retention, and optical/digital routing. The
+retention, and optical/digital routing;
+[active chemical sensing](25-active-chemical-sensing.md) for transport,
+mixtures, active sampling, adaptation, drift, exposure, and analytical nulls;
+and the
 [mission-profile reliability chapter](26-reliability-under-mission-profiles.md)
 then carries those decisions into physical variation, degradation, correction,
-repair, repurposing, and lifetime accounting.
+repair, repurposing, and lifetime accounting. Finally,
+[physical computation boundaries](28-physical-computation-boundaries.md)
+separates fundamental limits from devices, circuits, workload movement,
+facilities, and embodied lifecycle work.
 
 ## Reading paths
 
-- **Architecture first:** 01 → 10 → 20 → 22 → 23 → 24 → 26 → 30 → 40 → 50 →
-  60 → 70.
+- **Architecture first:** 01 → 10 → 20 → 22 → 23 → 24 → 25 → 26 → 28 → 30 →
+  40 → 50 → 60 → 70.
 - **Evidence and deduplication:** 00 → 05 → 07 → the relevant mechanism
   chapter → its linked claim range and fixture.
-- **Evaluation first:** 80 → 22, 23, 24, or 26 → the linked mathematical
+- **Evaluation first:** 80 → 22, 23, 24, 25, 26, or 28 → the linked mathematical
   contract and hostile fixture → 90.
 - **One mechanism at a time:** open any chapter, follow its stable `C-` claims,
   then inspect only the candidates and experiments listed in that chapter.
