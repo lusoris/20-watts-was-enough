@@ -295,6 +295,49 @@ analysis, and lifecycle accounting. Retire the composition when that stack
 reaches the same representative transfer, risk, and total-cost frontier. See
 [OQ-061](open-questions.md#oq-061).
 
+### Operator-qualified optical-inference evaluation contract
+
+The [optics audit](audits/2026-08-05-optics-photonics-inverse-sensing.md)
+promotes no principle or candidate. Its 32 scoped claims contain 24 established,
+6 plausible, and 2 disputed statements. Their durable result is an outcome
+firewall: a decoded image is conditional on a physical forward operator;
+aperture and photon budget limit information; null-space content remains
+unmeasured; precision bounds are model-qualified; and active or coded sensing
+buys evidence by spending photons, dose, time, actuation, and computation
+([C-970](claims.md#c-970)–[C-982](claims.md#c-982)).
+
+Adaptive correction remains a delayed, bandwidth-limited control loop.
+Calibration state, scene state, saturation, dead time, frame alignment, and
+cross-sensor error dependence stay separate. Passive optical transforms execute
+real linear maps, but task benefit remains conditional on source, modulation,
+loss, detection, conversion, effective precision, utilization, operator reuse,
+and an independently measured accepted output ([C-983](claims.md#c-983)–[C-993](claims.md#c-993)).
+
+Fabrication variation, thermal tuning, in-situ adaptation, hardware routing,
+future-query recoverability, typed uncertainty, and operational plus embodied
+energy complete the boundary. A nominal optical core, best die, carrier rate,
+or photon-per-operation result cannot stand in for acquisition-to-decision wall
+energy or lifecycle service ([C-994](claims.md#c-994)–[C-1001](claims.md#c-1001)).
+
+The cross-domain routing is explicit and non-promotional: measurement and
+hardware allocation refine P-001/P-002; provisional phase and calibration state
+refine P-003; coded diversity and device ensembles refine P-004; in-situ tuning
+refines P-005; adaptive correction and thermal stabilization refine P-006;
+active measurement and typed ambiguity refine P-007; wavelength/mode crosstalk
+refines P-008/P-011; calibration, fallback, and lifecycle work refine P-009;
+physical transforms and acquisition co-design refine P-010; configuration,
+calibration, and raw-data lifetimes refine P-012; and operator versions plus
+uncertainty records refine P-013.
+
+[Fixture F-007](../experiments/fixtures/007-operator-qualified-optical-inference.md)
+applies the contract across Candidates 001, 006, 007, 010, 014, 017, and 018.
+Its null is the full Bayesian/regularized inverse, experiment-design,
+compressed-sensing, phase-retrieval, computational-imaging, adaptive-control,
+fusion, calibrated digital/analog hardware, monitoring, and lifecycle-accounting
+stack. Retire the composition when those methods reach the same ambiguity,
+transfer, risk, query-recovery, and total-energy frontier. See
+[OQ-062](open-questions.md#oq-062).
+
 ## P-001 — Selective allocation
 
 **Problem.** Total possible capacity is larger than the activity or resources

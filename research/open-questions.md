@@ -345,3 +345,17 @@ project choice.
   [C-926](claims.md#c-926)–[C-969](claims.md#c-969),
   [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md),
   and the [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md#audit-verdict).
+- **OQ-062:** Does an operator-qualified measure–infer–intervene–monitor–route–
+  retain contract expose consequential false specificity or improve the held-out
+  task-quality, calibration, latency, risk, future-query recovery, and energy
+  frontier beyond Bayesian and regularized inverse methods, experiment design,
+  compressed sensing, phase retrieval, computational imaging, adaptive-optics
+  control, covariance-aware fusion, matched digital accelerators, calibrated
+  optical/analog front ends, residual monitoring, and lifecycle assessment when
+  aperture, photon and dose budgets, ambiguity classes, prior support, operator
+  drift, saturation, conversion, effective precision, fabrication yield,
+  thermal control, retained raw evidence, human work, every power rail, and
+  embodied cost remain explicit? This is an evaluation fixture, not a principle
+  or candidate promotion. See [C-970](claims.md#c-970)–[C-1001](claims.md#c-1001),
+  [Fixture F-007](../experiments/fixtures/007-operator-qualified-optical-inference.md),
+  and the [optics audit](audits/2026-08-05-optics-photonics-inverse-sensing.md#verdict).
