@@ -65,6 +65,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/value-aware-artifact-tiering.mmd` separates access/recompute cost,
   task/evidence value, reconstructability, constraints, placement, and outcome
   calibration for Candidate 018.
+- `diagrams/audited-cumulative-inheritance.mmd` keeps generation, transmission,
+  newcomer reconstruction, evaluation, external lineage, governance, turnover,
+  invalidation, and retirement separate for Candidate 019.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

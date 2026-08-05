@@ -148,3 +148,9 @@ project choice.
   device economics, and fault-domain-aware storage after migration and metadata
   costs? See
   [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+- **OQ-038:** Can a population preserve and recombine validated capability
+  across real learner turnover better than a centralized continual learner
+  with replay, versioning, retrieval, search, workflow, and governance after
+  transmission, interpretation, evaluation, coordination, compatibility,
+  migration, and failure costs are charged? See
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).

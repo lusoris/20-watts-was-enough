@@ -186,6 +186,76 @@ tested in
 against typed protocols, schema registries, acknowledgements, replicated logs,
 calibrated inference, standard coding, and explicit migration.
 
+### Capability can cross learner turnover without staying inside one learner
+
+A repository, demonstration, or popular practice is not yet cumulative
+inheritance. The system must expose six different operations:
+
+1. **Generate:** produce a variant by invention, reconstruction, imitation, or
+   recombination.
+2. **Transmit:** identify exactly which actions, outcomes, explanations,
+   artifacts, tests, and environmental state reach the next learner.
+3. **Evaluate:** test the reconstructed capability independently rather than
+   crediting popularity, prestige, or successful transmission as usefulness.
+4. **Retain:** place accepted capability, evidence, failures, and lineage in a
+   form that a newcomer can retrieve and interpret.
+5. **Govern:** control compatibility, authority, appeal, migration, and
+   retirement without treating a convention as truth.
+6. **Survive turnover:** repeat the cycle with a genuinely new learner and a
+   protected test suite.
+
+```mermaid
+flowchart LR
+    G["Generate · imitate · reconstruct · recombine"] --> T["Versioned transmission channel"]
+    T --> L["Independent learner / newcomer"]
+    L --> E["Outcome + protected evaluation"]
+    E --> D{"Retain, revise, branch, or reject?"}
+    D -->|"retain"| A["External artifact + lineage"]
+    D -->|"revise"| G
+    D -->|"reject"| X["Negative result + retirement"]
+    A --> V["Governance · compatibility · appeal"]
+    V --> N["Turnover / next generation"]
+    N --> T
+    V --> R["Audit · invalidate · migrate"]
+    R --> A
+```
+
+Editable source:
+[audited-cumulative-inheritance.mmd](../assets/diagrams/audited-cumulative-inheritance.mmd).
+
+For generation $g$, a deliberately simple capability ledger is
+
+$$
+K_{g+1}=q_gK_g+I_g+R_g-D_g,
+$$
+
+where $K_g$ is validated capability in a declared task-score unit, $q_g$ is
+the dimensionless retained fraction, $I_g$ is independently generated
+improvement, $R_g$ is validated recombination gain, and $D_g$ is degradation
+or compatibility loss in the same task unit. These terms are accounting fields,
+not a claim that capabilities are generally additive; protected outcomes stay
+visible beside the aggregate.
+
+Raw population size also overstates diversity when every learner sees the same
+few lineages. If exposure weights are $\pi_i$ and $\sum_i\pi_i=1$, then
+
+$$
+N_{\mathrm{eff}}=\frac{1}{\sum_i\pi_i^2}
+$$
+
+is the dimensionless effective number of equally exposed models. It measures
+attention concentration—not competence, independence, or complexity.
+
+The evidence in [C-343](../research/claims.md#c-343)–[C-367](../research/claims.md#c-367)
+supports bounded cultural accumulation, conditional social-information use,
+material scaffolding, and severe archaeological inference limits. It does not
+establish a population advantage for artificial learners. That residual is
+isolated in
+[Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+which must beat centralized continual learning, replay, version control,
+retrieval, workflow engines, quality-diversity search, and fixed governance at
+equal cumulative effort.
+
 ### Live response and longitudinal learning are separate loops
 
 The runtime may need to contain a failure before its cause is known. Later
@@ -286,6 +356,7 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
 | Collective coordination and resilience | C-052–C-060 | scoped observations; quorum and fragility translations experimental |
 | Endogenous generation and exploration | C-061–C-066 | constituent observations; integrated curriculum speculative |
 | Communication and convention lifecycle | C-268–C-281 | constituent mechanisms established or scoped; versioned repairable composition speculative |
+| Cumulative inheritance across turnover | C-343–C-367 | bounded constituents established or scoped; population advantage unvalidated |
 | Complete integrated system | none | unvalidated project synthesis |
 
 ## Speculative extensions
@@ -316,6 +387,9 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
   targeted intervention and outcome-based selection.
 - Fluent exchange creates false common ground, silent semantic drift, or local
   conventions that newcomers and older versions cannot interpret or reject.
+- A population receives credit for cumulative learning when it only performs
+  more parallel search, preserves a headline score while losing rare skills,
+  or copies one correlated lineage through every nominally independent agent.
 - The architecture accumulates mechanisms faster than experiments can reject
   them.
 
@@ -333,6 +407,9 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
    fixed regularization, fixed pruning schedules, and naive fine-tuning.
 6. Versioned uptake, repair, and cross-play gates reduce silent semantic failure
    under agent and protocol drift beyond a complete fixed-protocol stack.
-7. The integrated system occupies a better quality–risk–latency–energy frontier
+7. Audited turnover retains and recombines more protected capability than a
+   centralized continual learner at equal cumulative learning, coordination,
+   storage, migration, and energy cost—or the population mechanism is retired.
+8. The integrated system occupies a better quality–risk–latency–energy frontier
    than every component ablation and the strongest ordinary controller,
    scheduler, cache, and router baselines.

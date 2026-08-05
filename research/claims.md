@@ -5269,3 +5269,349 @@ describes the exact statement here, not a broader interpretation.
   [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
   [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md),
   [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-343
+
+- **Statement:** Later members of bounded replacement microsocieties improved
+  paper-airplane and tower-task performance in the cited experiments.
+- **Status:** established.
+- **Primary sources:** `CaldwellMillen2008Models`,
+  `CaldwellMillen2010Conservatism`.
+- **Rationale:** Capability can accumulate across controlled participant
+  turnover within a defined task and transmission setup.
+- **Open issue:** Laboratory accumulation does not establish prehistoric,
+  species-universal, open-ended, or energy-efficient cultural evolution.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-344
+
+- **Statement:** Literal action imitation was not necessary for accumulation in
+  one paper-airplane experiment: imitation, outcome-only emulation, and teaching
+  conditions each permitted improvement.
+- **Status:** established.
+- **Primary source:** `CaldwellMillen2009Imitation`.
+- **Rationale:** Functional reconstruction fidelity can matter more than token-
+  or action-level identity depending on the task.
+- **Open issue:** Process opacity, safety-critical steps, and causal transfer can
+  make richer channels necessary in other domains.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-345
+
+- **Statement:** Functional reconstruction fidelity may be a better engineered
+  inheritance target than exact trace imitation.
+- **Status:** plausible.
+- **Primary sources:** `CaldwellMillen2009Imitation`,
+  `LewisLaland2012Fidelity`.
+- **Rationale:** Different transmission channels can preserve task-relevant
+  capability while discarding incidental actions.
+- **Open issue:** It must preserve protected rare behavior and beat artifact-
+  plus-test transfer at equal cumulative effort.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md).
+
+### C-346
+
+- **Statement:** A population-level cultural ratchet may retain and recombine
+  validated capability across turnover beyond a centralized continual learner.
+- **Status:** speculative.
+- **Primary source:** none sufficient; scoped constituents are in
+  [C-343](#c-343)–[C-345](#c-345).
+- **Rationale:** Generation, transmission, evaluation, lineage, external state,
+  and governance may distribute accumulation across replaceable learners.
+- **Open issue:** Parallel search, extra examples, social bandwidth, storage,
+  review, and governance must be equalized across the whole lineage.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md).
+
+### C-347
+
+- **Statement:** Meerkat provisioning behavior facilitated pup prey-handling
+  learning in the studied population.
+- **Status:** established.
+- **Primary source:** `ThorntonMcAuliffe2006Teaching`.
+- **Rationale:** The behavior meets a scoped functional teaching criterion in
+  that setting.
+- **Open issue:** Current facilitation does not identify the historical origin
+  or establish a universal teaching algorithm.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-348
+
+- **Statement:** Human use of social information varies with uncertainty,
+  consensus, cost, payoff, and learner confidence in tested tasks.
+- **Status:** established.
+- **Primary sources:** `MesoudiEtAl2006SocialInformation`,
+  `MorganEtAl2012SocialLearning`, `Mesoudi2011Strategies`.
+- **Rationale:** Social learning is a conditional allocation decision rather
+  than a fixed copy-others rule.
+- **Open issue:** Task structure, incentives, observability, and population
+  sampling bound transfer to artificial routing.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md).
+
+### C-349
+
+- **Statement:** Participants can exhibit heterogeneous frequency-dependent
+  social-learning strategies rather than universal conformity.
+- **Status:** established.
+- **Primary source:** `EffersonEtAl2008Conformists`.
+- **Rationale:** Population-level frequency patterns can arise from mixtures of
+  individual rules.
+- **Open issue:** Majority behavior is neighborhood- and sampling-relative and
+  cannot be used as a truth or competence guarantee.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-350
+
+- **Statement:** Prestige, payoff, and content cues may reduce evaluation cost
+  when direct evidence is sparse.
+- **Status:** plausible.
+- **Primary sources:** `ChudekEtAl2012Prestige`,
+  `MesoudiEtAl2006SocialInformation`, `MorganEtAl2012SocialLearning`.
+- **Rationale:** Model cues can allocate scarce evaluation attention.
+- **Open issue:** Prestige laundering, correlated majorities, domain mismatch,
+  and metric gaming can make the shortcut worse than direct evaluation.
+- **Used by:** [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-351
+
+- **Statement:** Prestige or popularity is not a generally reliable proxy for
+  competence, truth, or authority.
+- **Status:** disputed.
+- **Primary sources:** `ChudekEtAl2012Prestige`,
+  `EffersonEtAl2008Conformists`.
+- **Rationale:** The cue can be decoupled from domain-relevant performance or
+  strategically manufactured.
+- **Open issue:** A calibrated domain-specific cue may still add value when
+  tested against direct evaluation and identity manipulation.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md).
+
+### C-352
+
+- **Statement:** Material action exposed information and reduced internal
+  computation in the studied Tetris task.
+- **Status:** established.
+- **Primary source:** `KirshMaglio1994Epistemic`.
+- **Rationale:** Manipulating external state can be epistemic as well as
+  pragmatic, offloading part of a computation into world interaction.
+- **Open issue:** Write, action, sensing, verification, and recovery costs can
+  exceed the internal work saved.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-353
+
+- **Statement:** External representations may preserve recoverable task state
+  across individual turnover.
+- **Status:** plausible.
+- **Primary source:** `Hutchins1995Cognition`.
+- **Rationale:** Coordinated people and artifacts can retain procedure and state
+  beyond any one participant.
+- **Open issue:** Discoverability, interpretation, schema drift, correctness,
+  migration, and loss remain lifecycle requirements.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-354
+
+- **Statement:** Distributed cognition is not inherently more energy-efficient
+  than centralized computation.
+- **Status:** speculative.
+- **Primary source:** none sufficient; `Hutchins1995Cognition` establishes an
+  analysis frame, not an energy comparison.
+- **Rationale:** Externalization can shift work into communication, artifacts,
+  indexing, verification, migration, and recovery.
+- **Open issue:** A lifecycle comparison must include every human and physical
+  resource boundary.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [energy chapter](../concept/80-energy-model.md).
+
+### C-355
+
+- **Statement:** Sanction availability and institution choice changed
+  cooperation in specified public-goods experiments.
+- **Status:** established.
+- **Primary sources:** `FehrGaechter2002Punishment`,
+  `GuererkEtAl2006Institutions`, `OstromEtAl1992Covenants`.
+- **Rationale:** Monitoring, punishment, choice, and communication alter the
+  payoff structure under their experimental rules.
+- **Open issue:** Enforcement cost, false or antisocial punishment, identity,
+  capture, exit, appeal, and replication scope bound transfer.
+- **Used by:** [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-356
+
+- **Statement:** Costly punishment varies substantially across sampled
+  societies and should not be represented by one universal sanction constant.
+- **Status:** established.
+- **Primary sources:** `HenrichEtAl2006Punishment`,
+  `LoIaconoEtAl2023Replication`.
+- **Rationale:** Payoffs, norms, sampling, design, and replication affect
+  punishment and cooperation outcomes.
+- **Open issue:** Artificial governance must measure net welfare and tail harm,
+  not cooperation rate alone.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-357
+
+- **Statement:** Endogenous norms have no established general advantage over
+  contracts, IAM, policy-as-code, and randomized audits for aligning artificial
+  agents.
+- **Status:** speculative.
+- **Primary source:** none sufficient; relevant scoped experiments are in
+  [C-355](#c-355)–[C-356](#c-356).
+- **Rationale:** Norm formation adds enforcement, error, capture, appeal, and
+  coordination dynamics.
+- **Open issue:** It must beat a complete conventional governance stack under
+  strategic behavior and turnover.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-358
+
+- **Statement:** Partial connectivity preserved solution diversity and improved
+  bounded combinatorial outcomes in the cited experiment.
+- **Status:** established.
+- **Primary source:** `DerexBoyd2016Connectivity`.
+- **Rationale:** Network structure can trade rapid diffusion against independent
+  exploration and later recombination.
+- **Open issue:** The task, population, message budget, and timescale do not
+  establish one universal optimal topology.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions).
+
+### C-359
+
+- **Statement:** Technological performance can improve across transmission
+  without measured causal understanding improving in a bounded wheel task.
+- **Status:** established.
+- **Primary source:** `DerexEtAl2019Causal`.
+- **Rationale:** Outcome-guided reconstruction can accumulate an effective form
+  without an explicit causal model.
+- **Open issue:** Opaque inheritance is unsafe when transfer, diagnosis, or
+  high-consequence intervention requires causal understanding.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-360
+
+- **Statement:** Scheduled isolation and exchange may improve recombinational
+  search by preserving independent solution lineages.
+- **Status:** plausible.
+- **Primary sources:** `DerexBoyd2016Connectivity`, `DerexEtAl2013GroupSize`.
+- **Rationale:** Fully connected populations can converge before useful
+  alternatives mature.
+- **Open issue:** Slow diffusion, duplicated work, interface cost, and ordinary
+  quality-diversity search may erase the gain.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-361
+
+- **Statement:** Raw population size is not a general single cause of
+  technological complexity.
+- **Status:** disputed.
+- **Primary sources:** `PowellEtAl2009Demography`, `KlineBoyd2010Oceania`,
+  `CollardEtAl2013Population`, `VaesenEtAl2016Population`.
+- **Rationale:** Comparative, archaeological, and laboratory evidence is mixed,
+  and ecology, connectivity, accessible expertise, task cost, and measurement
+  can confound nominal headcount.
+- **Open issue:** Population and effective accessible model diversity must be
+  manipulated separately.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-362
+
+- **Statement:** Accessible independent model diversity may be more predictive
+  of cumulative search than nominal population headcount.
+- **Status:** plausible.
+- **Primary sources:** `DerexEtAl2013GroupSize`,
+  `DerexBoyd2016Connectivity`, `MuthukrishnaEtAl2014Sociality`.
+- **Rationale:** Exposure concentration, topology, independence, and model
+  quality determine which alternatives a learner can actually use.
+- **Open issue:** Effective count does not measure competence or independence
+  unless those are separately instrumented.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [P-001](principle-registry.md#p-001--selective-allocation).
+
+### C-363
+
+- **Statement:** Uncertain payoff feedback increased group-specific persistence
+  in a bounded laboratory microsociety.
+- **Status:** established.
+- **Primary source:** `CaldwellMillen2010Conservatism`.
+- **Rationale:** Early outcomes can alter later exposure and switching under
+  uncertainty.
+- **Open issue:** Persistence can be adaptive, arbitrary, or harmful depending
+  on objective quality and switching cost.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-364
+
+- **Statement:** Early choices can lock artificial lineages through exposure,
+  compatibility, and switching-cost feedback.
+- **Status:** plausible.
+- **Primary source:** `CaldwellMillen2010Conservatism`.
+- **Rationale:** Path dependence is a change in reachable states or transition
+  probabilities, not mere temporal autocorrelation.
+- **Open issue:** Replay identical seeds, branch early choices, and compare safe
+  migration before inferring lock-in.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-365
+
+- **Statement:** Archaeological assemblages are transformed, selected, and
+  often time-averaged samples rather than synchronous behavioral snapshots.
+- **Status:** established.
+- **Primary sources:** `Schiffer1972Context`, `Premo2014TimeAveraging`.
+- **Rationale:** Use, discard, preservation, recovery, classification, and
+  temporal mixing mediate the observed record.
+- **Open issue:** Formation and observation kernels can be underidentified and
+  no correction recovers unpreserved information.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-366
+
+- **Statement:** Artifact form alone does not identify imitation, teaching,
+  symbolism, cognition, or a specific institution.
+- **Status:** disputed.
+- **Primary sources:** `Schiffer1972Context`, `Premo2014TimeAveraging`,
+  `HenshilwoodEtAl2002Engravings`, `MesoudiOBrien2008Projectile`.
+- **Rationale:** Multiple production, transmission, use, and formation histories
+  can be observationally equivalent.
+- **Open issue:** Strong inference needs competing generative histories,
+  contextual evidence, calibrated likelihood, and abstention.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-367
+
+- **Statement:** Archaeological patterning does not by itself validate a
+  prospective artificial cultural-governance mechanism.
+- **Status:** speculative.
+- **Primary source:** none sufficient; observation limits are in
+  [C-365](#c-365)–[C-366](#c-366).
+- **Rationale:** Historical fit under incomplete formation processes lacks an
+  engineered intervention and prospective counterfactual test.
+- **Open issue:** Candidate 019 must demonstrate controlled turnover,
+  transmission, evaluation, governance, and cumulative budget advantages.
+- **Used by:** [cultural audit](audits/2026-08-05-cultural-evolution-archaeology.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).

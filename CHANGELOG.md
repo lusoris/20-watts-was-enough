@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A cultural-evolution and archaeological-inference audit separating
+  generation, transmission, evaluation, retention, governance, model access,
+  path dependence, and transformed material evidence.
+- Twenty-five scoped cultural-inheritance claims (`C-343`–`C-367`), thirty-two
+  centralized sources, Candidate 019, and an editable turnover lifecycle
+  diagram testing population inheritance against a complete centralized null.
 - A databases and storage audit separating transaction, isolation, ordering,
   replication, quorum, index, cache, compaction, reclamation, event replay,
   temporal, coded repair, and tiering contracts as mature memory nulls.
