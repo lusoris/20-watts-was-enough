@@ -13,33 +13,37 @@ capture structure in natural inputs ([C-002](../research/claims.md#c-002)). The
 useful constraint is that symbols should connect to predictive state grounded in
 interaction, not only to other symbols.
 
-The analogy does not imply that a simulator reproduces childhood, or that more
-modalities necessarily produce causal understanding.
-
 ## Proposed AI translation
 
 Training examples are trajectories rather than isolated documents:
 
 $$
-\tau = \{(o_t, a_t, s_t, o_{t+1}, m_t)\}_{t=0}^{T},
+\tau = \{(o_t, a_t, u_t, o_{t+1}, m_t)\}_{t=0}^{T_\tau-1},
 $$
 
-where $o_t$ contains available observations, $a_t$ is an action or intervention,
-$s_t$ is known simulator or environment state when available, and $m_t$ records
-which modalities are present.
+where $t$ is a discrete step, $T_\tau$ is the trajectory length in transition
+counts, $o_t$ contains available observations, $a_t$ is an action or
+intervention, $u_t$ is known simulator or environment state when available,
+and $m_t$ is a dimensionless modality-presence mask.
 
 The model learns to predict target representations from context and action:
 
 $$
-\hat{z}_{t+k}=P(z_{\le t},a_{t:t+k-1},m_{\le t}),
+\hat{z}_{t+k}=f_\theta(z_{\le t},a_{t:t+k-1},m_{\le t}),
 \qquad
 \mathcal{L}_{\text{pred}}=d(\hat{z}_{t+k},\operatorname{sg}(z_{t+k})).
 $$
 
-The stop-gradient operator $\operatorname{sg}$ indicates that target encoding
-and collapse prevention require an explicit training design. I-JEPA supports
-latent prediction for images ([C-006](../research/claims.md#c-006)); it does not
-validate this full multimodal objective.
+Here $z_t$ and $\hat z_t$ are dimensionless latent vectors, $k$ is a positive
+integer prediction horizon in steps, $\theta$ is the predictor parameter
+vector, $f_\theta$ is the learned predictor, and $d$ is a dimensionless
+distance normalized by latent width. The
+stop-gradient operator
+$\operatorname{sg}$ indicates that target encoding and collapse prevention
+require an explicit training design. Thus $\mathcal{L}_{\text{pred}}$ is
+dimensionless. I-JEPA supports latent prediction for images
+([C-006](../research/claims.md#c-006)); it does not validate this full
+multimodal objective.
 
 Language enters as another observation and action channel. It should label,
 query, compress, and communicate already learned regularities, while remaining

@@ -20,6 +20,19 @@
 | $\sigma_t$ | predicted uncertainty for $z_t$ | same scale as distance |
 | $s_t$ | normalized surprise | dimensionless |
 
+## Symbol scope
+
+The table above reserves unqualified project-wide symbols. A chapter may add
+subscripts or superscripts, but it must not reuse a reserved symbol for a
+different physical quantity. In particular, $P$ remains power and $s_t$
+remains normalized surprise. Predictors use symbols such as $f_\theta$, and an
+environment state uses a locally declared symbol such as $u_t$.
+
+Time durations use seconds. Discrete sequence horizons use an explicit count
+such as $T_\tau$ or $T_B$ rather than the unqualified duration $T$. Every local
+objective must state the unit of its value and of every coefficient that makes
+unlike terms commensurable.
+
 ## Required qualifiers
 
 `FLOP`, `operation`, `token`, `event`, and `sample` are not interchangeable.

@@ -3,12 +3,13 @@
 > A biologically inspired R&D blueprint for sparse, grounded, continual,
 > energy-efficient AI.
 
-The name is a joke with a serious target: the adult brain operates on an energy
-budget commonly summarized as roughly 20 watts, while contemporary AI systems
-often buy capability by activating and moving far more state than a task needs.
-The number is an order-of-magnitude shorthand—not a claim that neural and
-silicon operations are directly comparable. See [C-001](research/claims.md#c-001)
-and the [energy-model chapter](concept/80-energy-model.md).
+The name is a joke with a serious target: metabolic accounting places the adult
+human brain's whole-organ power budget at roughly 17–20 watts, while
+contemporary AI systems often buy capability by activating and moving far more
+state than a task needs. The number names the constraint; comparisons with
+silicon require a shared task, quality envelope, and system boundary. See
+[C-001](research/claims.md#c-001) and the
+[energy-model chapter](concept/80-energy-model.md).
 
 ## Central thesis
 
@@ -48,12 +49,12 @@ state. See [decision 0005](decisions/0005-rendered-private-edition.md).
 | [Biology is a launchpad](concept/05-biology-is-a-launchpad.md) | Which biological constraints transfer, and which substrate limits should engineering escape? |
 | [Neurogenesis and routing](concept/10-neurogenesis-and-routing.md) | How can a large developmental capacity become conditionally active modules? |
 | [Sensorimotor grounding](concept/20-sensorimotor-grounding.md) | What must be learned before language can describe a world model? |
-| [Sparse predictive compute](concept/30-sparse-predictive-compute.md) | How should surprise, confidence, and routing control computation? |
-| [Memory and consolidation](concept/40-memory-and-consolidation.md) | How can fast learning coexist with stable long-term structure? |
-| [Grokking and pruning](concept/50-grokking-and-pruning.md) | When is specialization mature enough to remove capacity safely? |
+| [Sparse predictive compute](concept/30-sparse-predictive-compute.md) | How do event, context, and resource loops price the next computation or observation? |
+| [Memory and consolidation](concept/40-memory-and-consolidation.md) | How does an episode become a retained skill, external fact, weakened trace, or deletion? |
+| [Maturity and structural consolidation](concept/50-grokking-and-pruning.md) | When should a structure be protected, reopened, compacted, or retired? |
 | [Hardening and factual memory](concept/60-hardening-and-factual-memory.md) | What should become a low-cost skill, remain plastic, or move outside weights? |
-| [System synthesis](concept/70-system-synthesis.md) | How do the developmental and runtime loops fit together? |
-| [Energy model](concept/80-energy-model.md) | How will efficiency claims be made comparable and falsifiable? |
+| [System synthesis](concept/70-system-synthesis.md) | How do runtime, task, resource, adaptation, and maintenance control planes fit together? |
+| [Energy evaluation contract](concept/80-energy-model.md) | How are lifecycle boundaries, equal budgets, break-even, uncertainty, and null models enforced? |
 | [Research roadmap](concept/90-research-roadmap.md) | What evidence and experiments are required before building the full system? |
 
 Supporting material:

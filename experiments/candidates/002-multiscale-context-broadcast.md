@@ -250,10 +250,14 @@ not another plant. The global encoder observes only the noisy context sensor,
 not local plant state. This isolates one-way broadcast from centralized state
 feedback.
 
-The normalized episode cost is
+Let $T_B$ be the preregistered number of base steps in one Task-B episode, so
+the episode duration is $T_B\Delta t$ seconds. The tracking error $e_{i,t}$,
+action $a_{i,t}$, constraint violation $v_{i,t}$, and shared context $c_t$ are
+normalized and dimensionless; $a_{i,0}$ is the fixed reset action shared by
+all methods. The normalized episode cost is
 
 $$
-J = \sum_{t=1}^{T}\Delta t\sum_{i=1}^{8}
+J_B = \sum_{t=1}^{T_B}\Delta t\sum_{i=1}^{8}
 \left[
   e_{i,t}^{\mathsf T}Q_i(c_t)e_{i,t}
   + \lambda_a a_{i,t}^2
@@ -262,9 +266,12 @@ J = \sum_{t=1}^{T}\Delta t\sum_{i=1}^{8}
 \right],
 $$
 
-where $e_{i,t}$ is normalized tracking error and $v_{i,t}$ is normalized
-constraint violation. $Q_i$, $\lambda_a$, $\lambda_{\Delta a}$, and
-$\lambda_v$ are fixed before full runs and identical across methods.
+Here $Q_i(c_t)$ is a dimensionless positive-semidefinite tracking-weight
+matrix, and $\lambda_a$, $\lambda_{\Delta a}$, and $\lambda_v$ are
+dimensionless weights. The bracket is dimensionless, so $J_B$ has units of
+normalized-cost seconds. $T_B$, $Q_i$, and all weights are fixed before full
+runs and identical across methods; methods are compared on the same episode
+duration.
 
 ### Evaluation regimes
 
@@ -389,14 +396,14 @@ negative result.
 | $h_{i,t}$ | local hidden state | dimensionless activations |
 | $s_{i,t}$ | normalized plant state | dimensionless after declared scaling |
 | $a_{i,t}$ | normalized bounded control action | dimensionless |
-| $J$ | normalized cumulative control cost | dimensionless-seconds |
+| $J_B$ | normalized cumulative control cost | normalized-cost seconds |
 | $P$ | measured electrical power | watts |
 | $E$ | measured electrical energy | joules |
 | $L$ | wall latency | milliseconds per base step |
 | $B_{\mathrm{physical}}$ | measured context-related memory traffic | bytes per base step |
 
 All plant normalizers are fixed from training data and stored. Report original
-unnormalized constraint violations alongside normalized $J$ if physical units
+unnormalized constraint violations alongside normalized $J_B$ if physical units
 are later assigned to the simulator.
 
 ## Metrics
@@ -414,7 +421,7 @@ are later assigned to the simulator.
 
 **Task B**
 
-- normalized episode cost $J$;
+- normalized episode cost $J_B$;
 - integral absolute tracking error in seconds;
 - maximum overshoot as a fraction of the local allowed range;
 - constraint-violation count, duration in seconds, and integrated magnitude;
@@ -484,7 +491,7 @@ deleting parameters proves only that capacity was removed.
 - Use paired bootstrap 95% confidence intervals across full-run seeds and test
   episodes for method differences.
 - Report median, mean, standard deviation, and worst seed.
-- Predeclare NRMSE, Task-B $J$, physical bytes, and inference joules as primary;
+- Predeclare NRMSE, Task-B $J_B$, physical bytes, and inference joules as primary;
   treat remaining metrics as diagnostic or safety constraints.
 
 ### Practical margins

@@ -56,17 +56,27 @@ $$
 \mathcal{L}_{\text{route}}
 = \mathcal{L}_{\text{task}}
 + \lambda_E \widehat{E}(x)
-+ \lambda_B \mathcal{L}_{\text{balance}}
-+ \lambda_S \mathcal{L}_{\text{stability}},
++ \lambda_M \widehat{B}(x)
++ \lambda_{\mathrm{bal}} \mathcal{L}_{\text{balance}}
++ \lambda_{\mathrm{stab}} \mathcal{L}_{\text{stability}},
 $$
 
-where $\widehat{E}(x)$ estimates event-level energy and the stability term
-penalizes routing churn only after a module begins to consolidate.
+where all $\mathcal{L}$ terms are dimensionless normalized losses,
+$\widehat{E}(x)$ is estimated event-level energy in joules, and
+$\widehat{B}(x)$ is estimated memory and network traffic in bytes across named
+boundaries. Therefore $\lambda_E$ has units $\mathrm{J}^{-1}$,
+$\lambda_M$ has units $\mathrm{byte}^{-1}$, and
+$\lambda_{\mathrm{bal}}$ and $\lambda_{\mathrm{stab}}$ are dimensionless.
+The stability term penalizes routing churn only after a module begins to
+consolidate. Coefficients and normalization ranges are fixed before
+confirmatory evaluation.
 
 ## Efficiency mechanism
 
-For experts $i=1\ldots n$, router gates $g_i(x)\in\{0,1\}$, and expert costs
-$c_i(x)$, active work is
+For experts $i=1\ldots n$, let router gates $g_i(x)\in\{0,1\}$ be
+dimensionless, $c_i(x)$ be the executed operation count for expert $i$, and
+$C_{\text{router}}(x)$ be the router's executed operation count under the same
+precision and counting convention. Active work in operations per event is
 
 $$
 C_{\text{active}}(x)=C_{\text{router}}(x)+\sum_{i=1}^{n}g_i(x)c_i(x).
@@ -76,6 +86,9 @@ Capacity and active cost are decoupled only when the selected sum and routing
 overhead remain substantially below dense execution. Sparse MoE work establishes
 the feasibility of this separation in specific systems
 ([C-003](../research/claims.md#c-003)).
+
+Operation count is not energy: $\widehat{E}(x)$ and $\widehat{B}(x)$ remain
+separate measured or calibrated quantities.
 
 ## Evidence status
 

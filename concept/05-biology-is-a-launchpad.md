@@ -95,8 +95,8 @@ into a decorative score.
   [C-017](../research/claims.md#c-017) through
   [C-020](../research/claims.md#c-020); their proposed artificial abstractions
   are not thereby validated.
-- The claim that a hybrid will outperform both conventional AI and literal
-  emulation is the project's testable thesis, not a published result.
+- Performance of the complete cross-substrate system remains speculative until
+  matched engineering tests establish it.
 
 ## Speculative extensions
 

@@ -77,15 +77,20 @@ describes the exact statement here, not a broader interpretation.
 
 ### C-001
 
-- **Statement:** Neural signaling operates under a strict metabolic budget, and
-  the cost of spiking constrains how much cortex can be strongly active at once.
-- **Status:** established, for biological energy accounting and estimates of
-  cortical activity—not as a direct digital efficiency ratio.
-- **Primary sources:** `attwell2001energy`, `lennie2003cost`.
-- **Rationale:** Both works explicitly model or estimate signaling cost. Lennie
-  argues that substantially active neurons must be a small fraction of cortex.
-- **Open issue:** Whole-brain power and effective computation are not single,
-  task-independent constants.
+- **Statement:** Metabolic accounting places the adult human brain's whole-organ
+  power budget at approximately 17–20 W. Within that budget, the cost of neural
+  signaling constrains how much cortex can be strongly active at once.
+- **Status:** established for the cited whole-organ range and scoped biological
+  energy accounts—not as a direct digital efficiency ratio.
+- **Primary sources:** `levy2021communication`, `attwell2001energy`,
+  `lennie2003cost`.
+- **Rationale:** Levy and Calvert derive a 17–20 W whole-brain glucose power
+  budget before partitioning it by tissue and function. Attwell and Laughlin
+  model signaling cost; Lennie argues that substantially active neurons must be
+  a small fraction of cortex.
+- **Open issue:** The range depends on metabolic measurement and accounting
+  assumptions, while effective computation is not a task-independent physical
+  quantity.
 - **Used by:** [thesis](../concept/00-thesis-and-principles.md),
   [sparse compute](../concept/30-sparse-predictive-compute.md),
   [energy model](../concept/80-energy-model.md).

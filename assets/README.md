@@ -11,6 +11,14 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
   slow maintenance loops under shared resource control.
 - `diagrams/generative-recombination.mmd` treats useful novelty as a maintained
   copy–compress–vary–test–retain cycle rather than creation from nothing.
+- `diagrams/adaptive-compute-control.mmd` separates event-level acquisition,
+  rate-limited context, and slower physical resource control.
+- `diagrams/memory-lifecycle.mmd` follows an attributable episode through
+  replay, branching, promotion, externalization, weakening, or deletion.
+- `diagrams/maturity-fragility-cycle.mmd` tracks reversible protection,
+  reopening, recovery testing, and structural retirement.
+- `diagrams/efficiency-evaluation-loop.mmd` turns an efficiency claim into an
+  equal-budget measurement, uncertainty, rejection, and replication cycle.
 - `rendered/` is reserved for committed SVG or PNG outputs generated from those
   sources.
 - Future data-driven figures should store their plotting source and input-data

@@ -7,6 +7,15 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Readable, experiment-facing rewrites of sparse adaptive compute, memory
+  lifecycle, reversible structural consolidation, system synthesis, and energy
+  evaluation.
+- Four editable Mermaid figures for adaptive compute control, memory lifecycle,
+  maturity and fragility, and the efficiency evaluation loop.
+- A traceable 17–20 W whole-brain metabolic range in C-001 and its primary
+  source, replacing the previously under-sourced title shorthand.
+- Dimensionally closed notation for grounding, routing, adaptive compute,
+  consolidation, lifecycle efficiency, and Candidate 002's control objective.
 - A narrative working-architecture chapter that connects the evidence ledger
   to fast runtime, adaptation, maintenance, resource, and generative-
   recombination loops.
