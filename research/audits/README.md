@@ -29,6 +29,7 @@ failed deduplications that would be lost in the shorter claim ledger.
 | 2026-08-05 | [Linguistics and communication science](2026-08-05-linguistics-communication.md) | composition, pragmatics, common ground, repair, timing, coding, cultural transmission, grounding, and convention formation remain distinct; Candidate 015 tests a versioned repairable convention lifecycle |
 | 2026-08-05 | [Paleobiology and major transitions](2026-08-05-paleobiology-major-transitions.md) | demographic and reproductive bottlenecks, extinction and recovery, acquisition and integration, aggregation and individuality, exaptation, constraint, and fossil observation are separated; Candidate 016 tests a conflict-bounded unit transition |
 | 2026-08-05 | [Pathology and rehabilitation](2026-08-05-pathology-rehabilitation.md) | local selection, hidden recurrence, layered tolerance, capacity–load failure, propagation, compensation, dose/timing, reserve, and adverse adaptation refine existing mechanisms; compensation-aware recovery remains an evaluation method |
+| 2026-08-05 | [Databases and storage systems](2026-08-05-databases-storage.md) | transaction, ordering, replication, access, cache, compaction, reclamation, replay, temporal, repair, and placement contracts become mandatory memory nulls; Candidates 017 and 018 test semantic compaction and value-aware tiering |
 
 An audit does not itself promote a principle. Major observations receive stable
 `C-` claims, candidate mechanisms are deduplicated against the

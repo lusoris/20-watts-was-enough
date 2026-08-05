@@ -59,6 +59,12 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/conflict-bounded-unit-transition.mmd` distinguishes a reproducible
   collective lineage, within-lifetime specialization, member shortcuts,
   conflict cost, and cost-adjusted higher-level selection for Candidate 016.
+- `diagrams/semantic-compaction-contract.mmd` makes registered query,
+  evidence, invalidation, rollback, hidden-future, and corruption gates explicit
+  for Candidate 017.
+- `diagrams/value-aware-artifact-tiering.mmd` separates access/recompute cost,
+  task/evidence value, reconstructability, constraints, placement, and outcome
+  calibration for Candidate 018.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

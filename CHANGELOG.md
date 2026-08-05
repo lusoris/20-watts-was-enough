@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A databases and storage audit separating transaction, isolation, ordering,
+  replication, quorum, index, cache, compaction, reclamation, event replay,
+  temporal, coded repair, and tiering contracts as mature memory nulls.
+- Eighteen scoped storage claims (`C-325`–`C-342`), twenty-eight new centralized
+  sources, Candidates 017 and 018, and two editable diagrams for finite semantic
+  compaction contracts and value/reconstructability-aware artifact placement.
 - A pathology and rehabilitation audit covering somatic evolution, recurrence,
   layered tolerance, proteostasis capacity, seeded propagation, compensation,
   forced use, intervention timing, reserve, and adverse plasticity.

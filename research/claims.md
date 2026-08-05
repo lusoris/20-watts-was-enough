@@ -5011,3 +5011,261 @@ describes the exact statement here, not a broader interpretation.
 - **Used by:** [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
   [hardening chapter](../concept/60-hardening-and-factual-memory.md),
   [pathology audit](audits/2026-08-05-pathology-rehabilitation.md).
+
+### C-325
+
+- **Statement:** Atomicity, isolation, and durability are distinct storage
+  contracts and none establishes factual truth or specification adequacy.
+- **Status:** established.
+- **Primary sources:** `gray1981transaction`, `mohan1992aries`.
+- **Rationale:** Each property constrains effects, concurrency, or persistence
+  only inside a declared system and failure boundary.
+- **Open issue:** External actions and application invariants require separate
+  coordination and evidence.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-326
+
+- **Statement:** Write-ahead-log recovery depends on ordering and a trustworthy
+  stable-storage boundary.
+- **Status:** established.
+- **Primary source:** `mohan1992aries`.
+- **Rationale:** Acknowledged recovery guarantees stop when log/page ordering,
+  stable media, checksums, or implementation assumptions fail.
+- **Open issue:** Physical side effects outside the transaction are not made
+  reversible by the log.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-327
+
+- **Statement:** Snapshot isolation can admit histories that are not
+  serializable.
+- **Status:** established.
+- **Primary sources:** `berenson1995isolation`, `bernstein1983mvcc`.
+- **Rationale:** Versioned snapshots and write-conflict rules can still permit
+  write skew and other application anomalies.
+- **Open issue:** Every implementation must name and test its exact isolation
+  contract rather than inherit a label by analogy.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-328
+
+- **Statement:** Linearizability and serializability are different correctness
+  conditions; only the former necessarily preserves real-time order for the
+  declared object operations.
+- **Status:** established.
+- **Primary source:** `herlihy1990linearizability`.
+- **Rationale:** Concurrent-object operations and multi-operation transaction
+  histories have different scopes and admissible orders.
+- **Open issue:** The two can coincide for a restricted API but must not be
+  treated as synonyms generally.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-329
+
+- **Statement:** CAP is a scoped impossibility result about availability and
+  atomic consistency during partitions, not a three-feature product taxonomy.
+- **Status:** established.
+- **Primary source:** `gilbert2002cap`.
+- **Rationale:** The theorem's definitions of partition, availability, and
+  consistency determine its conclusion.
+- **Open issue:** Partial synchrony, bounded staleness, transaction scope, and
+  normal-operation trade-offs require other models.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation).
+
+### C-330
+
+- **Statement:** Simple quorum overlap guarantees depend on fixed membership,
+  weights, protocol version, failure, and concurrency assumptions.
+- **Status:** established.
+- **Primary source:** `gifford1979weighted`.
+- **Rationale:** Arithmetic overlap alone does not solve arbitrary concurrency,
+  Byzantine behavior, changing membership, or common-mode failures.
+- **Open issue:** Identity and administrative independence must be measured, not
+  inferred from logical replica count.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-331
+
+- **Statement:** Replication and erasure coding preserve exact state under
+  declared faults without supplying semantic diversity, truth, or new function.
+- **Status:** established.
+- **Primary sources:** `reed1960codes`, `dimakis2010regenerating`,
+  `huang2012azure`, `lamport1998paxos`, `ongaro2014raft`.
+- **Rationale:** Copies, code symbols, or an agreed log can reproduce a shared
+  semantic error exactly.
+- **Open issue:** Common software, credentials, commands, and recovery roots can
+  correlate nominal failure domains.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [fault-tolerance audit](audits/2026-08-05-fault-tolerance-and-reconstruction.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-332
+
+- **Statement:** An exact learned index requires a correction or fallback path
+  outside the predictor.
+- **Status:** established.
+- **Primary sources:** `bayer1972btree`, `kraska2018learnedindexes`.
+- **Rationale:** A learned model predicts a location or range; exact lookup
+  still verifies and corrects prediction error.
+- **Open issue:** Distribution shift, updates, rebuild cost, correction window,
+  and tail latency determine the lifecycle advantage.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-333
+
+- **Statement:** Adaptive recency/frequency cache policies are mature nulls for
+  use-dependent memory allocation.
+- **Status:** established.
+- **Primary sources:** `belady1966replacement`, `denning1968workingset`,
+  `megiddo2003arc`, `einziger2017tinylfu`.
+- **Rationale:** Cache admission and eviction already adapt to trace structure;
+  biological terminology is not an algorithmic distinction.
+- **Open issue:** AI-specific value must improve task/evidence outcomes beyond
+  size-, miss-cost-, and shift-aware caching without future leakage.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-334
+
+- **Statement:** LSM compaction trades read, write, space, maintenance debt, and
+  tail-latency behavior rather than removing cost.
+- **Status:** established.
+- **Primary sources:** `oneil1996lsm`, `dayan2018dostoevsky`,
+  `balmau2019silk`.
+- **Rationale:** Logical write throughput can externalize work into background
+  merging, amplification, stalls, and device wear.
+- **Open issue:** Workload, media, configuration, scheduler, and foreground
+  interference determine the frontier.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-335
+
+- **Statement:** Garbage and version reclamation is correct only relative to
+  declared reachability, visibility, roots, snapshots, and retention horizons.
+- **Status:** established.
+- **Primary sources:** `dijkstra1978garbage`, `postgresql2025vacuum`.
+- **Rationale:** Age, coldness, or current unreachability does not establish
+  epistemic unimportance or future irrelevance.
+- **Open issue:** Long readers, legal holds, rollback, source invalidation, and
+  rare future safety queries change the live set.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [memory chapter](../concept/40-memory-and-consolidation.md),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-336
+
+- **Statement:** Event replay reproduces intended state only when ordering,
+  event schemas, handlers, configuration, nondeterministic inputs, and external
+  effects remain controlled and version-compatible.
+- **Status:** plausible.
+- **Primary sources:** `fowler2005eventsourcing`, `mohan1992aries`.
+- **Rationale:** Re-executing bytes through changed semantics can silently
+  create a different state or duplicate irreversible effects.
+- **Open issue:** Prospective replay experiments should quantify semantic drift,
+  upcaster burden, external receipts, and recovery time.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-337
+
+- **Statement:** Valid time and system/transaction time answer different
+  questions and cannot generally be reduced to one timestamp without lost
+  information.
+- **Status:** established.
+- **Primary sources:** `snodgrass1985time`, `kulkarni2012sqltemporal`.
+- **Rationale:** When a proposition is asserted to hold in the world and when a
+  database stored or believed it are separate coordinates.
+- **Open issue:** Event, processing, receipt, and correction clocks may add more
+  coordinates in observation pipelines.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [factual-memory chapter](../concept/60-hardening-and-factual-memory.md).
+
+### C-338
+
+- **Statement:** Storage-tier break-even thresholds depend on workload,
+  hardware, energy, and economic assumptions rather than one durable constant.
+- **Status:** established.
+- **Primary source:** `gray1987fiveminute`.
+- **Rationale:** Access rate, capacity price, transfer cost, latency, energy,
+  endurance, and failure risk move the placement frontier.
+- **Open issue:** Every quantitative tiering result must expose current hardware
+  and cost configuration.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-339
+
+- **Statement:** Semantic and evidence value may improve AI artifact placement
+  beyond access probability, size, and miss cost when decided without future
+  leakage.
+- **Status:** plausible.
+- **Primary source:** none sufficient; established cache and storage nulls are
+  scoped in [C-333](#c-333) and [C-338](#c-338).
+- **Rationale:** A rare cold record can be required for audit, rollback,
+  invalidation, or reconstruction despite low expected access.
+- **Open issue:** Strong engineered feature vectors may match the result and
+  metadata/migration cost may erase the saving.
+- **Used by:** [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md),
+  [storage audit](audits/2026-08-05-databases-storage.md),
+  [P-001](principle-registry.md#p-001--selective-allocation).
+
+### C-340
+
+- **Statement:** A compactor may shrink histories while preserving registered
+  query, evidence, rollback, uncertainty, and invalidation contracts better than
+  ordinary views, snapshots, and archives.
+- **Status:** speculative.
+- **Primary source:** none sufficient; physical compaction boundaries are in
+  [C-334](#c-334)–[C-337](#c-337).
+- **Rationale:** The residual is preservation of a finite declared semantic
+  contract, not arbitrary future meaning.
+- **Open issue:** It must survive hidden future queries and include metadata,
+  retained fragments, compaction work, failure, and audit reconstruction cost.
+- **Used by:** [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  [storage audit](audits/2026-08-05-databases-storage.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-341
+
+- **Statement:** Physical compaction is not equivalent to biological memory
+  consolidation or semantic summarization.
+- **Status:** disputed.
+- **Primary sources:** `oneil1996lsm`, `dayan2018dostoevsky`.
+- **Rationale:** Conventional compaction preserves a declared logical storage
+  view while changing physical representation; it does not preserve arbitrary
+  evidence or future answers.
+- **Open issue:** A semantic compactor can earn a distinct label only by passing
+  registered preservation, hidden-query, and invalidation tests.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  [memory chapter](../concept/40-memory-and-consolidation.md).
+
+### C-342
+
+- **Statement:** Cold, old, or currently unreachable information is not thereby
+  unimportant, false, or safe to forget.
+- **Status:** disputed.
+- **Primary sources:** `dijkstra1978garbage`, `postgresql2025vacuum`.
+- **Rationale:** Reachability and access frequency are policy-relative storage
+  states rather than future task or evidence value.
+- **Open issue:** Rare safety, legal, provenance, rollback, and recurrence needs
+  must enter retention tests without making deletion impossible.
+- **Used by:** [storage audit](audits/2026-08-05-databases-storage.md),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).

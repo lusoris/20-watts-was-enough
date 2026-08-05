@@ -170,6 +170,101 @@ Weakening is separate from deletion because many obsolete or interfering
 memories should first lose influence while evidence accumulates. A tombstone or
 provenance record prevents deleted state from becoming an unexplained absence.
 
+### Storage contracts precede memory policy
+
+Persistent state has several independent contracts:
+
+| Contract | Question | Does not establish |
+| --- | --- | --- |
+| atomicity and recovery | which in-scope effects commit or abort after failure? | isolation, outside-effect reversal, or truth |
+| isolation | which concurrent histories are visible? | real-time order or durability |
+| durability | what survives acknowledged completion under the fault model? | correctness or indefinite retention |
+| version visibility | which snapshot or temporal coordinate answers a read? | serializability or current-world truth |
+| replication/coding | which exact bytes or log survive named faults? | independent judgment or semantic diversity |
+| indexing/caching | where is a candidate copy found cheaply? | importance, authority, or source-of-truth status |
+| retention/reclamation | which roots, readers, holds, and horizons keep state live? | future irrelevance or epistemic worth |
+
+These boundaries are established by storage theory and systems evidence in
+[C-325](../research/claims.md#c-325)–[C-338](../research/claims.md#c-338).
+Versioning alone does not make a history serializable; a durable statement can
+remain false; an agreed log can preserve a bad command; and event replay can
+change meaning when handlers, schemas, configuration, nondeterministic inputs,
+or outside effects are not version-compatible.
+
+Valid time and system time remain separate. The first records when a proposition
+is asserted to hold in the modeled world; the second records when the store
+held that version ([C-337](../research/claims.md#c-337)). Capture, receipt,
+processing, correction, and supersession may add more clocks.
+
+### Semantic compaction has a finite preservation contract
+
+Physical compaction preserves a declared storage view; it is not automatically
+semantic consolidation ([C-334](../research/claims.md#c-334),
+[C-341](../research/claims.md#c-341)). A semantic compactor may replace history
+$H$ with $Z=C_\phi(H)$ only under registered query, evidence, uncertainty,
+rollback, invalidation, deletion, and failure-degradation obligations.
+
+```mermaid
+flowchart LR
+    H["Versioned history + evidence"] --> C["Compactor + manifest"]
+    C --> Z["Compact state + retained fragments"]
+    Z --> Q["Registered query families"]
+    Z --> E["Evidence reachability"]
+    Z --> I["Invalidation + rollback"]
+    Q --> G{"Hidden future gates pass?"}
+    E --> G
+    I --> G
+    G -->|"yes"| P["Publish compact version"]
+    G -->|"no"| X["Retain history · narrow contract"]
+    P --> V["Version / schema / source change"]
+    V --> I
+```
+
+Editable source:
+[semantic-compaction-contract.mmd](../assets/diagrams/semantic-compaction-contract.mmd).
+
+[Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md)
+freezes the compactor before generating hidden future queries and invalidation
+requests. It compares with indexed history, snapshots plus suffix logs,
+materialized views, key compaction, lossless compression, extractive evidence
+summaries, and cold archives. Unsupported questions must be exposed, not filled
+with invented detail.
+
+### Placement separates access, value, and reconstructability
+
+Recency and frequency are strong baselines, not definitions of importance
+([C-333](../research/claims.md#c-333)). A rare cold artifact may still block a
+safety audit, source invalidation, rollback, or recovery. Conversely, a hot
+derived view may be cheap to reconstruct. The placement controller therefore
+keeps access forecast, recomputation cost, task loss, evidence value, staleness,
+and correlated-failure reconstructability as separately calibrated quantities.
+
+```mermaid
+flowchart LR
+    A["Versioned artifact manifest"] --> F["Access + recompute forecast"]
+    A --> V["Task + evidence value"]
+    A --> R["Reconstructability + correlated failure"]
+    F --> P["Constraint-aware placement policy"]
+    V --> P
+    R --> P
+    P --> T["Hot · warm · cold · reconstructible"]
+    T --> O["Access · invalidation · failure outcome"]
+    O --> K["Calibrate cost, loss, and restore models"]
+    K --> P
+    O --> G{"Constraints still hold?"}
+    G -->|"no"| M["Migrate · replicate · retain"]
+    M --> T
+```
+
+Editable source:
+[value-aware-artifact-tiering.mmd](../assets/diagrams/value-aware-artifact-tiering.mmd).
+
+[Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md)
+must beat LRU/LFU, ARC, W-TinyLFU, size- and miss-cost-aware caching,
+economic tiering, static optimization, and coded fault-domain placement without
+future labels. Physical bytes, movement, metadata, endurance, p99 latency,
+policy work, privacy, and failure costs remain inside the boundary.
+
 ### 6. Follow one event through the lifecycle
 
 Suppose a tool returns a surprising result. Working state can use it
@@ -222,6 +317,8 @@ update budgets—is defined in
 | Schema-sensitive integration | C-038 | established in scoped learning conditions |
 | Retrieval-induced update window | C-039, C-040 | lability established narrowly; exact human mismatch gate disputed |
 | Active forgetting | C-041, C-042 | established in scoped interventions; safe AI policy untested |
+| Storage and temporal contracts | C-325–C-338 | mature engineered mechanisms; mandatory nulls and vocabulary |
+| Semantic compaction and value-aware tiering | C-339–C-342 | held residual experiments under Candidates 017 and 018 |
 | Complete lifecycle controller | none | speculative synthesis |
 
 ## Speculative extensions
@@ -245,6 +342,10 @@ update budgets—is defined in
 - Generated replay drifts away from the environment.
 - Retrieval becomes an adversarial write primitive.
 - Weakening or deletion removes evidence later required for recovery or audit.
+- A compact summary passes familiar queries but loses evidence, invalidation,
+  rollback, deletion, or rare hidden-future obligations.
+- A placement policy calls access frequency “importance,” leaks future value,
+  or treats correlated replicas as independently reconstructible.
 - Scheduler scans and telemetry consume the saved maintenance budget.
 - The episodic store becomes an unbounded duplicate of the training corpus.
 
@@ -263,3 +364,7 @@ update budgets—is defined in
    and unsupported factual carryover.
 6. Maintenance energy amortized per served event remains below the online
    training work it replaces.
+7. Registered semantic compaction reduces physical bytes without reducing
+   hidden-query, evidence, rollback, or invalidation coverage below threshold.
+8. Value/reconstructability features improve shifted-workload artifact
+   placement beyond strong cache and storage policies after migration cost.

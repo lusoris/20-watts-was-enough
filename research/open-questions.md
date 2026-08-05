@@ -138,3 +138,13 @@ project choice.
   adaptation predict consequential post-recovery failures beyond ordinary
   robustness, cost accounting, and fault injection? See
   [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+- **OQ-036:** Can a frozen compactor reduce physical history bytes while
+  preserving registered queries, evidence, uncertainty, rollback, invalidation,
+  deletion, and audit reconstruction on hidden future tests beyond snapshots,
+  views, compression, and cold archive? See
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+- **OQ-037:** Does leakage-free task/evidence value and reconstructability under
+  correlated failure improve artifact placement beyond access, size, miss cost,
+  device economics, and fault-domain-aware storage after migration and metadata
+  costs? See
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
