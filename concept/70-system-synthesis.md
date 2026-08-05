@@ -103,6 +103,52 @@ winning action:
 7. the rule version, amendment path, emergency authority, checked handoff,
    compatibility result, and rollback target.
 
+### A decision record is more than evidence plus a score
+
+Where an action is contestable and authority-bearing, the system keeps
+normative authority, empirical evidence, formal inference, and procedural
+validity as separate predicates. Authenticity, admissibility for a stated
+purpose, weight, sufficiency under a burden, authorization, review, remedy, and
+finality are not ranks on one confidence scale.
+
+```mermaid
+flowchart LR
+    C["Claim · requested action · protected interests"] --> B["Authority · burden · decision rule"]
+    E["Offered item + provenance + purpose"] --> A{"Authentic and admissible for purpose?"}
+    A -->|"no"| X["Excluded item + preserved ruling"]
+    A -->|"yes"| R["Contestable admitted record"]
+    D["Disclosure · objection · response · contrary evidence"] --> R
+    B --> F["Weight + sufficiency under burden"]
+    R --> F
+    F --> J["Reasons + disposition + remedy"]
+    J --> V{"Authorized review / reopening?"}
+    V -->|"affirm / final"| Z["Final versioned decision"]
+    V -->|"vacate / remand / reopen"| C
+    X --> V
+    K["Conflict · recusal · independent assignment"] -.-> A
+    K -.-> F
+```
+
+Editable source:
+[burden-qualified-decision.mmd](../assets/diagrams/burden-qualified-decision.mmd).
+
+The record binds claim/action, authority, affected interests, proponent,
+burden, evidence purpose and provenance, disclosure/access, objections,
+contrary evidence, findings, reasons, decision, protected outcomes, review
+scope, remedy, successor version, and reopening conditions. It records excluded
+material so later review can test contamination without silently letting that
+material influence the decision.
+
+The [contestable-decision mathematics](../math/contestable-decision-record.md)
+keeps error, delay, review, access, human work, energy, and protected procedure
+as raw axes. Its evidence boundaries are
+[C-679](../research/claims.md#c-679)–[C-704](../research/claims.md#c-704).
+The composition must beat typed workflow, provenance, selective
+prediction, access control, rule graphs, independent review, red-team
+challenge, and full recomputation. It refines existing assurance, verification,
+operational learning, observation, convention, and governance candidates; it
+does not add a new control primitive.
+
 ```mermaid
 flowchart TB
     O["Authorized objectives · protected invariants"] --> L["Scoped local authority"]

@@ -111,6 +111,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/horizon-qualified-learning.mmd` follows a skill-local instructional
   event through attempt, support, delayed retention, transfer, fluency,
   calibration, motivation, and complete cost.
+- `diagrams/burden-qualified-decision.mmd` separates evidence purpose and
+  provenance, authority, admissibility, contestation, sufficiency, reasons,
+  remedy, review, and reopening.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

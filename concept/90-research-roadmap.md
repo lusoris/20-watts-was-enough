@@ -271,13 +271,16 @@ adding citations:
 | animal navigation, sensory ecology, biomechanics, and motor control | sensing policy, emitted signal, propagation, body mechanics, controller, calibration, environment, and task are bound explicitly; controlled observability and controller–plant binding refine Candidates 006/007/012/014 rather than becoming new principles |
 | pharmacology and toxicology | commanded intervention, realized exposure, engagement, response, benefit, harm, adaptation, dependence, withdrawal, interaction null, and population support remain separate; a state-qualified intervention fixture refines Candidates 005/007/012/014 |
 | operations research, supply chains, and learning science | confidence and inventory records share one proxy-versus-state firewall, but instructional events and material commitments remain different transitions; horizon-qualified learning refines Candidates 004/019 while material service refines existing allocation/recovery candidates |
+| legal evidence and procedure | normative authority, doctrine, empirical effect, formal inference, authentication, admissibility, weight, sufficiency, challenge, review, remedy, and finality remain distinct; a burden-qualified contestable-decision record refines Candidates 009/010/011/014/015/020 |
 
 The active and next breadth queue is selected by expected ability to split,
 merge, reject, or re-baseline a current mechanism:
 
 | Field cluster | Mechanism question | Expected decision |
 | --- | --- | --- |
-| legal evidence and procedure | which burden, admissibility, contestability, disclosure, review, remedy, and precedent mechanisms add more than assurance, provenance, governance, and ordinary statistical decision rules? | refine existing evidence and governance candidates only where a distinct decision state survives |
+| music cognition and improvisation | which timing, hierarchy, motif transformation, ensemble, motor-auditory, memory, practice, and recombination mechanisms survive sequence, control, search, retrieval, and curriculum nulls? | deduplicate creative and coordination mechanisms before changing Candidates 004/011/015/019 |
+| built environments and urban systems | which passive-design, spatial, construction, occupancy, accessibility, infrastructure, adaptation, and lifecycle mechanisms survive physics, optimization, control, HCI, and asset-management nulls? | refine structural offloading, physical service, authority, and observation fixtures only where measured state remains distinct |
+| immune tolerance and trained immunity | which selection, suppression, anergy, exhaustion, contraction, affinity, innate memory, tissue residency, and metabolic mechanisms survive anomaly, ensemble, evolutionary, replay, access-control, and control nulls? | deepen P-004/P-006/P-009/P-012 or expose a genuinely missing invariant |
 
 This queue is revised whenever an audit changes a principle, null model, or
 experiment. Breadth alone does not close a row.

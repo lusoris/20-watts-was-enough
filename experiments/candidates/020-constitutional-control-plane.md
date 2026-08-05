@@ -215,3 +215,22 @@ governance hours.
 and directly verifiable state, when supplier diversity is only nominal, or when
 centralized optimization plus ordinary contracts/admission matches service,
 rights, and recovery outcomes at lower lifecycle cost.
+
+## Burden-qualified contestable-decision track
+
+The [legal evidence/procedure audit](../../research/audits/2026-08-05-legal-evidence-procedure.md#candidate-coverage-and-exact-refinements)
+adds a conflict registry, recusal trigger, independently assigned replacement,
+practical notice/access/response state, affected-interest and burden records,
+reason requirement, typed appeal/review, executable remedy, and protected
+procedural outcomes that cannot be traded silently for aggregate reward.
+
+Evidence: [C-679](../../research/claims.md#c-679)–[C-704](../../research/claims.md#c-704).
+
+Inject self-reported and hidden conflicts, correlated reviewers, unusable
+notice, unequal response capacity, emergency deadlines, selected appeals,
+incomplete remedies, and finality/reopening limits. Compare ordinary separation
+of duties, conflict-of-interest controls, independent review, access-control
+workflows, and calibrated decision rules under equal authority, information,
+human effort, delay, compute, and energy. Reject if governance is invoked
+without distinct protected interests or if the conventional stack matches both
+task and procedural outcomes.

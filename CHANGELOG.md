@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A legal evidence/procedure audit that separates normative authority,
+  doctrinal validity, empirical effect, formal inference, authentication,
+  admissibility, weight, sufficiency, review, remedy, and finality.
+- Twenty-six scoped claims (`C-679`–`C-704`), twenty-nine centralized sources,
+  an editable contestable-decision diagram, a unit-bearing math note, and
+  burden-qualified tracks in Candidates 009/010/011/014/015/020.
 - Paired operations-research/supply-chain and learning-science audits that
   share a calibrated proxy-versus-state firewall while keeping physical
   commitment and durable skill acquisition as different transitions.

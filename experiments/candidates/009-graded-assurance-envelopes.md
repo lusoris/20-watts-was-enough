@@ -308,3 +308,22 @@ Reject or narrow when:
 - engineer-hours, p99 latency, storage, or joules exceed avoided incident cost;
   or
 - gains disappear after false rejection and delayed deployment are charged.
+
+## Burden-qualified contestable-decision track
+
+The [legal evidence/procedure audit](../../research/audits/2026-08-05-legal-evidence-procedure.md#candidate-coverage-and-exact-refinements)
+requires separate authenticity, admissibility-for-purpose, weight,
+sufficiency-under-burden, authority, review-standard, and finality fields. A
+higher value in one cannot upgrade another. Rule, authority, purpose, burden,
+record, or review-version changes invalidate only assurances that depend on
+them and can narrow action authority immediately.
+
+Evidence: [C-679](../../research/claims.md#c-679)–[C-704](../../research/claims.md#c-704).
+
+Compare the complete record with typed workflow/provenance, calibrated
+selective prediction, access control, independent review, rule graphs, and full
+recomputation. Equalize evidence, authority, reviewer time, delay, compute,
+storage, and energy. Reject the track if the extra grades are unused metadata,
+if authenticity becomes truth, if admissibility becomes reliability, or if the
+ordinary assurance stack matches protected outcomes and lifecycle cost. See
+the [decision-record mathematics](../../math/contestable-decision-record.md).

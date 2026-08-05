@@ -223,3 +223,22 @@ Reject or narrow the candidate when:
 - [P-011](../../research/principle-registry.md#p-011--transient-communication-coalitions)
 - [P-012](../../research/principle-registry.md#p-012--memory-matched-to-information-lifetime)
 - [P-013](../../research/principle-registry.md#p-013--externalized-shared-state)
+
+## Burden-qualified contestable-decision track
+
+The [legal evidence/procedure audit](../../research/audits/2026-08-05-legal-evidence-procedure.md#candidate-coverage-and-exact-refinements)
+requires every rule-like precedent to carry jurisdiction, authority hierarchy,
+holding/rule identity, material-fact and issue map, effective date, negative
+treatment, overruling/deprecation, retroactivity/applicability, and successor
+version. Semantic similarity may retrieve candidates but cannot make a lower,
+foreign, superseded, or factually distinguishable record controlling.
+
+Evidence: [C-679](../../research/claims.md#c-679)–[C-704](../../research/claims.md#c-704).
+
+Test hierarchy conflict, changed facts, negative treatment, partial
+supersession, prospective versus retroactive change, stale caches, and
+downstream subscribers. Compare versioned rules engines, citation graphs,
+temporal knowledge graphs, and manual applicability checks at equal review,
+latency, bytes, compute, and energy. Reject if a conventional authority graph
+matches applicable-rule selection and invalidation or if finality is mistaken
+for immutable truth.

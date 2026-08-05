@@ -235,3 +235,20 @@ readiness, delivered-service error, retrieval precision, and human hours.
 not tested and deployed, if retrieval is untargeted, or if ordinary corrective-
 action tracking plus event-sourced evidence matches next-event service and
 recovery.
+
+## Burden-qualified contestable-decision track
+
+The [legal evidence/procedure audit](../../research/audits/2026-08-05-legal-evidence-procedure.md#candidate-coverage-and-exact-refinements)
+binds every review to preserved issue, record version, review standard,
+permitted scope, prejudicial-error rule, disposition, remedy, successor version,
+and reopening/finality state. A reversal is not automatically a first-stage
+error label, and affirmance is not proof of correctness.
+
+Evidence: [C-679](../../research/claims.md#c-679)–[C-704](../../research/claims.md#c-704).
+
+Inject selected review, unpreserved issues, deferential versus de-novo scopes,
+harmless errors, incomplete remedies, remand loops, reviewer error, and changed
+rules. Report protected-outcome correction, time under wrong effect, review and
+remedy latency, recurrence, human effort, bytes, and joules. Reject if ordinary
+versioned issue tracking plus independent review/recompute matches the frontier
+or if the learning loop trains directly on reversal as ground truth.

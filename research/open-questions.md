@@ -248,3 +248,10 @@ project choice.
   stochastic/robust optimization, and frozen-commitment MPC at equal physical,
   compute, reserve, energy, and human budgets? See the
   [material/service contract](../math/material-service-state.md).
+- **OQ-053:** Does binding evidence purpose/provenance, authority, burden,
+  admissibility, weight, sufficiency, objections, contrary evidence, protected
+  procedure, review, remedy, and reopening reduce unsafe reuse or invalidation
+  errors beyond typed workflow, provenance, selective prediction, rule graphs,
+  independent review, and full recomputation at equal information, authority,
+  human time, delay, compute, storage, and energy? See the
+  [contestable-decision record](../math/contestable-decision-record.md).

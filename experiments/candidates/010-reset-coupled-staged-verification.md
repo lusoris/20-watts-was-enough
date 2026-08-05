@@ -257,3 +257,21 @@ information, reversibility, and consequence ratios before results are observed.
 - [P-003](../../research/principle-registry.md#p-003--temporary-trace-before-commitment)
 - [P-007](../../research/principle-registry.md#p-007--prediction-error-allocation)
 - [P-009](../../research/principle-registry.md#p-009--maintenance-plane)
+
+## Burden-qualified contestable-decision track
+
+The [legal evidence/procedure audit](../../research/audits/2026-08-05-legal-evidence-procedure.md#candidate-coverage-and-exact-refinements)
+adds a harder adversarial-verification condition: affected parties or test
+roles receive the adverse material, usable access, time, authority, and tools
+to challenge it; contrary evidence and objections remain linked to the claim;
+contaminating excluded information is isolated; and a failed gate has an
+executable remedy before irreversible commitment.
+
+Evidence: [C-679](../../research/claims.md#c-679)–[C-704](../../research/claims.md#c-704).
+
+Cross unequal access, hidden favorable evidence, inadmissible contamination,
+asymmetric false-action costs, time limits, reviewer dependence, and
+irreversible effects. Compare ordinary red teams, two-person review, staged
+testing, provenance, and full recomputation at equal information, attempts,
+authority, human time, delay, compute, and joules. Reject if “adversarial” means
+only another model prompt or if ordinary independent review matches the result.

@@ -23,6 +23,9 @@ notation.
 - [`learning-outcome-contract.md`](learning-outcome-contract.md) defines
   acquisition, retention horizons, transfer strata, fluency, calibration, and
   complete instructional cost.
+- [`contestable-decision-record.md`](contestable-decision-record.md) separates
+  evidence, authority, burden, admissibility, weight, sufficiency, review,
+  remedy, and finality.
 
 Rules:
 

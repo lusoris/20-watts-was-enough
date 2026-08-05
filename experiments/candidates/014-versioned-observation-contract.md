@@ -374,3 +374,22 @@ items/kilograms, verified return yield, latency, joules, and audit hours.
 age-structured inventory and versioned metrics matches decisions and evidence
 quality, or if the candidate counts records, forecasts, allocations, shipments,
 or returns as physical availability or realized service.
+
+## Burden-qualified contestable-decision track
+
+The [legal evidence/procedure audit](../../research/audits/2026-08-05-legal-evidence-procedure.md#candidate-coverage-and-exact-refinements)
+adds jurisdiction/rule authority, proponent, permitted purpose, burden bearer,
+authentication and custody, disclosure/access state, admissibility ruling,
+objection, contrary evidence, weight, sufficiency, decision authority, review
+state, remedy, and finality/reopening fields. Preserve excluded items and their
+rulings for contamination and review tests without making them decision input.
+
+Evidence: [C-679](../../research/claims.md#c-679)–[C-704](../../research/claims.md#c-704).
+
+Ablate each field and change authority, purpose, burden, rule, contrary
+evidence, or review standard after downstream reuse. Compare a complete typed
+evidence schema, provenance DAG, rule/citation graph, selective classifier, and
+full recomputation. Equalize records, bytes, reviewer time, delay, compute, and
+energy. Reject if the contract merely stores legal labels, if a complete
+conventional schema matches invalidation/review, or if reason text is treated
+as faithful causal introspection.

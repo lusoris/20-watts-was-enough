@@ -8088,6 +8088,7 @@ describes the exact statement here, not a broader interpretation.
   Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
   and [010](../experiments/candidates/010-reset-coupled-staged-verification.md).
 
+
 ### C-552
 
 - **Statement:** BMP-pathway and Bax/Bak perturbations show that regulated cell
@@ -10121,3 +10122,376 @@ describes the exact statement here, not a broader interpretation.
   [012](../experiments/candidates/012-latency-qualified-authority.md),
   [013](../experiments/candidates/013-deficit-capability-routing.md), and
   [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-679
+
+- **Statement:** Normative authority, doctrinal validity, empirical effect, and
+  formal optimality are separate predicates.
+- **Status:** established.
+- **Primary sources:** analytic boundary synthesized in the
+  [legal evidence/procedure audit](audits/2026-08-05-legal-evidence-procedure.md);
+  no one legal authority or experiment establishes the cross-category rule.
+- **Rationale:** A binding rule can serve protected interests without being the
+  most accurate measured policy, while a formally optimal or empirically useful
+  policy can remain unauthorized.
+- **Open issue:** Every transfer must label which predicate is asserted and the
+  source type capable of supporting it.
+- **Used by:** [contestable-decision record](../math/contestable-decision-record.md),
+  [system synthesis](../concept/70-system-synthesis.md).
+
+### C-680
+
+- **Statement:** In *Winship*, due process required proof beyond a reasonable
+  doubt for facts necessary to constitute the charged offense.
+- **Status:** established.
+- **Primary source:** `winship1970`.
+- **Rationale:** The holding assigns a scoped proof burden through legal
+  authority and protected interests rather than a project-invented threshold.
+- **Open issue:** The holding does not define one universal posterior
+  probability or apply outside its jurisdiction and posture without analysis.
+- **Used by:** [legal evidence/procedure audit](audits/2026-08-05-legal-evidence-procedure.md),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-681
+
+- **Statement:** In *Addington*, civil commitment required clear and convincing
+  evidence because the Court allocated asymmetric risks and interests.
+- **Status:** established.
+- **Primary source:** `addington1979`.
+- **Rationale:** The applicable burden depends on the proceeding, authority,
+  consequences, and distribution of residual uncertainty.
+- **Open issue:** The verbal standard is not a portable numeric threshold for
+  other decisions or populations.
+- **Used by:** [contestable-decision record](../math/contestable-decision-record.md),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-682
+
+- **Statement:** Verbal legal standards of proof do not, by themselves,
+  specify universal posterior probabilities.
+- **Status:** established.
+- **Primary sources:** `winship1970`, `addington1979`, `kaplan1968decision`,
+  `burtis2018error`.
+- **Rationale:** Authority, burden bearer, evidence model, consequences, and
+  protected interests remain outside a bare probability number.
+- **Open issue:** A quantitative implementation must declare its hypotheses,
+  calibration, loss vector, uncertainty, and authorization rather than borrow a
+  legal phrase.
+- **Used by:** [contestable-decision record](../math/contestable-decision-record.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-683
+
+- **Statement:** A formal error-cost model can derive a decision threshold only
+  after hypotheses, priors or evidence distributions, consequences, and the
+  decision rule are declared.
+- **Status:** established.
+- **Primary sources:** `kaplan1968decision`, `burtis2018error`.
+- **Rationale:** Thresholds are conclusions inside a model, not context-free
+  facts supplied by a verbal burden.
+- **Open issue:** Protected non-tradable constraints, distribution shift,
+  calibration error, and who is authorized to set the costs remain explicit.
+- **Used by:** [contestable-decision record](../math/contestable-decision-record.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-684
+
+- **Statement:** Authentication, admissibility for a purpose, weight, and
+  sufficiency under a burden are distinct decision states.
+- **Status:** established.
+- **Primary source:** `fre2024current`.
+- **Rationale:** Federal evidence rules assign different questions, actors,
+  purposes, and consequences to these layers; success at one does not
+  monotonically satisfy the next.
+- **Open issue:** An AI evidence schema must preserve purpose, authority,
+  version, objections, contrary evidence, and supported claim scope.
+- **Used by:** [burden-qualified fixture](../concept/70-system-synthesis.md#a-decision-record-is-more-than-evidence-plus-a-score),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-685
+
+- **Statement:** Federal Rule 702 and *Daubert* assign federal trial judges a
+  gatekeeping role for expert evidence, not a guarantee of scientific truth.
+- **Status:** established.
+- **Primary sources:** `fre2024current`, `daubert1993`.
+- **Rationale:** Authorized admissibility review and scientific validity are
+  overlapping but nonidentical predicates.
+- **Open issue:** Jurisdiction, rule version, purpose, scientific method,
+  measurement validity, and later treatment must be checked separately.
+- **Used by:** [legal evidence/procedure audit](audits/2026-08-05-legal-evidence-procedure.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-686
+
+- **Statement:** Inadmissible information affected decisions in scoped
+  experiments with judges despite instructions or rulings to disregard it.
+- **Status:** established.
+- **Primary source:** `wistrich2005inadmissible`.
+- **Rationale:** Exposure can contaminate later judgment even when a workflow
+  records formal exclusion.
+- **Open issue:** Vignette, participant, evidence type, task, timing, and remedy
+  bound the effect; prospective systems tests must isolate information access.
+- **Used by:** [legal evidence/procedure audit](audits/2026-08-05-legal-evidence-procedure.md),
+  [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md).
+
+### C-687
+
+- **Statement:** Federal Rule 901 authentication asks for sufficient support
+  that an item is what its proponent claims; it does not establish truth of the
+  contents.
+- **Status:** established.
+- **Primary source:** `fre2024current`.
+- **Rationale:** Artifact identity and content accuracy answer different
+  questions and can fail independently.
+- **Open issue:** Purpose, custody, transformation, completeness, measurement
+  validity, admissibility, and supported claim must remain separate.
+- **Used by:** [contestable-decision record](../math/contestable-decision-record.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-688
+
+- **Statement:** A cryptographic custody chain can support integrity and actor
+  claims while leaving truth, completeness, legality, and admissibility
+  unresolved.
+- **Status:** established.
+- **Primary sources:** `fre2024current`; cryptographic boundary is established
+  separately in the [security audit](audits/2026-08-05-security-cryptography.md).
+- **Rationale:** Authentic bytes and attributable transformations do not prove
+  that the originating observation was complete, accurate, authorized, or fit
+  for the offered purpose.
+- **Open issue:** Threat model, trust roots, acquisition process, gaps, rule
+  version, purpose, and downstream inference must be audited.
+- **Used by:** Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-689
+
+- **Statement:** In *Melendez-Diaz*, the scoped forensic certificates were
+  testimonial and admission without the analysts violated the confrontation
+  right.
+- **Status:** established.
+- **Primary source:** `melendezdiaz2009`.
+- **Rationale:** A document's technical appearance or provenance did not remove
+  the applicable authority and challenge requirement.
+- **Open issue:** The holding's jurisdiction, testimonial category, exceptions,
+  later treatment, and procedural posture limit transfer.
+- **Used by:** Candidates [010](../experiments/candidates/010-reset-coupled-staged-verification.md)
+  and [020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-690
+
+- **Statement:** Latent-print examiner error rates and verification effects
+  depend on the tested item pool, decision categories, participants, and
+  operational boundary.
+- **Status:** established.
+- **Primary source:** `ulery2011accuracy`.
+- **Rationale:** A measured forensic error rate is conditional on sampling,
+  task, response categories, workflow, verification, and exclusions.
+- **Open issue:** Transport to deployed systems requires representative cases,
+  complete denominators, dependence modeling, uncertainty, and prospective
+  calibration.
+- **Used by:** [legal evidence/procedure audit](audits/2026-08-05-legal-evidence-procedure.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-691
+
+- **Statement:** Task-irrelevant context changed repeated fingerprint judgments
+  for some experts in a small scoped study.
+- **Status:** established.
+- **Primary source:** `dror2006context`.
+- **Rationale:** The intervention supplies evidence that information outside
+  the comparison can alter an expert decision.
+- **Open issue:** Sample, item selection, repeat exposure, direction/magnitude,
+  field prevalence, and mitigation generalization require broader testing.
+- **Used by:** [legal evidence/procedure audit](audits/2026-08-05-legal-evidence-procedure.md),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [010](../experiments/candidates/010-reset-coupled-staged-verification.md).
+
+### C-692
+
+- **Statement:** Suppression of requested favorable material evidence violated
+  due process in *Brady*.
+- **Status:** established.
+- **Primary source:** `brady1963`.
+- **Rationale:** Adverse testing is not meaningful when qualifying favorable
+  material is withheld from the affected party.
+- **Open issue:** Later doctrine, materiality, request, remedy, jurisdiction,
+  access, timing, and usable response capacity must be checked.
+- **Used by:** Candidates [010](../experiments/candidates/010-reset-coupled-staged-verification.md)
+  and [020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-693
+
+- **Statement:** *Crawford* protects a scoped opportunity to cross-examine
+  testimonial evidence; confrontation is not scientific validation.
+- **Status:** established.
+- **Primary source:** `crawford2004`.
+- **Rationale:** Authorized challenge and measurement/model validity answer
+  different questions even when both may expose error.
+- **Open issue:** Testimonial scope, exceptions, availability, prior
+  opportunity, later treatment, and the difference between formal and effective
+  access remain jurisdiction-specific.
+- **Used by:** [contestable-decision record](../math/contestable-decision-record.md),
+  Candidates [010](../experiments/candidates/010-reset-coupled-staged-verification.md)
+  and [020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-694
+
+- **Statement:** Lower U.S. federal courts must follow directly controlling
+  Supreme Court precedent rather than anticipate its overruling.
+- **Status:** established.
+- **Primary source:** `rodriguez1989`.
+- **Rationale:** Applicable authority depends on hierarchy and controlling
+  status, not semantic similarity or a predicted future rule.
+- **Open issue:** Holding, issue, material facts, jurisdiction, later treatment,
+  effective date, and remedy determine application.
+- **Used by:** [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-695
+
+- **Statement:** Stare decisis constrains legal change but does not make
+  precedent immutable.
+- **Status:** established.
+- **Primary source:** `payne1991`.
+- **Rationale:** A prior authoritative rule can be retained, distinguished,
+  limited, or overruled through an authorized process.
+- **Open issue:** Authority, doctrine, reliance, retroactivity, successor rule,
+  and downstream invalidation are jurisdiction- and issue-specific.
+- **Used by:** [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [principle registry](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-696
+
+- **Statement:** Appeal is authority- and issue-scoped review, not automatic
+  retrial or direct observation of ground truth.
+- **Status:** established.
+- **Primary sources:** `usc28s1291`, `frap2025current`.
+- **Rationale:** Review depends on appellate jurisdiction, preserved issues,
+  record, standard, remedy, and procedural posture.
+- **Open issue:** Selection into appeal, settlement, access, reviewer error, and
+  standards of review prevent simple error-rate inference.
+- **Used by:** [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [principle registry](principle-registry.md#p-009--maintenance-plane).
+
+### C-697
+
+- **Statement:** Whole-record substantial-evidence review preserves distinct
+  institutional fact-finding and review roles.
+- **Status:** established.
+- **Primary sources:** `universalcamera1951`, `usc5s706`.
+- **Rationale:** A reviewing body evaluates a bounded record under an assigned
+  standard rather than silently replacing first-instance fact-finding.
+- **Open issue:** Record completeness, contrary evidence, scope, deference,
+  prejudice, remedy, and current statutory/case authority remain explicit.
+- **Used by:** Candidates [011](../experiments/candidates/011-dual-loop-operational-assurance.md)
+  and [020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-698
+
+- **Statement:** U.S. federal civil procedure supplies limited, ground- and
+  time-qualified routes to reopen final decisions.
+- **Status:** established.
+- **Primary source:** `frcp2025current`.
+- **Rationale:** Finality and reopening are versioned authority states, not
+  synonyms for correctness, deletion, or cost-free rollback.
+- **Open issue:** Rule version, ground, time limit, reliance, outside effects,
+  evidence availability, and remedy constrain reopening.
+- **Used by:** [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [principle registry](principle-registry.md#p-003--temporary-trace-before-commitment).
+
+### C-699
+
+- **Statement:** The *Mathews* due-process analysis considers private interest,
+  error risk and likely value of safeguards, and governmental interest/burden;
+  it is not a universal scalar optimizer.
+- **Status:** established.
+- **Primary sources:** `mathews1976`, `goldberg1970`.
+- **Rationale:** The authorized test names context-specific interests and
+  procedure rather than supplying transferable numerical exchange rates.
+- **Open issue:** Jurisdiction, protected interest, current doctrine, practical
+  notice/access, distribution of error, and remedy remain separate.
+- **Used by:** [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-700
+
+- **Statement:** Federal recusal law and *Caperton* constrain decision-makers
+  with specified conflicts or extreme bias risks under different scopes.
+- **Status:** established.
+- **Primary sources:** `usc28s455`, `caperton2009`.
+- **Rationale:** Independence cannot be inferred from a decision-maker's
+  self-confidence or aggregate task accuracy alone.
+- **Open issue:** Trigger, disclosure, waiver, objective risk, assignment,
+  correlated replacement, timing, and remedy depend on the governing authority.
+- **Used by:** Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-701
+
+- **Statement:** Federal formal agency decisions covered by 5 U.S.C. §557(c)
+  must state findings, conclusions, and reasons or basis on material issues.
+- **Status:** established.
+- **Primary source:** `usc5s557`.
+- **Rationale:** A reason record supports scoped review and accountability but
+  does not prove correctness or faithful causal introspection.
+- **Open issue:** Applicability, required granularity, whole-record support,
+  contrary evidence, changed reasons, and reviewer use must be tested.
+- **Used by:** Candidates [011](../experiments/candidates/011-dual-loop-operational-assurance.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-702
+
+- **Statement:** Reason writing can alter decisions in scoped experiments but
+  is not guaranteed to debias or reveal the actual causal basis.
+- **Status:** established.
+- **Primary sources:** `liu2018reasons`, `spamann2016judges`,
+  `maegherman2022accountability`.
+- **Rationale:** Experimental results vary with decision task, participants,
+  accountability manipulation, incentives, and outcome; fluent reasons can
+  rationalize rather than explain.
+- **Open issue:** Independent outcome tests, contamination probes, reason-record
+  completeness, human effort, verbosity, and transfer must be measured.
+- **Used by:** [legal evidence/procedure audit](audits/2026-08-05-legal-evidence-procedure.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-703
+
+- **Statement:** Reversal and affirmance rates cannot identify first-instance
+  accuracy without models of appeal selection, review scope, preservation,
+  prejudice, remedy, and reviewer error.
+- **Status:** established.
+- **Primary sources:** `usc28s1291`, `frap2025current`, `usc5s706`,
+  `universalcamera1951` define constituent review structure; the identification
+  boundary is an audit inference.
+- **Rationale:** Only a selected and procedurally filtered subset receives
+  review, and disposition is not a direct ground-truth label.
+- **Open issue:** Prospective benchmarks need independent outcomes and complete
+  selection, access, settlement, timing, issue, and remedy data.
+- **Used by:** [contestable-decision record](../math/contestable-decision-record.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-704
+
+- **Statement:** A burden-qualified contestable decision record may improve
+  safe reuse, review, and invalidation across changing evidence and authority.
+- **Status:** speculative.
+- **Primary sources:** no direct comparative systems validation; constituent
+  distinctions are bounded by [C-679](#c-679)–[C-703](#c-703).
+- **Rationale:** The proposed value is preserving evidence purpose, authority,
+  burden, procedure, contrary material, protected outcomes, review, remedy, and
+  reopening as one versioned dependency graph without collapsing them into a
+  truth score.
+- **Open issue:** It must beat typed workflow, provenance, access control,
+  calibrated selective prediction, rule/citation graphs, independent review,
+  red teams, conflict controls, and full recomputation at equal information,
+  authority, human effort, delay, compute, storage, and energy.
+- **Used by:** [burden-qualified fixture](../concept/70-system-synthesis.md#a-decision-record-is-more-than-evidence-plus-a-score),
+  [contestable-decision record](../math/contestable-decision-record.md), and
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [010](../experiments/candidates/010-reset-coupled-staged-verification.md),
+  [011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [014](../experiments/candidates/014-versioned-observation-contract.md),
+  [015](../experiments/candidates/015-versioned-repairable-conventions.md), and
+  [020](../experiments/candidates/020-constitutional-control-plane.md).

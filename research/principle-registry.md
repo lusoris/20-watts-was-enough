@@ -177,6 +177,9 @@ compensation, and controlled live update ([C-152](claims.md#c-152),
 [C-154](claims.md#c-154), [C-155](claims.md#c-155)); and driven kinetic
 proofreading with discriminatory rejection before product commitment
 ([C-159](claims.md#c-159), [C-160](claims.md#c-160)).
+Legal procedure adds offered items, preliminary rulings, objections, and
+provisional findings before authorized disposition; these are typed procedural
+states rather than another memory mechanism ([C-679](claims.md#c-679)–[C-688](claims.md#c-688)).
 
 **Candidate AI primitive.** Versioned local context marks with explicit decay,
 promotion, rollback, and provenance.
@@ -374,6 +377,9 @@ models add audit requirements ([C-139](claims.md#c-139),
 assurance adds proof checking, static analysis, monitoring, migration,
 compensation, provenance, and cross-layer invalidation as distinct maintenance
 actions ([C-146](claims.md#c-146)–[C-157](claims.md#c-157)).
+Issue-scoped review, remedy, recusal, and qualified reopening add maintenance
+actions whose authority and selection process remain explicit
+([C-696](claims.md#c-696)–[C-703](claims.md#c-703)).
 
 **Candidate AI primitive.** Auditable lifecycle controller with limited
 actions, shadow evaluation, and rollback.
@@ -461,6 +467,9 @@ and transfer strata, while operational records, commitments, expiry, and
 service evidence have distinct retention/reconstruction needs
 ([C-628](claims.md#c-628)–[C-658](claims.md#c-658),
 [C-674](claims.md#c-674)–[C-678](claims.md#c-678)).
+Legal records add authority-, review-, limitation-, finality-, and reopening-
+qualified lifetimes without making an authoritative or final statement true
+([C-694](claims.md#c-694)–[C-698](claims.md#c-698)).
 
 **Candidate AI primitive.** A versioned memory hierarchy spanning transient
 state, episodic records, slow skills, and externally attributable facts.
@@ -496,6 +505,10 @@ Operational ledgers expose forecast, inventory, commitment, delivery, and
 service state, but their integrity does not establish that the physical state
 matches the record ([C-627](claims.md#c-627),
 [C-674](claims.md#c-674)–[C-677](claims.md#c-677)).
+Procedural records coordinate offers, rulings, objections, findings, decisions,
+and mandates across actors, while access, permitted purpose, authority, and
+review scope determine what that shared state can do
+([C-684](claims.md#c-684)–[C-704](claims.md#c-704)).
 
 **Candidate AI primitive.** A versioned shared workspace where modules publish
 compact observations, partial results, route pressure, and unresolved questions
