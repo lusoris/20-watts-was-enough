@@ -16,6 +16,20 @@ if ($markdownFiles.Count -eq 0) {
     throw 'No Markdown files found.'
 }
 
+# Reject invisible control characters that can corrupt LaTeX commands (for
+# example, a backspace produced by an incorrectly escaped `\beta`). Tabs and
+# normal line endings remain valid.
+$invalidControlPattern = [regex]'[\x00-\x08\x0B\x0C\x0E-\x1F]'
+foreach ($file in $markdownFiles) {
+    $content = Get-Content -Raw -LiteralPath $file.FullName
+    foreach ($match in $invalidControlPattern.Matches($content)) {
+        $lineNumber = 1 + ([regex]::Matches($content.Substring(0, $match.Index), "`n")).Count
+        $relativeFile = [System.IO.Path]::GetRelativePath($root, $file.FullName)
+        $codePoint = [int][char]$match.Value[0]
+        $errors.Add("Invalid control character U+$($codePoint.ToString('X4')) in ${relativeFile}:${lineNumber}")
+    }
+}
+
 # Validate relative Markdown links. External URLs and same-page anchors are
 # outside this local check.
 $linkPattern = [regex]'\[[^\]]+\]\((?<target>[^)]+)\)'

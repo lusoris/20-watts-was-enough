@@ -49,11 +49,17 @@ const suspiciousCommands = [
     pattern: /(^|[^\\])\b(?:sum|prod|inf|argmin|argmax)\s*_/,
     message: "likely missing backslash before an operator",
   },
+  {
+    pattern:
+      /(^|[^\\A-Za-z])(?:alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|rho|sigma|tau|upsilon|phi|chi|psi|omega)(?=\s|[_^,;=+\-*/)]|$)/,
+    message: "likely missing backslash before a Greek symbol",
+  },
 ];
 
 const files = await collectMarkdown(root);
 const failures = [];
 let equationCount = 0;
+let inlineEquationCount = 0;
 let fileCount = 0;
 
 for (const file of files) {
@@ -95,6 +101,38 @@ for (const file of files) {
     }
   }
 
+  const inlineMasked = masked.replace(/\$\$[\s\S]*?\$\$/g, (block) =>
+    block.replace(/[^\n]/g, " "),
+  );
+  for (const match of inlineMasked.matchAll(
+    /(?<!\\)\$(?!\$)([^$\n]*?)(?<!\\)\$(?!\$)/g,
+  )) {
+    const source = match[1].trim();
+    const line = lineAt(inlineMasked, match.index ?? 0);
+    inlineEquationCount += 1;
+
+    for (const check of suspiciousCommands) {
+      if (check.pattern.test(source)) {
+        failures.push(
+          `${path.relative(root, file)}:${line}: ${check.message}`,
+        );
+      }
+    }
+
+    try {
+      katex.renderToString(source, {
+        displayMode: false,
+        output: "html",
+        strict: "error",
+        throwOnError: true,
+        trust: false,
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      failures.push(`${path.relative(root, file)}:${line}: ${message}`);
+    }
+  }
+
   if (matchedInFile > 0) fileCount += 1;
 }
 
@@ -104,6 +142,6 @@ if (failures.length > 0) {
   process.exitCode = 1;
 } else {
   console.log(
-    `Mathematical notation validation passed: ${equationCount} display equations in ${fileCount} Markdown files.`,
+    `Mathematical notation validation passed: ${equationCount} display and ${inlineEquationCount} inline equations in ${fileCount} display-math Markdown files.`,
   );
 }

@@ -245,7 +245,7 @@ $$
 
 where $M$ is memory cells, $\rho_{\mathrm{home}}$ and $\delta_M$ are renewal and
 loss rates in day$^{-1}$, $C$ is precursor cells/day entering the memory state,
-and $eta$ is a dimensionless conversion fraction. The cited mouse studies
+and $\eta$ is a dimensionless conversion fraction. The cited mouse studies
 separate generation from maintenance: specific antigen/MHC-I interactions were
 not required for persistence in one transfer setting, whereas IL-7 and IL-15
 contributed to survival, generation, or homeostatic renewal in distinct ways
@@ -263,7 +263,7 @@ z_{t+1}=\alpha z_t+B u_t+\epsilon_t,
 $$
 
 where $z_t$ is a typed internal state, $u_t$ is an exposure or intervention,
-$B$ maps exposure units into state units, and $epsilon_t$ is drift. The decay
+$B$ maps exposure units into state units, and $\epsilon_t$ is drift. The decay
 time is measured in steps, h, or days. This covers ordinary stateful
 calibration and adaptive control; “trained immunity” is not a distinct
 algorithm unless the implementation adds a measurable transformation beyond

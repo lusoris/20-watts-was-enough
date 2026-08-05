@@ -507,7 +507,7 @@ is not an adequate default.
   microscopic state; a single deterministic aging shift can miss tails.
 - **Primary anchors:** [Kaczer et al. 2010](https://doi.org/10.1109/IRPS.2010.5488856),
   [Grasser et al. 2010](https://doi.org/10.1109/IRPS.2010.5488859), and
-  [Rauch et al. 2020](https://arxiv.org/abs/2001.03236).
+  [Wirth 2020](https://doi.org/10.48550/arXiv.2001.03236).
 - **Rationale:** discrete traps produce step-like temporal variation, while
   fabricated differences alter field, delay, and stress exposure.
 - **Open question:** which stochastic-tail models remain identifiable from cheap
@@ -1861,13 +1861,22 @@ through E-SEMI-10, not a renamed architecture.
     *Environmental Science & Technology* 44 (2010). DOI:
     <https://doi.org/10.1021/es902388b>.
 
+### Additional claim anchors
+
+67. NIST/SEMATECH. **Accelerated life testing**. *Engineering Statistics
+    Handbook*, Section 8.1.5. Maintained by NIST.
+    <https://www.itl.nist.gov/div898/handbook/apr/section1/apr15.htm>.
+68. Wirth, G. **Threshold voltage jitter due to random telegraph noise**
+    (2020). arXiv:2001.03236. DOI:
+    <https://doi.org/10.48550/arXiv.2001.03236>.
+
 ## Audit disposition
 
 - **Audit-local claims:** 52 (`SEMI-001`–`SEMI-052`).
 - **Status counts:** 47 established; 5 plausible; 0 speculative; 0 disputed.
 - **Decisive equal-budget experiments:** 10 (`E-SEMI-01`–`E-SEMI-10`).
 - **Negative results and construct traps:** 16.
-- **Bibliography entries:** 66.
+- **Bibliography entries:** 68.
 - **New principle:** none.
 - **New candidate:** none.
 - **Durable output:** mission-profile-qualified degradation and recovery
