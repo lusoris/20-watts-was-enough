@@ -14,6 +14,7 @@
 | 010 | [Reset-coupled staged verification](010-reset-coupled-staged-verification.md) | When false commitment is expensive, does reversible execution plus conditionally informative verification beat calibrated cascades, sequential tests, abstention, retries, and redundant checks? |
 | 011 | [Dual-loop operational assurance](011-dual-loop-operational-assurance.md) | Does connecting scoped live incident response to versioned verified learning reduce tail containment and recurrence beyond a mature SRE stack? |
 | 012 | [Latency-qualified authority envelopes](012-latency-qualified-authority.md) | Does shrinking or widening action authority from evidence age, integrity, mode, headroom, and coordination beat static hierarchies and runtime-assurance nulls? |
+| 013 | [Bidirectional deficit–capability routing](013-deficit-capability-routing.md) | Does compressed deficit-up/context-down signaling plus a local feasibility gate beat centralized, backpressure, primal–dual, and learned allocation under moving demand and resources? |
 
 These are pre-implementation contracts, not evidence that a candidate works.
 Passing a simulator stage permits a higher-fidelity test; it does not promote a

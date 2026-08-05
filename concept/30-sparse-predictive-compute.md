@@ -329,6 +329,34 @@ control. Its primary channel is two 8-bit components at different cadences,
 with an average logical rate of $825\ \mathrm{bit\,s^{-1}}$. That number is an
 experiment setting, not a proposed universal bus rate.
 
+### Deficit travels; feasibility remains local
+
+Plant nitrogen acquisition supplies a precise three-part allocation loop:
+nitrogen-starved roots send CEP deficit signals upward, shoot-derived CEPD
+signals return global context, and high-affinity uptake increases only where a
+root also encounters nitrate ([C-207](../research/claims.md#c-207)). This is
+not evidence for a new controller. Backpressure and primal–dual allocation are
+the strongest nulls.
+
+For module $i$, let $d_i(t)$ be unmet task demand per second, $a_i(t)\in[0,1]$
+be local capability availability, $u_i(t)$ be allocated compute-seconds per
+second or watts, and $B(t)$ be the total budget in the same unit as $u_i$:
+
+$$
+\sum_{i=1}^{n}u_i(t)\le B(t),
+\qquad
+u_i(t)=0\ \text{when}\ a_i(t)=0.
+$$
+
+The possible advantage is communication structure: compress deficits upward,
+return a small scarcity code downward, and keep the expensive feasibility
+decision at the receiver. It should lose when complete state is fresh,
+capability is uniform, or backpressure already carries the required deficit
+and feasibility information more cheaply.
+[Candidate 013](../experiments/candidates/013-deficit-capability-routing.md)
+tests moving demand and resource patches, delay, topology churn, strategic
+over-reporting, reversible allocation, slow growth, and second events.
+
 ### Engineering null models
 
 Biological language is removed when an established method explains the result

@@ -41,6 +41,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/latency-qualified-authority.mmd` derives bounded local action,
   fallback, and validated handoff from evidence age, trust, headroom, and
   coordination for Candidate 012.
+- `diagrams/deficit-capability-routing.mmd` separates upward unmet demand,
+  downward scarcity context, local feasibility, allocation, and outcome
+  calibration for Candidate 013.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

@@ -103,3 +103,9 @@ project choice.
   constrained control, barrier functions, and runtime assurance without
   self-certification or unsafe envelope transitions? See
   [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+- **OQ-030:** Does compact deficit-up/context-down signaling plus a local
+  capability gate improve distributed allocation beyond backpressure,
+  primal–dual control, delayed centralized optimization, and learned routing
+  after delay, messages, state, reserve, reconfiguration, and strategic demand
+  are charged? See
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).

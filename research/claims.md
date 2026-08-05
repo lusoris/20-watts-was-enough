@@ -3189,3 +3189,239 @@ describes the exact statement here, not a broader interpretation.
   [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
   [P-008](principle-registry.md#p-008--compartmentalized-interaction),
   [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-204
+
+- **Statement:** In Arabidopsis, clade-3 glutamate-receptor-like channels
+  participate causally in wound-induced electrical and calcium signaling and
+  distal defense, while in Marchantia a related systemic signal can be
+  uncoupled from systemic oxylipin-gene induction.
+- **Status:** established.
+- **Primary sources:** `mousavi2013glr`, `toyota2018glutamate`,
+  `sanmartin2024marchantia`.
+- **Rationale:** Propagation and decoded downstream effect are separate causal
+  stages.
+- **Open issue:** Species, vascular anatomy, stimulus, receptor complement, and
+  output determine whether a propagated signal changes defense.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions).
+
+### C-205
+
+- **Statement:** RBOHD-dependent reactive-oxygen propagation and GLR3.3
+  desensitization show that rapid plant-wide alarms combine local amplification
+  with mechanisms that restore a resting state.
+- **Status:** established.
+- **Primary sources:** `miller2009rbohd`, `yan2024desensitization`.
+- **Rationale:** Regenerative gain and negative feedback jointly determine
+  coverage, sensitivity, saturation, and repeated-event response.
+- **Open issue:** Reported speeds and defense effects are assay-specific;
+  repeated-stress, false-alarm, and growth costs remain regime-dependent.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions).
+
+### C-206
+
+- **Statement:** Rapid hydraulic root-to-shoot drought evidence and slower
+  CLE25/ABA-mediated control are complementary rather than interchangeable.
+- **Status:** established.
+- **Primary sources:** `christmann2007hydraulic`, `takahashi2018cle25`.
+- **Rationale:** A fast physical state path can trigger protection while a
+  slower biochemical path supplies more specific context and control.
+- **Open issue:** Contribution changes with species, tissue, drought onset,
+  duration, geometry, conductance, capacitance, and transpiration.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions).
+
+### C-207
+
+- **Statement:** Nitrogen-starved Arabidopsis roots can send CEP peptides to
+  shoot receptors, which induce descending CEPD signals that enhance
+  high-affinity nitrate uptake where roots locally encounter nitrate.
+- **Status:** established.
+- **Primary sources:** `tabata2014cep`, `ohkubo2017cepd`.
+- **Rationale:** The loop separates deficit-up, context-down, and local
+  opportunity gating.
+- **Open issue:** The systems abstraction may reduce entirely to backpressure,
+  primal–dual control, and ordinary feasibility constraints.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions).
+
+### C-208
+
+- **Statement:** NRT1.1- and TCP20-related signaling contributes to
+  preferential lateral-root proliferation in nitrate-rich patches under
+  heterogeneous supply.
+- **Status:** established.
+- **Primary sources:** `remans2006nrt11`, `guan2014tcp20`.
+- **Rationale:** Local nutrient evidence changes irreversible structural
+  allocation and future sampling geometry.
+- **Open issue:** Growth pays only when a patch persists long enough to
+  amortize construction, maintenance, and reversal cost.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-209
+
+- **Statement:** Differential growth is shared across plant tropisms, while
+  cue sensing, transporters, tissue, and signaling mechanism are not universal.
+- **Status:** established.
+- **Primary sources:** `ding2011pin3`, `rakusova2011pin3`,
+  `dietrich2017hydrotropism`, `kimura2018rootphototropism`.
+- **Rationale:** Similar actuator geometry can arise from materially different
+  sensing and causal paths.
+- **Open issue:** A post-bending molecular gradient cannot by itself identify
+  the initiating sensor or justify one generic tropism controller.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-210
+
+- **Statement:** Sugar availability can precede auxin depletion in initiating
+  pea bud release after decapitation, while auxin transport and strigolactone
+  pathways regulate later branch competition and sustained outgrowth.
+- **Status:** established.
+- **Primary sources:** `mason2014sugar`, `brewer2009strigolactone`,
+  `prusinkiewicz2009auxinswitch`.
+- **Rationale:** Initial reserve release and sustained structural admission are
+  distinct stages.
+- **Open issue:** Sugar is both resource and signal; node, species, and
+  developmental state limit transfer.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-211
+
+- **Statement:** Direct pressure, flow, geometry, imaging, and transporter
+  perturbations support osmotically generated long-distance phloem flow with
+  active loading and anatomically selective unloading.
+- **Status:** established.
+- **Primary sources:** `knoblauch2016munch`, `rosselliott2017unloading`,
+  `chen2012sweet`.
+- **Rationale:** Physical transport, loading, unloading, and cargo filtering
+  form separate cost and control boundaries.
+- **Open issue:** No single efficiency constant covers geometry, viscosity,
+  pressure, active transport, interface selectivity, and maintenance.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-212
+
+- **Statement:** In split-pot tomato, a larger root sink attracted more carbon
+  when vascularly aligned with a labeled source but did not overcome a poorly
+  connected sector.
+- **Status:** established.
+- **Primary source:** `bledsoe2006sectoriality`.
+- **Rationale:** Demand cannot allocate through a path the physical topology
+  does not provide.
+- **Open issue:** Species and developmental architectures differ; the
+  transferable constraint is feasible path before objective size.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-213
+
+- **Statement:** Controlled experiments have demonstrated direct hyphal carbon
+  transfer in one mycorrhizal system and a defense-associated receiver effect
+  in connected tomato plants after donor challenge.
+- **Status:** established.
+- **Primary sources:** `francis1984direct`, `song2010communication`.
+- **Rationale:** A shared fungal path can carry material or alter a receiver
+  response in scoped systems.
+- **Open issue:** Direct path, payload, donor benefit, receiver benefit,
+  intentional signaling, and ecosystem effect remain separate claims.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-214
+
+- **Statement:** Controlled isotope experiments support preferential
+  reciprocal allocation between plants and fungi while multi-host networks can
+  produce strongly asymmetric terms of trade.
+- **Status:** established.
+- **Primary sources:** `kiers2011rewards`, `walder2012unequal`.
+- **Rationale:** Exchange occurs between partners with partly aligned and
+  partly conflicting objectives.
+- **Open issue:** Reciprocal reward does not establish equality, altruism,
+  shared intent, or benefit to every participant.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-215
+
+- **Statement:** Shared mycorrhizal networks can increase some productivity or
+  nutrient measures while also intensifying competition or plant-size
+  inequality in controlled systems.
+- **Status:** established.
+- **Primary sources:** `merrild2013competition`,
+  `weremijewicz2013inequality`.
+- **Rationale:** Community outcome is vector-valued rather than captured by
+  mean biomass.
+- **Open issue:** Productivity, distribution, robustness, exclusion, and each
+  participant's benefit require separate measurements.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-216
+
+- **Statement:** A composition of upward deficit signals, downward scarcity
+  context, and local capability gates may reduce communication while allocating
+  sparse capacity under heterogeneous demand.
+- **Status:** speculative.
+- **Primary sources:** `tabata2014cep`, `ohkubo2017cepd`,
+  `remans2006nrt11` establish biological components only.
+- **Rationale:** The composition separates demand, global context, and local
+  feasibility before allocation or growth.
+- **Open issue:** It must beat backpressure, primal–dual control, delayed
+  centralized optimization, and learned routing under delay, topology change,
+  strategic demand, and complete resource cost.
+- **Used by:** [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md),
+  [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions).
+
+### C-217
+
+- **Statement:** Evidence that compatible fungi occur, a tracer reaches a
+  receiver, or a connected seedling performs better does not alone establish a
+  continuous common network, path-exclusive transfer, net donor benefit, or
+  generalized aid in forests.
+- **Status:** disputed.
+- **Primary source:** `karst2023bias`.
+- **Rationale:** Controlled transfer mechanisms coexist with path ambiguity,
+  unequal outcomes, and documented citation bias in stronger forest-network
+  narratives.
+- **Open issue:** This disputes the generalized inference chain, not the
+  ecological importance of mycorrhizae or every controlled transfer result.
+- **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).

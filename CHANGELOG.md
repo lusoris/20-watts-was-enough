@@ -7,6 +7,13 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A plant distributed-control audit that keeps individual-plant signaling,
+  plant–fungus exchange, and community outcomes at separate causal scales,
+  including explicit rejection of generalized forest-network claims that
+  outrun path-identifying evidence.
+- Fourteen scoped plant claims (`C-204`–`C-217`), twenty-nine centralized
+  sources, and Candidate 013 for bidirectional deficit–capability routing with
+  an editable signal-and-gate diagram.
 - High-reliability-organization and power-grid audits that replace vague
   reliability language with explicit observation, authority, topology,
   reserve, latency, containment, restoration, learning, and maintenance paths.
