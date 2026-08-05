@@ -14535,3 +14535,471 @@ describes the exact statement here, not a broader interpretation.
 - **Rationale:** semiconductor manufacture and photonic packaging/calibration carry process-specific material and energy burdens that must be measured rather than copied.
 - **Open issue:** public studies rarely expose fab yield, packaging, field calibration, lifetime, and replacement data together.
 - **Used by:** [optics audit](audits/2026-08-05-optics-photonics-inverse-sensing.md), [Fixture F-007](../experiments/fixtures/007-operator-qualified-optical-inference.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1002
+
+- **Statement:** semiconductor reliability is defined only relative to a function, failure criterion, environment, operating history, and time horizon; it is not an intrinsic scalar attached to a technology name.
+- **Status:** established.
+- **Primary sources:** `SemiNISTReliability`, `SemiAECQ100`, `SemiJEP122H`.
+- **Rationale:** standards select tests from expected failure mechanisms and use conditions, while lifetime statistics require an explicit event definition.
+- **Open issue:** how should task-dependent analog degradation thresholds be versioned when the downstream model and workload change?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1003
+
+- **Statement:** passing a stress-test qualification supports conformance to that revision, sample plan, failure criteria, and technology applicability; it does not prove every field mission or exclude untested mechanisms.
+- **Status:** established.
+- **Primary sources:** `SemiAECQ100`, `SemiJESD47L`, `SemiNASA873910`.
+- **Rationale:** AEC explicitly calls for mechanism-based tests and requalification after relevant changes; NASA separates source control, derating, and radiation concerns.
+- **Open issue:** what minimum requalification is needed after changing calibration, firmware, model weights, or task acceptance thresholds?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1004
+
+- **Statement:** acceleration factors are valid only when the stressed and use regimes share the relevant mechanism and the selected model and parameters remain supported.
+- **Status:** established.
+- **Primary sources:** `SemiJEP122H`, `NISTAcceleratedLife`, `ChoiEtAl2011EMWaveform`.
+- **Rationale:** temperature, field, current, humidity, cycling, and radiation accelerate different physical processes; excessive stress can introduce a new mechanism or change microstructure.
+- **Open issue:** how can online controllers detect that their aging model is crossing a mechanism boundary before destructive failure?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1005
+
+- **Statement:** zero or few observed failures do not imply zero hazard; exposure, censoring, sampling, distribution choice, and interval coverage determine the supported upper bound.
+- **Status:** established.
+- **Primary sources:** `SemiNISTReliability`, `SemiJESD88E`, `SemiAECQ100`.
+- **Rationale:** reliability demonstrations are exposure experiments, often with right-censored units and a selected lifetime family.
+- **Open issue:** how should confidence be propagated when field telemetry is missing not at random because dead devices stop reporting?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1006
+
+- **Statement:** tester accuracy, calibration, sampling, guard bands, and decision rules affect whether a part is accepted or rejected near a specification limit.
+- **Status:** established.
+- **Primary sources:** `jcgm100`, `jcgm106`, `SemiAECQ100`.
+- **Rationale:** measured value and uncertainty determine conformity risk; a hard threshold on an unqualified reading hides false accept and false reject rates.
+- **Open issue:** how should correlated on-chip monitor error be propagated through adaptive voltage and lifetime-control decisions?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1007
+
+- **Statement:** a device can pass production tests yet fail later, or be screened out despite adequate field life; yield, test escape, early-life failure, and wear-out require different evidence.
+- **Status:** established.
+- **Primary sources:** `Murphy1964Yield`, `SemiAECQ100`.
+- **Rationale:** fatal fabrication defects, parametric tails, latent defects, and use-induced mechanisms occur at different stages and have different selection.
+- **Open issue:** how much field telemetry is needed to update manufacturing screens without overfitting one product population?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1008
+
+- **Statement:** larger critical area generally exposes more opportunities for fatal defects, but clustering, layout sensitivity, repair, and edge structure determine the actual yield law.
+- **Status:** established.
+- **Primary sources:** `Murphy1964Yield`, `StapperEtAl1983Yield`.
+- **Rationale:** Poisson yield is a useful null, not a universal fabrication law; observed wafer maps and critical-area models carry additional information.
+- **Open issue:** can modular chiplets reduce scrap and embodied energy after packaging, interconnect, test, and known-good-die burdens are included?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1009
+
+- **Statement:** MOS parameter mismatch showed inverse square-root area scaling in the measured processes and layouts studied by Pelgrom and colleagues; systematic gradients and technology-specific sources remain separate.
+- **Status:** established.
+- **Primary sources:** `PelgromEtAl1989Mismatch`, `Asenov1998RandomDopant`.
+- **Rationale:** discrete dopants, dimensions, work-function grains, interfaces, and layout gradients do not reduce to one global Gaussian offset.
+- **Open issue:** which variation coordinates are observable cheaply enough to support per-device routing rather than worst-case margin?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-1010
+
+- **Statement:** satisfying each specification marginally at a high rate does not establish the joint fraction satisfying all correlated timing, power, noise, analog, and memory constraints.
+- **Status:** established.
+- **Primary sources:** `SemiAECQ100`, `BorkarEtAl2003Variation`, `BowmanEtAl2002FrequencyVariation`.
+- **Rationale:** process variables influence multiple endpoints and extreme paths; separate average margins can conceal joint failures.
+- **Open issue:** how should a learned hardware mapper preserve calibrated joint-tail risk under workload shift?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1011
+
+- **Statement:** spare rows, columns, blocks, and remapping can raise accepted yield when defect geometry and diagnosis allow replacement, at costs in area, test, routing, latency, and residual common modes.
+- **Status:** established.
+- **Primary sources:** `StapperEtAl1980RedundancyYield`, `KuoFuchs1986Spares`.
+- **Rationale:** repair changes the acceptance function; it does not remove defects or guarantee post-repair lifetime.
+- **Open issue:** what granularity of spare expert, array, or compute tile minimizes lifecycle cost under clustered defects and later wear?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1012
+
+- **Statement:** smaller devices can exhibit device-specific aging and random telegraph fluctuations whose magnitude and trajectory depend on their initial microscopic state; a single deterministic aging shift can miss tails.
+- **Status:** plausible.
+- **Primary sources:** `KaczerEtAl2010NBTI`, `GrasserEtAl2010TDDS`, `Wirth2020RTN`.
+- **Rationale:** discrete traps produce step-like temporal variation, while fabricated differences alter field, delay, and stress exposure.
+- **Open issue:** which stochastic-tail models remain identifiable from cheap fleet monitors?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1013
+
+- **Statement:** semiconductor variation contains hierarchical spatial and temporal components; randomly splitting individual measurements can leak shared fabrication history and overstate generalization.
+- **Status:** established.
+- **Primary sources:** `PelgromEtAl1989Mismatch`, `BowmanEtAl2002FrequencyVariation`, `SemiAECQ100`.
+- **Rationale:** local mismatch, die gradients, wafer signatures, lot shifts, and aging share different causes and correlations.
+- **Open issue:** how much hierarchical telemetry can be retained without exposing proprietary process information?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1014
+
+- **Statement:** bias-temperature instability changes transistor threshold and performance under bias and temperature, with observable recovery after stress; measurement delay and waveform therefore alter the reported degradation.
+- **Status:** established.
+- **Primary sources:** `Alam2003NBTI`, `GrasserEtAl2010TDDS`, `KaczerEtAl2010NBTI`.
+- **Rationale:** trap capture and emission produce history-dependent kinetics; a single end-of-stress reading confounds stress, recovery, and instrument delay.
+- **Open issue:** can workload scheduling exploit recovery without increasing total damage, latency, or correlated aging elsewhere?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-1015
+
+- **Statement:** energetic carriers generated under particular electric-field and current conditions can create or charge interface and oxide defects, degrading device parameters according to switching and bias history.
+- **Status:** established.
+- **Primary sources:** `HuEtAl1985HCI`, `SemiJEP122H`.
+- **Rationale:** calendar time or average utilization alone does not encode the drain, gate, substrate-current, and temperature conditions that drive damage.
+- **Open issue:** which application-level activity summaries preserve enough causal information for lifetime control without transistor-level traces?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1016
+
+- **Statement:** time-dependent dielectric breakdown is observed as a distribution of breakdown times under field and temperature; area scaling and Weibull extrapolation require spatial homogeneity and a stable mechanism.
+- **Status:** established.
+- **Primary sources:** `SemiJEP122H`, `McPhersonMogul1998TDDB`, `KeaneEtAl2011TDDB`.
+- **Rationale:** accumulated defects and conductive paths are stochastic; soft and hard breakdown, thickness variation, and local field enhancement change the observed distribution.
+- **Open issue:** how should graceful task degradation respond to rising leakage before a physically abrupt breakdown?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1017
+
+- **Statement:** electron-driven atomic transport can nucleate and grow voids or extrusions, but lifetime parameters depend on interconnect material, microstructure, reservoirs, geometry, stress, waveform, and temperature.
+- **Status:** established.
+- **Primary sources:** `Black1969Electromigration`, `Blech1976Electromigration`, `ChoiEtAl2011EMWaveform`.
+- **Rationale:** Black-type current and temperature acceleration is empirical and scoped; short-line back stress and waveform conditions can change outcomes.
+- **Open issue:** can sparse routing reduce total interconnect damage without concentrating current into a small set of hot links?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1018
+
+- **Statement:** current and switching generate local heat; temperature changes delay, leakage, material transport, and degradation rates, which can change power and current again.
+- **Status:** established.
+- **Primary sources:** `RzepkaEtAl1998SelfHeating`, `SkadronEtAl2003Thermal`, `DingEtAl2025ThermoElectro`.
+- **Rationale:** average chip power is an inadequate proxy for local transient temperature, especially with spatial activity and package thermal impedance.
+- **Open issue:** which low-cost sensors and thermal models expose damaging gradients in heterogeneous 3-D systems?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1019
+
+- **Statement:** repeated temperature changes can fatigue solder joints and package interfaces; cycle range, ramp, dwell, geometry, material, and failure criterion determine acceleration.
+- **Status:** established.
+- **Primary sources:** `Darveaux2000Solder`, `SemiAECQ100`.
+- **Rationale:** steady hot operation and frequent power cycling can produce different package damage even at similar average temperature.
+- **Open issue:** when does aggressive power gating save operational energy but shorten package or interconnect service life?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1020
+
+- **Statement:** temperature, voltage, current, fabrication variation, and package state can couple nominally separate mechanisms; summing independent constant failure rates can misstate system risk.
+- **Status:** plausible.
+- **Primary sources:** `SemiJEP122H`, `RzepkaEtAl1998SelfHeating`, `DingEtAl2025ThermoElectro`.
+- **Rationale:** the same local heat changes electromigration, delay, leakage, retention, and monitor readings; damage can also redistribute current.
+- **Open issue:** which couplings materially change decisions, rather than only adding model complexity?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1021
+
+- **Statement:** conditional activation can reduce total switching and data movement while increasing duty cycle, temperature, current density, and aging concentration in frequently selected routes or experts.
+- **Status:** plausible.
+- **Primary sources:** `SkadronEtAl2003Thermal`, `RzepkaEtAl1998SelfHeating`, `Black1969Electromigration`.
+- **Rationale:** total energy and maximum local stress are different objectives; skewed routing can improve one and damage the other.
+- **Open issue:** what regularizer captures lifetime and repair cost without forcing wasteful uniform use?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1022
+
+- **Statement:** some electrical parameters partially recover after bias or temperature stress, while other defects, electromigration voids, endurance consumption, and package fatigue persist; equal current performance can hide unequal remaining life.
+- **Status:** established.
+- **Primary sources:** `GrasserEtAl2010TDDS`, `Black1969Electromigration`, `Darveaux2000Solder`.
+- **Rationale:** observed function after rest is not a conserved damage measure.
+- **Open issue:** which nondestructive probes distinguish compensation from recovered physical margin in complex accelerators?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-1023
+
+- **Statement:** soft-error and destructive-event rates depend on particle type, energy or linear energy transfer, altitude, shielding, solar and terrestrial environment, device cross-section, and operating state.
+- **Status:** established.
+- **Primary sources:** `ZieglerLanford1979Cosmic`, `SemiJESD89`, `SemiNASAJSC07001`.
+- **Rationale:** accelerated source exposure must be folded with the intended spectrum and device response; one terrestrial FIT does not transfer to space.
+- **Open issue:** how should route authority change when radiation telemetry is sparse, delayed, or itself faulted?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1024
+
+- **Statement:** ionizing radiation can cause non-destructive stored-state upset, transient analog or logic pulses, destructive latch-up or burnout, and cumulative total-ionizing-dose degradation; they require different detection and response.
+- **Status:** established.
+- **Primary sources:** `MayWoods1979SoftErrors`, `SemiNASAJSC07001`, `SemiNASA873910`.
+- **Rationale:** correcting a flipped memory bit does not contain latch-up or restore dose-degraded analog margin.
+- **Open issue:** what minimal event classifier supports the least destructive correct response under ambiguous telemetry?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1025
+
+- **Statement:** large production studies found DRAM errors dominated by hard errors in the observed fleet and flash-drive reliability relationships that differed from simple raw-error and wear assumptions.
+- **Status:** established.
+- **Primary sources:** `SchroederEtAl2009DRAM`, `SchroederEtAl2016Flash`.
+- **Rationale:** field selection, controller behavior, workload, temperature, manufacturing, and detection differ from isolated accelerated cell tests.
+- **Open issue:** how can vendors publish useful field distributions without leaking customer or product-sensitive data?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1026
+
+- **Statement:** logical, electrical, temporal, architectural, software, and application masking can prevent or amplify a device event before it becomes an incorrect accepted output.
+- **Status:** established.
+- **Primary sources:** `MukherjeeEtAl2003AVF`, `SemiNASAJSC07001`.
+- **Rationale:** susceptible bits, live state, instruction influence, checking, replay, and task semantics mediate propagation.
+- **Open issue:** how can application vulnerability be estimated for dynamic sparse graphs without exhaustive fault injection?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1027
+
+- **Statement:** a SEC–DED code corrects one erroneous bit and detects two within its codeword under its decoder assumptions; burst, chip, address, decoder, correlated, or higher-multiplicity faults require different interleaving or codes.
+- **Status:** established.
+- **Primary sources:** `Hsiao1970ECC`, `ChenHsiao1984ECC`.
+- **Rationale:** redundancy count alone does not determine coverage; physical bit placement and shared logic determine which errors land in one codeword.
+- **Open issue:** which learned placement policy remains robust when the field fault geometry shifts from its training distribution?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1028
+
+- **Statement:** periodically reading, correcting, and rewriting memory reduces the time in which correctable errors can accumulate, while consuming bandwidth, energy, controller activity, and possibly write endurance.
+- **Status:** established.
+- **Primary sources:** `SalehEtAl1990Scrubbing`, `Hsiao1970ECC`.
+- **Rationale:** scrub interval changes multi-error probability; the independent Poisson model is only a baseline for correlated and permanent faults.
+- **Open issue:** can risk-adaptive scrubbing beat fixed patrol schedules after telemetry, burst risk, and endurance cost are included?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md).
+
+### C-1029
+
+- **Statement:** spatial replication and voting tolerate only faults outside the shared supply, clock, thermal, radiation, design, voter, software, and update failure domains.
+- **Status:** established.
+- **Primary sources:** `LyonsVanderkulk1962TMR`, `SemiNASA873910`, `SemiNASAJSC07001`.
+- **Rationale:** majority voting adds no information when every replica receives the same wrong design, corrupted update, supply event, or environmental burst.
+- **Open issue:** how much physical and implementation diversity is worth its verification and maintenance burden?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-1030
+
+- **Statement:** detecting an error does not establish containment, correct diagnosis, successful repair, absence of corrupted side effects, or restored future reliability.
+- **Status:** established.
+- **Primary sources:** `ArlatEtAl1990FaultInjection`, `ErnstEtAl2003Razor`, `SemiAECQ100`.
+- **Rationale:** a checker can detect after external commitment; replay can repeat a permanent or deterministic fault; replacement can import stale state.
+- **Open issue:** what minimal transaction boundary prevents analog or timing errors from escaping before validation?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md).
+
+### C-1031
+
+- **Statement:** fault-injection results are conditional on injection location, timing, duration, activation, observation, workload, and representativeness of the physical fault population.
+- **Status:** established.
+- **Primary sources:** `ArlatEtAl1990FaultInjection`, `SemiAECQ100`, `MukherjeeEtAl2003AVF`.
+- **Rationale:** uniform bit flips are convenient but do not represent all delay, analog, burst, permanent, address, control, or correlated physical faults.
+- **Open issue:** how should physical test data update an architectural fault injection distribution with uncertainty?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1032
+
+- **Statement:** dynamic switching energy scales approximately with $V^2$, while lower supply increases delay and can induce timing, SRAM, analog, and retention failures; the useful operating point is workload- and device-specific.
+- **Status:** established.
+- **Primary sources:** `ErnstEtAl2003Razor`, `TschanzEtAl2002BodyBias`, `KimEtAl2018MATIC`.
+- **Rationale:** a nominal guardband covers process, voltage, temperature, aging, droop, and data-dependent delay; removing it changes the error distribution.
+- **Open issue:** what voltage controller remains calibrated under changing network topology, aging, memory placement, and rare critical inputs?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1033
+
+- **Statement:** Razor-class shadow sampling detects selected late transitions and can replay or correct them, permitting operation closer to actual timing limits when checker and recovery assumptions hold.
+- **Status:** established.
+- **Primary sources:** `ErnstEtAl2003Razor`, `DasEtAl2009RazorII`.
+- **Rationale:** the method converts a portion of worst-case voltage margin into detection hardware, hold-time constraints, replay latency, and error energy.
+- **Open issue:** how should analog and memory faults that do not present as a late digital transition be included in the same authority envelope?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1034
+
+- **Statement:** replica paths, ring oscillators, SRAM canaries, and thermal sensors estimate nearby failure margin only to the extent they track the spatial, temporal, data-dependent, and aging behavior of protected circuits.
+- **Status:** established.
+- **Primary sources:** `TschanzEtAl2002BodyBias`, `KimEtAl2018MATIC`, `SkadronEtAl2003Thermal`.
+- **Rationale:** monitor offset, placement, quantization, calibration, and shared supply effects can create false headroom or needless derating.
+- **Open issue:** how many independent monitors are needed to bound a sparse, reconfigurable, spatially heterogeneous accelerator?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1035
+
+- **Statement:** forward and reverse body bias can compensate some process and workload variation, but change threshold, leakage, speed, junction bias, and technology-specific reliability limits.
+- **Status:** established.
+- **Primary sources:** `TschanzEtAl2002BodyBias`, `MartinEtAl2002DVSABB`.
+- **Rationale:** per-die or regional adaptation can improve joint frequency-power yield, but the optimal bias depends on state and constraints.
+- **Open issue:** does fine-grained body-bias control remain beneficial in the selected device technology after regulators, wells, sensors, and control work?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1036
+
+- **Statement:** frequency scaling, local toggling, task migration, cooling, and throttling can bound temperature, but sensor error and thermal time constants determine performance and safety.
+- **Status:** established.
+- **Primary sources:** `SkadronEtAl2003Thermal`, `RzepkaEtAl1998SelfHeating`.
+- **Rationale:** equal instantaneous or average power can produce different spatial temperatures because package paths and activity history differ.
+- **Open issue:** when does migrating work reduce a hotspot versus heating communication and spare regions enough to worsen lifecycle cost?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1037
+
+- **Statement:** a learned or optimizing controller that sets voltage, frequency, refresh, calibration, or routing should not be the sole judge of whether its own evidence and actuators remain trustworthy.
+- **Status:** plausible.
+- **Primary sources:** `ErnstEtAl2003Razor`, `SemiNASA873910`, `SemiAECQ100`.
+- **Rationale:** controller, monitor, clock, supply, firmware, and update faults can create unsafe positive feedback.
+- **Open issue:** what is the smallest trusted protection layer for each hardware class and failure consequence?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1038
+
+- **Statement:** approximate data or operations may reduce energy only when flows into exact control, addressing, safety, accounting, and acceptance state are explicitly constrained and task error is measured.
+- **Status:** established.
+- **Primary sources:** `SampsonEtAl2011EnerJ`, `KimEtAl2018MATIC`, `ErnstEtAl2003Razor`.
+- **Rationale:** numerical error is not harmless because an application average is tolerant; rare inputs and control-path corruption can have discontinuous consequences.
+- **Open issue:** which internal states in an adaptive model are safely approximate across distribution and objective changes?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md).
+
+### C-1039
+
+- **Statement:** resistive arrays can perform vector–matrix products using stored device conductances and circuit laws, reducing some weight movement while making device, wire, and peripheral state part of the computation.
+- **Status:** established.
+- **Primary sources:** `LeGalloEtAl2018MixedPrecision`, `JoshiEtAl2020PCMInference`, `LeGalloEtAl2023PCMChip`.
+- **Rationale:** the crossbar computes an analog current sum, but input drive, output conversion, tiling, activation, communication, and correction remain.
+- **Open issue:** which operators have enough reuse, locality, and tolerated precision to amortize programming and calibration?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1040
+
+- **Statement:** PCM and RRAM conductance changes vary across devices and pulses, depend on current state, and can require iterative verify-and-program or algorithmic tolerance.
+- **Status:** established.
+- **Primary sources:** `AmbrogioEtAl2014RRAM`, `NminibapielEtAl2017RRAM`, `AmbrogioEtAl2018AnalogTraining`.
+- **Rationale:** a requested weight and realized conductance are different variables; verification itself is noisy and costs pulses, time, and endurance.
+- **Open issue:** when does allocating extra programming effort to important weights beat retraining, digital residuals, or different mapping?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1041
+
+- **Statement:** amorphous PCM resistance evolves after programming with device- and state-dependent drift and noise; elapsed time, temperature, and reference state affect inferred weights and network accuracy.
+- **Status:** established.
+- **Primary sources:** `BoniardiIelmini2011PCMDrift`, `JoshiEtAl2020PCMInference`, `BallmaierEtAl2025PCMDrift`.
+- **Rationale:** an approximate power law over one window is not stationary over all times and temperatures; common and differential drift need not cancel.
+- **Open issue:** which compact drift state is sufficient for large shared arrays under intermittent operation?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1042
+
+- **Statement:** line resistance, source and access resistance, sneak paths, finite dynamic range, DAC/ADC quantization, peripheral noise, and tiling alter the realized matrix operation and its energy.
+- **Status:** established.
+- **Primary sources:** `LeGalloEtAl2023PCMChip`, `ChenEtAl2019MemristiveCIM`, `LiEtAl2021MemristorCrossbar`.
+- **Rationale:** ideal crossbar parallelism does not include converters, communication, accumulation, or voltage drop across large arrays.
+- **Open issue:** where is the end-to-end crossover against current digital accelerators for sparse and attention-like workloads?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1043
+
+- **Statement:** training with measured or modeled hardware errors can recover accuracy on supported distributions, but does not establish robustness to unseen devices, faults, drift laws, temperatures, or correlated errors.
+- **Status:** established.
+- **Primary sources:** `JoshiEtAl2020PCMInference`, `RaschEtAl2023HardwareAware`, `KimEtAl2018MATIC`.
+- **Rationale:** the error model becomes part of the training distribution and can be overfit like any simulator.
+- **Open issue:** what device- and lot-held-out protocol is sufficient to estimate transfer to production hardware?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1044
+
+- **Statement:** an imprecise in-memory kernel plus high-precision residual or iterative refinement can reach accurate solutions when conditioning and error bounds permit, while retaining digital compute, conversions, and iterations.
+- **Status:** established.
+- **Primary sources:** `LeGalloEtAl2018MixedPrecision`, `AmbrogioEtAl2018AnalogTraining`.
+- **Rationale:** physical computation supplies a proposal or low-precision update; a digital path evaluates and corrects it.
+- **Open issue:** which AI workloads expose residuals cheaply enough for reliable iterative correction?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-1045
+
+- **Statement:** nonvolatile-memory cells tolerate a finite and variable number of programming events, with failure dependent on device, state trajectory, pulse, temperature, and acceptance threshold.
+- **Status:** established.
+- **Primary sources:** `HuoEtAl2016PCMEndurance`, `AmbrogioEtAl2014RRAM`, `SemiAECQ100`.
+- **Rationale:** a nominal cycle count is not a guaranteed uniform capacity and may not transfer from binary storage to multilevel analog updates.
+- **Open issue:** what online wear proxy predicts analog-task failure before hard cell failure?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1046
+
+- **Statement:** changing logical-to-physical mapping can approach more uniform wear and extend useful life, but costs metadata, movement, latency, energy, recovery logic, and resilience to malicious or pathological writes.
+- **Status:** established.
+- **Primary sources:** `QureshiEtAl2009StartGap`, `WangEtAl2015WearLeveling`.
+- **Rationale:** uniform use is not automatically optimal when cells have unequal endurance, data have unequal value, and movement itself consumes writes.
+- **Open issue:** should physical expert rotation optimize remaining life, reconstruction cost, or task value under adversarial demand?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1047
+
+- **Statement:** Google’s six-year flash field study found raw bit error rate relationships and uncorrectable errors that did not support common simple proxies; controller and device-level metrics must be validated against service outcomes.
+- **Status:** established.
+- **Primary source:** `SchroederEtAl2016Flash`.
+- **Rationale:** ECC strength, bad blocks, controller firmware, read traffic, device model, wear, and non-bit failures mediate end-to-end data loss.
+- **Open issue:** which analog-array telemetry predicts silent task failure rather than merely conductance variance?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1048
+
+- **Statement:** primary lifecycle inventories show substantial electricity, fuels, ultrapure materials, gases, water, and infrastructure burdens in wafer and device production; results depend strongly on process and allocation.
+- **Status:** established.
+- **Primary sources:** `WilliamsEtAl2002Microchip`, `KrishnanEtAl2008LCI`, `BoydEtAl2010FabEnergy`.
+- **Rationale:** an operationally efficient specialized device can lose its advantage when low utilization, yield, short life, or frequent replacement amortizes high manufacture over little accepted service.
+- **Open issue:** current node- and package-specific inventories are often proprietary; how can decisions expose uncertainty without false precision?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1049
+
+- **Statement:** semiconductor facilities and tools consume substantial idle, support, and cleanroom energy, so energy per wafer or good die depends on throughput, utilization, rework, and yield rather than recipe energy alone.
+- **Status:** established.
+- **Primary sources:** `BoydEtAl2010FabEnergy`, `SemiS23`, `KrishnanEtAl2008LCI`.
+- **Rationale:** denominator choice and facility allocation can reverse rankings between low-volume prototypes and mature high-yield production.
+- **Open issue:** what public ranges are defensible for future accelerators before production yield and utilization exist?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1050
+
+- **Statement:** process, idle, rest, and sleep modes and non-electric utilities require explicit rates, durations, conversions, and reporting boundaries.
+- **Status:** established.
+- **Primary sources:** `SemiS23`, `jcgm100`.
+- **Rationale:** peak tool power or process-only electricity omits facility and standby burdens; energy-equivalent conversions add model uncertainty.
+- **Open issue:** can future hardware papers publish compatible fabrication and use-stage mode traces without disclosing proprietary recipes?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1051
+
+- **Statement:** guardbands, redundancy, refresh, cooling, calibration, and repair can extend useful hardware life but consume operational energy and capacity; replacement can save use energy while spending new fabrication burden.
+- **Status:** plausible.
+- **Primary sources:** `SemiISO14044`, `WilliamsEtAl2002Microchip`, `SemiS23`.
+- **Rationale:** neither maximum physical lifetime nor minimum instantaneous power is a complete lifecycle objective.
+- **Open issue:** what functional unit fairly values evolving AI service quality across old and replacement hardware?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1052
+
+- **Statement:** moving a stable operation into an ASIC, analog array, or other physical structure can reduce repeated programmable work, but loses when workload reuse, yield, lifetime, calibration support, or utilization is too low.
+- **Status:** established.
+- **Primary sources:** `LeGalloEtAl2023PCMChip`, `KrishnanEtAl2008LCI`, `Murphy1964Yield`.
+- **Rationale:** compile-to-structure is an amortization decision across design, fabrication, mapping, conversion, maintenance, and future change.
+- **Open issue:** which measured workload-stability statistic predicts a profitable physical commitment without hindsight leakage?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1053
+
+- **Statement:** after comparison with mature semiconductor and systems engineering, this audit’s transferable content composes existing project bundles and candidates; it does not expose a distinct problem–causal-loop–timescale invariant.
+- **Status:** established.
+- **Primary sources:** `SemiJEP122H`, `SemiAECQ100`, `ErnstEtAl2003Razor`, `Hsiao1970ECC`, `SemiISO14044`.
+- **Rationale:** variation-aware allocation, local containment, temporary traces, feedback, maintenance separation, structural compilation, lifetime-matched memory, and environmental telemetry already map to P-001 through P-013.
+- **Open issue:** can the integrated benchmark reveal a composition advantage beyond a complete conventional reliability stack?
+- **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).

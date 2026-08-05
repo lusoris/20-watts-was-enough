@@ -359,3 +359,18 @@ project choice.
   or candidate promotion. See [C-970](claims.md#c-970)–[C-1001](claims.md#c-1001),
   [Fixture F-007](../experiments/fixtures/007-operator-qualified-optical-inference.md),
   and the [optics audit](audits/2026-08-05-optics-photonics-inverse-sensing.md#verdict).
+- **OQ-063:** Does a mission-profile-qualified degradation and recovery contract
+  improve accepted quality, silent-error risk, tail latency, availability,
+  operational and embodied energy, and useful lifetime beyond foundry corners,
+  qualification and physics-of-failure models, survival analysis, guardbands,
+  coding/scrubbing/sparing/remapping/replay/replication, Razor-class timing
+  recovery, adaptive voltage/frequency/body bias, thermal control, hardware-
+  aware training, mixed precision, wear leveling, and ISO/SEMI lifecycle
+  accounting when wafer/lot/die/block/device/time hierarchy, mechanism support,
+  censoring, monitor age, electrothermal concentration, common cause, protected
+  exact state, physical-weight age, converters, calibration, reserve, repair,
+  human work, replacement, and uncertainty remain explicit? This is an
+  evaluation fixture, not a principle or candidate promotion. See
+  [C-1002](claims.md#c-1002)–[C-1053](claims.md#c-1053),
+  [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md),
+  and the [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md#audit-disposition).

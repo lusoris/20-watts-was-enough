@@ -282,9 +282,10 @@ adding citations:
 | fluid dynamics and turbulence | signed cascade/flux, intermittency and tails, detector-qualified coherent structures, closure/model-form support, objective-qualified ROMs, adaptive-resolution total work, observation/assimilation/observability, sensor-placement transport, stable net-benefit control, a mixing vector, path-dependent transition, calibrated extremes, measurement operators and uncertainty, and the full energy boundary remain separate; Fixture F-005 carries the outcome firewall across Candidates 002/003/006/007/012/014 without promoting a principle or candidate |
 | sports expertise, adaptive performance, and team coordination | anticipation/interception, causal cue use, practice/retention/transfer, relevant variability, speed/accuracy/risk/energy, fatigue/readiness/damage/return, shared information/coordination, adversarial deception, feedback dependence, prospective selection, and full human/joule budgets remain separate; Fixture F-006 carries the representative history/resource-qualified performance contract across Candidates 002/004/006/007/009/012/014/019 without promoting a principle or candidate |
 | optics, photonics, and inverse sensing | forward operators, finite information modes, null-space ambiguity, photon/noise budgets, structural priors, active/coded acquisition, adaptive correction, drift, saturation, fusion, optical transforms, conversion, analog error, fabrication, thermal control, future-query recovery, and full lifecycle energy remain separate; Fixture F-007 carries the operator-qualified measure–infer–intervene–monitor–route–retain contract across Candidates 001/006/007/010/014/017/018 without promoting a principle or candidate |
+| semiconductor device and circuit reliability | qualification, hierarchical yield and variability, reversible drift, cumulative degradation, abrupt failure, transient upset, fault geometry, correction/recovery stages, adaptive margin, analog/in-memory physical state, endurance/wear, accepted field service, and fabrication-to-retirement burden remain separate; Fixture F-008 carries the mission-profile-qualified degradation/recovery contract across Candidates 001/005/006/009/010/012/014/017/018 without promoting a principle or candidate |
 
 The music, library/archival, comparative-cognition, visual-design,
-mathematical-practice, fluid-dynamics, sports, and optics queues are closed by explicit
+mathematical-practice, fluid-dynamics, sports, optics, and semiconductor queues are closed by explicit
 no-promotion decisions. The music
 [Fixture F-001](../experiments/fixtures/001-shared-clock-free-coadaptation.md)
 retains E-MUSIC-07 as a cross-candidate benchmark; the archival refinement
@@ -337,6 +338,17 @@ drift attribution and fallback, optical/digital service curves, multi-device
 fabrication and thermal variation, and physical compaction under future queries.
 Its null is the complete inverse-method, experiment-design, control, fusion,
 digital/analog acceleration, calibration, and lifecycle-accounting stack.
+Semiconductor reliability contributes
+[Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md)
+across Candidates 001/005/006/009/010/012/014/017/018. It binds accepted
+service to manufactured-unit hierarchy, mission profile, mechanism-specific
+acceleration, censoring, monitor age, electrothermal concentration, fault
+geometry, correction and recovery state, protected exact boundaries, physical-
+weight age, endurance, and fabrication-through-retirement resources. Its ten
+tracks test hierarchical transfer, accelerated-life support, sparse wear,
+correlated faults, voltage authority, approximation containment, analog/digital
+crossover, nonideality transfer, wear placement, and keep/repair/repurpose/
+replace policy against the complete mature reliability stack.
 The next
 breadth field is selected by expected ability to split, merge, reject, or
 re-baseline a current mechanism. Breadth alone does not close a row.

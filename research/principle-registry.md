@@ -338,6 +338,44 @@ stack. Retire the composition when those methods reach the same ambiguity,
 transfer, risk, query-recovery, and total-energy frontier. See
 [OQ-062](open-questions.md#oq-062).
 
+### Mission-profile-qualified device-reliability evaluation contract
+
+The [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md)
+promotes no principle or candidate. Its 52 scoped claims contain 47 established
+and 5 plausible statements, with none speculative or disputed. The durable
+firewall separates qualification from lifetime, manufacturing yield from field
+reliability, time-zero variation from time-dependent change, reversible drift
+from cumulative degradation, and abrupt physical failure from transient upset,
+latent fault, measurement uncertainty, and model-support failure
+([C-1002](claims.md#c-1002)–[C-1022](claims.md#c-1022)).
+
+Fault geometry controls what coding, scrubbing, sparing, replay, replication,
+and injection tests establish. Voltage, body bias, timing recovery, thermal
+management, and adaptive margin spend safety, monitor independence, reserve,
+replay, and wear rather than removing those costs. Approximate state must remain
+outside protected exact control; analog or in-memory weights remain physical,
+stochastic, drifting, finite-endurance state with converter and wire limits
+([C-1023](claims.md#c-1023)–[C-1046](claims.md#c-1046)).
+
+Accepted service, not a raw component-error rate or core operation, is the
+functional unit. Fabrication material and energy, utilization, equipment modes,
+cooling, calibration, maintenance, repair, lifetime extension, repurposing,
+replacement, and end of life can reverse a component-level efficiency ranking
+([C-1047](claims.md#c-1047)–[C-1053](claims.md#c-1053)). Cross-domain mapping
+refines P-001/P-002 allocation and containment, P-003 provisional traces, P-005
+use-dependent topology, P-006/P-007 feedback and evidence allocation, P-008
+fault compartments, P-009 maintenance, P-010 structural compilation, P-012
+lifetime-matched state, and P-013 external calibration/wear records without
+creating another invariant.
+
+[Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md)
+applies the contract across Candidates 001, 005, 006, 009, 010, 012, 014, 017,
+and 018. Its null is the full qualification, yield, physics-of-failure,
+survival, guardband, fault-tolerance, adaptive-margin, thermal, hardware-aware,
+mixed-precision, wear-management, and lifecycle-accounting stack. Retire the
+composition when those methods reach the same accepted-service frontier. See
+[OQ-063](open-questions.md#oq-063).
+
 ## P-001 — Selective allocation
 
 **Problem.** Total possible capacity is larger than the activity or resources
