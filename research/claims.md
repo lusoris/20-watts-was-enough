@@ -15886,3 +15886,471 @@ describes the exact statement here, not a broader interpretation.
 - **Rationale:** the comparison crosses logical erasure, device, circuit, workload, facility, and lifecycle boundaries while omitting accepted quality, time, and error.
 - **Open issue:** retain the comparison only as a boundary-qualified ratio after every numerator, denominator, and assumption is exposed.
 - **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [energy model](../concept/80-energy-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [research roadmap](../concept/90-research-roadmap.md).
+
+### C-1152
+
+- **Statement:** receptor families provide a large sensing basis, not one detector per odor.
+- **Status:** established.
+- **Primary sources:** `OlfactB001BuckAxel1991`.
+- **Rationale:** a large mammalian odorant-receptor family supplies broad population coverage rather than a one-receptor-per-odor catalogue.
+- **Open issue:** repertoire size and expression are species-specific and do not establish downstream codes or arbitrary chemical coverage.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1153
+
+- **Statement:** mammalian odor coding is combinatorial in the studied receptor panel.
+- **Status:** established.
+- **Primary sources:** `OlfactB002MalnicEtAl1999`.
+- **Rationale:** assayed receptors responded to multiple odorants and individual odorants activated multiple receptors.
+- **Open issue:** the result does not establish open-world identification or equal, independent information across channels.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1154
+
+- **Statement:** receptor codes vary with concentration.
+- **Status:** established.
+- **Primary sources:** `OlfactB002MalnicEtAl1999`.
+- **Rationale:** changing concentration recruited or altered receptor responses, changing the population pattern.
+- **Open issue:** identity and concentration must be crossed in data splits and scored separately before claiming invariance.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1155
+
+- **Statement:** chemosensation does not have one universal population-code architecture.
+- **Status:** established.
+- **Primary sources:** `OlfactB003ZhaoEtAl2003`.
+- **Rationale:** mammalian sweet and umami perturbations provide a scoped counterexample in which behavioral meaning depends strongly on the activated cell class.
+- **Open issue:** the counterexample blocks universal coding slogans but does not establish labelled-line coding for every chemical sense.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1156
+
+- **Statement:** divisive normalization can arise from pooled receptor input.
+- **Status:** established.
+- **Primary sources:** `OlfactB004OlsenEtAl2010`.
+- **Rationale:** pooled lateral inhibition divisively normalized and transiently reshaped projection-neuron responses in the studied Drosophila preparation.
+- **Open issue:** test absolute-intensity loss, saturation, novel interferents, and nonstationary gain against calibrated normalization nulls.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1157
+
+- **Statement:** olfactory-bulb transformations can improve concentration-tolerant identity.
+- **Status:** established.
+- **Primary sources:** `OlfactB005StoraceCohen2017`.
+- **Rationale:** measured mouse bulb input-output transformations produced greater concentration tolerance for the tested odors.
+- **Open issue:** greater invariance is not independence from mixtures, adaptation, sampling waveform, or receptor saturation.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1158
+
+- **Statement:** temporal population trajectories can retain identity across intensity.
+- **Status:** established.
+- **Primary sources:** `OlfactB006StopferEtAl2003`.
+- **Rationale:** locust projection-neuron trajectories grouped by odor identity across tested concentrations while downstream tolerance remained heterogeneous.
+- **Open issue:** population-time structure does not guarantee one invariant embedding across species or chemical regimes.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1159
+
+- **Statement:** recurrent piriform circuitry can support concentration invariance.
+- **Status:** established.
+- **Primary sources:** `OlfactB007BoldingFranks2018`.
+- **Rationale:** recurrent circuit perturbations implicated cortical recurrence and inhibition in more concentration-stable odor representations.
+- **Open issue:** recurrence must beat feed-forward normalization and concentration-conditioned classifiers at equal latency and energy.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1160
+
+- **Statement:** identity and intensity can be complementary population outputs.
+- **Status:** established.
+- **Primary sources:** `OlfactB008BoldingFranks2017`.
+- **Rationale:** bulb output retained concentration information while piriform activity supported more concentration-tolerant identity in the studied recordings.
+- **Open issue:** both outcomes must remain measured because discarding intensity can erase task or safety information.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1161
+
+- **Statement:** respiration supplies a mechanosensory timing reference.
+- **Status:** established.
+- **Primary sources:** `OlfactB009IwataEtAl2017`.
+- **Rationale:** airflow-related mechanosensory input organized sniff-phase coding in the recorded mouse olfactory system.
+- **Open issue:** sniff waveform and alignment are observation-operator state, not exchangeable background metadata.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1162
+
+- **Statement:** the bulb can explicitly encode concentration changes between inhalations.
+- **Status:** established.
+- **Primary sources:** `OlfactB010ParabuckiEtAl2019`.
+- **Rationale:** studied mitral and tufted activity represented inter-inhalation concentration change rather than instantaneous level alone.
+- **Open issue:** absolute, relative, and derivative cues need separate ablation because differencing can amplify calibration noise and drift.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1163
+
+- **Statement:** receptor adaptation includes calcium feedback onto transduction.
+- **Status:** established.
+- **Primary sources:** `OlfactB011KurahashiMenini1997`.
+- **Rationale:** calcium-dependent feedback modulated the cyclic-nucleotide-gated channel during receptor-cell adaptation.
+- **Open issue:** receptor adaptation must remain distinct from habituation, constancy, baseline correction, and long-term device drift.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1164
+
+- **Statement:** removing a calcium-modulated channel subunit impairs adaptation.
+- **Status:** established.
+- **Primary sources:** `OlfactB012MungerEtAl2001`.
+- **Rationale:** CNGA4 removal causally disrupted calcium-calmodulin-dependent olfactory adaptation.
+- **Open issue:** an engineering analogue must identify its controlled state and benefit rather than copy generic gain decay.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1165
+
+- **Statement:** receptor current and spiking can have different concentration ranges.
+- **Status:** established.
+- **Primary sources:** `OlfactB013ReisertMatthews2001`.
+- **Rationale:** isolated receptor-cell current varied over a wider concentration range than the steeper spike-output relation.
+- **Open issue:** transduction and event generation must be modeled separately because sparse events can hide graded input and saturation.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1166
+
+- **Statement:** habituation depends on presentation history and generalizes selectively.
+- **Status:** established.
+- **Primary sources:** `OlfactB014ChaudhuryEtAl2010`.
+- **Rationale:** behavioral and bulb habituation varied with duration, interval, and odor similarity.
+- **Open issue:** a weaker repeated response alone cannot identify adaptation, habituation, fatigue, motor change, or sensor drift.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1167
+
+- **Statement:** sniff rate is rapidly and task-dependently controlled.
+- **Status:** established.
+- **Primary sources:** `OlfactB015KepecsEtAl2007`.
+- **Rationale:** rats rapidly shifted breathing over roughly 2–12 Hz during odor-mixture discrimination, with difficult trials associated with a narrower high-rate range.
+- **Open issue:** active acquisition must beat fixed-rate and dose-matched sampling while charging respiratory or pump cost.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1168
+
+- **Statement:** sniffing changes the peripheral-to-bulb filter.
+- **Status:** established.
+- **Primary sources:** `OlfactB016VerhagenEtAl2007`.
+- **Rationale:** changing sniff frequency altered how odor input was filtered and represented in the studied preparation.
+- **Open issue:** samples from different sniff or pump waveforms are not exchangeable without operator identification or correction.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1169
+
+- **Statement:** early inhalation-locked activity can carry rapid odor information.
+- **Status:** established.
+- **Primary sources:** `OlfactB017CuryUchida2010`.
+- **Rationale:** transient inhalation-coupled activity carried substantial tested-odor information within roughly 100 ms.
+- **Open issue:** end-to-end latency must include transport, sensing, decision, and action rather than treating 100 ms as universal.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1170
+
+- **Statement:** animals can behaviorally use millisecond-scale sniff phase.
+- **Status:** established.
+- **Primary sources:** `OlfactB018SmearEtAl2011`.
+- **Rationale:** mice discriminated relative timing differences on the order of 10 ms within the sniff cycle.
+- **Open issue:** task-specific neural timing cannot be transferred to slow chemical sensors that never observed that bandwidth.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1171
+
+- **Statement:** bulb response timing can tile the sniff cycle precisely.
+- **Status:** established.
+- **Primary sources:** `OlfactB019ShustermanEtAl2011`.
+- **Rationale:** awake mouse mitral and tufted responses were sniff-locked and distributed over the cycle with reported mean jitter near 12 ms.
+- **Open issue:** precise downstream timing cannot recover plume fluctuations removed by a slow inlet or sensor.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1172
+
+- **Statement:** serial sampling can suffice in a noisy airborne gradient task.
+- **Status:** established.
+- **Primary sources:** `OlfactB020FindleyEtAl2021`.
+- **Rationale:** mice used concentration-gradient cues without requiring stereo olfaction in the tested task.
+- **Open issue:** bilateral, serial, and wind cues must be crossed by range and plume regime before generalizing to turbulence.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1173
+
+- **Statement:** bilateral temporal correlation can reveal odor-motion direction.
+- **Status:** established.
+- **Primary sources:** `OlfactB021KadakiaEtAl2022`.
+- **Rationale:** Drosophila used bilateral timing structure, and reversing measured plume time while preserving stationary statistics reduced source reaching.
+- **Open issue:** compare lag correlation with instantaneous bilateral gradient and unilateral-history nulls at feasible spacing and bandwidth.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1174
+
+- **Statement:** turbulent odor detections are intermittent, not a smooth gradient.
+- **Status:** established.
+- **Primary sources:** `OlfactB036CelaniEtAl2014`.
+- **Rationale:** passive-scalar theory tested against simulation, laboratory, and field observations yields structured heavy-tailed whiffs and blanks.
+- **Open issue:** reactive, buoyant, depositing, or multiphase chemicals require separately supported transport operators.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1175
+
+- **Statement:** plume truth requires faster measurements than many gas sensors provide.
+- **Status:** established.
+- **Primary sources:** `OlfactB037CrimaldiKoseff2001`.
+- **Rationale:** high-resolution optical measurements exposed plume structure and kilohertz-scale point variation unavailable to many gas sensors.
+- **Open issue:** ground truth must separate transport, sensor convolution, and policy failure without hiding instrument cost.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1176
+
+- **Statement:** field plume sparsity changes with environment.
+- **Status:** established.
+- **Primary sources:** `OlfactB038MurlisEtAl2000`.
+- **Rationale:** measured open-field and forest plumes had similar occupancy but markedly different gap structure and detector responses.
+- **Open issue:** report encounter count, gap distribution, environment, and sensor transfer rather than elapsed time alone.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1177
+
+- **Statement:** intuitive burst summaries can be poor directional cues.
+- **Status:** established.
+- **Primary sources:** `OlfactB039WebsterWeissburg2001`.
+- **Rationale:** in a measured open-channel plume, time-average convergence was slow and common burst summaries provided weak or impractical source-range information.
+- **Open issue:** gradient claims need held-out wins over history-only, encounter-frequency, wind-only, and transport-model nulls.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1178
+
+- **Statement:** repeated odor onsets and offsets can sustain upwind tracking.
+- **Status:** established.
+- **Primary sources:** `vickers1994strands`.
+- **Rationale:** filamentous pheromone presentation supported repeated upwind responses on contact and crosswind casting after loss in moths.
+- **Open issue:** this supports an event-triggered null, not one universally optimal surge-cast rule.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1179
+
+- **Statement:** odor ON, odor OFF and wind can drive distinct motor transforms.
+- **Status:** established.
+- **Primary sources:** `OlfactB041AlvarezSalvadoEtAl2018`.
+- **Rationale:** controlled Drosophila assays separated onset-driven upwind movement, offset-driven local search, and wind-direction support.
+- **Open issue:** crosswind, ON/OFF memory, and level need causal ablations because trajectory fit does not identify a unique controller.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1180
+
+- **Statement:** irregular plumes can favor event-biased stochastic decisions.
+- **Status:** established.
+- **Primary sources:** `demir2020plumes`.
+- **Rationale:** encounter timing biased stereotyped stochastic saccades and walk-stop transitions in complex-plume walking flies.
+- **Open issue:** the result rejects universal continuous control but does not establish stochastic event policies in every plume.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1181
+
+- **Statement:** plume contact can alter locomotion without proving an optimal policy.
+- **Status:** established.
+- **Primary sources:** `OlfactB043TariqEtAl2021`.
+- **Rationale:** sensor-measured plume contacts preceded lower head and body speed in freely moving mice.
+- **Open issue:** speed clamps or yoked replay are needed before calling slowing information-maximizing or energy-optimal.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1182
+
+- **Statement:** infotaxis is a mature information-search null.
+- **Status:** established.
+- **Primary sources:** `vergassola2007infotaxis`.
+- **Rationale:** infotaxis selects movement by expected entropy reduction under sporadic encounters using an explicit source and plume model.
+- **Open issue:** policy comparisons must equalize likelihood models, source priors, sensing, action, and stopping rules.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1183
+
+- **Statement:** fused gas and wind sensing can localize a source robotically.
+- **Status:** established.
+- **Primary sources:** `OlfactB045IshidaEtAl1994`.
+- **Rationale:** a movable gas and anemometric probe tracked one source in a controlled wind tunnel.
+- **Open issue:** gas-only, wind-only, fused, and randomized-wind policies need identical plume seeds and declarations before broader claims.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1184
+
+- **Statement:** transient processing can compensate partly for slow MOX recovery.
+- **Status:** established.
+- **Primary sources:** `OlfactB046IshidaEtAl2004`.
+- **Rationale:** relative-change and onset-recovery processing supported a narrow two-metre robot source-tracking demonstration.
+- **Open issue:** partial dynamic compensation is not equivalent to fast chemical measurement and requires held-out sensor/device transfer.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1185
+
+- **Statement:** a simpler reactive search can beat infotaxis on path length.
+- **Status:** established.
+- **Primary sources:** `OlfactB047VogesEtAl2014`.
+- **Rationale:** reported robot and cyborg trials found a reactive policy with shorter paths under the tested conditions.
+- **Open issue:** unequal and filtered trial counts prevent a universal ranking; compare completion, risk, time, and resource distributions prospectively.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1186
+
+- **Statement:** geometry can change which modular search policy works best.
+- **Status:** established.
+- **Primary sources:** `OlfactB048LiEtAl2020`.
+- **Rationale:** a two-scenario three-dimensional comparison changed the relative performance of modular source-localization policies.
+- **Open issue:** geometry-specific rankings require held-out sites and equivalent sensing, priors, declarations, and failure accounting.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1187
+
+- **Statement:** particle-filter source belief is a mature robotics null.
+- **Status:** established.
+- **Primary sources:** `OlfactB049LiEtAl2009`.
+- **Rationale:** particle-filter belief tracking has a narrow indoor robotic source-localization demonstration in time-varying airflow.
+- **Open issue:** compare belief and action components separately under identical operator, airflow, prior, and stopping support.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1188
+
+- **Statement:** compact temporal-memory RL can work in simulated plumes.
+- **Status:** plausible.
+- **Primary sources:** `OlfactB050RandoEtAl2025`.
+- **Rationale:** temporal-memory reinforcement learning succeeded in the studied direct-numerical-simulation plume regimes.
+- **Open issue:** embodied transfer remains unestablished and must include sensor dynamics, calibration, actuation, exposure, and energy.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1189
+
+- **Statement:** piriform odor activity can be sparse under global inhibition.
+- **Status:** established.
+- **Primary sources:** `OlfactB022PooIsaacson2009`.
+- **Rationale:** rat piriform recordings showed sparse odor responses shaped by global inhibition for the studied stimuli.
+- **Open issue:** sparse activity is protocol- and concentration-qualified and does not alone establish lower complete-system energy.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1190
+
+- **Statement:** piriform odor maps are distributed rather than neatly topographic.
+- **Status:** established.
+- **Primary sources:** `OlfactB023StettlerAxel2009`.
+- **Rationale:** imaged mouse piriform representations were spatially distributed rather than arranged as a simple topographic odor map.
+- **Open issue:** distributed anatomy does not by itself identify a useful routing, learning, or hardware architecture.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1191
+
+- **Statement:** rate-like population information can outperform precise-pattern accounts.
+- **Status:** established.
+- **Primary sources:** `OlfactB024MiuraEtAl2012`.
+- **Rationale:** distributed rate information best explained the studied rat discrimination data relative to more precise-pattern accounts.
+- **Open issue:** compare representations under matched tasks, temporal support, decoder capacity, and causal perturbation.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1192
+
+- **Statement:** the degree of piriform sparsity is disputed and concentration-dependent.
+- **Status:** disputed.
+- **Primary sources:** `OlfactB025RolandEtAl2017`.
+- **Rationale:** distributed ensemble measurements showed the apparent degree of sparsity varies with protocol and concentration.
+- **Open issue:** retain protocol, concentration, threshold, population coverage, and sampling uncertainty in every sparsity comparison.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1193
+
+- **Statement:** piriform ensemble identity can drift while behavior remains stable.
+- **Status:** established.
+- **Primary sources:** `OlfactB026SchoonoverEtAl2021`.
+- **Rationale:** longitudinal mouse recordings found changing primary-olfactory-cortex ensemble identity despite stable behavior.
+- **Open issue:** determine whether downstream readout adapts, invariants remain, or maintenance cost is displaced elsewhere.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1194
+
+- **Statement:** rapid reward-category coding need not appear explicitly in piriform.
+- **Status:** established.
+- **Primary sources:** `OlfactB027MillmanMurthy2020`.
+- **Rationale:** rapid odor-value coding appeared in olfactory striatum without the same explicit regional signal in piriform during the studied task.
+- **Open issue:** negative regional results block attributing every learned category to the first sensory cortex.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1195
+
+- **Statement:** arbitrary piriform ensembles can acquire opposite learned valence.
+- **Status:** established.
+- **Primary sources:** `OlfactB028ChoiEtAl2011`.
+- **Rationale:** artificial activation paired with reward or shock gave arbitrary piriform ensembles opposing learned behavioral valence.
+- **Open issue:** flexible association does not establish odor identity, innate meaning, or one storage site.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1196
+
+- **Statement:** innate aversion and learned detection can be dissociated.
+- **Status:** established.
+- **Primary sources:** `OlfactB029KobayakawaEtAl2007`.
+- **Rationale:** olfactory-zone depletion dissociated innate aversion from learned detection in mice.
+- **Open issue:** detection, identity, valence, hazard, and learned action must remain separate literal outcomes.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1197
+
+- **Statement:** cortical amygdala pathways can causally drive innate odor behavior.
+- **Status:** established.
+- **Primary sources:** `OlfactB030RootEtAl2014`.
+- **Rationale:** perturbing studied cortical-amygdala pathways causally affected innate appetitive and aversive odor behavior.
+- **Open issue:** region-specific causal behavior does not turn odor response into a universal chemical-hazard classifier.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1198
+
+- **Statement:** target detection in mixtures degrades with background count and overlap.
+- **Status:** established.
+- **Primary sources:** `OlfactB031RokniEtAl2014`.
+- **Rationale:** learned target detection in mouse odor mixtures worsened as background components and overlap increased.
+- **Open issue:** mixture tests must vary count, overlap, concentration, unknowns, and criterion rather than report closed-set accuracy alone.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1199
+
+- **Statement:** chemically similar maskers can raise detection thresholds more.
+- **Status:** established.
+- **Primary sources:** `OlfactB032LaingEtAl1989`.
+- **Rationale:** chemically similar maskers produced larger behavioral threshold shifts in the studied rat odor-masking comparison.
+- **Open issue:** masking is a criterion-qualified behavioral outcome, not merely receptor overlap or mixture concentration.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1200
+
+- **Statement:** cross-reactive artificial sensor arrays are an established baseline.
+- **Status:** established.
+- **Primary sources:** `OlfactB051PersaudDodd1982`, `OlfactB052RakowSuslick2000`.
+- **Rationale:** partially selective semiconductor and colorimetric arrays produced analyte-dependent multivariate response patterns.
+- **Open issue:** cross-reactivity creates interference and cannot identify analytes absent from sensor, standard, or training support.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1201
+
+- **Statement:** electronic-nose drift is measurable over years.
+- **Status:** established.
+- **Primary sources:** `OlfactB053VergaraEtAl2012`, `OlfactB054FonollosaEtAl2015`.
+- **Rationale:** a 16-MOX-sensor, six-analyte dataset changed substantially across three years and motivated drift compensation.
+- **Open issue:** split by device, batch, day, and future time while preserving raw vintages and source-off blanks.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1202
+
+- **Statement:** humidity, stability, selectivity and poisoning are operator state.
+- **Status:** established.
+- **Primary sources:** `OlfactB057PengEtAl2015`, `OlfactB066ISO26142`, `OlfactB067IEC60079291`.
+- **Rationale:** humidity interfered with ion-mobility identification, while detector standards require stability, response, range, selectivity, and poisoning tests.
+- **Open issue:** compensation from one environment or device history does not establish invariance; out-of-support states require detection and safe failure.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1203
+
+- **Statement:** analytical identification and safety remain qualified claims.
+- **Status:** established.
+- **Primary sources:** `OlfactB062EPATO15A`, `OlfactB063EPATO17`, `OlfactB064NISTSpectrumLibrary`, `OlfactB072NIOSHPocketGuide`, `OlfactB073NIOSHIDLH`.
+- **Rationale:** authoritative workflows separate sampling, blanks, recovery, separation, calibration, identification support, and exposure rules.
+- **Open issue:** neither a library match nor an odor report establishes source, concentration, exposure, or safety without confirmation and an authoritative rule.
+- **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).

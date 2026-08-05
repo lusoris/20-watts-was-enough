@@ -285,9 +285,10 @@ adding citations:
 | semiconductor device and circuit reliability | qualification, hierarchical yield and variability, reversible drift, cumulative degradation, abrupt failure, transient upset, fault geometry, correction/recovery stages, adaptive margin, analog/in-memory physical state, endurance/wear, accepted field service, and fabrication-to-retirement burden remain separate; Fixture F-008 carries the mission-profile-qualified degradation/recovery contract across Candidates 001/005/006/009/010/012/014/017/018 without promoting a principle or candidate |
 | acoustics, hearing, and auditory-scene analysis | calibrated pressure/level and room support, cochlear filtering/compression, temporal coding, spatial cues, masking/grouping/separation, reverberation/context, sparse activity, efferent control, echolocation and active emission/reception, array inference, uncertainty, calibration, and complete lifecycle cost remain separate; Fixture F-009 carries the operator- and action-qualified acoustic contract across Candidates 002/006/007/009/012/014 without promoting a principle or candidate |
 | information thermodynamics and physical computation | 46 established, 5 plausible, and 1 disputed claim keep logical transformation, device, circuit, computer/workload, facility, and lifecycle quantities separate; finite-time/error/reservoir/controller costs, reversible history, thermal noise, information engines, thermodynamic uncertainty, distribution mismatch, data movement, PUE, and embodied burden refine P-001/P-003/P-006/P-007/P-008/P-009/P-010/P-012/P-013; Fixture F-010 carries the boundary-qualified physical-computation contract across Candidates 001/005/006/009/010/012/014/017/018 without promoting a principle or candidate |
+| olfaction, chemical sensing, and plume tracking | 50 established, 1 plausible, and 1 disputed claim keep receptor/sensor coverage, identity, concentration, mixtures, normalization, sniff/pump dynamics, adaptation, turbulent transport, active search, sparse and drifting representations, valence, cross-reactive arrays, humidity, poisoning, analytical confirmation, exposure, safety, and lifecycle cost separate; Fixture F-011 carries the operator-qualified active chemical-sensing contract across Candidates 002/006/007/009/010/012/014/017/018 without promoting a principle or candidate |
 
 The music, library/archival, comparative-cognition, visual-design,
-mathematical-practice, fluid-dynamics, sports, optics, semiconductor, acoustics, and information-thermodynamics queues are closed by explicit
+mathematical-practice, fluid-dynamics, sports, optics, semiconductor, acoustics, information-thermodynamics, and olfaction/chemical-sensing queues are closed by explicit
 no-promotion decisions. The music
 [Fixture F-001](../experiments/fixtures/001-shared-clock-free-coadaptation.md)
 retains E-MUSIC-07 as a cross-candidate benchmark; the archival refinement
@@ -374,6 +375,19 @@ movement, PUE allocation, and fabrication-to-retirement ranking. Its null is
 the complete compression, reversible-computation, stochastic-thermodynamics,
 circuit/architecture, workload-metering, facility, and lifecycle-assessment
 stack.
+Olfaction and chemical sensing contribute
+[Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md)
+across Candidates 002/006/007/009/010/012/014/017/018. It binds source and
+release, turbulent or reactive transport, realized sniff/pump/motion, receiver
+path, dynamic response and recovery, cross-sensitivity, calibration and
+exposure history, operator support, literal outcome, feasible action, safety,
+independent unit, and complete lifecycle cost. Its fourteen tracks test
+concentration–identity factorization, sensor coverage, normalization,
+deconvolution, active acquisition, bilateral/serial/wind cues, plume statistics,
+search policy, embodiment, sparse total cost, drifting representations, mixture
+masking, sensor poisoning, analytical confirmation, and safe tiered action
+against the complete calibrated sensing, analytical, estimation, control,
+standards, human-work, consumable, and lifecycle stack.
 The next
 breadth field is selected by expected ability to split, merge, reject, or
 re-baseline a current mechanism. Breadth alone does not close a row.

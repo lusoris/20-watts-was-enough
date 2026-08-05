@@ -444,6 +444,39 @@ assessment stack. Retire the composition when that stack reaches the same
 accepted quality–error–latency–energy–lifecycle frontier without hidden
 boundary crossings. See [OQ-065](open-questions.md#oq-065).
 
+### Operator-qualified active chemical-sensing evaluation contract
+
+The [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md)
+promotes no principle or candidate. Its 52 scoped claims contain 50 established,
+1 plausible, and 1 disputed statement. The durable firewall keeps receptor or
+sensor coverage, chemical identity, concentration, mixture, odor identity,
+intensity, valence, source, exposure, hazard, and safety distinct; every result
+remains attached to release and transport, realized acquisition, receiver path,
+dynamic cross-sensitive operator, calibration and exposure history, support,
+uncertainty, independent unit, feasible action, and complete cost
+([C-1152](claims.md#c-1152)–[C-1203](claims.md#c-1203)).
+
+Receptor coverage, sparse activity, event-triggered search, and tiered analysis
+qualify P-001; local ON/OFF reflex and confirmation escalation qualify P-002;
+transients and provisional classifications qualify P-003; diversity, flexible
+association, and staged anatomy do not independently promote P-004/P-005/P-008;
+adaptation, normalization, inhibition, and drift control qualify P-006; active
+sniffing, search, and confirmation qualify P-007; calibration and replacement
+qualify P-009; sensing chemistry and inlet geometry qualify P-010; sniff-phase
+and encounter timing remain task-specific evidence adjacent to P-011; distinct
+adaptation, habituation, drift, and library timescales qualify P-012; and a plume
+supports P-013 only when agents intentionally maintain it as shared state.
+
+[Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md)
+applies this evaluation composition across Candidates 002, 006, 007, 009, 010,
+012, 014, 017, and 018. Its null is the complete dynamic calibration,
+chemometrics, system-identification, analytical-instrument, plume-metrology,
+CFD/estimation, reactive-search, particle-filter, infotaxis, POMDP/MPC/VOI,
+safety-control, standards, human-work, consumable, and lifecycle stack. Retire
+the composition when that stack reaches the same literal held-out outcome,
+risk, latency, exposure, and resource frontier. See
+[OQ-066](open-questions.md#oq-066).
+
 ## P-001 — Selective allocation
 
 **Problem.** Total possible capacity is larger than the activity or resources

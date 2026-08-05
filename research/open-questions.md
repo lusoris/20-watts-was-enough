@@ -403,3 +403,19 @@ project choice.
   ([C-1100](claims.md#c-1100)–[C-1151](claims.md#c-1151)). See
   [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md)
   and the [information-thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md#audit-disposition).
+
+- **OQ-066:** Does an operator-qualified active chemical-sensing contract expose
+  consequential false specificity or improve literal detection, identity,
+  quantification, mixture separation, source localization, calibrated
+  abstention, action, hazard, and lifecycle frontiers beyond calibrated arrays
+  and chemometrics, dynamic sensor models, high-bandwidth plume measurement,
+  CFD/Bayesian estimation, reactive search, particle filters, infotaxis,
+  POMDP/MPC/value-of-information control, certified standards, confirmatory
+  analytical instruments, detector qualification, exposure rules, and
+  lifecycle accounting? Source and release, transport and chemistry, realized
+  acquisition, receiver path, response/recovery and cross-sensitivity,
+  calibration/exposure history, support, independent unit, literal outcome,
+  safety authority, human work, consumables, and energy must remain explicit
+  ([C-1152](claims.md#c-1152)–[C-1203](claims.md#c-1203)). See
+  [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md)
+  and the [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md#audit-verdict).
