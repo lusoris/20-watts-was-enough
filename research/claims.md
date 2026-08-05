@@ -2460,3 +2460,253 @@ describes the exact statement here, not a broader interpretation.
   [P-009](principle-registry.md#p-009--maintenance-plane),
   [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
   [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-158
+
+- **Statement:** Equilibrium binding and conformational change can implement
+  selective molecular recognition, but affinity alone is neither posterior
+  probability nor kinetic proofreading.
+- **Status:** established.
+- **Primary sources:** `koshland1958specificity`, `monod1965allosteric`,
+  `savir2007conformational`.
+- **Rationale:** Concentration, occupancy, binding energy, and conformational
+  cost jointly determine a scoped physical classifier.
+- **Open issue:** Saturation, nonspecific binding, slow release, and look-alike
+  ligands limit discrimination; software transfer must beat calibrated
+  classification or likelihood-ratio nulls.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-159
+
+- **Statement:** A driven multistep pathway with discriminatory dissociation
+  and reset can improve specificity beyond a single equilibrium discrimination
+  step in the stated kinetic models.
+- **Status:** established.
+- **Primary sources:** `hopfield1974proofreading`, `ninio1975kinetic`.
+- **Rationale:** Temporary intermediate states create repeated opportunities
+  for wrong candidates to escape before product commitment.
+- **Open issue:** Correlated or nondiscriminating stages, bypass, fuel limits,
+  and irreversible partial action collapse the benefit.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-160
+
+- **Statement:** Kinetic proofreading occupies a model-specific
+  speed–error–dissipation frontier; more stages or fuel do not guarantee a
+  universal monotonic accuracy improvement.
+- **Status:** established.
+- **Primary sources:** `murugan2012speed`, `sartori2015thermodynamics`.
+- **Rationale:** Error reduction, delay, reset traffic, and chemical driving
+  are coupled rather than summarized by one accuracy multiplier.
+- **Open issue:** Every transfer must count rejected work and compare against
+  conditioned sequential tests, cascades, retries, and codes.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md).
+
+### C-161
+
+- **Statement:** Finite-time diffusive sensing, noisy feedback suppression,
+  template-copying error, sensory adaptation, and steady-state current
+  precision have different lower bounds whose numerical scalings are not
+  interchangeable.
+- **Status:** established.
+- **Primary sources:** `berg1977chemoreception`, `lestas2010limits`,
+  `lan2012tradeoff`, `barato2015tur`.
+- **Rationale:** Each result assumes a particular observable, dynamics,
+  stationarity condition, boundary, and cost definition.
+- **Open issue:** Hidden reservoirs, memory, transient operation,
+  coarse-graining, or a changed output invalidate direct reuse.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [energy model](../concept/80-energy-model.md).
+
+### C-162
+
+- **Statement:** Open elementary mass-action networks require explicit
+  chemostat work and entropy-production accounting to maintain nonequilibrium
+  state; coarse-graining can hide reservoirs and cycles.
+- **Status:** established.
+- **Primary sources:** `schnakenberg1976network`, `rao2016nonequilibrium`.
+- **Rationale:** A reaction vessel's internal dissipation is not a complete
+  wall-energy boundary.
+- **Open issue:** Reagent synthesis, mixing, pumping, temperature control,
+  sensing, reset, purification, waste, and embodied hardware remain outside a
+  vessel-only ledger.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-163
+
+- **Statement:** Autocatalytic and cooperative RNA systems can amplify,
+  compete, and persist in scoped in-vitro conditions while resource depletion,
+  parasites, mutation, inhibition, and selection protocol bound transfer.
+- **Status:** established.
+- **Primary sources:** `lincoln2009replication`, `vaidya2012network`,
+  `eigen1971selforganization`.
+- **Rationale:** Positive feedback and catalytic cooperation create growth, not
+  a free guarantee of robustness or open-ended improvement.
+- **Open issue:** Equal-resource comparisons must include stochastic
+  extinction, parasite load, mutation, and waste removal.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback).
+
+### C-164
+
+- **Statement:** Compartments can preserve genotype–phenotype association and,
+  under scoped selection and mixing protocols, prevent parasite-driven
+  extinction.
+- **Status:** established.
+- **Primary sources:** `tawfik1998compartments`, `szathmary1987group`,
+  `ichihashi2013darwinian`, `matsumura2016transient`.
+- **Rationale:** Physical locality can couple a producer to its product before
+  group-level evaluation and propagation.
+- **Open issue:** Leakage, multiple occupancy, fusion, starvation,
+  small-number extinction, and a misaligned group objective can erase or
+  reverse the effect.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-165
+
+- **Statement:** Coupled reaction and diffusion can form spatial patterns from
+  local fields, with a characteristic diffusion time scaling as $L^2/D$.
+- **Status:** established.
+- **Primary sources:** `turing1952morphogenesis`, `basu2005pattern`.
+- **Rationale:** Local physical propagation can replace a global address table
+  in a declared geometry.
+- **Open issue:** Quadratic spatial latency, boundary sensitivity, parameter
+  drift, weak addressability, and conversion cost constrain useful scale.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [adaptive-materials audit](audits/2026-08-05-adaptive-materials-and-self-assembly.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-166
+
+- **Statement:** Chemical fuel can program the finite lifetime of assemblies in
+  specific synthetic materials, while complete erasure and lifecycle
+  efficiency remain chemistry-specific.
+- **Status:** established.
+- **Primary sources:** `boekhoven2015transient`,
+  `tenasolsona2017nonequilibrium`.
+- **Rationale:** Fuel activation and spontaneous deactivation can implement a
+  physical expiration path.
+- **Open issue:** Kinetic traps, incomplete decay, by-products, replenishment,
+  reset, manufacturing, and waste can dominate the apparent benefit.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-167
+
+- **Statement:** Formal chemical reaction networks can be compiled
+  approximately into DNA strand-displacement systems under scale-separation
+  and inventory assumptions, and molecular logic, neural, and oscillator
+  circuits have been demonstrated.
+- **Status:** established.
+- **Primary sources:** `soloveichik2010dna`, `qian2011scaling`,
+  `qian2011neural`, `srinivas2017enzymefree`.
+- **Rationale:** Chemistry is an established computing substrate rather than
+  evidence that its implementation is automatically faster or more efficient.
+- **Open issue:** Leakage, depletion, crosstalk, slow propagation, readout,
+  reset, fabrication yield, and conversion must enter matched comparisons.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-168
+
+- **Statement:** Chemical limit cycles and propagating waves provide
+  autonomous phase state but no general accuracy, computation, or
+  energy-efficiency guarantee.
+- **Status:** established.
+- **Primary sources:** `field1972oscillations`, `field1974oregonator`,
+  `zaikin1970waves`.
+- **Rationale:** Fuel-maintained phase is a concrete state variable with
+  measurable period, coupling, and phase diffusion.
+- **Open issue:** Depletion, phase noise, temperature sensitivity, mode change,
+  and rigid entrainment must be compared with timers, oscillators, PLLs, and
+  recurrent control.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions).
+
+### C-169
+
+- **Statement:** Antithetic integral feedback can guarantee robust perfect
+  adaptation of a regulated mean under the theorem's stochastic-network
+  conditions and has been implemented experimentally, but it does not
+  guarantee low variance or universal stability.
+- **Status:** established.
+- **Primary sources:** `briat2016antithetic`, `aoki2019universal`.
+- **Rationale:** Controller species encode an integral-like state through
+  production and annihilation.
+- **Open issue:** Ergodicity, stability, controllability, reachable set point,
+  molecular burden, variance, and population heterogeneity remain binding.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-170
+
+- **Statement:** Reset-coupled staged verification may reduce costly false
+  commitment when a later stage adds conditional information or a distinct
+  detector and rollback is cheaper than the avoided error.
+- **Status:** speculative.
+- **Primary source:** none sufficient; component mechanisms are scoped in
+  [C-159](#c-159) and [C-160](#c-160).
+- **Rationale:** The composition preserves reversibility until commitment and
+  charges rejected work rather than treating it as free overhead.
+- **Open issue:** It must beat conditioned sequential tests, calibrated
+  cascades, abstention, retries, independent verification, and codes at equal
+  complete budget.
+- **Used by:** [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md),
+  [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-171
+
+- **Statement:** Physical locality may improve credit assignment when a
+  producer and its shareable product cannot otherwise be attributed cheaply
+  and reliably.
+- **Status:** plausible.
+- **Primary sources:** `tawfik1998compartments`, `matsumura2016transient`.
+- **Rationale:** Compartment occupancy can make lineage and product fate share
+  one causal boundary.
+- **Open issue:** Explicit provenance, quotas, sharded evaluation, and ordinary
+  sandboxing may dominate without leakage and group-selection costs.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-172
+
+- **Statement:** A fuel-coupled transient state may serve as a fail-closed
+  physical lease when loss of fuel makes hazardous action impossible.
+- **Status:** speculative.
+- **Primary sources:** `boekhoven2015transient`,
+  `tenasolsona2017nonequilibrium` establish component feasibility only.
+- **Rationale:** Authority and physical availability can share the same
+  expiring substrate instead of relying on a separate revocation message.
+- **Open issue:** It must beat signed leases, TTLs, watchdogs, volatile latches,
+  and powered interlocks under stuck-on, stuck-off, partition, waste, and
+  lifecycle tests.
+- **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).

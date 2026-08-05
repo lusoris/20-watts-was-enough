@@ -186,6 +186,38 @@ $c_h=N_{G_h=1}/N_{\mathrm{offered}}$, a dimensionless fraction. Coverage is a
 result, not a target inferred after testing; $N_{G_h=1}$ and
 $N_{\mathrm{offered}}$ are event counts.
 
+### Reversible verification before commitment
+
+Kinetic proofreading shows that recognition and commitment can be separated
+by driven intermediate states with discriminatory rejection and reset
+([C-159](../research/claims.md#c-159)). Its speed, error, and dissipation costs
+form a model-specific frontier rather than a universal accuracy multiplier
+([C-160](../research/claims.md#c-160)). The systems translation therefore has
+four hard requirements:
+
+1. temporary execution remains inside a declared rollback boundary;
+2. the later verifier adds conditional information or a distinct detector;
+3. rejected attempts, reset, delay, and provenance remain in the cost ledger;
+4. irreversible authority is withheld until commitment.
+
+For observations $z_1,\ldots,z_t$, the strongest statistical null conditions on
+the evidence already seen:
+
+$$
+L_t=\sum_{i=1}^{t}
+\log\frac{p(z_i\mid R,z_{<i})}{p(z_i\mid W,z_{<i})}.
+$$
+
+Here $L_t$ is the dimensionless cumulative log-likelihood ratio, $R$ and $W$
+denote correct/safe and wrong/unsafe hypotheses, and $z_{<i}$ is prior evidence.
+Ignoring that conditioning turns correlated rechecks into false confidence.
+
+[Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md)
+tests reversible execution and risk-conditioned verification against this
+sequential test, calibrated cascades, abstention, retries, redundant verifiers,
+and error-detecting codes. It must tie or lose when the later stage is only a
+correlated copy or when reset leaks irreversible effects.
+
 ### Graded assurance envelopes
 
 Qualification records must state what kind of assurance each result provides.

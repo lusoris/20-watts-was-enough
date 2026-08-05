@@ -92,6 +92,7 @@ experimental discrimination to receive a stable `P-` ID.
 | Intervention-aware surveillance under endogenous observation | P-001, P-007, P-009, P-013 | action changes both hidden state and the telemetry channel, but the composition may reduce to delay-aware state estimation, POMDP/dual control, sequential detection, and value-of-information sampling | [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md) must identify action effects and observation drift beyond those nulls using true data vintages and matched investigation cost |
 | Audit-backed contestable modular allocation | P-001, P-004, P-007, P-009, P-013 | price, auction, matching, scoring, bandit, sanction, and ledger components are established; the composition applies only when persistent modules hold private decision-relevant information, can profit from gaming, and face real opportunity consequences | [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md) must tie or lose under cooperative direct observability and beat routers, primal–dual control, bandits, and randomized audits under strategic pressure |
 | Versioned graded assurance envelope | P-002, P-003, P-004, P-006, P-008, P-009, P-012, P-013 | types, proofs, contracts, effects, capabilities, monitors, provenance, transactions, and deployment metadata are established; the residual is explicit grade/version binding plus cross-layer invalidation | [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md) must beat a composed typed API, sandbox/IAM, CI/static-analysis, runtime-monitor, lineage, canary, transaction, and build-invalidation stack |
+| Reset-coupled staged verification | P-003, P-007, P-009 | kinetic proofreading establishes driven delay, discriminatory escape, and reset in scoped chemistry; the systems residual exists only when temporary execution or a distinct verifier adds conditional information before an expensive commitment | [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md) must beat conditioned sequential tests, calibrated cascades, abstention, retries, redundant verification, and codes after rejected work and rollback leakage are charged |
 
 ## P-001 — Selective allocation
 
@@ -159,7 +160,9 @@ response; promote it only after a later signal or recurrence.
 decision ([C-090](claims.md#c-090), [C-093](claims.md#c-093)); caches and
 write-ahead logs in computing; finite-trace monitor verdicts, transactions,
 compensation, and controlled live update ([C-152](claims.md#c-152),
-[C-154](claims.md#c-154), [C-155](claims.md#c-155)).
+[C-154](claims.md#c-154), [C-155](claims.md#c-155)); and driven kinetic
+proofreading with discriminatory rejection before product commitment
+([C-159](claims.md#c-159), [C-160](claims.md#c-160)).
 
 **Candidate AI primitive.** Versioned local context marks with explicit decay,
 promotion, rollback, and provenance.

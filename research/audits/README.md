@@ -19,6 +19,7 @@ failed deduplications that would be lost in the shorter claim ledger.
 | 2026-08-05 | [Epidemiology and surveillance control](2026-08-05-epidemiology-and-surveillance-control.md) | placement, delayed reporting, pooled proxies, sequential detection, ascertainment, and action feedback normalize to established OR/statistical/POMDP methods; intervention-aware endogenous observation remains held |
 | 2026-08-05 | [Economics, market design, and incentives](2026-08-05-economics-market-design-incentives.md) | prices, auctions, matching, scoring, bandits, sanctions, and ledgers normalize to existing bundles; audit-backed contestable allocation survives only for persistent strategic private information |
 | 2026-08-05 | [Programming languages and verification](2026-08-05-programming-languages-verification.md) | separates proof, monitored behavior, authority, rollback, provenance, and empirical evidence; a versioned graded assurance envelope remains held against a complete conventional platform stack |
+| 2026-08-05 | [Chemistry, reaction networks, and proofreading](2026-08-05-chemistry-reaction-networks-proofreading.md) | recognition, proofreading, driven networks, autocatalysis, compartments, patterning, transient assembly, oscillators, and stochastic control map to existing bundles; reset-coupled staged verification remains held against sequential-testing and recovery nulls |
 
 An audit does not itself promote a principle. Major observations receive stable
 `C-` claims, candidate mechanisms are deduplicated against the

@@ -32,6 +32,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/graded-assurance-envelope.mmd` keeps static guarantees, capability
   authority, canary evidence, runtime verdicts, rollback or compensation, and
   dependency invalidation distinct for Candidate 009.
+- `diagrams/reset-coupled-verification.mmd` keeps reversible execution,
+  selective verification, reset, commitment, and outcome accounting distinct
+  for Candidate 010.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

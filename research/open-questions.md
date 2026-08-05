@@ -88,3 +88,8 @@ project choice.
   and recovery records to one module version improve assurance and invalidation
   beyond a complete conventional platform stack at equal lifecycle budget? See
   [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+- **OQ-027:** When false commitment is expensive, does reversible execution
+  followed by a conditionally informative verifier beat a correctly conditioned
+  sequential test, calibrated cascade, abstention, retry, and redundant
+  verification after reset leakage and rejected work are charged? See
+  [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md).

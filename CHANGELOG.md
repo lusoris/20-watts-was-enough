@@ -7,6 +7,15 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A chemistry and reaction-network audit separating equilibrium recognition,
+  kinetic proofreading, nonequilibrium work, autocatalysis,
+  compartmentalization, reaction–diffusion, transient assembly, molecular
+  computation, oscillators, and stochastic integral control.
+- Fifteen scoped chemistry claims (`C-158`–`C-172`), thirty-three centralized
+  primary references, and explicit vessel-to-wall energy-accounting boundaries.
+- Candidate 010 and an editable verification-loop diagram testing reversible
+  execution, conditionally informative checks, reset, and commitment against
+  sequential-testing, cascade, abstention, retry, redundancy, and coding nulls.
 - Eight new primary-source audits spanning endocrine/circadian control,
   fault-tolerant reconstruction, cellular quality control, Earth-system
   transition signals, adaptive materials, epidemiological surveillance,

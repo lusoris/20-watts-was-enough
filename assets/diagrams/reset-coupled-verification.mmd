@@ -1,0 +1,11 @@
+flowchart TD
+    I["Candidate action"] --> T["Reversible trace"]
+    T --> Q{"Commit risk or uncertainty high?"}
+    Q -->|"no"| C["Commit"]
+    Q -->|"yes"| V["Conditionally informative verifier"]
+    V -->|"clear"| C
+    V -->|"reject"| R["Reset trace"]
+    R --> P["Record stage and reason"]
+    P --> I
+    C --> O["Outcome and energy ledger"]
+    O --> I

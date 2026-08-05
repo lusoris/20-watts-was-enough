@@ -11,6 +11,7 @@
 | 007 | [Intervention-aware endogenous observation](007-endogenous-observation-surveillance.md) | Can joint process/observation estimation prevent policy-induced telemetry changes from being mistaken for recovery beyond POMDP, detection, nowcasting, and value-of-information nulls? |
 | 008 | [Audit-backed contestable modular allocation](008-contestable-modular-allocation.md) | When persistent modules can gain by hiding information or gaming metrics, do audits, real opportunity consequences, entrant reserves, and replay beat ordinary routing and evaluation? |
 | 009 | [Versioned graded assurance envelopes](009-graded-assurance-envelopes.md) | Does binding distinct proof, authority, monitoring, evidence, update, and recovery claims to one module identity beat a complete conventional assurance stack? |
+| 010 | [Reset-coupled staged verification](010-reset-coupled-staged-verification.md) | When false commitment is expensive, does reversible execution plus conditionally informative verification beat calibrated cascades, sequential tests, abstention, retries, and redundant checks? |
 
 These are pre-implementation contracts, not evidence that a candidate works.
 Passing a simulator stage permits a higher-fidelity test; it does not promote a
