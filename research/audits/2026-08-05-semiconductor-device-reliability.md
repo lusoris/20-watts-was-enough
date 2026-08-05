@@ -148,7 +148,7 @@ $$
 S_k(t)=\exp\!\left[-\left(\frac{t}{\eta_k}\right)^{\beta_k}\right],
 $$
 
-where $eta_k$ is the scale time [s] and $eta_k$ is the dimensionless shape.
+where $\eta_k$ is the scale time [s] and $\beta_k$ is the dimensionless shape.
 $\beta_k=1$ gives a constant hazard; fitting another value does not identify the
 physical cause by itself.
 
