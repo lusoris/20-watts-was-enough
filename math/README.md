@@ -72,6 +72,16 @@ notation.
   covariance, null-space honesty, photon and saturation regimes, active
   acquisition, drift, heterogeneous execution, device-population variability,
   query-registered retention, and lifecycle energy for Fixture F-007.
+- [`mission-profile-qualified-device-reliability.md`](mission-profile-qualified-device-reliability.md)
+  defines device-population identity, mission history, hierarchical variation,
+  mechanism-specific hazards, censoring, electrothermal wear, transient and
+  permanent faults, adaptive margins, repair, retirement, accepted service,
+  and lifecycle burden for Fixture F-008.
+- [`operator-qualified-acoustic-inference.md`](operator-qualified-acoustic-inference.md)
+  defines calibrated acoustic level and clocks, time-varying propagation,
+  nonlinear filterbank state, binaural and array geometry, reverberation,
+  grouping and separation, active emission and receiver motion, uncertainty,
+  exposure, and lifecycle energy for Fixture F-009.
 
 Rules:
 

@@ -157,6 +157,15 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
   physical ambiguity, reconstruction, active evidence, heterogeneous routing,
   fabrication population, future-query retention, and complete lifecycle
   ledger in Fixture F-007.
+- `diagrams/mission-profile-qualified-degradation-recovery.mmd` carries a
+  fabricated device population through measured mission history, typed
+  variation and degradation, evidence-age-qualified operation, detection,
+  containment, correction, repair, repurposing, and retirement in Fixture
+  F-008.
+- `diagrams/operator-qualified-active-acoustic-inference.mmd` binds calibrated
+  emission, propagation, receiver geometry, masking, reverberation, motion,
+  grouping, localization, separation, active evidence, safety, and complete
+  cost in Fixture F-009.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

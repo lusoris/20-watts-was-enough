@@ -14,3 +14,5 @@ budgets, withheld regimes, perturbations, and explicit rejection rules.
 | F-005 | [Regime-qualified flow inference and control](005-regime-qualified-flow-inference-control.md) | 002, 003, 006, 007, 012, 014 |
 | F-006 | [Representative adaptive performance](006-representative-adaptive-performance.md) | 002, 004, 006, 007, 009, 012, 014, 019 |
 | F-007 | [Operator-qualified optical inference](007-operator-qualified-optical-inference.md) | 001, 006, 007, 010, 014, 017, 018 |
+| F-008 | [Mission-profile-qualified device reliability](008-mission-profile-qualified-device-reliability.md) | 001, 005, 006, 009, 010, 012, 014, 017, 018 |
+| F-009 | [Operator-qualified active acoustic inference](009-operator-qualified-active-acoustic-inference.md) | 002, 006, 007, 009, 012, 014 |
