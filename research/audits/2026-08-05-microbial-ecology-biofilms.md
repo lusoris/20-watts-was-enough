@@ -1250,7 +1250,7 @@ These claims are deliberately scoped to their preparations and evidence type.
 | C-MIC-27 | established | Nitric oxide and c-di-GMP phosphodiesterase interventions triggered scoped P. aeruginosa biofilm dispersal. | Barraud et al. 2006; Roy et al. 2012 | active dispersal is not safe migration |
 | C-MIC-28 | established | Model marine-particle communities underwent rapid reproducible succession shaped by dispersal limitation and facilitation. | Datta et al. 2016 | reproducibility is not progress or inheritance |
 | C-MIC-29 | disputed | Quorum sensing is equivalent to consensus, voting, or independently corroborated commitment. | contradicted by transport and confinement interventions | reject category error |
-| C-MIC-30 | disputed | Biofilm structure establishes brain-like representation, global control, or collective cognition. | no supporting intervention in audited sources | reject analogy |
+| C-MIC-30 | disputed | Biofilm structure establishes a global representational code, integrated controller, or collective task objective. | no supporting intervention in audited sources | reject analogy |
 | C-MIC-31 | disputed | Cross-feeding, matrix production, or community persistence is intrinsically cooperative and efficient. | sign reversals and lifecycle accounting | requires counterfactual fitness and full cost |
 | C-MIC-32 | speculative | A transport-explicit, locally decoded shared field may improve sparse modular coordination when geometry and cleanup are task-relevant. | transfer hypothesis only | hold as P-011/P-013 experiment fixture; reject if pub/sub wins |
 

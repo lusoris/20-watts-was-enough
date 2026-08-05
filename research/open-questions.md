@@ -283,3 +283,36 @@ project choice.
   benchmark fixture, not a principle or candidate promotion. See
   [C-780](claims.md#c-780), [Fixture F-001](../experiments/fixtures/001-shared-clock-free-coadaptation.md),
   and the [music audit](audits/2026-08-05-music-cognition-improvisation.md#e-music-07--shared-clock-free-ensemble-co-adaptation).
+- **OQ-057:** Does attaching actual sensory opportunity, feasible action,
+  morphology, acquisition and social history, reward, intervention, controls,
+  timescale, and sampling unit to every adaptive-action claim change an
+  architecture decision and improve hidden-plant transfer beyond ordinary
+  affordance learning, search, RL/POMDP/MPC, retrieval, selective prediction,
+  imitation, hierarchical control, system identification, and stratified
+  evaluation without materially increasing false rejection? This is an
+  evaluation fixture, not a principle or candidate promotion. See
+  [C-841](claims.md#c-841), [Fixture F-003](../experiments/fixtures/003-opportunity-history-qualified-action.md),
+  and the [comparative-cognition audit](audits/2026-08-05-comparative-cognition-tool-use.md#promotion-and-retirement-gates).
+- **OQ-058:** Does a versioned reconstruct–externalize–inspect–transform–evaluate
+  loop improve validity, diversity, recovery, transfer, and lifecycle cost
+  beyond retrieval and recombination, editable scratchpads/CAD, beam or
+  population search, simulation, contextual preference models, version control,
+  provenance, and ordinary design workflow when fixation, negative transfer,
+  evaluator identity and disagreement, material variables, and lineage loss are
+  explicit? This is an evaluation fixture, not a principle or candidate
+  promotion. See [C-842](claims.md#c-842)–[C-860](claims.md#c-860),
+  [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md),
+  and the [visual-art/design audit](audits/2026-08-05-visual-art-design-cognition.md#promotion-verdict).
+- **OQ-059:** Does a versioned propose–challenge–decompose–prove–check–publish–
+  invalidate loop improve checked closure, source attribution, or error
+  localization beyond theorem provers, SAT/SMT and constraint solvers, formal
+  libraries, ordinary certificates, dependency analysis, CI, and review when
+  candidate generation remains separate from acceptance; counterexamples and
+  proof-DAG reconstruction are mandatory; `proved`, `refuted`, `tested`,
+  `unknown`, `disputed`, and `retracted` remain distinct; training and
+  evaluation are ancestor- and dependency-safe; and every search, checker,
+  proof-storage, rebuild, human-hour, wall-time, and joule cost is charged? This
+  is an evaluation fixture, not a principle or candidate promotion. See
+  [C-861](claims.md#c-861)–[C-880](claims.md#c-880),
+  [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md), and
+  the [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md#conservative-verdict).

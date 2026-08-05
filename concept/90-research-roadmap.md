@@ -276,12 +276,32 @@ adding citations:
 | immune tolerance, adaptation, and memory | representation, recognition, deletion, ignorance, anergy, active suppression, exhaustion, expansion, contraction, affinity selection, trained state, context, memory maintenance, residency, and immunometabolism remain distinct; no new principle or candidate survives, while a typed lifecycle contract remains an evaluation discipline |
 | music cognition, performance, and improvisation | statistical expectation, grouping, tonal state, phase correction, motif transformation, auditory–motor feedback, expressive plans, ensemble synchronization, improvisation, practice, far transfer, and enculturation map to existing bundles and ordinary sequence/control/retrieval/search/curriculum nulls; shared-clock-free partner- and phrase-specific co-adaptation remains a benchmark fixture only, not a principle or candidate |
 | library, archival, and information science | provenance is not truth, fixity is not authenticity, retention is not useful memory, and retrieval rank is not epistemic confidence; appraisal, designated communities, representation dependencies, authority/vocabulary drift, migration, FAIR packaging, and institutional capability refine Candidates 014/015/017/018/019, while no new principle survives |
+| comparative cognition, tool use, and flexible action | manufacture, causal transfer, future preparation, event memory, uncertainty control, social learning, teaching, recombination, exploration, inhibition, route recovery, and peripheral control are kept task-, opportunity-, morphology-, observation-, and history-qualified; species/task rankings are rejected, and Fixture F-003 refines evaluation for Candidates 004/006/007/014/018/019 without promoting a principle or candidate |
+| visual art and design cognition | reconstructive generation, external workspaces, epistemic action, analogy, copying, fixation, proposal/selection separation, qualified aesthetic evaluators, material feedback, cultural accumulation, and provenance map to existing bundles; Fixture F-002 tests a versioned reconstruct–externalize–inspect–transform–evaluate composition across Candidates 004/014/017/018/019 without promoting a principle or candidate |
+| mathematical practice and proof discovery | conjecture, analogy, abstraction, counterexample search, proof decomposition, libraries, representations, invariants, theorem proving, certificates, SAT/SMT, model finding, experimental mathematics, collaboration, and teaching map to mature methods; Fixture F-004 keeps attributable proposals separate from typed acceptance, reconstructs proof DAGs through small checkers, uses dependency-safe splits and reverse-dependency invalidation, and charges complete human/joule budgets across Candidates 004/009/010/011/014/017/019 without promoting a principle or candidate |
 
-The music and library/archival queues are closed by explicit no-promotion
-decisions. The music
+The music, library/archival, comparative-cognition, visual-design, and
+mathematical-practice queues are closed by explicit no-promotion decisions. The music
 [Fixture F-001](../experiments/fixtures/001-shared-clock-free-coadaptation.md)
 retains E-MUSIC-07 as a cross-candidate benchmark; the archival refinement
-stays inside Candidate 017's query-registered preservation track. The next
+stays inside Candidate 017's query-registered preservation track; and
+comparative cognition contributes
+[Fixture F-003](../experiments/fixtures/003-opportunity-history-qualified-action.md)
+as an opportunity/history audit across Candidates 004/006/007/014/018/019;
+and visual design contributes
+[Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md)
+as a versioned reconstruct–externalize–inspect–transform–evaluate audit across
+Candidates 004/014/017/018/019. It treats fixation and negative transfer as
+measured failure modes, qualifies evaluators and material evidence, and keeps
+lineage separate from truth, intent, and recoverability; and mathematical
+practice contributes
+[Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md) across
+Candidates 004/009/010/011/014/017/019. It keeps proposal provenance separate
+from correctness, requires counterexamples and proof-DAG reconstruction,
+preserves typed lifecycle state, prevents dependency leakage, propagates
+reverse-dependency invalidation, and includes proof, checker, human, rebuild,
+and joule cost.
+The next
 breadth field is selected by expected ability to split, merge, reject, or
 re-baseline a current mechanism. Breadth alone does not close a row.
 

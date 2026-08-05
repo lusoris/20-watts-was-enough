@@ -131,6 +131,23 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
   authority, registered queries, migration, evidence/authenticity/access gates,
   drift, invalidation, source recovery, and abstention through a preserved
   version lifecycle.
+- `diagrams/versioned-reconstructive-design.mmd` separates logged source
+  exposure, metered retrieval, reconstructive branches, editable external
+  state, epistemic and material feedback, fixation checks, constraint-qualified
+  selection, and retained attributable lineage for Fixture F-002.
+- `diagrams/opportunity-history-qualified-action.mmd` carries actual sensory
+  opportunity, feasible action, training and social history, intervention,
+  realized plant action, first-trial transfer, ordinary nulls, and diagnostic
+  attribution through Fixture F-003.
+- `diagrams/versioned-proof-discovery-lifecycle.mmd` keeps immutable problem
+  identity, dependency-safe proposal search, counterexamples, abstraction
+  obligations, proof decomposition, certificate checking, typed publication,
+  reverse-dependency invalidation, and mature solver nulls visible in Fixture
+  F-004.
+- `diagrams/regime-qualified-flow-inference-control.mmd` binds measurement,
+  filter and detector identity, scale flux, closures, reduced state, adaptive
+  resolution, assimilation, sensing, control, transition tails, and complete
+  lifecycle energy in Fixture F-005.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

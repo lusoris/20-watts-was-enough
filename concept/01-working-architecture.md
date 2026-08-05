@@ -137,6 +137,93 @@ the [endogenous generation audit](../research/audits/2026-08-05-endogenous-gener
 and is falsified first through
 [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
 
+#### Reconstructive adaptation through external state
+
+Visual art and design cognition make the cycle more operational. Proposal
+generation is reconstructive: learned categories, exemplars, relations,
+styles, constraints, tools, and prior transformations shape what can be
+proposed ([C-842](../research/claims.md#c-842)–[C-860](../research/claims.md#c-860)).
+That does not reduce the process to nearest-neighbor retrieval. A system can
+externalize a partial state, inspect consequences that were not explicit in
+its preceding plan, change representation, probe the world, and use the result
+to create a new branch. The novelty is relative to a declared history; the
+validity comes from constraints and observed outcomes.
+
+The adaptation loop therefore distinguishes seven event types:
+
+1. **Exposure:** which sources, examples, styles, and constraints were
+   available before the task;
+2. **Retrieval:** which versioned sources were deliberately requested during
+   the task and at what cost;
+3. **Reconstruction:** which fragments, relations, or abstractions formed a
+   proposal branch;
+4. **Externalization:** which editable representation—text, sketch, scene
+   graph, CAD state, program, simulation, or prototype—made the proposal
+   inspectable;
+5. **Epistemic action:** which render, measurement, simulation, query, or
+   material intervention was selected to reduce a decision-relevant
+   uncertainty;
+6. **Evaluation and selection:** which hard constraints, qualified evaluators,
+   risk limits, and selection rule admitted or rejected a version; and
+7. **Retention:** which source, parent, operation, test, rejected branch,
+   dependency, expiry, and rollback records were preserved.
+
+```mermaid
+flowchart LR
+    brief["Hidden problem · declared constraints · evaluator contract"] --> expose["Logged source exposure"]
+    corpus["Versioned source corpus"] --> expose
+    corpus --> retrieve["Metered retrieval · precedents · cases"]
+    expose --> reconstruct["Reconstructive generation"]
+    retrieve --> reconstruct
+    reconstruct --> branches["Independent proposal branches"]
+    branches --> externalize["Externalize · sketch · scene graph · CAD"]
+    externalize --> inspect["Inspect · query · resegment"]
+    inspect --> transform["Transform representation or proposal"]
+    transform --> externalize
+    inspect --> action["Epistemic action · render · simulate · probe"]
+    action --> material["Material or environment feedback"]
+    material --> externalize
+    externalize --> diversity["Diversity and fixation audit"]
+    diversity --> evaluate["Constraint validity · usefulness · risk · cost"]
+    evaluate --> select["Blinded evaluation and selection"]
+    select --> retain["Retain · expire · recombine · rollback"]
+    retain --> lineage["Version graph · sources · operations · tests · rejected branches"]
+    lineage --> retrieve
+    nulls["Retrieval · CAD/editors · diffusion · QD/BO · scratchpads · active learning"] --> evaluate
+```
+
+Editable source:
+[versioned-reconstructive-design.mmd](../assets/diagrams/versioned-reconstructive-design.mmd).
+
+Several separations are non-negotiable. More proposals are not necessarily
+better proposals; proposal diversity, constraint validity, selection regret,
+and realized outcome are different measurements. Similarity to an example can
+transfer a useful structural relation or cause fixation and negative transfer,
+so similarity and task effect are both reported. A provenance graph can record
+derivation without proving intention, authenticity, correctness, or
+originality. Aesthetic response is observer-, context-, expertise-, and
+history-qualified rather than a universal scalar.
+
+Parallel branches are useful only if they remain genuinely independent before
+critique. A shared canvas can coordinate work and simultaneously propagate an
+early fixation. The comparison therefore includes private branches, delayed
+reveal, source substitution, example removal, evaluator swap, material swap,
+and representation conversion. Every alternative pays for retrieval,
+proposals, tools, simulations, human critique, physical material, waste,
+retention, and recovery.
+
+[Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md)
+tests this complete loop against a mature composition of retrieval, CAD and
+editors, generative sampling, explicit search and quality-diversity,
+scratchpads and shared workspaces, active learning, simulation, version
+control, provenance, and independent reranking. The
+[mathematical contract](../math/versioned-reconstructive-design.md) keeps
+exposure, retrieval, relative novelty, reinterpretation, information gain,
+fixation, negative transfer, constraint margins, evaluator qualification,
+selection regret, lineage, reconstructability, and lifecycle cost separate.
+If that ordinary stack ties, the additional architecture is removed while the
+fixture remains as a negative result.
+
 ### 3. Maintenance
 
 Maintenance receives a budgeted set of possible actions. For any memory,
@@ -233,6 +320,7 @@ baseline. Skipped FLOPs alone are not an efficiency result.
 | External factual memory | C-014 | usable mechanism; conflict and energy policy unresolved |
 | Local resource and context control | C-046–C-051 | biological observations established; proposed control planes experimental |
 | Endogenous proposal generation | C-061–C-066 | constituent observations established; integrated curriculum speculative |
+| Versioned reconstructive design | C-842–C-860 | constituent observations scoped; complete externalize–inspect–transform–evaluate loop unvalidated |
 | Complete three-loop system | none | unvalidated synthesis |
 
 The [engineering analogue audit](../research/audits/2026-08-05-engineering-analogues.md)
@@ -266,6 +354,12 @@ the appropriate engineering baseline.
   provenance or contradiction checks.
 - **Maintenance dominates cost:** replay, probes, migrations, and regression
   testing consume the savings of conditional execution.
+- **Fixation propagates through shared state:** early examples or collaborators
+  collapse independent branches before alternatives are tested.
+- **Generation impersonates evaluation:** the proposal model's own score is
+  reported as independent evidence of validity or usefulness.
+- **Lineage impersonates truth:** a complete derivation record is treated as
+  proof of correctness, intention, authenticity, or originality.
 - **Renaming without mechanism:** a familiar cache, controller, or scheduler
   receives a biological label without a different causal operation.
 
@@ -282,9 +376,13 @@ following predictions:
    necessary relearning or newcomer admission.
 4. Structured recombination plus targeted intervention produces more valid,
    useful novelty than matched-budget stochastic sampling alone.
-5. Maintenance improves retention and adaptability after replay, monitoring,
+5. Editable externalization, inspection, representation change, and epistemic
+   action improve hidden-constraint validity, selection regret, and transfer
+   beyond the complete retrieval/editor/generation/search/tool stack without
+   increasing fixation or lifecycle cost.
+6. Maintenance improves retention and adaptability after replay, monitoring,
    migration, and recovery costs are counted.
-6. At least one proposed mechanism beats the strongest ordinary controller,
+7. At least one proposed mechanism beats the strongest ordinary controller,
    scheduler, cache, router, or system-identification baseline.
 
 Until those tests pass, this is a working architecture: precise enough to

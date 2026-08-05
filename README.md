@@ -45,11 +45,11 @@ state. See [decision 0005](decisions/0005-rendered-private-edition.md).
 | Chapter | Question |
 | --- | --- |
 | [Thesis and principles](concept/00-thesis-and-principles.md) | What is the project's central engineering hypothesis? |
-| [Working architecture](concept/01-working-architecture.md) | How do runtime, adaptation, maintenance, resource control, and generative recombination form one system? |
+| [Working architecture](concept/01-working-architecture.md) | How do runtime, adaptation, reconstructive generation, maintenance, and resource control form one system? |
 | [Biology is a launchpad](concept/05-biology-is-a-launchpad.md) | Which biological constraints transfer, and which substrate limits should engineering escape? |
 | [Cross-domain convergence](concept/07-cross-domain-convergence.md) | How do different sciences collapse into shared problem–solution principles without losing causal differences? |
 | [Structural growth and routing](concept/10-neurogenesis-and-routing.md) | How does a persistent capability gap create, test, specialize, merge, protect, or retire conditional modules? |
-| [Sensorimotor grounding](concept/20-sensorimotor-grounding.md) | Which event, clock, intervention, missingness, language, uncertainty, and provenance contracts ground a world model? |
+| [Sensorimotor grounding](concept/20-sensorimotor-grounding.md) | Which event, clock, opportunity, action, intervention, history, language, uncertainty, and provenance contracts ground a world model? |
 | [Sparse predictive compute](concept/30-sparse-predictive-compute.md) | How do event, context, and resource loops price the next computation or observation? |
 | [Memory and consolidation](concept/40-memory-and-consolidation.md) | How does an episode become a retained skill, external fact, weakened trace, or deletion? |
 | [Maturity and structural consolidation](concept/50-grokking-and-pruning.md) | When should a structure be protected, reopened, compacted, or retired? |

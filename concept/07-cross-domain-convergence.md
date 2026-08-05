@@ -430,6 +430,91 @@ must beat ordinary OAIS/PREMIS-style packaging, versioned schema/vocabulary,
 retained-source recovery, and query-regression tests. If it does not, the
 ordinary preservation stack remains the implementation.
 
+### Candidate production is not acceptance
+
+Mathematical practice supplies the sharpest version of a distinction already
+needed throughout this project: producing a candidate and earning acceptance
+are different operations. Conjectures, analogies, abstractions, proof sketches,
+retrieved lemmas, numerical patterns, solver traces, and learned tactic choices
+can all direct search. None of those origins establishes the resulting claim.
+The evidence and formal-system boundaries are tracked in
+[C-861](../research/claims.md#c-861)–[C-880](../research/claims.md#c-880).
+
+The transferable lifecycle is typed:
+
+1. **Propose.** Bind a candidate to the exact problem, definitions, logic,
+   axioms, library, corpus, proposal ancestry, and accessible evidence.
+2. **Challenge.** Search examples, counterexamples, countermodels, boundary
+   cases, definition changes, and adversarial encodings before commitment.
+3. **Decompose.** Turn the target into a dependency DAG whose child artifacts
+   reconstruct the parent goal through named interfaces and side conditions.
+4. **Prove or refute.** Produce a proof term, checked finite reduction, solver
+   certificate, admissible model, or exact counterexample—not only a verdict.
+5. **Check.** Bind the artifact to the exact instance and library version, then
+   run a small independent checker while publishing shared trust roots.
+6. **Publish.** Retain `proved`, `refuted`, `tested`, `unknown`, `disputed`, and
+   `retracted` as different states with evidence, provenance, and cost.
+7. **Invalidate.** A definition, axiom, checker, dependency, or library change
+   quarantines its reverse-dependency closure until rebuild or recheck.
+
+```mermaid
+flowchart LR
+    identity["Immutable identity<br/>problem · definitions · logic · library · corpus · checker"] --> propose["PROPOSE<br/>conjecture · analogy · abstraction · candidate proof"]
+    split["Dependency-safe split<br/>ancestor · sibling · restatement · source isolation"] --> propose
+    propose --> challenge["CHALLENGE<br/>examples · countermodels · adversarial cases · critique"]
+    challenge -->|"valid counterexample"| refuted["REFUTED<br/>typed counterexample + domain witness"]
+    challenge -->|"survives finite tests"| tested["TESTED<br/>support range + precision + generator"]
+    challenge --> revise["Revise statement · definition · abstraction"]
+    revise --> propose
+    challenge --> decompose["DECOMPOSE<br/>goal DAG · lemmas · interfaces · side conditions"]
+    abstraction["Abstraction obligations<br/>soundness · adequacy · reconstruction · excluded cases"] --> decompose
+    decompose --> prove["PROVE<br/>proof term · solver trace · model · exact finite reduction"]
+    prove --> check["CHECK<br/>independent kernel or certificate checker"]
+    separation["Generator/checker separation<br/>frozen input hash · explicit shared roots"] --> check
+    check -->|"accepted certificate"| proved["PROVED<br/>scoped proposition + dependency closure"]
+    check -->|"failed or unsupported"| unknown["UNKNOWN<br/>timeout · incomplete theory · malformed certificate"]
+    refuted --> publish["PUBLISH<br/>versioned artifact · state · evidence · provenance · cost"]
+    tested --> publish
+    proved --> publish
+    unknown --> publish
+    disputed["DISPUTED<br/>formalization · assumptions · significance · review"] --> publish
+    publish --> registry["Release registry<br/>proved · refuted · tested · unknown · disputed · retracted"]
+    registry --> change["Dependency, definition, checker, or library change"]
+    change --> invalidate["INVALIDATE<br/>reverse dependency closure · quarantine · recheck"]
+    invalidate --> retracted["RETRACTED<br/>superseded state + reason + affected versions"]
+    invalidate --> challenge
+    nulls["ITP · ATP · CDCL · SMT · CP/MIP · CEGAR/CEGIS<br/>formal libraries · learned guidance · exact numerics · peer review"] --> compare{"Equal lifecycle budget<br/>hidden families · human-hours · joules"}
+    registry --> compare
+    compare --> retain["Retain measured residual<br/>otherwise retire composition"]
+```
+
+Editable source:
+[versioned-proof-discovery-lifecycle.mmd](../assets/diagrams/versioned-proof-discovery-lifecycle.mmd).
+
+This lifecycle prevents five common substitutions:
+
+- finite agreement is evidence for a tested range, not a universal result;
+- a counterexample rejects the encoded universal claim but does not choose its
+  unique repair;
+- individually plausible lemmas do not close a parent goal unless their proof
+  artifacts reconstruct it;
+- a checker establishes the encoded proposition relative to its logic,
+  definitions, axioms, libraries, preprocessing, and trusted implementation;
+  it does not validate the informal intent or importance; and
+- participant or model count does not establish independent checking when
+  sources, parsers, libraries, prompts, or failure modes are shared.
+
+[Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md)
+compares the joined lifecycle with complete interactive and automated theorem
+provers, formal libraries, CDCL SAT, DPLL(T) SMT, constraint and model finding,
+CEGAR/CEGIS, learned premise/tactic guidance, exact numerical and exhaustive
+methods, and ordinary expert review. The
+[mathematical contract](../math/proof-discovery-verification-contract.md)
+defines immutable identities, leakage closures, abstraction obligations,
+proof-DAG reconstruction, certificate cost, typed states, invalidation, human
+effort, and joules. If the mature stack ties, the composition is retired; the
+state distinctions and negative result remain.
+
 ## Efficiency mechanism
 
 Deduplication saves two different resources.
@@ -471,6 +556,7 @@ remain inside their declared envelopes.
 | Proposition | Status | Basis |
 | --- | --- | --- |
 | several scientific domains expose recurring scarcity, locality, memory, stability, and structural pressures | established within the current scoped corpus | [claims ledger](../research/claims.md) and [domain inventory](../research/domain-inventory.md) |
+| candidate production and scoped formal acceptance are different artifact states | established or plausible within the audited formal systems and experiments | [C-861](../research/claims.md#c-861)–[C-879](../research/claims.md#c-879); the joined lifecycle in C-880 remains plausible |
 | the thirteen current principles are the correct deduplication | plausible working taxonomy | [principle registry](../research/principle-registry.md); boundaries remain revisionable |
 | five families provide a useful navigation layer without erasing mechanism differences | proposed synthesis | must improve retrieval, experimental reuse, and reviewer agreement |
 | recurrence across less-related domains predicts a useful artificial primitive | speculative | requires prospective tests against matched null models |
@@ -510,6 +596,13 @@ remain inside their declared envelopes.
   returns with a new metaphor.
 - **Double-counted savings:** two principles claim the same avoided operation or
   compare against different baselines.
+- **Verifier laundering:** checker acceptance is reported as truth about an
+  informal statement without exposing formalization, axioms, dependencies, or
+  the trusted implementation.
+- **Finite-to-universal leakage:** a sampled numerical or test range is silently
+  promoted from `tested` to `proved`.
+- **Correlated checking:** producer and verifier share the parser, library,
+  preprocessing, or defect that matters while being counted as independent.
 - **Taxonomy lock-in:** stable IDs are mistaken for immutable scientific truth.
 
 ## Measurable predictions
@@ -531,3 +624,7 @@ remain inside their declared envelopes.
 6. A principle promoted from recurrent evidence survives at least one regime
    derived from a domain outside the one that originally motivated its AI
    translation.
+7. A typed propose–challenge–prove–check lifecycle reduces bad acceptance,
+   localizes repair, and improves dependency invalidation beyond a generator
+   plus checker alone after search, certificates, libraries, human effort, and
+   joules are charged; otherwise Fixture F-004 retires the composition.

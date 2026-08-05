@@ -26,5 +26,7 @@ invariants across biological and digital substrates. The
 recurring observations are deduplicated into shared principles and experiments.
 
 Start with [the working architecture](01-working-architecture.md) for a single
-narrative view of the runtime, adaptation, maintenance, resource, and
-generative-recombination loops.
+narrative view of runtime, adaptation, reconstructive generation, maintenance,
+and resource control. Continue with
+[sensorimotor grounding](20-sensorimotor-grounding.md) for the actual-channel,
+opportunity, action, intervention, and history contract.

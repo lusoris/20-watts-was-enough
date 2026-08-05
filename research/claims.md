@@ -6428,6 +6428,9 @@ describes the exact statement here, not a broader interpretation.
   switching cost must be independently varied.
 - **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
 
+
+
+
 ### C-428
 
 - **Statement:** Bass or logistic adoption curves do not identify interpersonal
@@ -8428,8 +8431,8 @@ describes the exact statement here, not a broader interpretation.
 
 ### C-576
 
-- **Statement:** Biofilm structure establishes brain-like representation,
-  global control, or collective cognition.
+- **Statement:** Biofilm structure establishes a global representational code,
+  integrated controller, or collective task objective.
 - **Status:** disputed.
 - **Primary sources:** no audited intervention supports the equivalence; local
   transport, physiology, ecology, and selection explain the reported effects.
@@ -12029,3 +12032,1091 @@ describes the exact statement here, not a broader interpretation.
   provenance, executable tests, and guided practice at equal authoring and
   training effort on delayed novel incidents.
 - **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-804
+
+- **Statement:** Individual New Caledonian crows can shape functional hook tools in captivity.
+- **Status:** established.
+- **Primary source:** `WeirEtAl2002Hooks`.
+- **Rationale:** Controlled retrieval tasks document functional wire transformation by tested individuals.
+- **Open issue:** Replicate across subjects, materials, and sites while separating prevalence, learned affordances, search, and a putative template.
+- **Used by:** [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-010](principle-registry.md#p-010--structural-offloading-and-co-design), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-805
+
+- **Statement:** Tested Goffin's cockatoos transferred elongated tool manufacture across materials.
+- **Status:** established.
+- **Primary sources:** `AuerspergEtAl2012Innovation`, `AuerspergEtAl2016Materials`.
+- **Rationale:** Subjects produced a similar functional tool type from materials with different manipulation demands.
+- **Open issue:** Measure prior object experience, fracture-supplied shapes, failed transformations, and material-specific motor cost.
+- **Used by:** [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-010](principle-registry.md#p-010--structural-offloading-and-co-design), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-806
+
+- **Statement:** Asian elephants can modify branches and one tested subject moved supports to reach food.
+- **Status:** established.
+- **Primary sources:** `HartEtAl2001ElephantTools`, `FoerderEtAl2011ElephantInsight`.
+- **Rationale:** The studies document branch modification and support-moving behavior in scoped tasks.
+- **Open issue:** Preserve trunk sensing and motor opportunity, disclose component-action history, and avoid transporting a single-subject result to a species rate.
+- **Used by:** [P-008](principle-registry.md#p-008--compartmentalized-interaction), [P-010](principle-registry.md#p-010--structural-offloading-and-co-design), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-807
+
+- **Statement:** Functional manufacture can preserve a goal relation across material changes.
+- **Status:** plausible.
+- **Primary sources:** `WeirEtAl2002Hooks`, `AuerspergEtAl2016Materials`, `HartEtAl2001ElephantTools`.
+- **Rationale:** Cross-material and cross-object manufacture cases preserve a task-relevant relation while changing geometry or material.
+- **Open issue:** Require novel-material transfer beyond affordance learning plus model-based search at matched observations, actions, trials, and joules.
+- **Used by:** [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-007](principle-registry.md#p-007--prediction-error-allocation), [P-010](principle-registry.md#p-010--structural-offloading-and-co-design), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-808
+
+- **Statement:** Tested New Caledonian crows can solve a short-tool-to-long-tool sequence.
+- **Status:** established.
+- **Primary source:** `TaylorEtAl2007Metatool`.
+- **Rationale:** Subjects used one tool to obtain another required for the terminal retrieval action.
+- **Open issue:** Reorder or delete intermediate relations and compare against a learned finite-state controller, hierarchical policy, retrieval, and search.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-008](principle-registry.md#p-008--compartmentalized-interaction), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-809
+
+- **Statement:** Sequential-tool performance changes with step number and retrieval cost.
+- **Status:** established.
+- **Primary sources:** `MartinOrdasEtAl2012Sequential`, `AuerspergEtAl2010KeaSecondOrder`.
+- **Rationale:** Performance varied as intermediate requirements and costs changed, rather than following one task-independent success rate.
+- **Open issue:** Factor working-memory load, motor opportunity, reward delay, and extinction exposure before attributing the difference to planning depth.
+- **Used by:** [P-001](principle-registry.md#p-001--selective-allocation), [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-008](principle-registry.md#p-008--compartmentalized-interaction), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-810
+
+- **Statement:** Success on trap-tube or Aesop tasks generally proves causal understanding.
+- **Status:** disputed.
+- **Primary sources:** `TaylorEtAl2009Causal`, `SeedEtAl2006Rooks`, `VisalberghiLimongelli1994Capuchin`, `GhirlandaLind2017Aesop`, `HennefieldEtAl2018Aesop`.
+- **Rationale:** Mixed transfer, control failures, and trial-course analyses show that surface relations and reinforcement can reproduce terminal success.
+- **Open issue:** Counterbalance arbitrary cues and freeze first-trial functional-inversion and held-out causal-graph tests.
+- **Used by:** [P-007](principle-registry.md#p-007--prediction-error-allocation), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-811
+
+- **Statement:** Some crows transferred a trap relation across visually different apparatuses.
+- **Status:** plausible.
+- **Primary source:** `TaylorEtAl2009Causal`.
+- **Rationale:** A subset of tested crows transferred from an initial two-trap problem to a visually different trap-table.
+- **Open issue:** Increase samples and exclude learned feature rules with perceptually matched functional inversions and impossible controls.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-007](principle-registry.md#p-007--prediction-error-allocation), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-812
+
+- **Statement:** Some great apes and ravens select and retain items for later tool or exchange tasks.
+- **Status:** established.
+- **Primary sources:** `MulcahyCall2006Future`, `KabadayiOsvath2017Ravens`.
+- **Rationale:** Subjects selected, transported, or retained task-relevant items across delays and contextual separation.
+- **Open issue:** Separate learned delayed choice from prospective control using current-versus-future goal conflicts and novel item–task recombinations.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-813
+
+- **Statement:** Delayed future preparation can use a task trace not reducible to current affordance.
+- **Status:** plausible.
+- **Primary sources:** `MulcahyCall2006Future`, `KabadayiOsvath2017Ravens`, `RabyEtAl2007Planning`.
+- **Rationale:** Item choice or caching occurred when the later task or motivational state was separated from the immediate action opportunity.
+- **Open issue:** Beat context-conditioned value tables, successor representations, model-predictive planning, and cached policies at equal memory and rollout budgets.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-814
+
+- **Statement:** Scrub-jays and rats use what–where–when-like information in scoped food tasks.
+- **Status:** established.
+- **Primary sources:** `ClaytonDickinson1998Episodic`, `BabbCrystal2006RatMemory`.
+- **Rationale:** Item, location, and elapsed-time information jointly affected recovery choices under the reported task conditions.
+- **Open issue:** Keep subjective recollection outside the claim and test unique episodes, odor controls, interval rules, and post-encoding updates.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-815
+
+- **Statement:** Integrated event records help when item, place, time, and learned decay must be recombined.
+- **Status:** plausible.
+- **Primary sources:** `ClaytonDickinson1998Episodic`, `BabbCrystal2006RatMemory`.
+- **Rationale:** The tasks require event-conditioned use of multiple fields, but do not establish that a monolithic episodic store is necessary.
+- **Open issue:** Require trial-unique exception and content-update gains beyond factorized semantic-plus-spatial memory at equal bytes and retrieval latency.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-816
+
+- **Statement:** Scrub-jay cache protection changes with observation and pilfering experience.
+- **Status:** established.
+- **Primary sources:** `EmeryClayton2001Caching`, `DallyEtAl2004Shade`.
+- **Rationale:** Re-caching and placement differed with observer exposure and prior pilfering history.
+- **Open issue:** Compare against a calibrated contextual theft-risk policy and measure secrecy, availability, relocation cost, and novel-observer transfer.
+- **Used by:** [P-007](principle-registry.md#p-007--prediction-error-allocation), [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime), [P-013](principle-registry.md#p-013--externalized-shared-state), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-817
+
+- **Statement:** Dolphins, macaques, rats, and baboons can use trained decline or information-seeking responses selectively in scoped tasks.
+- **Status:** established.
+- **Primary sources:** `SmithEtAl1995DolphinUncertain`, `WashburnEtAl2006Generalize`, `FooteCrystal2007Metacognition`, `MalassisEtAl2015Baboons`.
+- **Rationale:** Subjects selectively declined, checked, or requested information as task difficulty changed.
+- **Open issue:** Publish full risk–coverage–cost curves and separate transfer, public cues, response strength, reward gradients, and individual effects.
+- **Used by:** [P-001](principle-registry.md#p-001--selective-allocation), [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation), [P-007](principle-registry.md#p-007--prediction-error-allocation), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-818
+
+- **Statement:** Some nonhuman subjects use internal performance-related cues to guide information seeking.
+- **Status:** plausible.
+- **Primary sources:** `BrownEtAl2017DomainGeneral`, `FooteCrystal2007Metacognition`, `MalassisEtAl2015Baboons`.
+- **Rationale:** Prospective and cross-task patterns are consistent with internal performance signals after some public cues are reduced.
+- **Open issue:** Replicate individual-level transfer while matching associative difficulty, response-strength, and learned escape policies.
+- **Used by:** [P-007](principle-registry.md#p-007--prediction-error-allocation), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-819
+
+- **Statement:** Any adaptive uncertainty response demonstrates reflective metacognition.
+- **Status:** disputed.
+- **Primary sources:** `SmithEtAl1995DolphinUncertain`, `BrownEtAl2017DomainGeneral`, `FooteCrystal2007Metacognition`, `MalassisEtAl2015Baboons`.
+- **Rationale:** Learned stimulus difficulty, reward, response strength, and escape policies can produce adaptive uncertainty behavior.
+- **Open issue:** Test prospective information purchase after public difficulty cues are removed and against calibrated confidence and POMDP value-of-information nulls.
+- **Used by:** [P-007](principle-registry.md#p-007--prediction-error-allocation), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-820
+
+- **Statement:** Social exposure can change acquisition of actions, results, affordances, or techniques.
+- **Status:** established.
+- **Primary sources:** `HornerWhiten2005Imitation`, `ButtelmannEtAl2013ImitationFailure`, `AuerspergEtAl2014SocialTool`, `JaakkolaEtAl2010Blindfolded`.
+- **Rationale:** Demonstrator exposure changed behavior across studies while the transmitted target varied.
+- **Open issue:** Cross action form, end state, trajectory, embodiment, and causal relevance using ghost, result-only, and novel-action controls.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-008](principle-registry.md#p-008--compartmentalized-interaction), [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-821
+
+- **Statement:** Social learning and imitation are interchangeable.
+- **Status:** disputed.
+- **Primary sources:** `HornerWhiten2005Imitation`, `ButtelmannEtAl2013ImitationFailure`, `AuerspergEtAl2014SocialTool`.
+- **Rationale:** Ghost, result, affordance, attention, and action-form outcomes separate multiple learning targets hidden by the broader social label.
+- **Open issue:** Declare the copied target and test whether its transfer requires action form rather than terminal state or location.
+- **Used by:** [P-008](principle-registry.md#p-008--compartmentalized-interaction), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-822
+
+- **Statement:** Operational teaching can occur through learner-contingent behavior and measurable teacher cost.
+- **Status:** established.
+- **Primary sources:** `ThorntonMcAuliffe2006Teaching`, `FranksRichardson2006AntTeaching`.
+- **Rationale:** Meerkat provisioning and ant tandem running changed with learner state and improved acquisition while imposing cost on the informed actor.
+- **Open issue:** Compare against noncontingent exposure, fixed curriculum, and adaptive shaping while measuring dependence, delayed transfer, and harm.
+- **Used by:** [P-001](principle-registry.md#p-001--selective-allocation), [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation), [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-823
+
+- **Statement:** Selecting teachers by experience, reliability, uncertainty, or access can improve learning.
+- **Status:** plausible.
+- **Primary sources:** `HornerEtAl2010Prestige`, `KendalEtAl2015Strategies`.
+- **Rationale:** Chimpanzee copying varied with model experience, rank, demonstrated success, learner state, and exposure.
+- **Open issue:** Counterbalance rank and network access and compare with a contextual teacher bandit using domain- and time-qualified reliability.
+- **Used by:** [P-001](principle-registry.md#p-001--selective-allocation), [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-013](principle-registry.md#p-013--externalized-shared-state), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-824
+
+- **Statement:** Dolphin sponge foraging is associated with predominantly vertical social transmission and ecological opportunity in Shark Bay.
+- **Status:** established.
+- **Primary sources:** `KrutzenEtAl2005DolphinCulture`, `WildEtAl2019DolphinDiffusion`.
+- **Rationale:** Longitudinal and network-based analyses associate acquisition with matrilineal exposure after accounting for measured ecological and genetic structure.
+- **Open issue:** Do not infer action imitation or teaching from diffusion; quantify observation opportunity, unmeasured ecology, and model sensitivity.
+- **Used by:** [P-013](principle-registry.md#p-013--externalized-shared-state), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-825
+
+- **Statement:** Chimpanzees and bumblebees can socially acquire scoped solutions rarely or not observed during finite asocial baselines.
+- **Status:** established.
+- **Primary sources:** `VanLeeuwenEtAl2024ChimpSkill`, `AlemEtAl2016Bees`, `LoukolaEtAl2017Bees`.
+- **Rationale:** Seeded demonstrations produced acquisition or diffusion after finite baselines with little or no spontaneous completion.
+- **Open issue:** Treat baseline non-discovery as a sampled rate, charge model training and exposure, and test independence after model removal.
+- **Used by:** [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-013](principle-registry.md#p-013--externalized-shared-state), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-826
+
+- **Statement:** Sharing is valuable when expected independent discovery cost exceeds teaching, communication, and lock-in cost.
+- **Status:** plausible.
+- **Primary sources:** `VanLeeuwenEtAl2024ChimpSkill`, `AlemEtAl2016Bees`, `LoukolaEtAl2017Bees`.
+- **Rationale:** Social acquisition can shorten discovery for a population, but only a cumulative-cost comparison determines whether it creates net value.
+- **Open issue:** Compare seeded populations with centralized replay and independent search while charging failed attempts, evaluation, storage, communication, and fragility.
+- **Used by:** [P-001](principle-registry.md#p-001--selective-allocation), [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-013](principle-registry.md#p-013--externalized-shared-state), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-827
+
+- **Statement:** Cockatoo and elephant innovation cases recombine available objects and component actions under functional constraints.
+- **Status:** established.
+- **Primary sources:** `AuerspergEtAl2012Innovation`, `AuerspergEtAl2016Materials`, `AuerspergEtAl2013Locks`, `FoerderEtAl2011ElephantInsight`.
+- **Rationale:** Novel-to-subject outcomes were assembled from manipulable materials, prior action components, exploration, and functional feedback.
+- **Open issue:** Freeze the observed action inventory and report all prior tasks, husbandry, unrewarded manipulation, failed attempts, and transfers.
+- **Used by:** [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-007](principle-registry.md#p-007--prediction-error-allocation), [P-010](principle-registry.md#p-010--structural-offloading-and-co-design), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-828
+
+- **Statement:** Behavioral novelty means creation without antecedents.
+- **Status:** disputed.
+- **Primary sources:** `AuerspergEtAl2012Innovation`, `AuerspergEtAl2013Locks`, `FoerderEtAl2011ElephantInsight`.
+- **Rationale:** Novelty is defined relative to an observation and action history; component reuse, search, and unobserved prior experience remain.
+- **Open issue:** Preregister the action vocabulary and compare recombination, retrieval, planning, and stochastic search at matched operator and evaluator budgets.
+- **Used by:** [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-829
+
+- **Statement:** Prior unrewarded exploration can improve later functional object choice in some kea and crows.
+- **Status:** established.
+- **Primary sources:** `LambertEtAl2017Exploration`, `AuerspergEtAl2011MultiAccess`.
+- **Rationale:** Some explored subjects later selected functional objects above a no-exploration control, with task and species variation.
+- **Open issue:** Match contact time and action diversity and distinguish acquired object properties from persistence or accidental solution.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-007](principle-registry.md#p-007--prediction-error-allocation), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-830
+
+- **Statement:** A temporary exploration record can become useful when task relevance is revealed later.
+- **Status:** plausible.
+- **Primary source:** `LambertEtAl2017Exploration`.
+- **Rationale:** Unrewarded object interaction preceded later functional choice, but strategic information targeting was not demonstrated.
+- **Open issue:** Beat random action, curiosity, count-based exploration, and an ordinary replay buffer on delayed transfer at equal steps, bytes, and joules.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-831
+
+- **Statement:** The cylinder task is a species-general scalar measure of self-control.
+- **Status:** disputed.
+- **Primary sources:** `MacLeanEtAl2014SelfControl`, `KabadayiEtAl2017ParrotCylinder`, `FarrarEtAl2020Replication`.
+- **Rationale:** Learning, transparency, actuator geometry, site, sampling, and weak cross-task convergence undermine one portable scalar interpretation.
+- **Open issue:** Use multiple inhibition tasks and plant geometries with matched practice, sensing, action cost, and per-site uncertainty.
+- **Used by:** [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation), [P-007](principle-registry.md#p-007--prediction-error-allocation), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-832
+
+- **Statement:** Route blocking can induce alternative solution discovery and route switching.
+- **Status:** established.
+- **Primary sources:** `AuerspergEtAl2011MultiAccess`, `AuerspergEtAl2013Locks`.
+- **Rationale:** Birds switched or discovered routes when prior solutions were blocked, removed, or reordered.
+- **Open issue:** Compare with extinction, cached alternatives, contextual bandits, and bounded replanning while charging route-maintenance cost.
+- **Used by:** [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation), [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-007](principle-registry.md#p-007--prediction-error-allocation), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-833
+
+- **Statement:** Prior training can produce persistence on a now-nonfunctional elephant lid action.
+- **Status:** established.
+- **Primary source:** `Nissani2006ElephantCausal`.
+- **Rationale:** Trained lid removal persisted even when the lid no longer blocked access, documenting task-specific negative transfer.
+- **Open issue:** Track prior reinforcement and switch cost and test whether intervention/history records predict perseveration across apparatus changes.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-007](principle-registry.md#p-007--prediction-error-allocation), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-834
+
+- **Statement:** Octopus arm extension contains a basic peripheral motor program.
+- **Status:** established.
+- **Primary source:** `SumbreEtAl2001Peripheral`.
+- **Rationale:** Mechanically or electrically evoked extensions in disconnected arms shared kinematic features with intact reaching.
+- **Open issue:** Bound which goals, loads, contacts, and damage states the local program can handle and measure central override latency.
+- **Used by:** [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation), [P-008](principle-registry.md#p-008--compartmentalized-interaction), [P-010](principle-registry.md#p-010--structural-offloading-and-co-design), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-835
+
+- **Statement:** Octopus fetching can dynamically constrain a flexible arm into a quasi-articulated form.
+- **Status:** established.
+- **Primary source:** `SumbreEtAl2005Flexible`.
+- **Rationale:** Arm geometry and activity changed with grasp position while forming transient joint-like organization during fetching.
+- **Open issue:** Establish whether the strategy improves energy, stability, or transfer beyond passive mechanics and ordinary hierarchical control.
+- **Used by:** [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation), [P-008](principle-registry.md#p-008--compartmentalized-interaction), [P-010](principle-registry.md#p-010--structural-offloading-and-co-design), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-836
+
+- **Statement:** Octopuses can combine central visual goals with peripheral arm information in operant tasks.
+- **Status:** established.
+- **Primary sources:** `GutnickEtAl2011Vision`, `GutnickEtAl2020Peripheral`.
+- **Rationale:** Operant studies support exchange between central visual target information and peripheral arm location or sensory state.
+- **Open issue:** Measure representation, bandwidth, latency, compression loss, and robustness against a centralized controller receiving identical events.
+- **Used by:** [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation), [P-007](principle-registry.md#p-007--prediction-error-allocation), [P-008](principle-registry.md#p-008--compartmentalized-interaction), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-837
+
+- **Statement:** Sucker-local chemotactile sensing and coordination contribute to exploratory search.
+- **Status:** established.
+- **Primary sources:** `VanGiesenEtAl2020Chemotactile`, `SivitilliEtAl2023Search`.
+- **Rationale:** Molecular and behavioral experiments link local contact sensing and sucker coordination to exploration, including without visual feedback.
+- **Open issue:** Compare local preprocessing with centralized event handling under occlusion, compression, delay, false negatives, and arm loss.
+- **Used by:** [P-001](principle-registry.md#p-001--selective-allocation), [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation), [P-007](principle-registry.md#p-007--prediction-error-allocation), [P-008](principle-registry.md#p-008--compartmentalized-interaction), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-838
+
+- **Statement:** Local sensorimotor control can reduce central bandwidth for compliant plants.
+- **Status:** plausible.
+- **Primary sources:** `SumbreEtAl2001Peripheral`, `SumbreEtAl2005Flexible`, `GutnickEtAl2020Peripheral`, `SivitilliEtAl2023Search`.
+- **Rationale:** Peripheral programs and sensing can transform compact goals and local events into plant-specific action without transmitting every raw variable centrally.
+- **Open issue:** Beat hierarchical control and passive-dynamics nulls on an accuracy–latency–energy–recovery frontier with equal sensors and bandwidth.
+- **Used by:** [P-001](principle-registry.md#p-001--selective-allocation), [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation), [P-008](principle-registry.md#p-008--compartmentalized-interaction), [P-010](principle-registry.md#p-010--structural-offloading-and-co-design), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-839
+
+- **Statement:** Morphology, sensory opportunity, prior training, handler cues, and site affect comparative-task performance.
+- **Status:** established.
+- **Primary sources:** `FoerderEtAl2011ElephantInsight`, `ChuEtAl2023Handlers`, `AuerspergEtAl2011MultiAccess`, `KabadayiEtAl2017ParrotCylinder`, `FarrarEtAl2020Replication`.
+- **Rationale:** Across tasks, functional sensor and actuator access, prior actions, protocol deviations, site, and individual history altered observed performance.
+- **Open issue:** Use hidden sites and plants, record full history and protocol deviations, and estimate subject- and site-level uncertainty.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment), [P-008](principle-registry.md#p-008--compartmentalized-interaction), [P-010](principle-registry.md#p-010--structural-offloading-and-co-design), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-840
+
+- **Statement:** A species rank derived from one apparatus estimates general intelligence.
+- **Status:** disputed.
+- **Primary sources:** `MacLeanEtAl2014SelfControl`, `KabadayiEtAl2017ParrotCylinder`, `FarrarEtAl2020Replication`.
+- **Rationale:** Apparatus-specific sensing, motor affordance, training, site, sample, and construct validity prevent transport from one score to a general species scalar.
+- **Open issue:** Replace species rankings with task-by-opportunity-by-history estimates across multiple constructs, sites, and compatible apparatuses.
+- **Used by:** [P-008](principle-registry.md#p-008--compartmentalized-interaction), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-841
+
+- **Statement:** An opportunity- and history-qualified action contract will improve embodied-agent generalization audits.
+- **Status:** speculative.
+- **Primary sources:** `FoerderEtAl2011ElephantInsight`, `ChuEtAl2023Handlers`, `KabadayiEtAl2017ParrotCylinder`, `FarrarEtAl2020Replication`.
+- **Rationale:** Comparative results repeatedly change when actual observation, feasible action, training history, reward, intervention, and site differ, but the proposed AI evaluation benefit is untested.
+- **Open issue:** Run E-CCOG-01–08 and retain the contract only if it changes an architecture decision, catches reproducible confounds, and improves hidden-plant prediction without materially increasing false rejection.
+- **Used by:** [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-842
+
+- **Statement:** In small architectural-design protocol studies, inspecting a
+  sketch was associated with newly reported perceptual relations and functional
+  or conceptual thoughts; this supports a scoped external-workspace function,
+  not a general benefit from sketching.
+- **Status:** plausible.
+- **Primary sources:** `SuwaTversky1997Sketches`,
+  `SuwaPurcellGero1998CognitiveActions`, `Goldschmidt1991Dialectics`.
+- **Rationale:** Sequential marks can become queryable evidence for later
+  reinterpretation rather than merely recording a fully formed internal plan.
+- **Open issue:** Randomize visibility, persistence, manipulability, and
+  semantic detail against memory-only, textual, CAD, scratchpad, and search-tree
+  controls while preserving time and motor effort.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [P-013](principle-registry.md#p-013--externalized-shared-state),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-843
+
+- **Statement:** Manipulating a representation can reduce the perceptual or
+  computational cost of a scoped task even when the action does not directly
+  advance its terminal state.
+- **Status:** established.
+- **Primary sources:** `KirshMaglio1994Epistemic`,
+  `ZhangNorman1994DistributedRepresentations`.
+- **Rationale:** Tetris operations and isomorphic external-representation tasks
+  show that action and notation change available operators and memory demands.
+- **Open issue:** Separate information acquisition from habitual, preparatory,
+  or pragmatic action and compare with exhaustive transforms, simulation,
+  active perception, and value-of-information policies at equal action cost.
+- **Used by:** [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-013](principle-registry.md#p-013--externalized-shared-state),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-844
+
+- **Statement:** Ambiguous, low-commitment representations can support early
+  reinterpretation, while more finished representations can favor refinement;
+  the effect is contingent on operations and tool fluency rather than medium.
+- **Status:** plausible.
+- **Primary sources:** `StonesCassidy2010Reinterpret`,
+  `PurcellGero1998Drawings`.
+- **Rationale:** A scoped student study found reinterpretation in paper and
+  digital marks, with more paper reinterpretations becoming new ideas, while
+  the broader literature is mainly protocol evidence.
+- **Open issue:** Cross representational fidelity and reversibility while
+  equalizing training, operations, display, time, proposal count, and final
+  rendering cost; charge downstream invalid branches.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-845
+
+- **Statement:** Voluntary visual imagery can affect later perception, while
+  drawing-relevant object and spatial memory can dissociate; one uniform
+  internal bitmap is not required to explain visual construction.
+- **Status:** established.
+- **Primary sources:** `PearsonRademakerTong2011Imagery`,
+  `Bainbridge2021AphantasiaDrawing`.
+- **Rationale:** Controlled imagery affected binocular-rivalry outcomes, while
+  participants reporting congenital aphantasia showed different object-detail
+  and spatial-memory profiles with matched copying performance.
+- **Open issue:** Test monolithic latent, factorized object/spatial, symbolic,
+  and retrieval-render systems separately on perception, memory, composition,
+  and transformation, including compensation and recruitment controls.
+- **Used by:** [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-846
+
+- **Statement:** Expert observational drawing is associated with task-specific
+  eye–hand segmentation and flexible local/global attention, but does not
+  establish a general perceptual upgrade or fixed expert gaze policy.
+- **Status:** plausible.
+- **Primary sources:** `Tchalenko2009DrawingExpertise`,
+  `ChamberlainWagemans2015FlexibleAttention`.
+- **Rationale:** Small copying and cross-sectional studies link drawing skill to
+  source segmentation, direct eye–hand strategies, accuracy, and flexible
+  attention.
+- **Open issue:** Use longitudinal randomized training and unfamiliar media to
+  distinguish learned routing from selection, motor fluency, saliency, image
+  pyramids, contour tracing, and fixed demonstrations.
+- **Used by:** [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-847
+
+- **Statement:** Style and content discrimination vary with exposure time,
+  task, and expertise, supporting a learned and context-qualified relation
+  rather than one context-free visual statistic.
+- **Status:** plausible.
+- **Primary sources:** `Augustin2008StyleContent`, `Pihko2011ArtExpertise`.
+- **Rationale:** Crossed artist/motif judgments and expert–lay viewing studies
+  report different time courses, features, appraisals, and scan patterns.
+- **Open issue:** Hold out artists, motifs, media, capture pipelines, and
+  institutions; remove label and reproduction leakage before attributing a
+  representation to style.
+- **Used by:** [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-848
+
+- **Statement:** Novel visual proposals can inherit typical and correlated
+  properties from learned categories even when the requested entity is
+  fictional.
+- **Status:** established.
+- **Primary source:** `Ward1994StructuredImagination`.
+- **Rationale:** Across five experiments, imagined extraterrestrial animals
+  retained common Earth-animal properties and prompt-dependent correlations,
+  demonstrating reconstructive generation from acquired structure.
+- **Open issue:** Compare structured proposal priors with matched generative
+  search and measure novelty, validity, source dependence, and transfer without
+  treating stochasticity or prior experience as a complete mechanism.
+- **Used by:** [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-849
+
+- **Statement:** Copying or prolonged inspection of an unfamiliar visual style
+  can change later drawing choices and creativity ratings in scoped student
+  tasks; the effect depends on engagement and unfamiliarity.
+- **Status:** plausible.
+- **Primary sources:** `IshibashiOkada2010Copying`,
+  `OkadaIshibashi2017Imitation`.
+- **Rationale:** Copying interventions outperformed no-copy conditions in the
+  reported tasks, and follow-up comparisons separated copying, viewing,
+  reproduction, and reflection.
+- **Open issue:** Preregister source familiarity, attribution, transformation
+  depth, independent ratings, delayed transfer, and comparison with retrieval,
+  critique, fine-tuning, and equal-duration practice.
+- **Used by:** [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-850
+
+- **Statement:** Presented examples can narrow explored categories and transmit
+  example features or flaws, while sometimes improving novelty or quality;
+  design fixation is a conditional tradeoff, not a universal penalty.
+- **Status:** established.
+- **Primary sources:** `JanssonSmith1991Fixation`,
+  `SioKotovskyCagan2015Examples`.
+- **Rationale:** Controlled engineering-design experiments documented copied
+  features and faults, and a 43-study meta-analysis found reduced variety with
+  heterogeneous effects on novelty and quality.
+- **Open issue:** Cross example number, quality, distance, timing, visibility,
+  expertise, and incubation against retrieval, no-example, diverse-example, and
+  independent-search conditions at equal budgets.
+- **Used by:** [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-851
+
+- **Statement:** Analogical transfer in design depends jointly on structural
+  relevance, accessibility, timing, task, and expertise; source distance alone
+  does not predict benefit.
+- **Status:** plausible.
+- **Primary sources:** `DahlMoreau2002AnalogicalThinking`,
+  `Tseng2008AnalogyTiming`, `ChristensenSchunn2007AnalogicalDistance`.
+- **Rationale:** Design protocols and experiments report interacting effects of
+  transfer type, primes, surface similarity, timing, function, and preinventive
+  structure.
+- **Open issue:** Compare learned retrieval and structure mapping with nearest
+  neighbor, random source, no-source, expert search, and matched generative
+  baselines while measuring fixation and source dependence.
+- **Used by:** [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-013](principle-registry.md#p-013--externalized-shared-state),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-852
+
+- **Statement:** Designers report and exhibit mental simulation more often
+  under uncertainty, with approximate rather than high-fidelity results.
+- **Status:** plausible.
+- **Primary source:** `ChristensenSchunn2009MentalSimulation`.
+- **Rationale:** Naturalistic engineering protocols associated simulation
+  episodes with higher prior coded uncertainty, lower subsequent uncertainty,
+  and more approximate representations than base-rate episodes.
+- **Open issue:** Manipulate uncertainty and simulator access; compare explicit
+  low-fidelity models, retrieval, search, and staged verification while scoring
+  calibration, false confidence, latency, and energy.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-853
+
+- **Statement:** Proposal fluency, statistical rarity, category breadth, and
+  task value are separable; common originality scores can be confounded by
+  response count and scoring-sample composition.
+- **Status:** established.
+- **Primary sources:** `Hocevar1979FluencyConfound`,
+  `Silvia2008DivergentScoring`.
+- **Rationale:** Measurement studies document fluency confounds and reliability
+  and validity differences among divergent-thinking scoring methods.
+- **Open issue:** Validate independently rated novelty, constraint
+  satisfaction, realized value, harm, and cost on held-out design tasks rather
+  than treating open-ended output count as the target.
+- **Used by:** [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-854
+
+- **Statement:** Generating more proposals does not ensure that the selected
+  result is better; idea generation and selection have different failure modes
+  and originality–effectiveness tradeoffs.
+- **Status:** established.
+- **Primary source:** `Rietzschel2010IdeaSelection`.
+- **Rationale:** Individual ideation experiments found suboptimal selection and
+  showed that originality instructions changed chosen ideas without improving
+  every desirable outcome.
+- **Open issue:** Compare coupled and independent evaluators under hidden tests,
+  adversarial decoys, calibrated abstention, proposal-count controls, and
+  stakeholder-specific outcome vectors.
+- **Used by:** [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-855
+
+- **Statement:** In one randomized novice graphic-design study, producing
+  parallel prototypes before feedback improved later diversity and Web-ad
+  outcomes relative to serial prototype–feedback cycles.
+- **Status:** established.
+- **Primary source:** `Dow2010ParallelPrototyping`.
+- **Rationale:** The sequencing intervention changed expert judgments,
+  click-through performance, output diversity, and self-efficacy under the
+  study's scoped task and population.
+- **Open issue:** Compare serial, parallel, beam, restart, and quality-diversity
+  search at equal proposal, critique, compute, and evaluation budgets, including
+  tasks where early feedback is strongly informative.
+- **Used by:** [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-013](principle-registry.md#p-013--externalized-shared-state),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-856
+
+- **Statement:** Collaborative drawing surfaces carry gesture, spatial
+  reference, action history, and talk beyond a final artifact, while exposure
+  to others' ideas can also narrow category search.
+- **Status:** plausible.
+- **Primary sources:** `Tang1991CollaborativeWork`,
+  `KohnSmith2011CollaborativeFixation`.
+- **Rationale:** Observational workspace studies expose coordination channels,
+  while electronic-brainstorming experiments document conformity and
+  fixation, including a scoped incubation effect.
+- **Open issue:** Compare shared canvas, independent-then-pool, pairwise
+  communication, and centralized coordination under unique information,
+  fixating examples, turnover, and equal communication and evaluation cost.
+- **Used by:** [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions),
+  [P-013](principle-registry.md#p-013--externalized-shared-state),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-857
+
+- **Statement:** Visual-art appraisal varies across observers and with
+  expertise, abstraction, titles, familiarity, and context; neural correlates
+  of strong responses do not define a universal value function.
+- **Status:** established.
+- **Primary sources:** `VesselStarrRubin2012BrainArt`,
+  `MullennixRobinet2018Titles`, `VanPaasschen2015ArtTrainingPreference`.
+- **Rationale:** Rating, title, expertise, training, and neuroimaging studies
+  expose substantial observer and context dependence while measuring distinct
+  cognitive, affective, and neural outcomes.
+- **Open issue:** Compare global, grouped, hierarchical, and individual
+  preference models on new observers, contexts, cultures, and works while
+  retaining outcome vectors and minority distributions.
+- **Used by:** [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-858
+
+- **Statement:** Performance can accumulate across learner turnover in scoped
+  artifact tasks, but persistence depends on transmission, network structure,
+  archive access, and selection and is not automatically faithful or open-ended.
+- **Status:** established.
+- **Primary sources:** `CaldwellMillen2008Models`,
+  `CaldwellMillen2009Imitation`, `DerexBoyd2016Connectivity`.
+- **Rationale:** Transmission-chain and microsociety experiments document
+  generation-indexed improvement and task-dependent effects of available social
+  information and network connectivity.
+- **Open issue:** Compare turnover populations with centralized learning,
+  population optimization, archives, best-of-n selection, and independent
+  restarts at equal cumulative trials, memory, human time, and energy.
+- **Used by:** [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [P-013](principle-registry.md#p-013--externalized-shared-state),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-859
+
+- **Statement:** Scientific imaging can expose hidden material states, and a
+  provenance graph can preserve derivations and transformations; neither alone
+  reconstructs complete intention or establishes authenticity.
+- **Status:** established.
+- **Primary sources:** `Alfeld2013HiddenPaint`,
+  `Vandivere2019GirlSpotlight`, `w3cprov`.
+- **Rationale:** Complementary imaging and calibrated mock-ups reveal latent
+  layers, while W3C PROV records entities, activities, agents, and derivations
+  without turning lineage into truth or intent.
+- **Open issue:** Seed known branches, missing dependencies, corrupted metadata,
+  source retractions, and irreversible transforms; compare with
+  content-addressed version control plus ordinary provenance at equal cost.
+- **Used by:** [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [P-013](principle-registry.md#p-013--externalized-shared-state),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-860
+
+- **Statement:** Physical materials can selectively expose load, fit,
+  compliance, assembly, reach, and failure during making, but physical,
+  virtual, and sketch prototypes trade differently across tasks and represented
+  variables.
+- **Status:** plausible.
+- **Primary sources:** `Youmans2011PhysicalPrototyping`,
+  `FaasBaoYang2014Prototyping`, `Bousseau2016NovicePrototyping`.
+- **Rationale:** Controlled and observational design studies report functional,
+  fixation, exploration, and communication effects, with mixed task-dependent
+  comparisons among representation modes.
+- **Open issue:** Cross physical, virtual, sketch, and hybrid prototypes while
+  matching represented variables, time, trials, material, simulation,
+  irreversible rework, waste, and lifecycle energy.
+- **Used by:** [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  [P-013](principle-registry.md#p-013--externalized-shared-state),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md).
+
+### C-861
+
+- **Statement:** Analogical transfer is cue- and representation-dependent in
+  the cited experimental tasks.
+- **Status:** established.
+- **Primary sources:** `GickHolyoak1980Analogy`,
+  `GickHolyoak1983Schema`.
+- **Rationale:** The experiments separate exposure to a source from retrieval
+  and relational transfer: distant analogs were used more often when cues made
+  the relation accessible, and comparison across analogs supported schema
+  induction. The result is task-scoped and does not make analogy evidence of
+  correctness.
+- **Open issue:** Compare relation-aware retrieval with nearest-neighbor,
+  graph-matching, anti-unification, and no-source baselines on ancestor-disjoint
+  targets, charging hints, source access, mapping search, and proof checks.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-862
+
+- **Statement:** A conjecture's agreement with finite examples does not
+  establish a universal theorem.
+- **Status:** established.
+- **Primary source:** `Ferguson1999PSLQ`.
+- **Rationale:** Finite numerical or symbolic agreement can propose a relation
+  and bound the tested domain, precision, and generator; universal acceptance
+  requires a proof or a checked exhaustive reduction whose scope covers the
+  claimed domain.
+- **Open issue:** Publish the exact generator, sample policy, precision,
+  ancestor grouping, counterexample search, proof obligation, and status change
+  for every experimentally supported conjecture.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-863
+
+- **Statement:** A valid counterexample refutes an encoded universal claim but
+  does not select a unique repair.
+- **Status:** established.
+- **Primary source:** `Clarke2000CEGAR`.
+- **Rationale:** Counterexample-guided abstraction refinement demonstrates how
+  a localized failing case can drive a specific refinement loop, while the same
+  failure can remain compatible with multiple changes to definitions, side
+  conditions, abstractions, or candidate programs.
+- **Open issue:** Test whether typed failure localization improves valid hidden-
+  case repair over model finding, property-based testing, CEGAR, and CEGIS at
+  matched solver calls, repair proposals, human time, compute, and energy.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-864
+
+- **Statement:** Explicit abstraction obligations can prevent some efficiency
+  gains from being purchased by hidden excluded cases.
+- **Status:** plausible.
+- **Primary source:** `Clarke2000CEGAR`.
+- **Rationale:** Mature abstraction-refinement methods make soundness or
+  adequacy obligations and spurious counterexamples visible. Whether an
+  obligation-carrying learned abstraction improves the search–checking frontier
+  beyond those methods remains an integration hypothesis.
+- **Open issue:** Match retained information, solver calls, abstraction-
+  construction cost, proof budget, and human design time, then test excluded
+  and degenerate cases under concretization.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-865
+
+- **Statement:** Tactic decomposition is safe only when child proofs
+  reconstruct a proof of the parent goal through the kernel interface.
+- **Status:** established.
+- **Primary source:** `Gordon1979LCF`.
+- **Rationale:** LCF-style architecture lets untrusted tactics propose
+  decompositions while restricting theorem construction to a trusted logical
+  interface. Subgoal closure without parent reconstruction is therefore not an
+  accepted proof.
+- **Open issue:** Measure whether learned decomposition improves checked closure
+  and transfer over hammers and tuned prover portfolios after failed branches,
+  kernel calls, proof size, formalization labor, and energy are charged.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-866
+
+- **Statement:** Formal libraries amortize proof work while adding retrieval,
+  dependency, review, and migration costs.
+- **Status:** established.
+- **Primary sources:** `Bancerek2018MizarLibrary`, `Mathlib2020Library`,
+  `vanDoorn2020Maintenance`.
+- **Rationale:** Mizar and mathlib document reusable, machine-checked library
+  development, while maintenance work exposes the dependency and migration
+  burden that must accompany any claim of cumulative efficiency.
+- **Open issue:** Compare audited inheritance with an ordinary formal library
+  plus Git and CI across contributor or model turnover, definition changes,
+  seeded defects, reverse dependencies, and complete human and compute costs.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-867
+
+- **Statement:** Informationally equivalent representations can differ in the
+  operations and search required for a task.
+- **Status:** established.
+- **Primary source:** `Larkin1987Diagrams`.
+- **Rationale:** The cited analysis explains diagrammatic advantage through
+  computational properties such as locality, grouping, and perceptual
+  inference rather than through additional semantic content alone.
+- **Open issue:** Compare fixed, synchronized, and learned representations on
+  isomorphic problems while charging view construction and selection and
+  testing round-trip loss, accessibility, and deliberately hidden edge cases.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-868
+
+- **Statement:** Verified invariants and symmetries can prune search; unverified
+  ones can remove valid solutions.
+- **Status:** established.
+- **Primary source:** `Crawford1996Symmetry`.
+- **Rationale:** Symmetry-breaking predicates reduce redundant search when they
+  preserve a representative of each valid orbit. Treating an approximate or
+  unproved transformation as an exact symmetry can instead prune admissible
+  solutions.
+- **Open issue:** Require group-action or invariant certificates where exactness
+  is claimed, and compare approximate reductions separately under false-prune,
+  search-node, checking, and lifecycle budgets.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-869
+
+- **Statement:** Local proofs yield a global result only through explicit
+  compatibility and composition conditions.
+- **Status:** established.
+- **Primary source:** `Hales2017Flyspeck`.
+- **Rationale:** The Flyspeck case demonstrates a large proof assembled from
+  formal definitions, reductions, local obligations, computation, and checked
+  composition. Passing isolated checks does not by itself close the parent
+  theorem.
+- **Open issue:** Test proof-DAG reconstruction under missing assumptions,
+  stale dependencies, independently valid but incompatible lemmas, and
+  definition changes; report the exact unresolved cut when closure fails.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-870
+
+- **Statement:** Small-kernel proof assistants separate untrusted proof search
+  from trusted checking.
+- **Status:** established.
+- **Primary sources:** `Gordon1979LCF`, `deMoura2015Lean`.
+- **Rationale:** LCF and Lean place tactic, elaboration, and search outside a
+  comparatively small trusted checking boundary. A kernel-accepted term proves
+  the encoded proposition relative to the declared logic, axioms, definitions,
+  dependencies, and artifact version.
+- **Open issue:** Publish the exact trusted computing base and proposition
+  identity, then seed parser, elaborator, dependency, axiom, and wrong-problem
+  failures rather than treating checker success as unrestricted truth.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-871
+
+- **Statement:** Certificates can shift expensive untrusted search to cheaper
+  independent checking under a fixed calculus and instance identity.
+- **Status:** established.
+- **Primary sources:** `necula1997pcc`, `Wetzler2014DRAT`.
+- **Rationale:** Proof-carrying code and DRAT checking demonstrate producer–
+  consumer or solver–checker separation in scoped calculi. The boundary depends
+  on immutable input identity, certificate coverage, checker correctness, and
+  the declared policy or formula.
+- **Open issue:** Compare standard certificate checking with reruns, same-code
+  replay, and graded envelopes on wrong inputs, truncated proofs, stale
+  dependencies, shared bugs, certificate size, I/O, energy, and recovery work.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-872
+
+- **Statement:** Resolution completeness does not remove heuristic clause-
+  search cost.
+- **Status:** established.
+- **Primary sources:** `Robinson1965Resolution`, `Kovacs2013Vampire`.
+- **Rationale:** Resolution supplies a complete inference basis under its
+  formal conditions, while practical provers still depend on indexing,
+  ordering, rewriting, subsumption, splitting, selection, and resource
+  schedules to control combinatorial search.
+- **Open issue:** Compare learned guidance with tuned saturation and portfolio
+  baselines at matched premises, inferences, generated clauses, memory, wall
+  time, energy, proof size, and ancestor-safe splits.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-873
+
+- **Statement:** Learned tactic/premise guidance can improve results in
+  particular formal corpora and budgets; the result is not corpus-independent.
+- **Status:** established.
+- **Primary sources:** `Bansal2019HOList`, `Hubert2025AlphaProof`.
+- **Rationale:** HOList and AlphaProof report learned-guidance gains in named
+  formal environments and task sets. Those measured results remain conditional
+  on formalization, library, accessible ancestors, training procedure, search
+  budget, and evaluation split.
+- **Open issue:** Group duplicates, restatements, specializations, generated
+  siblings, proofs, and dependency-closing lemmas before splitting, then test
+  hidden theories, definition shifts, and new proof families against kNN,
+  hammers, and tuned portfolios.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-874
+
+- **Statement:** CDCL learns conflict clauses and manages their lifetime under
+  the encoded CNF problem.
+- **Status:** established.
+- **Primary source:** `Nieuwenhuis2006DPLLT`.
+- **Rationale:** Conflict analysis produces clauses that block implicated
+  assignments, while activity, deletion, restart, and preprocessing policies
+  manage search and retained state. This is a mature temporary-memory and
+  feedback-control null.
+- **Open issue:** Compare any transferred conflict-memory proposal with a tuned
+  CDCL stack at equal clauses, solver calls, memory, restarts, checking, wall
+  time, and energy, preserving formula and preprocessing identity.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-875
+
+- **Statement:** DPLL(T) composes Boolean search with scoped theory solvers
+  through explicit propagation/conflict interfaces.
+- **Status:** established.
+- **Primary sources:** `Nieuwenhuis2006DPLLT`, `Barrett2010SMTLIB`.
+- **Rationale:** The architecture separates a Boolean search layer from
+  theory-specific reasoning while exchanging justified consequences and
+  conflicts under a declared logic. Solver status and certificate or model
+  support must remain typed and theory-scoped.
+- **Open issue:** Preserve SAT, UNSAT, and UNKNOWN separately, bind every
+  result to the exact formula and logic, and compare modular learned components
+  with tuned SMT solvers under proof-production and checking budgets.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-876
+
+- **Statement:** Constraint/model finding is bounded by its encoding,
+  domain, solver, and certificate support.
+- **Status:** established.
+- **Primary source:** `Nethercote2007MiniZinc`.
+- **Rationale:** A modeling language and solver can search the encoded finite or
+  theory-bounded problem; a returned model or failure status does not establish
+  claims outside that encoding, domain, semantics, or supported certificate.
+- **Open issue:** Record parser, model, domain bounds, solver version, seeds,
+  precision, status, model validation, and certificate coverage, including
+  hidden tests that distinguish an encoding error from a search failure.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-877
+
+- **Statement:** Numerical relation discovery requires exact or certified
+  follow-up before universal acceptance.
+- **Status:** established.
+- **Primary sources:** `Ferguson1999PSLQ`, `Hales2017Flyspeck`.
+- **Rationale:** Integer-relation algorithms and large formalized computations
+  can support discovery or checked finite reduction, but numerical agreement
+  alone remains a tested conjecture unless the exact reduction and certificate
+  chain cover the theorem.
+- **Open issue:** Seed conditioning, precision, implementation, arithmetic,
+  reduction, and certificate faults; report the tested range and precision
+  separately from exact theorem status.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-878
+
+- **Statement:** Versioned formal collaboration is feasible, while participant
+  count alone does not establish independent checking.
+- **Status:** established.
+- **Primary sources:** `Polymath2012DHJ`, `Mathlib2020Library`,
+  `vanDoorn2020Maintenance`.
+- **Rationale:** Distributed mathematical and formal-library work can produce
+  versioned shared artifacts, review, and maintenance, but contributors may
+  share definitions, sources, tools, assumptions, and blind spots.
+- **Open issue:** Record the shared-information and dependency graph, seed
+  errors across versions, and compare pooled collaboration with genuinely
+  diverse checking at matched participant, review, build, repair, and energy
+  budgets.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-879
+
+- **Statement:** Worked examples and strategic proof knowledge have task-scoped
+  learning evidence; immediate performance is not general expertise.
+- **Status:** established.
+- **Primary sources:** `SwellerCooper1985Examples`, `Weber2001Strategic`,
+  `Inglis2012ProofReading`, `Inglis2013Standards`.
+- **Rationale:** The cited instructional and proof-cognition studies distinguish
+  supported task performance, strategic knowledge, proof reading, and evaluator
+  standards. None licenses unmeasured far transfer or durable independent
+  expertise.
+- **Open issue:** Match examples, proof steps, hints, training compute, human
+  instruction, and energy, then test delayed, ancestor-disjoint, definition-
+  shifted transfer with support withdrawn.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-880
+
+- **Statement:** A unified propose–challenge–prove–check lifecycle may improve
+  source attribution and error localization beyond a generator plus kernel
+  alone.
+- **Status:** plausible.
+- **Primary sources:** `Clarke2000CEGAR`, `Gordon1979LCF`, `necula1997pcc`,
+  `vanDoorn2020Maintenance`.
+- **Rationale:** Counterexample refinement, trusted-kernel reconstruction,
+  certificate checking, and versioned library maintenance establish the
+  component operations, not the claimed benefit of their unified lifecycle.
+  The composition therefore remains a benchmark hypothesis.
+- **Open issue:** Compare the complete loop with generators plus kernels,
+  theorem provers, SAT/SMT, formal libraries, and ordinary review while matching
+  every proposal, search node, checker call, proof byte, dependency rebuild,
+  human-hour, wall-second, and joule.
+- **Used by:** [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).

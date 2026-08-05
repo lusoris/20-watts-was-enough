@@ -143,6 +143,85 @@ retrieval and explicit protocol state reaches the same frontier; neural
 synchrony cannot override that result ([C-783](claims.md#c-783)). See
 [OQ-056](open-questions.md#oq-056).
 
+### Opportunity- and history-qualified adaptive-action benchmark
+
+The [comparative-cognition audit](audits/2026-08-05-comparative-cognition-tool-use.md)
+promotes no principle or candidate. Its durable result is an evaluation
+contract: retain the task and apparatus, actual sensory evidence, feasible
+motor actions, morphology, acquisition and social history, reward schedule,
+intervention and controls, timescale, and sampling unit before naming a
+capability ([C-804](claims.md#c-804)–[C-840](claims.md#c-840)). Species or
+task rankings are explicitly rejected; terminal success cannot erase unequal
+opportunity, reinforcement history, or failed transfer.
+
+[Fixture F-003](../experiments/fixtures/003-opportunity-history-qualified-action.md)
+applies that contract to Candidates 004, 006, 007, 014, 018, and 019. Its
+required null stack includes affordance learning plus search, model-based
+RL/POMDP/MPC, retrieval, selective prediction and value of information,
+behavior cloning, task graphs, hierarchical control, domain randomization,
+system identification, and stratified evaluation. Retain the fixture only if
+it changes an architecture decision, catches a reproducible opportunity or
+history confound, and improves hidden-plant prediction without materially
+increasing false rejection ([C-841](claims.md#c-841)). See
+[OQ-057](open-questions.md#oq-057).
+
+### Versioned reconstructive-design benchmark
+
+The [visual-art/design audit](audits/2026-08-05-visual-art-design-cognition.md)
+promotes no principle or candidate. Its durable result composes existing
+operations into an evaluation loop: reconstruct proposals from learned
+categories, examples, analogies, and constraints; externalize attributable
+variants; inspect newly available relations or material evidence; transform
+without erasing source and branch history; and evaluate against a qualified
+outcome vector ([C-842](claims.md#c-842)–[C-860](claims.md#c-860)).
+
+The contract keeps proposal generation separate from selection, treats example
+exposure as both a possible aid and a fixation or negative-transfer channel,
+binds evaluator identity, context, and uncertainty to each judgment, and
+records which physical variables a sketch, simulation, or material probe
+actually exposed. Provenance establishes derivation, not truth, authenticity,
+intent, or complete recoverability. [Fixture F-002](../experiments/fixtures/002-versioned-reconstructive-design.md)
+applies these boundaries across Candidates 004, 014, 017, 018, and 019.
+
+Its required null is the complete composition of retrieval, structured
+scratchpads and CAD, beam/population/quality-diversity search, simulation,
+contextual preference models, content-addressed version control, W3C PROV, and
+ordinary design workflow. Retain the fixture only if it improves held-out
+validity, diversity, recovery, transfer, and lifecycle cost while exposing
+fixation, evaluator disagreement, material-model omissions, and lineage loss
+beyond that stack. See [OQ-058](open-questions.md#oq-058).
+
+### Versioned proof-discovery and verification benchmark
+
+The [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md)
+promotes no principle or candidate. Its durable result is an evaluation
+contract that keeps candidate production separate from acceptance. Examples,
+analogy, abstraction, retrieval, search, and stochastic variation may propose a
+statement; none makes it true. Counterexamples can reject and localize but do
+not choose a unique repair. A decomposed proof is accepted only when its child
+artifacts reconstruct the parent through the declared checker, definitions,
+axioms, dependencies, and version ([C-861](claims.md#c-861)–[C-870](claims.md#c-870)).
+
+[Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md)
+applies this contract across Candidates 004, 009, 010, 011, 014, 017, and 019.
+It requires immutable problem and library identity, proposal ancestry,
+abstraction obligations, counterexample search, a reconstructible proof DAG, a
+small trusted checker or independently checkable certificate, and typed
+`proved`, `refuted`, `tested`, `unknown`, `disputed`, and `retracted` state.
+Changing a premise, definition, checker, or library version invalidates every
+reachable dependent until it is rebuilt and rechecked ([C-871](claims.md#c-871)–[C-880](claims.md#c-880)).
+
+Its required null is the complete relevant stack: theorem provers, proof
+assistants and kernels, SAT/SMT and constraint solvers, CEGAR/CEGIS, formal
+libraries, proof certificates, version control, CI, dependency analysis, and
+ordinary mathematical review. Evaluation splits group exact duplicates,
+restatements, specializations, isomorphic variants, generated siblings, source
+texts, and dependency-closing lemmas before partitioning. Report all candidate,
+search, counterexample, proof, certificate, checker, storage, migration, repair,
+review, human-hour, wall-time, memory, and joule costs. Retire the composition
+when that mature stack reaches the same checked-result and fault-localization
+frontier. See [OQ-059](open-questions.md#oq-059).
+
 ## P-001 — Selective allocation
 
 **Problem.** Total possible capacity is larger than the activity or resources

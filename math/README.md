@@ -42,6 +42,26 @@ notation.
   compacted information to a designated interpreter community, representation
   dependencies, versioned vocabularies and identities, native-unit query
   tolerances, evidence obligations, recovery, and lifecycle cost.
+- [`versioned-reconstructive-design.md`](versioned-reconstructive-design.md)
+  separates exposure, retrieval, reconstruction, representation change,
+  epistemic and material feedback, relative novelty, fixation, constraint
+  validity, selection, attribution, retained lineage, and lifecycle cost for
+  Fixture F-002.
+- [`opportunity-history-qualified-action.md`](opportunity-history-qualified-action.md)
+  defines actual sensory and motor opportunity, acquisition history,
+  intervention-sensitive transfer, copy-target decomposition, prospective and
+  event-memory nulls, costed uncertainty, distributed control, and lifecycle
+  cost for Fixture F-003.
+- [`proof-discovery-verification-contract.md`](proof-discovery-verification-contract.md)
+  defines immutable problem and library identity, dependency-safe splits,
+  counterexample and abstraction obligations, reconstructible proof DAGs,
+  generator/checker separation, certificates, typed publication,
+  invalidation, human effort, and lifecycle energy for Fixture F-004.
+- [`regime-qualified-flow-contract.md`](regime-qualified-flow-contract.md)
+  defines signed scale transfer, detector-qualified coherent events,
+  closure-support distance, reduced-state adequacy, adaptive resolution,
+  assimilation and observability, transition and tail calibration, net control
+  benefit, and complete energy accounting for Fixture F-005.
 
 Rules:
 

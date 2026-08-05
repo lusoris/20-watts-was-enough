@@ -889,9 +889,9 @@ agent.
   removal, stabilization, phase noise, and readout carry the clock cost.
 - **“Exact Gillespie simulation means exact chemistry.”** It is exact sampling of a
   declared Markov jump model; model mismatch remains.
-- **“DNA neural networks are brain-like AI.”** The cited molecular circuits
-  implement formal threshold/associative computations. Their substrate does not
-  supply semantic learning or an efficiency advantage by itself.
+- **“Threshold or associative molecular circuits imply cognitive equivalence.”**
+  The cited circuits implement the named formal computations. Their substrate
+  does not supply semantic learning or an efficiency advantage by itself.
 - **“A self-erasing ink guarantees secure deletion.”** Residue, by-products,
   incomplete disassembly, and recoverable traces must be assayed.
 - **“A thermodynamic uncertainty relation is one universal AI energy law.”** The

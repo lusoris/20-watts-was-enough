@@ -37,8 +37,8 @@ function lineAt(text, offset) {
 
 const suspiciousCommands = [
   {
-    pattern: /(^|[^\\])\b(?:quad|qquad)\s*(?=\[)/,
-    message: "likely missing backslash before quad/qquad",
+    pattern: /(^|[^\\A-Za-z])(?:quad|qquad|land|lor|mid)(?=\s|$)/,
+    message: "likely missing backslash before a spacing or relation command",
   },
   {
     pattern:

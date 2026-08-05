@@ -402,6 +402,91 @@ compliance are credited before a controller ([C-597](../research/claims.md#c-597
 an action-correlated internal signal is not assumed to be a complete accurate
 forward model ([C-601](../research/claims.md#c-601)).
 
+### Opportunity- and history-qualified adaptive action
+
+Comparative cognition adds a sharper condition to the observation contract:
+the same apparatus does not create the same task when bodies, sensors, prior
+training, rewards, demonstrators, handlers, or feasible actions differ. The
+evidence in [C-804](../research/claims.md#c-804)–[C-841](../research/claims.md#c-841)
+spans tool manufacture, causal transfer, future preparation, event memory,
+uncertainty control, imitation, teaching, exploration, negative transfer, and
+central-versus-peripheral control. Its durable contribution is not a species
+ranking. It is a requirement to record the opportunity that made an outcome
+possible.
+
+Extend each episode with
+
+$$
+\Omega=(X,S,A,H,R,C,\tau,U),
+$$
+
+where $X$ is task and apparatus state, $S$ is the sensory information actually
+available, $A$ is the feasible realized-action set, $H$ is prior training and
+social exposure, $R$ is reward and stopping state, $C$ is the intervention and
+control set, $\tau$ is elapsed time in seconds, and $U$ is the sampling unit.
+The detailed definitions and units are maintained in the
+[opportunity/history mathematics](../math/opportunity-history-qualified-action.md).
+
+This record prevents several category errors:
+
+1. **Terminal success is not transfer.** First-trial response after a material,
+   geometry, cue, relation, body, or history change is retained separately
+   from later test-time learning.
+2. **One copied outcome is not one copied process.** Demonstrations are
+   decomposed into action form, trajectory, end state, location, demonstrator,
+   and functional relation. Ghost and result-only controls identify which
+   component changed the learner.
+3. **A future-directed action is not a unique memory mechanism.** Value tables,
+   successor representations, planning, and retrieval remain nulls for delayed
+   selection and resource reservation.
+4. **Adaptive checking is not a unique uncertainty mechanism.** Public
+   difficulty cues, response strength, calibrated confidence, selective
+   prediction, and ordinary value of information must be beaten.
+5. **Local control is not independent control.** Body mechanics, local sensing,
+   peripheral feedback, central goal selection, override latency, and message
+   traffic are measured separately.
+6. **Repeated trials are not independent agents.** Episode, learner, dyad,
+   group, site, rearing or training cohort, and population remain distinct
+   sampling levels.
+
+```mermaid
+flowchart LR
+    task["Task · apparatus · hidden regime"] --> channel["Actual sensory channel + receipt time"]
+    body["Body · tool · feasible action set"] --> channel
+    history["Training · reward · social exposure · handler cues"] --> state["Opportunity/history-qualified state"]
+    channel --> state
+    controls["Intervention · ghost · cue reversal · history swap"] --> task
+    state --> policy["Act · inspect · abstain · retrieve · communicate"]
+    policy --> plant["Realized action through compliant plant"]
+    plant --> outcome["Outcome + first-trial transfer + safety + cost"]
+    outcome --> diagnosis{"Which relation transferred?"}
+    diagnosis --> affordance["Affordance · causal model · search"]
+    diagnosis --> memory["Event · semantic · prospective memory"]
+    diagnosis --> social["Action form · result · location · convention"]
+    diagnosis --> control["Central · local · mechanical contribution"]
+    nulls["RL · POMDP/MPC · retrieval · VOI · imitation · hierarchical control"] --> diagnosis
+    diagnosis --> revision["Retain · narrow · reject · revise"]
+    revision --> history
+```
+
+Editable source:
+[opportunity-history-qualified-action.mmd](../assets/diagrams/opportunity-history-qualified-action.mmd).
+
+[Fixture F-003](../experiments/fixtures/003-opportunity-history-qualified-action.md)
+turns the contract into eight separable tracks: manufacture transfer, causal
+inversion, future resource reservation, event memory, costed uncertainty,
+copy-target decomposition, social acquisition, and local/central/mechanical
+control. It compares the full composition with learned affordances and search,
+model-free and model-based RL, POMDP/MPC, semantic and episodic retrieval,
+selective prediction and value of information, imitation learning, central
+replay, and hierarchical control under one lifecycle boundary.
+
+The fixture earns architectural credit only when opportunity qualification
+changes a conclusion, exposes a reproducible confound missed by the existing
+stack, or produces robust transfer beyond the complete nulls. Otherwise the
+episode contract remains useful instrumentation and the additional mechanism
+is retired.
+
 ### Grounded learning loop
 
 ```mermaid
@@ -672,6 +757,12 @@ the proposed benefit.
   **established or plausible within the audited vehicle domains**.
 - Validated asynchronous authority transfer under
   [C-461](../research/claims.md#c-461): **speculative**.
+- Opportunity, history, causal-transfer, event-memory, social-learning, and
+  distributed-control observations under
+  [C-804](../research/claims.md#c-804)–[C-840](../research/claims.md#c-840):
+  **established, plausible, or disputed only within their declared tasks**;
+  the integrated action contract under
+  [C-841](../research/claims.md#c-841) is **speculative**.
 
 ## Speculative extensions
 
@@ -722,6 +813,9 @@ on intervention novelty alone.
 | Calibration fails specifically under missing modalities or novel interventions | uncertainty is not deployment-valid; block autonomous escalation in those strata |
 | Low state-estimation error coexists with integrity alerts that are late or absent | average accuracy is not safe-to-use evidence; bind fault hypotheses, alert limit, and deadline |
 | Handoff produces overlapping owners, a control gap, or stale queued effects | transfer is not atomic or command expiry is incomplete; revoke, fall back, and preserve the trace |
+| Raw task success changes after body, cue, training, reward, handler, or site changes | the opportunity record is incomplete; stratify and rerun before attributing a mechanism |
+| A socially exposed policy reaches the same end state but changes no novel action form | result, affordance, or location learning explains the effect; remove the imitation claim |
+| A local controller wins until passive mechanics, local hardware, or communication are charged | the control-locus claim is misattributed; keep the cheaper complete baseline |
 
 ## Measurable predictions
 
@@ -798,8 +892,21 @@ ordinary arbitration, and the HCI/observation contracts at equal sensing,
 reserve, communication, training, review, latency, and joule budgets. A tie
 merges its useful fields into those conventional mechanisms.
 
+### H-G10 — Opportunity-qualified transfer
+
+At equal episodes, interventions, action feasibility, search, storage,
+communication, human effort, and lifecycle joules, explicit opportunity and
+history state will improve first-trial functional transfer and calibration
+under held material, causal-relation, body/tool, acquisition-history, and
+social-channel changes relative to an otherwise identical learner. The claim
+is rejected if the gain disappears after actual sensor cues, feasible actions,
+prior training, reward schedule, handler/site, or later test-time learning are
+modeled, or if the complete affordance/search, planning, retrieval, VOI,
+imitation, replay, and hierarchical-control stack matches the result.
+
 Promotion requires H-G1 plus at least one transfer result from H-G3–H-G6,
 valid uncertainty under H-G7, and no lifecycle contradiction under H-G8.
 Stage-4 authority-transfer claims additionally require H-G9. A
+comparative-cognition-derived transfer claim additionally requires H-G10. A
 positive result remains scoped to its trajectory schema, intervention family,
 environment shift, hardware boundary, and evaluated language role.

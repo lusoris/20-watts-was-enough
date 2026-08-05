@@ -7,6 +7,43 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A comparative-cognition and tool-use audit spanning manufacture, causal
+  transfer, future preparation, event memory, costed uncertainty, copying,
+  teaching, exploration, social acquisition, negative transfer, and
+  central/local/mechanical control.
+- Thirty-eight scoped comparative-cognition claims (`C-804`–`C-841`), fifty-one
+  new centralized sources, an opportunity- and history-qualified action
+  diagram and mathematical contract, and Fixture F-003 with eight independent
+  diagnostic tracks; no principle or candidate was added.
+- A visual-art and design-cognition audit covering external representations,
+  epistemic action, reconstructive generation, representation change,
+  expertise, analogy, fixation, parallel prototypes, material feedback,
+  qualified evaluation, cultural accumulation, conservation, and provenance.
+- Nineteen scoped visual/design claims (`C-842`–`C-860`) and thirty-five new
+  centralized sources; no principle or candidate was added.
+- Fixture F-002, its editable reconstruction/inspection/transform/evaluation
+  diagram, and its mathematical contract for exposure, retrieval, relative
+  novelty, fixation, constraint validity, selection regret, lineage,
+  reconstructability, and lifecycle cost.
+- A mathematical-practice and proof-discovery audit spanning conjecture,
+  analogy, abstraction, counterexamples, proof decomposition, lemma libraries,
+  notation, invariants, local/global composition, ITP/ATP, SAT/SMT, constraint
+  solving, experimental mathematics, collaboration, and proof learning.
+- Twenty scoped mathematical-practice claims (`C-861`–`C-880`) and twenty-eight
+  new centralized sources; no principle or candidate was added.
+- Fixture F-004, an editable propose/challenge/decompose/prove/check/publish/
+  invalidate diagram, and a mathematical contract for immutable problem
+  identity, leakage-safe splits, proof-DAG reconstruction, certificates, typed
+  publication, reverse-dependency invalidation, human effort, and energy.
+- A fluid-dynamics and turbulence audit spanning multiscale transfer,
+  intermittency, coherent structures, closure and model-form error,
+  reduced-order models, adaptive resolution, assimilation and observability,
+  sensor placement, control, mixing, transition, extremes, measurement, and
+  complete energy accounting.
+- Fixture F-005, its editable regime-qualified flow diagram, and a mathematical
+  contract for signed flux, detector/filter identity, closure support,
+  reduced-state adequacy, refinement, assimilation, tail calibration,
+  stability, and net lifecycle energy.
 - A music-cognition and improvisation audit covering sequence expectation,
   grouping, learned tonal/rhythmic priors, phase correction, motif
   transformation, audio–motor control, expression, ensemble coordination,
