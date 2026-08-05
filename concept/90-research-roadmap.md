@@ -280,9 +280,10 @@ adding citations:
 | visual art and design cognition | reconstructive generation, external workspaces, epistemic action, analogy, copying, fixation, proposal/selection separation, qualified aesthetic evaluators, material feedback, cultural accumulation, and provenance map to existing bundles; Fixture F-002 tests a versioned reconstruct–externalize–inspect–transform–evaluate composition across Candidates 004/014/017/018/019 without promoting a principle or candidate |
 | mathematical practice and proof discovery | conjecture, analogy, abstraction, counterexample search, proof decomposition, libraries, representations, invariants, theorem proving, certificates, SAT/SMT, model finding, experimental mathematics, collaboration, and teaching map to mature methods; Fixture F-004 keeps attributable proposals separate from typed acceptance, reconstructs proof DAGs through small checkers, uses dependency-safe splits and reverse-dependency invalidation, and charges complete human/joule budgets across Candidates 004/009/010/011/014/017/019 without promoting a principle or candidate |
 | fluid dynamics and turbulence | signed cascade/flux, intermittency and tails, detector-qualified coherent structures, closure/model-form support, objective-qualified ROMs, adaptive-resolution total work, observation/assimilation/observability, sensor-placement transport, stable net-benefit control, a mixing vector, path-dependent transition, calibrated extremes, measurement operators and uncertainty, and the full energy boundary remain separate; Fixture F-005 carries the outcome firewall across Candidates 002/003/006/007/012/014 without promoting a principle or candidate |
+| sports expertise, adaptive performance, and team coordination | anticipation/interception, causal cue use, practice/retention/transfer, relevant variability, speed/accuracy/risk/energy, fatigue/readiness/damage/return, shared information/coordination, adversarial deception, feedback dependence, prospective selection, and full human/joule budgets remain separate; Fixture F-006 carries the representative history/resource-qualified performance contract across Candidates 002/004/006/007/009/012/014/019 without promoting a principle or candidate |
 
 The music, library/archival, comparative-cognition, visual-design,
-mathematical-practice, and fluid-dynamics queues are closed by explicit
+mathematical-practice, fluid-dynamics, and sports queues are closed by explicit
 no-promotion decisions. The music
 [Fixture F-001](../experiments/fixtures/001-shared-clock-free-coadaptation.md)
 retains E-MUSIC-07 as a cross-candidate benchmark; the archival refinement
@@ -312,6 +313,18 @@ control, vector mixing outcomes, transition history, extreme calibration,
 propagated uncertainty, and a full lifecycle energy boundary. Its null is the
 complete relevant CFD, reduced-model, estimation, sensing, control,
 rare-event, metrology, and accounting stack.
+Sports contributes
+[Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md)
+across Candidates 002/004/006/007/009/012/014/019. It preserves actual
+observation/action coupling; separates anticipation from interception,
+practice from retention and transfer, relevant exploration from variance, and
+fatigue/readiness/damage from staged return; challenges coordination with
+turnover and perturbation, deceptive cues with calibration, selection with
+counterfactual opportunity, and apparent efficiency with full athlete, coach,
+facility, sensor, recovery, medical, failed-pathway, wall-time, and joule
+budgets. Its null is the complete calibrated prediction, retrieval, planning,
+control, curriculum, assurance, coordination, causal-inference, and lifecycle-
+accounting stack.
 The next
 breadth field is selected by expected ability to split, merge, reject, or
 re-baseline a current mechanism. Breadth alone does not close a row.

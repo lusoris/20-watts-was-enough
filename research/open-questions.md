@@ -330,3 +330,18 @@ project choice.
   [C-881](claims.md#c-881)–[C-925](claims.md#c-925),
   [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
   and the [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md#verdict).
+- **OQ-061:** Does a representative, history- and resource-qualified adaptive-
+  performance contract expose consequential false comparisons or improve
+  held-out transfer beyond calibrated prediction and retrieval, POMDP/RL/MPC,
+  matched curricula and domain randomization, state estimation, constrained
+  control, staged assurance, explicit coordination protocols, opponent models,
+  causal selection analysis, and lifecycle accounting when anticipation and
+  interception; practice, retention, and transfer; relevant variability;
+  speed, accuracy, risk, and energy; fatigue, readiness, damage, and return;
+  shared information and coordination; deceptive cues; feedback dependence;
+  selection opportunity; and every athlete, coach, facility, sensor, recovery,
+  medical, failed-pathway, wall-time, and joule cost remain separate? This is
+  an evaluation fixture, not a principle or candidate promotion. See
+  [C-926](claims.md#c-926)–[C-969](claims.md#c-969),
+  [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md),
+  and the [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md#audit-verdict).

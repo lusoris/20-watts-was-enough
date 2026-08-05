@@ -260,6 +260,41 @@ and lifecycle accounting. Retire the composition when that stack reaches the
 same quality–risk–latency–resource frontier. See
 [OQ-060](open-questions.md#oq-060).
 
+### Representative adaptive-performance evaluation contract
+
+The [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md)
+promotes no principle or candidate. Its durable result is an outcome firewall:
+anticipation is not physical interception; gaze is not causal cue use; practice
+performance is not delayed retention or target transfer; raw movement variance
+is not useful exploration; and speed, accuracy, risk, and energetic cost form a
+frontier rather than one interchangeable score ([C-926](claims.md#c-926)–[C-941](claims.md#c-941)).
+
+Each comparison binds the actual observation stream and feasible action set to
+acquisition and selection history, opponent and teammate distribution,
+feedback, current fatigue/resource/damage state, intervention, and sampling
+unit. Fatigue, readiness, injury, return to participation, return to sport, and
+return to performance remain distinct; promotion through return stages is
+reversible. Synchrony does not establish shared information or functional
+coordination, and intentional cue conflict requires calibration as well as
+accuracy ([C-942](claims.md#c-942)–[C-962](claims.md#c-962)).
+
+Selection systems are part of the causal process because relative age,
+maturation, opportunity, investment, attrition, and missing counterfactual
+careers shape the later population. Efficiency uses a vector retaining human
+time, metabolic and facility energy, equipment, sensing, recovery, medical
+burden, failed trials, opportunity cost, wall time, and joules rather than one
+collapsed score ([C-963](claims.md#c-963)–[C-969](claims.md#c-969)).
+
+[Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md)
+applies the contract across Candidates 002, 004, 006, 007, 009, 012, 014, and
+019. Its null is the complete relevant stack of calibrated sequence/retrieval
+models, POMDP/RL/MPC and opponent models, matched curricula, augmentation and
+robust optimization, state estimation and constrained control, staged
+assurance, distributed control and explicit protocols, causal selection
+analysis, and lifecycle accounting. Retire the composition when that stack
+reaches the same representative transfer, risk, and total-cost frontier. See
+[OQ-061](open-questions.md#oq-061).
+
 ## P-001 — Selective allocation
 
 **Problem.** Total possible capacity is larger than the activity or resources

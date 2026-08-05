@@ -13851,3 +13851,399 @@ describes the exact statement here, not a broader interpretation.
   [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
   [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
   [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-926
+
+- **Statement:** In temporally and spatially occluded badminton displays, world-class players used predictive pre-contact information from lower-body and racquet kinematics more consistently than recreational players. The 12-expert/12-nonexpert stroke-prediction paradigm does not establish a universal expert cue or architecture.
+- **Status:** established.
+- **Primary source:** `AbernethyZawi2007Kinematics`.
+- **Rationale:** prediction should be evaluated at successive cue cutoffs and feature interventions, not only after the outcome becomes visible.
+- **Open issue:** whether the effect transfers across opponents, tasks, response modes, and coupled physical action beyond calibrated sequence and retrieval nulls.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-927
+
+- **Statement:** World-class cricket batters used earlier hand and arm cues unavailable to lower-skill groups in some delivery judgments, while other cues were shared across skill levels. These video judgments are not equivalent to physically batting the delivery.
+- **Status:** established.
+- **Primary source:** `MullerEtAl2006Cricket`.
+- **Rationale:** cue value must remain opponent-, task-, and deadline-conditional rather than becoming a fixed saliency ranking.
+- **Open issue:** whether opponent-conditioned prediction explains the skill difference when tested with physical interception.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-928
+
+- **Statement:** Expert squash players retained predictive advantages under point-light and early-occlusion conditions, consistent with use of both kinematic and situational-probability information. Better-than-chance early prediction can also reflect opponent or sequence priors and does not prove direct perception of an invariant.
+- **Status:** plausible.
+- **Primary source:** `AbernethyEtAl2001KinematicSituational`.
+- **Rationale:** motion evidence and context priors must be crossed factorially with likelihood contributions and calibration reported separately.
+- **Open issue:** whether a hierarchical Bayesian prior-plus-likelihood model accounts for the observed advantage.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-929
+
+- **Statement:** In-situ association-football goalkeeping showed that advance visual information constrained movement timing and vulnerability to deception, and coupled action differed from video-simulation judgment. The penalty task remains a constrained sample of match play, opponents, and consequences.
+- **Status:** established.
+- **Primary source:** `DicksEtAl2010Goalkeeping`.
+- **Rationale:** observation–action latency, feasible response, and consequence must be preserved when claiming deployment transfer.
+- **Open issue:** whether a common predictor plus response-specific optimal control explains differences among label, joystick, partial, and full-action tasks.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-930
+
+- **Statement:** Explicit instruction, guided discovery, and discovery practice improved anticipation in intermediate tennis players in the tested design, with guided discovery more expedient and pressure-resilient on some measures. Improvement in multiple conditions does not identify one exclusive learning process.
+- **Status:** plausible.
+- **Primary source:** `SmeetonEtAl2005Anticipation`.
+- **Rationale:** curricula should be compared by retained and transferred calibration rather than their pedagogical label.
+- **Open issue:** whether any method beats a matched fixed supervised curriculum after examples, feedback, repetitions, and evaluation queries are equalized.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-931
+
+- **Statement:** A six-week junior-tennis intervention compared serve-only practice with practice that included a returner and subsequent shot to test transfer into more competition-like action chains. Thirty-three participants and one assigned sport-skill intervention do not establish that maximal realism is always optimal.
+- **Status:** plausible.
+- **Primary source:** `KrauseEtAl2019Representative`.
+- **Rationale:** training should preserve functionally relevant downstream reactions and test each representational dimension by ablation.
+- **Open issue:** whether the observed transfer exceeds matched domain-randomization and curriculum-learning baselines with equal target coverage.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-932
+
+- **Statement:** Penalty-kick and tennis results jointly show that viewing geometry, response mode, opponent interaction, timing, and consequence can alter the tested capability. This synthesis does not show that every ecological manipulation improves learning.
+- **Status:** established.
+- **Primary sources:** `DicksEtAl2010Goalkeeping`, `KrauseEtAl2019Representative`.
+- **Rationale:** representativeness is a train–deployment distance vector over observation, action, latency, agent response, and cost rather than visual realism alone.
+- **Open issue:** which dimensions predict transfer beyond ordinary distribution-shift evaluation and system identification.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-933
+
+- **Statement:** Variable practice improved throwing-task learning relative to constant practice in the reported experiments and was associated with more external attentional focus. The mediation and benefit remain task- and schedule-specific and do not identify an architecture.
+- **Status:** plausible.
+- **Primary source:** `AbdollahipourEtAl2019Variability`.
+- **Rationale:** relevant task parameters should be varied while coverage, information, retention, and target transfer remain separate outcomes.
+- **Open issue:** whether the benefit survives matched augmentation and domain-randomization controls.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-934
+
+- **Statement:** A 2025 registered report with 80 participants found that adding four target locations did not provide a universal retention advantage for the single criterion goal. This task-specific null rejects an unconditional variability rule, not variability in general.
+- **Status:** established.
+- **Primary source:** `RanganathanEtAl2025Variability`.
+- **Rationale:** variability schedules are interventions requiring target-specific transfer tests and negative controls.
+- **Open issue:** which dimensions and doses outperform constant practice at equal criterion exposure, attempts, duration, and feedback.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-935
+
+- **Statement:** Allowing a second volleyball serve was tested as a constraint intended to lower first-serve failure cost and change exploration of action capabilities. More aggressive or variable serves are not automatically more informative, transferable, or valuable.
+- **Status:** plausible.
+- **Primary source:** `MoyEtAl2024Exploration`.
+- **Rationale:** failure cost and retry budget must be explicit, with useful coverage measured separately from variance.
+- **Open issue:** whether the behavior exceeds entropy-regularized or risk-sensitive control at matched retry count and failure penalty.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-936
+
+- **Statement:** Experiments on differential-learning claims found that the size and structure of practice fluctuations matter; more fluctuation was not a context-free optimum. Short laboratory learning and retention tests do not settle season-scale adaptation.
+- **Status:** plausible.
+- **Primary source:** `HossnerEtAl2016Fluctuations`.
+- **Rationale:** perturbation distributions must be tuned against transfer and damage rather than a maximal-noise heuristic.
+- **Open issue:** whether a tuned schedule beats noise injection, randomized search, or Bayesian experimental design at equal perturbation dose.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-937
+
+- **Statement:** Retrospective soccer and field-hockey histories showed a monotonic association between accumulated individual-plus-team practice and skill level. Recall, prior selection, access, survivorship, reverse causation, and unobserved aptitude prevent a causal dose rule.
+- **Status:** plausible.
+- **Primary source:** `HelsenEtAl1998DeliberatePractice`.
+- **Rationale:** training exposures and selection events require timestamps; cumulative training alone cannot establish learning efficiency.
+- **Open issue:** whether the association survives prospective models of baseline, opportunity, attrition, and time-varying exposure.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-938
+
+- **Statement:** Expert and experienced nonexpert team-ball athletes reported different quantities and types of sport-specific activity associated with decision-making expertise. Twenty-eight retrospective participants and researcher-defined activity classes cannot isolate the cause of later skill differences.
+- **Status:** plausible.
+- **Primary source:** `BakerEtAl2003DecisionMaking`.
+- **Rationale:** actual task distributions, feedback, challenge, and learning gain per unit cost are more informative than a binary deliberate-practice label.
+- **Open issue:** whether prospective curriculum-feature and data-quantity models predict held-out capability.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-939
+
+- **Statement:** A meta-analysis estimated that deliberate practice explained 18 percent of variance overall and about 1 percent among elite performers in the included sport literature. Definitions, study quality, range restriction, retrospective measures, and inclusion criteria bound those estimates, while unexplained variance does not establish innate talent.
+- **Status:** established.
+- **Primary source:** `MacnamaraEtAl2016Practice`.
+- **Rationale:** practice is one causal input among data, initialization, morphology, curriculum, selection, feedback, and environment.
+- **Open issue:** prospective variance decomposition under measurement-error and range-restriction sensitivity.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-940
+
+- **Statement:** Whole-body postural movements showed Fitts-type relations, but target-distance conditions had different slopes and inherent sway changed effective target width. The canonical linear form and its parameters are not universal across bodies, constraints, or movement classes.
+- **Status:** established.
+- **Primary source:** `DuarteFreitas2005SpeedAccuracy`.
+- **Rationale:** latency–error frontiers must be reported across task difficulties rather than as one accuracy at one deadline.
+- **Open issue:** whether optimal feedback control with signal-dependent noise explains the scoped frontier.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-941
+
+- **Statement:** Across 5,400 pointing trials, speed emphasis and accuracy emphasis changed movement time and error rate without changing estimated throughput in the tested task. Failure to reject a throughput difference is not proof of exact invariance, and mouse pointing is not a universal motor model.
+- **Status:** plausible.
+- **Primary source:** `MacKenzieIsokoski2008Throughput`.
+- **Rationale:** evaluations must detect policies that improve one endpoint by shifting criterion rather than information-processing capacity.
+- **Open issue:** whether signal-detection or bounded-rational control accounts for the observed stability.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-942
+
+- **Statement:** After an eccentric-fatigue protocol, ten men completed 4.8 percent less work in a 15-minute cycling time trial by reducing power while retaining the broad pacing pattern. The small male sample, isolated protocol, and short task do not identify a general fatigue controller.
+- **Status:** established.
+- **Primary source:** `DeMorreeMarcora2013Fatigue`.
+- **Rationale:** resource allocation must be conditioned on measured capacity state rather than nominal initialization alone.
+- **Open issue:** whether state estimation plus constrained model-predictive control with a time-varying actuator envelope explains the result.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-943
+
+- **Statement:** Cyclists changed pacing and performance responses when a virtual opponent used slow–fast or fast–slow profiles relative to a no-opponent condition. Twelve participants and virtual profiles support opponent-conditioned control, not mind reading or a unique social mechanism.
+- **Status:** plausible.
+- **Primary source:** `KoningsEtAl2016OpponentPacing`.
+- **Rationale:** sequential decisions should include competitor policy and inferred remaining reserve.
+- **Open issue:** whether online opponent identification plus game-theoretic receding-horizon control reproduces the effect.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-944
+
+- **Statement:** One 16.1-km study found that riding against prior-performance feedback improved performance regardless of feedback accuracy, while deception changed perceptual responses without a sustained residual benefit. Placebo, competition, target setting, and belief remain entangled, so this does not justify deceptive control generally.
+- **Status:** established.
+- **Primary source:** `JonesEtAl2016PacingDeception`.
+- **Rationale:** target or competitor effects must be separated from feedback accuracy, downstream trust, and calibration.
+- **Open issue:** whether accurate calibrated challenge with the same avatar and incentives reaches the same outcome.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-945
+
+- **Statement:** Cycling experiments manipulated avatar power by 2 and 5 percent to test whether concealed challenge exposed a performance reserve, and effects depended on deception magnitude. Acute reserve in a familiar laboratory task is not free capacity; fatigue, safety, trust, and reproducibility remain costs.
+- **Status:** plausible.
+- **Primary source:** `StoneEtAl2017PerformanceReserve`.
+- **Rationale:** assumed limits may be probed only under bounded safeguards with failures and later calibration damage charged.
+- **Open issue:** whether safe Bayesian optimization or dual control over a measured capacity envelope performs as well without deception.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-946
+
+- **Statement:** A randomized crossover trial in youth elite ice-hockey players increased sleep and improved perceived fatigue and a demanding cognitive-control task, while vigilance, countermovement jump, and handgrip outcomes did not differ. Subjective improvement and one short intervention do not imply universal physical readiness.
+- **Status:** established.
+- **Primary source:** `VarescoEtAl2026SleepExtension`.
+- **Rationale:** resource-state indicators must remain task-specific and support abstention when they disagree.
+- **Open issue:** prospective validation of a multivariate state estimate against each task outcome.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-947
+
+- **Statement:** Randomized sleep extension in 50 tactical athletes increased sleep time and improved changes in vigilance, executive-task time, broad-jump distance, and motivation relative to control. The population, short duration, and test battery do not identify one recovery variable or a long-term performance effect.
+- **Status:** plausible.
+- **Primary source:** `RitlandEtAl2019SleepExtension`.
+- **Rationale:** recovery interventions should update a vector of capacities and uncertainties, not a scalar recovered flag.
+- **Open issue:** whether a conventional multivariate readiness model with repeated baselines transports to later tasks and populations.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-948
+
+- **Statement:** Session-RPE multiplies perceived session intensity by duration and was validated against heart-rate-derived training measures for non-steady and prolonged exercise. Agreement with heart-rate summaries does not make arbitrary units energy, tissue dose, readiness, or injury risk.
+- **Status:** established.
+- **Primary source:** `FosterEtAl2001TrainingMonitoring`.
+- **Rationale:** work issued, work realized, internal state change, and downstream failure are distinct constructs and must retain their original units.
+- **Open issue:** prospective validation of explicit multisensor state-space models rather than one load score.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-949
+
+- **Statement:** Acute:chronic workload-ratio critiques identify ratio construction, overlapping windows, mathematical coupling, discretization, sparse injuries, time-varying confounding, and exposure cessation as sources of misleading association. Rejecting a universal threshold does not imply workload history is irrelevant.
+- **Status:** disputed.
+- **Primary source:** `ImpellizzeriEtAl2020WorkloadRatio`.
+- **Rationale:** dynamic exposure and failure processes should be estimated directly rather than encoded as an unvalidated ratio sweet spot.
+- **Open issue:** survival and recurrent-event analyses with time-varying load, availability, prior injury, competition, and censoring.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-950
+
+- **Statement:** Elite-team studies have reported associations between derived workload histories and later injury, but observational design and methodological heterogeneity prevent deterministic individual prediction. Greater sensitivity of one ratio estimator does not establish causal effect, a transportable threshold, or a safe prescription.
+- **Status:** established.
+- **Primary source:** `MurrayEtAl2017WorkloadRatio`.
+- **Rationale:** risk estimates require deployment-cohort calibration, causal caveats, and a safe abstention/action policy.
+- **Open issue:** external temporal testing and decision-curve evaluation of calibrated time-to-event models.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-951
+
+- **Statement:** A prospective adductor-injury cohort used separate milestones for clinically pain-free status, controlled sport training, and full team training, and reaching pain-free criteria was associated with fewer reinjuries. Eighty-one male athletes and one injury class do not establish universal gates or causal effects for each criterion.
+- **Status:** established.
+- **Primary source:** `SernerEtAl2020ReturnToSport`.
+- **Rationale:** return requires reversible capability stages with monitored promotion and regression rather than a one-time deployment flag.
+- **Open issue:** whether an ordinary staged rollout with health checks, canary exposure, rollback, and risk budget matches the benefit.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-952
+
+- **Statement:** In the Delaware–Oslo ACL cohort, earlier return to level-I sport was associated with reinjury and passing a functional return battery with lower reinjury; time alone remained insufficient. Observational decisions, few injuries, and self-selection limit causal and numerical portability, so the reported 84-percent reduction is not universal.
+- **Status:** plausible.
+- **Primary source:** `GrindemEtAl2016ACL`.
+- **Rationale:** elapsed stabilization time and independent functional evidence should be combined with prospective monitoring.
+- **Open issue:** whether a risk-sensitive staged policy using state age and current health probes transports across fault classes.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-953
+
+- **Statement:** In a prospective ACL-reconstruction cohort, greater six-month quadriceps symmetry was associated with higher reinjury probability among early returners, while delayed return reduced risk in a later-return stratum. Association, subgrouping, exposure, and return behavior do not make symmetry harmful; they expose the construct failure of one readiness marker.
+- **Status:** plausible.
+- **Primary source:** `BodkinEtAl2022ACL`.
+- **Rationale:** health indicators must be tested against exposure-conditioned failures and gaming rather than face validity alone.
+- **Open issue:** whether multivariate survival models including timing, exposure, function, age, and prior injury predict recurrence prospectively.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-954
+
+- **Statement:** Twenty-three youth-football dyads increased indices of common understanding across collective training while total and orienting verbal communication decreased. Repeated dyads, a designed task, and correlational change do not establish a shared internal representation or match-level advantage.
+- **Status:** plausible.
+- **Primary source:** `BlaserSeiler2019SharedKnowledge`.
+- **Rationale:** teammate prediction, message use, and cross-play must be measured separately; reduced communication matters only if outcomes transfer.
+- **Open issue:** whether explicit teammate models or cached protocols learned through interaction explain the change.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-955
+
+- **Statement:** In a distributed-team simulation, shared displays initially slowed teams but later performance after display removal exceeded other conditions, consistent with construction of useful task knowledge. The simulation is not sport, and shared mental model remains an inferred construct.
+- **Status:** plausible.
+- **Primary source:** `BolstadEndsley1999SharedDisplays`.
+- **Rationale:** online coordination bandwidth must be separated from persistent coordination state acquired through a shared workspace.
+- **Open issue:** whether blackboard memory or explicit synchronization with matched display and communication cost reproduces the effect.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-956
+
+- **Statement:** Professional-football tracking showed time-varying player–team and team–team phase relations associated with possession and field direction. Phase alignment can arise from ball tracking, geometry, a common clock, role constraints, or direct coupling and therefore does not establish synergy or causal coordination.
+- **Status:** established.
+- **Primary source:** `DuarteEtAl2013Synchrony`.
+- **Rationale:** functional coordination requires perturbing one unit and measuring compensation and task-variable stability rather than rewarding synchrony alone.
+- **Open issue:** how much apparent coordination remains after centralized-planner and independent-common-state nulls.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-957
+
+- **Statement:** Football practice changed dimensional-compression and reciprocal-compensation measures in a rhythmic attacking–defending task. Metric changes in a designed task require perturbation and outcome validation before they count as functional team synergies.
+- **Status:** plausible.
+- **Primary source:** `SilvaEtAl2016TeamSynergies`.
+- **Rationale:** local policy changes should be tested for preservation of global task variables under dropout, delay, and role reassignment.
+- **Open issue:** whether decentralized feedback control over shared task state explains the result and cross-play performance.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-958
+
+- **Statement:** Skilled and less-skilled soccer players were overconfident when anticipating deceptive penalty kicks, and movement exaggeration changed cue use across occlusion times. Confidence and accuracy in video prediction do not measure physical saves or intentional-state inference.
+- **Status:** established.
+- **Primary source:** `RyuEtAl2013Deception`.
+- **Rationale:** early cues require adversarial manipulation with calibration scored separately from prediction.
+- **Open issue:** whether robust opponent-conditioned classification with adversarial augmentation and abstention removes the failure.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-959
+
+- **Statement:** Skilled rugby players were less susceptible than novices to side-step deception in a video task, while both groups expressed greater confidence on deceptive trials. Fourteen participants per group and filmed direction changes establish neither general deception immunity nor coupled interception.
+- **Status:** established.
+- **Primary source:** `JacksonEtAl2006Deception`.
+- **Rationale:** cue reliability under strategic manipulation and confidence anti-calibration must both be audited.
+- **Open issue:** whether adversarial training plus opponent-frequency priors explains the expertise difference.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-960
+
+- **Statement:** Skilled badminton players' deception judgments changed when spatial-frequency filtering emphasized kinematic or non-kinematic information, and high-spatial-frequency emphasis reduced accuracy on deceptive trials. Filtering is not a clean semantic channel separation, and each skill group had 12 players.
+- **Status:** plausible.
+- **Primary source:** `ParkEtAl2019Deception`.
+- **Rationale:** predictive channels should be tested under intentional cue conflict, not random masking alone.
+- **Open issue:** whether a multimodal robust model with dropout, calibration, and explicit conflict detection accounts for the findings.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-961
+
+- **Statement:** In volleyball-serving experiments, feedback about movement effects produced better serve accuracy during practice and retention than body-movement feedback across novice and advanced groups. Movement quality did not change the same way, and wording effects remain task- and instruction-dependent.
+- **Status:** established.
+- **Primary source:** `WulfEtAl2002ExternalFocus`.
+- **Rationale:** effect-focused feedback earns credit only when it improves independent retention and transfer.
+- **Open issue:** whether outcome-based error feedback with identical information content and schedule reproduces the result.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-962
+
+- **Statement:** Self-controlled feedback experiments found learning benefits dependent on when feedback was requested and on protecting perceived competence rather than a generic autonomy switch. Yoked controls can match feedback frequency while differing in agency, expectation, and trial history, leaving mediators contestable.
+- **Status:** plausible.
+- **Primary source:** `ChiviacowskyEtAl2012Feedback`.
+- **Rationale:** uncertainty-triggered feedback requests should be compared with value-of-information acquisition at matched query cost.
+- **Open issue:** whether calibrated active learning or selective prediction with a learned query policy reaches the same retention and transfer.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-963
+
+- **Statement:** In adolescent handball, relative-age effects were absent among all registered players but increased at county and regional selection levels despite sport-specific selection tasks. Birth quarter is only a cohort proxy, with maturation, size, opportunity, judgment, and prior investment among possible mechanisms.
+- **Status:** established.
+- **Primary source:** `TroznaiEtAl2021RelativeAge`.
+- **Rationale:** selection policies change future training data and must be audited for cohort-relative opportunity feedback loops.
+- **Open issue:** causal identification of cutoff, maturation, prior opportunity, and selection with counterfactual outcomes for excluded participants.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-964
+
+- **Statement:** Eight years of academy-football observations showed selection toward advanced maturity, with no U15–U16 player in that sample classified as late maturing. One academy and estimated maturity cannot establish general prevalence or counterfactual later performance among excluded players.
+- **Status:** established.
+- **Primary source:** `HillEtAl2020Maturation`.
+- **Rationale:** age, maturation, current performance, and learning potential cannot be collapsed into one rank.
+- **Open issue:** longitudinal latent-growth modeling with opportunity and the selection process represented explicitly.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-965
+
+- **Statement:** A systematic review found no consistent variable set across longitudinal and retrospective talent-identification studies that reliably predicted future elite success. Heterogeneous sports, ages, measures, and definitions limit pooled inference, while failure of a universal predictor does not preclude scoped prospective forecasting.
+- **Status:** established.
+- **Primary source:** `JohnstonEtAl2018TalentIdentification`.
+- **Rationale:** selection should be evaluated as a calibrated, revisable forecast under delayed labels and censored opportunity.
+- **Open issue:** external validation of simple age-, opportunity-, and baseline-adjusted forecasts on later cohorts.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-966
+
+- **Statement:** The Compendium attaches population MET values to activities for standardized energy-expenditure estimation and distinguishes measured from estimated entries. MET tables do not precisely measure individual metabolic cost and exclude facilities, travel, equipment, staff, medical care, and embodied energy.
+- **Status:** established.
+- **Primary sources:** `AinsworthEtAl2011Compendium`, `CompendiumPhysicalActivities`.
+- **Rationale:** measured device and facility energy and estimated human metabolism must remain separate with uncertainty and system boundaries.
+- **Open issue:** prospective full-boundary metering with explicit allocation rules for shared infrastructure and equipment.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-967
+
+- **Statement:** Australian-football research calibrated inertial-sensor energy estimates against oxygen uptake and assessed them against proprietary metabolic-power calculations during training and matches. Calibration in 18 players and one sport does not validate accelerometer energy estimates universally.
+- **Status:** plausible.
+- **Primary source:** `GastinEtAl2016EnergyExpenditure`.
+- **Rationale:** proxy resource metrics require task-specific calibration against direct measurement in the deployment regime.
+- **Open issue:** representative stratified validation against direct calorimetry or power metering with propagated uncertainty.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-968
+
+- **Statement:** The audited studies require coaches, athletes, facilities, opponents, rehabilitation, sensors, and repeated exposures that disappear if cost is reported only as active-device energy or trials. Conversions among person-time, metabolic energy, injury, money, and opportunity are normative, supporting a vector rather than one exchange rate.
+- **Status:** plausible.
+- **Primary sources:** `FosterEtAl2001TrainingMonitoring`, `AinsworthEtAl2011Compendium`, `SernerEtAl2020ReturnToSport`.
+- **Rationale:** system comparisons require a lifecycle Pareto vector and explicit boundary exclusions.
+- **Open issue:** whether activity-based costing and lifecycle assessment can quantify full athlete, coach, facility, sensor, recovery, medical, failed-trial, and opportunity budgets without hiding value judgments.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-969
+
+- **Statement:** Across anticipation, learning, pacing, return, coordination, and selection, apparent capability changes when observation, action, acquisition history, opponent, resource state, or exposure policy changes. This synthesis proposes an evaluation contract, not a new natural law or AI primitive.
+- **Status:** plausible.
+- **Primary sources:** the sports audit's scoped claims C-926–C-968; no primary paper establishes the composed system-level criterion.
+- **Rationale:** every performance record should bind available evidence, feasible actions, acquisition and selection history, opponent and teammate distribution, feedback, fatigue/damage/return state, intervention, sampling unit, and complete resource boundary.
+- **Open issue:** whether this contract catches consequential false comparisons beyond versioned experiment tracking, causal metadata, state estimation, and stratified evaluation.
+- **Used by:** [sports audit](audits/2026-08-05-sports-expertise-team-coordination.md), [Fixture F-006](../experiments/fixtures/006-representative-adaptive-performance.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
