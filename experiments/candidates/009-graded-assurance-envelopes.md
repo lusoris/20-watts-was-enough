@@ -59,9 +59,16 @@ For each module version, record distinct fields:
 8. **Update contract:** compatible predecessors/successors, state migration,
    invalidation cone, canary probes, rollback window, compensations, and
    irreversible effects.
+9. **Security profile:** principal and workload identity, scoped capability,
+   credential/key/attestation epoch, revocation freshness, approval-domain
+   independence, observation age, named adversary, compromise horizon, and
+   evidence for a clean recovery root.
 
 Each field carries its own evidence class, scope, timestamp, version,
 invalidation triggers, and measurement cost. An “assured” boolean is forbidden.
+Authentication, authorization, detection, containment, and recovery remain
+separate records: success in one field cannot silently satisfy another
+([C-250](../../research/claims.md#c-250)–[C-267](../../research/claims.md#c-267)).
 
 ## Admission and maintenance flow
 
@@ -187,6 +194,22 @@ assurance escaping to production, time to valid redeployment, bytes, energy,
 and operator effort. Include cross-layer changes, such as a retrieval snapshot
 altering a factual claim without changing its output type.
 
+### F — compromise-bounded assurance
+
+Inject stolen credentials and sessions, compromised workloads, clock or epoch
+rollback, stale policy caches, delegated authority, correlated approvers,
+blinded telemetry, a poisoned backup, and a compromised signing root. Compare
+the full envelope with mature short-lived IAM, PKI/HSM-backed policy, sandboxing,
+service-mesh enforcement, conventional monitoring, and a rehearsed
+isolate–reimage–restore–rotate–validate workflow.
+
+Measure unauthorized actions per attack, weighted capability-seconds,
+false denials per 1,000 legitimate requests, detection-to-containment seconds,
+compromise-to-last-covered-acceptance seconds, secure recovery time, recurrence,
+p50/p99 authorization latency, bytes, joules, and operator-hours. Retire the
+security profile if credential lifetime tuning and conventional recovery match
+the harm and recovery frontier at equal cost.
+
 ## Required null stack
 
 The strongest ordinary platform combines:
@@ -199,6 +222,8 @@ The strongest ordinary platform combines:
 - blue-green/canary rollout with transactions, checkpoints, and compensation;
 - build-system invalidation and schema migration; and
 - protected behavioral evaluation for learned components.
+- short-lived workload identity, PKI/HSM or KMS, session revocation, and tested
+  compromise rebuild and credential rotation.
 
 Candidate 009 is not distinct if this composed stack matches outcomes and cost.
 
@@ -214,6 +239,9 @@ Candidate 009 is not distinct if this composed stack matches outcomes and cost.
 8. Remove irreversible-effect declarations and compensation tests.
 9. Remove dependency-derived invalidation.
 10. Hold envelope bytes and compute constant but shuffle field/version links.
+11. Remove key/attestation epochs while keeping short credential lifetimes.
+12. Share one identity, approval, telemetry, and recovery control plane while
+    reporting the logical components as independent.
 
 ## Promotion criteria
 

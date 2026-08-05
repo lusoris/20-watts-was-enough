@@ -3911,3 +3911,277 @@ describes the exact statement here, not a broader interpretation.
   [P-009](principle-registry.md#p-009--maintenance-plane),
   [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
   [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-250
+
+- **Statement:** Authentication and authorization are distinct; protocol
+  authentication is relative to a named correspondence, freshness, and
+  adversary model.
+- **Status:** established.
+- **Primary sources:** `needham1978authentication`, `dolev1983security`,
+  `lowe1995attack`.
+- **Rationale:** Demonstrating control of accepted credentials does not grant a
+  capability or prove benign intent and safe outcome.
+- **Open issue:** Endpoint compromise, identity proofing, replay state, clock,
+  recovery, and implementation remain trusted boundaries.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-251
+
+- **Statement:** Secure cryptographic primitives do not by themselves prove a
+  composed authentication protocol secure.
+- **Status:** established.
+- **Primary sources:** `dolev1983security`, `lowe1995attack`.
+- **Rationale:** Message order, identities, freshness, binding, and adversarial
+  composition create protocol-level failure despite strong encryption.
+- **Open issue:** Formal model, computational assumptions, implementation,
+  endpoint, and key custody must match deployment.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-252
+
+- **Statement:** Least privilege, complete mediation, separation of privilege,
+  and capability-based authority are established security design families.
+- **Status:** established.
+- **Primary sources:** `saltzer1975protection`, `dennis1966programming`,
+  `watson2010capsicum`.
+- **Rationale:** Authority is reduced, mediated at named boundaries, and split
+  across principals or capabilities.
+- **Open issue:** Incorrect policy, ambient bypass, malicious authorized action,
+  collusion, and compromised enforcement remain outside the guarantee.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-253
+
+- **Statement:** Weighted capability-seconds may expose cumulative authority
+  risk when right definitions and severity weights remain auditable.
+- **Status:** plausible.
+- **Primary source:** none sufficient; dimensional synthesis from
+  [C-252](#c-252).
+- **Rationale:** Scope and duration jointly determine compromise opportunity
+  more clearly than credential count.
+- **Open issue:** Cardinality and weights can be arbitrary, nonlinear, and
+  context-dependent; report raw rights and time beside any aggregate.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-254
+
+- **Statement:** NIST zero trust removes location-based implicit trust while
+  retaining explicit roots in identity, policy, telemetry, enforcement, and
+  recovery.
+- **Status:** established.
+- **Primary source:** `rose2020zero`.
+- **Rationale:** Repeated access evaluation changes the trust path but cannot
+  eliminate trust roots.
+- **Open issue:** Operational efficacy, policy correctness, compromised
+  identity/control planes, authorized harm, and recovery remain
+  deployment-specific.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-255
+
+- **Statement:** Shamir sharing protects secrecy below threshold in its ideal
+  finite-field model without alone providing verifiability, robust signing,
+  availability, or secure reconstruction.
+- **Status:** established.
+- **Primary source:** `shamir1979share`.
+- **Rationale:** Polynomial shares distribute a secret but do not specify the
+  whole participant, communication, refresh, and recovery protocol.
+- **Open issue:** Malicious shares, unavailable holders, side channels, random
+  generation, identity, and reconstruction exposure require other mechanisms.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-256
+
+- **Statement:** Threshold-system benefit depends on audited administrative,
+  software, credential, identity, and recovery independence plus compromise
+  cadence rather than logical participant count alone.
+- **Status:** plausible.
+- **Primary sources:** `herzberg1995proactive`, `gennaro2001threshold`,
+  `douceur2002sybil`.
+- **Rationale:** A shared control plane or Sybil owner collapses apparent
+  multiplicity into one failure domain.
+- **Open issue:** Independence is difficult to establish and maintain; latency,
+  coordination, liveness, and recovery costs rise with distribution.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-257
+
+- **Statement:** PBFT-style safety assumes bounded Byzantine identities and
+  authenticated replicas, while liveness, privacy, client correctness, and
+  common-mode compromise are separate.
+- **Status:** established.
+- **Primary sources:** `lamport1982byzantine`, `castro1999pbft`.
+- **Rationale:** Quorum intersection provides scoped agreement under a declared
+  fault and timing model.
+- **Open issue:** Excess faults, correlated implementation or keys, Sybils,
+  bad clients, denial of service, and state privacy lie outside the basic claim.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-258
+
+- **Statement:** Proactive lifetime guarantees depend on fewer than the
+  threshold number of compromises per vulnerability window plus trustworthy
+  refresh, erasure, epoch agreement, and recovery.
+- **Status:** established.
+- **Primary sources:** `herzberg1995proactive`, `castro2002proactive`.
+- **Rationale:** Periodic refresh can prevent compromises from accumulating
+  across epochs only under mobile-adversary and clean-refresh assumptions.
+- **Open issue:** Refresh-channel, clock, erasure, recovery-root, or common-mode
+  compromise breaks the bound.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-259
+
+- **Statement:** Forward-secure signatures can protect past epochs after
+  current-key compromise under scheme assumptions without protecting the
+  current or future epoch or guaranteeing erasure.
+- **Status:** established.
+- **Primary source:** `bellare1999forward`.
+- **Rationale:** Key evolution narrows the temporal set of forgeries available
+  after compromise.
+- **Open issue:** Current compromise, rollback to old key state, copied
+  plaintext, malicious legitimate signing, endpoint state, and erasure remain.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-260
+
+- **Statement:** End-to-end revocation exposure is better measured from
+  compromise to the last covered acceptance than by nominal credential lifetime.
+- **Status:** plausible.
+- **Primary source:** `santesson2013ocsp`.
+- **Rationale:** Sessions, caches, delegation, offline enforcement, status
+  freshness, propagation, and acknowledgement can outlive issuer revocation.
+- **Open issue:** Coverage and acceptance logs may be incomplete or controlled
+  by the compromised path.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment).
+
+### C-261
+
+- **Statement:** Operational alert precision depends on attack prevalence, so
+  balanced-dataset accuracy is insufficient.
+- **Status:** established.
+- **Primary sources:** `denning1987intrusion`, `paxson1999bro`,
+  `sommer2010outside`.
+- **Rationale:** Even high sensitivity and specificity can yield analyst-flooding
+  false positives when attacks are rare.
+- **Open issue:** Prevalence, adaptive evasion, base-rate drift, sensor coverage,
+  duplicate alerts, and analyst behavior remain uncertain.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-262
+
+- **Statement:** Intrusion detection is a sensing and classification layer,
+  not containment, revocation, or compromise recovery.
+- **Status:** established.
+- **Primary sources:** `denning1987intrusion`, `paxson1999bro`.
+- **Rationale:** An alert changes no authority unless a separately defined and
+  evaluated response path acts on it.
+- **Open issue:** Automatic coupling can introduce false shutdown, attacker
+  control of response, and unsafe remediation.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-263
+
+- **Statement:** Moving-target defenses should be evaluated by attacker
+  work-factor change after information leakage, retries, and adaptation rather
+  than nominal configuration entropy.
+- **Status:** plausible.
+- **Primary sources:** `shacham2004aslr`, `snow2013jit`.
+- **Rationale:** Randomization helps only when it invalidates useful attacker
+  knowledge more quickly than it adds defender cost and new attack surface.
+- **Open issue:** Disclosure, crashes, probing, side channels, reuse, deployment
+  diversity, and adaptation can erase the nominal search space.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-264
+
+- **Statement:** Information-flow and noninterference guarantees are relative
+  to labels, observations, semantics, declassification, and covered channels.
+- **Status:** established.
+- **Primary sources:** `denning1976lattice`, `goguen1982policies`.
+- **Rationale:** A formal flow property can restrict declared information
+  transfer without proving truth, purpose, task quality, or all covert channels.
+- **Open issue:** Timing, resource, physical, declassification, reflection,
+  native, and uninstrumented channels can lie outside the model.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-265
+
+- **Statement:** Availability recovery can faithfully restore compromised
+  state; compromise recovery additionally needs a trustworthy horizon, clean
+  root, credential replacement, persistence removal, and recurrence tests.
+- **Status:** established.
+- **Primary sources:** `herzberg1995proactive`, `castro2002proactive`.
+- **Rationale:** Service restoration and security-state restoration have
+  different target invariants.
+- **Open issue:** The image, backup, keys, build chain, attestation, operators,
+  logs, and historical data may share the compromise.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-266
+
+- **Statement:** Explicit identity and credential epoch, capability scope,
+  revocation freshness, approval-domain independence, observation age,
+  compromise assumptions, and clean-root evidence may improve graded assurance
+  and dynamic authority envelopes.
+- **Status:** speculative.
+- **Primary source:** none sufficient; component guarantees are scoped in
+  [C-250](#c-250)–[C-265](#c-265).
+- **Rationale:** The security profile binds who may act, for how long, under
+  which adversary and clean-recovery assumptions to the same versioned envelope.
+- **Open issue:** It must beat short-lived IAM, PKI, HSM/KMS, sandboxing,
+  service-mesh policy, threshold approval, monitoring, reimage, key rotation,
+  and validation at equal complete budget.
+- **Used by:** [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [security audit](audits/2026-08-05-security-cryptography.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-267
+
+- **Statement:** Combining detection, diversity, thresholds, and recovery under
+  biological-immunity or collective-intelligence language does not establish a
+  novel security architecture.
+- **Status:** disputed.
+- **Primary source:** none; each component has the conventional nulls in
+  [C-252](#c-252)–[C-265](#c-265).
+- **Rationale:** Security novelty requires a specific adversary, trust boundary,
+  guarantee, and equal-budget win rather than metaphorical recurrence.
+- **Open issue:** A precise mechanism can still survive if it beats the best
+  security baseline under adaptive attack.
+- **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
+  [principle registry](principle-registry.md).

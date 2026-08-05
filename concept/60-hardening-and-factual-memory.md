@@ -249,6 +249,53 @@ compares this envelope against a complete conventional stack of typed APIs,
 sandbox/IAM, CI and static analysis, runtime policy monitoring, lineage,
 canaries, transactions, schema migration, and build-system invalidation.
 
+### Compromise-bounded authority and recovery
+
+The security contract adds an adversary and trust boundary without collapsing
+distinct stages. Authentication establishes a scoped protocol property;
+authorization grants an action; detection classifies telemetry; containment
+blocks covered future use; and recovery re-establishes declared invariants from
+a tested root. None substitutes for the next
+([C-250](../research/claims.md#c-250),
+[C-262](../research/claims.md#c-262),
+[C-265](../research/claims.md#c-265)).
+
+For capability class $j$, let $g_j$ and $r_j$ be its grant and effective
+revocation times in seconds, and let $w_j$ be a declared dimensionless severity
+weight. Authority exposure is
+
+$$
+X_A=\sum_j w_j\max(0,r_j-g_j),
+$$
+
+with unit weighted-capability-seconds. The weights and individual intervals
+remain visible because a single broad destructive capability is not equivalent
+to many harmless reads. Sensitivity to plausible weights is reported.
+
+Nominal credential lifetime is not the revocation result. If
+$t_{\mathrm{comp}}$ is the bounded compromise time and
+$t_{\mathrm{last}}$ is the last acceptance at every covered enforcement point,
+then
+
+$$
+W_{\mathrm{rev}}=\max(0,t_{\mathrm{last}}-t_{\mathrm{comp}})
+$$
+
+is revocation exposure in seconds. Sessions, caches, delegation, offline
+verifiers, propagation delay, clock rollback, and missing acknowledgements are
+part of the measurement ([C-260](../research/claims.md#c-260)). The incident
+record keeps four clocks separately: compromise interval, detection,
+effective containment, and independently validated recovery.
+
+The held profile binds principal and workload identity, capability scope,
+credential/key/attestation epoch, revocation freshness, approval-domain
+independence, observation age, adversary model, compromise horizon, and clean-
+root evidence to the same versioned artifact. It survives only if
+[Candidates 009](../experiments/candidates/009-graded-assurance-envelopes.md)
+and [012](../experiments/candidates/012-latency-qualified-authority.md) reduce
+harm or secure recovery time beyond mature short-lived IAM and a rehearsed
+reimage–rotate–validate workflow at equal lifecycle cost.
+
 ### Versioned factual memory
 
 A factual record $r$ contains at least

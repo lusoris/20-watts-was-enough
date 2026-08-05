@@ -213,13 +213,13 @@ adding citations:
 | plant distributed control | wound alarms, hydraulic/chemical drought response, patch foraging, tropisms, branching, source–sink flow, and mycorrhizal exchange map to existing bundles; organism, symbiosis, and community scales stay separate; deficit–capability routing becomes Candidate 013 |
 | astronomy and planetary remote inference | the latent-to-measurement-to-selection-to-association chain becomes explicit; non-detection, trials, model support, predictive checks, computation calibration, and causal identification remain distinct; Candidate 014 tests dependency-bearing observation contracts |
 | geology and geomorphology | efficient-looking fracture and drainage networks become passive-physics nulls; connectivity is not conductance, erosion implies relocation, topology change can destroy service, and mixed supports extend Candidate 014 rather than creating a new principle |
+| security and cryptography | authentication, authorization, information flow, detection, containment, and clean recovery remain separate; adversary, epoch, revocation, independence, compromise-horizon, and clean-root fields refine Candidates 009 and 012 rather than creating a new principle |
 
 The active and next breadth queue is selected by expected ability to split,
 merge, reject, or re-baseline a current mechanism:
 
 | Field cluster | Mechanism question | Expected decision |
 | --- | --- | --- |
-| security and cryptography | which authentication, revocation, least-privilege, threshold, adversarial, and post-compromise mechanisms alter current assurance or authority experiments? | attack P-002/P-003/P-008/P-009 and Candidates 009–012 with explicit adversaries and trust roots |
 | linguistics and communication | which compositional, pragmatic, repair, turn-taking, convention, and grounding mechanisms survive coding, Bayesian, dialogue, and information-theory nulls? | test P-002/P-007/P-011/P-013 and grounded language interfaces |
 | pathology and rehabilitation | when do somatic evolution, tolerance failure, compensation, restoration, reserve, dose, timing, and adverse adaptation change repair or continual-learning contracts? | test P-003/P-004/P-006/P-009/P-012 and functional-repair candidates |
 

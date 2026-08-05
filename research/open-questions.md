@@ -116,3 +116,9 @@ project choice.
   conventional statistics, state-space, event-time, lineage, surveillance, and
   assurance stack? See
   [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+- **OQ-032:** Do explicit identity/key/attestation epochs, revocation freshness,
+  approval-domain independence, adversary assumptions, and clean-root evidence
+  reduce compromise impact or secure recovery time beyond mature short-lived
+  IAM and a rehearsed rebuild–rotate–validate workflow at equal lifecycle cost?
+  See [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).

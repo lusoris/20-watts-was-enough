@@ -7,6 +7,13 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A security and cryptography audit that separates authentication,
+  authorization, information flow, detection, containment, revocation, and
+  compromise recovery while naming adversaries, trust roots, timing, and cost.
+- Eighteen security claims (`C-250`–`C-267`), twenty-two new centralized
+  references, and an editable compromise-bounded authority diagram; explicit
+  epoch, revocation, independence, and clean-root fields refine Candidates 009
+  and 012 instead of being promoted as a redundant principle.
 - A geology and geomorphology audit separating physical thresholds,
   self-organized networks, conductance, conservation, hysteresis, topology
   change, record destruction, warning rules, sparse resolution, and mixed

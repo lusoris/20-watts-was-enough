@@ -58,6 +58,50 @@ The certificate cannot be self-asserted solely by the learned policy seeking
 wider authority. Simple independent limits, trip paths, and fallbacks remain
 enforced.
 
+## Compromise-bounded authority profile
+
+Physical or logical headroom is not a security claim. Every authority decision
+therefore also carries
+
+$$
+S_i(t)=
+(p_i,w_i,a_i,e_i,f_i,d_i,\mathcal A_i,h_i,r_i),
+$$
+
+where $p_i$ and $w_i$ identify the principal and workload; $a_i$ is the scoped
+capability; $e_i$ is the credential, key, and attestation epoch; $f_i$ is
+revocation freshness in seconds; $d_i$ records independent approval domains;
+$\mathcal A_i$ names the adversary model; $h_i$ is the assumed compromise
+horizon in seconds; and $r_i$ identifies the clean recovery root and its
+evidence. These are typed fields rather than inputs to an unexplained trust
+score.
+
+An accepted action must satisfy both the physical/computational envelope
+$\mathcal U_i(t)$ and the security profile $S_i(t)$. Authentication does not
+establish authorization or safe effect ([C-250](../../research/claims.md#c-250));
+an alert does not contain an actor ([C-262](../../research/claims.md#c-262)); and
+availability restoration does not establish compromise recovery
+([C-265](../../research/claims.md#c-265)).
+
+```mermaid
+flowchart LR
+    I["Principal + workload identity"] --> E["Epoch-bound scoped capability"]
+    R["Named trust + clean recovery roots"] --> E
+    E --> T["Independent threshold / policy decision"]
+    O["Fresh observation + revocation state"] --> T
+    T --> A["Bounded action envelope"]
+    A --> Y["Outcome + security telemetry"]
+    Y --> D{"Compromise or stale authority?"}
+    D -->|"no"| O
+    D -->|"yes"| C["Contain + revoke covered authority"]
+    C --> B["Reimage · rotate · validate from clean root"]
+    B --> N["New epoch + recurrence gate"]
+    N --> I
+```
+
+Editable source:
+[compromise-bounded-authority.mmd](../../assets/diagrams/compromise-bounded-authority.mmd).
+
 ## Strongest nulls
 
 - coordinated primary and backup protection;
@@ -69,6 +113,8 @@ enforced.
 - runtime-assurance architectures;
 - event-triggered distributed control; and
 - named restoration runbooks with prerequisites and authority transfer.
+- mature IAM with short-lived workload credentials, capability confinement,
+  PKI/HSM or KMS, session revocation, monitoring, and tested reimage/rotation.
 
 ## Common accounting vector
 
@@ -135,6 +181,9 @@ All arms receive identical:
 7. staged restoration with named prerequisites; and
 8. an end-to-end cascade combining hidden failures, communication loss,
    limited reserve, operator delay, and recovery.
+9. a compromise track with stolen active sessions, workload compromise,
+   key/clock rollback, stale cache or delegation, correlated approval domains,
+   compromised telemetry, dirty restore, and attacker recurrence.
 
 ## Measurements
 
@@ -148,6 +197,9 @@ All arms receive identical:
 - headroom and replenishment at the second event;
 - inconsistent concurrent authority; and
 - recovery quality after restoration or reconnection.
+- weighted capability-seconds, revocation exposure in seconds, secure recovery
+  time, credential-rotation completeness, and recurrence after the declared
+  clean state.
 
 ## Required ablations
 
@@ -161,6 +213,10 @@ All arms receive identical:
 - remove envelope rollback and provenance; and
 - replace the learned policy with the same envelope around a conventional
   controller.
+- remove identity/key/attestation epochs while retaining ordinary short-lived
+  credentials; and
+- collapse identity, approval, telemetry, and recovery roots into one failure
+  domain while leaving their logical labels unchanged.
 
 ## Kill criteria
 
@@ -178,6 +234,8 @@ Reject the candidate if:
   or
 - gains require privileged labels, wider actuators, extra sensors, or oracle
   state.
+- mature IAM plus conventional rebuild/rotate/validate matches compromise
+  impact and secure recovery at lower lifecycle cost.
 
 ## Promotion rule
 
@@ -190,6 +248,8 @@ domains, and preserve simple independent safety limits.
 
 - [Power-grid audit](../../research/audits/2026-08-05-power-grids-protection-and-recovery.md)
 - [C-186](../../research/claims.md#c-186)–[C-203](../../research/claims.md#c-203)
+- [C-250](../../research/claims.md#c-250)–[C-267](../../research/claims.md#c-267)
+- [Security and cryptography audit](../../research/audits/2026-08-05-security-cryptography.md)
 - [P-002](../../research/principle-registry.md#p-002--local-autonomy-with-exception-escalation)
 - [P-006](../../research/principle-registry.md#p-006--homeostatic-negative-feedback)
 - [P-008](../../research/principle-registry.md#p-008--compartmentalized-interaction)
