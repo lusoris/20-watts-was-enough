@@ -389,3 +389,17 @@ project choice.
   [C-1054](claims.md#c-1054)–[C-1099](claims.md#c-1099),
   [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md),
   and the [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md#audit-verdict).
+
+- **OQ-065:** Does a boundary-qualified physical-computation contract improve
+  the accepted task-quality–error–latency–energy–lifecycle frontier, or expose
+  consequential false efficiency comparisons, beyond the complete stack of
+  compression, reversible algorithms, finite-time/error-aware thermodynamics,
+  adiabatic and conventional circuits, voltage/precision scaling,
+  data-movement optimization, workload metering, PUE, and lifecycle assessment?
+  Any answer must keep the logical-transformation, device, circuit,
+  computer/workload, facility, and lifecycle boundaries separate and expose
+  temperature, time, error, uncertainty, reservoir, controller, retained-state,
+  reset, idle-allocation, replacement, and functional-unit assumptions
+  ([C-1100](claims.md#c-1100)–[C-1151](claims.md#c-1151)). See
+  [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md)
+  and the [information-thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md#audit-disposition).

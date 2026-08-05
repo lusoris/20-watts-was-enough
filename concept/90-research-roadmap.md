@@ -284,9 +284,10 @@ adding citations:
 | optics, photonics, and inverse sensing | forward operators, finite information modes, null-space ambiguity, photon/noise budgets, structural priors, active/coded acquisition, adaptive correction, drift, saturation, fusion, optical transforms, conversion, analog error, fabrication, thermal control, future-query recovery, and full lifecycle energy remain separate; Fixture F-007 carries the operator-qualified measure–infer–intervene–monitor–route–retain contract across Candidates 001/006/007/010/014/017/018 without promoting a principle or candidate |
 | semiconductor device and circuit reliability | qualification, hierarchical yield and variability, reversible drift, cumulative degradation, abrupt failure, transient upset, fault geometry, correction/recovery stages, adaptive margin, analog/in-memory physical state, endurance/wear, accepted field service, and fabrication-to-retirement burden remain separate; Fixture F-008 carries the mission-profile-qualified degradation/recovery contract across Candidates 001/005/006/009/010/012/014/017/018 without promoting a principle or candidate |
 | acoustics, hearing, and auditory-scene analysis | calibrated pressure/level and room support, cochlear filtering/compression, temporal coding, spatial cues, masking/grouping/separation, reverberation/context, sparse activity, efferent control, echolocation and active emission/reception, array inference, uncertainty, calibration, and complete lifecycle cost remain separate; Fixture F-009 carries the operator- and action-qualified acoustic contract across Candidates 002/006/007/009/012/014 without promoting a principle or candidate |
+| information thermodynamics and physical computation | 46 established, 5 plausible, and 1 disputed claim keep logical transformation, device, circuit, computer/workload, facility, and lifecycle quantities separate; finite-time/error/reservoir/controller costs, reversible history, thermal noise, information engines, thermodynamic uncertainty, distribution mismatch, data movement, PUE, and embodied burden refine P-001/P-003/P-006/P-007/P-008/P-009/P-010/P-012/P-013; Fixture F-010 carries the boundary-qualified physical-computation contract across Candidates 001/005/006/009/010/012/014/017/018 without promoting a principle or candidate |
 
 The music, library/archival, comparative-cognition, visual-design,
-mathematical-practice, fluid-dynamics, sports, optics, semiconductor, and acoustics queues are closed by explicit
+mathematical-practice, fluid-dynamics, sports, optics, semiconductor, acoustics, and information-thermodynamics queues are closed by explicit
 no-promotion decisions. The music
 [Fixture F-001](../experiments/fixtures/001-shared-clock-free-coadaptation.md)
 retains E-MUSIC-07 as a cross-candidate benchmark; the archival refinement
@@ -361,6 +362,18 @@ emission/reception, localization under operator shift, reverberation transfer,
 grouping/separation, efferent-like gain, multi-emitter interference, and full
 lifecycle cost against the complete calibrated acoustics, inference, control,
 spectrum, uncertainty, and accounting stack.
+Information thermodynamics contributes
+[Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md)
+across Candidates 001/005/006/009/010/012/014/017/018. It binds every physical-
+efficiency result to one accepted service while keeping logical, device,
+circuit, workload, facility, and lifecycle quantities distinct. Its tracks
+challenge lower-bound substitution, finite-time and finite-error operation,
+reversible-history closure, thermal reliability, measurement/controller reset,
+uncertainty-relation applicability, distribution mismatch, topology, data
+movement, PUE allocation, and fabrication-to-retirement ranking. Its null is
+the complete compression, reversible-computation, stochastic-thermodynamics,
+circuit/architecture, workload-metering, facility, and lifecycle-assessment
+stack.
 The next
 breadth field is selected by expected ability to split, merge, reject, or
 re-baseline a current mechanism. Breadth alone does not close a row.

@@ -414,6 +414,36 @@ uncertainty, and lifecycle-accounting stack. Retire the composition when that
 stack reaches the same held-out operator/action/outcome/resource frontier. See
 [OQ-064](open-questions.md#oq-064).
 
+### Boundary-qualified physical-computation evaluation contract
+
+The [information-thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md)
+promotes no principle or candidate. Its 52 scoped claims contain 46 established,
+5 plausible, and 1 disputed statement. The durable firewall keeps six levels
+separate: logical transformation, physical device, circuit, complete
+computer/workload, facility, and lifecycle. Landauer's lower bound, reversible
+logic, fluctuation relations, finite-time dissipation, thermal noise,
+measurement and feedback, and thermodynamic uncertainty relations constrain
+specific physical models; none licenses a direct task- or facility-energy claim
+without the intervening ledger ([C-1100](claims.md#c-1100)–[C-1141](claims.md#c-1141)).
+
+The audit maps selective energy allocation to P-001, reversible provisional
+history to P-003, operating-point and recovery control to P-006,
+uncertainty/prediction-error spending to P-007, physical modularity to P-008,
+reset/calibration/correction/cooling to P-009, locality and substrate co-design
+to P-010, retention–write–error choices to P-012, and controller records to
+P-013. Distribution mismatch, topology, data movement, circuit charging, PUE,
+and embodied burden sharpen those bundles but create no additional invariant
+([C-1142](claims.md#c-1142)–[C-1151](claims.md#c-1151)).
+
+[Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md)
+applies the contract across Candidates 001, 005, 006, 009, 010, 012, 014, 017,
+and 018. Its null is the complete compression, reversible-algorithm,
+finite-time/error-aware thermodynamics, adiabatic and conventional circuit,
+voltage/precision, memory-hierarchy, workload-metering, PUE, and lifecycle-
+assessment stack. Retire the composition when that stack reaches the same
+accepted quality–error–latency–energy–lifecycle frontier without hidden
+boundary crossings. See [OQ-065](open-questions.md#oq-065).
+
 ## P-001 — Selective allocation
 
 **Problem.** Total possible capacity is larger than the activity or resources

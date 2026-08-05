@@ -15418,3 +15418,471 @@ describes the exact statement here, not a broader interpretation.
 - **Rationale:** no audited paper demonstrates that the whole contract beats a complete calibrated filterbank, spatial inference, separation, active sensing, control, uncertainty, and lifecycle-accounting stack.
 - **Open issue:** preserve the contract even if every architectural residual is retired.
 - **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1100
+
+- **Statement:** logical information and physical entropy require an explicit physical encoding and coarse graining; logical labels alone do not determine heat.
+- **Status:** established.
+- **Primary sources:** `landauer1961irreversibility`, `Bennett1982Thermodynamics`.
+- **Rationale:** the thermodynamic cost attaches to a physical transformation of represented distinctions under a declared model, not to an abstract label by itself.
+- **Open issue:** the encoding, state distribution, Hamiltonian, reservoir, protocol, and cycle boundary must accompany any numerical transfer.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [energy model](../concept/80-energy-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1101
+
+- **Statement:** resetting a uniformly distributed degenerate binary memory in an isothermal cyclic process has ideal expected work at least $k_BT\ln2$ under its stated assumptions.
+- **Status:** established.
+- **Primary sources:** `landauer1961irreversibility`, `ReebWolf2014Landauer`.
+- **Rationale:** temperature, distribution, energy landscape, cycle closure, and allowed error are part of the lower-bound statement.
+- **Open issue:** the result is not an energy-per-gate, FLOP, token, parameter, or accelerator constant.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [efficiency model](../math/efficiency-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1102
+
+- **Statement:** for a nonuniform degenerate logical state, the quasistatic erasure term is $k_BTH(X)$ rather than necessarily $k_BT\ln2$.
+- **Status:** established.
+- **Primary sources:** `landauer1961irreversibility`, `shannon1948mathematical1`.
+- **Rationale:** the prior state distribution and state preparation change the amount of information erased.
+- **Open issue:** preparation, side information, correlation, and downstream use cannot be excluded from the surrounding accounting.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [energy model](../concept/80-energy-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1103
+
+- **Statement:** nondegenerate or nonequilibrium memories require a free-energy accounting; a logical entropy count alone is incomplete.
+- **Status:** established.
+- **Primary sources:** `DeffnerJarzynski2013Information`, `ReebWolf2014Landauer`.
+- **Rationale:** minimum work depends on the physical state distribution and Hamiltonian through nonequilibrium free energy.
+- **Open issue:** the admissible controls and initial preparation remain implementation-specific.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [efficiency model](../math/efficiency-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1104
+
+- **Statement:** allowing symmetric binary reset error $\epsilon$ reduces the ideal information reduction to $\ln2-h(\epsilon)$, while useful-system accounting must charge error consequences.
+- **Status:** established.
+- **Primary sources:** `DianaEtAl2013Erasing`, `WimsattEtAl2021Landauer`.
+- **Rationale:** physical work, speed, and reset accuracy form a joint contract rather than an energy-only scalar.
+- **Open issue:** downstream correction, replay, harm, and service failure can dominate the saved device work.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [measurement contract](../math/measurement-contract.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-1105
+
+- **Statement:** correlations and usable side information can reduce erasure work, but destroying the correlation or resetting the helper transfers rather than removes the accounting.
+- **Status:** established.
+- **Primary sources:** `DelRioEtAl2011NegativeEntropy`, `DeffnerJarzynski2013Information`.
+- **Rationale:** an apparent subsystem gain depends on retained joint state and the full closure boundary.
+- **Open issue:** useful correlation, communication, retention, and eventual reset must be measured together.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1106
+
+- **Statement:** individual stochastic trajectories can dissipate less than $k_BT\ln2$ or have negative entropy production without violating ensemble fluctuation relations.
+- **Status:** established.
+- **Primary sources:** `Jarzynski1997Equality`, `Crooks1999Fluctuation`, `Seifert2005EntropyProduction`.
+- **Rationale:** nonequilibrium equalities constrain distributions or exponential ensemble averages rather than every trajectory.
+- **Open issue:** reported sample selection, reverse protocols, rare-event support, and estimator bias determine whether an experimental test is valid.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [research roadmap](../concept/90-research-roadmap.md).
+
+### C-1107
+
+- **Statement:** finite heat reservoirs produce corrections to the infinite-bath Landauer limit that depend on reservoir dimension and state.
+- **Status:** established.
+- **Primary sources:** `ReebWolf2014Landauer`.
+- **Rationale:** the ideal infinite-reservoir expression is not invariant to a finite environmental boundary.
+- **Open issue:** reservoir preparation, reuse, cooling, and restoration remain in the system cost.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1108
+
+- **Statement:** a colloidal one-bit memory approached the Landauer limit as the reset protocol was slowed, validating a scoped platform result rather than a universal device-energy constant.
+- **Status:** established.
+- **Primary sources:** `BerutEtAl2012Landauer`.
+- **Rationale:** the experiment measured a controlled physical memory and protocol near the theoretical limit.
+- **Open issue:** trap preparation, duration, instrumentation, controller, and cycle closure do not represent a complete computer.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1109
+
+- **Statement:** a feedback-trap implementation measured the finite-time approach to the Landauer bound and protocol-dependent work distributions.
+- **Status:** established.
+- **Primary sources:** `JunEtAl2014Landauer`.
+- **Rationale:** work changed with protocol duration in a controlled physical realization.
+- **Open issue:** feedback, calibration, trap operation, and sample-distribution cost remain boundary-qualified.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1110
+
+- **Statement:** nanomagnetic bit erasure has experimentally approached the Landauer scale under a controlled protocol without demonstrating complete-system energy at that scale.
+- **Status:** established.
+- **Primary sources:** `HongEtAl2016Landauer`.
+- **Rationale:** a single-bit physical operation was measured under selected conditions.
+- **Open issue:** field control, write/read paths, retention, error, interconnect, and cooling remain outside the narrow device result.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-1111
+
+- **Statement:** molecular-nanomagnet erasure near the Landauer limit was demonstrated at cryogenic operation with platform-specific field control and refrigeration boundaries.
+- **Status:** established.
+- **Primary sources:** `GaudenziEtAl2018QuantumLandauer`.
+- **Rationale:** the experiment establishes a physical erasure result for its molecular device and temperature.
+- **Open issue:** refrigeration and control energy prevent direct transfer to ordinary computing energy.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-1112
+
+- **Statement:** universal computation can be expressed through logically reversible operations, so compulsory logical erasure is not required at every intermediate step.
+- **Status:** established.
+- **Primary sources:** `Bennett1973LogicalReversibility`, `FredkinToffoli1982Conservative`.
+- **Rationale:** reversible constructions retain enough state to invert intermediate computation.
+- **Open issue:** physical reversibility, useful throughput, memory, control, and eventual output/reset costs remain separate.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-1113
+
+- **Statement:** reversible computation retains history or ancillae and later uncomputes them, creating time, space, communication, and control tradeoffs rather than free computation.
+- **Status:** established.
+- **Primary sources:** `Bennett1973LogicalReversibility`, `Bennett1989TimeSpace`.
+- **Rationale:** reducing erasure can require additional saved state and recomputation.
+- **Open issue:** memory hierarchy, leakage, checkpoint placement, and communication can erase a logical advantage.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1114
+
+- **Statement:** logical reversibility is not sufficient for thermodynamic reversibility of a physical implementation.
+- **Status:** established.
+- **Primary sources:** `Bennett1982Thermodynamics`, `WolpertEtAl2019SpaceTime`.
+- **Rationale:** protocol duration, physical dynamics, control restrictions, and state preparation determine dissipation beyond logical invertibility.
+- **Open issue:** a reversible instruction set alone makes no workload-energy prediction.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-1115
+
+- **Statement:** idealized adiabatic RC charging can reduce resistive loss approximately with $RC/\tau$ when transition time is slow relative to the circuit constant.
+- **Status:** established.
+- **Primary sources:** `AthasEtAl1994Adiabatic`.
+- **Rationale:** the scaling belongs to a specified waveform and circuit regime.
+- **Open issue:** the coefficient, clock, leakage, interconnect, and useful-throughput boundary determine the realized crossover.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1116
+
+- **Statement:** slower adiabatic switching does not remove leakage, power-clock generation, synchronization, control, interconnect, and retention costs, so a finite optimum may result.
+- **Status:** established.
+- **Primary sources:** `AthasEtAl1994Adiabatic`, `KimChae2005EnergyRecovery`.
+- **Rationale:** losses move between mechanisms as protocol duration changes.
+- **Open issue:** the optimum must be measured at equal accepted throughput, error, area, and service.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1117
+
+- **Statement:** a fabricated eight-bit reversible energy-recovery microprocessor demonstrated lower dissipation over a measured range without establishing zero-energy or workload-general superiority.
+- **Status:** established.
+- **Primary sources:** `KimChae2005EnergyRecovery`.
+- **Rationale:** the hardware result establishes feasibility within its frequency, process, and comparison boundary.
+- **Open issue:** area, clocks, I/O, leakage, yield, software, and representative workloads require retesting.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-1118
+
+- **Statement:** finite-time reset incurs protocol- and dynamics-dependent excess work above its quasistatic limit, so duration must accompany energy.
+- **Status:** established.
+- **Primary sources:** `AurellEtAl2011RefinedSecondLaw`, `ProesmansEtAl2020FiniteTimeLandauer`.
+- **Rationale:** finite-time constraints change the minimum-work problem.
+- **Open issue:** theorem-specific control and dynamics prevent a universal excess-work constant.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [efficiency model](../math/efficiency-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1119
+
+- **Statement:** finite-time and finite-error costs are separate axes whose tradeoff depends on the allowed controls and physical model.
+- **Status:** established.
+- **Primary sources:** `DianaEtAl2013Erasing`, `ProesmansEtAl2020OptimalErasure`, `WimsattEtAl2021Landauer`.
+- **Rationale:** speed, work, and reliability cannot be collapsed before service-level consequences are evaluated.
+- **Open issue:** system correction and retry policies can change the joint optimum.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1120
+
+- **Statement:** finite-time quantum erasure exhibits excess cost and work fluctuations, and classical quasistatic formulas cannot simply be relabeled as quantum-system bounds.
+- **Status:** established.
+- **Primary sources:** `MillerEtAl2020QuantumErasure`, `ZhenEtAl2021Reset`, `RolandiPerarnau2023Landauer`.
+- **Rationale:** quantum, strong-coupling, and finite-time models have distinct assumptions and bounds.
+- **Open issue:** useful quantum workload, control, measurement, refrigeration, and error correction remain outside the narrow erasure law.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1121
+
+- **Statement:** passive bistable-memory retention depends on energy barrier, temperature, time, and loss probability, coupling easy writes to retention through device physics and protocol.
+- **Status:** established.
+- **Primary sources:** `Kramers1940Brownian`, `Brown1963ThermalFluctuations`.
+- **Rationale:** activated escape models connect barrier height and temperature to retention time.
+- **Open issue:** real devices can have multiple barriers, field histories, gradients, and correlated failure.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1122
+
+- **Statement:** lower switching dissipation can increase error probability or duration, requiring an energy--error--speed frontier rather than energy alone.
+- **Status:** established.
+- **Primary sources:** `FashamiEtAl2013Switching`, `WimsattEtAl2021Landauer`.
+- **Rationale:** the accepted outcome changes when low-energy switching increases error or delay.
+- **Open issue:** correction, replay, redundancy, and downstream harm must be charged.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-1123
+
+- **Statement:** Johnson--Nyquist noise and fluctuation--dissipation impose physical noise on resistive and dissipative analog elements.
+- **Status:** established.
+- **Primary sources:** `Johnson1928ThermalAgitation`, `Nyquist1928ThermalAgitation`, `CallenWelton1951Noise`.
+- **Rationale:** useful precision depends on temperature, impedance, bandwidth, signal energy, and estimator.
+- **Open issue:** device drift, calibration, conversion, and nonthermal noise extend the boundary.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [measurement contract](../math/measurement-contract.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-1124
+
+- **Statement:** continuous-valued physical computation does not provide free infinite precision; useful bits depend on dynamic range, noise, drift, calibration, conversion, and error tolerance.
+- **Status:** established.
+- **Primary sources:** `Sarpeshkar1998AnalogDigital`, `DiamantiniEtAl2016AnalogLandauer`.
+- **Rationale:** analog state is physically supported and noisy rather than an exact real number.
+- **Open issue:** the digital/analog crossover is workload-, device-, precision-, and lifetime-qualified.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1125
+
+- **Statement:** noise or stochastic dynamics may reduce energy for selected sampling or search workloads, but any advantage is workload-, accuracy-, latency-, and hardware-dependent.
+- **Status:** plausible.
+- **Primary sources:** `FashamiEtAl2013Switching`, `GoldtSeifert2017StochasticLearning`.
+- **Rationale:** physical stochasticity can perform useful sampling only when its distribution and task match the objective.
+- **Open issue:** compare with high-quality pseudorandom digital sampling at equal mixing, bias, tails, wall time, and lifecycle cost.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-1126
+
+- **Statement:** Shannon's $E_b/N_0\ge\ln2$ asymptote is a reliable-communication limit for an AWGN channel at vanishing spectral efficiency, not a logic or memory-write law.
+- **Status:** established.
+- **Primary sources:** `shannon1948mathematical1`.
+- **Rationale:** the theorem binds received bit energy, noise spectral density, code, and rate regime.
+- **Open issue:** transmitter, coding, latency, bandwidth, receiver, and error costs define the complete communication service.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-1127
+
+- **Statement:** Jarzynski's equality connects an exponential work average to equilibrium free-energy difference for a specified initially canonical protocol ensemble.
+- **Status:** established.
+- **Primary sources:** `Jarzynski1997Equality`.
+- **Rationale:** it constrains an ensemble average rather than requiring each realization to cost $\Delta F$.
+- **Open issue:** rare-event sampling and initial-equilibrium support are part of an empirical estimator.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1128
+
+- **Statement:** Crooks' theorem relates forward and reverse work distributions under microscopic-reversibility assumptions and identifies $\Delta F$ at their crossing.
+- **Status:** established.
+- **Primary sources:** `Crooks1999Fluctuation`.
+- **Rationale:** the reverse protocol and probability-density support are part of the theorem.
+- **Open issue:** an approximate reversal or selected trajectories cannot support the full relation without qualification.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1129
+
+- **Statement:** integral fluctuation theorems allow negative stochastic entropy production on individual trajectories while constraining the exponential ensemble average.
+- **Status:** established.
+- **Primary sources:** `Seifert2005EntropyProduction`.
+- **Rationale:** trajectory-level exceptions do not refute the ensemble identity.
+- **Open issue:** the system, bath, path probability, time reversal, and observation support must be explicit.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1130
+
+- **Statement:** feedback can increase extractable work by an information term under Sagawa--Ueda models while measurement, memory, controller, and reset remain physical costs.
+- **Status:** established.
+- **Primary sources:** `SagawaUeda2010Jarzynski`, `SagawaUeda2012Feedback`.
+- **Rationale:** subsystem work extraction is conditioned on acquired information and a feedback protocol.
+- **Open issue:** closing the controller cycle can reverse a subsystem-only advantage.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-1131
+
+- **Statement:** a feedback-controlled Brownian particle experimentally converted acquired information into free energy under a scoped information-engine relation.
+- **Status:** established.
+- **Primary sources:** `ToyabeEtAl2010InformationEnergy`.
+- **Rationale:** the experiment validated information-to-energy conversion for its particle, feedback, and measurement cycle.
+- **Open issue:** measurement, control, memory, and reset prevent interpretation as controller-free net power.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-1132
+
+- **Statement:** a single-electron Szilard engine experimentally linked mutual information and extracted work in a controlled mesoscopic device.
+- **Status:** established.
+- **Primary sources:** `KoskiEtAl2014Szilard`.
+- **Rationale:** the result is platform- and cycle-specific.
+- **Open issue:** complete controller, refrigeration, readout, reset, and useful-load accounting remains necessary.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1133
+
+- **Statement:** in an autonomous electronic Maxwell-demon experiment the controlled system cooled while the demon dissipated heat, and the joint boundary restored thermodynamic balance.
+- **Status:** established.
+- **Primary sources:** `KoskiEtAl2015Demon`.
+- **Rationale:** subsystem cooling did not imply violation or cost-free refrigeration.
+- **Open issue:** system partition and heat measurement determine the conclusion.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1134
+
+- **Statement:** continuous information flow and subsystem entropy production in bipartite stochastic systems require an explicit joint process and transition structure.
+- **Status:** established.
+- **Primary sources:** `HorowitzEsposito2014InformationFlow`.
+- **Rationale:** assigning flows to subsystems depends on the modeled bipartite dynamics.
+- **Open issue:** arbitrary module boundaries do not inherit the same decomposition.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1135
+
+- **Statement:** biochemical sensing models have resource-dependent precision bounds that keep copy number, integration time, receptor statistics, and energy supply distinct.
+- **Status:** established.
+- **Primary sources:** `GovernTenWolde2014ResourceAllocation`, `GovernTenWolde2014Dissipation`.
+- **Rationale:** no universal scalar information cost captures the modeled sensing tradeoffs.
+- **Open issue:** transferring a cellular bound to AI requires a matched observation, dynamics, and task boundary.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-1136
+
+- **Statement:** a sensory-adaptation model yields an energy--speed--accuracy tradeoff under its network architecture.
+- **Status:** established.
+- **Primary sources:** `lan2012tradeoff`.
+- **Rationale:** reducing dissipation changes achievable response speed and precision in the model.
+- **Open issue:** the relationship is not a substrate-independent system law.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [efficiency model](../math/efficiency-model.md).
+
+### C-1137
+
+- **Statement:** retaining predictive rather than merely historical information may reduce useless physical memory updates, but the AI-system transfer is unverified.
+- **Status:** plausible.
+- **Primary sources:** `StillEtAl2012Prediction`.
+- **Rationale:** predictive information is coupled to dissipation in the audited model.
+- **Open issue:** a device-to-task measurement must beat ordinary predictive compression, caching, and event-triggered updates.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1138
+
+- **Statement:** stochastic-thermodynamic learning-efficiency results can guide toy adaptive systems but do not establish a digital-gradient-training joule bound or advantage.
+- **Status:** plausible.
+- **Primary sources:** `GoldtSeifert2017StochasticLearning`, `GoldtSeifert2017RuleLearning`.
+- **Rationale:** the results are tied to their learning dynamics, observables, and physical model.
+- **Open issue:** accelerator, memory, communication, optimizer, data, and accepted-task energy remain unbounded by the toy relation.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [research roadmap](../concept/90-research-roadmap.md).
+
+### C-1139
+
+- **Statement:** the original steady-state thermodynamic uncertainty relation bounds relative current variance by entropy production for scoped continuous-time Markov processes.
+- **Status:** established.
+- **Primary sources:** `barato2015tur`, `GingrichEtAl2016Dissipation`.
+- **Rationale:** the current, stationarity, dynamics, time regime, and reversal convention are part of the bound.
+- **Open issue:** task accuracy or training loss is not automatically the required physical current.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [efficiency model](../math/efficiency-model.md).
+
+### C-1140
+
+- **Statement:** thermodynamic uncertainty relations are not model-free laws for arbitrary estimators, nonstationary training, deterministic computers, or quantum devices.
+- **Status:** established.
+- **Primary sources:** `HorowitzGingrich2017FiniteTimeTUR`, `HasegawaVu2019TUR`, `TimpanaroEtAl2019TUR`.
+- **Rationale:** different derivations impose different dynamics, observables, initial states, and reversal conditions.
+- **Open issue:** every proposed AI transfer must first establish theorem support for its measured physical process.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1141
+
+- **Statement:** finite-time and arbitrary-initial-state uncertainty relations exist, but their bounds and validity conditions differ from the original steady-state expression.
+- **Status:** established.
+- **Primary sources:** `HorowitzGingrich2017FiniteTimeTUR`, `LiuEtAl2020TUR`, `Monnai2023TUR`.
+- **Rationale:** later variants do not license applying one familiar formula outside its regime.
+- **Open issue:** initial-state knowledge and physical-current observation can dominate an empirical application.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [measurement contract](../math/measurement-contract.md).
+
+### C-1142
+
+- **Statement:** independently operating computational modules can add thermodynamic cost when correlations crossing module boundaries are discarded or inaccessible.
+- **Status:** established.
+- **Primary sources:** `BoydEtAl2018Modularity`, `WolpertEtAl2019SpaceTime`.
+- **Rationale:** modular decomposition changes accessible state and implementation dynamics even when logical function is preserved.
+- **Open issue:** locality gains, communication, correlation retention, isolation, and controller cost must be measured jointly.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1143
+
+- **Statement:** a physical process optimized for one input distribution can dissipate extra work under a mismatched distribution.
+- **Status:** established.
+- **Primary sources:** `KolchinskyWolpert2017Dissipation`, `KolchinskyWolpert2021EntropyProduction`.
+- **Rationale:** thermodynamic cost depends on actual priors and implementation rather than the abstract input--output map alone.
+- **Open issue:** distribution drift and adaptation cost must accompany a deployment-energy claim.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1144
+
+- **Statement:** circuit topology, gate decomposition, timing, and accessible correlations can change minimum thermodynamic cost for the same input--output function.
+- **Status:** established.
+- **Primary sources:** `WolpertKolchinsky2020Circuits`, `KolchinskyWolpert2020Turing`.
+- **Rationale:** implementation structure is thermodynamically relevant.
+- **Open issue:** a function-level operation count does not determine physical energy without compilation and substrate details.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-1145
+
+- **Statement:** memory access and data movement can consume substantial or dominant energy relative to arithmetic on measured digital accelerators.
+- **Status:** established.
+- **Primary sources:** `horowitz2014energy`, `ChenEtAl2017Eyeriss`, `JouppiEtAl2017TPU`.
+- **Rationale:** locality, reuse, hierarchy, precision, and workload dataflow materially affect measured energy.
+- **Open issue:** component tables are process-, voltage-, precision-, memory-, utilization-, and workload-specific.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [energy model](../concept/80-energy-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1146
+
+- **Statement:** a hierarchy-aware model may predict which sparse or modular routes save task energy, but component energy constants do not transfer unchanged across systems.
+- **Status:** plausible.
+- **Primary sources:** `horowitz2014energy`, `ChenEtAl2017Eyeriss`, `SzeEtAl2017EfficientDNN`.
+- **Rationale:** process, voltage, precision, hierarchy, workload, utilization, and control alter the energy of a route.
+- **Open issue:** validate predictions at the wall-plug accepted-task boundary with controller, idle, and failed-route costs.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [energy model](../concept/80-energy-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1147
+
+- **Statement:** the ordinary $CV^2$ switching model describes circuit charging loss rather than Landauer erasure.
+- **Status:** established.
+- **Primary sources:** `AthasEtAl1994Adiabatic`, `horowitz2014energy`.
+- **Rationale:** dynamic energy also depends on activity, voltage, capacitance, frequency, short-circuit current, leakage, and implementation.
+- **Open issue:** a device-level charging model does not include memory hierarchy, software, idle, or facility overhead.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [energy model](../concept/80-energy-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1148
+
+- **Statement:** ISO/IEC 30134-2 defines PUE as facility energy divided by IT-equipment energy over a declared data-center boundary and measurement period.
+- **Status:** established.
+- **Primary sources:** `ThermoISO30134PUE`.
+- **Rationale:** PUE is a facility-overhead ratio, not task efficiency or carbon intensity.
+- **Open issue:** allocation to a workload still requires metered IT energy, accepted outcomes, time, location, and shared-infrastructure rules.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [measurement contract](../math/measurement-contract.md), [energy model](../concept/80-energy-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1149
+
+- **Statement:** semiconductor fabrication and packaging have material- and energy-intensive burdens that can change use-phase efficiency rankings.
+- **Status:** established.
+- **Primary sources:** `WilliamsEtAl2002Microchip`, `KrishnanEtAl2008LCI`, `BoydEtAl2010FabEnergy`.
+- **Rationale:** yield, utilization, lifetime, replacement, and functional unit determine allocated embodied burden.
+- **Open issue:** inventory data age, fab/site differences, package, and allocation uncertainty require sensitivity analysis.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [energy model](../concept/80-energy-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1150
+
+- **Statement:** specialized low-operational-energy hardware is lifecycle-superior only when saved use energy and accepted service outweigh fabrication, low utilization, support-life, maintenance, and replacement burdens.
+- **Status:** plausible.
+- **Primary sources:** `PirsonBol2021Embodied`, `ThermoISO14040`, `SemiISO14044`.
+- **Rationale:** lifecycle ranking depends on a common functional unit, geography, yield, use distribution, lifetime, and uncertainty.
+- **Open issue:** counterfactual displaced hardware and software-support lifetime are often missing.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [energy model](../concept/80-energy-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1151
+
+- **Statement:** distance above $k_BT\ln2$ is not by itself an actionable ranking or forecast for AI-system efficiency.
+- **Status:** disputed.
+- **Primary sources:** `WimsattEtAl2021Landauer`, `horowitz2014energy`, `ThermoISO30134PUE`.
+- **Rationale:** the comparison crosses logical erasure, device, circuit, workload, facility, and lifecycle boundaries while omitting accepted quality, time, and error.
+- **Open issue:** retain the comparison only as a boundary-qualified ratio after every numerator, denominator, and assumption is exposed.
+- **Used by:** [thermodynamics audit](audits/2026-08-05-information-thermodynamics-physical-computation.md), [energy model](../concept/80-energy-model.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md), [research roadmap](../concept/90-research-roadmap.md).
