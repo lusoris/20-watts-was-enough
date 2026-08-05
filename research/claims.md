@@ -7423,6 +7423,7 @@ describes the exact statement here, not a broader interpretation.
   [012](../experiments/candidates/012-latency-qualified-authority.md), and
   [014](../experiments/candidates/014-versioned-observation-contract.md).
 
+
 ### C-504
 
 - **Statement:** Separation performance trades equipment stages or area,
@@ -8883,5 +8884,323 @@ describes the exact statement here, not a broader interpretation.
   banks, and reset/retraining at equal lifecycle cost.
 - **Used by:** [controlled-observability fixture](../concept/20-sensorimotor-grounding.md#controlled-observability-and-plant-binding),
   Candidates [006](../experiments/candidates/006-reversible-physical-skill.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+
+### C-607
+
+- **Statement:** Receptor occupancy or module activation is not sufficient
+  evidence of downstream benefit or safety.
+- **Status:** plausible.
+- **Primary sources:** `black1983`.
+- **Rationale:** Affinity, efficacy, receptor reserve, tissue-specific
+  transduction, and off-target effects separate binding from functional and
+  clinical endpoints.
+- **Open issue:** Causal ablation and multistage measurement must add predictive
+  value beyond a calibrated operational response or nonlinear state-space
+  model.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-608
+
+- **Statement:** Administered amount, total systemic concentration, unbound
+  target-site concentration, and target engagement are distinct quantities.
+- **Status:** established.
+- **Primary sources:** `sheiner1979`, `mager2001`, `mateus2013`.
+- **Rationale:** Absorption, distribution, clearance, protein binding, tissue
+  transport, and engagement intervene between a command and the state available
+  to produce an effect.
+- **Open issue:** Any AI analogue must name each state, its unit and support,
+  observation process, uncertainty, and identifiability rather than infer
+  realized state from commanded input.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-609
+
+- **Statement:** Target binding can alter disposition, so intervention and
+  internal-state dynamics may be bidirectionally coupled.
+- **Status:** established.
+- **Primary sources:** `mager2001`.
+- **Rationale:** Target-mediated disposition provides a concrete nonlinear case
+  in which engagement changes the kinetics that determine later engagement.
+- **Open issue:** A systems transfer must identify this coupling and beat an
+  ordinary nonlinear state-space or target-mediated disposition null on
+  held-out transients.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-610
+
+- **Statement:** Observed effect delay does not identify effect-site
+  equilibration, turnover, feedback, disease, or observation lag without
+  discriminating interventions.
+- **Status:** established.
+- **Primary sources:** `sheiner1979`, `mager2003`.
+- **Rationale:** Direct, effect-compartment, turnover, precursor, irreversible,
+  tolerance, and measurement-delay models can fit similar sparse lag or
+  hysteresis while predicting different washout and re-intervention behavior.
+- **Open issue:** Competing mechanisms must be structurally and practically
+  identifiable on held-out transients at matched state dimension and data
+  budget.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-611
+
+- **Statement:** A therapeutic window is endpoint-, population-, regimen-, and
+  time-qualified rather than a universal dose interval.
+- **Status:** established.
+- **Primary sources:** `iche4`, `fdaer2003`.
+- **Rationale:** Dose, exposure, benefit, harm, subgroup state, schedule, and
+  follow-up jointly determine an admissible region; none of them alone defines
+  benefit and safety.
+- **Open issue:** Any AI analogue must publish every qualifier, protected
+  endpoint, uncertainty bound, horizon, and fallback and survive delayed and
+  subgroup harm tests.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-612
+
+- **Statement:** Therapeutic index is a population summary, not an individual
+  control law.
+- **Status:** established.
+- **Primary sources:** `iche4`, `fdaer2003`.
+- **Rationale:** A ratio of population-level effect and toxicity quantities
+  omits individual exposure, uncertainty, endpoint identity, schedule, and
+  changing susceptibility.
+- **Open issue:** It must be used only with an explicit endpoint, population,
+  regimen, horizon, and decision rule; it must not self-authorize individual
+  action.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-613
+
+- **Statement:** Population-average response cannot guarantee individual or
+  subgroup safety.
+- **Status:** established.
+- **Primary sources:** `sheiner1980`, `fdapoppk2022`, `mallal2008`.
+- **Rationale:** Mixed-effects variation, rare susceptibility, and a validated
+  genotype-defined hypersensitivity subgroup demonstrate why a population mean
+  does not bound every individual.
+- **Open issue:** External tail and subgroup validation, transportability,
+  calibrated uncertainty, representative support, and conservative fallback
+  are required.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  Candidates [012](../experiments/candidates/012-latency-qualified-authority.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-614
+
+- **Statement:** A predictive or mechanistic covariate need not improve the
+  complete closed-loop dosing system.
+- **Status:** established.
+- **Primary sources:** `kimmel2013`, `pirmohamed2013`.
+- **Rationale:** Contemporary genotype-guided warfarin trials produced different
+  system-level results under different algorithms, comparators, populations,
+  procedures, and follow-up; feature relevance did not determine net utility.
+- **Open issue:** Added information must beat the actual clinical or engineering
+  comparator at equal total measurement, adaptation, monitoring, and fallback
+  cost, including subgroup outcomes.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  Candidates [007](../experiments/candidates/007-endogenous-observation-surveillance.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-615
+
+- **Statement:** Bayesian adaptive dosage and therapeutic monitoring are mature
+  nulls for repeated state estimation and intervention.
+- **Status:** established.
+- **Primary sources:** `sheiner1972`, `fdapoppk2022`, `darwich2017`,
+  `rybak2020`.
+- **Rationale:** Individual Bayesian forecasting, population PK, therapeutic
+  monitoring, and model-informed precision dosing already close a
+  measurement–estimation–action loop with clinical constraints.
+- **Open issue:** Any adaptive AI intervention must beat Bayesian MIPD/TDM and
+  constrained MPC/POMDP analogues with identical observations, action
+  frequency, compute, human review, uncertainty, and safety fallback.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  Candidates [007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-616
+
+- **Statement:** Stale, selected, or intervention-dependent observations can
+  make adaptive dosing self-confirming or unsafe.
+- **Status:** plausible.
+- **Primary sources:** `fdaer2003`, `fdapoppk2022`, `kimmel2013`,
+  `pirmohamed2013`.
+- **Rationale:** An estimated state changes dose; dose then changes outcomes,
+  monitoring, rescue, adherence, attrition, and which later observations become
+  available.
+- **Open issue:** The loop must be tested with known action–observation feedback,
+  event and availability times, true data vintages, selection, rescue, and
+  measurement drift.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  Candidates [007](../experiments/candidates/007-endogenous-observation-surveillance.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-617
+
+- **Statement:** Tolerance is endpoint-, mechanism-, exposure-, and
+  context-specific; dose escalation is not a generally safe response.
+- **Status:** established.
+- **Primary sources:** `siegel1975`, `williams2013`.
+- **Rationale:** Context-conditioned compensation and distinct receptor,
+  cellular, network, and behavioral mechanisms can change one response without
+  implying a single global loss of sensitivity; escalation also changes harm
+  and dependence.
+- **Open issue:** Pharmacokinetic drift, pharmacodynamic adaptation, disease,
+  context, sensitization, and measurement drift must be separated with
+  longitudinal and transfer tests.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-618
+
+- **Statement:** Physical dependence and withdrawal are not synonyms for
+  tolerance or addiction.
+- **Status:** established.
+- **Primary sources:** `obrien1977`, `fdaabuse2017`, `robinson1993`,
+  `koob1997`.
+- **Rationale:** Conditioned withdrawal, reduced effect, adaptation to continued
+  exposure, incentive sensitization, and compulsive use describe separable
+  states and outcomes.
+- **Open issue:** Evaluation must retain separate tolerance, dependence,
+  withdrawal, wanting/use, native capability, recurrence, and harm axes rather
+  than one adaptation score.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  Candidates [005](../experiments/candidates/005-severity-ordered-containment.md)
+  and [012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-619
+
+- **Statement:** Removing support can be a different dynamical intervention
+  from adding it and may require taper, reserve, and post-removal surveillance.
+- **Status:** plausible.
+- **Primary sources:** `obrien1977`, `fdaabuse2017`.
+- **Rationale:** Repeated support can change slow and context-dependent state,
+  so abrupt removal may expose withdrawal or hidden dependence not predicted by
+  supported performance.
+- **Open issue:** The transfer must outperform staged decommissioning and
+  constrained ramp-down nulls while exposing hidden dependence, charging
+  reserve and rescue, and measuring native capability after removal.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  Candidates [005](../experiments/candidates/005-severity-ordered-containment.md),
+  [007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  and [012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-620
+
+- **Statement:** Synergy has no meaning without a reference model, response
+  scale, schedule, and uncertainty.
+- **Status:** established.
+- **Primary sources:** `bliss1939`, `chou1984`, `ichm12`.
+- **Rationale:** Bliss independence, dose-equivalence/combination-index,
+  highest-single-agent, and mechanistic interaction models make different null
+  predictions, and benefit interaction can differ from harm interaction.
+- **Open issue:** A claim must pass several prespecified nulls, full single-agent
+  curves, held-out schedules, uncertainty and multiplicity analysis, and
+  protected harm endpoints.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-621
+
+- **Statement:** A finite off-target screen bounds tested coverage only;
+  absence of detected activity is not proof of no harm.
+- **Status:** established.
+- **Primary sources:** `keiser2009`, `lounkine2012`.
+- **Rationale:** Computational target predictions can generate experimentally
+  confirmed hypotheses, but finite target panels omit unknown targets,
+  metabolites, tissue context, immune effects, interactions, and rare
+  susceptibilities.
+- **Open issue:** Screens need declared coverage, exposure relevance,
+  prospective calibration against held-out failures, functional testing, and
+  post-deployment surveillance.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  Candidates [005](../experiments/candidates/005-severity-ordered-containment.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-622
+
+- **Statement:** Biphasic responses may occur for scoped
+  agent–endpoint–model–time combinations.
+- **Status:** plausible.
+- **Primary sources:** `calabrese2003`, `thayer2005`, `mushak2007`.
+- **Rationale:** Reported low-dose stimulation and high-dose inhibition coexist
+  with disputes about definition, model choice, endpoint multiplicity,
+  selection, human generalization, and public-health interpretation.
+- **Open issue:** Each shape requires a preregistered dense-dose replication,
+  stable controls, competing monotone and mixture models, multiplicity control,
+  multiple harm endpoints, and independent follow-up.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md).
+
+### C-623
+
+- **Statement:** Hormesis is not justified as a universal low-dose benefit,
+  safety, or AI-training principle.
+- **Status:** disputed.
+- **Primary sources:** `calabrese2003`, `thayer2005`, `mushak2007`.
+- **Rationale:** A scoped nonmonotonic endpoint does not establish organism-wide
+  benefit, unmeasured safety, mechanism, cross-population generality, or a
+  transferable computation rule.
+- **Open issue:** No foreseeable single-domain experiment can promote
+  universality; only agent-, endpoint-, population-, schedule-, and
+  time-specific hypotheses are admissible.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md).
+
+### C-624
+
+- **Statement:** A benchmark dose or lower confidence bound is a model- and
+  endpoint-qualified point of departure, not a biological no-effect threshold.
+- **Status:** established.
+- **Primary sources:** `crump1984`, `epa2012`.
+- **Rationale:** BMD/BMDL depends on the benchmark response, dose metric,
+  endpoint, fitted model family, background response, uncertainty procedure,
+  and available dose–response data.
+- **Open issue:** Every use must report BMR, model family, fit, uncertainty,
+  route, duration, species/population, and sensitivity to defensible alternative
+  models.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-625
+
+- **Statement:** Toxicity is a multi-organ, multi-timescale,
+  population-qualified vector; one clean acute assay cannot establish universal
+  safety.
+- **Status:** established.
+- **Primary sources:** `crump1984`, `epa2012`, `nrc2007`.
+- **Rationale:** Molecular or cellular pathway perturbation, tissue response,
+  organism harm, delayed and cumulative effects, life stage, mixtures, and
+  susceptible subgroups require different endpoints and observation horizons.
+- **Open issue:** Coverage, follow-up, route, schedule, recovery, translation,
+  rare-event power, and uncertainty must match the scope of the safety claim.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  Candidates [005](../experiments/candidates/005-severity-ordered-containment.md),
+  [007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-626
+
+- **Statement:** Adaptive intervention changes both hidden state and the process
+  by which later outcomes are observed.
+- **Status:** plausible.
+- **Primary sources:** `fdaer2003`, `fdapoppk2022`, `kimmel2013`,
+  `pirmohamed2013`.
+- **Rationale:** Treatment policy changes exposure and outcome while also
+  changing sampling, rescue, discontinuation, adherence, attrition, and later
+  action authority; telemetry is therefore endogenous.
+- **Open issue:** Action effects and observation effects must be identified
+  beyond delay-aware POMDP/dual-control, longitudinal-causal, sequential-
+  detection, and versioned-observation nulls using true data vintages.
+- **Used by:** [pharmacology and toxicology audit](audits/2026-08-05-pharmacology-toxicology.md),
+  Candidates [007](../experiments/candidates/007-endogenous-observation-surveillance.md),
   [012](../experiments/candidates/012-latency-qualified-authority.md), and
   [014](../experiments/candidates/014-versioned-observation-contract.md).

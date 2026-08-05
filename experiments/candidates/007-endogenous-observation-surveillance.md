@@ -107,6 +107,25 @@ interference, sensing energy, latency, and risk. Reject the refinement if the
 strong conventional policies tie it or if the sensing controller wins only by
 receiving hidden state ([C-589](../../research/claims.md#c-589)–[C-596](../../research/claims.md#c-596)).
 
+## Adaptive-intervention observation track
+
+Add a synthetic intervention domain with separate commanded amount, realized
+internal exposure, mechanism engagement, proximal response, task benefit,
+protected harms, adaptation, dependence, and withdrawal. The intervention
+changes hidden state and may also change sampling, attrition, adherence,
+rescue, or the probability that later outcomes become visible
+([C-616](../../research/claims.md#c-616),
+[C-626](../../research/claims.md#c-626)).
+
+Cross schedule, observation delay, selected dropout, subgroup response,
+tolerance/sensitization, and taper rate. Compare a dose-only controller,
+Bayesian state-space PK/PD analogue, model-informed precision dosing, robust
+MPC, delay-aware POMDP, and the candidate observation/action contract. Match
+observations, interventions, reserve, fallback authority, compute, human
+review, and lifecycle energy. The track loses if the conventional estimator
+and controller recover the same hidden states, safety frontier, and withdrawal
+outcomes.
+
 ## SCOPE benchmark
 
 Build **Surveillance under Changing Observation, Policy, and Environment** as a

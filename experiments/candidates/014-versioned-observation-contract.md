@@ -132,7 +132,15 @@ Every derived claim or alert carries:
   structural postcondition;
 - body/tool, attachment, payload, contact, sensor/actuator, task-Jacobian,
   impedance/passivity, delay, safety-envelope, and controller/estimator binding
-  versions.
+  versions;
+- commanded intervention amount, schedule, route, delivery, adherence, and
+  realized internal-exposure estimate with units, support, and uncertainty;
+- engagement/activation, proximal response, benefit, and each protected-harm
+  endpoint as separate measurements with delays and validity regions;
+- adaptation, tolerance/sensitization, dependence, withdrawal, taper, rescue,
+  rebound, recurrence, and post-removal surveillance state; and
+- population/subgroup, co-intervention, context, interaction reference model,
+  response scale, schedule, and benchmark-response decision model.
 
 ## Metrological completeness and invalidation
 
@@ -239,6 +247,9 @@ Hold constant:
     competence windows, commitments, and observation support.
 12. counterfactual body, tool, attachment, payload, sensor, delay, contact, and
     impedance swaps with selective dependency invalidation.
+13. adaptive intervention under exposure lag, heterogeneous response, selected
+    observation, tolerance/sensitization, abrupt versus tapered removal,
+    rebound, and delayed multi-endpoint harm.
 
 ## Measurements
 
@@ -251,8 +262,11 @@ Hold constant:
 - non-detection interpretation errors;
 - stale-contract and superseded-claim use;
 - follow-up value, diversity, and self-confirmation rate;
-- compute, storage, reviewer time, messages, and joules; and
-- abstention on structurally non-identifiable directions.
+- compute, storage, reviewer time, messages, and joules;
+- abstention on structurally non-identifiable directions; and
+- commanded-versus-realized intervention error, engagement calibration,
+  benefit/harm coverage, subgroup tail risk, adaptation-state error,
+  withdrawal/rebound events, and post-removal native capability and reserve.
 
 ## Required ablations
 
@@ -271,8 +285,12 @@ Hold constant:
 - delete shared covariance while retaining marginal uncertainties;
 - record provenance without dependency-triggered re-evaluation; and
 - drop receiver history, competence version, or window support while retaining
-  the external signal; and
-- retain observation metadata while deleting plant/controller dependencies.
+  the external signal;
+- retain observation metadata while deleting plant/controller dependencies;
+- replace the intervention chain with commanded amount or cumulative amount;
+- merge engagement, benefit, and harm into one score; and
+- delete adaptation/withdrawal and removal-rate fields while retaining ordinary
+  outcome monitoring.
 
 ## Kill criteria
 
@@ -315,6 +333,9 @@ adaptive-follow-up setting at equal lifecycle cost.
 - [Animal navigation and sensory-ecology audit](../../research/audits/2026-08-05-animal-navigation-sensory-ecology.md)
 - [Biomechanics and motor-control audit](../../research/audits/2026-08-05-biomechanics-motor-control.md)
 - [C-586](../../research/claims.md#c-586)–[C-606](../../research/claims.md#c-606)
+- [Pharmacology and toxicology audit](../../research/audits/2026-08-05-pharmacology-toxicology.md)
+- [C-607](../../research/claims.md#c-607)–[C-626](../../research/claims.md#c-626)
+- [State-qualified intervention mathematics](../../math/state-qualified-intervention.md)
 - [P-001](../../research/principle-registry.md#p-001--selective-allocation)
 - [P-003](../../research/principle-registry.md#p-003--temporary-trace-before-commitment)
 - [P-007](../../research/principle-registry.md#p-007--prediction-error-allocation)

@@ -46,6 +46,17 @@ risk at equal sensing and lifecycle cost
 ([C-599](../../research/claims.md#c-599),
 [C-603](../../research/claims.md#c-603)–[C-606](../../research/claims.md#c-606)).
 
+For adaptive intervention, the envelope additionally binds commanded schedule,
+realized internal state, engagement, benefit and protected-harm endpoints,
+population/task/context support, adaptation, dependence, withdrawal risk,
+reserve, observation age, and uncertainty. It is a qualified region rather
+than one fixed threshold ([C-611](../../research/claims.md#c-611)–[C-613](../../research/claims.md#c-613)).
+Authority may contract to hold, taper, stop, rescue, or observe; withdrawal
+risk can make abrupt removal unsafe even when adding more intervention is also
+unsafe ([C-619](../../research/claims.md#c-619)). The track must beat Bayesian
+PK/PD or equivalent state estimation plus chance-constrained MPC/POMDP,
+ordinary safety monitors, and staged decommissioning.
+
 ## Candidate loop
 
 ```mermaid
@@ -237,6 +248,9 @@ All arms receive identical:
 9. a compromise track with stolen active sessions, workload compromise,
    key/clock rollback, stale cache or delegation, correlated approval domains,
    compromised telemetry, dirty restore, and attacker recurrence.
+10. a state- and withdrawal-qualified intervention track crossing schedule,
+    delayed benefit/harm, subgroup response, adaptation, stale evidence,
+    support removal, taper, rebound, and post-removal reserve.
 
 ## Measurements
 
@@ -252,8 +266,10 @@ All arms receive identical:
 - common-cause dependencies and redistributed load/demand;
 - degraded-service vector, affected strata, and exposure duration;
 - post-action verified next-event reserve;
-- inconsistent concurrent authority; and
-- recovery quality after restoration or reconnection.
+- inconsistent concurrent authority;
+- recovery quality after restoration or reconnection;
+- benefit, protected-harm, adaptation, dependence, withdrawal, rebound, and
+  native-capability vectors over the declared intervention/removal horizon;
 - weighted capability-seconds, revocation exposure in seconds, secure recovery
   time, credential-rotation completeness, and recurrence after the declared
   clean state.
@@ -269,11 +285,14 @@ All arms receive identical:
 - remove postcondition checks;
 - remove envelope rollback and provenance; and
 - replace the learned policy with the same envelope around a conventional
-  controller.
+  controller;
 - remove identity/key/attestation epochs while retaining ordinary short-lived
   credentials; and
 - collapse identity, approval, telemetry, and recovery roots into one failure
-  domain while leaving their logical labels unchanged.
+  domain while leaving their logical labels unchanged;
+- collapse command, realized state, engagement, benefit, and harm into one
+  intervention score; and
+- remove the withdrawal/removal-rate state while keeping adaptation.
 
 ## Kill criteria
 
@@ -321,6 +340,8 @@ domains, and preserve simple independent safety limits.
 - [C-186](../../research/claims.md#c-186)–[C-203](../../research/claims.md#c-203)
 - [C-250](../../research/claims.md#c-250)–[C-267](../../research/claims.md#c-267)
 - [Security and cryptography audit](../../research/audits/2026-08-05-security-cryptography.md)
+- [Pharmacology and toxicology audit](../../research/audits/2026-08-05-pharmacology-toxicology.md)
+- [C-607](../../research/claims.md#c-607)–[C-626](../../research/claims.md#c-626)
 - [P-002](../../research/principle-registry.md#p-002--local-autonomy-with-exception-escalation)
 - [P-006](../../research/principle-registry.md#p-006--homeostatic-negative-feedback)
 - [P-008](../../research/principle-registry.md#p-008--compartmentalized-interaction)

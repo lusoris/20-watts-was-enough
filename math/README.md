@@ -14,6 +14,9 @@ notation.
 - [`measurement-contract.md`](measurement-contract.md) defines measurands,
   uncertainty and covariance, reproducibility, decision rules, drift,
   dependency invalidation, and calibrated energy measurement.
+- [`state-qualified-intervention.md`](state-qualified-intervention.md)
+  separates commanded intervention, realized exposure, engagement, benefit,
+  harm, adaptation, withdrawal, schedule, and removal surveillance.
 
 Rules:
 

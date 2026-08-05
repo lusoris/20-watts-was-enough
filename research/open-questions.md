@@ -229,3 +229,10 @@ project choice.
   impedance control, gain scheduling, and model banks when sensing motion,
   mechanics, calibration, body/tool swaps, compute, energy, and failures are
   charged? See the [controlled-observability fixture](../concept/20-sensorimotor-grounding.md#controlled-observability-and-plant-binding).
+- **OQ-050:** Does separating command, realized internal state, engagement,
+  benefit, harm, adaptation, dependence, withdrawal, and removal rate improve
+  safety or efficiency beyond Bayesian state-space PK/PD analogues,
+  mixed-effects estimation, constrained MPC/POMDP, calibrated harm monitoring,
+  and staged decommissioning at equal observation, intervention, reserve,
+  compute, energy, and human cost? See the
+  [state-qualified intervention note](../math/state-qualified-intervention.md).

@@ -266,6 +266,9 @@ stability ([C-112](claims.md#c-112), [C-115](claims.md#c-115),
 [C-117](claims.md#c-117), [C-119](claims.md#c-119)); finite-trace monitoring and
 transactional recovery provide scoped engineered feedback
 ([C-152](claims.md#c-152), [C-154](claims.md#c-154)).
+Pharmacological tolerance and sensitization show why a changed response is not
+automatically one homeostatic mechanism: exposure, endpoint, context, and
+adapted state must be identified separately ([C-617](claims.md#c-617)).
 
 **Candidate AI primitive.** Per-module activity and update-rate controllers
 that operate separately from the task loss.
@@ -446,6 +449,10 @@ consolidation, reconsolidation, and regulated forgetting
 ([C-036](claims.md#c-036)–[C-042](claims.md#c-042)); memory-supported imagined
 scene construction ([C-066](claims.md#c-066)); versioned derivation provenance
 with separate truth and retraction checks ([C-156](claims.md#c-156)).
+Effect delay, tolerance/dependence, and withdrawal add domain-specific latent
+states with distinct observation and removal horizons; their timescales do not
+make them interchangeable memories ([C-610](claims.md#c-610),
+[C-617](claims.md#c-617)–[C-619](claims.md#c-619)).
 
 **Candidate AI primitive.** A versioned memory hierarchy spanning transient
 state, episodic records, slow skills, and externally attributable facts.

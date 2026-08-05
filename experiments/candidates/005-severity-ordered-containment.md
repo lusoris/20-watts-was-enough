@@ -285,6 +285,24 @@ verification, and restored next-event reserve
 The schema loses if ordinary mechanics/reliability, asset management, and
 network assignment predict the same failures more cheaply.
 
+### Support-removal and withdrawal qualification
+
+Treat removal of a compensating module, memory, retrieval source, tool,
+fallback, scaffold, or human support as a distinct intervention. Record the
+commanded removal schedule, realized loss of support, adapted/dependent state,
+native capability, reserve, rebound, recurrence, and post-removal observation
+coverage ([C-618](../../research/claims.md#c-618),
+[C-619](../../research/claims.md#c-619)). Compare abrupt removal, fixed taper,
+state-qualified taper, retained support, and conventional staged
+decommissioning with identical reserve, observation, fallback, compute, and
+energy budgets.
+
+Do not credit rollback merely because the support command reaches zero.
+Success requires declared postconditions for protected behavior, harm, reserve,
+and recurrence over a prespecified withdrawal horizon. Kill this refinement if
+ordinary dependency analysis, canary decommissioning, and staged rollback
+predict the same failures and schedule at lower lifecycle cost.
+
 ## Promotion criteria
 
 The held candidate advances beyond Stage 1 only if, over preregistered seeds and

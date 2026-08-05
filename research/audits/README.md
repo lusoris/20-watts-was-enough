@@ -44,6 +44,7 @@ failed deduplications that would be lost in the shorter claim ledger.
 | 2026-08-05 | [Fungal networks and resource allocation](2026-08-05-fungal-networks-resource-allocation.md) | branching, fusion, flow, source–sink reallocation, containment, bypass, nuclear heterogeneity, priming, exchange, and ecosystem effects become hydraulic, network, population, and strategic nulls; conservation-qualified in-flight topology refines Candidates 001/013 |
 | 2026-08-05 | [Animal navigation and sensory ecology](2026-08-05-animal-navigation-sensory-ecology.md) | path integration, optic flow, active electric sensing, echolocation, plume tracking, and magnetoreception separate movement-dependent evidence from map or modality claims; controlled observability refines Candidate 007 |
 | 2026-08-05 | [Biomechanics and motor control](2026-08-05-biomechanics-motor-control.md) | passive dynamics, synergies, impedance, optimal feedback, adaptation, elasticity, reflex modulation, and tool recalibration become mechanics/control nulls; controller–plant binding refines Candidates 006/012/014 |
+| 2026-08-05 | [Pharmacology and toxicology](2026-08-05-pharmacology-toxicology.md) | dose, exposure, engagement, response, benefit, harm, tolerance, dependence, withdrawal, interaction, off-target coverage, hormesis, and toxicity remain distinct; a state- and withdrawal-qualified intervention contract refines Candidates 005/007/012/014 |
 
 An audit does not itself promote a principle. Major observations receive stable
 `C-` claims, candidate mechanisms are deduplicated against the

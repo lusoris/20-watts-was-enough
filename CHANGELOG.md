@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A pharmacology/toxicology audit separating commanded dose, realized
+  exposure, engagement, response, benefit, harm, adaptation, dependence,
+  withdrawal, interaction nulls, and population support.
+- Twenty scoped intervention claims (`C-607`–`C-626`), thirty-two centralized
+  sources, an editable intervention-chain diagram, unit-bearing mathematical
+  notes, and a state/withdrawal-qualified track across Candidates 005/007/012/014.
 - Paired animal-navigation/sensory-ecology and biomechanics/motor-control
   audits that bind evidence to the sensing action, body, controller, mechanics,
   calibration, and environment that made it valid.

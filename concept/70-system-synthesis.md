@@ -219,6 +219,65 @@ write durable state. Each boundary becomes an ablation point: remove it, widen
 it, delay it, or replace it with a conventional baseline and measure the
 consequence.
 
+### Intervention is a stateful chain
+
+A commanded change is not its realized effect. Training intensity, routing
+quota, memory injection, tool access, fallback support, pruning pressure, and
+human escalation can each be delivered incompletely, arrive late, alter later
+observations, produce different useful and harmful effects, and change the
+system's future response. The contract therefore keeps this chain explicit:
+([C-607](../research/claims.md#c-607)–[C-610](../research/claims.md#c-610),
+[C-616](../research/claims.md#c-616),
+[C-626](../research/claims.md#c-626)).
+
+```mermaid
+flowchart LR
+    D["Commanded intervention · schedule · route"] --> X["Realized internal exposure"]
+    X --> G["Engagement / activated mechanism"]
+    G --> R["Proximal response"]
+    R --> B["Task benefit vector"]
+    X --> H["Protected harm vector"]
+    G --> A["Adaptation · tolerance · sensitization"]
+    A --> R
+    A --> W["Dependence / withdrawal state"]
+    C["Context · population · co-interventions · capacity"] --> X
+    C --> R
+    C --> H
+    M["Versioned observation + selection process"] -.-> X
+    M -.-> G
+    M -.-> B
+    M -.-> H
+    B --> Q{"Continue · adjust · taper · stop?"}
+    H --> Q
+    W --> Q
+    Q --> D
+    Q --> V["Removal + rebound surveillance"]
+    V -.-> W
+```
+
+Editable source:
+[state-qualified-intervention.mmd](../assets/diagrams/state-qualified-intervention.mmd).
+
+The held system record includes commanded schedule; realized state; mechanism
+engagement; benefit and protected-harm vectors; adaptation, dependence, and
+withdrawal state; population/task/context support; observation provenance;
+uncertainty; reserve; and permitted continuation, adjustment, taper, or stop.
+Its scientific bounds are recorded in
+[C-611](../research/claims.md#c-611)–[C-625](../research/claims.md#c-625).
+It rejects three shortcuts:
+
+1. activation or occupancy is not downstream benefit or safety;
+2. equal cumulative input does not imply equal peaks, spacing, state, or
+   recovery; and
+3. removing support is a new dynamical intervention, so rollback continues
+   through rebound, recurrence, native-capability, and reserve checks.
+
+The [state-qualified intervention mathematics](../math/state-qualified-intervention.md)
+defines the unit-bearing state, authority, interaction, and withdrawal tests.
+The composition remains a domain track under Candidates 005/007/012/014 and
+must beat Bayesian state-space estimation, constrained MPC/POMDP, calibrated
+harm monitoring, and staged decommissioning at equal lifecycle cost.
+
 ### After an outcome: adaptation proposes, maintenance decides
 
 An outcome can influence the next event through working state or episodic

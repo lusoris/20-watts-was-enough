@@ -102,6 +102,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/controlled-observability-plant-binding.mmd` binds an active sensing
   policy and controller to the body, mechanics, calibration, and environment
   that determine what can be observed and what action can accomplish.
+- `diagrams/state-qualified-intervention.mmd` separates commanded intervention,
+  realized exposure, engagement, response, benefit, harm, adaptation,
+  withdrawal, and post-removal surveillance.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.
