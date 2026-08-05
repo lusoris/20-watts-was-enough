@@ -44,6 +44,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/compromise-bounded-authority.mmd` adds scoped identity, epochs,
   revocation, containment, clean recovery, and recurrence checks to Candidate
   012 without conflating them with physical headroom.
+- `diagrams/compensation-aware-recovery.mmd` separates apparent task recovery,
+  native-path distance, compensating resources, support removal, transfer,
+  recurrence, reserve, and adverse adaptation.
 - `diagrams/deficit-capability-routing.mmd` separates upward unmet demand,
   downward scarcity context, local feasibility, allocation, and outcome
   calibration for Candidate 013.

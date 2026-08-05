@@ -296,6 +296,56 @@ and [012](../experiments/candidates/012-latency-qualified-authority.md) reduce
 harm or secure recovery time beyond mature short-lived IAM and a rehearsed
 reimage–rotate–validate workflow at equal lifecycle cost.
 
+### Recovery is not one endpoint score
+
+After a lesion or fault, the same task outcome can come from restored capability,
+a larger fallback, a different route, a tool, a cache, human intervention, or a
+more permissive environment. Rehabilitation evidence makes that
+underidentification explicit ([C-316](../research/claims.md#c-316)–[C-324](../research/claims.md#c-324)).
+
+Let $z$ be a declared post-recovery internal, routing, or behavioral state and
+$z_{\mathrm{ref}}$ a justified reference. Report
+
+$$
+D_{\mathrm{native}}=d(z,z_{\mathrm{ref}}),
+\qquad
+\mathbf B_{\mathrm{comp}}=
+(E_{\mathrm{extra}},M_{\mathrm{extra}},L_{\mathrm{extra}},
+H_{\mathrm{extra}},P_{\mathrm{fragile}}),
+$$
+
+where $D_{\mathrm{native}}$ has the declared metric's unit or is explicitly
+normalized; extra energy is joules; memory is bytes; latency and human support
+are seconds; and $P_{\mathrm{fragile}}$ is the dimensionless probability of
+failure under a named support-removal or shift test. These axes are not merged
+unless conversion weights are declared in advance.
+
+```mermaid
+flowchart LR
+    L["Declared lesion or failure"] --> R["Recovery intervention"]
+    R --> Y["Task outcome + calibration"]
+    Y --> N["Native-path distance"]
+    Y --> C["Compensation burden"]
+    C --> D["Remove / perturb compensator"]
+    N --> T["Shift + transfer tests"]
+    D --> T
+    T --> H["Recurrence + reserve horizon"]
+    H --> A["Adverse-effect audit"]
+    A --> Q{"Qualified recovery?"}
+    Q -->|"yes"| P["Publish recovery envelope"]
+    Q -->|"no"| X["Reclassify · repair · retain support"]
+```
+
+Editable source:
+[compensation-aware-recovery.mmd](../assets/diagrams/compensation-aware-recovery.mmd).
+
+Compensation is not a failure when it is robust, affordable, and declared. The
+failure is to call it restoration, hide recurring support, or deploy outside
+the context that makes it work. Conversely, an ordinary cheap workaround may
+dominate native restoration. Candidate 005 therefore compares the complete
+accounting method with conventional multi-objective robustness, fault injection,
+failover, checkpoint restoration, and functional reconstruction.
+
 ### Versioned factual memory
 
 A factual record $r$ contains at least

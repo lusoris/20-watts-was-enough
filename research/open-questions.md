@@ -133,3 +133,8 @@ project choice.
   in collective performance beyond ordinary permissions, tests, clean
   versioning, external evaluation, routing, and population selection? See
   [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md).
+- **OQ-035:** Does separating restored native capability from compensating
+  routes, resource burden, transfer, recurrence, remaining reserve, and adverse
+  adaptation predict consequential post-recovery failures beyond ordinary
+  robustness, cost accounting, and fault injection? See
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).

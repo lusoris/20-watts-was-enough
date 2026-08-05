@@ -218,13 +218,16 @@ adding citations:
 | security and cryptography | authentication, authorization, information flow, detection, containment, and clean recovery remain separate; adversary, epoch, revocation, independence, compromise-horizon, and clean-root fields refine Candidates 009 and 012 rather than creating a new principle |
 | linguistics and communication | formal composition, pragmatic inference, common ground, repair, turn timing, coding, iterated learning, grounding, and convention formation remain separate; Candidate 015 tests their versioned lifecycle composition against mature protocol engineering |
 | paleobiology and major transitions | demographic and reproductive bottlenecks, extinction and recovery, acquisition and integration, aggregation and individuality, exaptation, constraint, and fossil observation remain distinct; Candidate 016 retains only reproducible collective heredity plus costed conflict control |
+| pathology and rehabilitation | local selection can oppose host goals; sampled response is not eradication; tolerance is layered; output can hide compensation or depleted reserve; plasticity and dose have no monotonic sign; compensation-aware recovery becomes a cross-candidate evaluation method rather than a new principle |
 
 The active and next breadth queue is selected by expected ability to split,
 merge, reject, or re-baseline a current mechanism:
 
 | Field cluster | Mechanism question | Expected decision |
 | --- | --- | --- |
-| pathology and rehabilitation | when do somatic evolution, tolerance failure, compensation, restoration, reserve, dose, timing, and adverse adaptation change repair or continual-learning contracts? | test P-003/P-004/P-006/P-009/P-012 and functional-repair candidates |
+| databases and storage | which transaction, consistency, compaction, garbage-collection, temporal, tiering, and repair mechanisms alter current memory, assurance, and evidence contracts? | attack P-009/P-012/P-013 and Candidates 005/009/014 with complete storage lifecycle cost |
+| cultural evolution and archaeology | which imitation, teaching, transmission, external-memory, norm, population, path-dependence, and material-record mechanisms survive ordinary learning, retrieval, governance, and observation nulls? | test P-004/P-009/P-012/P-013 and Candidates 004/008/011/014/015/016 without inferring behavior directly from artifacts |
+| human–computer interaction and human factors | which mixed-initiative, interruption, mode-awareness, trust, shared-control, interface, error-recovery, and accessibility mechanisms alter authority and recovery contracts? | test P-002/P-003/P-006/P-007/P-009/P-011/P-013 and Candidates 009/011/012/015 against mature interface and control practice |
 
 This queue is revised whenever an audit changes a principle, null model, or
 experiment. Breadth alone does not close a row.

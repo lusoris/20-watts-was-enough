@@ -4691,3 +4691,323 @@ describes the exact statement here, not a broader interpretation.
 - **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
   [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
   [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-302
+
+- **Statement:** Tumors can undergo clonal evolution through heritable somatic
+  variation and differential expansion.
+- **Status:** established.
+- **Primary source:** `nowell1976clonal`.
+- **Rationale:** Local replicative success can oppose organism-level function;
+  internal adaptation is not automatically system alignment.
+- **Open issue:** The founding synthesis is not one universal tumor dynamical
+  law and does not license unconstrained artificial variation.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-303
+
+- **Statement:** Spatially separated samples from one tumor can contain branched
+  subclones that a single biopsy misses.
+- **Status:** established.
+- **Primary source:** `gerlinger2012intratumor`.
+- **Rationale:** Aggregate or local response can leave consequential hidden
+  heterogeneous state unidentified.
+- **Open issue:** Cancer type, sample placement, assay sensitivity, and time
+  constrain the recovered lineage history.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-304
+
+- **Statement:** Relapse can derive from a founding clone or a subclone already
+  present at diagnosis.
+- **Status:** established.
+- **Primary source:** `ding2012clonal`.
+- **Rationale:** Initial response does not establish eradication; recurrence
+  needs lineage, detection-limit, and follow-up evidence.
+- **Open issue:** Residual state, reseeding, observation limits, and new
+  emergence remain distinct recurrence explanations.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-305
+
+- **Statement:** Treatment can shape the mutational and clonal state observed at
+  recurrence in scoped cancers and treatment regimes.
+- **Status:** established.
+- **Primary source:** `johnson2014mutational`.
+- **Rationale:** An intervention changes both immediate burden and subsequent
+  selection pressure.
+- **Open issue:** Associations are treatment-, subgroup-, and observation-
+  process-specific rather than a deterministic recurrence rule.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-306
+
+- **Statement:** Evolution-informed combinations or adaptive schedules can
+  delay resistance only under declared mutation, cross-resistance, competition,
+  observation, and safety assumptions.
+- **Status:** plausible.
+- **Primary sources:** `bozic2013evolutionary`, `zhang2017integrating`,
+  `zhang2022evolution`.
+- **Rationale:** Preserving a sensitive competitor or combining interventions
+  can change resistance dynamics, but small nonrandomized clinical studies do
+  not establish a general policy.
+- **Open issue:** Compare with standard partially observed and model-predictive
+  control under equal data and intervention budgets.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback).
+
+### C-307
+
+- **Statement:** Adaptive abiraterone dosing may extend response while reducing
+  drug exposure in selected metastatic prostate-cancer patients.
+- **Status:** plausible.
+- **Primary sources:** `zhang2017integrating`, `zhang2022evolution`.
+- **Rationale:** The audited pilot and contemporaneous comparison reported
+  favorable scoped outcomes with intermittent treatment.
+- **Open issue:** Small nonrandomized cohorts require randomized confirmation,
+  broader safety evidence, and validation of the competition model.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md).
+
+### C-308
+
+- **Statement:** Central tolerance can delete developing self-reactive T cells
+  in defined mouse models.
+- **Status:** established.
+- **Primary source:** `kappler1987tcell`.
+- **Rationale:** Deletion is one tolerance operation rather than a universal
+  self/non-self classifier.
+- **Open issue:** False deletion, incomplete antigen representation, and
+  peripheral context require separate controls.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-309
+
+- **Statement:** Self-reactive B cells can persist in a functionally silenced
+  state in a defined transgenic mouse model.
+- **Status:** established.
+- **Primary source:** `goodnow1988altered`.
+- **Rationale:** Silencing and deletion are different state transitions with
+  different reversibility and failure modes.
+- **Open issue:** The model does not establish one universal outcome for all
+  self-reactive cells or artificial anomaly states.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment).
+
+### C-310
+
+- **Statement:** Aire broadens thymic representation of tissue-associated
+  antigens and contributes to central tolerance in the studied system.
+- **Status:** established.
+- **Primary source:** `anderson2002aire`.
+- **Rationale:** A detector can act only on represented evidence; observation
+  coverage and action policy remain separate.
+- **Open issue:** Representation is incomplete and does not by itself choose a
+  safe response.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-311
+
+- **Statement:** Peripheral regulatory T-cell mechanisms contribute to
+  self-tolerance in model systems.
+- **Status:** established.
+- **Primary sources:** `sakaguchi1995tolerance`, `hori2003foxp3`.
+- **Rationale:** Tolerance uses layered representation, deletion, silencing,
+  regulation, and context rather than one threshold.
+- **Open issue:** Layered control can normalize slow compromise or suppress
+  legitimate novelty and must beat calibrated abstention and cost-sensitive
+  action baselines.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation).
+
+### C-312
+
+- **Statement:** Tested autoantibodies can precede clinical systemic lupus
+  erythematosus by years among people who later receive the diagnosis.
+- **Status:** established.
+- **Primary source:** `arbuckle2003autoantibodies`.
+- **Rationale:** A marker can precede threshold crossing without becoming a
+  diagnosis or proof that preemptive intervention helps.
+- **Open issue:** Eventual-case sampling, prevalence, sampling cadence, positive
+  predictive value, and intervention harm bound transfer.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-313
+
+- **Statement:** Alpha-synuclein is a component of Lewy-body pathology.
+- **Status:** established.
+- **Primary source:** `spillantini1997alpha`.
+- **Rationale:** Membership in an observed aggregate does not identify the toxic
+  species, causal direction, or useful intervention target.
+- **Open issue:** Aggregate burden, soluble species, sequestration, clearance,
+  and function need separate perturbation evidence.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-314
+
+- **Statement:** Proteostasis capacity and stress responses can be experimentally
+  altered in scoped worm, fly, and mouse models.
+- **Status:** established.
+- **Primary sources:** `vilchez2012rpn6`, `labbadia2015heatshock`,
+  `ravikumar2004autophagy`.
+- **Rationale:** Failure depends on production, conversion, sequestration,
+  clearance, and maintenance capacity rather than aggregate quantity alone.
+- **Open issue:** Human efficacy and a universal artificial maintenance rule are
+  unsupported.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-315
+
+- **Statement:** Tau or alpha-synuclein pathology can be experimentally seeded
+  and propagated in susceptible mouse brains.
+- **Status:** established.
+- **Primary sources:** `clavaguera2009tauopathy`, `luk2012synuclein`.
+- **Rationale:** Local failure products can spread through susceptible
+  compartments under scoped biological conditions.
+- **Open issue:** Route, species, susceptibility, human disease, and generic
+  distributed-system transfer remain limited.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-316
+
+- **Statement:** Similar post-stroke task success can coexist with different
+  movement strategies and reliance on compensation.
+- **Status:** established.
+- **Primary sources:** `levin2009recovery`, `cirstea2000compensatory`.
+- **Rationale:** Endpoint performance underidentifies native capability,
+  compensating strategy, and environmental support.
+- **Open issue:** The reference mechanism and native-path distance require
+  task-specific justification rather than historical preference.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [hardening chapter](../concept/60-hardening-and-factual-memory.md).
+
+### C-317
+
+- **Statement:** Some gains after constraint-induced movement therapy can be
+  mediated by task-specific compensation rather than normalized motor control.
+- **Status:** plausible.
+- **Primary sources:** `kitago2013cimt`, `michaelsen2006trunk`.
+- **Rationale:** A successful task score does not show which control strategy
+  changed.
+- **Open issue:** Small scoped kinematic studies do not characterize every
+  patient, task, or outcome.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [hardening chapter](../concept/60-hardening-and-factual-memory.md).
+
+### C-318
+
+- **Statement:** Constraint-induced movement therapy can improve selected
+  upper-extremity outcomes in an eligible post-stroke population.
+- **Status:** established.
+- **Primary source:** `wolf2006excite`.
+- **Rationale:** The trial establishes a treatment-bundle effect within its
+  selection and protocol, not one isolated learned-nonuse mechanism.
+- **Open issue:** Restraint, shaped practice, transfer procedures, eligibility,
+  adherence, and later compensation bound generality.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [routing chapter](../concept/10-neurogenesis-and-routing.md).
+
+### C-319
+
+- **Statement:** Skilled use and rehabilitative training can change motor
+  representations in adult nonhuman primates.
+- **Status:** established.
+- **Primary sources:** `nudo1996usedependent`,
+  `nudo1996rehabilitative`.
+- **Rationale:** Use allocation can reshape measured representation, but map
+  change is not inherently beneficial or equivalent to stored skill.
+- **Open issue:** Bounded forced use must beat load balancing, exploration,
+  rehearsal, and dropout without damaging healthy capability.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [routing chapter](../concept/10-neurogenesis-and-routing.md).
+
+### C-320
+
+- **Statement:** Rehabilitation outcomes can depend jointly on intervention
+  timing, amount, content, and baseline state; dose is a schedule rather than
+  one scalar.
+- **Status:** established.
+- **Primary sources:** `avert2015mobilisation`, `winstein2016icare`,
+  `dromerick2021cpass`.
+- **Rationale:** Active-control trials show that theory-rich content, more time,
+  or earlier treatment do not supply a monotonic universal benefit.
+- **Open issue:** Artificial recovery schedules must demonstrate replicating
+  state-by-timing or state-by-dose interactions beyond tuned ordinary schedules.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [memory chapter](../concept/40-memory-and-consolidation.md),
+  [roadmap](../concept/90-research-roadmap.md).
+
+### C-321
+
+- **Statement:** A more intensive very-early mobilization bundle reduced the
+  odds of a favorable three-month outcome versus usual care in the AVERT trial.
+- **Status:** established.
+- **Primary source:** `avert2015mobilisation`.
+- **Rationale:** The result directly rejects the unrestricted rule that earlier
+  and more rehabilitation is always better.
+- **Open issue:** The bundle changed timing, frequency, and amount, so the
+  harmful component is not isolated.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [roadmap](../concept/90-research-roadmap.md).
+
+### C-322
+
+- **Statement:** Reserve can preserve observed function while underlying damage
+  or pathology accumulates.
+- **Status:** plausible.
+- **Primary sources:** `katzman1988dementia`, `stern2002reserve`.
+- **Rationale:** Service output and remaining disturbance margin are different
+  state variables.
+- **Open issue:** Reserve proxies are entangled with selection and measurement;
+  engineering reserve must be operationalized under declared perturbations.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-323
+
+- **Statement:** Use-dependent plastic change can accompany or cause adverse
+  outcomes in narrow human and animal settings.
+- **Status:** established.
+- **Primary sources:** `flor1995phantom`, `byl1996dystonia`,
+  `kozlowski1996injury`.
+- **Rationale:** Plasticity carries no sign; repetitive or early forced use can
+  stabilize pain, dedifferentiation, impaired control, or additional injury.
+- **Open issue:** Human correlation, primate overuse, and rodent lesion evidence
+  have different causal scope and cannot be collapsed into one effect size.
+- **Used by:** [pathology audit](audits/2026-08-05-pathology-rehabilitation.md),
+  [maturity chapter](../concept/50-grokking-and-pruning.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology).
+
+### C-324
+
+- **Statement:** Compensation-aware recovery accounting may select more robust
+  recovered artificial systems than endpoint task-score evaluation alone.
+- **Status:** speculative.
+- **Primary source:** none sufficient; the restoration/compensation boundary is
+  scoped in [C-316](#c-316)–[C-323](#c-323).
+- **Rationale:** The method separately reports native-path distance,
+  compensating resource burden, dependency removal, transfer, recurrence,
+  reserve, and adverse effects.
+- **Open issue:** Reject it as redundant if ordinary multi-objective robustness
+  and fault-injection accounting predict the same failures with lower overhead.
+- **Used by:** [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [hardening chapter](../concept/60-hardening-and-factual-memory.md),
+  [pathology audit](audits/2026-08-05-pathology-rehabilitation.md).

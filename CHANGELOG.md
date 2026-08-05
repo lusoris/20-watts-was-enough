@@ -7,6 +7,13 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A pathology and rehabilitation audit covering somatic evolution, recurrence,
+  layered tolerance, proteostasis capacity, seeded propagation, compensation,
+  forced use, intervention timing, reserve, and adverse plasticity.
+- Twenty-three scoped pathology/recovery claims (`C-302`–`C-324`), thirty-five
+  centralized sources, and an editable compensation-aware recovery diagram;
+  Candidate 005 now separates endpoint success from restored capability,
+  compensator dependence, transfer, recurrence, reserve, and adverse effects.
 - A paleobiology and major-transitions audit separating demographic from
   reproductive bottlenecks, survival from recovery, acquisition from
   integration, aggregation from individuality, and current utility from origin.

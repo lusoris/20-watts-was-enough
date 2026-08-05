@@ -234,6 +234,46 @@ Report at least:
 
 No aggregate resilience score replaces the raw vector.
 
+### Compensation-aware recovery qualification
+
+Task recovery can be supplied by a larger fallback, alternate route, cache,
+tool, human operator, permissive environment, or extra reserve rather than by
+restoration of the failed capability ([C-316](../../research/claims.md#c-316)–[C-324](../../research/claims.md#c-324)).
+Every arm therefore also reports:
+
+1. the recovered task distribution, quality, and calibration;
+2. distance from a justified reference mechanism, representation, route, or
+   behavior—without assuming that historically older means better;
+3. added joules, operations, bytes, latency, calls, permissions, and human time;
+4. loss after removal or perturbation of the suspected compensating path;
+5. transfer under task, environment, load, and sensor shift;
+6. recurrence and hazard over a declared horizon and detection limit;
+7. remaining margin under bounded disturbance; and
+8. off-target regression, calibration loss, safety events, and schedule damage.
+
+```mermaid
+flowchart LR
+    L["Declared lesion or failure"] --> R["Recovery intervention"]
+    R --> Y["Task outcome + calibration"]
+    Y --> N["Native-path distance"]
+    Y --> C["Compensation burden"]
+    C --> D["Remove / perturb compensator"]
+    N --> T["Shift + transfer tests"]
+    D --> T
+    T --> H["Recurrence + reserve horizon"]
+    H --> A["Adverse-effect audit"]
+    A --> Q{"Qualified recovery?"}
+    Q -->|"yes"| P["Publish recovery envelope"]
+    Q -->|"no"| X["Reclassify · repair · retain support"]
+```
+
+Editable source:
+[compensation-aware-recovery.mmd](../../assets/diagrams/compensation-aware-recovery.mmd).
+
+The method is rejected as redundant if ordinary multi-objective robustness,
+resource accounting, and fault injection predict the same removal, transfer,
+recurrence, or reserve failures with lower measurement overhead.
+
 ## Promotion criteria
 
 The held candidate advances beyond Stage 1 only if, over preregistered seeds and
@@ -249,6 +289,8 @@ held-out fault compositions:
    aggregate metrics; and
 5. its release rule remains stable under delayed observations and correlated
    tag error.
+6. apparent recovery survives support-removal and transfer tests, or is
+   explicitly released as compensated operation with its recurring burden.
 
 Advancement promotes the experiment to a higher-fidelity system. It does not
 create a new `P-` principle.
