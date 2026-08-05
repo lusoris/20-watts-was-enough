@@ -10495,3 +10495,662 @@ describes the exact statement here, not a broader interpretation.
   [014](../experiments/candidates/014-versioned-observation-contract.md),
   [015](../experiments/candidates/015-versioned-repairable-conventions.md), and
   [020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-705
+
+- **Statement:** Accessibility depends on the distribution of opportunities and
+  a declared impedance function, not distance alone.
+- **Status:** established.
+- **Primary source:** `hansen1959`.
+- **Rationale:** The accessibility measure explicitly combines opportunity
+  quantities with generalized travel cost, so changing either changes the
+  result.
+- **Open issue:** Opportunity definition, mode, time, reliability, ability,
+  population, and impedance calibration must match the evaluated service.
+- **Used by:** [principle P-001](principle-registry.md#p-001--selective-allocation)
+  and [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-706
+
+- **Statement:** User-equilibrium and system-optimal traffic assignments encode
+  different objectives and generally need not produce the same flow.
+- **Status:** established.
+- **Primary source:** `wardrop1952`.
+- **Rationale:** Individual route choices equalizing experienced cost differ
+  from minimizing the aggregate system objective.
+- **Open issue:** Dynamic demand, spillback, mode choice, induced demand,
+  emissions, accessibility, and distributional effects require richer models.
+- **Used by:** [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-707
+
+- **Statement:** Spatial configuration carries movement information in some
+  studied contexts, but it is not a universal causal law of movement.
+- **Status:** plausible.
+- **Primary source:** `hillier1993`.
+- **Rationale:** The scoped study reports configuration–movement associations,
+  while representation, destinations, land use, perception, time, and
+  self-selection remain in the causal system.
+- **Open issue:** Prospective interventions across heterogeneous layouts and
+  populations must separate configuration effects from correlated attraction.
+- **Used by:** principles [P-005](principle-registry.md#p-005--use-dependent-topology)
+  and [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-708
+
+- **Statement:** Plan complexity, signage, and familiarity can materially alter
+  wayfinding accuracy in tested building-navigation settings.
+- **Status:** established.
+- **Primary sources:** `oneill1991`, `oneill1992`.
+- **Rationale:** Controlled studies varied relevant layout and information
+  conditions and measured navigation performance.
+- **Open issue:** Population, disability, stress, emergency conditions, cue
+  reliability, long-term learning, and transfer to occupied buildings limit
+  generalization.
+- **Used by:** [principle P-013](principle-registry.md#p-013--externalized-shared-state)
+  and [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-709
+
+- **Statement:** Passive building response is constrained by heat, mass,
+  momentum, radiation, geometry, and material laws.
+- **Status:** established.
+- **Primary sources:** `linden1999`, `energyplus`.
+- **Rationale:** Envelope, thermal-mass, buoyancy, wind, daylight, and shading
+  effects arise from coupled physical balances rather than cost-free control.
+- **Open issue:** As-built properties, boundary conditions, occupant behavior,
+  weather, degradation, fabrication, maintenance, and omitted failure modes
+  determine realized performance.
+- **Used by:** [principle P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-710
+
+- **Statement:** Thermal acceptability and ventilation or indoor-air-quality
+  compliance are separate assessment domains.
+- **Status:** established.
+- **Primary sources:** `ashrae55`, `ashrae621`.
+- **Rationale:** The standards specify different environmental variables,
+  objectives, and assessment requirements; satisfying one does not establish
+  the other.
+- **Open issue:** Contaminants, spatial exposure, vulnerable occupants,
+  filtration, maintenance, sensor support, and applicable standard versions
+  remain explicit.
+- **Used by:** [principle P-006](principle-registry.md#p-006--homeostatic-negative-feedback)
+  and [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-711
+
+- **Statement:** Adaptive thermal-comfort relations have scoped empirical
+  support in applicable free-running or naturally conditioned buildings.
+- **Status:** established.
+- **Primary source:** `dedear2001`.
+- **Rationale:** Field data support context-dependent comfort expectations
+  rather than one invariant indoor setpoint.
+- **Open issue:** Climate, building mode, season, occupant population,
+  acclimatization, control opportunity, health, and air quality bound transfer.
+- **Used by:** [principle P-006](principle-registry.md#p-006--homeostatic-negative-feedback)
+  and the [built-environment audit](audits/2026-08-05-built-environment-urban-systems.md).
+
+### C-712
+
+- **Statement:** Building model-predictive control and standardized
+  high-performance HVAC control sequences are mature comparison baselines.
+- **Status:** established.
+- **Primary sources:** `oldewurtel2012`, `ashrae36`.
+- **Rationale:** Predictive optimization and explicit tested control sequences
+  already address forecast-aware operation, constraints, and equipment logic.
+- **Open issue:** Fair comparisons must include estimation, forecasts, sensing,
+  commissioning, actuator response, fallback, comfort, air quality, and total
+  control cost.
+- **Used by:** principles [P-006](principle-registry.md#p-006--homeostatic-negative-feedback)
+  and [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-713
+
+- **Statement:** Occupancy-responsive control can reduce energy in some
+  deployments, but effect size is specific to the building, service, sensing,
+  schedule, and comparator.
+- **Status:** plausible.
+- **Primary source:** `agarwal2010`.
+- **Rationale:** The deployment demonstrates a feasible measured intervention
+  without establishing a portable saving across asset types or operating
+  regimes.
+- **Open issue:** Prospective multi-building tests must separate forecast
+  occupancy, sensed occupancy, control commands, actuator delivery, zone state,
+  human outcomes, and rebound or service loss.
+- **Used by:** Candidates [007](../experiments/candidates/007-endogenous-observation-surveillance.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-714
+
+- **Statement:** BIM and IFC standardize information management or exchange;
+  they do not establish the current physical state of an asset.
+- **Status:** established.
+- **Primary sources:** `iso19650`, `iso16739`, `boje2020`.
+- **Rationale:** A versioned model or schema remains an information artifact
+  whose correspondence to geometry, material, equipment, occupancy, and
+  operation requires observation and validation.
+- **Open issue:** Survey support, timestamp, transformation lineage,
+  uncertainty, calibration, as-built change, permissions, and invalidation
+  dependencies must accompany each operational use.
+- **Used by:** [principle P-013](principle-registry.md#p-013--externalized-shared-state)
+  and [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-715
+
+- **Statement:** Post-occupancy evaluation can structure feedback, but
+  measurement or survey alone neither implements nor verifies corrective
+  change.
+- **Status:** established.
+- **Primary sources:** `leaman2001`, `bordass2005`.
+- **Rationale:** Feedback methods collect and interpret in-use evidence; a
+  separate intervention, responsibility, acceptance, and follow-up loop is
+  required to establish improvement.
+- **Open issue:** Sampling, nonresponse, season, instrument, causal attribution,
+  action ownership, completion, recurrence, and measured postcondition remain
+  explicit.
+- **Used by:** [principle P-009](principle-registry.md#p-009--maintenance-plane)
+  and [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-716
+
+- **Statement:** Modular construction has conditional lifecycle trade-offs
+  rather than an intrinsic environmental or reversibility advantage.
+- **Status:** established.
+- **Primary source:** `quale2012`.
+- **Rationale:** Comparative lifecycle results depend on manufacturing,
+  transport, site work, materials, use, replacement, and boundary choices;
+  standardized dimensions do not prove separability or reuse.
+- **Open issue:** Functional equivalence, connection damage, code validity,
+  local supply, repeated reuse, waste, study period, and end-of-life scenarios
+  require prospective accounting.
+- **Used by:** principles [P-008](principle-registry.md#p-008--compartmentalized-interaction)
+  and [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-717
+
+- **Statement:** Adaptive reuse can reduce embodied impacts when comparable
+  service and lifecycle boundaries favor retaining existing components.
+- **Status:** plausible.
+- **Primary sources:** `hasik2019`, `bullen2010`.
+- **Rationale:** A comparative whole-building study shows a conditional benefit,
+  while field evidence documents practical barriers and does not establish a
+  universal advantage.
+- **Open issue:** Functional equivalence, retained fraction, remediation,
+  replacement, operational performance, disruption, end of life, heritage, and
+  reference period can reverse the comparison.
+- **Used by:** [Candidate 001](../experiments/candidates/001-adaptive-topology.md).
+
+### C-718
+
+- **Statement:** Building evacuation time includes detection, notification,
+  pre-movement, and movement under scenario-specific behavior and tenability.
+- **Status:** established.
+- **Primary sources:** `iso16738`, `kuligowski2008`.
+- **Rationale:** Route length alone omits alarm interpretation, preparation,
+  helping, mobility, familiarity, congestion, smoke, doors, lifts, and
+  responder interaction.
+- **Open issue:** ASET and RSET uncertainty, population strata, correlated
+  route loss, evolving hazard, model validation, and safety margin must be
+  scenario-specific.
+- **Used by:** Candidates [005](../experiments/candidates/005-severity-ordered-containment.md),
+  [009](../experiments/candidates/009-graded-assurance-envelopes.md), and
+  [012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-719
+
+- **Statement:** Built-environment accessibility covers usability in ordinary
+  circulation and egress, including evacuation and work in existing buildings.
+- **Status:** established.
+- **Primary source:** `iso21542`.
+- **Rationale:** A graph-theoretic route or average travel time does not
+  establish that a route is usable by a particular person under current
+  conditions.
+- **Open issue:** Ability, assistance, closures, temporary works, lifts,
+  refuge, signage, responder support, and jurisdiction-specific requirements
+  must be represented.
+- **Used by:** [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and the [built-environment audit](audits/2026-08-05-built-environment-urban-systems.md).
+
+### C-720
+
+- **Statement:** Infrastructure dependencies can propagate service loss, and
+  nominal redundancy does not establish independence.
+- **Status:** established.
+- **Primary sources:** `rinaldi2001`, `buldyrev2010`.
+- **Rationale:** Coupled networks share supplies, controls, locations, and
+  failure causes; stylized cascade models show why dependency structure matters
+  without supplying a universal field effect size.
+- **Open issue:** Direction, strength, timing, common-cause groups, degraded
+  operation, restoration, empirical calibration, and boundary selection must
+  be validated for each asset system.
+- **Used by:** principles [P-004](principle-registry.md#p-004--diversity-selection-and-protection)
+  and [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-721
+
+- **Statement:** Whole-building environmental comparisons require declared
+  functional equivalence, lifecycle modules, data, and a reference study
+  period.
+- **Status:** established.
+- **Primary sources:** `en15978`, `rics2023`.
+- **Rationale:** Embodied, use, replacement, end-of-life, and beyond-boundary
+  effects can move in different directions and cannot be compared without a
+  common service basis.
+- **Open issue:** Data vintage and geography, allocation, biogenic treatment,
+  grid scenarios, replacements, uncertainty, and distribution across users
+  remain explicit.
+- **Used by:** [Candidate 001](../experiments/candidates/001-adaptive-topology.md)
+  and the [built-environment audit](audits/2026-08-05-built-environment-urban-systems.md).
+
+### C-722
+
+- **Statement:** Building life-cycle costing requires an agreed scope, study
+  period, cash flows, discounting, residual value, and alternatives.
+- **Status:** established.
+- **Primary sources:** `iso15686`, `nist135`.
+- **Rationale:** Capital cost alone cannot establish the long-horizon economic
+  advantage of a retrofit, replacement, modular system, or adaptive option.
+- **Open issue:** Scenario uncertainty, price paths, externalities, nonmonetized
+  safety or accessibility constraints, downtime, residual value, and discount
+  policy require separate disclosure.
+- **Used by:** [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-723
+
+- **Statement:** Asset management already links organizational objectives,
+  lifecycle decisions, performance, risk, and expenditure.
+- **Status:** established.
+- **Primary source:** `iso55001`.
+- **Rationale:** A proposed adaptive maintenance or reconfiguration system must
+  be compared with an established whole-lifecycle management process, not an
+  operate-to-failure straw baseline.
+- **Open issue:** Compliance does not establish implementation quality,
+  information validity, optimal decisions, or realized asset outcomes.
+- **Used by:** [principle P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-724
+
+- **Statement:** Community resilience links building and infrastructure
+  performance to social and economic functions, service loss, and recovery
+  goals.
+- **Status:** established.
+- **Primary sources:** `nist1190`, `nist1197`, `bruneau2003`.
+- **Rationale:** Reopening, minimum service, full function, accessible service,
+  reserve, and readiness for the next event are distinct outcome states.
+- **Open issue:** Hazard set, spatial and temporal boundary, subgroup service,
+  interdependence, recovery resources, governance, and aggregation weights must
+  be declared.
+- **Used by:** Candidates [005](../experiments/candidates/005-severity-ordered-containment.md),
+  [011](../experiments/candidates/011-dual-loop-operational-assurance.md), and
+  [012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-725
+
+- **Statement:** An occupancy- and life-safety-qualified spatial
+  reconfiguration contract may expose consequential invalid intermediate states
+  missed by document-centric change control.
+- **Status:** speculative.
+- **Primary sources:** no direct comparative systems validation; constituent
+  distinctions are bounded by [C-705](#c-705)–[C-724](#c-724).
+- **Rationale:** The proposed contract binds current and target topology,
+  transition sequence, in-place users, accessible routes, egress and
+  tenability, structure, utilities, observation support, authority, material
+  commitment, lifecycle impact, commissioning, and verified service.
+- **Open issue:** It must beat modular/open-building design, code-compliant
+  change control, BIM/IFC information management, permits, commissioning, MPC,
+  post-occupancy evaluation, and asset management at equal lifecycle budget in
+  at least two asset classes.
+- **Used by:** [Candidate 001](../experiments/candidates/001-adaptive-topology.md)
+  and [OQ-054](open-questions.md#oq-054).
+
+### C-726
+
+- **Statement:** Within this audit's built-environment scope, every reviewed
+  abstract mechanism maps to an existing principle, candidate, or mature
+  engineering baseline; no new registry principle is justified.
+- **Status:** plausible.
+- **Primary sources:** the bounded mapping synthesis in the
+  [built-environment audit](audits/2026-08-05-built-environment-urban-systems.md),
+  supported by [C-705](#c-705)–[C-725](#c-725).
+- **Rationale:** Accessibility, routing, passive physics, compartmentation,
+  controls, BIM, commissioning, maintenance, evacuation, lifecycle assessment,
+  asset management, dependency, and recovery all have stronger existing homes;
+  only the Candidate 001 stress track remains unresolved.
+- **Open issue:** Broader jurisdictions, asset classes, longitudinal occupied
+  transitions, informal settlements, climate adaptation, and prospective
+  intervention studies may reveal a distinct invariant.
+- **Used by:** [principle registry](principle-registry.md),
+  [adoption matrix](adoption-matrix.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+
+### C-727
+
+- **Statement:** Developing self-reactive T cells can be clonally eliminated
+  in a defined mouse receptor/MHC system.
+- **Status:** established.
+- **Primary source:** `kappler1987`.
+- **Rationale:** The cited receptor and MHC preparation directly supports
+  destructive developmental selection, not a complete theory of central
+  tolerance.
+- **Open issue:** Antigen representation, receptor coverage, false deletion,
+  surviving harmful lineages, and mechanisms outside the studied preparation
+  remain explicit.
+- **Used by:** principles [P-004](principle-registry.md#p-004--diversity-selection-and-protection)
+  and [P-009](principle-registry.md#p-009--maintenance-plane), and the
+  [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-728
+
+- **Statement:** Aire contributes to thymic representation of peripheral
+  tissue antigens and to protection from multiorgan autoimmunity in mice.
+- **Status:** established.
+- **Primary source:** `anderson2002`.
+- **Rationale:** The intervention connects a representation mechanism to a
+  scoped autoimmune phenotype while showing that selection depends on which
+  evidence its channel presents.
+- **Open issue:** Representation remains incomplete, and coverage alone does
+  not determine deletion, regulatory differentiation, or another outcome.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md)
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-729
+
+- **Statement:** Self-reactive B cells can persist while functionally silenced
+  in a double-transgenic mouse system.
+- **Status:** established.
+- **Primary source:** `goodnow1988`.
+- **Rationale:** The surviving cells establish that reversible or persistent
+  low responsiveness is not equivalent to deletion in this preparation.
+- **Open issue:** Anergy markers, duration, reversibility, context dependence,
+  and distinction from ignorance, active suppression, exhaustion, and resource
+  shortage require separate observation.
+- **Used by:** [principle P-003](principle-registry.md#p-003--temporary-trace-before-commitment)
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-730
+
+- **Statement:** Peripheral regulatory T-cell populations and Foxp3-dependent
+  development contribute to active self-tolerance in the cited mouse systems.
+- **Status:** established.
+- **Primary sources:** `sakaguchi1995`, `hori2003`.
+- **Rationale:** Depletion, transfer, rescue, and developmental evidence support
+  active regulation by another population rather than intrinsic safety of the
+  suppressed target.
+- **Open issue:** Regulatory identity, mechanism, tissue, timing, off-target
+  suppression, controller compromise, and reversibility are not universalized
+  by these studies.
+- **Used by:** principles [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation)
+  and [P-008](principle-registry.md#p-008--compartmentalized-interaction), and
+  the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-731
+
+- **Statement:** Exhausted virus-specific CD8 T cells in chronic LCMV had a
+  molecular program distinct from acute effector, memory, and anergy profiles.
+- **Status:** established.
+- **Primary source:** `wherry2007`.
+- **Rationale:** The scoped profiling comparison supports a differentiated
+  dysfunction state rather than treating all low activity as one condition.
+- **Open issue:** Infection model, lineage trajectory, functional substate,
+  measurement panel, causal drivers, and transfer to other chronic contexts
+  remain bounded.
+- **Used by:** the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-732
+
+- **Statement:** PD-1/PD-L1 blockade restored several CD8 T-cell functions and
+  improved viral control in the studied chronic-LCMV setting.
+- **Status:** established.
+- **Primary source:** `barber2006`.
+- **Rationale:** The intervention demonstrates partial state-dependent
+  functional recovery in one preparation, not universal, complete, or
+  cost-free rejuvenation.
+- **Open issue:** Responder state, durability, collateral activation, resource
+  cost, recurrence, and verified recovery after intervention withdrawal need
+  explicit measurement.
+- **Used by:** Candidates [005](../experiments/candidates/005-severity-ordered-containment.md)
+  and [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-733
+
+- **Statement:** Antigen-specific CD8 populations can expand, contract, persist
+  as a smaller memory population, and rapidly re-expand on homologous
+  rechallenge.
+- **Status:** established.
+- **Primary sources:** `muralikrishna1998`, `badovinac2002`.
+- **Rationale:** The studies separate population amplification, programmed
+  reduction, persistence, and recall rather than treating response strength as
+  one scalar state.
+- **Open issue:** Rates, precursors, tissues, challenge similarity, reserve,
+  maintenance cost, and benefit on heterogeneous future events are
+  context-specific.
+- **Used by:** principles [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection), and
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-734
+
+- **Statement:** Germinal-center selection can couple antigen presentation,
+  T-cell help, return to a proliferative zone, and clonal expansion.
+- **Status:** established.
+- **Primary source:** `victora2010`.
+- **Rationale:** The scoped mouse imaging system identifies a spatially and
+  informationally structured selection loop rather than unconstrained mutation
+  or score-only replication.
+- **Open issue:** Candidate generation, evaluator independence, search cost,
+  migration, carrying capacity, stopping, and external task benefit must be
+  charged in an AI comparison.
+- **Used by:** [principle P-004](principle-registry.md#p-004--diversity-selection-and-protection)
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-735
+
+- **Statement:** Efficient affinity maturation can coexist with multiple
+  maturing lineages rather than immediate clonal homogenization.
+- **Status:** established.
+- **Primary source:** `tas2016`.
+- **Rationale:** The lineage observations bound a simple winner-take-all story
+  and separate selection pressure from instantaneous loss of population
+  diversity.
+- **Open issue:** Nominal lineage diversity must be distinguished from
+  independent behavior, failure domains, useful coverage, and the cost of
+  maintaining alternatives.
+- **Used by:** [principle P-004](principle-registry.md#p-004--diversity-selection-and-protection)
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-736
+
+- **Statement:** Prior fungal or BCG exposure can induce sustained,
+  lymphocyte-independent changes in innate responses in the cited mouse, cell,
+  and human-volunteer preparations.
+- **Status:** established.
+- **Primary sources:** `quintin2012`, `kleinnijenhuis2012`.
+- **Rationale:** Prior exposure alters later response outside classical
+  antigen-specific adaptive memory in these bounded challenge designs.
+- **Open issue:** Duration, challenge specificity, harmful sensitization,
+  tolerance, poisoning, unrelated tasks, decay, and full maintenance burden
+  remain unresolved.
+- **Used by:** principles [P-003](principle-registry.md#p-003--temporary-trace-before-commitment)
+  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-737
+
+- **Statement:** Trained innate responses can involve epigenetic, metabolic,
+  and hematopoietic-progenitor changes.
+- **Status:** established.
+- **Primary sources:** `saeed2014`, `cheng2014`, `mitroulis2018`.
+- **Rationale:** The cited perturbation and profiling studies support multiple
+  physical substrates and timescales for persistent response change rather
+  than one universal marker.
+- **Open issue:** Causal contribution, substrate lifetime, maintenance and
+  replacement cost, lineage scope, cross-challenge harm, and reversibility must
+  be measured separately.
+- **Used by:** principles [P-009](principle-registry.md#p-009--maintenance-plane)
+  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-738
+
+- **Statement:** Innate receptor signaling and endogenous injury-associated
+  material can alter costimulation and adaptive-response conditions in defined
+  systems.
+- **Status:** established.
+- **Primary sources:** `medzhitov1997`, `gallucci1999`, `shi2003`.
+- **Rationale:** The studies establish context pathways that change response
+  conditions without making context a universal identity, causality, harm, or
+  authorization signal.
+- **Open issue:** Provenance, adversarial manipulation, tissue and timing,
+  false alarm, missing context, authority, and action-specific loss remain
+  explicit.
+- **Used by:** [principle P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-739
+
+- **Statement:** Memory CD8 maintenance can be separated from continuous
+  cognate antigen and depends on homeostatic cytokine support in
+  context-specific ways.
+- **Status:** established.
+- **Primary sources:** `muralikrishna1999`, `schluns2000`, `becker2002`.
+- **Rationale:** The mouse studies distinguish memory generation, survival, and
+  homeostatic renewal and show that idle recall capacity is maintained state.
+- **Open issue:** Resource source, renewal rate, competition, tissue placement,
+  memory quality, attrition, and recall after platform change must enter the
+  lifecycle boundary.
+- **Used by:** principles [P-009](principle-registry.md#p-009--maintenance-plane)
+  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-740
+
+- **Statement:** Adaptive-receptor diversity is produced by somatic gene
+  rearrangement and shaped by generation and selection processes that require
+  sampling-aware inference.
+- **Status:** established.
+- **Primary sources:** `hozumi1976`, `robins2009`, `murugan2012`.
+- **Rationale:** Repertoire sequence diversity reflects a generator, selection,
+  sampling depth, clone definition, and tissue rather than direct proof of
+  functional coverage.
+- **Open issue:** Generation probability, abundance, functional independence,
+  rare-mode coverage, shared failure, measurement error, and evaluation cost
+  must be separated.
+- **Used by:** [principle P-004](principle-registry.md#p-004--diversity-selection-and-protection)
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-741
+
+- **Statement:** Tissue-resident memory T cells can persist outside equilibrium
+  with circulation and initiate rapid local protection in defined mouse
+  tissues.
+- **Status:** established.
+- **Primary sources:** `gebhardt2009`, `schenkel2014`.
+- **Rationale:** Persistent local placement can change response latency and
+  initiation without making the local reserve globally available or free to
+  maintain.
+- **Open issue:** Placement, refresh, migration, staleness, local false alarm,
+  missed remote events, maintenance energy, and generality across tissues and
+  threats remain bounded.
+- **Used by:** principles [P-001](principle-registry.md#p-001--selective-allocation)
+  and [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-742
+
+- **Statement:** Metabolic and mitochondrial interventions can causally alter
+  effector, regulatory, and memory T-cell outcomes in scoped mouse and cell
+  systems.
+- **Status:** established.
+- **Primary sources:** `pearce2009`, `michalek2011`, `buck2016`.
+- **Rationale:** Resource state participates in cell fate and function, but the
+  interventions do not establish a one-to-one mapping between immune metabolism
+  and an AI compute substrate.
+- **Open issue:** Phase-specific demand, substrate and intervention boundary,
+  competing populations, delayed effects, maintenance cost, and functional
+  outcome must be measured jointly.
+- **Used by:** principles [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-009](principle-registry.md#p-009--maintenance-plane), and the
+  [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-743
+
+- **Statement:** Failures at distinct tolerance layers can generate
+  self-directed pathology in experimental systems.
+- **Status:** established.
+- **Primary sources:** `anderson2002`, `sakaguchi1995`, `goodnow1988`.
+- **Rationale:** Representation, destructive selection, intrinsic silencing,
+  and active regulation are distinct failure opportunities, so one detector or
+  scalar false-positive rate cannot represent the lifecycle.
+- **Open issue:** Layer interactions, causal ordering, compensation, tissue
+  damage, recovery, and the cost of false suppression or deletion need separate
+  service outcomes.
+- **Used by:** Candidates [005](../experiments/candidates/005-severity-ordered-containment.md),
+  [009](../experiments/candidates/009-graded-assurance-envelopes.md), and
+  the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+
+### C-744
+
+- **Statement:** The immune system is adequately described as one self/nonself
+  classifier.
+- **Status:** disputed.
+- **Primary sources:** `kappler1987`, `goodnow1988`, `sakaguchi1995`,
+  `wherry2007`, `badovinac2002`, `schenkel2014`.
+- **Rationale:** Deletion, ignorance, anergy, active regulation, context,
+  exhaustion, contraction, memory, and tissue placement supply experimentally
+  distinct states and operations.
+- **Open issue:** Any compressed classifier account must state which operations
+  and failure costs it preserves and show that the omitted state does not alter
+  intervention or recovery decisions.
+- **Used by:** the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract)
+  and [OQ-055](open-questions.md#oq-055).
+
+### C-745
+
+- **Statement:** Danger signals alone identify malicious or harmful targets and
+  authorize response.
+- **Status:** disputed.
+- **Primary sources:** `medzhitov1997`, `gallucci1999`, `shi2003`.
+- **Rationale:** These studies establish pathways by which context affects
+  activation conditions, not a universal identity, causality, harm, or
+  authorization rule.
+- **Open issue:** A transfer must preserve evidence provenance, calibrated
+  action-specific risk, scoped authority, contestability, and adversarial
+  context generation.
+- **Used by:** Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-746
+
+- **Statement:** Keeping immune-like inactive and response states distinct may
+  reduce unsafe reactivation and false deletion in modular AI evaluations.
+- **Status:** plausible.
+- **Primary sources:** no direct AI validation; the bounded biological
+  distinctions are supported by [C-727](#c-727)–[C-745](#c-745).
+- **Rationale:** Representation, recognition, authorization, activation,
+  suppression, deletion, exhaustion, contraction, memory, and recovery imply
+  different actions, reversibility, and failure costs.
+- **Open issue:** The typed contract must expose consequential errors beyond an
+  ordinary state machine, calibrated risk model, least-privilege policy, and
+  resource-aware controller under equal information and lifecycle budgets.
+- **Used by:** the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract)
+  and [OQ-055](open-questions.md#oq-055); it is not a principle or candidate.
+
+### C-747
+
+- **Statement:** A full tolerance–training–memory–residency lifecycle could
+  improve an AI service frontier beyond mature anomaly, IAM, search, replay,
+  placement, and control stacks.
+- **Status:** speculative.
+- **Primary sources:** no direct comparative systems evidence; constituent
+  biological observations are bounded by [C-727](#c-727)–[C-743](#c-743).
+- **Rationale:** The composition remains an analogy until an implementation
+  adds a measurable state transformation not reproduced by the complete null
+  stack.
+- **Open issue:** It must win in at least two materially different task
+  families under equal information, intervention, reserve, human, compute,
+  storage, time, and lifecycle-energy budgets and survive immune-state
+  ablations.
+- **Used by:** the [immune audit](audits/2026-08-05-immune-tolerance-trained-immunity.md)
+  as a rejection boundary; no principle or candidate is promoted.

@@ -114,6 +114,14 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/burden-qualified-decision.mmd` separates evidence purpose and
   provenance, authority, admissibility, contestation, sufficiency, reasons,
   remedy, review, and reopening.
+- `diagrams/occupancy-qualified-spatial-transition.mmd` carries verified
+  as-built topology, occupants, accessible and emergency routes, life safety,
+  physical dependencies, authority, and material commitment through a gated
+  work step, acceptance, safe-stop, commissioning, and outcome review.
+- `diagrams/typed-tolerance-lifecycle.mmd` keeps candidate generation,
+  representation support, validation, ignorance, deletion, permission,
+  activation, monitoring, quarantine, suppression, impairment, contraction,
+  memory, revalidation, and recovery as separate state transitions.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

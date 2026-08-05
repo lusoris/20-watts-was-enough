@@ -26,6 +26,14 @@ notation.
 - [`contestable-decision-record.md`](contestable-decision-record.md) separates
   evidence, authority, burden, admissibility, weight, sufficiency, review,
   remedy, and finality.
+- [`occupied-spatial-transition.md`](occupied-spatial-transition.md) keeps
+  occupancy, accessible and emergency routes, life safety, physical state,
+  evidence age, material commitment, service loss, and recovery explicit
+  through every topology-changing work step.
+- [`typed-tolerance-lifecycle.md`](typed-tolerance-lifecycle.md) separates
+  representation, recognition, permission, activation, quarantine,
+  suppression, impairment, contraction, maintained memory, reactivation, and
+  recovery under explicit loss and lifecycle budgets.
 
 Rules:
 

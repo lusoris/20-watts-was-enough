@@ -82,6 +82,7 @@ experimental discrimination to receive a stable `P-` ID.
 
 | Candidate | Nearest bundles | Why held | Discriminating work |
 | --- | --- | --- | --- |
+| Occupancy- and life-safety-qualified spatial reconfiguration | P-001, P-008, P-009, P-010, P-013 | passive design, modular/open building, BIM/IFC, controls, commissioning, LCA/LCC, and asset management are established; the residual is only whether a joint contract exposes invalid intermediate physical/service states while people and irreversible commitments remain in the system | [Candidate 001](../experiments/candidates/001-adaptive-topology.md#occupied-spatial-topology-track) must beat the complete building-design, change-control, commissioning, and lifecycle null stack across at least two asset classes |
 | Multiscale context broadcast | P-001, P-006, P-008, P-011 | few-to-many temporal decoding appears distinct, but may reduce to FiLM, recurrent gating, or supervisory control | [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md) |
 | Thresholded collective commitment | P-006, P-011 | nonlinear support/opposition/abstention may reduce to robust aggregation or calibrated confidence | quorum comparison defined in the [collective audit](audits/2026-08-05-collective-ecological-resilience.md) |
 | Transition-class-aware fragility sensing | adjacent to P-006, P-007, and P-009 | recovery rate is diagnostic only for gradual, observable, safely excitable stability loss and may reduce to conventional active system identification or a mechanism-specific indicator | [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md) must abstain on noise, rate, boundary, hidden-mode, and abrupt-jump classes |
@@ -105,6 +106,20 @@ experimental discrimination to receive a stable `P-` ID.
 | Audited cumulative inheritance | P-003, P-004, P-005, P-009, P-012, P-013 | generation, social transmission, repositories, versioning, search, evaluation, governance, and network effects are established scoped mechanisms; the residual is preservation and recombination of validated capability across real learner turnover | [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md) must beat the complete centralized continual-learning, retrieval, versioning, workflow, and governance stack at equal cumulative effort |
 | Constitutionalized multi-level control plane | P-002, P-004, P-008, P-009, P-011, P-013 | aggregation limits, IAM, constrained control, delegation models, veto theory, polycentricity, policy-as-code, review, lineage, incident response, and change management are established scoped mechanisms; the residual composition applies only with real asymmetric information, conflicting incentives, spillovers, or authorized standing | [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md) must beat the full ordinary governance stack on task-native and protected outcomes after capture, gridlock, concentration, human attention, and lifecycle cost |
 
+### Immune-state lifecycle evaluation contract
+
+The [immune audit](audits/2026-08-05-immune-tolerance-trained-immunity.md)
+does not leave a distinct principle or candidate. Its durable result is an
+evaluation contract: keep representation, recognition, authorization,
+activation, ignorance, anergy, active suppression, exhaustion, deletion,
+expansion, contraction, memory, residency, recovery, and resource state
+separate because they imply different actions, reversibility, and failure
+costs ([C-727](claims.md#c-727)–[C-746](claims.md#c-746)). Compare that record
+with typed state machines, calibrated risk and abstention, least privilege,
+supervisory and constrained control, evolutionary and AIS search, replay,
+placement, and lifecycle accounting. If those nulls reproduce its decisions,
+the immune terminology adds no systems mechanism ([C-747](claims.md#c-747)).
+
 ## P-001 — Selective allocation
 
 **Problem.** Total possible capacity is larger than the activity or resources
@@ -123,7 +138,9 @@ probability-sample calibration ([C-122](claims.md#c-122),
 [C-123](claims.md#c-123), [C-129](claims.md#c-129),
 [C-130](claims.md#c-130)); shadow-price allocation, mechanism-design
 constraints, and matching ([C-133](claims.md#c-133),
-[C-135](claims.md#c-135)–[C-138](claims.md#c-138)).
+[C-135](claims.md#c-135)–[C-138](claims.md#c-138)); and
+opportunity- and impedance-qualified spatial accessibility
+([C-705](claims.md#c-705), [C-706](claims.md#c-706)).
 
 **Candidate AI primitive.** Budgeted top-$k$ routing with explicit inhibition,
 capacity reserves, and measured communication cost.
@@ -332,7 +349,9 @@ tag-dependent routing of suspect material into distinct compartments
 ([C-091](claims.md#c-091)); types, refinements, contracts, effects,
 capabilities, proof-carrying code, owned-state reasoning, static analysis, and
 gradual boundaries ([C-145](claims.md#c-145)–[C-151](claims.md#c-151),
-[C-153](claims.md#c-153)).
+[C-153](claims.md#c-153)); and built compartments whose modularity does not by
+itself establish reversibility, lifecycle advantage, or independent failure
+([C-716](claims.md#c-716), [C-720](claims.md#c-720)).
 
 **Candidate AI primitive.** Hierarchical modules with local state, typed
 interfaces, and explicit cross-compartment budgets.
@@ -380,6 +399,10 @@ actions ([C-146](claims.md#c-146)–[C-157](claims.md#c-157)).
 Issue-scoped review, remedy, recusal, and qualified reopening add maintenance
 actions whose authority and selection process remain explicit
 ([C-696](claims.md#c-696)–[C-703](claims.md#c-703)).
+Commissioning, post-occupancy evaluation, and asset management add measured
+feedback and lifecycle governance while keeping observation, implemented
+change, accepted postcondition, and realized service separate
+([C-715](claims.md#c-715), [C-723](claims.md#c-723)).
 
 **Candidate AI primitive.** Auditable lifecycle controller with limited
 actions, shadow evaluation, and rollback.
@@ -412,6 +435,11 @@ can move recurring stabilization or energy storage into the plant, but their
 benefit remains bound to the controller, body, contact, and task
 ([C-597](claims.md#c-597)–[C-600](claims.md#c-600),
 [C-603](claims.md#c-603)–[C-606](claims.md#c-606)).
+Passive envelopes, thermal mass, buoyancy-driven ventilation, daylight, and
+shading add physical offloading whose fabrication, material, land, maintenance,
+comfort, failure, and lifecycle costs remain inside the comparison
+([C-709](claims.md#c-709), [C-710](claims.md#c-710),
+[C-721](claims.md#c-721)).
 
 **Candidate AI primitive.** Reversible structural search followed by compiled
 or physically colocated stable paths.
@@ -509,6 +537,9 @@ Procedural records coordinate offers, rulings, objections, findings, decisions,
 and mandates across actors, while access, permitted purpose, authority, and
 review scope determine what that shared state can do
 ([C-684](claims.md#c-684)–[C-704](claims.md#c-704)).
+BIM and IFC provide versioned shared information, but correspondence to the
+current asset still requires supported observation and validation
+([C-714](claims.md#c-714)).
 
 **Candidate AI primitive.** A versioned shared workspace where modules publish
 compact observations, partial results, route pressure, and unresolved questions

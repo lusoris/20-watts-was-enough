@@ -255,3 +255,19 @@ project choice.
   independent review, and full recomputation at equal information, authority,
   human time, delay, compute, storage, and energy? See the
   [contestable-decision record](../math/contestable-decision-record.md).
+- **OQ-054:** Does an occupancy- and life-safety-qualified spatial transition
+  contract expose consequential invalid intermediate states beyond modular or
+  open-building design, BIM/IFC, permits, ordinary change control,
+  commissioning, MPC, post-occupancy evaluation, and asset management at equal
+  lifecycle budget across at least two asset classes? See
+  [C-725](claims.md#c-725) and the
+  [Candidate 001 built-environment track](../experiments/candidates/001-adaptive-topology.md#occupied-spatial-topology-track).
+- **OQ-055:** Does separately recording representation, recognition,
+  authorization, activation, ignorance, anergy, suppression, exhaustion,
+  deletion, contraction, memory, and recovery expose unsafe reactivation or
+  false deletion missed by an ordinary typed state machine, calibrated risk
+  model, least-privilege policy, and resource-aware controller at equal
+  information and lifecycle budgets? This evaluates the
+  [immune-state contract](principle-registry.md#immune-state-lifecycle-evaluation-contract);
+  it is not a principle or candidate promotion gate. See
+  [C-746](claims.md#c-746).

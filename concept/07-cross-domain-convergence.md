@@ -265,6 +265,64 @@ cleanup, contamination, topology edits, failed delivery, reserve, and
 measurement. If geometry and cleanup do not affect the task, use the simpler
 digital primitive.
 
+### Inactive is not one state
+
+The immune evidence in
+[C-727](../research/claims.md#c-727)–[C-747](../research/claims.md#c-747)
+does not add another architecture principle. It contributes a stricter state
+contract. Representation, recognition, authentication, authorization,
+activation, suppression, deletion, impairment, contraction, memory, and
+recovery answer different questions and have different reversal costs.
+
+```mermaid
+flowchart LR
+    G["Generate candidate rule / module"] --> R["Represent sampled evidence"]
+    R --> V{"Developmental validation"}
+    V -->|"insufficient coverage"| I["Ignorant · unresolved"]
+    V -->|"unsafe with high support"| D["Delete + retain decision record"]
+    V -->|"provisional pass"| N["Eligible but inactive"]
+    N --> C["Context · provenance · current system state"]
+    C --> A{"Recognition + authority + risk gate"}
+    A -->|"permit"| X["Activate · expand · execute"]
+    A -->|"monitor"| M["Observe without authority increase"]
+    A -->|"quarantine"| Q["Anergic analogue · reversible disablement"]
+    A -->|"external control"| S["Suppressed · rate-limited · scoped"]
+    X --> O["Outcome · collateral loss · resource use"]
+    O --> K["Contract · clean up · retain memory"]
+    X -->|"persistent load or dysfunction"| H["Exhausted / impaired trajectory"]
+    K --> P["Maintained memory · placement · expiry"]
+    P -->|"qualified recurrence"| C
+    I --> R
+    M --> C
+    Q -->|"revalidate"| C
+    S -->|"authority changes"| C
+    H -->|"diagnose + bounded intervention"| C
+    O -->|"harm or false permit"| D
+```
+
+Editable source:
+[typed-tolerance-lifecycle.mmd](../assets/diagrams/typed-tolerance-lifecycle.mmd).
+
+An activation bit cannot distinguish an absent module from an unobserved one,
+a policy-suppressed module from a damaged one, or post-response contraction
+from retained memory. That ambiguity makes reactivation unsafe and makes
+resource accounting wrong. Each transition therefore records evidence support,
+authority, expected useful effect, collateral-loss terms, resource budget,
+expiry, recovery target, and observed outcome.
+
+Recognition supplies evidence; it does not grant authority. Deletion requires
+a higher support threshold than reversible monitoring or quarantine because a
+rare useful capability can be lost. Local copies pay maintenance, refresh,
+invalidation, and inconsistency costs. Recovery ends only when useful service
+and reserve are both restored.
+
+The [typed lifecycle mathematics](../math/typed-tolerance-lifecycle.md) compares
+this contract against a complete ordinary stack: typed state machines,
+calibrated risk and abstention, least privilege, constrained control, anomaly
+detection, evolutionary or ensemble search, replay, placement, and
+resource-aware scheduling. If the ordinary stack reproduces the decisions and
+frontier, the biological vocabulary is removed and the state contract remains.
+
 ## Efficiency mechanism
 
 Deduplication saves two different resources.

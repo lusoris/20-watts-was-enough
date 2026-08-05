@@ -234,6 +234,105 @@ if inventory hides in uncharged buffers, or if geometry and cleanup do not
 change task outcome. This is the Candidate-001 side of the shared
 [transported-field fixture](../../concept/07-cross-domain-convergence.md#transported-fields-are-not-messages).
 
+## Occupied spatial topology track
+
+The network experiment prices migration but still permits a graph edge to
+change without walls, people, smoke, utilities, permits, or irreversible work.
+The [built-environment audit](../../research/audits/2026-08-05-built-environment-urban-systems.md)
+adds one deliberately hostile track: change physical and service topology while
+people or critical services remain inside the affected boundary.
+
+This track is applicable only when all of the following hold:
+
+1. geometry, circulation, compartmentation, utility/control zoning, structural
+   load path, or functional use actually changes;
+2. occupants, critical service, or hazardous inventory remains present during
+   at least one step;
+3. material, legal, or temporal commitments make instantaneous rollback false;
+4. accessible use, egress, tenability, structural/utility service, and authority
+   must remain valid in every intermediate configuration; and
+5. isolation plus a fixed pre-approved sequence is not already sufficient.
+
+```mermaid
+flowchart LR
+    N["Need · target service · affected users"] --> P["Versioned transition plan"]
+    A["Verified as-built topology"] --> G{"Intermediate-state gate"}
+    O["Occupancy · ability · assistance"] --> G
+    R["Ordinary · accessible · emergency routes"] --> G
+    F["Fire · smoke · ASET/RSET · impairments"] --> G
+    S["Structure · utilities · controls · environment"] --> G
+    U["Authority · permits · stop-work power"] --> G
+    M["Material commitments · irreversible work"] --> G
+    P --> G
+    G -->|"evidence current + constraints pass"| W["Execute one bounded work step"]
+    G -->|"support expired or constraint fails"| X["Abstain · restrict · decant · safe-stop"]
+    W --> V["Inspect · test · reconcile physical state"]
+    V --> Q{"Postconditions accepted?"}
+    Q -->|"no"| X
+    Q -->|"yes"| T["Advance topology version"]
+    T --> G
+    T --> C["Commission · verify service · restore reserve"]
+    C --> E["Post-occupancy outcomes + lifecycle ledger"]
+    E --> N
+```
+
+Editable source:
+[occupancy-qualified-spatial-transition.mmd](../../assets/diagrams/occupancy-qualified-spatial-transition.mmd).
+The [mathematical contract](../../math/occupied-spatial-transition.md) defines
+the typed transition state, evidence-age and authority gates, scenario-specific
+egress margin, group-visible service loss, irreversibility, and recovery with
+reserve restoration.
+
+### Matched arms
+
+Use at least five arms on the same occupied reconfiguration tasks:
+
+| ID | Arm | Required content |
+| --- | --- | --- |
+| BE0 | conventional fit-out | professional design and ordinary construction management |
+| BE1 | modular/open system | service separation and prefabricated or replaceable components |
+| BE2 | mature ordinary stack | BE1 plus permits, impairment control, configuration management, commissioning, and asset management |
+| BE3 | ordinary stack + qualified observations | BE2 plus Candidate 014 evidence support, age, coverage, and invalidation |
+| BE4 | full held contract | BE3 plus explicit intermediate-state gates, user-group service, commitments, safe-stop, and reserve restoration |
+
+All arms receive identical target function, asset geometry, users and ability
+profiles, code basis, hazards, sensors, professional review, staff time,
+material, plant, construction windows, maintenance, and whole-life budget.
+Life-safety and accessibility limits are feasibility constraints; neither may
+be traded for mean energy, schedule, or cost.
+
+### State and measurements
+
+At every step, log current, target, and verified as-built topology; actual and
+forecast occupancy; ordinary, accessible, construction, emergency, responder,
+and goods routes; compartment and impairment state; scenario-specific ASET and
+RSET; structure, utilities, controls, indoor environment, evidence support,
+permits and authority; installed, removed, in-transit, reusable, waste, and
+irreversible material; acceptance tests, defects, safe-stop reachability, and
+reserve.
+
+Report, without hiding subgroup distributions:
+
+- hard life-safety, accessibility, structural, utility, and environmental
+  violations;
+- person-hours or service-unit-hours lost by user group;
+- route impairments, untenable exposure, incorrect continuation, unnecessary
+  stops, defects, rework, and recurrence;
+- transition and recovery time, including time to restore reserve;
+- energy, material, waste, whole-life GWP, present cost, and displaced burden;
+- evidence collection, modelling, review, commissioning, and maintenance work;
+  and
+- component reuse yield after inspection, not planned disassembly alone.
+
+### Rejection gate
+
+Merge this track into ordinary asset management if the mature BE2 or BE3 arm
+matches the protected-service and lifecycle frontier. Reject it immediately if
+any protected-user constraint is violated, a claimed advantage depends on an
+unverified model or ideal actuator, rollback ignores irreversible work, or
+reopening is counted before defects and reserve are restored. A surviving
+result refines Candidate 001; it does not create another principle.
+
 ## Methods
 
 ### Required standard engineering baselines

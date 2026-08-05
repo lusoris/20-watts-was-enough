@@ -7,6 +7,21 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A built-environment and urban-systems audit that keeps plans, sensed state,
+  verified physical state, occupants, accessible and emergency routes, life
+  safety, utilities, material commitments, acceptance, and recovery distinct
+  through topology-changing work.
+- Twenty-two scoped built-environment claims (`C-705`–`C-726`), thirty-eight
+  centralized sources, an occupied-transition diagram and mathematical
+  contract, and a physical stress track in Candidate 001; no new principle was
+  promoted.
+- An immune tolerance and trained-immunity audit that separates
+  representation, recognition, permission, activation, quarantine,
+  suppression, impairment, contraction, maintained memory, reactivation, and
+  recovery.
+- Twenty-one scoped immune claims (`C-727`–`C-747`), forty-four new centralized
+  sources, and an editable typed-lifecycle diagram and math note; the result is
+  an evaluation contract, not a new principle or candidate.
 - A legal evidence/procedure audit that separates normative authority,
   doctrinal validity, empirical effect, formal inference, authentication,
   admissibility, weight, sufficiency, review, remedy, and finality.

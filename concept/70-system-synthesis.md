@@ -28,7 +28,7 @@ interact without becoming one global update rule.
 ### Runtime path
 
 ```mermaid
-flowchart LR
+flowchart TB
     obs["Multimodal event"] --> enc["Sparse encoders"]
     enc --> state["Predictive shared state"]
     state --> gate{"Surprise · value · risk"}
@@ -150,7 +150,7 @@ operational learning, observation, convention, and governance candidates; it
 does not add a new control primitive.
 
 ```mermaid
-flowchart TB
+flowchart LR
     O["Authorized objectives · protected invariants"] --> L["Scoped local authority"]
     L --> D["Decision + evidence + affected scope"]
     D --> G{"Within authority and risk envelope?"}
@@ -380,6 +380,61 @@ beat event sourcing plus inventory reconciliation, queueing, base-stock and
 multi-echelon control, stochastic/robust optimization, and receding-horizon
 planning with frozen commitments. It is an evaluation contract, not a new
 allocation algorithm.
+
+### Physical topology must remain valid while it changes
+
+Logical routing can often switch within milliseconds and retry. Physical
+topology cannot assume that abstraction when a transition moves barriers,
+routes, utilities, controls, structure, people, or material. The system must
+represent the intermediate configurations—not only the before and after
+graphs.
+
+The built-environment evidence in
+[C-705](../research/claims.md#c-705)–[C-726](../research/claims.md#c-726)
+adds a demanding test case. A plan, BIM model, sensor dashboard, command, and
+verified physical state are separate records. Accessible use, egress,
+tenability, structure, utilities, environmental service, evidence validity,
+authority, and material commitment remain explicit through every work step.
+
+```mermaid
+flowchart LR
+    N["Need · target service · affected users"] --> P["Versioned transition plan"]
+    A["Verified as-built topology"] --> G{"Intermediate-state gate"}
+    O["Occupancy · ability · assistance"] --> G
+    R["Ordinary · accessible · emergency routes"] --> G
+    F["Fire · smoke · ASET/RSET · impairments"] --> G
+    S["Structure · utilities · controls · environment"] --> G
+    U["Authority · permits · stop-work power"] --> G
+    M["Material commitments · irreversible work"] --> G
+    P --> G
+    G -->|"evidence current + constraints pass"| W["Execute one bounded work step"]
+    G -->|"support expired or constraint fails"| X["Abstain · restrict · decant · safe-stop"]
+    W --> V["Inspect · test · reconcile physical state"]
+    V --> Q{"Postconditions accepted?"}
+    Q -->|"no"| X
+    Q -->|"yes"| T["Advance topology version"]
+    T --> G
+    T --> C["Commission · verify service · restore reserve"]
+    C --> E["Post-occupancy outcomes + lifecycle ledger"]
+    E --> N
+```
+
+Editable source:
+[occupancy-qualified-spatial-transition.mmd](../assets/diagrams/occupancy-qualified-spatial-transition.mmd).
+
+This pattern is useful beyond buildings whenever reconfiguration has occupants,
+physical inventory, slow work, external authority, or irreversible steps. Its
+core rule is simple: a target state cannot authorize a path whose intermediate
+states are invalid. Hard constraints remain a conjunction rather than a scalar
+score; lost service stays visible by affected group; and “rollback” is claimed
+only when the predecessor is still physically reachable.
+
+The full [transition mathematics](../math/occupied-spatial-transition.md) and
+[Candidate 001 stress track](../experiments/candidates/001-adaptive-topology.md#occupied-spatial-topology-track)
+compare the composition against ordinary design review, permits, impairment
+control, configuration management, commissioning, post-occupancy evaluation,
+and lifecycle asset management at equal budget. If that mature stack ties it,
+the extra composition is removed.
 
 ### After an outcome: adaptation proposes, maintenance decides
 
