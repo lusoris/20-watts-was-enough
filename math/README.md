@@ -62,6 +62,11 @@ notation.
   closure-support distance, reduced-state adequacy, adaptive resolution,
   assimilation and observability, transition and tail calibration, net control
   benefit, and complete energy accounting for Fixture F-005.
+- [`representative-adaptive-performance.md`](representative-adaptive-performance.md)
+  defines actual observation/action opportunity, acquisition and opponent
+  history, resource/damage state, anticipation and interception, retention and
+  transfer, pacing/readiness, staged return, team coordination, selection
+  transport, human effort, and lifecycle energy for Fixture F-006.
 
 Rules:
 

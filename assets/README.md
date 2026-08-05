@@ -148,6 +148,10 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
   filter and detector identity, scale flux, closures, reduced state, adaptive
   resolution, assimilation, sensing, control, transition tails, and complete
   lifecycle energy in Fixture F-005.
+- `diagrams/representative-resource-qualified-performance.mmd` carries actual
+  cue and action opportunity, acquisition history, opponent/team state,
+  feedback, fatigue/resource/damage state, action, retention/transfer,
+  reversible return, selection, and complete cost through Fixture F-006.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.
