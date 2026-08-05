@@ -25,12 +25,6 @@ constraints* behind that fact can become engineering requirements:
   into weights; and
 - measure energy, data movement, quality, and uncertainty together.
 
-This is not an attempt to simulate every detail of biology. Biological
-mechanisms are sources of constraints and hypotheses, not implementation
-instructions. The brain is a launchpad rather than a ceiling: where digital
-systems have faster communication, exact copying, rollback, external memory, or
-better arithmetic, the architecture should use those advantages.
-
 ## Project status
 
 **Stage:** concept and evidence framework. There is no model implementation yet.
@@ -49,7 +43,8 @@ state. See [decision 0005](decisions/0005-rendered-private-edition.md).
 
 | Chapter | Question |
 | --- | --- |
-| [Thesis and principles](concept/00-thesis-and-principles.md) | What is the project claiming—and explicitly not claiming? |
+| [Thesis and principles](concept/00-thesis-and-principles.md) | What is the project's central engineering hypothesis? |
+| [Working architecture](concept/01-working-architecture.md) | How do runtime, adaptation, maintenance, resource control, and generative recombination form one system? |
 | [Biology is a launchpad](concept/05-biology-is-a-launchpad.md) | Which biological constraints transfer, and which substrate limits should engineering escape? |
 | [Neurogenesis and routing](concept/10-neurogenesis-and-routing.md) | How can a large developmental capacity become conditionally active modules? |
 | [Sensorimotor grounding](concept/20-sensorimotor-grounding.md) | What must be learned before language can describe a world model? |

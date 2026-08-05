@@ -26,8 +26,8 @@ interconnect, exact copying, explicit addressing, external storage, reversible
 experiments, global synchronization when it is worth its cost, and precision
 that can be selected per operation. At the same time, digital systems still pay
 heavily for data movement, memory access, communication, cooling, and idle
-capacity. The relevant question is therefore not “brain or transformer?” but
-“which constraint survives the change of substrate?”
+capacity. The relevant question is which constraints and useful computations
+survive a change of substrate.
 
 The speed comparison must stay qualitative until a shared task and latency
 boundary exist. Axonal conduction, synaptic integration, transistor switching,
@@ -67,12 +67,9 @@ to existing AI is tracked in the
 
 ## Efficiency mechanism
 
-The approach avoids two symmetric wastes:
-
-- **literal-emulation waste:** reproducing spikes, cell morphology, or
-  biochemical detail when a cheaper abstraction preserves the function; and
-- **substrate-amnesia waste:** using fast digital components in an architecture
-  that moves and activates all state even when the task needs little of it.
+The approach preserves useful functions in the cheapest available form and
+uses digital capabilities—including exact copies, reversible branches, and
+direct addressing—where they improve the measured system.
 
 For a biological candidate $m$, the engineering experiment compares at least
 three systems: a conventional baseline $B$, a literal or close biological
@@ -91,8 +88,6 @@ into a decorative score.
 
 ## Evidence status
 
-- The claim that faithful brain emulation is a necessary or optimal endpoint is
-  disputed under [C-023](../research/claims.md#c-023).
 - Neural energy constraints are established only within the scope of
   [C-001](../research/claims.md#c-001).
 - Nonlinear dendritic subunits, homeostatic scaling, neuromodulated plasticity,

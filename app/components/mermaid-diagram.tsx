@@ -25,6 +25,9 @@ export function MermaidDiagram({ chart }: { chart: string }) {
             lineColor: "#97a39a",
             secondaryColor: "#253d4b",
             tertiaryColor: "#3b3022",
+            clusterBkg: "#18231b",
+            clusterBorder: "#3f5d49",
+            edgeLabelBackground: "#111611",
             fontFamily: "var(--font-sans)",
           },
         });

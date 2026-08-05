@@ -29,7 +29,6 @@ describes the exact statement here, not a broader interpretation.
 | C-020 | Disinhibitory interneurons provide context-dependent gain | established |
 | C-021 | Astrocytes participate in synapse removal and remote memory | established |
 | C-022 | Natural sensing depends on self-generated sensor motion | established |
-| C-023 | Faithful brain emulation is a necessary or optimal endpoint | disputed |
 | C-024 | Cephalopod arms use segmented and simplified peripheral control | established |
 | C-025 | Insect feedback inhibition maintains sparse discriminable codes | established |
 | C-026 | Repeated plant stress can leave a reversible response memory | established |
@@ -375,20 +374,6 @@ describes the exact statement here, not a broader interpretation.
 - **Used by:** [sensorimotor grounding](../concept/20-sensorimotor-grounding.md),
   [neuroscience map](neuroscience-opportunity-map.md),
   [P-007](principle-registry.md#p-007--prediction-error-allocation).
-
-### C-023
-
-- **Statement:** Faithfully emulating the biological substrate is necessary for,
-  or defines the optimal endpoint of, energy-efficient artificial intelligence.
-- **Status:** disputed.
-- **Primary sources:** none establish this necessity or optimum.
-- **Rationale:** Brains and digital systems face different component speeds,
-  noise, communication, copying, storage, repair, and optimization constraints.
-  Biological observations generate hypotheses; only matched engineering tests
-  can choose an implementation.
-- **Open issue:** Which biological constraints remain binding after a substrate
-  change and which can be escaped.
-- **Used by:** [launchpad](../concept/05-biology-is-a-launchpad.md).
 
 ### C-024
 

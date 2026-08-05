@@ -22,3 +22,7 @@ their individual assumptions are visible. The [energy model](80-energy-model.md)
 defines the comparison contract for every efficiency result. The
 [launchpad chapter](05-biology-is-a-launchpad.md) defines how to extract a
 computational invariant without copying a biological substrate limitation.
+
+Start with [the working architecture](01-working-architecture.md) for a single
+narrative view of the runtime, adaptation, maintenance, resource, and
+generative-recombination loops.

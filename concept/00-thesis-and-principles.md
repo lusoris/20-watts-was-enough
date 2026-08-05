@@ -24,9 +24,9 @@ search capacity of modern learning with constraints that biology cannot evade:
 6. stable skills, mutable facts, and active reasoning should use different
    storage and execution paths.
 
-The intended result is not “a brain on a computer.” It is a system whose cost
-scales primarily with the information and uncertainty relevant to a task, not
-with its full stored capacity.
+The intended result is a system whose cost scales primarily with the
+information and uncertainty relevant to a task, rather than with its full
+stored capacity.
 
 ## Biological observation
 
@@ -125,11 +125,3 @@ The integrated hypothesis survives only if, at matched quality:
   single-timescale baseline; and
 - grounded intervention tasks improve beyond gains explained by additional data
   or parameters alone.
-
-## Explicit non-claims
-
-- “20 watts” is not a near-term hardware target or a brain/AI conversion factor.
-- Mixed-signal training will not automatically eliminate hallucinations.
-- Grokking is not guaranteed and is not the sole pruning gate.
-- Pruned parameters do not automatically translate into energy savings.
-- Spiking hardware is a candidate substrate, not a predetermined winner.

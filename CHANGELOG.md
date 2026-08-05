@@ -7,6 +7,14 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A narrative working-architecture chapter that connects the evidence ledger
+  to fast runtime, adaptation, maintenance, resource, and generative-
+  recombination loops.
+- Editable Mermaid diagrams for the three-loop system and the
+  copy–compress–vary–test–retain cycle.
+- A refreshed private-site preview image aligned with the reader's restrained
+  biological-to-silicon visual language.
+
 - An open-world discovery policy treating every empirical, formal, and
   engineering science as a potential source, organized by shared problem
   classes and constrained by evidence, deduplication, engineering null models,

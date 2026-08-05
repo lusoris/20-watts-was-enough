@@ -39,13 +39,32 @@ function sourceLabel(document: ResearchDocument): string {
 }
 
 export function ResearchReader() {
-  const [currentPath, setCurrentPath] = useState(initialDocumentPath);
+  const [currentPath, setCurrentPath] = useState(DEFAULT_DOCUMENT);
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
+    () =>
+      new Set([
+        "Research",
+        "Experiments",
+        "Mathematics",
+        "Decisions",
+        "Graphics",
+        "Source archive",
+      ]),
+  );
   const searchRef = useRef<HTMLInputElement>(null);
 
   const currentDocument =
     documentsByPath.get(currentPath) ?? documentsByPath.get(DEFAULT_DOCUMENT)!;
+  const currentIndex = documents.findIndex(
+    (document) => document.path === currentDocument.path,
+  );
+  const previousDocument = currentIndex > 0 ? documents[currentIndex - 1] : null;
+  const nextDocument =
+    currentIndex >= 0 && currentIndex < documents.length - 1
+      ? documents[currentIndex + 1]
+      : null;
   const outline = useMemo(
     () => outlineFrom(currentDocument.body),
     [currentDocument.body],
@@ -71,6 +90,12 @@ export function ResearchReader() {
 
     setCurrentPath(path);
     setMenuOpen(false);
+    setCollapsedGroups((groups) => {
+      if (!groups.has(nextDocument.group)) return groups;
+      const nextGroups = new Set(groups);
+      nextGroups.delete(nextDocument.group);
+      return nextGroups;
+    });
     const url = new URL(window.location.href);
     url.searchParams.set("doc", path);
     url.hash = hash;
@@ -83,6 +108,19 @@ export function ResearchReader() {
   }, []);
 
   useEffect(() => {
+    const requestedPath = initialDocumentPath();
+    const requestedGroup = documentsByPath.get(requestedPath)?.group;
+    const initialFrame = window.requestAnimationFrame(() => {
+      setCurrentPath(requestedPath);
+      if (requestedGroup) {
+        setCollapsedGroups((groups) => {
+          if (!groups.has(requestedGroup)) return groups;
+          const nextGroups = new Set(groups);
+          nextGroups.delete(requestedGroup);
+          return nextGroups;
+        });
+      }
+    });
     const onPopState = () => setCurrentPath(initialDocumentPath());
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "/" && document.activeElement?.tagName !== "INPUT") {
@@ -97,6 +135,7 @@ export function ResearchReader() {
     window.addEventListener("popstate", onPopState);
     window.addEventListener("keydown", onKeyDown);
     return () => {
+      window.cancelAnimationFrame(initialFrame);
       window.removeEventListener("popstate", onPopState);
       window.removeEventListener("keydown", onKeyDown);
     };
@@ -142,8 +181,8 @@ export function ResearchReader() {
 
       <aside className={`sidebar ${menuOpen ? "sidebar-open" : ""}`}>
         <div className="sidebar-intro">
-          <span>Research edition</span>
-          <p>Every page below is rendered directly from the Git-tracked source.</p>
+          <span>Canonical library</span>
+          <p>{documents.length} versioned documents rendered from the private Git source.</p>
         </div>
         <nav aria-label="Research documents">
           {documentGroups.map(({ group, documents: groupDocuments }) => {
@@ -151,24 +190,47 @@ export function ResearchReader() {
               visiblePaths.has(document.path),
             );
             if (visibleDocuments.length === 0) return null;
+            const groupOpen =
+              Boolean(query.trim()) ||
+              !collapsedGroups.has(group);
             return (
-              <section className="nav-group" key={group}>
-                <h2>{group}</h2>
-                {visibleDocuments.map((document) => (
-                  <button
-                    type="button"
-                    key={document.path}
-                    className={document.path === currentDocument.path ? "active" : ""}
-                    onClick={() => navigate(document.path)}
-                    title={document.path}
-                  >
-                    <span>{document.title}</span>
-                    {document.path.startsWith("concept/") &&
-                    /^concept\/\d+/.test(document.path) ? (
-                      <small>{document.path.match(/^concept\/(\d+)/)?.[1]}</small>
-                    ) : null}
-                  </button>
-                ))}
+              <section className={`nav-group ${groupOpen ? "" : "collapsed"}`} key={group}>
+                <button
+                  type="button"
+                  className="nav-group-toggle"
+                  aria-expanded={groupOpen}
+                  onClick={() =>
+                    setCollapsedGroups((groups) => {
+                      const nextGroups = new Set(groups);
+                      if (groupOpen) nextGroups.add(group);
+                      else nextGroups.delete(group);
+                      return nextGroups;
+                    })
+                  }
+                >
+                  <span>{group}</span>
+                  <small>{visibleDocuments.length}</small>
+                  <i aria-hidden="true">⌄</i>
+                </button>
+                {groupOpen ? (
+                  <div className="nav-group-items">
+                    {visibleDocuments.map((document) => (
+                      <button
+                        type="button"
+                        key={document.path}
+                        className={`nav-item ${document.path === currentDocument.path ? "active" : ""}`}
+                        onClick={() => navigate(document.path)}
+                        title={document.path}
+                      >
+                        <span>{document.title}</span>
+                        {document.path.startsWith("concept/") &&
+                        /^concept\/\d+/.test(document.path) ? (
+                          <small>{document.path.match(/^concept\/(\d+)/)?.[1]}</small>
+                        ) : null}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
               </section>
             );
           })}
@@ -202,6 +264,22 @@ export function ResearchReader() {
               onNavigate={navigate}
             />
           </article>
+          <nav className="document-pager" aria-label="Adjacent documents">
+            {previousDocument ? (
+              <button type="button" onClick={() => navigate(previousDocument.path)}>
+                <small>Previous</small>
+                <span>← {previousDocument.title}</span>
+              </button>
+            ) : (
+              <span />
+            )}
+            {nextDocument ? (
+              <button type="button" onClick={() => navigate(nextDocument.path)}>
+                <small>Next</small>
+                <span>{nextDocument.title} →</span>
+              </button>
+            ) : null}
+          </nav>
         </div>
       </main>
 
@@ -224,7 +302,7 @@ export function ResearchReader() {
         )}
         <footer>
           <span className="live-dot" />
-          Live reload active locally
+          Generated from canonical Git source
         </footer>
       </aside>
 

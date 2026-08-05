@@ -13,9 +13,9 @@ coding models explain selected cortical effects by passing residual errors
 forward while feedback carries predictions
 ([C-005](../research/claims.md#c-005)).
 
-Biological neurons are not “near-zero power” when silent, and predictive coding
-is not an established complete theory of the brain. The engineering abstraction
-is conditional update and residual-driven allocation.
+The engineering abstraction used here is conditional update and
+residual-driven allocation. Its value is tested through measured behavior and
+energy rather than assumed from the analogy.
 
 ## Proposed AI translation
 

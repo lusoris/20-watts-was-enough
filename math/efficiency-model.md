@@ -3,7 +3,7 @@
 ## Purpose
 
 This model compares a conditional architecture with a dense baseline on the
-same task. It deliberately does not attempt to turn brain activity into FLOPs.
+same task using directly measured system quantities.
 
 ## Per-event cost
 
