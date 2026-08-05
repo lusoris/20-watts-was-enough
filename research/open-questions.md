@@ -128,3 +128,8 @@ project choice.
   better than a fixed typed protocol and mature migration stack at equal total
   cost? See
   [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+- **OQ-034:** When individually rewarded modules can profit from shortcuts, can
+  a reproducible collective lifecycle exhibit cost-adjusted heritable variation
+  in collective performance beyond ordinary permissions, tests, clean
+  versioning, external evaluation, routing, and population selection? See
+  [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md).

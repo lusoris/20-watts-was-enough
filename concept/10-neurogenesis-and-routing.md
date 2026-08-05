@@ -254,6 +254,49 @@ validation work, and wall-clock opportunity. Charge candidate failures and
 discarded births. Otherwise growth buys more search while the null models are
 asked to solve the task in place.
 
+### When the unit of adaptation changes
+
+A cooperating set of modules is not automatically a higher-level unit. The
+claim becomes testable only after defining its boundary, child-configuration
+event, inherited state, within-lifetime state, descendant relation, collective
+performance, member-level incentives, and conflict-control cost. This separates
+aggregation from individuality and a demographic bottleneck from a reproducible
+founder boundary ([C-282](../research/claims.md#c-282)–[C-295](../research/claims.md#c-295)).
+
+```mermaid
+flowchart LR
+    F["Versioned founder / propagule"] --> C["Reproducible collective configuration"]
+    C --> V["Bounded within-lifetime variation + specialization"]
+    V --> T["Collective task outcome"]
+    T --> P["Partition collective gain vs member shortcuts"]
+    P --> G{"Joint gain survives conflict cost?"}
+    G -->|"no"| X["Use ordinary modular control"]
+    G -->|"yes"| H["Select reproducible higher-level lineage"]
+    H --> F
+    V --> A["Audit · budget · sanction · reproductive separation"]
+    A --> P
+```
+
+Editable source:
+[conflict-bounded-unit-transition.mmd](../assets/diagrams/conflict-bounded-unit-transition.mmd).
+
+For collective lineage $k$, let $Z_k$ be task-native collective performance and
+$W_k$ its dimensionless admitted-descendant weight. The selection accounting is
+
+$$
+\Delta\bar Z=
+\frac{\operatorname{Cov}(W_k,Z_k)}{\bar W}
++\frac{\mathbb E[W_k\Delta Z_k]}{\bar W}.
+$$
+
+The first term is change among declared collectives and the second is
+transmission change. A nested partition separately reports member-level
+shortcuts. The identity is accounting, not causal proof; group and descendant
+definitions are preregistered. [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md)
+must beat typed modular systems, permissions and tests, clean versioning,
+external evaluation, routed experts, and ensemble/population selection after
+enforcement, false-sanction, interface, founder, reserve, and recovery costs.
+
 ## Efficiency mechanism
 
 For experts $i=1\ldots n$, let $g_i(x)\in\{0,1\}$ be the dimensionless event
@@ -309,6 +352,7 @@ system.
 | audit-backed contestable allocation ([C-144](../research/claims.md#c-144)) | speculative systems composition | Candidate 008 must lose its distinction when modules are cooperative and directly observable |
 | capability-gap repair ([C-056](../research/claims.md#c-056)) | established for the defined mouse community and challenge | motivates selecting additions by missing function |
 | functional redundancy and engraftment ([C-057](../research/claims.md#c-057)) | plausible association | motivates protected newcomer evaluation and a lock-in test |
+| higher-level heredity and conflict accounting ([C-282](../research/claims.md#c-282)–[C-295](../research/claims.md#c-295)) | scoped population-genetic and evolutionary results; artificial composition speculative | Candidate 016 tests whether a collective becomes a useful adaptation unit beyond ordinary modular lifecycle controls |
 | complete grow–route–specialize lifecycle | speculative synthesis | requires comparison with N0–N6 |
 
 ## Speculative extensions
@@ -342,6 +386,7 @@ system.
 | Cosmetic sparsity | active gates fall while loaded bytes, communication, or joules do not | hardware trace and dense-kernel ablation |
 | Maintenance inversion | search, validation, migration, and rollback cost exceeds runtime saving | full lifecycle equation and fixed-structure nulls |
 | Rare-role deletion | average quality holds while rare or safety-critical cases regress | protected recurrence suite and reconstructable checkpoint |
+| False higher-level unit | aggregate reward rises but collective inheritance is transient or member shortcuts dominate | preregister descendant relation; selection partition; ordinary modular and external-evaluator nulls |
 
 ## Measurable predictions
 
@@ -363,6 +408,9 @@ system.
    to justify its stored bytes, idle energy, and periodic test traffic.
 7. Joint routing and placement lowers communication energy only after migration,
    cold-start, and rollback work are included.
-8. The complete lifecycle advances only if it improves the quality–risk–latency–
+8. A collective lifecycle advances only when cost-adjusted between-collective
+   selection and inherited capability persist under member shortcuts and
+   turnover beyond ordinary lifecycle governance.
+9. The complete lifecycle advances only if it improves the quality–risk–latency–
    energy–adaptability frontier over N0–N5; a parameter-count or FLOP reduction
    alone does not satisfy the prediction.

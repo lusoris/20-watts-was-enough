@@ -4400,3 +4400,294 @@ describes the exact statement here, not a broader interpretation.
 - **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
   [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
   [principle registry](principle-registry.md).
+
+### C-282
+
+- **Statement:** Under a neutral finite diploid Wright–Fisher model, smaller
+  effective population size accelerates expected heterozygosity loss.
+- **Status:** established.
+- **Primary source:** `Nei1975Bottleneck`.
+- **Rationale:** A demographic bottleneck primarily changes drift and variation;
+  it is not a generic consolidation or optimization operator.
+- **Open issue:** Mutation, migration, selection, linkage, population structure,
+  and other inheritance systems change the quantitative null.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-283
+
+- **Statement:** One of ten selected *Chlamydomonas* populations in the cited
+  experiment evolved an alternating multicellular/unicellular lifecycle by
+  approximately 315 generations.
+- **Status:** established.
+- **Primary source:** `Ratcliff2013LifeCycle`.
+- **Rationale:** The result demonstrates a scoped evolved reproductive cycle;
+  the single-cell phase's observed fecundity advantage does not prove that
+  conflict suppression caused its origin.
+- **Open issue:** Preserve replicate count, selection regime, and historical
+  explanation rather than generalizing one trajectory.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md).
+
+### C-284
+
+- **Statement:** A narrow reproductive propagule can align higher-level
+  heredity by increasing relatedness within a new unit, but it can also lose
+  useful variation and create founder risk.
+- **Status:** plausible.
+- **Primary sources:** `Queller2000Relatedness`, `Michod2007Individuality`,
+  `Ratcliff2013LifeCycle`.
+- **Rationale:** Reproduction through few founders and demographic contraction
+  are different operations with different selection consequences.
+- **Open issue:** Test whether clean versioning and capability isolation provide
+  the same engineered benefit without a lifecycle framing.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-285
+
+- **Statement:** Reproductive resets may reduce inherited parasitic local state
+  in continual artificial lineages beyond ordinary versioning and capability
+  isolation.
+- **Status:** speculative.
+- **Primary source:** none sufficient; biological boundary conditions are in
+  [C-282](#c-282)–[C-284](#c-284).
+- **Rationale:** A declared child configuration can separate inherited state
+  from within-lifetime specialization.
+- **Open issue:** Founder failures, diversity loss, validation, and rare-role
+  deletion may erase the gain.
+- **Used by:** [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md),
+  [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md).
+
+### C-286
+
+- **Statement:** Survival through a mass extinction, taxonomic recovery,
+  abundance recovery, ecological-function recovery, and later diversification
+  need not coincide.
+- **Status:** established.
+- **Primary sources:** `Jablonski2002Survival`, `KirchnerWeil2000Recovery`,
+  `Alroy2010Shifting`.
+- **Rationale:** Recovery is vector-valued and path-dependent; richness alone
+  can hide loss of function, abundance, geography, or interactions.
+- **Open issue:** Fossil sampling and binning can change inferred timing and
+  magnitude on every axis.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [research roadmap](../concept/90-research-roadmap.md).
+
+### C-287
+
+- **Statement:** A universal approximately ten-million-year post-extinction
+  origination peak is not supported independently of estimator, time binning,
+  taxonomic treatment, and sampling correction.
+- **Status:** disputed.
+- **Primary sources:** `KirchnerWeil2000Recovery`, `Alroy2008Dynamics`.
+- **Rationale:** Sampling-standardized analyses can materially alter the
+  apparent origination and extinction trajectory.
+- **Open issue:** Any claimed delay needs interval uncertainty and alternative
+  observation models rather than a fixed constant.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-288
+
+- **Statement:** Destructive population shocks have no general basis as an
+  efficient training or optimization operator.
+- **Status:** speculative.
+- **Primary sources:** `RaupSepkoski1982Extinctions`,
+  `Jablonski2002Survival`.
+- **Rationale:** Extinction is a lossy path-dependent filter whose survivors and
+  later radiations need not preserve capability or ecological function.
+- **Open issue:** A bounded engineered deletion rule can still be tested, but it
+  must beat reversible pruning and diversity-preserving selection.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-289
+
+- **Statement:** Replicated island *Anolis* radiations show convergent ecomorph
+  outcomes within a constrained system while retaining historical contingency.
+- **Status:** established.
+- **Primary source:** `Losos1998Radiations`.
+- **Rationale:** Ecological opportunity and accessible variation can produce
+  repeated structure without making evolution deterministic in general.
+- **Open issue:** Engineered niche mechanisms must beat quality-diversity,
+  population training, and routed-expert baselines.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-290
+
+- **Statement:** Distinct ecological or task niches can protect useful
+  specialization, but niche labels do not guarantee capability or independent
+  failure modes.
+- **Status:** plausible.
+- **Primary source:** `Losos1998Radiations`.
+- **Rationale:** Specialization is useful when it contributes distinct
+  task-native outcomes rather than only occupying a descriptor bin.
+- **Open issue:** Measure Pareto coverage, correlation, interface cost, and
+  recovery at fixed evaluations and energy.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [routing chapter](../concept/10-neurogenesis-and-routing.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-291
+
+- **Statement:** Mitochondria have bacterial ancestry and organelle DNA can
+  transfer to a host nucleus, establishing acquisition and later integration
+  without identifying one exact universal origin sequence.
+- **Status:** established.
+- **Primary sources:** `Sagan1967Mitosing`, `Andersson1998Rickettsia`,
+  `Stegemann2003GeneTransfer`.
+- **Rationale:** Persistent integration involves inheritance, interfaces, state
+  transfer, and dependency beyond temporary cooperation.
+- **Open issue:** Competing origin models and later transfers constrain the
+  historical detail; reversible plugins are a strong engineering null.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-292
+
+- **Statement:** Staged capability integration may reduce duplicated compute or
+  state while preserving replacement and rollback better than conventional
+  composition.
+- **Status:** speculative.
+- **Primary source:** none sufficient; evolutionary integration is scoped in
+  [C-291](#c-291).
+- **Rationale:** Acquisition, stable inheritance, interface transfer, and
+  dependency consolidation are separate lifecycle stages.
+- **Open issue:** It must beat clean APIs, retrieval services, distillation,
+  model merging, and ordinary dependency management at equal cost.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [system synthesis](../concept/70-system-synthesis.md).
+
+### C-293
+
+- **Statement:** Strong settling selection produced simple clonal
+  multicellular yeast phenotypes and propagule-associated apoptosis in the
+  cited laboratory system.
+- **Status:** established.
+- **Primary source:** `Ratcliff2012Multicellularity`.
+- **Rationale:** The experiment demonstrates a scoped transition in selectable
+  collective traits, not a universal path to complexity or division of labor.
+- **Open issue:** Selection regime, organism, timescale, and replicate behavior
+  bound the transfer.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md).
+
+### C-294
+
+- **Statement:** Higher-level evolutionary individuality requires heritable
+  variation in collective performance plus sufficient control of lower-level
+  conflict for selection at that level to persist.
+- **Status:** plausible.
+- **Primary sources:** `Price1970Selection`, `Frank1995Policing`,
+  `Queller2000Relatedness`, `Michod2007Individuality`,
+  `SzathmaryMaynardSmith1995Transitions`.
+- **Rationale:** Cooperation or aggregation alone does not define a reproduced
+  selection unit; within- and between-unit selection can oppose one another.
+- **Open issue:** There is no single universal relatedness or policing threshold,
+  and engineered descendant relations must be operationally defined.
+- **Used by:** [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md),
+  [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-295
+
+- **Statement:** Costed policing may improve higher-level artificial collective
+  performance when member-level shortcuts are individually rewarded.
+- **Status:** speculative.
+- **Primary source:** `Frank1995Policing`.
+- **Rationale:** Conflict control can change the balance between within- and
+  between-collective selection.
+- **Open issue:** Permissions, unit tests, external evaluation, quotas, and
+  ordinary auditing may match the benefit with fewer false sanctions.
+- **Used by:** [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md),
+  [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md).
+
+### C-296
+
+- **Statement:** Exaptation distinguishes the historical origin of a trait from
+  its current useful role.
+- **Status:** established.
+- **Primary sources:** `GouldVrba1982Exaptation`, `Blount2012Citrate`.
+- **Rationale:** Present utility does not show that a component originated by
+  selection or design for that role.
+- **Open issue:** Post-hoc naming has no predictive value without a search
+  denominator and independent validation.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [endogenous-generation audit](audits/2026-08-05-endogenous-generation-creativity.md),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-297
+
+- **Statement:** Provenance-aware component search may lower the cost of finding
+  valid cross-task reuse when failed searches and retesting are included.
+- **Status:** plausible.
+- **Primary source:** `Blount2012Citrate`.
+- **Rationale:** Searchable origin, dependency, behavior, and validation records
+  can expose co-option candidates without claiming they were designed for the
+  new role.
+- **Open issue:** It must beat semantic retrieval, transfer learning, model
+  merging, and architecture search on search-plus-validation joules.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-298
+
+- **Statement:** Absence from an observed or theoretical morphospace does not
+  alone identify developmental infeasibility.
+- **Status:** established.
+- **Primary sources:** `MaynardSmith1985Constraints`, `Raup1966Morphospace`.
+- **Rationale:** Selection, function, history, sampling, and generative
+  constraints can all leave regions empty.
+- **Open issue:** Search systems need explicit excluded-region probes and escape
+  operators rather than treating absence as impossibility.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [routing chapter](../concept/10-neurogenesis-and-routing.md).
+
+### C-299
+
+- **Statement:** Generative constraints can improve valid-search yield while
+  risking permanent exclusion of recoverable optima.
+- **Status:** plausible.
+- **Primary sources:** `MaynardSmith1985Constraints`, `Raup1966Morphospace`.
+- **Rationale:** Structured proposal spaces can avoid invalid configurations,
+  but their bias is part of the algorithm and lifecycle cost.
+- **Open issue:** Compare typed spaces, learned proposal distributions,
+  regularization, and unconstrained search with explicit escape mutations.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [routing chapter](../concept/10-neurogenesis-and-routing.md).
+
+### C-300
+
+- **Statement:** Fossil ranges and inferred rates depend on preservation, rock
+  availability, collection, taxonomy, time binning, and estimator choice.
+- **Status:** established.
+- **Primary sources:** `FooteRaup1996Preservation`, `Marshall1994Ranges`,
+  `PetersFoote2002Extinction`, `Alroy2008Dynamics`.
+- **Rationale:** Observed first and last occurrences are products of a changing
+  observation process rather than exact latent origination/extinction times.
+- **Open issue:** No correction recovers information never preserved; coverage
+  remains conditional on the observation model.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-301
+
+- **Statement:** Retrospective fossil dynamics do not by themselves validate
+  prospective early-warning signals for artificial systems.
+- **Status:** disputed.
+- **Primary sources:** `FooteRaup1996Preservation`, `Marshall1994Ranges`,
+  `PetersFoote2002Extinction`.
+- **Rationale:** Sparse preservation, time averaging, changing observation
+  kernels, range truncation, and abrupt transitions can destroy identifiable
+  prospective lead time.
+- **Open issue:** Candidate 003 must test prospective timestamps, kernel
+  misspecification, transition class, lead-time distribution, and abstention.
+- **Used by:** [paleobiology audit](audits/2026-08-05-paleobiology-major-transitions.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).

@@ -7,6 +7,13 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A paleobiology and major-transitions audit separating demographic from
+  reproductive bottlenecks, survival from recovery, acquisition from
+  integration, aggregation from individuality, and current utility from origin.
+- Twenty scoped paleobiology claims (`C-282`–`C-301`), twenty-seven centralized
+  sources, and Candidate 016 with an editable collective-lifecycle diagram,
+  multilevel selection accounting, founder-risk tests, conventional modular
+  nulls, ablations, and cost-adjusted conflict gates.
 - A linguistics and communication-science audit separating formal composition,
   pragmatics, common ground, repair, turn timing, channel coding, compression,
   language change, iterated learning, grounding, and convention formation.

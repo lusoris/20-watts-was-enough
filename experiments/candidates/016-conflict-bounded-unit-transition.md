@@ -1,0 +1,175 @@
+# Candidate 016: conflict-bounded unit transition
+
+**Stage:** 1 — multilevel-selection and lifecycle falsification
+
+**Status:** held integration hypothesis; not an accepted project claim
+
+**Primary question:** when modules can improve their own measured reward by
+damaging collective performance, does a reproducible collective lifecycle plus
+costed conflict control create heritable higher-level capability beyond ordinary
+modularity, permissions, tests, routing, checkpoints, and ensemble selection?
+
+## Candidate statement
+
+A cooperating collection is treated as a candidate higher-level unit only when
+the experiment defines:
+
+1. the collective boundary and membership;
+2. a reproducible founder or child configuration;
+3. inherited versus within-lifetime state;
+4. variation among collective descendants;
+5. a task-native collective performance measure;
+6. member-level incentives and identifiable shortcuts;
+7. conflict-control mechanism and complete cost; and
+8. the event by which one collective lineage yields descendants.
+
+Cooperation, aggregation, specialization, or an API boundary alone is
+insufficient. The residual requires measurable heritable variation in
+collective performance and conflict controls whose cost does not erase the
+joint gain ([C-282](../../research/claims.md#c-282)–[C-301](../../research/claims.md#c-301)).
+
+## Lifecycle
+
+```mermaid
+flowchart LR
+    F["Versioned founder / propagule"] --> C["Reproducible collective configuration"]
+    C --> V["Bounded within-lifetime variation + specialization"]
+    V --> T["Collective task outcome"]
+    T --> P["Partition collective gain vs member shortcuts"]
+    P --> G{"Joint gain survives conflict cost?"}
+    G -->|"no"| X["Retire framing · use ordinary modular control"]
+    G -->|"yes"| H["Select reproducible higher-level lineage"]
+    H --> F
+    V --> A["Audit · budget · sanction · reproductive separation"]
+    A --> P
+```
+
+Editable source:
+[conflict-bounded-unit-transition.mmd](../../assets/diagrams/conflict-bounded-unit-transition.mmd).
+
+The founder is not a generic destructive bottleneck. A demographic contraction
+normally loses variation. The tested operation is a versioned reproduction
+boundary that may prevent parasitic local state from being inherited while
+preserving declared capability.
+
+## Selection accounting
+
+For collective lineages $k$, let $Z_k$ be collective performance in one
+task-native unit and $W_k$ the dimensionless number or weight of admitted child
+configurations. The Price accounting identity is
+
+$$
+\Delta\bar Z=
+\frac{\operatorname{Cov}(W_k,Z_k)}{\bar W}
++\frac{\mathbb E[W_k\Delta Z_k]}{\bar W}.
+$$
+
+The covariance term measures selection among declared collectives; the second
+term measures change during transmission. A nested partition separately reports
+member-level and collective-level covariance. This identity does not identify a
+cause; lineage definition, descendant relation, sampling, and observation
+window are fixed before the run.
+
+Net lifecycle benefit remains a vector. Report collective task value and risk,
+member reward, inherited defect rate, capability coverage, between-lineage
+heritability, enforcement joules, bytes, latency, false sanctions, interface
+traffic, replicated state, founder failures, replacement time, and recovery
+after removal of a specialist.
+
+## Strongest nulls
+
+- one modular system with typed interfaces, permissions, tests, and monitoring;
+- fixed sparse mixture-of-experts with ordinary load balancing;
+- checkpoint/version control and clean child deployments;
+- ensemble or population selection on collective task outcome;
+- population-based training and quality-diversity search;
+- independent modules with centralized external evaluation;
+- ordinary incentive-compatible or audit-backed allocation where applicable;
+- capability isolation, sandboxing, quotas, and least privilege; and
+- a capacity-matched monolith with no internal reward competition.
+
+## Experimental tracks
+
+### A — reproductive boundary versus ordinary versioning
+
+Alternate periods of within-lifetime specialization with child creation. Inject
+useful local adaptations, parasitic optimizer/router state, correlated defects,
+rare capabilities, founder corruption, and a returning regime. Compare full
+state inheritance, checkpoint/versioning, ensemble resampling, truncation
+selection, isolated capabilities, and the proposed founder contract.
+
+Measure inherited defects per child, retained capability coverage, rare-role
+loss, diversity, recovery, state bytes, validation work, and joules. Reject the
+candidate if ordinary clean deployment gives the same result or if founder loss
+and reduced variation erase the governance benefit.
+
+### B — higher-level performance under member shortcuts
+
+Create repeated collective lineages whose modules receive local reward and can
+take shortcuts that improve it while harming protected collective outcomes.
+Vary group formation, lineage mixing, observability, relatedness of initial
+state, task coupling, and shortcut payoff. Compare no control, permissions and
+tests, quotas, independent audits, sanctions, reproductive separation, and the
+complete candidate.
+
+Report the predeclared between/within selection partition, collective
+heritability, shortcut prevalence, false punishment, useful deviation lost,
+task value, tail risk, enforcement energy, and operator effort. Aggregate reward
+without positive cost-adjusted between-collective selection is a failure.
+
+### C — specialization without false individuality
+
+Under repeated tasks and component turnover, compare a capacity-matched
+monolith, routed experts, reversible plugins, specialized collectives, and the
+candidate. Remove specialists, change interfaces, introduce newcomers, and
+shift task niches. Measure joules per successful episode, boundary bytes,
+replicated state, unique contribution, correlated failure, regeneration time,
+rollback, and replacement.
+
+The candidate fails if ordinary routing or a modular monolith supplies the same
+specialization and recovery frontier without a reproductive lifecycle.
+
+## Ablations
+
+1. Remove the reproducible child configuration.
+2. Inherit every within-lifetime state change.
+3. Apply a narrow founder reset without protected capability checks.
+4. Select collectives by aggregate reward without member-level accounting.
+5. Remove individually profitable shortcuts from the environment.
+6. Remove conflict control while keeping the higher-level label.
+7. Hide enforcement energy, false sanctions, or interface traffic.
+8. Increase logical participant count without independent failure domains.
+9. Remove lineage turnover and descendant creation.
+10. Compare only against individually optimized modules, omitting a centralized
+    outcome evaluator and standard permissions/tests.
+
+## Promotion rule
+
+Advance only when a stable positive between-collective selection component and
+reproducible collective capability survive member-level conflict, turnover,
+founder loss, common-mode faults, and complete enforcement cost in at least two
+task families. A win must exceed ordinary versioning plus permissions, tests,
+external evaluation, and population selection.
+
+## Kill criteria
+
+Reject or merge the candidate when:
+
+- no unambiguous collective reproduction event can be defined;
+- collective performance is not inherited beyond transient co-adaptation;
+- demographic narrowing merely removes useful diversity;
+- apparent higher-level gain is ordinary checkpoint hygiene or ensemble
+  selection;
+- policing suppresses useful deviation or becomes the dominant failure source;
+- high shared ancestry creates correlated vulnerability;
+- within-unit shortcuts dominate after the accounting partition;
+- a standard permission/test stack matches the frontier; or
+- selection, validation, reserve, replacement, and recovery consume the gain.
+
+## Evidence links
+
+- [Paleobiology and major-transitions audit](../../research/audits/2026-08-05-paleobiology-major-transitions.md)
+- [P-004](../../research/principle-registry.md#p-004--diversity-selection-and-protection)
+- [P-008](../../research/principle-registry.md#p-008--compartmentalized-interaction)
+- [P-009](../../research/principle-registry.md#p-009--maintenance-plane)
+- [P-012](../../research/principle-registry.md#p-012--memory-matched-to-information-lifetime)
