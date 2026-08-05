@@ -3647,3 +3647,267 @@ describes the exact statement here, not a broader interpretation.
   [P-008](principle-registry.md#p-008--compartmentalized-interaction),
   [P-009](principle-registry.md#p-009--maintenance-plane),
   [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-232
+
+- **Statement:** Brittle crack advance can be expressed as an energy-release
+  threshold in the Griffith idealization.
+- **Status:** established.
+- **Primary source:** `griffith1921rupture`.
+- **Rationale:** Local propagation follows a material and loading condition,
+  not a represented routing objective.
+- **Open issue:** Ductile, frictional, chemically assisted, heterogeneous, and
+  dynamic fracture require additional state and constitutive laws.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-233
+
+- **Statement:** Interacting local failures can generate spatially organized
+  fracture or fault sets without a central controller.
+- **Status:** plausible.
+- **Primary sources:** `renshaw1994fracture`, `cowie1993faults`.
+- **Rationale:** Stress redistribution and local propagation produce network
+  structure through physics.
+- **Open issue:** Fit, finite-scale dependence, material heterogeneity, and
+  boundary conditions do not establish a represented service objective.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-234
+
+- **Statement:** Geometric connectivity and hydraulic conductance are not
+  equivalent in fracture networks.
+- **Status:** established.
+- **Primary sources:** `berkowitz1995connectivity`,
+  `witherspoon1980cubic`.
+- **Rationale:** A connected path may have negligible aperture or throughput,
+  while contact, roughness, stress, fluid, and boundary conditions determine
+  actual transport.
+- **Open issue:** Graph metrics cannot substitute for task capacity or service
+  under load.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-235
+
+- **Statement:** Apparent fracture scaling requires explicit lower and upper
+  cutoffs, sampling support, and finite-size tests.
+- **Status:** established.
+- **Primary sources:** `bonnet2001scaling`, `rundle2003faultsystems`.
+- **Rationale:** A fitted power law over a sampled range does not establish one
+  growth mechanism, criticality, or unlimited scale transfer.
+- **Open issue:** Detection limits, orientation, dimensional projection, and
+  truncation alter fitted exponents.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-236
+
+- **Statement:** Coupled flow, erosion, and topography can generate drainage
+  organization through local feedback and conservation.
+- **Status:** established.
+- **Primary sources:** `smith1972drainage`, `howard1994drainage`.
+- **Rationale:** Existing paths concentrate flow, which changes erosion and
+  future paths under declared process laws.
+- **Open issue:** Model class, substrate, uplift, sediment, vegetation, climate,
+  and absent agency bound transfer.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-237
+
+- **Statement:** Minimum-energy drainage networks are solutions to
+  analyst-defined objectives rather than evidence that rivers represent and
+  optimize that objective online.
+- **Status:** established.
+- **Primary sources:** `rinaldo1992minimum`,
+  `rodrigueziturbe1992leastenergy`, `banavar1999transport`.
+- **Rationale:** Similar statistics can emerge from variational models,
+  dissipative dynamics, positive feedback, or survivor selection.
+- **Open issue:** Equifinality and objective choice prevent inferring a hidden
+  controller from an efficient-looking network.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-238
+
+- **Statement:** Stream-power landscape equations are useful scoped process
+  models rather than universal laws.
+- **Status:** plausible.
+- **Primary source:** `howard1994drainage`.
+- **Rationale:** The equations expose relationships among uplift, slope,
+  drainage area, and erosion inside a model class.
+- **Open issue:** Transport limitation, glaciation, mass wasting, vegetation,
+  lithology, thresholds, and stochastic events require other dynamics.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md).
+
+### C-239
+
+- **Statement:** Sediment continuity couples erosion and deposition; material
+  removed from one control volume is transported, stored, or leaves through a
+  declared boundary.
+- **Status:** established.
+- **Primary source:** `paola2005exner`.
+- **Rationale:** Structural deletion has a relocation and downstream-state
+  consequence rather than zero lifecycle cost.
+- **Open issue:** Open boundaries, grain classes, porosity, suspension, and
+  unresolved storage must be declared.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-240
+
+- **Statement:** Landscape response time depends on forcing, process law,
+  spatial scale, observed metric, direction, and initial condition.
+- **Status:** established.
+- **Primary sources:** `whipple2001response`, `tucker1997climate`.
+- **Rationale:** Different parts and metrics of one landscape can adjust on
+  different clocks.
+- **Open issue:** One relaxation time cannot represent mixed processes,
+  thresholds, moving boundaries, or path-dependent topology.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-241
+
+- **Statement:** Geomorphic adjustment can depend on forcing direction and
+  prior state.
+- **Status:** established.
+- **Primary sources:** `schumm1979thresholds`, `jerolmack2007avulsion`.
+- **Rationale:** Similar external forcing can map to different internal state
+  and trajectories because stored geometry and sediment history differ.
+- **Open issue:** Hysteresis must remain distinct from ordinary lag, averaging,
+  irreversible damage, and noise.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-242
+
+- **Statement:** River capture and avulsion can persistently reassign transport
+  service and encode path dependence.
+- **Status:** established.
+- **Primary sources:** `willett2014reorganization`,
+  `jerolmack2007avulsion`.
+- **Rationale:** Topology change can move both flow and downstream consequence
+  rather than preserving existing service.
+- **Open issue:** Persistence, trigger, sediment supply, and affected recipients
+  differ; topology change is not delegated control.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-243
+
+- **Statement:** Sediment transport and preservation can destroy or distort
+  environmental input signals before they enter the geological record.
+- **Status:** established.
+- **Primary source:** `jerolmack2010shredding`.
+- **Rationale:** The archive has a preservation operator, not merely additive
+  measurement noise.
+- **Open issue:** Inference requires event survival, averaging, storage,
+  remobilization, and censoring models.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-244
+
+- **Statement:** Near-threshold channel dynamics can act as a nonlinear filter
+  on climatic forcing in scoped systems.
+- **Status:** plausible.
+- **Primary source:** `phillips2016filter`.
+- **Rationale:** A process threshold can suppress small inputs and release
+  accumulated response during larger events.
+- **Open issue:** Field scope, sediment supply, measurement support, and
+  alternative controls limit the inference.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-245
+
+- **Statement:** Infinite-slope and infiltration models express conditional
+  landslide margins rather than universal trigger laws.
+- **Status:** established.
+- **Primary sources:** `montgomery1994landslide`, `iverson2000landslide`.
+- **Rationale:** Failure depends on material, geometry, pore pressure,
+  infiltration, boundary, and initial conditions.
+- **Open issue:** Hidden hydrologic and strength state can make a precise
+  physical threshold operationally hard to observe.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback).
+
+### C-246
+
+- **Statement:** Empirical rainfall intensity–duration thresholds can support
+  regional warning only inside their calibration and operating boundaries.
+- **Status:** established.
+- **Primary sources:** `caine1980rainfall`, `keefer1987warning`,
+  `baum2010timing`.
+- **Rationale:** Operational warning trades misses, false alarms, lead time,
+  spatial support, and base rate rather than discovering a universal trigger.
+- **Open issue:** Terrain, sensor network, storm type, transfer region, event
+  inventory, and intervention policy change performance.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-247
+
+- **Statement:** Sparse geophysical and hydrologic data resolve averages under
+  an observation operator rather than a unique hidden field.
+- **Status:** established.
+- **Primary sources:** `backus1968resolution`, `beven1989hydrology`,
+  `bloeschl1995scale`.
+- **Rationale:** Spatial support, averaging kernel, nonuniqueness, and model
+  structure determine what a measurement can resolve.
+- **Open issue:** More sensors can still leave null spaces, equifinality, and
+  scale mismatch.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-248
+
+- **Statement:** Geomorphic estimates integrating different spatial and
+  temporal windows need not estimate the same quantity.
+- **Status:** established.
+- **Primary sources:** `granger1996erosion`, `kirchner2001timescales`,
+  `hilley2004landslides`.
+- **Rationale:** Event, reach, catchment, and geological averages carry
+  different supports and may respond to different histories.
+- **Open issue:** Stationarity and support equivalence must be tested before
+  fusion or trend comparison.
+- **Used by:** [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-249
+
+- **Statement:** Requiring every telemetry value to carry spatial support,
+  integration window, latency, resolution, observation operator, preservation
+  state, and intervention history may reduce false mixed-clock diagnosis.
+- **Status:** speculative.
+- **Primary source:** none sufficient; geological component boundaries are
+  scoped in [C-235](#c-235), [C-243](#c-243), [C-247](#c-247), and
+  [C-248](#c-248).
+- **Rationale:** A fusion layer can compare observations only through declared
+  transformations between supports instead of treating unlike aggregates as
+  contemporaneous measurements of one state.
+- **Open issue:** The proposal must beat standard observation models,
+  hierarchical state-space models, Gaussian processes, mixed-frequency models,
+  event-time schemas, lineage, and a metadata-only “never aggregate unlike
+  windows” rule at equal cost.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [geology audit](audits/2026-08-05-geology-geomorphology.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).

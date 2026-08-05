@@ -75,6 +75,20 @@ Different sensors do not imply conditional independence. Shared clocks,
 calibration, simulators, catalogs, preprocessing, priors, or trained models can
 create common-mode evidence.
 
+For observation $k$, retain a support certificate
+
+$$
+\mathcal S_k=(\Omega_k,[t_k^-,t_k^+],\ell_k,\delta_k,M_k,P_k,I_k),
+$$
+
+where $\Omega_k$ is spatial support in metres, square metres, cubic metres, or
+an explicit graph subset; $[t_k^-,t_k^+]$ is its integration interval in
+seconds; $\ell_k$ is reporting latency in seconds; $\delta_k$ is resolution in
+declared units; $M_k$ is the observation and preprocessing version; $P_k$ is
+preservation or censoring state; and $I_k$ records interventions that may have
+changed both system and observation. Fusion across unlike certificates requires
+a declared transformation and overlap calculation.
+
 ## Contract fields
 
 Every derived claim or alert carries:
@@ -106,6 +120,7 @@ Build a synthetic multi-sensor world with a known latent population and:
 - large rare-event searches over time, location, and templates;
 - alerts revised after delayed observations;
 - adaptive follow-up that changes the future sample; and
+- mixed per-event, rolling-window, delayed-label, and retained-log supports;
 - exact degeneracies and finite-realization uncertainty that more exposure
   cannot remove.
 
@@ -142,6 +157,8 @@ Hold constant:
 5. versioned alerts, revisions, supersession, and subscriber lag;
 6. mechanistic model comparison with omitted alternatives; and
 7. adaptive follow-up under policy-induced selection and confirmation bias.
+8. support-qualified fusion across local probes, rolling aggregates, delayed
+   expert labels, and post-intervention telemetry.
 
 ## Measurements
 
@@ -167,6 +184,7 @@ Hold constant:
 - collapse all uncertainty into one score;
 - drop data vintage and supersession;
 - let adaptive follow-up train and evaluate on its own selected sample; and
+- drop support intervals, preservation state, or intervention history; and
 - omit negative injection/recovery and predictive-check results.
 
 ## Kill criteria
@@ -181,6 +199,8 @@ Reject the composition if:
 - uncertainty remains overconfident under response misspecification; or
 - association and selection dependencies cannot be propagated without making
   the system less accurate or operationally unusable.
+- a standard hierarchical state-space model, event-time schema, or the simple
+  rule “never aggregate unlike windows” matches support-qualified fusion.
 
 ## Promotion rule
 
@@ -192,7 +212,9 @@ adaptive-follow-up setting at equal lifecycle cost.
 ## Evidence links
 
 - [Astronomy remote-inference audit](../../research/audits/2026-08-05-astronomy-remote-inference.md)
+- [Geology and geomorphology audit](../../research/audits/2026-08-05-geology-geomorphology.md)
 - [C-218](../../research/claims.md#c-218)–[C-231](../../research/claims.md#c-231)
+- [C-232](../../research/claims.md#c-232)–[C-249](../../research/claims.md#c-249)
 - [P-001](../../research/principle-registry.md#p-001--selective-allocation)
 - [P-003](../../research/principle-registry.md#p-003--temporary-trace-before-commitment)
 - [P-007](../../research/principle-registry.md#p-007--prediction-error-allocation)

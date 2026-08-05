@@ -7,6 +7,13 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A geology and geomorphology audit separating physical thresholds,
+  self-organized networks, conductance, conservation, hysteresis, topology
+  change, record destruction, warning rules, sparse resolution, and mixed
+  observation clocks from adaptive control.
+- Eighteen scoped geological claims (`C-232`–`C-249`) and thirty-three
+  centralized sources; support-qualified evidence fusion is folded into
+  Candidate 014 rather than duplicated as a new experiment.
 - An astronomy and planetary remote-inference audit that turns calibration,
   response, selection, non-detection, association, model checking, trials,
   alerting, finite-realization uncertainty, and adaptive follow-up into an

@@ -170,6 +170,30 @@ Calling the entire chain “sparsity,” “memory,” or “homeostasis” woul
 operation produced a gain. Each experiment therefore removes one principle at
 a time while holding the other interfaces constant.
 
+### Passive self-organization is a mandatory null
+
+Efficient-looking structure does not establish sensing, represented goals, or
+counterfactual action. Fracture sets, drainage networks, and river avulsions can
+arise from local stress, gravity, flow, conservation, thresholds, and stored
+geometry ([C-232](../research/claims.md#c-232)–[C-242](../research/claims.md#c-242)).
+The project calls a mechanism adaptive control only when it specifies:
+
+1. a service variable external to the adaptation law;
+2. observations with spatial/temporal support and latency;
+3. a decision that could choose differently under different evidence;
+4. authority and an actuator;
+5. movement, reserve, monitoring, and recovery budgets;
+6. persistent state and reset cost; and
+7. a guarantee or tested failure envelope.
+
+This criterion makes passive physics a stronger baseline. If local flow–structure
+feedback produces the same topology and service without a controller, the
+controller must justify its sensing, decision, switching, and maintenance cost.
+Connectivity is not throughput ([C-234](../research/claims.md#c-234)); material
+removed by “pruning” must appear as transport, storage, or output elsewhere
+([C-239](../research/claims.md#c-239)); and a topology change can reassign or
+destroy service rather than improve it ([C-242](../research/claims.md#c-242)).
+
 ## Efficiency mechanism
 
 Deduplication saves two different resources.
