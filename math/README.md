@@ -67,6 +67,11 @@ notation.
   history, resource/damage state, anticipation and interception, retention and
   transfer, pacing/readiness, staged return, team coordination, selection
   transport, human effort, and lifecycle energy for Fixture F-006.
+- [`operator-qualified-optical-inference.md`](operator-qualified-optical-inference.md)
+  binds latent physical state to a versioned measurement operator, calibration
+  covariance, null-space honesty, photon and saturation regimes, active
+  acquisition, drift, heterogeneous execution, device-population variability,
+  query-registered retention, and lifecycle energy for Fixture F-007.
 
 Rules:
 

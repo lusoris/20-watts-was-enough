@@ -13,3 +13,4 @@ budgets, withheld regimes, perturbations, and explicit rejection rules.
 | F-004 | [Versioned proof discovery and verification](004-versioned-proof-discovery.md) | 004, 009, 010, 011, 014, 017, 019 |
 | F-005 | [Regime-qualified flow inference and control](005-regime-qualified-flow-inference-control.md) | 002, 003, 006, 007, 012, 014 |
 | F-006 | [Representative adaptive performance](006-representative-adaptive-performance.md) | 002, 004, 006, 007, 009, 012, 014, 019 |
+| F-007 | [Operator-qualified optical inference](007-operator-qualified-optical-inference.md) | 001, 006, 007, 010, 014, 017, 018 |

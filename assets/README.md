@@ -152,6 +152,11 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
   cue and action opportunity, acquisition history, opponent/team state,
   feedback, fatigue/resource/damage state, action, retention/transfer,
   reversible return, selection, and complete cost through Fixture F-006.
+- `diagrams/operator-qualified-physical-inference.mmd` binds the versioned
+  optical operator, acquisition action, calibration and drift envelope,
+  physical ambiguity, reconstruction, active evidence, heterogeneous routing,
+  fabrication population, future-query retention, and complete lifecycle
+  ledger in Fixture F-007.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.
