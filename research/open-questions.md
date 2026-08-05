@@ -212,3 +212,8 @@ project choice.
   versions change at equal measurement and review cost? See
   [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md#metrological-completeness-and-invalidation)
   and the [measurement-contract note](../math/measurement-contract.md).
+- **OQ-047:** Does binding receiver history, competence window, provisional
+  execution, commitment, structural postcondition, permitted next states, and
+  explicit reopening predict safer or more efficient transitions than ordinary
+  gates, schedules, staged verification, and versioned migration? See the
+  [competence-gated fixture](../concept/10-neurogenesis-and-routing.md#competence-gated-structural-transition).

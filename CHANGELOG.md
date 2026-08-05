@@ -7,6 +7,13 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A developmental-biology and morphogenesis audit separating signal from
+  competence, specification from implementation, and current causal function
+  from evolutionary origin across patterning, commitment, sculpting, repair,
+  metamorphosis, canalization, and plasticity.
+- Twenty-four scoped developmental claims (`C-539`–`C-562`), twenty-six
+  centralized sources, an editable competence-transition state machine, and a
+  cross-candidate fixture spanning Candidates 002/006/009/010/014.
 - A metrology and measurement-science audit separating measurand, indication,
   result, calibration, adjustment, verification, validation, traceability,
   uncertainty, reproducibility, comparison, decision, drift, and provenance.

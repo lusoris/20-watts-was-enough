@@ -301,6 +301,76 @@ reserve, transition state, flushing, downtime, maintenance, and rollback are
 charged. If those nulls tie it, “adaptive topology” describes an implementation
 choice rather than an efficiency mechanism ([C-516](../research/claims.md#c-516)).
 
+### Competence-gated structural transition
+
+A signal is not a complete command. Developmental experiments show that
+concentration, duration, position, stage, and receiver state can change the
+response to the same extracellular input ([C-539](../research/claims.md#c-539)–[C-549](../research/claims.md#c-549)).
+Commitment can later be redirected, but reopening is an intervention with
+selection, resource, integrity, and safety costs rather than free reversal
+([C-550](../research/claims.md#c-550),
+[C-551](../research/claims.md#c-551)).
+
+For module $m$ and transition-contract version $v$, define the dimensionless
+admission predicate
+
+$$
+G_{m,v}(t)=
+\mathbf 1\!\left[
+q_m(t)\in\mathcal C_v,
+t\in W_v,
+e_m(t)\ge\theta_v,
+\mathbf r_m(t)\succeq\mathbf r_v^{\min},
+R_{m,v}(t)=1
+\right].
+$$
+
+$q_m(t)$ is typed local competence state; $\mathcal C_v$ is the permitted
+state region; $t$ is seconds; $W_v$ is a declared time interval in seconds;
+$e_m$ and evidence threshold $\theta_v$ are dimensionless; resource vectors
+$\mathbf r_m$ and $\mathbf r_v^{\min}$ are compared componentwise in their
+native units; and $R_{m,v}$ is a dimensionless predicate that a tested rollback
+path exists. The signal is eligible to create a provisional transition only
+when $G_{m,v}=1$.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Incompetent
+    Incompetent --> Eligible: local state enters window
+    Eligible --> Provisional: signal + evidence + resources
+    Provisional --> Committed: validation passes
+    Provisional --> Incompetent: reject + reset
+    Committed --> Protected: structural postcondition
+    Protected --> Reopening: explicit trigger + budget + rollback
+    Reopening --> Provisional: bounded retrial
+    Reopening --> Protected: abort + restore
+    Protected --> Retiring: replacement or lost utility
+    Retiring --> [*]: drain + retain evidence
+```
+
+Editable source:
+[competence-gated-transition.mmd](../assets/diagrams/competence-gated-transition.mmd).
+
+The fixture splits responsibilities instead of adding another candidate:
+
+- [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md)
+  tests low-bandwidth signal decoding by versioned receivers;
+- [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  owns admissibility, authority, dependencies, and invalidation;
+- [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md)
+  owns provisional evidence before commitment and reset;
+- [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md)
+  owns structural write, health, shadow, and physical reopening; and
+- [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md)
+  owns support, stage, vintage, and the observations defining competence.
+
+Reject the composition if an ordinary gate, schedule, staged verifier, and
+versioned migration procedure matches quality, interference, rollback,
+availability, bytes, latency, and joules. The fixture is useful only if the
+interaction among signal, receiver history, finite window, commitment, and
+reopening predicts failures those separate controls miss
+([C-562](../research/claims.md#c-562)).
+
 ### When the unit of adaptation changes
 
 A cooperating set of modules is not automatically a higher-level unit. The

@@ -291,6 +291,23 @@ duration.
 The $15\%$ shift is an experiment stress level, not a biological or deployment
 constant. Sensitivity runs use $5\%$, $10\%$, and $20\%$.
 
+### Competence-window diagnostic
+
+Add a paired receiver-history suite in which the transmitted context sequence
+is identical but local receivers differ in versioned competence state, prior
+exposure, and an undisclosed eligibility interval. Compare receiver-specific
+decoding with a feature-wise gate, recurrent gate, explicit finite-state
+controller, and scheduled eligibility mask at matched state, messages,
+operations, and energy.
+
+Measure correct transition, missed-window, premature-commit, cross-receiver
+interference, and reopening error. Reject the developmental refinement if the
+scheduled mask or ordinary recurrent gate matches it. The diagnostic tests
+[C-548](../../research/claims.md#c-548),
+[C-549](../../research/claims.md#c-549), and
+[C-562](../../research/claims.md#c-562); it does not change the candidate's
+primary broadcast hypothesis.
+
 ## Required baselines
 
 All learned baselines receive the same local observations. Equal-interface

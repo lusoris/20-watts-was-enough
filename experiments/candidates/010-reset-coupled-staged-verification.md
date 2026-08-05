@@ -180,7 +180,10 @@ Sweep at least:
 - verifier common-mode error;
 - base-rate shift;
 - observation delay; and
-- irreversible leakage before commitment.
+- irreversible leakage before commitment;
+- receiver competence state and version;
+- early, valid, expired, and explicitly reopened commitment windows; and
+- structural-write versus parameter-only commitment cost.
 
 ## Measurements
 
@@ -218,7 +221,9 @@ or when rollback is incomplete.
 - hide rejection-stage provenance;
 - invoke verification on every case;
 - remove risk-conditioned escalation; and
-- train on the evaluation detector's exact failure distribution.
+- train on the evaluation detector's exact failure distribution;
+- replace the competence window with a fixed schedule; and
+- allow reopening without revalidating rollback and the structural postcondition.
 
 ## Kill criteria
 
@@ -246,6 +251,9 @@ information, reversibility, and consequence ratios before results are observed.
 - [C-159](../../research/claims.md#c-159): scoped kinetic proofreading
 - [C-160](../../research/claims.md#c-160): speed–error–dissipation frontier
 - [C-170](../../research/claims.md#c-170): held systems hypothesis
+- [C-548](../../research/claims.md#c-548)–[C-562](../../research/claims.md#c-562):
+  competence, commitment, reopening, and developmental evidence boundaries
+- [Developmental morphogenesis audit](../../research/audits/2026-08-05-developmental-morphogenesis.md)
 - [P-003](../../research/principle-registry.md#p-003--temporary-trace-before-commitment)
 - [P-007](../../research/principle-registry.md#p-007--prediction-error-allocation)
 - [P-009](../../research/principle-registry.md#p-009--maintenance-plane)

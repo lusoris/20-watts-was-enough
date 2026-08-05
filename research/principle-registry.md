@@ -145,7 +145,10 @@ novelty, conflict, uncertainty, or failure upward.
 concept; hierarchical edge/cloud and distributed-control systems; monitored
 contracts, scoped capabilities, and mixed-trust boundaries
 ([C-147](claims.md#c-147), [C-148](claims.md#c-148),
-[C-153](claims.md#c-153)).
+[C-153](claims.md#c-153)); and stage- and receiver-specific competence that
+changes the response to a shared developmental signal
+([C-548](claims.md#c-548), [C-549](claims.md#c-549),
+[C-556](claims.md#c-556)).
 
 **Candidate AI primitive.** Sensor- or module-local predictor with a sparse
 escalation channel and auditable global override.
@@ -196,7 +199,8 @@ maturation with reduced mutation in high-affinity lineages
 ([C-028](claims.md#c-028)); developmental/evolutionary search in embodied agents
 ([C-029](claims.md#c-029)); evolved bacterial bet hedging
 ([C-032](claims.md#c-032)); complement-dependent developmental refinement
-([C-043](claims.md#c-043)); capability-guided assembly and its redundancy
+([C-043](claims.md#c-043)); regulated sculpting or scoped reprogramming
+([C-550](claims.md#c-550)–[C-552](claims.md#c-552)); capability-guided assembly and its redundancy
 boundary ([C-056](claims.md#c-056), [C-057](claims.md#c-057)); regulated
 behavioral variability ([C-065](claims.md#c-065)); and replicated candidate
 populations with fault-model-dependent protection

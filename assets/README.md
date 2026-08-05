@@ -93,6 +93,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/metrological-observation-contract.mmd` connects a defined measurand
   to calibration, indication, corrected result, covariance-aware inference,
   decision, provenance, drift checks, and dependency invalidation.
+- `diagrams/competence-gated-transition.mmd` follows a receiver from an
+  ineligible state through a finite window, provisional transition, validated
+  commitment, protection, explicit reopening, rollback, and retirement.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

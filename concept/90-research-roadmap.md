@@ -266,13 +266,13 @@ adding citations:
 | mechanical and civil resilience | compliant/passive mechanics, SHM, redundancy, robustness, graceful degradation, damage tolerance, fatigue/fracture, maintenance, max-flow/assignment, and transport recovery remain mature nulls; path-dependent residual capacity becomes a Candidates-005/012/014 test schema only |
 | chemical and process engineering | conservation, nonlinear operation, separation, recycle, heat integration, MPC/RTO, fault stages, safety layers, operability, and plantwide control become mature nulls; only conservation-qualified flowsheet reconfiguration remains as a Candidate-001 stress track |
 | metrology and measurement science | measurand, indication, calibration, adjustment, verification, validation, traceability, uncertainty, covariance, reproducibility, comparisons, decision rules, drift, software, and provenance remain distinct; their dependency-invalidating composition refines Candidates 009/014 and the energy model |
+| developmental biology and morphogenesis | signal, competence, specification, implementation, commitment, sculpting, regeneration, metamorphosis, canalization, plastic response, current function, and evolutionary origin remain distinct; competence-gated structural transition becomes only a Candidates-002/006/009/010/014 fixture |
 
 The active and next breadth queue is selected by expected ability to split,
 merge, reject, or re-baseline a current mechanism:
 
 | Field cluster | Mechanism question | Expected decision |
 | --- | --- | --- |
-| developmental biology and morphogenesis | which positional, competence-window, commitment, regeneration, sculpting, and canalization mechanisms survive ordinary staged optimization, local signaling, pruning, repair, and lineage nulls? | test P-002/P-003/P-005/P-006/P-009/P-012 and Candidates 001/005/006/017/018 without mistaking growth for learning |
 | microbial and fungal ecology | which transport-explicit shared fields, spatial gradients, cross-feeding, dispersal, damage bypass, and resource translocation add more than ordinary distributed control and network flow? | test P-001/P-005/P-006/P-011/P-013 and Candidates 001/013 without turning association into coordination |
 | animal sensing and embodied control | which active-sensing, observability, passive-dynamics, reflex, impedance, adaptation, and tool-use mechanisms survive POMDP, optimal-control, robotics, and mechanics nulls? | refine sensorimotor contracts and Candidates 002/006/007/012/014 only where a distinct state transition remains |
 

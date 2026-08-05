@@ -1,0 +1,12 @@
+stateDiagram-v2
+    [*] --> Incompetent
+    Incompetent --> Eligible: context + local state enter window
+    Eligible --> Provisional: signal + evidence + resources pass gate
+    Provisional --> Committed: validation passes
+    Provisional --> Incompetent: reject + reset
+    Committed --> Protected: structural write + postcondition
+    Protected --> Reopening: explicit trigger + budget + rollback path
+    Reopening --> Provisional: bounded retrial
+    Reopening --> Protected: abort + restore
+    Protected --> Retiring: replacement or lost utility
+    Retiring --> [*]: drain + evidence retained

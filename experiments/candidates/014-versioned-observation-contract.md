@@ -127,6 +127,9 @@ Every derived claim or alert carries:
 - cumulative load/use and intervention history for path-dependent assets;
 - damage/dependency posterior, detection limits, current/post-contingency
   capacity, and post-action reserve verification.
+- receiver competence state and version, eligibility-window support, prior
+  exposures, commitment state, permitted next states, reopening trigger, and
+  structural postcondition.
 
 ## Metrological completeness and invalidation
 
@@ -229,6 +232,8 @@ Hold constant:
    temporal/place/lineage holdouts.
 10. calibration-chain, covariance, drift, decision-rule, and downstream-
     invalidation changes under a fixed measurement and review budget.
+11. identical signals delivered to receivers with different histories,
+    competence windows, commitments, and observation support.
 
 ## Measurements
 
@@ -253,13 +258,15 @@ Hold constant:
 - omit the searched-family multiplicity record;
 - collapse all uncertainty into one score;
 - drop data vintage and supersession;
-- let adaptive follow-up train and evaluate on its own selected sample; and
-- drop support intervals, preservation state, or intervention history; and
+- let adaptive follow-up train and evaluate on its own selected sample;
+- drop support intervals, preservation state, or intervention history;
 - omit negative injection/recovery and predictive-check results;
 - replace the measurand with a bare metric name;
 - treat calibration, verification, and validation as one boolean;
-- delete shared covariance while retaining marginal uncertainties; and
-- record provenance without dependency-triggered re-evaluation.
+- delete shared covariance while retaining marginal uncertainties;
+- record provenance without dependency-triggered re-evaluation; and
+- drop receiver history, competence version, or window support while retaining
+  the external signal.
 
 ## Kill criteria
 
@@ -272,9 +279,9 @@ Reject the composition if:
 - follow-up policy increases confirmation bias or misses novel classes;
 - uncertainty remains overconfident under response misspecification; or
 - association and selection dependencies cannot be propagated without making
-  the system less accurate or operationally unusable.
+  the system less accurate or operationally unusable;
 - a standard hierarchical state-space model, event-time schema, or the simple
-  rule “never aggregate unlike windows” matches support-qualified fusion.
+  rule “never aggregate unlike windows” matches support-qualified fusion; or
 - a complete conventional metrology, statistics, and content-addressed
   provenance stack matches empirical coverage, invalidation recall, stale-
   decision exposure, and lifecycle cost.
@@ -297,6 +304,8 @@ adaptive-follow-up setting at equal lifecycle cost.
 - [Metrology and measurement-science audit](../../research/audits/2026-08-05-metrology-measurement-science.md)
 - [C-519](../../research/claims.md#c-519)–[C-538](../../research/claims.md#c-538)
 - [Measurement-contract mathematics](../../math/measurement-contract.md)
+- [Developmental morphogenesis audit](../../research/audits/2026-08-05-developmental-morphogenesis.md)
+- [C-539](../../research/claims.md#c-539)–[C-562](../../research/claims.md#c-562)
 - [P-001](../../research/principle-registry.md#p-001--selective-allocation)
 - [P-003](../../research/principle-registry.md#p-003--temporary-trace-before-commitment)
 - [P-007](../../research/principle-registry.md#p-007--prediction-error-allocation)

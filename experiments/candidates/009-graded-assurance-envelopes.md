@@ -75,6 +75,13 @@ reference changes, the dependency cone is invalidated alongside the artifact
 and behavioral envelopes ([C-534](../../research/claims.md#c-534),
 [C-535](../../research/claims.md#c-535)).
 
+For a structural transition, also version the receiver's competence state,
+admission window, prior commitment, allowed next states, structural
+postcondition, reopening trigger, resource ceiling, and rollback reachability.
+An available signal does not grant authority to execute outside this envelope
+([C-548](../../research/claims.md#c-548)–[C-551](../../research/claims.md#c-551),
+[C-562](../../research/claims.md#c-562)).
+
 Each field carries its own evidence class, scope, timestamp, version,
 invalidation triggers, and measurement cost. An “assured” boolean is forbidden.
 Authentication, authorization, detection, containment, and recovery remain

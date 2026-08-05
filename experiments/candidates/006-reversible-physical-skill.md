@@ -197,6 +197,18 @@ Retire the specialization if the digital shadow performs the real control
 continuously, reset is destructive, system-level drive dominates, or an
 ordinary hardware/control baseline ties the lifecycle frontier.
 
+### Competence and reopening gate across physical tracks
+
+Before a physical write, every track records substrate/device state,
+environment, calibration, prior writes, permitted transition window, required
+resources, shadow readiness, rollback path, and expected postcondition. Repeat
+the same control signal across eligible, not-yet-eligible, expired, committed,
+and explicitly reopened states. A device that writes outside its window or
+cannot recover the previous qualified behavior fails even if steady-state task
+score improves. This instantiates the cross-candidate
+[competence fixture](../../concept/10-neurogenesis-and-routing.md#competence-gated-structural-transition)
+without treating biological commitment as a substrate mechanism.
+
 ## Lifecycle accounting
 
 For $N$ deployed uses,

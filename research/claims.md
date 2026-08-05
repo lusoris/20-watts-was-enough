@@ -7918,3 +7918,323 @@ describes the exact statement here, not a broader interpretation.
   reopen the disposition.
 - **Used by:** [principle registry](principle-registry.md),
   [research roadmap](../concept/90-research-roadmap.md).
+
+### C-539
+
+- **Statement:** Genetically changing Bicoid level shifts anterior fate-map
+  positions in the studied *Drosophila* embryos.
+- **Status:** established.
+- **Primary source:** `driever1988bicoid`.
+- **Rationale:** The intervention supports concentration-dependent positional
+  influence in this system.
+- **Open issue:** One gradient is not the complete decoder or tissue-building
+  program.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-540
+
+- **Statement:** Distance from an activin source can select different gene
+  responses in the studied amphibian tissue combinations.
+- **Status:** established.
+- **Primary source:** `gurdon1994activin`.
+- **Rationale:** A spatial signal can support distinct responses within the
+  tested preparation.
+- **Open issue:** Tissue competence and experimental geometry bound the result.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-541
+
+- **Statement:** Sonic-hedgehog interpretation in ventral neural patterning
+  depends on both concentration and exposure duration.
+- **Status:** established.
+- **Primary source:** `dessaud2007sonic`.
+- **Rationale:** A static scalar threshold is insufficient for the studied
+  pathway and tissue.
+- **Open issue:** The decoding dynamics do not transfer unchanged to other
+  signals or tissues.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-542
+
+- **Statement:** Downstream *Drosophila* boundaries plausibly use information or
+  correction beyond a one-input readout of measured Bicoid variability.
+- **Status:** plausible.
+- **Primary source:** `houchmandzadeh2002precision`.
+- **Rationale:** Reported downstream precision exceeded the simplest direct
+  interpretation of measured input variability.
+- **Open issue:** Measurement, embryo alignment, and model assumptions affect
+  the inferred correction.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-543
+
+- **Statement:** Relative Notch/Delta activity causally biases neural-versus-
+  epidermal fate in the studied *Drosophila* mosaics.
+- **Status:** established.
+- **Primary source:** `heitzler1991choice`.
+- **Rationale:** Mosaic perturbation demonstrates neighbor-dependent relative
+  signaling in that fate decision.
+- **Open issue:** Not every Notch context implements lateral inhibition or one
+  winner per neighborhood.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-544
+
+- **Statement:** A feedback lateral-inhibition model can amplify small local
+  differences into alternating cell states under specified graph and parameter
+  conditions.
+- **Status:** established.
+- **Primary source:** `collier1996lateral`.
+- **Rationale:** The model supplies a mechanistic pattern-forming null with
+  explicit conditions.
+- **Open issue:** Noise, delay, mobility, topology, and gain determine whether
+  the pattern forms or remains stable.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [principle registry](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-545
+
+- **Statement:** Mutations in distinct *Drosophila* loci disrupt segmentation
+  at different spatial scales.
+- **Status:** established.
+- **Primary source:** `nussleinvolhard1980segment`.
+- **Rationale:** The screen supports a staged and multiscale genetic contribution
+  to segment patterning.
+- **Open issue:** Necessity classes do not by themselves give the complete
+  dynamics or evolutionary origin.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md).
+
+### C-546
+
+- **Statement:** Chick presomitic mesoderm exhibits autonomous cyclic
+  *c-hairy1* expression linked in period to somite formation.
+- **Status:** established.
+- **Primary source:** `palmeirim1997hairy`.
+- **Rationale:** Explant observations support a tissue-autonomous oscillatory
+  component correlated with segmentation timing.
+- **Open issue:** The gene is not thereby the sole clock or complete boundary
+  mechanism.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md).
+
+### C-547
+
+- **Statement:** Altering FGF signaling shifts the chick determination front
+  and future somite boundaries.
+- **Status:** established.
+- **Primary source:** `dubrulle2001fgf`.
+- **Rationale:** The perturbation supports interaction between a moving front
+  and segment placement.
+- **Open issue:** Clock, elongation, signal, and mechanics remain system-specific.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-548
+
+- **Statement:** Somatic linker-H1 accumulation causally contributes to loss of
+  mesodermal competence in the studied *Xenopus* assay.
+- **Status:** established.
+- **Primary source:** `steinbach1997histones`.
+- **Rationale:** Receiver state can close a response window even when the
+  external inducing signal is available.
+- **Open issue:** It is one competence mechanism in one preparation.
+- **Used by:** [competence fixture](../concept/10-neurogenesis-and-routing.md#competence-gated-structural-transition),
+  Candidates [002](../experiments/candidates/002-multiscale-context-broadcast.md)
+  and [009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-549
+
+- **Statement:** Activin-response competence in isolated *Xenopus* blastomeres
+  has a stage-dependent onset.
+- **Status:** established.
+- **Primary source:** `kinoshita1995competence`.
+- **Rationale:** A receiver can be unable to execute a response before entering
+  a developmental window.
+- **Open issue:** Isolation, dose, timing, and assay define the demonstrated
+  window.
+- **Used by:** [competence fixture](../concept/10-neurogenesis-and-routing.md#competence-gated-structural-transition),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-550
+
+- **Statement:** Forced C/EBP expression can redirect differentiated B cells
+  toward functional macrophage-like cells in vitro.
+- **Status:** established.
+- **Primary source:** `xie2004reprogramming`.
+- **Rationale:** A differentiated state can be redirected by a scoped
+  intervention rather than being universally irreversible.
+- **Open issue:** Culture conditions, safety, efficiency, and in-vivo relevance
+  bound the result.
+- **Used by:** [competence fixture](../concept/10-neurogenesis-and-routing.md#competence-gated-structural-transition),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-551
+
+- **Statement:** Four defined factors generated induced-pluripotent-like
+  colonies from mouse fibroblast cultures in the original study.
+- **Status:** established.
+- **Primary source:** `takahashi2006ips`.
+- **Rationale:** Strong intervention can reopen a broader state space under
+  selected culture conditions.
+- **Open issue:** Efficiency, selection, genomic integrity, maturity, and in-vivo
+  safety prevent treating reopening as free rollback.
+- **Used by:** [competence fixture](../concept/10-neurogenesis-and-routing.md#competence-gated-structural-transition),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [010](../experiments/candidates/010-reset-coupled-staged-verification.md).
+
+### C-552
+
+- **Statement:** BMP-pathway and Bax/Bak perturbations show that regulated cell
+  death contributes causally to normal limb and tissue sculpting in the studied
+  systems.
+- **Status:** established.
+- **Primary sources:** `yokouchi1996bmp`, `ganan1996tgf`, `lindsten2000bakbax`.
+- **Rationale:** Removal is an active construction operation, not merely failed
+  growth.
+- **Open issue:** Redundant pathways, clearance, replacement, and resource cost
+  vary by organism and stage.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [maturity chapter](../concept/50-grokking-and-pruning.md).
+
+### C-553
+
+- **Statement:** Planarian Wnt/β-catenin state controls anterior-versus-
+  posterior regenerative identity in the studied perturbations.
+- **Status:** established.
+- **Primary sources:** `gurley2008betacatenin`, `pascualcarreras2023wnt`.
+- **Rationale:** Regeneration uses positional signaling to choose replacement
+  identity.
+- **Open issue:** The pathway is not a complete body blueprint or restoration
+  algorithm.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-554
+
+- **Statement:** A single transplanted clonogenic neoblast can restore
+  regenerative capacity to a lethally irradiated planarian host.
+- **Status:** established.
+- **Primary source:** `wagner2011neoblasts`.
+- **Rationale:** A scoped cellular source can repopulate a depleted regenerative
+  system under exceptional biological conditions.
+- **Open issue:** Proliferation, host environment, time, and organism-specific
+  capacity are substantial resources.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-555
+
+- **Statement:** Axolotl limb blastemas contain lineage-restricted progenitors
+  that retain tissue-origin information.
+- **Status:** established.
+- **Primary source:** `kragl2009memory`.
+- **Rationale:** Functional regeneration need not erase lineage constraints.
+- **Open issue:** Labeling, tissue class, injury, and observation window bound
+  the result.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-556
+
+- **Statement:** Ecdysone-receptor isoforms and juvenile-hormone synthesis
+  causally regulate scoped insect metamorphic transitions.
+- **Status:** established.
+- **Primary sources:** `bender1997ecdysone`, `minakuchi2008jhamt`.
+- **Rationale:** A global endocrine trigger is decoded through local and
+  stage-specific competence.
+- **Open issue:** The trigger is not the local tissue-rebuilding program or its
+  resource account.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-557
+
+- **Statement:** Hsp90 impairment exposed background-dependent morphological
+  variation in *Drosophila*, some of which responded to selection.
+- **Status:** established.
+- **Primary source:** `rutherford1998hsp90`.
+- **Rationale:** Buffering can hide phenotypic effects of underlying variation
+  under the studied conditions.
+- **Open issue:** The result does not establish universal capacitance, efficiency,
+  or evolutionary purpose.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [research roadmap](../concept/90-research-roadmap.md).
+
+### C-558
+
+- **Statement:** Dnmt3 knockdown shifted honeybee caste-associated development
+  toward queen-like phenotypes in the studied experiment.
+- **Status:** established.
+- **Primary source:** `kucharski2008honeybee`.
+- **Rationale:** Epigenetic state participates causally in decoding a
+  developmental trajectory.
+- **Open issue:** It is not the sole nutritional decoder or a lifetime-fitness
+  result.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-559
+
+- **Statement:** Plastic gene-expression responses in ancestral guppies were
+  not uniformly adaptive; some nonadaptive responses were associated with later
+  evolutionary change.
+- **Status:** established.
+- **Primary sources:** `ghalambor2015plasticity`, `ghalambor2018erratum`.
+- **Rationale:** Inducibility and direction of change do not establish improved
+  fitness.
+- **Open issue:** Corrected effect magnitude, tissue expression, environment,
+  and whole-organism fitness must remain separate.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [research roadmap](../concept/90-research-roadmap.md).
+
+### C-560
+
+- **Statement:** Developmental plasticity, canalization, or regeneration is
+  automatically efficient or adaptive.
+- **Status:** disputed.
+- **Primary sources:** contradicted by resource accounting and the scoped
+  nonadaptive plasticity result in [C-559](#c-559).
+- **Rationale:** Robust output can consume reserve, hide defects, or reduce
+  utility in a new regime.
+- **Open issue:** Each transfer needs equal-budget utility, risk, and lifecycle
+  measurement.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [energy model](../concept/80-energy-model.md).
+
+### C-561
+
+- **Statement:** A current knockout, inhibition, rescue, or reprogramming
+  phenotype establishes why a mechanism evolved.
+- **Status:** disputed.
+- **Primary sources:** evidence-category boundary; no intervention on present
+  function alone establishes historical origin.
+- **Rationale:** Necessity, sufficiency, current utility, adaptation, and
+  evolutionary sequence are different claims.
+- **Open issue:** Origin requires comparative, selection, phylogenetic, or
+  historical evidence appropriate to the claim.
+- **Used by:** [developmental audit](audits/2026-08-05-developmental-morphogenesis.md),
+  [discovery policy](discovery-policy.md).
+
+### C-562
+
+- **Statement:** A competence-gated structural transition may improve continual
+  modular learning and migration by binding signal, local admissibility window,
+  provisional execution, commitment, structural validation, and reopening.
+- **Status:** speculative.
+- **Primary sources:** no direct systems validation; constituent developmental
+  observations are bounded by [C-539](#c-539)–[C-559](#c-559).
+- **Rationale:** The same low-bandwidth signal can have different effects when
+  receiver state, history, and permitted transition differ.
+- **Open issue:** Reject the composition if ordinary gates, schedules, staged
+  verification, and migration match it at equal cost.
+- **Used by:** [competence fixture](../concept/10-neurogenesis-and-routing.md#competence-gated-structural-transition),
+  Candidates [002](../experiments/candidates/002-multiscale-context-broadcast.md),
+  [006](../experiments/candidates/006-reversible-physical-skill.md),
+  [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [010](../experiments/candidates/010-reset-coupled-staged-verification.md), and
+  [014](../experiments/candidates/014-versioned-observation-contract.md).
