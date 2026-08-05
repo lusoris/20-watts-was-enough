@@ -268,13 +268,13 @@ adding citations:
 | metrology and measurement science | measurand, indication, calibration, adjustment, verification, validation, traceability, uncertainty, covariance, reproducibility, comparisons, decision rules, drift, software, and provenance remain distinct; their dependency-invalidating composition refines Candidates 009/014 and the energy model |
 | developmental biology and morphogenesis | signal, competence, specification, implementation, commitment, sculpting, regeneration, metamorphosis, canalization, plastic response, current function, and evolutionary origin remain distinct; competence-gated structural transition becomes only a Candidates-002/006/009/010/014 fixture |
 | microbial ecology, biofilms, and fungal networks | molecular signaling, receiver response, cell physiology, transport, lineage ecology, selection, organismal flow, symbiosis, and ecosystem consequence remain distinct; one transported-field fixture refines P-011/P-013 and Candidates 001/013 |
+| animal navigation, sensory ecology, biomechanics, and motor control | sensing policy, emitted signal, propagation, body mechanics, controller, calibration, environment, and task are bound explicitly; controlled observability and controller–plant binding refine Candidates 006/007/012/014 rather than becoming new principles |
 
 The active and next breadth queue is selected by expected ability to split,
 merge, reject, or re-baseline a current mechanism:
 
 | Field cluster | Mechanism question | Expected decision |
 | --- | --- | --- |
-| animal sensing and embodied control | which active-sensing, observability, passive-dynamics, reflex, impedance, adaptation, and tool-use mechanisms survive POMDP, optimal-control, robotics, and mechanics nulls? | refine sensorimotor contracts and Candidates 002/006/007/012/014 only where a distinct state transition remains |
 | pharmacology and toxicology | which exposure, target engagement, effect, tolerance, interaction, withdrawal, and state-dependent therapeutic-window contracts survive control, causal-inference, and safety nulls? | refine Candidates 005/007/012/014 without turning dose into effect |
 | operations research and learning science | which inventory, delay, pooling, disruption, curriculum, retrieval, spacing, feedback, retention, and transfer mechanisms add more than mature optimization and educational nulls? | test existing allocation, memory, observation, and cumulative-learning candidates before adding any principle |
 

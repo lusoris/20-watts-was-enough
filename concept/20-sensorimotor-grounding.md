@@ -322,6 +322,86 @@ route sensing or compute, as described under
 [P-007](../research/principle-registry.md#p-007--prediction-error-allocation)
 and in the [engineering analogue audit](../research/audits/2026-08-05-engineering-analogues.md#p-007--prediction-error-allocation).
 
+### Controlled observability and plant binding
+
+The observation operator is partly controlled. Sensor pose, locomotor
+microstructure, emission timing, sampling density, and contact can change which
+state directions are observable ([C-589](../research/claims.md#c-589)–[C-592](../research/claims.md#c-592)).
+At the same time, body, tool, attachment, payload, compliance, and contact
+change how commands become motion and sensory consequences
+([C-599](../research/claims.md#c-599),
+[C-603](../research/claims.md#c-603)–[C-605](../research/claims.md#c-605)).
+
+Separate the immediate task controller from the sensing controller:
+
+$$
+u_t=\pi_{\mathrm{task}}(b_t,\Pi_v),
+\qquad
+a_t^{\mathrm{sense}}=\pi_{\mathrm{sense}}(b_t,\mathcal O_v,\Pi_v),
+$$
+
+where $b_t$ is a dimensionless belief state, task action $u_t$ retains its
+physical units, sensing action $a_t^{\mathrm{sense}}$ retains pose, emission,
+sampling, or motion units, $\mathcal O_v$ is observation-contract version $v$,
+and $\Pi_v$ is the controller–plant binding
+
+$$
+\Pi_v=(B,T,A,C,S,J,Z,D,E),
+$$
+
+with body/tool identity $B$, task $T$, attachment/payload $A$, contact model
+$C$, sensor/actuator calibration $S$, task Jacobian $J$, impedance/passivity
+envelope $Z$, delay model $D$, and safety/authority envelope $E$. Each field is
+typed, versioned, and linked to the controller, estimator, data, and tests that
+depend on it.
+
+```mermaid
+flowchart LR
+    G["Task goal + risk envelope"] --> TC["Task controller"]
+    B["Belief + uncertainty"] --> TC
+    B --> SC["Sensing controller"]
+    TC --> U["Motor command + reflex settings"]
+    SC --> A["Pose · emission · sampling action"]
+    U --> P["Versioned body · tool · actuator · contact plant"]
+    A --> P
+    P --> W["World + medium"]
+    W --> O["Propagation + sensor physics"]
+    P --> O
+    O --> Y["Versioned observations"]
+    U --> E["Action record / efference copy"]
+    Y --> X["State + consequence estimator"]
+    E --> X
+    X --> B
+    V["Plant · attachment · calibration · delay · impedance · safety version"] -.-> P
+    V -.-> X
+    V -.-> TC
+    H["Health · passivity · wear · energy · contact"] -.-> TC
+    H -.-> SC
+    Z["Counterfactual swap + selective invalidation"] -.-> V
+```
+
+Editable source:
+[controlled-observability-plant-binding.mmd](../assets/diagrams/controlled-observability-plant-binding.mmd).
+
+Two held tests share this record:
+
+1. **Controlled observability.** Keep the task policy fixed while a sensing
+   policy maintains information through pose, emission, or sampling. It must
+   beat fixed excitation, random acquisition, one-step expected value of
+   information, active SLAM, observability MPC, and dual control at equal
+   action, time, risk, compute, and energy ([C-596](../research/claims.md#c-596)).
+2. **Counterfactual plant binding.** Swap one body, tool, attachment, payload,
+   sensor, delay, contact, or impedance field at a time. Dependencies should
+   predict which estimator/controller state is safe to reuse and which must be
+   invalidated. It must beat reset/retraining, unversioned adaptation, model
+   banks, gain scheduling, operational-space impedance control, and adaptive
+   MPC ([C-606](../research/claims.md#c-606)).
+
+This composition avoids two attribution errors. Passive mechanics and
+compliance are credited before a controller ([C-597](../research/claims.md#c-597));
+an action-correlated internal signal is not assumed to be a complete accurate
+forward model ([C-601](../research/claims.md#c-601)).
+
 ### Grounded learning loop
 
 ```mermaid

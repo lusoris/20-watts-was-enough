@@ -99,6 +99,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/transported-field-contract.mmd` follows local production through
   geometry-dependent transport, typed inventory, receiver response, validation,
   topology update, contamination handling, cleanup, and retirement.
+- `diagrams/controlled-observability-plant-binding.mmd` binds an active sensing
+  policy and controller to the body, mechanics, calibration, and environment
+  that determine what can be observed and what action can accomplish.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

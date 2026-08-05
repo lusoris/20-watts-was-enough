@@ -293,6 +293,12 @@ and denominator calibration ([C-124](claims.md#c-124)–[C-126](claims.md#c-126)
 [C-128](claims.md#c-128), [C-129](claims.md#c-129)).
 Proper scoring and peer prediction add scoped report-elicitation mechanisms,
 not independent truth ([C-140](claims.md#c-140), [C-141](claims.md#c-141)).
+Animal navigation and sensory ecology add action-conditioned calibration,
+emission, propagation, and evidence acquisition: the sensing policy is part of
+the observation model, not a detachable input source
+([C-586](claims.md#c-586)–[C-596](claims.md#c-596)). Motor prediction adds a
+command-correlated signal without identifying one universal neural
+implementation ([C-601](claims.md#c-601)).
 
 **Candidate AI primitive.** Calibrated residual router that can buy another
 layer, modality, sensor action, memory lookup, or human query.
@@ -389,6 +395,11 @@ reaction–diffusion, and self-assembly provide substrate-native manifestations
 ([C-112](claims.md#c-112)–[C-118](claims.md#c-118)). Types and proof artifacts
 can compile interface obligations into checked admission paths
 ([C-145](claims.md#c-145), [C-149](claims.md#c-149)).
+Passive dynamics, compliance, series elasticity, and task-dependent impedance
+can move recurring stabilization or energy storage into the plant, but their
+benefit remains bound to the controller, body, contact, and task
+([C-597](claims.md#c-597)–[C-600](claims.md#c-600),
+[C-603](claims.md#c-603)–[C-606](claims.md#c-606)).
 
 **Candidate AI primitive.** Reversible structural search followed by compiled
 or physically colocated stable paths.

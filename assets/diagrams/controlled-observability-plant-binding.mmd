@@ -1,0 +1,24 @@
+flowchart LR
+    G["Task goal + risk envelope"] --> TC["Task controller"]
+    B["Belief + uncertainty"] --> TC
+    B --> SC["Sensing controller"]
+
+    TC --> U["Motor command + reflex settings"]
+    SC --> A["Pose · emission · sampling action"]
+    U --> P["Versioned body · tool · actuator · contact plant"]
+    A --> P
+    P --> W["World + medium"]
+    W --> O["Propagation + sensor physics"]
+    P --> O
+    O --> Y["Versioned observations"]
+    U --> E["Action record / efference copy"]
+    Y --> X["State + consequence estimator"]
+    E --> X
+    X --> B
+
+    V["Plant, attachment, calibration, support, delay, impedance, and safety version"] -.-> P
+    V -.-> X
+    V -.-> TC
+    H["Health · passivity · wear · energy · contact"] -.-> TC
+    H -.-> SC
+    Z["Counterfactual swap + dependency invalidation"] -.-> V

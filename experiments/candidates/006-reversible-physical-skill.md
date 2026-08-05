@@ -47,6 +47,9 @@ A tested system qualifies only when all conditions hold:
    inputs.
 6. Candidate and baselines share the same sensing, actuation, task, safety,
    response, payload, and measurement boundary.
+7. The compiled state is bound to a versioned body/tool, attachment, contact,
+   sensor/actuator calibration, task Jacobian, impedance/passivity, delay, and
+   safety envelope; a counterfactual swap invalidates every failed dependency.
 
 ## Candidate control loop
 
@@ -96,6 +99,13 @@ Use a tactile or force-stabilization task with repeatable disturbances and a
 declared out-of-envelope set. Hold payload, sensor placement, actuator
 authority, geometry envelope, settling tolerance, and safety constraints
 constant.
+
+Factorially swap body geometry, tool, attachment stiffness, payload, sensor
+delay, contact, and impedance after qualification. Compare full reset,
+unversioned adaptation, context-gated model banks, system identification plus
+gain scheduling, adaptive MPC, and selective dependency invalidation. The
+compiled path fails if its contract permits unsafe transfer or discards valid
+state more often than the mature nulls ([C-597](../../research/claims.md#c-597)–[C-606](../../research/claims.md#c-606)).
 
 Compare:
 

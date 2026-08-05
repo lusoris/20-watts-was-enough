@@ -90,6 +90,23 @@ path in randomized simulator replicas or shadow canaries. It must distinguish
 “less telemetry because the fault diminished” from “less telemetry because the
 controller hid, diverted, delayed, or stopped measuring it.”
 
+## Controlled-observability modality track
+
+Add an embodied track in which sensor pose, emission, sampling cadence, or
+locomotor microstructure changes the observation Jacobian while the task
+continues. Compare fixed excitation, random sensing, entropy sampling, one-step
+expected value of sample information, active SLAM, observability MPC, dual
+control, and a separated sensing/task-controller policy. Give every arm the
+same actions, sensor bandwidth, actuator authority, state, compute, wall time,
+exposure/risk, and energy.
+
+Use at least two physical modalities from electrosensing, directional sonar,
+intermittent plume tracking, or camera/force sensing. Report observability
+Gramian or task-identified directions, belief coverage, task quality, action
+interference, sensing energy, latency, and risk. Reject the refinement if the
+strong conventional policies tie it or if the sensing controller wins only by
+receiving hidden state ([C-589](../../research/claims.md#c-589)–[C-596](../../research/claims.md#c-596)).
+
 ## SCOPE benchmark
 
 Build **Surveillance under Changing Observation, Policy, and Environment** as a

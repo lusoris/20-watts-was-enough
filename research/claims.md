@@ -8573,3 +8573,315 @@ describes the exact statement here, not a broader interpretation.
 - **Used by:** [transported-field fixture](../concept/07-cross-domain-convergence.md#transported-fields-are-not-messages),
   Candidates [001](../experiments/candidates/001-adaptive-topology.md) and
   [013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-586
+
+- **Statement:** Desert ants update a homeward estimate during indirect travel,
+  accumulate systematic integration error, and shift distance search after an
+  experimental change in leg length.
+- **Status:** established.
+- **Primary sources:** `muller1988path`, `wittlinger2006odometer`.
+- **Rationale:** Path integration is a calibrated state-estimation process, not
+  drift-free coordinates.
+- **Open issue:** Cue mixtures, gait, terrain, motivational state, and species
+  bound the demonstrated calibration.
+- **Used by:** [navigation audit](audits/2026-08-05-animal-navigation-sensory-ecology.md),
+  [sensorimotor chapter](../concept/20-sensorimotor-grounding.md).
+
+### C-587
+
+- **Statement:** Lesion, cue-conflict, displacement, and route-tracking studies
+  support several forms of spatial memory but do not uniquely identify one
+  global-map algorithm.
+- **Status:** established.
+- **Primary sources:** `hafting2005grid`, `morris1982place`,
+  `gothard1996mismatch`, `menzel2005map`, `biro2004route`.
+- **Rationale:** Periodic codes, causal hippocampal contribution, landmark
+  anchoring, goal choice, and route stereotypy constrain different layers.
+- **Open issue:** Flexible relational tests must discriminate path integration,
+  beaconing, route policy, topological memory, and metric inference.
+- **Used by:** [navigation audit](audits/2026-08-05-animal-navigation-sensory-ecology.md),
+  [memory chapter](../concept/40-memory-and-consolidation.md).
+
+### C-588
+
+- **Statement:** Honeybee odometric reports vary with accumulated optic flow
+  and scene geometry rather than absolute metres.
+- **Status:** established.
+- **Primary sources:** `srinivasan2000odometer`, `esch2001dances`.
+- **Rationale:** Image motion entangles self-motion, depth, field of view, and
+  calibration.
+- **Open issue:** Generalization requires scene-geometry and motion changes, not
+  one visual tunnel.
+- **Used by:** [navigation audit](audits/2026-08-05-animal-navigation-sensory-ecology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-589
+
+- **Statement:** Object geometry, relative pose, and conductivity structure
+  electric images, while weakly electric fish actively position their body and
+  receptor surface during prey capture.
+- **Status:** established.
+- **Primary sources:** `rasnow1996electric`, `maciver2001prey`, `jun2016attention`.
+- **Rationale:** The body and sensing action alter the observation operator.
+- **Open issue:** Association between scanning and task state does not by itself
+  establish an optimal acquisition objective.
+- **Used by:** [controlled-observability fixture](../concept/20-sensorimotor-grounding.md#controlled-observability-and-plant-binding),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-590
+
+- **Statement:** Closed-loop manipulation of reafferent gain changed electric-
+  fish ancillary motion consistently with regulation of sensory slip separate
+  from refuge tracking.
+- **Status:** established.
+- **Primary source:** `biswas2018slip`.
+- **Rationale:** One preparation causally separates a sensing-related control
+  objective from the overt task controller.
+- **Open issue:** Transfer beyond electrosensing and advantage over standard
+  observability control remain untested.
+- **Used by:** [controlled-observability fixture](../concept/20-sensorimotor-grounding.md#controlled-observability-and-plant-binding),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-591
+
+- **Statement:** Echolocating animals depend on self-generated sound in scoped
+  tasks and can directionally aim or schedule emissions during search and
+  selection.
+- **Status:** established.
+- **Primary sources:** `griffin1941bats`, `surlykke2009beam`,
+  `wisniewska2012gaze`.
+- **Rationale:** Emission and beam direction are costed sensing actions, not
+  passive observations.
+- **Open issue:** Energy, interference, exposure, association, and propagation
+  conditions determine value.
+- **Used by:** [navigation audit](audits/2026-08-05-animal-navigation-sensory-ecology.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-592
+
+- **Statement:** In turbulent plume tasks, moths and walking flies use odor-
+  encounter timing, loss, and stochastic or crosswind actions rather than
+  simple continuous gradient ascent.
+- **Status:** established.
+- **Primary sources:** `kennedy1974anemotaxis`, `vickers1994strands`,
+  `mafra1994plumes`, `demir2020plumes`.
+- **Rationale:** Intermittent transport makes event history and active search
+  part of the observation process.
+- **Open issue:** Wind sensing, plume regime, memory, and movement cost must be
+  varied independently.
+- **Used by:** [navigation audit](audits/2026-08-05-animal-navigation-sensory-ecology.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-593
+
+- **Statement:** Controlled magnetic fields can alter orientation in scoped
+  animals, but behavioral, radio-frequency, molecular-sensitivity, anatomical,
+  neural, and navigation-function claims remain separate.
+- **Status:** established.
+- **Primary sources:** `wiltschko1972compass`, `ritz2004radical`,
+  `keller2021sharks`, `xu2021cryptochrome`, `treiber2012macrophages`.
+- **Rationale:** Magnetic behavior does not identify a receptor; purified
+  molecular sensitivity does not establish in-vivo transduction; a proposed
+  receptor anatomy can be refuted.
+- **Open issue:** A complete receptor-to-behavior causal chain remains
+  taxon- and mechanism-specific.
+- **Used by:** [navigation audit](audits/2026-08-05-animal-navigation-sensory-ecology.md),
+  [discovery policy](discovery-policy.md).
+
+### C-594
+
+- **Statement:** Reliability-sensitive multisensory weighting can approximate
+  inverse-variance fusion in scoped tasks but depends on calibration,
+  dependence, causal structure, likelihood shape, and loss.
+- **Status:** established.
+- **Primary sources:** `ernst2002integration`, `fetsch2009reweighting`,
+  `kalman1960filtering`.
+- **Rationale:** Near-optimal fit is a mature statistical null, not proof of a
+  universal biological Bayesian circuit.
+- **Open issue:** Cue conflict, common cause, distribution shift, and unknown
+  correlation require robust alternatives.
+- **Used by:** [navigation audit](audits/2026-08-05-animal-navigation-sensory-ecology.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-595
+
+- **Statement:** Individual bumblebees can iteratively develop repeatable multi-
+  destination routes, but shortening or stereotypy alone does not establish an
+  explicit shortest-path, energy, or global-map optimizer.
+- **Status:** established.
+- **Primary sources:** `lihoreau2012routes`, `charnov1976foraging`,
+  `dijkstra1959graphs`.
+- **Rationale:** Observed route improvement is compatible with multiple memory,
+  search, and constrained-optimization mechanisms.
+- **Open issue:** Competing algorithms require held-out detours, rearrangement,
+  energy, risk, and information tests.
+- **Used by:** [navigation audit](audits/2026-08-05-animal-navigation-sensory-ecology.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-596
+
+- **Statement:** A controlled-observability sensing contract may improve task-
+  relevant evidence acquisition by separating sensing actions from task
+  actions while binding both to the observation model and cost.
+- **Status:** speculative.
+- **Primary sources:** no direct comparative systems validation; constituent
+  evidence is bounded by [C-586](#c-586)–[C-595](#c-595).
+- **Rationale:** Sensor pose, emission, sampling density, and locomotor
+  microstructure can keep an otherwise degrading observation process
+  informative.
+- **Open issue:** It must beat active SLAM, dual control, observability MPC, and
+  one-step expected value of information at equal actions, sensors, compute,
+  time, risk, and energy.
+- **Used by:** [controlled-observability fixture](../concept/20-sensorimotor-grounding.md#controlled-observability-and-plant-binding),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-597
+
+- **Statement:** Passive dynamics and compliant bodies can produce stable motion
+  or fading task-usable state under narrow physical conditions.
+- **Status:** established.
+- **Primary sources:** `mcgeer1990passive`, `collins2005efficient`,
+  `hauser2011morphological`, `nakajima2014softbody`.
+- **Rationale:** Geometry, inertia, gravity, compliance, damping, and contact are
+  strong physical nulls before high-rate computation is credited.
+- **Open issue:** Basin, slope, bandwidth, mounting, drive, readout, control,
+  durability, and lifecycle cost bound the gain.
+- **Used by:** [biomechanics audit](audits/2026-08-05-biomechanics-motor-control.md),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-598
+
+- **Statement:** Low-dimensional muscle-activity factorizations do not uniquely
+  identify low-dimensional neural modules.
+- **Status:** established.
+- **Primary sources:** `bizzi1991computations`, `saltiel2001synergies`,
+  `davella2003combinations`, `ting2005limited`, `tresch2006matrix`,
+  `kutch2012challenges`, `steele2015biomechanical`.
+- **Rationale:** Factorization method, task geometry, biomechanics, moment arms,
+  filtering, and normalization can create or change apparent synergies.
+- **Open issue:** Causal modularity needs perturbations and predictions beyond
+  reconstruction rank.
+- **Used by:** [biomechanics audit](audits/2026-08-05-biomechanics-motor-control.md),
+  [principle registry](principle-registry.md#p-001--selective-allocation).
+
+### C-599
+
+- **Statement:** Human arm impedance is direction- and posture-dependent and can
+  be increased selectively to stabilize unstable task dynamics.
+- **Status:** established.
+- **Primary sources:** `hogan1984adaptive`, `mussa1985posture`,
+  `burdet2001stabilizes`, `milner2005impedance`.
+- **Rationale:** Mechanical interaction policy and internal prediction can
+  change with task context.
+- **Open issue:** Co-contraction, feedback, prediction, fatigue, and endpoint
+  stiffness require separate measurements.
+- **Used by:** [biomechanics audit](audits/2026-08-05-biomechanics-motor-control.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-600
+
+- **Statement:** Movement primitives, optimal-feedback-control models, and
+  task-Jacobian decompositions can compactly describe scoped behavior without
+  uniquely identifying a neural implementation.
+- **Status:** established.
+- **Primary sources:** `flash1985coordination`, `thoroughman2000primitives`,
+  `ijspeert2013dmp`, `todorov2002optimal`, `liu2007flexible`,
+  `scholz1999ucm`, `gomi1996equilibrium`.
+- **Rationale:** Model fit and task-selective correction are mature control and
+  statistical nulls.
+- **Open issue:** Competing models must be separated with interventions and
+  out-of-distribution predictions.
+- **Used by:** [biomechanics audit](audits/2026-08-05-biomechanics-motor-control.md),
+  [sensorimotor chapter](../concept/20-sensorimotor-grounding.md).
+
+### C-601
+
+- **Statement:** Motor-command-correlated signals can support prediction of
+  sensory consequences before ordinary feedback arrives.
+- **Status:** established.
+- **Primary sources:** `bell1981efference`, `sommer2006thalamus`,
+  `wolpert1995internal`.
+- **Rationale:** An action record can change state estimation without being an
+  accurate complete forward model by itself.
+- **Open issue:** Circuit, content, calibration, delay, and behavioral necessity
+  remain preparation-specific.
+- **Used by:** [controlled-observability fixture](../concept/20-sensorimotor-grounding.md#controlled-observability-and-plant-binding),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-602
+
+- **Statement:** Motor adaptation can show after-effects, fitted fast/slow
+  components, interference, history-dependent learning rates, strategic savings,
+  and structural learning under different protocols.
+- **Status:** established.
+- **Primary sources:** `shadmehr1994adaptive`, `smith2006interacting`,
+  `brasherskrug1996consolidation`, `krakauer2005adaptation`,
+  `herzfeld2014errors`, `morehead2015savings`, `braun2009structural`.
+- **Rationale:** These outcomes do not identify one memory substrate or make
+  savings synonymous with retained implicit commands.
+- **Open issue:** Context, schedule, frame, delay, explicit strategy, transfer,
+  retention, and energy must be separated.
+- **Used by:** [biomechanics audit](audits/2026-08-05-biomechanics-motor-control.md),
+  [memory chapter](../concept/40-memory-and-consolidation.md).
+
+### C-603
+
+- **Statement:** Animal tendons and foot structures can store and return strain
+  energy, and series elasticity can improve force control and shock tolerance
+  in an engineered actuator.
+- **Status:** established.
+- **Primary sources:** `alexander1977elastic`, `ker1987arch`,
+  `roberts1997turkeys`, `pratt1995series`.
+- **Rationale:** Physical energy storage and compliance can offload repeated
+  control or work within a bounded operating range.
+- **Open issue:** Added mass, bandwidth, losses, preload, fatigue, drive, and
+  lifecycle energy must be matched.
+- **Used by:** [biomechanics audit](audits/2026-08-05-biomechanics-motor-control.md),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-604
+
+- **Statement:** Reflex gain and response sign can vary with gait phase and task
+  context, while long-latency feedback can integrate multi-joint information.
+- **Status:** established.
+- **Primary sources:** `nichols1976stiffness`, `capaday1986hreflex`,
+  `yang1990reflex`, `pruszynski2011multijoint`.
+- **Rationale:** Fast feedback is locally and contextually modulated rather than
+  a fixed immutable lookup.
+- **Open issue:** Delay, plant dynamics, cortical contribution, task, and
+  perturbation class bound the response.
+- **Used by:** [biomechanics audit](audits/2026-08-05-biomechanics-motor-control.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-605
+
+- **Statement:** Tool use can recalibrate receptive fields, kinematics, and
+  learned dynamics, but the affected body/tool representation is measure-
+  specific.
+- **Status:** established.
+- **Primary sources:** `iriki1996tools`, `cardinali2009tool`, `kluzik2008reach`.
+- **Rationale:** A tool can alter sensorimotor prediction and reachable action
+  without literally or permanently becoming part of every body representation.
+- **Open issue:** Attachment, payload, task, delay, impedance, retention, and
+  transfer determine which state should update.
+- **Used by:** [controlled-observability fixture](../concept/20-sensorimotor-grounding.md#controlled-observability-and-plant-binding),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-606
+
+- **Statement:** A versioned controller–plant binding may permit safer selective
+  reuse after body, tool, attachment, sensor, contact, or impedance changes.
+- **Status:** speculative.
+- **Primary sources:** no direct comparative systems validation; constituent
+  evidence is bounded by [C-597](#c-597)–[C-605](#c-605).
+- **Rationale:** Counterfactual swaps can invalidate only the controller,
+  estimator, task Jacobian, compliance, calibration, or safety fields whose
+  predictions fail.
+- **Open issue:** It must beat robust/adaptive MPC, operational-space impedance
+  control, system identification plus gain scheduling, context-gated model
+  banks, and reset/retraining at equal lifecycle cost.
+- **Used by:** [controlled-observability fixture](../concept/20-sensorimotor-grounding.md#controlled-observability-and-plant-binding),
+  Candidates [006](../experiments/candidates/006-reversible-physical-skill.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [014](../experiments/candidates/014-versioned-observation-contract.md).

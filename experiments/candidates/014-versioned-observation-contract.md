@@ -126,10 +126,13 @@ Every derived claim or alert carries:
 - frozen forecast, coding, hyperparameter, holdout, and data-vintage boundary;
 - cumulative load/use and intervention history for path-dependent assets;
 - damage/dependency posterior, detection limits, current/post-contingency
-  capacity, and post-action reserve verification.
+  capacity, and post-action reserve verification;
 - receiver competence state and version, eligibility-window support, prior
   exposures, commitment state, permitted next states, reopening trigger, and
-  structural postcondition.
+  structural postcondition;
+- body/tool, attachment, payload, contact, sensor/actuator, task-Jacobian,
+  impedance/passivity, delay, safety-envelope, and controller/estimator binding
+  versions.
 
 ## Metrological completeness and invalidation
 
@@ -234,6 +237,8 @@ Hold constant:
     invalidation changes under a fixed measurement and review budget.
 11. identical signals delivered to receivers with different histories,
     competence windows, commitments, and observation support.
+12. counterfactual body, tool, attachment, payload, sensor, delay, contact, and
+    impedance swaps with selective dependency invalidation.
 
 ## Measurements
 
@@ -266,7 +271,8 @@ Hold constant:
 - delete shared covariance while retaining marginal uncertainties;
 - record provenance without dependency-triggered re-evaluation; and
 - drop receiver history, competence version, or window support while retaining
-  the external signal.
+  the external signal; and
+- retain observation metadata while deleting plant/controller dependencies.
 
 ## Kill criteria
 
@@ -306,6 +312,9 @@ adaptive-follow-up setting at equal lifecycle cost.
 - [Measurement-contract mathematics](../../math/measurement-contract.md)
 - [Developmental morphogenesis audit](../../research/audits/2026-08-05-developmental-morphogenesis.md)
 - [C-539](../../research/claims.md#c-539)–[C-562](../../research/claims.md#c-562)
+- [Animal navigation and sensory-ecology audit](../../research/audits/2026-08-05-animal-navigation-sensory-ecology.md)
+- [Biomechanics and motor-control audit](../../research/audits/2026-08-05-biomechanics-motor-control.md)
+- [C-586](../../research/claims.md#c-586)–[C-606](../../research/claims.md#c-606)
 - [P-001](../../research/principle-registry.md#p-001--selective-allocation)
 - [P-003](../../research/principle-registry.md#p-003--temporary-trace-before-commitment)
 - [P-007](../../research/principle-registry.md#p-007--prediction-error-allocation)

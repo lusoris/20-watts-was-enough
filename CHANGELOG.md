@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Paired animal-navigation/sensory-ecology and biomechanics/motor-control
+  audits that bind evidence to the sensing action, body, controller, mechanics,
+  calibration, and environment that made it valid.
+- Twenty-one deduplicated sensorimotor claims (`C-586`–`C-606`), seventy-seven
+  centralized sources, an editable controlled-observability/plant-binding
+  diagram, and new stress tracks in Candidates 006/007/012/014.
 - Paired microbial-ecology/biofilm and fungal-network audits that keep
   signaling, physiology, transport, ecology, lineage selection, symbiosis, and
   ecosystem consequences at their correct scales.

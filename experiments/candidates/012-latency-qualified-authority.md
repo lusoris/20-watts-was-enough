@@ -36,6 +36,16 @@ timestamp, provenance, and uncertainty. Stale evidence, lost integrity,
 reduced headroom, or lost coordination should shrink authority to a local safe
 fallback. Wider actions require a validated handoff and checked postcondition.
 
+For embodied action, the envelope additionally binds body/tool, attachment and
+payload, contact state, sensor/actuator calibration, plant-confidence region,
+task Jacobian, impedance/passivity, and actuation-delay versions. A tool or
+contact change can shrink authority even when telemetry age is low. Inject
+counterfactual plant swaps and reject this refinement if robust/adaptive MPC,
+operational-space impedance control, or gain scheduling matches service and
+risk at equal sensing and lifecycle cost
+([C-599](../../research/claims.md#c-599),
+[C-603](../../research/claims.md#c-603)–[C-606](../../research/claims.md#c-606)).
+
 ## Candidate loop
 
 ```mermaid

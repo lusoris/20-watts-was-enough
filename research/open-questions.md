@@ -223,3 +223,9 @@ project choice.
   allocation, and stateful make-before-break at equal production, movement,
   storage, controller, contamination, and lifecycle cost? See the
   [transported-field fixture](../concept/07-cross-domain-convergence.md#transported-fields-are-not-messages).
+- **OQ-049:** Does an action-conditioned observation contract plus explicit
+  controller–plant binding improve calibration, transfer, and safe authority
+  beyond active SLAM, observability-aware and dual control, robust/adaptive MPC,
+  impedance control, gain scheduling, and model banks when sensing motion,
+  mechanics, calibration, body/tool swaps, compute, energy, and failures are
+  charged? See the [controlled-observability fixture](../concept/20-sensorimotor-grounding.md#controlled-observability-and-plant-binding).
