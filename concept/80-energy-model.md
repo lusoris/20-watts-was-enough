@@ -155,6 +155,46 @@ and interval. A cited fleet average is not substituted for a measured node or
 cluster result. Facility, carbon, water, and financial cost are separate
 outcomes; none is used as a synonym for joules.
 
+### The energy number is a measurement result
+
+The measurand must name the electrical boundary, object, state, interval,
+conditions, aggregation, workload, and intended decision. A counter reading is
+an indication, not yet a result ([C-519](../research/claims.md#c-519),
+[C-520](../research/claims.md#c-520)). Each reported energy value therefore
+retains:
+
+1. instrument, range, firmware, voltage/current/phase configuration, bandwidth,
+   sampling, clock, environment, and raw trace identity;
+2. measurement model, integration rule, preprocessing and software version,
+   missing-sample policy, warm-up, retry, idle, and useful-output definitions;
+3. calibration chain, stated reference, corrections, validity scope, checks,
+   drift status, and every uncertainty contribution;
+4. covariance from shared meters, clocks, coefficients, environments, and
+   preprocessing, plus coverage method and reproducibility conditions; and
+5. the decision rule, target uncertainty, permitted comparison, expiry,
+   provenance, supersession, and invalidation dependencies.
+
+Calibration does not mean validated, traceability does not mean accurate
+enough, and uncertainty is not unknown error
+([C-521](../research/claims.md#c-521)–[C-526](../research/claims.md#c-526)).
+The [measurement-contract note](../math/measurement-contract.md) defines the
+record, dimensional checks, covariance propagation, guard bands, drift review,
+and invalidation graph.
+
+For sampled power, the estimator
+
+$$
+\widehat E=\sum_{m=1}^{M}P_m\Delta t_m
+$$
+
+has units J because $P_m$ is W and $\Delta t_m$ is s. Its uncertainty model
+must retain correlations between samples and coefficients when they share a
+meter, calibration, clock, or correction. Repeated samples from one trace do
+not become independent experimental runs. An end-to-end calibrated boundary
+can rank systems differently from software estimates or device-only counters;
+the existence, sign, and frequency of such reversals are measured outcomes,
+not constants ([C-536](../research/claims.md#c-536)).
+
 ### Lifecycle energy
 
 For candidate $C$ over horizon $H$, define the disjoint lifecycle total

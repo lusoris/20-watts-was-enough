@@ -11,6 +11,9 @@ notation.
 - [`population-observation.md`](population-observation.md) separates stocks,
   flows, cohorts, lifecycle stages, selected records, causal identification,
   collapse vectors, and frozen prospective tests.
+- [`measurement-contract.md`](measurement-contract.md) defines measurands,
+  uncertainty and covariance, reproducibility, decision rules, drift,
+  dependency invalidation, and calibrated energy measurement.
 
 Rules:
 

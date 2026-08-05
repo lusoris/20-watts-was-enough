@@ -90,6 +90,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/conservation-qualified-reconfiguration.mmd` carries inventory,
   energy, contamination, authority, protection, maintenance, and reserve state
   through a gated topology transition and rollback.
+- `diagrams/metrological-observation-contract.mmd` connects a defined measurand
+  to calibration, indication, corrected result, covariance-aware inference,
+  decision, provenance, drift checks, and dependency invalidation.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

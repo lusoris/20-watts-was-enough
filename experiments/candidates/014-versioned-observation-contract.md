@@ -93,6 +93,18 @@ a declared transformation and overlap calculation.
 
 Every derived claim or alert carries:
 
+- exact measurand or construct, object/population, state, interval, location,
+  conditions, intended use, target uncertainty, and permitted action;
+- quantity kind, unit or reference scale, sign convention, aggregation, and
+  raw indication or sample identity;
+- measurement procedure/model, instrument configuration, environment,
+  firmware, clock, preprocessing, software build, and numerical precision;
+- calibration relation, stated reference, certificate, date, scope,
+  corrections, uncertainty contribution, and drift/check status;
+- complete uncertainty budget, covariance assumptions, coverage method,
+  repeatability/reproducibility conditions, and unresolved effects;
+- decision rule, tolerance/specification version, guard band, and owner of
+  false-accept and false-reject costs;
 - raw artifact identifiers and immutable data vintage;
 - sensor, response, calibration, coordinate, and clock versions;
 - exposure and missingness window;
@@ -115,6 +127,50 @@ Every derived claim or alert carries:
 - cumulative load/use and intervention history for path-dependent assets;
 - damage/dependency posterior, detection limits, current/post-contingency
   capacity, and post-action reserve verification.
+
+## Metrological completeness and invalidation
+
+The contract must distinguish a raw indication from a measurement result,
+metrological traceability from artifact lineage, calibration from validation,
+and uncertainty from error ([C-519](../../research/claims.md#c-519)–[C-524](../../research/claims.md#c-524)).
+It must also preserve shared covariance rather than multiplying correlated
+sensor evidence as if it were independent ([C-525](../../research/claims.md#c-525),
+[C-533](../../research/claims.md#c-533)).
+
+```mermaid
+flowchart LR
+    Q["Defined measurand + intended use"] --> I["Raw indication"]
+    I --> M["Versioned model + calibration"]
+    M --> R["Corrected result + uncertainty"]
+    R --> F["Correlation-aware inference"]
+    F --> D["Decision rule + permitted action"]
+    S["Stated reference + calibration chain"] --> M
+    C["Checks · comparison · drift"] -.-> I
+    P["Data · code · certificate provenance"] -.-> M
+    X["Supersession + dependency invalidation"] -.-> M
+    X -.-> D
+```
+
+Editable source:
+[metrological-observation-contract.mmd](../../assets/diagrams/metrological-observation-contract.mmd).
+
+Let the dependency graph $G=(V,E)$ contain raw-data, calibration, software,
+model, transformation, result, and decision versions. If $(a,b)\in E$, node
+$b$ depends on node $a$. A changed or failed dependency $a$ defines the
+invalidation cone
+
+$$
+\mathcal I(a)=\{v\in V:a\leadsto v\}.
+$$
+
+Every $v\in\mathcal I(a)$ must be re-evaluated, restricted, superseded, or
+withdrawn before its action remains eligible. Provenance identifies the cone;
+it does not prove that a value inside it is true or fit for use
+([C-534](../../research/claims.md#c-534)). The held residual is whether this
+cross-layer invalidation prevents more stale decisions than a complete
+metrology, statistics, and content-addressed provenance stack at the same
+sensor, compute, storage, review, and latency budget
+([C-535](../../research/claims.md#c-535)).
 
 ## Task family
 
@@ -171,6 +227,8 @@ Hold constant:
 9. cohort-component monitoring under entry shocks, lifecycle aging, migration,
    nonstationary transitions, selected record survival, and prospective
    temporal/place/lineage holdouts.
+10. calibration-chain, covariance, drift, decision-rule, and downstream-
+    invalidation changes under a fixed measurement and review budget.
 
 ## Measurements
 
@@ -197,7 +255,11 @@ Hold constant:
 - drop data vintage and supersession;
 - let adaptive follow-up train and evaluate on its own selected sample; and
 - drop support intervals, preservation state, or intervention history; and
-- omit negative injection/recovery and predictive-check results.
+- omit negative injection/recovery and predictive-check results;
+- replace the measurand with a bare metric name;
+- treat calibration, verification, and validation as one boolean;
+- delete shared covariance while retaining marginal uncertainties; and
+- record provenance without dependency-triggered re-evaluation.
 
 ## Kill criteria
 
@@ -213,6 +275,9 @@ Reject the composition if:
   the system less accurate or operationally unusable.
 - a standard hierarchical state-space model, event-time schema, or the simple
   rule “never aggregate unlike windows” matches support-qualified fusion.
+- a complete conventional metrology, statistics, and content-addressed
+  provenance stack matches empirical coverage, invalidation recall, stale-
+  decision exposure, and lifecycle cost.
 
 ## Promotion rule
 
@@ -229,6 +294,9 @@ adaptive-follow-up setting at equal lifecycle cost.
 - [C-232](../../research/claims.md#c-232)–[C-249](../../research/claims.md#c-249)
 - [Quantitative history and demography audit](../../research/audits/2026-08-05-quantitative-history-demography.md)
 - [C-417](../../research/claims.md#c-417)–[C-444](../../research/claims.md#c-444)
+- [Metrology and measurement-science audit](../../research/audits/2026-08-05-metrology-measurement-science.md)
+- [C-519](../../research/claims.md#c-519)–[C-538](../../research/claims.md#c-538)
+- [Measurement-contract mathematics](../../math/measurement-contract.md)
 - [P-001](../../research/principle-registry.md#p-001--selective-allocation)
 - [P-003](../../research/principle-registry.md#p-003--temporary-trace-before-commitment)
 - [P-007](../../research/principle-registry.md#p-007--prediction-error-allocation)

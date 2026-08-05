@@ -1,0 +1,21 @@
+flowchart LR
+    Q["Defined measurand + intended use"] --> O["Object, population, state, interval, conditions"]
+    O --> I["Sensor + raw indication"]
+    I --> M["Versioned measurement model + software"]
+    M --> R["Corrected result + uncertainty"]
+    R --> F["Correlation-aware fusion or inference"]
+    F --> D["Versioned decision rule + permitted action"]
+
+    SI["SI definition or stated reference"] --> S1["Primary or reference standard"]
+    S1 --> S2["Working standard or CRM"]
+    S2 --> C["Calibration relation + uncertainty"]
+    C --> I
+
+    QC["Check standard · comparison · drift monitoring"] -.-> I
+    QC -.-> M
+    P["Data · code · model · environment · certificate provenance"] -.-> M
+    P -.-> R
+    V["Verification + intended-use validation"] -.-> D
+    X["Supersession + dependency invalidation"] -.-> C
+    X -.-> M
+    X -.-> D

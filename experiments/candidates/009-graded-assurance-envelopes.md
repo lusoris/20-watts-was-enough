@@ -64,6 +64,17 @@ For each module version, record distinct fields:
    independence, observation age, named adversary, compromise horizon, and
    evidence for a clean recovery root.
 
+The empirical envelope is itself a measurement result, not a free-form score.
+It names the measurand or construct, procedure, calibration/reference state,
+uncertainty budget and covariance, reproducibility conditions, decision rule,
+intended use, and permitted action. Calibration, verification, and validation
+remain separate, and metrological traceability is not substituted by artifact
+lineage ([C-519](../../research/claims.md#c-519)–[C-531](../../research/claims.md#c-531)).
+If a calibration, procedure, dataset, software build, decision rule, or stated
+reference changes, the dependency cone is invalidated alongside the artifact
+and behavioral envelopes ([C-534](../../research/claims.md#c-534),
+[C-535](../../research/claims.md#c-535)).
+
 Each field carries its own evidence class, scope, timestamp, version,
 invalidation triggers, and measurement cost. An “assured” boolean is forbidden.
 Authentication, authorization, detection, containment, and recovery remain

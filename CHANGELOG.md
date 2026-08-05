@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A metrology and measurement-science audit separating measurand, indication,
+  result, calibration, adjustment, verification, validation, traceability,
+  uncertainty, reproducibility, comparison, decision, drift, and provenance.
+- Twenty scoped measurement claims (`C-519`–`C-538`), twenty-four centralized
+  sources, a dedicated mathematical note, an editable assurance flow, and
+  dependency-invalidation gates in Candidates 009/014 and the energy chapter.
 - A chemical/process-engineering audit separating conservation, nonlinear
   reaction dynamics, separation, recycle, heat integration, MPC/RTO, fault
   diagnosis, safety layers, operability, and structural reconfiguration.

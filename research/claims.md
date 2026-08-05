@@ -7643,3 +7643,278 @@ describes the exact statement here, not a broader interpretation.
   primary evidence or a decisive equal-budget experiment.
 - **Used by:** [principle registry](principle-registry.md),
   [research roadmap](../concept/90-research-roadmap.md).
+
+### C-519
+
+- **Statement:** A measurand must specify the quantity intended, including the
+  relevant object, state, component, time, location, and conditions.
+- **Status:** established.
+- **Primary source:** `jcgm200`.
+- **Rationale:** “Energy,” “quality,” or “accuracy” alone does not identify what
+  was measured.
+- **Open issue:** Required specificity is use- and risk-dependent.
+- **Used by:** [metrology audit](audits/2026-08-05-metrology-measurement-science.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [energy model](../concept/80-energy-model.md).
+
+### C-520
+
+- **Statement:** A measurement result generally includes a measured value and
+  associated uncertainty, not an instrument indication alone.
+- **Status:** established.
+- **Primary sources:** `jcgm200`, `jcgm100`.
+- **Rationale:** Procedure, correction, reference, and uncertainty turn an
+  indication into an attributable result.
+- **Open issue:** Some ordinal or task-defined constructs require reference
+  scales rather than SI units.
+- **Used by:** [metrology audit](audits/2026-08-05-metrology-measurement-science.md),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-521
+
+- **Statement:** Metrological traceability is a documented unbroken calibration
+  chain to a stated reference, with every calibration contributing uncertainty.
+- **Status:** established.
+- **Primary sources:** `jcgm200`, `ilacp10`.
+- **Rationale:** Traceability is a property of a result and its reference chain,
+  not a generic synonym for data lineage.
+- **Open issue:** Chain validity is conditional on calibration scope, conditions,
+  and use.
+- **Used by:** [metrology audit](audits/2026-08-05-metrology-measurement-science.md),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-522
+
+- **Statement:** Metrological traceability does not guarantee that uncertainty
+  is adequate for purpose or that the result is free of mistakes.
+- **Status:** established.
+- **Primary source:** `jcgm200`.
+- **Rationale:** An intact reference chain and fitness for a decision are
+  separate claims.
+- **Open issue:** Intended-use validation must set target uncertainty and error
+  consequences.
+- **Used by:** [metrology audit](audits/2026-08-05-metrology-measurement-science.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-523
+
+- **Statement:** Calibration, adjustment, verification, and validation are
+  distinct operations.
+- **Status:** established.
+- **Primary source:** `jcgm200`.
+- **Rationale:** Establishing an indication relation, changing an instrument,
+  checking requirements, and showing fitness for use answer different questions.
+- **Open issue:** Project artifacts must record which operation actually occurred.
+- **Used by:** [metrology audit](audits/2026-08-05-metrology-measurement-science.md),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-524
+
+- **Statement:** Measurement uncertainty and measurement error are different;
+  applying an estimated correction leaves residual uncertainty.
+- **Status:** established.
+- **Primary sources:** `jcgm200`, `jcgm100`.
+- **Rationale:** Error is a signed difference from a reference, whereas
+  uncertainty describes dispersion of values attributed from available evidence.
+- **Open issue:** Reference values and systematic-effect models can themselves
+  be uncertain or incomplete.
+- **Used by:** [measurement math](../math/measurement-contract.md), all
+  quantitative project claims.
+
+### C-525
+
+- **Statement:** First-order uncertainty propagation requires covariance terms
+  when input quantities are dependent.
+- **Status:** established.
+- **Primary sources:** `jcgm100`, `jcgm101`.
+- **Rationale:** Dropping off-diagonal covariance silently asserts independence
+  and can understate or overstate result uncertainty.
+- **Open issue:** Strong nonlinearity and non-Gaussian inputs require distribution
+  propagation or another justified method.
+- **Used by:** [measurement math](../math/measurement-contract.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [energy model](../concept/80-energy-model.md).
+
+### C-526
+
+- **Statement:** Expanded uncertainty requires a stated coverage factor and a
+  justified interpretation of coverage.
+- **Status:** established.
+- **Primary sources:** `jcgm100`, `nisttn1297`.
+- **Rationale:** A factor such as $k=2$ is not automatically an exact 95%
+  interval for every distribution and degrees-of-freedom regime.
+- **Open issue:** Empirical coverage should be checked under the declared use.
+- **Used by:** [measurement math](../math/measurement-contract.md), all
+  quantitative project claims.
+
+### C-527
+
+- **Statement:** Repeatability and reproducibility refer to different declared
+  sets of measurement conditions.
+- **Status:** established.
+- **Primary sources:** `jcgm200`, `iso5725`.
+- **Rationale:** Agreement within one short instrument/operator setting cannot
+  establish agreement across systems, operators, locations, or time.
+- **Open issue:** Intermediate-precision designs must name which factors vary.
+- **Used by:** [metrology audit](audits/2026-08-05-metrology-measurement-science.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-528
+
+- **Statement:** Variance-component and gauge R&R designs are mature methods for
+  separating measurement-system variation.
+- **Status:** established.
+- **Primary sources:** `nist-handbook`, `iso22514`.
+- **Rationale:** Equipment, operator, part/sample, run, and interaction effects
+  can be estimated under a declared design.
+- **Open issue:** Confounding and nonrepresentative samples can make components
+  misleading.
+- **Used by:** [measurement math](../math/measurement-contract.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-529
+
+- **Statement:** Certified-reference-material usefulness depends on intended
+  use, homogeneity, stability, assigned values, uncertainty, traceability, and
+  sometimes commutability with real samples.
+- **Status:** established.
+- **Primary sources:** `jcgm200`, `iso17034`, `iso33405`.
+- **Rationale:** A certified value outside the target matrix or procedure does
+  not automatically validate a measurement.
+- **Open issue:** Commutability and matrix effects are domain-specific.
+- **Used by:** [metrology audit](audits/2026-08-05-metrology-measurement-science.md),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-530
+
+- **Statement:** Interlaboratory comparison supplies scoped compatibility or
+  performance evidence, not automatic traceability or permanent competence.
+- **Status:** established.
+- **Primary sources:** `iso17043`, `iso13528`, `cipmmra`.
+- **Rationale:** A comparison samples methods, participants, artifacts, and time;
+  it does not repair a method or guarantee future results.
+- **Open issue:** Reference assignment, participant selection, and instability
+  shape interpretation.
+- **Used by:** [metrology audit](audits/2026-08-05-metrology-measurement-science.md),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-531
+
+- **Statement:** Conformity decisions near tolerance limits require an explicit
+  decision rule and allocation of false-accept and false-reject risk.
+- **Status:** established.
+- **Primary sources:** `jcgm106`, `ilacg8`, `iso17025`.
+- **Rationale:** A guard band changes decision risk but does not remove
+  measurement uncertainty.
+- **Open issue:** Risk ownership and loss asymmetry are application-specific.
+- **Used by:** [measurement math](../math/measurement-contract.md), Candidates
+  [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [010](../experiments/candidates/010-reset-coupled-staged-verification.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-532
+
+- **Statement:** Fixed recalibration intervals are not evidence of stability;
+  checks, history, risk, and equipment behavior should inform review.
+- **Status:** established.
+- **Primary source:** `oimld10`.
+- **Rationale:** Drift can be nonlinear, abrupt, environmental, or absent, and
+  can occur between scheduled dates.
+- **Open issue:** The optimal review policy depends on drift process, decision
+  risk, check sensitivity, and calibration cost.
+- **Used by:** [measurement math](../math/measurement-contract.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-533
+
+- **Statement:** Sensor fusion that ignores shared correlation can become
+  overconfident.
+- **Status:** established.
+- **Primary sources:** `kalman1960`, `julier1997`.
+- **Rationale:** Shared calibration, clocks, preprocessing, environment, priors,
+  or training data make apparently separate measurements dependent.
+- **Open issue:** Unknown cross-correlation may require conservative fusion and
+  can reduce the claimed value of added sensors.
+- **Used by:** [measurement math](../math/measurement-contract.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-534
+
+- **Statement:** Provenance can represent derivation and version relations but
+  does not establish truth or fitness for purpose.
+- **Status:** established.
+- **Primary source:** `w3cprov`.
+- **Rationale:** A complete lineage graph can faithfully reproduce an invalid
+  result.
+- **Open issue:** Evidence quality, entailment, uncertainty, and intended-use
+  checks require separate records.
+- **Used by:** [measurement math](../math/measurement-contract.md), Candidates
+  [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [014](../experiments/candidates/014-versioned-observation-contract.md),
+  [017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  and [019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-535
+
+- **Statement:** Binding measurement, selection, software, and provenance
+  dependencies to every downstream claim may reduce stale or overconfident
+  decisions.
+- **Status:** plausible.
+- **Primary sources:** no direct comparative validation; constituent methods are
+  established by [C-519](#c-519)–[C-534](#c-534).
+- **Rationale:** Dependency invalidation can propagate a changed calibration,
+  response, transformation, dataset, or decision rule to affected conclusions.
+- **Open issue:** It must beat a complete conventional metrology, statistics,
+  and content-addressed provenance stack at equal lifecycle cost.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-536
+
+- **Statement:** Calibrated end-to-end energy metrology can reverse rankings
+  produced by software estimates or narrow hardware boundaries.
+- **Status:** plausible.
+- **Primary sources:** no universal effect evidence; the mechanism follows from
+  boundary, calibration, timing, covariance, and missing-cost differences in
+  [C-519](#c-519)–[C-533](#c-533).
+- **Rationale:** Metered node or facility energy can include movement, idle,
+  conversion, cooling, retry, and control costs absent from device counters.
+- **Open issue:** Frequency and direction of ranking reversals are hardware- and
+  workload-specific.
+- **Used by:** [energy model](../concept/80-energy-model.md),
+  [measurement math](../math/measurement-contract.md).
+
+### C-537
+
+- **Statement:** Treating a learned representation as a measurement system may
+  improve discipline when a measurand, reference, influence quantities,
+  uncertainty, and intended use can be operationalized.
+- **Status:** speculative.
+- **Primary sources:** analogy only; metrology standards do not validate latent
+  representation semantics.
+- **Rationale:** The framing forces construct, calibration, environment, drift,
+  and action limits to become explicit.
+- **Open issue:** Many latent features and task constructs lack stable references
+  or identifiable measurands.
+- **Used by:** [mathematical foundations](../math/README.md),
+  [research roadmap](../concept/90-research-roadmap.md).
+
+### C-538
+
+- **Statement:** Metrology warrants no new registry principle; its mature methods
+  strengthen the null and schema for Candidates 009 and 014.
+- **Status:** plausible.
+- **Primary source:** [metrology audit](audits/2026-08-05-metrology-measurement-science.md).
+- **Rationale:** Every abstract component audited has an established measurement,
+  statistical, quality, or provenance analogue; only their cross-layer
+  invalidating composition remains unresolved.
+- **Open issue:** A new state transition or decisive comparative result can
+  reopen the disposition.
+- **Used by:** [principle registry](principle-registry.md),
+  [research roadmap](../concept/90-research-roadmap.md).

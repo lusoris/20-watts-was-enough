@@ -205,3 +205,10 @@ project choice.
   transition reachability, authority, protection dependencies, maintenance,
   flushing, downtime, and rollback are charged? See the
   [Candidate 001 process track](../experiments/candidates/001-adaptive-topology.md#process-domain-stress-track).
+- **OQ-046:** Does a metrologically complete dependency graph reduce
+  overconfidence and stale decisions beyond calibrated measurement models,
+  explicit selection/covariance, content-addressed lineage, and conventional
+  quality systems when calibration, software, data, reference, and decision-rule
+  versions change at equal measurement and review cost? See
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md#metrological-completeness-and-invalidation)
+  and the [measurement-contract note](../math/measurement-contract.md).
