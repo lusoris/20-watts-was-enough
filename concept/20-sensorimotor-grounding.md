@@ -138,6 +138,41 @@ source provenance. A retrospective caption, an instruction available before
 action, a question, a report from another agent, and model-generated text have
 different roles even when their words match.
 
+### Observation is a versioned contract
+
+A sensor record is not the latent state. Propagation, foreground, exposure,
+instrument response, background, calibration, reconstruction, threshold, and
+selection intervene before a downstream model sees it
+([C-218](../research/claims.md#c-218)–[C-221](../research/claims.md#c-221)).
+For latent target $\theta$, nuisance state $\eta$, measurement $y$, and response
+version $H_v$,
+
+$$
+y=H_v(\theta,\eta)+\epsilon,
+$$
+
+where $y$ and $H_v$ have matching declared units and $\epsilon$ follows a
+declared noise and background model. If the analyzed record was selected by
+event $S=1$, inference is conditional on that event:
+
+$$
+p(\theta,\eta\mid y,S=1,v)
+\propto p(y,S=1\mid\theta,\eta,v)p(\theta,\eta\mid v).
+$$
+
+The trajectory record therefore carries response and calibration version,
+exposure, selection state, detection power for non-detections, reconstruction
+choice, and data vintage. Cross-modal fusion also retains association
+uncertainty and shared dependencies; a different sensor type is not evidence
+of conditional independence ([C-224](../research/claims.md#c-224)).
+
+[Candidate 014](../experiments/candidates/014-versioned-observation-contract.md)
+tests whether propagating this contract with each claim adds value beyond a
+complete typed, calibrated, lineage-aware, selection-aware, and
+simulation-checked evidence stack. The candidate must abstain on response null
+spaces and exact degeneracies rather than buy more observations that cannot
+identify the missing direction ([C-229](../research/claims.md#c-229)).
+
 ### Missingness is observed state, not a zero tensor
 
 For modality $r$ and decision time $t$, define

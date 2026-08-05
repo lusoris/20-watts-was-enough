@@ -7,6 +7,13 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- An astronomy and planetary remote-inference audit that turns calibration,
+  response, selection, non-detection, association, model checking, trials,
+  alerting, finite-realization uncertainty, and adaptive follow-up into an
+  explicit end-to-end observation chain.
+- Fourteen scoped remote-inference claims (`C-218`–`C-231`), twenty-two
+  centralized sources, and Candidate 014 for versioned observation contracts
+  with an editable observation-chain diagram.
 - A plant distributed-control audit that keeps individual-plant signaling,
   plant–fungus exchange, and community outcomes at separate causal scales,
   including explicit rejection of generalized forest-network claims that

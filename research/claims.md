@@ -3425,3 +3425,225 @@ describes the exact statement here, not a broader interpretation.
   ecological importance of mycorrhizae or every controlled transfer result.
 - **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
   [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-218
+
+- **Statement:** Remote inference requires a forward observation model that
+  separates latent source, nuisance state, propagation, instrument response,
+  background, and noise.
+- **Status:** established.
+- **Primary sources:** `rodgers2000inverse`, `line2013retrieval`.
+- **Rationale:** An inverse estimate is conditional on the process that turns a
+  latent state into measurements.
+- **Open issue:** A concentrated posterior or confidence score can remain wrong
+  under response, nuisance, background, or structural misspecification.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-219
+
+- **Statement:** Richardson–Lucy and CLEAN establish response-aware
+  reconstruction families without proving that every reconstructed feature is
+  physical.
+- **Status:** established.
+- **Primary sources:** `richardson1972bayesian`, `lucy1974iterative`,
+  `hogbom1974aperture`.
+- **Rationale:** Reconstruction combines a response model, data, iteration, and
+  regularizing choices.
+- **Open issue:** Response error, stopping rule, sidelobes, priors, and
+  nonlinear preprocessing can create artifacts; injection and alternative
+  reductions remain mandatory.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-220
+
+- **Statement:** Catalog membership is a selection event whose probability may
+  depend on the same noisy data later analyzed.
+- **Status:** established.
+- **Primary sources:** `schmidt1968space`, `loredo2004source`.
+- **Rationale:** Population likelihood must include detection and inclusion
+  probability over source and context, not treat the observed catalog as an
+  unbiased sample.
+- **Open issue:** Constant completeness correction fails when efficiency varies
+  with flux, background, location, spectrum, cadence, or pipeline state.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-221
+
+- **Statement:** A non-detection constrains a source only through declared
+  exposure, background, threshold, response, and detection power.
+- **Status:** established.
+- **Primary source:** `kashyap2010upper`.
+- **Rationale:** No selected record is not equivalent to a measured zero or an
+  exposure-free upper bound.
+- **Open issue:** Power changes with source properties, trial policy,
+  background, calibration, and searched family.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-222
+
+- **Statement:** Survey design is a multi-objective allocation problem across
+  area, depth, cadence, wavelength, latency, and follow-up capacity.
+- **Status:** established.
+- **Primary source:** `ivezic2019lsst`.
+- **Rationale:** Observation policy changes which events and populations become
+  visible.
+- **Open issue:** Incompatible science utilities, weather, hardware, season,
+  alert load, and future discoveries prevent one astronomy-specific universal
+  policy.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-223
+
+- **Statement:** Hierarchical marginalization can prevent plug-in source
+  uncertainty from corrupting population inference under a correct population,
+  measurement, and selection model.
+- **Status:** established.
+- **Primary source:** `loredo2004source`.
+- **Rationale:** Individual uncertainty and population structure must be
+  propagated jointly instead of replacing every source with one point estimate.
+- **Open issue:** Misspecified population families, priors, selection, and
+  dependence can remain confidently wrong.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-224
+
+- **Statement:** Multi-sensor fusion requires an explicit source-association
+  hypothesis and a dependence model before evidence is multiplied.
+- **Status:** established.
+- **Primary sources:** `budavari2008crossid`, `abbott2017multimessenger`.
+- **Rationale:** Records can be unrelated coincidences or share calibration,
+  clocks, foregrounds, catalogs, simulations, and priors.
+- **Open issue:** Different modality is not evidence of conditional
+  independence; association uncertainty must reach the final claim.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-225
+
+- **Statement:** Model evidence, posterior or predictive checking, and
+  computation calibration answer distinct assurance questions.
+- **Status:** established.
+- **Primary sources:** `trotta2008bayes`, `skilling2006nested`,
+  `gelman1996posterior`, `talts2018sbc`.
+- **Rationale:** Relative model support, fit-to-observed discrepancies, and
+  correctness of the inference implementation are not interchangeable.
+- **Open issue:** All can pass inside a jointly misspecified model family or
+  simulator.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-226
+
+- **Statement:** Rare-event significance must account for the searched
+  template, time, location, and parameter family plus downstream follow-up
+  exposure.
+- **Status:** established.
+- **Primary sources:** `allen2012findchirp`, `kovacs2002box`,
+  `gross2010trials`.
+- **Rationale:** A local detection statistic omits the opportunities that could
+  have produced an extreme score.
+- **Open issue:** Adaptive search, correlated templates, broker filtering, and
+  repeated follow-up complicate effective trial accounting.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-227
+
+- **Statement:** A versioned time-domain alert is a temporary follow-up claim,
+  not a confirmed discovery or authority for irreversible action.
+- **Status:** established.
+- **Primary sources:** `bellm2019ztf`, `seaman2011voevent`.
+- **Rationale:** Detection, packet schema, revisions, broker policy,
+  subscribers, and later observations jointly determine operational meaning.
+- **Open issue:** Subscriber lag, supersession, duplicated alerts, and
+  follow-up selection can propagate stale confidence.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-228
+
+- **Statement:** Remote mechanistic model comparison does not by itself
+  identify an intervention effect or exclude omitted causes.
+- **Status:** established.
+- **Primary source:** `catling2018biosignatures`.
+- **Rationale:** A best-supported explanation remains conditional on the
+  modeled alternatives, observation chain, and background knowledge.
+- **Open issue:** Mechanistic plausibility, predictive support, exclusion of
+  alternatives, and identified causality need separate labels.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-229
+
+- **Statement:** Some remote-inference uncertainty is limited by response null
+  spaces, exact degeneracy, or a finite number of realized modes rather than
+  detector noise.
+- **Status:** established.
+- **Primary sources:** `rodgers2000inverse`, `knox1995inflationary`.
+- **Rationale:** More exposure cannot identify a direction that the response
+  does not encode or create independent realizations that do not exist.
+- **Open issue:** Systems must separate reducible measurement uncertainty from
+  structural and realization-limited uncertainty before buying more data.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-230
+
+- **Statement:** Adaptive astronomical follow-up is a value-of-information
+  sensing problem whose policy induces future selection.
+- **Status:** established.
+- **Primary sources:** `ivezic2019lsst`, `bellm2019ztf`.
+- **Rationale:** Limited observation capacity is assigned to candidates that
+  alter expected inference or decision value.
+- **Open issue:** The policy must beat ordinary Bayesian design, scheduling,
+  POMDP, and bandit baselines while measuring self-confirmation and missed
+  classes.
+- **Used by:** [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-231
+
+- **Statement:** Propagating response, exposure, selection, association,
+  uncertainty, and data-vintage dependencies with an inferred claim may reduce
+  invalid multi-agent evidence composition.
+- **Status:** speculative.
+- **Primary source:** none sufficient; components are scoped in
+  [C-218](#c-218)–[C-230](#c-230).
+- **Rationale:** The held observation contract makes downstream validity depend
+  on the full versioned observation chain rather than a detached confidence
+  score.
+- **Open issue:** It must beat a typed schema, calibrated likelihood, selection
+  model, lineage, detection statistics, predictive checks, simulation
+  calibration, graded assurance, surveillance modeling, and value-of-information
+  scheduling at equal lifecycle cost.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [astronomy audit](audits/2026-08-05-astronomy-remote-inference.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).

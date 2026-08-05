@@ -109,3 +109,8 @@ project choice.
   after delay, messages, state, reserve, reconfiguration, and strategic demand
   are charged? See
   [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+- **OQ-031:** Does propagating response, exposure, selection, association,
+  uncertainty, data-vintage, and supersession dependencies with every derived
+  claim reduce invalid evidence composition beyond a complete conventional
+  statistics, lineage, surveillance, and assurance stack? See
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).

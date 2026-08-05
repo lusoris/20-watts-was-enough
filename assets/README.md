@@ -44,6 +44,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/deficit-capability-routing.mmd` separates upward unmet demand,
   downward scarcity context, local feasibility, allocation, and outcome
   calibration for Candidate 013.
+- `diagrams/versioned-observation-contract.mmd` preserves the chain from latent
+  source through response, selection, association, inference, follow-up, and
+  outcome-based revision for Candidate 014.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.
