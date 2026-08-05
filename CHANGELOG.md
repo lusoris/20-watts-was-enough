@@ -14,6 +14,8 @@ the exact diff; this file records why the project changed.
   copy–compress–vary–test–retain cycle.
 - A refreshed private-site preview image aligned with the reader's restrained
   biological-to-silicon visual language.
+- Explicit unordered, ordered, and nested list markers in the rendered reader
+  so Markdown structure remains visible after the CSS reset.
 
 - An open-world discovery policy treating every empirical, formal, and
   engineering science as a potential source, organized by shared problem
