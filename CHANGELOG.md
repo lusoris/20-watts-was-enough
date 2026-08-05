@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A quantitative-history and demography audit separating stock, flow, cohort,
+  age, period, migration, momentum, diffusion, selected archives, causal
+  identification, multivariate recovery, retrospective fit, and forecasting.
+- Twenty-eight scoped population/history claims (`C-417`–`C-444`), twenty-six
+  centralized sources, a dedicated mathematical note, and an editable cohort-
+  observation diagram; the residual contract extends Candidate 014.
 - A human–computer-interaction and human-factors audit separating initiative,
   interruption, mode, automation bias, trust/reliance, explanation, shared
   control, recovery, display, cognitive load, accessibility, and adaptation.

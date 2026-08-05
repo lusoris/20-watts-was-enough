@@ -171,3 +171,10 @@ project choice.
   [011](../experiments/candidates/011-dual-loop-operational-assurance.md),
   [012](../experiments/candidates/012-latency-qualified-authority.md), and
   [015](../experiments/candidates/015-versioned-repairable-conventions.md).
+- **OQ-041:** Does a cohort-aware, versioned population observation contract
+  reduce false aging, diffusion, collapse, path-dependence, and prospective
+  claims beyond cohort-component accounting, survival/state-space models,
+  missing-data sensitivity, design-specific causal inference, nonstationary
+  learning, and temporal/place/lineage holdouts? See
+  [population-observation math](../math/population-observation.md) and
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).

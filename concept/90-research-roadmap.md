@@ -98,6 +98,39 @@ at different positions inside it; the
 [domain inventory](../research/domain-inventory.md) and
 [adoption matrix](../research/adoption-matrix.md) expose those differences.
 
+### Historical evidence has a separate promotion gate
+
+Longitudinal evidence enters the roadmap as one of four typed claims:
+
+1. **Accounting identity:** the declared stocks and flows reconcile.
+2. **Descriptive regularity:** a relation exists in a sampled period, place,
+   coding system, and surviving archive.
+3. **Causal estimate:** an intervention or design-specific contrast identifies
+   an effect under explicit assumptions.
+4. **Prospective prediction:** a frozen model succeeds on a period, place,
+   lineage, or regime unavailable during development.
+
+No row upgrades itself into the next. A cohort matrix can be arithmetically
+correct and forecast poorly under changing rates. An adoption curve can fit
+while influence, common cause, homophily, and command remain unidentified. A
+historical instrument can estimate a local effect without predicting a future
+system. A surviving record can support chronology while omitting destroyed or
+never-produced evidence.
+
+For interval $\Delta t$ seconds, the basic population identity is
+
+$$
+N_{t+\Delta t}=N_t+B_t-D_t+I_t-O_t,
+$$
+
+where $N$ is qualified units at a timestamp and $B,D,I,O$ are entry,
+retirement, immigration, and outmigration counts during the interval. The
+identity finds bookkeeping errors; it does not explain or forecast a flow.
+The full cohort, selection, diffusion, collapse-vector, and prospective-test
+contract is derived in
+[population-observation math](../math/population-observation.md) and folded
+into Candidate 014 rather than promoted as a new principle.
+
 ### Stage 1 — Isolated mechanism experiments
 
 The first tests isolate control operations before composing them.
@@ -227,6 +260,7 @@ adding citations:
 | cultural evolution and archaeology | generation, transmission, evaluation, retention, governance, accessible model diversity, path dependence, and archaeological formation remain distinct; Candidate 019 tests only the residual population-level inheritance advantage across turnover |
 | social choice and institutional governance | theorem assumptions, empirical effects, and authorized normative commitments remain separate; aggregation, strategy, delegation, veto, agenda, capture, amendment, participation, and path dependence refine Candidates 008/011/012/015/016; Candidate 020 tests only the applicable multi-level composition |
 | human–computer interaction and human factors | nominal human presence, trust, transparency, explanation, preference, and adaptation are not assurance; effective initiative binds timely state, actual/pending mode, executable authority, state delta, recovery, resumption, expiry, accessibility, and full human cost into Candidates 009/011/012/015 |
+| quantitative history and demography | stock, flow, cohort, age, period, migration, replication, retirement, diffusion, archive selection, causal identification, collapse dimensions, and prospective validation remain distinct; their versioned composition strengthens Candidate 014 rather than creating another principle |
 
 The active and next breadth queue is selected by expected ability to split,
 merge, reject, or re-baseline a current mechanism:

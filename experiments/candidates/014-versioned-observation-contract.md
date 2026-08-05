@@ -105,7 +105,13 @@ Every derived claim or alert carries:
   association, computation, or finite realization;
 - predictive, injection/recovery, and simulation-calibration results;
 - supersession and retraction relations; and
-- permitted follow-up action and expiry.
+- permitted follow-up action and expiry;
+- qualified population membership and risk-set denominator;
+- entry cohort, lifecycle age/stage, calendar period, role, and location;
+- replication/descendant, retirement, and migration events;
+- record production, survival, discovery, retention, and coding dependencies;
+- projection transition matrix, scenario range, and stationarity assumptions;
+- frozen forecast, coding, hyperparameter, holdout, and data-vintage boundary.
 
 ## Task family
 
@@ -159,6 +165,9 @@ Hold constant:
 7. adaptive follow-up under policy-induced selection and confirmation bias.
 8. support-qualified fusion across local probes, rolling aggregates, delayed
    expert labels, and post-intervention telemetry.
+9. cohort-component monitoring under entry shocks, lifecycle aging, migration,
+   nonstationary transitions, selected record survival, and prospective
+   temporal/place/lineage holdouts.
 
 ## Measurements
 
@@ -215,6 +224,8 @@ adaptive-follow-up setting at equal lifecycle cost.
 - [Geology and geomorphology audit](../../research/audits/2026-08-05-geology-geomorphology.md)
 - [C-218](../../research/claims.md#c-218)–[C-231](../../research/claims.md#c-231)
 - [C-232](../../research/claims.md#c-232)–[C-249](../../research/claims.md#c-249)
+- [Quantitative history and demography audit](../../research/audits/2026-08-05-quantitative-history-demography.md)
+- [C-417](../../research/claims.md#c-417)–[C-444](../../research/claims.md#c-444)
 - [P-001](../../research/principle-registry.md#p-001--selective-allocation)
 - [P-003](../../research/principle-registry.md#p-003--temporary-trace-before-commitment)
 - [P-007](../../research/principle-registry.md#p-007--prediction-error-allocation)

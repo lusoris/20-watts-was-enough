@@ -6287,3 +6287,366 @@ describes the exact statement here, not a broader interpretation.
   [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
   [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
   [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-417
+
+- **Statement:** Unrestricted linear age, period, and cohort effects are not
+  uniquely identified because cohort equals period minus age.
+- **Status:** established.
+- **Primary sources:** `mason1973cohort`, `bell2013impossibility`.
+- **Rationale:** The dependency is algebraic; more observations or lower noise
+  do not identify three unrestricted trends.
+- **Open issue:** Every usable decomposition must expose its constraints,
+  priors, curvature, external variation, or mechanistic assumptions.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md),
+  [population math](../math/population-observation.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-418
+
+- **Statement:** Age–period–cohort estimators encode identifying constraints or
+  priors even when those constraints are implicit.
+- **Status:** established.
+- **Primary sources:** `mason1973cohort`, `bell2013impossibility`.
+- **Rationale:** An algorithm cannot remove exact collinearity without adding
+  structure that allocates variation among the terms.
+- **Open issue:** Nonlinear deviations may remain estimable under declared
+  models, but they do not validate an unrestricted decomposition.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-419
+
+- **Statement:** Leslie matrices propagate age- or stage-structured counts
+  correctly under their declared transitions and interval.
+- **Status:** established.
+- **Primary source:** `leslie1945matrices`.
+- **Rationale:** The matrix operation is a conditional demographic accounting
+  model with dimensioned replication and probability transitions.
+- **Open issue:** Forecasting additionally requires migration treatment, rate
+  scenarios, uncertainty, and validation outside the fitting interval.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md),
+  [population math](../math/population-observation.md).
+
+### C-420
+
+- **Statement:** Equal population totals can imply different future paths when
+  lifecycle-stage composition differs.
+- **Status:** established.
+- **Primary sources:** `leslie1945matrices`, `keyfitz1971momentum`.
+- **Rationale:** Stage-specific replication, survival, transition, and migration
+  expose state hidden by one total.
+- **Open issue:** A registered aggregation is acceptable only if it preserves
+  the future quantities used by the decision.
+- **Used by:** [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md),
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-421
+
+- **Statement:** A population can continue growing after an immediate shift to
+  replacement fertility because of its age composition.
+- **Status:** established.
+- **Primary source:** `keyfitz1971momentum`.
+- **Rationale:** Momentum is a conditional consequence of initial structure and
+  the post-change rate scenario.
+- **Open issue:** This demographic result must not be relabeled as optimizer
+  momentum in engineered systems.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md).
+
+### C-422
+
+- **Statement:** Mortality decline, fertility decline, and population aging form
+  a broad descriptive regularity with heterogeneous timing and mechanisms, not
+  an inevitable stage law.
+- **Status:** plausible.
+- **Primary source:** `lee2003transition`.
+- **Rationale:** Long-run demographic synthesis supports the sequence while
+  documenting large variation.
+- **Open issue:** Policy, institutions, health, technology, and family behavior
+  prevent one universal transition rate or cause.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md).
+
+### C-423
+
+- **Statement:** Working-age composition affects growth only through
+  complementary employment, health, education, capital, and institutional
+  conditions.
+- **Status:** plausible.
+- **Primary source:** `bloom1998transitions`.
+- **Rationale:** Composition creates an opportunity rather than an automatic
+  demographic dividend.
+- **Open issue:** Aggregate historical regressions do not isolate one portable
+  effect or intervention.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md).
+
+### C-424
+
+- **Statement:** Unified growth models can reproduce broad demographic and
+  economic regimes retrospectively.
+- **Status:** established.
+- **Primary source:** `galor2000population`.
+- **Rationale:** The formal model demonstrates explanatory capability under its
+  chosen mechanisms and calibration.
+- **Open issue:** Fit does not establish unique mechanism, causal identification,
+  or prospective forecast skill.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md).
+
+### C-425
+
+- **Statement:** Migrants are commonly selected relative to stayers, so naive
+  destination comparisons can be biased.
+- **Status:** established.
+- **Primary source:** `sjaastad1962migration`.
+- **Rationale:** Migration is a choice shaped by costs and expected returns;
+  observed movers need not represent the source population.
+- **Open issue:** Selection direction, migration constraint, and destination
+  assignment are context-specific.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md),
+  [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md).
+
+### C-426
+
+- **Statement:** Refugee-dispersal policies can supply quasi-experimental
+  variation in enclave exposure for eligible populations.
+- **Status:** established.
+- **Primary sources:** `edin2003enclaves`, `damm2009enclaves`.
+- **Rationale:** Administrative placement reduces part of the ordinary location-
+  choice confounding under bounded cohorts and policies.
+- **Open issue:** Compliance, later movement, eligibility, interference, and
+  external validity remain.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md).
+
+### C-427
+
+- **Statement:** Migration networks may transmit job or task information while
+  also creating selection and lock-in.
+- **Status:** plausible.
+- **Primary sources:** `edin2003enclaves`, `damm2009enclaves`.
+- **Rationale:** Enclave exposure can change access to information and resources,
+  but movers and destinations are jointly selected outside strong designs.
+- **Open issue:** Network effect, mover selection, destination effect, and
+  switching cost must be independently varied.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-428
+
+- **Statement:** Bass or logistic adoption curves do not identify interpersonal
+  influence.
+- **Status:** established.
+- **Primary source:** `bass1969growth`.
+- **Rationale:** Similar curves can arise from independent exposure, common
+  broadcast, command, homophily, network influence, or mixtures.
+- **Open issue:** Influence needs intervention or additional identifying
+  assumptions, not curve fit alone.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-429
+
+- **Statement:** Similar mean individual thresholds can produce different
+  aggregate outcomes when threshold distributions differ.
+- **Status:** established.
+- **Primary source:** `granovetter1978threshold`.
+- **Rationale:** Collective cascades depend on the distribution and exposure
+  process, not only an average threshold.
+- **Open issue:** Thresholds are latent unless the design observes or identifies
+  them.
+- **Used by:** [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-430
+
+- **Statement:** Clustered reinforcement increased adoption in Centola's bounded
+  online social-network experiment.
+- **Status:** established.
+- **Primary source:** `centola2010spread`.
+- **Rationale:** Randomized network structure supports a context-bounded causal
+  effect for the studied behavior.
+- **Open issue:** It does not generalize to every behavior, network, population,
+  or truth-sensitive decision.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-431
+
+- **Statement:** Homophily and contagion are generically confounded in
+  unrestricted observational social-network studies.
+- **Status:** established.
+- **Primary source:** `shalizi2011homophily`.
+- **Rationale:** Similarity can cause ties and correlated change without peer
+  influence, leaving observational distributions non-identifying.
+- **Open issue:** Experiments, measured latent traits, timing, or strong
+  substantive restrictions are needed.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-432
+
+- **Statement:** A high-variance principal component in coded historical data
+  establishes covariance under that sample and coding, not a universal causal
+  complexity ladder.
+- **Status:** established.
+- **Primary source:** `turchin2018complexity`.
+- **Rationale:** Component orientation and explained variance depend on selected
+  variables, scales, missingness, populations, and transformations.
+- **Open issue:** Causal and temporal interpretations require separate designs
+  and held-out tests.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md).
+
+### C-433
+
+- **Statement:** Seshat demonstrates feasibility of provenance-rich comparative
+  quantitative history.
+- **Status:** established.
+- **Primary sources:** `turchin2013war`, `turchin2018complexity`.
+- **Rationale:** The infrastructure organizes coded observations, sources, and
+  expert review across many historical cases.
+- **Open issue:** Database scale does not remove construct, archive, coding,
+  survival, or sampling uncertainty.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-434
+
+- **Statement:** Chronological alignment of environmental and political change
+  supports but does not alone identify a collapse mechanism.
+- **Status:** established.
+- **Primary source:** `kennett2012maya`.
+- **Rationale:** Temporal association is compatible with mediation, migration,
+  common causes, feedback, and selected record survival.
+- **Open issue:** Lead/lag structure and alternative causal models must remain
+  visible.
+- **Used by:** [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-435
+
+- **Statement:** Large urban systems can recover relative size after severe
+  temporary shocks in some settings.
+- **Status:** established.
+- **Primary source:** `davis2002bones`.
+- **Rationale:** The studied city populations show substantial persistence and
+  reconstruction after wartime shocks.
+- **Open issue:** Relative population recovery is not universal functional,
+  institutional, network, or welfare recovery.
+- **Used by:** [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-436
+
+- **Statement:** Collapse and recovery require a declared vector of population,
+  service, authority, network, governance, reserve, and identity outcomes.
+- **Status:** plausible.
+- **Primary sources:** bounded evidence and limits in `kennett2012maya` and
+  `davis2002bones`.
+- **Rationale:** One returning count can hide lost functions, changed
+  composition, exhausted reserve, or compensating structures.
+- **Open issue:** Any scalar weighting is task- and authorization-specific.
+- **Used by:** [population math](../math/population-observation.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-437
+
+- **Statement:** Persistence is insufficient evidence of path dependence.
+- **Status:** established.
+- **Primary source:** `nunn2008slave` as a design-specific illustration; the
+  general requirement is methodological.
+- **Rationale:** Path dependence needs an alternative reachable path and a
+  named reinforcement mechanism that makes sequence consequential.
+- **Open issue:** Warm starts, hysteresis, autocorrelation, and omitted stable
+  causes are competing explanations.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-438
+
+- **Statement:** Long-run historical exposure can affect current outcomes
+  through multiple institutional, cultural, and network channels.
+- **Status:** plausible.
+- **Primary sources:** `nunn2008slave`, `acemoglu2001colonial`.
+- **Rationale:** Design-specific historical studies estimate persistent
+  associations or effects and propose mediating paths.
+- **Open issue:** Every result depends on its identification, measurement,
+  population, and mediation assumptions.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md).
+
+### C-439
+
+- **Statement:** Historical records are selected by production, survival,
+  discovery, retention, and coding.
+- **Status:** established.
+- **Primary sources:** `rubin1976missing`, `heckman1979selection`,
+  `surovell2009taphonomic`.
+- **Rationale:** Missing-data, selection, and taphonomic mechanisms all mediate
+  the observed archive.
+- **Open issue:** Their probabilities are rarely independent or fully known.
+- **Used by:** [population math](../math/population-observation.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-440
+
+- **Statement:** Taphonomic loss can make recent archaeological material
+  overrepresented.
+- **Status:** established.
+- **Primary source:** `surovell2009taphonomic`.
+- **Rationale:** Preservation and recovery probability vary with age and context,
+  distorting raw temporal frequency.
+- **Open issue:** Correction form is material-, environment-, and observation-
+  specific.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-441
+
+- **Statement:** Unrestricted missing-not-at-random data are not recoverable
+  from observed values alone.
+- **Status:** established.
+- **Primary sources:** `rubin1976missing`, `heckman1979selection`.
+- **Rationale:** The unobserved outcome can affect selection after conditioning
+  on available data, leaving multiple compatible full-data distributions.
+- **Open issue:** External data, instruments, selection models, bounds, or
+  sensitivity ranges must supply additional structure.
+- **Used by:** [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-442
+
+- **Statement:** Long-run instrumental-variable estimates depend on relevance,
+  exclusion, independence, measurement, and population assumptions.
+- **Status:** established.
+- **Primary sources:** `acemoglu2001colonial`, `albouy2012colonial`.
+- **Rationale:** Historical controversy illustrates that instrument construction
+  and exclusion cannot be replaced by narrative plausibility.
+- **Open issue:** Local estimates may not transport to the prospective system or
+  policy of interest.
+- **Used by:** [quantitative-history audit](audits/2026-08-05-quantitative-history-demography.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-443
+
+- **Statement:** Retrospective fit and random-row validation can overstate
+  forecasting evidence under temporal, spatial, or lineage dependence.
+- **Status:** established.
+- **Primary sources:** `stone1974crossvalidation`, `makridakis2020m4`.
+- **Rationale:** Validation must withhold the dependency structure over which
+  future transfer is claimed.
+- **Open issue:** Rolling-origin, place, lineage, regime, vintage, and live
+  holdouts answer different questions and should be preregistered.
+- **Used by:** [population math](../math/population-observation.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-444
+
+- **Statement:** A cohort-aware versioned population monitor may reduce false
+  historical narratives in evolving artificial systems.
+- **Status:** speculative.
+- **Primary sources:** no direct validation; constituent boundaries are in
+  [C-417](#c-417)–[C-443](#c-443).
+- **Rationale:** It jointly carries cohort, lifecycle stage, period, migration,
+  replication, retirement, selection, record survival, vintage, scenario, and
+  frozen forecast lineage.
+- **Open issue:** The composition must beat ordinary cohort accounting, survival
+  analysis, state-space estimation, nonstationary learning, missing-data
+  sensitivity, and time-blocked forecasting.
+- **Used by:** [population math](../math/population-observation.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md).

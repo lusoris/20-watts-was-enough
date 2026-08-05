@@ -8,6 +8,9 @@ notation.
   model and explains why the inherited brain/GPU ratio is invalid.
 - [`memory-lifecycle.md`](memory-lifecycle.md) defines a constrained replay,
   consolidation, and forgetting controller.
+- [`population-observation.md`](population-observation.md) separates stocks,
+  flows, cohorts, lifecycle stages, selected records, causal identification,
+  collapse vectors, and frozen prospective tests.
 
 Rules:
 
