@@ -122,6 +122,33 @@ No implementation may collapse all of these into “confidence” and retain the
 same claim. Residual magnitude, likelihood, expected value, and risk answer
 different questions.
 
+### Observation is affected by action
+
+The acquisition model must also represent how sensing and response change the
+future observation channel. Operational telemetry can be delayed, incomplete,
+pooled, or policy-coupled: robust residual methods remain strong nulls
+([C-124](../research/claims.md#c-124)); current counts can omit events that
+occurred but have not yet arrived ([C-126](../research/claims.md#c-126)); pooled
+signals can trade attribution for coverage ([C-127](../research/claims.md#c-127));
+and a fast behavioral proxy can drift with platform, attention, or policy
+([C-128](../research/claims.md#c-128)).
+
+More importantly, an action can alter both hidden state and telemetry. Isolation
+may reduce propagation while also removing the isolated component's messages;
+throttling can suppress an error count by suppressing all traffic; a warning can
+change user behavior; and a new sensor policy changes which events can be
+observed. The controller therefore versions coverage, delay, ascertainment,
+observation-model state, and every sensing or response action. A drop in the
+post-action residual is not independent recovery evidence
+([C-131](../research/claims.md#c-131)).
+
+[Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md)
+tests joint process/observation estimation against residual CUSUM/GLR,
+nowcasting, maximum coverage, value-of-information sampling, and delay-aware
+POMDP or model-predictive control. It must use true data vintages, preserve
+subgroup coverage, estimate counterfactual observation paths, and charge
+investigation and action capacity as well as compute.
+
 ### Price a menu of acquisitions
 
 At event $t$, the system considers a finite action menu $\mathcal A_t$:
@@ -395,6 +422,8 @@ metabolism” is not a substitute for that comparison.
 | congestion-triggered reserve route | [C-035](../research/claims.md#c-035) | established in the ant experiment; conventional routing remains the null |
 | multirate broadcast and local decoding | [C-046](../research/claims.md#c-046)–[C-048](../research/claims.md#c-048) | biological observations established; AI mechanism is Candidate 002 |
 | local demand, placement, and supply | [C-049](../research/claims.md#c-049)–[C-051](../research/claims.md#c-051) | cellular observations established; artificial resource plane untested |
+| sparse, delayed, pooled, and policy-coupled surveillance | [C-122](../research/claims.md#c-122)–[C-131](../research/claims.md#c-131) | scoped epidemiological and statistical evidence; AI-system translation is Candidate 007 |
+| joint process/observation estimation with action provenance | [C-132](../research/claims.md#c-132) | speculative composition against POMDP, detection, nowcasting, and value-of-information nulls |
 
 The integrated runtime is speculative until its gates are tested separately
 and then recombined under one measurement boundary. A combined win cannot

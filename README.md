@@ -47,12 +47,13 @@ state. See [decision 0005](decisions/0005-rendered-private-edition.md).
 | [Thesis and principles](concept/00-thesis-and-principles.md) | What is the project's central engineering hypothesis? |
 | [Working architecture](concept/01-working-architecture.md) | How do runtime, adaptation, maintenance, resource control, and generative recombination form one system? |
 | [Biology is a launchpad](concept/05-biology-is-a-launchpad.md) | Which biological constraints transfer, and which substrate limits should engineering escape? |
-| [Neurogenesis and routing](concept/10-neurogenesis-and-routing.md) | How can a large developmental capacity become conditionally active modules? |
-| [Sensorimotor grounding](concept/20-sensorimotor-grounding.md) | What must be learned before language can describe a world model? |
+| [Cross-domain convergence](concept/07-cross-domain-convergence.md) | How do different sciences collapse into shared problem–solution principles without losing causal differences? |
+| [Structural growth and routing](concept/10-neurogenesis-and-routing.md) | How does a persistent capability gap create, test, specialize, merge, protect, or retire conditional modules? |
+| [Sensorimotor grounding](concept/20-sensorimotor-grounding.md) | Which event, clock, intervention, missingness, language, uncertainty, and provenance contracts ground a world model? |
 | [Sparse predictive compute](concept/30-sparse-predictive-compute.md) | How do event, context, and resource loops price the next computation or observation? |
 | [Memory and consolidation](concept/40-memory-and-consolidation.md) | How does an episode become a retained skill, external fact, weakened trace, or deletion? |
 | [Maturity and structural consolidation](concept/50-grokking-and-pruning.md) | When should a structure be protected, reopened, compacted, or retired? |
-| [Hardening and factual memory](concept/60-hardening-and-factual-memory.md) | What should become a low-cost skill, remain plastic, or move outside weights? |
+| [Hardening and factual memory](concept/60-hardening-and-factual-memory.md) | Which qualified path becomes compiled, remains a reusable skill, enters versioned factual memory, or escalates? |
 | [System synthesis](concept/70-system-synthesis.md) | How do runtime, task, resource, adaptation, and maintenance control planes fit together? |
 | [Energy evaluation contract](concept/80-energy-model.md) | How are lifecycle boundaries, equal budgets, break-even, uncertainty, and null models enforced? |
 | [Research roadmap](concept/90-research-roadmap.md) | What evidence and experiments are required before building the full system? |

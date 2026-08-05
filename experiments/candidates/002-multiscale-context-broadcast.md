@@ -39,6 +39,11 @@ earn a new principle.
   not a few-to-many context signal.
 - [C-030](../../research/claims.md#c-030) supports recurring transient network
   states as an observational result, not causal broadcast control.
+- [C-068](../../research/claims.md#c-068)–[C-071](../../research/claims.md#c-071)
+  and [C-075](../../research/claims.md#c-075) show that pulse timing and local
+  receiver state can alter measured downstream responses in endocrine and
+  circadian preparations. They motivate waveform controls, not hormone-named
+  artificial channels.
 - [C-003](../../research/claims.md#c-003) establishes conditional routing as an
   AI baseline that this mechanism must improve upon rather than rename.
 - [P-001](../../research/principle-registry.md#p-001--selective-allocation),
@@ -302,7 +307,7 @@ labeled as a higher-bandwidth upper bound.
 | B5 | Bottleneck global token | A learned projection of quantized $b_t$ creates one token that local module tokens cross-attend to |
 | B6 | Standard global token | One hidden-width context token is computed directly from $g_t$ and mixed through attention; quality upper bound with its actual larger traffic charged |
 | B7 | Low-rank hypernetwork | Quantized $b_t$ generates bounded rank-$r$ adapters or gate weights for each module |
-| B8 | Tuned multirate receiver bank | Fixed-form IIR filters and module gains selected by system identification or search; no neural receiver |
+| B8 | Tuned multirate receiver bank | Fixed-form FIR/IIR or identified state-space filters, pulse-width/frequency decoders, and module gains selected by system identification or search; no neural receiver |
 | B9 | Gain-scheduled supervisory control | Task B only: nominal per-plant LQR controllers, fast safety override, and a slow regime supervisor, tuned on the same training distribution |
 | B10 | Oracle context | True $c_t^F,c_t^S$ and generator/plant parameters; unattainable diagnostic ceiling, never eligible as a learned winner |
 
@@ -315,6 +320,25 @@ temporal task trivial. The hypernetwork generates weights as in the conventional
 definition—one network producing parameters for another—not as a biological
 analogy. B8 and B9 are necessary because the candidate receiver is also a
 multirate control structure.
+
+### Boundary test: transient receiver versus persistent local phase
+
+Endocrine and circadian evidence adds a boundary the primary tasks must not
+blur. A filtered receiver state decays toward its input-conditioned equilibrium;
+an autonomous local oscillator carries phase between sparse corrections. Run a
+diagnostic variant that independently phase-shifts data arrival, local compute,
+maintenance, and resource windows while holding their totals fixed. Compare:
+
+1. the primary transient receiver;
+2. a global timestamp plus fixed cyclic schedule;
+3. local timers with phase-locked-loop correction;
+4. distributed clock discipline; and
+5. a learned local phase controller with the same state and communication cap.
+
+If the task rewards only phase tracking, a clock method is the correct null and
+Candidate 002 is rejected for that regime. A distinct phase-state experiment is
+justified only if receiver-dependent behavior and task value survive those
+clock and scheduling baselines.
 
 ## Equal-budget protocol
 
@@ -475,6 +499,11 @@ as a diagnostic sweep.
 14. **Precision sweep:** $q\in\{4,8,16\}$ bits per update.
 15. **Receiver-state capacity sweep:** one IIR state, the primary two-state
     receiver, and a parameter-matched GRU receiver.
+16. **Equal-integral waveform controls:** compare constant, pulsed, and phase-
+    scrambled broadcasts with matched transmitted bits and time-integrated
+    magnitude.
+17. **Persistent-phase substitution:** replace the receiver with the best
+    equal-state timer/PLL or learned phase controller from the boundary test.
 
 Selective evidence for H3 requires an interaction: the fast-branch ablation
 must damage fast-event metrics more than slow steady-state metrics, and the

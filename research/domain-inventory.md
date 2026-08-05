@@ -40,7 +40,7 @@ when all of its useful observations deduplicate into an existing principle.
 | Regeneration and morphogenesis | target-state repair and positional memory | [P-006](principle-registry.md#p-006--homeostatic-negative-feedback), [P-009](principle-registry.md#p-009--maintenance-plane) | partial | bioelectric target states, salamander limb repair, cancer suppression |
 | Evolution and development | evolvability, canalization, modularity, robustness | [P-004](principle-registry.md#p-004--diversity-selection-and-protection), [P-010](principle-registry.md#p-010--structural-offloading-and-co-design) | partial | gene-regulatory construction, exaptation, open-ended novelty |
 | Collective animal behavior | local rules, consensus, leadership, fission–fusion | P-011 plus held thresholded-commitment candidate | partial | correlated-error quorum tests, fission–fusion, adversarial capture |
-| Endocrine and hormonal control | low-bandwidth global context and multi-timescale regulation | unresolved | queued | stress axes, circadian control, growth and satiety signals |
+| Endocrine and hormonal control | low-bandwidth global context, waveform decoding, local entrainment, and multi-timescale regulation | P-002, P-006, P-009, P-011 plus held context-broadcast and entrainable-phase candidates | partial | growth, satiety, reproductive axes, receptor adaptation, and cross-axis conflict |
 | Vascular and metabolic networks | resource allocation, demand response, redundancy | P-001, P-002, P-009, P-010 | partial | causal remodeling after demand shifts or damage; organ-level budgeting |
 | Microbiomes and host ecosystems | cooperative/competitive consortia and regime shifts | P-004, P-008, P-009, P-013 | partial | expression-aware capability repair, longitudinal recovery, host feedback |
 | Ecology | resilience, diversity, succession, niche construction | P-004, P-006 plus held fragility-sensing candidate | partial | false alarms across transition classes, succession, portfolio effects |
@@ -56,9 +56,9 @@ when all of its useful observations deduplicate into an existing principle.
 | Statistical decision theory | uncertainty, exploration, sequential tests, change detection | P-003, P-004, P-007 | partial | robust Bayesian, sequential, and value-of-information baselines |
 | Dynamical systems | attractors, metastability, bifurcation, critical transitions | P-006, P-011 | partial | non-bifurcation failures and reliable active fragility estimation |
 | Network science | adaptive graphs, percolation, robustness, multilayer networks | P-005, P-008, P-011 | partial | common benchmark for neural, fungal, slime-mold, and routing graphs |
-| Error-correcting codes and fault tolerance | redundancy, reconstruction, graceful degradation | P-004, P-009 | queued | compare regeneration metaphors with coding and checkpoint baselines |
+| Error-correcting codes and fault tolerance | redundancy, exact reconstruction, rollback, failure detection, legitimate-set convergence, graceful degradation | P-004, P-006, P-009, P-013 plus held constraint-guided functional reconstruction | partial | semantic/common-mode faults, heterogeneous redundancy, and energy-aware behavioral scrubbing |
 | Thermodynamics and physical computing | energy limits, reversible operations, embodied computation | P-007, P-010 | partial | separate Landauer limits, device switching, data movement, and facility cost |
-| Materials and self-assembly | computation in morphology, hysteresis, self-repair | P-006, P-010 | queued | programmable matter, mechanical logic, adaptive materials |
+| Materials and self-assembly | computation in morphology, hysteresis, self-repair | P-006, P-009, P-010 plus held reversible physical skill compilation | partial | [adaptive-materials audit](audits/2026-08-05-adaptive-materials-and-self-assembly.md); next: fabrication yield, embodied energy, analog drift, and scalable interfaces |
 | Robotics | active sensing, morphology, local control, sim-to-real | P-002, P-007, P-010 | partial | matched embodied experiments for principle bundles |
 | Computer architecture | memory hierarchy, near-memory compute, fabrics, precision | P-001, P-002, P-010, P-012 | partial | identify silicon-native implementation for each accepted invariant |
 
@@ -69,29 +69,29 @@ not obvious. Rows are research queues, not claims of useful transfer.
 
 | Domain family | Example fields and systems | Problem patterns to search | State |
 | --- | --- | --- | --- |
-| Molecular and cellular regulation | gene regulation, signaling pathways, organelles, proteostasis | distributed control, error correction, turnover, compartmentalization | queued |
-| Endocrine and whole-body physiology | hormonal axes, circadian systems, metabolism, exercise adaptation | low-bandwidth context, multi-timescale control, resource arbitration | queued |
+| Molecular and cellular regulation | gene regulation, signaling pathways, organelles, proteostasis | distributed control, load shedding, tagged routing, selective extraction, turnover, compartmentalization | partial; [cellular quality-control audit](audits/2026-08-05-cellular-quality-control.md); next: transcriptional networks, kinetic proofreading, organelle contact sites |
+| Endocrine and whole-body physiology | hormonal axes, circadian systems, metabolism, exercise adaptation | low-bandwidth context, multi-timescale control, resource arbitration | partial |
 | Development and morphogenesis | embryology, tissue patterning, wound repair, metamorphosis | staged commitment, positional state, self-construction, reversible plasticity | partial |
 | Pathology and rehabilitation | cancer, autoimmunity, neurodegeneration, physical rehabilitation | capture, misgeneralization, failure containment, recovery and relearning | queued |
-| Epidemiology and public health | transmission networks, surveillance, intervention policy | sparse sensing, delayed feedback, change detection, robust allocation | queued |
+| Epidemiology and public health | transmission networks, surveillance, intervention policy | sparse sensing, delayed and endogenous observation, pooled state, sequential detection, robust allocation | partial; [surveillance-control audit](audits/2026-08-05-epidemiology-and-surveillance-control.md); next: causal surveillance design, privacy, multi-hazard allocation, and prospective evaluation |
 | Paleobiology and origins | major transitions, extinction, symbiosis, early replication | evolvability, bottlenecks, cooperation, open-ended search | queued |
-| Earth and climate systems | atmosphere, oceans, biogeochemical cycles, tipping elements | multiscale coupling, latent-state inference, regime shift, hysteresis | queued |
+| Earth and climate systems | atmosphere, oceans, biogeochemical cycles, tipping elements | multiscale coupling, latent-state inference, transition-class boundaries, hysteresis, observation-model uncertainty | partial; [transition-signal audit](audits/2026-08-05-earth-system-transition-signals.md); next: multiscale budgets, coupled tipping cascades, and data-assimilation nulls |
 | Geology and geomorphology | fracture networks, rivers, erosion, self-organized landscapes | topology formation, path dependence, transport under changing load | queued |
 | Astronomy and planetary science | orbital systems, stellar populations, remote inference | indirect sensing, filtering, multiscale dynamics, rare-event reasoning | queued |
 | Chemistry and reaction networks | catalysis, autocatalysis, reaction–diffusion, self-assembly | constrained search, local computation, pattern formation, kinetic proofreading | queued |
 | Soft matter and active matter | swarms, colloids, granular media, phase separation | emergent organization, local rules, jamming, state transitions | queued |
-| Materials science | metamaterials, shape-memory matter, self-healing composites | computation in structure, hysteresis, damage sensing, repair | queued |
+| Materials science | metamaterials, shape-memory matter, self-healing composites | computation in structure, hysteresis, damage sensing, repair | partial; [adaptive-materials audit](audits/2026-08-05-adaptive-materials-and-self-assembly.md) |
 | Mechanical and civil engineering | compliant mechanisms, structural health, transport grids | passive control, graceful degradation, reserve capacity, maintenance | queued |
 | Chemical and process engineering | reactors, separation networks, process control | recirculation, stability, fault isolation, energy integration | queued |
 | Aerospace and maritime systems | flight control, autonomy, navigation, redundancy | safety envelopes, local reflex, degraded operation, sensor fusion | queued |
 | Electrical power systems | grids, protection relays, demand response, microgrids | distributed synchronization, cascading failure, islanding, recovery | queued |
 | Security and cryptography | adversarial protocols, zero trust, authentication, secret sharing | distrust, verification, Byzantine failure, bounded information release | queued |
-| Programming languages and verification | types, proofs, contracts, interpreters, runtime checks | compositional guarantees, abstraction, rollback, safe specialization | queued |
+| Programming languages and verification | types, proofs, contracts, interpreters, runtime checks | compositional guarantees, scoped authority, monitored obligations, rollback, invalidation, safe specialization | partial; [PL/verification audit](audits/2026-08-05-programming-languages-verification.md); next: verified compilers, distributed protocols, proof repair, probabilistic programs, and learned-component specifications |
 | Databases and storage | transactions, indexing, replication, compaction, garbage collection | memory lifecycle, consistency, locality, maintenance | partial |
 | Human–computer interaction | mixed initiative, interruption, adaptive interfaces | calibrated escalation, shared state, uncertainty communication | queued |
 | Linguistics and communication science | syntax, pragmatics, language change, dialogue | compositional structure, compression, grounding, coordination | queued |
 | Anthropology and archaeology | cultural transmission, material records, distributed practice | external memory, cumulative adaptation, coordination across generations | queued |
-| Economics and market design | prices, auctions, firms, externalities, mechanism design | decentralized allocation, incentives, information aggregation, capture | queued |
+| Economics and market design | prices, auctions, firms, externalities, mechanism design | decentralized allocation, incentives, information aggregation, capture | partial; [economics audit](audits/2026-08-05-economics-market-design-incentives.md); next: dynamic contracts, computational constraints, organizational boundaries, and empirical platform governance |
 | Social choice and political science | voting, institutions, federation, collective action | quorum, minority protection, delegation, adversarial coordination | queued |
 | Organizational science and safety | high-reliability organizations, incident response, governance | escalation, redundancy, learning from near misses, maintenance culture | queued |
 | Quantitative history and demography | diffusion, collapse, migration, long-run population dynamics | path dependence, resilience, delayed feedback, selection bias | queued |

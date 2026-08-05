@@ -1,133 +1,305 @@
 # Research roadmap
 
+> A publication checkpoint records progress. Completion is earned by closing a
+> gate, retiring a hypothesis, or producing a reproducible result.
+
 ## Scope
 
-Sequence the work so the project earns the right to build more complex systems.
-The current repository completes Stage 0 structure; it does not implement a
-model.
+This roadmap converts an open-world research ambition into bounded iterations.
+Breadth remains unlimited: any scientific field may contain a transferable
+operation. Work remains finite because each iteration must change a canonical
+claim, principle, chapter, equation, diagram, decision, or experiment—or record
+that the new evidence changes none of them.
+
+The stages are dependency gates rather than dates. Evidence discovery,
+architecture writing, null-model comparison, and measurement design continue
+in parallel, but an integrated system does not inherit a mechanism merely
+because its audit is interesting.
 
 ## Biological observation
 
-Development is staged, but biological age does not define an engineering
-schedule. The useful principle is progressive commitment: gather evidence
-before making structures expensive or irreversible.
+Development, adaptation, and maintenance operate on different timescales.
+Variation precedes selection; temporary states can precede durable change;
+stable organization remains repairable; and recurring behavior can migrate
+into structure. Relevant observations are separated across
+[P-003](../research/principle-registry.md#p-003--temporary-trace-before-commitment),
+[P-004](../research/principle-registry.md#p-004--diversity-selection-and-protection),
+[P-009](../research/principle-registry.md#p-009--maintenance-plane), and
+[P-010](../research/principle-registry.md#p-010--structural-offloading-and-co-design).
+
+The engineering consequence is progressive commitment. Cheap reversible work
+comes first; expensive structural or hardware commitments require stronger
+evidence and longer reuse horizons.
 
 ## Proposed AI translation
 
-### Stage 0 — Evidence and contracts (current)
+### One research iteration
 
-- Keep claims, primary sources, math, provenance, and decisions reviewable.
-- Collect observations by scientific domain, then bundle recurring
-  problem–solution invariants in the
-  [principle registry](../research/principle-registry.md).
-- Treat every empirical, formal, and engineering science as discoverable under
-  the [open-world policy](../research/discovery-policy.md); exclude leads by
-  weak evidence or failed transfer, not by disciplinary appearance.
-- Maintain an adoption matrix so an existing niche implementation is not
-  mistaken for a new principle or for scale-ready evidence.
-- Define task, quality, risk, and energy contracts.
-- Turn each attractive mechanism into a falsifiable prediction.
-- Resolve or narrow the disputed inherited energy comparison.
+```mermaid
+flowchart LR
+    discover["Discover across fields"] --> scope["Scope evidence + boundary"]
+    scope --> dedupe["Deduplicate into P-principle"]
+    dedupe --> null["Name strongest null model"]
+    null --> contract["Write decisive contract"]
+    contract --> result{"Result"}
+    result -->|"supports"| promote["Promote scoped mechanism"]
+    result -->|"ties"| merge["Merge into conventional primitive"]
+    result -->|"fails"| retire["Retire translation; keep evidence"]
+    promote --> update["Update claim · chapter · math · diagram"]
+    merge --> update
+    retire --> update
+    update --> discover
+```
 
-**Exit gate:** every proposed mechanism maps to an evidence claim and a
-deduplicated principle; each principle selected for implementation has a
-baseline, ablation, metric, failure test, and declared system boundary.
+Editable source:
+[`../assets/diagrams/research-iteration-loop.mmd`](../assets/diagrams/research-iteration-loop.mmd).
+
+An iteration has three independently reviewable outputs:
+
+| Output | Minimum durable artifact | Meaningful completion |
+| --- | --- | --- |
+| evidence delta | dated audit, primary reference, scoped `C-` claim proposal | the observation and its boundary can be checked without the architecture prose |
+| synthesis delta | merge into a `P-` principle or a written discriminating reason to keep it separate | another field name does not create another mechanism by default |
+| decision delta | experiment contract, rejection, or explicit no-change record | the result changes what the project would build or test |
+
+### Parallel workstreams
+
+Four workstreams move continuously, with different exit conditions:
+
+1. **Discovery and evidence.** Sample under-covered fields by constrained
+   problem, audit primary sources, extract causal operations, and preserve
+   boundary conditions.
+2. **Principle synthesis.** Deduplicate observations using the mechanism tuple
+   in [chapter 07](07-cross-domain-convergence.md), then update the shared
+   primitive rather than accumulating themed components.
+3. **Concept closure.** Turn retained principles into readable data contracts,
+   control paths, state ownership, equations, null models, failure signatures,
+   graphics, and measurable predictions.
+4. **Decisive testing.** Compare one operation at a time against the strongest
+   conventional method at equal interface, budget, hardware, and quality–risk
+   envelope.
+
+### Stage 0 — Evidence, synthesis, and contracts
+
+Stage 0 is complete for a mechanism only when:
+
+- its observation has at least one scoped claim and primary source;
+- its nearest existing AI and engineering analogues are recorded;
+- its normalized operation maps to a `P-` principle or a held candidate;
+- the affected chapter exposes state, information flow, timescale, physical
+  boundary, and failure behavior;
+- every equation defines symbols and units;
+- a conventional null, ablation, measurement envelope, and rejection condition
+  exist; and
+- imported discussions remain provenance rather than evidence.
+
+The repository structure satisfies this workflow. Individual mechanisms remain
+at different positions inside it; the
+[domain inventory](../research/domain-inventory.md) and
+[adoption matrix](../research/adoption-matrix.md) expose those differences.
 
 ### Stage 1 — Isolated mechanism experiments
 
-- Conditional routing versus dense capacity.
-- Early exit under calibrated distribution shift.
-- Latent prediction on aligned perception–action trajectories.
-- Episodic replay plus alternative interference controls.
-- Structured pruning with causal and magnitude baselines.
-- Quantization and retrieval as separate promotion targets.
-- Homeostatic conditional routing versus task-loss-only load balancing.
-- Local eligibility plus delayed modulation versus full global updates.
-- Peripheral autonomy plus exception escalation versus central control.
-- A maintenance plane for reversible replay and pruning decisions.
-- [Adaptive logical topology](../experiments/candidates/001-adaptive-topology.md)
-  versus fixed routing, global reoptimization, and oracle bounds.
-- [Multiscale context broadcast](../experiments/candidates/002-multiscale-context-broadcast.md)
-  versus FiLM, recurrent gates, global tokens, hypernetworks, and supervisory
-  control at a hard communication budget.
-- [Recovery-based fragility sensing](../experiments/candidates/003-recovery-dynamics-fragility.md)
-  versus SLOs, sequential change detection, passive identification, and active
-  system identification.
-- A closed-endogenous-curriculum experiment separating imitation, stochastic
-  proposal generation, targeted intervention, and evaluation.
+The first tests isolate control operations before composing them.
 
-**Exit gate:** at least one mechanism moves a quality–risk–energy Pareto frontier
-using wall energy, not only theoretical FLOPs.
+| Contract | Candidate operation | Strong null classes | Gate |
+| --- | --- | --- | --- |
+| [001 adaptive topology](../experiments/candidates/001-adaptive-topology.md) | reversible birth, routing, merge, and retirement | fixed sparse routing, periodic/global reoptimization, oracle bounds | structural changes improve a declared frontier after controller and migration cost |
+| [002 context broadcast](../experiments/candidates/002-multiscale-context-broadcast.md) | rate-limited context decoded by receiver-local temporal filters | FiLM, recurrent gates, global tokens, low-rank hypernetworks, gain scheduling | extra temporal decoding value survives an equal bit-rate and state interface |
+| [003 transition-class-aware recovery dynamics](../experiments/candidates/003-recovery-dynamics-fragility.md) | bounded probes estimate hidden restoring margin and reject inapplicable transition classes | SLO/headroom, change detection, state-space ID, observability analysis, mechanism-specific indicators | useful warning survives probe and false-action cost while noise, rate, boundary, hidden-mode, and jump cases receive calibrated abstention |
+| [004 endogenous curriculum](../experiments/candidates/004-closed-endogenous-curriculum.md) | generate, intervene, evaluate, and retain structured proposals | imitation, matched stochastic sampling, active learning, model-based planning, evolutionary search | compositional or causal gain survives equal proposal, interaction, evaluation, memory, and energy budgets |
+| [005 severity-ordered containment](../experiments/candidates/005-severity-ordered-containment.md) | contain spread, choose the least destructive qualified response, verify, escalate, and replenish | circuit breakers, static isolation, checkpoints, replicas, microrestart, scrubbing, rejuvenation, Bayesian repair/replace | collateral-loss and availability gains survive sensing, reserve, copying, replacement, and verification cost |
+| [006 reversible physical skill](../experiments/candidates/006-reversible-physical-skill.md) | compile a mature physical mapping into a rewritable local substrate with health probes and digital fallback | passive mechanics, analog control, FPGA/ASIC, fixed physical and matched digital reservoirs | a measured conversion, transport, recurrence, or command path is removed and lifecycle break-even precedes qualified retirement |
+| [007 endogenous-observation surveillance](../experiments/candidates/007-endogenous-observation-surveillance.md) | jointly estimate hidden state and action-altered observation while preserving sensing/action provenance | residual CUSUM/GLR, nowcasting, maximum coverage, value-of-information sampling, delay-aware POMDP/MPC | decisions improve on true data vintages without mistaking policy-induced telemetry suppression for recovery |
+| [008 contestable modular allocation](../experiments/candidates/008-contestable-modular-allocation.md) | withheld audits, protected entrants, real opportunity consequences, and replayable commitments under measured strategic private information | calibrated routers, constrained/primal–dual control, contextual bandits, randomized evaluation, applicable matching/scoring mechanisms | tie or lose under cooperative direct observability; improve protected outcomes under gaming, identity, collusion, and allocator threats at equal cost |
+| [009 graded assurance envelopes](../experiments/candidates/009-graded-assurance-envelopes.md) | bind distinct proof, effect, authority, evaluation, monitor, provenance, update, and recovery claims to a module version and invalidation graph | typed APIs, sandbox/IAM, CI/static analysis, runtime policy monitoring, lineage, canaries, transactions, schema/build invalidation | reduce unsafe admission, stale assurance, collateral rollback, and attribution time beyond the complete composed null at equal lifecycle budget |
+| grounding loop | action-conditioned multimodal prediction and acquisition | passive multimodal learning, text-centric pretraining, standard world models | intervention and composition gains survive shortcut and missing-modality controls |
+| memory lifecycle | capture, replay, externalize, weaken, or delete | reservoirs, prioritized replay, databases, caches, continual-learning regularizers | retention–adaptation improvement survives storage, maintenance, and deletion risk |
+| mature hardening | compile, quantize, retrieve, or keep plastic through separate gates | compiler/autotuning, standard quantization, RAG, caching, distillation | each target produces a physical saving without freshness or recovery regression |
 
-### Stage 2 — Two-loop prototype
+**Stage-1 exit gate:** at least one isolated operation changes the measured
+quality–risk–latency–energy frontier relative to its strongest null. A tie
+merges the biological translation into the conventional primitive; a loss
+retires the translation while preserving the source evidence.
 
-Combine a sparse runtime loop with episodic capture and offline consolidation.
-Keep the task environment small enough for full ablation and energy accounting.
+### Stage 2 — Runtime plus adaptation
 
-**Exit gate:** sequential adaptation improves without hidden lifecycle energy or
-retention regressions.
+Combine the event controller from [chapter 30](30-sparse-predictive-compute.md)
+with attributable episodic capture from
+[chapter 40](40-memory-and-consolidation.md). Keep slow structural state
+protected while a branch adapts.
+
+Required composed ablations:
+
+- runtime only;
+- adaptation only;
+- runtime plus adaptation without maintenance pricing;
+- full two-loop system with storage, replay, rollback, and controller cost; and
+- dense or monolithic continual-learning baselines at the same capacity and
+  observation stream.
+
+**Stage-2 exit gate:** sequential adaptation improves a declared task stream
+without a retention, calibration, rare-event, rollback, or lifecycle-energy
+regression hidden by the average score.
 
 ### Stage 3 — Grounded developmental curriculum
 
-Add temporally aligned perception, action, outcome, and language. Compare
-passive multimodal, action-conditioned, and text-centric curricula at matched
-capacity and data budget.
+Introduce temporally aligned perception, action, outcome, and language. Compare
+passive observation, action-conditioned prediction, targeted acquisition, and
+text-centric learning at matched capacity and interaction budget.
 
-**Exit gate:** held-out intervention and composition gains survive shortcut
-controls.
+The environment must expose interventions, counterfactual structure, missing
+modalities, sensor noise, delayed outcomes, and distribution shifts. Language
+may describe, query, or compress the learned state; it cannot be the only path
+by which every evaluation variable enters the model.
+
+**Stage-3 exit gate:** held-out intervention, temporal prediction, transfer,
+and composition gains survive leakage, memorization, simulator-state, and
+language-shortcut controls.
 
 ### Stage 4 — Structural maturation
 
-Apply reversible pruning, quantization, skill compilation, and factual-memory
-separation only to validated stable behavior.
+Apply the reversible maturity cycle from [chapter 50](50-grokking-and-pruning.md)
+and the separated hardening targets from
+[chapter 60](60-hardening-and-factual-memory.md). Candidate operations include
+structured pruning, module fusion, compilation, placement, quantization,
+retrieval externalization, write protection, and local reopening.
 
-**Exit gate:** lifecycle energy improves after discovery and compression costs
-are amortized.
+Every operation receives its own invalidation and recovery test. Parameter
+count is diagnostic; resident bytes, transferred bytes, wall energy, tail
+latency, maintenance, and rollback determine the system result.
+
+**Stage-4 exit gate:** benefits remain positive after discovery, validation,
+migration, shadow traffic, failed promotions, recovery, and the observed reuse
+horizon are included.
 
 ### Stage 5 — Substrate co-design
 
-Compare optimized conventional accelerators with event-driven or neuromorphic
-substrates such as the class demonstrated by
-[C-015](../research/claims.md#c-015). Architecture and hardware are allowed to
-co-evolve; neither wins by analogy.
+Compare accepted mechanisms on optimized conventional hardware and on
+event-driven, near-memory, neuromorphic, or other appropriate substrates.
+[C-015](../research/claims.md#c-015) establishes feasibility for a scoped class
+of event-driven systems; it does not select a winner for this workload.
 
-**Exit gate:** an independently reproducible end-to-end advantage on declared
-tasks and boundaries.
+Algorithm, precision, memory layout, interconnect, batching, cooling boundary,
+and hardware control policy become joint experimental variables. The same
+qualified event and quality–risk envelope apply to every substrate.
+
+**Stage-5 exit gate:** an independently reproducible end-to-end lifecycle
+advantage transfers beyond the workload or hardware used to tune it.
+
+### Breadth-wave decisions and next queue
+
+The latest completed audits already changed the architecture rather than merely
+adding citations:
+
+| Field cluster | Decision now recorded |
+| --- | --- |
+| endocrine and circadian control | most pulse decoding maps to P-002/P-006/P-011; persistent receiver-local phase remains held against clocks, timers, PLLs, and schedules in Candidate 002 |
+| proteostasis and organelle quality control | sensing, containment, triage, repair, extraction, removal, replacement, and verification are separated; their ordered composition is Candidate 005 |
+| fault tolerance and reconstruction | exact restore, coding, replication, detectors, scrubbing, and self-stabilization are mandatory nulls; only underdetermined functional repair remains speculative |
+| Earth-system transition signals | Candidate 003 is narrowed to gradual observable stability loss and now includes noise, rate, flickering, hysteresis, spatial, hidden-mode, boundary, jump, and benign-slowing controls |
+| adaptive materials and self-assembly | demonstrated physical computation, memory, patterning, assembly, and healing map to P-006/P-009/P-010; reversible physical skill compilation becomes Candidate 006 |
+| epidemiology and surveillance control | placement, delay, ascertainment, pooled proxies, and intervention feedback map to P-001/P-007/P-009/P-013; endogenous observation becomes Candidate 007 |
+| economics, market design, and incentives | prices, auctions, matching, scoring, bandits, sanctions, and ledgers map to existing bundles; contestable allocation becomes Candidate 008 only for persistent strategic private information |
+| programming languages and verification | proof, monitored behavior, authority, rollback, provenance, and empirical evidence remain distinct assurance classes; their versioned binding and invalidation becomes Candidate 009 |
+
+The active and next breadth queue is selected by expected ability to split,
+merge, reject, or re-baseline a current mechanism:
+
+| Field cluster | Mechanism question | Expected decision |
+| --- | --- | --- |
+| chemistry and reaction networks | when do kinetic proofreading, autocatalysis, compartmentalization, and reaction–diffusion create a distinct information–energy tradeoff? | test P-003/P-006/P-008/P-010 boundaries |
+| power grids and protection systems | when do local relays, islanding, synchronization, reserves, and black-start recovery outperform central coordination? | attack P-002/P-006/P-009 with mature infrastructure nulls |
+
+This queue is revised whenever an audit changes a principle, null model, or
+experiment. Breadth alone does not close a row.
 
 ## Efficiency mechanism
 
-The roadmap prevents compounding uncertain mechanisms before their individual
-costs are understood. Small falsifiable stages reduce research energy and make
-negative results reusable.
+Stage gates reduce the cost of compounding weak mechanisms. Shared principle
+bundles reuse telemetry, baselines, and test regimes; isolated rejection avoids
+paying for full-system integration; exact provenance prevents repeated searches;
+and negative results retire duplicated work.
+
+For stage $k$, let $E_{k,\mathrm{research}}$ and $E_{k,\mathrm{integration}}$
+be joules spent within declared research and compute boundaries. Let
+$p_{k,\mathrm{survive}}$ be the empirically estimated fraction of candidates
+that pass the isolated gate. The expected integration energy avoided by testing
+first is
+
+$$
+E_{k,\mathrm{avoided}}
+= (1-p_{k,\mathrm{survive}})E_{k,\mathrm{integration}}
+- E_{k,\mathrm{research}}.
+$$
+
+This quantity is reported only when both energy boundaries are actually
+measured; its purpose is to expose the cost of evaluation, not to assume that
+research automatically saves energy.
 
 ## Evidence status
 
-- The roadmap is a project decision, not an empirical claim.
-- Mechanism-specific status is recorded in
-  [`../research/claims.md`](../research/claims.md).
+- The ordering and gates are project decisions.
+- Mechanism-specific evidence remains in the
+  [claims ledger](../research/claims.md); roadmap placement does not promote a
+  claim.
+- The three existing experiment contracts are specified but not executed.
+- The five-stage composition and its lifecycle benefit remain speculative until
+  the gates produce measured results.
 - Sensorimotor transfer remains speculative under
   [C-007](../research/claims.md#c-007).
 
 ## Speculative extensions
 
-- Maintain a machine-readable experiment ledger once implementation begins.
-- Use energy-aware automated search only after the measurement proxy is
-  calibrated against hardware.
-- Publish negative results that falsify biological translations.
+- Maintain a machine-readable experiment ledger linked to commits, hardware
+  records, raw telemetry, derived figures, and claim-status changes.
+- Use active literature search to select the next field by expected impact on
+  an unresolved principle, not by publication volume.
+- Allocate compute to experiments by expected decision value and uncertainty
+  reduction once the proxy is calibrated against actual outcomes.
+- Run adversarial review agents whose only task is to find conventional
+  explanations, hidden costs, or domain evidence that breaks a principle.
+- Publish negative results and retired translations as reusable research
+  outputs rather than silently deleting them.
 
 ## Failure modes
 
-- Mechanism creep bypasses an exit gate.
-- Benchmarks reward average accuracy while hiding calibration or rare failures.
-- Documentation becomes detached from experiment artifacts.
-- Hardware comparison begins before the workload and boundary are stable.
-- A compelling narrative survives after its measurable predictions fail.
+- **Perpetual breadth:** new fields accumulate without changing principles or
+  experiments.
+- **Premature composition:** several plausible mechanisms are integrated before
+  any one survives its null model.
+- **Gate drift:** thresholds or comparison boundaries change after results are
+  visible.
+- **Mechanism creep:** a component enters the system without a claim, principle,
+  ablation, or owner.
+- **Proxy capture:** FLOPs, parameter count, or average accuracy substitutes for
+  measured physical cost and qualified behavior.
+- **Negative-result loss:** a failed translation disappears and later returns
+  under another domain name.
+- **Benchmark enclosure:** the roadmap optimizes a convenient task family that
+  no longer tests the intended operation.
+- **Documentation lag:** equations, diagrams, or claim status stop matching the
+  executed artifact.
+- **Hardware lock-in:** a mechanism is tuned to one substrate before its
+  functional interface is stable.
+- **Narrative immunity:** biological appeal preserves a mechanism after its
+  measurable predictions fail.
 
 ## Measurable predictions
 
-The roadmap is effective if each completed stage leaves:
-
-- reproducible baselines and measurements;
-- claim-status changes justified by evidence;
-- explicit negative results and retired hypotheses; and
-- smaller uncertainty about whether the next integration is worth its cost.
+1. Each breadth wave changes at least one principle boundary, null model,
+   experiment regime, or explicit no-change decision; otherwise the sampling
+   policy is revised.
+2. The ratio of scoped claims to deduplicated principles increases as coverage
+   grows, while duplicate organism-themed components decline.
+3. At least one Stage-1 candidate ties a conventional baseline and is merged,
+   and at least one loses and is retired; a roadmap in which every mechanism
+   wins is not discriminating.
+4. Shared telemetry and null-model infrastructure reduce the incremental cost
+   of testing later principles relative to the first isolated contracts.
+5. Mechanisms that pass isolated gates still sometimes fail composition,
+   producing explicit interaction terms rather than post-hoc stories.
+6. Lifecycle accounting reverses at least one apparent saving based on FLOPs,
+   parameter count, or inference-only energy.
+7. Every completed stage leaves reproducible baselines, scoped claim changes,
+   negative results, and a smaller set of unresolved integration decisions.

@@ -2,10 +2,12 @@
 
 **Stage:** 1 — synthetic falsification  
 **Status:** candidate; not an accepted project claim  
-**Primary question:** can small, bounded perturbations reveal a shrinking
-stability margin earlier than conventional service metrics, passive
-change-detection, queueing headroom, and standard system-identification methods
-at a controlled monitoring and probe budget?
+**Primary question:** within gradual local stability loss in observable, safely
+excitable modes, can small bounded perturbations estimate shrinking restoring
+margin earlier than conventional service metrics, passive change detection,
+queueing headroom, mechanism-specific indicators, and standard system
+identification at a controlled monitoring and probe budget—and abstain on
+transition classes where no such precursor exists?
 
 ## Why this experiment exists
 
@@ -18,6 +20,12 @@ test therefore asks whether the proposed **probe-and-recover maintenance
 primitive** adds engineering value; it does not test whether an ecological
 metaphor sounds plausible.
 
+[C-082](../../research/claims.md#c-082) adds a required systems boundary:
+failure detectors expose completeness, accuracy, timing, and false-suspicion
+assumptions rather than providing instantaneous diagnosis. Candidate alarms
+therefore report those axes separately and never treat injected fault time as
+an input available to the detector.
+
 The benchmark deliberately includes a condition in which instantaneous and
 marginal steady-state statistics are held constant while temporal recovery
 changes. It also includes less favorable conditions—workload drift, burst
@@ -29,7 +37,9 @@ scope limits.
 **Candidate hypothesis.** Under a gradual loss of local stability, a bounded
 impulse followed by a robust recovery-rate estimate gives earlier, better-
 calibrated warning than steady-state SLOs, conventional change detectors, or
-passive recovery estimates at acceptable traffic, latency, and energy cost.
+passive recovery estimates at acceptable traffic, latency, and energy cost,
+while an applicability test rejects noise-, rate-, boundary-, hidden-mode-, and
+abrupt-jump cases that the recovery model cannot identify.
 
 **Null.** At equal telemetry and compute budgets, recovery probes provide no
 material lead-time or calibration advantage; conventional passive monitoring
@@ -165,6 +175,41 @@ and thresholds. Evaluate on 200 `H`, 200 `N`, 200 held-out `S`/`C`, 100 `J`, and
 100 `Q` episodes. Seeds, family labels, and transition times remain hidden from
 detectors until scoring.
 
+### Stage-1B transition-class suite
+
+The initial six families test gradual scalar slowing and basic confounds. The
+Earth-system audit adds a broader falsification suite because critical slowing
+is not required for noise- or rate-induced transitions
+([C-102](../../research/claims.md#c-102)), warning signatures may be spatial
+([C-098](../../research/claims.md#c-098), [C-106](../../research/claims.md#c-106)),
+and path reversal need not restore the previous state
+([C-099](../../research/claims.md#c-099), [C-100](../../research/claims.md#c-100)).
+
+| Track | Ground-truth construction | Correct behavior |
+| --- | --- | --- |
+| F — gradual fold | dominant pole approaches one under a slow ramp; fixed-marginal and natural-noise variants | estimate restoring loss and beat passive ID or abstain |
+| O — oscillatory loss | complex pole pair loses damping at matched scalar recovery summary | use multivariate pole structure; do not report a scalar fold |
+| NE — noise escape | fixed local Jacobian with shrinking barrier; fixed-barrier/increasing-noise controls | report that event time is not identified by recovery rate |
+| R — rate-induced | identical start/end forcing under multiple ramp rates; frozen equilibria remain stable | mechanism-specific tracking-margin model wins or candidate abstains |
+| FL — flickering | noisy double-well with known basin occupancy and barrier | multimodality and dwell-time nulls win over exponential recovery fits |
+| HY — hysteresis | forward and reverse sweeps across two stable branches | represent history, branch identity, and rollback reachability |
+| SP — spatial | coupled grid with varied heterogeneity, connectivity, gradients, and sensor resolution | spatial evidence earns its sensing and transfer cost |
+| HM — hidden mode | critical eigenmode has swept excitation and observation gain | observability analysis predicts applicability before probing |
+| B — hard boundary | queue, memory, or resource reaches a constraint without pole drift | headroom and reachability nulls win |
+| J — abrupt jump | identical pre-event distributions and dynamics with random jump time | correctly report no advance skill |
+| CF — confounds | noise color, batching, cache inertia, filtering, seasonality, missingness | respect the locked false-alarm budget |
+
+Generate complete unselected trajectories before hiding class, transition time,
+and benign/failing prevalence. Retrospective event-conditioned selection is a
+known bias ([C-103](../../research/claims.md#c-103),
+[C-107](../../research/claims.md#c-107)); negative-warning cases
+([C-104](../../research/claims.md#c-104)) and benign slowing
+([C-108](../../research/claims.md#c-108)) are required evaluation classes.
+Detector fitting uses separate calibration families. Evaluation reports
+class-conditional misses, false alarms per healthy operating time, precision
+under prevalence sweeps, class-posterior calibration, and the fraction of cases
+in which the method correctly refuses a warning claim.
+
 ## Candidate probe and estimator
 
 ### Probe schedule and cost
@@ -281,6 +326,18 @@ and a detector given probe markers with post-probe samples shuffled. The last
 control tests whether the estimator uses recovery order rather than probe timing
 or late-episode position.
 
+### B7 — mechanism-specific and observation-model controls
+
+Give system-specific indicators the same raw signals, history, and compute
+budget: queue headroom and retry reproduction number, controller gain/phase
+margin, conservation and consistency residuals, memory-pressure trajectory,
+hard-boundary reachability, and branch-aware state estimation. A targeted
+physical indicator can be less window-sensitive than generic slowing in its
+applicable model ([C-111](../../research/claims.md#c-111)). Also fit explicit
+observation models and sweep proxy transformations, missingness, filtering, and
+sensor replacement because apparent stability trends can depend on reconstructed
+state ([C-109](../../research/claims.md#c-109)).
+
 ## Equal-budget rules
 
 - Every method receives the same 10 Hz telemetry: queue, latency, utilization,
@@ -387,6 +444,17 @@ held-out evaluation:
 8. Shuffled recovery order performs within 5 percentage points of the candidate
    on detection probability. That would indicate leakage from probe timing or
    episode position rather than recovery dynamics.
+9. It emits advance warnings in `J`, converts recovery-time estimates into an
+   exact failure date, or materially undercovers date uncertainty under proxy,
+   model-form, infilling, and forcing changes
+   ([C-110](../../research/claims.md#c-110)).
+10. It fails to abstain on `NE`, `R`, `HM`, or `B`, or hides those misses inside
+    an aggregate score.
+11. A B7 mechanism-specific indicator matches or dominates it on its own
+    applicable track at equal observation and compute cost.
+12. It improves warning accuracy but the resulting intervention policy does not
+    improve expected loss after probe, monitoring, delay, false-action, and
+    prevented-event accounting.
 
 Passing Stage 1 only warrants a discrete-event and then shadow-deployment test;
 it does not justify production probing or an `established` evidence status.
@@ -438,6 +506,15 @@ exhibit critical slowing, that autocorrelation is specific to declining
 resilience, or that active probes are safe and efficient in an AI service.
 Control theory and queueing practice are the relevant engineering baselines,
 and the candidate is rejected if it cannot beat them under the rules above.
+
+The Earth-system evidence adds model demonstrations of decay-rate warning
+([C-097](../../research/claims.md#c-097)), rate-induced failure without the same
+precursor ([C-101](../../research/claims.md#c-101)), flickering as a different
+signal class ([C-105](../../research/claims.md#c-105)), false warning from
+benign mechanism change ([C-108](../../research/claims.md#c-108)), and severe
+uncertainty in extrapolated tipping dates ([C-110](../../research/claims.md#c-110)).
+The candidate is therefore a **transition-class-aware local fragility
+estimator**, not a general tipping-point predictor.
 
 ## Promotion decision after Stage 1
 

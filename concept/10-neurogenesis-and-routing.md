@@ -1,135 +1,368 @@
-# Neurogenesis, modularity, and conditional routing
+# Structural growth, specialization, and conditional routing
 
 ## Scope
 
-Define a capacity-rich initial system that can specialize without requiring its
-entire parameter set to run for each input.
+Define how a modular system acquires new capacity without running, training, or
+retaining every possible module for every event. Growth is admitted only for a
+measured capability gap, new capacity earns traffic in probation, and mature
+capacity remains eligible for merge, reopening, or retirement.
+
+The central object is a **capacity lifecycle**, not a continuously expanding
+pool. Birth, routing, specialization, placement, consolidation, and removal are
+separate decisions with separate costs.
 
 ## Biological observation
 
-Developing nervous systems produce and reorganize more cells and connections
-than survive into mature circuits. Activity, trophic constraints, and experience
-shape which pathways stabilize. The useful abstraction is *developmental excess
-followed by competitive specialization*.
+Developing nervous systems generate and reorganize more cells and connections
+than remain in mature circuits. In the studied mouse retinogeniculate system,
+relative activity and complement signaling changed microglial engulfment and
+retention of developing inputs ([C-043](../research/claims.md#c-043)). This
+supports activity-sensitive structural refinement by a slower maintenance
+process, without specifying one general pruning rule.
 
-The analogy breaks if “more neurons” is treated as a reason to allocate an
-arbitrarily dense digital model. Biological growth, digital overparameterization,
-and lottery-ticket results occur under different mechanisms.
-
-Primary developmental interventions sharpen the abstraction. Complement and
-microglia participate causally in activity-sensitive removal of developing
-inputs ([C-043](../research/claims.md#c-043)). Mature extracellular and receptor
-structures can then constrain plasticity, while targeted interventions reopen
-it in specific adult visual-cortex preparations
+Protection is not necessarily permanent. Targeted extracellular and receptor
+interventions reopened specific forms of adult visual-cortex plasticity
 ([C-044](../research/claims.md#c-044),
-[C-045](../research/claims.md#c-045)). This supports separate **candidate,
-mature, reopened, and reconsolidating** module states—not literal microglia or
-fixed developmental ages.
+[C-045](../research/claims.md#c-045)). The resulting engineering states are
+candidate, consolidating, protected, reopened, and retiring. A module can be
+stable without becoming impossible to revise.
+
+Other biological systems expose control operations that recur at different
+scales:
+
+- germinal-center affinity maturation combines variation, selection,
+  expansion, and later protection of useful lineages
+  ([C-028](../research/claims.md#c-028));
+- *Physarum* and fungal networks couple use-dependent reinforcement,
+  exploration, fusion, and contraction to changing flow
+  ([C-027](../research/claims.md#c-027),
+  [C-034](../research/claims.md#c-034));
+- ants can open reserve routes under crowding before throughput falls
+  ([C-035](../research/claims.md#c-035)); and
+- activity can recruit local energy production, alter resource placement, and
+  change local vascular supply in scoped neural preparations
+  ([C-049](../research/claims.md#c-049)–[C-051](../research/claims.md#c-051)).
+
+These mechanisms are not interchangeable. Together they impose a useful
+system constraint: variation and reserve capacity consume resources; selection
+needs an independent test; frequently used structure may stabilize; unused or
+duplicated structure must be able to leave the hot path.
+
+A defined microbial-community experiment adds a practical design tactic:
+adding candidates selected for missing functions repaired the tested community
+better than merely restoring organism count ([C-056](../research/claims.md#c-056)).
+The inverse problem also matters. Functional redundancy was associated with
+poor newcomer engraftment in two small reanalyzed human microbiome datasets
+([C-057](../research/claims.md#c-057)). Mature capacity can resist both harmful
+and beneficial entrants, so an artificial newcomer needs protected evaluation
+traffic rather than permission from incumbent routing logits alone.
 
 ## Proposed AI translation
 
-Start with a modular seed containing:
+### The capacity lifecycle
 
-- modality-specific encoders that retain uncertainty;
-- a shared predictive state with explicit time and action context;
-- a pool of initially weakly specialized experts;
-- hierarchical routers that can select modality paths, experts, depth, and
-  memory access; and
-- reserved capacity that can be activated or grown only when existing modules
-  fail a novelty and interference test.
+```mermaid
+flowchart LR
+    subgraph birth["1 · Detect and birth"]
+        direction TB
+        gap["Persistent capability gap"] --> proposal["Clone · seed · compose"]
+        proposal --> probation["Probation<br/>bounded state + budget"]
+    end
+    subgraph compete["2 · Route and specialize"]
+        direction TB
+        trial["Exploit · explore · reserve traffic"] --> evidence{"Useful, distinct,<br/>and affordable?"}
+        evidence -->|"yes"| specialize["Local specialization"]
+        evidence -->|"no value"| discard["Discard + retain result"]
+        evidence -->|"duplicate"| merge["Merge or distill"]
+    end
+    subgraph lifecycle["3 · Consolidate or release"]
+        direction TB
+        gate["Maturity gate"] --> protected["Protected module"]
+        protected --> monitor["Quality · traffic · cost · fragility"]
+        monitor -->|"redundant"| retire["Drain + retire"]
+    end
+    probation --> trial
+    specialize --> gate
+    merge --> gate
+    monitor -->|"new gap"| gap
+    retire --> released["Released hot capacity"]
+```
 
-Each module also has a reversible maturity state. Maturation may lower its
-update rate, restrict which context signals can alter it, and make structural
-changes require shadow evaluation. Reopening requires evidence of persistent
-error or regime change, a versioned checkpoint, and a reconsolidation test
-before the replacement becomes canonical.
+Editable source:
+[`../assets/diagrams/structural-growth-routing.mmd`](../assets/diagrams/structural-growth-routing.mmd).
 
-Routing must be learned with three simultaneous pressures:
+The initial system contains modality encoders, predictive shared state,
+conditionally addressable experts, hierarchical routers, episodic and factual
+memory interfaces, and a declared reserve. Total addressable capacity may be
+large, but each event receives only a bounded route. Reserve capacity is stored,
+placed, and periodically tested; it is not free merely because it is inactive.
 
-1. **task loss** rewards useful selections;
-2. **budget loss** prices active compute, bytes moved, and communication; and
-3. **diversity/load loss** prevents one expert from absorbing every event.
+### 1. Detect a capability gap
 
-A generic router objective is:
+Growth begins with a gap record, not a global loss spike. A valid record groups
+attributable episodes that existing routes fail in a consistent way and asks
+whether the failure is better explained by:
+
+- missing capability;
+- insufficient active compute or depth;
+- missing context or memory;
+- router error or capacity congestion;
+- interference inside an existing module;
+- distribution drift; or
+- corrupted data, tools, or feedback.
+
+The maintenance plane attempts the cheaper explanations first. New capacity is
+eligible only when the gap persists across resampling or recurrence, existing
+modules cannot absorb it inside their interference and resource bounds, and a
+candidate has a declared validation contract. This ordering prevents every
+hard example from becoming an expert.
+
+### 2. Choose a birth operation
+
+The proposal names both the new structure and what it is expected to repair:
+
+| Birth operation | Best initial condition | Principal cost |
+| --- | --- | --- |
+| Clone and diverge | one incumbent is close but suffers interference | copied parameters, optimizer state, later deduplication |
+| Activate a seed | the gap is genuinely outside active coverage | stored reserve, cold-start training, placement |
+| Compose a module | existing primitives are adequate but repeatedly coordinated | router depth, boundary traffic, compilation work |
+| Reopen a protected module | a previously valid skill must change | regression risk, branch validation, rollback |
+
+Every birth creates a versioned provisional module. It cannot write the slow
+model, replace an incumbent, or claim permanent memory during probation.
+Initialization source, training episodes, expected role, resource ceiling, and
+discard path are recorded before it receives traffic.
+
+### 3. Give the candidate probation traffic
+
+The router divides admitted work into three explicit budgets:
+
+- **exploit traffic** goes to the strongest validated route;
+- **exploration traffic** compares plausible candidates on informative events;
+  and
+- **reserve traffic** preserves failover and tests paths that would otherwise
+  decay unnoticed.
+
+A newcomer receives a capped share of gap-relevant episodes plus matched
+control episodes. The control traffic reveals whether it learned a capability
+or merely a narrow identifier for the failure cluster. Incumbents cannot reduce
+the evaluation share through their own confidence, but the maintenance plane
+can stop the trial for quality, risk, latency, memory, or energy violations.
+
+For event $x$, use a dimensionless routing objective
 
 $$
-\mathcal{L}_{\text{route}}
-= \mathcal{L}_{\text{task}}
-+ \lambda_E \widehat{E}(x)
-+ \lambda_M \widehat{B}(x)
-+ \lambda_{\mathrm{bal}} \mathcal{L}_{\text{balance}}
-+ \lambda_{\mathrm{stab}} \mathcal{L}_{\text{stability}},
+\mathcal{L}_{\mathrm{route}}(x)
+= \mathcal{L}_{\mathrm{task}}(x)
++ \lambda_E\frac{\widehat E(x)}{E_0}
++ \lambda_B\frac{\widehat B(x)}{B_0}
++ \lambda_{\mathrm{bal}}\mathcal{L}_{\mathrm{balance}}(x)
++ \lambda_{\mathrm{churn}}\mathcal{L}_{\mathrm{churn}}(x),
 $$
 
-where all $\mathcal{L}$ terms are dimensionless normalized losses,
-$\widehat{E}(x)$ is estimated event-level energy in joules, and
-$\widehat{B}(x)$ is estimated memory and network traffic in bytes across named
-boundaries. Therefore $\lambda_E$ has units $\mathrm{J}^{-1}$,
-$\lambda_M$ has units $\mathrm{byte}^{-1}$, and
-$\lambda_{\mathrm{bal}}$ and $\lambda_{\mathrm{stab}}$ are dimensionless.
-The stability term penalizes routing churn only after a module begins to
-consolidate. Coefficients and normalization ranges are fixed before
-confirmatory evaluation.
+where $\widehat E(x)$ is estimated joules/event, $\widehat B(x)$ is estimated
+bytes/event across named memory and network boundaries, and $E_0$ and $B_0$ are
+declared reference scales with the same units. All $\lambda$ coefficients and
+losses are dimensionless. The physical joule and byte measurements remain
+separate reported outcomes; normalization does not turn them into task quality.
+
+Balance keeps one expert from taking all traffic. Churn is applied only after a
+route has accumulated evidence of stable specialization; penalizing early
+movement would protect arbitrary initialization.
+
+### When module reports become strategic
+
+Ordinary routing remains the default. Shadow-price feedback already represents
+scarcity under declared controller conditions ([C-133](../research/claims.md#c-133)),
+and auction or matching language adds nothing when the router can observe costs
+and every module shares the system objective. A market-like mechanism is in
+scope only when a persistent module holds decision-relevant private information,
+can improve its future traffic by misreporting, and faces a real opportunity
+consequence it cannot reset or evade.
+
+That regime creates specific failures. Selection pressure on a visible metric
+can damage poorly measured substitute tasks ([C-139](../research/claims.md#c-139));
+proper scoring needs an independently verified outcome and does not establish
+competence or causal contribution ([C-140](../research/claims.md#c-140)); peer
+agreement can reward shared error or collusion ([C-141](../research/claims.md#c-141));
+and fixed-agent truthfulness does not solve false identities or a biased
+allocator ([C-143](../research/claims.md#c-143)).
+
+[Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md)
+therefore begins with a cooperative applicability control that it should not
+beat. Only then does it introduce hidden costs, adaptive metric gaming,
+protected outcomes, entrants, identity resets, collusion, and allocator
+deviation. Withheld audits, lineage-bound consequences, protected entrant
+traffic, and replayable commitments remain only if they improve external task,
+risk, energy, and latency outcomes after their evaluation and storage costs.
+
+### 4. Measure specialization rather than naming it
+
+A candidate becomes useful when it improves a defined region of behavior while
+remaining distinguishable from existing modules. Evidence includes:
+
+- causal improvement when the candidate is admitted and regression when it is
+  ablated;
+- reduced interference on incumbents or protected history;
+- consistent advantage on held-out gap and recurrence episodes;
+- a stable but non-exclusive routing region;
+- calibration and rare-case behavior inside its declared envelope; and
+- physical cost that remains inside its allocation.
+
+Low routing entropy alone is not specialization: a router can collapse onto a
+module for the wrong reason. High activation diversity alone is not useful: a
+pool can fragment one capability across many expensive duplicates. The test is
+complementary causal contribution at a measured lifecycle cost.
+
+### 5. Hand off to merge, protection, or retirement
+
+At the end of probation, the candidate has three normal outcomes:
+
+1. **Discard.** It adds no reliable capability. Preserve the negative result so
+   the same proposal is not regenerated indefinitely.
+2. **Merge or distill.** It reproduces an incumbent or several modules have
+   converged on one operation. Build a compact branch, rerun intervention and
+   recurrence tests, then drain duplicates.
+3. **Consolidate.** It contributes a distinct reusable capability. Pass it to
+   the [maturity lifecycle](50-grokking-and-pruning.md) for protection,
+   reopening rules, structured pruning, and rollback.
+
+A protected module remains monitored for traffic, unique contribution,
+physical placement, recovery, and newcomer exclusion. Persistent redundancy
+returns it to a merge-or-retire gate. Logical topology changes can be evaluated
+with [Candidate 001](../experiments/candidates/001-adaptive-topology.md), which
+charges reconfiguration, migration, reserve, controller, and recovery costs.
+
+### Conventional null models
+
+The growth controller must beat ordinary ways of allocating or restructuring
+capacity, not only a frozen weak model:
+
+| ID | Null model | What it tests |
+| --- | --- | --- |
+| N0 | Capacity-matched dense monolith | whether modular growth is needed at all |
+| N1 | Fixed-capacity sparse MoE with tuned load balancing | whether conditional routing alone explains the gain |
+| N2 | Fixed modules plus adapters or low-rank updates | whether new structure beats ordinary parameter-efficient adaptation |
+| N3 | Periodic global architecture or topology optimization | whether a standard batch redesign explains local lifecycle control |
+| N4 | Usage- or magnitude-prune/retrain cycle | whether causal merge/retire gates add value |
+| N5 | Random valid birth, merge, and retirement under equal budgets | whether the lifecycle signals carry information |
+| N6 | Trace-aware oracle with future gap labels | unattainable ceiling; never a superiority baseline |
+
+Equalize initial capacity, maximum stored capacity, active work, optimizer
+updates, training examples, router information, tuning trials, migration bytes,
+validation work, and wall-clock opportunity. Charge candidate failures and
+discarded births. Otherwise growth buys more search while the null models are
+asked to solve the task in place.
 
 ## Efficiency mechanism
 
-For experts $i=1\ldots n$, let router gates $g_i(x)\in\{0,1\}$ be
-dimensionless, $c_i(x)$ be the executed operation count for expert $i$, and
-$C_{\text{router}}(x)$ be the router's executed operation count under the same
-precision and counting convention. Active work in operations per event is
+For experts $i=1\ldots n$, let $g_i(x)\in\{0,1\}$ be the dimensionless event
+gate, $C_i(x)$ be executed operations/event under a declared precision, and
+$C_{\mathrm{router}}(x)$ use the same convention:
 
 $$
-C_{\text{active}}(x)=C_{\text{router}}(x)+\sum_{i=1}^{n}g_i(x)c_i(x).
+C_{\mathrm{active}}(x)
+=C_{\mathrm{router}}(x)+\sum_{i=1}^{n}g_i(x)C_i(x).
 $$
 
-Capacity and active cost are decoupled only when the selected sum and routing
-overhead remain substantially below dense execution. Sparse MoE work establishes
-the feasibility of this separation in specific systems
-([C-003](../research/claims.md#c-003)).
+This separates addressable parameter capacity from executed work, as sparse
+mixture-of-experts systems demonstrate in specific implementations
+([C-003](../research/claims.md#c-003)). It does not price parameter reads,
+dispatch, all-to-all communication, imbalance, cold starts, or maintenance.
 
-Operation count is not energy: $\widehat{E}(x)$ and $\widehat{B}(x)$ remain
-separate measured or calibrated quantities.
+The lifecycle energy per served event is therefore
+
+$$
+\bar E_{\mathrm{capacity}}
+= E_{\mathrm{route}}+\sum_{i=1}^{n}g_iE_i+E_{\mathrm{comm}}
++\frac{
+E_{\mathrm{birth}}+E_{\mathrm{train}}+E_{\mathrm{place}}
++E_{\mathrm{validate}}+E_{\mathrm{merge/retire}}
++\mathbb{E}[E_{\mathrm{recovery}}]
+}{N_{\mathrm{served}}},
+$$
+
+where every $E$ term is in joules, $E_i$ is expert execution energy/event, and
+$N_{\mathrm{served}}$ is the number of events over the comparison horizon.
+Report stored parameter and optimizer bytes, bytes moved/event, latency,
+utilization, quality, calibration, and risk alongside energy.
+
+Growth is efficient only if conditional execution saves more than candidate
+search, idle reserve, placement, validation, and later contraction consume.
+Lottery-ticket results show that competitive sparse subnetworks can exist in
+tested settings ([C-012](../research/claims.md#c-012)); they do not establish
+that this lifecycle discovers them or realizes energy savings on a target
+system.
 
 ## Evidence status
 
-- Conditional expert selection is established under
-  [C-003](../research/claims.md#c-003).
-- Lottery-ticket experiments establish competitive sparse subnetworks in
-  bounded settings under [C-012](../research/claims.md#c-012), not the full
-  developmental proposal.
-- Developmental pruning and reversible adult plasticity brakes are established
-  in scoped biological preparations under
-  [C-043](../research/claims.md#c-043)–[C-045](../research/claims.md#c-045).
-- Automatic module growth, multimodal specialization, and stable hierarchical
-  routing are speculative integrations.
+| Element | Status | Role in this chapter |
+| --- | --- | --- |
+| conditional expert routing ([C-003](../research/claims.md#c-003)) | established in published systems | capacity and active compute can be separated in suitable implementations |
+| competitive sparse subnetworks ([C-012](../research/claims.md#c-012)) | established in tested settings | staged selection and pruning are viable operators |
+| use-dependent biological topology ([C-027](../research/claims.md#c-027), [C-034](../research/claims.md#c-034)) | established in scoped organisms/models | motivates reinforcement, decay, exploration, and contraction tests |
+| diversity, selection, and protection ([C-028](../research/claims.md#c-028)) | established in the cited immune experiment/model | motivates a bounded candidate lifecycle |
+| congestion-triggered reserve use ([C-035](../research/claims.md#c-035)) | established in the cited ant setup/model | reserve paths should be priced and tested before overload |
+| developmental refinement and reopening ([C-043](../research/claims.md#c-043)–[C-045](../research/claims.md#c-045)) | established in scoped neural preparations | supports distinct candidate, protected, and reopened states |
+| local resource demand and placement ([C-049](../research/claims.md#c-049)–[C-051](../research/claims.md#c-051)) | established in scoped neural preparations | physical supply and movement belong in routing cost |
+| shadow prices, matching, proper scoring, metric pressure, identity, and allocator credibility ([C-133](../research/claims.md#c-133)–[C-143](../research/claims.md#c-143)) | established under scoped economic models and experiments | ordinary routing remains the null; contestable allocation is conditional on a measured strategic-information problem |
+| audit-backed contestable allocation ([C-144](../research/claims.md#c-144)) | speculative systems composition | Candidate 008 must lose its distinction when modules are cooperative and directly observable |
+| capability-gap repair ([C-056](../research/claims.md#c-056)) | established for the defined mouse community and challenge | motivates selecting additions by missing function |
+| functional redundancy and engraftment ([C-057](../research/claims.md#c-057)) | plausible association | motivates protected newcomer evaluation and a lock-in test |
+| complete grow–route–specialize lifecycle | speculative synthesis | requires comparison with N0–N6 |
 
 ## Speculative extensions
 
-- Structural plasticity that allocates a new expert only after novelty persists
-  across episodes and existing experts show measurable interference.
-- Topology-aware routing that prices cross-device communication explicitly.
-- A reversible “provisional module” state before new capacity becomes permanent.
-- Capability-gap repair that admits complementary modules rather than merely
-  restoring a previous count ([C-056](../research/claims.md#c-056)).
+- Let modules request a birth trial with a compact capability-gap certificate;
+  maintenance allocates the trial, not the requesting module.
+- Maintain seed modules at several parameter and precision scales so a new role
+  need not start from the largest available structure.
+- Learn placement jointly with specialization only after migration cost and
+  rollback are measurable.
+- Use recurrence-aware cold storage: retire a module from hot execution while
+  retaining enough checkpoint and routing evidence to restore it if its regime
+  returns.
+- Allow two candidates to share an encoder or memory interface while keeping
+  their update authority and resource accounts separate.
+- Test local birth/retirement against periodic global architecture optimization
+  under recurrent rather than one-way task sequences.
 
 ## Failure modes
 
-- **Router collapse:** one expert receives most events.
-- **Fragmentation:** experts duplicate work and lose transfer.
-- **Stranded capacity:** rarely selected parameters occupy memory without value.
-- **Premature localization:** a modality is isolated before cross-modal concepts
-  form.
-- **Maturity lock-in:** protected modules resist beneficial newcomers or
-  necessary relearning ([C-057](../research/claims.md#c-057)).
-- **False sparsity:** gates are sparse mathematically but implementations still
-  load dense tensors or all-to-all communication dominates.
+| Failure | Observable signature | Required response or ablation |
+| --- | --- | --- |
+| Router collapse | one module takes most traffic; queue tails or overflow rise | fixed-capacity MoE and stronger load-balancing baseline |
+| Candidate inflation | birth rate and stored bytes rise without held-out gap closure | cap trials; compare no-growth and random-birth nulls |
+| Fragmentation | many modules show overlapping ablation effects and high boundary traffic | merge/distill branch with causal coverage tests |
+| Incumbent lock-in | a superior newcomer cannot acquire evaluation traffic | reserved probation share; compare router-logit admission |
+| Premature localization | modality-specific routes lose cross-modal transfer | shared-module and monolithic controls on compositional tests |
+| Reserve starvation | no path remains for faults or new regimes | price and enforce declared reserve capacity |
+| Reconfiguration thrash | repeated births, moves, merges, or retirements dominate cost | hysteresis and slower maintenance epochs |
+| Stranded capacity | cold modules occupy memory but never serve, fail over, or restore | cold-storage, deletion, and restore-value comparison |
+| Cosmetic sparsity | active gates fall while loaded bytes, communication, or joules do not | hardware trace and dense-kernel ablation |
+| Maintenance inversion | search, validation, migration, and rollback cost exceeds runtime saving | full lifecycle equation and fixed-structure nulls |
+| Rare-role deletion | average quality holds while rare or safety-critical cases regress | protected recurrence suite and reconstructable checkpoint |
 
 ## Measurable predictions
 
-- At matched task quality, active parameter fraction and bytes moved per event
-  fall as total capacity grows.
-- Expert mutual information with meaningful event factors increases without
-  one-hot modality isolation.
-- Adding tasks causes less regression than in a capacity-matched monolith.
-- End-to-end energy improves after router, dispatch, and communication costs are
-  included—not merely after counting FLOPs.
+1. Capability-gap-driven births close held-out failure clusters with fewer
+   admitted candidates and lower lifecycle energy than random birth, periodic
+   fixed growth, and capacity-matched adapter baselines.
+2. A protected probation share lets genuinely better newcomers establish causal
+   value faster than incumbent-logit admission without increasing harmful
+   promotions at the same validation budget.
+3. Successful specialization produces a stable, non-exclusive routing region
+   and positive unique ablation value; routing entropy alone predicts promotion
+   less reliably.
+4. Conditional growth reduces executed operations and bytes moved/event relative
+   to a capacity-matched monolith while preserving quality, calibration, and
+   rare-case performance.
+5. Causal merge/retire gates preserve recurring and intervention capability
+   better than usage- or magnitude-only pruning at matched hot capacity.
+6. Reserve capacity improves recovery after faults or returning regimes enough
+   to justify its stored bytes, idle energy, and periodic test traffic.
+7. Joint routing and placement lowers communication energy only after migration,
+   cold-start, and rollback work are included.
+8. The complete lifecycle advances only if it improves the quality–risk–latency–
+   energy–adaptability frontier over N0–N5; a parameter-count or FLOP reduction
+   alone does not satisfy the prediction.

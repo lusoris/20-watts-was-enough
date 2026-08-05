@@ -133,7 +133,9 @@ Editable source:
 Stochasticity can alter which variants are tried. Usefulness comes from the
 entire cycle: decomposition, recombination, intervention, comparison, and
 selection. The supporting evidence and unresolved distinctions are tracked in
-the [endogenous generation audit](../research/audits/2026-08-05-endogenous-generation-creativity.md).
+the [endogenous generation audit](../research/audits/2026-08-05-endogenous-generation-creativity.md)
+and is falsified first through
+[Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
 
 ### 3. Maintenance
 

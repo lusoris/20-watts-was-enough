@@ -21,7 +21,9 @@ The [system synthesis](70-system-synthesis.md) combines mechanisms only after
 their individual assumptions are visible. The [energy model](80-energy-model.md)
 defines the comparison contract for every efficiency result. The
 [launchpad chapter](05-biology-is-a-launchpad.md) develops computational
-invariants across biological and digital substrates.
+invariants across biological and digital substrates. The
+[cross-domain convergence chapter](07-cross-domain-convergence.md) shows how
+recurring observations are deduplicated into shared principles and experiments.
 
 Start with [the working architecture](01-working-architecture.md) for a single
 narrative view of the runtime, adaptation, maintenance, resource, and

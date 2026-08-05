@@ -49,13 +49,42 @@ project choice.
   reappear as memory traffic, synchronization, thermal, or reliability limits?
 - **OQ-017:** Does useful artificial creativity require a closed loop of
   structured generation, intervention, evaluation, and memory update, or can
-  matched-budget stochastic sampling explain the benefit?
+  matched-budget stochastic sampling explain the benefit? The discriminating
+  test is [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
 - **OQ-018:** Does receiver-specific temporal decoding of a rate-limited global
   context signal add anything beyond FiLM, recurrent gates, global tokens,
   low-rank hypernetworks, or gain-scheduled control?
-- **OQ-019:** Can recovery dynamics warn of hidden fragility across failure
-  classes, or only near smooth local transitions already handled by active
-  system identification?
+- **OQ-019:** Can bounded recovery probes add calibrated warning for gradual,
+  observable stability loss beyond active system identification and
+  mechanism-specific indicators while correctly abstaining on noise-, rate-,
+  boundary-, hidden-mode-, and abrupt-jump transitions? The falsification suite
+  is [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md).
 - **OQ-020:** How should breadth-first research decide that a field has been
   sampled enough to move effort toward depth without falsely declaring its
   remaining mechanisms irrelevant?
+- **OQ-021:** Does severity-ordered containment, minimally destructive triage,
+  verification, escalation, and replenishment improve the availability–spread–
+  collateral-loss–energy frontier beyond circuit breakers, checkpoints,
+  replicas, microrestart, scrubbing, rejuvenation, and a Bayesian repair/replace
+  policy? See [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+- **OQ-022:** When no clean target state exists, can constraint-guided
+  functional reconstruction restore a missing capability without collateral
+  regressions more efficiently than retraining, program repair, architecture
+  search, or unconstrained module generation?
+- **OQ-023:** Can a mature repeated physical mapping reach lifecycle break-even
+  in a rewritable local substrate before drift, calibration, conversion,
+  fabrication, or task change invalidates it? See
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+- **OQ-024:** Can joint process/observation estimation prevent actions that
+  suppress telemetry from being misread as recovery beyond delay-aware POMDP,
+  nowcasting, residual detection, and value-of-information sampling? See
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+- **OQ-025:** Do audit-backed contestability and real opportunity consequences
+  improve routing only when persistent modules can profit from hidden
+  information or metric gaming, while correctly adding no value in cooperative
+  directly observed regimes? See
+  [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md).
+- **OQ-026:** Does binding distinct proof, authority, monitor, evidence, update,
+  and recovery records to one module version improve assurance and invalidation
+  beyond a complete conventional platform stack at equal lifecycle budget? See
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).

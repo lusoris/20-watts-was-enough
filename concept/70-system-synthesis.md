@@ -118,7 +118,9 @@ The system may also create learning events: propose a structured hypothesis or
 latent rollout, choose a bounded intervention, and evaluate the outcome. This
 closed endogenous curriculum composes the evidence in
 [C-061](../research/claims.md#c-061)–[C-066](../research/claims.md#c-066);
-random variation supplies candidates, not validation.
+random variation supplies candidates, not validation. Its operations are
+separated under equal budgets in
+[Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
 
 The [memory lifecycle](40-memory-and-consolidation.md) governs evidence and
 retention. The

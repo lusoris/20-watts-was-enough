@@ -7,6 +7,37 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Eight new primary-source audits spanning endocrine/circadian control,
+  fault-tolerant reconstruction, cellular quality control, Earth-system
+  transition signals, adaptive materials, epidemiological surveillance,
+  economic incentive design, and programming-language assurance.
+- Ninety-one scoped claims (`C-067`–`C-157`) with centralized bibliography
+  entries, boundaries, conventional nulls, affected chapters, and open tests.
+- Candidate 005 for severity-ordered containment, Candidate 006 for reversible
+  physical skill compilation, Candidate 007 for endogenous observation,
+  Candidate 008 for contestable modular allocation, and Candidate 009 for
+  versioned graded assurance envelopes.
+- Five editable candidate diagrams separating repair triage, physical
+  compilation, action-altered observation, contestable allocation, and graded
+  assurance; Candidate 004 also gains an editable endogenous-curriculum loop.
+- Explicit distinctions among exact restoration, encoded reconstruction,
+  legitimate-set convergence, and underdetermined functional repair; among
+  bifurcation, noise, rate, flickering, hysteretic, hidden-mode, boundary, and
+  abrupt transitions; and among proof, monitored behavior, authority,
+  provenance, rollback, and empirical evidence.
+- A canonical cross-domain convergence chapter that groups thirteen existing
+  principles into five navigational families while preserving causal,
+  topological, timescale, and failure-boundary differences.
+- Experiment-facing rewrites of structural growth and routing, multimodal
+  sensorimotor grounding, and hardening/factual memory.
+- Five editable Mermaid figures for cross-domain solution families, structural
+  growth, grounded learning, hardening paths, and the recurring research loop.
+- A staged research program with explicit evidence, synthesis, decision, null-
+  model, rejection, integration, and substrate gates plus an immediate field
+  queue.
+- Candidate 004, a two-track equal-budget contract that separates copying,
+  retrieval, stochastic and evolutionary search, targeted intervention,
+  independent evaluation, controlled variation, and lineage memory.
 - Readable, experiment-facing rewrites of sparse adaptive compute, memory
   lifecycle, reversible structural consolidation, system synthesis, and energy
   evaluation.
