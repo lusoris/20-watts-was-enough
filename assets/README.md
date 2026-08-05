@@ -78,6 +78,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/cohort-observation-contract.mmd` follows entry cohort and lifecycle
   state through transition, migration, selected record survival, versioned
   observation, identification, scenario projection, and frozen holdout.
+- `diagrams/asynchronous-authority-transfer.mmd` keeps effect scope, epoch,
+  readiness, fallback reachability, atomic owner change, timeout, rejection,
+  recovery, and postcondition verification in one state machine.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

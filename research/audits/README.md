@@ -34,6 +34,7 @@ failed deduplications that would be lost in the shorter claim ledger.
 | 2026-08-05 | [Social choice and institutional governance](2026-08-05-social-choice-institutions.md) | formal aggregation limits, strategy, delegation, polycentricity, veto, agenda, capture, amendment, participation, and path dependence refine governance contracts; Candidate 020 tests the residual composition |
 | 2026-08-05 | [Human–computer interaction and human factors](2026-08-05-hci-human-factors.md) | mixed initiative, interruption, modes, automation bias, reliance, shared control, direct manipulation, recovery, ecological displays, disclosure, load, accessibility, and adaptation refine effective-authority and recovery gates |
 | 2026-08-05 | [Quantitative history, demography, collapse, and diffusion](2026-08-05-quantitative-history-demography.md) | separates stock, flow, age, cohort, period, migration, momentum, diffusion, selected archives, causal identification, multivariate recovery, retrospective fit, and prospective forecasting |
+| 2026-08-05 | [Aerospace, maritime, and safety-critical autonomy](2026-08-05-aerospace-maritime-autonomy.md) | control, navigation integrity, operational envelopes, runtime assurance, redundancy/common cause, fault stages, degraded/fallback behavior, collision avoidance, remote operation, human handoff, certification, maintenance, and investigation refine Candidate 012 |
 
 An audit does not itself promote a principle. Major observations receive stable
 `C-` claims, candidate mechanisms are deduplicated against the

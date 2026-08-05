@@ -178,3 +178,10 @@ project choice.
   learning, and temporal/place/lineage holdouts? See
   [population-observation math](../math/population-observation.md) and
   [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+- **OQ-042:** Does a validated asynchronous authority-transfer record reduce
+  split-brain, stale-command, no-owner, and unsafe-boundary time beyond mode
+  annunciation, interlocks, epoch leases, runtime assurance, ordinary shared
+  control, Candidate 014, and the recoverable-initiative contract after
+  sensing, reserve, communication, training, assurance, latency, and energy
+  costs? See
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).

@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- An aerospace, maritime, and safety-critical-autonomy audit separating
+  stabilization, navigation integrity, operational envelopes, fault stages,
+  degraded behavior, fallback, authority, assurance, maintenance, and inquiry.
+- Eighteen scoped vehicle/autonomy claims (`C-445`–`C-462`), thirty-five new
+  centralized sources, an editable asynchronous authority-transfer state
+  machine, and integrity/handoff gates in Candidate 012 and chapter 20.
 - A quantitative-history and demography audit separating stock, flow, cohort,
   age, period, migration, momentum, diffusion, selected archives, causal
   identification, multivariate recovery, retrospective fit, and forecasting.

@@ -6650,3 +6650,242 @@ describes the exact statement here, not a broader interpretation.
 - **Used by:** [population math](../math/population-observation.md),
   [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
   [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md).
+
+### C-445
+
+- **Statement:** Stabilization, guidance, navigation, and mission safety are
+  distinct functions with distinct evidence.
+- **Status:** established.
+- **Primary sources:** `kalman1960filtering`, `sae4754b`, `sae4761a`.
+- **Rationale:** State regulation, path generation, state estimation, and hazard
+  control have different models, interfaces, and assurance obligations.
+- **Open issue:** An alternative decomposition must still expose equivalent
+  state, authority, timing, and failure boundaries.
+- **Used by:** [autonomy audit](audits/2026-08-05-aerospace-maritime-autonomy.md),
+  [sensorimotor chapter](../concept/20-sensorimotor-grounding.md).
+
+### C-446
+
+- **Statement:** Navigation integrity requires a timely bound on hazardous
+  misleading information, not only low average error or estimator confidence.
+- **Status:** established.
+- **Primary sources:** `brown1992raim`, `icao2025gnss`.
+- **Rationale:** Integrity monitoring binds position error hypotheses to alert
+  limits and time-to-alert under an operation-specific risk allocation.
+- **Open issue:** Learned confidence does not inherit integrity without fault,
+  bias, dependence, coverage, and timing analysis.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [sensorimotor chapter](../concept/20-sensorimotor-grounding.md).
+
+### C-447
+
+- **Statement:** A declared operational design domain is not runtime evidence
+  that the system remains inside it or can still reach fallback.
+- **Status:** established.
+- **Primary sources:** `astmf3269`, `imo2026mass`.
+- **Rationale:** A validity region, membership monitor, boundary uncertainty,
+  and reachable recovery state are separate artifacts.
+- **Open issue:** Boundary misclassification and delayed recovery must be fault-
+  injected, not assumed away.
+- **Used by:** [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-448
+
+- **Statement:** Barrier functions and runtime-assurance architectures protect
+  only the modeled set, inputs, timing, disturbances, monitor coverage, and
+  recovery controller.
+- **Status:** established.
+- **Primary sources:** `ames2017cbf`, `sha2001simplex`, `seto1998simplex`.
+- **Rationale:** Formal guarantees are conditional on declared dynamics,
+  admissible controls, regularity, update timing, and certified regions.
+- **Open issue:** Sensor corruption, model error, actuator saturation, latency,
+  and common-mode failure can violate the certificate boundary.
+- **Used by:** [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [hardening chapter](../concept/60-hardening-and-factual-memory.md).
+
+### C-449
+
+- **Statement:** Redundant channels improve system reliability only through a
+  justified dependence, coverage, voter, latent-fault, and success model.
+- **Status:** established.
+- **Primary sources:** `briere1993airbus`, `yeh1996triple`,
+  `knight1986multiversion`.
+- **Rationale:** Channel count alone omits shared requirements, sensors, power,
+  environment, implementation, maintenance, and voting faults.
+- **Open issue:** Common-cause and voter fault injections are mandatory.
+- **Used by:** [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [system synthesis](../concept/70-system-synthesis.md).
+
+### C-450
+
+- **Statement:** Dissimilar implementation does not by itself establish
+  statistically independent failures.
+- **Status:** established.
+- **Primary source:** `knight1986multiversion`.
+- **Rationale:** Independently developed program versions can fail together on
+  the same inputs.
+- **Open issue:** Independence claims need shared-cause analysis and measured
+  joint failure, not different labels or codebases.
+- **Used by:** [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-451
+
+- **Statement:** Fault detection, isolation, identification, prognosis, and
+  accommodation answer different questions.
+- **Status:** established.
+- **Primary source:** `zhang2008ftc`.
+- **Rationale:** Each stage has different information, latency, confusion, and
+  action requirements.
+- **Open issue:** A detector can be accurate yet too late or too ambiguous for a
+  safe reconfiguration.
+- **Used by:** [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-452
+
+- **Statement:** Safe reconfiguration requires completion before a reachable
+  physical boundary and a validated post-fault controller.
+- **Status:** plausible.
+- **Primary sources:** `zhang2008ftc`, `sha2001simplex`, `seto1998simplex`.
+- **Rationale:** Detection and selection have no value if transfer finishes
+  after control margin is exhausted or the replacement controller is invalid.
+- **Open issue:** Passive robustness and standard fault-tolerant control are
+  strong nulls under equal reserve.
+- **Used by:** [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-453
+
+- **Statement:** Degraded operation and minimum-risk fallback optimize different
+  service and consequence objectives.
+- **Status:** established.
+- **Primary sources:** `imo2026mass`, `faa251329c`, `faa251309b`.
+- **Rationale:** Continuing reduced service and transitioning toward a bounded-
+  consequence state are not interchangeable.
+- **Open issue:** No universal fallback ordering exists across hazards,
+  environments, remaining authority, and reachable states.
+- **Used by:** [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-454
+
+- **Statement:** Collision avoidance requires state uncertainty, maneuver
+  dynamics, other-agent response, and domain rules beyond closest-point geometry.
+- **Status:** established.
+- **Primary sources:** `kochenderfer2012acas`, `imo1972colregs`.
+- **Rationale:** Advisories and maneuvers interact with uncertain trajectories,
+  coordinated response, vehicle limits, and right-of-way rules.
+- **Open issue:** Learned policies must be compared with domain systems under
+  the same sensing, traffic, maneuver, and rule model.
+- **Used by:** [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-455
+
+- **Statement:** Remote authority should shrink as observation age, link
+  integrity, mode uncertainty, local headroom, and fallback difficulty rise.
+- **Status:** plausible.
+- **Primary sources:** `imo2019masstrials`, `imo2026mass`.
+- **Rationale:** Remote control couples delayed observation and communication
+  state to the remaining locally recoverable envelope.
+- **Open issue:** Static authority plus local runtime assurance and ordinary
+  epoch leases may match the proposed adaptation.
+- **Used by:** [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-456
+
+- **Statement:** Nominal human availability does not establish a recovery
+  function without timely information, skill, effective authority, reaction
+  margin, and a validated postcondition.
+- **Status:** established.
+- **Primary sources:** `bainbridge1983ironies`, `sarter1995mode`,
+  `endsley1995outofloop`, `parasuraman2000levels`.
+- **Rationale:** Automation can remove practice, obscure mode and state, and
+  request intervention only after the response window has narrowed.
+- **Open issue:** There is no universal takeover-time constant.
+- **Used by:** [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [C-415](#c-415)–[C-416](#c-416).
+
+### C-457
+
+- **Statement:** Certification-process evidence, runtime evidence, operational
+  safety evidence, and accident evidence are non-substitutable assurance types.
+- **Status:** established.
+- **Primary sources:** `sae4754b`, `sae4761a`, `rtca178c`, `icao2024annex13`.
+- **Rationale:** Development conformance, live behavior, field outcomes, and
+  occurrence reconstruction answer different questions.
+- **Open issue:** Their versioned composition is application-specific and can
+  still omit shared assumptions.
+- **Used by:** [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-458
+
+- **Statement:** A safety case must remain versioned against configuration,
+  operational domain, assumptions, defeaters, dependencies, and field evidence.
+- **Status:** plausible.
+- **Primary sources:** `gsn2021standard`, `ul2023ul4600`, `leveson2004accident`.
+- **Rationale:** A structured argument can become stale when the system,
+  environment, evidence, or causal model changes.
+- **Open issue:** Conventional traceability and change control may provide the
+  same protection at lower cost.
+- **Used by:** [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-459
+
+- **Statement:** Maintenance selection should depend on function, failure mode,
+  consequence, detectability, and task effectiveness rather than a universal
+  component-age rule.
+- **Status:** established.
+- **Primary sources:** `nowlan1978rcm`, `faa12016g`.
+- **Rationale:** Reliability-centered maintenance distinguishes age-related,
+  random, detectable, hidden, and consequence-dependent failures.
+- **Open issue:** Inspection selection, false removal, dormant backup failure,
+  and maintenance-induced faults must be included.
+- **Used by:** [maintenance principle](principle-registry.md#p-009--maintenance-plane).
+
+### C-460
+
+- **Statement:** Accident reports support claims about an occurrence and
+  plausible controls, not population incidence or one universal causal law.
+- **Status:** established.
+- **Primary sources:** `icao2024annex13`, `imo2008casualty`, `bea2012af447`,
+  `ntsb2019mccain`, `ntsb2019uber`, `ntsb2020fitzgerald`.
+- **Rationale:** Independent investigations reconstruct bounded sequences from
+  selected evidence for prevention; they do not provide a surveillance
+  denominator or randomized counterfactual.
+- **Open issue:** Rate claims need exposure and reporting coverage.
+- **Used by:** [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-461
+
+- **Statement:** A validated asynchronous authority-transfer record may prevent
+  split-brain, stale-command, and no-owner failures across local automation,
+  human, remote, and independent recovery controllers.
+- **Status:** speculative.
+- **Primary sources:** no direct validation; constituent boundaries are in
+  [C-447](#c-447), [C-452](#c-452)–[C-456](#c-456).
+- **Rationale:** The record binds proposer and accepter epochs, actual and
+  pending mode, observation vintage, control scope, effect boundary, deadline,
+  acknowledgement, fallback reachability, expiry, and verified postcondition.
+- **Open issue:** It must beat mode annunciation, interlock, epoch lease,
+  runtime assurance, HCI, and Candidate 014 at equal cost.
+- **Used by:** [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [sensorimotor chapter](../concept/20-sensorimotor-grounding.md).
+
+### C-462
+
+- **Statement:** Aerospace and maritime autonomy add no stable project principle
+  after mature control, integrity, containment, assurance, maintenance, HCI,
+  and investigation mechanisms are applied as nulls.
+- **Status:** established.
+- **Primary sources:** synthesis of [C-445](#c-445)–[C-461](#c-461).
+- **Rationale:** Every surviving mechanism maps to existing principles or
+  candidates; only the authority-transfer record remains experimentally open.
+- **Open issue:** Reopen only for a distinct state, information path, cost,
+  failure boundary, and equal-budget win.
+- **Used by:** [cross-domain chapter](../concept/07-cross-domain-convergence.md).

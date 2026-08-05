@@ -489,6 +489,50 @@ and sensor failure. Recalibrate energy at device and node boundaries using the
 recovery, and negative results are reported by intervention and missingness
 stratum rather than one average.
 
+The real platform adds two contracts that simulation accuracy cannot supply.
+First, estimation is qualified by integrity. An illustrative position
+protection level is
+
+$$
+PL=K_{\mathrm{int}}\sigma_{\mathrm{pos}},
+\qquad \text{usable only when }PL\le AL,
+$$
+
+where $PL$, position standard uncertainty $\sigma_{\mathrm{pos}}$, and alert
+limit $AL$ are in metres, while $K_{\mathrm{int}}$ is dimensionless and tied
+to a declared fault and risk allocation. A learned confidence score does not
+become integrity without bias bounds, dependence, coverage, and time-to-alert
+([C-446](../research/claims.md#c-446)).
+
+Second, a controller handoff must preserve exclusive effective authority while
+the world keeps moving. The transfer binds the controlled effect, epoch,
+outgoing and incoming controller, actual and pending mode, observation basis,
+headroom, time-to-boundary, faults, outstanding commands, fallback reachable
+set, expiry, acknowledgement, atomic activation, and observed postcondition.
+
+```mermaid
+stateDiagram-v2
+    [*] --> StableOwner
+    StableOwner --> TransferProposed: effect + epoch + observation
+    TransferProposed --> TransferRejected: stale / unsupported / not ready
+    TransferProposed --> Armed: receiver ready + fallback reachable
+    Armed --> NewOwner: atomic activation + old authority revoked
+    Armed --> Fallback: timeout / fault / margin exhausted
+    NewOwner --> StableOwner: postcondition verified
+    NewOwner --> Fallback: postcondition fails
+    TransferRejected --> StableOwner
+    Fallback --> StableOwner: recovery + explicit reassignment
+```
+
+Editable source:
+[asynchronous-authority-transfer.mmd](../assets/diagrams/asynchronous-authority-transfer.mmd).
+
+This is a refinement of Candidate 012, not a new autonomy layer. It must beat
+mode annunciation, interlocks, epoch leases, runtime assurance, explicit
+arbitration, Candidate 014, and the recoverable-initiative contract under
+split-brain, stale-command, no-owner, delayed-link, common-mode, and failed-
+postcondition injections ([C-447](../research/claims.md#c-447)–[C-461](../research/claims.md#c-461)).
+
 ## Efficiency mechanism
 
 Grounding adds sensors and interaction, so its efficiency claim is conditional:
@@ -542,6 +586,12 @@ the proposed benefit.
   theory.
 - Robust general physical concepts from the integrated multimodal curriculum
   under [C-007](../research/claims.md#c-007): **speculative**.
+- Navigation integrity, protection-envelope scope, fault-stage separation,
+  degraded/fallback distinctions, and assurance boundaries under
+  [C-445](../research/claims.md#c-445)–[C-460](../research/claims.md#c-460):
+  **established or plausible within the audited vehicle domains**.
+- Validated asynchronous authority transfer under
+  [C-461](../research/claims.md#c-461): **speculative**.
 
 ## Speculative extensions
 
@@ -590,6 +640,8 @@ on intervention novelty alone.
 | Active training wins only because it observed more frames or spent more action energy | data or resource exposure explains the result; compare at matched events, actions, and joules |
 | Sensor and interaction energy erase compute savings | narrow the result to representation quality; do not claim system efficiency |
 | Calibration fails specifically under missing modalities or novel interventions | uncertainty is not deployment-valid; block autonomous escalation in those strata |
+| Low state-estimation error coexists with integrity alerts that are late or absent | average accuracy is not safe-to-use evidence; bind fault hypotheses, alert limit, and deadline |
+| Handoff produces overlapping owners, a control gap, or stale queued effects | transfer is not atomic or command expiry is incomplete; revoke, fall back, and preserve the trace |
 
 ## Measurable predictions
 
@@ -656,7 +708,18 @@ encoding. The claim is rejected if the confidence interval for lifecycle
 energy includes the preregistered equivalence margin after collection,
 calibration, language, maintenance, and failed-action costs are included.
 
+### H-G9 — Integrity-qualified authority transfer
+
+Under delayed links, boundary misclassification, degraded sensors, outstanding
+commands, common-mode faults, and failed postconditions, a validated transfer
+record will reduce double-owner, no-owner, stale-command, and unsafe-boundary
+time beyond mode annunciation, interlocks, epoch leases, runtime assurance,
+ordinary arbitration, and the HCI/observation contracts at equal sensing,
+reserve, communication, training, review, latency, and joule budgets. A tie
+merges its useful fields into those conventional mechanisms.
+
 Promotion requires H-G1 plus at least one transfer result from H-G3–H-G6,
-valid uncertainty under H-G7, and no lifecycle contradiction under H-G8. A
+valid uncertainty under H-G7, and no lifecycle contradiction under H-G8.
+Stage-4 authority-transfer claims additionally require H-G9. A
 positive result remains scoped to its trajectory schema, intervention family,
 environment shift, hardware boundary, and evaluated language role.

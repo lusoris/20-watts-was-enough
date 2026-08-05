@@ -58,6 +58,49 @@ The certificate cannot be self-asserted solely by the learned policy seeking
 wider authority. Simple independent limits, trip paths, and fallbacks remain
 enforced.
 
+## Validated asynchronous authority transfer
+
+A handoff is a typed state transition while the controlled system continues to
+evolve. Its record carries:
+
+1. controlled effect, transfer ID, and monotonic epoch;
+2. authenticated outgoing and incoming controller versions;
+3. actual and pending mode with activation and cancel conditions;
+4. Candidate 014 observation packet, integrity, clocks, and uncertainty;
+5. current trajectory, constraints, physical/computational headroom, and
+   time-to-boundary in native units;
+6. active faults, unavailable functions, and outstanding commands/effects;
+7. versioned fallback controller, reachable set, deadline, and reserve;
+8. proposed authority scope, start, expiry, revocation, and renewal;
+9. acknowledgement plus machine self-test or human readiness evidence;
+10. exclusive activation event preventing both double owner and no owner;
+11. observed postcondition proving the intended owner, mode, and effect; and
+12. immutable software, data, configuration, clock, and outcome lineage.
+
+```mermaid
+stateDiagram-v2
+    [*] --> StableOwner
+    StableOwner --> TransferProposed: effect + epoch + observation
+    TransferProposed --> TransferRejected: stale / unsupported / not ready
+    TransferProposed --> Armed: receiver ready + fallback reachable
+    Armed --> NewOwner: atomic activation + old authority revoked
+    Armed --> Fallback: timeout / fault / margin exhausted
+    NewOwner --> StableOwner: postcondition verified
+    NewOwner --> Fallback: postcondition fails
+    TransferRejected --> StableOwner
+    Fallback --> StableOwner: recovery + explicit reassignment
+```
+
+Editable source:
+[asynchronous-authority-transfer.mmd](../../assets/diagrams/asynchronous-authority-transfer.mmd).
+
+The record may produce only validated transfer, continued current authority,
+or qualified fallback. It does not widen the available actions. Retire its
+name if explicit mode annunciation, an independent runtime-assurance monitor,
+an epoch lease, ordinary arbitration, Candidate 014, and the recoverable-
+initiative contract match its failures and outcomes at equal cost
+([C-445](../../research/claims.md#c-445)–[C-461](../../research/claims.md#c-461)).
+
 ## Compromise-bounded authority profile
 
 Physical or logical headroom is not a security claim. Every authority decision
