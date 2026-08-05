@@ -4185,3 +4185,218 @@ describes the exact statement here, not a broader interpretation.
   security baseline under adaptive attack.
 - **Used by:** [security audit](audits/2026-08-05-security-cryptography.md),
   [principle registry](principle-registry.md).
+
+### C-268
+
+- **Statement:** Formal composition can systematically relate structured
+  expressions to interpretations only under a declared grammar, lexicon, type
+  discipline, and semantic interpretation.
+- **Status:** established.
+- **Primary sources:** `lambek1958mathematics`, `montague1970universal`.
+- **Rationale:** Composition supplies a rule for building meanings from parts;
+  it does not select the lexicon, context, referent, world state, or truth.
+- **Open issue:** Learned composition must be compared with typed grammars and
+  semantic parsers on held-out task denotation rather than proxy structure.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-269
+
+- **Statement:** Explicit compositional structure can improve transmission to
+  new learners in bounded emergent-language experiments even when it is not
+  necessary for within-population generalization.
+- **Status:** plausible.
+- **Primary source:** `chaabouni2020compositionality`.
+- **Rationale:** Learnability by a new receiver and success among co-adapted
+  senders and receivers are different outcomes.
+- **Open issue:** Replicate across tasks, architectures, heterogeneous agents,
+  and equal-budget typed baselines.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [routing chapter](../concept/10-neurogenesis-and-routing.md).
+
+### C-270
+
+- **Statement:** Pragmatic interpretation is a defeasible inference over
+  alternatives, priors, context, sender goals, and incentive assumptions rather
+  than a typed guarantee, proof, or authority grant.
+- **Status:** established.
+- **Primary sources:** `grice1975logic`, `frank2012predicting`,
+  `crawford1982strategic`.
+- **Rationale:** The inferred intention can change with the listener's model
+  even when the literal signal is unchanged.
+- **Open issue:** Unknown or misaligned incentives can make recursive pragmatic
+  confidence actively misleading.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [grounding chapter](../concept/20-sensorimotor-grounding.md).
+
+### C-271
+
+- **Statement:** Collaborative reference and lexical entrainment can be
+  partner- and interaction-history-specific.
+- **Status:** established.
+- **Primary sources:** `clark1986referring`, `brennan1996conceptual`.
+- **Rationale:** Repeated partners can converge on shorter local descriptions
+  that are not automatically shared with newcomers or other groups.
+- **Open issue:** Per-partner state may cost more than explicit identifiers and
+  can preserve mistaken or exclusionary pacts.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [memory chapter](../concept/40-memory-and-consolidation.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-272
+
+- **Statement:** Human conversation contains organized practices for locating
+  and repairing trouble, with broad cross-linguistic similarities in
+  other-initiated repair within the audited samples.
+- **Status:** established.
+- **Primary sources:** `schegloff1977preference`,
+  `dingemanse2015universal`.
+- **Rationale:** Repair is a separately observable coordination process rather
+  than proof that the first message was understood.
+- **Open issue:** An AI transfer must beat schema errors, NACK/retry, targeted
+  clarification, and ordinary exception handling under bounded latency.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment).
+
+### C-273
+
+- **Statement:** Evidence-backed acknowledgements and partner-scoped state may
+  reduce false-common-ground commitments in multi-agent systems.
+- **Status:** plausible.
+- **Primary sources:** `clark1991grounding`, `clark1986referring`.
+- **Rationale:** Delivery, parsing, sufficient understanding, acceptance, and
+  task success are distinct states that may diverge under asymmetric context.
+- **Open issue:** Test against an append-only replicated log with explicit
+  acknowledgements and version vectors under packet loss and churn.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-274
+
+- **Statement:** Human turn transition is locally coordinated and shows both
+  cross-linguistic commonalities and variation; it does not establish one
+  universal centralized scheduling algorithm.
+- **Status:** established.
+- **Primary sources:** `sacks1974simplest`, `stivers2009universals`.
+- **Rationale:** Gaps, overlap, selection, self-selection, and timing depend on
+  interactional and language-specific conditions.
+- **Open issue:** Machine workloads require comparison with priority queues,
+  leases, actors, cancellation, and deadline schedulers.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [sparse-compute chapter](../concept/30-sparse-predictive-compute.md),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions).
+
+### C-275
+
+- **Statement:** Shannon capacity and rate-distortion limits are relative to a
+  source, channel, code, and distortion model and do not themselves define
+  truth, reference, intention, or task value.
+- **Status:** established.
+- **Primary sources:** `shannon1948mathematical1`,
+  `shannon1948mathematical2`, `berger1971rate`.
+- **Rationale:** A semantic or safety claim enters through a separately
+  declared distortion, utility, grounding, and authority model.
+- **Open issue:** End-to-end experiments must charge encoder, decoder,
+  synchronization, repair, and protected-tail errors.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [energy chapter](../concept/80-energy-model.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-276
+
+- **Statement:** Context-sensitive brevity plausibly reflects a trade between
+  production cost, predictability, and recoverability rather than a fixed law
+  of optimal message length.
+- **Status:** plausible.
+- **Primary sources:** `ferrericancho2003least`, `piantadosi2011word`,
+  `levy2008expectation`.
+- **Rationale:** Short forms can externalize cost into priors, decoder state,
+  ambiguity, clarification, and maintenance.
+- **Open issue:** Causal transfer requires native-unit task distortion,
+  protected-tail loss, total energy, and drift tests.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [energy chapter](../concept/80-energy-model.md),
+  [P-001](principle-registry.md#p-001--selective-allocation).
+
+### C-277
+
+- **Statement:** Iterated learning can amplify learner biases and transmission
+  bottlenecks; increased learnability does not imply increased task fitness.
+- **Status:** established.
+- **Primary sources:** `griffiths2007language`, `kirby2008cumulative`.
+- **Rationale:** Repeated reconstruction selects what later learners can acquire,
+  which can simplify or regularize a code while discarding useful distinctions.
+- **Open issue:** Measure rare-meaning retention, cross-play, cumulative compute,
+  and outcome utility in heterogeneous populations.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [memory chapter](../concept/40-memory-and-consolidation.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-278
+
+- **Statement:** Multi-agent task reward alone does not guarantee that an
+  emergent communication code is interpretable, compositional, grounded,
+  transferable, or safe.
+- **Status:** established.
+- **Primary sources:** `kottur2017natural`,
+  `chaabouni2020compositionality`.
+- **Rationale:** Co-adapted agents can exploit task-specific correlations and
+  private encodings without recovering the properties named above.
+- **Open issue:** Require direct denotation, cross-play, newcomer, grounding,
+  incentive, and protected-meaning tests.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [system synthesis](../concept/70-system-synthesis.md).
+
+### C-279
+
+- **Statement:** Local convention adaptation can help under genuine requirement
+  drift only if candidate forms remain mapped to explicit semantics and survive
+  cross-play, compatibility, protected-meaning, and rollback gates.
+- **Status:** plausible.
+- **Primary sources:** `lewis1969convention`, `baronchelli2006sharp`,
+  `centola2015spontaneous`.
+- **Rationale:** Population convergence is a coordination outcome, while safe
+  protocol evolution also needs semantic and lifecycle constraints.
+- **Open issue:** Compare with schema registries and human-authored migration at
+  equal communication, storage, compute, and maintenance cost.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-280
+
+- **Statement:** A versioned, repairable convention layer may improve
+  heterogeneous-agent adaptation while reducing total design and communication
+  cost under vocabulary, task, and population drift.
+- **Status:** speculative.
+- **Primary source:** none sufficient; component mechanisms are scoped in
+  [C-268](#c-268)–[C-279](#c-279).
+- **Rationale:** The residual binds typed literal content, defeasible inference,
+  uptake evidence, repair lineage, cross-play, compatibility, and rollback.
+- **Open issue:** It must beat a complete typed protocol, schema registry,
+  acknowledgement, calibrated inference, replicated state, and migration stack.
+- **Used by:** [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [roadmap](../concept/90-research-roadmap.md).
+
+### C-281
+
+- **Statement:** Convergence, frequency, or communicative task success is not
+  sufficient evidence that an emergent code is meaningful, truthful, grounded,
+  inclusive, or safe.
+- **Status:** disputed.
+- **Primary sources:** `kottur2017natural`,
+  `chaabouni2020compositionality`, `crawford1982strategic`.
+- **Rationale:** Coordination can stabilize on brittle, private, deceptive, or
+  exclusionary signals whose semantics fail outside the co-adapted population.
+- **Open issue:** A specific code can still pass independent semantic,
+  grounding, incentive, cross-play, safety, and lifecycle tests.
+- **Used by:** [communication audit](audits/2026-08-05-linguistics-communication.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [principle registry](principle-registry.md).

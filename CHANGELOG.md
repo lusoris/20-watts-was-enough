@@ -7,6 +7,13 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A linguistics and communication-science audit separating formal composition,
+  pragmatics, common ground, repair, turn timing, channel coding, compression,
+  language change, iterated learning, grounding, and convention formation.
+- Fourteen scoped communication claims (`C-268`–`C-281`), twenty-eight
+  centralized sources, and Candidate 015 with an editable convention-lifecycle
+  diagram, typed message contract, cross-play gates, mature protocol nulls,
+  ablations, and equal-budget semantic-drift tests.
 - A security and cryptography audit that separates authentication,
   authorization, information flow, detection, containment, revocation, and
   compromise recovery while naming adversaries, trust roots, timing, and cost.

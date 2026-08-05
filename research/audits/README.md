@@ -26,6 +26,7 @@ failed deduplications that would be lost in the shorter claim ledger.
 | 2026-08-05 | [Astronomy and planetary remote inference](2026-08-05-astronomy-remote-inference.md) | forward models, reconstruction, selection, non-detection, association, model checks, trials, alerts, and adaptive follow-up map to established statistics and assurance; a dependency-bearing observation contract remains held against the complete conventional stack |
 | 2026-08-05 | [Geology and geomorphology](2026-08-05-geology-geomorphology.md) | fractures, drainage, erosion/deposition, hysteresis, capture, thresholds, warnings, sparse observation, and mixed clocks establish passive-physics and observation nulls; support-qualified fusion extends Candidate 014 |
 | 2026-08-05 | [Security and cryptography](2026-08-05-security-cryptography.md) | adversary models, trust roots, least privilege, thresholds, revocation, detection, information flow, and clean recovery remain distinct conventional mechanisms; compromise-bounded epoch fields refine Candidates 009 and 012 |
+| 2026-08-05 | [Linguistics and communication science](2026-08-05-linguistics-communication.md) | composition, pragmatics, common ground, repair, timing, coding, cultural transmission, grounding, and convention formation remain distinct; Candidate 015 tests a versioned repairable convention lifecycle |
 
 An audit does not itself promote a principle. Major observations receive stable
 `C-` claims, candidate mechanisms are deduplicated against the

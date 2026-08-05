@@ -122,3 +122,9 @@ project choice.
   IAM and a rehearsed rebuild–rotate–validate workflow at equal lifecycle cost?
   See [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md)
   and [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+- **OQ-033:** Can heterogeneous agents adapt local message forms under task,
+  vocabulary, and population drift while preserving literal semantics,
+  recipient uptake evidence, protected meanings, compatibility, and rollback
+  better than a fixed typed protocol and mature migration stack at equal total
+  cost? See
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).

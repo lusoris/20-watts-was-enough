@@ -137,6 +137,55 @@ Every promoted structural action records:
 5. a promotion or rejection decision; and
 6. a rollback target.
 
+### Communication is a versioned state transition
+
+A fluent message is not one state variable. The runtime keeps at least six
+separate records:
+
+1. typed literal payload and protocol version;
+2. external referent, query, action, or constraint;
+3. defeasible hypotheses about sender intention;
+4. recipient-generated uptake state—received, parsed, understood-enough,
+   accepted, rejected, or unresolved;
+5. repair and supersession lineage; and
+6. any resulting authority decision, which communication alone cannot grant.
+
+This separation follows the evidence boundaries in
+[C-268](../research/claims.md#c-268)–[C-281](../research/claims.md#c-281).
+Composition is relative to a grammar and interpretation; pragmatic inference
+depends on context and incentives; acknowledgement is not identical belief;
+channel capacity is not semantic value; and population convergence is not
+grounding, truth, or safety.
+
+```mermaid
+flowchart LR
+    W["World · task · private observation"] --> M["Typed literal message"]
+    M --> P["Defeasible pragmatic hypotheses"]
+    P --> U["Recipient uptake state"]
+    U --> Q{"Clear enough for this task?"}
+    Q -->|"no"| R["Clarify · repair · reject"]
+    R --> M
+    Q -->|"yes"| A["Bounded task action"]
+    A --> O["Observed outcome"]
+    O --> C["Sandboxed convention candidate"]
+    C --> G["Cross-play · newcomer · protected-meaning gates"]
+    G -->|"fail"| X["Expire · withdraw · roll back"]
+    G -->|"pass"| V["Publish version + migration"]
+    V --> M
+```
+
+Editable source:
+[versioned-repairable-conventions.mmd](../assets/diagrams/versioned-repairable-conventions.mmd).
+
+A local shorthand remains session-scoped until independent interpreters recover
+its declared denotation, older and newcomer agents pass cross-play, corrupted
+or version-mismatched messages trigger bounded repair, protected rare meanings
+survive, and migration plus rollback have been exercised. The full lifecycle is
+tested in
+[Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md)
+against typed protocols, schema registries, acknowledgements, replicated logs,
+calibrated inference, standard coding, and explicit migration.
+
 ### Live response and longitudinal learning are separate loops
 
 The runtime may need to contain a failure before its cause is known. Later
@@ -236,6 +285,7 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
 | Maturation, reopening, and contextual control | C-043–C-051 | scoped interventions; digital translations experimental |
 | Collective coordination and resilience | C-052–C-060 | scoped observations; quorum and fragility translations experimental |
 | Endogenous generation and exploration | C-061–C-066 | constituent observations; integrated curriculum speculative |
+| Communication and convention lifecycle | C-268–C-281 | constituent mechanisms established or scoped; versioned repairable composition speculative |
 | Complete integrated system | none | unvalidated project synthesis |
 
 ## Speculative extensions
@@ -264,6 +314,8 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
   and newcomer-admission effects.
 - Proposal generation collapses into high-temperature sampling without
   targeted intervention and outcome-based selection.
+- Fluent exchange creates false common ground, silent semantic drift, or local
+  conventions that newcomers and older versions cannot interpret or reject.
 - The architecture accumulates mechanisms faster than experiments can reject
   them.
 
@@ -279,6 +331,8 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
    and unsupported factual carryover.
 5. Reversible maturation gates improve retention and relearning relative to
    fixed regularization, fixed pruning schedules, and naive fine-tuning.
-6. The integrated system occupies a better quality–risk–latency–energy frontier
+6. Versioned uptake, repair, and cross-play gates reduce silent semantic failure
+   under agent and protocol drift beyond a complete fixed-protocol stack.
+7. The integrated system occupies a better quality–risk–latency–energy frontier
    than every component ablation and the strongest ordinary controller,
    scheduler, cache, and router baselines.

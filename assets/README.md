@@ -50,6 +50,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/versioned-observation-contract.mmd` preserves the chain from latent
   source through response, selection, association, inference, follow-up, and
   outcome-based revision for Candidate 014.
+- `diagrams/versioned-repairable-conventions.mmd` separates typed literal
+  content, pragmatic hypotheses, recipient uptake, bounded repair, task outcome,
+  convention tests, publication, expiry, and rollback for Candidate 015.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

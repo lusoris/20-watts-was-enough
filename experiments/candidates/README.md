@@ -16,6 +16,7 @@
 | 012 | [Latency-qualified authority envelopes](012-latency-qualified-authority.md) | Does shrinking or widening action authority from evidence age, integrity, mode, headroom, and coordination beat static hierarchies and runtime-assurance nulls? |
 | 013 | [Bidirectional deficit–capability routing](013-deficit-capability-routing.md) | Does compressed deficit-up/context-down signaling plus a local feasibility gate beat centralized, backpressure, primal–dual, and learned allocation under moving demand and resources? |
 | 014 | [Versioned observation contracts](014-versioned-observation-contract.md) | Does propagating response, selection, association, uncertainty, and data-vintage dependencies reduce invalid inference beyond a complete conventional evidence stack? |
+| 015 | [Versioned, repairable conventions](015-versioned-repairable-conventions.md) | Can heterogeneous agents adapt local message forms under drift while explicit meaning, uptake, repair, compatibility, and rollback beat a complete fixed-protocol stack? |
 
 These are pre-implementation contracts, not evidence that a candidate works.
 Passing a simulator stage permits a higher-fidelity test; it does not promote a
