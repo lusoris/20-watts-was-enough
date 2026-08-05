@@ -50,6 +50,8 @@ state. See [decision 0005](decisions/0005-rendered-private-edition.md).
 | [Cross-domain convergence](concept/07-cross-domain-convergence.md) | How do different sciences collapse into shared problem–solution principles without losing causal differences? |
 | [Structural growth and routing](concept/10-neurogenesis-and-routing.md) | How does a persistent capability gap create, test, specialize, merge, protect, or retire conditional modules? |
 | [Sensorimotor grounding](concept/20-sensorimotor-grounding.md) | Which event, clock, opportunity, action, intervention, history, language, uncertainty, and provenance contracts ground a world model? |
+| [Representative adaptive performance](concept/22-representative-adaptive-performance.md) | How are learning, transfer, fatigue, risk, recovery, coordination, and selection compared under the conditions in which action is actually possible? |
+| [Operator-qualified sensing](concept/24-operator-qualified-sensing.md) | What could a physical measurement resolve, what remains prior-dependent, when is another observation worth its cost, and which substrate should execute the transform? |
 | [Sparse predictive compute](concept/30-sparse-predictive-compute.md) | How do event, context, and resource loops price the next computation or observation? |
 | [Memory and consolidation](concept/40-memory-and-consolidation.md) | How does an episode become a retained skill, external fact, weakened trace, or deletion? |
 | [Maturity and structural consolidation](concept/50-grokking-and-pruning.md) | When should a structure be protected, reopened, compacted, or retired? |

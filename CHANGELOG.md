@@ -7,6 +7,22 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A sports-expertise, adaptive-performance, and team-coordination audit that
+  keeps anticipation, physical interception, practice, retention, transfer,
+  useful exploration, pacing, readiness, staged return, coordination, shared
+  information, deception, selection, and complete cost distinct.
+- Forty-four scoped sports claims (`C-926`–`C-969`), forty-seven centralized
+  sources, Fixture F-006, its mathematical contract and editable diagram, and
+  a dedicated representative-adaptive-performance chapter; no principle or
+  candidate was added.
+- An optics, photonics, and inverse-sensing audit covering finite measurement
+  channels, photon budgets, inverse and computational imaging, active sensing,
+  calibration, saturation, fusion, physical transforms, conversion,
+  fabrication spread, thermal control, and lifecycle energy.
+- Thirty-two scoped optics claims (`C-970`–`C-1001`), sixty-one new centralized
+  references plus two deduplicated existing records, Fixture F-007, its
+  operator-qualified mathematical contract and editable diagram, and a
+  dedicated physical-inference chapter; no principle or candidate was added.
 - A comparative-cognition and tool-use audit spanning manufacture, causal
   transfer, future preparation, event memory, costed uncertainty, copying,
   teaching, exploration, social acquisition, negative transfer, and
