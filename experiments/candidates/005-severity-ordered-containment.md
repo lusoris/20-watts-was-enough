@@ -274,6 +274,17 @@ The method is rejected as redundant if ordinary multi-objective robustness,
 resource accounting, and fault injection predict the same removal, transfer,
 recurrence, or reserve failures with lower measurement overhead.
 
+### Residual-capacity and redistributed-load qualification
+
+For structural, routed, or dependency-bearing failures, also record cumulative
+load/use history, damage/dependency posterior, observation detection limits,
+current and post-contingency capacity, common-cause set, redistributed demand,
+degraded-service vector, time to constraint, intervention, post-action
+verification, and restored next-event reserve
+([C-481](../../research/claims.md#c-481)–[C-500](../../research/claims.md#c-500)).
+The schema loses if ordinary mechanics/reliability, asset management, and
+network assignment predict the same failures more cheaply.
+
 ## Promotion criteria
 
 The held candidate advances beyond Stage 1 only if, over preregistered seeds and

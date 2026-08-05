@@ -7113,3 +7113,267 @@ describes the exact statement here, not a broader interpretation.
   fabrication, drift, shadow, fallback, and retirement costs.
 - **Used by:** [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md),
   [hardening chapter](../concept/60-hardening-and-factual-memory.md).
+
+### C-481
+
+- **Statement:** Compliant mechanisms obtain motion through elastic deformation,
+  coupling desired compliance to load-bearing stiffness, stored energy,
+  nonlinearity, and stress.
+- **Status:** established.
+- **Primary sources:** `Howell1994CompliantPivots`, `Howell1996LoopClosure`,
+  `Frecker1997Topology`.
+- **Rationale:** Mechanics and design methods expose an input–deformation–output
+  mapping with physical constraints.
+- **Open issue:** Calling the mapping intelligence adds no mechanism without
+  task, accuracy, programmability, reset, and lifecycle comparison.
+- **Used by:** [mechanical/civil audit](audits/2026-08-05-mechanical-civil-resilience.md),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-482
+
+- **Statement:** Stress concentration and cyclic deformation bound flexure
+  range and fatigue life.
+- **Status:** established.
+- **Primary sources:** `Liu2017FlexureStress`, `Miner1945CumulativeDamage`.
+- **Rationale:** Local geometry, material, amplitude, spectrum, environment, and
+  accumulated cycles constrain repeatable compliant operation.
+- **Open issue:** Physical compilation must charge inspection, replacement,
+  drift, and failed-device cost.
+- **Used by:** [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-483
+
+- **Statement:** Passive mechanics can produce stable or useful trajectories
+  with little active control inside a bounded morphology and excitation envelope.
+- **Status:** established.
+- **Primary sources:** `McGeer1990PassiveWalking`, `Collins2005PassiveRobots`,
+  `Zayas1990Isolation`.
+- **Rationale:** Geometry, inertia, elasticity, damping, gravity, and preparation
+  can offload control for scoped conditions.
+- **Open issue:** Off-envelope behavior, disturbance rejection, startup, reset,
+  and lifecycle energy remain.
+- **Used by:** [structural offloading](principle-registry.md#p-010--structural-offloading-and-co-design),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-484
+
+- **Statement:** Optimum passive-vibration parameters depend on excitation and
+  response objective; off-design amplification and stroke limits remain possible.
+- **Status:** established.
+- **Primary source:** `Warburton1982Absorber`.
+- **Rationale:** Analytical optima are conditional on frequency, damping,
+  objective, and model.
+- **Open issue:** A passive component is not universally stable or optimal.
+- **Used by:** [mechanical/civil audit](audits/2026-08-05-mechanical-civil-resilience.md).
+
+### C-485
+
+- **Statement:** Vibration or modal changes can support damage inference in
+  constrained specimens.
+- **Status:** established.
+- **Primary source:** `Cawley1979DefectLocation`.
+- **Rationale:** Structural changes alter measured dynamic response under
+  specified excitation, placement, noise, and model conditions.
+- **Open issue:** Detection does not establish location, type, severity,
+  remaining life, cause, or repair.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-486
+
+- **Statement:** Environmental and operational variation can confound vibration-
+  based structural damage indicators.
+- **Status:** established.
+- **Primary source:** `Peeters2001Z24`.
+- **Rationale:** Long-term bridge monitoring showed substantial non-damage
+  variability in modal features.
+- **Open issue:** Observation contracts must carry excitation, environment,
+  sensor/calibration, reference version, and support.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-487
+
+- **Statement:** Structural-health sensing and diagnosis do not themselves
+  restore stiffness, strength, calibration, service, or reserve.
+- **Status:** established.
+- **Primary source:** `Worden2007SHMAxioms` plus maintenance evidence in
+  `Frangopol1997LifeCycle` and `Frangopol2000BridgeMaintenance`.
+- **Rationale:** Observation, intervention, and verified recovery are different
+  state transitions.
+- **Open issue:** Monitoring value must name the changed maintenance decision
+  and post-action evidence.
+- **Used by:** [maintenance principle](principle-registry.md#p-009--maintenance-plane),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-488
+
+- **Statement:** Structural-redundancy benefit depends on damage state,
+  mechanics, redistribution, residual capacity, and common-cause reliability,
+  not member count.
+- **Status:** established.
+- **Primary sources:** `Frangopol1987DamageRedundancy`, `Schafer2005Stability`,
+  `Ellingwood2005AbnormalLoads`.
+- **Rationale:** Loss of one element changes loads and stability of surviving
+  paths; multiple paths can share hazards and bottlenecks.
+- **Open issue:** Redundancy and independence must remain separate.
+- **Used by:** [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-489
+
+- **Statement:** Structural-robustness metrics depend on the selected direct and
+  indirect consequences and damage/hazard model.
+- **Status:** established.
+- **Primary source:** `Baker2008Robustness`.
+- **Rationale:** A robustness index embeds scope, event, consequence, and
+  aggregation choices.
+- **Open issue:** No universal scalar transfers across structures, services,
+  users, or time horizons.
+- **Used by:** [mechanical/civil audit](audits/2026-08-05-mechanical-civil-resilience.md).
+
+### C-490
+
+- **Statement:** Graceful degradation is a retained service vector and is
+  distinct from repair, full recovery, or restored next-event reserve.
+- **Status:** established.
+- **Primary sources:** `Bruneau2003SeismicResilience`,
+  `FAA2011DamageTolerance`.
+- **Rationale:** Remaining online can preserve some functions while quality,
+  users, margin, duration, and future tolerance differ.
+- **Open issue:** Uptime alone cannot establish graceful degradation.
+- **Used by:** [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-491
+
+- **Statement:** Damage-tolerant operation requires a qualified relation among
+  assumed flaw, growth, residual strength, detectability, inspection, and
+  corrective action.
+- **Status:** established.
+- **Primary source:** `FAA2011DamageTolerance`.
+- **Rationale:** Continued service with damage is conditional on a complete
+  detection-to-intervention programme.
+- **Open issue:** It is not immunity to fracture or permission for indefinite
+  degraded operation.
+- **Used by:** [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-492
+
+- **Statement:** Palmgren–Miner cumulative damage is a simple dimensionless
+  fatigue model, not a universal failure threshold.
+- **Status:** established.
+- **Primary sources:** `Miner1945CumulativeDamage`, `Fatemi1998FatigueSurvey`.
+- **Rationale:** Load sequence, multiaxial state, mean stress, environment,
+  material, and interaction effects violate its simplest assumptions.
+- **Open issue:** Physical history is durable state but not beneficial learning.
+- **Used by:** [memory lifetime principle](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-493
+
+- **Statement:** Griffith fracture and Paris-type crack growth are unit-bearing,
+  regime-limited mechanics nulls.
+- **Status:** established.
+- **Primary sources:** `griffith1921rupture`, `Paris1963CrackGrowth`.
+- **Rationale:** The models relate energy/stress intensity and crack growth under
+  explicit material, geometry, loading, and regime assumptions.
+- **Open issue:** Learned prognosis must beat these baselines with censored,
+  variable-amplitude, environmental, and inspection data.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-494
+
+- **Statement:** Lifecycle inspection and repair can be optimized under explicit
+  deterioration, detection, reliability, cost, and repair assumptions.
+- **Status:** established.
+- **Primary sources:** `Frangopol1997LifeCycle`,
+  `Frangopol2000BridgeMaintenance`.
+- **Rationale:** Mature reliability/maintenance models already connect uncertain
+  state, inspection information, intervention, and cost.
+- **Open issue:** Nonstationarity, common causes, scarce crews, and maintenance-
+  induced faults can invalidate the policy.
+- **Used by:** [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-495
+
+- **Statement:** Fixed-capacity maximum flow equals minimum cut under the
+  classical graph model, but that theorem does not model congestion, behavior,
+  degradation, or recovery.
+- **Status:** established.
+- **Primary source:** `Ford1956MaxFlow`.
+- **Rationale:** The result is a powerful capacity null inside its assumptions.
+- **Open issue:** Dynamic demand, shared hazards, rerouting, repair, and
+  inequality require additional models.
+- **Used by:** [Candidate 001](../experiments/candidates/001-adaptive-topology.md),
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-496
+
+- **Statement:** Road-link loss can be valued conditionally through changes in
+  generalized travel cost under a declared demand and assignment model.
+- **Status:** established.
+- **Primary source:** `Jenelius2006RoadVulnerability`.
+- **Rationale:** Vulnerability is a conditional consequence of a specified
+  disruption and behavior model.
+- **Open issue:** It is not the probability of the event or a universal
+  resilience measure.
+- **Used by:** [Candidate 001](../experiments/candidates/001-adaptive-topology.md),
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-497
+
+- **Statement:** Transport degradation and route-choice equilibrium must be
+  modeled jointly when users reroute after component loss.
+- **Status:** established.
+- **Primary sources:** `Nicholson1997DegradableTransport`,
+  `MurrayTuite2006NetworkResilience`.
+- **Rationale:** Surviving paths receive redistributed load and may develop
+  congestion or new bottlenecks.
+- **Open issue:** Static graph connectivity can overstate usable service.
+- **Used by:** [Candidate 001](../experiments/candidates/001-adaptive-topology.md),
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-498
+
+- **Statement:** Added network capacity can worsen selfish-routing equilibrium
+  in specified networks.
+- **Status:** established.
+- **Primary source:** `Braess2005Paradox`.
+- **Rationale:** Route-choice response can turn an added edge into higher total
+  equilibrium cost.
+- **Open issue:** More links, agents, or paths cannot be assumed to increase
+  resilience without the allocation behavior.
+- **Used by:** [Candidate 001](../experiments/candidates/001-adaptive-topology.md),
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-499
+
+- **Statement:** Nominal reserve is usable only if capacity survives the event,
+  carries redistributed demand, is reachable in time, remains within constraints,
+  and can later be replenished.
+- **Status:** plausible.
+- **Primary sources:** synthesis of [C-488](#c-488), [C-490](#c-490),
+  [C-495](#c-495)–[C-498](#c-498).
+- **Rationale:** Nameplate spare capacity can be damaged, common-cause coupled,
+  inaccessible, overloaded, too slow, or exhausted.
+- **Open issue:** Every reserve claim needs survival, deliverability, activation,
+  duration, constraints, and restoration fields.
+- **Used by:** [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-500
+
+- **Statement:** A path-dependent residual-capacity contract may reduce cross-
+  layer errors beyond isolated monitoring, maintenance, and service records.
+- **Status:** speculative.
+- **Primary sources:** no direct validation; constituent evidence is bounded by
+  [C-481](#c-481)–[C-499](#c-499).
+- **Rationale:** It binds damage posterior, load history, observation support,
+  present/post-contingency capacity, dependencies, redistributed demand,
+  degraded service, intervention deadline, action, verification, and reserve
+  restoration.
+- **Open issue:** It must beat nonlinear mechanics, structural reliability,
+  asset management, Candidates 005/009/011/012/014, and conventional network
+  assignment at equal information and lifecycle cost.
+- **Used by:** [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).

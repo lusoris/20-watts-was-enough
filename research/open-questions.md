@@ -191,3 +191,11 @@ project choice.
   drive, sensing, compute, transduction, readout, fabrication, reset, drift,
   shadow, fallback, and retirement costs? See
   [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+- **OQ-044:** Does a path-dependent residual-capacity contract predict unsafe
+  second-event, redistributed-load, degraded-service, and false-recovery cases
+  beyond nonlinear mechanics, structural reliability, SHM, asset management,
+  fault handling, and network assignment after full observation, inspection,
+  downtime, intervention, and lifecycle cost? See Candidates
+  [005](../experiments/candidates/005-severity-ordered-containment.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [014](../experiments/candidates/014-versioned-observation-contract.md).

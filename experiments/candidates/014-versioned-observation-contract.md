@@ -111,7 +111,10 @@ Every derived claim or alert carries:
 - replication/descendant, retirement, and migration events;
 - record production, survival, discovery, retention, and coding dependencies;
 - projection transition matrix, scenario range, and stationarity assumptions;
-- frozen forecast, coding, hyperparameter, holdout, and data-vintage boundary.
+- frozen forecast, coding, hyperparameter, holdout, and data-vintage boundary;
+- cumulative load/use and intervention history for path-dependent assets;
+- damage/dependency posterior, detection limits, current/post-contingency
+  capacity, and post-action reserve verification.
 
 ## Task family
 

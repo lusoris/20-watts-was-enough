@@ -205,6 +205,52 @@ Recovery is only one axis. A maturity record should expose at least:
 These quantities must be reported separately before any aggregate resilience
 score is computed.
 
+### Structural health is a path-dependent capacity contract
+
+A module or route can continue producing output after pruning, damage, drift,
+or overload while its remaining margin and next-event tolerance collapse.
+“Healthy,” “redundant,” “gracefully degraded,” and “reserve” are therefore not
+single scalar states.
+
+For every structurally consolidated asset, record:
+
+1. damage or dependency posterior and cumulative load/use history;
+2. observation method, calibration, support, and detection limits;
+3. present capacity and post-contingency capacity in native units;
+4. surviving load/routing paths, common causes, and redistributed demand;
+5. permitted degraded-service vector, affected strata, and exposure duration;
+6. remaining time to a constraint boundary and available intervention;
+7. unload, isolation, reroute, repair, replacement, or rollback action;
+8. post-action verification; and
+9. restored next-event reserve rather than merely returned output.
+
+```mermaid
+flowchart LR
+    L["Load · demand · environment · use history"] --> S["Damage / dependency state"]
+    S --> O["Sensors · inspection · observation support"]
+    O --> I["Damage posterior + detection limits"]
+    I --> C["Current + post-contingency capacity"]
+    C --> R["Redistributed demand + common-cause set"]
+    R --> G{"Qualified service and intervention window?"}
+    G -->|"inside"| D["Declared degraded service vector"]
+    G -->|"outside"| A["Unload · isolate · reroute · repair · replace"]
+    D --> A
+    A --> V["Post-action verification"]
+    V --> N["Restored function + next-event reserve"]
+    N --> L
+```
+
+Editable source:
+[residual-capacity-contract.mmd](../assets/diagrams/residual-capacity-contract.mmd).
+
+The mechanics and network evidence in
+[C-481](../research/claims.md#c-481)–[C-499](../research/claims.md#c-499)
+establish mature nulls and measurement boundaries, not an AI effect size.
+The combined contract in [C-500](../research/claims.md#c-500) remains an
+experimental schema shared by Candidates 005, 012, and 014. It is rejected if
+ordinary mechanics/reliability, asset management, fault handling, and network
+assignment match it.
+
 ## Efficiency mechanism
 
 Maturity can reduce recurring work in four places:
@@ -260,6 +306,8 @@ must include failed branches and rollback, not only successful releases.
 | redundancy and newcomer engraftment ([C-057](../research/claims.md#c-057)) | plausible association | stability may obstruct beneficial replacement |
 | recovery warning signals ([C-058](../research/claims.md#c-058), [C-059](../research/claims.md#c-059)) | established in scoped ecological systems | restoring dynamics are worth testing as a fragility signal |
 | multidimensional stability tradeoff ([C-060](../research/claims.md#c-060)) | established in the cited microcosms | resilience dimensions must remain separate |
+| mechanics, residual capacity, damage tolerance, and redistributed network load ([C-481](../research/claims.md#c-481)–[C-499](../research/claims.md#c-499)) | established or plausible in scoped engineering models | mature nulls for structural health, reserve, and recovery |
+| path-dependent residual-capacity contract ([C-500](../research/claims.md#c-500)) | speculative synthesis | cross-layer fault-injection schema only |
 | complete digital lifecycle controller | speculative synthesis | requires isolated and composed experiments |
 
 ## Speculative extensions
@@ -299,6 +347,9 @@ must include failed branches and rollback, not only successful releases.
   recovery, adaptability, or newcomer acceptance has deteriorated.
 - **Causal misattribution:** a correlated low-usage path is pruned even though
   it stabilizes another module or handles a hidden confound.
+- **Hidden reserve loss:** current output remains acceptable while damage,
+  redistributed demand, common causes, or depleted intervention margin remove
+  post-contingency capacity and next-event reserve.
 
 ## Measurable predictions
 
@@ -324,3 +375,6 @@ must include failed branches and rollback, not only successful releases.
 7. Consolidation produces a net lifecycle energy benefit only above a measurable
    reuse horizon $N$; below that horizon, leaving the computation plastic or
    interpreted is cheaper.
+8. Residual-capacity fields predict unsafe second-event or redistributed-load
+   failures beyond ordinary output, utilization, health, and redundancy scores;
+   otherwise the cross-layer schema is removed.

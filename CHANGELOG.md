@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A mechanical/civil-resilience audit separating compliant/passive physics,
+  monitoring, redundancy, robustness, degradation, damage tolerance,
+  fatigue/fracture, maintenance, reserve, network flow, and recovery.
+- Twenty scoped mechanics/network claims (`C-481`–`C-500`), twenty-eight new
+  centralized sources, an editable residual-capacity diagram, and new
+  second-event/redistributed-load gates in Candidates 005, 012, and 014.
 - A soft/active-matter audit separating passive relaxation, continuous fixed
   drive, external feedback, and adaptive policy across flocking, nematics,
   phase separation, jamming, granular flow, and colloidal assembly.

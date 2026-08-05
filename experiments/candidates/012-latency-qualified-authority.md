@@ -238,6 +238,10 @@ All arms receive identical:
 - unsafe action under stale or corrupted evidence;
 - energy, communication, reserve, and human cost;
 - headroom and replenishment at the second event;
+- current and post-contingency capacity in native units;
+- common-cause dependencies and redistributed load/demand;
+- degraded-service vector, affected strata, and exposure duration;
+- post-action verified next-event reserve;
 - inconsistent concurrent authority; and
 - recovery quality after restoration or reconnection.
 - weighted capability-seconds, revocation exposure in seconds, secure recovery

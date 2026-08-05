@@ -84,6 +84,9 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/phase-field-compilation.mmd` follows a mature local mapping through
   physical classification, fabrication/programming, execution, readout,
   health/shadow checks, reprogramming, fallback, and retirement.
+- `diagrams/residual-capacity-contract.mmd` binds load/use history, damage,
+  observation support, present and contingency capacity, redistributed demand,
+  degraded service, intervention, verification, and next-event reserve.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

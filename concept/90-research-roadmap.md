@@ -263,13 +263,14 @@ adding citations:
 | quantitative history and demography | stock, flow, cohort, age, period, migration, replication, retirement, diffusion, archive selection, causal identification, collapse dimensions, and prospective validation remain distinct; their versioned composition strengthens Candidate 014 rather than creating another principle |
 | aerospace, maritime, and safety-critical autonomy | stabilization, guidance, navigation, integrity, ODD, envelope protection, redundancy, fault stages, degraded service, fallback, collision avoidance, remote authority, certification, maintenance, and investigation remain distinct; validated asynchronous transfer refines Candidate 012 only |
 | soft and active matter | passive relaxation, continuous fixed drive, external feedback, and adaptive policy remain separate; flocking, phase separation, defects, jamming, and assembly are physical mechanisms or nulls, while reversible phase-field compilation becomes only a Candidate-006 track |
+| mechanical and civil resilience | compliant/passive mechanics, SHM, redundancy, robustness, graceful degradation, damage tolerance, fatigue/fracture, maintenance, max-flow/assignment, and transport recovery remain mature nulls; path-dependent residual capacity becomes a Candidates-005/012/014 test schema only |
 
 The active and next breadth queue is selected by expected ability to split,
 merge, reject, or re-baseline a current mechanism:
 
 | Field cluster | Mechanism question | Expected decision |
 | --- | --- | --- |
-| mechanical, civil, and process engineering | which passive stability, redundancy, structural-health, reserve, plant-wide control, recycle, separation, safety-instrumented, and maintenance mechanisms change topology, authority, or lifecycle contracts? | test P-005/P-006/P-009/P-010/P-012 and Candidates 001/003/005/006/009/011/012/014 against mature engineering practice |
+| chemical and process engineering | which recycle, separation, heat-integration, plant-wide-control, safety-instrumented, fault-diagnosis, operability, and reconfiguration mechanisms change topology, authority, or lifecycle contracts? | test P-001/P-005/P-006/P-009/P-010/P-012 and Candidates 001/003/005/009/011/012/014 against mature process engineering |
 | developmental biology and morphogenesis | which positional, competence-window, commitment, regeneration, sculpting, and canalization mechanisms survive ordinary staged optimization, local signaling, pruning, repair, and lineage nulls? | test P-002/P-003/P-005/P-006/P-009/P-012 and Candidates 001/005/006/017/018 without mistaking growth for learning |
 
 This queue is revised whenever an audit changes a principle, null model, or
