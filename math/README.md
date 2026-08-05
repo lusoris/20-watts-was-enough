@@ -82,6 +82,16 @@ notation.
   nonlinear filterbank state, binaural and array geometry, reverberation,
   grouping and separation, active emission and receiver motion, uncertainty,
   exposure, and lifecycle energy for Fixture F-009.
+- [`boundary-qualified-physical-computation.md`](boundary-qualified-physical-computation.md)
+  separates generalized erasure bounds, finite-time/error/stability work,
+  device and circuit transitions, workload and data movement, cooling and
+  facility overhead, fabrication, replacement, and lifecycle service for
+  Fixture F-010.
+- [`operator-qualified-chemical-sensing.md`](operator-qualified-chemical-sensing.md)
+  defines source, reaction, transport, sampler trajectory, receiver response,
+  mixtures, dynamic calibration and drift, active information value, plume
+  navigation, exposure, analytical confirmation, and lifecycle energy for
+  Fixture F-011.
 
 Rules:
 

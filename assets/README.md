@@ -166,6 +166,13 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
   emission, propagation, receiver geometry, masking, reverberation, motion,
   grouping, localization, separation, active evidence, safety, and complete
   cost in Fixture F-009.
+- `diagrams/boundary-qualified-physical-computation.mmd` keeps fundamental,
+  device, circuit, workload/data-movement, facility, and embodied-lifecycle
+  energy boundaries separate through Fixture F-010.
+- `diagrams/operator-qualified-active-chemical-sensing.mmd` binds source
+  chemistry, transport, sampling action, receiver and sensor state, mixtures,
+  calibration, drift, identification, localization, exposure, and complete
+  lifecycle work in Fixture F-011.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

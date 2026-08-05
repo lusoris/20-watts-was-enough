@@ -16,3 +16,5 @@ budgets, withheld regimes, perturbations, and explicit rejection rules.
 | F-007 | [Operator-qualified optical inference](007-operator-qualified-optical-inference.md) | 001, 006, 007, 010, 014, 017, 018 |
 | F-008 | [Mission-profile-qualified device reliability](008-mission-profile-qualified-device-reliability.md) | 001, 005, 006, 009, 010, 012, 014, 017, 018 |
 | F-009 | [Operator-qualified active acoustic inference](009-operator-qualified-active-acoustic-inference.md) | 002, 006, 007, 009, 012, 014 |
+| F-010 | [Boundary-qualified physical computation](010-boundary-qualified-physical-computation.md) | 001, 005, 006, 009, 010, 012, 014, 017, 018 |
+| F-011 | [Operator-qualified active chemical sensing](011-operator-qualified-active-chemical-sensing.md) | 002, 006, 007, 009, 010, 012, 014, 017, 018 |
