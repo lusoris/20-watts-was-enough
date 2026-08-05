@@ -137,6 +137,39 @@ Every promoted structural action records:
 5. a promotion or rejection decision; and
 6. a rollback target.
 
+### Live response and longitudinal learning are separate loops
+
+The runtime may need to contain a failure before its cause is known. Later
+analysis may identify a cause without improving the next live response. A
+usable operational-assurance plane therefore connects two loops without
+collapsing them:
+
+| Loop | Deadline | Required state transition | Failure if measured alone |
+| --- | --- | --- | --- |
+| Live response | seconds to minutes | detect, acknowledge, assign scoped authority, contain, degrade, revoke, roll back, restore | fast containment can recur because no verified change enters future operation |
+| Longitudinal learning | releases to months | retain competing traces, analyze, bind a finding to dependencies and an owner, test, deploy, verify, retrieve, retire | a complete report can arrive after preventable damage and may never change operation |
+
+Report volume is observation-biased. Over a declared exposure interval,
+
+$$
+N_{\mathrm{report}}=N_{\mathrm{precursor}}
+p_{\mathrm{detect}}p_{\mathrm{report}}p_{\mathrm{retain}},
+$$
+
+where both $N$ values are event counts and every $p$ is a dimensionless
+conditional probability. A low count can mean low exposure, weak detection,
+reporting friction, fear, or deletion; a high count can mean hazard, improved
+coverage, duplication, or gaming ([C-178](../research/claims.md#c-178)).
+
+Likewise, an incident archive becomes memory only when an applicable lesson is
+retrieved, used, evaluated, invalidated, and retired
+([C-184](../research/claims.md#c-184)). The held composition binds live traces
+and precursor detections to scoped response, dependency-linked changes,
+protected tests, verified outcomes, retrieval triggers, and retirement.
+[Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md)
+compares it with a complete SRE stack and rejects it if role, interruption,
+reviewer, storage, stale-memory, or coordination cost erases the gain.
+
 ### Build the system in dependency order
 
 The full system should be assembled through progressively stronger contracts:

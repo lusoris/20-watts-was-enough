@@ -7,6 +7,16 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- High-reliability-organization and power-grid audits that replace vague
+  reliability language with explicit observation, authority, topology,
+  reserve, latency, containment, restoration, learning, and maintenance paths.
+- Thirty-one scoped claims (`C-173`–`C-203`) and fifty-six centralized sources
+  covering incident command, reporting bias, memory-in-use, local protection,
+  adaptive relaying, state estimation, synchronization, finite reserve,
+  islanding, cascades, and black-start restoration.
+- Candidate 011 for dual-loop operational assurance and Candidate 012 for
+  latency-qualified authority, each with a compact editable diagram, complete
+  accounting vector, mature engineering nulls, ablations, and kill criteria.
 - A chemistry and reaction-network audit separating equilibrium recognition,
   kinetic proofreading, nonequilibrium work, autocatalysis,
   compartmentalization, reaction–diffusion, transient assembly, molecular

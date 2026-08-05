@@ -35,6 +35,12 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/reset-coupled-verification.mmd` keeps reversible execution,
   selective verification, reset, commitment, and outcome accounting distinct
   for Candidate 010.
+- `diagrams/dual-loop-operational-assurance.mmd` connects a scoped live
+  containment loop to a separate versioned learning and retirement loop for
+  Candidate 011.
+- `diagrams/latency-qualified-authority.mmd` derives bounded local action,
+  fallback, and validated handoff from evidence age, trust, headroom, and
+  coordination for Candidate 012.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

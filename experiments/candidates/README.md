@@ -12,6 +12,8 @@
 | 008 | [Audit-backed contestable modular allocation](008-contestable-modular-allocation.md) | When persistent modules can gain by hiding information or gaming metrics, do audits, real opportunity consequences, entrant reserves, and replay beat ordinary routing and evaluation? |
 | 009 | [Versioned graded assurance envelopes](009-graded-assurance-envelopes.md) | Does binding distinct proof, authority, monitoring, evidence, update, and recovery claims to one module identity beat a complete conventional assurance stack? |
 | 010 | [Reset-coupled staged verification](010-reset-coupled-staged-verification.md) | When false commitment is expensive, does reversible execution plus conditionally informative verification beat calibrated cascades, sequential tests, abstention, retries, and redundant checks? |
+| 011 | [Dual-loop operational assurance](011-dual-loop-operational-assurance.md) | Does connecting scoped live incident response to versioned verified learning reduce tail containment and recurrence beyond a mature SRE stack? |
+| 012 | [Latency-qualified authority envelopes](012-latency-qualified-authority.md) | Does shrinking or widening action authority from evidence age, integrity, mode, headroom, and coordination beat static hierarchies and runtime-assurance nulls? |
 
 These are pre-implementation contracts, not evidence that a candidate works.
 Passing a simulator stage permits a higher-fidelity test; it does not promote a

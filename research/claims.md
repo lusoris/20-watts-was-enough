@@ -2710,3 +2710,482 @@ describes the exact statement here, not a broader interpretation.
   [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
   [P-009](principle-registry.md#p-009--maintenance-plane),
   [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-173
+
+- **Statement:** Field studies of selected hazardous organizations identify
+  recurring weak-signal attention, cross-check, expertise, maintenance, and
+  temporary authority mechanisms without establishing a portable causal effect.
+- **Status:** plausible.
+- **Primary sources:** `rochlin1987selfdesigning`,
+  `roberts1990characteristics`, `laporte1991practice`.
+- **Rationale:** The observations supply operational mechanisms, not a universal
+  reliability label.
+- **Open issue:** Outcome selection, survivorship, unobserved near misses,
+  training, luck, and domain-specific authority confound transfer.
+- **Used by:** [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-174
+
+- **Statement:** Interactive complexity and tight coupling can create
+  propagation paths that attention or response culture cannot interrupt before
+  consequence.
+- **Status:** plausible.
+- **Primary sources:** `perrow1984normal`, `sagan1993limits`.
+- **Rationale:** Topology, timing, buffers, and common-mode weaknesses can
+  dominate response quality.
+- **Open issue:** The candidate needs operational measures of interaction and
+  coupling plus matched topology and response interventions.
+- **Used by:** [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-175
+
+- **Statement:** Reserve capacity, monitoring, graceful degradation, recovery,
+  and sustained adaptation are distinct resilience dimensions whose values can
+  move in opposite directions.
+- **Status:** established.
+- **Primary sources:** `woods2015four`, `hollnagel2013safety`.
+- **Rationale:** One resilience scalar can hide which capacity actually changed.
+- **Open issue:** Each dimension needs an observable task metric and resource
+  boundary before an intervention can be evaluated.
+- **Used by:** [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-176
+
+- **Statement:** Crew-resource-management challenge and acknowledgement
+  protocols may expose distributed evidence suppressed by authority gradients.
+- **Status:** plausible.
+- **Primary sources:** `helmreich1999crm`, `faa2004crm`.
+- **Rationale:** Explicit callout, cross-check, acknowledgement, and correction
+  change the information and authority path.
+- **Open issue:** The protocol must beat structured assertions, deterministic
+  interlocks, pagers, and revocation at equal false-stop and training cost.
+- **Used by:** [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation).
+
+### C-177
+
+- **Statement:** Incident-command systems define a modular temporary authority
+  and information structure for volatile multi-party response.
+- **Status:** established.
+- **Primary sources:** `bigley2001ics`, `fema2017nims`.
+- **Rationale:** Objectives, roles, operating periods, spans of control, and
+  briefed command transfer provide a mature coordination null.
+- **Open issue:** Effectiveness depends on training, communication, role fit,
+  scale, and whether role overhead exceeds incident complexity.
+- **Used by:** [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-178
+
+- **Statement:** Near-miss report count is the product of precursor exposure
+  and the detection, reporting, and retention processes rather than a direct
+  safety rate.
+- **Status:** established.
+- **Primary sources:** `phimister2003nearmiss`, `faa2021asrp`.
+- **Rationale:** Silence can reflect low exposure, weak sensing, fear, friction,
+  or deletion; volume can reflect hazards, better observation, duplication, or
+  gaming.
+- **Open issue:** Conditional probabilities depend on severity, identity,
+  workload, instrumentation, incentives, and enforcement.
+- **Used by:** [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-179
+
+- **Statement:** Sampling ordinary successful work may reveal adaptations and
+  drift omitted by failure-only analysis.
+- **Status:** plausible.
+- **Primary sources:** `hollnagel2013safety`, `march1991samples`.
+- **Rationale:** Conditioning only on failures selects a narrow tail and hides
+  how constraints are usually satisfied.
+- **Open issue:** Ordinary work vastly outnumbers incidents; the method must
+  improve prospective hazard discovery under a fixed analysis and retention
+  budget.
+- **Used by:** [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-180
+
+- **Statement:** Blameless postmortems may improve candor only when protection
+  boundaries, exclusions, evidence, owned actions, and outcome verification are
+  credible.
+- **Status:** plausible.
+- **Primary source:** `lunney2016postmortem`.
+- **Rationale:** A non-punitive account can preserve local observations that
+  blame suppresses, but document production is not prevention.
+- **Open issue:** Practitioner evidence does not isolate causal effect;
+  no-accountability variants, performative closure, and legal/security duties
+  can defeat the mechanism.
+- **Used by:** [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-181
+
+- **Statement:** Checklists can reduce omissions and coordinate handoffs, while
+  benefit depends on trigger, content, fidelity, deviation policy, training,
+  and maintenance.
+- **Status:** plausible.
+- **Primary source:** `haynes2009checklist`.
+- **Rationale:** Externalized steps alter recall and team coordination in a
+  scoped workflow.
+- **Open issue:** Before-after effect sizes do not transfer as constants;
+  fixation, bypass, stale items, delay, and revision cost must be measured.
+- **Used by:** [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-182
+
+- **Statement:** Escalation is operationally specified only when trigger,
+  acknowledgement, authority, scope, fallback, expiry, and restoration are
+  explicit.
+- **Status:** plausible.
+- **Primary sources:** `helmreich1999crm`, `bigley2001ics`, `fema2017nims`.
+- **Rationale:** Temporary authority inversion must be a bounded state
+  transition rather than an informal appeal to expertise.
+- **Open issue:** It must beat an approval gate, pager, scoped token,
+  deterministic interlock, and kill switch under missed-event and false-stop
+  costs.
+- **Used by:** [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation).
+
+### C-183
+
+- **Statement:** Redundancy improves reliability only relative to a declared
+  dependence, adjudication, switching, demand, and repair model.
+- **Status:** established.
+- **Primary source:** `landau1969redundancy`.
+- **Rationale:** Shared model, data, prompt, tool, specification, or operator
+  can create common-mode failure that independent-channel arithmetic omits.
+- **Open issue:** Diversity cost and failure dependence must be measured rather
+  than inferred from replica count.
+- **Used by:** [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-184
+
+- **Statement:** Stored incident documents become organizational memory only
+  when applicable lessons are retrieved, used, evaluated, invalidated, and
+  retired.
+- **Status:** plausible.
+- **Primary sources:** `march1991samples`, `drupsteen2013critical`,
+  `lukic2012framework`, `nasa2026lessons`.
+- **Rationale:** Archive size measures storage, not memory-in-use or changed
+  future behavior.
+- **Open issue:** Prospective retrieval precision, recurrence, stale-lesson
+  harm, curation, and retirement latency must be measured across versions.
+- **Used by:** [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-185
+
+- **Statement:** Binding live multi-agent traces to dependencies, scoped
+  response actions, tests, deployments, verified outcomes, later retrieval,
+  and retirement may reduce both containment delay and recurrence.
+- **Status:** speculative.
+- **Primary source:** none sufficient; components are scoped in
+  [C-173](#c-173)–[C-184](#c-184).
+- **Rationale:** The held composition makes live response and longitudinal
+  learning separate loops with an explicit versioned interface.
+- **Open issue:** It must beat mature telemetry, SRE roles, IAM, interlocks,
+  canaries, chaos drills, postmortems, action tracking, and searchable runbooks
+  at equal operational cost.
+- **Used by:** [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-186
+
+- **Statement:** Stored-program substation protection can infer fault location
+  and issue breaker-opening commands, establishing high-speed bounded local
+  digital authority as an engineering family.
+- **Status:** established.
+- **Primary source:** `rockefeller1969fault`.
+- **Rationale:** Detection, selectivity, and actuation can be colocated inside a
+  crisp physical protection zone.
+- **Open issue:** AI transfers need an equally explicit zone, actuator,
+  dependability target, and safe failure path.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-187
+
+- **Statement:** Protection quality jointly includes dependability, security,
+  selectivity, and clearing performance; a fast detector alone is not a
+  protection result.
+- **Status:** established.
+- **Primary sources:** `rockefeller1969fault`, `nerc2019prc004`.
+- **Rationale:** Missed action, false action, collateral isolation, and delay
+  are separate failure axes.
+- **Open issue:** Numerical targets and tradeoffs remain scheme-, zone-, and
+  consequence-specific.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-188
+
+- **Statement:** Online relay-setting changes and hierarchies of local,
+  substation, and remote processors predate modern machine learning.
+- **Status:** established.
+- **Primary source:** `rockefeller1988adaptive`.
+- **Rationale:** Adaptive authority and multilevel protection are mandatory
+  engineering nulls rather than novel consequences of biological analogy.
+- **Open issue:** Field benefit, validation latency, setting error, and
+  observability remain application-specific.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-189
+
+- **Statement:** Protection defects, setting and design errors, malfunctions,
+  and communication failures can remain latent and amplify a later disturbance.
+- **Status:** established.
+- **Primary sources:** `tamronglak1996anatomy`, `phadke1995anatomy`,
+  `nerc2020reliability`.
+- **Rationale:** A safety layer becomes another coupled component with hidden
+  common-mode and maintenance failures.
+- **Open issue:** Rates vary by system, reporting period, exposure, and
+  classification; independent validation and behavioral scrubbing require
+  explicit budgets.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-190
+
+- **Statement:** Wide-area protection and remedial-action schemes combine
+  broader measurements with selected pre-engineered actions without replacing
+  local primary protection guarantees.
+- **Status:** established.
+- **Primary sources:** `begovic2005wide`, `nerc2016prc012`.
+- **Rationale:** Wider view, communication, and event-dependent coordination
+  trade additional coverage for latency, trust, and coupling.
+- **Open issue:** Exact performance and coalition membership remain
+  scheme-specific; communication alone does not establish useful transient
+  coordination.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions).
+
+### C-191
+
+- **Statement:** Static state estimation infers voltage state from redundant
+  measurements and a network model under observability and error assumptions;
+  it is neither direct ground truth nor a dynamic-stability guarantee.
+- **Status:** established.
+- **Primary source:** `schweppe1970state`.
+- **Rationale:** A shared estimated state depends on model, topology,
+  measurement placement, covariance, and residual assumptions.
+- **Open issue:** Topology error, nonstationarity, unobservable regions, delay,
+  and adversarial model consistency can defeat the estimate.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-192
+
+- **Statement:** Synchrophasors provide standardized time-referenced phasor,
+  frequency, and rate-of-change measurements, while end-to-end control latency
+  and trust require separate clock, network, concentrator, model, and actuator
+  evidence.
+- **Status:** established.
+- **Primary sources:** `phadke1983measurement`,
+  `ieeeiec2018synchrophasor`.
+- **Rationale:** Synchronized measurement widens the observable boundary but
+  does not by itself grant authority or certify the whole path.
+- **Open issue:** Timestamp quality, delay, loss, spoofing, aggregation, and
+  control deadlines must be measured end to end.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-193
+
+- **Statement:** In a linear state-estimation model, attacks of the form
+  $a=Hc$ can bias estimated state while preserving ordinary residual structure
+  under the stated access assumptions.
+- **Status:** established.
+- **Primary source:** `liu2009false`.
+- **Rationale:** A residual-only detector can be blind to model-consistent
+  corruption.
+- **Open issue:** The construction is threat-model scoped; access, topology,
+  nonlinear dynamics, protected sensors, and alternative checks change
+  feasibility.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-194
+
+- **Statement:** Frequency response composes inertia and load behavior, primary
+  feedback, secondary restoration, and tertiary reserve or dispatch; these
+  layers are not interchangeable.
+- **Status:** established.
+- **Primary sources:** `kundur2004definition`, `nerc2019pfc`.
+- **Rationale:** Arresting deviation, stabilizing frequency, restoring the
+  target, and replenishing reserve occur under different authority, timescale,
+  and energy boundaries.
+- **Open issue:** Aggregate parameters and response quality change with device
+  mix, operating point, limits, and topology.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-195
+
+- **Statement:** Droop-controlled sources can coordinate and share power from
+  local electrical measurements and network coupling, while synchronization
+  guarantees remain model-, limit-, and topology-scoped.
+- **Status:** established.
+- **Primary sources:** `chandorkar1993parallel`,
+  `simpsonporco2013droop`, `dorfler2013synchronization`.
+- **Rationale:** Local physical feedback can coordinate without continuous
+  central commands.
+- **Open issue:** Saturation, line dynamics, delays, heterogeneous controls,
+  weak grids, and changed topology bound transfer.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback).
+
+### C-196
+
+- **Statement:** Fast frequency and grid-forming response is constrained by
+  rated power, current, headroom, energy, delay, duration, state of charge, and
+  interacting controls rather than being free software inertia.
+- **Status:** established.
+- **Primary sources:** `nerc2020ffr`, `nerc2023gfm`, `milano2018lowinertia`.
+- **Rationale:** Fast control consumes finite physical authority and can
+  saturate before slower layers restore state.
+- **Open issue:** Device and test values do not transfer; qualification must
+  include the second event and replenishment.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback).
+
+### C-197
+
+- **Statement:** Demand response is constrained load flexibility whose value
+  depends on response, duration, availability, location, process or comfort
+  cost, and rebound.
+- **Status:** established.
+- **Primary sources:** `callaway2011loads`, `palensky2011demand`.
+- **Rationale:** Deferred consumption and lost service are not equivalent to
+  generated energy or permanent capacity.
+- **Open issue:** Baselines, rebound, correlated participation, communication,
+  and a second event can reverse apparent benefit.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback).
+
+### C-198
+
+- **Statement:** Reserve is usable only when available, rampable before the
+  deadline, sustainable for the required duration, and deliverable through the
+  surviving network.
+- **Status:** established.
+- **Primary sources:** `nerc2018bal002`, `uscanada2004blackout`.
+- **Rationale:** Nameplate or stored capacity is not operational headroom.
+- **Open issue:** Location, transmission, fuel or state of charge, restoration,
+  common-mode loss, and replenishment determine the next-event state.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-199
+
+- **Statement:** Controlled islanding is a constrained physical partition that
+  requires generator coherence, real and reactive balance, network limits,
+  viable protection and control, and later synchronization.
+- **Status:** established.
+- **Primary sources:** `sun2003splitting`, `yang2006islanding`,
+  `lasseter2002microgrids`.
+- **Rationale:** Generic graph modularity cannot establish that each island is
+  dynamically viable or safely reconnectable.
+- **Open issue:** Model error, boundary selection, load pickup, protection
+  settings, black-start resources, and resynchronization remain decisive.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
+
+### C-200
+
+- **Statement:** Cascading outages can couple physical redistribution,
+  protection and control actions, observability, organizational failure, and
+  both fast event and slow adaptation timescales.
+- **Status:** established.
+- **Primary sources:** `uscanada2004blackout`, `dobson2001initial`.
+- **Rationale:** The safety and recovery layers participate in the same dynamic
+  topology they attempt to stabilize.
+- **Open issue:** One event sequence or theoretical model does not establish
+  universal criticality or transferable event rates.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-201
+
+- **Statement:** `N-1` security is conditional on a declared contingency set,
+  initial state, models, limits, and corrective actions rather than a universal
+  resilience theorem.
+- **Status:** established.
+- **Primary source:** `nerc2022tpl001`.
+- **Rationale:** Multiple, protection-failure, common-structure, and outside-set
+  events require additional assessment.
+- **Open issue:** The contract must remain tied to actual topology, operating
+  state, modeling uncertainty, and executable corrective authority.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-202
+
+- **Statement:** Black-start restoration is a tested and trained sequence of
+  cranking, energization, balancing, load pickup, synchronization, and authority
+  transfer under real, reactive, resource, and topology constraints.
+- **Status:** established.
+- **Primary sources:** `nerc2018eop005`, `adibi1994restoration`,
+  `lindenmeyer2001restoration`.
+- **Rationale:** Recovery is constrained reconstruction with named prerequisites
+  and staged authority, not merely restarting components.
+- **Open issue:** Cranking resources, communication, cold-load pickup, reactive
+  limits, hidden damage, and changed topology can invalidate the plan.
+- **Used by:** [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-203
+
+- **Statement:** Dynamically restricting action authority from observation age,
+  integrity, mode, physical headroom, and coordination state may improve
+  service and risk relative to fixed hierarchies.
+- **Status:** speculative.
+- **Primary source:** none sufficient; grid components are scoped in
+  [C-186](#c-186)–[C-202](#c-202).
+- **Rationale:** Fast local evidence, delayed wide-area evidence, finite
+  authority, and degraded communication are represented in one shrinking or
+  widening admissible-action boundary.
+- **Open issue:** The candidate must beat adaptive protection, gain scheduling,
+  constrained and robust control, barrier functions, runtime assurance, and
+  restoration runbooks without self-certification or uncharged reserve.
+- **Used by:** [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-009](principle-registry.md#p-009--maintenance-plane).

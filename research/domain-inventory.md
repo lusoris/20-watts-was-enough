@@ -84,7 +84,7 @@ not obvious. Rows are research queues, not claims of useful transfer.
 | Mechanical and civil engineering | compliant mechanisms, structural health, transport grids | passive control, graceful degradation, reserve capacity, maintenance | queued |
 | Chemical and process engineering | reactors, separation networks, process control | recirculation, stability, fault isolation, energy integration | queued |
 | Aerospace and maritime systems | flight control, autonomy, navigation, redundancy | safety envelopes, local reflex, degraded operation, sensor fusion | queued |
-| Electrical power systems | grids, protection relays, demand response, microgrids | distributed synchronization, cascading failure, islanding, recovery | queued |
+| Electrical power systems | grids, protection relays, demand response, microgrids | distributed synchronization, cascading failure, islanding, recovery | partial; [power-grid audit](audits/2026-08-05-power-grids-protection-and-recovery.md); next: distribution protection, protection-inverter interaction, hardware-in-loop, and restoration under cyber loss |
 | Security and cryptography | adversarial protocols, zero trust, authentication, secret sharing | distrust, verification, Byzantine failure, bounded information release | queued |
 | Programming languages and verification | types, proofs, contracts, interpreters, runtime checks | compositional guarantees, scoped authority, monitored obligations, rollback, invalidation, safe specialization | partial; [PL/verification audit](audits/2026-08-05-programming-languages-verification.md); next: verified compilers, distributed protocols, proof repair, probabilistic programs, and learned-component specifications |
 | Databases and storage | transactions, indexing, replication, compaction, garbage collection | memory lifecycle, consistency, locality, maintenance | partial |
@@ -93,7 +93,7 @@ not obvious. Rows are research queues, not claims of useful transfer.
 | Anthropology and archaeology | cultural transmission, material records, distributed practice | external memory, cumulative adaptation, coordination across generations | queued |
 | Economics and market design | prices, auctions, firms, externalities, mechanism design | decentralized allocation, incentives, information aggregation, capture | partial; [economics audit](audits/2026-08-05-economics-market-design-incentives.md); next: dynamic contracts, computational constraints, organizational boundaries, and empirical platform governance |
 | Social choice and political science | voting, institutions, federation, collective action | quorum, minority protection, delegation, adversarial coordination | queued |
-| Organizational science and safety | high-reliability organizations, incident response, governance | escalation, redundancy, learning from near misses, maintenance culture | queued |
+| Organizational science and safety | high-reliability organizations, incident response, governance | escalation, redundancy, learning from near misses, maintenance culture | partial; [HRO audit](audits/2026-08-05-high-reliability-organizations-incident-learning.md); next: prospective causal evaluations, adaptive-team experiments, and measured operational burden |
 | Quantitative history and demography | diffusion, collapse, migration, long-run population dynamics | path dependence, resilience, delayed feedback, selection bias | queued |
 
 ## Collection order

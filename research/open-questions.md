@@ -93,3 +93,13 @@ project choice.
   sequential test, calibrated cascade, abstention, retry, and redundant
   verification after reset leakage and rejected work are charged? See
   [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md).
+- **OQ-028:** Does a versioned interface between live containment and
+  longitudinal incident learning reduce tail containment and recurrence beyond
+  a mature SRE stack after authority, reporting, reviewer, storage, false-stop,
+  and stale-memory costs are charged? See
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+- **OQ-029:** Does dynamically restricting authority from evidence age,
+  integrity, mode, headroom, and coordination beat adaptive protection,
+  constrained control, barrier functions, and runtime assurance without
+  self-certification or unsafe envelope transitions? See
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).

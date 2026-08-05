@@ -280,6 +280,40 @@ flowchart TB
 Editable source:
 [`../assets/diagrams/adaptive-compute-control.mmd`](../assets/diagrams/adaptive-compute-control.mmd).
 
+### Authority follows information and remaining capability
+
+Power-grid protection supplies a hard engineering version of local reflex and
+global escalation. Local digital relays can act quickly inside a declared zone
+([C-186](../research/claims.md#c-186)), while wide-area schemes add broader but
+delayed and failure-prone evidence ([C-190](../research/claims.md#c-190)). Fast
+response is still constrained by current, headroom, energy, duration, and
+interacting controls ([C-196](../research/claims.md#c-196)).
+
+The held translation assigns controller $i$ an admissible action set
+
+$$
+\mathcal U_i(t)=\mathcal E_i\!\left(
+\tau_i(t),q_i(t),m_i(t),b_i(t),c_i(t)
+\right),
+\qquad u_i(t)\in\mathcal U_i(t),
+$$
+
+where $\tau_i$ is observation age in seconds, $q_i$ is integrity state, $m_i$
+is operating-mode state, $b_i$ is remaining physical or compute headroom,
+$c_i$ is coordination availability, $\mathcal E_i$ is a certified set-valued
+map, and $u_i$ is the proposed action. The vector components retain their own
+units, timestamps, uncertainty, and provenance; the notation does not make
+them interchangeable.
+
+Stale evidence, lost integrity, exhausted reserve, or lost coordination should
+shrink authority toward an independently enforced fallback. A wider action
+requires validated handoff and a checked postcondition. The candidate loses if
+adaptive protection, gain scheduling, constrained control, barrier functions,
+or runtime assurance reproduce the same frontier.
+[Candidate 012](../experiments/candidates/012-latency-qualified-authority.md)
+tests this under saturation, hidden failure, attack, communication loss,
+partition, second events, and staged recovery.
+
 ### Context is a constrained interface
 
 The context candidate sends a small quantized code at declared fast and slow
