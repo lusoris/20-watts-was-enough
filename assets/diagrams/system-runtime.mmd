@@ -1,0 +1,15 @@
+flowchart LR
+    obs["Multimodal event"] --> enc["Sparse encoders"]
+    enc --> state["Predictive shared state"]
+    state --> gate{"Surprise / risk gate"}
+    gate -->|low| reflex["Hardened skill or early exit"]
+    gate -->|high| route["Hierarchical router"]
+    route --> experts["Selected experts"]
+    route --> episodic["Episodic memory"]
+    route --> facts["Sourced factual memory"]
+    experts --> output["Prediction / action"]
+    episodic --> output
+    facts --> output
+    reflex --> output
+    output --> feedback["Outcome and uncertainty"]
+    feedback --> episodic
