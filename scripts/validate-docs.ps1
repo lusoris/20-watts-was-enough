@@ -8,8 +8,9 @@ $root = (Resolve-Path -LiteralPath $RepositoryRoot).Path
 $errors = [System.Collections.Generic.List[string]]::new()
 $warnings = [System.Collections.Generic.List[string]]::new()
 
+$excludedDirectories = '[\\/](\.git|node_modules|dist|\.next|\.wrangler)[\\/]'
 $markdownFiles = Get-ChildItem -LiteralPath $root -Recurse -File -Filter '*.md' |
-    Where-Object { $_.FullName -notmatch '[\\/]\.git[\\/]' }
+    Where-Object { $_.FullName -notmatch $excludedDirectories }
 
 if ($markdownFiles.Count -eq 0) {
     throw 'No Markdown files found.'
@@ -69,6 +70,36 @@ if (-not (Test-Path -LiteralPath $claimsPath)) {
 
     if ($definedClaims.Count -lt 1) {
         $errors.Add('No claim definitions found in research/claims.md')
+    }
+}
+
+# Validate stable principle IDs and ensure every canonical use resolves to the
+# deduplicated registry.
+$principlesPath = Join-Path $root 'research/principle-registry.md'
+if (-not (Test-Path -LiteralPath $principlesPath)) {
+    $errors.Add('Missing research/principle-registry.md')
+} else {
+    $principlesText = Get-Content -Raw -LiteralPath $principlesPath
+    $definedPrinciples = [System.Collections.Generic.HashSet[string]]::new()
+    foreach ($match in [regex]::Matches($principlesText, '(?m)^## (P-\d{3})\b')) {
+        [void]$definedPrinciples.Add($match.Groups[1].Value)
+    }
+
+    $canonicalFiles = $markdownFiles | Where-Object {
+        $_.FullName -notmatch '[\\/]sources[\\/]'
+    }
+    foreach ($file in $canonicalFiles) {
+        $content = Get-Content -Raw -LiteralPath $file.FullName
+        foreach ($match in [regex]::Matches($content, '\bP-\d{3}\b')) {
+            if (-not $definedPrinciples.Contains($match.Value)) {
+                $relativeFile = [System.IO.Path]::GetRelativePath($root, $file.FullName)
+                $errors.Add("Undefined principle $($match.Value) in ${relativeFile}")
+            }
+        }
+    }
+
+    if ($definedPrinciples.Count -lt 1) {
+        $errors.Add('No principle definitions found in research/principle-registry.md')
     }
 }
 

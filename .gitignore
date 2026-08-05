@@ -11,3 +11,12 @@ Desktop.ini
 .cache/
 tmp/
 assets/rendered/*.tmp
+
+# Private documentation site build and local runtime
+node_modules/
+dist/
+.next/
+.vinext/
+.vite/
+.wrangler/
+*.tsbuildinfo

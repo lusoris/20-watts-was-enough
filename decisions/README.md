@@ -9,3 +9,5 @@ than silently changing its outcome.
 | [0001](0001-git-is-canonical.md) | Git is the canonical source | accepted |
 | [0002](0002-evidence-before-assertion.md) | Evidence precedes major assertions | accepted |
 | [0003](0003-biology-is-a-constraint.md) | Biology supplies constraints, not a literal blueprint | accepted |
+| [0004](0004-organize-by-invariant.md) | Organize research by recurring invariant | accepted |
+| [0005](0005-rendered-private-edition.md) | Render one private edition from canonical files | accepted |

@@ -27,7 +27,9 @@ constraints* behind that fact can become engineering requirements:
 
 This is not an attempt to simulate every detail of biology. Biological
 mechanisms are sources of constraints and hypotheses, not implementation
-instructions.
+instructions. The brain is a launchpad rather than a ceiling: where digital
+systems have faster communication, exact copying, rollback, external memory, or
+better arithmetic, the architecture should use those advantages.
 
 ## Project status
 
@@ -37,11 +39,18 @@ The repository is the canonical source. The original Google Doc and Gemini
 discussions are preserved under [`sources/`](sources/README.md) as historical,
 non-authoritative inputs.
 
+The same files are also rendered as a private research site. The site is a
+generated reading surface—not a second document store. Saving a Markdown,
+equation, bibliography, or Mermaid file updates the local preview through hot
+reload; publishing creates an owner-only online edition from a committed Git
+state. See [decision 0005](decisions/0005-rendered-private-edition.md).
+
 ## Concept map
 
 | Chapter | Question |
 | --- | --- |
 | [Thesis and principles](concept/00-thesis-and-principles.md) | What is the project claiming—and explicitly not claiming? |
+| [Biology is a launchpad](concept/05-biology-is-a-launchpad.md) | Which biological constraints transfer, and which substrate limits should engineering escape? |
 | [Neurogenesis and routing](concept/10-neurogenesis-and-routing.md) | How can a large developmental capacity become conditionally active modules? |
 | [Sensorimotor grounding](concept/20-sensorimotor-grounding.md) | What must be learned before language can describe a world model? |
 | [Sparse predictive compute](concept/30-sparse-predictive-compute.md) | How should surprise, confidence, and routing control computation? |
@@ -56,6 +65,12 @@ Supporting material:
 
 - [`research/claims.md`](research/claims.md) — stable claim IDs and evidence status
 - [`research/references.bib`](research/references.bib) — primary-source bibliography
+- [`research/adoption-matrix.md`](research/adoption-matrix.md) — what to use, test, explore, or watch
+- [`research/principle-registry.md`](research/principle-registry.md) — canonical deduplicated problem–solution invariants
+- [`research/domain-inventory.md`](research/domain-inventory.md) — audited, partial, and queued scientific fields
+- [`research/neuroscience-opportunity-map.md`](research/neuroscience-opportunity-map.md) — underused neural mechanisms and falsifiable translations
+- [`research/comparative-biology.md`](research/comparative-biology.md) — candidates from animals, plants, immune systems, and adaptive networks
+- [`research/source-crosswalk.md`](research/source-crosswalk.md) — imported ideas mapped into evidence and principle bundles
 - [`research/open-questions.md`](research/open-questions.md) — unresolved decisions
 - [`math/`](math/README.md) — notation, boundaries, and derivations
 - [`assets/`](assets/README.md) — editable diagram and future figure sources
@@ -71,6 +86,18 @@ then run:
 ```powershell
 pwsh -File scripts/validate-docs.ps1
 ```
+
+For the live rendered edition, install the locked dependencies once and start
+the watcher:
+
+```powershell
+npm ci
+npm run dev
+```
+
+The preview is served at `http://localhost:3000`. Internal Markdown links,
+GitHub-style tables, LaTeX equations, the bibliography, and editable Mermaid
+sources are rendered in the same searchable reader.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow.
 
