@@ -15,6 +15,7 @@ const rawModules = import.meta.glob(
     "/concept/**/*.md",
     "/research/**/*.md",
     "/research/**/*.bib",
+    "/experiments/**/*.md",
     "/math/**/*.md",
     "/decisions/**/*.md",
     "/sources/**/*.md",
@@ -32,6 +33,7 @@ const GROUP_ORDER = [
   "Project",
   "Concept",
   "Research",
+  "Experiments",
   "Mathematics",
   "Decisions",
   "Graphics",
@@ -50,6 +52,8 @@ const PATH_PRIORITY: Record<string, number> = {
   "research/source-crosswalk.md": 6,
   "research/open-questions.md": 7,
   "research/references.bib": 8,
+  "experiments/README.md": 0,
+  "experiments/candidates/README.md": 1,
   "math/README.md": 0,
   "decisions/README.md": 0,
   "assets/README.md": 0,
@@ -72,6 +76,7 @@ function titleFrom(path: string, body: string): string {
 function groupFrom(path: string): string {
   if (path.startsWith("concept/")) return "Concept";
   if (path.startsWith("research/")) return "Research";
+  if (path.startsWith("experiments/")) return "Experiments";
   if (path.startsWith("math/")) return "Mathematics";
   if (path.startsWith("decisions/")) return "Decisions";
   if (path.startsWith("assets/")) return "Graphics";

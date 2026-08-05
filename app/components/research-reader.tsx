@@ -31,6 +31,8 @@ function outlineFrom(body: string) {
 
 function sourceLabel(document: ResearchDocument): string {
   if (document.path.startsWith("sources/")) return "Historical source capture";
+  if (document.path.startsWith("experiments/"))
+    return "Pre-implementation experiment contract";
   if (document.kind === "mermaid") return "Editable diagram source";
   if (document.kind === "bibtex") return "Machine-readable bibliography";
   return "Canonical research text";

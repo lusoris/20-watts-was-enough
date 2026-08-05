@@ -23,6 +23,8 @@ the exact diff; this file records why the project changed.
 - Three pre-implementation experiment contracts for adaptive topology,
   multiscale context broadcast, and recovery-based fragility sensing, with
   equal budgets, conventional baselines, ablations, and hard rejection gates.
+- An Experiments section in the private research reader so the contracts are
+  searchable and navigable alongside the evidence and concept chapters.
 - A dimensioned, constrained memory-lifecycle model separating replay, merge,
   externalization, weakening, deletion, and deferral actions.
 

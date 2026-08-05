@@ -69,7 +69,7 @@ Supporting material:
 - [`research/principle-registry.md`](research/principle-registry.md) — canonical deduplicated problem–solution invariants
 - [`research/domain-inventory.md`](research/domain-inventory.md) — audited, partial, and queued scientific fields
 - [`research/discovery-policy.md`](research/discovery-policy.md) — open-world search, extraction, deduplication, and promotion rules
-- [`research/audits/`](research/audits/) — dated primary-source research passes and engineering null-model audits
+- [`research/audits/`](research/audits/README.md) — dated primary-source research passes and engineering null-model audits
 - [`research/neuroscience-opportunity-map.md`](research/neuroscience-opportunity-map.md) — underused neural mechanisms and falsifiable translations
 - [`research/comparative-biology.md`](research/comparative-biology.md) — candidates from animals, plants, immune systems, and adaptive networks
 - [`research/source-crosswalk.md`](research/source-crosswalk.md) — imported ideas mapped into evidence and principle bundles
@@ -77,7 +77,7 @@ Supporting material:
 - [`math/`](math/README.md) — notation, boundaries, and derivations
 - [`assets/`](assets/README.md) — editable diagram and future figure sources
 - [`decisions/`](decisions/README.md) — durable project decisions
-- [`experiments/candidates/`](experiments/candidates/) — falsifiable, equal-budget experiment contracts
+- [`experiments/candidates/`](experiments/candidates/README.md) — falsifiable, equal-budget experiment contracts
 - [`CHANGELOG.md`](CHANGELOG.md) — human-readable evolution
 
 ## Editing rule
