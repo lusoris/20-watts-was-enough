@@ -75,6 +75,7 @@ Supporting material:
 - [`assets/`](assets/README.md) — editable diagram and future figure sources
 - [`decisions/`](decisions/README.md) — durable project decisions
 - [`experiments/candidates/`](experiments/candidates/README.md) — falsifiable, equal-budget experiment contracts
+- [`experiments/fixtures/`](experiments/fixtures/README.md) — reusable cross-candidate stress benchmarks that add no architecture by themselves
 - [`CHANGELOG.md`](CHANGELOG.md) — human-readable evolution
 
 ## Editing rule
@@ -85,6 +86,7 @@ then run:
 
 ```powershell
 pwsh -File scripts/validate-docs.ps1
+npm run validate:math
 ```
 
 For the live rendered edition, install the locked dependencies once and start

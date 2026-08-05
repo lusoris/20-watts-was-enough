@@ -7,6 +7,24 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A music-cognition and improvisation audit covering sequence expectation,
+  grouping, learned tonal/rhythmic priors, phase correction, motif
+  transformation, audio–motor control, expression, ensemble coordination,
+  practice, improvisation, and cultural transmission.
+- Thirty-six scoped music claims (`C-748`–`C-783`), forty-two new centralized
+  sources, a local-clock temporal-control math note, and Fixture F-001 for
+  shared-clock-free partner and phrase co-adaptation; no principle or candidate
+  was added.
+- A library, archival, and information-science audit covering record context,
+  provenance, appraisal, retention, fixity, designated communities,
+  representation dependencies, migration, authority/vocabulary drift,
+  retrieval, citation limits, data curation, and institutional memory.
+- Twenty scoped information-science claims (`C-784`–`C-803`), a
+  query-registered preservation diagram and mathematical contract, and a
+  designated-community/representation-dependency track in Candidate 017; no
+  new principle was promoted.
+- Decision 0007 and a dedicated `experiments/fixtures/` index separating
+  reusable cross-candidate stress regimes from architecture candidates.
 - A built-environment and urban-systems audit that keeps plans, sensed state,
   verified physical state, occupants, accessible and emergency routes, life
   safety, utilities, material commitments, acceptance, and recovery distinct
@@ -286,6 +304,8 @@ the exact diff; this file records why the project changed.
   explicitly labeled horizontal scroller instead of being compressed to the
   prose column; the constitutional control diagram now follows a horizontal
   reading path.
+- Display-equation validation now renders canonical Markdown through KaTeX and
+  flags likely missing command escapes before a commit can pass `npm test`.
 
 ## [0.1.0] - 2026-08-05
 

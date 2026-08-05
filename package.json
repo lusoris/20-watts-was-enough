@@ -9,8 +9,9 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
-    "test": "npm run lint && npm run build",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "test": "npm run lint && npm run validate:math && npm run build",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "validate:math": "node scripts/validate-math.mjs"
   },
   "dependencies": {
     "katex": "^0.18.1",

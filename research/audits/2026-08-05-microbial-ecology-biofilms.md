@@ -48,10 +48,11 @@ Two popular analogies are rejected at the audit boundary:
    respond to molecules. Concentration depends on cell activity, geometry,
    flow, degradation, and receiver state. There need be no proposal, vote,
    objection, membership list, or mutually known commitment.
-2. **A biofilm is not a brain.** A matrix-embedded population can form
-   gradients, local niches, clonal sectors, invasion barriers, and dispersal
-   states. None of those observations establishes representations, a global
-   objective, inference, credit assignment, or organism-level cognition.
+2. **Population structure does not establish system cognition.** A
+   matrix-embedded population can form gradients, local niches, clonal sectors,
+   invasion barriers, and dispersal states. Those observations alone do not
+   establish representations, a global objective, inference, credit assignment,
+   or organism-level cognition.
 
 The strongest transferable requirement is therefore methodological:
 **preserve locality, state heterogeneity, transport, lineage, and lifecycle

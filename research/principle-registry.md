@@ -66,14 +66,14 @@ evidence gates to each.
 | P-003 | Leave a cheap temporary trace before slow commitment | synaptic eligibility, plant priming, fast memory, caches | experiment |
 | P-004 | Generate diversity, select, then protect or compress winners | development, pruning, immune affinity maturation, evolutionary search | experiment |
 | P-005 | Reinforce useful paths and decay unused topology | synapses/glia, slime-mold transport, routing graphs | experiment |
-| P-006 | Stabilize a dynamic system with slower negative feedback | synaptic scaling, insect feedback inhibition, load control | explore |
-| P-007 | Spend sensing or compute on unresolved prediction error | predictive coding, active sensing, surprise routing | experiment |
+| P-006 | Stabilize a dynamic system with slower negative feedback | synaptic scaling, insect feedback inhibition, load control, performance timing | explore |
+| P-007 | Spend sensing or compute on unresolved prediction error | predictive coding, active sensing, musical expectation, surprise routing | experiment |
 | P-008 | Contain interactions in modules before global integration | dendritic branches, cephalopod segments, cell types, expert modules | explore |
 | P-009 | Separate task execution from maintenance and consolidation | astrocytes, sleep/replay, repair, system control planes | explore |
 | P-010 | Move recurring computation into structure or placement | morphology, myelination/timing, compilation, memory hierarchy | experiment |
-| P-011 | Form transient coalitions through time-dependent communication | cortical phase coupling, scheduled fabrics, future quorum audit | watch |
-| P-012 | Match memory medium and update rate to information lifetime | fast/slow memory, immune memory, plant priming, external factual stores | use/experiment |
-| P-013 | Coordinate through shared state left in the environment | ant trails, blackboards, logs, external workspaces | experiment |
+| P-011 | Form transient coalitions through time-dependent communication | cortical phase coupling, ensemble timing, scheduled fabrics, future quorum audit | watch |
+| P-012 | Match memory medium and update rate to information lifetime | fast/slow memory, immune and motif memory, cultural priors, external factual stores | use/experiment |
+| P-013 | Coordinate through shared state left in the environment | ant trails, scores and repertoire, blackboards, logs, external workspaces | experiment |
 
 ## Candidates held outside the registry
 
@@ -101,7 +101,7 @@ experimental discrimination to receive a stable `P-` ID.
 | Versioned, repairable convention layer | P-002, P-003, P-004, P-007, P-008, P-009, P-011, P-012, P-013 | composition, pragmatic inference, repair, coding, partner state, convention formation, schema versioning, migration, and rollback are established scoped mechanisms; the residual binds adaptive local forms to literal semantics, uptake evidence, protected meanings, cross-play, and lifecycle gates | [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md) must beat a fixed typed protocol, schema registry, acknowledgement/retry, calibrated inference, replicated state, coding, migration, and rollback stack under genuine task and population drift |
 | Conflict-bounded unit transition | P-004, P-008, P-009, P-012 | population selection, modular boundaries, versioned reproduction, permissions, testing, auditing, and conflict control are established; the residual asks when reproducible collective heredity and cost-adjusted between-collective selection justify treating the collection as a unit | [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md) must beat ordinary modules, permissions/tests, checkpoint hygiene, external evaluation, routed experts, and ensemble/population selection under member shortcuts, turnover, and founder risk |
 | Compensation-aware recovery accounting | P-003, P-006, P-009, P-012 | restoration, failover, reconstruction, robustness testing, resource accounting, reserve, and recurrence monitoring are established; the residual is an evaluation vector separating native capability from compensating dependence and adverse adaptation | [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md) must show that support removal, transfer, recurrence, and reserve axes expose consequential false recovery beyond ordinary multi-objective evaluation and fault injection |
-| Contract-preserving semantic compaction | P-003, P-009, P-012, P-013 | snapshots, materialized views, log compaction, compression, archives, provenance, rollback, and invalidation are established; the residual is finite registered semantic preservation under hidden future queries | [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md) must beat the complete storage null after metadata, retained fragments, maintenance interference, corruption, deletion, audit, and rollback cost |
+| Contract-preserving semantic compaction | P-003, P-009, P-012, P-013 | snapshots, materialized views, log compaction, compression, archives, provenance, OAIS/PREMIS packages, versioned identity and vocabulary, migration tests, rollback, and invalidation are established; the residual is finite registered semantic preservation for a declared interpreter community under hidden future queries | [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md) must beat the complete storage-and-preservation null after representation dependencies, metadata, retained fragments, migration, maintenance interference, corruption, deletion, access, audit, capability turnover, and rollback cost |
 | Value- and reconstructability-aware artifact tiering | P-001, P-009, P-012, P-013 | adaptive caching, miss-cost policies, economic tiering, fault-domain placement, coding, and reconstructability are established; the residual asks whether task/evidence value adds leakage-free generalizable placement information | [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md) must beat ARC/TinyLFU, size/miss-cost, static, economic, and coded-placement nulls under shift and correlated failure |
 | Audited cumulative inheritance | P-003, P-004, P-005, P-009, P-012, P-013 | generation, social transmission, repositories, versioning, search, evaluation, governance, and network effects are established scoped mechanisms; the residual is preservation and recombination of validated capability across real learner turnover | [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md) must beat the complete centralized continual-learning, retrieval, versioning, workflow, and governance stack at equal cumulative effort |
 | Constitutionalized multi-level control plane | P-002, P-004, P-008, P-009, P-011, P-013 | aggregation limits, IAM, constrained control, delegation models, veto theory, polycentricity, policy-as-code, review, lineage, incident response, and change management are established scoped mechanisms; the residual composition applies only with real asymmetric information, conflicting incentives, spillovers, or authorized standing | [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md) must beat the full ordinary governance stack on task-native and protected outcomes after capture, gridlock, concentration, human attention, and lifecycle cost |
@@ -119,6 +119,29 @@ with typed state machines, calibrated risk and abstention, least privilege,
 supervisory and constrained control, evolutionary and AIS search, replay,
 placement, and lifecycle accounting. If those nulls reproduce its decisions,
 the immune terminology adds no systems mechanism ([C-747](claims.md#c-747)).
+
+### Shared-clock-free predictive co-adaptation benchmark
+
+The [music audit](audits/2026-08-05-music-cognition-improvisation.md) promotes
+no principle or candidate. Its narrow residual is a benchmark fixture: maintain
+literal task constraints, bounded relative timing, and responsive phrase state
+while tempo and microtiming drift, delay is asymmetric, roles and motifs
+change, and partners turn over, without a privileged shared clock
+([C-780](claims.md#c-780)). The fixture composes the held entrainable local
+phase state with [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md),
+[Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+and [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+The executable contract is [Fixture F-001](../experiments/fixtures/001-shared-clock-free-coadaptation.md).
+
+Its required null is the complete stack of pairwise phase correction, PLL and
+Kalman/state-space estimation, adaptive feedback, MPC, centralized scheduling,
+retrieval, explicit role/version protocol, and ordinary rehearsal. Measure
+literal success, pairwise onset error, phrase response, recovery, role
+violations, messages, latency, memory, human effort, and lifecycle energy
+separately. Retire the residual when conventional online identification plus
+retrieval and explicit protocol state reaches the same frontier; neural
+synchrony cannot override that result ([C-783](claims.md#c-783)). See
+[OQ-056](open-questions.md#oq-056).
 
 ## P-001 — Selective allocation
 

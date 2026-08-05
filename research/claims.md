@@ -11154,3 +11154,878 @@ describes the exact statement here, not a broader interpretation.
   ablations.
 - **Used by:** the [immune audit](audits/2026-08-05-immune-tolerance-trained-immunity.md)
   as a rejection boundary; no principle or candidate is promoted.
+
+### C-748
+
+- **Statement:** Adults and infants can segment scoped continuous tone streams
+  using transition structure.
+- **Status:** established.
+- **Primary source:** `SaffranEtAl1999ToneStatistics`.
+- **Rationale:** Discrimination of trained tone-word structure in two age
+  groups establishes auditory statistical learning without requiring prior
+  musical theory.
+- **Open issue:** Fragment memorization, token acoustics, exposure duration,
+  delayed retention, and transfer to new timbres and grammars remain bounded.
+- **Used by:** principles [P-003](principle-registry.md#p-003--temporary-trace-before-commitment)
+  and [P-007](principle-registry.md#p-007--prediction-error-allocation), and the
+  [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark).
+
+### C-749
+
+- **Statement:** Adults can rapidly learn and generalize aspects of a
+  finite-state grammar in an unfamiliar musical scale.
+- **Status:** established.
+- **Primary source:** `LouiEtAl2010Grammar`.
+- **Rationale:** Recognition, generalization, frequency sensitivity, and
+  preference changed after a short exposure to the novel scale and grammar.
+- **Open issue:** Recognition, structural generalization, frequency effects,
+  and preference must remain separate outcomes, with delayed and cross-style
+  transfer measured independently.
+- **Used by:** principles [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation), and
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-750
+
+- **Statement:** Learned variable-order probabilities plausibly explain part
+  of melodic expectation.
+- **Status:** plausible.
+- **Primary source:** `PearceEtAl2010Expectation`.
+- **Rationale:** Probabilities from an unsupervised variable-order model
+  covaried with expectedness ratings and electrophysiological responses, but
+  correlation does not identify a neural implementation.
+- **Open issue:** A causal account must beat tuned sequence, retrieval, and
+  control alternatives on held-out bits per event without corpus leakage.
+- **Used by:** [principle P-007](principle-registry.md#p-007--prediction-error-allocation)
+  and [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-751
+
+- **Statement:** Pitch and timbre grouping cues affect learning of nonadjacent
+  tone dependencies.
+- **Status:** established.
+- **Primary source:** `CreelEtAl2004DistantMelodies`.
+- **Rationale:** Learning changed when grouping made the relevant separated
+  tones coherent, and moderate grouping supported adjacent and nonadjacent
+  regularities together.
+- **Open issue:** Grouping cues, adjacency statistics, token identity, and
+  boundary information need factorial control before inferring hierarchical
+  parsing.
+- **Used by:** principles [P-008](principle-registry.md#p-008--compartmentalized-interaction)
+  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  and [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-752
+
+- **Statement:** Listeners plausibly process some nonlocal structure in tonal
+  chorales.
+- **Status:** plausible.
+- **Primary source:** `KoelschEtAl2013Hierarchy`.
+- **Rationale:** Behavioral and ERP responses differed under manipulations
+  intended to disrupt nonlocal structure while preserving selected local
+  properties, but the contrast does not identify a unique parser.
+- **Open issue:** Acoustic leakage, style familiarity, unmatched high-order
+  statistics, annotation assumptions, and long-context or retrieval nulls must
+  be excluded on held-out interventions.
+- **Used by:** [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  and the [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark).
+
+### C-753
+
+- **Statement:** Western tonal contexts produce reproducible probe-tone
+  hierarchies in the studied listeners.
+- **Status:** established.
+- **Primary sources:** `KrumhanslKessler1982Tonal`,
+  `KrumhanslKeil1982Acquisition`.
+- **Rationale:** Major and minor contexts produced structured rating profiles,
+  and their organization differed developmentally in the sampled Western
+  populations.
+- **Open issue:** Perception, familiarity, convention, task demand, culture,
+  and development must be separated before treating the geometry as universal
+  or innate.
+- **Used by:** principles [P-007](principle-registry.md#p-007--prediction-error-allocation)
+  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-754
+
+- **Statement:** Phase correction in synchronized tapping changes with timing
+  perturbation and tempo.
+- **Status:** established.
+- **Primary sources:** `Repp2011PerturbedMetronome`,
+  `Repp2006MultipleReferences`.
+- **Rationale:** Responses were tempo-dependent and nonlinear, and correction
+  could draw on beat and subdivision references rather than only the latest
+  asynchrony.
+- **Open issue:** Estimated gain, uncertainty, saturation, skipped events,
+  recovery time, metrical state, and ordinary feedback-control fits need joint
+  reporting.
+- **Used by:** [principle P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  the held [entrainable local phase state](adoption-matrix.md#working-matrix),
+  and the [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark).
+
+### C-755
+
+- **Statement:** EEG responses can contain enhanced frequency components at
+  perceived beat, imagined meter, and sensorimotor-coupling frequencies.
+- **Status:** established.
+- **Primary sources:** `NozaradanEtAl2011BeatMeter`,
+  `NozaradanEtAl2015Sensorimotor`.
+- **Rationale:** The studies establish frequency-tagged measurements during
+  listening and tapping, not the causal origin or computational role of the
+  aligned activity.
+- **Open issue:** Periodic evoked responses, nonlinear transforms, movement
+  artifact, filtering, leakage, omission persistence, and behavioral mediation
+  remain competing explanations.
+- **Used by:** [principle P-011](principle-registry.md#p-011--transient-communication-coalitions)
+  and the held [entrainable local phase state](adoption-matrix.md#working-matrix).
+
+### C-756
+
+- **Statement:** Autonomous oscillatory models plausibly explain some cortical
+  tracking of music beyond the tested evoked-response models.
+- **Status:** plausible.
+- **Primary source:** `DoellingEtAl2019Oscillator`.
+- **Rationale:** An oscillator model predicted measured cortical responses
+  better than the evoked model in that comparison, while untested model classes
+  and causal behavioral consequences remain open.
+- **Open issue:** The result needs replication under omissions, phase shifts,
+  irregular inputs, movement controls, broader null models, and preregistered
+  behavioral consequences.
+- **Used by:** [principle P-011](principle-registry.md#p-011--transient-communication-coalitions)
+  and the held [entrainable local phase state](adoption-matrix.md#working-matrix).
+
+### C-757
+
+- **Statement:** Experience-driven predictability always strengthens EEG beat
+  entrainment.
+- **Status:** disputed.
+- **Primary source:** `HoddinottEtAl2026PredictabilityNull`.
+- **Rationale:** The cited primary study found no change in its EEG
+  beat-entrainment measure under an experience-driven predictability
+  manipulation.
+- **Open issue:** Paradigm sensitivity, estimator choice, statistical power,
+  stimulus class, exposure history, and behavioral relevance delimit both the
+  null and any positive generalization.
+- **Used by:** the held [entrainable local phase state](adoption-matrix.md#working-matrix)
+  and the [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark)
+  as a falsification boundary.
+
+### C-758
+
+- **Statement:** Melodic contour, interval relations, absolute pitch, harmonic
+  context, and shared tones contribute differently to melody recognition.
+- **Status:** established.
+- **Primary sources:** `DowlingFujitani1971MelodyMemory`,
+  `CuddyEtAl1981MelodicStructure`, `TervaniemiEtAl2001MelodicMemory`.
+- **Rationale:** Recognition and learning vary across relational and absolute
+  cues, transposition, context, and experience rather than depending on one
+  invariant motif store.
+- **Open issue:** Expertise selection, motif leakage, weakly identifying
+  contours, transformation family, false matches, and cultural style need
+  stratified evaluation.
+- **Used by:** principles [P-003](principle-registry.md#p-003--temporary-trace-before-commitment)
+  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  and [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-759
+
+- **Statement:** Transformation-aware motif storage could reduce redundant
+  memory relative to storing every observed variant.
+- **Status:** plausible.
+- **Primary sources:** no direct systems validation; the scoped perceptual
+  distinctions are supported by [C-758](#c-758).
+- **Rationale:** Factoring exact content from declared transformation-stable
+  relations may reduce storage, but canonicalization, interval encoding,
+  equivariance, data augmentation, and retrieval already implement relevant
+  operations.
+- **Open issue:** It must beat exact and canonical retrieval on unseen motif
+  families and styles across false-match rate, bytes, latency, quality, and
+  joules.
+- **Used by:** [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md)
+  and the [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark).
+
+### C-760
+
+- **Statement:** Altered pitch and phase feedback can differentially disrupt
+  event selection and performance timing in keyboard tasks.
+- **Status:** established.
+- **Primary sources:** `Pfordresher2003Feedback`,
+  `Pfordresher2005FeedbackStructure`, `PfordresherPalmer2002Delay`.
+- **Rationale:** Pitch-period, phase, and delayed-feedback manipulations
+  produced task-dependent effects on note accuracy and timing, with structure
+  and skill modifying disruption.
+- **Open issue:** Attention, salience, new rhythmic cues, actuator dynamics,
+  instrument transfer, and causal separation of control loops remain open.
+- **Used by:** principles [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation)
+  and [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  and [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-761
+
+- **Statement:** Skilled perception and action plausibly use coupled forward
+  sensory state during music performance.
+- **Status:** plausible.
+- **Primary sources:** `ChenEtAl2008MotorRhythm`,
+  `BangertEtAl2006SharedNetworks`, `Pfordresher2003Feedback`.
+- **Rationale:** Motor-region recruitment during rhythm listening, overlapping
+  auditory–motor activation, and feedback-specific disruption are consistent
+  with coupling but do not identify a unique or music-specific mechanism.
+- **Open issue:** Causal necessity and transfer must be tested against separate
+  conventional forward models under matched pitch, phase, latency, dropout,
+  attention, and compute.
+- **Used by:** [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md)
+  and [Fixture F-001](../experiments/fixtures/001-shared-clock-free-coadaptation.md).
+
+### C-762
+
+- **Statement:** Expert expressive timing can plausibly be generated largely
+  from an internal performance plan.
+- **Status:** plausible.
+- **Primary source:** `Repp1999Control`.
+- **Rationale:** Expressive temporal patterns persisted across performed,
+  silent, and imagery-related tasks for the studied passage and pianists.
+- **Open issue:** Small samples, repeated and memorized passages, motivation,
+  novel material, actuator change, and phrase transfer bound the inference.
+- **Used by:** [principle P-010](principle-registry.md#p-010--structural-offloading-and-co-design)
+  and [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-763
+
+- **Statement:** Removing auditory feedback can produce small measurable
+  changes in expressive piano performance.
+- **Status:** established.
+- **Primary source:** `Repp1999FeedbackDeprivation`.
+- **Rationale:** Feedback deprivation changed some expressive parameters, with
+  heterogeneous and sometimes larger pedaling effects, while listener
+  classification remained limited.
+- **Open issue:** Player-specific effect size, instrument dependence, passage
+  familiarity, pedaling, delayed degradation, and listener agreement require
+  broader measurement.
+- **Used by:** [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md)
+  and the [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark).
+
+### C-764
+
+- **Statement:** Pairwise phase correction plausibly explains part of
+  professional string-quartet synchronization.
+- **Status:** plausible.
+- **Primary source:** `WingEtAl2014Quartet`.
+- **Rationale:** A first-order phase-correction model fitted performances by two
+  professional quartets and exposed asymmetric leader–follower gain patterns,
+  but the evidence is limited to two case studies.
+- **Open issue:** Repertoire, rehearsal, quartet population, expressive
+  nonstationarity, role switching, shared score, common cues, and alternative
+  controller fits need prospective tests.
+- **Used by:** principles [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback), and the
+  [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark).
+
+### C-765
+
+- **Statement:** Partner-specific performance memory can plausibly improve
+  synchronization.
+- **Status:** plausible.
+- **Primary source:** `KellerEtAl2007Duet`.
+- **Rationale:** Pianists synchronized more accurately with recordings of
+  their own prior performances, and self-recognition covaried with that
+  advantage.
+- **Open issue:** Retrieval, motor similarity, memorized microtiming,
+  familiarity, recording quality, partner turnover, and recent timing history
+  are sufficient competing explanations.
+- **Used by:** principles [P-003](principle-registry.md#p-003--temporary-trace-before-commitment)
+  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  and the [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark).
+
+### C-766
+
+- **Statement:** Improvisation differs from memorized performance in behavioral
+  demand and measured brain activity in the cited tasks.
+- **Status:** established.
+- **Primary sources:** `BengtssonEtAl2007Improvisation`, `LimbBraun2008Jazz`,
+  `BerkowitzAnsari2008Improvisation`, `DonnayEtAl2014TradingFours`.
+- **Rationale:** Constrained, jazz, and interactive improvisation contrasts
+  produced distributed activation differences while also changing novelty,
+  entropy, memory, error, selection, and motor demands.
+- **Open issue:** Retrieval, proposal generation, search, evaluation,
+  constraint enforcement, partner response, and execution require independent
+  manipulations rather than reverse inference from activation.
+- **Used by:** [principle P-004](principle-registry.md#p-004--diversity-selection-and-protection)
+  and [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-767
+
+- **Statement:** Improvisation is only random recombination.
+- **Status:** disputed.
+- **Primary sources:** `BengtssonEtAl2007Improvisation`,
+  `BerkowitzAnsari2008Improvisation`, `DonnayEtAl2014TradingFours`.
+- **Rationale:** The tasks require structured generation, constraint, partner
+  response, selection, memory, and execution, none of which is identified or
+  excluded by a randomness-only account.
+- **Open issue:** Factorial comparisons of retrieval, transformation,
+  stochastic variation, search, evaluation, revision, and motor execution are
+  needed under identical evaluator access and cost.
+- **Used by:** [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+  and the [endogenous-generation audit](audits/2026-08-05-endogenous-generation-creativity.md).
+
+### C-768
+
+- **Statement:** Prefrontal deactivation is a general causal mechanism of
+  creativity.
+- **Status:** disputed.
+- **Primary sources:** `LimbBraun2008Jazz`,
+  `BengtssonEtAl2007Improvisation`, `BerkowitzAnsari2008Improvisation`.
+- **Rationale:** Activation and deactivation patterns vary with task and
+  control contrasts, and correlational neuroimaging does not establish causal
+  necessity for novelty or value.
+- **Open issue:** Causal perturbation, matched task demands, output quality,
+  retrieval, error, motor transition, and participant expertise must be
+  separated.
+- **Used by:** [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+  as a rejected shortcut explanation.
+
+### C-769
+
+- **Statement:** Practice history is associated with expertise in some
+  musician samples.
+- **Status:** established.
+- **Primary sources:** `EricssonEtAl1993Practice`,
+  `MacnamaraMaitra2019Practice`.
+- **Rationale:** Retrospective deliberate-practice histories covaried with
+  expertise strata, while a later violin replication found a substantially
+  smaller relation.
+- **Open issue:** Selection, aptitude, family resources, instructors,
+  attrition, retrospective error, practice quality, and retained performance
+  remain confounded.
+- **Used by:** [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+  and the [horizon-qualified learning contract](adoption-matrix.md#working-matrix).
+
+### C-770
+
+- **Statement:** A fixed quantity of deliberate practice is sufficient for
+  elite expertise.
+- **Status:** disputed.
+- **Primary sources:** `EricssonEtAl1993Practice`,
+  `MacnamaraMaitra2019Practice`.
+- **Rationale:** The replication found no deliberate-practice-hour difference
+  between its best and good violinist groups, undermining a sufficient fixed-
+  hours account.
+- **Open issue:** Measurement error, practice content, selection, opportunity,
+  training quality, plateau, retention, and task-specific capability require
+  prospective designs.
+- **Used by:** [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+  and the [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md).
+
+### C-771
+
+- **Statement:** Longitudinal music training can accompany domain-relevant
+  behavioral and structural change.
+- **Status:** established.
+- **Primary sources:** `HydeEtAl2009Training`,
+  `HabibiEtAl2016AuditoryTraining`.
+- **Rationale:** The longitudinal studies reported motor, auditory-processing,
+  and structural differences during childhood training, with assignment and
+  bundled-intervention limits varying by design.
+- **Open issue:** Randomization, active controls, baseline aptitude,
+  socioeconomic and instructor factors, attrition, component attribution, and
+  delayed retention need explicit treatment.
+- **Used by:** principles [P-009](principle-registry.md#p-009--maintenance-plane)
+  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  and [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-772
+
+- **Statement:** Music lessons can plausibly cause small changes on some
+  nonmusical tests.
+- **Status:** plausible.
+- **Primary source:** `Schellenberg2004IQ`.
+- **Rationale:** Random assignment to music, drama, or no lessons produced a
+  small measured IQ change for the music packages, but package-level effects do
+  not identify a musical mechanism.
+- **Open issue:** Multiple outcomes, instructor contact, expectancy,
+  engagement, retention, active-control equivalence, and which intervention
+  component caused the change remain unresolved.
+- **Used by:** [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+  and the [horizon-qualified learning contract](adoption-matrix.md#working-matrix).
+
+### C-773
+
+- **Statement:** Music lessons generally increase intelligence.
+- **Status:** disputed.
+- **Primary source:** `Schellenberg2004IQ`.
+- **Rationale:** One bounded randomized package-level effect cannot establish a
+  general outcome, durable transfer, or music-specific causal route.
+- **Open issue:** Factorially isolate the claimed musical component and compare
+  it with an equally engaging active curriculum on delayed untrained outcomes.
+- **Used by:** [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+  as a far-transfer rejection boundary.
+
+### C-774
+
+- **Statement:** Rhythm perception becomes culture-qualified during infancy in
+  the studied populations.
+- **Status:** established.
+- **Primary sources:** `HannonTrehub2005Rhythm`,
+  `HannonEtAl2011Constraints`.
+- **Rationale:** Sensitivity to familiar and unfamiliar metrical structures
+  changed with age and exposure, while interval-ratio complexity and
+  enculturation could be separated experimentally.
+- **Open issue:** Sensitive-period scope, exposure history, population
+  sampling, acoustic discrimination, motor demand, and reversibility beyond
+  brief exposure remain bounded.
+- **Used by:** principles [P-003](principle-registry.md#p-003--temporary-trace-before-commitment)
+  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  and [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-775
+
+- **Statement:** Iterated rhythm reproduction reveals attraction toward simple
+  ratios together with cross-cultural variation.
+- **Status:** established.
+- **Primary sources:** `JacobyMcDermott2017RhythmPriors`,
+  `JacobyEtAl2024RhythmPriors`.
+- **Rationale:** Reproduced rhythm distributions converged toward structured
+  ratio categories, and their specific forms varied across sampled
+  populations.
+- **Open issue:** Perception, memory, motor noise, transmission, prior,
+  category choice, sampling, and recording conditions remain mixed in the
+  reproduction channel.
+- **Used by:** principles [P-004](principle-registry.md#p-004--diversity-selection-and-protection)
+  and [P-013](principle-registry.md#p-013--externalized-shared-state), and
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-776
+
+- **Statement:** Western consonance preference is not universal.
+- **Status:** established.
+- **Primary source:** `McDermottEtAl2016Dissonance`.
+- **Rationale:** The studied Tsimane' listeners discriminated relevant sounds
+  without showing the Western consonance preference, separating acoustic
+  discrimination from preference.
+- **Open issue:** Population representation, exposure, stimulus construction,
+  response scales, and the boundary between common auditory constraints and
+  learned preference need further cross-cultural tests.
+- **Used by:** [principle P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime)
+  and [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-777
+
+- **Statement:** Song is widespread and exhibits both cross-cultural
+  regularity and diversity.
+- **Status:** established.
+- **Primary source:** `MehrEtAl2019HumanSong`.
+- **Rationale:** Corpus and listener analyses document recurring features and
+  substantial variation across sampled societies, without providing a causal
+  learning intervention.
+- **Open issue:** Sampling, recording selection, category transport,
+  within-culture variation, historical contact, and causal transmission
+  mechanisms remain unresolved.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md)
+  and the [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark).
+
+### C-778
+
+- **Statement:** Learned conventions can plausibly compress coordination
+  within an ensemble or population.
+- **Status:** plausible.
+- **Primary sources:** `HannonTrehub2005Rhythm`,
+  `JacobyMcDermott2017RhythmPriors`, `JacobyEtAl2024RhythmPriors`.
+- **Rationale:** Exposure- and population-qualified priors can reduce local
+  prediction and communication burden, while also creating lock-in, exclusion,
+  and cross-population failure.
+- **Open issue:** Literal task success, protected meanings, bidirectional
+  cross-play, partner turnover, drift, repair, and full teaching and lifecycle
+  costs must be compared with explicit protocol state.
+- **Used by:** [principle P-013](principle-registry.md#p-013--externalized-shared-state),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  and [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-779
+
+- **Statement:** A local predictive phase state could reduce polling compute
+  when useful events are sparse and temporally predictable.
+- **Status:** speculative.
+- **Primary sources:** no direct AI energy validation; behavioral and neural
+  boundaries are provided by [C-754](#c-754)–[C-757](#c-757).
+- **Rationale:** Persistent local phase could schedule computation near expected
+  events, but timers, PLLs, adaptive oscillators, filters, and clock discipline
+  already implement the proposed saving.
+- **Open issue:** The state must beat those baselines under matched update rate,
+  uncertainty, latency, memory, omissions, false events, and measured lifecycle
+  joules.
+- **Used by:** the held [entrainable local phase state](adoption-matrix.md#working-matrix),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md),
+  and the [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark).
+
+### C-780
+
+- **Statement:** Partner- and phrase-specific predictive co-adaptation could
+  outperform conventional multi-agent timing and protocol control without a
+  privileged shared clock.
+- **Status:** speculative.
+- **Primary sources:** no direct systems evidence; the bounded ensemble
+  observations are [C-764](#c-764) and [C-765](#c-765).
+- **Rationale:** The proposed residual composes local phase estimation,
+  partner memory, phrase state, role-qualified action, convention repair, and
+  inheritance rather than identifying a distinct mechanism.
+- **Open issue:** It must beat pairwise phase correction, Kalman/state-space
+  estimation, MPC, centralized scheduling, retrieval, typed role protocols,
+  and rehearsal under partner turnover, delay, role, motif, and lifecycle-cost
+  interventions.
+- **Used by:** the [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark)
+  and [OQ-056](open-questions.md#oq-056); it is not a principle or candidate.
+
+### C-781
+
+- **Statement:** A hierarchical musical state could improve transfer beyond
+  long-context prediction and retrieval.
+- **Status:** speculative.
+- **Primary sources:** no direct comparative systems evidence; scoped grouping
+  and nonlocal observations are [C-751](#c-751) and [C-752](#c-752).
+- **Rationale:** Multiscale groups could compress context and preserve
+  dependencies, but long-context sequence models, retrieval, explicit chunks,
+  and MDL segmentation can express the same benefit.
+- **Open issue:** Preregistered held-out gain must survive unseen pieces,
+  styles, transformations, local-statistic controls, annotation cost,
+  description length, latency, and joules.
+- **Used by:** [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  and the [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark).
+
+### C-782
+
+- **Statement:** Transformation-aware motif memory could improve the
+  storage–latency–quality frontier.
+- **Status:** speculative.
+- **Primary sources:** no direct comparative systems evidence; scoped melodic
+  distinctions are [C-758](#c-758).
+- **Rationale:** Relational indexing may reuse structure across transposition,
+  timing, or other declared transformations, but preprocessing and canonical
+  retrieval can supply the same invariance.
+- **Open issue:** It must beat exact retrieval, canonicalization, dynamic time
+  warping, contrastive augmentation, and equivariant encoding on leakage-
+  audited unseen motifs and styles.
+- **Used by:** [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md)
+  and the [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark).
+
+### C-783
+
+- **Statement:** Neural synchrony between performers proves shared cognition.
+- **Status:** disputed.
+- **Primary sources:** no cited primary experiment establishes that inference;
+  the behavioral and interactive contrasts are bounded by [C-764](#c-764)–[C-766](#c-766).
+- **Rationale:** Common sensory input, common motor output, shared score or
+  timing, preprocessing, and analysis leakage can produce aligned signals
+  without a distinct shared cognitive state.
+- **Open issue:** A causal intervention must alter behavior beyond common-input
+  and motor-alignment controls and survive independent preprocessing,
+  multiplicity correction, and cross-partner replication.
+- **Used by:** the [music co-adaptation benchmark](principle-registry.md#shared-clock-free-predictive-co-adaptation-benchmark)
+  as a rejection boundary; no principle or candidate is promoted.
+
+### C-784
+
+- **Statement:** A decision trace is useful evidence only when its action
+  boundary, record schema, identity, clock, and disposition policy remain
+  interpretable.
+- **Status:** plausible.
+- **Primary source:** `iso15489`.
+- **Rationale:** Records management binds captured content to its generating
+  activity, context, controls, and lifecycle rather than treating stored data
+  as self-interpreting evidence.
+- **Open issue:** Test whether structured capture reduces missed causal links
+  and recovery time at equal bytes, latency, reviewer effort, and privacy risk.
+- **Used by:** principles [P-003](principle-registry.md#p-003--temporary-trace-before-commitment)
+  and [P-013](principle-registry.md#p-013--externalized-shared-state), and
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-785
+
+- **Statement:** Provenance constrains how evidence was produced and
+  transformed; it does not validate the evidence's assertions.
+- **Status:** established.
+- **Primary sources:** `isadg2000`, `prov2013`.
+- **Rationale:** Archival description and PROV represent creator, context,
+  entity, activity, agent, and derivation relations while leaving assertion
+  accuracy to separate evaluation.
+- **Open issue:** Measure attribution accuracy and contradiction-diagnosis time
+  after recontextualization at equal metadata and curatorial effort.
+- **Used by:** [principle P-013](principle-registry.md#p-013--externalized-shared-state),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-786
+
+- **Statement:** Metadata depth should be an explicit allocation decision with
+  coverage and equity constraints, not a default property of every stored
+  item.
+- **Status:** plausible.
+- **Primary source:** `greene2005mplp`.
+- **Rationale:** Multilevel archival description can trade item-level detail
+  for broader access when processing backlogs and curator time are binding.
+- **Open issue:** Compare uniform and demand- or risk-driven enrichment on
+  access, recall, sensitive-item leakage, and downstream loss at equal labour.
+- **Used by:** [principle P-001](principle-registry.md#p-001--selective-allocation)
+  and [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-787
+
+- **Statement:** Function- and accountability-aware appraisal may dominate
+  access-frequency retention when future queries shift.
+- **Status:** speculative.
+- **Primary source:** `cook2004macro`.
+- **Rationale:** Functional appraisal selects records by institutional
+  functions, accountability, risk, and anticipated use rather than prominence
+  or access frequency alone, but the AI transfer is untested.
+- **Open issue:** Preregister future-query loss and equity measures, include
+  rare audit queries, and compare against standard retention and sampling at
+  equal storage-years, ingest energy, and review effort.
+- **Used by:** principles [P-001](principle-registry.md#p-001--selective-allocation)
+  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  and [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-788
+
+- **Statement:** Retention is a governed lifecycle claim only when triggers,
+  holds, derivations, replicas, authority, and execution evidence are included.
+- **Status:** established.
+- **Primary source:** `iso15489`.
+- **Rationale:** Records-management retention and disposition are authorized,
+  documented state transitions whose execution can be suspended by holds.
+- **Open issue:** Verify deletion propagation and stale-evidence prevention
+  across indexes, caches, replicas, and derived artifacts without destroying
+  protected evidence.
+- **Used by:** principles [P-009](principle-registry.md#p-009--maintenance-plane)
+  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  and [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-789
+
+- **Statement:** Fixity verifies equality to a referenced bitstream;
+  authenticity and semantic validity require additional evidence.
+- **Status:** established.
+- **Primary sources:** `rfc8493`, `premis30`.
+- **Rationale:** BagIt checks payload digests and PREMIS records preservation
+  events and agents, but neither makes an opaque payload true, safe, or
+  interpretable.
+- **Open issue:** Define the complete dependency closure, attacker model, and
+  algorithm lifecycle before treating a digest or custody event as assurance.
+- **Used by:** [principle P-009](principle-registry.md#p-009--maintenance-plane)
+  and [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-790
+
+- **Statement:** Long-term AI memory is an interpreter-dependency contract,
+  not merely a storage-duration property.
+- **Status:** plausible.
+- **Primary source:** `ccsds2024oais`.
+- **Rationale:** OAIS makes preservation relative to a designated community's
+  knowledge base and the representation information needed to interpret an
+  object.
+- **Open issue:** After dependency and staff turnover, compare successful
+  reconstruction, answer error, and interpretation time for ordinary
+  reproducibility packages and the proposed contract at equal curation cost.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md)
+  and [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-791
+
+- **Statement:** Registered-use validation can make semantic migration
+  falsifiable, but cannot prove preservation for unregistered future uses.
+- **Status:** speculative.
+- **Primary sources:** `premis30`, `ccsds2024oais`.
+- **Rationale:** Preservation migrations can record source, transform,
+  destination, and events and test declared significant properties, while
+  unanticipated semantics remain outside the test contract.
+- **Open issue:** Compare migration, emulation, and semantic compaction across
+  repeated technology changes under equal storage, compute, engineering time,
+  and held-out query families.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md)
+  and [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-792
+
+- **Statement:** Replica diversity is meaningful only after failure-domain,
+  administration, software, and threat correlations are measured.
+- **Status:** established.
+- **Primary source:** `maniatis2005lockss`.
+- **Rationale:** LOCKSS combines independently administered replicas, polling,
+  and repair under explicit fault and adversary assumptions; nominal copy count
+  alone does not establish independence.
+- **Open issue:** Report correlated-failure models, storage and bandwidth
+  overhead, energy, recovery objectives, and common poisoned-content risk.
+- **Used by:** principles [P-004](principle-registry.md#p-004--diversity-selection-and-protection)
+  and [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-793
+
+- **Statement:** AI factual memory should version entity resolution separately
+  from claims so identity corrections do not silently rewrite evidence.
+- **Status:** plausible.
+- **Primary sources:** `marc21authority`, `haak2012orcid`.
+- **Rationale:** Authority control and persistent identifiers separate entity
+  identity from names while retaining cross-references and correction history.
+- **Open issue:** Test false merges, false splits, correction latency, erasure,
+  tracking risk, and downstream answer loss under name and affiliation drift.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md)
+  and [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-794
+
+- **Statement:** Separating conceptual, representational, packaged, and
+  executed identity can prevent evidence from being inherited across
+  non-equivalent AI artifact versions.
+- **Status:** plausible.
+- **Primary source:** `ifla2017lrm`.
+- **Rationale:** IFLA LRM distinguishes work, expression, manifestation, and
+  item, demonstrating that related object levels can have different identity
+  and evidence contracts.
+- **Open issue:** Compare level-aware and flat artifact identity on duplicate
+  detection, incorrect evidence transfer, rollback, metadata cost, and query
+  accuracy across revisions.
+- **Used by:** [principle P-008](principle-registry.md#p-008--compartmentalized-interaction)
+  and [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-795
+
+- **Statement:** Versioned concept mediation should expose semantic drift and
+  mapping uncertainty rather than overwrite old labels or equate embedding
+  proximity with equivalence.
+- **Status:** plausible.
+- **Primary sources:** `niso2010z3919`, `skos2009`,
+  `tennis2006versioning`.
+- **Rationale:** Controlled vocabularies and SKOS distinguish labels, concepts,
+  relations, schemes, and mappings, while retrieval-aware versioning preserves
+  changes in those commitments.
+- **Open issue:** Under equal annotation and index cost, test temporal, domain,
+  and language drift, contested mappings, repair latency, and subgroup error.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md)
+  and [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-796
+
+- **Statement:** Faceted composition is useful where query dimensions are
+  separately governed and empirically recombinable; it is not a new modular-
+  learning principle.
+- **Status:** established.
+- **Primary source:** `ranganathan1933colon`.
+- **Rationale:** Faceted classification composes separately controlled
+  dimensions at description or query time instead of enumerating every fixed
+  combined class.
+- **Open issue:** Compare facets, flat tags, and fixed hierarchies at equal
+  metadata and query compute while testing context loss and intersectional
+  errors.
+- **Used by:** [principle P-008](principle-registry.md#p-008--compartmentalized-interaction)
+  and [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-797
+
+- **Statement:** Evidence routing must beat mature sparse, dense, and hybrid
+  retrieval at equal end-to-end budget; relevance scores are not epistemic
+  confidence.
+- **Status:** established.
+- **Primary source:** `robertson1976relevance`.
+- **Rationale:** Probabilistic information retrieval ranks items by estimated
+  relevance under a corpus, query, and model, not by source truth or causal
+  importance.
+- **Open issue:** Match corpus, index bytes, training data, latency, energy,
+  and downstream tokens while measuring task loss, citation support,
+  calibration, diversity, and tail performance.
+- **Used by:** principles [P-001](principle-registry.md#p-001--selective-allocation)
+  and [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-798
+
+- **Statement:** Feedback should update a versioned query or task model with
+  exploration and rollback, not silently rewrite the evidence base.
+- **Status:** plausible.
+- **Primary source:** `salton1990feedback`.
+- **Rationale:** Relevance feedback updates a query representation from scoped
+  judgments; displayed results, clicks, and corrections are exposure-dependent
+  signals rather than ground truth.
+- **Open issue:** Compare static, pseudo-feedback, and online approaches at
+  equal interactions, labels, compute, latency, and reviewer effort under
+  mistaken and poisoned feedback.
+- **Used by:** principles [P-003](principle-registry.md#p-003--temporary-trace-before-commitment)
+  and [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-799
+
+- **Statement:** Search should represent the information need as versioned
+  uncertain state when evidence acquisition predictably changes the question.
+- **Status:** plausible.
+- **Primary sources:** `taylor1968question`, `belkin1982ask`,
+  `bates1989berrypicking`.
+- **Rationale:** Question negotiation, anomalous knowledge state, and
+  berrypicking models all treat information seeking as an evolving interaction
+  rather than execution of one fixed surface query.
+- **Open issue:** At equal turns, wall time, compute, and user effort, test
+  hidden-goal success, regret, privacy loss, abandonment, and whether the final
+  reformulation still matches the user's goal.
+- **Used by:** principles [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation)
+  and [P-007](principle-registry.md#p-007--prediction-error-allocation), and
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-800
+
+- **Statement:** Citation topology is a biased discovery signal whose value
+  must be reported conditional on database, field, document type, age, and
+  task.
+- **Status:** established.
+- **Primary sources:** `garfield1955citation`, `brin1998anatomy`,
+  `merton1968matthew`, `seglen1997impact`, `hicks2015leiden`.
+- **Rationale:** Citation and link graphs aid navigation, but cumulative
+  advantage, coverage, age, field, gaming, and reference purpose prevent
+  centrality from serving as a context-free quality measure.
+- **Open issue:** Compare text, citation, and hybrid discovery on primary-source
+  recall, correction and retraction detection, field coverage, and downstream
+  claim error under fixed review budgets.
+- **Used by:** [principle P-001](principle-registry.md#p-001--selective-allocation)
+  and [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-801
+
+- **Statement:** A knowledge graph makes selected commitments inspectable; it
+  does not make its instance assertions complete, current, or true.
+- **Status:** established.
+- **Primary sources:** `gruber1993ontology`, `owl22012`, `prov2013`.
+- **Rationale:** Ontologies formalize selected classes, properties, and axioms,
+  and PROV formalizes lineage, while instance evidence, update coverage, and
+  open- versus closed-world assumptions remain separate.
+- **Open issue:** At matched annotation, storage, compute, engineering effort,
+  and latency, compare graph, relational, text, and hybrid systems on correction,
+  contradiction, calibration, and task loss.
+- **Used by:** principles [P-008](principle-registry.md#p-008--compartmentalized-interaction)
+  and [P-013](principle-registry.md#p-013--externalized-shared-state), and
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-802
+
+- **Statement:** Reuse readiness is a dependency, provenance, rights, and
+  interpretation contract, not evidence that reuse will be valid or ethical.
+- **Status:** established.
+- **Primary sources:** `wilkinson2016fair`, `prov2013`.
+- **Rationale:** FAIR and PROV support discovery, access conditions,
+  interoperability, reuse, and lineage without guaranteeing correctness,
+  openness, privacy safety, or exact reproducibility.
+- **Open issue:** Test independent reuse after staff and environment turnover,
+  including interpretation error, misuse, linkage risk, and correction time at
+  equal packaging and access-control cost.
+- **Used by:** [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md)
+  and [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-803
+
+- **Statement:** Institutional continuity requires evidence plus tested
+  interpretation and performance capability; document count is an invalid
+  proxy.
+- **Status:** plausible.
+- **Primary sources:** `walsh1991memory`, `brown1991communities`,
+  `szulanski1996stickiness`.
+- **Rationale:** Organizational memory spans records, retrieval, routines,
+  roles, relationships, and practiced knowledge, whose transfer can remain
+  difficult after turnover.
+- **Open issue:** Replace original operators and compare documents, structured
+  provenance, executable tests, and guided practice at equal authoring and
+  training effort on delayed novel incidents.
+- **Used by:** [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).

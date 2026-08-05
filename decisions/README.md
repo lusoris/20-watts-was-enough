@@ -12,3 +12,4 @@ than silently changing its outcome.
 | [0004](0004-organize-by-invariant.md) | Organize research by recurring invariant | accepted |
 | [0005](0005-rendered-private-edition.md) | Render one private edition from canonical files | accepted |
 | [0006](0006-open-world-scientific-search.md) | Search all sciences through shared problem classes | accepted |
+| [0007](0007-benchmark-fixtures-are-not-candidates.md) | Keep cross-candidate stress fixtures separate from architecture candidates | accepted |

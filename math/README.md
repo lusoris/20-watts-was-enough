@@ -34,6 +34,14 @@ notation.
   representation, recognition, permission, activation, quarantine,
   suppression, impairment, contraction, maintained memory, reactivation, and
   recovery under explicit loss and lifecycle budgets.
+- [`predictive-temporal-coadaptation.md`](predictive-temporal-coadaptation.md)
+  defines local clocks, delayed partner observation, phase and phrase state,
+  role-qualified action, recovery, and lifecycle cost for a shared-clock-free
+  coordination benchmark.
+- [`query-registered-preservation.md`](query-registered-preservation.md) binds
+  compacted information to a designated interpreter community, representation
+  dependencies, versioned vocabularies and identities, native-unit query
+  tolerances, evidence obligations, recovery, and lifecycle cost.
 
 Rules:
 

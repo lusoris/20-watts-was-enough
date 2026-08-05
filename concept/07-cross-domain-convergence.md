@@ -323,6 +323,113 @@ detection, evolutionary or ensemble search, replay, placement, and
 resource-aware scheduling. If the ordinary stack reproduces the decisions and
 frontier, the biological vocabulary is removed and the state contract remains.
 
+### Coordination without a privileged clock
+
+Music cognition provides a combined stress regime for mechanisms that already
+exist elsewhere in the project: multiscale prediction, local timing control,
+transformation-aware memory, constrained generation, role protocols, repair,
+and cumulative transmission. The evidence in
+[C-748](../research/claims.md#c-748)–[C-783](../research/claims.md#c-783)
+does not justify a music-specific principle.
+
+Its useful residue is a benchmark: agents must preserve literal phrase
+constraints and bounded relative timing while tempo, expressive microtiming,
+delay, roles, motifs, leaders, and partners change, without reading a privileged
+shared clock.
+
+```mermaid
+flowchart LR
+    task["Score · cue · literal task constraints"] --> phrase["Phrase · motif · boundary state"]
+    partner["Partner action"] --> channel["Delay · jitter · loss · acoustic/physical path"]
+    channel --> observe["Timestamped local observation + uncertainty"]
+    observe --> phase["Local phase · tempo · drift estimate"]
+    memory["Partner · role · repertoire memory"] --> phrase
+    phase --> controller["Role-qualified local controller"]
+    phrase --> controller
+    controller --> action["Timed expressive action"]
+    action --> partner
+    action --> evaluate["Literal task · synchrony · response · quality · cost"]
+    evaluate --> repair["Correct · clarify · rehearse · update convention"]
+    repair --> phrase
+    repair --> memory
+    nulls["PLL · Kalman · MPC · retrieval · typed protocol · rehearsal"] --> evaluate
+    perturb["Tempo drift · role switch · leader loss · new motif · turnover"] --> channel
+    perturb --> controller
+```
+
+Editable source:
+[shared-clock-free-coadaptation.mmd](../assets/diagrams/shared-clock-free-coadaptation.mmd).
+
+The fixture refuses several easy substitutions:
+
+- similar mean tempo is not pairwise synchronization;
+- stimulus-frequency neural power is not evidence of endogenous prediction;
+- low onset error is not the correct phrase or role;
+- familiar-partner performance is not co-adaptation when retrieval explains it;
+- novelty is not validity, responsiveness, or usefulness; and
+- within-group convention compression is not cross-group task success.
+
+[Fixture F-001](../experiments/fixtures/001-shared-clock-free-coadaptation.md)
+compares the full composition with fixed correction, PLL/adaptive oscillator,
+Kalman identification, distributed MPC, a paid centralized conductor,
+transformation-aware retrieval, and typed role/version protocols. The
+[mathematical contract](../math/predictive-temporal-coadaptation.md) keeps local
+clock error, phase, phrase prediction, role safety, message bytes, latency,
+rehearsal, recovery, and joules separate. If online estimation plus retrieval
+and explicit protocol state ties, the residual is retired.
+
+### Preserved bits are not preserved meaning
+
+Library and archival science adds a dependency that storage abstractions often
+hide: information remains useful only for a declared interpreter community
+with the formats, schemas, vocabularies, identity mappings, authority evidence,
+software, units, permissions, and practiced capability needed to use it. The
+audit evidence will occupy [C-784](../research/claims.md#c-784)–[C-803](../research/claims.md#c-803).
+
+```mermaid
+flowchart LR
+    object["Payload · metadata · evidence links"] --> package["Versioned preservation package"]
+    community["Designated interpreter community + capabilities"] --> package
+    dependencies["Format · schema · vocabulary · software · authority"] --> package
+    queries["Registered queries · units · tolerances"] --> gate
+    package --> transform["Retain · compact · migrate · emulate · delete"]
+    transform --> candidate["Candidate version + manifest"]
+    candidate --> gate{"Query · evidence · authenticity · access gates"}
+    gate -->|"pass"| publish["Publish version + supersession lineage"]
+    gate -->|"fail"| fallback["Retain source · narrow contract · repair"]
+    publish --> drift["Community · dependency · vocabulary · authority drift"]
+    drift --> invalidate["Invalidate · re-test · migrate · retire"]
+    invalidate --> gate
+    requests["New unregistered information need"] --> abstain["Answer if supported · otherwise abstain / recover source"]
+    publish --> abstain
+    outcomes["Task outcome · error · effort · cost"] --> queries
+    publish --> outcomes
+```
+
+Editable source:
+[query-registered-preservation.mmd](../assets/diagrams/query-registered-preservation.mmd).
+
+This separates several failure modes that are otherwise mistaken for one
+success:
+
+- fixity detects bit change; it does not establish truth or authenticity;
+- provenance records lineage; it does not validate the assertion;
+- a valid ontology constrains representation; it does not prove instance data;
+- a citation edge is not endorsement or comparable impact;
+- findability and interoperability do not establish correctness or safe reuse;
+  and
+- retaining records does not retain the tacit capability needed to interpret
+  or act on them.
+
+The [query-registered preservation mathematics](../math/query-registered-preservation.md)
+defines finite native-unit tolerances, evidence reachability, interpreter and
+dependency validity, migration regression, unregistered-query abstention, and
+complete lifecycle cost. The
+[Candidate 017 track](../experiments/candidates/017-contract-preserving-semantic-compaction.md#designated-community-and-representation-dependency-track)
+must beat ordinary OAIS/PREMIS-style packaging, versioned schema/vocabulary,
+retained-source recovery, and query-regression tests. If it does not, the
+ordinary preservation stack remains the implementation.
+
 ## Efficiency mechanism
 
 Deduplication saves two different resources.

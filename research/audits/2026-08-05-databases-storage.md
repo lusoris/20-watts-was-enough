@@ -458,8 +458,8 @@ flowchart LR
     A --> T
 ```
 
-The diagram is intentionally not a brain analogy. It marks where authority and
-information differ: an application author declares invariants; a transaction
+The diagram marks where authority and information differ: an application
+author declares invariants; a transaction
 manager decides commit; a recovery manager interprets WAL; an index chooses an
 access path; a cache policy chooses residency; a replication protocol orders
 copies; and a maintenance controller decides when physical representations can

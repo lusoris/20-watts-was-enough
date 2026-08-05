@@ -122,6 +122,15 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
   representation support, validation, ignorance, deletion, permission,
   activation, monitoring, quarantine, suppression, impairment, contraction,
   memory, revalidation, and recovery as separate state transitions.
+- `diagrams/shared-clock-free-coadaptation.mmd` connects locally timestamped
+  delayed partner events to phase/tempo estimation, phrase and role state,
+  action, literal and timing evaluation, repair, memory, ordinary control
+  nulls, and partner or regime perturbations.
+- `diagrams/query-registered-preservation.mmd` carries payload, provenance,
+  designated-community assumptions, representation dependencies, vocabulary,
+  authority, registered queries, migration, evidence/authenticity/access gates,
+  drift, invalidation, source recovery, and abstention through a preserved
+  version lifecycle.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

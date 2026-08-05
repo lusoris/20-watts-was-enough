@@ -139,9 +139,11 @@ project choice.
   robustness, cost accounting, and fault injection? See
   [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md).
 - **OQ-036:** Can a frozen compactor reduce physical history bytes while
-  preserving registered queries, evidence, uncertainty, rollback, invalidation,
-  deletion, and audit reconstruction on hidden future tests beyond snapshots,
-  views, compression, and cold archive? See
+  preserving native-unit registered queries, evidence, uncertainty, rollback,
+  invalidation, deletion, and audit reconstruction for a declared interpreter
+  community across representation, vocabulary, identity, software, access, and
+  staff change on hidden future tests beyond snapshots, views, compression,
+  cold archive, and an OAIS/PREMIS-style package? See
   [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
 - **OQ-037:** Does leakage-free task/evidence value and reconstructability under
   correlated failure improve artifact placement beyond access, size, miss cost,
@@ -271,3 +273,13 @@ project choice.
   [immune-state contract](principle-registry.md#immune-state-lifecycle-evaluation-contract);
   it is not a principle or candidate promotion gate. See
   [C-746](claims.md#c-746).
+- **OQ-056:** Can shared-clock-free, partner- and phrase-specific predictive
+  co-adaptation maintain literal task success, bounded relative timing, and
+  responsive phrasing through expressive drift, asymmetric delay, role
+  switches, novel motifs, and partner turnover better than pairwise phase
+  correction, PLL/state-space estimation, MPC, centralized scheduling,
+  retrieval, typed role protocols, and rehearsal at equal messages, latency,
+  memory, human effort, and lifecycle energy? This is a cross-candidate
+  benchmark fixture, not a principle or candidate promotion. See
+  [C-780](claims.md#c-780), [Fixture F-001](../experiments/fixtures/001-shared-clock-free-coadaptation.md),
+  and the [music audit](audits/2026-08-05-music-cognition-improvisation.md#e-music-07--shared-clock-free-ensemble-co-adaptation).

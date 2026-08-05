@@ -5,4 +5,5 @@ Candidate contracts define the null hypothesis, strongest standard baselines,
 equal-budget boundary, units, ablations, and rejection rule before code can
 make a favored mechanism look inevitable.
 
-See the [candidate index](candidates/README.md).
+See the [candidate index](candidates/README.md) and the
+[cross-candidate fixture index](fixtures/README.md).

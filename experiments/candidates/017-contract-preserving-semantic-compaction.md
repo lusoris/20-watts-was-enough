@@ -153,3 +153,44 @@ backlog-clearance error, restore hours, bytes, joules, and human audit hours.
 compression, if service/recovery evidence cannot be reconstructed, or if a
 complete log plus snapshots/cold archive matches the storage–query–maintenance
 frontier.
+
+## Designated-community and representation-dependency track
+
+The [library and archival-science audit](../../research/audits/2026-08-05-library-archival-information-science.md)
+adds a stricter preservation boundary. A byte sequence and query manifest are
+not sufficient when the future interpreter also needs a format, schema,
+vocabulary, identity mapping, authority record, software dependency, unit
+convention, access grant, or practiced procedure.
+
+For every compact version, add:
+
+1. the designated human or agent community and a versioned capability profile;
+2. closure over required format, rendering, schema, vocabulary, authority,
+   software, unit, and cryptographic dependencies;
+3. registered queries with output unit, tolerance, evidence obligations,
+   authorization, and time horizon;
+4. migration and vocabulary mapping manifests with split, merge, contested,
+   loss, supersession, reviewer, and rollback/source-recovery fields;
+5. a typed outcome for unregistered queries: covered, source-recovery required,
+   or unsupported; and
+6. lifecycle accounts for description, metadata, replicas, dependencies,
+   tests, curator/reviewer work, migration, restore, holds, and deletion.
+
+The matched E-LIS-1 arms are full retained history; ordinary versioned
+repository plus query regression; OAIS/PREMIS-style designated-community and
+representation package; and learned compaction with the same package and
+tests. Equalize stored byte-years, ingestion and migration joules,
+engineering/curator/reviewer hours, query latency, restore horizon, and
+authorized source access.
+
+Perturb schemas, vocabularies, identities, dependencies, interpreters, and
+required deletion. Measure registered-query error in native units, evidence-
+link survival, calibration, reconstruction seconds, missing dependencies,
+unregistered-query regret, privacy/authorization failures, and the complete
+lifecycle vector.
+
+The [mathematical contract](../../math/query-registered-preservation.md) and
+[editable diagram](../../assets/diagrams/query-registered-preservation.mmd)
+define the state. Retire this track if ordinary packaging, versioned schemas and
+vocabularies, retained source, and query-regression tests match the frontier.
+It refines Candidate 017; it is not an archival-intelligence candidate.

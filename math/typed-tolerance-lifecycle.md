@@ -174,9 +174,9 @@ Recovery time is measured to sustained useful service plus restored reserve:
 
 $$
 T_{\mathrm{recover}}=
-\inf\{t\ge t_f:
+\inf\left\{t\ge t_f:
 Q(t:t+\Delta)\ge Q^{\min}
-\land R(t:t+\Delta)\ge R^{\min}}-t_f,
+\land R(t:t+\Delta)\ge R^{\min}\right\}-t_f,
 $$
 
 where $t_f$ and $T_{\mathrm{recover}}$ are seconds, $\Delta$ is a frozen
