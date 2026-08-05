@@ -279,9 +279,11 @@ adding citations:
 | comparative cognition, tool use, and flexible action | manufacture, causal transfer, future preparation, event memory, uncertainty control, social learning, teaching, recombination, exploration, inhibition, route recovery, and peripheral control are kept task-, opportunity-, morphology-, observation-, and history-qualified; species/task rankings are rejected, and Fixture F-003 refines evaluation for Candidates 004/006/007/014/018/019 without promoting a principle or candidate |
 | visual art and design cognition | reconstructive generation, external workspaces, epistemic action, analogy, copying, fixation, proposal/selection separation, qualified aesthetic evaluators, material feedback, cultural accumulation, and provenance map to existing bundles; Fixture F-002 tests a versioned reconstruct–externalize–inspect–transform–evaluate composition across Candidates 004/014/017/018/019 without promoting a principle or candidate |
 | mathematical practice and proof discovery | conjecture, analogy, abstraction, counterexample search, proof decomposition, libraries, representations, invariants, theorem proving, certificates, SAT/SMT, model finding, experimental mathematics, collaboration, and teaching map to mature methods; Fixture F-004 keeps attributable proposals separate from typed acceptance, reconstructs proof DAGs through small checkers, uses dependency-safe splits and reverse-dependency invalidation, and charges complete human/joule budgets across Candidates 004/009/010/011/014/017/019 without promoting a principle or candidate |
+| fluid dynamics and turbulence | signed cascade/flux, intermittency and tails, detector-qualified coherent structures, closure/model-form support, objective-qualified ROMs, adaptive-resolution total work, observation/assimilation/observability, sensor-placement transport, stable net-benefit control, a mixing vector, path-dependent transition, calibrated extremes, measurement operators and uncertainty, and the full energy boundary remain separate; Fixture F-005 carries the outcome firewall across Candidates 002/003/006/007/012/014 without promoting a principle or candidate |
 
-The music, library/archival, comparative-cognition, visual-design, and
-mathematical-practice queues are closed by explicit no-promotion decisions. The music
+The music, library/archival, comparative-cognition, visual-design,
+mathematical-practice, and fluid-dynamics queues are closed by explicit
+no-promotion decisions. The music
 [Fixture F-001](../experiments/fixtures/001-shared-clock-free-coadaptation.md)
 retains E-MUSIC-07 as a cross-candidate benchmark; the archival refinement
 stays inside Candidate 017's query-registered preservation track; and
@@ -300,7 +302,16 @@ Candidates 004/009/010/011/014/017/019. It keeps proposal provenance separate
 from correctness, requires counterexamples and proof-DAG reconstruction,
 preserves typed lifecycle state, prevents dependency leakage, propagates
 reverse-dependency invalidation, and includes proof, checker, human, rebuild,
-and joule cost.
+and joule cost; and fluid dynamics contributes
+[Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md)
+across Candidates 002/003/006/007/012/014. It requires signed scale transfer,
+tail fidelity, detector-qualified structures, explicit closure/model support,
+objective-qualified reduction, total adaptive work, actual observation and
+sensor operators, observability and posterior calibration, stable net-benefit
+control, vector mixing outcomes, transition history, extreme calibration,
+propagated uncertainty, and a full lifecycle energy boundary. Its null is the
+complete relevant CFD, reduced-model, estimation, sensing, control,
+rare-event, metrology, and accounting stack.
 The next
 breadth field is selected by expected ability to split, merge, reject, or
 re-baseline a current mechanism. Breadth alone does not close a row.

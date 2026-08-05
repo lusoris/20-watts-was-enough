@@ -222,6 +222,44 @@ review, human-hour, wall-time, memory, and joule costs. Retire the composition
 when that mature stack reaches the same checked-result and fault-localization
 frontier. See [OQ-059](open-questions.md#oq-059).
 
+### Scale–closure–observation–control evaluation contract
+
+The [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md)
+promotes no principle or candidate. Its durable result is an outcome firewall
+for systems whose apparent efficiency can be created by changing the measured
+quantity, support, regime, or resource boundary. A multiscale result must name
+the transported invariant and signed flux; low-order fit does not establish
+intermittent-tail or extreme fidelity; and a coherent structure remains bound
+to its observable, filter, detector, threshold, and frame
+([C-881](claims.md#c-881)–[C-889](claims.md#c-889)).
+
+Every coarse state carries a closure and model-form support claim. Reduced
+coordinates are qualified by forecast, control, stability, or tail objective,
+not retained variance alone. Adaptive resolution is credited only through
+total work at a target error, including substeps, transfers, regridding,
+communication, imbalance, and rejected work. Assimilation and reconstruction
+remain conditional on the actual observation operator, error model, prior,
+boundaries, observability, and posterior calibration
+([C-890](claims.md#c-890)–[C-907](claims.md#c-907)).
+
+Control must remain stable within latency, bandwidth, authority, saturation,
+and failure limits, and must deliver net benefit after sensing, actuation,
+compute, facility, and auxiliary power. Mixing is a declared outcome vector,
+not visual filamentation. Transition records include perturbation and ramp
+history; extreme claims require prospective tail calibration; measurements
+carry response operators and propagated uncertainty; and efficiency uses the
+full lifecycle energy boundary ([C-908](claims.md#c-908)–[C-925](claims.md#c-925)).
+
+[Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md)
+applies this contract across Candidates 002, 003, 006, 007, 012, and 014. Its
+null is the complete relevant stack of verified CFD, established closures and
+uncertainty perturbations, goal-oriented AMR, objective-matched ROMs,
+assimilation and observability analysis, constrained sensor placement, robust
+and model-predictive control, rare-event estimation, response-aware metrology,
+and lifecycle accounting. Retire the composition when that stack reaches the
+same quality–risk–latency–resource frontier. See
+[OQ-060](open-questions.md#oq-060).
+
 ## P-001 — Selective allocation
 
 **Problem.** Total possible capacity is larger than the activity or resources

@@ -378,6 +378,85 @@ The equations and unit requirements for innovation, value of information,
 CUSUM, allocation, and energy are recorded in the
 [engineering-analogue audit](../research/audits/2026-08-05-engineering-analogues.md#shared-equations-and-units).
 
+### Adaptive resolution must be target- and regime-qualified
+
+Fluid dynamics is a hostile test for “allocate more compute where prediction
+error is high.” The governing equations can be known while the useful state is
+still limited by unresolved scales, boundary and forcing uncertainty,
+discretization, closure error, partial observation, chaotic amplification,
+regime change, intermittency, and rare extremes. The audited evidence in
+[C-881](../research/claims.md#c-881)–[C-925](../research/claims.md#c-925)
+therefore tightens the allocator contract.
+
+An allocation signal is valid only relative to a declared target and
+measurement identity:
+
+- **variable and support:** which physical or latent variable, spatial region,
+  temporal window, and averaging kernel define the target;
+- **filter and detector:** which scale, threshold, reference frame, event
+  detector, and observation operator define a residual or coherent event;
+- **signed relation:** whether energy, information, error, or another invariant
+  should move toward larger or smaller scales under the current regime;
+- **model boundary:** which part is resolved dynamics, closure, discretization,
+  observation error, and out-of-support model-form discrepancy;
+- **quantity of interest:** whether the reduced state must preserve average
+  field reconstruction, control authority, transition timing, mixing, or an
+  extreme tail; and
+- **regime and history:** geometry, forcing, ramp direction, dwell, disturbance,
+  prior occupancy, sensor drift, actuator condition, and current uncertainty.
+
+A mean residual can be small while the signed scale flux is wrong, the tail is
+miscalibrated, or the rare event that matters is missed. A high-energy reduced
+basis can discard a weak direction that controls transition or actuation. A
+mesh can use fewer cells at one instant while spending more on regridding,
+subcycling, synchronization, load imbalance, data transfer, and failed solves.
+These are different failures and stay separate in the outcome vector.
+
+```mermaid
+flowchart LR
+    truth["Reference plant or simulation<br/>equations · geometry · boundaries · forcing"] --> observe["Versioned observation operator<br/>filter · kernel · support · latency · covariance"]
+    regime["Hidden regime and history<br/>forcing · ramp · disturbance · dwell"] --> truth
+    truth --> unresolved["Resolved state + unresolved scales<br/>discretization · closure · model-form error"]
+    observe --> assimilate["Estimate and calibrate<br/>EnKF · 4D-Var · moving horizon · learned estimator"]
+    unresolved --> infer["Forecast and represent<br/>DNS/RANS/LES · ROM · operator surrogate"]
+    assimilate --> infer
+    infer --> allocate{"Allocate scarce resolution?"}
+    allocate --> mesh["Mesh and compute<br/>uniform · AMR · goal-oriented"]
+    allocate --> sensors["Sensors and bandwidth<br/>fixed · optimal · adaptive"]
+    mesh --> truth
+    sensors --> observe
+    infer --> act["Act or abstain<br/>passive · robust · MPC · learned control"]
+    act --> truth
+    infer --> firewall["Outcome firewall<br/>field · signed flux · tails · coherent events<br/>closure · ROM · refinement · assimilation · sensors<br/>control · mixing · transition · extremes · measurement · energy"]
+    truth --> firewall
+    nulls["Reference/DNS · RANS/LES · POD/DMD/resolvent<br/>AMR · EnKF/4D-Var · adjoint placement<br/>LQG/H∞/MPC · passive control · learned baselines"] --> compare{"Equal information and lifecycle budget"}
+    firewall --> compare
+    meter["Complete ledger<br/>cell-steps · samples · bytes · seconds · person-hours · joules"] --> compare
+    compare --> decision["Retain measured residual<br/>or retire the composition"]
+```
+
+Editable source:
+[regime-qualified-flow-inference-control.mmd](../assets/diagrams/regime-qualified-flow-inference-control.mmd).
+
+[Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md)
+crosses ten adversarial tracks: signed multiscale transfer, closure portability,
+target-qualified reduced state, adaptive resolution, assimilation, sensor
+placement, closed-loop control, mixing, path-dependent transition, and extreme
+prediction. Its decisive comparator is a complete composition of reference
+simulation, classical RANS/LES closures, POD/DMD/resolvent or balanced
+reduction, goal-oriented AMR, EnKF/4D-Var and moving-horizon estimation,
+adjoint/Fisher/Gramian sensor placement, robust/MPC/passive control, and learned
+operators or policies.
+
+The [flow mathematics](../math/regime-qualified-flow-contract.md) binds every
+result to geometry, equation, boundary, forcing, solver, grid, measurement,
+filter, detector, data lineage, actuator, target, regime, and resource identity.
+An adaptive mechanism earns credit only when it improves its preregistered
+target beyond that complete stack without reversing flux, losing stability,
+undercovering uncertainty, missing the sealed natural tail, or producing
+negative net lifecycle energy. Otherwise the ordinary method remains and the
+proposed composition is retired.
+
 ## Efficiency mechanism
 
 ### Sparse work has four independent levers
@@ -486,6 +565,7 @@ metabolism” is not a substitute for that comparison.
 | local demand, placement, and supply | [C-049](../research/claims.md#c-049)–[C-051](../research/claims.md#c-051) | cellular observations established; artificial resource plane untested |
 | sparse, delayed, pooled, and policy-coupled surveillance | [C-122](../research/claims.md#c-122)–[C-131](../research/claims.md#c-131) | scoped epidemiological and statistical evidence; AI-system translation is Candidate 007 |
 | joint process/observation estimation with action provenance | [C-132](../research/claims.md#c-132) | speculative composition against POMDP, detection, nowcasting, and value-of-information nulls |
+| regime-qualified closure, reduction, assimilation, refinement, and control | [C-881](../research/claims.md#c-881)–[C-925](../research/claims.md#c-925) | scoped fluid evidence and formal relations; integrated allocator remains Fixture F-005 |
 
 The integrated runtime is speculative until its gates are tested separately
 and then recombined under one measurement boundary. A combined win cannot
@@ -542,6 +622,10 @@ be surprising yet irrelevant to the pending action.
 | state-migration thrash | repeated placement changes exceed saved memory traffic | require hysteresis and observed break-even reuse count |
 | shortcut no-op | unchanged-input gate suppresses slow but important drift | maintain persistent-change statistic and scheduled freshness checks |
 | accounting boundary leak | reported savings omit host, network, idle, context, or control energy | withhold efficiency claim until the missing boundary is measured |
+| mean-fit tail failure | average field error falls while signed flux, transition, or extreme-event calibration worsens | retain the full outcome firewall; reject pooled-score improvement |
+| closure/numerics cancellation | a learned residual wins only on one solver/grid and degrades under refinement | separate closure, discretization, and model-form support; test hidden solver and grid lineages |
+| adaptive-resolution bookkeeping leak | cell count falls while regrids, rejected steps, transfers, imbalance, or sensing dominate | compare complete work, wall time, bytes, and joules at equal target error |
+| control saving without net saving | task drag or loss falls but actuation, sensing, compute, auxiliary, installation, or maintenance erase it | report service-interval net energy and reject non-positive benefit |
 
 ## Measurable predictions
 
@@ -559,6 +643,7 @@ operation count is not a pass.
 | AC-06 | predictive placement versus static placement, LRU, and NUMA-aware scheduling | migration bytes; cache misses/item; p95 ms; J/item; break-even reuse count | placement wins only after migration and validation amortize within observed reuse; otherwise retain the conventional policy |
 | AC-07 | difficulty-controlled input sets with equal length but varied ambiguity, relevance, and risk | acquired work/item; J/item; task utility; calibration | work should track expected decision value and risk, not length or irrelevant noise; extra work without utility improvement falsifies the allocator |
 | AC-08 | distribution shift and rare-event stress with every adaptive gate enabled | worst-stratum error; expected calibration error; missed-hazard probability; safe-fallback rate; J/item | adaptive savings must survive the declared risk bounds; a favorable average with a worse safety tail fails |
+| AC-09 | Fixture F-005 complete regime-qualified composition versus its strongest classical/learned closure, ROM, AMR, assimilation, sensor, and controller stack | target-native field/flux/tail/event errors; calibration; stability; complete cell-steps, bytes, person-hours, and J/run | require a preregistered target improvement under hidden regime, solver, grid, observation, and hardware changes without degrading signed flux, sealed-tail calibration, stability, or net lifecycle energy; a tie retires the composition |
 
 Mechanism ablations are interpreted selectively. Removing the exit gate should
 increase depth without changing routing identity; removing sparse routing

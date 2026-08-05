@@ -40,6 +40,9 @@ the exact diff; this file records why the project changed.
   reduced-order models, adaptive resolution, assimilation and observability,
   sensor placement, control, mixing, transition, extremes, measurement, and
   complete energy accounting.
+- Forty-five scoped fluid-dynamics claims (`C-881`–`C-925`) and fifty-eight
+  new centralized primary or authoritative sources; no principle or candidate
+  was added.
 - Fixture F-005, its editable regime-qualified flow diagram, and a mathematical
   contract for signed flux, detector/filter identity, closure support,
   reduced-state adequacy, refinement, assimilation, tail calibration,

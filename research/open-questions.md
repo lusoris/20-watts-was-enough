@@ -316,3 +316,17 @@ project choice.
   [C-861](claims.md#c-861)–[C-880](claims.md#c-880),
   [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md), and
   the [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md#conservative-verdict).
+- **OQ-060:** Does a scale–closure–observation–control contract improve a
+  preregistered quality–risk–latency–resource frontier beyond verified
+  simulation, uncertainty-perturbed closures, goal-oriented refinement,
+  objective-matched reduced models, assimilation, observability-aware sensor
+  placement, robust control, rare-event methods, response-aware metrology, and
+  lifecycle accounting when signed flux and tails, detector dependence,
+  closure support, rollout stability, total adaptive work, actual observation
+  operators, posterior calibration, sensor transport and failure, stable net
+  energy, mixing objectives, transition history, extreme return periods,
+  propagated covariance, and the full energy boundary are all retained? This
+  is an evaluation fixture, not a principle or candidate promotion. See
+  [C-881](claims.md#c-881)–[C-925](claims.md#c-925),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  and the [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md#verdict).

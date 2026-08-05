@@ -13120,3 +13120,734 @@ describes the exact statement here, not a broader interpretation.
   [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
   [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
   and [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-881
+
+- **Statement:** The incompressible Navier–Stokes equations do not determine a
+  unique experimental or numerical problem until geometry, initial state,
+  boundary conditions, forcing, material properties, and observation target
+  are specified.
+- **Status:** established.
+- **Primary sources:** `ASMEVV202009`.
+- **Rationale:** validation is defined for specified variables at specified
+  validation points, not for an equation name in isolation.
+- **Open issue:** how much boundary and forcing uncertainty must be propagated
+  for each target.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-882
+
+- **Statement:** The signed four-fifths relation is an exact inertial-range
+  result only under stationary, homogeneous, isotropic, incompressible and
+  sufficiently high-Reynolds-number conditions; finite-Reynolds corrections
+  can remain material.
+- **Status:** established.
+- **Primary sources:** `AntoniaEtAl2019FourFifths`,
+  `AntoniaBurattini2006FourFifths`.
+- **Rationale:** the transport equation exposes forcing, viscosity, finite
+  range, and nonstationarity terms omitted from the asymptotic statement.
+- **Open issue:** robust inference of a usable inertial range in short,
+  anisotropic records.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-883
+
+- **Statement:** Kinetic-energy cascade direction is regime-dependent:
+  three-dimensional, two-dimensional, and rotating flows can exhibit forward,
+  inverse, or simultaneous transfers.
+- **Status:** established.
+- **Primary sources:** `BoffettaMusacchio2010DoubleCascade`,
+  `CampagneEtAl2014RotatingCascade`.
+- **Rationale:** direct numerical and laboratory measurements resolve flux on
+  both sides of the forcing scale.
+- **Open issue:** transfer classification under strong inhomogeneity and finite
+  observational support.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-884
+
+- **Statement:** A mean forward cascade can contain intense spatially local
+  backscatter and forward-transfer events; the mean sign does not specify the
+  event distribution.
+- **Status:** established.
+- **Primary sources:** `CardesaEtAl2017FiveDimensionalCascade`,
+  `DongEtAl2020TransferStructure`.
+- **Rationale:** scale-resolved transfer fields have organized, signed local
+  structure.
+- **Open issue:** detector-independent characterization of transfer events.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-885
+
+- **Statement:** High-order velocity-increment and dissipation statistics show
+  intermittent departures from simple Kolmogorov self-similarity.
+- **Status:** established.
+- **Primary sources:** `SheLeveque1994Scaling`,
+  `DebueEtAl2018Dissipation`,
+  `IshiharaEtAl2007SmallScale`.
+- **Rationale:** scaling exponents and gradient/dissipation tails are not
+  determined by low-order spectra alone.
+- **Open issue:** finite-record and finite-resolution bias at the highest
+  orders.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md).
+
+### C-886
+
+- **Statement:** Agreement on mean, variance, or energy spectrum does not imply
+  agreement on scale flux, high-order moments, gradients, or rare extremes.
+- **Status:** established.
+- **Primary sources:** `IshiharaEtAl2016Spectrum`,
+  `YoshimatsuEtAl2009Intermittency`.
+- **Rationale:** fields with similar low-order spectra can have different phase
+  organization and intermittent statistics.
+- **Open issue:** the smallest sufficient metric set for a given downstream
+  decision.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-887
+
+- **Statement:** A coherent structure is conditional on an observable,
+  reference frame, filter, detector and threshold; different valid definitions
+  need not select identical material.
+- **Status:** established.
+- **Primary sources:** `AdrianEtAl2000VortexOrganization`,
+  `Schmid2010DMD`.
+- **Rationale:** PIV vortex signatures and modal structures are outputs of
+  distinct measurement and decomposition operators.
+- **Open issue:** detector-robust event identity under multiscale merging and
+  splitting.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-888
+
+- **Statement:** Unstable travelling-wave solutions exist in pipe flow and can
+  provide state-space coordinates for transition, but their existence alone
+  does not establish that a small set controls fully developed turbulence.
+- **Status:** plausible.
+- **Primary sources:** `WedinKerswell2004ExactStructures`,
+  `FaisstEckhardt2003TravellingWaves`.
+- **Rationale:** exact invariant solutions are mathematically precise; their
+  quantitative coverage and predictive sufficiency remain flow- and regime-
+  dependent.
+- **Open issue:** scalable state-space distance and coverage at high Reynolds
+  number.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md).
+
+### C-889
+
+- **Statement:** Non-normal linearized shear-flow dynamics can yield large
+  finite-time energy growth even when every eigenmode is asymptotically stable.
+- **Status:** established.
+- **Primary sources:** `ButlerFarrell1992OptimalPerturbations`.
+- **Rationale:** optimal perturbations exploit nonorthogonal dynamics, so
+  eigenvalue stability and short-horizon amplification are different outcomes.
+- **Open issue:** which finite-time gains remain predictive after nonlinear
+  saturation and uncertainty.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md).
+
+### C-890
+
+- **Statement:** Averaging or filtering nonlinear fluid equations produces
+  unresolved correlation terms, so every coarse simulation or surrogate makes
+  an explicit or implicit closure choice.
+- **Status:** established.
+- **Primary sources:** `GermanoEtAl1991DynamicSGS`,
+  `FukagataEtAl2002SkinFriction`.
+- **Rationale:** nonlinear products do not commute with Reynolds averages or
+  spatial filters.
+- **Open issue:** memory and nonlocality required for accurate portable
+  closures.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-891
+
+- **Statement:** A dynamic LES coefficient inferred from two filter levels can
+  adapt to local flow and vanish in laminar or near-wall limits represented by
+  the model, but it remains tied to its filter and modelling assumptions.
+- **Status:** established.
+- **Primary sources:** `GermanoEtAl1991DynamicSGS`.
+- **Rationale:** the Germano identity supplies an internal cross-scale
+  consistency relation rather than a universal coefficient.
+- **Open issue:** robust operation on anisotropic grids, complex boundaries,
+  and under-resolved transitional flow.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md).
+
+### C-892
+
+- **Statement:** Single-point RANS closures carry epistemic model-form
+  uncertainty that is not represented by numerical convergence or parameter
+  uncertainty alone.
+- **Status:** established.
+- **Primary sources:** `IaccarinoEtAl2017Eigenspace`,
+  `KlemmerMueller2021ImpliedModels`.
+- **Rationale:** admissible stress perturbations and implied-model analyses
+  expose uncertainty and error cancellation caused by closure assumptions.
+- **Open issue:** calibrated, non-overconservative bounds outside validation
+  support.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-893
+
+- **Statement:** Embedding Galilean invariance in a learned Reynolds-stress
+  model improves physical consistency and reported prediction relative to a
+  generic network, but invariance does not by itself guarantee realizability,
+  solver stability, or extrapolation.
+- **Status:** established.
+- **Primary sources:** `LingEtAl2016InvariantRANS`,
+  `ParishDuraisamy2016FIML`.
+- **Rationale:** a correct symmetry removes invalid degrees of freedom while
+  leaving data support and closure adequacy unresolved.
+- **Open issue:** joint enforcement of symmetry, realizability, conservation,
+  and calibrated out-of-support uncertainty.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-894
+
+- **Statement:** A field-inversion correction may contain compensating effects
+  from closure, discretization, boundary, and parameter errors unless these
+  contributions are experimentally separated.
+- **Status:** plausible.
+- **Primary sources:** `ParishDuraisamy2016FIML`,
+  `KlemmerMueller2021ImpliedModels`.
+- **Rationale:** the inverse problem identifies a correction sufficient for the
+  chosen observations, not a unique causal discrepancy.
+- **Open issue:** identifiability of portable correction terms from sparse
+  heterogeneous observations.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-895
+
+- **Statement:** POD maximizes captured variance or kinetic energy for a
+  declared inner product and snapshot distribution; this objective need not
+  preserve input-output gain, stability, tail risk, or control authority.
+- **Status:** established.
+- **Primary sources:** `Rowley2005BalancedPOD`.
+- **Rationale:** balanced modes differ from energy-ranked modes because they
+  include controllability and observability.
+- **Open issue:** multi-objective basis construction without losing online
+  efficiency.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-896
+
+- **Statement:** DMD estimates spectral information for a finite-dimensional
+  inter-snapshot map; mode interpretation depends on sampling, observable,
+  noise, rank truncation, and nonstationarity.
+- **Status:** established.
+- **Primary sources:** `Schmid2010DMD`,
+  `SchmidEtAl2011DMDApplications`.
+- **Rationale:** DMD is a data-dependent decomposition, not direct recovery of
+  all nonlinear governing dynamics.
+- **Open issue:** reliable mode identity under drift and intermittent regime
+  switching.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-897
+
+- **Statement:** Discarded modes can destabilize or over-damp a reduced fluid
+  model; truncation uncertainty and closure must be evaluated during rollout,
+  not inferred from reconstruction error alone.
+- **Status:** established.
+- **Primary sources:** `ResseguierEtAl2021ROMUncertainty`.
+- **Rationale:** stochastic residual models can stabilize temporal coefficients
+  and represent missing variability in scoped wake-flow tests.
+- **Open issue:** closure portability across rank, geometry and operating
+  regime.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-898
+
+- **Statement:** Adaptive mesh refinement can reduce work for localized
+  hyperbolic features by creating and removing nested spatial and temporal
+  grids from error indicators.
+- **Status:** established.
+- **Primary sources:** `BergerOliger1984AMR`,
+  `BergerColella1989AMR`.
+- **Rationale:** the algorithms explicitly couple truncation estimates,
+  recursive grids, time subcycling and interface operations.
+- **Open issue:** dependable indicators for under-resolved turbulence and
+  moving quantities of interest.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-899
+
+- **Statement:** Cell count alone is not an adequate AMR cost because fine-
+  level substeps, regridding, interpolation, refluxing, communication, load
+  imbalance, storage and rejected work can dominate.
+- **Status:** established.
+- **Primary sources:** `BergerColella1989AMR`.
+- **Rationale:** conservative adaptive algorithms require explicit data
+  structures and cross-level operations.
+- **Open issue:** hardware-independent cost summaries that still predict energy
+  and wall time.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-900
+
+- **Statement:** A refinement indicator is useful only to the extent that it
+  reduces error in the declared quantity of interest; gradients or residual
+  magnitude alone can refine the wrong region.
+- **Status:** established.
+- **Primary sources:** `HayVisonneau2005TurbulentAMR`,
+  `PonsinEtAl2015GoalMesh`.
+- **Rationale:** goal-oriented weighting changes the value of a local residual
+  according to its downstream effect.
+- **Open issue:** low-cost adjoint or influence estimates for chaotic long-
+  horizon targets.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-901
+
+- **Statement:** Data assimilation estimates state by combining a model prior
+  and an observation likelihood; posterior accuracy and calibration depend on
+  both model-error and observation-error assumptions.
+- **Status:** established.
+- **Primary sources:** `Evensen1994EnKF`,
+  `TalagrandCourtier1987Variational`.
+- **Rationale:** neither forecast nor observations are treated as exact in the
+  general estimation problem.
+- **Open issue:** non-Gaussian, state-dependent, correlated model error in
+  turbulent systems.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-902
+
+- **Statement:** EnKF forecast covariance is a finite-ensemble estimate and can
+  suffer sampling error, rank deficiency and spurious long-range correlation;
+  ensemble size and localization are resource-bearing model choices.
+- **Status:** established.
+- **Primary sources:** `Evensen1994EnKF`.
+- **Rationale:** Monte Carlo error statistics replace explicit covariance
+  evolution but do not eliminate covariance approximation.
+- **Open issue:** adaptive localization under flow-dependent coherent
+  structures without truth leakage.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-903
+
+- **Statement:** Four-dimensional variational assimilation couples all
+  observations in a window through forward and adjoint models, but its answer
+  remains conditional on model fidelity, optimization landscape, regularization
+  and the selected window.
+- **Status:** established.
+- **Primary sources:** `TalagrandCourtier1987Variational`.
+- **Rationale:** one gradient requires forward and backward integrations of the
+  declared model; an exact optimizer of a wrong model remains wrong.
+- **Open issue:** scalable uncertainty quantification around nonlinear local
+  optima.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-904
+
+- **Statement:** Small-scale turbulent fields can be reconstructed from
+  sufficiently informative large-scale observations in scoped simulations,
+  but recoverability has critical spatial and temporal support and noise
+  conditions.
+- **Status:** established.
+- **Primary sources:** `YoshidaEtAl2005Regeneration`,
+  `WangEtAl2022SparseAssimilation`.
+- **Rationale:** synchronization of unresolved scales relies on dynamically
+  constraining enough resolved modes often enough.
+- **Open issue:** critical support under model error, unknown boundaries and
+  real heterogeneous instruments.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-905
+
+- **Statement:** Observability is target-, trajectory-, sensor-, noise-, and
+  horizon-dependent; reconstructing one statistic does not establish full-state
+  observability.
+- **Status:** established.
+- **Primary sources:** `Rowley2005BalancedPOD`,
+  `ManoharEtAl2018SparseSensors`.
+- **Rationale:** input-output balancing and sparse reconstruction optimize
+  declared subspaces and targets.
+- **Open issue:** nonlinear empirical observability with regime changes and
+  actuator-dependent observations.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-906
+
+- **Statement:** Sparse reconstruction sensors selected from a low-rank library
+  can be effective in-distribution, but performance is conditional on the
+  library spanning the test field and on the sensing matrix remaining well
+  conditioned.
+- **Status:** established.
+- **Primary sources:** `ManoharEtAl2018SparseSensors`.
+- **Rationale:** pivoted placement optimizes a finite basis, not unseen state
+  components.
+- **Open issue:** shift detectors and safe sensor reserves for new regimes.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-907
+
+- **Statement:** A sensor layout optimized for classification can require less
+  information than one optimized for field reconstruction; the tasks must not
+  share an undifferentiated “sensor efficiency” score.
+- **Status:** established.
+- **Primary sources:** `BruntonEtAl2016SensorClassification`.
+- **Rationale:** discrimination between known classes is a weaker inverse
+  problem than recovering all field coordinates.
+- **Open issue:** calibrated rejection of unknown classes and compound regimes.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-908
+
+- **Statement:** Feedback using wall-normal velocity information can reduce
+  turbulent skin friction in scoped channel-flow DNS, demonstrating that
+  localized observation-action paths can alter global transport.
+- **Status:** established.
+- **Primary sources:** `ChoiEtAl1994ActiveControl`,
+  `FukagataEtAl2002SkinFriction`.
+- **Rationale:** opposition control changes near-wall Reynolds stress and the
+  resulting friction contribution.
+- **Open issue:** robust net benefit at realistic Reynolds number, sensing,
+  actuator spacing and delay.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-909
+
+- **Statement:** Gross drag reduction can substantially exceed net energy
+  saving after actuation power is charged.
+- **Status:** established.
+- **Primary sources:** `QuadrioRicco2004NetDrag`.
+- **Rationale:** the cited wall-oscillation DNS reported a maximum gross drag
+  reduction of $44.7\%$ but a maximum net saving of $7.3\%$ under its stated
+  assumptions, including neglect of mechanical losses.
+- **Open issue:** complete installation and lifecycle accounting outside
+  canonical DNS.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-910
+
+- **Statement:** Closed-loop flow-control authority must be qualified by sensor
+  latency, inference latency, actuator bandwidth, saturation, spatial support,
+  failure state and evidence age.
+- **Status:** plausible.
+- **Primary sources:** `ChoiEtAl1994ActiveControl`,
+  `QuadrioRicco2004NetDrag`.
+- **Rationale:** the target structures convect and decorrelate; a delayed action
+  need not oppose the event that triggered it.
+- **Open issue:** certified envelopes for chaotic, partially observed plants.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-911
+
+- **Statement:** Unsteady advection can stretch and fold material into fine
+  structure even in laminar flow, while molecular diffusion or reaction
+  determines irreversible homogenization or conversion.
+- **Status:** established.
+- **Primary sources:** `Aref1984ChaoticAdvection`,
+  `Batchelor1959Scalar`.
+- **Rationale:** Lagrangian chaos and scalar diffusion are separable physical
+  operations.
+- **Open issue:** optimal action schedules with uncertain diffusivity, reaction
+  and boundaries.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-912
+
+- **Statement:** The smallest dynamically relevant scalar scale can differ from
+  the smallest velocity scale and depends on the ratio of viscosity to scalar
+  diffusivity.
+- **Status:** established.
+- **Primary sources:** `Batchelor1959Scalar`,
+  `DonzisEtAl2010ScalarResolution`.
+- **Rationale:** high-Schmidt-number scalar gradients can require resolution
+  below the Kolmogorov velocity scale.
+- **Open issue:** cost-effective multiresolution coupling for active,
+  multiphase, or reacting scalars.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-913
+
+- **Statement:** Scalar variance, negative-Sobolev mix norm, interface length,
+  scalar dissipation, reaction yield and residence-time distribution are
+  non-equivalent mixing objectives.
+- **Status:** established.
+- **Primary sources:** `MathewEtAl2005MixNorm`,
+  `MathewEtAl2007OptimalMixing`.
+- **Rationale:** a protocol can move variance to unresolved scales or maximize
+  stretching without maximizing irreversible task completion.
+- **Open issue:** task-specific sufficient metric suites for reactive and
+  multiphase systems.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-914
+
+- **Statement:** Transition in pipe flow is finite-amplitude and history-
+  sensitive although the laminar base flow is linearly stable over the relevant
+  range; a universal instantaneous critical Reynolds number is therefore an
+  invalid summary.
+- **Status:** established.
+- **Primary sources:** `HofEtAl2008Repeller`,
+  `AvilaEtAl2011Onset`.
+- **Rationale:** disturbance amplitude, turbulent lifetime, decay and splitting
+  statistics jointly determine observed transition.
+- **Open issue:** predictive state variables for naturally disturbed,
+  noncanonical pipes.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md).
+
+### C-915
+
+- **Statement:** Localized pipe-flow puffs have stochastic decay and splitting
+  processes whose competing timescales determine sustained turbulence in the
+  tested regime.
+- **Status:** established.
+- **Primary sources:** `AvilaEtAl2011Onset`,
+  `LemoultEtAl2024PuffJamming`.
+- **Rationale:** spatial proliferation, not only increasing temporal complexity
+  at one point, controls sustained turbulent fraction.
+- **Open issue:** universality across geometry, pulsation, roughness and
+  external noise.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md).
+
+### C-916
+
+- **Statement:** Directed-percolation scaling is supported for sustained
+  transition in scoped Couette and pipe-flow regimes, but should not be treated
+  as a universal model of every turbulent transition.
+- **Status:** plausible.
+- **Primary sources:** `LemoultEtAl2016DirectedPercolation`,
+  `LemoultEtAl2024PuffJamming`.
+- **Rationale:** measured exponents and spatiotemporal behavior support the
+  class where short-range contagion and an absorbing laminar state apply.
+- **Open issue:** long-range coupling, additional conserved fields, finite
+  domains and jamming corrections.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md).
+
+### C-917
+
+- **Statement:** Hysteresis and coexistence require ramp direction, dwell time,
+  perturbation protocol and state history to be included in a transition
+  record.
+- **Status:** established.
+- **Primary sources:** `Barkley2011PipeModel`,
+  `HofEtAl2008Repeller`.
+- **Rationale:** excitable and bistable regimes can yield different state at
+  the same control parameter.
+- **Open issue:** separating true hysteresis from slow equilibration and finite
+  observation time.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md).
+
+### C-918
+
+- **Statement:** Accurate central-distribution or mean-flow prediction does not
+  establish calibrated extreme-load, dissipation-burst, or return-period
+  prediction.
+- **Status:** established.
+- **Primary sources:** `FarazmandSapsis2017Variational`,
+  `LestangEtAl2018ReturnTimes`.
+- **Rationale:** tail events require separate exposure, sampling and
+  uncertainty; rare-event estimators target a different functional.
+- **Open issue:** regime-shift-robust tails with limited natural exposure.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-919
+
+- **Statement:** Dynamically informed precursor coordinates can predict scoped
+  bursts more efficiently than generic full-state monitoring, but precursor
+  validity is event-, model-, horizon-, and regime-specific.
+- **Status:** plausible.
+- **Primary sources:** `FarazmandSapsis2016Indicators`,
+  `FarazmandSapsis2017Variational`.
+- **Rationale:** optimized time-dependent modes and variational trigger states
+  isolate event-relevant directions in canonical systems.
+- **Open issue:** prospective calibration on independent physical experiments.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-920
+
+- **Statement:** Rare-event algorithms can reduce variance or computational
+  cost for one observable while providing no gain for another; unbiased
+  reweighting and method-specific diagnostics are mandatory.
+- **Status:** established.
+- **Primary sources:** `LestangEtAl2020ExtremeDrag`,
+  `LestangEtAl2018ReturnTimes`.
+- **Rationale:** in the cited bluff-body study adaptive multilevel splitting
+  yielded little runtime benefit while the genealogical method was effective
+  for time-averaged drag extremes.
+- **Open issue:** automatic reaction coordinates without bias or prohibitive
+  training cost.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md).
+
+### C-921
+
+- **Statement:** Every turbulence instrument has a spatial and temporal
+  transfer function; finite probe length, interrogation volume, exposure time,
+  filtering and sampling can attenuate precisely the gradients and tails of
+  interest.
+- **Status:** established.
+- **Primary sources:** `Roberts1973HotWire`,
+  `EwingEtAl1995HotWire`.
+- **Rationale:** hot-wire spatial averaging biases derivative statistics and
+  requires a response-aware correction.
+- **Open issue:** traceable uncertainty for learned inverse corrections to
+  sensor filtering.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-922
+
+- **Statement:** Measurement uncertainty must propagate input covariance,
+  including correlations, through the measurement model and remain attached to
+  derived quantities.
+- **Status:** established.
+- **Primary sources:** `JCGM1002008`,
+  `JCGM1012008`.
+- **Rationale:** combined standard uncertainty is a property of the measurand,
+  input information and declared model, not a generic sensor percentage.
+- **Open issue:** nonstationary covariance and model-form uncertainty in
+  automated sensor pipelines.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-923
+
+- **Statement:** CFD validation at one variable and validation point does not
+  by itself validate other fields, regimes, geometries, horizons or tail
+  observables.
+- **Status:** established.
+- **Primary sources:** `ASMEVV202009`.
+- **Rationale:** the standard scopes accuracy to specified validation variables
+  and points and distinguishes solution and experimental uncertainty.
+- **Open issue:** defensible interpolation and extrapolation domains for learned
+  fluid models.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-924
+
+- **Statement:** A physical efficiency claim for flow prediction or control is
+  incomplete unless facility, sensing, actuation, compute, data movement,
+  storage, auxiliary, maintenance and embodied rows are either measured or
+  explicitly excluded with sensitivity bounds.
+- **Status:** plausible.
+- **Primary sources:** `QuadrioRicco2004NetDrag`,
+  `ASMEVV202009`.
+- **Rationale:** gross physical benefit can be mostly consumed by the action
+  producing it, and simulation credibility depends on a declared comparison.
+- **Open issue:** common functional units for training, real-time control and
+  long-life infrastructure.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-925
+
+- **Statement:** A fluid-inspired learning system earns architectural credit
+  only if it beats conventional simulation, estimation, control, sparse
+  sensing, adaptive refinement and learned-operator nulls on a preregistered
+  quality–risk–latency–resource frontier.
+- **Status:** speculative.
+- **Primary sources:** the audit's method comparisons and benchmark contracts;
+  no primary paper establishes this proposed system-level criterion.
+- **Rationale:** most proposed ingredients already exist as mature engineering
+  methods; novelty must lie in a discriminating composition and measured
+  residual advantage.
+- **Open issue:** whether any residual survives the complete null stack.
+- **Used by:** [fluid-dynamics audit](audits/2026-08-05-fluid-dynamics-turbulence.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md),
+  [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
