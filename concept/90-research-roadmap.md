@@ -17,12 +17,18 @@ before making structures expensive or irreversible.
 ### Stage 0 — Evidence and contracts (current)
 
 - Keep claims, primary sources, math, provenance, and decisions reviewable.
+- Collect observations by scientific domain, then bundle recurring
+  problem–solution invariants in the
+  [principle registry](../research/principle-registry.md).
+- Maintain an adoption matrix so an existing niche implementation is not
+  mistaken for a new principle or for scale-ready evidence.
 - Define task, quality, risk, and energy contracts.
 - Turn each attractive mechanism into a falsifiable prediction.
 - Resolve or narrow the disputed inherited energy comparison.
 
-**Exit gate:** every proposed mechanism has a baseline, metric, failure test,
-and declared system boundary.
+**Exit gate:** every proposed mechanism maps to an evidence claim and a
+deduplicated principle; each principle selected for implementation has a
+baseline, ablation, metric, failure test, and declared system boundary.
 
 ### Stage 1 — Isolated mechanism experiments
 
@@ -32,6 +38,10 @@ and declared system boundary.
 - Episodic replay plus alternative interference controls.
 - Structured pruning with causal and magnitude baselines.
 - Quantization and retrieval as separate promotion targets.
+- Homeostatic conditional routing versus task-loss-only load balancing.
+- Local eligibility plus delayed modulation versus full global updates.
+- Peripheral autonomy plus exception escalation versus central control.
+- A maintenance plane for reversible replay and pruning decisions.
 
 **Exit gate:** at least one mechanism moves a quality–risk–energy Pareto frontier
 using wall energy, not only theoretical FLOPs.

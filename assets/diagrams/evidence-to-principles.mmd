@@ -1,0 +1,14 @@
+flowchart LR
+    neuro["Neuroscience observations"] --> claims["Scoped C- claims"]
+    bio["Comparative biology observations"] --> claims
+    engineering["Engineering results"] --> claims
+    imports["Imported conversations and drafts"] --> leads["Unaudited source leads"]
+    leads --> audit["Primary-source audit"]
+    audit --> claims
+    claims --> normalize["Normalize problem, causal loop, timescale, and information flow"]
+    normalize --> registry["Deduplicated P- principle bundles"]
+    registry --> primitive["Silicon-native AI primitive"]
+    primitive --> experiment["Baseline, ablation, quality, risk, energy"]
+    experiment --> results["Results and failure evidence"]
+    results --> claims
+    results --> registry

@@ -23,6 +23,25 @@ describes the exact statement here, not a broader interpretation.
 | C-014 | Non-parametric retrieval improves knowledge-intensive generation | established |
 | C-015 | Event-driven neuromorphic hardware supports local sparse learning | established |
 | C-016 | The inherited brain-to-hyperscaler energy range is valid | disputed |
+| C-017 | Thin dendrites can act as nonlinear computational subunits | established |
+| C-018 | Neurons can homeostatically scale synaptic strengths | established |
+| C-019 | Delayed dopamine can gate earlier local plasticity | established |
+| C-020 | Disinhibitory interneurons provide context-dependent gain | established |
+| C-021 | Astrocytes participate in synapse removal and remote memory | established |
+| C-022 | Natural sensing depends on self-generated sensor motion | established |
+| C-023 | Faithful brain emulation is a necessary or optimal endpoint | disputed |
+| C-024 | Cephalopod arms use segmented and simplified peripheral control | established |
+| C-025 | Insect feedback inhibition maintains sparse discriminable codes | established |
+| C-026 | Repeated plant stress can leave a reversible response memory | established |
+| C-027 | Local flow adaptation can form efficient resilient networks | established |
+| C-028 | Immune affinity maturation couples variation, selection, and protection | established |
+| C-029 | Morphological development can guide embodied-agent search | established |
+| C-030 | Phase coupling can define transient large-scale neural states | plausible |
+| C-031 | Ant trails can store direction in environmental geometry | established |
+| C-032 | Stochastic phenotype switching can evolve as risk spreading | established |
+| C-033 | Regeneration reads pre-existing positional context | established |
+| C-034 | Fungal networks couple exploratory growth with transport | established |
+| C-035 | Ant traffic recruits reserve routes before throughput collapses | established |
 
 ## Claims
 
@@ -228,3 +247,293 @@ describes the exact statement here, not a broader interpretation.
 - **Open issue:** Determine whether a functional comparison can be constructed
   without inventing an operation-equivalence factor.
 - **Used by:** [energy model](../concept/80-energy-model.md).
+
+### C-017
+
+- **Statement:** Nearby inputs on the same thin dendritic branch of rat
+  neocortical pyramidal neurons can sum sigmoidally, while inputs on separate
+  branches sum more nearly linearly, supporting branch-local computational
+  subunits.
+- **Status:** established for the preparation and stimulation protocol studied.
+- **Primary source:** `polsky2004dendrites`.
+- **Rationale:** The experiment rejects a single global summation rule for these
+  cells. It does not establish that artificial dendrites outperform ordinary
+  neural-network components.
+- **Open issue:** Whether a compartmental abstraction improves conditional
+  expressivity per unit of measured energy.
+- **Used by:** [launchpad](../concept/05-biology-is-a-launchpad.md),
+  [neuroscience map](neuroscience-opportunity-map.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation).
+
+### C-018
+
+- **Statement:** Prolonged changes in cortical-neuron activity can cause
+  compensatory scaling of miniature excitatory postsynaptic currents while
+  approximately preserving relative synaptic strengths.
+- **Status:** established in cultured neocortical neurons.
+- **Primary source:** `turrigiano1998scaling`.
+- **Rationale:** The result supports a slow stability controller distinct from
+  task-error learning. It does not specify a target activation rate for an AI
+  model.
+- **Open issue:** Which controlled variables prevent expert collapse without
+  suppressing useful specialization.
+- **Used by:** [launchpad](../concept/05-biology-is-a-launchpad.md),
+  [neuroscience map](neuroscience-opportunity-map.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback).
+
+### C-019
+
+- **Statement:** In mouse hippocampal slices, dopamine delivered after a
+  spike-timing protocol can retroactively convert timing-dependent depression
+  into potentiation.
+- **Status:** established for the experimental preparation.
+- **Primary source:** `brzosko2015dopamine`.
+- **Rationale:** This is concrete evidence for a local eligibility state gated
+  by a delayed modulatory signal. It does not validate a particular artificial
+  three-factor rule at scale.
+- **Open issue:** Trace duration, interference, and the semantics of a safe
+  artificial modulator.
+- **Used by:** [neuroscience map](neuroscience-opportunity-map.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment).
+
+### C-020
+
+- **Statement:** VIP-expressing interneurons can suppress other inhibitory
+  interneurons and increase the gain of a subpopulation of principal cells in
+  awake mice during an auditory discrimination task.
+- **Status:** established for the circuits and behavior studied.
+- **Primary source:** `pi2013disinhibition`.
+- **Rationale:** The result demonstrates a cell-type-specific disinhibitory
+  control motif recruited by reinforcement signals. It does not show that an
+  excite–veto–release router is superior in AI.
+- **Open issue:** Whether explicit opponent gate roles improve routing stability
+  beyond a larger conventional gate.
+- **Used by:** [launchpad](../concept/05-biology-is-a-launchpad.md),
+  [neuroscience map](neuroscience-opportunity-map.md),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction).
+
+### C-021
+
+- **Statement:** Astrocytes participate in activity-dependent elimination of
+  adult hippocampal excitatory synapses and can affect formation of remote
+  contextual memory through hippocampal–cortical communication in specific
+  mouse experiments.
+- **Status:** established for those interventions; broader “glial intelligence”
+  claims are not established.
+- **Primary sources:** `lee2021astrocytes`, `kol2020astrocytes`.
+- **Rationale:** The studies motivate a maintenance and consolidation role that
+  is separate from the neuron's fast input–output path.
+- **Open issue:** Whether one artificial maintenance plane can capture a useful
+  common abstraction without becoming an unpriced second model.
+- **Used by:** [neuroscience map](neuroscience-opportunity-map.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-022
+
+- **Statement:** During active whisker exploration in awake mice, rotational
+  force on the whisker predicted primary mechanosensory-neuron firing better
+  than whisker angle in the studied conditions.
+- **Status:** established for the measured sensorimotor task.
+- **Primary source:** `campagner2016active`.
+- **Rationale:** The result demonstrates that self-generated sensing mechanics
+  matter to the sensory code. It does not prove that embodiment is required for
+  every intelligent capability.
+- **Open issue:** Which active interventions add information beyond a matched
+  passive multimodal dataset.
+- **Used by:** [sensorimotor grounding](../concept/20-sensorimotor-grounding.md),
+  [neuroscience map](neuroscience-opportunity-map.md),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-023
+
+- **Statement:** Faithfully emulating the biological substrate is necessary for,
+  or defines the optimal endpoint of, energy-efficient artificial intelligence.
+- **Status:** disputed.
+- **Primary sources:** none establish this necessity or optimum.
+- **Rationale:** Brains and digital systems face different component speeds,
+  noise, communication, copying, storage, repair, and optimization constraints.
+  Biological observations generate hypotheses; only matched engineering tests
+  can choose an implementation.
+- **Open issue:** Which biological constraints remain binding after a substrate
+  change and which can be escaped.
+- **Used by:** [launchpad](../concept/05-biology-is-a-launchpad.md).
+
+### C-024
+
+- **Statement:** Octopus arms combine a segmented axial nerve-cord organization
+  with motor strategies that temporarily reduce the control problem by forming
+  quasi-jointed structures.
+- **Status:** established for the described anatomy and fetching behavior.
+- **Primary sources:** `olson2025cephalopod`, `sumbre2005octopus`.
+- **Rationale:** The findings support peripheral modularity and degrees-of-
+  freedom reduction as biological control strategies. They do not establish
+  one universal octopus-style controller.
+- **Open issue:** Whether local autonomy plus sparse central override improves
+  robust embodied learning at matched capacity.
+- **Used by:** [comparative biology](comparative-biology.md),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation).
+
+### C-025
+
+- **Statement:** Feedback inhibition in the Drosophila mushroom body maintains
+  sparse, decorrelated odor responses, and disrupting the loop impairs learned
+  discrimination of similar odors in the studied experiments.
+- **Status:** established for the circuit and odors studied.
+- **Primary sources:** `caron2013random`, `lin2014sparse`.
+- **Rationale:** The result links sparsification to behavioral discrimination,
+  not merely to a compact representation.
+- **Open issue:** Whether expand–sparsify–associate improves continual few-shot
+  learning once expansion traffic is charged.
+- **Used by:** [comparative biology](comparative-biology.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback).
+
+### C-026
+
+- **Statement:** Repeated dehydration can train the transcriptional response of
+  a subset of Arabidopsis genes, leaving molecular marks during recovery while
+  transcript levels return near baseline.
+- **Status:** established for the plants, genes, and protocol studied.
+- **Primary source:** `ding2012drought`.
+- **Rationale:** The result supports reversible stress priming. It is not
+  evidence for general plant cognition or for an AI memory design.
+- **Open issue:** Whether explicit decaying priming state improves recurring-
+  hazard adaptation without persistent bias.
+- **Used by:** [comparative biology](comparative-biology.md),
+  [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+
+### C-027
+
+- **Statement:** A local flow-dependent reinforcement and decay rule can model
+  the formation of efficient, fault-tolerant transport networks by *Physarum*
+  in the experimental settings studied.
+- **Status:** established within the organism experiments and network model.
+- **Primary source:** `tero2010network`.
+- **Rationale:** The work supplies a concrete decentralized topology rule. It
+  does not establish that the same rule is stable for expert routing.
+- **Open issue:** Exploration reserves, monopoly prevention, and reconfiguration
+  cost under returning task distributions.
+- **Used by:** [comparative biology](comparative-biology.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology).
+
+### C-028
+
+- **Statement:** Germinal-center affinity maturation combines mutation,
+  affinity-dependent selection, expansion, and protection of high-affinity B
+  cell lineages through a reduced mutation rate per division in the cited mouse
+  experiments.
+- **Status:** established for the immunization experiments and model studied.
+- **Primary source:** `merkenschlager2025hypermutation`.
+- **Rationale:** The result is a concrete explore–select–protect loop. It does
+  not license unconstrained mutation of a deployed model.
+- **Open issue:** How to bound candidate generation and choose a trustworthy
+  artificial affinity test.
+- **Used by:** [comparative biology](comparative-biology.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-029
+
+- **Statement:** In the cited simulated embodied-agent experiments,
+  morphological development exposed body plans robust to controller changes
+  and guided evolutionary search through differential canalization.
+- **Status:** established within that simulation study.
+- **Primary source:** `kriegman2018morphology`.
+- **Rationale:** The result motivates joint structural and controller search; it
+  does not establish transfer to physical robots or disembodied model topology.
+- **Open issue:** Lifecycle energy, reality-gap robustness, and reproducibility
+  when structure is also optimized.
+- **Used by:** [comparative biology](comparative-biology.md),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+
+### C-030
+
+- **Statement:** Resting-state human MEG can be described by recurring,
+  short-lived network states with distinct spatial, spectral, and phase-coupling
+  patterns.
+- **Status:** plausible as a general routing principle; established as a result
+  of the cited analysis in 55 participants.
+- **Primary source:** `vidaurre2018phase`.
+- **Rationale:** The measurement supports transient temporal coalitions. It does
+  not establish phase coupling as a causal universal communication protocol.
+- **Open issue:** Whether phase- or slot-gated artificial communication beats a
+  conventional router under the same bandwidth and latency budget.
+- **Used by:** [neuroscience map](neuroscience-opportunity-map.md),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions).
+
+### C-031
+
+- **Statement:** Pharaoh's ants can use bifurcation geometry in a pheromone
+  trail network to recover travel direction after joining a trail incorrectly.
+- **Status:** established for the species and trail experiments studied.
+- **Primary source:** `jackson2004trails`.
+- **Rationale:** The environment stores coordination information in its
+  geometry, not only in an agent's internal memory or a direct message.
+- **Open issue:** Which shared artificial state should be structural, decaying,
+  attributable, or access-controlled.
+- **Used by:** [comparative biology](comparative-biology.md),
+  [P-013](principle-registry.md#p-013--externalized-shared-state).
+
+### C-032
+
+- **Statement:** Stochastic switching between bacterial phenotypes evolved in
+  some experimental populations under continually changing selection, allowing
+  those lineages to persist across fluctuating conditions.
+- **Status:** established for the experimental evolution regime.
+- **Primary source:** `beaumont2009bethedging`.
+- **Rationale:** The experiment supports diversity as risk spreading when the
+  next state is not reliably predictable. It does not establish that arbitrary
+  noise improves an AI ensemble.
+- **Open issue:** How much diversity is worth maintaining under a measured
+  uncertainty and capacity budget.
+- **Used by:** [comparative biology](comparative-biology.md),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection).
+
+### C-033
+
+- **Statement:** During planarian regeneration, wound cells change chromatin
+  accessibility according to the polarity of pre-existing tissue through
+  Wnt/β-catenin-dependent signaling, helping specify head-versus-tail identity.
+- **Status:** established for the molecular interventions and time course
+  studied.
+- **Primary source:** `pascual2023planarian`.
+- **Rationale:** Repair uses distributed positional context to infer what is
+  missing rather than replaying a complete stored copy of the body.
+- **Open issue:** Whether target-state constraints can guide modular AI repair
+  more cheaply than checkpoint restoration or retraining.
+- **Used by:** [comparative biology](comparative-biology.md),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+
+### C-034
+
+- **Statement:** In imaged arbuscular mycorrhizal fungi, pulses of growing tips
+  form travelling expansion waves whose density is regulated by fusion while
+  the network maintains transport efficiency and adds shorter routes.
+- **Status:** established for the strains and two-dimensional culture system
+  studied.
+- **Primary source:** `oyartegalvez2025fungal`.
+- **Rationale:** The result couples cheap frontier exploration, density control,
+  topology formation, and resource transport in one decentralized network.
+- **Open issue:** Whether an expanding expert graph can preserve transport
+  efficiency after charging growth and fusion costs.
+- **Used by:** [comparative biology](comparative-biology.md),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation).
+
+### C-035
+
+- **Statement:** In a two-route experiment, foraging ants concentrated on one
+  trail at low density but established a second route under crowding before
+  food-return throughput declined; the fitted mechanism included inhibitory
+  interactions and reserve capacity.
+- **Status:** established for the experimental setup and model studied.
+- **Primary source:** `dussutour2004traffic`.
+- **Rationale:** The result links local congestion feedback to proactive use of
+  capacity reserves.
+- **Open issue:** Whether an expert router can open reserve paths before queueing
+  creates latency tails, without oscillation or chronic overprovisioning.
+- **Used by:** [comparative biology](comparative-biology.md),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback).

@@ -19,4 +19,6 @@ Every mechanism chapter contains:
 
 The [system synthesis](70-system-synthesis.md) combines mechanisms only after
 their individual assumptions are visible. The [energy model](80-energy-model.md)
-defines the comparison contract for every efficiency result.
+defines the comparison contract for every efficiency result. The
+[launchpad chapter](05-biology-is-a-launchpad.md) defines how to extract a
+computational invariant without copying a biological substrate limitation.

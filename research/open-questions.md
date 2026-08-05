@@ -35,3 +35,15 @@ project choice.
   failure alongside average energy?
 - **OQ-012:** Is any defensible operation-level comparison between brains and
   digital models possible, or should comparisons remain functional only?
+
+## Synthesis
+
+- **OQ-013:** What evidence is sufficient to call two domain observations the
+  same causal invariant rather than a superficial analogy?
+- **OQ-014:** How should repeated solutions be weighted when the domains may
+  share evolutionary ancestry or when one scientific description influenced
+  another?
+- **OQ-015:** Which principle bundle produces the smallest experiment that can
+  discriminate it from a standard router, optimizer, cache, or scheduler?
+- **OQ-016:** Which biological constraints disappear on silicon, and which
+  reappear as memory traffic, synchronization, thermal, or reliability limits?
