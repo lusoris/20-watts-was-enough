@@ -265,6 +265,56 @@ economic tiering, static optimization, and coded fault-domain placement without
 future labels. Physical bytes, movement, metadata, endurance, p99 latency,
 policy work, privacy, and failure costs remain inside the boundary.
 
+### Learning is a horizon-indexed outcome vector
+
+Immediate task success does not identify durable learning. A curriculum event
+can improve acquisition while weakening delayed retention, novel transfer,
+fluency, calibration, motivation, or total efficiency. The evaluator therefore
+keeps those outputs separate and makes retention horizon and transfer distance
+part of the claim.
+The evidence boundaries are [C-627](../research/claims.md#c-627)–[C-658](../research/claims.md#c-658).
+
+```mermaid
+flowchart LR
+    G["Skill goal + retention / transfer horizon"] --> S["Skill-local learner state"]
+    S --> P["Select retrieval · example · spacing · variation · support"]
+    P --> A["Attempt before answer / scaffold"]
+    A --> O["Outcome · latency · confidence · help · cost"]
+    O --> E["Immediate acquisition evaluator"]
+    O --> R["Delayed retention evaluator"]
+    O --> T["Preregistered transfer strata"]
+    O --> F["Fluency · calibration · motivation"]
+    E --> U{"Update support / schedule?"}
+    R --> U
+    T --> U
+    F --> U
+    U --> S
+    U --> X["Fade · retain · branch · stop"]
+    C["Teacher + learner + compute + energy cost"] -.-> P
+    C -.-> U
+```
+
+Editable source:
+[horizon-qualified-learning.mmd](../assets/diagrams/horizon-qualified-learning.mmd).
+
+For each skill, retain current acquisition estimate, retention estimates at
+declared horizons, transfer by preregistered stratum, fluency/error frontier,
+calibration, support/scaffold state, confusability/context, intervention
+history, state version, and uncertainty. Difficulty is useful only when the
+attempt is processed successfully enough to generate information; failure is
+not beneficial merely because it was hard.
+
+[Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+must compare the adaptive sequence with tuned spacing, ordinary knowledge
+tracing, fixed fading, hard-example mining, and fixed curricula at equal
+attempt, feedback, time, storage, compute, and energy. Candidate
+[019](../experiments/candidates/019-audited-cumulative-inheritance.md) must
+compare interactive teaching with a versioned artifact plus tests, then measure
+retention and novel transfer after actual learner/model turnover while charging
+both teacher and learner effort. The
+[learning-outcome mathematics](../math/learning-outcome-contract.md) defines
+the common evaluator.
+
 ### 6. Follow one event through the lifecycle
 
 Suppose a tool returns a surprising result. Working state can use it

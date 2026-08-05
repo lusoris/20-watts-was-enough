@@ -184,3 +184,34 @@ protection, or decision gains.
 - [Candidate 012](012-latency-qualified-authority.md)
 - [Candidate 015](015-versioned-repairable-conventions.md)
 - [Candidate 016](016-conflict-bounded-unit-transition.md)
+
+## Supply-chain operations-research track
+
+**Applicability.** Invoke governance only when separate organizations or agents
+possess strategic private information, distinct rights, or enforceable
+contracts. See the
+[supply-chain audit](../../research/audits/2026-08-05-supply-chain-operations-research.md#exact-candidate-refinements).
+Evidence: [C-627](../../research/claims.md#c-627),
+[C-659](../../research/claims.md#c-659)–[C-678](../../research/claims.md#c-678).
+
+**Strongest OR nulls.** Centralized stochastic/robust optimization, admission
+and feasibility control, contract-constrained allocation, min-cost flow,
+inventory and sourcing optimization, and direct measurement of supplier
+reliability and common-cause dependence.
+
+**Matched-budget test.** Cross cooperative versus strategic suppliers, private
+capacity/cost information, correlated outages, qualification delay, and
+contractual rights; equalize data, inventory, qualified capacity, reserve,
+routes, messages, compute, enforcement, and human governance across centralized
+control and constitutionalized arms.
+
+**Service and recovery measurements.** Report feasible commitments, unit
+fill/OTIF, tail delay, service disparity across protected counterparties,
+qualified deliverable capacity, degraded-service area, backlog-clearance and
+reserve-restoration hours, second-event service, currency, joules, and human
+governance hours.
+
+**Rejection gate.** Reject the governance transfer when actors share one loss
+and directly verifiable state, when supplier diversity is only nominal, or when
+centralized optimization plus ordinary contracts/admission matches service,
+rights, and recovery outcomes at lower lifecycle cost.

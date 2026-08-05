@@ -341,3 +341,36 @@ fault distribution:
 Negative results remain useful: they identify which biological distinctions
 collapse into ordinary systems mechanisms and which fault regimes select each
 conventional baseline.
+
+## Supply-chain operations-research track
+
+**Domain status.** Recovery qualification, not a new containment mechanism.
+See the
+[supply-chain audit](../../research/audits/2026-08-05-supply-chain-operations-research.md#exact-candidate-refinements).
+Evidence: [C-627](../../research/claims.md#c-627),
+[C-659](../../research/claims.md#c-659)–[C-678](../../research/claims.md#c-678).
+
+**Recovery state.** Add backlog clearance, unit-fill and OTIF recovery, aged or
+expired stock, expedite/transshipment cost, reserve depletion and
+replenishment, return/repair backlog, verified recovery yield, and service
+under a second disruption. Containment and nominal throughput are not recovery.
+
+**Strongest OR nulls.** Reliability/availability models, safety stock, dual
+sourcing, contingent rerouting, robust/CVaR planning, recovery scheduling, and
+repairable-item inventory with ready and repair stocks separated.
+
+**Matched-budget test.** Run the audit's disruption/reserve and closed-loop-
+recovery scenarios on paired outage, return-quality, capacity, expiry, and
+demand seeds; equalize inventory, qualified reserve, routes, repair capacity,
+intervention authority, compute, and human maintenance.
+
+**Service and recovery measurements.** Report degraded-service area,
+backlog-clearance hours, unit fill/OTIF, expiry and stranded items, expedite and
+switching currency, reserve restoration, return backlog, turnaround hours,
+verified yield, quality escapes, waste kilograms, joules, and second-event
+service.
+
+**Rejection gate.** Reject if returns are counted as ready before inspection,
+if supplier labels hide correlated deliverable capacity, if recovery stops at
+rerouting or nominal throughput, or if ordinary recovery scheduling and
+repairable-item control match the full lifecycle vector.

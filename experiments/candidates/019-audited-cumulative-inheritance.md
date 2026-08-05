@@ -16,6 +16,13 @@ with accumulation merely because its headline score rises. Protected functions,
 rare skills, compatibility, task value, and complete learning/coordination cost
 must survive turnover ([C-343](../../research/claims.md#c-343)–[C-367](../../research/claims.md#c-367)).
 
+The [learning-science and skill-acquisition audit](../../research/audits/2026-08-05-learning-science-skill-acquisition.md)
+adds an outcome firewall: a teaching channel is credited only for independently
+measured acquisition, delayed retention, novel transfer, fluency, calibration,
+motivation, and total teacher-plus-learner effort. Fluent imitation while the
+teacher, trace, or answer remains available is not inherited capability.
+Evidence: [C-627](../../research/claims.md#c-627)–[C-658](../../research/claims.md#c-658).
+
 ```mermaid
 flowchart LR
     G["Generate · imitate · reconstruct · recombine"] --> T["Versioned transmission channel"]
@@ -59,6 +66,59 @@ $$
 This dimensionless concentration measure does not establish competence,
 independence, or cultural complexity.
 
+## Typed teaching and learning contract
+
+Every transmission event declares exactly which channel was available:
+
+```text
+literal action trace
+outcome-only observation
+authored explanation
+contrastive cases
+interactive question, hint, and feedback
+versioned artifact plus executable tests
+```
+
+A record carries teacher/source identity and version, learner identity and
+prior support state, content and answer exposure, channel type, event and
+availability times, attempts, hints, feedback, confidence before feedback,
+cost, and the later tests that can invalidate the transmission. Mixed channels
+remain decomposable; “instruction” is not one treatment.
+
+For learner generation $g$, retention delay $\Delta$, and preregistered
+transfer-distance stratum $d$, report
+
+$$
+Y_g(\Delta,d)=
+\left[A_g,R_g(\Delta),T_g(\Delta,d),F_g(\Delta),
+\operatorname{BS}_g(\Delta),M_g,C_g\right],
+$$
+
+where $A$, $R$, and $T$ are score-unit changes for acquisition, retention, and
+transfer; $F$ is correct tasks/s with its error rate; $\operatorname{BS}$ is
+dimensionless Brier score; $M$ keeps voluntary persistence, return, and
+self-report separate; and $C_g$ is a lifecycle cost vector. The cost vector
+contains at least
+
+$$
+C_g=\left[
+\tau_{g,L},\tau_{g,T},N_{g,\mathrm{example}},N_{g,\mathrm{attempt}},
+N_{g,\mathrm{hint}},B_{g,\mathrm{feedback}},B_{g,\mathrm{artifact}},
+N_{g,\mathrm{update}},E_g
+\right],
+$$
+
+with learner time $\tau_{g,L}$ and teacher/evaluator time $\tau_{g,T}$ in
+seconds, counts $N$ dimensionless, feedback and artifact volume $B$ in bytes,
+and measured energy $E_g$ in joules at a declared boundary. Preparation,
+interaction, correction, assessment, migration, maintenance, and failed or
+abandoned learners stay in the denominator and cost ledger.
+
+Preregister acquisition at the immediate unaided post-test; retention,
+fluency, calibration, and motivation at each declared delay; transfer at both a
+delay and distance stratum; and cumulative cost through the longest reported
+outcome and turnover. The cost clock cannot stop when teaching ends.
+
 ## Strongest null stack
 
 - one centralized continual learner with the same cumulative examples and work;
@@ -69,8 +129,15 @@ independence, or cultural complexity.
 - Candidate 015's fixed/versioned communication protocol;
 - quality-diversity or population search under centralized evaluation;
 - fixed IAM/policy-as-code, randomized audits, and Candidate 011 governance;
-- standard databases/workflow engines for external state; and
-- human-authored migration and compatibility tests.
+- standard databases/workflow engines for external state;
+- human-authored migration and compatibility tests;
+- a versioned artifact plus executable tests with no interactive teacher;
+- matched rereading/replay and retrieval with identical attempts, hints,
+  correction, and elapsed time;
+- tuned fixed, spaced-repetition, and forgetting-curve review schedules;
+- a standard knowledge-tracing tutor with the same item bank; and
+- fixed worked examples, fading, mastery criteria, and curriculum order with
+  every extra opportunity charged.
 
 ## Experiment family
 
@@ -79,18 +146,25 @@ independence, or cultural complexity.
 Use replacement microsocieties of artificial agents on compositional design,
 repair, planning, and tool tasks. Vary whether learners receive actions,
 outcomes, explanations, artifacts, tests, or combinations. Match cumulative
-examples, optimizer work, environment interactions, wall time, storage, and
-human maintenance. Measure protected-capability retention, new capability,
-recombination, rare-skill loss, compatibility, calibration, newcomer sample
-complexity, task value, and lifecycle joules.
+examples, attempts, hints, feedback information, optimizer work, environment
+interactions, learner time, teacher/evaluator time, wall time, storage, and
+maintenance. After each replacement, remove access to the source teacher and
+training trace before testing immediate acquisition, retention at declared
+delays, near and novel transfer, fluency, calibration, motivation/return,
+protected-capability retention, new capability, recombination, rare-skill loss,
+compatibility, newcomer sample complexity, task value, and lifecycle joules.
 
 ### B — imitation, reconstruction, and teaching channels
 
 Compare literal trace imitation, outcome-only reconstruction, authored
-instruction, interactive teaching, code/artifact transfer, and the full
-candidate. Corrupt demonstrations, hide causal steps, change tools, and insert
-irrelevant actions. The winner is channel- and task-dependent; Candidate 019
-fails if one ordinary artifact plus tests transfers capability equally well.
+explanation, contrastive cases, interactive questions/hints/feedback, versioned
+artifact plus executable tests, and the full candidate. Hold content and answer
+exposure visible; factorially vary support fading where feasible. Corrupt
+demonstrations, hide causal steps, change tools, insert irrelevant actions, and
+test after the source becomes unavailable. The winner is channel-, learner-,
+skill-, horizon-, and task-dependent; Candidate 019 fails if one ordinary
+artifact plus tests transfers capability equally well at matched total
+teacher-plus-learner effort.
 
 ### C — model choice under sparse and strategic evidence
 
@@ -124,6 +198,26 @@ inference, a typed hierarchical/state-space model, Candidate 014, and the
 candidate's lineage record. Measure coverage, calibration, mechanism
 identifiability, and correct abstention under equifinal histories.
 
+### G — retention and novel transfer through turnover
+
+Teach prerequisite-rich skills to generation $g$, then replace every active
+learner and expose generation $g+1$ through one registered channel. Test
+unaided acquisition immediately, retention after fixed wall-clock and
+interaction-count delays, and four separate strata: trained form, near variant,
+changed representation/tool/context, and novel causal composition. Repeat a
+second turnover without the original teacher or answer traces. Include
+misleading fluency cues, helped answers, irrelevant demonstration steps,
+schema drift, and rare protected skills.
+
+Compare interactive teaching, artifact plus tests, fixed and spaced review,
+knowledge tracing, Candidate 004 without population turnover, and centralized
+continual learning at identical cumulative examples, response opportunities,
+feedback, teacher/evaluator and learner seconds, storage, updates, wall time,
+and joules. Score source retrieval, relational mapping, target adaptation, and
+execution separately. Reject inheritance if the effect is immediate imitation,
+test-format matching, answer leakage, more instruction, or persistent access to
+the original source.
+
 ## Ablations
 
 1. Merge generation and transmission into one operation.
@@ -136,6 +230,14 @@ identifiability, and correct abstention under equifinal histories.
 8. Remove compatibility, migration, and retirement.
 9. Remove governance cost, appeals, and capture tests.
 10. Infer learning mechanism directly from retained artifacts.
+11. Collapse all teaching channels into one instruction label.
+12. Leave the teacher, demonstrations, or answer-bearing trace available during
+    retention and transfer tests.
+13. Replace skill-local support and fading with one global learner score.
+14. Score immediate acquisition while hiding delayed retention and novel
+    transfer.
+15. Exclude teacher preparation, interaction, correction, assessment, failed
+    learners, or learner time from cumulative effort.
 
 ## Promotion and kill rules
 
@@ -143,17 +245,25 @@ Advance only if the population method retains and recombines more validated
 capability across real turnover than the complete centralized null at matched
 cumulative work, and the result survives rare-skill, manipulation, network,
 schema-drift, governance, and artifact-observation tests in at least two task
-families.
+families. The result must also beat a versioned artifact plus executable tests
+and tuned conventional instructional schedulers on delayed retention and novel
+transfer after the original teacher and answer traces are unavailable, without
+worsening fluency, calibration, motivation, protected outcomes, or lifecycle
+cost.
 
 Retire if improvement disappears under equal total learning time; accumulation
 comes from more parallel search; documents fail under interpretation drift;
 prestige or majority cues propagate correlated error; sanctions/capture dominate;
-or ordinary versioning, retrieval, search, workflow, and governance match the
-frontier.
+ordinary versioning, retrieval, search, workflow, and governance match the
+frontier; gains are helped-answer or test-format leakage; only immediate
+acquisition improves; one tuned fixed/spaced/knowledge-tracing schedule matches
+the result; or teacher-plus-learner effort, attrition, and maintenance erase the
+advantage.
 
 ## Evidence links
 
 - [Cultural evolution and archaeology audit](../../research/audits/2026-08-05-cultural-evolution-archaeology.md)
+- [Learning science and skill acquisition audit](../../research/audits/2026-08-05-learning-science-skill-acquisition.md)
 - [Candidate 004](004-closed-endogenous-curriculum.md)
 - [Candidate 008](008-contestable-modular-allocation.md)
 - [Candidate 011](011-dual-loop-operational-assurance.md)

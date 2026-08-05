@@ -113,3 +113,36 @@ P-012, and Candidate 014 metadata.
 - [P-009](../../research/principle-registry.md#p-009--maintenance-plane)
 - [P-012](../../research/principle-registry.md#p-012--memory-matched-to-information-lifetime)
 - [P-013](../../research/principle-registry.md#p-013--externalized-shared-state)
+
+## Supply-chain operations-research track
+
+**Domain status.** Inventory placement is a mature analogy, not evidence for
+semantic tiering. See the
+[supply-chain audit](../../research/audits/2026-08-05-supply-chain-operations-research.md#exact-candidate-refinements).
+Evidence: [C-627](../../research/claims.md#c-627),
+[C-659](../../research/claims.md#c-659)–[C-678](../../research/claims.md#c-678).
+
+**Cost boundary.** Keep holding, movement, restore, expiry, stockout,
+reconciliation, switching, access/lead-time uncertainty, and correlated
+failure-domain costs explicit; reconstructability cannot stand in for physical
+availability.
+
+**Strongest OR/storage nulls.** Correlation-aware inventory placement and
+safety stock, pooling/postponement, economic tiering, miss-cost caching,
+ARC/TinyLFU, coded placement, stochastic allocation, and receding-horizon
+rebalancing.
+
+**Matched-budget test.** Use paired demand, access, lead-time, expiry, movement,
+and correlated-failure trajectories; equalize capacity, redundancy, network,
+forecast access, migration authority, compute, storage, and maintenance across
+ordinary cost-aware and candidate policies.
+
+**Service and recovery measurements.** Report unit fill/availability, tail
+access latency, stockout/miss events, restore and backlog-clearance hours,
+movement bytes or items, expiry, reconciliation error, correlated-loss impact,
+switching cost, joules, and human maintenance.
+
+**Rejection gate.** Reject if semantic value adds no out-of-sample information
+beyond engineered cost/reconstructability features, if future labels leak, if
+correlated failures are ignored, or if ordinary placement/tiering matches the
+service–recovery–lifecycle frontier.

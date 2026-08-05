@@ -342,3 +342,35 @@ adaptive-follow-up setting at equal lifecycle cost.
 - [P-008](../../research/principle-registry.md#p-008--compartmentalized-interaction)
 - [P-009](../../research/principle-registry.md#p-009--maintenance-plane)
 - [P-013](../../research/principle-registry.md#p-013--externalized-shared-state)
+
+## Supply-chain operations-research track
+
+**Domain status.** Central material/service observation refinement. See the
+[supply-chain audit](../../research/audits/2026-08-05-supply-chain-operations-research.md#exact-candidate-refinements).
+Evidence: [C-627](../../research/claims.md#c-627),
+[C-659](../../research/claims.md#c-659)–[C-678](../../research/claims.md#c-678).
+
+**Contract fields.** Add event versus availability time, forecast vintage,
+demand censored by stockout, physical reconciliation, allocation/reservation,
+uncertain pipeline ETA, age/condition, supplier common-cause groups,
+returns/recovery yield, and service-definition version. Record integrity does
+not establish physical truth.
+
+**Strongest OR nulls.** Event-sourced physical ledgers, inventory
+reconciliation, age-structured inventory and FEFO, stochastic-life MPC,
+survival/censoring models, and typed versioned service-level metrics.
+
+**Matched-budget test.** Run the audit's state-firewall and perishability tests
+on paired stale-record, hidden-reservation, uncertain-arrival, expiry,
+stockout-censorship, substitution, cancellation, and metric-version changes;
+equalize observations, inventory, capacity, compute, and audit effort.
+
+**Service and recovery measurements.** Report phantom-availability items,
+infeasible commitments, service-estimation and reconciliation error, unsafe or
+invalid issues, true versus reported fill/OTIF, $p_{95}$ delay, expiry
+items/kilograms, verified return yield, latency, joules, and audit hours.
+
+**Rejection gate.** Reject if an ordinary typed event ledger plus
+age-structured inventory and versioned metrics matches decisions and evidence
+quality, or if the candidate counts records, forecasts, allocations, shipments,
+or returns as physical availability or realized service.

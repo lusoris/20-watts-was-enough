@@ -270,13 +270,14 @@ adding citations:
 | microbial ecology, biofilms, and fungal networks | molecular signaling, receiver response, cell physiology, transport, lineage ecology, selection, organismal flow, symbiosis, and ecosystem consequence remain distinct; one transported-field fixture refines P-011/P-013 and Candidates 001/013 |
 | animal navigation, sensory ecology, biomechanics, and motor control | sensing policy, emitted signal, propagation, body mechanics, controller, calibration, environment, and task are bound explicitly; controlled observability and controller–plant binding refine Candidates 006/007/012/014 rather than becoming new principles |
 | pharmacology and toxicology | commanded intervention, realized exposure, engagement, response, benefit, harm, adaptation, dependence, withdrawal, interaction null, and population support remain separate; a state-qualified intervention fixture refines Candidates 005/007/012/014 |
+| operations research, supply chains, and learning science | confidence and inventory records share one proxy-versus-state firewall, but instructional events and material commitments remain different transitions; horizon-qualified learning refines Candidates 004/019 while material service refines existing allocation/recovery candidates |
 
 The active and next breadth queue is selected by expected ability to split,
 merge, reject, or re-baseline a current mechanism:
 
 | Field cluster | Mechanism question | Expected decision |
 | --- | --- | --- |
-| operations research and learning science | which inventory, delay, pooling, disruption, curriculum, retrieval, spacing, feedback, retention, and transfer mechanisms add more than mature optimization and educational nulls? | test existing allocation, memory, observation, and cumulative-learning candidates before adding any principle |
+| legal evidence and procedure | which burden, admissibility, contestability, disclosure, review, remedy, and precedent mechanisms add more than assurance, provenance, governance, and ordinary statistical decision rules? | refine existing evidence and governance candidates only where a distinct decision state survives |
 
 This queue is revised whenever an audit changes a principle, null model, or
 experiment. Breadth alone does not close a row.

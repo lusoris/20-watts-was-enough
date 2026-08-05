@@ -17,6 +17,12 @@ notation.
 - [`state-qualified-intervention.md`](state-qualified-intervention.md)
   separates commanded intervention, realized exposure, engagement, benefit,
   harm, adaptation, withdrawal, schedule, and removal surveillance.
+- [`material-service-state.md`](material-service-state.md) keeps forecasts,
+  commitments, physical inventory/capacity, delivery, service, and recovery
+  dimensionally separate.
+- [`learning-outcome-contract.md`](learning-outcome-contract.md) defines
+  acquisition, retention horizons, transfer strata, fluency, calibration, and
+  complete instructional cost.
 
 Rules:
 

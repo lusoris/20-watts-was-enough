@@ -203,3 +203,35 @@ and maintenance practice.
 - [P-003](../../research/principle-registry.md#p-003--temporary-trace-before-commitment)
 - [P-009](../../research/principle-registry.md#p-009--maintenance-plane)
 - [P-013](../../research/principle-registry.md#p-013--externalized-shared-state)
+
+## Supply-chain operations-research track
+
+**Domain status.** Operational-closure refinement only. See the
+[supply-chain audit](../../research/audits/2026-08-05-supply-chain-operations-research.md#exact-candidate-refinements).
+Evidence: [C-627](../../research/claims.md#c-627),
+[C-659](../../research/claims.md#c-659)–[C-678](../../research/claims.md#c-678).
+
+**Trace contract.** Bind forecast vintage, accepted demand, inventory and
+capacity evidence, allocation, route, delivered service, and service-definition
+version to an implemented and verified policy change. Retrieval must be
+relevance-triggered; a postmortem is not loop closure.
+
+**Strongest OR nulls.** Event-sourced operational ledgers, inventory
+reconciliation, ordinary corrective-action tracking, verified policy
+deployment, reliability/recovery scheduling, searchable runbooks, and standard
+incident/postmortem practice.
+
+**Matched-budget test.** Replay paired repeated and near-neighbor disruptions
+with identical forecasts, inventory error, ownership handoff, partial
+remediation, compute, human hours, and intervention authority; compare no
+postmortem, narrative-only, retrieval-only, verified policy update, and this
+candidate.
+
+**Service and recovery measurements.** Report action closure, policy-test pass,
+next-event unit fill/OTIF, recurrence, backlog-clearance hours, reserve
+readiness, delivered-service error, retrieval precision, and human hours.
+
+**Rejection gate.** Reject if no executable policy changes, if the change is
+not tested and deployed, if retrieval is untargeted, or if ordinary corrective-
+action tracking plus event-sourced evidence matches next-event service and
+recovery.

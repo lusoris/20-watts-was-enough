@@ -269,6 +269,9 @@ transactional recovery provide scoped engineered feedback
 Pharmacological tolerance and sensitization show why a changed response is not
 automatically one homeostatic mechanism: exposure, endpoint, context, and
 adapted state must be identified separately ([C-617](claims.md#c-617)).
+Queue, backlog, inventory, and service-deficit control add mature feedback
+nulls whose delay, censoring, and frozen commitments must remain explicit
+([C-659](claims.md#c-659)–[C-673](claims.md#c-673)).
 
 **Candidate AI primitive.** Per-module activity and update-rate controllers
 that operate separately from the task loss.
@@ -453,6 +456,11 @@ Effect delay, tolerance/dependence, and withdrawal add domain-specific latent
 states with distinct observation and removal horizons; their timescales do not
 make them interchangeable memories ([C-610](claims.md#c-610),
 [C-617](claims.md#c-617)–[C-619](claims.md#c-619)).
+Learning science adds target retention horizons, skill-local support state,
+and transfer strata, while operational records, commitments, expiry, and
+service evidence have distinct retention/reconstruction needs
+([C-628](claims.md#c-628)–[C-658](claims.md#c-658),
+[C-674](claims.md#c-674)–[C-678](claims.md#c-678)).
 
 **Candidate AI primitive.** A versioned memory hierarchy spanning transient
 state, episodic records, slow skills, and externally attributable facts.
@@ -484,6 +492,10 @@ and transaction/compensation records plus derivation provenance
 or fungal fields whose geometry, uptake, transformation, and cleanup remain
 physical ([C-563](claims.md#c-563), [C-571](claims.md#c-571),
 [C-580](claims.md#c-580)).
+Operational ledgers expose forecast, inventory, commitment, delivery, and
+service state, but their integrity does not establish that the physical state
+matches the record ([C-627](claims.md#c-627),
+[C-674](claims.md#c-674)–[C-677](claims.md#c-677)).
 
 **Candidate AI primitive.** A versioned shared workspace where modules publish
 compact observations, partial results, route pressure, and unresolved questions

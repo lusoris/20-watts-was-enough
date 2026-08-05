@@ -105,6 +105,12 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/state-qualified-intervention.mmd` separates commanded intervention,
   realized exposure, engagement, response, benefit, harm, adaptation,
   withdrawal, and post-removal surveillance.
+- `diagrams/material-commitment-service.mmd` separates forecast and policy from
+  accepted commitments, physical capacity/stock, delivery, measured service,
+  returns, and second-event recovery.
+- `diagrams/horizon-qualified-learning.mmd` follows a skill-local instructional
+  event through attempt, support, delayed retention, transfer, fluency,
+  calibration, motivation, and complete cost.
 - `diagrams/structural-growth-routing.mmd` follows a measured capability gap
   through bounded candidate birth, probation routing, specialization,
   protection, merging, and retirement.

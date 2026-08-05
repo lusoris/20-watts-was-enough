@@ -121,3 +121,35 @@ by key is the only preserved contract; or summary drift destroys reproducibility
 - [Candidate 011](011-dual-loop-operational-assurance.md)
 - [Candidate 014](014-versioned-observation-contract.md)
 
+## Supply-chain operations-research track
+
+**Domain status.** Query-contract refinement, not an inventory-compression
+analogy. See the
+[supply-chain audit](../../research/audits/2026-08-05-supply-chain-operations-research.md#exact-candidate-refinements).
+Evidence: [C-627](../../research/claims.md#c-627),
+[C-659](../../research/claims.md#c-659)–[C-678](../../research/claims.md#c-678).
+
+**Preserved queries.** Declare before compaction every order/inventory history
+needed to reconstruct provenance, lead-time and delay distributions, lost-sales
+censoring, expiry/condition, returns and recovery yield, disruption/recovery,
+and service-definition versions.
+
+**Strongest OR/storage nulls.** Lossless event logs, snapshots, materialized
+views, cold archive, ordinary compression with retained raw fragments,
+age-structured inventory, service/censoring models, and repairable-item
+ledgers.
+
+**Matched-budget test.** Replay identical demand, expiry, return, disruption,
+and metric-version histories across complete log, snapshot/archive, ordinary
+compression, and candidate compaction; equalize storage bytes, query compute,
+maintenance, rebuild time, and retained metadata.
+
+**Service and recovery measurements.** Report query error, unreconstructable
+service decisions, lost-sales and lead-time estimation error, fill/OTIF
+reconstruction, expiry/condition mistakes, recovery-yield error,
+backlog-clearance error, restore hours, bytes, joules, and human audit hours.
+
+**Rejection gate.** Reject if required future queries must be guessed after
+compression, if service/recovery evidence cannot be reconstructed, or if a
+complete log plus snapshots/cold archive matches the storage–query–maintenance
+frontier.

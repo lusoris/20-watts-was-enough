@@ -346,3 +346,35 @@ domains, and preserve simple independent safety limits.
 - [P-006](../../research/principle-registry.md#p-006--homeostatic-negative-feedback)
 - [P-008](../../research/principle-registry.md#p-008--compartmentalized-interaction)
 - [P-009](../../research/principle-registry.md#p-009--maintenance-plane)
+
+## Supply-chain operations-research track
+
+**Domain status.** Physical-authority refinement only. See the
+[supply-chain audit](../../research/audits/2026-08-05-supply-chain-operations-research.md#exact-candidate-refinements).
+Evidence: [C-627](../../research/claims.md#c-627),
+[C-659](../../research/claims.md#c-659)–[C-678](../../research/claims.md#c-678).
+
+**Authority fields.** Qualify authority by forecast vintage, age of inventory
+and capacity evidence, physical lead time, pipeline and frozen commitments,
+qualified reserve, perishability/condition, route availability, setup and
+qualification, and revocation time. Fast messages do not create fast physical
+authority.
+
+**Strongest OR nulls.** Queueing admission, dynamic vehicle routing, two-stage
+stochastic planning, robust/CVaR and chance-constrained control, receding-
+horizon MPC with nonanticipativity, dual sourcing, and qualified reserve.
+
+**Matched-budget test.** Use paired uncertainty and disruption trajectories;
+equalize evidence, inventory, capacity, reserve, routes, forecast access,
+message bytes, compute deadline, switching rights, and maintenance. Cross stale
+evidence, frozen commitments, common-cause outage, and revocation delay.
+
+**Service and recovery measurements.** Report infeasible or stale-authority
+actions, false-positive switching, unit fill/OTIF, service shortfall, $p_{95}$
+delay, plan churn, stranded items, reserve depletion/replenishment,
+backlog-clearance hours, and second-event service.
+
+**Rejection gate.** Reject if authority is inferred from message latency alone,
+if actions violate frozen commitments or physical lead time, if qualification
+and common causes are omitted, or if calibrated stochastic/robust control
+matches the safety–service frontier.

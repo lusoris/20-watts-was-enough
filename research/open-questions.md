@@ -236,3 +236,15 @@ project choice.
   and staged decommissioning at equal observation, intervention, reserve,
   compute, energy, and human cost? See the
   [state-qualified intervention note](../math/state-qualified-intervention.md).
+- **OQ-051:** Can a skill-local scheduler using explicit retention horizons,
+  transfer strata, support state, fluency, calibration, motivation, and full
+  teacher/learner cost beat tuned spacing, knowledge tracing, fixed fading,
+  hard-example mining, and fixed curricula across held-out tasks and
+  learner/model populations? See the
+  [learning-outcome contract](../math/learning-outcome-contract.md).
+- **OQ-052:** Does a typed forecast-to-service contract prevent infeasible
+  commitments, false availability, and premature recovery claims beyond event
+  sourcing, reconciliation, queueing/inventory control, routing,
+  stochastic/robust optimization, and frozen-commitment MPC at equal physical,
+  compute, reserve, energy, and human budgets? See the
+  [material/service contract](../math/material-service-state.md).

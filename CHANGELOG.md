@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Paired operations-research/supply-chain and learning-science audits that
+  share a calibrated proxy-versus-state firewall while keeping physical
+  commitment and durable skill acquisition as different transitions.
+- Fifty-two deduplicated claims (`C-627`–`C-678`), sixty-nine centralized
+  sources, two editable diagrams, two unit-bearing math notes, and experiment
+  refinements spanning material service and horizon-qualified instruction.
 - A pharmacology/toxicology audit separating commanded dose, realized
   exposure, engagement, response, benefit, harm, adaptation, dependence,
   withdrawal, interaction nulls, and population support.

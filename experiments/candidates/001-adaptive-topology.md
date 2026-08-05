@@ -610,3 +610,37 @@ The final Stage-1 report must end in exactly one disposition:
 
 Regardless of disposition, the biological claims remain scoped observations.
 They do not rise or fall with this engineering translation.
+
+## Supply-chain operations-research track
+
+**Domain status.** Evaluation refinement only; topology changes in logistics
+are covered by mature operations-research methods. See the
+[supply-chain audit](../../research/audits/2026-08-05-supply-chain-operations-research.md#exact-candidate-refinements).
+Evidence: [C-627](../../research/claims.md#c-627),
+[C-659](../../research/claims.md#c-659)–[C-678](../../research/claims.md#c-678).
+
+**Executable state.** Carry qualification, setup, and contract delay; in-transit
+work and inventory; reservations; stranded stock; switching cost; correlated
+supplier and route failures; qualified reserve state; and recovery to delivered
+service through every transition. An adjacency edit is not executable topology.
+
+**Strongest OR nulls.** Correlation-aware pooling and safety stock,
+postponement, min-cost transshipment and flow, capacitated/dynamic vehicle
+routing, dual sourcing, two-stage stochastic and robust optimization, and
+receding-horizon control with frozen commitments.
+
+**Matched-budget test.** Reuse the audit's pooling/postponement, uncertainty-
+aware control, and disruption experiments with identical demand, capacity,
+travel, expiry, disruption, and measurement trajectories; equalize inventory,
+qualified capacity, reserve, routes, observations, solve deadline, messages,
+compute, and maintenance.
+
+**Service and recovery measurements.** Report setup/qualification hours,
+stranded/reserved/pipeline items, switching currency and joules, fill and OTIF,
+$p_{95}$ delay, degraded-service area, backlog-clearance hours, reserve
+depletion/replenishment, and service under a second disruption.
+
+**Rejection gate.** Reject when gains require instantaneous movement, free
+switching, unqualified nominal suppliers, ignored common causes, or recovery
+defined only by nominal throughput; also reject if the best calibrated OR null
+matches the lifecycle and tail-service frontier.

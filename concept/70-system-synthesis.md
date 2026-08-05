@@ -278,6 +278,63 @@ The composition remains a domain track under Candidates 005/007/012/014 and
 must beat Bayesian state-space estimation, constrained MPC/POMDP, calibrated
 harm monitoring, and staged decommissioning at equal lifecycle cost.
 
+### A plan, a commitment, and service are different states
+
+Resource-bearing execution has an informational path and a physical path. A
+forecast can change policy; policy can authorize an order, reservation, route,
+or allocation; none of those creates qualified capacity, moves material,
+finishes work, or proves service
+([C-627](../research/claims.md#c-627),
+[C-659](../research/claims.md#c-659)–[C-678](../research/claims.md#c-678)).
+The complete path is:
+
+```mermaid
+flowchart LR
+    F["Forecast distribution + vintage"] --> P["Policy / optimizer"]
+    D["Observed requests"] --> A["Admission + accepted demand"]
+    A --> P
+    R["Inventory / capacity records"] -.-> P
+    P --> O["Orders · reservations · routes"]
+    O --> C["Qualified physical capacity"]
+    O --> K["Frozen commitments"]
+    H["On-hand stock · age · condition"] --> W["Work / production / transport"]
+    I["Pipeline stock + uncertain arrival"] --> W
+    C --> W
+    K --> W
+    W --> L["Delivered quantity · time · condition"]
+    L --> S["Realized service vector"]
+    X["Disruption + common-cause state"] --> C
+    X --> I
+    T["Returns"] --> Q["Inspect · recover · scrap"]
+    Q --> H
+    H -.-> R
+    I -.-> R
+    M["Reconciliation + metric version"] -.-> R
+    M -.-> S
+```
+
+Editable source:
+[material-commitment-service.mmd](../assets/diagrams/material-commitment-service.mmd).
+
+This distinction applies when modules allocate physical devices, accelerators,
+network paths, robot/tool capacity, spares, storage media, human attention, or
+external services with lead time. Every decision-bearing record preserves:
+
+1. forecast vintage, observed request, admission, and accepted commitment;
+2. on-hand, reserved, quarantined, pipeline, and available-to-promise state;
+3. qualified capacity, queue, route, setup, common-cause, and lead-time state;
+4. dispatched versus delivered work, condition, completeness, and timing;
+5. the service metric's denominator, clock, substitutions, and version; and
+6. backlog, lost demand, returns, recovery yield, reserve replenishment, and
+   second-event readiness.
+
+The [material/service mathematics](../math/material-service-state.md) makes
+conservation, service, and recovery units explicit. The held composition must
+beat event sourcing plus inventory reconciliation, queueing, base-stock and
+multi-echelon control, stochastic/robust optimization, and receding-horizon
+planning with frozen commitments. It is an evaluation contract, not a new
+allocation algorithm.
+
 ### After an outcome: adaptation proposes, maintenance decides
 
 An outcome can influence the next event through working state or episodic

@@ -27,6 +27,14 @@ emulation ([C-064](../../research/claims.md#c-064)), regulated variability
 curriculum. Together they justify one discriminating experiment in which those
 operations can be removed separately.
 
+The [learning-science and skill-acquisition audit](../../research/audits/2026-08-05-learning-science-skill-acquisition.md)
+adds a narrower constraint: a curriculum cannot be credited from end-of-
+practice success alone. Acquisition, delayed retention, novel transfer,
+fluency, calibration, motivation, and complete instructional cost are separate
+outcomes, and the next event must be conditioned on skill-local evidence rather
+than one global learner score.
+Evidence: [C-627](../../research/claims.md#c-627)–[C-658](../../research/claims.md#c-658).
+
 The candidate composes existing principles rather than creating a creativity
 module:
 
@@ -87,6 +95,59 @@ use ground-truth simulator outcomes, executable tests, or a locked scoring
 model, depending on the track. Evaluator information becomes available to the
 generator only through the same result record exposed to every method.
 
+## Skill-local support and outcome state
+
+For learner or model $i$, skill component $j$, and decision step $t$, the
+curriculum maintains a versioned support state
+
+$$
+s_{ijt}=\left(
+\hat a_{ijt},\hat r_{ijt}(\Delta),\hat u_{ijt}(d),
+\hat f_{ijt},\hat c_{ijt},h_{ijt},v_{ijt}
+\right),
+$$
+
+where $\hat a$ is estimated unaided acquisition, $\hat r(\Delta)$ is retained
+performance at a declared delay $\Delta$, $\hat u(d)$ is transfer at a
+preregistered distance stratum $d$, $\hat f$ is fluency, $\hat c$ is confidence
+calibration, $h$ is the current help level, and $v$ records evidence version
+and support. Dimensionless estimates retain their scoring rule; fluency is
+reported in correct tasks per second. The state never treats a helped answer as
+unaided mastery.
+
+The event menu is typed:
+
+```text
+full worked trace | partial trace | hint | unaided retrieval | contrastive pair
+changed-context application | novel composition | feedback | no review
+```
+
+Fading removes support for one component only after successful generation under
+changed examples; failure or drift may restore support. Difficulty is useful
+only while the target operation remains processable with bounded correction.
+Visual friction or extra compute is not credited as a desirable difficulty.
+
+For horizon $\Delta$ and transfer stratum $d$, report the outcome vector
+
+$$
+Y_{ij}(\Delta,d)=
+\left[A_{ij},R_{ij}(\Delta),T_{ij}(\Delta,d),F_{ij}(\Delta),
+\operatorname{BS}_{ij}(\Delta),M_{ij},C_{ij}\right],
+$$
+
+where $A$, $R$, and $T$ are score-unit changes, $F$ is correct tasks/s,
+$\operatorname{BS}$ is dimensionless Brier score, $M$ contains separately
+declared persistence/return and self-report measures, and $C$ is the vector of
+learner time, examples, retrievals, hints, feedback, evaluator or teacher time,
+bytes, updates, and joules. No scalar average may hide a transfer, calibration,
+motivation, or cost loss.
+
+Before a run, register the measurement horizon for every component: acquisition
+at the immediate unaided post-test; retention, fluency, calibration, and
+motivation at each declared delay; transfer at both a delay and distance
+stratum; and cost accumulated through the last reported outcome. A method may
+not stop its cost clock before its longest claimed benefit.
+
 ## Hypotheses and null
 
 ### H1 — targeted evidence
@@ -112,6 +173,14 @@ A learned proposal-variance controller improves the value–failure frontier ove
 fixed-temperature sampling only if its advantage survives identical proposal
 counts and generator distributions.
 
+### H5 — horizon-qualified sequencing
+
+At equal instructional events, response opportunities, feedback information,
+time, and energy, a skill-local scheduler improves the delayed retention–novel
+transfer frontier over fixed curricula, tuned spaced-repetition schedules, and
+standard knowledge tracing without worsening fluency, calibration, motivation,
+or protected outcomes.
+
 ### Joint null
 
 The closed loop offers no material advantage once a strong sampler, active
@@ -119,6 +188,20 @@ learner, model-based planner, evolutionary search procedure, or retrieval
 baseline receives the same base model, candidate count, interactions,
 evaluator calls, memory, wall time, and energy. A tie merges the candidate into
 the best conventional method; it does not preserve a separate biological name.
+
+### Instructional scheduler nulls
+
+The learning-science refinement must additionally beat:
+
+1. matched rereading or replay with identical content and elapsed time;
+2. retrieval practice with the same attempts, hints, correction, and scoring;
+3. massed, fixed expanding, tuned population, and ordinary forgetting-curve
+   schedules;
+4. blocked, random, and confusability-stratified interleaving with spacing held
+   fixed;
+5. full worked examples, fixed example–problem alternation, and fixed fading;
+6. a tuned knowledge-tracing tutor with the same exercise bank; and
+7. fixed-order and fixed-criterion mastery with every extra opportunity charged.
 
 ## Track A — causal mechanism discovery
 
@@ -258,6 +341,13 @@ Track B.
 Use the candidate generator and revision loop but replace the independent
 evaluator with its own predicted score. This isolates evaluator separation.
 
+### B8 — conventional instructional schedulers
+
+Use tuned fixed curricula, spaced repetition or forgetting-curve review,
+knowledge tracing, fixed mastery criteria, and fixed worked-example fading.
+Each receives the same item bank, learner observations, help and feedback
+interfaces, and total instructional budget as the candidate.
+
 ### C — closed endogenous curriculum
 
 Use structured proposals, targeted acquisition, independent evaluation,
@@ -282,8 +372,13 @@ For each paired episode, methods receive identical:
 - accessible memory bytes $B_M$;
 - maximum serialized candidate and lineage bytes;
 - wall-clock deadline and accelerator allocation;
-- tool permissions and sandbox limits; and
-- task-specific quality, risk, and latency envelope.
+- tool permissions and sandbox limits;
+- task-specific quality, risk, and latency envelope;
+- maximum learning events, examples viewed, retrieval attempts, hints, retries,
+  and feedback information;
+- learner/model active time plus evaluator or teacher preparation and response
+  time; and
+- identical preregistered immediate, retention-horizon, and transfer tests.
 
 Methods may leave a budget unused. They may not convert unused evaluator calls
 into additional environment interactions unless the conversion rule is fixed
@@ -311,6 +406,12 @@ validity_and_risk_result
 energy_latency_and_byte_cost
 promotion_rejection_or_revision
 invalidation_boundary
+skill_component_and_prerequisite_versions
+help_level_and_answer_exposure
+unaided_success_latency_and_error_type
+target_retention_horizon_and_transfer_stratum
+pre_feedback_confidence_and_post_feedback_action
+instructional_event_time_attempt_feedback_and_energy_cost
 ```
 
 The memory baseline receives the same byte budget and may use a flat replay or
@@ -330,6 +431,11 @@ failure retention, and invalidation rather than from more storage.
 9. provide lineage memory to the best evolutionary baseline; and
 10. randomize proposal ancestry labels to test whether lineage content rather
     than extra metadata produces the effect.
+11. replace skill-local support with one global competence score;
+12. replace horizon-qualified scheduling with current-accuracy scheduling;
+13. use fixed fading while preserving examples, hints, and feedback; and
+14. optimize acquisition alone while hiding delayed retention, transfer,
+    calibration, motivation, and cost from the scheduler.
 
 ## Measurements
 
@@ -370,6 +476,21 @@ failure retention, and invalidation rather than from more storage.
 - false invalidation and stale-memory use;
 - recovery events and joules after a rule change; and
 - provenance coverage of promoted proposals.
+
+### Instructional state and durable learning
+
+- unaided acquisition by skill component and help level;
+- retention at every preregistered delay $\Delta$;
+- trained-form, near, changed-context, and novel-composition transfer reported
+  separately;
+- correct tasks/s with the complete speed–accuracy frontier;
+- pre-feedback Brier score, expected calibration error with frozen bins, and
+  confidence discrimination;
+- voluntary persistence, return, hint seeking, and subjective motivation as
+  separate measures;
+- examples, retrievals, failed attempts, hints, feedback bits, and learner,
+  evaluator, and teacher seconds; and
+- scheduler inference, storage, data movement, optimizer updates, and joules.
 
 ### Risk
 
@@ -425,8 +546,11 @@ energy from TDP or operation counts.
   tuning energy cap.
 - Report paired bootstrap confidence intervals across task instances and seeds
   for each primary axis.
-- Correct the confirmatory family across H1–H4; label remaining comparisons
-  exploratory.
+- Correct the confirmatory family across H1–H4; H5 has its own preregistered
+  retention and transfer family, and remaining comparisons are exploratory.
+- Keep immediate acquisition, each delayed retention horizon, and every
+  transfer-distance stratum separate; model learner/model initialization,
+  item, skill, teacher/evaluator, and cohort where those sampling levels exist.
 - Publish every seed, failed run, budget overrun, unsafe proposal, and excluded
   episode with its preregistered exclusion reason.
 - Repeat the winning comparison on a held-out environment grammar or operator
@@ -449,8 +573,16 @@ Reject the closed-loop candidate if any of the following holds:
 6. novelty gains vanish under canonical equivalence or hidden tests;
 7. advantages rely on future leakage, simulator state unavailable at decision
    time, or a stronger evaluator interface;
-8. lifecycle energy or tail latency leaves the declared envelope; or
-9. the result fails on the held-out grammar/library replication.
+8. lifecycle energy or tail latency leaves the declared envelope;
+9. the result fails on the held-out grammar/library replication;
+10. skill-local sequencing is matched by a tuned fixed schedule or standard
+    knowledge-tracing tutor at equal total instructional cost;
+11. apparent learning gains vanish on delayed or novel-composition tests, come
+    from helped-answer leakage, extra attempts, feedback, or evaluator time, or
+    trap weak learners behind a noisy mastery gate; or
+12. calibration improves only by indiscriminate uncertainty, fluency gains
+    trade against error, motivation losses increase attrition, or scheduler
+    overhead consumes the saved learning work.
 
 Promote only the operations that survive their ablations. A possible result is
 that targeted experiment design wins while learned variation and lineage memory
@@ -469,3 +601,5 @@ rest of the composed story.
   stationary regimes and charge its idle cost elsewhere.
 - **Sampling matches all results:** reject the closed endogenous curriculum as
   unnecessary composition at the tested budgets.
+- **Only skill-local scheduling survives:** retain it as an ordinary adaptive
+  instructional scheduler and retire the broader endogenous-curriculum label.

@@ -9204,3 +9204,920 @@ describes the exact statement here, not a broader interpretation.
   Candidates [007](../experiments/candidates/007-endogenous-observation-surveillance.md),
   [012](../experiments/candidates/012-latency-qualified-authority.md), and
   [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-627
+
+- **Statement:** Decision-relevant informational proxies can diverge from the
+  independently tested state needed for action: learner confidence can diverge
+  from delayed competence, and inventory records can diverge from physical
+  inventory.
+- **Status:** established.
+- **Primary sources:** `RoedigerKarpicke2006TestEnhanced`,
+  `KarpickeRoediger2008Critical`, `RawsonDunlosky2007SelfEvaluation`,
+  `dehoratius2008`.
+- **Rationale:** Scoped learning experiments separate prospective or subjective
+  judgments from later performance, while a primary retail study separates
+  recorded from physically observed stock. Both are observation-state
+  mismatches rather than failures of the underlying state itself.
+- **Open issue:** The claim does not imply that every proxy is wrong. Each use
+  must declare calibration, reconciliation, independent verification, support,
+  event and availability time, and the action allowed by the observation.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md),
+  [material-service contract](../math/material-service-state.md),
+  [cross-domain convergence](../concept/07-cross-domain-convergence.md), and
+  Candidates [004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-628
+
+- **Statement:** Retrieval practice can improve delayed retention relative to
+  restudy in scoped verbal-learning tasks.
+- **Status:** established.
+- **Primary sources:** `RoedigerKarpicke2006TestEnhanced`,
+  `KarpickeRoediger2008Critical`.
+- **Rationale:** Randomized comparisons found stronger recall after declared
+  delays following retrieval than following additional exposure under the
+  studied materials and schedules.
+- **Open issue:** Retrieval must be separated from response time, corrective
+  information, test-format matching, learner selection, and unsupported
+  failure; the result is not universal across tasks or outcomes.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md),
+  [memory and consolidation](../concept/40-memory-and-consolidation.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-629
+
+- **Statement:** End-of-practice performance can reverse the treatment ranking
+  observed after a declared retention delay.
+- **Status:** established.
+- **Primary sources:** `RoedigerKarpicke2006TestEnhanced`.
+- **Rationale:** Repeated study led shortly after practice in a scoped verbal
+  task, whereas retrieval led after two-day and one-week delays, demonstrating
+  that immediate acquisition and retained change are different outcomes.
+- **Open issue:** Every claim must specify the retention clock, interference,
+  missing delayed tests, and scoring rule rather than treat one post-test as
+  durable learning.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-630
+
+- **Statement:** Varied retrieval can improve application to changed examples
+  in some scoped learning tasks.
+- **Status:** plausible.
+- **Primary sources:** `Butler2010Transfer`, `ButlerEtAl2017Examples`.
+- **Rationale:** Primary experiments report gains on changed questions or
+  examples after retrieval, but the manipulation and transfer distance vary and
+  do not establish broad generalization.
+- **Open issue:** Preregistered transfer strata must exclude shared answers,
+  superficial cues, solution traces, and extra feedback, and must replicate in
+  a held-out task family.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-631
+
+- **Statement:** Additional study after successful retrieval can add less
+  delayed benefit than additional retrieval in a studied procedure.
+- **Status:** established.
+- **Primary sources:** `KarpickeRoediger2008Critical`.
+- **Rationale:** After initial learning was held constant, continued retrieval
+  improved later recall in the studied materials while additional study after
+  correct recall did not.
+- **Open issue:** This is not a universal stopping rule; difficulty, feedback,
+  retention horizon, item value, and the cost of later forgetting must be
+  tested against tuned spaced-review policies.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-632
+
+- **Statement:** The useful spacing interval depends on the target retention
+  interval; no single optimal gap follows.
+- **Status:** established.
+- **Primary sources:** `CepedaEtAl2008Ridgeline`.
+- **Rationale:** A large primary experiment found a ridge relating study gap to
+  final-test delay rather than one globally optimal review interval.
+- **Open issue:** A scheduler must declare target horizons, elapsed-time
+  confounds, attempts, sleep and interference, cohort transfer, and inference
+  overhead.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md),
+  [memory and consolidation](../concept/40-memory-and-consolidation.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-633
+
+- **Statement:** Individualized review can outperform a time-matched
+  one-size-fits-all schedule in a scoped educational setting.
+- **Status:** plausible.
+- **Primary sources:** `LindseyEtAl2014Personalized`.
+- **Rationale:** Personalized retrieval review improved cumulative retention in
+  one classroom implementation relative to massed and common spaced schedules,
+  supporting but not establishing a general adaptive scheduler.
+- **Open issue:** Replication must equalize attempts and content, charge
+  scheduling compute and data, and test new learners, cohorts, horizons, and
+  task families against tuned conventional tutors.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-634
+
+- **Statement:** Interleaving and blocking can have opposite benefits under
+  different category and task structures.
+- **Status:** established.
+- **Primary sources:** `RohrerTaylor2007Shuffling`,
+  `CarvalhoGoldstone2014Order`, `CarvalhoGoldstone2015Tasks`.
+- **Rationale:** Primary studies report delayed benefits of shuffled practice
+  in some mathematics tasks and structure-dependent reversals in category
+  learning, rejecting schedule as a context-free scalar.
+- **Open issue:** Spacing, within-category variability, between-category
+  similarity, active study, immediate fluency, and persistence must be varied
+  or held separately.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-635
+
+- **Statement:** Interleaving is plausibly useful when discrimination among
+  confusable categories or operations is the limiting skill.
+- **Status:** plausible.
+- **Primary sources:** `TaylorRohrer2010Interleaved`,
+  `CarvalhoGoldstone2014Order`.
+- **Rationale:** Experiments that manipulate order while considering category
+  similarity support contrastive discrimination as one scoped account, but do
+  not establish a universal interleaving mechanism.
+- **Open issue:** The interaction with measured confusability must replicate
+  after spacing, attempts, example difficulty, feedback, and retention horizon
+  are controlled.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-636
+
+- **Statement:** Difficult but successful retrieval can improve later access in
+  scoped paired-associate tasks.
+- **Status:** plausible.
+- **Primary sources:** `PycRawson2009Effort`, `PycRawson2011Cues`.
+- **Rationale:** The studied retrieval manipulations associate successful
+  effort with later recall while also showing that reduced support can lower
+  success and make corrective feedback consequential.
+- **Open issue:** Difficulty must be task-relevant and tested inside a viability
+  band with success, feedback, dropout, motivation, latency, and total effort
+  reported rather than inferred from friction alone.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-637
+
+- **Statement:** Generic perceptual disfluency is not established as a reliable
+  way to improve memory.
+- **Status:** disputed.
+- **Primary sources:** `TaylorEtAl2020SansForgetica`, `WetzlerEtAl2021Font`.
+- **Rationale:** Multiple controlled tests of a deliberately difficult font
+  failed to produce the broad memory benefit predicted by the generic
+  desirable-difficulty slogan.
+- **Open issue:** Future claims must distinguish task-relevant reconstruction
+  from visual friction, preregister the delay and endpoint, include failure and
+  attrition, and report null conditions.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-638
+
+- **Statement:** Worked examples can improve novice acquisition in scoped
+  procedural problem-solving tasks.
+- **Status:** established.
+- **Primary sources:** `SwellerCooper1985Examples`.
+- **Rationale:** Controlled algebra experiments found that example-based study
+  could replace some unguided solution search during acquisition and improve
+  later performance for the studied novices.
+- **Open issue:** Content, learner prior knowledge, task structure, copied-trace
+  risk, delayed retention, transfer, and total solution information must remain
+  explicit.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-639
+
+- **Statement:** Skill-local fading can plausibly outperform fixed support in
+  some procedural learning tasks.
+- **Status:** plausible.
+- **Primary sources:** `AtkinsonRenklMerrill2003Fading`,
+  `RenklAtkinsonGrosse2004Fading`, `Moreno2009Examples`.
+- **Rationale:** Primary studies manipulate fading, prompts, and feedback and
+  support withdrawing worked steps as capability develops, but do not establish
+  a domain-general adaptive fading policy.
+- **Open issue:** Adaptive fading must beat fixed example-problem alternation at
+  matched information, attempts, time, feedback, and difficulty on delayed and
+  novel-transfer tests.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-640
+
+- **Statement:** Elicited self-explanation can improve understanding in some
+  domains, but explanation text is not proof of causal knowledge.
+- **Status:** plausible.
+- **Primary sources:** `ChiEtAl1989SelfExplanation`,
+  `ChiEtAl1994Eliciting`.
+- **Rationale:** Observational protocols associate spontaneous explanation with
+  success, and a later intervention supports a scoped causal effect; neither
+  makes fluent explanation equivalent to executable transfer.
+- **Open issue:** Answer leakage, paraphrase, prior knowledge, explanation
+  scoring, delayed transfer, and independent task execution must be tested.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  Candidates [004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+  and [019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-641
+
+- **Statement:** Expertise reversal is not an automatic consequence of a
+  learner becoming more advanced.
+- **Status:** disputed.
+- **Primary sources:** `NievelsteinEtAl2013Examples`.
+- **Rationale:** In a less-structured legal-case task, worked examples remained
+  useful for both less and more advanced learners, bounding a universal
+  expertise-threshold account.
+- **Open issue:** Prior knowledge, task structure, support type, copied work,
+  acquisition, delayed transfer, and cost must be crossed before withdrawing
+  support based on an expertise label.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-642
+
+- **Statement:** Retrospective structured-practice histories are associated
+  with expertise strata in some domains.
+- **Status:** established.
+- **Primary sources:** `EricssonEtAl1993Practice`.
+- **Rationale:** Selected musician groups reported different accumulated
+  histories of structured practice, establishing an association and a useful
+  decomposition of practice activity, not randomized lifetime causation.
+- **Open issue:** Selection, prior ability, access age, coaching, resources,
+  injury, survivorship, and retrospective recall prevent hours from identifying
+  the cause of elite performance.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-643
+
+- **Statement:** A fixed practice-hour threshold is not sufficient to establish
+  or guarantee elite expertise.
+- **Status:** disputed.
+- **Primary sources:** `EricssonEtAl1993Practice`,
+  `MacnamaraMaitra2019Practice`.
+- **Rationale:** The foundational retrospective association does not identify a
+  sufficient threshold, and a double-blind violinist replication found smaller
+  group differences and no practice difference between its best and good
+  strata.
+- **Open issue:** Practice quality, target skill, opportunity, selection,
+  teacher effects, transfer, and whole-task performance must replace a universal
+  hour total.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-644
+
+- **Statement:** Feedback effects depend on content, timing, task, available
+  action, and the final test; no universally best delay follows.
+- **Status:** established.
+- **Primary sources:** `ButlerEtAl2007Feedback`, `Maier2021Feedback`.
+- **Rationale:** Primary experiments find different effects from delayed versus
+  immediate correction and from differently typed motivational or academic
+  messages, showing that “feedback” is not one intervention.
+- **Open issue:** Information length, spacing, retry opportunity, stale
+  correction, reward effects, answer copying, teacher attention, and delayed
+  transfer must be equalized.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-645
+
+- **Statement:** Action-guiding correction can plausibly reduce repeated errors
+  efficiently when its information and retry opportunities are charged.
+- **Status:** plausible.
+- **Primary sources:** `ButlerEtAl2007Feedback`,
+  `Wentling1973MasteryFeedback`.
+- **Rationale:** Corrective feedback can change later responses, but benefit
+  depends on what is revealed and whether a subsequent action can demonstrate a
+  state change.
+- **Open issue:** Compare correctness-only, answer, error-class, explanatory,
+  and next-action feedback at matched bits, timing, attempts, elapsed time, and
+  retention horizon.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  and the exclusion boundary of
+  [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md).
+
+### C-646
+
+- **Statement:** Mastery-learning bundles can improve course performance in
+  some settings.
+- **Status:** plausible.
+- **Primary sources:** `FuchsEtAl1986Mastery`,
+  `GladdingEtAl2015Mastery`.
+- **Rationale:** Primary educational studies report benefits from mastery-style
+  packages, but the packages combine criteria, correction, repeated assessment,
+  additional attempts, variable time, and sometimes richer solutions.
+- **Open issue:** Factor threshold, order, corrective content, attempts, time,
+  enrichment, teacher effects, delayed retention, and transfer against a tuned
+  knowledge-tracing tutor.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-647
+
+- **Statement:** No single mastery threshold or curriculum order is established
+  as universally optimal.
+- **Status:** disputed.
+- **Primary sources:** `FuchsEtAl1986Mastery`,
+  `Wentling1973MasteryFeedback`, `GladdingEtAl2015Mastery`,
+  `CepedaEtAl2008Ridgeline`, `CarvalhoGoldstone2014Order`.
+- **Rationale:** Mastery studies confound thresholds with correction and time,
+  while spacing and interleaving results show that effective sequence depends
+  on learner, skill structure, and target horizon.
+- **Open issue:** A proposed gate must name evidence window, allowed help,
+  failure action, prerequisite uncertainty, retention horizon, extra
+  opportunities, and trapped-learner rate.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-648
+
+- **Statement:** Spontaneous analogical transfer can remain low despite source
+  exposure, while an explicit hint can substantially change source retrieval.
+- **Status:** established.
+- **Primary sources:** `GickHolyoak1980Analogy`.
+- **Rationale:** In the studied laboratory problem, participants often failed to
+  retrieve a relevant source without a hint even after seeing a structurally
+  analogous example.
+- **Open issue:** Source retrieval must be separated from relation mapping and
+  target adaptation, with answer leakage, wording overlap, hint information,
+  and transfer distance preregistered.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  Candidates [004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+  and [019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-649
+
+- **Statement:** Comparing analogs can plausibly support relational abstraction
+  and later transfer.
+- **Status:** plausible.
+- **Primary sources:** `GickHolyoak1983Schema`,
+  `ButlerEtAl2017Examples`.
+- **Rationale:** Primary experiments report improved schema induction or later
+  application after comparison or varied retrieval, but the effect depends on
+  source quality and whether the common relation is identifiable.
+- **Open issue:** Comparison must beat varied examples without explicit mapping
+  at matched information and effort on preregistered changed-representation and
+  novel-composition tests.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  Candidates [004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+  and [019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-650
+
+- **Statement:** Retrieving a source, mapping its relations, and adapting it to
+  a target are separable failure points in analogical transfer.
+- **Status:** established.
+- **Primary sources:** `GickHolyoak1980Analogy`,
+  `NovickHolyoak1991Mathematical`.
+- **Rationale:** Hint effects identify source retrieval as one bottleneck, while
+  experiments separating mapping from target execution identify adaptation as
+  another; one aggregate transfer score obscures the failure location.
+- **Open issue:** Transfer benchmarks must score each stage under fixed source
+  access, representations, tool constraints, hints, and target novelty.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  Candidates [004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+  and [019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-651
+
+- **Statement:** Calibration-specific feedback can plausibly improve
+  metacognitive accuracy in some tasks.
+- **Status:** plausible.
+- **Primary sources:** `RawsonDunlosky2007SelfEvaluation`,
+  `CarpenterEtAl2019Metacognitive`.
+- **Rationale:** Explicit self-evaluation procedures do not always eliminate
+  overconfidence, while one adaptive-training experiment reports improved
+  metacognitive ability, leaving task benefit and transport uncertain.
+- **Open issue:** Report proper calibration scores, discrimination, task
+  performance, help seeking, answer leakage, base-rate shift, transfer, and the
+  cost of elicitation and scoring.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-652
+
+- **Statement:** Broad working-memory training need not transfer to academic
+  outcomes even when near-task performance changes.
+- **Status:** established.
+- **Primary sources:** `RobertsEtAl2016WorkingMemory`.
+- **Rationale:** A double-blind randomized population trial found no academic
+  benefit at 12 or 24 months, bounding claims that improvement on trained
+  working-memory tasks establishes educational transfer.
+- **Open issue:** Near-task, academic, delayed, and novel-transfer outcomes must
+  remain separate, with attrition, intervention dose, subgroup support, and
+  horizon declared.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md),
+  [memory and consolidation](../concept/40-memory-and-consolidation.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-653
+
+- **Statement:** Sleep timing or restriction can change educationally relevant
+  factual retention in scoped human studies.
+- **Status:** established.
+- **Primary sources:** `GaisEtAl2006Sleep`,
+  `CousinsEtAl2019Restriction`.
+- **Rationale:** Primary studies relate sleep soon after learning or restricted
+  sleep opportunity to later vocabulary or classroom-like factual retention,
+  while vigilance and encoding remain relevant pathways.
+- **Open issue:** Circadian time, encoding quality, wake interference,
+  vigilance, elapsed interval, cueing, and consolidation must be discriminated;
+  no AI mechanism follows directly.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md),
+  [memory and consolidation](../concept/40-memory-and-consolidation.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-654
+
+- **Statement:** Sleep is not established as a general mechanism for insight or
+  analogical transfer.
+- **Status:** disputed.
+- **Primary sources:** `MonaghanEtAl2015SleepTransfer`,
+  `BrodtEtAl2018SleepNull`.
+- **Rationale:** A task-specific positive result coexists with null results on
+  other insight tasks, rejecting a context-free transfer from sleep to creative
+  problem solving.
+- **Open issue:** Each claim must preregister task, sleep manipulation, encoding,
+  vigilance, circadian time, transfer criterion, delay, and null outcomes; AI
+  replay remains an independent engineering test.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [memory and consolidation](../concept/40-memory-and-consolidation.md),
+  [memory lifecycle](../math/memory-lifecycle.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-655
+
+- **Statement:** Pedagogical demonstration can narrow exploration in a scoped
+  child-learning task.
+- **Status:** established.
+- **Primary sources:** `BonawitzEtAl2011Pedagogy`.
+- **Rationale:** Intentional demonstration focused children more narrowly on a
+  demonstrated function than several nonpedagogical conditions, showing that
+  instruction changes inferred relevance as well as information exposure.
+- **Open issue:** The result does not make instruction generally harmful; task,
+  teacher intent, exploration budget, hidden functions, learner age, retention,
+  and transfer must be varied.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-656
+
+- **Statement:** Interactive teaching can plausibly transmit some skills more
+  efficiently than unguided discovery.
+- **Status:** plausible.
+- **Primary sources:** `ChiEtAl1994Eliciting`,
+  `DeslauriersEtAl2011Physics`.
+- **Rationale:** Causally elicited explanation and active instructional packages
+  can improve scoped learning, but the relevant interventions bundle different
+  amounts of guidance, practice, feedback, and instructor work.
+- **Open issue:** Compare trace, outcome, explanation, contrast, interaction,
+  and versioned artifact-plus-tests channels at equal content bits, exploration,
+  and cumulative teacher-plus-learner effort across true turnover.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-657
+
+- **Statement:** Active-learning packages can improve measured performance
+  while reducing felt learning, without identifying one causal mechanism.
+- **Status:** established.
+- **Primary sources:** `DeslauriersEtAl2011Physics`,
+  `DeslauriersEtAl2019Feeling`.
+- **Rationale:** Primary classroom comparisons report performance benefits from
+  active packages, and a randomized comparison reports higher measured learning
+  alongside lower perceived learning; the packages combine multiple operations.
+- **Open issue:** Practice, feedback, peers, instructor behavior, time,
+  confidence, delayed retention, transfer, and attrition must remain separate
+  before attributing benefit to one component.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md), and
+  Candidates [004](../experiments/candidates/004-closed-endogenous-curriculum.md)
+  and [019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-658
+
+- **Statement:** A multi-horizon, transfer-qualified instructional scheduler may
+  outperform tuned conventional tutors at equal lifecycle cost.
+- **Status:** speculative.
+- **Primary sources:** none sufficient yet; `CepedaEtAl2008Ridgeline`,
+  `LindseyEtAl2014Personalized`, `AtkinsonRenklMerrill2003Fading`, and
+  `CarpenterEtAl2019Metacognitive` support components only.
+- **Rationale:** Spacing, personalization, fading, and calibration motivate a
+  skill-local composition, but no cited experiment establishes the complete
+  scheduler across retention horizons, novel transfer, fluency, calibration,
+  motivation, and full cost.
+- **Open issue:** It must beat tuned retrieval, spaced repetition, fixed fading,
+  knowledge tracing, and conventional curricula in at least two task families
+  and a held-out learner/model population with attempts, feedback, teacher work,
+  storage, latency, and joules matched.
+- **Used by:** [learning-science audit](audits/2026-08-05-learning-science-skill-acquisition.md),
+  [learning-outcome contract](../math/learning-outcome-contract.md),
+  [research roadmap](../concept/90-research-roadmap.md), and
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md).
+
+### C-659
+
+- **Statement:** Under its stated long-run conditions, average queue population,
+  arrival rate, and average time in system obey Little's law.
+- **Status:** established.
+- **Primary sources:** `little1961`.
+- **Rationale:** The conservation relation $L=\lambda W$ connects three
+  long-run averages without requiring a specific scheduling policy.
+- **Open issue:** Finite means, stationarity and the paper's arrival-process
+  conditions must hold; the relation says nothing by itself about tails,
+  correctness, utility, or optimal control.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [neurogenesis and routing](../concept/10-neurogenesis-and-routing.md), and
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-660
+
+- **Statement:** Utilization and arrival/service variability can sharply
+  increase queue delay in classical single-server settings.
+- **Status:** established.
+- **Primary sources:** `kingman1961`.
+- **Rationale:** Kingman's heavy-traffic result exposes how variability and the
+  factor $\rho/(1-\rho)$ affect waiting time near saturation.
+- **Open issue:** It is a model-qualified approximation, not a universal law;
+  service discipline, failures, preemption, abandonment, nonstationarity, and
+  tail delay require direct evaluation.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md), and
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-661
+
+- **Statement:** Product-form queueing networks are a mature allocation and
+  congestion null under restrictive Markovian assumptions.
+- **Status:** established.
+- **Primary sources:** `jackson1957`.
+- **Rationale:** Jackson derived steady-state parameters for a network of
+  waiting lines, establishing an ordinary network-flow comparator before a new
+  routing mechanism receives credit.
+- **Open issue:** Arrival, service, routing, independence, stability, server,
+  and stationarity assumptions must match; otherwise use a more appropriate
+  queueing or simulation null.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [neurogenesis and routing](../concept/10-neurogenesis-and-routing.md), and
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-662
+
+- **Statement:** Base-stock and staged inventory policies are mature nulls for
+  replenishment under demand, lead-time, holding, and shortage trade-offs.
+- **Status:** established.
+- **Primary sources:** `arrow1951`, `clark1960`.
+- **Rationale:** Foundational inventory theory formalizes order decisions from
+  inventory position and extends control across coupled echelons rather than
+  treating a resource deficit as a new feedback principle.
+- **Open issue:** Backorder versus lost sale, lead-time and demand laws,
+  capacity, substitution, review cadence, reservations, and physical record
+  error must be declared.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md), and
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-663
+
+- **Statement:** Multi-echelon inventory couples upstream availability to
+  downstream lead time, stock, and realized service.
+- **Status:** established.
+- **Primary sources:** `clark1960`.
+- **Rationale:** In the foundational serial model, an upstream shortage changes
+  downstream replenishment rather than remaining an independent local state.
+- **Open issue:** Network shape, echelon versus installation stock, dependence,
+  capacity, transport, allocation, substitution, and service definition must be
+  represented in any transfer.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [system synthesis](../concept/70-system-synthesis.md), and
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-664
+
+- **Statement:** Forecast updating, lead time, order batching, price variation,
+  rationing incentives, and feedback misperception can amplify orders relative
+  to customer demand.
+- **Status:** established.
+- **Primary sources:** `sterman1989`, `lee1997`, `chen2000`.
+- **Rationale:** Controlled inventory-distribution behavior and analytic
+  supply-chain models identify several distinct mechanisms behind the
+  bullwhip effect.
+- **Open issue:** The variance ratio must not substitute for service; demand
+  censorship, stationarity, forecast model, lead time, batching, incentives,
+  inventory, and capacity variation must be reported.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  and [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-665
+
+- **Statement:** Centralized demand information can reduce but need not
+  eliminate order amplification.
+- **Status:** established.
+- **Primary sources:** `chen2000`.
+- **Rationale:** A simple supply-chain model shows that sharing customer demand
+  can reduce amplification while forecasting and physical lead time continue to
+  generate it.
+- **Open issue:** Information sharing does not create stock, transport, or
+  capacity; compare forecast vintage, batching, incentives, censored demand,
+  physical constraints, and realized service.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md), and
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-666
+
+- **Statement:** Inventory-pooling benefit depends on demand correlation and
+  the declared cost and service assumptions.
+- **Status:** established.
+- **Primary sources:** `eppen1979`.
+- **Rationale:** The multilocation newsvendor analysis makes centralization
+  savings depend on the joint demand structure rather than on pooled scale
+  alone.
+- **Open issue:** Transport geometry, local response time, handling capacity,
+  service promises, positive correlation, and common-cause disruption must be
+  charged before claiming benefit.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [Candidate 001](../experiments/candidates/001-adaptive-topology.md), and
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-667
+
+- **Statement:** Postponement trades delayed commitment against compatible
+  product/process design, setup, lead time, and service deadlines.
+- **Status:** established.
+- **Primary sources:** `bucklin1965`, `leetang1997`.
+- **Rationale:** Foundational postponement work and formal delayed-
+  differentiation models treat flexibility as a costed option, not free
+  information-dependent reassignment.
+- **Open issue:** The decoupling point, remaining response time, setup and
+  qualification, variant compatibility, transport, common causes, and option-
+  maintenance cost must be explicit.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [Candidate 001](../experiments/candidates/001-adaptive-topology.md), and
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-668
+
+- **Statement:** Lateral transshipment is a mature form of costly post-demand
+  recourse, not instantaneous inventory reassignment.
+- **Status:** established.
+- **Primary sources:** `robinson1990`.
+- **Rationale:** Multiperiod, multilocation inventory theory balances holding
+  and shortage savings against transfer costs after demand is observed.
+- **Open issue:** Source opportunity cost, reservations, compatibility, route
+  capacity, transit time, damage, expiry, receipt, and destination service must
+  be included.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [neurogenesis and routing](../concept/10-neurogenesis-and-routing.md), and
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-669
+
+- **Statement:** Capacitated vehicle routing and dynamic dispatch are mature
+  physical-allocation nulls.
+- **Status:** established.
+- **Primary sources:** `dantzig1959`, `ichoua2006`.
+- **Rationale:** The foundational truck-dispatching formulation and later
+  real-time dispatch experiments already optimize routes under capacity and
+  changing request information.
+- **Open issue:** Travel, load, time windows, service duration, energy,
+  connectivity, preemption, current position, forecast availability, and frozen
+  commitments must match the proposed router.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [neurogenesis and routing](../concept/10-neurogenesis-and-routing.md), and
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-670
+
+- **Statement:** Stochastic programming is a mature null that separates
+  commitments made before uncertainty from feasible recourse after observation.
+- **Status:** established.
+- **Primary sources:** `dantzig1955`.
+- **Rationale:** The foundational formulation makes stage information and
+  nonanticipativity explicit rather than allowing later knowledge to influence
+  an earlier commitment.
+- **Open issue:** Scenario law, out-of-sample calibration, nonanticipativity,
+  recourse feasibility, objective units, physical lead time, and computation
+  must match any candidate comparison.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [system synthesis](../concept/70-system-synthesis.md), and Candidates
+  [012](../experiments/candidates/012-latency-qualified-authority.md) and
+  [013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-671
+
+- **Statement:** Robustness is defined relative to a declared uncertainty set
+  or tail-loss model and has an opportunity cost.
+- **Status:** established.
+- **Primary sources:** `bertsimas2004`, `rockafellar2000`.
+- **Rationale:** Budgeted robust optimization exposes the price of protection,
+  while CVaR optimization supplies a mature tail-risk objective; neither makes
+  a misspecified model safe.
+- **Open issue:** Validate uncertainty sets, distributions, dependence,
+  confidence levels, objective units, common-case service, out-of-set common
+  causes, reserve, and solve cost.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [system synthesis](../concept/70-system-synthesis.md), and Candidates
+  [005](../experiments/candidates/005-severity-ordered-containment.md) and
+  [012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-672
+
+- **Statement:** Receding-horizon control repeatedly replans but does not erase
+  already executed or physically frozen actions.
+- **Status:** established.
+- **Primary sources:** `mayne2000`, `ichoua2006`.
+- **Rationale:** Model-predictive control and real-time dispatch are mature
+  methods for updating plans from new observations while executing only
+  admissible current actions.
+- **Open issue:** State evidence age, solve deadline, model validity, recursive
+  feasibility, switching, setup, current position, pipeline work, reservations,
+  and revocation must be retained.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [Candidate 001](../experiments/candidates/001-adaptive-topology.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  and [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-673
+
+- **Statement:** Inventory, reliable sourcing, passive acceptance, and
+  contingent rerouting can be competing or combined disruption strategies
+  depending on disruption and capacity assumptions.
+- **Status:** established.
+- **Primary sources:** `tomlin2006`.
+- **Rationale:** A primary analytic comparison changes the preferred mitigation
+  or contingency strategy with disruption frequency, duration, supplier
+  capacity, flexibility, and risk attitude.
+- **Open issue:** Recovery must include backlog clearance, reserve restoration,
+  qualification and ramp time, common causes, false-positive switching, and
+  service under a second disruption.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [system synthesis](../concept/70-system-synthesis.md), and Candidates
+  [001](../experiments/candidates/001-adaptive-topology.md),
+  [005](../experiments/candidates/005-severity-ordered-containment.md), and
+  [012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-674
+
+- **Statement:** Multiple suppliers are not automatically safer or optimal;
+  cost, yield or reliability, delivery contracts, capacity, and dependence
+  determine allocation.
+- **Status:** established.
+- **Primary sources:** `anupindi1993`, `tomlin2006`.
+- **Rationale:** Dual-sourcing models derive when one or both uncertain suppliers
+  should be used and how reliable but costly capacity competes with inventory
+  and contingency strategies.
+- **Open issue:** Qualification, switching, minimum volume, shared ownership,
+  raw materials, infrastructure, transport, code, quality, and other common-
+  cause groups must replace supplier count as the resilience state.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [Candidate 001](../experiments/candidates/001-adaptive-topology.md), and
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-675
+
+- **Statement:** Perishable inventory requires age or condition state and an
+  explicit outdating or degradation cost.
+- **Status:** established.
+- **Primary sources:** `nahmias1975`, `pierskalla1972`.
+- **Rationale:** Foundational perishable-inventory models make finite lifetime
+  and age-dependent issuing part of the state rather than treating aggregate
+  stock as uniformly serviceable.
+- **Open issue:** Deterministic versus stochastic life, measured condition,
+  compatibility, inspection, storage history, lead time, issuing rule, unsafe
+  use, and waste must be explicit.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md), and Candidates
+  [014](../experiments/candidates/014-versioned-observation-contract.md),
+  [017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  and [018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-676
+
+- **Statement:** Ready-for-issue inventory and returned or repairable inventory
+  are distinct states with nonunit recovery yield.
+- **Status:** established.
+- **Primary sources:** `schrady1967`.
+- **Rationale:** The foundational repairable-item model explicitly separates
+  ready stock from carcasses awaiting repair and includes positive scrap, so a
+  return cannot be counted as available service stock.
+- **Open issue:** Inspection, classification, repair capacity, turnaround,
+  quality verification, obsolescence, procurement, yield, energy, waste, and
+  second-failure service must be measured.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [system synthesis](../concept/70-system-synthesis.md), and Candidates
+  [005](../experiments/candidates/005-severity-ordered-containment.md),
+  [011](../experiments/candidates/011-dual-loop-operational-assurance.md), and
+  [017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-677
+
+- **Statement:** A project-wide material-commitment-qualified service-state
+  contract may prevent false claims of availability, allocation, recovery, and
+  service across adaptive AI components.
+- **Status:** plausible.
+- **Primary sources:** `dehoratius2008`, `clark1960`, `mayne2000`,
+  `tomlin2006`, `caggiano2007` support the component distinctions; none
+  establishes the complete AI composition.
+- **Rationale:** The held contract composes established separations among
+  forecast, record, policy, reservation, pipeline and on-hand stock, qualified
+  capacity, physical execution, delivery, service, and recovery.
+- **Open issue:** It must reduce infeasible commitments, phantom availability,
+  false recovery, or tail service loss beyond typed event sourcing,
+  reconciliation, queueing and inventory control, routing, stochastic/robust
+  optimization, and frozen-commitment MPC at equal lifecycle cost.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [system synthesis](../concept/70-system-synthesis.md), and Candidates
+  [001](../experiments/candidates/001-adaptive-topology.md),
+  [005](../experiments/candidates/005-severity-ordered-containment.md),
+  [011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md),
+  [013](../experiments/candidates/013-deficit-capability-routing.md),
+  [014](../experiments/candidates/014-versioned-observation-contract.md),
+  [017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  and [018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-678
+
+- **Statement:** A material-commitment-qualified service-state contract may
+  improve multi-agent AI under delayed, irreversible, and capacity-limited
+  action beyond ordinary event sourcing and operations-research control.
+- **Status:** speculative.
+- **Primary sources:** none sufficient yet; `clark1960`, `robinson1990`,
+  `mayne2000`, `tomlin2006`, and `dehoratius2008` establish conventional nulls
+  and component distinctions only.
+- **Rationale:** The proposed systems value is the cross-layer preservation of
+  physical commitment and service semantics, not a new queueing, inventory,
+  routing, or optimization law.
+- **Open issue:** Ten equal-budget audit experiments must show practically
+  meaningful gains across at least two task families after matching
+  observations, compute, messages, inventory, capacity, routes, reserve,
+  intervention authority, maintenance, energy, money, waste, latency, and human
+  work.
+- **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [material-service contract](../math/material-service-state.md),
+  [research roadmap](../concept/90-research-roadmap.md), and Candidates
+  [001](../experiments/candidates/001-adaptive-topology.md),
+  [005](../experiments/candidates/005-severity-ordered-containment.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md),
+  [013](../experiments/candidates/013-deficit-capability-routing.md), and
+  [014](../experiments/candidates/014-versioned-observation-contract.md).

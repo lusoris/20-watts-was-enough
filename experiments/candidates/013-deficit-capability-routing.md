@@ -204,3 +204,34 @@ feasibility gating, and the existing principle bundles.
 - [P-005](../../research/principle-registry.md#p-005--use-dependent-topology)
 - [P-006](../../research/principle-registry.md#p-006--homeostatic-negative-feedback)
 - [P-011](../../research/principle-registry.md#p-011--transient-communication-coalitions)
+
+## Supply-chain operations-research track
+
+**Domain status.** Mandatory operations-research stress track. See the
+[supply-chain audit](../../research/audits/2026-08-05-supply-chain-operations-research.md#exact-candidate-refinements).
+Evidence: [C-627](../../research/claims.md#c-627),
+[C-659](../../research/claims.md#c-659)–[C-678](../../research/claims.md#c-678).
+
+**Typed state.** Keep forecast, request, accepted demand, backlog, lost sale,
+on-hand, reserved, pipeline, inventory position, local serviceability,
+qualified capacity, allocation, dispatch, and realized service separate.
+
+**Strongest OR nulls.** Base-stock and multi-echelon inventory, Jackson and
+general queueing/scheduling, max-weight/backpressure, min-cost flow and
+transshipment, stochastic/robust optimization, and capacitated dynamic VRP or
+receding-horizon dispatch.
+
+**Matched-budget test.** Run paired queueing and multi-echelon/transshipment
+scenarios with identical arrival, service, demand, lead-time, route, failure,
+and reservation trajectories; equalize observations, messages, compute,
+inventory, qualified capacity, switching, and admission authority.
+
+**Service and recovery measurements.** Report throughput jobs/hour, mean and
+$p_{95}/p_{99}$ delay, queue area job-hours, deadline service, unit/order fill,
+OTIF, backlog item-hours, lost demand, transfer kilometres/items, infeasible
+dispatches, source-service loss, joules/job, and recovery after failures.
+
+**Rejection gate.** Reject if gains vanish after matching admission, capacity,
+information, and switching; if movement is instantaneous; if source opportunity
+cost is omitted; or if a mature queueing, flow, inventory, or dynamic-routing
+null ties the tail-service frontier.
