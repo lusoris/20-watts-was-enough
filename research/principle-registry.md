@@ -376,6 +376,44 @@ mixed-precision, wear-management, and lifecycle-accounting stack. Retire the
 composition when those methods reach the same accepted-service frontier. See
 [OQ-063](open-questions.md#oq-063).
 
+### Operator- and action-qualified acoustic-inference evaluation contract
+
+The [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md)
+promotes no principle or candidate. Its 46 scoped claims contain 39 established,
+4 plausible, 2 disputed, and 1 speculative statement. The durable firewall
+separates calibrated pressure and exposure from perception; filtering from
+compression; timing from rate; direction from range; masking from grouping,
+separation, intelligibility, and identity; room compensation from waveform
+recovery; and sparse activity from physical energy
+([C-1054](claims.md#c-1054)–[C-1073](claims.md#c-1073)).
+
+Biological filtering, gain control, temporal coherence, context adaptation,
+sparse coding, echolocation, emission level/aim/timing, and receiver motion are
+real scoped observations, but each is operator-, task-, history-, species-, and
+action-qualified. Active sensing changes obtainable evidence while spending
+acoustic exposure, motion, latency, energy, detectability, interference, and
+calibration. A disputed general efferent benefit and context-dependent jamming
+response remain typed as such ([C-1074](claims.md#c-1074)–[C-1085](claims.md#c-1085)).
+
+GCC, matched filtering, adaptive beamforming, MUSIC, ICA, DUET, deep clustering,
+permutation-invariant training, Conv-TasNet, SI-SDR, and cochlear-like front ends
+are mature nulls rather than biological novelty. Calibration identity, operator
+support, literal outcome, uncertainty, independent unit, and complete lifecycle
+cost remain attached to every result ([C-1086](claims.md#c-1086)–[C-1099](claims.md#c-1099)).
+This refines all existing P-001–P-013 bundles: allocation and multiscale local
+processing; provisional temporal/source traces; hypothesis diversity; learned
+routes; gain feedback; active evidence; typed channels; calibration maintenance;
+physical transfer functions; transient grouping; lifetime-matched evidence; and
+shared propagating state. It creates no additional invariant.
+
+[Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md)
+applies the contract across Candidates 002, 006, 007, 009, 012, and 014. Its
+null is the complete calibrated measurement, front-end, localization,
+separation, dereverberation, scene-inference, active-control, spectrum,
+uncertainty, and lifecycle-accounting stack. Retire the composition when that
+stack reaches the same held-out operator/action/outcome/resource frontier. See
+[OQ-064](open-questions.md#oq-064).
+
 ## P-001 — Selective allocation
 
 **Problem.** Total possible capacity is larger than the activity or resources

@@ -374,3 +374,18 @@ project choice.
   [C-1002](claims.md#c-1002)–[C-1053](claims.md#c-1053),
   [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md),
   and the [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md#audit-disposition).
+- **OQ-064:** Does an operator- and action-qualified acoustic contract expose
+  consequential false specificity or improve literal detection, grouping,
+  separation, localization, ranging, intelligibility, calibration, abstention,
+  and decision-value frontiers beyond IEC/ISO-qualified measurement, fixed and
+  learned filterbanks, compression/AGC, matched filtering and GCC, robust
+  beamforming and subspace localization, ICA/DUET/deep clustering/PIT/Conv-
+  TasNet, dereverberation, Bayesian scene inference, POMDP/dual control/value of
+  information, spectrum protocols, and calibrated uncertainty when sources,
+  rooms/media, operators, clocks, arrays/bodies, context, source count,
+  interference, feasible actions, emission/exposure, motion, latency, human
+  work, hardware, maintenance, and embodied energy remain explicit? This is an
+  evaluation fixture, not a principle or candidate promotion. See
+  [C-1054](claims.md#c-1054)–[C-1099](claims.md#c-1099),
+  [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md),
+  and the [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md#audit-verdict).

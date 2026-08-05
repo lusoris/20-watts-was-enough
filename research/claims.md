@@ -15003,3 +15003,418 @@ describes the exact statement here, not a broader interpretation.
 - **Rationale:** variation-aware allocation, local containment, temporary traces, feedback, maintenance separation, structural compilation, lifetime-matched memory, and environmental telemetry already map to P-001 through P-013.
 - **Open issue:** can the integrated benchmark reveal a composition advantage beyond a complete conventional reliability stack?
 - **Used by:** [semiconductor audit](audits/2026-08-05-semiconductor-device-reliability.md), [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+
+### C-1054
+
+- **Statement:** acoustic level is reference-, weighting-, and instrument-qualified.
+- **Status:** established.
+- **Primary sources:** `AcousticIEC61672`.
+- **Rationale:** the standard distinguishes time-weighted, integrating-averaging, and integrating instruments, two performance classes, acceptance limits, and measurement uncertainty at 95% coverage.
+- **Open issue:** an unqualified “dB” value is not a reproducible acoustic observation and cannot serve as energy, loudness, or exposure by itself.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1055
+
+- **Statement:** room-acoustic quantities require a declared measurement procedure and support.
+- **Status:** established.
+- **Primary sources:** `AcousticISO3382`.
+- **Rationale:** reverberation time and other room parameters are derived from measured impulse responses under specified apparatus, coverage, evaluation, and reporting procedures.
+- **Open issue:** one room label or scalar decay time does not identify the frequency-, source-, receiver-, and support-dependent propagation operator.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1056
+
+- **Statement:** basilar-membrane filtering is sharply tuned and compressively nonlinear near characteristic frequency.
+- **Status:** established.
+- **Primary sources:** `RoblesEtAl1986Cochlea`, `RuggeroEtAl1997Cochlea`.
+- **Rationale:** chinchilla basilar-membrane measurements showed sharp frequency tuning and level-dependent compressive input--output functions in the measured basal region.
+- **Open issue:** species, cochlear place, level, preparation condition, and measurement method bound the result; it does not prescribe one artificial filterbank or exponent.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1057
+
+- **Statement:** outer-hair-cell somatic motility contributes causally to cochlear amplification.
+- **Status:** established.
+- **Primary sources:** `MelladoLagardeEtAl2008OHC`.
+- **Rationale:** basilar-membrane displacement in a mouse manipulation that limited stereociliary contribution supported somatic motility as the basis of amplification in the tested preparation.
+- **Open issue:** causal biological amplification does not establish lower total energy or superior robustness for an artificial active analog front end.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1058
+
+- **Statement:** psychophysical auditory-filter shapes depend on centre frequency and fitting assumptions.
+- **Status:** established.
+- **Primary sources:** `GlasbergMoore1990Filters`, `MooreEtAl1990LowFilters`.
+- **Rationale:** notched-noise thresholds support asymmetric effective filters whose bandwidth and shape vary with centre frequency; derivation depends on off-frequency listening and outer/middle-ear corrections.
+- **Open issue:** the estimated perceptual filter is model-conditioned and is not a direct immutable hardware transfer function.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1059
+
+- **Statement:** temporal-envelope sensitivity is band-limited rather than event-rate invariant.
+- **Status:** established.
+- **Primary sources:** `Viemeister1979TMTF`.
+- **Rationale:** human modulation-detection measurements define a temporal modulation transfer function with task- and carrier-conditioned sensitivity.
+- **Open issue:** “event-driven hearing” cannot assume that every event rate or temporal detail is equally observable or useful.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1060
+
+- **Statement:** auditory-nerve phase locking degrades with frequency.
+- **Status:** established.
+- **Primary sources:** `Johnson1980PhaseLock`.
+- **Rationale:** single-fibre cat auditory-nerve recordings quantified stimulus-parameter-dependent synchrony and its high-frequency decline.
+- **Open issue:** spike timing is a task- and frequency-qualified channel, not a universal replacement for rate or spectral representations.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1061
+
+- **Statement:** cochlear-nucleus circuitry can sharpen low-frequency temporal synchrony.
+- **Status:** established.
+- **Primary sources:** `JorisEtAl1994Synchronization`.
+- **Rationale:** trapezoid-body recordings showed stronger synchronization than auditory-nerve inputs for scoped low-frequency tones.
+- **Open issue:** synchronization enhancement is not evidence that artificial coincidence circuits improve end-to-end tasks or energy without comparison.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1062
+
+- **Statement:** coincidence-sensitive circuits can encode interaural time differences.
+- **Status:** established.
+- **Primary sources:** `CarrEtAl2009ITD`.
+- **Rationale:** in vivo alligator nucleus-laminaris recordings showed phase-locked inputs and maximal responses near delays that aligned bilateral arrivals.
+- **Open issue:** represented delay range, frequency, anatomy, and head geometry are species-specific; GCC and conventional delay estimators remain nulls.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1063
+
+- **Statement:** binaural cue weighting changes with frequency content.
+- **Status:** established.
+- **Primary sources:** `MacphersonMiddlebrooks2002Duplex`.
+- **Rationale:** virtual-space cue-conflict experiments found different weights for interaural time, level, and spectral cues across low-pass, high-pass, and broadband stimuli.
+- **Open issue:** one “duplex” rule is not a complete localization model under individual transfer functions, reverberation, motion, or hearing state.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1064
+
+- **Statement:** head movement can reduce localization ambiguity.
+- **Status:** established.
+- **Primary sources:** `KatoEtAl2003HeadMotion`.
+- **Rationale:** allowing head motion reduced localization errors, including front--back confusion, in the tested virtual-audio conditions.
+- **Open issue:** movement changes the observation operator and costs time and energy; static-HRTF, active-SLAM, and value-of-information baselines apply.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1065
+
+- **Statement:** early-arriving spatial information can dominate later copies.
+- **Status:** established.
+- **Primary sources:** `WallachEtAl1949Precedence`.
+- **Rationale:** controlled lead--lag presentations produced fusion and localization dominance by the earlier arrival within bounded delay regimes.
+- **Open issue:** the precedence effect depends on waveform, delay, context, and task; it is not a general command to discard late evidence.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1066
+
+- **Statement:** spatial separation can improve speech recognition in masking.
+- **Status:** established.
+- **Primary sources:** `BronkhorstPlomp1988SpeechSpatial`.
+- **Rationale:** binaural speech-recognition experiments showed benefits that depended on target/masker spatial configuration and masker type.
+- **Open issue:** better-ear level, binaural unmasking, attention, and source separation must remain distinct mechanisms and outcomes.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1067
+
+- **Statement:** informational masking can fall when target and masker are perceptually segregated.
+- **Status:** established.
+- **Primary sources:** `KiddEtAl1994InfoMask`.
+- **Rationale:** presentation schemes designed to segregate a target from uncertain multitone maskers reduced masking beyond simple spectral-energy accounts.
+- **Open issue:** this does not identify one grouping mechanism; template uncertainty, spatial filtering, sequential prediction, and attention are competing explanations.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1068
+
+- **Statement:** selective listening is strongly altered by ear and source configuration.
+- **Status:** established.
+- **Primary sources:** `Cherry1953Cocktail`.
+- **Rationale:** speech-shadowing experiments showed large differences between monaural mixtures and dichotic presentation of competing messages.
+- **Open issue:** the classic result establishes task-conditioned selection, not a complete computational mechanism or modern multi-source benchmark.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1069
+
+- **Statement:** temporal coherence can support grouping across frequency channels.
+- **Status:** plausible.
+- **Primary sources:** `ElhilaliEtAl2009TemporalCoherence`.
+- **Rationale:** psychophysical and cortical measurements plus a model linked cross-channel temporal coherence with stream organization in the tested stimuli.
+- **Open issue:** coherence is neither necessary nor sufficient for every scene; source models, attention, harmonicity, spatial cues, and learned separation remain nulls.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1070
+
+- **Statement:** stable spectrotemporal context can alter later speech judgments.
+- **Status:** established.
+- **Primary sources:** `StilpEtAl2016Context`.
+- **Rationale:** vowel judgments adapted to stable spectral properties in preceding context whether caused by reverberation or a concurrent tone.
+- **Open issue:** the result warns against calling every contextual compensation an inferred room model.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1071
+
+- **Statement:** prior exposure to a room can improve masked-speech intelligibility.
+- **Status:** established.
+- **Primary sources:** `BrandewieZahorik2010Room`.
+- **Rationale:** prior listening in a consistent simulated room improved the scoped speech-in-noise outcome.
+- **Open issue:** room identity, exposure duration, listener, speech task, and transfer room must be retained; ordinary adaptive filtering is a null.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1072
+
+- **Statement:** monaural context can compensate for reverberant speech distortion.
+- **Status:** established.
+- **Primary sources:** `Watkins2005ReverbComp`, `BeestonEtAl2014ReverbComp`.
+- **Rationale:** controlled context manipulations changed consonant identification in reverberant speech without requiring binaural input.
+- **Open issue:** compensation is bounded by context consistency and stimulus; it does not establish physical dereverberation or waveform recovery.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1073
+
+- **Statement:** direct-to-reverberant energy contributes to auditory distance judgments.
+- **Status:** established.
+- **Primary sources:** `BronkhorstHoutgast1999Distance`.
+- **Rationale:** virtual-room experiments supported a quantitative relation between modified direct-to-reverberant energy ratio and perceived distance.
+- **Open issue:** perceived distance, true metric range, room inference, and echo ranging are different outcomes.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1074
+
+- **Statement:** awake auditory cortex can represent sounds with low population activity.
+- **Status:** established.
+- **Primary sources:** `HromadkaEtAl2008Sparse`.
+- **Rationale:** cell-attached recordings in unanesthetized rats found sparse sound-evoked activity across the sampled auditory-cortical population.
+- **Open issue:** sampling, bin width, stimulus ensemble, cell type, and task matter; sparse spikes do not directly measure organism or hardware energy.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1075
+
+- **Statement:** sparse coding of natural sounds can learn cochlea-like kernels.
+- **Status:** plausible.
+- **Primary sources:** `SmithLewicki2006Efficient`.
+- **Rationale:** a sparse generative spike-code model trained on natural sounds learned time-domain kernels resembling measured auditory filters and encoded the modeled corpus efficiently.
+- **Open issue:** this is a computational model; representation efficiency under its objective is not measured biological or hardware energy efficiency.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1076
+
+- **Statement:** learned efficient auditory codes depend on the sound ensemble.
+- **Status:** established.
+- **Primary sources:** `Lewicki2002Efficient`, `SmithLewicki2006Efficient`.
+- **Rationale:** learned basis functions differed with natural-sound and speech ensembles, showing that efficient features are distribution-qualified.
+- **Open issue:** a natural-corpus match does not guarantee task transfer, robustness, causal grouping, or efficiency after encoder/decoder cost.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1077
+
+- **Statement:** efferent activation can reduce cochlear gain and enhance masked-tone nerve responses.
+- **Status:** established.
+- **Primary sources:** `KawaseEtAl1993Olivocochlear`.
+- **Rationale:** contralateral stimulation activating the olivocochlear reflex altered cat auditory-nerve responses and enhanced responses to some masked tones despite suppressive gain effects.
+- **Open issue:** preparation, masker, level, frequency, and contralateral stimulus bound the effect; AGC, lateral inhibition, and adaptive filtering remain engineering nulls.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1078
+
+- **Statement:** a general human speech-in-noise benefit from medial olivocochlear strength remains disputed.
+- **Status:** disputed.
+- **Primary sources:** `RaoEtAl2020Olivocochlear`.
+- **Rationale:** the small human electrophysiological study did not establish a simple one-to-one mapping from otoacoustic-emission inhibition to all behavioral and cortical listening-in-noise outcomes.
+- **Open issue:** cochlear suppression, neural protection, attention, detection, and intelligibility are distinct; a claimed efferent controller must select its literal endpoint.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1079
+
+- **Statement:** biosonar call timing changes with spatial task difficulty.
+- **Status:** established.
+- **Primary sources:** `MossEtAl2006ActiveListening`.
+- **Rationale:** big brown bats changed pulse grouping and terminal call timing when intercepting insects near clutter, alongside lower success and longer initiation time.
+- **Open issue:** temporal emission control is coupled to flight, respiration, clutter, and task; it does not identify a generic scheduler.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1080
+
+- **Statement:** echolocating bats adapt emission level with target distance.
+- **Status:** established.
+- **Primary sources:** `SurlykkeKalko2008Bats`.
+- **Rationale:** field-array measurements found high source levels and distance-dependent level reduction as several bat species approached the recording array or background.
+- **Open issue:** source-level estimation depends on beam aim, array geometry, propagation, and reference distance; active power control is already mature.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1081
+
+- **Statement:** echolocators can steer and reshape their acoustic field of view.
+- **Status:** established.
+- **Primary sources:** `YovelEtAl2011Field`.
+- **Rationale:** Egyptian fruit bats changed click-pair aim and emission intensity in a multiple-object task, controlling spatial acoustic sampling.
+- **Open issue:** beam steering, waveform design, and sequential sensor placement are established engineering operations and remain the null mechanisms.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1082
+
+- **Statement:** head and pinna motion can be coordinated with sonar emission.
+- **Status:** established.
+- **Primary sources:** `WohlgemuthEtAl2016Action`.
+- **Rationale:** synchronized audio and stereo video showed coordinated call, head, and ear changes that enhanced target-localization cues in flying bats.
+- **Open issue:** receiver motion and emission are joint interventions; their separate value requires factorial ablation and complete motion/emission cost.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1083
+
+- **Statement:** human experts can use self-generated echoes, with extensive experience and neural reorganization.
+- **Status:** established.
+- **Primary sources:** `ThalerEtAl2011HumanEcho`.
+- **Rationale:** fMRI and behavioral measurements in early- and late-blind expert echolocators showed echo-specific responses including occipital recruitment.
+- **Open issue:** the small expert sample, blindness history, training, click production, and scanner playback bound the result; it does not establish a general-purpose transferable sonar representation.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1084
+
+- **Statement:** spectral jamming avoidance in bats is context-dependent rather than universal.
+- **Status:** disputed.
+- **Primary sources:** `BatesEtAl2008Jamming`, `CvikelEtAl2015NoJamming`.
+- **Rationale:** controlled laboratory playbacks elicited frequency shifts in one task, whereas on-board field recordings did not find a classical spectral jamming-avoidance response during close encounters.
+- **Open issue:** species, task, interferer waveform, echo-to-noise ratio, social setting, and measurement frame must accompany the claim.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1085
+
+- **Statement:** echo-ranging resolution is waveform- and ambiguity-qualified.
+- **Status:** established.
+- **Primary sources:** `Simmons1979EchoPhase`.
+- **Rationale:** behavioral echo-delay discrimination in bats demonstrated fine temporal ranging under the tested broadband sonar conditions.
+- **Open issue:** bandwidth, SNR, target, ambiguity function, training, and motor timing define the resolution; microsecond discrimination is not free global clock precision.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1086
+
+- **Statement:** generalized cross-correlation is a mature time-delay estimator.
+- **Status:** established.
+- **Primary sources:** `KnappCarter1976GCC`.
+- **Rationale:** the generalized-correlation framework derives frequency weightings for estimating delay under stated signal and noise assumptions.
+- **Open issue:** biological timing analogies must beat tuned GCC variants under the same bandwidth, synchronization, reverberation, and compute budget.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1087
+
+- **Statement:** adaptive minimum-variance beamforming is a mature spatial-allocation null.
+- **Status:** established.
+- **Primary sources:** `Capon1969MV`.
+- **Rationale:** data-dependent minimum-variance spatial spectral estimation achieves narrower response than conventional fixed windows under its model.
+- **Open issue:** covariance estimation, source coherence, array calibration, sample support, and steering mismatch can erase the advantage.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1088
+
+- **Statement:** subspace methods provide a mature high-resolution direction-of-arrival null.
+- **Status:** established.
+- **Primary sources:** `Schmidt1986MUSIC`.
+- **Rationale:** MUSIC separates modeled signal and noise subspaces to estimate source number, direction, strength, and correlation under explicit assumptions.
+- **Open issue:** model order, snapshot count, source coherence, noise structure, array manifold, and calibration are not optional.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1089
+
+- **Statement:** blind separation by independence is mature but assumption-bound.
+- **Status:** established.
+- **Primary sources:** `BellSejnowski1995ICA`.
+- **Rationale:** information-maximizing nonlinear learning separated scoped mixtures and addressed blind deconvolution without known source waveforms.
+- **Open issue:** independence, sensor/source count, mixing model, scale, permutation, stationarity, and noise determine identifiability.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1090
+
+- **Statement:** time--frequency sparsity supports separation only under overlap assumptions.
+- **Status:** established.
+- **Primary sources:** `YilmazRickard2004DUET`.
+- **Rationale:** DUET demonstrated blind speech-mixture separation using attenuation/delay clustering and approximate time--frequency disjointness.
+- **Open issue:** dense overlap, reverberation, moving sources, phase, and array mismatch violate the favorable condition.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1091
+
+- **Statement:** deep clustering is an established learned separation baseline.
+- **Status:** established.
+- **Primary sources:** `HersheyEtAl2016Clustering`.
+- **Rationale:** learned time--frequency embeddings clustered mixture bins by source and improved the evaluated multi-speaker separation benchmark.
+- **Open issue:** corpus construction, source count, speaker overlap, room, permutation, and evaluation metric define the result.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1092
+
+- **Statement:** permutation-invariant training directly addresses output-label ambiguity.
+- **Status:** established.
+- **Primary sources:** `YuEtAl2017PIT`.
+- **Rationale:** utterance-level permutation selection enabled direct training of multi-talker separators without a fixed output-speaker order.
+- **Open issue:** resolving label permutation does not resolve causal source identity, unknown source count, open-set generalization, or room shift.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1093
+
+- **Statement:** time-domain learned separation is a mature high-capacity null.
+- **Status:** established.
+- **Primary sources:** `LuoMesgarani2019ConvTasNet`.
+- **Rationale:** Conv-TasNet learned an encoder, masks, and decoder and exceeded the evaluated ideal magnitude-mask baseline on scoped speech data.
+- **Open issue:** training data, latency, causal mode, compute, phase, source count, language, acoustics, and downstream task must be retested.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1094
+
+- **Statement:** source-separation metrics can hide severe waveform changes.
+- **Status:** established.
+- **Primary sources:** `LeRouxEtAl2019SDR`.
+- **Rationale:** the analysis showed that common BSS Eval variants could forgive large filtering changes and proposed a clearly defined SI-SDR.
+- **Open issue:** SI-SDR itself does not measure intelligibility, localization, calibration, identity, perceptual quality, or lifecycle cost.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1095
+
+- **Statement:** cochlear-like front ends are already conventional signal-processing baselines.
+- **Status:** established.
+- **Primary sources:** `IrinoPatterson2006Gammachirp`, `GlasbergMoore1990Filters`.
+- **Rationale:** auditory filterbank models and psychophysical filter derivations predate modern neural architectures and can be implemented as fixed or learned multirate transforms.
+- **Open issue:** calling a front end “cochlear” does not distinguish it from ERB, gammatone, wavelet, constant-Q, or learnable convolutional baselines.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1096
+
+- **Statement:** active acoustic sensing changes both information and physical cost.
+- **Status:** established.
+- **Primary sources:** `MossEtAl2006ActiveListening`, `WohlgemuthEtAl2016Action`.
+- **Rationale:** emission timing and receiver orientation vary with task and alter returned acoustic evidence.
+- **Open issue:** every active-sensing claim must charge emission, motion, detectability, interference, exposure, calibration, latency, and compute.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1097
+
+- **Statement:** sparse auditory activity is not a complete energy claim.
+- **Status:** plausible.
+- **Primary sources:** `HromadkaEtAl2008Sparse`, `SmithLewicki2006Efficient`.
+- **Rationale:** sparse population responses and sparse model codes are empirically or computationally supported in their scopes.
+- **Open issue:** input transduction, spontaneous activity, inhibition, timing, routing, memory, decoder, training, and hardware overhead must be measured before claiming energy efficiency.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1098
+
+- **Statement:** calibration identity is part of the learned acoustic task.
+- **Status:** plausible.
+- **Primary sources:** `AcousticIEC61672`, `AcousticISO3382`, `KatoEtAl2003HeadMotion`.
+- **Rationale:** instrument response, room response, receiver geometry, and listener-specific transfer functions materially change measured inputs and localization outcomes.
+- **Open issue:** calibration metadata can be a shortcut; it must improve counterfactual transfer and uncertainty rather than merely identify a device.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1099
+
+- **Statement:** the transferable residual is an operator- and action-qualified evaluation contract.
+- **Status:** speculative.
+- **Primary sources:** synthesis of [C-1054](#c-1054)–[C-1098](#c-1098); no single study validates the complete contract.
+- **Rationale:** no audited paper demonstrates that the whole contract beats a complete calibrated filterbank, spatial inference, separation, active sensing, control, uncertainty, and lifecycle-accounting stack.
+- **Open issue:** preserve the contract even if every architectural residual is retired.
+- **Used by:** [acoustics audit](audits/2026-08-05-acoustics-auditory-scene-analysis.md), [Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).

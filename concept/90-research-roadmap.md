@@ -283,9 +283,10 @@ adding citations:
 | sports expertise, adaptive performance, and team coordination | anticipation/interception, causal cue use, practice/retention/transfer, relevant variability, speed/accuracy/risk/energy, fatigue/readiness/damage/return, shared information/coordination, adversarial deception, feedback dependence, prospective selection, and full human/joule budgets remain separate; Fixture F-006 carries the representative history/resource-qualified performance contract across Candidates 002/004/006/007/009/012/014/019 without promoting a principle or candidate |
 | optics, photonics, and inverse sensing | forward operators, finite information modes, null-space ambiguity, photon/noise budgets, structural priors, active/coded acquisition, adaptive correction, drift, saturation, fusion, optical transforms, conversion, analog error, fabrication, thermal control, future-query recovery, and full lifecycle energy remain separate; Fixture F-007 carries the operator-qualified measure–infer–intervene–monitor–route–retain contract across Candidates 001/006/007/010/014/017/018 without promoting a principle or candidate |
 | semiconductor device and circuit reliability | qualification, hierarchical yield and variability, reversible drift, cumulative degradation, abrupt failure, transient upset, fault geometry, correction/recovery stages, adaptive margin, analog/in-memory physical state, endurance/wear, accepted field service, and fabrication-to-retirement burden remain separate; Fixture F-008 carries the mission-profile-qualified degradation/recovery contract across Candidates 001/005/006/009/010/012/014/017/018 without promoting a principle or candidate |
+| acoustics, hearing, and auditory-scene analysis | calibrated pressure/level and room support, cochlear filtering/compression, temporal coding, spatial cues, masking/grouping/separation, reverberation/context, sparse activity, efferent control, echolocation and active emission/reception, array inference, uncertainty, calibration, and complete lifecycle cost remain separate; Fixture F-009 carries the operator- and action-qualified acoustic contract across Candidates 002/006/007/009/012/014 without promoting a principle or candidate |
 
 The music, library/archival, comparative-cognition, visual-design,
-mathematical-practice, fluid-dynamics, sports, optics, and semiconductor queues are closed by explicit
+mathematical-practice, fluid-dynamics, sports, optics, semiconductor, and acoustics queues are closed by explicit
 no-promotion decisions. The music
 [Fixture F-001](../experiments/fixtures/001-shared-clock-free-coadaptation.md)
 retains E-MUSIC-07 as a cross-candidate benchmark; the archival refinement
@@ -349,6 +350,17 @@ tracks test hierarchical transfer, accelerated-life support, sparse wear,
 correlated faults, voltage authority, approximation containment, analog/digital
 crossover, nonideality transfer, wear placement, and keep/repair/repurpose/
 replace policy against the complete mature reliability stack.
+Acoustics contributes
+[Fixture F-009](../experiments/fixtures/009-operator-qualified-active-acoustic-inference.md)
+across Candidates 002/006/007/009/012/014. It binds each result to source and
+emission action, propagation/room state, receiver geometry and motion,
+calibrated operator support, context/history, literal target, uncertainty,
+independent unit, feasible action, exposure, and complete resource boundary.
+Its nine tracks test level-dependent front ends, sparse event timing, active
+emission/reception, localization under operator shift, reverberation transfer,
+grouping/separation, efferent-like gain, multi-emitter interference, and full
+lifecycle cost against the complete calibrated acoustics, inference, control,
+spectrum, uncertainty, and accounting stack.
 The next
 breadth field is selected by expected ability to split, merge, reject, or
 re-baseline a current mechanism. Breadth alone does not close a row.
