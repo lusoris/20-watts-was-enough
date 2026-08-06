@@ -61,6 +61,28 @@ function DiagramAwarePre({ children, ...props }: ComponentPropsWithoutRef<"pre">
   return <pre {...props}>{children}</pre>;
 }
 
+// The overflow region must receive keyboard focus so arrow-key users can scroll it.
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
+function ResponsiveTable(props: ComponentPropsWithoutRef<"table">) {
+  return (
+    <div className="table-frame">
+      <div className="table-scroll-cue" aria-hidden="true">
+        <span>Wide table</span>
+        <span>Scroll horizontally ↔</span>
+      </div>
+      <div
+        className="table-region"
+        role="region"
+        aria-label="Scrollable data table"
+        tabIndex={0}
+      >
+        <table {...props} />
+      </div>
+    </div>
+  );
+}
+/* eslint-enable jsx-a11y/no-noninteractive-tabindex */
+
 export function MarkdownDocument({
   body,
   currentPath,
@@ -113,6 +135,7 @@ export function MarkdownDocument({
       );
     },
     pre: DiagramAwarePre,
+    table: ResponsiveTable,
   };
 
   return (
