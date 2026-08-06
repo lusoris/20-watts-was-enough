@@ -274,6 +274,57 @@ All arms receive identical:
   time, credential-rotation completeness, and recurrence after the declared
   clean state.
 
+## Confirmatory analysis and statistical plan
+
+The confirmatory unit is an independently generated disturbance or compromise
+episode with its full detection, authorization, actuation, degradation,
+replenishment, restoration, and next-event record. Pair every eligible arm on
+the same plant/topology state, sensor and communication trace, fault sequence,
+reserve state, operator delay, attacker action, and intervention/removal
+schedule. Repeated episodes sharing a network, controller, physical plant,
+credential root, subgroup, or simulator seed are clustered. Confirmation holds
+out complete topologies, operating modes, fault and compromise families,
+communication regimes, plant/domain instances, intervention subgroups, and
+future-time sequences rather than individual samples from the same trajectory.
+
+Preregister paired contrasts between the latency-qualified envelope and the
+strongest static hierarchy, constrained/robust controller, safety-filter or
+runtime-assurance null appropriate to each track. Estimate paired effects with
+simultaneous intervals for retained service, damage/constraint exposure, false
+and missed action, unsafe action, p99 detection/action/recovery latency,
+revocation exposure, reserve at the second event, restoration quality, and the
+energy/communication/human rows of $\mathbf J$. Use hierarchical episode models
+or cluster resampling across topology and fault family. Report tail quantile or
+restricted-mean intervals, common-cause sensitivity, state-estimation
+uncertainty, and meter/simulator uncertainty without collapsing the accounting
+vector into post-hoc scalar weights.
+
+Freeze a decision hierarchy before confirmation: every hard physical, safety,
+integrity, and authority constraint must pass; service and damage outcomes must
+meet task-specific noninferiority margins; the candidate must then improve a
+preregistered latency, reserve, or recovery outcome; resource savings are tested
+last. Control family-wise error across the eligible comparator family, ten
+tracks, and registered primary endpoints with a hierarchical or closed-testing
+procedure. Report adjusted decisions alongside every raw effect and interval.
+No universal latency or risk margin is introduced.
+
+No-action and no-detection episodes remain outcomes. Detection, response,
+replenishment, revocation, or recovery not completed by the horizon are
+right-censored for time analysis and failures for any deadline-qualified gate.
+Missing, stale, spoofed, or partitioned telemetry is part of the assigned input
+condition, not a reason to drop the episode. Unavailable post-event labels,
+operator records, reserve measurements, or clean-state verification are typed
+missingness states with preregistered worst/best-case and model-based
+sensitivity when informative censoring is possible.
+
+Envelope maps, age/integrity thresholds, authority transition rules,
+certifiers, conventional inner controllers, support/abstention tests,
+replenishment requirements, credential epochs, withdrawal logic, and recovery
+postconditions are fitted only on development/validation episodes and frozen
+before held-out release. Apply the frozen decision to all confirmation strata,
+including fallback when support is absent. The oracle-state ceiling is reported
+but never participates in promotion.
+
 ## Required ablations
 
 - remove observation age;

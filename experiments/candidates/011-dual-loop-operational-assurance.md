@@ -150,6 +150,58 @@ Report raw axes:
 - stale-lesson harm and retirement latency; and
 - retained bytes per prevented recurrence.
 
+## Confirmatory analysis and statistical plan
+
+The confirmatory unit is an independently generated incident episode, including
+its precursor exposure, live response, restoration, learning record, later
+applicability opportunities, and recurrence window. Pair arms on the same fault,
+topology, alert stream, authority gradient, objectives, and expert-availability
+schedule. Cluster repeated episodes that share a causal family, system version,
+runbook, memory lineage, operator or expert, or simulator world. Hold out entire
+fault families, dependency topologies, version migrations, symptom renamings,
+authority structures, report-policy regimes, and future recurrence periods;
+random alerts or log entries from one incident cannot cross splits.
+
+Preregister paired contrasts of the dual-loop composition against the mature
+SRE stack, deterministic interlocks plus incident command, and fixed central
+supervision. Report paired effects and simultaneous intervals for unsafe
+consequence before containment, p99 containment time, restoration time,
+false-stop utility loss, verified corrective-change rate, recurrence severity,
+stale-lesson harm, communication/expert cost, and retained bytes per prevented
+recurrence. Time outcomes use survival or restricted-mean analysis with the
+episode deadline stated; precursor recall and recurrence use their actual
+exposure denominators. Hierarchical or cluster-resampled intervals preserve
+fault-family, version, site, and repeated-expert dependence. Simulator,
+timestamp, energy-meter, and expert-time uncertainty remain separately
+reported.
+
+Use a frozen gatekeeping order: no excess unsafe action or false-stop harm;
+noninferior containment/restoration under the declared task margins; lower
+recurrence or faster applicability-triggered retrieval; then lower human,
+communication, storage, or energy cost. Task margins are preregistered from the
+service contract. Control multiplicity across the six experimental tracks,
+eligible comparator contrasts, and primary tail/outcome family with a
+hierarchical family-wise procedure. Publish raw effects and intervals even when
+the adjusted decision does not pass, and do not replace the outcome vector with
+one incident score.
+
+Episodes not contained or restored by the observation horizon are right-
+censored for time analysis and retain their full consequence and availability
+loss. Missing telemetry, unavailable experts, unacknowledged handoffs,
+unverified corrective actions, absent recurrence opportunities, privacy-
+redacted reports, and failed retrieval are explicit states. “No recurrence” is
+not credited when follow-up exposure is absent or censored. Preregister
+selection and sensitivity analyses for strategic reporting and informative
+loss to follow-up; assigned incidents remain in all service denominators.
+
+Roles, authority transfers, acknowledgement deadlines, challenge rules,
+containment triggers, retrieval ranking, applicability tests, memory versioning,
+expiry, corrective-action verification, and closure criteria are tuned on
+development/validation incidents and frozen before confirmation. Apply the
+frozen policy to every held-out incident and recurrence opportunity, including
+novel or unsupported states that require abstention or fallback. The
+topology-reduced ceiling remains descriptive and cannot determine a pass.
+
 ## Required ablations
 
 - disconnect the learning loop from live retrieval;

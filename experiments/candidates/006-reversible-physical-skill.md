@@ -91,6 +91,46 @@ The maintained digital shadow stores the qualified mapping, calibration
 envelope, substrate version, protected tests, fallback executable, and the
 trace connecting outputs to substrate state.
 
+## Strongest comparator arms
+
+Every physical track includes the strongest applicable ordinary alternatives,
+not only a digital neural baseline:
+
+1. tuned passive mechanics or a fixed physical transfer;
+2. conventional analog feedback with the same sensing and actuation boundary;
+3. an FPGA/ASIC implementation at the required precision and latency;
+4. a capacity-matched digital state-space, reservoir, or adaptive-control
+   implementation;
+5. the candidate substrate used only as a sensor or filter, with the remaining
+   computation performed digitally;
+6. standard system identification, gain scheduling, model-predictive control,
+   redundancy, repair, and recalibration as appropriate to the track; and
+7. an oracle-selected arm used only to expose regime dependence.
+
+The best non-oracle comparator is selected on a frozen development set for
+each track. A weak universal comparator cannot be used to promote a physical
+mechanism across substrates or tasks.
+
+## Equal-budget experimental boundary
+
+Candidate and comparator arms receive the same physical input histories,
+targets, sensing aperture and bandwidth, actuator authority, safety envelope,
+payload, response deadline, training examples, tuning opportunities, and
+held-out evaluation horizon. Match effective state capacity and numerical
+precision where the comparison depends on them. Cap development compute,
+engineer-hours, calibration opportunities, spare devices, and permitted
+restarts before evaluation. An arm that cannot use an allowance leaves it
+unused; it may not exchange unused storage or calibration for hidden test data,
+extra actuator authority, or a longer lifetime.
+
+Energy is an outcome, not a quantity forced to equality. Measure all arms at
+the same named wall-plug or device boundary and charge drive, conversion,
+readout, control, cooling allocated to the device, calibration, health probes,
+fallback, reset, fabrication yield loss, and retirement. Give digital and
+physical arms the same accepted-output quality and risk contract before an
+energy comparison. Record batch, device, mounting, temperature, calibration,
+and test order so physical drift is not mistaken for an arm effect.
+
 ## Experiment tracks
 
 ### Track A — local sensorimotor stabilization
@@ -293,6 +333,42 @@ valid assembly, or recovered function.
 9. Compare healing alone with healing plus automatic behavioral recalibration.
 10. Replace the candidate with the best passive, analog, and FPGA/ASIC design
     discovered under the same engineering effort.
+
+## Statistical analysis plan
+
+Write a separate confirmatory contract for each promoted track; success in one
+track is not pooled with another. Freeze substrate design, controller and
+readout fitting, calibration procedure, acceptance limits, energy boundary,
+and practical-effect margins before opening held-out environment, damage,
+aging, mounting, or input-rate histories. Randomize arm and test order within
+device and fabrication batch where reuse is safe; otherwise block by batch and
+use independently fabricated devices. Repeated time samples from one device do
+not count as independent replicates.
+
+For scalar outcomes, report paired or blocked arm differences with uncertainty
+resampled first at the device or fabrication-batch level and then, when
+applicable, at the episode level. Report complete quality--risk--latency--energy
+frontiers and raw distributions. Apply a declared multiplicity correction to
+the finite primary comparisons within a track; cross-track findings and
+unplanned substrate slices remain exploratory. Promotion requires protected
+quality and safety to satisfy margins fixed in native task units before a
+lower-energy claim is evaluated. Failure to find a difference is not an
+equivalence result unless the corresponding equivalence margin and test were
+preregistered.
+
+Analyze drift, damage, fallback, and device failure as time-to-event outcomes.
+Devices still operating at the fixed horizon are right-censored; fabrication
+failures and devices that never qualify remain in yield and lifecycle-cost
+accounting. Estimate the distribution of break-even use count rather than only
+substituting mean costs into $N_{\mathrm{break}}$, and report the fraction of
+devices that never reach break-even within their qualified lifetime. Repeat
+the calculation over declared embodied-energy and facility-allocation ranges.
+
+Full-versus-ablation contrasts use identical physical histories and account
+for rewritten or replaced substrates. Missing sensor intervals, unsafe aborts,
+recalibrations, excluded devices, and fallback episodes are reported by arm.
+An exclusion made after outcomes are visible is a protocol deviation and is
+included in a sensitivity analysis.
 
 ## Promotion criteria
 

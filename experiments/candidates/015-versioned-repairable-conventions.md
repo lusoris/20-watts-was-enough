@@ -114,6 +114,15 @@ constraints remain visible rather than becoming cheap scalar penalties.
 
 ## Equal-budget experiment family
 
+For every family, replay the same task instances, sender observations, partner
+histories, channel faults, schema changes, and adversarial events across arms.
+Equalize training examples, answer exposure, optimizer updates, model capacity,
+inference work, transmitted and retained bytes, permitted repair turns, wall
+time, energy boundary, migration opportunities, and human review. If an arm
+does not use an allowance, record the unused amount rather than reallocating it
+after outcomes are visible. Preparation, compatibility, rollback, and failed
+repair work remain inside the comparison boundary.
+
 ### A — composition and reference
 
 Use typed primitives, nested relations, lexical ambiguity, hidden sender
@@ -161,6 +170,65 @@ useful, neutral, ambiguous, and harmful variants at equal frequency. Compare
 popularity adoption, outcome selection, controlled standards governance, and
 the candidate. Measure adoption curves, task utility, subgroup error,
 manipulation, fragmentation, migration burden, and rollback time.
+
+## Outcomes and measurements
+
+Report every outcome by task family, partner lineage, protocol-version pair,
+incentive regime, and held-out stratum before any aggregate. Required native
+measurements are:
+
+| Outcome | Unit and denominator |
+| --- | --- |
+| task completion and exact denotation | fraction of eligible tasks or messages |
+| novel-combination and independent cross-play success | fraction of preregistered held-out trials |
+| calibration | dimensionless Brier score or declared calibration error |
+| false-common-ground, contradictory-action, and authority errors | event count and events per eligible message or task |
+| protected-meaning retention and subgroup compatibility | fraction within each registered protected stratum |
+| repair precision and recall | dimensionless fractions over registered repair opportunities |
+| clarification and repair burden | repair turns per task and repair bytes per task |
+| median and tail completion latency | milliseconds from first send to terminal outcome |
+| communication and retained state | transmitted bits per completed task and stored bytes |
+| encoder, decoder, synchronization, and migration energy | joules per completed task at the declared boundary |
+| rollback and partition recovery | seconds to the registered restored state |
+| migration and review work | person-minutes and machine-seconds per released version |
+
+Timeouts, rejected messages, and unresolved repairs remain in their original
+denominators. Task utility, semantic correctness, safety, and cost stay as a
+vector unless conversion weights were authorized and frozen before allocation.
+
+## Confirmatory analysis and statistical plan
+
+Pair arms on task seed, sender observation, partner history, protocol versions,
+fault schedule, and adversarial intervention. Freeze models, migration rules,
+clarification policies, outcome code, and the primary fixed-protocol comparator
+before opening held-out composition templates, independently trained partner
+lineages, schema transitions, and task regimes. The independent unit is the
+predeclared session or population lineage, not each message within it.
+
+For each experiment family, preregister one primary candidate-versus-complete-
+null contrast and its primary semantic or task outcome together with the full
+cost vector. Estimate paired differences with uncertainty intervals using a
+hierarchical model or cluster bootstrap that preserves task, partner, and
+version dependence. Report distributional and tail outcomes rather than only
+means. Calibration analyses retain the predictions issued before feedback.
+
+Gate secondary outcomes behind the primary contrast or control their familywise
+error across the five experiment families with a declared step-down procedure.
+Protected-meaning, authority-error, and catastrophic-tail endpoints are reported
+separately even when sparse; they are not pooled away by an aggregate utility.
+
+Missing telemetry is reported by arm and cause. Delivery failure, agent
+dropout, safe rejection, unresolved clarification, rollback failure, and
+deadline exhaustion are outcomes, not removable rows. Right-censor completion
+or recovery time at the registered horizon and include worst-case and bounded
+sensitivity analyses for any remaining outcome missingness. Do not use
+complete-case analysis as the primary result.
+
+Apply the existing promotion and kill rules once, ex ante, to the held-out
+estimates and uncertainty intervals. Any acceptance margin must come from a
+registered task or safety requirement, measurement resolution, or comparator
+variability; it is not selected from these results. An exploratory win may
+narrow or motivate a new contract but cannot promote this candidate.
 
 ## Ablations
 

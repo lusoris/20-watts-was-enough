@@ -14,6 +14,10 @@
 - **Mathematics:**
   [operator-qualified optical inference contract](../../math/operator-qualified-optical-inference.md)
 
+## Evidence links
+
+The direct evidence range is [C-970](../../research/claims.md#c-970)–[C-1001](../../research/claims.md#c-1001). The range supplies traceability to the scoped source claims; the fixture remains a joint engineering test.
+
 ## Question
 
 At equal information, hardware, safety, labor, and lifecycle-energy budgets, can

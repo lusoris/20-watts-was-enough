@@ -123,7 +123,7 @@ The intersection is a policy statement. Capability enforcement and complete
 mediation—not the notation—supply authority control. Any observed undeclared
 effect triggers quarantine and envelope invalidation.
 
-## Lifecycle budget
+## Matched-budget lifecycle contract
 
 For envelope version $v$ over deployment horizon $H$,
 
@@ -139,6 +139,16 @@ Report engineer-hours, machine-hours, joules, bytes, and latency separately;
 they are not dimensionally summed without declared conversion weights. Include
 false rejection, delayed deployment, stale assurance, compensation failure,
 and incidents outside the monitored boundary.
+
+Before evaluation, give the candidate and complete ordinary null stack the
+same module versions, fault and attack opportunities, test data, deployment
+windows, engineer-hours, CI machine-hours, runtime CPU and memory ceilings,
+persistent storage, p99 latency envelope, canary capacity, rollback authority,
+and observation horizon. Candidate-specific proof, envelope maintenance,
+lineage, replay, invalidation, and reviewer work are charged to the candidate;
+ordinary policy, CI, monitoring, incident-response, and migration work are
+charged to the null. Unused budget remains unused and cannot be exchanged for
+extra fault labels, broader authority, or delayed evaluation.
 
 ## Decisive experiments
 
@@ -228,6 +238,38 @@ p50/p99 authorization latency, bytes, joules, and operator-hours. Retire the
 security profile if credential lifetime tuning and conventional recovery match
 the harm and recovery frontier at equal cost.
 
+## Measurements and units
+
+Use one cross-experiment outcome record while retaining each field's native
+meaning and unit:
+
+1. unsafe admissions, escaped authority violations, stale-assurance escapes,
+   and irreversible effects as counts and events per 1,000 attempted
+   deployments or authorized actions;
+2. false rejection, false denial, inconclusive verdict, rollback failure,
+   compensation failure, and recurrence as counts with their denominators;
+3. weighted capability-seconds only with the predeclared capability weights
+   and the raw action counts and durations in seconds;
+4. detection, attribution, containment, rollback, migration, revalidation,
+   redeployment, and secure-recovery time in seconds;
+5. p50 and p99 task or authorization latency in milliseconds, plus task quality
+   and protected-slice loss in their declared task units;
+6. proof/checker, CI, canary, runtime, monitor, replay, migration, and incident
+   energy in joules at one named boundary;
+7. artifact, state, trace, lineage, checkpoint, and invalidation traffic in
+   bytes, with peak CPU and memory reported separately;
+8. specification, proof, review, incident, migration, and recovery effort in
+   person-hours and machine-hours;
+9. invalidation recall and precision against the injected dependency ground
+   truth, together with unnecessary rechecks and missed stale artifacts; and
+10. empirical-envelope calibration, interval coverage, provenance coverage,
+    source identity, and blind entailment as separate fractions with explicit
+    denominators.
+
+Do not sum person-hours, machine-hours, joules, bytes, seconds, quality, and
+risk without publishing conversion weights and a sensitivity analysis. A
+better traceability fraction cannot compensate for a worse protected outcome.
+
 ## Required null stack
 
 The strongest ordinary platform combines:
@@ -260,6 +302,44 @@ Candidate 009 is not distinct if this composed stack matches outcomes and cost.
 11. Remove key/attestation epochs while keeping short credential lifetimes.
 12. Share one identity, approval, telemetry, and recovery control plane while
     reporting the logical components as independent.
+
+## Statistical analysis plan
+
+Freeze envelope schemas, policies, checkers, monitors, dependency rules,
+thresholds, practical-effect margins, and analysis code on development module
+versions. The confirmatory split uses new versions, dependency graphs, fault
+and attack seeds, update orders, source changes, and migration histories. Pair
+the complete candidate and ordinary null stack on the same initial artifact,
+state, workload, injected event, and observation horizon. The oracle injection
+record is evaluator-only.
+
+Treat the module-version by injected-event seed as the primary unit. Requests,
+monitor ticks, and dependency nodes inside that unit are correlated
+measurements, not independent replicates. Report paired arm differences with
+uncertainty resampled at the module-version and injection level. For rare
+unsafe admissions or authority escapes, publish event counts, denominators,
+and interval estimates even when a cell has zero observed events. Analyze
+detection, containment, redeployment, and secure recovery as time-to-event
+outcomes; unresolved runs at the fixed horizon are right-censored and remain in
+the unresolved fraction.
+
+Each experiment A--F has a predeclared primary contrast against its strongest
+applicable conventional arm. Apply one declared multiplicity procedure across
+the finite primary outcome family; proof classes, monitor classes, dependency
+types, attacks, and human-facing strata not named before the holdout opens are
+exploratory. Claims that an ordinary stack is matched require a predeclared
+equivalence margin; a nonsignificant difference alone is not equivalence.
+Protected safety and authority outcomes use non-inferiority margins fixed in
+their native units before any latency or energy improvement is considered.
+
+Score invalidation precision and recall against the injected dependency graph
+without counting one stale artifact repeatedly across descendant alerts.
+Outstanding factual outcomes, selected incident reports, aborted deployments,
+inconclusive monitor states, and failed migrations are reported by arm rather
+than dropped. Human-facing results are stratified by the prespecified review or
+accessibility condition. Every post-freeze exclusion, checker failure, and
+missing measurement receives a protocol-deviation record and sensitivity
+analysis.
 
 ## Promotion criteria
 

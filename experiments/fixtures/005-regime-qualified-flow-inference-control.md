@@ -10,6 +10,10 @@
 - **Evidence source:** [fluid-dynamics and turbulence audit](../../research/audits/2026-08-05-fluid-dynamics-turbulence.md)
 - **Mathematics:** [regime-qualified flow contract](../../math/regime-qualified-flow-contract.md)
 
+## Evidence links
+
+The direct evidence range is [C-881](../../research/claims.md#c-881)–[C-925](../../research/claims.md#c-925). The range supplies traceability to the scoped source claims; the fixture remains a joint engineering test.
+
 ## Question
 
 Can a proposed system allocate resolution, sensing, inference, and control

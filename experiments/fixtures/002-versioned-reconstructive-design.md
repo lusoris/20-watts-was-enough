@@ -8,6 +8,10 @@
 - **Evidence source:** [visual art and design cognition audit](../../research/audits/2026-08-05-visual-art-design-cognition.md)
 - **Mathematics:** [versioned reconstructive design contract](../../math/versioned-reconstructive-design.md)
 
+## Evidence links
+
+The direct evidence range is [C-842](../../research/claims.md#c-842)–[C-860](../../research/claims.md#c-860). The range supplies traceability to the scoped source claims; the fixture remains a joint engineering test.
+
 ## Question
 
 Can a system reconstruct from declared exposure, externalize editable state,

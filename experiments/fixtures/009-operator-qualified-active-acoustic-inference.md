@@ -12,6 +12,10 @@
   audit](../../research/audits/2026-08-05-acoustics-auditory-scene-analysis.md)
 - **Mathematics:** [operator-qualified acoustic inference](../../math/operator-qualified-acoustic-inference.md)
 
+## Evidence links
+
+The direct evidence range is [C-1054](../../research/claims.md#c-1054)–[C-1099](../../research/claims.md#c-1099). The range supplies traceability to the scoped source claims; the fixture remains a joint engineering test.
+
 ## Question
 
 Can a proposed acoustic system detect, group, separate, localize, range, and act

@@ -154,6 +154,54 @@ Report raw axes:
 - concentration of allocation and monopolization; and
 - second-event service after incomplete replenishment.
 
+## Confirmatory analysis and statistical plan
+
+The confirmatory unit is an independently generated demand/resource episode
+containing the complete arrival stream, patch motion and lifetime, topology,
+messages, allocations, reconfiguration, replenishment, and second event. Pair
+arms on the same episode seed and initial inventory. Repeated episodes sharing a
+topology, demand family, patch generator, strategic identity, or simulator world
+are clustered. Hold out whole demand families, resource-motion laws, patch-
+lifetime bands, topology/partition regimes, strategic behaviors, second-event
+timings, and the required second application domain; random requests from one
+episode do not cross development and confirmation splits.
+
+Preregister paired contrasts against tuned backpressure, tuned primal--dual
+allocation, the delayed centralized optimizer, and the learned router. Report
+paired effects and simultaneous intervals for fulfilled and cumulative unmet
+demand, worst-stratum starvation, oracle regret, oscillation/recovery,
+second-event service, messages/state bytes, wall energy, active/idle capacity,
+migration/growth/retirement cost, gate errors, and monopolization. Analyze time
+series with episode-level or block-resampled uncertainty that preserves bursts
+and topology dependence. Report module/task-stratified effects and tail
+intervals; the oracle supplies regret only and is ineligible to win.
+
+Freeze a gatekeeping order: no hard capacity, stability, starvation, or
+strategic-monopolization failure; noninferior fulfilled demand and tail service
+under task-specific margins; improved unmet demand, recovery, or second-event
+service; then lower communication, state, capacity, or energy cost. Control
+family-wise error over eligible comparator contrasts, primary service/cost
+outcomes, factorial regimes, and the two confirmation domains with a
+preregistered hierarchical procedure. Publish the complete effect/interval
+matrix and adjusted decisions rather than a single routing score.
+
+Unserved or expired requests remain unmet demand, not missing data. Jobs still
+open at the horizon, patch lifetimes extending beyond observation, incomplete
+growth/retirement, and unresolved second events are right-censored only for
+their time-to-event analyses and retain their service/cost consequences.
+Message loss, partitions, unknown topology, and unavailable local capability
+are assigned experimental conditions. Instrument or log loss is a typed
+missingness state with preregistered sensitivity analysis; all assigned episodes
+remain in denominators.
+
+Deficit encoding, context rate, receiver decoder, capability gate, demand-
+calibration rule, strategic enforcement, reserve target, movement/growth
+threshold, rollback, and retirement policy are tuned on development/validation
+episodes and frozen before confirmation. Apply the frozen policy without
+retuning to every held-out regime and to the second domain, including support-
+qualified fallback. Promotion uses that frozen cross-domain decision, not the
+best post-hoc sweep cell.
+
 ## Required ablations
 
 - remove the upward deficit signal;

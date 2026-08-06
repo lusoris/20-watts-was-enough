@@ -139,6 +139,19 @@ outcome and turnover. The cost clock cannot stop when teaching ends.
 - fixed worked examples, fading, mastery criteria, and curriculum order with
   every extra opportunity charged.
 
+## Matched-budget and resource parity
+
+Pair population and centralized arms on initial capability, task and item
+sequence, source artifacts, answer exposure, feedback information, teacher and
+learner availability, turnover schedule, evaluation calls, and perturbation
+seeds. Equalize cumulative examples, attempts, hints, response opportunities,
+optimizer updates, environment interactions, model capacity, storage and
+artifact bytes, communication, learner seconds, teacher/evaluator seconds,
+wall time, measured joules, governance work, and maintenance through the
+longest outcome horizon. Failed and abandoned learners, preparation, migration,
+compatibility work, and second-turnover costs remain charged. Parallel agents
+do not create additional free search or evaluation.
+
 ## Experiment family
 
 ### A — inheritance across turnover
@@ -217,6 +230,68 @@ and joules. Score source retrieval, relational mapping, target adaptation, and
 execution separately. Reject inheritance if the effect is immediate imitation,
 test-format matching, answer leakage, more instruction, or persistent access to
 the original source.
+
+## Outcomes and measurements
+
+Report outcomes by generation, learner lineage, teaching channel, skill,
+retention delay, transfer-distance stratum, task family, and protected group:
+
+| Outcome | Unit and denominator |
+| --- | --- |
+| unaided acquisition, delayed retention, and transfer | score-unit change and success fraction per registered item or task |
+| fluency and execution error | correct tasks per second and error fraction |
+| probabilistic calibration | dimensionless Brier score or declared calibration error |
+| validated capability retained, generated, degraded, or recombined | declared task-native capability units per generation |
+| protected and rare-skill retention | success fraction within each registered stratum |
+| newcomer sample complexity | examples, attempts, hints, and feedback bytes to criterion |
+| accessible lineage diversity | dimensionless $N_{\mathrm{eff}}$ with exposure weights reported |
+| compatibility, migration, repair, and governance events | counts per generation and seconds to resolution |
+| learner and teacher/evaluator effort | seconds per learner and per validated capability unit |
+| artifacts, communication, and retained state | bytes per generation |
+| training, evaluation, transmission, and maintenance energy | joules at the declared boundary per generation |
+| voluntary persistence and return | attempt or return fraction, reported separately from self-report scales |
+
+Immediate helped performance is never substituted for unaided delayed
+retention or novel transfer. Numerators, eligible denominators, unavailable
+sources, and attrition remain visible for every generation.
+
+## Confirmatory analysis and statistical plan
+
+Pair arms on initial learner state, source lineage, task/item seed, teaching
+content, answer exposure, feedback, turnover, and evaluation schedule. Freeze
+channel assignments, support fading, lineage definitions, outcome code, and
+cost accounting before revealing held-out teachers, source artifacts, task
+families, representation/tool changes, novel causal compositions, and second-
+turnover tests. Treat an independently initialized lineage or replacement
+microsociety as the sampling unit; learners, items, and repeated delays within
+one lineage remain clustered.
+
+The co-primary comparisons are against the complete centralized continual-
+learning null and the versioned-artifact-plus-tests null under matched cumulative
+effort. Estimate paired effects and uncertainty with a hierarchical model or
+lineage-level cluster bootstrap across generations. Delayed novel transfer and
+protected-capability retention are analyzed jointly with the lifecycle resource
+vector; immediate acquisition alone cannot satisfy the confirmatory contrast.
+
+Preregister one primary delay and transfer-distance stratum for each task
+family. Gate recombination and teaching-channel mechanism claims on those
+outcomes and control the remaining comparisons across delays, channels,
+families, and transfer strata with a declared multiplicity procedure. Rare
+skills, protected groups, manipulation, and correlated-error endpoints remain
+separate even when estimates are imprecise.
+
+Abandonment, failure to return, inability to reach the unaided test, lineage
+collapse, and loss of the source teacher are outcomes rather than exclusions.
+Retention or recovery not observed by the registered horizon is right-censored;
+record missing telemetry and inaccessible artifacts by arm and cause. The
+primary analysis uses no completer-only filter and includes bounded sensitivity
+analyses for non-random missing task outcomes.
+
+Apply the existing promotion and kill rules ex ante to the frozen held-out
+estimates and uncertainty intervals. Criteria and meaningful margins must come
+from the registered task, retention, safety, or measurement contract before
+allocation. New channels, delays, or transfer definitions introduced after
+unblinding are exploratory and require a new independent evaluation.
 
 ## Ablations
 

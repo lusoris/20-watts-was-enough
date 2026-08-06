@@ -9,8 +9,8 @@ the exact diff; this file records why the project changed.
 
 - A generated test-coverage ledger that maps all 1,202 central claims to both
   claim-side and experiment-side relations, applies an eight-facet protocol
-  gate, and separates 528 protocol-covered claims from zero workstation-ready
-  executions.
+  gate, and now separates 1,085 protocol-covered claims from zero
+  workstation-ready executions.
 - A workstation execution contract defining commands, frozen environments,
   hardware assumptions, seeds, data, raw outputs, smoke runs, resumability, and
   measured-energy records required before prose becomes a runnable package.
@@ -403,6 +403,13 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- Completed the confirmatory analysis contracts for Candidates 005–020, so all
+  31 candidate and fixture artifacts now pass the same eight-facet protocol
+  gate with explicit resource parity, units, uncertainty handling, and frozen
+  decision rules.
+- Added direct claim-range links to every fixture, exposed coverage by evidence
+  status, and made documentation, mathematics, and generated coverage freshness
+  mandatory parts of the normal test command.
 - Strengthened the private reader's palette, text hierarchy, secondary-text
   contrast, table and equation treatment, full page outline, and mathematical
   figure presentation.

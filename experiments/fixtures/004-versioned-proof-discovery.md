@@ -14,6 +14,10 @@
 - **Mathematics:**
   [proof-discovery and verification contract](../../math/proof-discovery-verification-contract.md)
 
+## Evidence links
+
+The direct evidence range is [C-861](../../research/claims.md#c-861)–[C-880](../../research/claims.md#c-880). The range supplies traceability to the scoped source claims; the fixture remains a joint engineering test.
+
 ## Question
 
 At equal lifecycle budget, does a versioned

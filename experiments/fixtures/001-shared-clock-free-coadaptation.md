@@ -7,6 +7,10 @@
 - **Evidence source:** [music cognition and improvisation audit](../../research/audits/2026-08-05-music-cognition-improvisation.md)
 - **Mathematics:** [predictive temporal co-adaptation](../../math/predictive-temporal-coadaptation.md)
 
+## Evidence links
+
+The direct evidence range is [C-748](../../research/claims.md#c-748)–[C-783](../../research/claims.md#c-783). The range supplies traceability to the scoped source claims; the fixture remains a joint engineering test.
+
 ## Question
 
 Can locally clocked agents maintain literal phrase constraints, bounded relative

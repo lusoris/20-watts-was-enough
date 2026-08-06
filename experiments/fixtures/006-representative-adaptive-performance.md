@@ -13,6 +13,10 @@
   coordination audit](../../research/audits/2026-08-05-sports-expertise-team-coordination.md)
 - **Mathematics:** [representative adaptive-performance contract](../../math/representative-adaptive-performance.md)
 
+## Evidence links
+
+The direct evidence range is [C-926](../../research/claims.md#c-926)–[C-969](../../research/claims.md#c-969). The range supplies traceability to the scoped source claims; the fixture remains a joint engineering test.
+
 ## Question
 
 Does a proposed adaptive system preserve useful performance when the available

@@ -18,6 +18,10 @@
   [F-008 device reliability](008-mission-profile-qualified-device-reliability.md),
   and [F-009 active acoustic inference](009-operator-qualified-active-acoustic-inference.md)
 
+## Evidence links
+
+The direct evidence range is [C-1152](../../research/claims.md#c-1152)–[C-1203](../../research/claims.md#c-1203). The range supplies traceability to the scoped source claims; the fixture remains a joint engineering test.
+
 ## Question
 
 Can a proposed chemical-sensing system detect, identify, quantify, separate,

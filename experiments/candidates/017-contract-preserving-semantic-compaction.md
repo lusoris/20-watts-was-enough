@@ -72,6 +72,18 @@ Editable source:
 All arms receive equal hot/cold physical bytes, index and metadata bytes,
 maintenance bandwidth, compaction work, human policy time, and rollback horizon.
 
+## Matched-budget and resource parity
+
+Replay identical histories, correction times, schema and source changes,
+retention obligations, corruption events, and registered requests through all
+arms. Equalize hot and cold byte-years, replicas and backups, index and metadata
+bytes, ingestion and maintenance bandwidth, compaction and query compute,
+measured energy, restore horizon, authorized source access, and curator,
+reviewer, and engineering person-minutes. Charge manifest generation,
+dependency retention, migration, failed rebuilds, legal holds, and verified
+deletion to the arm that requires them. Do not let an arm obtain a longer raw
+history or additional query work after hidden queries are revealed.
+
 ## Experiment
 
 Use streams containing factual corrections, late observations, conflicting
@@ -88,6 +100,65 @@ Every compact version emits a machine-readable manifest naming the query,
 evidence, uncertainty, retention, deletion, and rollback obligations it claims.
 Unsupported questions must be rejected rather than reconstructed from invented
 detail.
+
+## Outcomes and measurements
+
+Report results by stream, compact version, registered query family, source and
+schema regime, obligation type, and corruption stratum:
+
+| Outcome | Unit and denominator |
+| --- | --- |
+| physical storage and metadata | bytes and byte-years at each tier, including replicas and backups |
+| compaction, maintenance, query, and restore energy | joules at the declared system boundary |
+| foreground interference and reconstruction time | p99 seconds and seconds per completed request |
+| registered-query error | each query's declared native unit and tolerance |
+| query calibration and contract coverage | dimensionless calibration measure and covered-query fraction |
+| evidence-link and invalidation performance | precision and recall fractions over registered obligations |
+| rollback horizon and restore completion | seconds of recoverable history and completed restores per request |
+| deletion or erasure success | verified fraction of registered deletion requests, with residual bytes reported |
+| missing representation dependencies | count per compact version |
+| unsupported-query behavior | correct abstentions, erroneous answers, and source-recovery requests per query |
+| human lifecycle work | curator, reviewer, and engineering person-minutes per version |
+
+Query-native outcomes are not converted to a common score unless the conversion
+and its sensitivity analysis were registered before compaction.
+
+## Confirmatory analysis and statistical plan
+
+Pair arms on the complete input history, source arrival times, corrections,
+schema transitions, legal obligations, corruption schedule, and query seeds.
+Freeze each compactor and manifest before generating hidden future queries,
+invalidations, rollback requests, and deletion tests. Hold out complete query
+families, future time blocks, sources, schema versions, and workload families;
+the independent unit is a stream or independently generated history, with
+queries clustered inside it.
+
+The primary comparison is against the strongest snapshot, materialized-view,
+lossless-compression, or cold-archive null under the matched resource vector.
+Estimate paired differences and uncertainty with a stream-level hierarchical
+model or cluster bootstrap. Report the storage–maintenance–energy–query vector,
+contract-violation rates, calibration, and tail reconstruction behavior; do not
+declare a win from byte reduction alone.
+
+Preregister one primary obligation or query contrast per workload family. Gate
+secondary frontier claims on those contrasts and use a declared multiplicity
+procedure across query families, corruption conditions, and obligations. Rare
+safety, evidence, deletion, and rollback obligations remain separately visible
+even when their intervals are wide.
+
+An unregistered question counts as a correct abstention only when the frozen
+manifest says it is unsupported or requires source recovery. Timeouts and
+unfinished restore or rollback operations are right-censored at the registered
+horizon; unavailable sources, missing dependencies, failed erasure
+verification, and corrupted compact state remain adverse outcomes. Report
+missingness by arm and cause and use bounded sensitivity analyses rather than a
+complete-case primary analysis.
+
+Apply the promotion and retirement rules ex ante to held-out estimates and
+uncertainty intervals. Query tolerances and acceptance margins must come from
+the registered use contract, measurement resolution, or baseline variability,
+not from the observed candidate result. New query families discovered during
+analysis require a new compact version and test split.
 
 ## Ablations
 

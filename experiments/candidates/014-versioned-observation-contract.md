@@ -268,6 +268,60 @@ Hold constant:
   benefit/harm coverage, subgroup tail risk, adaptation-state error,
   withdrawal/rebound events, and post-removal native capability and reserve.
 
+## Confirmatory analysis and statistical plan
+
+The confirmatory unit is an independently generated latent-world replicate with
+its complete exposures, sensor records, non-detections, associations, searched
+family, alerts/revisions, follow-up actions, delayed outcomes, intervention
+history, and downstream uses. Pair arms on the same latent world, sensor and
+calibration realization, missingness process, search opportunities, reviewer
+budget, and follow-up choices available at each decision time. Cluster records
+that share a source, sensor, calibration chain, preprocessing lineage, cohort,
+receiver, site, or adaptive policy. Hold out complete response/calibration
+lineages, sensors, source/context strata, spatial and future-time blocks, latent
+classes, search families, cohorts, receivers, counterfactual dependencies, and
+intervention/removal regimes; random records from one lineage cannot cross
+splits.
+
+Preregister paired contrasts against the calibrated likelihood/selection arm
+and the complete conventional stack. Estimate paired effects with simultaneous
+intervals for stratum coverage, calibration and bias, population-parameter
+error, false/missed association, complete-family error, alert precision/recall
+and wasted work, stale-contract use, invalidation recall, self-confirmation,
+abstention, benefit/harm coverage, subgroup tail risk, and compute/storage/
+reviewer/joule cost. Hierarchical or cluster-resampled uncertainty must retain
+shared calibration, covariance, selection, and adaptive-follow-up dependence.
+Propagate Monte Carlo, calibration, measurement, and model-form uncertainty
+separately where identifiable.
+
+Use a frozen gatekeeping order: required coverage and family-wise or false-
+discovery control must pass in every hard-gated stratum; stale/superseded use and
+unsafe intervention outcomes must be noninferior at task-specific margins; then
+test improved inference, invalidation, or follow-up value; resource reductions
+are tested last. Preregister the eligible primary outcomes and control
+multiplicity across comparator contrasts, thirteen tracks, strata, searched
+families, and endpoint groups with a hierarchical closed or family-wise
+procedure. Report raw effect sizes and intervals, adjusted decisions, and the
+complete searched family; do not select the uncertainty score after release.
+
+Missing exposure, non-detection, ambiguous association, delayed label,
+unobserved follow-up, record supersession, and post-intervention loss to
+follow-up are different states. A non-detection is never imputed as zero, and an
+unseen outcome is never counted as a negative event. Event times and outcomes
+unresolved at the horizon are right-censored with their selection history
+retained. Any inverse-probability, selection, or imputation model and its
+best/worst-case sensitivity are preregistered; every assigned latent world and
+follow-up opportunity remains in the appropriate denominator.
+
+Response and selection models, calibration/covariance versions, association
+rules, searched families, alert thresholds, support/abstention gates,
+supersession and dependency invalidation, receiver-competence handling,
+follow-up policy, and intervention/removal decision rule are fitted only on
+development/validation worlds and frozen before confirmation. Apply the frozen
+contract and decision mechanically to all held-out records, receivers, and
+future-time blocks, including required abstention when support is absent. The
+oracle latent state is a ceiling and cannot determine promotion.
+
 ## Required ablations
 
 - drop the response version;

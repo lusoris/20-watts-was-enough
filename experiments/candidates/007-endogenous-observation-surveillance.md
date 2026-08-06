@@ -272,6 +272,47 @@ quality, subgroup, and energy axes remain separately reported.
 11. Frequency of self-induced apparent recovery and whether the policy catches
     it before release.
 
+## Statistical analysis plan
+
+Freeze sensor placement, observation models, thresholds, action policies,
+hyperparameters, practical-effect margins, and the operational data cutoff on
+development episodes. Confirmatory evaluation uses new seeds, held-out graph
+and fault compositions, and only the data vintage available at each simulated
+decision time. Candidate and baseline arms share hidden process realizations,
+arrival streams, reporting delays, missingness draws, action opportunities,
+and evaluator budgets. Final revised histories are available only after all
+online decisions have been scored.
+
+Use the complete episode as the primary independent unit and pair arms by
+generator seed. Resample whole episodes within preregistered coverage,
+ascertainment, delay, proxy-coupling, subgroup, and action-effect strata; if one
+trained policy is reused across episodes, resample policy fits before their
+episodes. Report raw distributions, paired differences, calibration curves,
+interval coverage, and uncertainty intervals. Detection times for episodes
+without an alarm and recovery times unresolved at the fixed horizon are
+right-censored and accompanied by miss or unresolved fractions. Abstention,
+unsafe aborts, and exhausted action capacity remain outcomes rather than
+missing observations.
+
+The primary families are hidden-state calibration, operational loss and
+resource cost, and counterfactual action-effect error. Compare the complete
+candidate with the strongest composed sampling, nowcasting, and control null,
+not with each weak component separately. Use one preregistered multiplicity
+procedure across the finite primary comparisons and label additional slices
+exploratory. Protected subgroup results are reported separately; an aggregate
+gain cannot offset a subgroup harm outside a margin chosen before held-out data
+are opened.
+
+In the simulator, score action-effect estimates against the retained factual
+and counterfactual trajectories. In the shadow-service stage, make causal
+claims only for randomized safe actions or for a design with logged assignment
+probabilities, overlap diagnostics, and a frozen adjustment set. If action
+opportunity or follow-up is absent for a stratum, report non-identifiability
+rather than extrapolating. Vary assumptions about selected dropout, delayed
+revision, and policy-dependent observation in sensitivity analyses. All
+post-freeze exclusions, unavailable vintages, and provenance failures are
+listed by arm.
+
 ## Promotion criteria
 
 Advance only if the candidate:

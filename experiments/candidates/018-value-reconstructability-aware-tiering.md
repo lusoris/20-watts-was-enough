@@ -62,6 +62,18 @@ Editable source:
 7. P-001/P-012 lifecycle policy without semantic/evidence features; and
 8. an offline future-trace oracle, reported only as an upper bound.
 
+## Matched-budget and resource parity
+
+Replay the same artifact births, accesses, corrections, invalidations,
+failures, rebuild opportunities, and device conditions through every policy.
+Equalize usable physical capacity by tier, redundancy and failure domains,
+network and migration bandwidth, forecast inputs, policy-update opportunities,
+CPU and memory allowance, storage and metadata bytes, device endurance,
+measured energy, wall time, and operator person-minutes. Charge failed
+migrations, verification, reconciliation, restore, and policy maintenance to
+the invoking arm. The future-trace oracle is not eligible for promotion and
+receives no hidden resource advantage.
+
 ## Experiment
 
 Artifacts include raw observations, evidence-linked claims, summaries,
@@ -79,6 +91,67 @@ allowance.
 Report task-native loss, evidence/invalidation success, restore and p99 access
 latency, hot/cold bytes, movement bytes, endurance writes, joules, currency,
 policy CPU/memory, and calibration of every predicted component.
+
+## Outcomes and measurements
+
+Report every result by workload, artifact class, placement tier, failure
+domain, decision-time information stratum, and held-out regime:
+
+| Outcome | Unit and denominator |
+| --- | --- |
+| task loss from unavailable or stale artifacts | declared task-native unit per eligible access or task |
+| evidence and invalidation success | successful requests per registered request |
+| artifact availability and loss | fraction of required accesses and irrecoverable artifacts per failure event |
+| access and restore latency | median and p99 milliseconds for access; seconds to verified restoration |
+| placement and metadata footprint | hot, warm, cold, replica, index, and policy-state bytes |
+| movement and endurance | bytes moved and device writes per declared interval |
+| policy and lifecycle energy | joules for forecasting, placement, movement, access, verification, and restore |
+| monetary cost | currency and price date per declared interval |
+| policy compute | CPU-seconds and peak memory bytes |
+| prediction calibration | dimensionless calibration measure separately for access, cost, loss, and reconstructability |
+| privacy, locality, capacity, and failure-domain violations | count per eligible decision |
+| human maintenance | operator person-minutes per policy interval |
+
+Keep unavailable and stale loss separate. A scalar utility is secondary to the
+native-unit vector and is analyzed only under preregistered conversion weights.
+
+## Confirmatory analysis and statistical plan
+
+Pair policies on the complete trace, artifact identity, decision-time feature
+history, device state, correlated-failure seed, correction schedule, and
+migration opportunity. Freeze forecasts, policy parameters, constraints, and
+conversion weights before revealing held-out workloads, time blocks, artifact
+classes, hardware profiles, and failure-domain combinations. The independent
+unit is an independently generated trace or deployment interval; repeated
+accesses within it remain clustered.
+
+The confirmatory comparison is the candidate against the strongest ordinary
+cost-, miss-, and correlation-aware placement policy under matched resources.
+Estimate paired differences and uncertainty with a trace-level hierarchical
+model or block bootstrap that preserves bursts and failure episodes. Report
+task-native loss, evidence/invalidation success, constraint violations, and the
+complete resource vector together. Forecast calibration is evaluated only on
+predictions recorded before access or failure outcomes.
+
+Preregister one primary contrast for each held-out workload family and gate
+feature-mechanism conclusions on the corresponding outcome result. Control the
+remaining familywise error across workloads, artifact classes, and failure
+regimes with a declared multiplicity procedure. Rare audit, rollback, and correlated-loss
+events remain separate endpoints rather than being diluted by common cache
+hits.
+
+Irrecoverable artifacts, latent corruption discovered late, access failure,
+and constraint violation are outcomes. Incomplete restore is right-censored at
+the registered horizon. Missing task/evidence labels are tabulated by arm and
+cause and are not filled with future information; use preregistered bounds or
+sensitivity models for genuinely unobserved loss. Include artifacts still in
+migration in both resource and availability accounting.
+
+Apply the promotion and retirement rules once to the frozen held-out analysis.
+Any required margin must be derived ex ante from an operational constraint,
+measurement resolution, or baseline variability. A policy tuned after seeing
+the held-out trace or dependent on future labels is rejected for confirmatory
+purposes, regardless of its retrospective score.
 
 ## Ablations
 

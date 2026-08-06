@@ -303,6 +303,44 @@ and recurrence over a prespecified withdrawal horizon. Kill this refinement if
 ordinary dependency analysis, canary decommissioning, and staged rollback
 predict the same failures and schedule at lower lifecycle cost.
 
+## Statistical analysis plan
+
+Freeze policy parameters, action ordering, detector thresholds, scalarization
+weights, and any practical-effect margins on development episodes. The
+confirmatory set contains new random seeds plus the held-out fault compositions
+and causal mechanisms from the factorial grid. Candidate and comparator arms
+receive identical arrivals, fault times, fault realizations, observation noise,
+and reserve failures for every paired episode. The oracle remains diagnostic
+and is never the reference for promotion.
+
+Treat the episode, not a telemetry sample, as the independent unit. Report raw
+distributions and paired arm differences. Estimate uncertainty by resampling
+whole episodes within preregistered fault-grid strata; when several episodes
+share one trained policy, checkpoint, or simulated deployment, resample that
+higher-level unit before its episodes. Recovery times that exceed the declared
+horizon are right-censored rather than discarded. Report a survival curve and
+the fraction unresolved at the horizon alongside any time-to-recovery summary.
+Catastrophic loss, relapse, missed faults, and destructive false actions remain
+event counts with interval estimates even when no event is observed.
+
+The primary comparison is the complete candidate against B8 and the strongest
+of B3--B6 for each preregistered fault stratum. Test the service-quality,
+availability, spread, destructive-action, lifecycle-energy, persistent-byte,
+and operator-effort vector without collapsing it into one score. Promotion
+requires the protected outcomes to remain within margins fixed before the
+confirmatory data are opened; failure to reject an ordinary difference is not
+evidence of equivalence. Apply one declared multiplicity correction across the
+finite primary arm-by-outcome family. Label all additional slice, sensitivity,
+and scalarization results exploratory.
+
+Estimate each component's contribution with paired full-versus-ablation
+contrasts and the preregistered reversed-order controls. Report interactions
+when two components cease to help independently. Runs aborted by an unsafe
+action, exhausted reserve, or evaluator failure remain in the assigned arm and
+retain their cost and failure outcome. Missing telemetry, excluded hardware
+runs, and post-freeze deviations are listed by arm with a sensitivity analysis;
+none may be silently replaced until a favorable seed is obtained.
+
 ## Promotion criteria
 
 The held candidate advances beyond Stage 1 only if, over preregistered seeds and

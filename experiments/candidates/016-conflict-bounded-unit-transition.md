@@ -88,6 +88,18 @@ after removal of a specialist.
 - capability isolation, sandboxing, quotas, and least privilege; and
 - a capacity-matched monolith with no internal reward competition.
 
+## Matched-budget and resource parity
+
+Construct paired arms from the same founder state, task sequence, member reward
+schedule, shortcut opportunities, fault injections, and descendant slots.
+Equalize active model capacity, training and evaluation episodes, optimizer
+updates, environment interactions, evaluator calls, storage bytes, interface
+and audit traffic, wall time, measured joules, reserve capacity, and operator
+person-minutes. Validation, sanctions, failed founders, clean-room child
+construction, replacement, and recovery are charged to the arm that invokes
+them. Unused allowances are reported and cannot be exchanged after outcomes
+are observed.
+
 ## Experimental tracks
 
 ### A — reproductive boundary versus ordinary versioning
@@ -128,6 +140,67 @@ rollback, and replacement.
 
 The candidate fails if ordinary routing or a modular monolith supplies the same
 specialization and recovery frontier without a reproductive lifecycle.
+
+## Outcomes and measurements
+
+Report the following by lineage, generation, task family, shortcut regime, and
+fault stratum:
+
+| Outcome | Unit and denominator |
+| --- | --- |
+| collective task value and protected loss | declared task-native unit per episode |
+| between-lineage and transmission terms | the task-native unit per declared generation from the preregistered Price partition |
+| member shortcut prevalence | shortcut events per eligible member-opportunity |
+| inherited defects and founder failures | defects per admitted child and fraction of attempted founders |
+| collective heritability and capability coverage | dimensionless estimate and fraction of registered capabilities |
+| rare-role loss and useful deviation suppressed | capability counts and fraction of eligible deviations |
+| enforcement and validation work | joules, machine-seconds, and person-minutes per admitted child |
+| boundary and replicated state | transmitted bytes per episode and retained bytes per collective |
+| false sanctions | count per audited member-action |
+| completion, replacement, and recovery time | seconds from registered trigger to terminal state |
+| specialist-removal degradation and common-mode failure | task-native loss and failure fraction |
+
+Headline collective reward never substitutes for the member/collective
+partition, protected outcomes, or complete lifecycle costs.
+
+## Confirmatory analysis and statistical plan
+
+Pair candidate and null arms on founder, task and fault seed, shortcut payoff,
+member initialization, turnover schedule, and descendant opportunity. Freeze
+the collective boundary, descendant relation, Price partition, validation
+tests, and conflict-control policy before revealing held-out task families,
+member compositions, returning regimes, and common-mode faults. Treat a lineage
+or independently generated collective as the sampling unit; episodes and
+members nested inside one lineage are not independent replicates.
+
+The confirmatory contrast is the candidate against ordinary clean versioning
+plus permissions, tests, external evaluation, and population selection. Report
+paired effects and uncertainty for protected collective performance, the
+between-lineage component, transmission change, and the complete cost vector.
+Use a hierarchical model or lineage-level bootstrap that resamples intact
+lineages and descendant clusters. For covariance and heritability estimates,
+report interval estimates and sensitivity to the preregistered weighting and
+observation window rather than interpreting the accounting identity causally.
+
+Preregister one primary contrast per experimental track. Gate downstream
+mechanism claims on the corresponding task/protection result and control the
+remaining track-level familywise error with a declared multiplicity procedure. Report
+founder corruption, rare-role loss, and common-mode failure separately rather
+than averaging them into frequent benign episodes.
+
+Extinct lineages, child-construction failures, unadmitted children, specialist
+loss, and inability to recover by the horizon remain outcomes. Recovery and
+replacement times are right-censored at the registered horizon; missing audit
+telemetry and missing descendants are tabulated by arm and cause. The primary
+analysis uses no successful-lineage or complete-case filter and includes
+bounded sensitivity analyses where a task-native outcome is genuinely
+unobserved.
+
+Apply the promotion and kill criteria to the held-out lineage-level estimates
+and their uncertainty intervals exactly as preregistered. Acceptance margins
+must be derived from the task contract, measurement resolution, or baseline
+variation before allocation. Post-hoc lineage definitions or observation
+windows can produce only exploratory results.
 
 ## Ablations
 

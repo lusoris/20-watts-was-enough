@@ -199,6 +199,55 @@ Report raw axes before any aggregate score:
 - maintenance and provenance overhead; and
 - consequence-weighted loss using the preregistered task units.
 
+## Confirmatory analysis and statistical plan
+
+The confirmatory unit is one independently generated action opportunity with its
+complete evidence, consequence, reset, rollback, and commitment record. Run all
+eligible arms on paired opportunities from the same scenario seed and task
+version. Repeated opportunities from one scenario, service instance, verifier,
+or reset backend are clustered rather than counted as independent replication.
+Confirmation holds out task templates, base-rate bands, evidence-correlation
+regimes, verifier implementations, reset backends, consequence schedules, and
+the concrete transactional or filesystem service. Random event splits within
+one generated world are development diagnostics only.
+
+Preregister the proposed composition's paired contrasts against the conditioned
+sequential test, calibrated cascade, abstention, rollback, and independent-
+verification nulls. The primary report gives paired effect estimates and
+simultaneous confidence or credible intervals for consequence-weighted loss,
+false commits, false rejects, rollback violations, joules per correct committed
+action, and p99 stopping time. Calibration error, abstention, verifier calls,
+bytes, and maintenance remain separately interval-estimated outcomes. Quantile
+uncertainty and rare-violation intervals use scenario-level resampling or a
+hierarchical model that preserves the paired and clustered design; meter,
+calibration, and simulator uncertainty remain separate, and individual events
+are not resampled as if independent.
+
+Freeze one gatekeeping order before confirmation: first test noninferiority on
+irreversible violations and false commits at the task-specific margins; then
+test superiority on consequence-weighted loss; only then test energy, latency,
+or verifier-call savings. Margins come from the declared consequence contract,
+not a universal constant. Control family-wise error across the confirmatory
+null contrasts and factorial regimes with a preregistered hierarchical or Holm
+procedure. Report the full unadjusted effect/interval table as well as adjusted
+decisions; no weighted aggregate may conceal a failed safety or parity gate.
+
+Timeouts and opportunities still unresolved at the deadline are right-censored
+for stopping-time analysis and failures for any deadline-dependent service
+outcome. Verifier unavailability, missing evidence, aborted preparation,
+incomplete rollback measurement, zero-commit strata, and energy-meter loss are
+typed outcomes or missingness states, never silent exclusions. Preregister
+best/worst-case and model-based sensitivity analyses when missingness can depend
+on risk or arm. Denominators include every assigned opportunity and rejected or
+reset attempt.
+
+Escalation thresholds, stopping boundaries, calibration maps, abstention rules,
+reset-completeness tests, rollback postconditions, and the final promotion gate
+are learned only on development/validation data and frozen before held-out
+release. The frozen decision is then applied mechanically to every confirmatory
+stratum, including out-of-support abstention. Oracle information remains a
+ceiling and is never part of the eligible win decision.
+
 ## Decisive predictions
 
 The candidate predicts a Pareto improvement only where all three conditions

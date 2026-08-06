@@ -104,9 +104,27 @@ so allocation creates selection pressure. Tasks include:
 - corrupted outcome channels; and
 - correlated specialists sharing training data or gradients.
 
+## Matched-budget contract
+
 Equalize total model capacity, offered tasks, training/update opportunities,
 router compute, evaluation calls, withheld labels, audit fraction, exploration
 traffic, storage, bytes, energy, and wall-clock horizon.
+
+Also equalize task arrival order, initial specialist checkpoints, permitted
+reports, action latency, protected evaluator access, entrant opportunities,
+outcome delay, and real future-traffic authority. Commit audit draws before a
+module reports, but reveal no more audit information to the candidate than to
+the baselines. Charge ledger writes, replay, lineage checks, privacy controls,
+settlement, and challenges to the candidate arm. Charge equivalent ordinary
+monitoring and evaluation to the conventional arms. Unused resources remain
+unused and cannot be traded for extra labels, exploration, or a stronger
+consequence.
+
+Report compute and evaluation ceilings alongside realized joules, seconds,
+bytes, labels, exploration tasks, and task opportunity transferred among
+modules. A result is not matched if the candidate's audit outcome updates a
+specialist while the corresponding baseline is denied the same independently
+verified outcome.
 
 ## Baselines
 
@@ -218,6 +236,41 @@ privacy cost.
 9. Replace peer agreement with external outcomes, then reverse the comparison.
 10. Sweep audit fraction, outcome delay, solver error, collusion, and reward-
     channel corruption.
+
+## Statistical analysis plan
+
+Freeze report formats, router and specialist update rules, audit fraction,
+consequence schedule, identity policy, protected outcomes, practical-effect
+margins, and analysis code on development streams. Confirmatory streams use
+new task-order seeds, module initializations, hidden types, entrant arrivals,
+outcome delays, collusion groups, and allocator-deviation schedules. Run every
+arm from paired initial checkpoints on the same offered task stream and
+precommitted audit schedule.
+
+Treat a module population under one task-stream seed as the independent unit.
+Requests from one persistent specialist are serially dependent and are not
+counted as independent replicates. Estimate paired arm differences and
+uncertainty by resampling task-stream seeds and, where independent populations
+are nested within a seed, whole module lineages. Report time-resolved effects
+as well as end-of-run totals so temporary audit gains are not confused with
+stable incentive effects.
+
+Test A is a negative control. Its expected tie must be assessed with a
+predeclared equivalence margin on external quality, risk, and resource use;
+failure to reject a difference does not establish equivalence. For Tests B--E,
+the primary contrast is Candidate 008 against the strongest applicable
+composed conventional baseline on the raw quality--risk--energy--latency
+vector. Apply a declared multiplicity correction across the finite primary
+test-by-outcome family. Calibration, collusion, subgroup, entrant, and
+approximation slices not named before the holdout opens remain exploratory.
+
+Delayed outcomes outstanding at the fixed horizon remain unresolved and are
+reported by arm. Any weighting or imputation for selected missing outcomes
+requires logged observation probabilities, an overlap check, a frozen model,
+and a sensitivity analysis; otherwise no population claim is made for the
+unobserved stratum. Report reset identities and colluding groups as clusters.
+Audit-label leakage, recommitted randomness, dropped tasks, unsafe aborts, and
+post-freeze rule changes are protocol deviations, not removable outliers.
 
 ## Promotion criteria
 

@@ -92,6 +92,19 @@ competence, legitimacy, or correctness.
 11. human authorization of standing, protected interests, exceptions, and
     amendment rules.
 
+## Matched-budget and resource parity
+
+Pair governance arms on objectives and protected invariants, private
+information, proposal set and order, evaluator assignments, shocks, fault and
+capture seeds, action authority, and decision deadlines. Equalize observations,
+models, sensors, actuators, reserve, proposal and evaluator calls, messages,
+compute, storage, deployment windows, measured energy, enforcement capacity,
+accessibility support, and human person-minutes. Charge appeals, recusals,
+replacement reviewers, veto delay, emergency handoff, rollback, compatibility,
+and rule maintenance to the arm that invokes them. An unresolved decision or
+unused authority budget is reported rather than silently replaced after the
+outcome is known.
+
 ## Experiment families
 
 ### A — aggregation, strategy, and agenda
@@ -147,6 +160,50 @@ participation, deliberative sampling, and stratified contestable review at
 equal person-minutes and accessibility support. Separately randomize early
 exposure, evaluator assignment, conventions, and authority, then match final
 conditions and ablate reinforcement mechanisms.
+
+## Confirmatory analysis and statistical plan
+
+Pair arms on scenario seed, information allocation, proposal order, reviewer
+and proxy identities, protected-interest exposure, faults, shocks, and action
+opportunities. Freeze standing, authority, conflict and recusal rules,
+aggregation and veto procedures, emergency expiry, outcome definitions, and
+human-authorized conversion weights before revealing held-out task families,
+strategic identities, correlated-model failures, rare protected harms, and
+legitimate rule drift. Treat an independently generated scenario or governance
+lineage as the sampling unit; decisions, appeals, and participants within it
+remain clustered.
+
+The confirmatory comparison is the candidate against constrained optimization
+plus typed IAM, deterministic interlocks, independent evaluation, append-only
+lineage, and ordinary incident governance under the matched resource vector.
+Estimate paired effects and uncertainty with a scenario-level hierarchical
+model or cluster bootstrap. Report task quality, worst protected-interest loss,
+unresolved-decision time, capture diagnostics, authority violations, and the
+complete lifecycle vector; a higher decision count or amendment rate is not a
+benefit by itself. Tail and severe-harm outcomes receive direct interval or
+bound estimates rather than normal approximations when sparse.
+
+Preregister one primary contrast for each experiment family and a gate from
+task/protected outcomes to mechanism claims. Control familywise error across
+governance forms, perturbations, and outcome strata with a declared
+multiplicity procedure. Distinct protected interests, procedural outcomes,
+status-quo harm, and common-cause failure remain visible and are not averaged
+away by aggregate reward.
+
+Unresolved decisions, incomplete appeals or remedies, unavailable reviewers,
+emergency authority still active at the horizon, failed rollback, and denied
+practical participation are outcomes. Decision and restoration times are
+right-censored at the preregistered horizon; missing telemetry, undisclosed
+conflicts discovered later, and inaccessible participants are tabulated by arm
+and cause. Use bounded sensitivity analyses for remaining missing outcomes and
+do not make a completer-only analysis primary.
+
+Apply the applicability gate before the experiment and the promotion or kill
+rules once to the held-out estimates and uncertainty intervals. Protected-
+interest definitions, conversion weights, and acceptance margins must be
+human-authorized or derived from the task contract, measurement resolution, or
+baseline variability before allocation. Post-hoc changes to standing, burden,
+or decision rules cannot support confirmation.
 
 ## Ablations
 

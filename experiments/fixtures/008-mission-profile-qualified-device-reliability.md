@@ -20,6 +20,10 @@
 - **Promotion state:** fixture only; success strengthens the listed candidates
   within their existing scopes and failure removes unsupported composition
 
+## Evidence links
+
+The direct evidence range is [C-1002](../../research/claims.md#c-1002)–[C-1053](../../research/claims.md#c-1053). The range supplies traceability to the scoped source claims; the fixture remains a joint engineering test.
+
 ## Question
 
 At equal fabrication, sensing, protection, reserve, compute, energy, material,

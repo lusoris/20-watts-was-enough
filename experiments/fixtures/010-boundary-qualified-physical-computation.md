@@ -21,6 +21,10 @@
   candidate within its present scope, while failure retires the unsupported
   physical-efficiency composition
 
+## Evidence links
+
+The direct evidence range is [C-1100](../../research/claims.md#c-1100)–[C-1151](../../research/claims.md#c-1151). The range supplies traceability to the scoped source claims; the fixture remains a joint engineering test.
+
 ## Question
 
 At equal useful-task quality, latency, risk, throughput, retention, hardware
