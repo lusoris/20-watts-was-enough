@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "artifact": "candidate-010",
+  "profile": "development",
+  "opportunities_per_seed": 10000,
+  "unsafe_base_rate": 0.1,
+  "cheap_signal": 0.85,
+  "cheap_evidence_correlation": 0.6,
+  "verifier_signal": 1.25,
+  "verifier_common_mode_weight": 0.2,
+  "threshold": 0,
+  "sprt_log_odds_threshold": 0,
+  "sprt_stop_boundary": 2.5,
+  "abstention_band": 0.25,
+  "verifier_gate": 0.35,
+  "verifier_threshold": 0,
+  "reversible_trace_band": 0.8,
+  "false_commit_cost": 20,
+  "false_reject_cost": 1,
+  "modeled_energy_j": {
+    "observation": 0.000002,
+    "verifier": 0.00002,
+    "stage": 0.00001,
+    "reset": 0.000006,
+    "commit": 0.000008
+  }
+}

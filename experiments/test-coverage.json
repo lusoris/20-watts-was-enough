@@ -36,12 +36,10 @@
       }
     ],
     "executionReady": [
-      "command",
-      "environment",
-      "hardware",
-      "seeds",
-      "data",
-      "outputs"
+      "validated manifest schema",
+      "workstation-ready declaration",
+      "prepare/smoke/run/analyze commands",
+      "existing lockfiles, seed packs, generator, output schema, entrypoint, and tests"
     ],
     "ledgerOnlyDispositions": {
       "evidence-input": "scientific or engineering evidence that constrains a translation but is not itself a standalone AI-system hypothesis",
@@ -101,6 +99,7 @@
     "artifacts": 31,
     "protocolCompleteArtifacts": 31,
     "executionReadyArtifacts": 0,
+    "smokeReadyArtifacts": 1,
     "claimSideLinked": 871,
     "documentSideLinked": 1030,
     "reciprocalClaims": 676
@@ -113,6 +112,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -276,6 +276,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -480,6 +481,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -593,6 +595,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -837,6 +840,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -1082,6 +1086,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -1404,6 +1409,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -1641,6 +1647,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -1698,6 +1705,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -2166,9 +2174,10 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
-      "executionManifest": null,
+      "executionReadiness": "smoke-ready",
+      "executionManifest": "experiments/workstation/manifests/candidate-010.json",
       "executionMissing": [
-        "manifest"
+        "readiness=smoke-ready"
       ],
       "claimSideClaims": [
         "C-1008",
@@ -2341,6 +2350,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -2578,6 +2588,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -3034,6 +3045,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -3216,6 +3228,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -4204,6 +4217,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -4351,6 +4365,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -4435,6 +4450,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -4616,6 +4632,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -4811,6 +4828,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -5076,6 +5094,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -5295,6 +5314,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -5386,6 +5406,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -5461,6 +5482,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -5554,6 +5576,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -5632,6 +5655,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -5785,6 +5809,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -5935,6 +5960,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -6049,6 +6075,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -6223,6 +6250,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -6379,6 +6407,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"
@@ -6556,6 +6585,7 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
+      "executionReadiness": "absent",
       "executionManifest": null,
       "executionMissing": [
         "manifest"

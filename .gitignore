@@ -19,4 +19,5 @@ dist/
 .vinext/
 .vite/
 .wrangler/
+experiments/workstation/runs/
 *.tsbuildinfo

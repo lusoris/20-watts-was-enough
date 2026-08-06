@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "partition": "held-out",
+  "state": "sealed",
+  "commitment": null,
+  "note": "Held-out task templates and seeds will be committed before workstation-ready status."
+}

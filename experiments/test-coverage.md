@@ -85,8 +85,9 @@ appear on the claim side, 1030 on the document side, and
 ## Artifact coverage
 
 There are 31 experiment artifacts: 31
-pass the written-protocol gate, and 0 pass the
-execution gate.
+pass the written-protocol gate, a validated smoke harness exists for
+1, and 0 pass the full execution gate.
+Smoke readiness verifies deterministic plumbing but cannot promote a claim.
 
 | Artifact | Directly related claims | Protocol status | Execution status |
 | --- | ---: | --- | --- |
@@ -99,7 +100,7 @@ execution gate.
 | [candidate-007](candidates/007-endogenous-observation-surveillance.md) | 106 | complete description | not executable |
 | [candidate-008](candidates/008-contestable-modular-allocation.md) | 19 | complete description | not executable |
 | [candidate-009](candidates/009-graded-assurance-envelopes.md) | 208 | complete description | not executable |
-| [candidate-010](candidates/010-reset-coupled-staged-verification.md) | 73 | complete description | not executable |
+| [candidate-010](candidates/010-reset-coupled-staged-verification.md) | 73 | complete description | smoke-ready; not executable |
 | [candidate-011](candidates/011-dual-loop-operational-assurance.md) | 100 | complete description | not executable |
 | [candidate-012](candidates/012-latency-qualified-authority.md) | 199 | complete description | not executable |
 | [candidate-013](candidates/013-deficit-capability-routing.md) | 73 | complete description | not executable |
@@ -132,9 +133,11 @@ execution gate.
   in an existing artifact but lack an exact traceability or test track.
 - 0 claims reach only a partial description.
   The missing facets are concentrated in no artifact.
-- No execution manifests, runners, frozen environments, seed packs, or raw-output
-  schemas exist yet. The [workstation contract](workstation/README.md) defines
-  the next layer without pretending that prose is runnable.
+- 1 artifact(s) have a validated smoke manifest and
+  deterministic harness. They remain non-executable for claim coverage until
+  confirmation seeds, held-out generators, complete analysis, resume and
+  corruption checks, and measured-energy instrumentation satisfy the
+  [workstation contract](workstation/README.md).
 
 ## Machine-readable report
 

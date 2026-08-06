@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "artifact": "candidate-010",
+  "profile": "smoke",
+  "config_sha256": "2f123c234826620c3900d17bf8e4d59f7f86b609b7eb10c06724ca789c7365e0",
+  "scientific_payload_sha256": "61b465ada3f9a3d648708b10020e0f790d5f2c0bf172891f449c35921d11b04c",
+  "records": 512,
+  "note": "This digest excludes timestamps, CPU timing, and unavailable measured energy. It validates deterministic scientific generation, decisions, outcomes, budgets, and filesystem effects; it is not a scientific result."
+}

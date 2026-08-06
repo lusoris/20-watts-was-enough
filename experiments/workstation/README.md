@@ -2,11 +2,14 @@
 
 The current repository contains research and protocol specifications, not an
 executable experimental package. A test becomes workstation-ready only when its
-checked manifest exists at `experiments/workstation/manifests/<artifact-id>.json`
-and names all six fields below.
+checked manifest exists at `experiments/workstation/manifests/<artifact-id>.json`,
+passes `npm run validate:workstation`, declares `workstation-ready`, and names
+all six fields below. A `smoke-ready` manifest proves only that the deterministic
+plumbing runs; it does not upgrade any claim to workstation-executable.
 
-1. **Command:** one non-interactive entry point that returns a nonzero exit code
-   when the run or acceptance checks fail.
+1. **Command:** one non-interactive entry point with `prepare`, `smoke`, `run`,
+   and `analyze` actions that returns a nonzero exit code when preparation,
+   execution, analysis, or registered acceptance checks fail.
 2. **Environment:** locked operating-system, driver, runtime, library, and
    container or environment identities.
 3. **Hardware:** supported CPU, GPU, memory, storage, power-meter, and thermal
@@ -44,3 +47,18 @@ measured joules remain separate output fields.
 
 The coverage audit reports zero executable claims until manifests and their
 referenced files actually exist.
+
+The machine-readable contract is
+[`manifest.schema.json`](manifest.schema.json). Referenced lockfiles, seed
+manifests, generators, output schemas, runner entrypoints, and tests must exist
+inside the repository. The coverage audit no longer treats six arbitrary
+non-empty JSON fields as proof of execution readiness.
+
+## Current implementation
+
+[Candidate 010](candidate-010/README.md) now has the first validated
+`smoke-ready` harness. It exercises deterministic paired opportunities, seven
+eligible null/candidate arms, an oracle ceiling, real filesystem staging and
+rollback, append-only raw events, and reproducibility hashes. It intentionally
+leaves claim coverage at zero workstation-executable until the full promotion
+contract is implemented.

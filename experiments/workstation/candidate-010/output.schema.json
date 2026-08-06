@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Candidate 010 raw opportunity-arm event",
+  "type": "object",
+  "required": [
+    "schema",
+    "artifact",
+    "profile",
+    "opportunity_id",
+    "seed",
+    "arm",
+    "truth_unsafe",
+    "decision",
+    "outcome",
+    "resources",
+    "filesystem"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "artifact": { "const": "candidate-010" },
+    "profile": { "type": "string" },
+    "opportunity_id": { "type": "string" },
+    "seed": { "type": "integer" },
+    "arm": { "type": "string" },
+    "truth_unsafe": { "type": "boolean" },
+    "decision": { "type": "object" },
+    "outcome": { "type": "object" },
+    "resources": { "type": "object" },
+    "filesystem": { "type": ["object", "null"] }
+  }
+}

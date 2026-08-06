@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "artifact": "candidate-010",
+  "readiness": "smoke-ready",
+  "command": {
+    "prepare": "node experiments/workstation/candidate-010/runner.mjs prepare --profile smoke",
+    "smoke": "node experiments/workstation/candidate-010/runner.mjs smoke --profile smoke",
+    "run": "node experiments/workstation/candidate-010/runner.mjs run --profile development",
+    "analyze": "node experiments/workstation/candidate-010/runner.mjs analyze --output <run-directory>",
+    "validate": "node experiments/workstation/candidate-010/runner.mjs validate --output <run-directory>"
+  },
+  "environment": {
+    "runtime": "Node.js >=22 on Windows x64; exact runtime captured per run",
+    "lockfiles": ["package-lock.json"]
+  },
+  "hardware": {
+    "smoke": {
+      "cpu": "one x64 CPU thread or more",
+      "memory_bytes": 268435456,
+      "disk_bytes": 104857600,
+      "energy": "not required; measured joules remain null"
+    },
+    "workstation": {
+      "cpu": "x64 CPU",
+      "memory_bytes": 2147483648,
+      "disk_bytes": 1073741824,
+      "energy": "external calibrated wall or rail meter required before workstation-ready promotion"
+    }
+  },
+  "seeds": {
+    "development": "experiments/workstation/candidate-010/seeds/development.json",
+    "confirmation": "experiments/workstation/candidate-010/seeds/confirmation.commit.json",
+    "held_out": "experiments/workstation/candidate-010/seeds/held-out.commit.json"
+  },
+  "data": {
+    "generator": "experiments/workstation/candidate-010/generator.mjs",
+    "full_profile": "experiments/workstation/candidate-010/configs/development.json",
+    "external": []
+  },
+  "outputs": {
+    "directory": "experiments/workstation/runs/candidate-010-*",
+    "schema": "experiments/workstation/candidate-010/output.schema.json",
+    "append_only": true,
+    "hash_chain": false
+  },
+  "implementation": {
+    "entrypoint": "experiments/workstation/candidate-010/runner.mjs",
+    "tests": ["experiments/workstation/candidate-010/runner.test.mjs"],
+    "full_tests": []
+  },
+  "energy": {
+    "mode": "none",
+    "required": false
+  },
+  "resume": {
+    "supported": false
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "partition": "confirmation",
+  "state": "sealed",
+  "commitment": null,
+  "note": "The full seed list and SHA-256 commitment are intentionally absent while the benchmark is only smoke-ready."
+}

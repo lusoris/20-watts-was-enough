@@ -7,6 +7,14 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- The first executable experiment layer: a native-Node Candidate 010 smoke
+  harness with deterministic correlated evidence, all declared decision arms,
+  real filesystem stage/reset/commit behavior, append-only raw events,
+  reproducibility digests, and raw-axis analysis. It remains explicitly
+  smoke-ready rather than workstation-ready.
+- A strict workstation-manifest schema and validator that checks readiness,
+  commands, referenced lockfiles, seed packs, generators, output schemas,
+  entrypoints, and tests before claim coverage can become executable.
 - Rillig et al. (2025) on concurrent common fungal networks across fungal
   guilds, integrated as a perspective-level causal-attribution boundary with a
   guild-specific intervention refinement to the existing fungal audit; no new
