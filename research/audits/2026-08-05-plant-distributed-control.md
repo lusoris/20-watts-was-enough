@@ -2,6 +2,10 @@
 
 **Audit date:** 2026-08-05
 
+**Source addition:** 2026-08-06 — Rillig et al. (2025),
+"Concurrent common fungal networks formed by different guilds of fungi"
+([DOI](https://doi.org/10.1111/nph.20418)).
+
 **Scope:** within-plant distributed sensing and control, hydraulic/electrical/
 chemical long-distance signalling, nutrient foraging, tropisms, shoot
 branching, source--sink transport, mycorrhizal exchange, and community effects
@@ -111,6 +115,7 @@ biomass can rise while inequality and exclusion also rise.
 | Pressure-flow plus selective loading/unloading | demand-biased flow over a physically constrained network | `P-001`, `P-006`, `P-010`, `P-013` | capacitated network flow/backpressure | deduplicate |
 | Reciprocal mycorrhizal reward | local exchange under partially conflicting objectives | `P-001`, `P-008`, `P-013` | market/contract/matching mechanism | deduplicate; gaming is central |
 | CMN transfer, priming, and inequality | shared fabric changes externalities and competitive outcomes | `P-004`, `P-008`, `P-013` | shared cache/message bus/market with unequal access | no collective-intelligence claim |
+| Concurrent fungal guild links | superposed, typed transport layers can share plant endpoints without being causally interchangeable | `P-008`, `P-013`; observation contract in Candidate 014 | multiplexed network with per-channel telemetry and fault injection | perspective-level design constraint; no new principle |
 
 ### Cross-audit deduplication
 
@@ -642,6 +647,16 @@ all in moles. Measuring only $\Delta n_R$ does not identify the hyphal term.
 Mesh size, severing, air gaps, microbial controls, donor/receiver physiology,
 fungal abundance, and time-resolved isotope recovery are needed as appropriate.
 
+Rillig et al. add a second attribution problem: mycorrhizal, endophytic,
+parasitic, and saprobic fungi may form concurrent direct or indirect links
+between the same plant endpoints. Their Letter proposes terminology and an
+experimental program; it does not establish the prevalence or functional
+effect of those concurrent networks. An intact-versus-cut result that changes
+several guilds at once therefore identifies only a bundle effect. A
+guild-specific claim requires guild and genet typing, continuity evidence, an
+independently switchable intervention, indirect-path controls, and
+participant-specific outcomes.
+
 For allocation outcome, report at least total productivity and a distribution:
 
 $$
@@ -664,6 +679,8 @@ coefficient. Higher total $\sum_i x_i$ does not imply lower inequality $G$.
   reverse with different partners and soil ecology.
 - “Communication” can collapse to passive transport along source--sink
   gradients; “cooperation” can collapse to repeated exchange with sanctions.
+- Co-severed fungal guilds can make a bundle effect look like a
+  mycorrhiza-specific causal effect.
 
 ## Applicability map to sparse, grounded, continual AI
 
@@ -992,6 +1009,8 @@ should assign stable IDs only after checking overlap with existing claims.
 6. **Require path-exclusive and distributional controls.** A shared network is
    valuable only after alternative paths, strategic behavior, and unequal
    outcomes are measured.
+7. **Keep concurrent fungal layers typed.** Endpoint detection or a shared cut
+   does not identify guild, genet, continuity, transport, or functional effect.
 
 ## Bibliography (audit-local BibTeX)
 

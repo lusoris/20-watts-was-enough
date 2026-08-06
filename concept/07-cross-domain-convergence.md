@@ -221,6 +221,26 @@ typed byte or item ledger; they do not inherit molecular units or diffusion
 laws. Geometry, boundary conditions, sampling support, and receiver state are
 part of the contract.
 
+Several fields can be superposed at the same endpoints. If the observed
+outcome is
+
+$$
+y=\sum_{g=1}^{G}h_g(c_g,\theta_g)+b+\varepsilon,
+$$
+
+where $G$ is the number of typed channels, $g$ indexes one channel, $c_g$ is
+its transported concentration or inventory, $h_g$ is its receiver-dependent
+effect, $\theta_g$ is channel state, $b$ is background, and $\varepsilon$ is
+measurement error. Observing $y$ or cutting every channel together does
+not identify any one $h_g$. Each claimed channel needs an independently
+targetable intervention or a justified identification model. Rillig et al.'s
+concurrent-fungal-network perspective makes this problem explicit for fungal
+guilds sharing plant endpoints; the project adopts it as an engineering
+inference, not as evidence that such guild combinations have a demonstrated
+beneficial function ([DOI](https://doi.org/10.1111/nph.20418),
+[C-217](../research/claims.md#c-217),
+[C-584](../research/claims.md#c-584)).
+
 ```mermaid
 flowchart LR
     P["Local production, release, or deficit"] --> T["Transport: flow · diffusion · delay · loss"]
@@ -255,7 +275,9 @@ differences:
   ([C-577](../research/claims.md#c-577)–[C-581](../research/claims.md#c-581));
   and
 - distinct symbiotic partners can exchange unequally under conflicting
-  objectives ([C-584](../research/claims.md#c-584)).
+  objectives ([C-584](../research/claims.md#c-584)); and
+- concurrent typed channels sharing endpoints remain causally unresolved when
+  the experiment observes or disables only their aggregate.
 
 The held fixture belongs jointly to P-011/P-013 and existing Candidates 001
 and 013 ([C-585](../research/claims.md#c-585)). It must beat typed pub/sub or

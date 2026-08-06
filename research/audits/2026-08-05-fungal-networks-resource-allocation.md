@@ -2,10 +2,15 @@
 
 **Audit date:** 2026-08-05
 
+**Source addition:** 2026-08-06 — Rillig et al. (2025),
+"Concurrent common fungal networks formed by different guilds of fungi"
+([DOI](https://doi.org/10.1111/nph.20418)).
+
 **Scope:** hyphal branching and anastomosis, oscillatory and growth-induced
 transport, nutrient foraging and translocation, source--sink reallocation,
 damage containment and bypass, nuclear heterogeneity, priming and directional
-"memory," plant--fungus exchange, and network remodeling
+"memory," plant--fungus exchange, concurrent fungal guild networks, causal
+link attribution, and network remodeling
 
 **Purpose:** candidate evidence for later claim-ledger review. This file does
 not promote a claim, create a stable claim ID, amend the principle registry, or
@@ -38,6 +43,15 @@ Damage is included as a stress condition and scored with Candidate 005-style
 containment metrics, but the evidence does **not** add a third candidate: rapid
 septal plugging already reduces to local containment, and later bypass reduces
 to Candidate 001 topology change.
+
+The 2025 source addition does not change that disposition. It is a
+peer-reviewed Letter and research perspective, not an experiment demonstrating
+functional complementarity, synergy, or antagonism among guild-level
+networks. Its useful contribution here is a stricter causal boundary:
+mycorrhizal, endophytic, parasitic, and saprobic fungi may concurrently connect
+the same plant endpoints, so a shared mesh cut or endpoint response cannot
+identify which channel caused the effect. Guild, genet, continuity, indirect
+pathways, and independently severable interventions must be reported.
 
 The biological findings also impose several negative conclusions:
 
@@ -110,6 +124,7 @@ proxy for common control, common genotype, or freely shared resources.
 | Directional memory | transfer-and-regrowth assay in *P. velutina*; negative *Laccaria bicolor* assay | prior asymmetric growth can predict later asymmetric regrowth in one preparation | disputed/generalization unsupported | residual biomass, polarity, viability, and unequal propagule state |
 | Stress priming | controlled heat and drought prime--delay--challenge experiments | prior sublethal stress can transiently alter later growth/activity | plausible to established by isolate; substrate unresolved | acclimation, retained metabolites, damage selection, or growth-state carryover |
 | Plant--fungus trade | partner manipulation and isotope tracing | carbon supply can alter fungal N/P uptake and allocation; exchange can be unequal | established in scoped AM systems | local carbon limitation and ordinary exchange economics |
+| Concurrent fungal guild networks | peer-reviewed perspective plus a proposed spatial-mapping and intervention agenda | multiple guilds may link the same plant endpoints, but their existence, continuity, interaction, and function require separate tests | research program proposed; functional effects unestablished | mixed inoculum, shared endpoints, and co-severed paths confound attribution |
 | Ecosystem consequence | connected-litter microcosms | fungal reallocation can alter decomposition, N retention, and carbon-use efficiency | plausible and system-specific | species turnover, substrate chemistry, and microbial competition |
 
 ## Mechanism synthesis
@@ -417,7 +432,44 @@ is unnecessary overhead; ordinary constrained allocation is the null.
 - partner choice can reduce diversity or strand weak participants;
 - isotope arrival does not identify intent or ultimate fitness effect.
 
-### 9. Ecosystem effects stay at ecosystem scale
+### 9. Concurrent guild networks require channel-specific intervention
+
+Rillig et al. distinguish common mycorrhizal networks with demonstrated hyphal
+continuity from broader common mycorrhizal and common fungal networks, which
+may include direct or indirect links formed by mycorrhizal, endophytic,
+parasitic, or saprobic fungi
+([DOI](https://doi.org/10.1111/nph.20418)). The article argues that several
+guilds can plausibly form concurrent links among the same plants and proposes a
+research program using spatial sampling, mesh compartments, link severing, and
+factorial guild combinations.
+
+The evidence status matters: this is a conceptual Letter grounded in cited
+prior literature and a proposed mapping program, not direct evidence that
+concurrent guild networks normally exist, remain continuous, or produce complementary,
+synergistic, or antagonistic effects. Those outcomes are explicit hypotheses.
+Even detecting one fungal genet at both endpoints establishes an initial link
+candidate, not transport, causal function, benefit, or an independently
+controlled path.
+
+For this project, the result deduplicates into typed provenance and causal
+intervention. If multiple physical or learned channels share endpoints, a
+single aggregate output change cannot credit one channel. Tests must identify
+the active channel, independently disable it where possible, retain indirect
+path nulls, and report actor-specific outcomes. This tightens P-013 and the
+observation/intervention contracts already used by Candidate 014; it adds no
+new principle or architecture candidate.
+
+#### Failure modes and measurable predictions
+
+- co-severing several networks produces an effect that is misattributed to one;
+- taxonomic detection is mistaken for hyphal continuity or active transport;
+- endpoint benefit hides parasitic or competitive effects in another actor;
+- mesh geometry alters water, diffusion, roots, or microbiomes together with
+  the intended fungal path; and
+- complementarity, synergy, and antagonism remain indistinguishable without a
+  factorial design that can intervene on guilds separately.
+
+### 10. Ecosystem effects stay at ecosystem scale
 
 Fungal networks alter decomposition, mineral retention, water access, and
 interactions among species. Those effects can be large while no organism
@@ -753,7 +805,10 @@ geometry must be matched before interpreting $D$ as stored direction.
 13. **Pathway-ambiguity null:** plant-to-plant effects arise through roots,
     diffusion, volatiles, altered microbes, or isotope recycling rather than a
     continuous common mycorrhizal network.
-14. **Ecosystem-emergence null:** aggregate stability or productivity is a
+14. **Concurrent-channel null:** multiple fungal guilds, genets, and indirect
+    pathways connect the same endpoints, so a shared cut or endpoint response
+    cannot identify one network's contribution.
+15. **Ecosystem-emergence null:** aggregate stability or productivity is a
     population consequence with no collective controller.
 
 ## Equal-budget falsification experiments
@@ -875,15 +930,21 @@ future decision.
 
 Use multiple plant and fungal partners with independently manipulated carbon,
 N, P, access, and outside options. Include mesh/path controls that separate
-hyphae, solutes, roots, volatiles, and microbial communities.
+hyphae, solutes, roots, volatiles, and microbial communities. Type each fungal
+isolate or detected genet by guild and link mode. Add factorial mycorrhizal,
+endophytic, parasitic, and saprobic arms in which each candidate link can be
+severed independently; an all-links-intact/all-links-cut comparison is an
+insufficient causal design.
 
 **Measurements:** gross and net element flux, each partner's growth and
-reproduction, payment/delivery response, concentration, weakest-partner loss,
-network maintenance, and path attribution.
+reproduction and survival, payment/delivery response, concentration,
+weakest-partner loss, soil aggregation and organic-matter processing,
+microbiome change, network maintenance, and guild-specific path attribution.
 
 **Kill:** reject market-like or routing claims if local carbon/substrate
 availability explains allocation, causal path is ambiguous, or average gain
-hides participant harm.
+hides participant harm. Any guild-specific functional claim also fails when
+the design cannot intervene on that guild without co-severing the others.
 
 ## Temporary audit claims
 
@@ -922,6 +983,7 @@ claims.
 | FUNG-T28 | disputed | Common mycorrhizal networks generally optimize forest community welfare. | Path ambiguity, conflict, unequal trade, and distributional outcomes defeat the claim. | no promotion |
 | FUNG-T29 | audit conclusion | No reviewed result warrants a new stable principle or candidate. | All abstractions reduce to existing bundles and mature nulls. | registry |
 | FUNG-T30 | audit conclusion | Conservation-qualified topology adaptation is the narrowest useful fungal residual. | Must beat fixed routing/global optimization with in-flight inventory charged. | Candidates 001, 013 |
+| FUNG-T31 | perspective boundary | Different fungal guilds may concurrently connect the same plant endpoints, but their continuity, interaction, and functional effects are unestablished until channel-specific interventions separate them. | Rillig et al. 2025 proposes terminology and experiments; it does not report a decisive concurrent-guild experiment. | P-013, Candidate 014, FUNG-E09 |
 
 ## Quantitative reporting checklist
 
@@ -1255,5 +1317,17 @@ to `research/references.bib` in a separate change.
   volume = {639},
   pages = {172--180},
   doi = {10.1038/s41586-025-08614-x}
+}
+
+@article{rillig2025concurrent,
+  author = {Rillig, Matthias C. and Lehmann, Anika and Mounts, Ian R. and Bock, Beatrice M.},
+  title = {Concurrent Common Fungal Networks Formed by Different Guilds of Fungi},
+  journal = {New Phytologist},
+  year = {2025},
+  volume = {246},
+  number = {1},
+  pages = {33--38},
+  doi = {10.1111/nph.20418},
+  url = {https://doi.org/10.1111/nph.20418}
 }
 ```

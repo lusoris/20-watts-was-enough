@@ -3427,6 +3427,10 @@ describes the exact statement here, not a broader interpretation.
   narratives.
 - **Open issue:** This disputes the generalized inference chain, not the
   ecological importance of mycorrhizae or every controlled transfer result.
+  Concurrent mycorrhizal, endophytic, parasitic, or saprobic links would add a
+  second attribution problem: a cut that changes several guilds identifies a
+  bundle effect, not the active guild (`rillig2025concurrent`, a perspective
+  and proposed research program rather than a decisive experiment).
 - **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
   [P-013](principle-registry.md#p-013--externalized-shared-state).
 
@@ -8559,7 +8563,10 @@ describes the exact statement here, not a broader interpretation.
 - **Rationale:** Distinct organisms exchange under local feasibility, metabolic
   need, and partly conflicting objectives rather than one system utility.
 - **Open issue:** Gross transfer, net fitness, path attribution, reproduction,
-  and network-maintenance cost must remain partner-specific.
+  and network-maintenance cost must remain partner-specific. When several
+  fungal guilds can share endpoints, they must also remain channel-specific;
+  aggregate detection or co-severing cannot assign a causal effect to one
+  guild (`rillig2025concurrent`, perspective-level boundary).
 - **Used by:** [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
   Candidates [008](../experiments/candidates/008-contestable-modular-allocation.md)
   and [013](../experiments/candidates/013-deficit-capability-routing.md).

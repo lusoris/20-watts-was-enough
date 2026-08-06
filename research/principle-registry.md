@@ -904,7 +904,12 @@ instead of broadcasting pairwise state.
 
 **Do not collapse.** An ant trail is low-bandwidth, lossy, and often anonymous;
 a digital store can be exact, attributable, access-controlled, and rolled back.
-Those silicon advantages should be retained.
+Those silicon advantages should be retained. Multiple transported or shared
+layers may also occupy the same endpoints without being interchangeable. Keep
+channel type, producer, path, transformation, receiver, and intervention scope
+observable; an aggregate read or co-failure establishes only a bundle effect,
+not which layer caused it ([C-217](claims.md#c-217),
+[C-584](claims.md#c-584)).
 
 ## How to add a finding
 

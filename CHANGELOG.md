@@ -7,6 +7,10 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Rillig et al. (2025) on concurrent common fungal networks across fungal
+  guilds, integrated as a perspective-level causal-attribution boundary with a
+  guild-specific intervention refinement to the existing fungal audit; no new
+  principle, central claim, or architecture candidate was promoted.
 - A generated test-coverage ledger that maps all 1,202 central claims to both
   claim-side and experiment-side relations, applies an eight-facet protocol
   gate, and now separates 1,089 protocol-covered claims from zero
