@@ -13,3 +13,4 @@ than silently changing its outcome.
 | [0005](0005-rendered-private-edition.md) | Render one private edition from canonical files | accepted |
 | [0006](0006-open-world-scientific-search.md) | Search all sciences through shared problem classes | accepted |
 | [0007](0007-benchmark-fixtures-are-not-candidates.md) | Keep cross-candidate stress fixtures separate from architecture candidates | accepted |
+| [0008](0008-eu-germany-normative-default.md) | Use the European Union and Germany as the normative default | accepted |

@@ -8,6 +8,22 @@ an adaptive computational system also faces.
 This is an open-world policy, not a claim that the inventory is exhaustive.
 New fields and subfields remain admissible without changing the project scope.
 
+## Normative sources are a distinct evidence role
+
+Law, regulation, standards, and regulator guidance can expose requirements,
+failure taxonomies, test methods, or mature engineering nulls. Their authority
+does not by itself establish that an empirical mechanism works, and a foreign
+rule does not become locally applicable because it contains a useful idea.
+
+Use the European Union and Germany as the default normative context and follow
+[`normative-baseline.md`](normative-baseline.md). Every normative source must be
+classified as an applicable binding requirement, project-specific obligation,
+conformity route, technical practice, comparative source, or draft/historical
+source. Foreign material remains comparative unless a named market,
+deployment, contract, certification, procurement, supply-chain, or other hook
+makes it applicable. Scientific promotion still requires primary empirical or
+formal evidence under the ordinary gates below.
+
 ## Search by problem, not resemblance
 
 Each research pass starts with a constrained problem and asks how different

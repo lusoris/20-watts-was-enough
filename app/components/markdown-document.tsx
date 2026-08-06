@@ -17,6 +17,8 @@ type MarkdownDocumentProps = {
   body: string;
   currentPath: string;
   onNavigate: (path: string, hash?: string) => void;
+  internalHref?: (path: string, hash: string) => string;
+  imageLoading?: "eager" | "lazy";
 };
 
 function normalizePath(path: string): string {
@@ -87,6 +89,8 @@ export function MarkdownDocument({
   body,
   currentPath,
   onNavigate,
+  internalHref,
+  imageLoading = "lazy",
 }: MarkdownDocumentProps) {
   const components: Components = {
     a({ href = "", children, ...props }) {
@@ -94,6 +98,14 @@ export function MarkdownDocument({
       if (!internal) {
         return (
           <a href={href} target="_blank" rel="noreferrer" {...props}>
+            {children}
+          </a>
+        );
+      }
+
+      if (internalHref) {
+        return (
+          <a href={internalHref(internal.path, internal.hash)} {...props}>
             {children}
           </a>
         );
@@ -118,7 +130,7 @@ export function MarkdownDocument({
         <img
           src={resolveImageSource(src, currentPath)}
           alt={alt}
-          loading="lazy"
+          loading={imageLoading}
           {...props}
         />
       );

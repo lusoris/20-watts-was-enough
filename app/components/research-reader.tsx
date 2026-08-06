@@ -165,9 +165,18 @@ export function ResearchReader() {
           />
           <kbd>/</kbd>
         </label>
-        <div className="privacy-status">
-          <span />
-          Owner-only
+        <div className="topbar-actions">
+          <a
+            className="book-download"
+            href="/downloads/20-watts-was-enough-full-concept-book.pdf"
+            download
+          >
+            PDF book
+          </a>
+          <div className="privacy-status">
+            <span />
+            Owner-only
+          </div>
         </div>
       </header>
 

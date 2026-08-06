@@ -41,15 +41,19 @@ const roleKeywords = {
 } as const;
 
 function decorateDiagram(renderedSvg: string): string {
-  const document = new DOMParser().parseFromString(renderedSvg, "image/svg+xml");
-  for (const node of document.querySelectorAll("g.node")) {
+  const template = document.createElement("template");
+  template.innerHTML = renderedSvg;
+  const svg = template.content.querySelector("svg");
+  if (!svg) return renderedSvg;
+
+  for (const node of svg.querySelectorAll("g.node")) {
     const label = (node.textContent ?? "").toLowerCase();
     const role = Object.entries(roleKeywords).find(([, keywords]) =>
       keywords.some((keyword) => label.includes(keyword)),
     )?.[0] ?? "system";
     node.classList.add(`diagram-role-${role}`);
   }
-  return new XMLSerializer().serializeToString(document.documentElement);
+  return svg.outerHTML;
 }
 
 export function MermaidDiagram({ chart }: { chart: string }) {

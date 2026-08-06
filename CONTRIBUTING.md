@@ -31,6 +31,25 @@ Use the problem-first search, extraction tuple, and promotion gates in
 name the strongest conventional engineering null model before its translation
 can influence an architecture or experiment.
 
+## Normative-source workflow
+
+The default normative context is the European Union and Germany. Before using
+language such as *required*, *compliant*, *certified*, or *state of the art*,
+follow [`research/normative-baseline.md`](research/normative-baseline.md):
+
+1. identify the system, intended use, deployment, actor role, and jurisdiction;
+2. record the official source, exact version and status, relevant dates, source
+   role, and concrete applicability hook;
+3. distinguish binding law, project obligations, conformity routes, technical
+   guidance, comparative foreign material, and drafts;
+4. verify EU harmonisation, Official Journal citation, transition, and German
+   adoption rather than inferring them from an ISO or IEC title; and
+5. recheck official sources before consequential use.
+
+Foreign law, standards, and regulator guidance remain valid comparative or
+technical research inputs. They are not German or EU compliance requirements
+without an explicit applicability hook.
+
 ## Live research edition
 
 Run `npm ci` once, then `npm run dev`. The browser reader watches the canonical

@@ -7,11 +7,25 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A generated, downloadable 182-page A4 full-concept book assembled from the
+  README and all nineteen concept chapters, with a cover, contents page,
+  chapter boundaries, print-safe tables, equations, plots, and 47 rendered
+  Mermaid diagrams. A source digest makes the build reject a stale PDF.
+- Exact visible-text captures of the four supplied Google Docs, retained as
+  dated research leads and routed into the existing endogenous-generation,
+  constraint, mathematical-practice, and verification queues without being
+  promoted to evidence.
+- Decision 0008 and a research-wide normative baseline that make the European
+  Union and Germany the default context, distinguish binding requirements,
+  conformity routes, technical practice, comparative foreign material, and
+  drafts, and require exact applicability, version, date, adoption, and
+  recheck metadata without invalidating existing foreign audits.
 - A biomimetics transfer-method audit, provenance capture for the two supplied
   overview links, ten centralized methodology references, and a colored
   bidirectional workflow that joins phenomenon-push and problem-pull discovery
   at functional abstraction, deduplication, substrate redesign, and
   equal-budget falsification; no claim, principle, or candidate was added.
+
 - The first executable experiment layer: a native-Node Candidate 010 smoke
   harness with deterministic correlated evidence, all declared decision arms,
   real filesystem stage/reset/commit behavior, append-only raw events,
@@ -420,6 +434,15 @@ the exact diff; this file records why the project changed.
 - A searchable private research edition that live-renders canonical Markdown,
   LaTeX, BibTeX, and Mermaid sources without duplicating the documents.
 - A committed production build path and owner-only online publishing policy.
+
+### Fixed
+
+- Mermaid SVG decoration now parses renderer output as HTML-compatible SVG,
+  eliminating the XML `<br>` parser failures that could replace diagrams with
+  error boxes in the private site.
+- Book-internal links no longer retain local preview origins in the exported
+  PDF; included chapters use document anchors and supporting research links use
+  the canonical private-site URL.
 
 ### Changed
 

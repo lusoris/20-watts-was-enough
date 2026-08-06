@@ -4,6 +4,26 @@ Audits are dated, scoped passes through primary literature or authoritative
 engineering sources. They preserve disagreements, boundary conditions, and
 failed deduplications that would be lost in the shorter claim ledger.
 
+## Normative-source header
+
+An audit that uses law, regulation, a standard, regulator guidance, or another
+normative source must state the following when it is created or substantively
+updated:
+
+- **Normative context:** the default EU/Germany context or an explicit
+  project-specific replacement;
+- **Jurisdiction and authority:** every relevant jurisdiction and issuing body;
+- **Source role:** binding requirement, project obligation, conformity route,
+  technical practice, comparative source, or draft/historical source;
+- **Snapshot date and version:** when the official status was checked and which
+  text or edition was evaluated; and
+- **Applicability hook:** the product, use, deployment, actor, market, contract,
+  certification, or other fact that activates it, or `unresolved`.
+
+Follow [`../normative-baseline.md`](../normative-baseline.md). Existing US and
+other foreign-jurisdiction audits remain preserved as comparative research;
+this default does not retroactively convert or invalidate them.
+
 | Date | Audit | Main outcome |
 | --- | --- | --- |
 | 2026-08-06 | [Biomimetics transfer methodology](2026-08-06-biomimetics-transfer-methodology.md) | formalizes phenomenon-push and problem-pull discovery through one abstraction, deduplication, substrate-redesign, and equal-budget rejection gate; no claim, principle, or candidate added |

@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "vinext dev",
-    "build": "vinext build",
+    "build": "npm run validate:book-pdf && vinext build",
     "start": "vinext start",
     "test": "npm run lint && npm run validate:docs && npm run validate:math && npm run validate:workstation && npm run check:test-coverage && npm run build",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
@@ -17,6 +17,8 @@
     "test:workstation": "node --test --test-isolation=none experiments/workstation/**/*.test.mjs",
     "workstation:candidate-010": "node experiments/workstation/candidate-010/runner.mjs",
     "generate:plots": "node scripts/generate-plots.mjs",
+    "generate:book-pdf": "node scripts/generate-book-pdf.mjs",
+    "validate:book-pdf": "node scripts/validate-book-pdf.mjs",
     "audit:tests": "node scripts/audit-test-coverage.mjs",
     "check:test-coverage": "node scripts/audit-test-coverage.mjs --check"
   },

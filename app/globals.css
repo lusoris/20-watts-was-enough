@@ -1130,3 +1130,511 @@ button {
     border: 0;
   }
 }
+
+/* Full concept book ------------------------------------------------------ */
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  min-width: 0;
+  padding-right: 20px;
+}
+
+.book-download {
+  padding: 7px 10px;
+  border: 1px solid #51705d;
+  border-radius: 4px;
+  color: #f2f5ef;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.book-download:hover {
+  border-color: var(--green-bright);
+  color: var(--green-bright);
+}
+
+.book-shell {
+  min-height: 100%;
+  padding: 34px clamp(20px, 5vw, 76px) 90px;
+  background:
+    radial-gradient(circle at 88% 4%, rgb(134 239 172 / 14%), transparent 25rem),
+    var(--paper);
+}
+
+.book-actions {
+  position: sticky;
+  top: 16px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(100%, 1040px);
+  margin: 0 auto 22px;
+  padding: 10px;
+  border: 1px solid #44604f;
+  border-radius: 7px;
+  background: rgb(11 29 20 / 94%);
+  box-shadow: 0 12px 38px rgb(11 29 20 / 20%);
+  backdrop-filter: blur(12px);
+}
+
+.book-actions a,
+.book-actions button {
+  padding: 9px 13px;
+  border: 1px solid #50685a;
+  border-radius: 4px;
+  background: transparent;
+  color: #e9eee8;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.book-actions .book-download-primary {
+  margin-left: auto;
+  border-color: #9ee8b5;
+  background: #9ee8b5;
+  color: #0a2818;
+  font-weight: 800;
+}
+
+.book-cover,
+.book-toc,
+.book-document {
+  width: min(100%, 1040px);
+  margin-right: auto;
+  margin-left: auto;
+  border: 1px solid var(--line);
+  background: var(--paper-raised);
+  box-shadow: 0 18px 48px rgb(11 29 20 / 9%);
+}
+
+.book-cover {
+  display: flex;
+  min-height: min(760px, calc(100vh - 150px));
+  padding: clamp(52px, 9vw, 118px);
+  flex-direction: column;
+  justify-content: center;
+  border-top: 12px solid var(--green-strong);
+}
+
+.book-kicker {
+  color: var(--green-strong);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.book-cover h1 {
+  max-width: 760px;
+  margin: 20px 0 26px;
+  color: #0d2417;
+  font-family: var(--font-serif);
+  font-size: clamp(58px, 9vw, 108px);
+  font-weight: 520;
+  letter-spacing: -0.055em;
+  line-height: 0.92;
+}
+
+.book-subtitle {
+  max-width: 680px;
+  margin: 0;
+  color: #314b3b;
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 2.8vw, 30px);
+  line-height: 1.35;
+}
+
+.book-cover-rule {
+  width: 100%;
+  height: 1px;
+  margin: 52px 0 24px;
+  background: linear-gradient(90deg, var(--green), transparent);
+}
+
+.book-cover dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 38px;
+  margin: 0;
+}
+
+.book-cover dl div {
+  min-width: 0;
+}
+
+.book-cover dt {
+  color: #65736a;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.book-cover dd {
+  margin: 5px 0 0;
+  color: #1d3426;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.book-toc {
+  margin-top: 34px;
+  padding: clamp(38px, 7vw, 80px);
+}
+
+.book-toc h2 {
+  margin: 8px 0 34px;
+  color: #0d2417;
+  font-family: var(--font-serif);
+  font-size: clamp(38px, 5vw, 60px);
+  font-weight: 520;
+}
+
+.book-toc ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--green-strong);
+}
+
+.book-toc li {
+  border-bottom: 1px solid var(--line);
+}
+
+.book-toc a {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 18px;
+  padding: 13px 4px;
+  color: #193524;
+  text-decoration: none;
+}
+
+.book-toc a > span,
+.book-toc code {
+  color: #617267;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.book-toc strong {
+  font-size: 14px;
+}
+
+.book-document {
+  margin-top: 34px;
+  padding: clamp(34px, 7vw, 78px);
+}
+
+.book-document-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 48px;
+  padding-bottom: 13px;
+  border-bottom: 2px solid var(--green-strong);
+  color: #5b6b61;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.book-document-meta code {
+  color: var(--green-strong);
+  font-family: inherit;
+  overflow-wrap: anywhere;
+  text-transform: none;
+}
+
+.book-prose > :first-child {
+  margin-top: 0;
+}
+
+.book-prose > p,
+.book-prose > ul,
+.book-prose > ol,
+.book-prose > blockquote {
+  max-width: 78ch;
+}
+
+@media (max-width: 760px) {
+  .topbar-actions {
+    padding-right: 8px;
+  }
+
+  .topbar-actions .book-download {
+    padding: 7px 8px;
+    font-size: 9px;
+  }
+
+  .book-shell {
+    padding: 15px 12px 60px;
+  }
+
+  .book-actions {
+    position: static;
+    flex-wrap: wrap;
+  }
+
+  .book-actions .book-download-primary {
+    margin-left: 0;
+  }
+
+  .book-cover {
+    min-height: 70vh;
+    padding: 44px 28px;
+  }
+
+  .book-cover dl {
+    grid-template-columns: 1fr;
+  }
+
+  .book-toc,
+  .book-document {
+    padding: 32px 22px;
+  }
+
+  .book-toc a {
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .book-toc code {
+    display: none;
+  }
+
+  .book-document-meta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@page {
+  size: A4 portrait;
+  margin: 16mm 14mm 18mm;
+
+  @bottom-center {
+    color: #52635a;
+    content: "20 Watts Was Enough  ·  " counter(page);
+    font-family: "Cascadia Mono", Consolas, monospace;
+    font-size: 7pt;
+  }
+}
+
+@media print {
+  html,
+  body {
+    height: auto;
+    background: #fff;
+  }
+
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .book-shell {
+    padding: 0;
+    background: #fff;
+  }
+
+  .book-actions {
+    display: none;
+  }
+
+  .book-cover,
+  .book-toc,
+  .book-document {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  .book-cover {
+    min-height: 250mm;
+    padding: 26mm 12mm;
+    border-top: 6mm solid var(--green-strong);
+    break-after: page;
+  }
+
+  .book-cover h1 {
+    font-size: 60pt;
+  }
+
+  .book-subtitle {
+    font-size: 19pt;
+  }
+
+  .book-toc {
+    padding: 9mm 4mm;
+    break-after: page;
+  }
+
+  .book-toc h2 {
+    font-size: 34pt;
+  }
+
+  .book-toc a {
+    grid-template-columns: 9mm minmax(0, 1fr) auto;
+    gap: 3mm;
+    padding: 2.1mm 1mm;
+  }
+
+  .book-toc strong {
+    font-size: 8.5pt;
+  }
+
+  .book-toc a > span,
+  .book-toc code {
+    font-size: 6.5pt;
+  }
+
+  .book-document {
+    break-before: page;
+  }
+
+  .book-document-meta {
+    margin-bottom: 10mm;
+    padding-bottom: 3mm;
+  }
+
+  .book-prose {
+    color: #111;
+    font-size: 9.3pt;
+    line-height: 1.45;
+  }
+
+  .book-prose h1 {
+    margin-bottom: 8mm;
+    font-size: 30pt;
+    break-after: avoid;
+  }
+
+  .book-prose h2 {
+    margin: 9mm 0 4mm;
+    padding-top: 3mm;
+    font-size: 17pt;
+    break-after: avoid;
+  }
+
+  .book-prose h3 {
+    margin: 6mm 0 2.5mm;
+    font-size: 13pt;
+    break-after: avoid;
+  }
+
+  .book-prose h4 {
+    margin: 5mm 0 2mm;
+    font-size: 9pt;
+    break-after: avoid;
+  }
+
+  .book-prose p,
+  .book-prose li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .book-prose a {
+    color: #174b30;
+    text-decoration-thickness: 0.3pt;
+  }
+
+  .book-prose pre {
+    max-width: 100%;
+    overflow: visible;
+    padding: 3mm;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 6.8pt;
+    break-inside: auto;
+  }
+
+  .book-prose .table-frame {
+    max-width: 100%;
+    margin: 5mm 0;
+  }
+
+  .book-prose .table-scroll-cue {
+    display: none !important;
+  }
+
+  .book-prose .table-region {
+    overflow: visible;
+    border-radius: 0;
+    box-shadow: none;
+    contain: none;
+  }
+
+  .book-prose table {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+    font-size: 6.7pt;
+    line-height: 1.25;
+  }
+
+  .book-prose th,
+  .book-prose td {
+    position: static !important;
+    min-width: 0;
+    max-width: none;
+    padding: 1.4mm 1.5mm;
+    overflow-wrap: anywhere;
+    box-shadow: none !important;
+  }
+
+  .book-prose th {
+    font-size: 6.2pt;
+  }
+
+  .book-prose .katex-display {
+    max-width: 100%;
+    overflow: visible;
+    margin: 5mm 0 !important;
+    padding: 3mm;
+    font-size: 0.76em;
+  }
+
+  .book-prose .diagram {
+    max-width: 100%;
+    min-height: 0;
+    overflow: visible;
+    margin: 6mm 0;
+    padding: 4mm;
+    break-inside: avoid;
+  }
+
+  .book-prose .diagram-canvas svg,
+  .book-prose img {
+    max-width: 100% !important;
+    max-height: 220mm;
+    height: auto !important;
+    object-fit: contain;
+  }
+
+  .book-prose blockquote,
+  .book-prose figure,
+  .book-prose img {
+    break-inside: avoid;
+  }
+}

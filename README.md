@@ -34,11 +34,20 @@ The repository is the canonical source. The original Google Doc and Gemini
 discussions are preserved under [`sources/`](sources/README.md) as historical,
 non-authoritative inputs.
 
+The default normative context is the European Union and Germany. Legal,
+standards, and conformity claims remain applicability-, jurisdiction-, version-,
+and date-qualified under the
+[`normative baseline`](research/normative-baseline.md); foreign material is
+preserved as comparative unless a concrete project hook makes it applicable.
+
 The same files are also rendered as a private research site. The site is a
 generated reading surface—not a second document store. Saving a Markdown,
 equation, bibliography, or Mermaid file updates the local preview through hot
 reload; publishing creates an owner-only online edition from a committed Git
-state. See [decision 0005](decisions/0005-rendered-private-edition.md).
+state. The site also provides a downloadable A4 book containing this README and
+all canonical concept chapters, generated from the same files and checked for
+staleness during the build. See
+[decision 0005](decisions/0005-rendered-private-edition.md).
 
 ## Concept map
 
@@ -72,6 +81,7 @@ Supporting material:
 - [`research/principle-registry.md`](research/principle-registry.md) — canonical deduplicated problem–solution invariants
 - [`research/domain-inventory.md`](research/domain-inventory.md) — audited, partial, and queued scientific fields
 - [`research/discovery-policy.md`](research/discovery-policy.md) — open-world search, extraction, deduplication, and promotion rules
+- [`research/normative-baseline.md`](research/normative-baseline.md) — EU/Germany default, source-role hierarchy, and applicability record
 - [`research/audits/`](research/audits/README.md) — dated primary-source research passes and engineering null-model audits
 - [`research/neuroscience-opportunity-map.md`](research/neuroscience-opportunity-map.md) — underused neural mechanisms and falsifiable translations
 - [`research/comparative-biology.md`](research/comparative-biology.md) — candidates from animals, plants, immune systems, and adaptive networks
@@ -110,6 +120,21 @@ npm run dev
 The preview is served at `http://localhost:3000`. Internal Markdown links,
 GitHub-style tables, LaTeX equations, the bibliography, and editable Mermaid
 sources are rendered in the same searchable reader.
+
+Regenerate the full concept book after changing the README, a concept chapter,
+diagram renderer, plot, or book stylesheet:
+
+```powershell
+npm run generate:book-pdf
+npm run validate:book-pdf
+```
+
+The tracked artifact is
+`public/downloads/20-watts-was-enough-full-concept-book.pdf`; the private site
+offers it directly for download, while `/book` remains a printable HTML
+edition. Raw source captures, audit ledgers, and experiment fixtures remain in
+the searchable private site rather than being duplicated into the reading
+edition.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow.
 
