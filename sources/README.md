@@ -33,3 +33,4 @@ captured body text. They route research questions; they do not support claims.
 | 2026-08-06 | Generative versus labor-adding constraints | [`2026-08-06/google-doc-1BXU7cVe.md`](2026-08-06/google-doc-1BXU7cVe.md) |
 | 2026-08-06 | Generator–rules-engine separation and constrained output | [`2026-08-06/google-doc-1Lo_tgeg.md`](2026-08-06/google-doc-1Lo_tgeg.md) |
 | 2026-08-06 | Combinatorial account of creativity | [`2026-08-06/google-doc-1tQnOxql.md`](2026-08-06/google-doc-1tQnOxql.md) |
+| 2026-08-06 | Empirical-versus-formal evaluator boundaries in scientific discovery | [`2026-08-06/google-doc-1q3PvYWS.md`](2026-08-06/google-doc-1q3PvYWS.md) |

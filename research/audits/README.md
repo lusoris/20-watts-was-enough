@@ -26,6 +26,7 @@ this default does not retroactively convert or invalidate them.
 
 | Date | Audit | Main outcome |
 | --- | --- | --- |
+| 2026-08-06 | [Scientific-discovery evaluator contracts](2026-08-06-scientific-discovery-evaluator-contracts.md) | separates empirical observation, inverse-model, and intervention tests from formal specification, execution, certificate, and proof checks; corrects the supplied dusty-plasma and FunSearch examples; no claim, principle, candidate, or fixture added |
 | 2026-08-06 | [Biomimetics transfer methodology](2026-08-06-biomimetics-transfer-methodology.md) | formalizes phenomenon-push and problem-pull discovery through one abstraction, deduplication, substrate-redesign, and equal-budget rejection gate; no claim, principle, or candidate added |
 | 2026-08-05 | [Memory, replay, and forgetting](2026-08-05-memory-replay-forgetting.md) | selective replay, schema-sensitive consolidation, reconsolidation limits, and active forgetting |
 | 2026-08-05 | [Neurodevelopment and global control](2026-08-05-neurodevelopment-global-control.md) | existing developmental/resource bundles plus a candidate multiscale context broadcast |

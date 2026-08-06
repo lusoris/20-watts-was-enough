@@ -7,6 +7,11 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A provenance capture and primary-source audit for empirical-versus-formal
+  scientific-discovery evaluators, correcting the supplied dusty-plasma date
+  and method, scoping FunSearch to executable program search, and defining
+  separate observation, identification, intervention, and formal-checking
+  contracts without adding another principle or architecture candidate.
 - A generated, downloadable 182-page A4 full-concept book assembled from the
   README and all nineteen concept chapters, with a cover, contents page,
   chapter boundaries, print-safe tables, equations, plots, and 47 rendered
