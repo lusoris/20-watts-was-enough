@@ -32,6 +32,26 @@ function classifyDiagram(renderedSvg: string): Omit<RenderedDiagram, "svg"> {
   return { shape: "standard" };
 }
 
+const roleKeywords = {
+  decision: ["gate", "decide", "reject", "retire", "accept", "compare", "qualify", "pass?", "hold?"],
+  evidence: ["evidence", "measure", "observation", "telemetry", "sensor", "outcome", "source", "claim", "audit"],
+  resource: ["energy", "power", "cost", "resource", "budget", "thermal", "capacity", "material"],
+  memory: ["memory", "replay", "store", "archive", "trace", "provenance", "ledger", "checkpoint", "record"],
+  action: ["action", "route", "control", "adapt", "learn", "train", "repair", "restore", "recover", "select", "specialize", "update"],
+} as const;
+
+function decorateDiagram(renderedSvg: string): string {
+  const document = new DOMParser().parseFromString(renderedSvg, "image/svg+xml");
+  for (const node of document.querySelectorAll("g.node")) {
+    const label = (node.textContent ?? "").toLowerCase();
+    const role = Object.entries(roleKeywords).find(([, keywords]) =>
+      keywords.some((keyword) => label.includes(keyword)),
+    )?.[0] ?? "system";
+    node.classList.add(`diagram-role-${role}`);
+  }
+  return new XMLSerializer().serializeToString(document.documentElement);
+}
+
 export function MermaidDiagram({ chart }: { chart: string }) {
   const reactId = useId();
   const [rendered, setRendered] = useState<RenderedDiagram | null>(null);
@@ -46,18 +66,28 @@ export function MermaidDiagram({ chart }: { chart: string }) {
         mermaid.initialize({
           startOnLoad: false,
           securityLevel: "strict",
-          theme: "dark",
+          theme: "base",
           themeVariables: {
-            background: "#111611",
-            primaryColor: "#1f382a",
-            primaryTextColor: "#f3f0e8",
-            primaryBorderColor: "#78c091",
-            lineColor: "#97a39a",
-            secondaryColor: "#253d4b",
-            tertiaryColor: "#3b3022",
-            clusterBkg: "#18231b",
-            clusterBorder: "#3f5d49",
-            edgeLabelBackground: "#111611",
+            darkMode: true,
+            background: "#0f1712",
+            mainBkg: "#334155",
+            primaryColor: "#334155",
+            primaryTextColor: "#f8fafc",
+            primaryBorderColor: "#94a3b8",
+            nodeBorder: "#94a3b8",
+            nodeTextColor: "#f8fafc",
+            lineColor: "#b8c4bc",
+            defaultLinkColor: "#b8c4bc",
+            secondaryColor: "#173b5f",
+            tertiaryColor: "#3c2764",
+            clusterBkg: "#16231b",
+            clusterBorder: "#6a8f76",
+            edgeLabelBackground: "#0f1712",
+            stateBkg: "#3c2764",
+            stateBorder: "#c4b5fd",
+            stateLabelColor: "#fbf8ff",
+            transitionColor: "#b8c4bc",
+            transitionLabelColor: "#f8fafc",
             fontFamily: "var(--font-sans)",
           },
         });
@@ -65,7 +95,8 @@ export function MermaidDiagram({ chart }: { chart: string }) {
       })
       .then(({ svg: renderedSvg }) => {
         if (!active) return;
-        setRendered({ svg: renderedSvg, ...classifyDiagram(renderedSvg) });
+        const decoratedSvg = decorateDiagram(renderedSvg);
+        setRendered({ svg: decoratedSvg, ...classifyDiagram(decoratedSvg) });
         setError("");
       })
       .catch((renderError: unknown) => {
@@ -108,7 +139,7 @@ export function MermaidDiagram({ chart }: { chart: string }) {
     >
       {rendered.shape === "wide" ? (
         <figcaption className="diagram-caption">
-          Wide diagram · scroll horizontally
+          Wide diagram · fit to page
         </figcaption>
       ) : null}
       <div

@@ -7,6 +7,17 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A generated test-coverage ledger that maps all 1,202 central claims to both
+  claim-side and experiment-side relations, applies an eight-facet protocol
+  gate, and separates 528 protocol-covered claims from zero workstation-ready
+  executions.
+- A workstation execution contract defining commands, frozen environments,
+  hardware assumptions, seeds, data, raw outputs, smoke runs, resumability, and
+  measured-energy records required before prose becomes a runnable package.
+- Four deterministic mathematical SVG plots for finite-error erasure,
+  finite-time adiabatic crossover, sparse/locality break-even, and lifecycle
+  payback, with editable JSON parameters and explicit non-measurement labels.
+
 - An information-thermodynamics and physical-computation audit separating
   generalized erasure bounds, finite-time/error/stability work, device and
   circuit transitions, workload/data movement, facility/cooling, and embodied
@@ -392,10 +403,16 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
-- Wide Mermaid diagrams retain a readable 1,120–1,800 px canvas inside an
-  explicitly labeled horizontal scroller instead of being compressed to the
-  prose column; the constitutional control diagram now follows a horizontal
-  reading path.
+- Strengthened the private reader's palette, text hierarchy, secondary-text
+  contrast, table and equation treatment, full page outline, and mathematical
+  figure presentation.
+- Gave Mermaid nodes a shared high-contrast semantic palette and made wide
+  diagrams fit the reading surface instead of forcing a cropped canvas.
+- Extended documentation validation to four-digit claim IDs, claim-anchor
+  consistency, and all bibliography keys named in primary-source fields.
+- Wide Mermaid diagrams now retain their intrinsic geometry while fitting the
+  available reading surface; the constitutional control diagram follows a
+  horizontal reading path.
 - Display-equation validation now renders canonical Markdown through KaTeX and
   flags likely missing command escapes before a commit can pass `npm test`.
 

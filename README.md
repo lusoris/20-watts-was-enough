@@ -78,10 +78,14 @@ Supporting material:
 - [`research/source-crosswalk.md`](research/source-crosswalk.md) — imported ideas mapped into evidence and principle bundles
 - [`research/open-questions.md`](research/open-questions.md) — unresolved decisions
 - [`math/`](math/README.md) — notation, boundaries, and derivations
+- [`math/visual-models.md`](math/visual-models.md) — interpretable plots of the
+  current efficiency equations and break-even boundaries
 - [`assets/`](assets/README.md) — editable diagram and future figure sources
 - [`decisions/`](decisions/README.md) — durable project decisions
 - [`experiments/candidates/`](experiments/candidates/README.md) — falsifiable, equal-budget experiment contracts
 - [`experiments/fixtures/`](experiments/fixtures/README.md) — reusable cross-candidate stress benchmarks that add no architecture by themselves
+- [`experiments/test-coverage.md`](experiments/test-coverage.md) — generated
+  claim-to-protocol coverage and workstation execution readiness
 - [`CHANGELOG.md`](CHANGELOG.md) — human-readable evolution
 
 ## Editing rule

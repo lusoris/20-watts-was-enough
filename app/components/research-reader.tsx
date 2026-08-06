@@ -287,7 +287,7 @@ export function ResearchReader() {
         <h2>On this page</h2>
         {outline.length ? (
           <nav>
-            {outline.slice(0, 24).map((heading, index) => (
+            {outline.map((heading, index) => (
               <a
                 key={`${heading.id}-${index}`}
                 className={heading.depth === 3 ? "outline-child" : ""}

@@ -11,7 +11,10 @@
     "start": "vinext start",
     "test": "npm run lint && npm run validate:math && npm run build",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "validate:math": "node scripts/validate-math.mjs"
+    "validate:math": "node scripts/validate-math.mjs",
+    "generate:plots": "node scripts/generate-plots.mjs",
+    "audit:tests": "node scripts/audit-test-coverage.mjs",
+    "check:test-coverage": "node scripts/audit-test-coverage.mjs --check"
   },
   "dependencies": {
     "katex": "^0.18.1",

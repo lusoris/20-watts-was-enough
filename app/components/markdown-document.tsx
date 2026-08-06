@@ -42,6 +42,17 @@ function resolveInternalLink(href: string, currentPath: string) {
   return { path: normalizePath(`${base}${relativePath}`), hash };
 }
 
+function resolveImageSource(src: string, currentPath: string): string {
+  if (/^(https?:|data:|\/)/i.test(src)) return src;
+  const base = currentPath.includes("/")
+    ? currentPath.slice(0, currentPath.lastIndexOf("/") + 1)
+    : "";
+  const resolved = normalizePath(`${base}${src}`);
+  return resolved.startsWith("public/")
+    ? `/${resolved.slice("public/".length)}`
+    : src;
+}
+
 function DiagramAwarePre({ children, ...props }: ComponentPropsWithoutRef<"pre">) {
   const onlyChild = Children.count(children) === 1 ? Children.only(children) : null;
   if (isValidElement(onlyChild) && onlyChild.type === MermaidDiagram) {
@@ -75,6 +86,19 @@ export function MarkdownDocument({
         <a href={`?doc=${encodeURIComponent(internal.path)}`} onClick={handleClick} {...props}>
           {children}
         </a>
+      );
+    },
+    img({ src = "", alt = "", ...props }) {
+      return (
+        // Plot SVGs are already optimized deterministic assets and keep their
+        // intrinsic viewBox when rendered directly.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={resolveImageSource(src, currentPath)}
+          alt={alt}
+          loading="lazy"
+          {...props}
+        />
       );
     },
     code({ className, children, ...props }) {

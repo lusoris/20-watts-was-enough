@@ -1,0 +1,58 @@
+[
+  {
+    "id": "finite-error-erasure",
+    "title": "Finite-error erasure boundary",
+    "equation": "E/(k_B T) = ln(2) - h(epsilon)",
+    "source": "math/boundary-qualified-physical-computation.md#logical-loss-and-generalized-erasure",
+    "parameters": {
+      "epsilon_min": 0,
+      "epsilon_max": 0.5,
+      "samples": 181
+    },
+    "status": "The equation is literature-backed; the plotted error sweep is illustrative."
+  },
+  {
+    "id": "adiabatic-crossover",
+    "title": "Finite-time adiabatic crossover",
+    "equation": "E/(CV^2) = gamma/x + ell*x + e_overhead",
+    "source": "math/boundary-qualified-physical-computation.md#measured-device-transition",
+    "parameters": {
+      "x_min": 1,
+      "x_max": 10000,
+      "gamma": 1,
+      "leakage": [0.000001, 0.00001, 0.0001, 0.001],
+      "overhead": 0.08,
+      "samples": 241
+    },
+    "status": "Functional form is literature-backed; normalized coefficients are hypothetical until calibrated on hardware."
+  },
+  {
+    "id": "sparse-locality-break-even",
+    "title": "Sparse/locality break-even plane",
+    "equation": "Delta E / E_B = overhead - (compute gain + movement gain)",
+    "source": "concept/80-energy-model.md#data-movement-ledger",
+    "parameters": {
+      "gain_min": 0,
+      "gain_max": 0.8,
+      "overhead_min": 0,
+      "overhead_max": 0.8,
+      "cells": 40
+    },
+    "status": "The accounting identity is canonical; the normalized plane contains no measured system values."
+  },
+  {
+    "id": "lifecycle-break-even",
+    "title": "Lifecycle break-even horizon",
+    "equation": "N* = Delta E_0 / delta e",
+    "source": "concept/80-energy-model.md#break-even-horizon",
+    "parameters": {
+      "initial_cost_min": 0.01,
+      "initial_cost_max": 1000,
+      "saving_min": 0.001,
+      "saving_max": 100,
+      "cells": 42,
+      "horizon_contours": [1, 100, 10000, 1000000]
+    },
+    "status": "The accounting identity is canonical; all axes are normalized illustrative ratios."
+  }
+]

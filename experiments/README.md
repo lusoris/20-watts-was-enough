@@ -1,5 +1,8 @@
 # Experiments
 
+- [Current claim-to-test coverage](test-coverage.md)
+- [Workstation execution contract](workstation/README.md)
+
 This phase specifies experiments but does not implement models or simulators.
 Candidate contracts define the null hypothesis, strongest standard baselines,
 equal-budget boundary, units, ablations, and rejection rule before code can

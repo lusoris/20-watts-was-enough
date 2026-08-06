@@ -6,6 +6,9 @@ notation.
 - [`notation.md`](notation.md) defines shared symbols, units, and boundaries.
 - [`efficiency-model.md`](efficiency-model.md) derives the first testable cost
   model and explains why the inherited brain/GPU ratio is invalid.
+- [`visual-models.md`](visual-models.md) plots the finite-error erasure bound,
+  finite-time adiabatic crossover, sparse/locality break-even plane, and
+  lifecycle payback horizon from editable normalized specifications.
 - [`memory-lifecycle.md`](memory-lifecycle.md) defines a constrained replay,
   consolidation, and forgetting controller.
 - [`population-observation.md`](population-observation.md) separates stocks,

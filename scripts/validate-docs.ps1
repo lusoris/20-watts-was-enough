@@ -65,7 +65,7 @@ if (-not (Test-Path -LiteralPath $claimsPath)) {
 } else {
     $claimsText = Get-Content -Raw -LiteralPath $claimsPath
     $definedClaims = [System.Collections.Generic.HashSet[string]]::new()
-    foreach ($match in [regex]::Matches($claimsText, '(?m)^### (C-\d{3})\s*$')) {
+    foreach ($match in [regex]::Matches($claimsText, '(?m)^### (C-\d{3,4})\s*$')) {
         [void]$definedClaims.Add($match.Groups[1].Value)
     }
 
@@ -74,10 +74,25 @@ if (-not (Test-Path -LiteralPath $claimsPath)) {
     }
     foreach ($file in $canonicalFiles) {
         $content = Get-Content -Raw -LiteralPath $file.FullName
-        foreach ($match in [regex]::Matches($content, '\bC-\d{3}\b')) {
+        foreach ($match in [regex]::Matches($content, '\bC-\d{3,4}\b')) {
             if (-not $definedClaims.Contains($match.Value)) {
                 $relativeFile = [System.IO.Path]::GetRelativePath($root, $file.FullName)
                 $errors.Add("Undefined claim $($match.Value) in ${relativeFile}")
+            }
+        }
+
+        foreach ($match in [regex]::Matches($content, 'claims\.md#(?<anchor>c-\d{3,4})', 'IgnoreCase')) {
+            $anchorClaim = $match.Groups['anchor'].Value.ToUpperInvariant()
+            if (-not $definedClaims.Contains($anchorClaim)) {
+                $relativeFile = [System.IO.Path]::GetRelativePath($root, $file.FullName)
+                $errors.Add("Undefined claim anchor $($match.Groups['anchor'].Value) in ${relativeFile}")
+            }
+        }
+
+        foreach ($match in [regex]::Matches($content, '\[(?<label>C-\d{3,4})\]\([^)]*claims\.md#(?<anchor>c-\d{3,4})\)', 'IgnoreCase')) {
+            if ($match.Groups['label'].Value.ToLowerInvariant() -ne $match.Groups['anchor'].Value.ToLowerInvariant()) {
+                $relativeFile = [System.IO.Path]::GetRelativePath($root, $file.FullName)
+                $errors.Add("Claim link label/anchor mismatch in ${relativeFile}: $($match.Value)")
             }
         }
     }
@@ -151,10 +166,13 @@ if (-not (Test-Path -LiteralPath $bibPath)) {
     }
 
     $claimsText = Get-Content -Raw -LiteralPath $claimsPath
-    foreach ($match in [regex]::Matches($claimsText, '`([a-z][a-z0-9]+)`')) {
-        $key = $match.Groups[1].Value
-        if (-not $bibKeys.Contains($key)) {
-            $errors.Add("Claim ledger references missing bibliography key: ${key}")
+    $primarySourcePattern = [regex]'(?ms)^- \*\*Primary sources?:\*\*\s*(?<value>.*?)(?=^- \*\*|\z)'
+    foreach ($sourceField in $primarySourcePattern.Matches($claimsText)) {
+        foreach ($match in [regex]::Matches($sourceField.Groups['value'].Value, '`([^`]+)`')) {
+            $key = $match.Groups[1].Value
+            if (-not $bibKeys.Contains($key)) {
+                $errors.Add("Claim ledger references missing bibliography key: ${key}")
+            }
         }
     }
 }

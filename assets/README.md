@@ -5,6 +5,10 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 ## Layout
 
 - `diagrams/` contains Mermaid sources used by the concept.
+- `plots/core-models.json` contains the editable equations, parameter ranges,
+  evidence status, and source links for the generated mathematical figures.
+- `../scripts/generate-plots.mjs` deterministically renders those specifications
+  to `../public/plots/` for GitHub and the private reader.
 - `diagrams/evidence-to-principles.mmd` shows how domain findings are audited,
   bundled, translated, and tested without duplicating concepts.
 - `diagrams/recurring-solution-families.mmd` groups the current principle
@@ -191,10 +195,10 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 - `diagrams/research-iteration-loop.mmd` keeps discovery, deduplication,
   conventional nulls, decisive tests, promotion, merging, and retirement in
   one recurring research workflow.
-- `rendered/` is reserved for committed SVG or PNG outputs generated from those
-  sources.
-- Future data-driven figures should store their plotting source and input-data
-  provenance beside the output.
+- `rendered/` is reserved for other committed SVG or PNG outputs generated from
+  editable sources.
+- Future data-driven figures must store plotting source, parameter status, and
+  input-data provenance beside the output.
 
 Do not add a screenshot when a Mermaid, SVG, plotting script, or other editable
 source can express the same information.

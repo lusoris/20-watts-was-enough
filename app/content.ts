@@ -3,7 +3,7 @@ export type ResearchDocument = {
   title: string;
   group: string;
   body: string;
-  kind: "markdown" | "mermaid" | "bibtex";
+  kind: "markdown" | "mermaid" | "bibtex" | "json";
   words: number;
 };
 
@@ -16,11 +16,13 @@ const rawModules = import.meta.glob(
     "/research/**/*.md",
     "/research/**/*.bib",
     "/experiments/**/*.md",
+    "/experiments/**/*.json",
     "/math/**/*.md",
     "/decisions/**/*.md",
     "/sources/**/*.md",
     "/assets/**/*.md",
     "/assets/diagrams/**/*.mmd",
+    "/assets/plots/**/*.json",
   ],
   {
     eager: true,
@@ -67,7 +69,7 @@ function titleFrom(path: string, body: string): string {
   return path
     .split("/")
     .at(-1)!
-    .replace(/\.(mmd|bib|md)$/i, "")
+    .replace(/\.(mmd|bib|md|json)$/i, "")
     .replace(/^\d+-/, "")
     .replaceAll("-", " ")
     .replace(/\b\w/g, (character) => character.toUpperCase());
@@ -87,6 +89,7 @@ function groupFrom(path: string): string {
 function kindFrom(path: string): ResearchDocument["kind"] {
   if (path.endsWith(".mmd")) return "mermaid";
   if (path.endsWith(".bib")) return "bibtex";
+  if (path.endsWith(".json")) return "json";
   return "markdown";
 }
 
@@ -100,6 +103,9 @@ function renderableBody(
   }
   if (kind === "bibtex") {
     return `# Bibliography\n\nThis is the canonical machine-readable reference ledger.\n\n\`\`\`bibtex\n${body.trim()}\n\`\`\``;
+  }
+  if (kind === "json") {
+    return `# ${title}\n\nThis is the editable machine-readable source for generated graphics.\n\n\`\`\`json\n${body.trim()}\n\`\`\``;
   }
   return body;
 }
