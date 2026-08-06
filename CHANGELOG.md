@@ -12,6 +12,12 @@ the exact diff; this file records why the project changed.
   and method, scoping FunSearch to executable program search, and defining
   separate observation, identification, intervention, and formal-checking
   contracts without adding another principle or architecture candidate.
+- A sixth Google-Doc source capture and coupling-qualified selective-relaxation
+  extension to the discovery audit. It replaces the unsupported pinned/unpinned
+  terminology and fixed `99%/1%` split with typed formal, numerical, empirical,
+  and heuristic assurance classes; corrects the ice-storage phase-change
+  example; and adds ten hostile test regimes without adding a principle or
+  candidate.
 - A generated, downloadable 182-page A4 full-concept book assembled from the
   README and all nineteen concept chapters, with a cover, contents page,
   chapter boundaries, print-safe tables, equations, plots, and 47 rendered

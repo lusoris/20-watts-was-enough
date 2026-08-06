@@ -34,3 +34,4 @@ captured body text. They route research questions; they do not support claims.
 | 2026-08-06 | Generator–rules-engine separation and constrained output | [`2026-08-06/google-doc-1Lo_tgeg.md`](2026-08-06/google-doc-1Lo_tgeg.md) |
 | 2026-08-06 | Combinatorial account of creativity | [`2026-08-06/google-doc-1tQnOxql.md`](2026-08-06/google-doc-1tQnOxql.md) |
 | 2026-08-06 | Empirical-versus-formal evaluator boundaries in scientific discovery | [`2026-08-06/google-doc-1q3PvYWS.md`](2026-08-06/google-doc-1q3PvYWS.md) |
+| 2026-08-06 | Selectively relaxed research domains inside a modular constraint architecture | [`2026-08-06/google-doc-1JvM_XQy.md`](2026-08-06/google-doc-1JvM_XQy.md) |

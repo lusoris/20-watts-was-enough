@@ -176,6 +176,152 @@ complete solution of the cap-set problem.
 | the evaluator eliminated hallucinations or incorrect ideas in general | disputed | it filtered only failures represented by its execution and scoring contract |
 | passing selected empirical inputs proves general program correctness | disputed | behavior outside the evaluated domain remains unproved |
 
+## Selective relaxation is coupling-qualified
+
+The second supplied document proposes a “pinned layer,” an “unpinned layer,”
+and an orchestration loop that varies one scientific domain while treating the
+others as fixed. The decomposition is useful, but the labels
+“Domain-Specific Relaxation” and “Bounded Sandbox” were not established as
+standard names for this architecture in the scoped primary-source search.
+Treat them as source-specific descriptions, not scientific provenance.
+
+The mature engineering relatives are multidisciplinary design optimization,
+constrained and robust optimization, abstraction refinement, model-discrepancy
+analysis, grey-box system identification, and runtime assurance. Universal
+differential equations directly instantiate the close null of fixed mechanistic
+terms plus a learnable unknown term
+([Rackauckas et al. 2020](https://arxiv.org/abs/2001.04385)); sparse equation
+identification is another mature comparator but can recover only dynamics
+represented by its candidate library
+([Brunton, Proctor, and Kutz 2016](https://doi.org/10.1073/pnas.1517384113)).
+These methods do not make discrepancy localization identifiable. A flexible
+term can absorb errors in fixed equations, boundaries, observations, latent
+inputs, parameters, or numerics.
+
+Multidisciplinary design optimization exists
+precisely because structures, fluids, thermal behavior, controls, and other
+disciplines exchange coupling variables rather than forming independent
+chapters
+([Martins and Lambe 2013](https://doi.org/10.2514/1.J051895)). Runtime-assurance
+architectures permit a less-assured advanced component only within a monitored
+safe region and transfer authority to an assured path before recovery becomes
+infeasible
+([Seto et al. 1998](https://doi.org/10.1109/ACC.1998.703255);
+[Slagel et al. 2024](https://doi.org/10.1007/978-3-031-60698-4_19)). Neither
+method makes the fixed model automatically correct.
+
+Use “sandbox” only for an actual execution or capability boundary. Restricting
+which model terms may vary is a hypothesis-family boundary; monitoring safe
+physical states is an operational-assurance boundary; deciding what evidence
+supports a scientific claim is an epistemic boundary. Conflating the four lets
+containment evidence masquerade as model validity.
+
+### Coupling contract
+
+Partition a candidate into an explored block $u$, a nominally fixed block $v$,
+shared parameters $\theta$, and versioned evidence and solver identity $\eta$.
+The coupled analysis must satisfy
+
+$$
+R(u,v,\theta;\eta)=0,
+$$
+
+where every component of residual $R$ has a declared native unit or is formed
+by a documented nondimensionalization. “Pinning” $v$ is valid only if the
+solver still establishes multidisciplinary consistency for each proposed $u$.
+
+For a pinned constraint $c_p$, the total sensitivity to an explored variable
+is
+
+$$
+\frac{d c_p}{d u}
+=\frac{\partial c_p}{\partial u}
++\frac{\partial c_p}{\partial v}\frac{d v^*}{d u},
+$$
+
+where $v^*(u)$ is the coupled fixed-point or solution state. Calling $c_p$
+“outside the sandbox” does not remove either term. If the derivative is
+nonzero, changing the open block changes the allegedly pinned result. If the
+derivative is unknown, the coupling is an unclosed risk rather than zero.
+
+Each retained constraint therefore needs a typed assurance class:
+
+| Class | Admission event | Required identity | What it does not establish |
+| --- | --- | --- | --- |
+| formal invariant | proof or independently checked certificate | proposition, definitions, axioms, library, checker, artifact hash | faithful physical model or applicability outside assumptions |
+| numerical bound | verified residual/error/tolerance result | equations, discretization, solver, mesh, precision, convergence and tolerance units | absence of model-form error or untested regimes |
+| empirical envelope | calibrated measurement and support-qualified predictive/intervention evidence | observation operator, apparatus, sample, uncertainty, regime and analysis version | universal law or behavior outside support |
+| heuristic penalty | finite score on declared cases | objective, weights, test cases, seeds and resource limit | feasibility, safety, causality, or proof |
+
+A heuristic evaluation model is not a hard wall. A deterministic solver is
+deterministic relative to its equations, discretization, implementation,
+inputs, tolerances, and hardware—not necessarily relative to the physical
+system.
+
+### The supplied ice-storage example is false as written
+
+The document says that an ice-storage phase transition happens during
+extraction rather than charging. In a conventional cold-storage cycle, charging
+solidifies water into ice and discharging melts the ice; both stages contain a
+phase transition
+([Aljuneidi et al. 2024](https://doi.org/10.1016/bs.aiht.2024.05.002)). A
+system that pinned the supplied sentence would hard-code an error and reject
+valid designs. This is a direct counterexample to the document's claim that the
+pinned layer can be treated as an unquestionable mechanical baseline.
+
+### Assumption lifecycle
+
+Every pinned item must remain independently challengeable while proposals are
+prevented from silently rewriting it. Store
+
+$$
+A_i=(q_i,s_i,e_i,b_i,v_i,d_i),
+$$
+
+where $q_i$ is the exact proposition or model component, $s_i$ its assurance
+class and status, $e_i$ its evidence, $b_i$ its applicability boundary, $v_i$
+its version, and $d_i$ its reverse dependencies. A new observation,
+counterexample, solver defect, calibration change, or boundary violation
+invalidates dependent admissions; it does not merely lower a prose confidence
+score. Model calibration must also represent residual model discrepancy rather
+than forcing every mismatch into adjustable parameters
+([Kennedy and O'Hagan 2001](https://doi.org/10.1111/1467-9868.00294)).
+
+The source's `99%` pinned and `1%` open split has no unit, denominator, or
+evidence. Replace it with a dependency graph and measured search/assurance
+budget. Different proposals can activate different constraint subsets; the
+system must report which constraints ran, which were inapplicable, which
+returned unknown, and which were approximated.
+
+### Hostile selective-relaxation tests
+
+Every experiment needs four matched arms before the hostile conditions below
+are crossed: all components fixed; exactly one named component relaxed; the
+target component and its strongest interacting neighbor relaxed jointly; and a
+fully flexible or strongest mature baseline. Hold observations, candidate and
+evaluator calls, compute, wall time, human work, and energy budgets equal. The
+joint arm tests whether a learned component merely compensates an error in a
+supposedly fixed neighbor; alternative decompositions test whether the result
+depends on where the researcher drew the module boundary.
+
+| Track | Planted condition | Required comparison | Reject the architecture when |
+| --- | --- | --- | --- |
+| S1 valid decomposition | one block varies and all cross-couplings are known | ordinary coupled optimization with the same solvers | orchestration adds no valid Pareto improvements at equal evaluations and joules |
+| S2 hidden coupling | an open variable changes a pinned discipline through an omitted path | fully coupled multidisciplinary analysis | the gated system admits infeasible candidates or misses the coupling |
+| S3 false pinned rule | one fixed proposition is plausible but wrong | versioned challengeable assumptions plus counterexample search | the hard gate suppresses the valid family and cannot recover after correction |
+| S4 numerical false pass | discretization, tolerance, precision, convergence, or solver defect masks a violation | independent solver, refinement and residual/error estimation | admission changes across valid numerical implementations without detection |
+| S5 regime shift | a formerly valid constraint leaves its calibrated support | robust/domain-qualified model with abstention | the system continues to call the pinned result certain |
+| S6 objective gaming | a candidate exploits a proxy or evaluation-model blind spot | adversarial testing and direct physical/independent evaluation | proxy score rises while declared physical outcomes worsen |
+| S7 swapped research domain | the open and fixed blocks exchange roles across episodes | full rebuild and dependency-aware incremental evaluation | stale caches, assumptions, or certificates leak assurance across roles |
+| S8 all-correct negative control | fixed laws are correct but measurements contain noise, drift, missingness, and finite sampling | preregistered family-wise/FDR control and no-discrepancy model | the flexible block invents a new term above the error budget |
+| S9 wrong-location absorption | the defect lies in a pinned module, boundary, observation operator, calibration, latent input, clock, or numerical implementation | one-relaxed variants, localized-discrepancy methods, and an abstaining ensemble | the open block confidently absorbs and mislabels the external defect |
+| S10 multi-fault interaction | two defects and one cross-module interaction are planted | pairwise/factorial relaxation, explicit interaction model, and all-flexible discrepancy | the system forces a single culprit instead of returning an equivalence set or insufficient model |
+
+Report valid-candidate yield, false admission, false rejection, hidden-coupling
+detection, time to invalidate, recovery after correction, solver/evaluator
+calls, wall-seconds, peak bytes, electrical joules, and human-hours. A larger
+candidate count is not a gain when the acceptance surface is wrong.
+
 ## Workstation test contract
 
 The supplied source should change later experiments in one concrete way: every
@@ -209,6 +355,8 @@ checker chain.
 | empirical observation and support | [Candidate 014](../../experiments/candidates/014-versioned-observation-contract.md) and [Fixture F-005](../../experiments/fixtures/005-regime-qualified-flow-inference-control.md) | add as real-data stress case, not evidence inherited by the candidate |
 | formal construction and verification | [Fixture F-004](../../experiments/fixtures/004-versioned-proof-discovery.md) | FunSearch is a mature comparator for efficiently evaluable construction tasks |
 | graded difference between fit, component validation, transfer, and replication | [Candidate 009](../../experiments/candidates/009-graded-assurance-envelopes.md) | secondary assurance vocabulary only |
+| selectively open proposal block with fixed constraints | [Candidate 004](../../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 009](../../experiments/candidates/009-graded-assurance-envelopes.md), and [Candidate 014](../../experiments/candidates/014-versioned-observation-contract.md) | no new architecture; add coupling, typed-assurance, and invalidation tests |
+| scoped local composition and model-error absorption | [C-150](../claims.md#c-150), [C-153](../claims.md#c-153), [C-155](../claims.md#c-155), [C-868](../claims.md#c-868), [C-869](../claims.md#c-869), and [C-894](../claims.md#c-894) | existing claims already require true disjointness or explicit compatibility and warn that learned corrections can absorb upstream errors |
 
 The source therefore adds a better test split and a corrected case study. It
 does not enlarge the principle registry or architecture candidate set.
@@ -223,4 +371,17 @@ does not enlarge the principle registry or architecture candidate set.
   [nonreciprocal effective interactions](https://doi.org/10.1103/PhysRevX.5.011035).
 - Romera-Paredes, B. et al. (2024),
   [FunSearch](https://doi.org/10.1038/s41586-023-06924-6).
-
+- Martins, J. R. R. A. and Lambe, A. B. (2013),
+  [multidisciplinary design-optimization architectures](https://doi.org/10.2514/1.J051895).
+- Seto, D. et al. (1998),
+  [Simplex architecture](https://doi.org/10.1109/ACC.1998.703255).
+- Slagel, J. T. et al. (2024),
+  [formal runtime-assurance framework](https://doi.org/10.1007/978-3-031-60698-4_19).
+- Kennedy, M. C. and O'Hagan, A. (2001),
+  [computer-model calibration and discrepancy](https://doi.org/10.1111/1467-9868.00294).
+- Aljuneidi, N. et al. (2024),
+  [ice thermal-energy-storage modeling](https://doi.org/10.1016/bs.aiht.2024.05.002).
+- Rackauckas, C. et al. (2020),
+  [universal differential equations](https://arxiv.org/abs/2001.04385).
+- Brunton, S. L., Proctor, J. L., and Kutz, J. N. (2016),
+  [sparse identification of nonlinear dynamics](https://doi.org/10.1073/pnas.1517384113).
