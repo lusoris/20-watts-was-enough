@@ -1,0 +1,153 @@
+{
+  "schema": 1,
+  "range": {
+    "start": "C-086",
+    "end": "C-311"
+  },
+  "claims": [
+    {
+      "id": "C-125",
+      "disposition": "evidence-input",
+      "rationale": "This is a scoped scan-statistic property and observation-bias warning, not a standalone AI-system hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-130",
+      "disposition": "evidence-input",
+      "rationale": "The trial result constrains causal interpretation of targeted interventions but does not posit an AI-system advantage.",
+      "targets": []
+    },
+    {
+      "id": "C-136",
+      "disposition": "evidence-input",
+      "rationale": "Auction objective mismatch is a design constraint for allocation experiments rather than a separate project hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-137",
+      "disposition": "evidence-input",
+      "rationale": "The scoped impossibility theorem limits feasible mechanism guarantees but is not itself an AI-system experiment claim.",
+      "targets": []
+    },
+    {
+      "id": "C-142",
+      "disposition": "evidence-input",
+      "rationale": "The common-pool experiment supplies evidence about governance and enforcement costs without asserting a distinct AI mechanism.",
+      "targets": []
+    },
+    {
+      "id": "C-150",
+      "disposition": "evidence-input",
+      "rationale": "The frame rule is a formal compositional-reasoning result that constrains ownership designs rather than predicting an AI advantage.",
+      "targets": []
+    },
+    {
+      "id": "C-153",
+      "disposition": "evidence-input",
+      "rationale": "Gradual typing and blame guarantees establish a mixed-boundary mechanism and cost boundary, not a new AI-system hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-155",
+      "disposition": "evidence-input",
+      "rationale": "Dynamic software update supplies an established migration and safety boundary for reversible systems rather than a separate transfer claim.",
+      "targets": []
+    },
+    {
+      "id": "C-158",
+      "disposition": "evidence-input",
+      "rationale": "Molecular recognition is source-domain component evidence whose limitations motivate classifier nulls but do not define an AI hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-161",
+      "disposition": "evidence-input",
+      "rationale": "The claim prevents incompatible physical bounds from being conflated and therefore serves as an evaluation constraint.",
+      "targets": []
+    },
+    {
+      "id": "C-162",
+      "disposition": "evidence-input",
+      "rationale": "Nonequilibrium chemostat and entropy accounting define the physical cost boundary rather than a standalone AI-system prediction.",
+      "targets": []
+    },
+    {
+      "id": "C-163",
+      "disposition": "evidence-input",
+      "rationale": "Scoped autocatalytic RNA behavior motivates selection and parasite controls but does not assert an artificial-system benefit.",
+      "targets": []
+    },
+    {
+      "id": "C-164",
+      "disposition": "evidence-input",
+      "rationale": "The compartment experiments establish source-domain genotype-product association; C-171 carries the distinct engineering transfer hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-165",
+      "disposition": "evidence-input",
+      "rationale": "Reaction-diffusion patterning and its diffusion timescale are established physical mechanisms used to constrain locality proposals.",
+      "targets": []
+    },
+    {
+      "id": "C-166",
+      "disposition": "evidence-input",
+      "rationale": "Transient chemical assembly establishes component feasibility and lifecycle caveats; C-172 states the separate lease hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-167",
+      "disposition": "evidence-input",
+      "rationale": "CRN compilation and molecular circuits establish a computing substrate, not a project claim of superior task efficiency.",
+      "targets": []
+    },
+    {
+      "id": "C-168",
+      "disposition": "evidence-input",
+      "rationale": "Chemical oscillation establishes scoped autonomous phase state while only motivating, not testing, an engineering phase residual.",
+      "targets": []
+    },
+    {
+      "id": "C-169",
+      "disposition": "evidence-input",
+      "rationale": "Antithetic integral feedback is a theorem- and experiment-scoped source result that constrains control translations.",
+      "targets": []
+    },
+    {
+      "id": "C-306",
+      "disposition": "evidence-input",
+      "rationale": "This conditional therapeutic-policy synthesis motivates adaptive-control tests but does not itself claim an AI-system advantage.",
+      "targets": []
+    },
+    {
+      "id": "C-307",
+      "disposition": "source-reproduction",
+      "rationale": "Resolving the claim requires randomized clinical confirmation, broader safety evidence, and source-domain validation of the competition model.",
+      "targets": []
+    },
+    {
+      "id": "C-308",
+      "disposition": "evidence-input",
+      "rationale": "Central deletion is a scoped mouse-model observation used to distinguish tolerance operations, not an AI hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-309",
+      "disposition": "evidence-input",
+      "rationale": "B-cell anergy is a source-domain observation that motivates reversible silencing distinctions without asserting artificial-system performance.",
+      "targets": []
+    },
+    {
+      "id": "C-310",
+      "disposition": "evidence-input",
+      "rationale": "Aire-dependent antigen representation is biological evidence for an observation-coverage constraint, not a separate AI-system claim.",
+      "targets": []
+    },
+    {
+      "id": "C-311",
+      "disposition": "evidence-input",
+      "rationale": "Peripheral regulatory tolerance supplies evidence for layered control while the AI action policy remains a distinct engineering question.",
+      "targets": []
+    }
+  ]
+}

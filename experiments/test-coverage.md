@@ -1,8 +1,9 @@
 # Test coverage
 
-This report is generated from the central claim ledger and the experiment
-documents. It distinguishes a written protocol from runnable software. Re-run
-`npm run audit:tests` after changing claim links or experiment contracts.
+This report is generated from the central claim ledger, experiment documents,
+and reviewed ledger-only dispositions. It distinguishes a written protocol from
+runnable software. Re-run `npm run audit:tests` after changing claim links,
+experiment contracts, or disposition fragments.
 
 ## Current answer
 
@@ -10,14 +11,14 @@ The four rows below are mutually exclusive highest-reached tiers.
 
 | Highest coverage tier | Claims | Share of 1202 | Meaning |
 | --- | ---: | ---: | --- |
-| ledger-only | 117 | 9.7% | no exact direct relation to a numbered experiment artifact |
+| ledger-only | 113 | 9.4% | no exact direct relation to a numbered experiment artifact |
 | linked test description | 0 | 0.0% | related experiment prose exists, but at least one required protocol facet is absent |
-| protocol-complete test contract | 1085 | 90.3% | at least one linked artifact contains all eight required facets |
+| protocol-complete test contract | 1089 | 90.6% | at least one linked artifact contains all eight required facets |
 | workstation-executable | 0 | 0.0% | checked execution manifest and runnable scientific harness exist |
 
-The short answer is therefore **1085 claims have a complete
+The short answer is therefore **1089 claims have a complete
 test description, but 0 are executable on the workstation**.
-Across both description tiers, 1085 claims have an exact direct
+Across both description tiers, 1089 claims have an exact direct
 relation to at least one experiment artifact. These are aggregate candidate
 tests: they evaluate engineering translations supported by several claims; they
 do not independently reproduce every source paper.
@@ -26,10 +27,28 @@ do not independently reproduce every source paper.
 
 | Highest tier | Established | Plausible | Speculative | Disputed | Unknown |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| ledger-only | 94 | 15 | 4 | 4 | 0 |
+| ledger-only | 93 | 14 | 2 | 4 | 0 |
 | linked-description | 0 | 0 | 0 | 0 | 0 |
-| protocol-complete | 813 | 177 | 51 | 44 | 0 |
+| protocol-complete | 814 | 178 | 53 | 44 | 0 |
 | workstation-executable | 0 | 0 | 0 | 0 | 0 |
+
+## Why ledger-only claims remain unlinked
+
+A reviewed disposition explains every ledger-only claim without counting the
+classification itself as a test.
+
+| Disposition | Claims | Meaning |
+| --- | ---: | --- |
+| evidence-input | 81 | scientific or engineering evidence that constrains a translation but is not itself a standalone AI-system hypothesis |
+| source-reproduction | 24 | a source-domain result whose direct test would reproduce the cited study rather than evaluate this project's AI system |
+| existing-artifact-gap | 0 | an engineering consequence belongs in an existing artifact, but its exact traceability or track is still missing |
+| new-artifact-needed | 8 | a project engineering hypothesis needs a new experiment contract |
+
+The 8 unresolved engineering claims
+collapse into 5 proposed experiment families.
+Their minimum promotion contracts are kept in the
+[proposed-artifact backlog](proposed/README.md). The source fragments and schema
+are in [claim dispositions](claim-dispositions/README.md).
 
 ## What “complete test description” means
 
@@ -59,9 +78,9 @@ A relation exists when either side states it exactly:
 
 Inclusive ranges are expanded only when both endpoints have exact matching
 links. Prose numbers and indirect adoption-matrix associations do not count.
-The union yields 1085 linked claims: 867
-appear on the claim side, 1026 on the document side, and
-672 have at least one reciprocal same-artifact relation.
+The union yields 1089 linked claims: 871
+appear on the claim side, 1030 on the document side, and
+676 have at least one reciprocal same-artifact relation.
 
 ## Artifact coverage
 
@@ -78,17 +97,17 @@ execution gate.
 | [candidate-005](candidates/005-severity-ordered-containment.md) | 107 | complete description | not executable |
 | [candidate-006](candidates/006-reversible-physical-skill.md) | 147 | complete description | not executable |
 | [candidate-007](candidates/007-endogenous-observation-surveillance.md) | 106 | complete description | not executable |
-| [candidate-008](candidates/008-contestable-modular-allocation.md) | 18 | complete description | not executable |
+| [candidate-008](candidates/008-contestable-modular-allocation.md) | 19 | complete description | not executable |
 | [candidate-009](candidates/009-graded-assurance-envelopes.md) | 208 | complete description | not executable |
 | [candidate-010](candidates/010-reset-coupled-staged-verification.md) | 73 | complete description | not executable |
 | [candidate-011](candidates/011-dual-loop-operational-assurance.md) | 100 | complete description | not executable |
-| [candidate-012](candidates/012-latency-qualified-authority.md) | 198 | complete description | not executable |
+| [candidate-012](candidates/012-latency-qualified-authority.md) | 199 | complete description | not executable |
 | [candidate-013](candidates/013-deficit-capability-routing.md) | 73 | complete description | not executable |
 | [candidate-014](candidates/014-versioned-observation-contract.md) | 450 | complete description | not executable |
 | [candidate-015](candidates/015-versioned-repairable-conventions.md) | 55 | complete description | not executable |
-| [candidate-016](candidates/016-conflict-bounded-unit-transition.md) | 28 | complete description | not executable |
+| [candidate-016](candidates/016-conflict-bounded-unit-transition.md) | 29 | complete description | not executable |
 | [candidate-017](candidates/017-contract-preserving-semantic-compaction.md) | 78 | complete description | not executable |
-| [candidate-018](candidates/018-value-reconstructability-aware-tiering.md) | 83 | complete description | not executable |
+| [candidate-018](candidates/018-value-reconstructability-aware-tiering.md) | 84 | complete description | not executable |
 | [candidate-019](candidates/019-audited-cumulative-inheritance.md) | 110 | complete description | not executable |
 | [candidate-020](candidates/020-constitutional-control-plane.md) | 85 | complete description | not executable |
 | [fixture-001](fixtures/001-shared-clock-free-coadaptation.md) | 36 | complete description | not executable |
@@ -100,13 +119,17 @@ execution gate.
 | [fixture-007](fixtures/007-operator-qualified-optical-inference.md) | 32 | complete description | not executable |
 | [fixture-008](fixtures/008-mission-profile-qualified-device-reliability.md) | 52 | complete description | not executable |
 | [fixture-009](fixtures/009-operator-qualified-active-acoustic-inference.md) | 46 | complete description | not executable |
-| [fixture-010](fixtures/010-boundary-qualified-physical-computation.md) | 52 | complete description | not executable |
+| [fixture-010](fixtures/010-boundary-qualified-physical-computation.md) | 53 | complete description | not executable |
 | [fixture-011](fixtures/011-operator-qualified-active-chemical-sensing.md) | 52 | complete description | not executable |
 
 ## Immediate gaps
 
-- 117 claims remain ledger-only. The machine report retains their
-  exact IDs and evidence status.
+- 113 claims remain ledger-only: 81
+  evidence inputs, 24 source-domain
+  reproductions, and 8 claims needing
+  a new project experiment artifact.
+- 0 ledger-only claims still belong
+  in an existing artifact but lack an exact traceability or test track.
 - 0 claims reach only a partial description.
   The missing facets are concentrated in no artifact.
 - No execution manifests, runners, frozen environments, seed packs, or raw-output
@@ -116,4 +139,5 @@ execution gate.
 ## Machine-readable report
 
 [`test-coverage.json`](test-coverage.json) contains every claim-to-artifact
-mapping, the per-artifact facet result, and execution readiness.
+mapping, reviewed ledger-only disposition, per-artifact facet result, and
+execution readiness.

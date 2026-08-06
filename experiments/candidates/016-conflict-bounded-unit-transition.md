@@ -129,6 +129,21 @@ heritability, shortcut prevalence, false punishment, useful deviation lost,
 task value, tail risk, enforcement energy, and operator effort. Aggregate reward
 without positive cost-adjusted between-collective selection is a failure.
 
+The producer–product locality refinement tests
+[C-171](../../research/claims.md#c-171). Give modules opportunities to emit a
+shareable useful artifact while faster free riders can consume it without
+producing it. Cross group size, producer occupancy, mixing, and measured
+leakage. Compare a global pool, an ordinary logical sandbox, cryptographic
+provenance with per-lineage reward, quotas, sharded group evaluation, and—only
+where location and transport are real—a physically co-located or
+substrate-enforced compartment. All arms inherit the matched budgets and frozen
+confirmatory decisions above; additionally charge physical boundary, transport,
+material, and leakage-control costs to the arm that incurs them. Report producer
+survival, useful artifacts per eligible opportunity, free-rider fraction,
+misattributed credit, stochastic extinction, and joules per accepted useful
+artifact. Reject the locality refinement if explicit provenance, quotas,
+sandboxing, or sharded evaluation reaches the same or better frontier.
+
 ### C — specialization without false individuality
 
 Under repeated tasks and component turnover, compare a capacity-matched
@@ -215,6 +230,8 @@ windows can produce only exploratory results.
 9. Remove lineage turnover and descendant creation.
 10. Compare only against individually optimized modules, omitting a centralized
     outcome evaluator and standard permissions/tests.
+11. Break producer–product co-location while retaining the same group labels,
+    access rights, selection rule, and resource ceilings.
 
 ## Promotion rule
 
@@ -242,6 +259,8 @@ Reject or merge the candidate when:
 ## Evidence links
 
 - [Paleobiology and major-transitions audit](../../research/audits/2026-08-05-paleobiology-major-transitions.md)
+- [C-171 — physical locality and producer–product credit](../../research/claims.md#c-171)
+- [Chemistry and reaction-networks audit](../../research/audits/2026-08-05-chemistry-reaction-networks-proofreading.md)
 - [P-004](../../research/principle-registry.md#p-004--diversity-selection-and-protection)
 - [P-008](../../research/principle-registry.md#p-008--compartmentalized-interaction)
 - [P-009](../../research/principle-registry.md#p-009--maintenance-plane)

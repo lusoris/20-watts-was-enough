@@ -25,6 +25,11 @@
 
 The direct evidence range is [C-1100](../../research/claims.md#c-1100)–[C-1151](../../research/claims.md#c-1151). The range supplies traceability to the scoped source claims; the fixture remains a joint engineering test.
 
+The Candidate 012 full-composition profile below is also the physical and
+lifecycle accounting route for
+[C-172](../../research/claims.md#c-172). Component feasibility remains source
+evidence until that matched-system profile passes.
+
 ## Question
 
 At equal useful-task quality, latency, risk, throughput, retention, hardware
@@ -512,6 +517,33 @@ case, and future time. Stop authority when the registered support threshold is
 crossed. Retire the broad composition if no Pareto improvement survives all
 hard gates and required sensitivity cases, even when one component energy
 metric improves.
+
+#### Candidate 012 profile — fuel-loss physical lease
+
+For [C-172](../../research/claims.md#c-172), instantiate T12 with a hazardous
+actuator or capability that must become physically unavailable after loss of
+authorization or maintenance energy. Compare software TTL, signed renewable
+lease, watchdog plus powered interlock, volatile hardware latch, and a
+fuel-coupled transient material or device state. Freeze the authorization
+window, false-shutdown tolerance, threat model, renewal and partition schedule,
+stuck-on and stuck-off faults, verification rule, restart rule, and lifecycle
+functional unit before release.
+
+The profile inherits every common budget, outcome, ablation, analysis, leakage,
+and retirement rule in this fixture. Charge fuel synthesis and delivery,
+unproductive consumption, standby power, sensors and controller, residue,
+cleanup, waste, verification, restart, fabrication yield, maintenance,
+replacement, facility allocation, and embodied lifecycle. Report hazardous
+actions after authority loss, premature expiry, residual hazard, accepted
+service, joules per authorized hour, waste per cycle, recovery latency, and the
+full T12 outcome vector.
+
+Ablate the physical gating path while preserving nominal expiry telemetry, and
+replace the transient substrate with each conventional expiration mechanism
+without reallocating freed resources. Retire this profile if nominal
+disassembly leaves hazardous action possible, if an omitted physical or
+lifecycle boundary creates the gain, or if the strongest lease, watchdog,
+interlock, or volatile-latch null reaches the same or better joint frontier.
 
 ## Analysis and controls
 

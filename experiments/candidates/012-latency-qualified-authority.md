@@ -251,6 +251,31 @@ All arms receive identical:
 10. a state- and withdrawal-qualified intervention track crossing schedule,
     delayed benefit/harm, subgroup response, adaptation, stale evidence,
     support removal, taper, rebound, and post-removal reserve.
+11. a fuel-loss physical-lease track crossing authorization expiry, renewal
+    loss, communication partition, stuck-on and stuck-off faults, residue,
+    restart, and repeated lifecycle operation.
+
+### Fuel-loss physical-lease refinement
+
+Track 11 tests [C-172](../../research/claims.md#c-172) only where a hazardous
+actuator or capability can be physically gated by the expiring state. Compare a
+software TTL, signed renewable lease, watchdog plus powered interlock, volatile
+hardware latch, and fuel-coupled transient material or device state. Freeze the
+availability window, false-shutdown tolerance, attack model, renewal policy,
+fault schedule, restart rule, and manufacturing boundary before held-out
+release.
+
+Every arm inherits the common authority, sensing, reserve, compute, analysis,
+and frozen-decision contract. Apply
+[Fixture F-010](../fixtures/010-boundary-qualified-physical-computation.md) to
+charge fuel production and delivery, standby power, sensing, residue and waste,
+verification, cleanup, restart, manufacture, maintenance, replacement, and
+facility energy. In addition to the common measurements, report probability of
+hazardous action after authority loss, premature expiry, residual hazard,
+joules per authorized hour, waste per cycle, and recovery latency. Reject this
+refinement if fuel loss does not make hazardous action physically unavailable
+or if a conventional lease, watchdog, interlock, or volatile latch reaches the
+same or better lifecycle risk–cost frontier.
 
 ## Measurements
 
@@ -343,7 +368,9 @@ but never participates in promotion.
   domain while leaving their logical labels unchanged;
 - collapse command, realized state, engagement, benefit, and harm into one
   intervention score; and
-- remove the withdrawal/removal-rate state while keeping adaptation.
+- remove the withdrawal/removal-rate state while keeping adaptation; and
+- bypass the expiring physical state while preserving its nominal expiry
+  telemetry.
 
 ## Kill criteria
 
@@ -363,6 +390,9 @@ Reject the candidate if:
   state.
 - mature IAM plus conventional rebuild/rotate/validate matches compromise
   impact and secure recovery at lower lifecycle cost.
+- a fuel-coupled arm remains capable of hazardous action after fuel loss, or a
+  signed lease, watchdog, powered interlock, or volatile latch matches it after
+  complete physical and lifecycle accounting.
 
 ## Promotion rule
 
@@ -393,6 +423,9 @@ domains, and preserve simple independent safety limits.
 - [Security and cryptography audit](../../research/audits/2026-08-05-security-cryptography.md)
 - [Pharmacology and toxicology audit](../../research/audits/2026-08-05-pharmacology-toxicology.md)
 - [C-607](../../research/claims.md#c-607)–[C-626](../../research/claims.md#c-626)
+- [C-172 — fuel-coupled fail-closed physical lease](../../research/claims.md#c-172)
+- [Chemistry and reaction-networks audit](../../research/audits/2026-08-05-chemistry-reaction-networks-proofreading.md)
+- [Fixture F-010 — boundary-qualified physical computation](../fixtures/010-boundary-qualified-physical-computation.md)
 - [P-002](../../research/principle-registry.md#p-002--local-autonomy-with-exception-escalation)
 - [P-006](../../research/principle-registry.md#p-006--homeostatic-negative-feedback)
 - [P-008](../../research/principle-registry.md#p-008--compartmentalized-interaction)

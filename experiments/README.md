@@ -1,6 +1,8 @@
 # Experiments
 
 - [Current claim-to-test coverage](test-coverage.md)
+- [Ledger-only claim dispositions](claim-dispositions/README.md)
+- [Proposed experiment families](proposed/README.md)
 - [Workstation execution contract](workstation/README.md)
 
 This phase specifies experiments but does not implement models or simulators.

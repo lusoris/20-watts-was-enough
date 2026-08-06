@@ -11,6 +11,11 @@ entrant capacity, real future-traffic consequences, and contestable records
 improve quality and resource allocation beyond calibrated routers, primal–dual
 control, contextual bandits, and ordinary randomized evaluation at equal cost?
 
+This contract is the direct falsification route for
+[C-144](../../research/claims.md#c-144). Tests A–C already isolate its
+applicability gate, strategic private-information regime, delayed randomized
+audits, metric gaming, contestable records, and strongest engineering nulls.
+
 ## Applicability gate
 
 Do not run a market-like mechanism merely because experts compete for routing.

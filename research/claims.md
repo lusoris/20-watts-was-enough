@@ -2243,7 +2243,8 @@ describes the exact statement here, not a broader interpretation.
   [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
   [P-007](principle-registry.md#p-007--prediction-error-allocation),
   [P-009](principle-registry.md#p-009--maintenance-plane),
-  [P-013](principle-registry.md#p-013--externalized-shared-state).
+  [P-013](principle-registry.md#p-013--externalized-shared-state), and
+  [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md).
 
 ### C-145
 
@@ -2692,7 +2693,8 @@ describes the exact statement here, not a broader interpretation.
 - **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
   [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
   [P-008](principle-registry.md#p-008--compartmentalized-interaction),
-  [P-013](principle-registry.md#p-013--externalized-shared-state).
+  [P-013](principle-registry.md#p-013--externalized-shared-state), and
+  [Candidate 016](../experiments/candidates/016-conflict-bounded-unit-transition.md).
 
 ### C-172
 
@@ -2709,7 +2711,9 @@ describes the exact statement here, not a broader interpretation.
 - **Used by:** [chemistry audit](audits/2026-08-05-chemistry-reaction-networks-proofreading.md),
   [P-003](principle-registry.md#p-003--temporary-trace-before-commitment),
   [P-009](principle-registry.md#p-009--maintenance-plane),
-  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  and [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
 
 ### C-173
 
@@ -11857,8 +11861,9 @@ describes the exact statement here, not a broader interpretation.
   alone does not establish independence.
 - **Open issue:** Report correlated-failure models, storage and bandwidth
   overhead, energy, recovery objectives, and common poisoned-content risk.
-- **Used by:** principles [P-004](principle-registry.md#p-004--diversity-selection-and-protection)
-  and [P-009](principle-registry.md#p-009--maintenance-plane).
+- **Used by:** principles [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-009](principle-registry.md#p-009--maintenance-plane), and
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
 
 ### C-793
 

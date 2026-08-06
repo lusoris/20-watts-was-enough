@@ -1,0 +1,203 @@
+{
+  "schema": 1,
+  "range": {
+    "start": "C-312",
+    "end": "C-1203"
+  },
+  "claims": [
+    {
+      "id": "C-313",
+      "disposition": "source-reproduction",
+      "rationale": "Testing alpha-synuclein membership in Lewy-body pathology would reproduce a pathology study, not evaluate an AI system.",
+      "targets": []
+    },
+    {
+      "id": "C-462",
+      "disposition": "evidence-input",
+      "rationale": "This negative aerospace and maritime synthesis constrains when to reopen the search; an AI artifact cannot establish that the audit found no additional principle.",
+      "targets": []
+    },
+    {
+      "id": "C-505",
+      "disposition": "evidence-input",
+      "rationale": "The scoped meaning of a pinch-analysis target is a mature process-engineering comparison boundary, not a standalone AI hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-514",
+      "disposition": "evidence-input",
+      "rationale": "The definition of self-optimizing control supplies comparator terminology and scope rather than a separate engineering translation.",
+      "targets": []
+    },
+    {
+      "id": "C-518",
+      "disposition": "evidence-input",
+      "rationale": "This process-engineering audit synthesis constrains novelty claims; Candidate 001 can test its residual but cannot verify the audit-wide completeness conclusion.",
+      "targets": []
+    },
+    {
+      "id": "C-707",
+      "disposition": "source-reproduction",
+      "rationale": "Validating the scoped configuration-movement association would require prospective built-environment research rather than an AI-system experiment.",
+      "targets": []
+    },
+    {
+      "id": "C-709",
+      "disposition": "evidence-input",
+      "rationale": "Coupled physical laws constrain structural offloading and co-design but do not constitute a distinct AI-system hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-711",
+      "disposition": "source-reproduction",
+      "rationale": "Testing the empirical scope of adaptive thermal comfort would require building and occupant field studies, not an AI artifact.",
+      "targets": []
+    },
+    {
+      "id": "C-712",
+      "disposition": "evidence-input",
+      "rationale": "Mature building MPC and HVAC sequences define required baselines and cost boundaries rather than a new project hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-716",
+      "disposition": "source-reproduction",
+      "rationale": "Directly testing modular construction's conditional lifecycle trade-offs requires a functionally matched construction lifecycle study.",
+      "targets": []
+    },
+    {
+      "id": "C-720",
+      "disposition": "evidence-input",
+      "rationale": "Infrastructure dependency and common-cause structure constrain redundancy claims but are not a standalone AI translation.",
+      "targets": []
+    },
+    {
+      "id": "C-723",
+      "disposition": "evidence-input",
+      "rationale": "ISO 55001 supplies the mature whole-lifecycle asset-management null for adaptive maintenance proposals.",
+      "targets": []
+    },
+    {
+      "id": "C-726",
+      "disposition": "evidence-input",
+      "rationale": "This negative built-environment synthesis bounds the registry search; Candidate 001 tests the surviving residual, not the audit-wide conclusion.",
+      "targets": []
+    },
+    {
+      "id": "C-727",
+      "disposition": "source-reproduction",
+      "rationale": "Clonal deletion in the defined mouse T-cell system is an immunology result whose direct test requires source-domain reproduction.",
+      "targets": []
+    },
+    {
+      "id": "C-729",
+      "disposition": "source-reproduction",
+      "rationale": "Persistence with functional silencing in the cited transgenic B-cell preparation is a biological result, not an AI-system claim.",
+      "targets": []
+    },
+    {
+      "id": "C-730",
+      "disposition": "source-reproduction",
+      "rationale": "The Foxp3 and regulatory T-cell tolerance result requires mouse-system reproduction rather than an AI evaluation.",
+      "targets": []
+    },
+    {
+      "id": "C-731",
+      "disposition": "source-reproduction",
+      "rationale": "The distinct molecular program of exhausted CD8 cells in chronic LCMV is a bounded immunology observation.",
+      "targets": []
+    },
+    {
+      "id": "C-733",
+      "disposition": "source-reproduction",
+      "rationale": "Expansion, contraction, persistence, and recall of antigen-specific CD8 populations are biological source observations.",
+      "targets": []
+    },
+    {
+      "id": "C-734",
+      "disposition": "source-reproduction",
+      "rationale": "The germinal-center presentation, help, return, and expansion loop is a source-domain mouse result.",
+      "targets": []
+    },
+    {
+      "id": "C-735",
+      "disposition": "source-reproduction",
+      "rationale": "Coexisting maturing lineages during affinity maturation are an empirical immunology result, not an AI hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-736",
+      "disposition": "source-reproduction",
+      "rationale": "Persistent innate-response changes after fungal or BCG exposure require biological and human-volunteer reproduction.",
+      "targets": []
+    },
+    {
+      "id": "C-737",
+      "disposition": "source-reproduction",
+      "rationale": "Epigenetic, metabolic, and progenitor substrates of trained immunity are source-domain mechanistic observations.",
+      "targets": []
+    },
+    {
+      "id": "C-739",
+      "disposition": "source-reproduction",
+      "rationale": "Antigen-independent CD8 memory maintenance and cytokine support are biological findings requiring source-domain study.",
+      "targets": []
+    },
+    {
+      "id": "C-740",
+      "disposition": "source-reproduction",
+      "rationale": "Somatic receptor rearrangement and sampling-qualified repertoire diversity are immunological observations.",
+      "targets": []
+    },
+    {
+      "id": "C-741",
+      "disposition": "source-reproduction",
+      "rationale": "Tissue-resident memory persistence and rapid local protection are bounded mouse-tissue results.",
+      "targets": []
+    },
+    {
+      "id": "C-742",
+      "disposition": "source-reproduction",
+      "rationale": "Metabolic and mitochondrial interventions altering T-cell outcomes require biological source-study reproduction.",
+      "targets": []
+    },
+    {
+      "id": "C-744",
+      "disposition": "source-reproduction",
+      "rationale": "Assessing whether one self/nonself classifier adequately describes immunity is a source-domain immunological synthesis, not an AI test.",
+      "targets": []
+    },
+    {
+      "id": "C-746",
+      "disposition": "new-artifact-needed",
+      "rationale": "The predicted reduction in unsafe reactivation and false deletion from separately typed immune-like states is an untested AI evaluation contract.",
+      "targets": [
+        "proposed:immune-state-lifecycle-evaluation"
+      ]
+    },
+    {
+      "id": "C-747",
+      "disposition": "new-artifact-needed",
+      "rationale": "The full tolerance-training-memory-residency composition asserts a systems-frontier advantage that no current artifact isolates against its complete null stack.",
+      "targets": [
+        "proposed:immune-state-lifecycle-evaluation"
+      ]
+    },
+    {
+      "id": "C-797",
+      "disposition": "new-artifact-needed",
+      "rationale": "No current protocol performs the required equal-budget comparison of adaptive evidence routing with mature sparse, dense, and hybrid retrieval.",
+      "targets": [
+        "proposed:versioned-evidence-retrieval-feedback"
+      ]
+    },
+    {
+      "id": "C-798",
+      "disposition": "new-artifact-needed",
+      "rationale": "No current artifact isolates versioned query-model feedback, exploration, rollback, and evidence-base preservation under mistaken and poisoned feedback.",
+      "targets": [
+        "proposed:versioned-evidence-retrieval-feedback"
+      ]
+    }
+  ]
+}

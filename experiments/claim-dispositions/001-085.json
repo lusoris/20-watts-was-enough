@@ -1,0 +1,365 @@
+{
+  "schema": 1,
+  "range": {
+    "start": "C-001",
+    "end": "C-085"
+  },
+  "claims": [
+    {
+      "id": "C-001",
+      "disposition": "evidence-input",
+      "rationale": "Scoped brain power accounting constrains the energy thesis but is not an AI-system performance hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-002",
+      "disposition": "evidence-input",
+      "rationale": "The published sparse-coding result is representation-learning evidence rather than a new project mechanism.",
+      "targets": []
+    },
+    {
+      "id": "C-004",
+      "disposition": "evidence-input",
+      "rationale": "The published early-exit result is an engineering baseline; shifted calibration and tail risk are separate hypotheses.",
+      "targets": []
+    },
+    {
+      "id": "C-005",
+      "disposition": "source-reproduction",
+      "rationale": "Confirming the scoped visual-cortex model requires reproducing its source-domain response study, not running an AI-system protocol.",
+      "targets": []
+    },
+    {
+      "id": "C-006",
+      "disposition": "evidence-input",
+      "rationale": "The I-JEPA result supplies objective-design evidence without asserting multimodal or causal grounding.",
+      "targets": []
+    },
+    {
+      "id": "C-007",
+      "disposition": "new-artifact-needed",
+      "rationale": "The predicted transfer advantage of temporally aligned perception, action, and outcome training lacks a matched text-centric and passive-training protocol.",
+      "targets": [
+        "proposed:sensorimotor-grounding-transfer"
+      ]
+    },
+    {
+      "id": "C-008",
+      "disposition": "new-artifact-needed",
+      "rationale": "No current artifact isolates rapid episodic acquisition plus slow validated integration under one continual-learning lifecycle budget.",
+      "targets": [
+        "proposed:continual-memory-lifecycle"
+      ]
+    },
+    {
+      "id": "C-009",
+      "disposition": "evidence-input",
+      "rationale": "Elastic Weight Consolidation is an established continual-learning baseline, not the proposed memory architecture.",
+      "targets": []
+    },
+    {
+      "id": "C-010",
+      "disposition": "new-artifact-needed",
+      "rationale": "Current candidates use replay as a component or null but do not isolate replay selection, interference, privacy, retention, and energy.",
+      "targets": [
+        "proposed:continual-memory-lifecycle"
+      ]
+    },
+    {
+      "id": "C-011",
+      "disposition": "evidence-input",
+      "rationale": "This disputed universal is retained as a constraint against treating grokking as a maturity or pruning certificate.",
+      "targets": []
+    },
+    {
+      "id": "C-012",
+      "disposition": "evidence-input",
+      "rationale": "The lottery-ticket result is a pruning baseline scoped to its published settings.",
+      "targets": []
+    },
+    {
+      "id": "C-013",
+      "disposition": "new-artifact-needed",
+      "rationale": "The ternary-model claim needs project-workload reproduction with real kernels, activation precision, matched quality, and end-to-end energy.",
+      "targets": [
+        "proposed:low-bit-model-hardware-crossover"
+      ]
+    },
+    {
+      "id": "C-014",
+      "disposition": "evidence-input",
+      "rationale": "The RAG result is an established retrieval baseline; provenance and conflict handling are separate project consequences.",
+      "targets": []
+    },
+    {
+      "id": "C-015",
+      "disposition": "evidence-input",
+      "rationale": "Loihi's published substrate capabilities are hardware evidence, not proof of superiority on project tasks.",
+      "targets": []
+    },
+    {
+      "id": "C-016",
+      "disposition": "evidence-input",
+      "rationale": "The disputed estimate is retained as a warning against undefined operation equivalence, not as a hypothesis an AI run can rescue.",
+      "targets": []
+    },
+    {
+      "id": "C-017",
+      "disposition": "evidence-input",
+      "rationale": "Branch-local dendritic integration motivates compartment abstractions without claiming they outperform artificial baselines.",
+      "targets": []
+    },
+    {
+      "id": "C-019",
+      "disposition": "evidence-input",
+      "rationale": "Delayed dopamine-gated plasticity motivates eligibility traces but does not validate an artificial three-factor rule.",
+      "targets": []
+    },
+    {
+      "id": "C-022",
+      "disposition": "evidence-input",
+      "rationale": "Active-whisker mechanics motivates controlled-observability experiments but is not itself an AI active-sensing claim.",
+      "targets": []
+    },
+    {
+      "id": "C-024",
+      "disposition": "evidence-input",
+      "rationale": "Octopus peripheral control is biological motivation for local-versus-central controls, not a universal controller hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-025",
+      "disposition": "evidence-input",
+      "rationale": "The fly sparsification result links circuit activity to discrimination without asserting an artificial few-shot advantage.",
+      "targets": []
+    },
+    {
+      "id": "C-026",
+      "disposition": "evidence-input",
+      "rationale": "Arabidopsis stress memory is scoped evidence for reversible priming rather than an AI-memory design claim.",
+      "targets": []
+    },
+    {
+      "id": "C-028",
+      "disposition": "evidence-input",
+      "rationale": "Affinity maturation motivates bounded explore-select-protect loops without validating artificial mutation and selection.",
+      "targets": []
+    },
+    {
+      "id": "C-029",
+      "disposition": "evidence-input",
+      "rationale": "The embodied-simulation result is source evidence for morphology-controller co-design, not physical or disembodied transfer.",
+      "targets": []
+    },
+    {
+      "id": "C-031",
+      "disposition": "evidence-input",
+      "rationale": "Ant trail geometry motivates externalized coordination state without asserting a digital stigmergy advantage.",
+      "targets": []
+    },
+    {
+      "id": "C-032",
+      "disposition": "evidence-input",
+      "rationale": "Bacterial bet hedging motivates diversity under unpredictable regimes but does not claim arbitrary AI noise is useful.",
+      "targets": []
+    },
+    {
+      "id": "C-033",
+      "disposition": "evidence-input",
+      "rationale": "Planarian polarity-guided repair motivates target-state constraints without establishing an artificial reconstruction method.",
+      "targets": []
+    },
+    {
+      "id": "C-036",
+      "disposition": "evidence-input",
+      "rationale": "Assembly-specific replay disruption is causal neuroscience evidence, not proof of an artificial replay policy.",
+      "targets": []
+    },
+    {
+      "id": "C-037",
+      "disposition": "evidence-input",
+      "rationale": "The selective-replay studies motivate nonuniform allocation while explicitly failing to identify one universal priority signal.",
+      "targets": []
+    },
+    {
+      "id": "C-038",
+      "disposition": "evidence-input",
+      "rationale": "Schema-sensitive consolidation is a scoped animal result, not authorization for rapid writes into artificial slow memory.",
+      "targets": []
+    },
+    {
+      "id": "C-039",
+      "disposition": "evidence-input",
+      "rationale": "Retrieval-sensitive reconsolidation motivates versioned write windows without specifying an AI update rule.",
+      "targets": []
+    },
+    {
+      "id": "C-040",
+      "disposition": "source-reproduction",
+      "rationale": "The disputed prediction-error gate for human fear-memory destabilization requires source-domain replication, not an AI memory test.",
+      "targets": []
+    },
+    {
+      "id": "C-041",
+      "disposition": "evidence-input",
+      "rationale": "Regulated forgetting in flies motivates memory lifecycle controls without asserting an artificial forgetting benefit.",
+      "targets": []
+    },
+    {
+      "id": "C-043",
+      "disposition": "evidence-input",
+      "rationale": "Microglial structural refinement motivates a maintenance actor but does not establish an artificial pruning rule.",
+      "targets": []
+    },
+    {
+      "id": "C-044",
+      "disposition": "evidence-input",
+      "rationale": "Extracellular-matrix removal is evidence that mature plasticity constraints can reopen, not that subsequent artificial change is useful.",
+      "targets": []
+    },
+    {
+      "id": "C-045",
+      "disposition": "evidence-input",
+      "rationale": "The Lynx1 result motivates receiver-local plasticity gates without making an artificial module-gating performance claim.",
+      "targets": []
+    },
+    {
+      "id": "C-049",
+      "disposition": "evidence-input",
+      "rationale": "Use-coupled presynaptic ATP supply motivates local resource backpressure but is not a scheduler result.",
+      "targets": []
+    },
+    {
+      "id": "C-050",
+      "disposition": "evidence-input",
+      "rationale": "Mitochondrial placement and mobility motivate migration accounting without determining artificial compute placement.",
+      "targets": []
+    },
+    {
+      "id": "C-051",
+      "disposition": "evidence-input",
+      "rationale": "Pericyte-mediated local supply response motivates an adjacent resource plane but does not validate an artificial controller.",
+      "targets": []
+    },
+    {
+      "id": "C-052",
+      "disposition": "evidence-input",
+      "rationale": "The stickleback quorum response constrains aggregation under correlated cues without supplying a general voting theorem.",
+      "targets": []
+    },
+    {
+      "id": "C-053",
+      "disposition": "evidence-input",
+      "rationale": "The fish and model result motivates abstention-aware aggregation while robust aggregation remains the engineering null.",
+      "targets": []
+    },
+    {
+      "id": "C-054",
+      "disposition": "source-reproduction",
+      "rationale": "Causal leader-follower influence inferred from pigeon telemetry requires source-domain intervention or replication.",
+      "targets": []
+    },
+    {
+      "id": "C-055",
+      "disposition": "evidence-input",
+      "rationale": "The microbiome intervention motivates shared environmental admission state without asserting a digital enforcement advantage.",
+      "targets": []
+    },
+    {
+      "id": "C-056",
+      "disposition": "evidence-input",
+      "rationale": "Function-guided microbial repair motivates capability-gap selection without establishing an AI admission result.",
+      "targets": []
+    },
+    {
+      "id": "C-057",
+      "disposition": "source-reproduction",
+      "rationale": "The small observational FMT association needs source-domain replication or intervention before a causal niche-occupancy claim.",
+      "targets": []
+    },
+    {
+      "id": "C-060",
+      "disposition": "evidence-input",
+      "rationale": "The ciliate result establishes resilience as a vector and constrains reporting rather than proposing an AI mechanism.",
+      "targets": []
+    },
+    {
+      "id": "C-067",
+      "disposition": "source-reproduction",
+      "rationale": "Delayed endocrine-feedback sufficiency versus alternative oscillators requires source-domain model comparison and perturbation.",
+      "targets": []
+    },
+    {
+      "id": "C-072",
+      "disposition": "evidence-input",
+      "rationale": "Local receptor-qualified clock resetting motivates receiver-specific phase tests without becoming an artificial timing claim.",
+      "targets": []
+    },
+    {
+      "id": "C-073",
+      "disposition": "evidence-input",
+      "rationale": "Autonomous peripheral rhythms plus coordination need are biological timing evidence, not a distributed-clock result.",
+      "targets": []
+    },
+    {
+      "id": "C-074",
+      "disposition": "evidence-input",
+      "rationale": "Resource-schedule entrainment motivates multi-source scheduling while leaving the artificial advantage unclaimed.",
+      "targets": []
+    },
+    {
+      "id": "C-076",
+      "disposition": "evidence-input",
+      "rationale": "The coupling-rigidity tradeoff constrains phase experiments without predicting a useful artificial coupling schedule.",
+      "targets": []
+    },
+    {
+      "id": "C-077",
+      "disposition": "evidence-input",
+      "rationale": "Time-restricted feeding motivates schedule as an explicit variable but is not an AI scheduling hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-078",
+      "disposition": "evidence-input",
+      "rationale": "The forced-desynchrony study is a scoped systems-warning input, not an artificial phase-diagnostic result.",
+      "targets": []
+    },
+    {
+      "id": "C-079",
+      "disposition": "evidence-input",
+      "rationale": "The coding-distance bound is an exact engineering null for reconstructing deliberately encoded state.",
+      "targets": []
+    },
+    {
+      "id": "C-080",
+      "disposition": "evidence-input",
+      "rationale": "Storage-code locality and repair tradeoffs are established engineering constraints for any reconstruction proposal.",
+      "targets": []
+    },
+    {
+      "id": "C-081",
+      "disposition": "evidence-input",
+      "rationale": "Checkpoint interval and rollback limits are established engineering baselines, not a project-specific repair hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-083",
+      "disposition": "evidence-input",
+      "rationale": "Raft and PBFT guarantees define replication nulls and fault-model limits without asserting heterogeneous experts will help.",
+      "targets": []
+    },
+    {
+      "id": "C-084",
+      "disposition": "evidence-input",
+      "rationale": "Self-stabilization is the formal target-state-repair null; learned context-dependent repair is a separate hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-085",
+      "disposition": "evidence-input",
+      "rationale": "Integrity scrubbing is an established maintenance baseline with explicit coverage, bandwidth, and energy costs.",
+      "targets": []
+    }
+  ]
+}

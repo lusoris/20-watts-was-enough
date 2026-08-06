@@ -9,8 +9,11 @@ the exact diff; this file records why the project changed.
 
 - A generated test-coverage ledger that maps all 1,202 central claims to both
   claim-side and experiment-side relations, applies an eight-facet protocol
-  gate, and now separates 1,085 protocol-covered claims from zero
+  gate, and now separates 1,089 protocol-covered claims from zero
   workstation-ready executions.
+- Reviewed, machine-validated dispositions for every remaining ledger-only
+  claim and a five-family proposed-artifact backlog covering the eight genuine
+  unresolved engineering hypotheses without counting them as tested.
 - A workstation execution contract defining commands, frozen environments,
   hardware assumptions, seeds, data, raw outputs, smoke runs, resumability, and
   measured-energy records required before prose becomes a runnable package.
@@ -406,6 +409,12 @@ the exact diff; this file records why the project changed.
 - Opened every document group by default in the private reader and added
   explicit `Show all` and `Current section` controls; the previous collapsed
   default made most of the 228-file library look absent.
+- Contained every Markdown table in a keyboard-accessible horizontal region,
+  widened the document canvas without widening prose, and gave six-column-plus
+  tables an explicit scroll cue and sticky first column.
+- Repaired four exact claim-to-test gaps: contestable audits, producer-product
+  locality, fuel-coupled physical leases, and correlation-qualified replica
+  diversity now have explicit tracks and bidirectional traceability.
 - Completed the confirmatory analysis contracts for Candidates 005–020, so all
   31 candidate and fixture artifacts now pass the same eight-facet protocol
   gate with explicit resource parity, units, uncertainty handling, and frozen

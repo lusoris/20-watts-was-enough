@@ -82,6 +82,13 @@ Traces include stationary skew, scans, bursty changes, delayed corrections,
 rare safety audits, rollback, source invalidation, regional loss, latent
 corruption, and correlated software failure.
 
+Replica diversity is credited only from measured failure-domain,
+administrative, software, and threat correlations, not from nominal copy count
+([C-792](../../research/claims.md#c-792)). The existing correlated-failure
+replay therefore carries those correlation labels into reconstructability,
+restore-cost, and loss estimates; Ablation 5 tests the error created by treating
+logical replicas as independent despite shared failure.
+
 Value labels use only information available at decision time. Ablate access,
 recompute, task-loss, evidence, and failure-correlation features. Replay the
 same traces through every arm with equal physical capacity, bandwidth,
