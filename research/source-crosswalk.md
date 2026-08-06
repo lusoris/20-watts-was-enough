@@ -1,9 +1,9 @@
 # Imported-source crosswalk
 
-This crosswalk prevents ideas from the preserved Google Doc and Gemini
-discussions from being lost while keeping them separate from scientific
-evidence. A source lead can point to a deduplicated principle; it cannot raise a
-claim's evidence status.
+This crosswalk prevents ideas from preserved source captures from being lost
+while keeping them separate from scientific evidence. A source lead can point
+to a deduplicated principle or research queue; it cannot raise a claim's
+evidence status.
 
 | Imported idea | Preserved source | Principle bundle | Evidence claims or audit state |
 | --- | --- | --- | --- |
@@ -16,6 +16,9 @@ claim's evidence status.
 | Mutable facts outside weights | [Google Doc](../sources/2026-08-05-google-doc.md), [Gemini pipeline](../sources/2026-08-05-gemini-training-pipeline.md) | [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime) | Retrieval evidence [C-014](claims.md#c-014) |
 | Spiking and event-driven hardware | [Gemini pipeline](../sources/2026-08-05-gemini-training-pipeline.md) | [P-001](principle-registry.md#p-001--selective-allocation), [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation) | Substrate feasibility [C-015](claims.md#c-015); superiority unestablished |
 | Brain-versus-hyperscaler energy ratio | [Gemini energy](../sources/2026-08-05-gemini-energy-comparison.md) | No principle; measurement warning | Disputed [C-016](claims.md#c-016) |
+| Constraints may redirect candidate search; a useful constraint must be separated from labor-only friction | [constraint-filter capture](../sources/2026-08-06/google-doc-10uFJaJN.md), [generative-constraint capture](../sources/2026-08-06/google-doc-1BXU7cVe.md) | No new principle; route to candidate-generation and equal-budget experiment design | Research leads only: [endogenous-generation audit](audits/2026-08-05-endogenous-generation-creativity.md) and [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md); the captures' universal language and numerical heuristics are unsupported |
+| Separate open-ended proposal generation from deterministic rule, solver, simulator, or checker admission | [constrained-output capture](../sources/2026-08-06/google-doc-1Lo_tgeg.md) | No new principle; overlaps existing proposal–evaluation separation and graded assurance | Research lead only: [mathematical-practice audit](audits/2026-08-05-mathematical-practice-proof-discovery.md) and [programming-languages/verification audit](audits/2026-08-05-programming-languages-verification.md); a checker proves only its encoded contract |
+| Creativity as recombination of acquired structure, followed by task-specific evaluation and selection | [combinatorial-creativity capture](../sources/2026-08-06/google-doc-1tQnOxql.md) | No new principle; routes to the existing generation–evaluation decomposition | Research lead only: route mechanism and causal questions to the [endogenous-generation audit](audits/2026-08-05-endogenous-generation-creativity.md) |
 
 Future imported notes should be added here once, then merged into the relevant
 principle bundle instead of becoming another parallel concept document.
