@@ -43,15 +43,7 @@ export function ResearchReader() {
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
-    () =>
-      new Set([
-        "Research",
-        "Experiments",
-        "Mathematics",
-        "Decisions",
-        "Graphics",
-        "Source archive",
-      ]),
+    () => new Set(),
   );
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -183,6 +175,25 @@ export function ResearchReader() {
         <div className="sidebar-intro">
           <span>Canonical library</span>
           <p>{documents.length} versioned documents rendered from the private Git source.</p>
+          <div className="library-actions" aria-label="Document-section display">
+            <button type="button" onClick={() => setCollapsedGroups(new Set())}>
+              Show all
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                setCollapsedGroups(
+                  new Set(
+                    documentGroups
+                      .map(({ group }) => group)
+                      .filter((group) => group !== currentDocument.group),
+                  ),
+                )
+              }
+            >
+              Current section
+            </button>
+          </div>
         </div>
         <nav aria-label="Research documents">
           {documentGroups.map(({ group, documents: groupDocuments }) => {

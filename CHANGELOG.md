@@ -403,6 +403,9 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- Opened every document group by default in the private reader and added
+  explicit `Show all` and `Current section` controls; the previous collapsed
+  default made most of the 228-file library look absent.
 - Completed the confirmatory analysis contracts for Candidates 005–020, so all
   31 candidate and fixture artifacts now pass the same eight-facet protocol
   gate with explicit resource parity, units, uncertainty handling, and frozen
