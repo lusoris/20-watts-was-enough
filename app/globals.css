@@ -1593,6 +1593,14 @@ button {
     line-height: 1.25;
   }
 
+  .book-prose thead {
+    display: table-header-group;
+  }
+
+  .book-prose tr {
+    break-inside: avoid;
+  }
+
   .book-prose th,
   .book-prose td {
     position: static !important;

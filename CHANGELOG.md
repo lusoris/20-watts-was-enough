@@ -443,6 +443,8 @@ the exact diff; this file records why the project changed.
 - Book-internal links no longer retain local preview origins in the exported
   PDF; included chapters use document anchors and supporting research links use
   the canonical private-site URL.
+- Printed table headers repeat across page breaks and rows remain intact where
+  the PDF renderer paginates long research tables.
 
 ### Changed
 
