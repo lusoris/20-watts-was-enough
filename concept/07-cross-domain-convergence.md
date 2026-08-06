@@ -68,7 +68,7 @@ shared experiment can replace several renamed proposals.
 Every retained observation is rewritten as the following tuple:
 
 $$
-M = \langle p, b, x, f, G, \tau, \rho, \phi \rangle,
+M = \langle p, s, b, x, f, G, \tau, \rho, \phi \rangle,
 $$
 
 where:
@@ -76,6 +76,7 @@ where:
 | Symbol | Field | Required content |
 | --- | --- | --- |
 | $p$ | problem | the failure or objective faced by the observed system |
+| $s$ | source organization and scale | form/material, process/organism, ecosystem/collective, or an explicit cross-scale interaction |
 | $b$ | constrained budget | energy, bandwidth, material, time, risk, or capacity with declared units |
 | $x$ | sensed state | what the mechanism can actually observe |
 | $f$ | causal operation | the intervention-supported state transformation |
@@ -88,6 +89,72 @@ The tuple is a structured research record, not a numerical embedding. Its
 fields retain units and provenance. Two findings are candidates for one
 principle only when their problem, causal operation, information topology, and
 timescale agree at the abstraction needed by an experiment.
+
+Source organization and scale are not optional metadata. A material structure,
+an organism-level control loop, and an ecosystem-level interaction can deliver
+a similar function through different causal paths, authority, and timescales;
+they do not merge until those differences are shown irrelevant to the
+discriminating experiment.
+
+### Biomimetic transfer is a search method, not an evidence grade
+
+Biomimetics gives this project useful process language, but it does not create
+a shortcut through the evidence ledger. The search runs in both directions:
+
+1. **Phenomenon push** begins with a measured effect in a living system and asks
+   which artificial problem shares its function, constraints, causal operation,
+   and failure boundary.
+2. **Problem pull** begins with a measured artificial-system failure and asks
+   which scientific fields contain a mechanism that solves the normalized
+   problem under a comparable budget.
+
+`Phenomenon push` broadens the established biology-push/solution-driven route;
+`problem pull` broadens technology-pull/problem-driven design. The broader names
+matter because this project searches physical, formal, social, and engineering
+sciences as well as biology.
+
+Both routes converge on $M$, then pass through deduplication, silicon-native
+redesign, a strong conventional null, and a falsifiable equal-budget test. A
+visual likeness without transferred function is rejected; a transferred
+function without a causal and cost model remains only a lead; and a validated
+source mechanism does not establish that its artificial translation works.
+
+```mermaid
+flowchart LR
+    bio["PHENOMENON PUSH<br/>observe a reproducible effect"] --> bmeasure["Measure function,<br/>mechanism, cost, boundary"]
+    problem["PROBLEM PULL<br/>declare failure + budget"] --> pspec["Specify function,<br/>constraints, strongest null"]
+    bmeasure --> abstract["FUNCTIONAL ABSTRACTION<br/>normalized mechanism record"]
+    pspec --> abstract
+    resemblance["Shape-only or story-only resemblance"] --> reject["REJECT AS LEAD<br/>no functional transfer"]
+    abstract --> dedup["DEDUPLICATE<br/>merge · discriminate · hold"]
+    dedup --> substrate["RE-ENGINEER<br/>use silicon affordances"]
+    substrate --> test["FALSIFY<br/>equal quality · risk · lifecycle budget"]
+    test --> keep["KEEP / MERGE / RETIRE"]
+
+    classDef bio fill:#087f5b,stroke:#34d399,color:#ffffff,stroke-width:2px;
+    classDef pull fill:#c2410c,stroke:#fb923c,color:#ffffff,stroke-width:2px;
+    classDef shared fill:#6d28d9,stroke:#a78bfa,color:#ffffff,stroke-width:2px;
+    classDef gate fill:#1d4ed8,stroke:#60a5fa,color:#ffffff,stroke-width:2px;
+    classDef pass fill:#166534,stroke:#4ade80,color:#ffffff,stroke-width:2px;
+    classDef fail fill:#991b1b,stroke:#fb7185,color:#ffffff,stroke-width:2px;
+    class bio,bmeasure bio;
+    class problem,pspec pull;
+    class abstract,dedup,substrate shared;
+    class test gate;
+    class keep pass;
+    class resemblance,reject fail;
+```
+
+Editable source:
+[biomimetic-bidirectional-transfer.mmd](../assets/diagrams/biomimetic-bidirectional-transfer.mmd).
+
+The public descriptions of biomimicry are useful for discovering biological
+strategies and unifying themes, while [ISO 18458:2015](https://www.iso.org/standard/62500.html)
+and [VDI 6220 Part 2](https://www.vdi.de/en/home/vdi-standards/details/vdi-6220-blatt-2-biomimetics-biomimetic-design-methodology-products-and-processes)
+provide more precise terminology and process frames. None is evidence that a
+particular mechanism transfers or improves efficiency. The dated
+[method audit](../research/audits/2026-08-06-biomimetics-transfer-methodology.md)
+records the source hierarchy and the parts adopted here.
 
 ### Five solution families
 

@@ -34,6 +34,70 @@ The same paper may enter through several families. The registry later
 deduplicates causal invariants; the discovery pass does not discard apparent
 duplicates early.
 
+## Search in both directions
+
+The project uses two complementary discovery passes.
+
+1. **Problem pull:** start with a measured engineering failure, resource limit,
+   or missing capability; specify its function, boundary, and strongest current
+   null; then search every relevant field for mechanisms that operate under a
+   comparable constraint.
+2. **Phenomenon push:** start with a reproducible biological, physical, social,
+   mathematical, or engineered phenomenon; quantify what it does and where it
+   fails; then search for artificial problems with the same normalized
+   operation.
+
+These repository terms deliberately broaden the established biomimetics
+vocabulary. `Phenomenon push` includes biology-push, solution-driven, and
+biology-to-design searches but also admits non-biological sciences. `Problem
+pull` includes technology-pull, problem-driven, and challenge-to-biology
+searches but does not stop at biology.
+
+Both directions end at the same extraction record, deduplication protocol, and
+equal-budget rejection gate. Visual resemblance and organism-themed naming do
+not survive that gate. A biological shape, behavior, or story is only a lead
+until a functional mechanism has been isolated; a functional mechanism is only
+an engineering candidate until it beats the strongest available alternative.
+
+This bidirectional structure is compatible with the terminology and process
+framework of [ISO 18458:2015](https://www.iso.org/standard/62500.html), the
+analysis–analogy–abstraction–transfer sequence described for materials in
+[ISO 18457:2016](https://www.iso.org/standard/62499.html), and the published
+top-down/bottom-up product-development workflow in
+[VDI 6220 Part 2](https://www.vdi.de/en/home/vdi-standards/details/vdi-6220-blatt-2-biomimetics-biomimetic-design-methodology-products-and-processes).
+The later [ISO/WD 25895](https://www.iso.org/standard/91868.html) is retained as
+a provisional international method lead. The project's evidence and test gates
+remain stricter than any terminology label.
+
+```mermaid
+flowchart LR
+    bio["PHENOMENON PUSH<br/>observe a reproducible effect"] --> bmeasure["Measure function,<br/>mechanism, cost, boundary"]
+    problem["PROBLEM PULL<br/>declare failure + budget"] --> pspec["Specify function,<br/>constraints, strongest null"]
+    bmeasure --> abstract["FUNCTIONAL ABSTRACTION<br/>normalized mechanism record"]
+    pspec --> abstract
+    resemblance["Shape-only or story-only resemblance"] --> reject["REJECT AS LEAD<br/>no functional transfer"]
+    abstract --> dedup["DEDUPLICATE<br/>merge · discriminate · hold"]
+    dedup --> substrate["RE-ENGINEER<br/>use silicon affordances"]
+    substrate --> test["FALSIFY<br/>equal quality · risk · lifecycle budget"]
+    test --> keep["KEEP / MERGE / RETIRE"]
+
+    classDef bio fill:#087f5b,stroke:#34d399,color:#ffffff,stroke-width:2px;
+    classDef pull fill:#c2410c,stroke:#fb923c,color:#ffffff,stroke-width:2px;
+    classDef shared fill:#6d28d9,stroke:#a78bfa,color:#ffffff,stroke-width:2px;
+    classDef gate fill:#1d4ed8,stroke:#60a5fa,color:#ffffff,stroke-width:2px;
+    classDef pass fill:#166534,stroke:#4ade80,color:#ffffff,stroke-width:2px;
+    classDef fail fill:#991b1b,stroke:#fb7185,color:#ffffff,stroke-width:2px;
+    class bio,bmeasure bio;
+    class problem,pspec pull;
+    class abstract,dedup,substrate shared;
+    class test gate;
+    class keep pass;
+    class resemblance,reject fail;
+```
+
+Editable source:
+[biomimetic-bidirectional-transfer.mmd](../assets/diagrams/biomimetic-bidirectional-transfer.mmd).
+
 ## Field horizon
 
 The search includes, but is not limited to:
@@ -66,25 +130,29 @@ made explicit.
 For every retained result, record:
 
 1. **system and task:** what system was observed and what problem it faced;
-2. **constraint:** the limiting resource, risk, uncertainty, or timescale;
-3. **causal operation:** the intervention-supported transformation or control
+2. **source organization and scale:** whether the relevant source is a form or
+   material, process or organism, ecosystem or collective, or a cross-scale
+   interaction; similar functions at different levels do not imply the same
+   mechanism;
+3. **constraint:** the limiting resource, risk, uncertainty, or timescale;
+4. **causal operation:** the intervention-supported transformation or control
    loop, not an organism-themed metaphor;
-4. **information path:** what state is sensed, transmitted, stored, or hidden;
-5. **physical path:** where energy, matter, bandwidth, and latency are spent;
-6. **boundary conditions:** when the effect weakens, reverses, or fails;
-7. **evidence status:** established, plausible, speculative, or disputed;
-8. **nearest `P-` bundle:** or an explicit reason a candidate is not a
+5. **information path:** what state is sensed, transmitted, stored, or hidden;
+6. **physical path:** where energy, matter, bandwidth, and latency are spent;
+7. **boundary conditions:** when the effect weakens, reverses, or fails;
+8. **evidence status:** established, plausible, speculative, or disputed;
+9. **nearest `P-` bundle:** or an explicit reason a candidate is not a
    duplicate;
-9. **engineering null model:** the strongest conventional mechanism already
+10. **engineering null model:** the strongest conventional mechanism already
    solving the normalized problem; and
-10. **discriminating test:** a result that would reject the proposed transfer.
+11. **discriminating test:** a result that would reject the proposed transfer.
 
 ## Deduplication protocol
 
 Domain language is preserved in audits, then normalized into this tuple:
 
 ```text
-<problem, constrained resource, sensed state, causal transformation,
+<problem, source organization/scale, constrained resource, sensed state, causal transformation,
  information topology, timescale, failure boundary>
 ```
 

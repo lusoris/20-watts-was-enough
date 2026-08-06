@@ -6,6 +6,7 @@ failed deduplications that would be lost in the shorter claim ledger.
 
 | Date | Audit | Main outcome |
 | --- | --- | --- |
+| 2026-08-06 | [Biomimetics transfer methodology](2026-08-06-biomimetics-transfer-methodology.md) | formalizes phenomenon-push and problem-pull discovery through one abstraction, deduplication, substrate-redesign, and equal-budget rejection gate; no claim, principle, or candidate added |
 | 2026-08-05 | [Memory, replay, and forgetting](2026-08-05-memory-replay-forgetting.md) | selective replay, schema-sensitive consolidation, reconsolidation limits, and active forgetting |
 | 2026-08-05 | [Neurodevelopment and global control](2026-08-05-neurodevelopment-global-control.md) | existing developmental/resource bundles plus a candidate multiscale context broadcast |
 | 2026-08-05 | [Collective and ecological resilience](2026-08-05-collective-ecological-resilience.md) | candidate quorum commitment and recovery-based fragility sensing; vector resilience constraint |

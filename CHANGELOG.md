@@ -7,6 +7,11 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A biomimetics transfer-method audit, provenance capture for the two supplied
+  overview links, ten centralized methodology references, and a colored
+  bidirectional workflow that joins phenomenon-push and problem-pull discovery
+  at functional abstraction, deduplication, substrate redesign, and
+  equal-budget falsification; no claim, principle, or candidate was added.
 - The first executable experiment layer: a native-Node Candidate 010 smoke
   harness with deterministic correlated evidence, all declared decision arms,
   real filesystem stage/reset/commit behavior, append-only raw events,
