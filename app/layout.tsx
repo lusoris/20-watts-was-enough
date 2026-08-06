@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const protocol = host.startsWith("localhost") || host.startsWith("127.0.0.1")
     ? "http"
     : "https";
-  const imageUrl = new URL("/og-v2.png", `${protocol}://${host}`).toString();
+  const imageUrl = new URL("/og-v2.jpg", `${protocol}://${host}`).toString();
 
   return {
     title: "20 Watts Was Enough",

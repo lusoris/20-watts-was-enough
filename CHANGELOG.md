@@ -448,6 +448,9 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- Replaced two multi-megabyte PNG social-preview assets with one visually
+  equivalent progressive JPEG, reducing the production upload without changing
+  the page or book content.
 - Opened every document group by default in the private reader and added
   explicit `Show all` and `Current section` controls; the previous collapsed
   default made most of the 228-file library look absent.
