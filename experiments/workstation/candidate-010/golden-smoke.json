@@ -2,8 +2,9 @@
   "schema": 1,
   "artifact": "candidate-010",
   "profile": "smoke",
-  "config_sha256": "2f123c234826620c3900d17bf8e4d59f7f86b609b7eb10c06724ca789c7365e0",
-  "scientific_payload_sha256": "61b465ada3f9a3d648708b10020e0f790d5f2c0bf172891f449c35921d11b04c",
-  "records": 512,
+  "config_sha256": "148b7bc647176a40438cac96e8bef1f937c572112ce6ca5dff958e52e8d934cf",
+  "scientific_payload_sha256": "7292e92f7aaba6a6b654c5c79974582a603e699b767a4208673e8e8c4e369a43",
+  "hash_chain_sha256": "9b4ae1d80984438c51926515ab78e203109d297c809e257986a647f9034dcf1d",
+  "records": 576,
   "note": "This digest excludes timestamps, CPU timing, and unavailable measured energy. It validates deterministic scientific generation, decisions, outcomes, budgets, and filesystem effects; it is not a scientific result."
 }

@@ -51,7 +51,7 @@ test("changing only the readiness label still fails the full gate", async () => 
     await writeFile(manifestPath, JSON.stringify(source));
     const result = await validateExecutionManifest(root, manifestPath, "candidate-010");
     assert.equal(result.ready, false);
-    assert.ok(result.errors.some((error) => error.includes("hash_chain")));
+    assert.ok(result.errors.some((error) => error.includes("full_tests")));
     assert.ok(result.errors.some((error) => error.includes("confirmation")));
     assert.ok(result.errors.some((error) => error.includes("energy.required")));
   } finally {

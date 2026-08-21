@@ -21,8 +21,6 @@ export function generateOpportunities(config, seed) {
   const rho = config.cheap_evidence_correlation;
   const commonWeight = Math.sqrt(rho);
   const residualWeight = Math.sqrt(1 - rho);
-  const verifierCommon = config.verifier_common_mode_weight;
-  const verifierResidual = Math.sqrt(1 - verifierCommon ** 2);
 
   for (let index = 0; index < config.opportunities_per_seed; index += 1) {
     const unsafe = rng() < config.unsafe_base_rate;
@@ -32,10 +30,9 @@ export function generateOpportunities(config, seed) {
       direction * config.cheap_signal + commonWeight * common + residualWeight * normal(rng);
     const evidence2 =
       direction * config.cheap_signal + commonWeight * common + residualWeight * normal(rng);
-    const verifier =
-      direction * config.verifier_signal + verifierCommon * common + verifierResidual * normal(rng);
     const consequence =
       config.false_commit_cost * (0.75 + 0.5 * rng());
+    const traceNonce = Math.floor(rng() * 0x1_0000_0000);
 
     opportunities.push({
       id: `${seed}-${String(index).padStart(6, "0")}`,
@@ -43,7 +40,11 @@ export function generateOpportunities(config, seed) {
       index,
       unsafe,
       evidence: [evidence1, evidence2],
-      verifier,
+      trace_job: {
+        unsafe,
+        cheap_common_mode: common,
+        nonce: traceNonce,
+      },
       consequence,
       payload: `candidate-010:${seed}:${index}`,
     });

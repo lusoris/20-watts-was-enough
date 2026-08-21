@@ -106,9 +106,18 @@ async function isExecutionReady(id) {
         : validation.ready
           ? []
           : [`readiness=${validation.readiness}`],
+      promotionChecks: validation.promotionChecks ?? [],
+      executionClaims: validation.executionClaims ?? [],
     };
   } catch {
-    return { ready: false, readiness: "absent", manifest: null, missing: ["manifest"] };
+    return {
+      ready: false,
+      readiness: "absent",
+      manifest: null,
+      missing: ["manifest"],
+      promotionChecks: [],
+      executionClaims: [],
+    };
   }
 }
 
@@ -133,6 +142,8 @@ for (const absolutePath of artifactPaths) {
     executionReadiness: execution.readiness,
     executionManifest: execution.manifest,
     executionMissing: execution.missing,
+    executionPromotionChecks: execution.promotionChecks,
+    executionClaims: execution.executionClaims,
     claimSideClaims: new Set(),
     documentSideClaims: new Set(),
   });
@@ -187,7 +198,9 @@ const claims = claimRecords.map(({ id, status, claimSideArtifacts }) => {
     (artifact) =>
       artifact.documentSideClaims.has(id) || claimSideArtifacts.includes(artifact),
   );
-  const executionReady = linkedArtifacts.some((artifact) => artifact.executionReady);
+  const executionReady = linkedArtifacts.some(
+    (artifact) => artifact.executionReady && artifact.executionClaims.includes(id),
+  );
   const protocolCovered = linkedArtifacts.some((artifact) => artifact.protocolComplete);
   const tier = executionReady
     ? "workstation-executable"
@@ -206,6 +219,25 @@ const claims = claimRecords.map(({ id, status, claimSideArtifacts }) => {
     artifacts: linkedArtifacts.map((artifact) => artifact.id),
   };
 });
+
+const knownClaimIds = new Set(claims.map((claim) => claim.id));
+const executionScopeErrors = [];
+for (const artifact of artifacts) {
+  const linkedClaims = new Set([
+    ...artifact.claimSideClaims,
+    ...artifact.documentSideClaims,
+  ]);
+  for (const claimId of artifact.executionClaims) {
+    if (!knownClaimIds.has(claimId)) {
+      executionScopeErrors.push(`${artifact.id} execution scope names unknown claim ${claimId}`);
+    } else if (!linkedClaims.has(claimId)) {
+      executionScopeErrors.push(`${artifact.id} execution scope names unlinked claim ${claimId}`);
+    }
+  }
+}
+if (executionScopeErrors.length) {
+  throw new Error(`Execution-claim scope validation failed:\n- ${executionScopeErrors.join("\n- ")}`);
+}
 
 const dispositionMeanings = {
   "evidence-input": "scientific or engineering evidence that constrains a translation but is not itself a standalone AI-system hypothesis",
@@ -381,6 +413,7 @@ const jsonReport = {
       "workstation-ready declaration",
       "prepare/smoke/run/analyze commands",
       "existing lockfiles, seed packs, generator, output schema, entrypoint, and tests",
+      "explicit per-manifest execution claim scope",
     ],
     ledgerOnlyDispositions: dispositionMeanings,
   },
@@ -395,12 +428,66 @@ const jsonReport = {
     executionReadiness: artifact.executionReadiness,
     executionManifest: artifact.executionManifest,
     executionMissing: artifact.executionMissing,
+    executionPromotionChecks: artifact.executionPromotionChecks,
+    executionClaims: artifact.executionClaims,
     claimSideClaims: [...artifact.claimSideClaims].sort(),
     documentSideClaims: [...artifact.documentSideClaims].sort(),
     linkedClaims: [...new Set([...artifact.claimSideClaims, ...artifact.documentSideClaims])].sort(),
   })),
   claims,
 };
+
+const readinessSummary = {
+  schema: 1,
+  generatedFrom: "experiments/test-coverage.json",
+  claims: {
+    total: counts.claims,
+    testRouted: counts.testRouted,
+    protocolCovered: counts.protocolCovered,
+    executionReady: counts.executionReady,
+    tierCounts,
+    tierStatusCounts,
+  },
+  ledgerOnly: {
+    total: tierCounts["ledger-only"],
+    dispositionCounts,
+    proposedArtifactFamilies: proposedArtifactFamilies.length,
+  },
+  artifacts: {
+    total: counts.artifacts,
+    protocolComplete: counts.protocolCompleteArtifacts,
+    smokeReady: counts.smokeReadyArtifacts,
+    workstationReady: counts.executionReadyArtifacts,
+    items: artifacts.map((artifact) => ({
+      id: artifact.id,
+      path: artifact.path,
+      title: artifact.title,
+      linkedClaims: new Set([
+        ...artifact.claimSideClaims,
+        ...artifact.documentSideClaims,
+      ]).size,
+      protocolComplete: artifact.protocolComplete,
+      missingFacets: artifact.missingFacets,
+      executionReadiness: artifact.executionReadiness,
+      executionReady: artifact.executionReady,
+      executionManifest: artifact.executionManifest,
+      executionClaims: artifact.executionClaims,
+      promotionChecks: artifact.executionPromotionChecks,
+    })),
+  },
+};
+
+const readinessTierTotal = Object.values(readinessSummary.claims.tierCounts)
+  .reduce((sum, value) => sum + value, 0);
+if (readinessTierTotal !== readinessSummary.claims.total) {
+  throw new Error(`Readiness summary tier total ${readinessTierTotal} does not match ${readinessSummary.claims.total}`);
+}
+for (const [tier, statuses] of Object.entries(readinessSummary.claims.tierStatusCounts)) {
+  const statusTotal = Object.values(statuses).reduce((sum, value) => sum + value, 0);
+  if (statusTotal !== readinessSummary.claims.tierCounts[tier]) {
+    throw new Error(`Readiness summary evidence total for ${tier} does not match its tier count`);
+  }
+}
 
 function percent(value, total) {
   return `${((value / total) * 100).toFixed(1)}%`;
@@ -452,6 +539,7 @@ const renderedMarkdownReport = markdownReport
 
 const outputs = [
   [path.join(root, "experiments", "test-coverage.json"), `${JSON.stringify(jsonReport, null, 2)}\n`],
+  [path.join(root, "experiments", "test-readiness-summary.json"), `${JSON.stringify(readinessSummary, null, 2)}\n`],
   [path.join(root, "experiments", "test-coverage.md"), renderedMarkdownReport],
 ];
 

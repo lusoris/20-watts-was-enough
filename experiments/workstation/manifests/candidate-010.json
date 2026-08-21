@@ -41,12 +41,13 @@
     "directory": "experiments/workstation/runs/candidate-010-*",
     "schema": "experiments/workstation/candidate-010/output.schema.json",
     "append_only": true,
-    "hash_chain": false
+    "hash_chain": true
   },
   "implementation": {
     "entrypoint": "experiments/workstation/candidate-010/runner.mjs",
     "tests": ["experiments/workstation/candidate-010/runner.test.mjs"],
-    "full_tests": []
+    "full_tests": [],
+    "execution_claims": ["C-170"]
   },
   "energy": {
     "mode": "none",

@@ -4,6 +4,13 @@ import path from "node:path";
 
 const readinessLevels = new Set(["scaffold", "smoke-ready", "workstation-ready"]);
 const commandActions = ["prepare", "smoke", "run", "analyze", "validate"];
+const claimIdPattern = /^C-\d{3,4}$/;
+
+function executionClaimScope(manifest) {
+  return Array.isArray(manifest.implementation?.execution_claims)
+    ? manifest.implementation.execution_claims
+    : [];
+}
 
 async function exists(absolutePath) {
   try {
@@ -36,6 +43,133 @@ function collectReferencedPaths(manifest) {
     ...(Array.isArray(manifest.implementation?.tests)
       ? manifest.implementation.tests.map((value) => ["implementation.tests", value])
       : []),
+  ];
+}
+
+async function committedSeedCheck(root, manifest, field, label) {
+  const seedPath = localPath(root, manifest.seeds?.[field]);
+  if (!seedPath || !(await exists(seedPath))) {
+    return {
+      id: `${field}-seeds`,
+      label,
+      passed: false,
+      detail: `seeds.${field} must reference an existing committed seed manifest`,
+    };
+  }
+
+  try {
+    const seedDocument = JSON.parse(await readFile(seedPath, "utf8"));
+    if (!Array.isArray(seedDocument.seeds) || !seedDocument.seeds.length) {
+      return {
+        id: `${field}-seeds`,
+        label,
+        passed: false,
+        detail: `seeds.${field} does not disclose a frozen non-empty seed list`,
+      };
+    }
+    const commitment = createHash("sha256")
+      .update(JSON.stringify(seedDocument.seeds))
+      .digest("hex");
+    if (seedDocument.commitment !== commitment) {
+      return {
+        id: `${field}-seeds`,
+        label,
+        passed: false,
+        detail: `seeds.${field} commitment does not match its seed list`,
+      };
+    }
+    return {
+      id: `${field}-seeds`,
+      label,
+      passed: true,
+      detail: `seeds.${field} is frozen and its commitment matches`,
+    };
+  } catch (error) {
+    return {
+      id: `${field}-seeds`,
+      label,
+      passed: false,
+      detail: `seeds.${field} is invalid: ${error.message}`,
+    };
+  }
+}
+
+export async function workstationPromotionChecks(root, manifest) {
+  const fullProfile = localPath(root, manifest.data?.full_profile);
+  const fullTests = Array.isArray(manifest.implementation?.full_tests)
+    ? manifest.implementation.full_tests
+    : [];
+  const fullTestPaths = fullTests.map((value) => localPath(root, value));
+  const fullTestsExist = fullTests.length > 0 && fullTestPaths.every(Boolean)
+    && (await Promise.all(fullTestPaths.map((value) => exists(value)))).every(Boolean);
+  const energyProvider = localPath(root, manifest.energy?.provider_config);
+  const executionClaims = executionClaimScope(manifest);
+  const validExecutionClaimScope = executionClaims.length > 0
+    && executionClaims.every((claim) => claimIdPattern.test(claim))
+    && new Set(executionClaims).size === executionClaims.length;
+
+  return [
+    {
+      id: "execution-claim-scope",
+      label: "Explicit execution-track claim scope",
+      passed: validExecutionClaimScope,
+      detail: validExecutionClaimScope
+        ? `execution track is limited to ${executionClaims.join(", ")}`
+        : "implementation.execution_claims must name at least one exact claim ID",
+    },
+    {
+      id: "full-profile",
+      label: "Frozen full profile",
+      passed: Boolean(fullProfile && (await exists(fullProfile))),
+      detail: fullProfile && (await exists(fullProfile))
+        ? "data.full_profile references a repository file"
+        : "data.full_profile must reference an existing repository file",
+    },
+    {
+      id: "full-tests",
+      label: "Full scientific tests",
+      passed: fullTestsExist,
+      detail: fullTestsExist
+        ? "implementation.full_tests references at least one existing test"
+        : "implementation.full_tests must name at least one existing test",
+    },
+    {
+      id: "hash-chain",
+      label: "Corruption-evident output ledger",
+      passed: manifest.outputs?.hash_chain === true,
+      detail: manifest.outputs?.hash_chain === true
+        ? "outputs.hash_chain is enabled"
+        : "outputs.hash_chain must be true",
+    },
+    {
+      id: "resume",
+      label: "Deterministic resume",
+      passed: manifest.resume?.supported === true,
+      detail: manifest.resume?.supported === true
+        ? "resume.supported is enabled"
+        : "resume.supported must be true",
+    },
+    {
+      id: "energy-provider",
+      label: "Measured-energy provider",
+      passed: manifest.energy?.required === true
+        && Boolean(energyProvider && (await exists(energyProvider))),
+      detail: manifest.energy?.required === true
+        && energyProvider
+        && (await exists(energyProvider))
+        ? "energy.required is enabled and provider_config exists"
+        : "energy.required must be true and provider_config must reference an existing file",
+    },
+    await committedSeedCheck(root, manifest, "confirmation", "Frozen confirmation seeds"),
+    await committedSeedCheck(root, manifest, "held_out", "Frozen held-out seeds"),
+    {
+      id: "readiness-declaration",
+      label: "Workstation-ready declaration",
+      passed: manifest.readiness === "workstation-ready",
+      detail: manifest.readiness === "workstation-ready"
+        ? "manifest declares workstation-ready"
+        : `manifest currently declares ${manifest.readiness ?? "no readiness"}`,
+    },
   ];
 }
 
@@ -81,6 +215,17 @@ export async function validateExecutionManifest(root, manifestPath, expectedArti
   }
   if (!Array.isArray(manifest.implementation?.tests) || !manifest.implementation.tests.length) {
     errors.push("implementation.tests must name at least one test file");
+  }
+  const executionClaims = executionClaimScope(manifest);
+  if (!executionClaims.length) {
+    errors.push("implementation.execution_claims must name at least one claim");
+  } else {
+    if (executionClaims.some((claim) => !claimIdPattern.test(claim))) {
+      errors.push("implementation.execution_claims must contain exact C-NNN or C-NNNN identifiers");
+    }
+    if (new Set(executionClaims).size !== executionClaims.length) {
+      errors.push("implementation.execution_claims must not contain duplicates");
+    }
   }
 
   for (const [field, value] of collectReferencedPaths(manifest)) {
@@ -131,11 +276,15 @@ export async function validateExecutionManifest(root, manifestPath, expectedArti
     }
   }
 
+  const promotionChecks = await workstationPromotionChecks(root, manifest);
+
   return {
     ready: errors.length === 0 && manifest.readiness === "workstation-ready",
     readiness: errors.length ? "invalid" : manifest.readiness,
     errors,
     manifest,
+    executionClaims,
+    promotionChecks,
   };
 }
 

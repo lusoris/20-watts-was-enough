@@ -19,6 +19,7 @@
   "false_reject_cost": 1,
   "modeled_energy_j": {
     "observation": 0.000002,
+    "temporary_execution": 0.00002,
     "verifier": 0.00002,
     "stage": 0.00001,
     "reset": 0.000006,

@@ -10,10 +10,12 @@
     "seed",
     "arm",
     "truth_unsafe",
+    "trace",
     "decision",
     "outcome",
     "resources",
-    "filesystem"
+    "filesystem",
+    "integrity"
   ],
   "properties": {
     "schema": { "const": 1 },
@@ -23,9 +25,27 @@
     "seed": { "type": "integer" },
     "arm": { "type": "string" },
     "truth_unsafe": { "type": "boolean" },
+    "trace": {
+      "type": "object",
+      "required": ["revealed", "verifier", "output_sha256"],
+      "properties": {
+        "revealed": { "type": "boolean" },
+        "verifier": { "type": ["number", "null"] },
+        "output_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
     "decision": { "type": "object" },
     "outcome": { "type": "object" },
     "resources": { "type": "object" },
-    "filesystem": { "type": ["object", "null"] }
+    "filesystem": { "type": "object" },
+    "integrity": {
+      "type": "object",
+      "required": ["sequence", "previous_sha256", "record_sha256"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 0 },
+        "previous_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "record_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
   }
 }

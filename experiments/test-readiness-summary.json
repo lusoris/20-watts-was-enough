@@ -1,0 +1,524 @@
+{
+  "schema": 1,
+  "generatedFrom": "experiments/test-coverage.json",
+  "claims": {
+    "total": 1239,
+    "testRouted": 1126,
+    "protocolCovered": 1126,
+    "executionReady": 0,
+    "tierCounts": {
+      "ledger-only": 113,
+      "linked-description": 0,
+      "protocol-complete": 1126,
+      "workstation-executable": 0
+    },
+    "tierStatusCounts": {
+      "ledger-only": {
+        "established": 93,
+        "plausible": 14,
+        "speculative": 2,
+        "disputed": 4,
+        "unknown": 0
+      },
+      "linked-description": {
+        "established": 0,
+        "plausible": 0,
+        "speculative": 0,
+        "disputed": 0,
+        "unknown": 0
+      },
+      "protocol-complete": {
+        "established": 843,
+        "plausible": 183,
+        "speculative": 55,
+        "disputed": 45,
+        "unknown": 0
+      },
+      "workstation-executable": {
+        "established": 0,
+        "plausible": 0,
+        "speculative": 0,
+        "disputed": 0,
+        "unknown": 0
+      }
+    }
+  },
+  "ledgerOnly": {
+    "total": 113,
+    "dispositionCounts": {
+      "evidence-input": 81,
+      "source-reproduction": 24,
+      "existing-artifact-gap": 0,
+      "new-artifact-needed": 8
+    },
+    "proposedArtifactFamilies": 5
+  },
+  "artifacts": {
+    "total": 31,
+    "protocolComplete": 31,
+    "smokeReady": 1,
+    "workstationReady": 0,
+    "items": [
+      {
+        "id": "candidate-001",
+        "path": "experiments/candidates/001-adaptive-topology.md",
+        "title": "Candidate 001 — Adaptive logical topology under changing flow",
+        "linkedClaims": 66,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-002",
+        "path": "experiments/candidates/002-multiscale-context-broadcast.md",
+        "title": "Candidate 002: multiscale context broadcast",
+        "linkedClaims": 89,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-003",
+        "path": "experiments/candidates/003-recovery-dynamics-fragility.md",
+        "title": "Candidate 003: recovery dynamics as latent fragility sensing",
+        "linkedClaims": 40,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-004",
+        "path": "experiments/candidates/004-closed-endogenous-curriculum.md",
+        "title": "Candidate 004: closed endogenous curriculum",
+        "linkedClaims": 102,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-005",
+        "path": "experiments/candidates/005-severity-ordered-containment.md",
+        "title": "Candidate 005: severity-ordered containment and triage",
+        "linkedClaims": 107,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-006",
+        "path": "experiments/candidates/006-reversible-physical-skill.md",
+        "title": "Candidate 006: reversible physical skill compilation",
+        "linkedClaims": 147,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-007",
+        "path": "experiments/candidates/007-endogenous-observation-surveillance.md",
+        "title": "Candidate 007: intervention-aware surveillance under endogenous observation",
+        "linkedClaims": 106,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-008",
+        "path": "experiments/candidates/008-contestable-modular-allocation.md",
+        "title": "Candidate 008: audit-backed contestable modular allocation",
+        "linkedClaims": 19,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-009",
+        "path": "experiments/candidates/009-graded-assurance-envelopes.md",
+        "title": "Candidate 009: versioned graded assurance envelopes",
+        "linkedClaims": 220,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-010",
+        "path": "experiments/candidates/010-reset-coupled-staged-verification.md",
+        "title": "Candidate 010: reset-coupled staged verification",
+        "linkedClaims": 73,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "smoke-ready",
+        "executionReady": false,
+        "executionManifest": "experiments/workstation/manifests/candidate-010.json",
+        "executionClaims": [
+          "C-170"
+        ],
+        "promotionChecks": [
+          {
+            "id": "execution-claim-scope",
+            "label": "Explicit execution-track claim scope",
+            "passed": true,
+            "detail": "execution track is limited to C-170"
+          },
+          {
+            "id": "full-profile",
+            "label": "Frozen full profile",
+            "passed": true,
+            "detail": "data.full_profile references a repository file"
+          },
+          {
+            "id": "full-tests",
+            "label": "Full scientific tests",
+            "passed": false,
+            "detail": "implementation.full_tests must name at least one existing test"
+          },
+          {
+            "id": "hash-chain",
+            "label": "Corruption-evident output ledger",
+            "passed": true,
+            "detail": "outputs.hash_chain is enabled"
+          },
+          {
+            "id": "resume",
+            "label": "Deterministic resume",
+            "passed": false,
+            "detail": "resume.supported must be true"
+          },
+          {
+            "id": "energy-provider",
+            "label": "Measured-energy provider",
+            "passed": false,
+            "detail": "energy.required must be true and provider_config must reference an existing file"
+          },
+          {
+            "id": "confirmation-seeds",
+            "label": "Frozen confirmation seeds",
+            "passed": false,
+            "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "held_out-seeds",
+            "label": "Frozen held-out seeds",
+            "passed": false,
+            "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "readiness-declaration",
+            "label": "Workstation-ready declaration",
+            "passed": false,
+            "detail": "manifest currently declares smoke-ready"
+          }
+        ]
+      },
+      {
+        "id": "candidate-011",
+        "path": "experiments/candidates/011-dual-loop-operational-assurance.md",
+        "title": "Candidate 011: dual-loop operational assurance",
+        "linkedClaims": 100,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-012",
+        "path": "experiments/candidates/012-latency-qualified-authority.md",
+        "title": "Candidate 012: latency-qualified authority envelopes",
+        "linkedClaims": 199,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-013",
+        "path": "experiments/candidates/013-deficit-capability-routing.md",
+        "title": "Candidate 013: bidirectional deficit–capability routing",
+        "linkedClaims": 82,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-014",
+        "path": "experiments/candidates/014-versioned-observation-contract.md",
+        "title": "Candidate 014: versioned observation contracts",
+        "linkedClaims": 468,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-015",
+        "path": "experiments/candidates/015-versioned-repairable-conventions.md",
+        "title": "Candidate 015: versioned, repairable conventions",
+        "linkedClaims": 57,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-016",
+        "path": "experiments/candidates/016-conflict-bounded-unit-transition.md",
+        "title": "Candidate 016: conflict-bounded unit transition",
+        "linkedClaims": 29,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-017",
+        "path": "experiments/candidates/017-contract-preserving-semantic-compaction.md",
+        "title": "Candidate 017: contract-preserving semantic compaction",
+        "linkedClaims": 84,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-018",
+        "path": "experiments/candidates/018-value-reconstructability-aware-tiering.md",
+        "title": "Candidate 018: value- and reconstructability-aware artifact tiering",
+        "linkedClaims": 84,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-019",
+        "path": "experiments/candidates/019-audited-cumulative-inheritance.md",
+        "title": "Candidate 019: audited cumulative inheritance",
+        "linkedClaims": 118,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "candidate-020",
+        "path": "experiments/candidates/020-constitutional-control-plane.md",
+        "title": "Candidate 020: constitutionalized multi-level control plane",
+        "linkedClaims": 93,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-001",
+        "path": "experiments/fixtures/001-shared-clock-free-coadaptation.md",
+        "title": "Fixture F-001 — Shared-clock-free predictive co-adaptation",
+        "linkedClaims": 36,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-002",
+        "path": "experiments/fixtures/002-versioned-reconstructive-design.md",
+        "title": "Fixture F-002 — Versioned reconstructive design",
+        "linkedClaims": 19,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-003",
+        "path": "experiments/fixtures/003-opportunity-history-qualified-action.md",
+        "title": "Fixture F-003 — Opportunity- and history-qualified adaptive action",
+        "linkedClaims": 38,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-004",
+        "path": "experiments/fixtures/004-versioned-proof-discovery.md",
+        "title": "Fixture F-004 — Versioned proof discovery and verification",
+        "linkedClaims": 22,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-005",
+        "path": "experiments/fixtures/005-regime-qualified-flow-inference-control.md",
+        "title": "Fixture F-005 — Regime-qualified flow inference and control",
+        "linkedClaims": 50,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-006",
+        "path": "experiments/fixtures/006-representative-adaptive-performance.md",
+        "title": "Fixture F-006 — Representative adaptive performance",
+        "linkedClaims": 44,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-007",
+        "path": "experiments/fixtures/007-operator-qualified-optical-inference.md",
+        "title": "Fixture F-007 — Operator-qualified optical inference",
+        "linkedClaims": 32,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-008",
+        "path": "experiments/fixtures/008-mission-profile-qualified-device-reliability.md",
+        "title": "Fixture F-008 — Mission-profile-qualified device reliability",
+        "linkedClaims": 52,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-009",
+        "path": "experiments/fixtures/009-operator-qualified-active-acoustic-inference.md",
+        "title": "Fixture F-009 — Operator-qualified active acoustic inference",
+        "linkedClaims": 46,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-010",
+        "path": "experiments/fixtures/010-boundary-qualified-physical-computation.md",
+        "title": "Fixture F-010 — Boundary-qualified physical computation",
+        "linkedClaims": 53,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-011",
+        "path": "experiments/fixtures/011-operator-qualified-active-chemical-sensing.md",
+        "title": "Fixture F-011 — Operator-qualified active chemical sensing",
+        "linkedClaims": 52,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      }
+    ]
+  }
+}

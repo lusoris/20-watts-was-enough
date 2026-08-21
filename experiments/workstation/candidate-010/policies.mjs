@@ -6,6 +6,7 @@ export const armNames = [
   "retry-rollback",
   "independent-verifier",
   "reset-coupled",
+  "reset-coupled-no-trace",
   "oracle-ceiling",
 ];
 
@@ -23,14 +24,21 @@ function conditionedLogLikelihood(opportunity, config) {
   return { prior, firstLogLikelihood, conditionalLogLikelihood };
 }
 
-export function decide(arm, opportunity, config) {
+export function shouldRevealTrace(arm, opportunity, config) {
+  const score = cheapScore(opportunity);
+  if (arm === "independent-verifier") return score < config.verifier_gate;
+  if (arm === "reset-coupled") return score >= -config.reversible_trace_band;
+  return false;
+}
+
+export function decide(arm, opportunity, config, revealedVerifier = null) {
   const score = cheapScore(opportunity);
   const base = {
     arm,
     commit: false,
     abstain: false,
-    stage: false,
-    reset: false,
+    stage: true,
+    reset: true,
     verifier_calls: 0,
     observations: 1,
     score,
@@ -38,13 +46,15 @@ export function decide(arm, opportunity, config) {
   };
 
   if (arm === "threshold") {
-    return { ...base, commit: score < config.threshold, observations: 2, reason: "mean-threshold" };
+    const commit = score < config.threshold;
+    return { ...base, commit, reset: !commit, observations: 2, reason: "mean-threshold" };
   }
   if (arm === "cascade") {
     const firstPass = opportunity.evidence[0] < config.threshold;
     return {
       ...base,
       commit: firstPass && opportunity.evidence[1] < config.threshold,
+      reset: !(firstPass && opportunity.evidence[1] < config.threshold),
       observations: firstPass ? 2 : 1,
       reason: firstPass ? "second-stage" : "early-reject",
     };
@@ -59,6 +69,7 @@ export function decide(arm, opportunity, config) {
     return {
       ...base,
       commit: posteriorLogOdds < config.sprt_log_odds_threshold,
+      reset: !(posteriorLogOdds < config.sprt_log_odds_threshold),
       observations: stopEarly ? 1 : 2,
       score: posteriorLogOdds,
       reason: stopEarly ? "conditioned-sprt-early-stop" : "conditioned-sprt-second-observation",
@@ -69,28 +80,33 @@ export function decide(arm, opportunity, config) {
     return {
       ...base,
       commit: !abstain && score < config.threshold,
+      reset: abstain || !(score < config.threshold),
       abstain,
       observations: 2,
       reason: abstain ? "uncertainty-band" : "outside-band",
     };
   }
   if (arm === "retry-rollback") {
-    const stage = opportunity.evidence[0] < config.threshold;
-    const commit = stage && opportunity.evidence[1] < config.threshold;
+    const eligible = opportunity.evidence[0] < config.threshold;
+    const commit = eligible && opportunity.evidence[1] < config.threshold;
     return {
       ...base,
       commit,
-      stage,
-      reset: stage && !commit,
-      observations: stage ? 2 : 1,
-      reason: stage ? (commit ? "retry-pass" : "retry-reset") : "first-reject",
+      reset: !commit,
+      observations: eligible ? 2 : 1,
+      reason: eligible ? (commit ? "retry-pass" : "retry-reset") : "first-reject",
     };
   }
   if (arm === "independent-verifier") {
     const eligible = score < config.verifier_gate;
+    if (eligible && !Number.isFinite(revealedVerifier)) {
+      throw new Error("independent-verifier requires a trace revealed by temporary execution");
+    }
+    const commit = eligible && revealedVerifier < config.verifier_threshold;
     return {
       ...base,
-      commit: eligible && opportunity.verifier < config.verifier_threshold,
+      commit,
+      reset: !commit,
       verifier_calls: eligible ? 1 : 0,
       observations: 2 + (eligible ? 1 : 0),
       reason: eligible ? "independent-verifier" : "cheap-reject",
@@ -98,21 +114,35 @@ export function decide(arm, opportunity, config) {
   }
   if (arm === "reset-coupled") {
     if (score < -config.reversible_trace_band) {
-      return { ...base, commit: true, observations: 2, reason: "low-risk-direct-commit" };
+      return { ...base, commit: true, reset: false, observations: 2, reason: "low-risk-direct-commit" };
     }
-    const commit = opportunity.verifier < config.verifier_threshold;
+    if (!Number.isFinite(revealedVerifier)) {
+      throw new Error("reset-coupled requires a trace revealed by temporary execution");
+    }
+    const commit = revealedVerifier < config.verifier_threshold;
     return {
       ...base,
       commit,
-      stage: true,
       reset: !commit,
       verifier_calls: 1,
       observations: 3,
       reason: commit ? "verified-commit" : "verified-reset",
     };
   }
+  if (arm === "reset-coupled-no-trace") {
+    if (score < -config.reversible_trace_band) {
+      return { ...base, commit: true, reset: false, observations: 2, reason: "low-risk-direct-commit" };
+    }
+    return {
+      ...base,
+      commit: false,
+      reset: true,
+      observations: 2,
+      reason: "trace-withheld-reset",
+    };
+  }
   if (arm === "oracle-ceiling") {
-    return { ...base, commit: !opportunity.unsafe, reason: "oracle-truth" };
+    return { ...base, commit: !opportunity.unsafe, reset: opportunity.unsafe, reason: "oracle-truth" };
   }
   throw new Error(`Unknown arm: ${arm}`);
 }
@@ -125,6 +155,7 @@ export function scoreDecision(opportunity, decision, config) {
     (falseReject ? config.false_reject_cost : 0);
   const modeledEnergy =
     decision.observations * config.modeled_energy_j.observation +
+    config.modeled_energy_j.temporary_execution +
     decision.verifier_calls * config.modeled_energy_j.verifier +
     (decision.stage ? config.modeled_energy_j.stage : 0) +
     (decision.reset ? config.modeled_energy_j.reset : 0) +

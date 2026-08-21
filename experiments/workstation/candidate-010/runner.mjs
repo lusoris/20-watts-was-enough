@@ -5,8 +5,8 @@ import path from "node:path";
 import process from "node:process";
 import { performance } from "node:perf_hooks";
 import { generateOpportunities } from "./generator.mjs";
-import { executeFilesystemDecision } from "./filesystem-track.mjs";
-import { armNames, decide, scoreDecision } from "./policies.mjs";
+import { executeFilesystemTrial } from "./filesystem-track.mjs";
+import { armNames, decide, scoreDecision, shouldRevealTrace } from "./policies.mjs";
 
 const root = process.cwd();
 const benchmarkRoot = path.join(root, "experiments", "workstation", "candidate-010");
@@ -54,7 +54,7 @@ function scientificPayload(event) {
     arm: event.arm,
     truth_unsafe: event.truth_unsafe,
     evidence: event.evidence,
-    verifier: event.verifier,
+    trace: event.trace,
     decision: event.decision,
     outcome: event.outcome,
     resources: {
@@ -64,7 +64,17 @@ function scientificPayload(event) {
       durable_bytes_written: event.resources.durable_bytes_written,
       staged_bytes_written: event.resources.staged_bytes_written,
     },
-    filesystem: event.filesystem,
+    filesystem: {
+      boundary: event.filesystem.boundary,
+      trace_revealed: event.filesystem.trace_revealed,
+      trace_output_sha256: event.filesystem.trace_output_sha256,
+      staged_bytes_written: event.filesystem.staged_bytes_written,
+      durable_bytes_written: event.filesystem.durable_bytes_written,
+      stageExists: event.filesystem.stageExists,
+      durableExists: event.filesystem.durableExists,
+      rollbackComplete: event.filesystem.rollbackComplete,
+      commitComplete: event.filesystem.commitComplete,
+    },
   };
 }
 
@@ -79,6 +89,7 @@ export async function runExperiment({ config, seeds, outputDirectory }) {
   const started = new Date().toISOString();
   const digest = createHash("sha256");
   let records = 0;
+  let previousRecordHash = "0".repeat(64);
 
   await writeFile(path.join(provenanceDirectory, "config.json"), `${JSON.stringify(config, null, 2)}\n`, { flag: "wx" });
   await writeFile(path.join(provenanceDirectory, "seeds.json"), `${JSON.stringify({ seeds }, null, 2)}\n`, { flag: "wx" });
@@ -93,10 +104,21 @@ export async function runExperiment({ config, seeds, outputDirectory }) {
     for (const opportunity of opportunities) {
       for (const arm of armNames) {
         const start = performance.now();
-        const decision = decide(arm, opportunity, config);
-        const filesystem = arm === "reset-coupled"
-          ? await executeFilesystemDecision(filesystemDirectory, opportunity, decision)
-          : null;
+        const policyOpportunity = {
+          id: opportunity.id,
+          evidence: opportunity.evidence,
+          ...(arm === "oracle-ceiling" ? { unsafe: opportunity.unsafe } : {}),
+        };
+        const revealTrace = shouldRevealTrace(arm, policyOpportunity, config);
+        const trial = await executeFilesystemTrial({
+          root: filesystemDirectory,
+          opportunity,
+          arm,
+          config,
+          revealTrace,
+          decideWithTrace: (revealedVerifier) => decide(arm, policyOpportunity, config, revealedVerifier),
+        });
+        const { decision, filesystem, revealedVerifier } = trial;
         const scored = scoreDecision(opportunity, decision, config);
         const event = {
           schema: 1,
@@ -107,7 +129,11 @@ export async function runExperiment({ config, seeds, outputDirectory }) {
           arm,
           truth_unsafe: opportunity.unsafe,
           evidence: opportunity.evidence,
-          verifier: opportunity.verifier,
+          trace: {
+            revealed: revealTrace,
+            verifier: revealedVerifier,
+            output_sha256: filesystem.trace_output_sha256,
+          },
           decision: {
             commit: decision.commit,
             abstain: decision.abstain,
@@ -120,7 +146,7 @@ export async function runExperiment({ config, seeds, outputDirectory }) {
             false_commit: scored.falseCommit,
             false_reject: scored.falseReject,
             consequence_weighted_loss: scored.loss,
-            rollback_violation: filesystem ? !filesystem.rollbackComplete : false,
+            rollback_violation: decision.reset && !filesystem.rollbackComplete,
           },
           resources: {
             observations: decision.observations,
@@ -128,14 +154,25 @@ export async function runExperiment({ config, seeds, outputDirectory }) {
             modeled_energy_j: scored.modeledEnergy,
             measured_energy_j: null,
             cpu_elapsed_ms: performance.now() - start,
-            durable_bytes_written: filesystem?.durableExists ? filesystem.bytesWritten : 0,
-            staged_bytes_written: filesystem?.bytesWritten ?? 0,
+            durable_bytes_written: filesystem.durable_bytes_written,
+            staged_bytes_written: filesystem.staged_bytes_written,
+            filesystem_stage_ms: filesystem.stage_elapsed_ms,
+            temporary_execution_ms: filesystem.temporary_execution_elapsed_ms,
+            filesystem_finalize_ms: filesystem.finalize_elapsed_ms,
+            filesystem_boundary_ms: filesystem.boundary_elapsed_ms,
           },
           filesystem,
+        };
+        const recordHash = sha256(`${previousRecordHash}\n${canonical(scientificPayload(event))}`);
+        event.integrity = {
+          sequence: records,
+          previous_sha256: previousRecordHash,
+          record_sha256: recordHash,
         };
         const line = `${JSON.stringify(event)}\n`;
         await appendFile(rawPath, line, { encoding: "utf8" });
         digest.update(canonical(scientificPayload(event)));
+        previousRecordHash = recordHash;
         records += 1;
       }
     }
@@ -154,6 +191,7 @@ export async function runExperiment({ config, seeds, outputDirectory }) {
     records,
     config_sha256: sha256(canonical(config)),
     scientific_payload_sha256: digest.digest("hex"),
+    hash_chain_sha256: previousRecordHash,
     measured_energy_j: null,
   };
   await writeFile(path.join(provenanceDirectory, "run.json"), `${JSON.stringify(run, null, 2)}\n`, { flag: "wx" });
@@ -166,7 +204,7 @@ export async function analyzeRun(outputDirectory) {
   const byArm = new Map();
   for (const line of lines) {
     const event = JSON.parse(line);
-    const row = byArm.get(event.arm) ?? { opportunities: 0, false_commits: 0, false_rejects: 0, abstentions: 0, rollback_violations: 0, loss: 0, verifier_calls: 0, modeled_energy_j: 0 };
+    const row = byArm.get(event.arm) ?? { opportunities: 0, false_commits: 0, false_rejects: 0, abstentions: 0, rollback_violations: 0, loss: 0, verifier_calls: 0, modeled_energy_j: 0, staged_bytes_written: 0, durable_bytes_written: 0, filesystem_boundary_ms: 0 };
     row.opportunities += 1;
     row.false_commits += Number(event.outcome.false_commit);
     row.false_rejects += Number(event.outcome.false_reject);
@@ -175,6 +213,9 @@ export async function analyzeRun(outputDirectory) {
     row.loss += event.outcome.consequence_weighted_loss;
     row.verifier_calls += event.resources.verifier_calls;
     row.modeled_energy_j += event.resources.modeled_energy_j;
+    row.staged_bytes_written += event.resources.staged_bytes_written;
+    row.durable_bytes_written += event.resources.durable_bytes_written;
+    row.filesystem_boundary_ms += event.resources.filesystem_boundary_ms;
     byArm.set(event.arm, row);
   }
   const summary = {
@@ -185,6 +226,8 @@ export async function analyzeRun(outputDirectory) {
     arms: Object.fromEntries([...byArm.entries()].map(([arm, row]) => [arm, {
       ...row,
       mean_loss: row.loss / row.opportunities,
+      mean_staged_bytes_written: row.staged_bytes_written / row.opportunities,
+      mean_filesystem_boundary_ms: row.filesystem_boundary_ms / row.opportunities,
       false_commit_rate: row.false_commits / row.opportunities,
       false_reject_rate: row.false_rejects / row.opportunities,
     }])),
@@ -203,6 +246,9 @@ export async function validateRun(outputDirectory) {
   const digest = createHash("sha256");
   const keys = new Set();
   const errors = [];
+  const stagedBytesByOpportunity = new Map();
+  const traceHashesByOpportunity = new Map();
+  let previousRecordHash = "0".repeat(64);
 
   for (const [index, line] of lines.entries()) {
     let event;
@@ -219,13 +265,65 @@ export async function validateRun(outputDirectory) {
       errors.push(`raw line ${index + 1} has the wrong schema or artifact`);
     }
     if (!armNames.includes(event.arm)) errors.push(`raw line ${index + 1} has unknown arm ${event.arm}`);
-    if (event.decision?.reset && event.filesystem && event.filesystem.rollbackComplete !== true) {
+    if (!event.filesystem || event.filesystem.boundary !== "filesystem-stage-execute-finalize-v1") {
+      errors.push(`work unit did not cross the declared filesystem boundary: ${event.opportunity_id}/${event.arm}`);
+    }
+    if (event.decision?.stage !== true || event.decision?.reset === event.decision?.commit) {
+      errors.push(`work unit did not stage then choose exactly one finalization: ${event.opportunity_id}/${event.arm}`);
+    }
+    if (event.decision?.reset && event.filesystem?.rollbackComplete !== true) {
       errors.push(`reset did not restore pre-state: ${event.opportunity_id}/${event.arm}`);
     }
-    if (event.decision?.commit && event.arm === "reset-coupled" && event.filesystem?.commitComplete !== true) {
+    if (event.decision?.commit && event.filesystem?.commitComplete !== true) {
       errors.push(`commit did not cross the filesystem boundary: ${event.opportunity_id}/${event.arm}`);
     }
-    digest.update(canonical(scientificPayload(event)));
+    if (event.trace?.revealed !== event.filesystem?.trace_revealed) {
+      errors.push(`trace revelation record disagrees with filesystem record: ${event.opportunity_id}/${event.arm}`);
+    }
+    if (event.trace?.output_sha256 !== event.filesystem?.trace_output_sha256) {
+      errors.push(`trace digest disagrees with filesystem record: ${event.opportunity_id}/${event.arm}`);
+    }
+    if (
+      !Number.isFinite(event.resources?.filesystem_boundary_ms)
+      || event.resources.filesystem_boundary_ms < 0
+      || event.resources?.staged_bytes_written !== event.filesystem?.staged_bytes_written
+      || event.resources?.durable_bytes_written !== event.filesystem?.durable_bytes_written
+    ) {
+      errors.push(`filesystem cost report is invalid: ${event.opportunity_id}/${event.arm}`);
+    }
+    if (event.trace?.revealed ? !Number.isFinite(event.trace.verifier) : event.trace?.verifier !== null) {
+      errors.push(`trace verifier visibility is invalid: ${event.opportunity_id}/${event.arm}`);
+    }
+    const byteSet = stagedBytesByOpportunity.get(event.opportunity_id) ?? new Set();
+    byteSet.add(event.resources?.staged_bytes_written);
+    stagedBytesByOpportunity.set(event.opportunity_id, byteSet);
+    const traceHashes = traceHashesByOpportunity.get(event.opportunity_id) ?? new Set();
+    traceHashes.add(event.filesystem?.trace_output_sha256);
+    traceHashesByOpportunity.set(event.opportunity_id, traceHashes);
+    let payload;
+    try {
+      payload = canonical(scientificPayload(event));
+    } catch (error) {
+      errors.push(`raw line ${index + 1} is structurally incomplete: ${error.message}`);
+      continue;
+    }
+    const expectedRecordHash = sha256(`${previousRecordHash}\n${payload}`);
+    if (
+      event.integrity?.sequence !== index
+      || event.integrity?.previous_sha256 !== previousRecordHash
+      || event.integrity?.record_sha256 !== expectedRecordHash
+    ) {
+      errors.push(`hash-chain mismatch at raw line ${index + 1}`);
+    }
+    previousRecordHash = expectedRecordHash;
+    digest.update(payload);
+  }
+
+  for (const [opportunityId, byteSet] of stagedBytesByOpportunity) {
+    if (byteSet.size !== 1) errors.push(`filesystem staging cost is not byte-comparable across arms: ${opportunityId}`);
+  }
+  for (const [opportunityId, traceHashes] of traceHashesByOpportunity) {
+    if (traceHashes.size !== 1) errors.push(`temporary execution differs across arms: ${opportunityId}`);
   }
 
   const expectedRecords = run.opportunities * run.arms;
@@ -236,6 +334,9 @@ export async function validateRun(outputDirectory) {
   if (scientificDigest !== run.scientific_payload_sha256) {
     errors.push("scientific payload digest does not match provenance");
   }
+  if (previousRecordHash !== run.hash_chain_sha256) {
+    errors.push("final hash-chain digest does not match provenance");
+  }
 
   const validation = {
     schema: 1,
@@ -245,6 +346,7 @@ export async function validateRun(outputDirectory) {
     records: lines.length,
     unique_work_units: keys.size,
     scientific_payload_sha256: scientificDigest,
+    hash_chain_sha256: previousRecordHash,
   };
   const analysisDirectory = path.join(outputDirectory, "analysis");
   await mkdir(analysisDirectory, { recursive: true });
