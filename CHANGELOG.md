@@ -11,11 +11,22 @@ the exact diff; this file records why the project changed.
   42 OECD FORD second-level fields, checked against all 49 DFG review boards
   and ANZSRC taxonomy disagreements. The reproducible baseline was 20
   dedicated, 14 adjacent, and 8 unreviewed OECD fields; after the first breadth
-  wave it is 23 dedicated, 12 adjacent, and 7 unreviewed. The finer DFG probe
-  moved from 24/13/12 to 26/14/9. A high-contrast SVG, machine record, drift
+  wave it was 23 dedicated, 12 adjacent, and 7 unreviewed; after the second it
+  is 28 dedicated, 13 adjacent, and 1 unreviewed. The finer DFG probe moved
+  from 24/13/12 through 26/14/9 to 29/17/3. A high-contrast SVG, machine record, drift
   validator, anti-bias breadth scheduler, completed-wave record, and next gap
-  wave make the remaining agriculture/veterinary, social-science,
-  biotechnology, health, chemistry, physics, and humanities depth gaps visible.
+  wave keep the remaining humanities, social-science, clinical, biotechnology,
+  chemistry, geoscience, water, manufacturing, and field-depth gaps visible.
+
+- Seven deliberately distant field audits in the second breadth wave: nursing
+  and care science; animal/veterinary population health; environmental and
+  industrial biotechnology; accounting/audit/actuarial/insurance; theology and
+  religious practice; forestry/fisheries/aquatic food systems; and
+  particle/nuclear experimentation. Together they add 57 central claims and 42
+  exact synthetic protocol tracks, deepen EU/German applicability records, and
+  change observation, cohort, welfare, reserve, rights, response, selection,
+  lifecycle, and search-family boundaries without adding a redundant principle
+  or architecture candidate.
 
 - Four field-centered breadth audits: soil/crop multi-resource co-limitation,
   philosophy of science and theory choice, Indigenous data and knowledge
@@ -23,7 +34,7 @@ the exact diff; this file records why the project changed.
   `C-1204`--`C-1240`, centralized scholarly or authoritative sources, hostile
   tests, and exact candidate routing without inventing another principle.
 - A generated `/readiness` surface and shared book front matter separating
-  1,239 claims, 1,126 protocol-covered claims, zero workstation-executable
+  1,296 claims, 1,183 protocol-covered claims, zero workstation-executable
   claims, 31 complete written protocols, one smoke harness, and zero
   workstation-ready experiments. Candidate 010 exposes nine machine-checkable
   promotion gates, three of which currently pass.
@@ -44,7 +55,7 @@ the exact diff; this file records why the project changed.
   and heuristic assurance classes; corrects the ice-storage phase-change
   example; and adds ten hostile test regimes without adding a principle or
   candidate.
-- A generated, downloadable 197-page A4 full-concept book assembled from the
+- A generated, downloadable 198-page A4 full-concept book assembled from the
   README and all nineteen concept chapters, with generated readiness front
   matter, the global-field-coverage appendix, a cover, contents page, chapter
   boundaries, print-safe tables, equations, plots, and 47 rendered Mermaid
@@ -76,9 +87,9 @@ the exact diff; this file records why the project changed.
   guilds, integrated as a perspective-level causal-attribution boundary with a
   guild-specific intervention refinement to the existing fungal audit; no new
   principle, central claim, or architecture candidate was promoted.
-- A generated test-coverage ledger that maps all 1,239 central claims to both
+- A generated test-coverage ledger that maps all 1,296 central claims to both
   claim-side and experiment-side relations, applies an eight-facet protocol
-  gate, and now separates 1,126 protocol-covered claims from zero
+  gate, and now separates 1,183 protocol-covered claims from zero
   workstation-ready executions.
 - Reviewed, machine-validated dispositions for every remaining ledger-only
   claim and a five-family proposed-artifact backlog covering the eight genuine

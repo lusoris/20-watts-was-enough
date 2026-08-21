@@ -16699,3 +16699,516 @@ describes the exact statement here, not a broader interpretation.
 - **Rationale:** several lineage, change, loss, and contamination histories can explain the same surviving witness set under different transcription and collation choices.
 - **Open issue:** report predictive checks, held-out-witness behavior, model sensitivity, response to newly discovered evidence, uncertainty, and correct abstention instead of unknowable real-world recovery percentages.
 - **Used by:** [textual criticism audit](audits/2026-08-21-textual-criticism-variant-traditions.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1241
+
+- **Statement:** completed-work throughput can hide necessary work that remained undone within its service window.
+- **Status:** established as a health-services measurement boundary.
+- **Primary sources:** `BallEtAl2014CareLeftUndone`, `BallEtAl2018MissedCareMortality`.
+- **Rationale:** large hospital surveys recorded activity-specific nursing care reported left undone under time pressure; those items do not appear in counts of completed activity.
+- **Open issue:** self-report and cross-sectional measurement are incomplete and potentially selected, so fixtures need known obligation denominators, applicability, deadlines, completion evidence, and protected outcomes.
+- **Used by:** [nursing and care audit](audits/2026-08-21-nursing-care-health-services.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-1242
+
+- **Statement:** hospital staffing, workload, reported missed nursing care, and mortality are associated in large European observational studies, but those results do not establish one universal safe ratio or causal scheduling rule.
+- **Status:** established association with an established causal boundary.
+- **Primary sources:** `AikenEtAl2014NurseStaffing`, `BallEtAl2018MissedCareMortality`.
+- **Rationale:** RN4CAST combined patient outcomes and nurse surveys across countries and hospitals while retaining observational, aggregated, case-mix, measurement, and organizational limitations.
+- **Open issue:** prospective and policy-natural-experiment evidence may refine staffing decisions, but an AI experiment must independently calibrate task demand, skills, interruptions, dependencies, reserve, and consequence.
+- **Used by:** [nursing and care audit](audits/2026-08-21-nursing-care-health-services.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-1243
+
+- **Statement:** a standardized handoff bundle with receiver synthesis and implementation support can reduce communication and error failures in a scoped multicentre setting, while bundle evidence does not identify a universal active component.
+- **Status:** established for the studied intervention and population.
+- **Primary sources:** `StarmerEtAl2014IPASS`, `WHO2016TransitionsCare`.
+- **Rationale:** the I-PASS prospective intervention combined a structured packet, training, observation, faculty development, and sustainability work; WHO guidance separately treats read-back, questions, and patient involvement as parts of handover practice.
+- **Open issue:** compare one-way summary, typed packet, acknowledgement, receiver synthesis, and adaptive protocol arms at equal bytes, time, questions, calls, human work, and energy.
+- **Used by:** [nursing and care audit](audits/2026-08-21-nursing-care-health-services.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-1244
+
+- **Statement:** informational continuity, coherent management, relational continuity, and actual service completion are distinct properties and should not inherit evidence from one another.
+- **Status:** established conceptual distinction; outcome benefits remain context-qualified.
+- **Primary sources:** `BakerEtAl2020ContinuityMortality`, `ColemanEtAl2006CareTransitions`, `WHO2016TransitionsCare`.
+- **Rationale:** continuity research distinguishes record, plan, and relationship mechanisms, while transition interventions bundle several of them with delivered follow-up service.
+- **Open issue:** paired tests must separate same-agent persistence from full event-sourced records, stable plan ownership, receiver acceptance, and verified downstream service.
+- **Used by:** [nursing and care audit](audits/2026-08-21-nursing-care-health-services.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1245
+
+- **Statement:** early-warning score performance is qualified by the observation operator, missingness, population, threshold, response protocol, and available responder capacity.
+- **Status:** established method boundary.
+- **Primary sources:** `DowneyEtAl2017EarlyWarningScores`, `ReichlEtAl2024WearableNEWS2`.
+- **Rationale:** early-warning systems combine intermittent observations into escalation triggers, while a prospective wearable comparison exposed signal-quality, matching, missing-data, and decision-use limits despite substantial agreement.
+- **Open issue:** report time to verified effect, queue displacement, false-alert work, consequence before action, abstention, and observation uncertainty rather than discrimination or agreement alone.
+- **Used by:** [nursing and care audit](audits/2026-08-21-nursing-care-health-services.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1246
+
+- **Statement:** EU health-data law distinguishes access and control, primary and secondary use, interoperability, logging, and purpose; technical availability does not authorize every processing operation or establish record completeness.
+- **Status:** established legal boundary.
+- **Primary sources:** `EU2016GDPR`, `EU2011CrossBorderHealthcare`, `EU2025EHDS`.
+- **Rationale:** the instruments impose different scopes and duties, and the EHDS applies through staged dates beginning after the audit date.
+- **Open issue:** bind each workflow action to applicable purpose, authority, role, data category, access/logging rule, version, correction path, retention, and effective date rather than a scalar compliance flag.
+- **Used by:** [nursing and care audit](audits/2026-08-21-nursing-care-health-services.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1247
+
+- **Statement:** representing required unfinished work with applicability, ownership, receiver acceptance, dependencies, deadlines, unresolved questions, and completion evidence may expose transition failures hidden by task accuracy and throughput.
+- **Status:** speculative.
+- **Primary sources:** `BallEtAl2014CareLeftUndone`, `StarmerEtAl2014IPASS`, `WHO2016TransitionsCare`.
+- **Rationale:** the source disciplines establish omission and transition hazards but do not validate this project's typed workflow composition or its lifecycle cost.
+- **Open issue:** compare it with event-sourced typed workflow, ordinary schedulers, fixed handover schemas, acknowledgement, read-back, case management, and Candidate 011 across feasible and infeasible loads.
+- **Used by:** [nursing and care audit](audits/2026-08-21-nursing-care-health-services.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-1248
+
+- **Statement:** a more sensitive deterioration detector can worsen the service frontier when false alerts, queue delay, interruptions, or authority limits consume the finite response path.
+- **Status:** plausible.
+- **Primary sources:** `DowneyEtAl2017EarlyWarningScores`, `ReichlEtAl2024WearableNEWS2`, `WHO2016TransitionsCare`.
+- **Rationale:** a trigger has no direct effect until an observation, scoring, queue, acknowledgement, action, and verification chain completes; every stage can fail or displace other necessary work.
+- **Open issue:** plant rare deterioration and correlated benign anomalies under finite responders and compare fixed thresholds, calibrated sequential detection, queue-aware policies, POMDP/MPC, and the candidate at equal action authority.
+- **Used by:** [nursing and care audit](audits/2026-08-21-nursing-care-health-services.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1249
+
+- **Statement:** causal opacity and conventional framing can increase exact copying of an action sequence, but transmission fidelity does not establish instrumental necessity or correctness.
+- **Status:** established for scoped experimental tasks; generality remains plausible.
+- **Primary sources:** `KapitanyNielsen2015RitualStance`, `LegareNielsen2020RitualExplained`.
+- **Rationale:** participants copy causally opaque or conventionally framed actions differently from visibly instrumental actions, so preserved form and preserved function require separate measurements.
+- **Open issue:** test order, repetition, social framing, authority labels, causal transparency, delay, turnover, and actual task success independently.
+- **Used by:** [theology and religious-practice audit](audits/2026-08-21-theology-religious-practice-ritual.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-1250
+
+- **Statement:** shared ritual-like action can carry affiliation information in a scoped social context without establishing generalized trust, competence, cooperation, or truth.
+- **Status:** plausible and task-qualified.
+- **Primary sources:** `LibermanEtAl2018RitualAffiliation`, `LegareNielsen2020RitualExplained`.
+- **Rationale:** conventional similarity can change social categorization, while the stronger downstream properties require their own interventions and outcomes.
+- **Open issue:** compare shared history, labels, mere synchrony, equal-cost joint action, conventional form, strategic display, and independently measured behavior.
+- **Used by:** [theology and religious-practice audit](audits/2026-08-21-theology-religious-practice-ritual.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-1251
+
+- **Statement:** interpersonal synchrony can change immediate cooperation in some laboratory tasks, but it is not a universal coordination benefit and can also create correlated timing or correlated failure.
+- **Status:** established for a scoped laboratory intervention; systems translation is speculative.
+- **Primary sources:** `WiltermuthHeath2009Synchrony`.
+- **Rationale:** one intervention supports a local behavioral effect, not an invariant across populations, tasks, delays, adversaries, or coupled technical systems.
+- **Open issue:** compare common clock, shared cue, communication, prediction, asynchronous diversity, and synchrony at equal opportunity while measuring both cooperation and common-mode failure.
+- **Used by:** [theology and religious-practice audit](audits/2026-08-21-theology-religious-practice-ritual.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-1252
+
+- **Statement:** a costly or credibility-enhancing display may update an observer's inference about commitment while providing no direct evidence that the displayed proposition is true, the actor is competent, or the world model is correct.
+- **Status:** plausible mechanism with an established evidence boundary.
+- **Primary sources:** `Henrich2009CREDs`.
+- **Rationale:** signal production, observer inference, commitment, source reliability, content truth, and task outcome are different variables.
+- **Open issue:** plant honest, mistaken, strategic, and adversarial sources with independently controlled cost, reliability, evidence access, and proposition truth.
+- **Used by:** [theology and religious-practice audit](audits/2026-08-21-theology-religious-practice-ritual.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1253
+
+- **Statement:** protected or sacred values can produce trade-off responses unlike ordinary priced preferences, so refusal, non-substitutability, authority, procedure, and remedy should not be represented merely as very large scalar reward weights.
+- **Status:** established behavioral distinction; proposed systems representation is speculative.
+- **Primary sources:** `TetlockEtAl2000TabooTradeoffs`, `EUCharterArticle10`.
+- **Rationale:** scalarization can silently convert a prohibited exchange into an expensive permitted exchange and can erase who has standing to authorize or refuse it.
+- **Open issue:** compare scalar penalties, lexicographic constraints, typed authority, contestable rules, abstention, and human decision at equal information and review cost.
+- **Used by:** [theology and religious-practice audit](audits/2026-08-21-theology-religious-practice-ritual.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1254
+
+- **Statement:** claims that ritualized action reduces anxiety or improves performance remain mixed and component-confounded, so repetition, predictability, synchrony, attention, social support, expectancy, and measurement reactivity require active nulls.
+- **Status:** disputed as a general effect.
+- **Primary sources:** `KarlFischer2018RitualStress`.
+- **Rationale:** a preregistered study reporting limited or null support prevents a universal benefit from being inferred from selected positive studies or a bundled intervention.
+- **Open issue:** use preregistered multi-site tests with manipulation checks, appropriate repeated-measure models, smallest-effect bounds, adverse effects, and complete participant burden.
+- **Used by:** [theology and religious-practice audit](audits/2026-08-21-theology-religious-practice-ritual.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-1255
+
+- **Statement:** European freedom of thought, conscience, and religion and the GDPR's special-category treatment of religious or philosophical beliefs establish an authority and data boundary; observed practice is not permission to infer, store, or generalize a person's belief.
+- **Status:** established legal boundary, with applicability dependent on actor, processing, purpose, and context.
+- **Primary sources:** `EUCharterArticle10`, `EU2016GDPR`.
+- **Rationale:** practice observation, inferred affiliation, declared belief, protected exercise, consent, legal basis, and system authorization are distinct records and decisions.
+- **Open issue:** bind any real deployment to purpose, necessity, lawful basis, data minimization, access, retention, contestability, applicable national law, and effective-date review; research fixtures remain synthetic.
+- **Used by:** [theology and religious-practice audit](audits/2026-08-21-theology-religious-practice-ritual.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1256
+
+- **Statement:** pregnancy and lactation resource partitioning combines short-horizon regulation with slower coordinated tissue allocation, so acute restriction can separate output, reserve mobilization, physiological expression, and later recovery.
+- **Status:** established, species- and intervention-qualified.
+- **Primary sources:** `BaumanCurrie1980Homeorhesis`, `AbdelattyEtAl2017FeedRestriction`.
+- **Rationale:** lactation biology distinguishes maintenance of a trajectory from a fixed set point and shows that maintained output can coexist with changed reserve or molecular state.
+- **Open issue:** test resource pools, flows, reserve debt, recovery horizon, welfare components, and individual heterogeneity rather than importing a universal homeorhetic controller.
+- **Used by:** [animal and veterinary population-health audit](audits/2026-08-21-animal-veterinary-population-health.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1257
+
+- **Statement:** risk-based veterinary surveillance is objective- and target-population-specific; concentrating observations can improve detection efficiency while making raw positivity non-representative of population prevalence.
+- **Status:** established surveillance method and sampling boundary.
+- **Primary sources:** `StarkEtAl2006RiskBasedSurveillance`, `DreweEtAl2012SurveillanceEvaluation`.
+- **Rationale:** inclusion is changed deliberately to serve a detection objective, so prevalence inference requires the frame, inclusion probabilities or a defensible model, denominators, diagnostics, and missing channels.
+- **Open issue:** compare uniform, stratified, risk-based, adaptive, sentinel, pooled, and active-sensing policies at equal samples, response capacity, analyst work, and joules.
+- **Used by:** [animal and veterinary population-health audit](audits/2026-08-21-animal-veterinary-population-health.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1258
+
+- **Statement:** a One-Health surveillance record needs sector, sampler, target frame, diagnostic and case-definition version, denominator, delay, and intervention history because channels can generate non-comparable positivity.
+- **Status:** established method and authoritative observation boundary.
+- **Primary sources:** `BordierEtAl2020OneHealthSurveillance`, `EFSAECDC2025Zoonoses2024`.
+- **Rationale:** competent-authority, operator, animal, food-chain, and human-health observations arise under heterogeneous programs rather than one exchangeable sampling process.
+- **Open issue:** test cross-channel fusion under known selection, delayed reporting, diagnostic change, movement, intervention, and missing-sector attacks, with correct abstention when harmonization is impossible.
+- **Used by:** [animal and veterinary population-health audit](audits/2026-08-21-animal-veterinary-population-health.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1259
+
+- **Statement:** animal welfare is a protected multidimensional outcome; productivity, health alone, survival, preference, motivation, or one animal-based measure cannot substitute for the whole vector.
+- **Status:** established measurement boundary.
+- **Primary sources:** `EFSA2022WelfareMethodology`, `EFSA2023DairyCowWelfare`, `VonKeyserlingkEtAl2017PastureMotivation`, `HardingPaulMendl2004CognitiveBias`.
+- **Rationale:** welfare assessment requires consequence-specific and fit-for-purpose measures, while preference and cognitive-bias experiments illuminate only scoped components under their instruments and designs.
+- **Open issue:** preserve health, injury, behavior, affect-relevant, preference/motivation, severe-event, recovery, missingness, removal, and attrition outcomes without hiding a failed component in an aggregate.
+- **Used by:** [animal and veterinary population-health audit](audits/2026-08-21-animal-veterinary-population-health.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1260
+
+- **Statement:** population improvement should report realized descendant gain beside coancestry, inbreeding, reproductive concentration, effective population size, and rare-capability retention; optimum-contribution selection is a mandatory conventional null.
+- **Status:** established method with population-qualified evidence.
+- **Primary sources:** `Meuwissen1997OptimumContribution`, `MakanjuolaEtAl2020GenomicInbreeding`.
+- **Rationale:** optimizing predicted merit without lineage constraints can concentrate reproduction and reduce future variation, while raw population size does not measure realized genetic diversity.
+- **Open issue:** compare selection policies at matched observations, offspring budget, reproductive feasibility, realized coancestry and inbreeding, environment transfer, and long-horizon capability.
+- **Used by:** [animal and veterinary population-health audit](audits/2026-08-21-animal-veterinary-population-health.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1261
+
+- **Statement:** a rumen-consortium intervention claim must separate host context, absolute load, relative composition, activity, substrate and product flux, passage, host uptake, emissions, host outcome, and recovery.
+- **Status:** established measurement boundary supported by scoped interventions.
+- **Primary sources:** `HendersonEtAl2015GlobalRumen`, `WeimerEtAl2017RumenExchange`, `VandeputteEtAl2017QuantitativeMicrobiome`, `HristovEtAl2015MethaneInhibitor`.
+- **Rationale:** relative composition is constrained by a denominator and can move without corresponding absolute abundance or function; host and flow conditions shape both state and intervention response.
+- **Open issue:** use absolute standards, flux balances, passage and recovery horizons, host/welfare effects, and independent perturbations before attributing mechanism to a taxonomic shift.
+- **Used by:** [animal and veterinary population-health audit](audits/2026-08-21-animal-veterinary-population-health.md), [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1262
+
+- **Statement:** an intervention against a pathogen can change host harm, pathogen burden, infectious period, and transmission differently; robustness to an evolving opponent requires archived time-shift cross-play rather than evaluation only against the current population.
+- **Status:** established in scoped host-pathogen experiments; AI translation remains plausible.
+- **Primary sources:** `ReadEtAl2015ImperfectVaccination`, `DecaesteckerEtAl2007RedQueen`.
+- **Rationale:** direct benefit and population transmission are different estimands, and a contemporaneous opponent can hide asymmetric adaptation or forgetting across historical states.
+- **Open issue:** test untreated, transmission-blocking, harm-reducing, imperfect, and mixed interventions against archived and unseen opponent lineages with explicit interference and containment.
+- **Used by:** [animal and veterinary population-health audit](audits/2026-08-21-animal-veterinary-population-health.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1263
+
+- **Statement:** a fitted dynamic or population-intervention model does not identify its mechanism without structural and practical identifiability and, where units interfere, explicit exposure, selection, and interference estimands.
+- **Status:** established method boundary.
+- **Primary sources:** `MunozTamayoTedeschi2023Identifiability`, `HalloranStruchiner1995Interference`.
+- **Rationale:** observational equivalence can persist even with ideal data, finite designs add further uncertainty, and one unit's intervention can change another unit's exposure and outcome.
+- **Open issue:** require planted nonidentifiability, discriminating interventions, alternative exposure mappings, selection/removal sensitivity, calibrated equivalence classes, and abstention.
+- **Used by:** [animal and veterinary population-health audit](audits/2026-08-21-animal-veterinary-population-health.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1264
+
+- **Statement:** a herd or population mean is cohort-dependent, so births, entries, deaths, removals, culls, replacements, and unavailable units must remain visible in both denominators and the cost ledger.
+- **Status:** plausible synthesis from established demography, surveillance, welfare, and selection boundaries.
+- **Primary sources:** `DreweEtAl2012SurveillanceEvaluation`, `EFSA2022WelfareMethodology`, `MakanjuolaEtAl2020GenomicInbreeding`.
+- **Rationale:** an apparent recovery or average improvement can be produced by changing membership rather than improving the starting units, while removed units can disappear from survivor-only summaries.
+- **Open issue:** compare start-cohort, end-cohort, survivor, event-weighted, and causal estimands under planted selective removal and replacement, retaining every adverse event and lifecycle cost.
+- **Used by:** [animal and veterinary population-health audit](audits/2026-08-21-animal-veterinary-population-health.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1265
+
+- **Statement:** double-entry bookkeeping detects violations of a declared balance relation but not balanced omission, fabrication, duplication, misclassification, valuation error, or a shared-source error.
+- **Status:** established formal boundary.
+- **Primary sources:** `Ellerman1985DoubleEntry`, `GermanyHGB238239`.
+- **Rationale:** equality of debits and credits is an internal invariant over encoded entries, not independent evidence that the underlying event occurred or was represented correctly.
+- **Open issue:** plant every balanced and unbalanced failure class and compare ordinary ledgers, event sourcing, hash chaining, independent reconciliation, and Candidate 014 at equal review and storage cost.
+- **Used by:** [accounting, audit, actuarial, and insurance audit](audits/2026-08-21-accounting-audit-actuarial-insurance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1266
+
+- **Statement:** financial-report materiality is user-, decision-, context-, nature-, magnitude-, and aggregation-qualified rather than a universal percentage or a physical detection limit.
+- **Status:** established scoped governance boundary.
+- **Primary sources:** `EU2013AccountingDirective`, `IFRS2017MaterialityPracticeStatement`.
+- **Rationale:** an item may matter because of its nature or context even below a numeric threshold, while the IFRS practice statement is non-mandatory guidance rather than an EU legal rule by itself.
+- **Open issue:** test isolated, aggregated, qualitative, threshold-adjacent, adversarially split, and decision-reversing items under frozen users and decisions, without transferring financial materiality to scientific measurement.
+- **Used by:** [accounting, audit, actuarial, and insurance audit](audits/2026-08-21-accounting-audit-actuarial-insurance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1267
+
+- **Statement:** a claims reserve is a versioned estimate of delayed obligations with process, parameter, and model uncertainty; it is not cash, capital, liquidity, realized loss, or operational headroom.
+- **Status:** established model-relative distinction.
+- **Primary sources:** `Mack1993ChainLadder`, `EnglandVerrall2002ClaimsReserving`, `EU2009SolvencyII`.
+- **Rationale:** reserving methods project incomplete development from assumptions and data vintages, and later experience can reveal both ordinary variation and structural misspecification.
+- **Open issue:** compare chain-ladder, bootstrap, hierarchical, survival/delay, state-space, robust, and candidate estimators across planted calendar change, reporting delay, truncation, reopening, inflation, and regime shift.
+- **Used by:** [accounting, audit, actuarial, and insurance audit](audits/2026-08-21-accounting-audit-actuarial-insurance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1268
+
+- **Statement:** Solvency II's 99.5% one-year Value-at-Risk calibration is a regulatory decision rule, while a stress-test result remains conditional on scenario, valuation, dependence model, management actions, and the modeled boundary.
+- **Status:** established scoped governance and model boundary.
+- **Primary sources:** `EU2009SolvencyII`, `EIOPA2024InsuranceStressTest`.
+- **Rationale:** neither a percentile target nor survival of selected scenarios establishes safety outside the encoded horizon, tail, model, balance sheet, action set, or external dependency assumptions.
+- **Open issue:** use reverse stress, alternative dependence and valuation models, hidden common causes, unavailable actions, longer horizons, and explicit failure modes beside the regulatory comparator.
+- **Used by:** [accounting, audit, actuarial, and insurance audit](audits/2026-08-21-accounting-audit-actuarial-insurance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1269
+
+- **Statement:** internal-model governance can require use, data and statistical quality, calibration, attribution, validation, sensitivity, reverse stress, documentation, and independent challenge without proving that the model is true.
+- **Status:** established scoped governance boundary.
+- **Primary sources:** `EU2009SolvencyII`, `EU2015SolvencyDelegated`, `GermanyVAG2016`.
+- **Rationale:** a governed model is a versioned decision instrument with defined responsibilities and tests; procedural completeness cannot validate omitted mechanisms, wrong observations, or out-of-support deployment.
+- **Open issue:** attack stale data, overridden assumptions, dependent validators, undocumented transforms, version skew, failed reverse stress, governance capture, and superficially complete documentation.
+- **Used by:** [accounting, audit, actuarial, and insurance audit](audits/2026-08-21-accounting-audit-actuarial-insurance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1270
+
+- **Statement:** adverse selection requires hidden type before allocation, whereas moral hazard requires hidden action responding to a consequence structure; neither follows from ordinary uncertainty or model error alone.
+- **Status:** established model distinction.
+- **Primary sources:** `RothschildStiglitz1976Insurance`, `Holmstrom1979MoralHazard`.
+- **Rationale:** the two mechanisms imply different timing, information, intervention, contract, and identification requirements and therefore different null models and remedies.
+- **Open issue:** plant hidden type, hidden action, both, neither, mismeasurement, and strategic reporting separately; require correct mechanism classification or abstention before crediting incentive-aware routing.
+- **Used by:** [accounting, audit, actuarial, and insurance audit](audits/2026-08-21-accounting-audit-actuarial-insurance.md), [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1271
+
+- **Statement:** total biomass can hide age, reproductive, cohort, and spatial structure that changes recruitment and population variability; those variables earn retention through prediction and intervention rather than by biological analogy.
+- **Status:** established, stock- and system-qualified.
+- **Primary sources:** `AndersonEtAl2008FishingVariability`, `Brunel2010AgeRecruitment`, `BerkeleyEtAl2004AgeSpatial`.
+- **Rationale:** equal aggregate biomass can arise from different age and spatial distributions with different future production, variance, and response to harvest.
+- **Open issue:** compare scalar biomass, age/size structure, cohort state, spatial state, and full alternatives across held-out life histories, observation errors, movement, recruitment regimes, and harvest patterns.
+- **Used by:** [forestry, fisheries, and aquatic food-systems audit](audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md), [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1272
+
+- **Statement:** a renewable-resource management procedure is a closed observation, assessment, decision-rule, implementation, and population-response loop whose robust performance is relative to declared operating-model and implementation uncertainty.
+- **Status:** established method boundary.
+- **Primary sources:** `Butterworth2007ManagementProcedure`, `GoethelEtAl2023WhenMSE`, `RochetRice2009MSEUncertainty`.
+- **Rationale:** testing only an estimator or harvest rule omits observation and implementation error, while a full management-strategy evaluation can itself be disproportionate for low-consequence decisions.
+- **Open issue:** compare fixed rules, model-predictive and robust control, full and reduced management-strategy evaluation, and candidates at equal model, observation, tuning, review, and compute budgets.
+- **Used by:** [forestry, fisheries, and aquatic food-systems audit](audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1273
+
+- **Statement:** forest current growth, standing carbon, transfer among carbon pools, harvest, product storage, substitution, leakage, and the counterfactual climate trajectory are different quantities; faster growth alone does not establish greater total carbon or climate benefit.
+- **Status:** established accounting boundary with system-specific evidence.
+- **Primary sources:** `HarmonEtAl1990ForestCarbon`, `EU2018LULUCFConsolidated`.
+- **Rationale:** a flow can increase while stocks fall, harvested carbon moves to products with different lifetimes, and substitution claims depend on a declared alternative system and horizon.
+- **Open issue:** report every pool and flux in compatible mass units plus time, permanence, disturbance, product decay, substitution range, leakage, biodiversity and water effects, and lifecycle work.
+- **Used by:** [forestry, fisheries, and aquatic food-systems audit](audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1274
+
+- **Statement:** natural-resource property regimes are typed bundles of access, withdrawal, management, exclusion, and alienation rather than one ownership scalar; catch-share and enforcement effects depend on design, monitoring, strategic response, distribution, and institutional setting.
+- **Status:** established conceptual distinction with scoped empirical evidence.
+- **Primary sources:** `SchlagerOstrom1992PropertyRights`, `CostelloEtAl2008CatchShares`, `ChavezEtAl2021CoEnforcement`, `MacCollEtAl2018Enforcement`.
+- **Rationale:** assigning a harvest right does not automatically assign monitoring, rule change, exclusion, transfer, appeal, or legitimate authority, and enforcement can have unintended behavioral effects.
+- **Open issue:** plant incomplete, conflicting, concentrated, non-transferable, weakly enforced, strategically evaded, and contested rights with explicit actors, costs, distribution, appeal, and remedy.
+- **Used by:** [forestry, fisheries, and aquatic food-systems audit](audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md), [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1275
+
+- **Statement:** aquaculture physical, production, ecological, and social carrying capacities are different constructs; social acceptability and protected ecological limits require authorized definitions rather than inference from output.
+- **Status:** established conceptual boundary.
+- **Primary sources:** `McKindseyEtAl2006CarryingCapacity`.
+- **Rationale:** available space, economically viable production, ecosystem assimilation, and socially authorized activity have different variables, thresholds, actors, and evidence.
+- **Open issue:** compare models and interventions that vary hydrodynamics, species, stocking, feed, waste, disease, cumulative farms, protected limits, monitoring, and stakeholder authority without scalarizing the capacities.
+- **Used by:** [forestry, fisheries, and aquatic food-systems audit](audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md), [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1276
+
+- **Statement:** aquaculture disease, parasite, nutrient, and genetic externalities can cross farm boundaries through spatial transport, host migration, escape, and reproduction; estimates remain farm-, host-, hydrodynamic-, population-, and horizon-qualified.
+- **Status:** established for cited systems, with disputed general magnitude.
+- **Primary sources:** `KrkosekEtAl2005SeaLice`, `KrkosekEtAl2006Epizootics`, `GloverEtAl2017FarmWildSalmon`.
+- **Rationale:** farm production metrics omit effects carried into wild populations or neighboring sites, while causal attribution depends on transport, observation, alternative sources, and population dynamics.
+- **Open issue:** use spatially explicit generators, alternative hydrodynamics and sources, farm interventions, wild-host movement, escape reproduction, genetic ancestry uncertainty, and independent observation channels.
+- **Used by:** [forestry, fisheries, and aquatic food-systems audit](audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md), [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1277
+
+- **Statement:** nominal multi-trophic coupling does not establish circularity; nutrient recovery requires a bounded mass balance and measured harvested export across relevant seasons, while disease, energy, toxicity, and product safety remain separate outcomes.
+- **Status:** plausible synthesis from a scoped intervention and established mass-balance requirements.
+- **Primary sources:** `LiEtAl2019IMTA`, `McKindseyEtAl2006CarryingCapacity`.
+- **Rationale:** nutrient contained temporarily in standing extractive biomass is not yet recovered service, and one recovered element cannot erase unrecovered matter, energy, or adverse effects.
+- **Open issue:** measure feed and inflow, dissolved and particulate discharge, standing biomass, harvest, mortality, treatment, sediment, off-site export, product use, safety, pumping, aeration, processing, and full lifecycle energy.
+- **Used by:** [forestry, fisheries, and aquatic food-systems audit](audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1278
+
+- **Statement:** aquatic-food efficiency must preserve edible fraction, nutrient vector, feed opportunity cost, product substitution, physical stressors, and protected outcomes; live weight, feed-conversion ratio, or fish-in/fish-out alone cannot establish net nutritional benefit.
+- **Status:** established measurement boundary.
+- **Primary sources:** `GephartEtAl2021BlueFoodEnvironment`, `NaylorEtAl2021AquacultureReview`, `WillerEtAl2024WildFishNutrients`.
+- **Rationale:** gross biomass and feed mass do not describe which nutrients reach people, which edible wild fish were diverted, what products are replaced, or which environmental and welfare effects occur.
+- **Open issue:** compare technologies and policies at the same delivered edible nutrient vector and service population, reporting feed origin, retained nutrients, losses, substitution uncertainty, affordability, accessibility, environmental impacts, and human work.
+- **Used by:** [forestry, fisheries, and aquatic food-systems audit](audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1279
+
+- **Statement:** under the assumptions of steady-state metabolic-control analysis, flux-control coefficients describe local system sensitivity and need not reside in one immutable rate-limiting enzyme.
+- **Status:** established within the formal model.
+- **Primary sources:** `heinrich1974`.
+- **Rationale:** control can be distributed and can shift with operating point, network state, kinetics, and constraints, so component labels cannot replace perturbation-derived sensitivity.
+- **Open issue:** test local coefficients against finite perturbations, alternate operating points, regulation, measurement error, structural uncertainty, resource burden, and ordinary constrained-control nulls.
+- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md), [Candidate 001](../experiments/candidates/001-adaptive-topology.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1280
+
+- **Statement:** in continuous culture, dilution changes biomass and substrate inventory, residence time, washout boundary, and the relative fitness required for persistence; it is not merely a refresh frequency.
+- **Status:** established foundational theory and experiment.
+- **Primary sources:** `novick1950`, `herbert1956`.
+- **Rationale:** the same manipulated flow simultaneously alters plant dynamics and selection pressure, so controller evaluation must include both short-horizon regulation and long-horizon population change.
+- **Open issue:** compare chemostat, turbidostat, fed-batch, PID, MPC, robust, adaptive, and candidate policies under saturation, lag, washout, mutation, invasion, sensor drift, and changing feed.
+- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1281
+
+- **Statement:** external measurement, control computation, and actuation can stabilize and steer a microbial composition for a bounded horizon without making the community self-governing or evolutionarily stable.
+- **Status:** established for a scoped laboratory intervention.
+- **Primary sources:** `gutierrezmena2022`.
+- **Rationale:** the demonstrated loop depended on flow cytometry, PID control, and optogenetic actuation, and later drift was consistent with escape mutation.
+- **Open issue:** report operator identity, sampling delay, calibration, actuation authority, bandwidth, drift, mutation, rescue work, recovery, and complete energy while comparing ordinary feedback and no-control arms.
+- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1282
+
+- **Statement:** composition, delivered function, dynamical stability, recovery stability, and evolutionary stability are different properties; no single abundance statistic establishes the others.
+- **Status:** established conceptual and experimental boundary.
+- **Primary sources:** `shou2007`, `gutierrezmena2022`, `fussmann2000`, `becks2005`.
+- **Rationale:** mutual dependence, externally controlled mixtures, regular oscillation, and chaotic population dynamics are realizable under different mechanisms and horizons.
+- **Open issue:** use independent function, absolute abundance, perturbation/recovery, invasion, mutation, lineage, phase, amplitude, and long-horizon measures rather than one compositional distance or endpoint yield.
+- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md), [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md), [Candidate 008](../experiments/candidates/008-contestable-modular-allocation.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1283
+
+- **Statement:** catalytic degree-of-rate-control attribution is local to a declared mechanism and operating state, and a measured reactor rate must be cleared of external and internal transport limitation before it is called intrinsic.
+- **Status:** established reaction-engineering boundary.
+- **Primary sources:** `campbell2001`, `thiele1939`, `mears1971`.
+- **Rationale:** apparent kinetic sensitivity can be produced or suppressed by diffusion and transfer, while active sites and rate-controlling steps can change with conditions.
+- **Open issue:** vary temperature, pressure, concentration, particle size, flow, active-site inventory, deactivation, regeneration, and alternate mechanisms with transport diagnostics and uncertainty.
+- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1284
+
+- **Statement:** nominal reactor averages can fail to represent the exposure histories created by large-scale mixing and feed gradients, so homogeneous laboratory performance does not establish scale-up behavior.
+- **Status:** established for a scoped industrial and scale-down comparison.
+- **Primary sources:** `enfors2001`.
+- **Rationale:** cells traverse local substrate and oxygen environments over time, making trajectory distributions rather than vessel means relevant to physiology and production.
+- **Open issue:** compare homogeneous, compartment, computational-fluid-dynamics, residence-time, and learned models under held-out geometry, feed placement, scale, mixing, sensor placement, and actuator latency.
+- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1285
+
+- **Statement:** a bioremediation endpoint requires parent and daughter products, total mass, spatial support, terminal products or toxicity, intervention history, and post-treatment rebound; concentration at one time and location is not durable removal.
+- **Status:** established boundary supported by scoped field interventions.
+- **Primary sources:** `major2002`, `anderson2003`, `wu2007`.
+- **Rationale:** transformation can stall at harmful intermediates, apparent depletion can reflect movement or sampling, and reduced species can reoxidize when environmental conditions change.
+- **Open issue:** test alternative transport paths, unobserved zones, daughter-product toxicity, electron donors/acceptors, oxygen ingress, monitoring wells, cessation, rebound, and independent mass closure.
+- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md), [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1286
+
+- **Statement:** production burden plus mutational escape can destroy an engineered function over serial propagation even when the initial clone is correct and productive.
+- **Status:** established for a controlled production-strain experiment and fitted population model.
+- **Primary sources:** `rugbjerg2018`.
+- **Rationale:** several disruptions that relieved the costly production function arose and expanded over industrially relevant experimental horizons.
+- **Open issue:** compare protected architecture, burden reduction, essential coupling, lineage monitoring, seed-train reset, archive/replay, ordinary quality control, and candidate mechanisms across unseen escape classes.
+- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1287
+
+- **Statement:** microbial optical-density measurements require an instrument-, medium-, morphology-, and range-qualified calibration model and cannot by themselves identify viable or productive biomass.
+- **Status:** established measurement boundary.
+- **Primary sources:** `stevenson2016`.
+- **Rationale:** optical density becomes nonlinear through scattering and changes with instrument and biological conditions, while viability and product formation are separate measurands.
+- **Open issue:** attack bubbles, fouling, morphology, color, multiple scattering, sampling lag, dilution, drift, missingness, contamination, and changed medium with independent biomass, viability, and product references.
+- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1288
+
+- **Statement:** atom economy, isolated yield, process mass intensity, physical recycled content, attributed chain of custody, circularity, and lifecycle impact per functional unit are different ledgers and cannot inherit evidence from one another.
+- **Status:** established metric and standards boundary.
+- **Primary sources:** `trost1991`, `iso14040`, `iso14044`, `iso22095`, `iso220952`, `iso59020`, `eu2021pef`.
+- **Rationale:** the measures use different numerators, denominators, boundaries, allocation rules, physical claims, attribute models, impacts, and decision purposes.
+- **Open issue:** require physical and attribute balance, function equivalence, allocation sensitivity, energy, toxicity, water, durability, safety, end-of-life, double-counting attacks, and current standard/version identity.
+- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1289
+
+- **Statement:** high-rate trigger selection can reduce resource use, but downstream inference remains conditional on the menu, prescale, operating mode, eligibility support, efficiency, timeout, deadtime, and monitoring streams.
+- **Status:** established for a scoped high-energy-physics trigger system; general selection boundary established.
+- **Primary sources:** `ATLAS2020Run2Trigger`.
+- **Rationale:** an online selector changes which events can be retained and reconstructed, so compute savings and observation support are coupled rather than independent.
+- **Open issue:** plant rare classes, rate spikes, menu changes, prescale version errors, timeouts, correlated deadtime, monitoring loss, and support holes; compare fixed cascades, propensity logging, streaming backpressure, and candidates at equal end-to-end cost.
+- **Used by:** [particle and nuclear experimentation audit](audits/2026-08-21-particle-nuclear-high-energy-experimentation.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1290
+
+- **Statement:** detector unfolding is response- and regularization-qualified: migration and inefficiency can make inversion ill-posed, and stable recovery requires a declared response, prior or regularizer, validation family, covariance, and non-identifiable directions.
+- **Status:** established inverse-problem boundary.
+- **Primary sources:** `DAgostini1995Unfolding`, `HoeckerKartvelishvili1996SVD`.
+- **Rationale:** several latent distributions can map to observationally similar reconstructed data, and regularization trades variance for bias rather than recovering model-free truth.
+- **Open issue:** compare forward folding, truncated SVD, Tikhonov, iterative Bayes, hierarchical, simulation-based, and candidate methods under response shift, zero-support classes, alternate priors, finite simulation, and hidden backgrounds.
+- **Used by:** [particle and nuclear experimentation audit](audits/2026-08-21-particle-nuclear-high-energy-experimentation.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1291
+
+- **Statement:** a joint likelihood can propagate declared nuisance correlations and auxiliary constraints, but profiling or marginalization does not validate omitted nuisances, control-to-signal transfer, auxiliary independence, or the chosen functional family.
+- **Status:** established statistical-model boundary.
+- **Primary sources:** `CranmerEtAl2012HistFactory`, `CowanEtAl2011Asymptotic`.
+- **Rationale:** numerical treatment of encoded uncertainty is distinct from completeness and fidelity of the uncertainty model and its evidence ancestry.
+- **Open issue:** plant missing, shared-root, weakly identified, target-absorbing, non-Gaussian, boundary, contaminated-control, and covariate-shift nuisances with saturated and alternate-model checks.
+- **Used by:** [particle and nuclear experimentation audit](audits/2026-08-21-particle-nuclear-high-energy-experimentation.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1292
+
+- **Statement:** rare-event significance must account for the actual search family; a local tail probability at one fixed hypothesis point differs from the global probability after searching locations, windows, channels, models, or adaptive variants.
+- **Status:** established statistical boundary.
+- **Primary sources:** `GrossVitells2010LookElsewhere`.
+- **Rationale:** selecting the most extreme result from correlated alternatives changes its null distribution, and the resulting p-value is not the probability that a theory is true.
+- **Open issue:** freeze and log every searched family, adaptive change, stopping decision, and access path; compare analytic, permutation, maximum-statistic, familywise, false-discovery, sequential, split-confirmation, and independent-replication controls.
+- **Used by:** [particle and nuclear experimentation audit](audits/2026-08-21-particle-nuclear-high-energy-experimentation.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md).
+
+### C-1293
+
+- **Statement:** blinding selected result information can reduce outcome-directed tuning but cannot repair observation or model error and requires disclosure of access, unblinding, and every post-unblinding change.
+- **Status:** established scoped bias-control method.
+- **Primary sources:** `KleinRoodman2005Blinding`.
+- **Rationale:** construction-confirmation separation protects a particular information path, not the detector, simulation, background model, hypothesis family, or independent replication claim.
+- **Open issue:** compare open, salted, hidden-region, split-data, delayed-verifier, preregistered, and independent-confirmation workflows under leakage, partial access, emergency unblinding, revision, and selective reporting.
+- **Used by:** [particle and nuclear experimentation audit](audits/2026-08-21-particle-nuclear-high-energy-experimentation.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md).
+
+### C-1294
+
+- **Statement:** detailed particle-transport simulation is a conditional forward model whose geometry, material, process, cross-section, cutoff, and implementation choices require regime-relevant validation; it is not ground truth.
+- **Status:** established simulation boundary.
+- **Primary sources:** `AgostinelliEtAl2003Geant4`.
+- **Rationale:** simulation can expose and propagate an explicit physical model while still omitting or misspecifying processes and sharing errors with downstream calibration or inference.
+- **Open issue:** compare generators and physics lists, detector/material variants, independent calibration and control data, held-out regimes, data-driven corrections, support detection, and full simulation/calibration cost.
+- **Used by:** [particle and nuclear experimentation audit](audits/2026-08-21-particle-nuclear-high-energy-experimentation.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1295
+
+- **Statement:** published tables, educational subsets, reconstructed research data, statistical likelihoods, and runnable workflows support different levels of reinterpretation and reconstructability; none alone establishes independent replication.
+- **Status:** established preservation and evidence boundary.
+- **Primary sources:** `CERN2020OpenDataPolicy`, `MaguireEtAl2017HEPData`, `ATLAS2019FullLikelihoods`, `SimkoEtAl2021DeclarativeWorkflows`.
+- **Rationale:** preserved outputs differ in information content, environment, external dependencies, authority, reconstruction path, and ability to vary assumptions, while a rerun can reproduce the same lineage and error.
+- **Open issue:** test bit preservation, environment rebuild, workflow execution, likelihood reconstruction, result equivalence, alternate-model reinterpretation, external-service loss, dependency invalidation, and independent data acquisition separately.
+- **Used by:** [particle and nuclear experimentation audit](audits/2026-08-21-particle-nuclear-high-energy-experimentation.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1296
+
+- **Statement:** an evaluated nuclear-data library combines measurements, models, processing, standards, and expert judgment under a version, so central values, covariance, benchmark role, and evidence ancestry remain application-qualified.
+- **Status:** established data-product and uncertainty boundary.
+- **Primary sources:** `PlompenEtAl2020JEFF33`, `OECDNEA2023NuclearCovariance`.
+- **Rationale:** an evaluation is neither one raw measurement nor universal truth, and covariance can encode assumptions, model sharing, and incomplete components that affect downstream response differently.
+- **Open issue:** test version change, covariance omission, shared-experiment dependence, differential versus integral benchmarks, processing-code differences, application sensitivity, out-of-range use, and reverse-dependency invalidation.
+- **Used by:** [particle and nuclear experimentation audit](audits/2026-08-21-particle-nuclear-high-energy-experimentation.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1297
+
+- **Statement:** a finite-order effective model is conditional on its scale ratio, power counting, coefficient assumptions, and breakdown scale; truncation uncertainty remains distinct from measurement, parameter, model-form, and numerical error.
+- **Status:** established regime-qualified modeling boundary.
+- **Primary sources:** `FurnstahlEtAl2015EFTTruncation`, `AppelquistCarazzone1975Decoupling`, `Weinberg1979Phenomenological`.
+- **Rationale:** lower-scale structure can be represented without resolving every high-scale degree of freedom only within a declared expansion and applicability regime.
+- **Open issue:** compare fixed-order, order-mixing, Bayesian truncation, alternate power counting, full/reference, learned residual, and candidate models across the registered breakdown boundary and symmetry-violating target.
+- **Used by:** [particle and nuclear experimentation audit](audits/2026-08-21-particle-nuclear-high-energy-experimentation.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).

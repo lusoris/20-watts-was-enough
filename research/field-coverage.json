@@ -70,10 +70,11 @@
       "audits": [
         "research/audits/2026-08-05-information-thermodynamics-physical-computation.md",
         "research/audits/2026-08-05-optics-photonics-inverse-sensing.md",
-        "research/audits/2026-08-05-soft-active-matter.md"
+        "research/audits/2026-08-05-soft-active-matter.md",
+        "research/audits/2026-08-21-particle-nuclear-high-energy-experimentation.md"
       ],
-      "scopeGap": "Statistical physics, optics, acoustics, and soft matter are represented; quantum, nuclear, particle, and much condensed-matter physics are not.",
-      "nextQuestion": "Which physical systems perform useful inference, error correction, or adaptive allocation before digital abstraction?"
+      "scopeGap": "Statistical physics, optics, acoustics, soft matter, and particle/nuclear experimental methodology are represented; quantum information, much condensed-matter, atomic/molecular, plasma, accelerator, and nuclear-structure breadth remain partial or absent.",
+      "nextQuestion": "Which results survive explicit selection, detector response, nuisance, search-family, simulation, preservation, symmetry, and regime-breakdown tests?"
     },
     {
       "code": "1.4",
@@ -191,18 +192,18 @@
     {
       "code": "2.8",
       "name": "Environmental biotechnology",
-      "state": "unreviewed",
-      "audits": [],
-      "scopeGap": "Microbial ecology is present, but it is not evidence from engineered bioremediation or environmental biotechnology; no field audit exists.",
-      "nextQuestion": "How do engineered consortia maintain function, containment, succession, and recovery under open environmental exchange?"
+      "state": "dedicated",
+      "audits": ["research/audits/2026-08-21-biotechnology-chemistry-process-systems.md"],
+      "scopeGap": "Engineered groundwater remediation, intervention, transport, product/mass endpoints, rebound, and open-system evolutionary failure are audited; wastewater, gaseous emissions, mining, marine systems, containment, and environmental-release breadth remain unsampled.",
+      "nextQuestion": "Which intervention effects survive alternative transport paths, daughter products, oxygen ingress, invasion, succession, off-site export, monitoring designs, and post-treatment rebound?"
     },
     {
       "code": "2.9",
       "name": "Industrial biotechnology",
-      "state": "unreviewed",
-      "audits": [],
-      "scopeGap": "Chemical process work does not substitute for strain design, fermentation, bioprocess control, and evolutionary stability; no field audit exists.",
-      "nextQuestion": "Which production-control schemes preserve yield while organisms evolve, drift, contaminate, and compete?"
+      "state": "dedicated",
+      "audits": ["research/audits/2026-08-21-biotechnology-chemistry-process-systems.md"],
+      "scopeGap": "Strain burden/escape, fermentation, continuous culture, cybergenetic control, scale-up, separation, and lifecycle boundaries are audited; cell therapy, food fermentation, enzyme manufacture, product validation, contamination control, and manufacturing authorization remain unsampled.",
+      "nextQuestion": "Which production-control results survive lineage drift, escape mutation, scale gradients, sensor distortion, transport limits, fouling, off-spec propagation, cleaning, and full seed-to-retirement cost?"
     },
     {
       "code": "2.10",
@@ -250,9 +251,12 @@
       "code": "3.3",
       "name": "Health sciences",
       "state": "dedicated",
-      "audits": ["research/audits/2026-08-05-epidemiology-and-surveillance-control.md"],
-      "scopeGap": "Surveillance is represented; nursing, care science, health services, occupational health, nutrition, and implementation science remain mostly absent.",
-      "nextQuestion": "How do distributed caregivers preserve situation awareness, continuity, escalation, and workload under shift and resource constraints?"
+      "audits": [
+        "research/audits/2026-08-05-epidemiology-and-surveillance-control.md",
+        "research/audits/2026-08-21-nursing-care-health-services.md"
+      ],
+      "scopeGap": "Surveillance plus a first nursing, care-continuity, and health-services audit are represented; occupational health, nutrition, implementation science, long-term care, community care, and most clinical service designs remain unsampled.",
+      "nextQuestion": "Which mechanisms preserve necessary service and legitimate person-level authority across community, long-term, acute, and digital care without hiding unfinished work or unpaid human burden?"
     },
     {
       "code": "3.4",
@@ -276,42 +280,43 @@
       "state": "dedicated",
       "audits": [
         "research/audits/2026-08-05-plant-distributed-control.md",
-        "research/audits/2026-08-21-soil-crop-multiresource-colimitation.md"
+        "research/audits/2026-08-21-soil-crop-multiresource-colimitation.md",
+        "research/audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md"
       ],
-      "scopeGap": "Soil, crop, and multi-resource co-limitation now have a field-centered audit; forestry, fisheries, pest management, livestock integration, and most farm decision systems remain unaudited.",
-      "nextQuestion": "How do managed ecosystems allocate sensing and intervention across seasons, spatial heterogeneity, pests, weather, and irreversible harvest decisions?"
+      "scopeGap": "Soil/crop co-limitation, forestry, capture fisheries, aquaculture, and aquatic resource management have direct audits; silvicultural breadth, inland fisheries, pest management, livestock integration, farm economics, and many production systems remain unsampled.",
+      "nextQuestion": "Which policies remain effective across alternative population, spatial, climate, observation, implementation, rights, and market models without exporting harm or changing the denominator?"
     },
     {
       "code": "4.2",
       "name": "Animal and dairy science",
-      "state": "unreviewed",
-      "audits": [],
-      "scopeGap": "No animal-production or husbandry audit exists.",
-      "nextQuestion": "Which herd-level sensing, welfare, nutrition, breeding, and outbreak-control mechanisms generalize to populations of heterogeneous agents?"
+      "state": "dedicated",
+      "audits": ["research/audits/2026-08-21-animal-veterinary-population-health.md"],
+      "scopeGap": "Resource partitioning, cattle feed restriction, welfare measurement, breeding diversity, rumen consortia, and population-event accounting are audited; species breadth, husbandry systems, reproduction, farm economics, and fisheries remain unsampled.",
+      "nextQuestion": "Which findings survive across species, production systems, lifetimes, protected welfare components, reproductive constraints, and start-cohort denominators?"
     },
     {
       "code": "4.3",
       "name": "Veterinary science",
-      "state": "unreviewed",
-      "audits": [],
-      "scopeGap": "No veterinary audit exists.",
-      "nextQuestion": "How does comparative medicine reason across species, sparse evidence, population health, and welfare constraints without assuming human physiology?"
+      "state": "dedicated",
+      "audits": ["research/audits/2026-08-21-animal-veterinary-population-health.md"],
+      "scopeGap": "Risk-based and One-Health surveillance, infection interference, evolving opponents, welfare, and dynamical identifiability are audited; comparative clinical care, surgery, companion and wildlife medicine, pharmacovigilance, and antimicrobial stewardship remain unsampled.",
+      "nextQuestion": "How do diagnosis, treatment, movement, surveillance, welfare, transmission, and resistance interact across species and changing target populations?"
     },
     {
       "code": "4.4",
       "name": "Agricultural biotechnology",
-      "state": "unreviewed",
-      "audits": [],
-      "scopeGap": "Plant and microbial biology are present, but agricultural biotechnology is not audited as an intervention field.",
-      "nextQuestion": "Which breeding, gene-editing, microbiome, and biological-control strategies manage delayed effects, resistance, and ecosystem spillover?"
+      "state": "adjacent",
+      "audits": ["research/audits/2026-08-21-animal-veterinary-population-health.md"],
+      "scopeGap": "Genomic selection, microbial intervention, vaccination, and evolutionary response provide adjacent evidence; gene editing, reproductive biotechnology, diagnostics, biological control, product platforms, and authorization remain unaudited.",
+      "nextQuestion": "Which intervention effects remain after lineage concentration, off-target change, evolutionary response, containment, field transfer, and authorization are tested prospectively?"
     },
     {
       "code": "4.5",
       "name": "Other agricultural sciences",
-      "state": "unreviewed",
-      "audits": [],
-      "scopeGap": "The residual agricultural category has not been searched.",
-      "nextQuestion": "Which food-system, rural-systems, or land-management fields contribute distinct resource and resilience mechanisms?"
+      "state": "dedicated",
+      "audits": ["research/audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md"],
+      "scopeGap": "Aquatic food systems and cross-resource governance provide a direct residual-field audit; rural studies, extension science, food logistics, agricultural education, and other residual specialties remain open.",
+      "nextQuestion": "Which residual agricultural disciplines change observation, authority, adoption, service, distribution, and long-horizon resilience beyond production output?"
     },
     {
       "code": "5.1",
@@ -331,10 +336,11 @@
       "state": "dedicated",
       "audits": [
         "research/audits/2026-08-05-economics-market-design-incentives.md",
-        "research/audits/2026-08-05-supply-chain-operations-research.md"
+        "research/audits/2026-08-05-supply-chain-operations-research.md",
+        "research/audits/2026-08-21-accounting-audit-actuarial-insurance.md"
       ],
-      "scopeGap": "Markets and operations are represented; accounting, audit, finance, insurance, actuarial science, management, and marketing remain shallow or absent.",
-      "nextQuestion": "Which assurance, materiality, reserve, incentive, and governance mechanisms expose failure that an optimization-only view misses?"
+      "scopeGap": "Markets, operations, accounting identities, audit and assurance boundaries, actuarial reserves, insurance selection and incentives, correlated tails, and solvency governance are represented; finance, management, marketing, taxation, organization design, and empirical institutional breadth remain shallow.",
+      "nextQuestion": "Which findings survive endogenous reporting, delayed obligations, correlated shocks, model misspecification, conflicting roles, and independently challengeable evidence?"
     },
     {
       "code": "5.3",
@@ -427,9 +433,12 @@
       "code": "6.3",
       "name": "Philosophy, ethics and religion",
       "state": "dedicated",
-      "audits": ["research/audits/2026-08-21-philosophy-of-science-theory-choice.md"],
-      "scopeGap": "Philosophy of science and theory choice now have a field-centered audit; ethics, philosophy of mind and technology, theology, and religious studies remain unaudited.",
-      "nextQuestion": "Which accounts of agency, moral status, value conflict, testimony, interpretation, and religious practice change system authority or evaluation contracts?"
+      "audits": [
+        "research/audits/2026-08-21-philosophy-of-science-theory-choice.md",
+        "research/audits/2026-08-21-theology-religious-practice-ritual.md"
+      ],
+      "scopeGap": "Philosophy of science, theory choice, theology, religious practice, and ritual now have field-centered audits; ethics, philosophy of mind and technology, comparative theology, and most religious traditions remain unsampled.",
+      "nextQuestion": "Which accounts of agency, moral status, value conflict, testimony, interpretation, conscience, and authority change system governance or evaluation contracts?"
     },
     {
       "code": "6.4",
@@ -463,13 +472,13 @@
     { "code": "1.13", "name": "Kunst-, Musik-, Theater- und Medienwissenschaften", "state": "dedicated", "gap": "Theatre and media studies are not directly audited." },
     { "code": "1.14", "name": "Sprachwissenschaften", "state": "dedicated", "gap": "Historical and typological breadth remains partial." },
     { "code": "1.15", "name": "Literaturwissenschaft", "state": "dedicated", "gap": "Textual criticism, scholarly editing, variant traditions, and translation qualification are audited; literary theory and most genres and traditions remain unsampled." },
-    { "code": "1.16", "name": "Sozial- und Kulturanthropologie, außereuropäische Kulturen, Judaistik und Religionswissenschaft", "state": "adjacent", "gap": "No ethnographic or religious-studies audit." },
-    { "code": "1.17", "name": "Theologie", "state": "unreviewed", "gap": "No audit." },
+    { "code": "1.16", "name": "Sozial- und Kulturanthropologie, außereuropäische Kulturen, Judaistik und Religionswissenschaft", "state": "adjacent", "gap": "Religious practice and ritual have a field-centered audit, but ethnography, anthropology, Judaic studies, non-European cultures, and comparative religious studies remain unsampled." },
+    { "code": "1.17", "name": "Theologie", "state": "dedicated", "gap": "Practice, ritual, interpretation, canon, authority, conscience, and evidence boundaries are audited; doctrinal, historical, pastoral, comparative, and tradition-specific theology remain unsampled." },
     { "code": "1.18", "name": "Philosophie", "state": "dedicated", "gap": "Philosophy of science and theory choice are audited; most other philosophical subfields remain unsampled." },
     { "code": "1.21", "name": "Erziehungswissenschaft und Bildungsforschung", "state": "dedicated", "gap": "Institutions and professional practice remain partial." },
     { "code": "1.22", "name": "Psychologie", "state": "dedicated", "gap": "Clinical, organizational, and personality work remain uneven." },
     { "code": "1.23", "name": "Sozialwissenschaften", "state": "adjacent", "gap": "Sociology, communication, and political science lack direct audits." },
-    { "code": "1.24", "name": "Wirtschaftswissenschaften", "state": "dedicated", "gap": "Accounting, finance, management, and marketing are gaps." },
+    { "code": "1.24", "name": "Wirtschaftswissenschaften", "state": "dedicated", "gap": "Market design, operations, accounting, audit, actuarial reserves, and insurance boundaries are audited; finance, management, marketing, taxation, organization studies, and much empirical institutional work remain unsampled." },
     { "code": "1.25", "name": "Rechtswissenschaften", "state": "dedicated", "gap": "Evidence and procedure dominate; substantive fields remain partial." },
     { "code": "2.11", "name": "Grundlagen der Biologie und Medizin", "state": "dedicated", "gap": "Genomics and structural biology remain uneven." },
     { "code": "2.12", "name": "Pflanzenwissenschaften", "state": "dedicated", "gap": "Field and crop contexts remain partial." },
@@ -477,29 +486,29 @@
     { "code": "2.21", "name": "Mikrobiologie, Virologie und Immunologie", "state": "dedicated", "gap": "Virology and parasitology are major gaps." },
     { "code": "2.22", "name": "Medizin", "state": "adjacent", "gap": "Only a small fraction of 33 listed medical subjects is directly sampled." },
     { "code": "2.23", "name": "Neurowissenschaften", "state": "dedicated", "gap": "Strongest life-science concentration; still not exhaustive." },
-    { "code": "2.31", "name": "Agrar-, Forstwissenschaften und Tiermedizin", "state": "adjacent", "gap": "Soil and crop co-limitation are audited, but forestry, animal science, and veterinary medicine remain absent." },
+    { "code": "2.31", "name": "Agrar-, Forstwissenschaften und Tiermedizin", "state": "dedicated", "gap": "Soil/crop co-limitation, animal production, welfare, breeding, rumen ecology, veterinary population health, forestry, fisheries, aquaculture, and aquatic food systems are audited; many species, production systems, food science, farm economics, and clinical veterinary breadth remain unsampled." },
     { "code": "3.11", "name": "Molekülchemie", "state": "unreviewed", "gap": "No synthesis-centered audit." },
     { "code": "3.12", "name": "Chemische Festkörper- und Oberflächenforschung", "state": "adjacent", "gap": "No surface-chemistry audit." },
     { "code": "3.13", "name": "Physikalische Chemie", "state": "adjacent", "gap": "Only neighboring reaction and thermodynamic material is present." },
-    { "code": "3.14", "name": "Analytische Chemie", "state": "unreviewed", "gap": "Metrology and chemical sensing are neighboring methods, not an analytical-chemistry audit." },
-    { "code": "3.15", "name": "Biologische Chemie und Lebensmittelchemie", "state": "unreviewed", "gap": "No field-centered audit; food chemistry is absent." },
+    { "code": "3.14", "name": "Analytische Chemie", "state": "adjacent", "gap": "Sensor calibration, optical-density distortion, sampling, and mass closure provide adjacent constraints; chemical metrology, calibration hierarchy, detection/quantification limits, matrix effects, speciation, and interlaboratory comparison lack a field-centered audit." },
+    { "code": "3.15", "name": "Biologische Chemie und Lebensmittelchemie", "state": "adjacent", "gap": "Metabolic pathways and edible nutrient/feed-flow accounting provide adjacent evidence; molecular biochemistry, food chemistry, processing, preservation, toxicology, and analytical methods lack a field-centered audit." },
     { "code": "3.16", "name": "Polymerforschung", "state": "unreviewed", "gap": "Adaptive materials touch polymers, but no polymer-research audit exists." },
-    { "code": "3.17", "name": "Theoretische Chemie", "state": "unreviewed", "gap": "No dedicated audit." },
+    { "code": "3.17", "name": "Theoretische Chemie", "state": "adjacent", "gap": "Stoichiometric networks, microkinetics, scaling relations, and transport models provide adjacent formalisms; electronic structure, quantum chemistry, molecular dynamics, statistical mechanics, and method validation lack a field-centered audit." },
     { "code": "3.21", "name": "Physik der kondensierten Materie", "state": "adjacent", "gap": "Soft matter and devices cover only a subset." },
     { "code": "3.22", "name": "Statistische Physik, nichtlineare Dynamik, komplexe Systeme, weiche und fluide Materie, biologische Physik", "state": "dedicated", "gap": "Several components are represented; nonlinear dynamics remains broad." },
     { "code": "3.23", "name": "Optik, Quantenoptik und Physik der Atome, Moleküle und Plasmen", "state": "dedicated", "gap": "Optics dominates; atomic and plasma physics remain shallow." },
-    { "code": "3.24", "name": "Teilchen, Kerne und Felder", "state": "unreviewed", "gap": "No audit." },
+    { "code": "3.24", "name": "Teilchen, Kerne und Felder", "state": "dedicated", "gap": "Triggering, detector response, calibration, unfolding, nuisance uncertainty, rare-event search, blinding, simulation, preservation, evaluated nuclear data, symmetry, and effective-model breakdown are audited; accelerator, detector technology, nuclear structure/reactions, neutrino, astroparticle, phenomenology, and theory breadth remain unsampled." },
     { "code": "3.25", "name": "Astrophysik und Astronomie", "state": "dedicated", "gap": "Remote inference is represented; field breadth remains partial." },
     { "code": "3.31", "name": "Mathematik", "state": "dedicated", "gap": "Practice and proof are represented; subfield breadth is not." },
-    { "code": "3.41", "name": "Atmosphären-, Meeres- und Klimaforschung", "state": "adjacent", "gap": "Earth-system work is present; ocean and atmospheric process detail remain shallow." },
+    { "code": "3.41", "name": "Atmosphären-, Meeres- und Klimaforschung", "state": "adjacent", "gap": "Earth-system work plus marine resource and farm-wild coupling are present; ocean physics, biogeochemistry, atmospheric process detail, and climate dynamics remain shallow." },
     { "code": "3.42", "name": "Geologie und Paläontologie", "state": "dedicated", "gap": "Both have initial audits." },
     { "code": "3.43", "name": "Geophysik und Geodäsie", "state": "adjacent", "gap": "No field-centered audit." },
     { "code": "3.44", "name": "Mineralogie, Petrologie und Geochemie", "state": "unreviewed", "gap": "Geology is neighboring evidence; no field-centered audit." },
     { "code": "3.45", "name": "Geographie", "state": "adjacent", "gap": "Physical and human geography are not audited directly." },
-    { "code": "3.46", "name": "Wasserforschung", "state": "unreviewed", "gap": "Hydrology, limnology, and water management lack a dedicated audit." },
+    { "code": "3.46", "name": "Wasserforschung", "state": "adjacent", "gap": "Receiving-water capacity and aquatic flows provide adjacent evidence; hydrology, limnology, hydraulics, water treatment, groundwater, and water governance lack a field-centered audit." },
     { "code": "4.11", "name": "Produktionstechnik", "state": "adjacent", "gap": "Manufacturing and factory systems lack a field-centered audit." },
     { "code": "4.12", "name": "Mechanik und konstruktiver Maschinenbau", "state": "dedicated", "gap": "Design and product development remain shallow." },
-    { "code": "4.21", "name": "Verfahrenstechnik und Technische Chemie", "state": "dedicated", "gap": "Bioprocess engineering remains a gap." },
+    { "code": "4.21", "name": "Verfahrenstechnik und Technische Chemie", "state": "dedicated", "gap": "Process engineering now includes a direct bioprocess/biotechnology audit; product-specific manufacturing, validation, downstream breadth, contamination control, and industrial authorization remain partial." },
     { "code": "4.22", "name": "Strömungsmechanik, Technische Thermodynamik und Thermische Energietechnik", "state": "dedicated", "gap": "Energy machinery and applied thermal systems remain partial." },
     { "code": "4.31", "name": "Werkstofftechnik", "state": "adjacent", "gap": "Adaptive materials are present; manufacturing-qualified materials breadth remains partial." },
     { "code": "4.32", "name": "Materialwissenschaft", "state": "dedicated", "gap": "Biomaterials and multiscale design remain partial." },

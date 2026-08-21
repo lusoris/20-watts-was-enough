@@ -304,3 +304,46 @@ rules. Report protected-outcome correction, time under wrong effect, review and
 remedy latency, recurrence, human effort, bytes, and joules. Reject if ordinary
 versioned issue tracking plus independent review/recompute matches the frontier
 or if the learning loop trains directly on reversal as ground truth.
+
+## Care-continuity and unfinished-work track
+
+The
+[nursing, care, and health-services audit](../../research/audits/2026-08-21-nursing-care-health-services.md)
+adds a falsification track in which locally correct completed work can coexist
+with necessary work left undone across shifts, agents, or service boundaries.
+This is a workload and transition test, not a clinical deployment.
+Evidence: [C-1241](../../research/claims.md#c-1241)–[C-1248](../../research/claims.md#c-1248).
+
+Each obligation must carry a version, applicability rule, owner, proposed
+receiver, prerequisites, service deadline, acceptance state, unresolved
+questions, and completion or exception evidence. Sender dispatch does not imply
+receiver acceptance; acknowledgement does not imply effective action; ticket
+closure does not imply delivered service. Informational continuity, plan
+continuity, persistent-actor continuity, and verified service are scored as
+different axes.
+
+Run the five frozen synthetic tracks specified in the audit:
+
+1. bilateral handover with omission, stale state, ambiguous ownership, receiver
+   synthesis, read-back, and version mismatch;
+2. unfinished necessary work under feasible and deliberately infeasible load;
+3. same-agent versus rotating-agent continuity with full records, summaries,
+   stable plans, and no-record controls;
+4. noisy deterioration detection joined to finite response queues and verified
+   effect; and
+5. changing preference, access, refusal, correction, and remedy through a
+   transition.
+
+The strongest null is an event-sourced typed workflow with ordinary scheduling,
+acknowledgement, schema validation, calibrated sequential detection, case
+management, and Candidate 014 support records. Equalize source observations,
+packet bytes, calls, question count, response authority, reserve, person-minutes,
+elapsed time, and joules. Report item-level omission, harm-weighted tardiness,
+unaccepted responsibility, downstream consequence, false escalation, queue
+displacement, preference/authority violations, human burden, bytes, and energy.
+
+Reject this refinement if the ordinary workflow stack matches the complete
+frontier; if benefit comes from hidden staff, labels, records, authority, or
+future information; if persistent-agent gain disappears with complete records
+and a stable plan; or if improved alarm discrimination fails to improve time to
+verified effect under finite response capacity.

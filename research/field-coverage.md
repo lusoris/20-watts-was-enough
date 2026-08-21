@@ -10,11 +10,11 @@ Editable data: [`field-coverage.json`](field-coverage.json). The plot and this p
 
 ## Result
 
-The OECD baseline contains **42 second-level fields**. The repository has a dedicated audit for **23 (54.8%)**, adjacent evidence without a field-centered audit for **12 (28.6%)**, and no durable review for **7 (16.7%)**.
+The OECD baseline contains **42 second-level fields**. The repository has a dedicated audit for **28 (66.7%)**, adjacent evidence without a field-centered audit for **13 (31.0%)**, and no durable review for **1 (2.4%)**.
 
-The finer DFG probe contains **49 review boards and 214 subjects**. At review-board resolution, the repository has 26 dedicated, 14 adjacent, and 9 unreviewed areas. That higher apparent coverage is not greater depth: one audit can touch a large review board while leaving most of its constituent subjects untouched.
+The finer DFG probe contains **49 review boards and 214 subjects**. At review-board resolution, the repository has 29 dedicated, 17 adjacent, and 3 unreviewed areas. That higher apparent coverage is not greater depth: one audit can touch a large review board while leaving most of its constituent subjects untouched.
 
-Agricultural and veterinary science remains the weakest broad area even after the first soil-and-crop entry audit: animal and dairy science, veterinary science, agricultural biotechnology, forestry, fisheries, and most production systems remain unreviewed. Hidden gaps also remain inside apparently represented fields: sociology and media studies; accounting, audit, finance, and insurance; nursing and care science; medical, environmental, and industrial biotechnology; nanotechnology; production engineering; ocean and water research; theology and religious studies; and major parts of chemistry, clinical medicine, and physics.
+At entry-audit resolution, the only OECD cell still wholly unreviewed is the residual Other humanities category. That is not near-complete science coverage: a dedicated label means one field-centered audit exists, while large depth gaps remain in sociology and media studies, clinical medicine and medical biotechnology, agricultural biotechnology, analytical and food chemistry, molecular and polymer research, mineralogy/geochemistry, water and ocean research, nanotechnology, production engineering, finance and management, comparative theology, and many named subfields inside every broad cell.
 
 ## What the states mean
 
@@ -47,9 +47,9 @@ A dedicated audit is an entry ticket, not completion. Audit depth, evidence qual
   - Missing depth: Several systems fields are covered; networking, compilers, visualization, and software engineering remain uneven.
   - Next discriminating question: Which mature information-system mechanisms are still missing as null models for the proposed architecture?
 - **1.3 Physical sciences — dedicated audit.**
-  - Current route: [information thermodynamics physical computation](audits/2026-08-05-information-thermodynamics-physical-computation.md), [optics photonics inverse sensing](audits/2026-08-05-optics-photonics-inverse-sensing.md), [soft active matter](audits/2026-08-05-soft-active-matter.md).
-  - Missing depth: Statistical physics, optics, acoustics, and soft matter are represented; quantum, nuclear, particle, and much condensed-matter physics are not.
-  - Next discriminating question: Which physical systems perform useful inference, error correction, or adaptive allocation before digital abstraction?
+  - Current route: [information thermodynamics physical computation](audits/2026-08-05-information-thermodynamics-physical-computation.md), [optics photonics inverse sensing](audits/2026-08-05-optics-photonics-inverse-sensing.md), [soft active matter](audits/2026-08-05-soft-active-matter.md), [particle nuclear high energy experimentation](audits/2026-08-21-particle-nuclear-high-energy-experimentation.md).
+  - Missing depth: Statistical physics, optics, acoustics, soft matter, and particle/nuclear experimental methodology are represented; quantum information, much condensed-matter, atomic/molecular, plasma, accelerator, and nuclear-structure breadth remain partial or absent.
+  - Next discriminating question: Which results survive explicit selection, detector response, nuisance, search-family, simulation, preservation, symmetry, and regime-breakdown tests?
 - **1.4 Chemical sciences — dedicated audit.**
   - Current route: [chemistry reaction networks proofreading](audits/2026-08-05-chemistry-reaction-networks-proofreading.md).
   - Missing depth: Reaction networks and proofreading are represented; synthesis, analytical chemistry, electrochemistry, catalysis, and surface chemistry remain shallow.
@@ -69,7 +69,7 @@ A dedicated audit is an entry ticket, not completion. Audit depth, evidence qual
 
 ### 2. Engineering and technology
 
-**6 dedicated · 3 adjacent · 2 unreviewed**
+**8 dedicated · 3 adjacent · 0 unreviewed**
 
 - **2.1 Civil engineering — dedicated audit.**
   - Current route: [mechanical civil resilience](audits/2026-08-05-mechanical-civil-resilience.md), [built environment urban systems](audits/2026-08-05-built-environment-urban-systems.md).
@@ -99,12 +99,14 @@ A dedicated audit is an entry ticket, not completion. Audit depth, evidence qual
   - Current route: [earth system transition signals](audits/2026-08-05-earth-system-transition-signals.md), [process engineering](audits/2026-08-05-process-engineering.md).
   - Missing depth: Environmental phenomena and industrial processes are separate audits; remediation, water treatment, waste systems, and environmental monitoring are not.
   - Next discriminating question: Which distributed treatment and monitoring strategies allocate intervention under uncertain transport and delayed feedback?
-- **2.8 Environmental biotechnology — unreviewed.**
-  - Missing depth: Microbial ecology is present, but it is not evidence from engineered bioremediation or environmental biotechnology; no field audit exists.
-  - Next discriminating question: How do engineered consortia maintain function, containment, succession, and recovery under open environmental exchange?
-- **2.9 Industrial biotechnology — unreviewed.**
-  - Missing depth: Chemical process work does not substitute for strain design, fermentation, bioprocess control, and evolutionary stability; no field audit exists.
-  - Next discriminating question: Which production-control schemes preserve yield while organisms evolve, drift, contaminate, and compete?
+- **2.8 Environmental biotechnology — dedicated audit.**
+  - Current route: [biotechnology chemistry process systems](audits/2026-08-21-biotechnology-chemistry-process-systems.md).
+  - Missing depth: Engineered groundwater remediation, intervention, transport, product/mass endpoints, rebound, and open-system evolutionary failure are audited; wastewater, gaseous emissions, mining, marine systems, containment, and environmental-release breadth remain unsampled.
+  - Next discriminating question: Which intervention effects survive alternative transport paths, daughter products, oxygen ingress, invasion, succession, off-site export, monitoring designs, and post-treatment rebound?
+- **2.9 Industrial biotechnology — dedicated audit.**
+  - Current route: [biotechnology chemistry process systems](audits/2026-08-21-biotechnology-chemistry-process-systems.md).
+  - Missing depth: Strain burden/escape, fermentation, continuous culture, cybergenetic control, scale-up, separation, and lifecycle boundaries are audited; cell therapy, food fermentation, enzyme manufacture, product validation, contamination control, and manufacturing authorization remain unsampled.
+  - Next discriminating question: Which production-control results survive lineage drift, escape mutation, scale gradients, sensor distortion, transport limits, fouling, off-spec propagation, cleaning, and full seed-to-retirement cost?
 - **2.10 Nano-technology — adjacent evidence only.**
   - Current route: [adaptive materials and self assembly](audits/2026-08-05-adaptive-materials-and-self-assembly.md), [soft active matter](audits/2026-08-05-soft-active-matter.md).
   - Missing depth: Nanoscale oscillators, DNA origami, and nanoparticle assembly occur in neighboring audits, but no dedicated nanotechnology audit exists.
@@ -127,9 +129,9 @@ A dedicated audit is an entry ticket, not completion. Audit depth, evidence qual
   - Missing depth: Pathology, rehabilitation, and pharmacology provide clinical fragments; most specialties, diagnosis, surgery, multimorbidity, and longitudinal care are not audited at field level.
   - Next discriminating question: Which staged diagnosis, treatment, monitoring, and escalation contracts work under incomplete observation and interacting failures?
 - **3.3 Health sciences — dedicated audit.**
-  - Current route: [epidemiology and surveillance control](audits/2026-08-05-epidemiology-and-surveillance-control.md).
-  - Missing depth: Surveillance is represented; nursing, care science, health services, occupational health, nutrition, and implementation science remain mostly absent.
-  - Next discriminating question: How do distributed caregivers preserve situation awareness, continuity, escalation, and workload under shift and resource constraints?
+  - Current route: [epidemiology and surveillance control](audits/2026-08-05-epidemiology-and-surveillance-control.md), [nursing care health services](audits/2026-08-21-nursing-care-health-services.md).
+  - Missing depth: Surveillance plus a first nursing, care-continuity, and health-services audit are represented; occupational health, nutrition, implementation science, long-term care, community care, and most clinical service designs remain unsampled.
+  - Next discriminating question: Which mechanisms preserve necessary service and legitimate person-level authority across community, long-term, acute, and digital care without hiding unfinished work or unpaid human burden?
 - **3.4 Medical biotechnology — adjacent evidence only.**
   - Current route: [cellular quality control](audits/2026-08-05-cellular-quality-control.md).
   - Missing depth: Cellular mechanisms are audited as biology, not engineered diagnostics, therapeutics, tissue systems, or manufacturing.
@@ -141,24 +143,28 @@ A dedicated audit is an entry ticket, not completion. Audit depth, evidence qual
 
 ### 4. Agricultural and veterinary sciences
 
-**1 dedicated · 0 adjacent · 4 unreviewed**
+**4 dedicated · 1 adjacent · 0 unreviewed**
 
 - **4.1 Agriculture, forestry, and fisheries — dedicated audit.**
-  - Current route: [plant distributed control](audits/2026-08-05-plant-distributed-control.md), [soil crop multiresource colimitation](audits/2026-08-21-soil-crop-multiresource-colimitation.md).
-  - Missing depth: Soil, crop, and multi-resource co-limitation now have a field-centered audit; forestry, fisheries, pest management, livestock integration, and most farm decision systems remain unaudited.
-  - Next discriminating question: How do managed ecosystems allocate sensing and intervention across seasons, spatial heterogeneity, pests, weather, and irreversible harvest decisions?
-- **4.2 Animal and dairy science — unreviewed.**
-  - Missing depth: No animal-production or husbandry audit exists.
-  - Next discriminating question: Which herd-level sensing, welfare, nutrition, breeding, and outbreak-control mechanisms generalize to populations of heterogeneous agents?
-- **4.3 Veterinary science — unreviewed.**
-  - Missing depth: No veterinary audit exists.
-  - Next discriminating question: How does comparative medicine reason across species, sparse evidence, population health, and welfare constraints without assuming human physiology?
-- **4.4 Agricultural biotechnology — unreviewed.**
-  - Missing depth: Plant and microbial biology are present, but agricultural biotechnology is not audited as an intervention field.
-  - Next discriminating question: Which breeding, gene-editing, microbiome, and biological-control strategies manage delayed effects, resistance, and ecosystem spillover?
-- **4.5 Other agricultural sciences — unreviewed.**
-  - Missing depth: The residual agricultural category has not been searched.
-  - Next discriminating question: Which food-system, rural-systems, or land-management fields contribute distinct resource and resilience mechanisms?
+  - Current route: [plant distributed control](audits/2026-08-05-plant-distributed-control.md), [soil crop multiresource colimitation](audits/2026-08-21-soil-crop-multiresource-colimitation.md), [forestry fisheries aquatic food systems](audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md).
+  - Missing depth: Soil/crop co-limitation, forestry, capture fisheries, aquaculture, and aquatic resource management have direct audits; silvicultural breadth, inland fisheries, pest management, livestock integration, farm economics, and many production systems remain unsampled.
+  - Next discriminating question: Which policies remain effective across alternative population, spatial, climate, observation, implementation, rights, and market models without exporting harm or changing the denominator?
+- **4.2 Animal and dairy science — dedicated audit.**
+  - Current route: [animal veterinary population health](audits/2026-08-21-animal-veterinary-population-health.md).
+  - Missing depth: Resource partitioning, cattle feed restriction, welfare measurement, breeding diversity, rumen consortia, and population-event accounting are audited; species breadth, husbandry systems, reproduction, farm economics, and fisheries remain unsampled.
+  - Next discriminating question: Which findings survive across species, production systems, lifetimes, protected welfare components, reproductive constraints, and start-cohort denominators?
+- **4.3 Veterinary science — dedicated audit.**
+  - Current route: [animal veterinary population health](audits/2026-08-21-animal-veterinary-population-health.md).
+  - Missing depth: Risk-based and One-Health surveillance, infection interference, evolving opponents, welfare, and dynamical identifiability are audited; comparative clinical care, surgery, companion and wildlife medicine, pharmacovigilance, and antimicrobial stewardship remain unsampled.
+  - Next discriminating question: How do diagnosis, treatment, movement, surveillance, welfare, transmission, and resistance interact across species and changing target populations?
+- **4.4 Agricultural biotechnology — adjacent evidence only.**
+  - Current route: [animal veterinary population health](audits/2026-08-21-animal-veterinary-population-health.md).
+  - Missing depth: Genomic selection, microbial intervention, vaccination, and evolutionary response provide adjacent evidence; gene editing, reproductive biotechnology, diagnostics, biological control, product platforms, and authorization remain unaudited.
+  - Next discriminating question: Which intervention effects remain after lineage concentration, off-target change, evolutionary response, containment, field transfer, and authorization are tested prospectively?
+- **4.5 Other agricultural sciences — dedicated audit.**
+  - Current route: [forestry fisheries aquatic food systems](audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md).
+  - Missing depth: Aquatic food systems and cross-resource governance provide a direct residual-field audit; rural studies, extension science, food logistics, agricultural education, and other residual specialties remain open.
+  - Next discriminating question: Which residual agricultural disciplines change observation, authority, adoption, service, distribution, and long-horizon resilience beyond production output?
 
 ### 5. Social sciences
 
@@ -169,9 +175,9 @@ A dedicated audit is an entry ticket, not completion. Audit depth, evidence qual
   - Missing depth: Cognition, learning, and generation are represented; social, organizational, clinical, developmental, and differential psychology remain uneven.
   - Next discriminating question: Which cognitive effects survive representative tasks, prospective testing, and selection-bias controls?
 - **5.2 Economics and business — dedicated audit.**
-  - Current route: [economics market design incentives](audits/2026-08-05-economics-market-design-incentives.md), [supply chain operations research](audits/2026-08-05-supply-chain-operations-research.md).
-  - Missing depth: Markets and operations are represented; accounting, audit, finance, insurance, actuarial science, management, and marketing remain shallow or absent.
-  - Next discriminating question: Which assurance, materiality, reserve, incentive, and governance mechanisms expose failure that an optimization-only view misses?
+  - Current route: [economics market design incentives](audits/2026-08-05-economics-market-design-incentives.md), [supply chain operations research](audits/2026-08-05-supply-chain-operations-research.md), [accounting audit actuarial insurance](audits/2026-08-21-accounting-audit-actuarial-insurance.md).
+  - Missing depth: Markets, operations, accounting identities, audit and assurance boundaries, actuarial reserves, insurance selection and incentives, correlated tails, and solvency governance are represented; finance, management, marketing, taxation, organization design, and empirical institutional breadth remain shallow.
+  - Next discriminating question: Which findings survive endogenous reporting, delayed obligations, correlated shocks, model misspecification, conflicting roles, and independently challengeable evidence?
 - **5.3 Education — dedicated audit.**
   - Current route: [learning science skill acquisition](audits/2026-08-05-learning-science-skill-acquisition.md).
   - Missing depth: Learning and skill acquisition are represented; institutions, curriculum, inclusion, teacher coordination, and assessment systems remain partial.
@@ -214,9 +220,9 @@ A dedicated audit is an entry ticket, not completion. Audit depth, evidence qual
   - Missing depth: Linguistics, textual criticism, variant traditions, scholarly editing, and translation qualification are represented; narrative theory, poetics, comparative literature, reception, performance, and most language traditions remain unsampled.
   - Next discriminating question: Which narrative and interpretive structures change counterfactual evaluation, perspective, compression, long-range coherence, or disagreement handling beyond the new witness-variant contract?
 - **6.3 Philosophy, ethics and religion — dedicated audit.**
-  - Current route: [philosophy of science theory choice](audits/2026-08-21-philosophy-of-science-theory-choice.md).
-  - Missing depth: Philosophy of science and theory choice now have a field-centered audit; ethics, philosophy of mind and technology, theology, and religious studies remain unaudited.
-  - Next discriminating question: Which accounts of agency, moral status, value conflict, testimony, interpretation, and religious practice change system authority or evaluation contracts?
+  - Current route: [philosophy of science theory choice](audits/2026-08-21-philosophy-of-science-theory-choice.md), [theology religious practice ritual](audits/2026-08-21-theology-religious-practice-ritual.md).
+  - Missing depth: Philosophy of science, theory choice, theology, religious practice, and ritual now have field-centered audits; ethics, philosophy of mind and technology, comparative theology, and most religious traditions remain unsampled.
+  - Next discriminating question: Which accounts of agency, moral status, value conflict, testimony, interpretation, conscience, and authority change system governance or evaluation contracts?
 - **6.4 Arts (arts, history of arts, performing arts, music) — dedicated audit.**
   - Current route: [visual art design cognition](audits/2026-08-05-visual-art-design-cognition.md), [music cognition improvisation](audits/2026-08-05-music-cognition-improvisation.md).
   - Missing depth: Visual art and music are represented; theatre, dance, film, architecture as art, conservation, and art history remain uneven.
@@ -231,25 +237,25 @@ The DFG layer catches gaps hidden by the broader OECD cells. It is shown at revi
 
 ### 1. Geistes- und Sozialwissenschaften
 
-**9 dedicated · 3 adjacent · 1 unreviewed**
+**10 dedicated · 3 adjacent · 0 unreviewed**
 
 - **1.11 Alte Kulturen — adjacent evidence only.** Archaeological inference is present, but ancient-culture detail remains sparse.
 - **1.12 Geschichtswissenschaften — dedicated audit.** Historical method breadth remains partial.
 - **1.13 Kunst-, Musik-, Theater- und Medienwissenschaften — dedicated audit.** Theatre and media studies are not directly audited.
 - **1.14 Sprachwissenschaften — dedicated audit.** Historical and typological breadth remains partial.
 - **1.15 Literaturwissenschaft — dedicated audit.** Textual criticism, scholarly editing, variant traditions, and translation qualification are audited; literary theory and most genres and traditions remain unsampled.
-- **1.16 Sozial- und Kulturanthropologie, außereuropäische Kulturen, Judaistik und Religionswissenschaft — adjacent evidence only.** No ethnographic or religious-studies audit.
-- **1.17 Theologie — unreviewed.** No audit.
+- **1.16 Sozial- und Kulturanthropologie, außereuropäische Kulturen, Judaistik und Religionswissenschaft — adjacent evidence only.** Religious practice and ritual have a field-centered audit, but ethnography, anthropology, Judaic studies, non-European cultures, and comparative religious studies remain unsampled.
+- **1.17 Theologie — dedicated audit.** Practice, ritual, interpretation, canon, authority, conscience, and evidence boundaries are audited; doctrinal, historical, pastoral, comparative, and tradition-specific theology remain unsampled.
 - **1.18 Philosophie — dedicated audit.** Philosophy of science and theory choice are audited; most other philosophical subfields remain unsampled.
 - **1.21 Erziehungswissenschaft und Bildungsforschung — dedicated audit.** Institutions and professional practice remain partial.
 - **1.22 Psychologie — dedicated audit.** Clinical, organizational, and personality work remain uneven.
 - **1.23 Sozialwissenschaften — adjacent evidence only.** Sociology, communication, and political science lack direct audits.
-- **1.24 Wirtschaftswissenschaften — dedicated audit.** Accounting, finance, management, and marketing are gaps.
+- **1.24 Wirtschaftswissenschaften — dedicated audit.** Market design, operations, accounting, audit, actuarial reserves, and insurance boundaries are audited; finance, management, marketing, taxation, organization studies, and much empirical institutional work remain unsampled.
 - **1.25 Rechtswissenschaften — dedicated audit.** Evidence and procedure dominate; substantive fields remain partial.
 
 ### 2. Lebenswissenschaften
 
-**4 dedicated · 3 adjacent · 0 unreviewed**
+**5 dedicated · 2 adjacent · 0 unreviewed**
 
 - **2.11 Grundlagen der Biologie und Medizin — dedicated audit.** Genomics and structural biology remain uneven.
 - **2.12 Pflanzenwissenschaften — dedicated audit.** Field and crop contexts remain partial.
@@ -257,31 +263,31 @@ The DFG layer catches gaps hidden by the broader OECD cells. It is shown at revi
 - **2.21 Mikrobiologie, Virologie und Immunologie — dedicated audit.** Virology and parasitology are major gaps.
 - **2.22 Medizin — adjacent evidence only.** Only a small fraction of 33 listed medical subjects is directly sampled.
 - **2.23 Neurowissenschaften — dedicated audit.** Strongest life-science concentration; still not exhaustive.
-- **2.31 Agrar-, Forstwissenschaften und Tiermedizin — adjacent evidence only.** Soil and crop co-limitation are audited, but forestry, animal science, and veterinary medicine remain absent.
+- **2.31 Agrar-, Forstwissenschaften und Tiermedizin — dedicated audit.** Soil/crop co-limitation, animal production, welfare, breeding, rumen ecology, veterinary population health, forestry, fisheries, aquaculture, and aquatic food systems are audited; many species, production systems, food science, farm economics, and clinical veterinary breadth remain unsampled.
 
 ### 3. Naturwissenschaften
 
-**5 dedicated · 6 adjacent · 8 unreviewed**
+**6 dedicated · 10 adjacent · 3 unreviewed**
 
 - **3.11 Molekülchemie — unreviewed.** No synthesis-centered audit.
 - **3.12 Chemische Festkörper- und Oberflächenforschung — adjacent evidence only.** No surface-chemistry audit.
 - **3.13 Physikalische Chemie — adjacent evidence only.** Only neighboring reaction and thermodynamic material is present.
-- **3.14 Analytische Chemie — unreviewed.** Metrology and chemical sensing are neighboring methods, not an analytical-chemistry audit.
-- **3.15 Biologische Chemie und Lebensmittelchemie — unreviewed.** No field-centered audit; food chemistry is absent.
+- **3.14 Analytische Chemie — adjacent evidence only.** Sensor calibration, optical-density distortion, sampling, and mass closure provide adjacent constraints; chemical metrology, calibration hierarchy, detection/quantification limits, matrix effects, speciation, and interlaboratory comparison lack a field-centered audit.
+- **3.15 Biologische Chemie und Lebensmittelchemie — adjacent evidence only.** Metabolic pathways and edible nutrient/feed-flow accounting provide adjacent evidence; molecular biochemistry, food chemistry, processing, preservation, toxicology, and analytical methods lack a field-centered audit.
 - **3.16 Polymerforschung — unreviewed.** Adaptive materials touch polymers, but no polymer-research audit exists.
-- **3.17 Theoretische Chemie — unreviewed.** No dedicated audit.
+- **3.17 Theoretische Chemie — adjacent evidence only.** Stoichiometric networks, microkinetics, scaling relations, and transport models provide adjacent formalisms; electronic structure, quantum chemistry, molecular dynamics, statistical mechanics, and method validation lack a field-centered audit.
 - **3.21 Physik der kondensierten Materie — adjacent evidence only.** Soft matter and devices cover only a subset.
 - **3.22 Statistische Physik, nichtlineare Dynamik, komplexe Systeme, weiche und fluide Materie, biologische Physik — dedicated audit.** Several components are represented; nonlinear dynamics remains broad.
 - **3.23 Optik, Quantenoptik und Physik der Atome, Moleküle und Plasmen — dedicated audit.** Optics dominates; atomic and plasma physics remain shallow.
-- **3.24 Teilchen, Kerne und Felder — unreviewed.** No audit.
+- **3.24 Teilchen, Kerne und Felder — dedicated audit.** Triggering, detector response, calibration, unfolding, nuisance uncertainty, rare-event search, blinding, simulation, preservation, evaluated nuclear data, symmetry, and effective-model breakdown are audited; accelerator, detector technology, nuclear structure/reactions, neutrino, astroparticle, phenomenology, and theory breadth remain unsampled.
 - **3.25 Astrophysik und Astronomie — dedicated audit.** Remote inference is represented; field breadth remains partial.
 - **3.31 Mathematik — dedicated audit.** Practice and proof are represented; subfield breadth is not.
-- **3.41 Atmosphären-, Meeres- und Klimaforschung — adjacent evidence only.** Earth-system work is present; ocean and atmospheric process detail remain shallow.
+- **3.41 Atmosphären-, Meeres- und Klimaforschung — adjacent evidence only.** Earth-system work plus marine resource and farm-wild coupling are present; ocean physics, biogeochemistry, atmospheric process detail, and climate dynamics remain shallow.
 - **3.42 Geologie und Paläontologie — dedicated audit.** Both have initial audits.
 - **3.43 Geophysik und Geodäsie — adjacent evidence only.** No field-centered audit.
 - **3.44 Mineralogie, Petrologie und Geochemie — unreviewed.** Geology is neighboring evidence; no field-centered audit.
 - **3.45 Geographie — adjacent evidence only.** Physical and human geography are not audited directly.
-- **3.46 Wasserforschung — unreviewed.** Hydrology, limnology, and water management lack a dedicated audit.
+- **3.46 Wasserforschung — adjacent evidence only.** Receiving-water capacity and aquatic flows provide adjacent evidence; hydrology, limnology, hydraulics, water treatment, groundwater, and water governance lack a field-centered audit.
 
 ### 4. Ingenieurwissenschaften
 
@@ -289,7 +295,7 @@ The DFG layer catches gaps hidden by the broader OECD cells. It is shown at revi
 
 - **4.11 Produktionstechnik — adjacent evidence only.** Manufacturing and factory systems lack a field-centered audit.
 - **4.12 Mechanik und konstruktiver Maschinenbau — dedicated audit.** Design and product development remain shallow.
-- **4.21 Verfahrenstechnik und Technische Chemie — dedicated audit.** Bioprocess engineering remains a gap.
+- **4.21 Verfahrenstechnik und Technische Chemie — dedicated audit.** Process engineering now includes a direct bioprocess/biotechnology audit; product-specific manufacturing, validation, downstream breadth, contamination control, and industrial authorization remain partial.
 - **4.22 Strömungsmechanik, Technische Thermodynamik und Thermische Energietechnik — dedicated audit.** Energy machinery and applied thermal systems remain partial.
 - **4.31 Werkstofftechnik — adjacent evidence only.** Adaptive materials are present; manufacturing-qualified materials breadth remains partial.
 - **4.32 Materialwissenschaft — dedicated audit.** Biomaterials and multiscale design remain partial.
@@ -319,20 +325,32 @@ Each breadth wave must contain four different selections:
 
 The first three selections collect leads. Only the fourth slot is allowed to consume substantial depth work before deduplication. This prevents familiar fields from monopolizing the research budget while still requiring useful residue to change a testable object.
 
-## Completed breadth wave
+## Completed breadth waves
+
+### Wave 1 — taxonomy and method boundaries
 
 1. **Soil, crop, and multi-resource co-limitation:** changed resource state from scalar availability to typed, transport- and service-window-qualified vectors; no new principle.
 2. **Philosophy of science and theory choice:** changed discovery admission from model fit to an alternative-, auxiliary-, observation-, access-, and failure-root-qualified contract; no new principle.
 3. **Indigenous data and knowledge governance:** added collective authority, purpose, benefit, refusal, and derivative-remedy obligations while prohibiting extraction of community knowledge; no new principle.
 4. **Textual criticism and variant traditions:** separated attestation, transcription, collation, lineage, conjecture, edition, translation, and interpretation and made apparatus compaction query-qualified; no new principle.
 
+### Wave 2 — deliberate disciplinary distance
+
+1. **Nursing, care science, and health services:** made unfinished necessary work, continuity type, receiver acceptance, response capacity, and verified service explicit; five synthetic protocols, no new principle.
+2. **Animal production and veterinary population health:** protected multidimensional welfare from productivity proxies and added cohort, lineage, interference, consortium-flux, breeding-diversity, and changing-opponent tests; no new principle.
+3. **Environmental and industrial biotechnology:** added dilution/selection, evolutionary escape, scale-gradient, transport, remediation-rebound, measurement, and lifecycle falsifiers while leaving chemistry boards conservatively open; no new principle.
+4. **Accounting, audit, actuarial science, and insurance:** separated balance from truth, materiality from detection, reserves from headroom, dependence from pooling, and governance from model validity; nine protocols, no new principle.
+5. **Theology, religious practice, and ritual:** separated instrumental effect, conventional form, protected commitment, authority, interpretation, and belief data; five synthetic protocols, no new principle.
+6. **Forestry, fisheries, aquaculture, and aquatic food systems:** added stock–flow–cohort–space–rights, carbon-pool, management-loop, externality, nutrient-recovery, and edible-endpoint tests; six protocols, no new principle.
+7. **Particle, nuclear, and high-energy experimentation:** added trigger support, detector response, unfolding, nuisance, blinding, search-family, simulation, preservation, covariance, and effective-model breakdown tests; eight protocols, no new principle.
+
 ## Next gap wave
 
-1. **Animal and dairy science, veterinary science, and agricultural biotechnology:** test welfare-qualified sensing, population intervention, resistance, breeding, production, and spillover without collapsing animal outcomes to yield.
-2. **Environmental and industrial biotechnology:** audit engineered consortia, strain stability, bioprocess control, containment, evolutionary failure, and full mass/energy balances separately from natural microbial ecology.
-3. **Accounting, audit, actuarial science, and insurance:** audit materiality, independent assurance, internal controls, reserves, correlated risk, going-concern logic, and evidence trails against the claim and maintenance planes.
-4. **Nursing, care science, and health services:** audit shift handoff, distributed observation, escalation, continuity, workload, triage, multimorbidity, and human-in-the-loop recovery.
-5. **Chemistry and physical-science gaps:** sample molecular synthesis, analytical and biological chemistry, polymers, theoretical chemistry, particle/nuclear physics, mineralogy/geochemistry, and water research rather than treating neighboring audits as coverage.
+1. **Residual humanities and direct social research:** sample the OECD Other humanities catch-all plus sociology, media studies, ethnography, translation practice, theatre/dance/film, heritage conservation, and comparative religious studies without treating neighboring audits as coverage.
+2. **The three wholly unreviewed DFG boards:** audit molecular synthesis, polymer research, and mineralogy/petrology/geochemistry as fields rather than importing catalysis, materials, or geology fragments.
+3. **Measurement-heavy adjacent fields:** audit analytical and food chemistry, water research, ocean/atmospheric science, geophysics/geodesy, and chemical speciation with explicit operator, calibration, transport, and interlaboratory boundaries.
+4. **Clinical and intervention depth:** sample clinical specialties, multimorbidity, diagnosis/treatment pathways, medical and agricultural biotechnology, antimicrobial stewardship, gene editing, biological control, and authorization separately from basic biology.
+5. **Engineering depth plus execution:** audit production engineering, nanotechnology, manufacturing and maintenance systems, then convert the most discriminating new protocols into versioned workstation artifacts instead of accumulating prose-only readiness.
 
 No item is promoted because it sounds novel. Every retained mechanism still passes the open-world extraction record, mature-null comparison, deduplication, and equal-budget rejection gate in the [discovery policy](discovery-policy.md).
 

@@ -310,3 +310,31 @@ temporal knowledge graphs, and manual applicability checks at equal review,
 latency, bytes, compute, and energy. Reject if a conventional authority graph
 matches applicable-rule selection and invalidation or if finality is mistaken
 for immutable truth.
+
+## Ritual and instrumental-practice track
+
+The [theology and religious-practice audit](../../research/audits/2026-08-21-theology-religious-practice-ritual.md)
+adds a synthetic test of a boundary this candidate could otherwise erase:
+instrumental procedures, conventional or ritualized sequences, interpretations,
+protected commitments, and authorization rules are different semantic types.
+Form fidelity, affiliation, synchrony, sacrifice, or survival through a
+transmission chain cannot inherit truth, competence, cooperation, or outcome
+evidence ([C-1249](../../research/claims.md#c-1249)–[C-1255](../../research/claims.md#c-1255)).
+
+Run the five `WS-REL` fixtures with synthetic practices only. Compare explicit
+instrumental schemas, opaque fixed sequences, delete-and-insert transmission,
+ordinary versioned workflow, typed practice records, and the candidate. Keep
+sequence fidelity, task success, source-reliability inference, affiliation,
+coordination, correlated failure, protected-value violations, abstention,
+interpretive-policy drift, rollback, human work, and joules as separate
+outcomes. Pre-register active-component nulls for order, repetition, synchrony,
+cost, framing, authority label, and shared history.
+
+Reject this track if the candidate:
+
+- copies causally irrelevant steps more reliably but labels that as task value;
+- treats an expensive display as evidence that its content is true;
+- converts a protected commitment or refusal right into a large scalar reward;
+- infers real religious belief, affiliation, or sacred knowledge; or
+- cannot distinguish canon version, interpretive policy, local practice,
+  authority, permitted variation, and downstream invalidation.
