@@ -22,7 +22,7 @@ test("independent verifier is deterministic and records a separate implementatio
   assert.deepEqual(first, second);
   assert.equal(first.lineage.implementation_id, INDEPENDENT_VERIFIER_IMPLEMENTATION_ID);
   assert.equal(first.lineage.shared_trace_implementation, false);
-  assert.equal(validateIndependentVerifierLineage(first.lineage), true);
+  assert.deepEqual(validateIndependentVerifierLineage(first.lineage, { opportunity, config }), first);
 });
 
 test("independent verifier source does not import or invoke the candidate trace helper", async () => {
@@ -34,11 +34,42 @@ test("independent verifier source does not import or invoke the candidate trace 
 test("shared or relabeled implementations are rejected", () => {
   const valid = executeIndependentVerifier({ opportunity, config }).lineage;
   assert.throws(
-    () => validateIndependentVerifierLineage({ ...valid, shared_trace_implementation: true }),
+    () => validateIndependentVerifierLineage(
+      { ...valid, shared_trace_implementation: true },
+      { opportunity, config },
+    ),
     /shares the candidate trace implementation/,
   );
   assert.throws(
-    () => validateIndependentVerifierLineage({ ...valid, implementation_id: "candidate-trace-job-v1" }),
+    () => validateIndependentVerifierLineage(
+      { ...valid, implementation_id: "candidate-trace-job-v1" },
+      { opportunity, config },
+    ),
     /shares the candidate trace implementation/,
+  );
+});
+
+test("hash-shaped substitutions cannot replace recomputation from the frozen input", () => {
+  const valid = executeIndependentVerifier({ opportunity, config }).lineage;
+  assert.throws(
+    () => validateIndependentVerifierLineage(
+      { ...valid, input_sha256: "f".repeat(64) },
+      { opportunity, config },
+    ),
+    /do not match the frozen input/,
+  );
+  assert.throws(
+    () => validateIndependentVerifierLineage(
+      { ...valid, output_sha256: "e".repeat(64) },
+      { opportunity, config },
+    ),
+    /do not match the frozen input/,
+  );
+  assert.throws(
+    () => validateIndependentVerifierLineage(valid, {
+      opportunity: { ...opportunity, trace_job: { ...opportunity.trace_job, nonce: "substituted" } },
+      config,
+    }),
+    /do not match the frozen input/,
   );
 });

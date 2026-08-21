@@ -14,7 +14,6 @@ import { createFrozenSeedReleaseContract } from "./release-contract.mjs";
 import { RunLockContentionError, acquireRunLock } from "./run-lock.mjs";
 import { seedListCommitment } from "./seeds/seed-pack.mjs";
 import {
-  CANDIDATE_010_SOURCE_FILES,
   captureCandidate010SourceBundle,
   computeSourceBundle,
 } from "./source-bundle.mjs";
@@ -149,7 +148,25 @@ async function rewriteLedger(outputDirectory, mutate) {
   run.scientific_payload_sha256 = digest.digest("hex");
   run.hash_chain_sha256 = previous;
   await writeFile(runPath, `${JSON.stringify(run, null, 2)}\n`, "utf8");
-  await rm(checkpointPath, { force: true });
+  const checkpoint = JSON.parse(await readFile(checkpointPath, "utf8"));
+  checkpoint.scientific_payload_sha256 = run.scientific_payload_sha256;
+  checkpoint.hash_chain_sha256 = run.hash_chain_sha256;
+  checkpoint.completed_work_units_sha256 = createHash("sha256")
+    .update(canonicalize(records.map((record) => {
+      const identities = deriveFactorialRecordIdentities(record);
+      return [
+        identities.cluster_id,
+        identities.pair_id,
+        identities.work_unit_id,
+        identities.paired_input_sha256,
+      ].join("\u0000");
+    }).sort()))
+    .digest("hex");
+  delete checkpoint.checkpoint_sha256;
+  checkpoint.checkpoint_sha256 = createHash("sha256")
+    .update(canonicalize(checkpoint))
+    .digest("hex");
+  await writeFile(checkpointPath, `${JSON.stringify(checkpoint, null, 2)}\n`, "utf8");
 }
 
 async function writeJson(file, value) {
@@ -166,7 +183,8 @@ async function confirmationReleaseFixture({
 }) {
   const root = await mkdtemp(path.join(os.tmpdir(), "20w-c010-run-release-"));
   const currentSource = await captureCandidate010SourceBundle(repositoryRoot);
-  for (const relative of CANDIDATE_010_SOURCE_FILES) {
+  const frozenSourceFiles = currentSource.files.map((entry) => entry.path);
+  for (const relative of frozenSourceFiles) {
     const destination = path.join(root, ...relative.split("/"));
     await mkdir(path.dirname(destination), { recursive: true });
     await writeFile(destination, await readFile(path.join(repositoryRoot, ...relative.split("/"))));
@@ -180,8 +198,8 @@ async function confirmationReleaseFixture({
   }
   const sourceBundle = mutateSource
     ? await computeSourceBundle({
-        root,
-        sourceFiles: CANDIDATE_010_SOURCE_FILES,
+      root,
+        sourceFiles: frozenSourceFiles,
         vcs: currentSource.vcs,
       })
     : currentSource;
@@ -323,7 +341,22 @@ test("the complete 48-scenario matrix executes through four real isolated backen
       && record.resources.policy_evaluations === 2
       && record.filesystem.staged_bytes_written
         === record.comparator_lineage.attempts.reduce((sum, attempt) => sum + attempt.staged_bytes_written, 0)
+      && record.comparator_lineage.attempts.every((attempt) => (
+        /^[0-9a-f]{64}$/.test(attempt.filesystem_snapshot?.snapshot_sha256 ?? "")
+      ))
     )));
+    const recordsByPair = Map.groupBy(records, (record) => record.pair_id);
+    assert.ok([...recordsByPair.values()].every((pair) => {
+      const singleLifecycleBytes = pair
+        .filter((record) => record.arm !== "retry-rollback")
+        .map((record) => record.filesystem.staged_bytes_written);
+      const retry = pair.find((record) => record.arm === "retry-rollback");
+      return new Set(singleLifecycleBytes).size === 1
+        && retry.comparator_lineage.attempts.every((attempt) => (
+          attempt.staged_bytes_written === singleLifecycleBytes[0]
+        ))
+        && retry.filesystem.staged_bytes_written === singleLifecycleBytes[0] * 2;
+    }));
     const independentRecords = records.filter((record) => record.arm === "independent-verifier");
     assert.ok(independentRecords.every((record) => (
       record.comparator_lineage?.implementation_id === "candidate-010-independent-sha512-verifier-v1"
@@ -350,6 +383,24 @@ test("the complete 48-scenario matrix executes through four real isolated backen
     assert.equal(confirmatory.decision, "abstain");
     assert.equal(confirmatory.eligible_for_superiority_claim, false);
     assert.ok(confirmatory.abstain_reasons.includes("not a frozen held-out confirmation release"));
+
+    let retryRoot = null;
+    for (const name of boundaryNames) {
+      const candidate = path.join(outputDirectory, "boundaries", name, "retry-action");
+      try {
+        await access(candidate);
+        retryRoot = candidate;
+        break;
+      } catch (error) {
+        if (error.code !== "ENOENT") throw error;
+      }
+    }
+    assert.ok(retryRoot, "a retry-action boundary must exist");
+    await writeFile(path.join(retryRoot, "unreported-state.bin"), "post-evidence mutation");
+    await assert.rejects(
+      validateFactorialRun(outputDirectory),
+      /retry\/rollback lifecycle invalid/,
+    );
   } finally {
     assert.ok(temporary.startsWith(os.tmpdir()));
     await rm(temporary, { recursive: true, force: true });
@@ -497,6 +548,59 @@ test("validation rejects arm-asymmetric paired input against the frozen schedule
   }
 });
 
+test("validation recomputes independent-verifier lineage from frozen input", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "20w-c010-independent-hostile-"));
+  const output = path.join(root, "run");
+  const scenario = buildFactorialDesign({ splits: ["development"] })[0];
+  try {
+    await runFactorialExperiment({
+      config: { ...smokeConfig, profile: "independent-hostile", opportunities_per_seed: 1 },
+      seeds: [606_062],
+      scenarios: [scenario],
+      outputDirectory: output,
+      executionMode: "development",
+    });
+    await rewriteLedger(output, (records) => {
+      const record = records.find((row) => row.arm === "independent-verifier");
+      record.comparator_lineage.output_sha256 = "f".repeat(64);
+    });
+    await assert.rejects(
+      validateFactorialRun(output),
+      /lineage hashes do not match|independent implementation identity/,
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("validation refuses retry accounting that hides the first lifecycle's staged work", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "20w-c010-retry-work-hostile-"));
+  const output = path.join(root, "run");
+  const scenario = buildFactorialDesign({ splits: ["development"] })[0];
+  try {
+    await runFactorialExperiment({
+      config: { ...smokeConfig, profile: "retry-work-hostile", opportunities_per_seed: 1 },
+      seeds: [606_063],
+      scenarios: [scenario],
+      outputDirectory: output,
+      executionMode: "development",
+    });
+    await rewriteLedger(output, (records) => {
+      const record = records.find((row) => row.arm === "retry-rollback");
+      const hiddenTotal = record.comparator_lineage.attempts[1].staged_bytes_written;
+      record.filesystem.staged_bytes_written = hiddenTotal;
+      record.resources.staged_bytes_written = hiddenTotal;
+      record.budget.observed.staged_bytes = hiddenTotal;
+    });
+    await assert.rejects(
+      validateFactorialRun(output),
+      /did not pay or report all lifecycle work|total actual staged work is incomplete/,
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("ledger reopening rejects tampered stable IDs after record rehashing", async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), "20w-c010-id-hostile-"));
   const output = path.join(root, "run");
@@ -570,7 +674,10 @@ test("validation rejects a nonpositive record-owned measurement interval", async
     await rewriteLedger(output, (records) => {
       records[0].measurement_interval.ended_at = records[0].measurement_interval.started_at;
     });
-    await assert.rejects(validateFactorialRun(output), /measurement interval is not strictly positive/);
+    await assert.rejects(
+      validateFactorialRun(output),
+      /measurement interval is not strictly positive|positive ordered UTC instants/,
+    );
   } finally {
     assert.ok(root.startsWith(os.tmpdir()));
     await rm(root, { recursive: true, force: true });
@@ -700,5 +807,78 @@ test("confirmation rejects config and design substitution after release opening"
     );
   } finally {
     await rm(fixture.root, { recursive: true, force: true });
+  }
+});
+
+test("validation recomputes factorial science instead of trusting consistently rehashed values", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "20w-c010-factorial-rehashed-science-"));
+  const output = path.join(root, "run");
+  try {
+    await runFactorialExperiment({
+      config: { ...smokeConfig, profile: "rehashed-science-hostile", opportunities_per_seed: 1 },
+      seeds: [818_181],
+      scenarios: buildFactorialDesign({ splits: ["development"] }).slice(0, 1),
+      outputDirectory: output,
+      executionMode: "development",
+    });
+    await rewriteLedger(output, (records) => {
+      for (const record of records) {
+        record.resources.modeled_energy_j += 1;
+      }
+    });
+
+    await assert.rejects(
+      validateFactorialRun(output),
+      /scientific result differs from independent recomputation/,
+    );
+    await assert.rejects(
+      analyzeFactorialRun(output),
+      /scientific result differs from independent recomputation/,
+    );
+    await assert.rejects(
+      access(path.join(output, "analysis", "factorial-summary.json")),
+      (error) => error.code === "ENOENT",
+    );
+  } finally {
+    assert.ok(root.startsWith(os.tmpdir()));
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("completed factorial analysis requires a current complete checkpoint authority", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "20w-c010-factorial-incomplete-checkpoint-"));
+  const output = path.join(root, "run");
+  const checkpointPath = path.join(output, "provenance", "checkpoint.json");
+  try {
+    await runFactorialExperiment({
+      config: { ...smokeConfig, profile: "checkpoint-hostile", opportunities_per_seed: 1 },
+      seeds: [828_282],
+      scenarios: buildFactorialDesign({ splits: ["development"] }).slice(0, 1),
+      outputDirectory: output,
+      executionMode: "development",
+    });
+    const checkpoint = JSON.parse(await readFile(checkpointPath, "utf8"));
+    checkpoint.complete = false;
+    delete checkpoint.checkpoint_sha256;
+    checkpoint.checkpoint_sha256 = createHash("sha256")
+      .update(canonicalize(checkpoint))
+      .digest("hex");
+    await writeFile(checkpointPath, `${JSON.stringify(checkpoint, null, 2)}\n`, "utf8");
+
+    await assert.rejects(
+      validateFactorialRun(output),
+      /completed factorial run lacks a current complete checkpoint authority/,
+    );
+    await assert.rejects(
+      analyzeFactorialRun(output),
+      /completed factorial run lacks a current complete checkpoint authority/,
+    );
+    await assert.rejects(
+      access(path.join(output, "analysis", "factorial-summary.json")),
+      (error) => error.code === "ENOENT",
+    );
+  } finally {
+    assert.ok(root.startsWith(os.tmpdir()));
+    await rm(root, { recursive: true, force: true });
   }
 });

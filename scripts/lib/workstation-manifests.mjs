@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
-import { access, readFile, readdir } from "node:fs/promises";
+import { access, lstat, readFile, readdir, realpath } from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { validatePromotionEvidence } from "../../experiments/workstation/candidate-010/promotion-evidence.mjs";
 
 const readinessLevels = new Set(["scaffold", "smoke-ready", "workstation-ready"]);
@@ -32,6 +33,172 @@ function localPath(root, value) {
 
 async function fileSha256(file) {
   return createHash("sha256").update(await readFile(file)).digest("hex");
+}
+
+function isInside(root, target) {
+  const relative = path.relative(root, target);
+  return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
+}
+
+async function repositoryRegularFile(root, value, label, { absoluteInput = false } = {}) {
+  if (typeof value !== "string" || value.trim() === "" || value.includes("\0")) {
+    throw new Error(`${label} must be a repository-relative regular file`);
+  }
+  const rootAbsolute = path.resolve(root);
+  const absolute = absoluteInput ? path.resolve(value) : localPath(rootAbsolute, value);
+  if (!absolute || !isInside(rootAbsolute, absolute)) {
+    throw new Error(`${label} must stay inside the repository`);
+  }
+  const relative = path.relative(rootAbsolute, absolute);
+  let current = rootAbsolute;
+  for (const component of relative.split(path.sep).filter(Boolean)) {
+    current = path.join(current, component);
+    let information;
+    try {
+      information = await lstat(current);
+    } catch (error) {
+      const failure = new Error(`${label} does not resolve to an existing file: ${error.message}`);
+      failure.code = error.code;
+      throw failure;
+    }
+    if (information.isSymbolicLink()) {
+      throw new Error(`${label} refuses symbolic-link or reparse-point traversal`);
+    }
+  }
+  const [rootReal, resolved, information] = await Promise.all([
+    realpath(rootAbsolute),
+    realpath(absolute),
+    lstat(absolute),
+  ]);
+  if (!information.isFile()) throw new Error(`${label} must be a regular file`);
+  if (!isInside(rootReal, resolved)) throw new Error(`${label} resolves outside the repository`);
+  return resolved;
+}
+
+async function schemaRelativeFile(root, schemaPath, value, label, extension) {
+  if (
+    typeof value !== "string"
+    || value.trim() === ""
+    || value.includes("\0")
+    || value.includes("?")
+    || value.includes("#")
+    || path.isAbsolute(value)
+    || /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(value)
+    || !value.endsWith(extension)
+  ) {
+    throw new Error(`${label} must be a schema-relative ${extension} repository path`);
+  }
+  const absolute = path.resolve(path.dirname(schemaPath), value);
+  if (!isInside(path.resolve(root), absolute)) {
+    throw new Error(`${label} escapes the repository`);
+  }
+  return repositoryRegularFile(root, absolute, label, { absoluteInput: true });
+}
+
+async function validateRuntimeSchemaBinding(root, manifest) {
+  const errors = [];
+  let schemaPath;
+  try {
+    schemaPath = await repositoryRegularFile(
+      root,
+      manifest.outputs?.schema,
+      "outputs.schema",
+    );
+  } catch (error) {
+    return [error.message];
+  }
+  let schema;
+  try {
+    schema = JSON.parse(await readFile(schemaPath, "utf8"));
+  } catch (error) {
+    return [`outputs.schema is not valid JSON: ${error.message}`];
+  }
+  const runtime = schema?.["x-runtime-validator"];
+  const requiredFields = ["module", "export", "version_export", "contract_version", "test"];
+  if (!runtime || typeof runtime !== "object" || Array.isArray(runtime)) {
+    return ["outputs.schema must declare an x-runtime-validator object"];
+  }
+  const actualFields = Object.keys(runtime).sort();
+  if (JSON.stringify(actualFields) !== JSON.stringify([...requiredFields].sort())) {
+    errors.push(`outputs.schema x-runtime-validator must contain exactly ${requiredFields.join(", ")}`);
+  }
+  const identifier = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
+  if (!identifier.test(runtime.export ?? "")) {
+    errors.push("outputs.schema runtime validator export must be a named JavaScript export");
+  }
+  if (!identifier.test(runtime.version_export ?? "")) {
+    errors.push("outputs.schema runtime validator version_export must be a named JavaScript export");
+  }
+  if (
+    typeof runtime.contract_version !== "string"
+    || !/^[a-z0-9][a-z0-9._-]*$/.test(runtime.contract_version)
+    || /placeholder|todo|tbd/i.test(runtime.contract_version)
+  ) {
+    errors.push("outputs.schema runtime validator contract_version must be a concrete version identifier");
+  }
+
+  let modulePath;
+  let testPath;
+  try {
+    modulePath = await schemaRelativeFile(
+      root,
+      schemaPath,
+      runtime.module,
+      "outputs.schema runtime validator module",
+      ".mjs",
+    );
+  } catch (error) {
+    errors.push(error.message);
+  }
+  try {
+    testPath = await schemaRelativeFile(
+      root,
+      schemaPath,
+      runtime.test,
+      "outputs.schema runtime validator test",
+      ".test.mjs",
+    );
+  } catch (error) {
+    errors.push(error.message);
+  }
+
+  if (testPath) {
+    const registeredTests = Array.isArray(manifest.implementation?.tests)
+      ? manifest.implementation.tests
+      : [];
+    const registeredRealPaths = await Promise.all(registeredTests.map(async (value) => {
+      const candidate = localPath(root, value);
+      if (!candidate || !(await exists(candidate))) return null;
+      try {
+        return await realpath(candidate);
+      } catch {
+        return null;
+      }
+    }));
+    if (!registeredRealPaths.includes(testPath)) {
+      errors.push("outputs.schema runtime validator test must be registered in implementation.tests");
+    }
+  }
+
+  if (modulePath && identifier.test(runtime.export ?? "")
+    && identifier.test(runtime.version_export ?? "") && errors.length === 0) {
+    try {
+      const moduleUrl = pathToFileURL(modulePath);
+      moduleUrl.searchParams.set("source_sha256", await fileSha256(modulePath));
+      const implementation = await import(moduleUrl.href);
+      if (typeof implementation[runtime.export] !== "function") {
+        errors.push(`outputs.schema runtime validator export ${runtime.export} is not a function`);
+      }
+      if (typeof implementation[runtime.version_export] !== "string") {
+        errors.push(`outputs.schema runtime validator version export ${runtime.version_export} is not a string`);
+      } else if (implementation[runtime.version_export] !== runtime.contract_version) {
+        errors.push("outputs.schema runtime validator version does not match contract_version");
+      }
+    } catch (error) {
+      errors.push(`outputs.schema runtime validator module could not be imported: ${error.message}`);
+    }
+  }
+  return errors;
 }
 
 async function validateExecutionClaimScope(root, manifest, executionClaims) {
@@ -184,7 +351,8 @@ export async function workstationPromotionChecks(root, manifest) {
   const fullTestPaths = fullTests.map((value) => localPath(root, value));
   let workstationTestPipeline = false;
   try {
-    const packageDocument = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
+    const packagePath = await repositoryRegularFile(root, "package.json", "package.json");
+    const packageDocument = JSON.parse(await readFile(packagePath, "utf8"));
     workstationTestPipeline = packageDocument.scripts?.test?.includes("npm run test:workstation") === true
       && packageDocument.scripts?.["test:workstation"]?.includes("node --test") === true
       && packageDocument.scripts["test:workstation"].includes("experiments/workstation/**/*.test.mjs");
@@ -376,13 +544,24 @@ export async function workstationPromotionChecks(root, manifest) {
 
 export async function validateExecutionManifest(root, manifestPath, expectedArtifact = null) {
   const errors = [];
+  let resolvedManifest;
   let manifest;
   try {
-    manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+    resolvedManifest = await repositoryRegularFile(
+      root,
+      manifestPath,
+      "execution manifest",
+      { absoluteInput: true },
+    );
   } catch (error) {
     if (error.code === "ENOENT") {
       return { ready: false, readiness: "absent", errors: ["manifest"] };
     }
+    return { ready: false, readiness: "invalid", errors: [error.message] };
+  }
+  try {
+    manifest = JSON.parse(await readFile(resolvedManifest, "utf8"));
+  } catch (error) {
     return { ready: false, readiness: "invalid", errors: [`invalid JSON: ${error.message}`] };
   }
 
@@ -451,13 +630,13 @@ export async function validateExecutionManifest(root, manifestPath, expectedArti
   }
 
   for (const [field, value] of collectReferencedPaths(manifest)) {
-    const absolute = localPath(root, value);
-    if (!absolute) {
-      errors.push(`${field} must be a repository-relative path`);
-    } else if (!(await exists(absolute))) {
-      errors.push(`${field} does not exist: ${value}`);
+    try {
+      await repositoryRegularFile(root, value, field);
+    } catch (error) {
+      errors.push(error.message);
     }
   }
+  errors.push(...await validateRuntimeSchemaBinding(root, manifest));
 
   if (manifest.readiness === "workstation-ready") {
     if (manifest.outputs?.hash_chain !== true) errors.push("workstation-ready outputs.hash_chain must be true");

@@ -1,12 +1,72 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
-import os from "node:os";
+import { mkdir, mkdtemp, readFile, rm, symlink, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { validateExecutionManifest } from "../../scripts/lib/workstation-manifests.mjs";
 
 const root = process.cwd();
 const realManifest = path.join(root, "experiments", "workstation", "manifests", "candidate-010.json");
+
+async function runtimeBindingFixture({
+  runtime = {},
+  moduleBody = [
+    'export const TEST_CONTRACT_VERSION = "test-runtime-contract-v1";',
+    "export function assertTestRuntimeRecord() { return true; }",
+    "",
+  ].join("\n"),
+  registerTest = true,
+  includeRuntime = true,
+  schemaViaJunction = false,
+} = {}) {
+  const temporary = await mkdtemp(path.join(root, "tmp-runtime-binding-"));
+  const storageDirectory = schemaViaJunction ? path.join(temporary, "actual") : temporary;
+  const junction = schemaViaJunction ? path.join(temporary, "linked") : null;
+  if (schemaViaJunction) {
+    await mkdir(storageDirectory);
+    await symlink(storageDirectory, junction, "junction");
+  }
+  const exposedDirectory = junction ?? storageDirectory;
+  const relativeDirectory = path.relative(root, exposedDirectory).replaceAll("\\", "/");
+  const modulePath = path.join(storageDirectory, "runtime-contract.mjs");
+  const testPath = path.join(storageDirectory, "runtime-contract.test.mjs");
+  const schemaPath = path.join(storageDirectory, "output.schema.json");
+  const manifestPath = path.join(temporary, "manifest.json");
+  const manifest = JSON.parse(await readFile(realManifest, "utf8"));
+  const metadata = {
+    module: "runtime-contract.mjs",
+    export: "assertTestRuntimeRecord",
+    version_export: "TEST_CONTRACT_VERSION",
+    contract_version: "test-runtime-contract-v1",
+    test: "runtime-contract.test.mjs",
+    ...runtime,
+  };
+  const schema = {
+    $schema: "https://json-schema.org/draft/2020-12/schema",
+    type: "object",
+    ...(includeRuntime ? { "x-runtime-validator": metadata } : {}),
+  };
+  manifest.outputs.schema = `${relativeDirectory}/output.schema.json`;
+  if (registerTest) {
+    manifest.implementation.tests = [
+      ...manifest.implementation.tests,
+      `${relativeDirectory}/runtime-contract.test.mjs`,
+    ];
+  }
+  await writeFile(modulePath, moduleBody);
+  await writeFile(testPath, "// registered hostile-test fixture\n");
+  await writeFile(schemaPath, JSON.stringify(schema));
+  await writeFile(manifestPath, JSON.stringify(manifest));
+  return {
+    temporary,
+    junction,
+    result: await validateExecutionManifest(root, manifestPath, "candidate-010"),
+  };
+}
+
+async function removeRuntimeBindingFixture(fixture) {
+  if (fixture.junction) await unlink(fixture.junction);
+  await rm(fixture.temporary, { recursive: true, force: true });
+}
 
 test("smoke readiness cannot promote an artifact to workstation-ready", async () => {
   const result = await validateExecutionManifest(root, realManifest, "candidate-010");
@@ -31,7 +91,7 @@ test("smoke readiness cannot promote an artifact to workstation-ready", async ()
 });
 
 test("six truthy placeholder fields cannot pass the execution gate", async () => {
-  const temporary = await mkdtemp(path.join(os.tmpdir(), "20w-manifest-"));
+  const temporary = await mkdtemp(path.join(root, "tmp-20w-manifest-"));
   const manifestPath = path.join(temporary, "candidate-010.json");
   try {
     await writeFile(
@@ -52,7 +112,7 @@ test("six truthy placeholder fields cannot pass the execution gate", async () =>
     assert.equal(result.ready, false);
     assert.ok(result.errors.length >= 10);
   } finally {
-    assert.ok(temporary.startsWith(os.tmpdir()));
+    assert.ok(temporary.startsWith(root));
     await rm(temporary, { recursive: true, force: true });
   }
 });
@@ -60,7 +120,7 @@ test("six truthy placeholder fields cannot pass the execution gate", async () =>
 test("changing only the readiness label still fails the full gate", async () => {
   const source = JSON.parse(await readFile(realManifest, "utf8"));
   source.readiness = "workstation-ready";
-  const temporary = await mkdtemp(path.join(os.tmpdir(), "20w-manifest-full-"));
+  const temporary = await mkdtemp(path.join(root, "tmp-20w-manifest-full-"));
   const manifestPath = path.join(temporary, "candidate-010.json");
   try {
     await writeFile(manifestPath, JSON.stringify(source));
@@ -71,7 +131,7 @@ test("changing only the readiness label still fails the full gate", async () => 
     assert.equal(result.promotionChecks.find((check) => check.id === "promotion-evidence").passed, false);
     assert.equal(result.promotionChecks.find((check) => check.id === "full-tests").passed, true);
   } finally {
-    assert.ok(temporary.startsWith(os.tmpdir()));
+    assert.ok(temporary.startsWith(root));
     await rm(temporary, { recursive: true, force: true });
   }
 });
@@ -133,5 +193,89 @@ test("fake manifest hashes and a favorable summary JSON cannot replace strict ev
   } finally {
     assert.ok(temporary.startsWith(root));
     await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test("output schema is bound to an importable versioned runtime validator and registered test", async () => {
+  const fixture = await runtimeBindingFixture();
+  try {
+    assert.equal(fixture.result.readiness, "smoke-ready");
+    assert.deepEqual(fixture.result.errors, []);
+  } finally {
+    await removeRuntimeBindingFixture(fixture);
+  }
+});
+
+test("manifest and runtime-schema paths refuse symbolic-link or reparse-point traversal", async () => {
+  const fixture = await runtimeBindingFixture({ schemaViaJunction: true });
+  try {
+    assert.equal(fixture.result.ready, false);
+    assert.ok(fixture.result.errors.some((error) => /symbolic-link|reparse-point/.test(error)));
+  } finally {
+    await removeRuntimeBindingFixture(fixture);
+  }
+});
+
+test("runtime binding rejects declarative placeholders, wrong exports, versions, tests, and paths", async () => {
+  const cases = [
+    {
+      options: { includeRuntime: false },
+      pattern: /must declare an x-runtime-validator object/,
+    },
+    {
+      options: { runtime: { export: "missingValidator" } },
+      pattern: /export missingValidator is not a function/,
+    },
+    {
+      options: {
+        runtime: { export: "declarativePlaceholder" },
+        moduleBody: [
+          'export const TEST_CONTRACT_VERSION = "test-runtime-contract-v1";',
+          "export const declarativePlaceholder = true;",
+          "",
+        ].join("\n"),
+      },
+      pattern: /export declarativePlaceholder is not a function/,
+    },
+    {
+      options: { runtime: { version_export: "MISSING_CONTRACT_VERSION" } },
+      pattern: /version export MISSING_CONTRACT_VERSION is not a string/,
+    },
+    {
+      options: { runtime: { contract_version: "test-runtime-contract-v2" } },
+      pattern: /version does not match contract_version/,
+    },
+    {
+      options: { runtime: { contract_version: "TODO-placeholder" } },
+      pattern: /must be a concrete version identifier/,
+    },
+    {
+      options: { registerTest: false },
+      pattern: /test must be registered in implementation.tests/,
+    },
+    {
+      options: { runtime: { module: "../../../../outside-runtime.mjs" } },
+      pattern: /module escapes the repository/,
+    },
+    {
+      options: { runtime: { test: "../../../../outside-runtime.test.mjs" } },
+      pattern: /test escapes the repository/,
+    },
+    {
+      options: { runtime: { module: "output.schema.json" } },
+      pattern: /module must be a schema-relative \.mjs repository path/,
+    },
+  ];
+  for (const { options, pattern } of cases) {
+    const fixture = await runtimeBindingFixture(options);
+    try {
+      assert.equal(fixture.result.ready, false);
+      assert.ok(
+        fixture.result.errors.some((error) => pattern.test(error)),
+        `${pattern} not found in ${JSON.stringify(fixture.result.errors)}`,
+      );
+    } finally {
+      await removeRuntimeBindingFixture(fixture);
+    }
   }
 });

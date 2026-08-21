@@ -72,17 +72,25 @@ commit, stale-version refusal, and declared-interruption reconciliation on
 transactional-KV and simulated-actuator instances. Resume is bound to the full
 executable source identity and revalidates complete durable history against the
 ledger. Atomic ownership-checked leases reject concurrent factorial and
-persistent writers before mutation. An eight-case deterministic
+persistent writers before mutation. Source discovery freezes the execution
+manifest, every production module, every registered test, the golden fixture,
+and relative imports from both production and test code. A shared
+runtime event contract validates smoke and factorial records before append and
+again before analysis. An eight-case deterministic
 fault campaign makes reset leakage, incomplete rollback, precommit effects,
 delayed cleanup, stale or corrupt verification, failed finalization, and an
 irreversible-effect sentinel observable to the validator.
 
 Those roots are isolated per opportunity–arm work unit, so the factorial path
 still does not test concurrent shared-service contention. File `fsync` is now
-requested for complete raw records and checkpoint replacements, while torn-tail
-repair, directory-entry persistence, and arbitrary power-loss recovery remain
-outside the contract. Writer contention is refused, not benchmarked, and stale
-locks are not broken automatically. The persistent and fault tracks are local diagnostics,
+requested for complete raw records, persistent identity and receipt metadata,
+checkpoints, and final run replacements, while torn-tail repair, directory-entry
+persistence, and arbitrary power-loss recovery remain outside the contract.
+The current in-process harness also does not equate already loaded ESM modules
+with later source hashes or bind the installed dependency/runtime image; frozen
+hardware confirmation remains blocked on a fresh immutable bootstrap.
+Writer contention is refused, not benchmarked, and stale locks are not broken
+automatically. The persistent and fault tracks are local diagnostics,
 not confirmation data. The strict seed-release and promotion-evidence builders
 exist, but no real frozen release, interval-owned calibrated energy observation,
 or validated evidence bundle exists. Six of nine **structural** promotion gates

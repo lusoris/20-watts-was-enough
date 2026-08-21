@@ -24,10 +24,13 @@ function independentNormal(nonce) {
   return Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);
 }
 
-export function executeIndependentVerifier({ opportunity, config }) {
+function computeIndependentVerifier({ opportunity, config }) {
   const job = opportunity?.trace_job;
   if (!job || typeof job.unsafe !== "boolean" || job.nonce === undefined) {
     throw new Error("Independent verifier requires an explicitly typed verifier job.");
+  }
+  if (!Number.isFinite(config?.verifier_signal)) {
+    throw new Error("Independent verifier requires a finite verifier signal.");
   }
   const input = {
     schema: 1,
@@ -39,7 +42,9 @@ export function executeIndependentVerifier({ opportunity, config }) {
   const direction = job.unsafe ? 1 : -1;
   const value = direction * config.verifier_signal + independentNormal(job.nonce);
   if (!Number.isFinite(value)) throw new Error("Independent verifier produced a non-finite result.");
-  const lineage = Object.freeze({
+  return Object.freeze({
+    value,
+    lineage: Object.freeze({
     schema: 1,
     comparator: "independent-verifier",
     implementation_id: INDEPENDENT_VERIFIER_IMPLEMENTATION_ID,
@@ -48,11 +53,15 @@ export function executeIndependentVerifier({ opportunity, config }) {
     shared_trace_implementation: false,
     input_sha256: sha256(canonical(input)),
     output_sha256: sha256(canonical({ schema: 1, value })),
+    }),
   });
-  return Object.freeze({ value, lineage });
 }
 
-export function validateIndependentVerifierLineage(lineage) {
+export function executeIndependentVerifier(input) {
+  return computeIndependentVerifier(input);
+}
+
+export function validateIndependentVerifierLineage(lineage, input) {
   if (
     lineage?.schema !== 1
     || lineage.comparator !== "independent-verifier"
@@ -60,8 +69,10 @@ export function validateIndependentVerifierLineage(lineage) {
     || lineage.source_module !== "independent-verifier.mjs"
     || lineage.implementation_independent !== true
     || lineage.shared_trace_implementation !== false
-    || !/^[0-9a-f]{64}$/.test(lineage.input_sha256 ?? "")
-    || !/^[0-9a-f]{64}$/.test(lineage.output_sha256 ?? "")
   ) throw new Error("Independent-verifier lineage is missing or shares the candidate trace implementation.");
-  return true;
+  const recomputed = computeIndependentVerifier(input);
+  if (canonical(lineage) !== canonical(recomputed.lineage)) {
+    throw new Error("Independent-verifier lineage hashes do not match the frozen input and recomputed output.");
+  }
+  return recomputed;
 }

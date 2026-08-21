@@ -25,19 +25,23 @@ The executable layer is narrower than the full protocol below:
   main run does not test concurrent shared-service contention; a separate
   longitudinal diagnostic now tests persistent transactional-KV and actuator
   histories through commit, reset, later commit, stale refusal, and a declared
-  interruption after backend finalization; its resume identity includes the
+  interruption after backend finalization and pending-receipt destination-file
+  `fsync`, but before ledger append; its resume identity includes the
   full executable source bundle and it revalidates all durable generations
   against the ledger;
 - complete ledger records and checkpoint replacements request file `fsync` and
-  truncated tails fail closed, but directory-entry persistence, torn-tail
-  repair, arbitrary power-loss, and general filesystem crash recovery are not
-  established;
+  persistent identity, receipt, and final metadata use the same synced
+  replacement path; truncated or ambiguous authority fails closed, but
+  directory-entry persistence, torn-tail repair, arbitrary power-loss, and
+  general filesystem crash recovery are not established;
 - factorial and persistent output roots use ownership-checked exclusive writer
   leases; contention is refused before mutation, stale locks are never broken
   automatically, and concurrent shared-service behavior is not measured;
 - the retry/rollback arm now executes two real effect lifecycles, and the
-  independent-verifier arm uses a separately implemented detector; both remain
-  synthetic local comparators rather than deployed-system evidence;
+  validator recomputes both lifecycle snapshots and total work; the independent-
+  verifier arm uses a separately implemented detector whose lineage is rebuilt
+  from frozen input and output; both remain synthetic local comparators rather
+  than deployed-system evidence;
 - a separate eight-case fault campaign injects reset leakage, incomplete
   rollback, precommit effects, delayed cleanup, stale or corrupt verification,
   failed finalization, and an irreversible-effect sentinel; it is a diagnostic,
@@ -46,6 +50,16 @@ The executable layer is narrower than the full protocol below:
   exist, but no real frozen confirmation/held-out release or validated evidence
   bundle exists; and
 - no interval-owned calibrated energy observation has been collected.
+- no fresh immutable execution bootstrap yet proves that loaded ESM code,
+  direct source hashes, the Node runtime, and installed dependencies share one
+  frozen identity.
+
+Every smoke and factorial raw record now crosses one executable event contract
+before append and again before analysis or validation. The source freeze also
+hashes the execution manifest and discovers production modules, registered
+tests, and both sets of relative imports rather than trusting duplicated
+hand-maintained lists. These controls make malformed evidence harder
+to admit; they do not change the result status.
 
 Accordingly, the 6/9 count describes structural gates only. It is neither a
 scientific result nor evidence for the held composition.

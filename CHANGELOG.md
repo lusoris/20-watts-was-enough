@@ -81,6 +81,25 @@ the exact diff; this file records why the project changed.
   promotion evidence exists. The 6/9 count remains structural, and no
   experimental result is claimed.
 
+- Candidate 010 source identity now hashes the execution manifest and discovers
+  every production module, manifest-registered test, golden fixture, classified
+  support file, and production/test relative import edge; an unlisted module,
+  unregistered test, unclassified file, symlink, or import outside the frozen
+  closure fails the build. A shared executable raw-
+  event contract is named by the JSON Schema and runs before smoke/factorial
+  append and before analysis, recomputing identities, interval ownership,
+  privilege, finalization, byte accounting, energy separation, and nonphysical
+  boundaries. Independent-verifier lineage is recomputed from frozen input and
+  output; retry/rollback validates two independently observed filesystem
+  lifecycles and their total paid work. Persistent identity, pending receipts,
+  checkpoints, and final metadata use synced file replacement; tested receipt
+  recovery begins only after destination-file `fsync` and before ledger append,
+  while directory fsync and arbitrary power-loss recovery remain unclaimed. The promotion
+  state remains 6/9 structural gates, zero workstation-ready experiments, and
+  zero executable claims. A real confirmation remains blocked until a fresh
+  immutable process binds loaded ESM code, source bytes, runtime, and installed
+  dependencies to one identity.
+
 - A provenance capture and primary-source audit for empirical-versus-formal
   scientific-discovery evaluators, correcting the supplied dusty-plasma date
   and method, scoping FunSearch to executable program search, and defining

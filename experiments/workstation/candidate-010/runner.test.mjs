@@ -1,12 +1,18 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import {
+  access, mkdtemp, readFile, rm, writeFile,
+} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { generateOpportunities } from "./generator.mjs";
 import { executeFilesystemTrial } from "./filesystem-track.mjs";
+import { canonicalize, nextRecordHash } from "./checkpoint.mjs";
 import { armNames, decide } from "./policies.mjs";
-import { analyzeRun, attachEnergyReading, runExperiment, validateRun } from "./runner.mjs";
+import {
+  analyzeRun, attachEnergyReading, runExperiment, scientificPayload, validateRun,
+} from "./runner.mjs";
 
 const benchmarkRoot = path.dirname(new URL(import.meta.url).pathname.replace(/^\/(.:)/, "$1"));
 const config = JSON.parse(await readFile(path.join(benchmarkRoot, "configs", "smoke.json"), "utf8"));
@@ -22,6 +28,42 @@ function deterministicSummary(summary) {
       return [arm, deterministic];
     })),
   };
+}
+
+async function rewriteSmokeLedger(outputDirectory, mutate) {
+  const rawPath = path.join(outputDirectory, "raw", "events.ndjson");
+  const runPath = path.join(outputDirectory, "provenance", "run.json");
+  const checkpointPath = path.join(outputDirectory, "provenance", "checkpoint.json");
+  const records = (await readFile(rawPath, "utf8")).trim().split(/\r?\n/).map(JSON.parse);
+  mutate(records);
+  const digest = createHash("sha256");
+  let previous = "0".repeat(64);
+  for (const [sequence, record] of records.entries()) {
+    delete record.integrity;
+    const payload = canonicalize(scientificPayload(record));
+    const recordSha256 = nextRecordHash(previous, payload);
+    record.integrity = {
+      sequence,
+      previous_sha256: previous,
+      record_sha256: recordSha256,
+    };
+    digest.update(payload);
+    previous = recordSha256;
+  }
+  const scientificPayloadSha256 = digest.digest("hex");
+  await writeFile(rawPath, `${records.map(JSON.stringify).join("\n")}\n`, "utf8");
+  const run = JSON.parse(await readFile(runPath, "utf8"));
+  run.scientific_payload_sha256 = scientificPayloadSha256;
+  run.hash_chain_sha256 = previous;
+  await writeFile(runPath, `${JSON.stringify(run, null, 2)}\n`, "utf8");
+  const checkpoint = JSON.parse(await readFile(checkpointPath, "utf8"));
+  checkpoint.scientific_payload_sha256 = scientificPayloadSha256;
+  checkpoint.hash_chain_sha256 = previous;
+  delete checkpoint.checkpoint_sha256;
+  checkpoint.checkpoint_sha256 = createHash("sha256")
+    .update(canonicalize(checkpoint))
+    .digest("hex");
+  await writeFile(checkpointPath, `${JSON.stringify(checkpoint, null, 2)}\n`, "utf8");
 }
 
 test("generator is deterministic and does not use scheduling state", () => {
@@ -243,6 +285,39 @@ test("hash chain rejects raw-ledger corruption", async () => {
     lines[0] = JSON.stringify(first);
     await writeFile(rawPath, `${lines.join("\n")}\n`, "utf8");
     await assert.rejects(validateRun(output), /hash-chain mismatch|scientific payload digest/);
+  } finally {
+    assert.ok(temporary.startsWith(os.tmpdir()));
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test("validation recomputes smoke science instead of trusting consistently rehashed values", async () => {
+  const temporary = await mkdtemp(path.join(os.tmpdir(), "20w-c010-rehashed-science-"));
+  const output = path.join(temporary, "run");
+  try {
+    await runExperiment({
+      config: { ...config, opportunities_per_seed: 1 },
+      seeds: [101],
+      outputDirectory: output,
+    });
+    await rewriteSmokeLedger(output, (records) => {
+      for (const record of records) {
+        record.resources.modeled_energy_j += 1;
+      }
+    });
+
+    await assert.rejects(
+      validateRun(output),
+      /scientific result differs from independent recomputation/,
+    );
+    await assert.rejects(
+      analyzeRun(output),
+      /scientific result differs from independent recomputation/,
+    );
+    await assert.rejects(
+      access(path.join(output, "analysis", "summary.json")),
+      (error) => error.code === "ENOENT",
+    );
   } finally {
     assert.ok(temporary.startsWith(os.tmpdir()));
     await rm(temporary, { recursive: true, force: true });

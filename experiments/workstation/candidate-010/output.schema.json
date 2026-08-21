@@ -1,7 +1,16 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Candidate 010 raw opportunity-arm event",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.local/schemas/candidate-010-raw-event-v1.json",
+  "title": "Candidate 010 smoke or factorial raw opportunity-arm event",
+  "x-runtime-validator": {
+    "module": "event-contract.mjs",
+    "export": "assertCandidate010RawEvent",
+    "contract_version": "candidate-010-raw-event-v1",
+    "version_export": "CANDIDATE_010_EVENT_CONTRACT_VERSION",
+    "test": "event-contract.test.mjs"
+  },
   "type": "object",
+  "additionalProperties": false,
   "required": [
     "schema",
     "artifact",
@@ -10,6 +19,7 @@
     "seed",
     "arm",
     "truth_unsafe",
+    "evidence",
     "trace",
     "decision",
     "outcome",
@@ -20,8 +30,9 @@
   "properties": {
     "schema": { "const": 1 },
     "artifact": { "const": "candidate-010" },
-    "run_kind": { "type": "string" },
-    "profile": { "type": "string" },
+    "run_kind": { "const": "factorial-diagnostic-v1" },
+    "execution_mode": { "enum": ["implementation-test", "development", "confirmation"] },
+    "profile": { "type": "string", "minLength": 1 },
     "run_id": { "type": "string", "pattern": "^c010-run-[0-9a-f]{64}$" },
     "phase": { "type": "string" },
     "scenario_id": { "type": "string", "minLength": 1 },
@@ -37,22 +48,117 @@
     "arm_order_schedule_id": { "type": "string", "pattern": "^c010-arm-order-[0-9a-f]{64}$" },
     "arm_order_index": { "type": "integer", "minimum": 0 },
     "opportunity_id": { "type": "string" },
-    "seed": { "type": "integer" },
-    "arm": { "type": "string" },
+    "seed": { "type": "integer", "minimum": 0 },
+    "arm": {
+      "enum": [
+        "threshold",
+        "cascade",
+        "conditioned-sprt",
+        "selective-abstention",
+        "retry-rollback",
+        "independent-verifier",
+        "reset-coupled",
+        "reset-coupled-no-trace",
+        "oracle-ceiling"
+      ]
+    },
     "truth_unsafe": { "type": "boolean" },
+    "evidence": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "type": "number" }
+    },
+    "candidate_variant": { "type": ["string", "null"] },
     "trace": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["revealed", "verifier", "output_sha256"],
       "properties": {
         "revealed": { "type": "boolean" },
         "verifier": { "type": ["number", "null"] },
-        "output_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        "output_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "constructed_for_all_arms": { "type": "boolean" }
       }
     },
-    "decision": { "type": "object" },
-    "outcome": { "type": "object" },
-    "budget": { "type": "object" },
-    "resources": { "type": "object" },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["abstain", "commit", "reason", "reset", "score", "stage"],
+      "properties": {
+        "abstain": { "type": "boolean" },
+        "arm": { "$ref": "#/properties/arm" },
+        "commit": { "type": "boolean" },
+        "first_action_rolled_back": { "const": true },
+        "observations": { "type": "integer", "minimum": 0 },
+        "policy_variant": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "reset": { "type": "boolean" },
+        "retry_lifecycle_count": { "const": 2 },
+        "score": { "type": "number" },
+        "stage": { "const": true },
+        "verifier_calls": { "type": "integer", "minimum": 0 },
+        "verifier_implementation_id": { "type": "string", "minLength": 1 },
+        "verifier_observed_but_decoupled": { "type": "boolean" }
+      },
+      "allOf": [
+        {
+          "oneOf": [
+            { "properties": { "commit": { "const": true }, "reset": { "const": false } } },
+            { "properties": { "commit": { "const": false }, "reset": { "const": true } } }
+          ]
+        },
+        {
+          "if": { "properties": { "abstain": { "const": true } } },
+          "then": { "properties": { "commit": { "const": false }, "reset": { "const": true } } }
+        }
+      ]
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["false_commit", "false_reject", "consequence_weighted_loss", "rollback_violation"],
+      "properties": {
+        "false_commit": { "type": "boolean" },
+        "false_reject": { "type": "boolean" },
+        "consequence_weighted_loss": { "type": "number", "minimum": 0 },
+        "rollback_violation": { "type": "boolean" },
+        "irreversible_violation": { "const": false }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arm", "assigned_allowance", "observed", "scenario_id", "unused_is_not_credit", "within_budget"],
+      "properties": {
+        "arm": { "$ref": "#/properties/arm" },
+        "scenario_id": { "type": "string", "minLength": 1 },
+        "unused_is_not_credit": { "const": true },
+        "within_budget": { "const": true },
+        "assigned_allowance": { "$ref": "#/definitions/budgetMeasures" },
+        "observed": { "$ref": "#/definitions/budgetMeasures" }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "observations": { "type": "integer", "minimum": 0 },
+        "verifier_calls": { "type": "integer", "minimum": 0 },
+        "policy_evaluations": { "type": "integer", "minimum": 0 },
+        "modeled_energy_j": { "type": "number", "exclusiveMinimum": 0 },
+        "measured_energy_j": { "type": "null" },
+        "external_energy": { "type": "null" },
+        "cpu_elapsed_ms": { "type": "number", "minimum": 0 },
+        "durable_bytes_written": { "type": "integer", "minimum": 0 },
+        "staged_bytes_written": { "type": "integer", "minimum": 0 },
+        "filesystem_stage_ms": { "type": "number", "minimum": 0 },
+        "temporary_execution_ms": { "type": "number", "minimum": 0 },
+        "filesystem_finalize_ms": { "type": "number", "minimum": 0 },
+        "filesystem_boundary_ms": { "type": "number", "minimum": 0 },
+        "stopping_time_ms": { "type": "number", "minimum": 0 }
+      }
+    },
+    "stopping_time_ms": { "type": "number", "minimum": 0 },
     "measurement_interval": {
       "type": "object",
       "additionalProperties": false,
@@ -65,19 +171,233 @@
     },
     "filesystem": {
       "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "backend_id", "boundary", "boundary_elapsed_ms", "commitComplete", "durableExists",
+        "durable_bytes_written", "finalize_elapsed_ms", "irreversible_violation", "physical_actuation",
+        "rollbackComplete", "stageExists", "stage_elapsed_ms", "staged_bytes_written", "task_family",
+        "temporary_execution_elapsed_ms", "trace_output_sha256", "trace_revealed"
+      ],
       "properties": {
-        "physical_actuation": { "type": "boolean" }
+        "appendOnlyRefusalVerified": { "type": "boolean" },
+        "backend_id": { "type": "string", "minLength": 1 },
+        "backend_implemented": { "const": true },
+        "backend_scope": { "const": "local-per-arm-isolated-state" },
+        "bootstrap_bytes_written": { "type": "integer", "minimum": 0 },
+        "boundary": { "type": "string", "minLength": 1 },
+        "boundary_elapsed_ms": { "type": "number", "minimum": 0 },
+        "command_sha256": { "$ref": "#/definitions/hash" },
+        "commitComplete": { "type": "boolean" },
+        "durableExists": { "type": "boolean" },
+        "durableIntegrityValid": { "type": "boolean" },
+        "durable_bytes_after": { "type": "integer", "minimum": 0 },
+        "durable_bytes_before": { "type": "integer", "minimum": 0 },
+        "durable_bytes_written": { "type": "integer", "minimum": 0 },
+        "durable_snapshot_post_sha256": { "$ref": "#/definitions/hash" },
+        "durable_snapshot_pre_sha256": { "$ref": "#/definitions/hash" },
+        "envelopeValid": { "type": "boolean" },
+        "envelope_sha256": { "$ref": "#/definitions/hash" },
+        "expected_version": { "type": "integer", "minimum": 0 },
+        "finalize_elapsed_ms": { "type": "number", "minimum": 0 },
+        "irreversible_violation": { "const": false },
+        "journal_entries": { "type": "integer", "minimum": 0 },
+        "journal_sha256": { "$ref": "#/definitions/hash" },
+        "observed_post_version": { "type": "integer", "minimum": 0 },
+        "observed_pre_version": { "type": "integer", "minimum": 0 },
+        "payload_sha256": { "$ref": "#/definitions/hash" },
+        "physical_actuation": { "const": false },
+        "post_state_bytes": { "type": "integer", "minimum": 0 },
+        "post_state_sha256": { "$ref": "#/definitions/hash" },
+        "post_version": { "type": "integer", "minimum": 0 },
+        "pre_state_bytes": { "type": "integer", "minimum": 0 },
+        "pre_state_sha256": { "$ref": "#/definitions/hash" },
+        "pre_version": { "type": "integer", "minimum": 0 },
+        "proofComplete": { "type": "boolean" },
+        "publication_sha256": { "anyOf": [{ "$ref": "#/definitions/hash" }, { "type": "null" }] },
+        "retry_rollback_lifecycle": { "type": "object" },
+        "rollbackComplete": { "type": "boolean" },
+        "safety_trace_sha256": { "$ref": "#/definitions/hash" },
+        "stageExists": { "const": false },
+        "stage_elapsed_ms": { "type": "number", "minimum": 0 },
+        "staged_bytes_written": { "type": "integer", "minimum": 0 },
+        "stale_version_refused": { "type": "boolean" },
+        "task_family": { "enum": ["filesystem-publish", "transactional-kv", "signed-publication", "actuator-command"] },
+        "temporary_execution_elapsed_ms": { "type": "number", "minimum": 0 },
+        "trace_output_sha256": { "$ref": "#/definitions/hash" },
+        "trace_revealed": { "type": "boolean" },
+        "transaction_id": { "type": "string", "pattern": "^[0-9a-f]{24}$" },
+        "write_set_sha256": { "$ref": "#/definitions/hash" }
       }
     },
     "privileged_evidence": { "type": "boolean" },
+    "comparator_lineage": { "type": ["object", "null"] },
     "integrity": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["sequence", "previous_sha256", "record_sha256"],
       "properties": {
         "sequence": { "type": "integer", "minimum": 0 },
         "previous_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
         "record_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
       }
+    }
+  },
+  "definitions": {
+    "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "budgetMeasures": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["durable_bytes", "observations", "policy_evaluations", "staged_bytes", "verifier_calls", "wall_time_ms"],
+      "properties": {
+        "durable_bytes": { "type": "number", "minimum": 0 },
+        "observations": { "type": "number", "minimum": 0 },
+        "policy_evaluations": { "type": "number", "minimum": 0 },
+        "staged_bytes": { "type": "number", "minimum": 0 },
+        "verifier_calls": { "type": "number", "minimum": 0 },
+        "wall_time_ms": { "type": "number", "minimum": 0 }
+      }
+    },
+    "factorialDecisionBase": {
+      "required": ["abstain", "arm", "commit", "observations", "reason", "reset", "score", "stage", "verifier_calls"],
+      "propertyNames": {
+        "enum": ["abstain", "arm", "commit", "observations", "reason", "reset", "score", "stage", "verifier_calls"]
+      }
+    },
+    "factorialDecisionIndependent": {
+      "required": ["abstain", "arm", "commit", "observations", "reason", "reset", "score", "stage", "verifier_calls", "verifier_implementation_id"],
+      "propertyNames": {
+        "enum": ["abstain", "arm", "commit", "observations", "reason", "reset", "score", "stage", "verifier_calls", "verifier_implementation_id"]
+      }
+    },
+    "factorialDecisionRetry": {
+      "required": ["abstain", "arm", "commit", "first_action_rolled_back", "observations", "reason", "reset", "retry_lifecycle_count", "score", "stage", "verifier_calls"],
+      "propertyNames": {
+        "enum": ["abstain", "arm", "commit", "first_action_rolled_back", "observations", "reason", "reset", "retry_lifecycle_count", "score", "stage", "verifier_calls"]
+      }
+    },
+    "factorialDecisionResetCoupled": {
+      "required": ["abstain", "arm", "commit", "observations", "policy_variant", "reason", "reset", "score", "stage", "verifier_calls", "verifier_observed_but_decoupled"],
+      "propertyNames": {
+        "enum": ["abstain", "arm", "commit", "observations", "policy_variant", "reason", "reset", "score", "stage", "verifier_calls", "verifier_observed_but_decoupled"]
+      }
+    },
+    "filesystemPublishShape": {
+      "required": ["backend_implemented"],
+      "propertyNames": {
+        "enum": [
+          "backend_id", "backend_implemented", "boundary", "boundary_elapsed_ms", "commitComplete", "durableExists",
+          "durable_bytes_written", "finalize_elapsed_ms", "irreversible_violation", "physical_actuation",
+          "retry_rollback_lifecycle", "rollbackComplete", "stageExists", "stage_elapsed_ms", "staged_bytes_written",
+          "task_family", "temporary_execution_elapsed_ms", "trace_output_sha256", "trace_revealed"
+        ]
+      },
+      "properties": {
+        "task_family": { "const": "filesystem-publish" },
+        "backend_id": { "const": "filesystem-stage-execute-finalize-v1" }
+      },
+      "oneOf": [
+        {
+          "not": { "required": ["retry_rollback_lifecycle"] },
+          "properties": { "boundary": { "const": "filesystem-stage-execute-finalize-v1" } }
+        },
+        {
+          "required": ["retry_rollback_lifecycle"],
+          "properties": { "boundary": { "const": "retry-rollback-two-lifecycle-v1" } }
+        }
+      ]
+    },
+    "transactionalKvShape": {
+      "required": [
+        "backend_scope", "bootstrap_bytes_written", "durable_bytes_after", "durable_bytes_before",
+        "durable_snapshot_post_sha256", "durable_snapshot_pre_sha256", "expected_version", "post_state_sha256",
+        "post_version", "pre_state_sha256", "pre_version", "proofComplete", "stale_version_refused", "transaction_id",
+        "write_set_sha256"
+      ],
+      "propertyNames": {
+        "enum": [
+          "backend_id", "backend_scope", "bootstrap_bytes_written", "boundary", "boundary_elapsed_ms", "commitComplete",
+          "durableExists", "durable_bytes_after", "durable_bytes_before", "durable_bytes_written",
+          "durable_snapshot_post_sha256", "durable_snapshot_pre_sha256", "expected_version", "finalize_elapsed_ms",
+          "irreversible_violation", "physical_actuation", "post_state_sha256", "post_version", "pre_state_sha256",
+          "pre_version", "proofComplete", "retry_rollback_lifecycle", "rollbackComplete", "stageExists", "stage_elapsed_ms",
+          "staged_bytes_written", "stale_version_refused", "task_family", "temporary_execution_elapsed_ms",
+          "trace_output_sha256", "trace_revealed", "transaction_id", "write_set_sha256"
+        ]
+      },
+      "properties": {
+        "task_family": { "const": "transactional-kv" },
+        "backend_id": { "const": "local-versioned-transactional-kv-v1" }
+      },
+      "oneOf": [
+        {
+          "not": { "required": ["retry_rollback_lifecycle"] },
+          "properties": { "boundary": { "const": "local-transactional-kv-stage-validate-finalize-v1" } }
+        },
+        {
+          "required": ["retry_rollback_lifecycle"],
+          "properties": { "boundary": { "const": "retry-rollback-two-lifecycle-v1" } }
+        }
+      ]
+    },
+    "signedPublicationShape": {
+      "required": [
+        "appendOnlyRefusalVerified", "durableIntegrityValid", "envelopeValid", "envelope_sha256", "payload_sha256",
+        "publication_sha256"
+      ],
+      "propertyNames": {
+        "enum": [
+          "appendOnlyRefusalVerified", "backend_id", "boundary", "boundary_elapsed_ms", "commitComplete", "durableExists",
+          "durableIntegrityValid", "durable_bytes_written", "envelopeValid", "envelope_sha256", "finalize_elapsed_ms",
+          "irreversible_violation", "payload_sha256", "physical_actuation", "publication_sha256",
+          "retry_rollback_lifecycle", "rollbackComplete", "stageExists", "stage_elapsed_ms", "staged_bytes_written",
+          "task_family", "temporary_execution_elapsed_ms", "trace_output_sha256", "trace_revealed"
+        ]
+      },
+      "properties": {
+        "task_family": { "const": "signed-publication" },
+        "backend_id": { "const": "synthetic-signed-publication-v1" }
+      },
+      "oneOf": [
+        {
+          "not": { "required": ["retry_rollback_lifecycle"] },
+          "properties": { "boundary": { "const": "signed-publication-stage-execute-finalize-v1" } }
+        },
+        {
+          "required": ["retry_rollback_lifecycle"],
+          "properties": { "boundary": { "const": "retry-rollback-two-lifecycle-v1" } }
+        }
+      ]
+    },
+    "actuatorCommandShape": {
+      "required": [
+        "command_sha256", "expected_version", "journal_entries", "journal_sha256", "observed_post_version",
+        "observed_pre_version", "post_state_bytes", "post_state_sha256", "pre_state_bytes", "pre_state_sha256",
+        "safety_trace_sha256", "stale_version_refused"
+      ],
+      "propertyNames": {
+        "enum": [
+          "backend_id", "boundary", "boundary_elapsed_ms", "command_sha256", "commitComplete", "durableExists",
+          "durable_bytes_written", "expected_version", "finalize_elapsed_ms", "irreversible_violation", "journal_entries",
+          "journal_sha256", "observed_post_version", "observed_pre_version", "physical_actuation", "post_state_bytes",
+          "post_state_sha256", "pre_state_bytes", "pre_state_sha256", "retry_rollback_lifecycle", "rollbackComplete",
+          "safety_trace_sha256", "stageExists", "stage_elapsed_ms", "staged_bytes_written", "stale_version_refused",
+          "task_family", "temporary_execution_elapsed_ms", "trace_output_sha256", "trace_revealed"
+        ]
+      },
+      "properties": {
+        "task_family": { "const": "actuator-command" },
+        "backend_id": { "const": "isolated-actuator-command-v1" }
+      },
+      "oneOf": [
+        {
+          "not": { "required": ["retry_rollback_lifecycle"] },
+          "properties": { "boundary": { "const": "isolated-actuator-stage-dry-run-finalize-v1" } }
+        },
+        {
+          "required": ["retry_rollback_lifecycle"],
+          "properties": { "boundary": { "const": "retry-rollback-two-lifecycle-v1" } }
+        }
+      ]
     }
   },
   "allOf": [
@@ -89,6 +409,7 @@
       "then": {
         "required": [
           "phase",
+          "execution_mode",
           "run_id",
           "scenario_id",
           "scenario_factors",
@@ -102,13 +423,40 @@
           "paired_input_sha256",
           "arm_order_schedule_id",
           "arm_order_index",
+          "candidate_variant",
           "budget",
+          "stopping_time_ms",
           "measurement_interval",
-          "privileged_evidence"
+          "privileged_evidence",
+          "comparator_lineage"
         ],
         "properties": {
           "backend_implemented": { "const": true },
           "privileged_evidence": { "const": false },
+          "trace": {
+            "required": ["constructed_for_all_arms"],
+            "properties": {
+              "constructed_for_all_arms": { "const": true }
+            }
+          },
+          "decision": {
+            "required": ["arm", "observations", "verifier_calls"]
+          },
+          "outcome": {
+            "required": ["irreversible_violation"]
+          },
+          "resources": {
+            "required": [
+              "observations", "verifier_calls", "policy_evaluations", "modeled_energy_j", "external_energy",
+              "durable_bytes_written", "staged_bytes_written", "stopping_time_ms"
+            ],
+            "propertyNames": {
+              "enum": [
+                "observations", "verifier_calls", "policy_evaluations", "modeled_energy_j", "external_energy",
+                "durable_bytes_written", "staged_bytes_written", "stopping_time_ms"
+              ]
+            }
+          },
           "filesystem": {
             "required": ["task_family", "backend_id", "physical_actuation"],
             "properties": {
@@ -118,7 +466,152 @@
             }
           }
         }
+      },
+      "else": {
+        "not": {
+          "anyOf": [
+            { "required": ["run_kind"] },
+            { "required": ["execution_mode"] },
+            { "required": ["run_id"] },
+            { "required": ["phase"] },
+            { "required": ["scenario_id"] },
+            { "required": ["scenario_factors"] },
+            { "required": ["task_family"] },
+            { "required": ["backend_id"] },
+            { "required": ["backend_implemented"] },
+            { "required": ["verifier_id"] },
+            { "required": ["cluster_id"] },
+            { "required": ["pair_id"] },
+            { "required": ["work_unit_id"] },
+            { "required": ["paired_input_sha256"] },
+            { "required": ["arm_order_schedule_id"] },
+            { "required": ["arm_order_index"] },
+            { "required": ["candidate_variant"] },
+            { "required": ["budget"] },
+            { "required": ["stopping_time_ms"] },
+            { "required": ["measurement_interval"] },
+            { "required": ["privileged_evidence"] },
+            { "required": ["comparator_lineage"] }
+          ]
+        },
+        "properties": {
+          "decision": {
+            "propertyNames": { "enum": ["abstain", "commit", "reason", "reset", "score", "stage"] }
+          },
+          "outcome": {
+            "propertyNames": {
+              "enum": ["consequence_weighted_loss", "false_commit", "false_reject", "rollback_violation"]
+            }
+          },
+          "resources": {
+            "required": [
+              "observations", "verifier_calls", "modeled_energy_j", "measured_energy_j", "cpu_elapsed_ms",
+              "durable_bytes_written", "staged_bytes_written", "filesystem_stage_ms", "temporary_execution_ms",
+              "filesystem_finalize_ms", "filesystem_boundary_ms"
+            ],
+            "propertyNames": {
+              "enum": [
+                "observations", "verifier_calls", "modeled_energy_j", "measured_energy_j", "cpu_elapsed_ms",
+                "durable_bytes_written", "staged_bytes_written", "filesystem_stage_ms", "temporary_execution_ms",
+                "filesystem_finalize_ms", "filesystem_boundary_ms"
+              ]
+            }
+          },
+          "filesystem": {
+            "allOf": [
+              { "$ref": "#/definitions/filesystemPublishShape" },
+              { "not": { "required": ["retry_rollback_lifecycle"] } }
+            ]
+          }
+        }
       }
+    },
+    {
+      "if": {
+        "properties": { "run_kind": { "const": "factorial-diagnostic-v1" }, "arm": { "const": "independent-verifier" } },
+        "required": ["run_kind", "arm"]
+      },
+      "then": {
+        "properties": {
+          "candidate_variant": { "const": null },
+          "decision": { "$ref": "#/definitions/factorialDecisionIndependent" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "run_kind": { "const": "factorial-diagnostic-v1" }, "arm": { "const": "retry-rollback" } },
+        "required": ["run_kind", "arm"]
+      },
+      "then": {
+        "properties": {
+          "candidate_variant": { "const": null },
+          "decision": { "$ref": "#/definitions/factorialDecisionRetry" },
+          "filesystem": { "required": ["retry_rollback_lifecycle"] }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "run_kind": { "const": "factorial-diagnostic-v1" }, "arm": { "const": "reset-coupled" } },
+        "required": ["run_kind", "arm"]
+      },
+      "then": {
+        "properties": {
+          "candidate_variant": { "type": "string", "minLength": 1 },
+          "decision": { "$ref": "#/definitions/factorialDecisionResetCoupled" },
+          "filesystem": { "not": { "required": ["retry_rollback_lifecycle"] } }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "run_kind": { "const": "factorial-diagnostic-v1" },
+          "arm": {
+            "enum": [
+              "threshold", "cascade", "conditioned-sprt", "selective-abstention",
+              "reset-coupled-no-trace", "oracle-ceiling"
+            ]
+          }
+        },
+        "required": ["run_kind", "arm"]
+      },
+      "then": {
+        "properties": {
+          "candidate_variant": { "const": null },
+          "decision": { "$ref": "#/definitions/factorialDecisionBase" },
+          "filesystem": { "not": { "required": ["retry_rollback_lifecycle"] } }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "run_kind": { "const": "factorial-diagnostic-v1" }, "task_family": { "const": "filesystem-publish" } },
+        "required": ["run_kind", "task_family"]
+      },
+      "then": { "properties": { "filesystem": { "$ref": "#/definitions/filesystemPublishShape" } } }
+    },
+    {
+      "if": {
+        "properties": { "run_kind": { "const": "factorial-diagnostic-v1" }, "task_family": { "const": "transactional-kv" } },
+        "required": ["run_kind", "task_family"]
+      },
+      "then": { "properties": { "filesystem": { "$ref": "#/definitions/transactionalKvShape" } } }
+    },
+    {
+      "if": {
+        "properties": { "run_kind": { "const": "factorial-diagnostic-v1" }, "task_family": { "const": "signed-publication" } },
+        "required": ["run_kind", "task_family"]
+      },
+      "then": { "properties": { "filesystem": { "$ref": "#/definitions/signedPublicationShape" } } }
+    },
+    {
+      "if": {
+        "properties": { "run_kind": { "const": "factorial-diagnostic-v1" }, "task_family": { "const": "actuator-command" } },
+        "required": ["run_kind", "task_family"]
+      },
+      "then": { "properties": { "filesystem": { "$ref": "#/definitions/actuatorCommandShape" } } }
     }
   ]
 }

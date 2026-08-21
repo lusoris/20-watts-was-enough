@@ -1,17 +1,23 @@
 import { createHash } from "node:crypto";
 import {
   access,
+  lstat,
   mkdir,
   readFile,
   readdir,
-  rename,
+  realpath,
   rm,
-  stat,
-  writeFile,
 } from "node:fs/promises";
 import path from "node:path";
 import { backendForTaskFamily, executeBackendTrial } from "./backend-registry.mjs";
-import { canonicalize, openCheckpointLedger, sha256Hex } from "./checkpoint.mjs";
+import {
+  LEDGER_DURABILITY_CONTRACT,
+  appendDurableRecord,
+  canonicalize,
+  openCheckpointLedger,
+  replaceDurableCheckpoint,
+  sha256Hex,
+} from "./checkpoint.mjs";
 import { generateOpportunities } from "./generator.mjs";
 import { acquireRunLock } from "./run-lock.mjs";
 import { captureCandidate010SourceBundle } from "./source-bundle.mjs";
@@ -19,9 +25,12 @@ import { captureCandidate010SourceBundle } from "./source-bundle.mjs";
 export const PERSISTENT_SERVICE_RUNNER_VERSION = "candidate-010-persistent-service-v1";
 export const PERSISTENT_SERVICE_RECOVERY_SCOPE = Object.freeze({
   protocol: "hash-bound-pending-receipt-v1",
-  interruption_boundary: "after-pending-receipt-rename-before-ledger-append",
-  fsync_guarantee: false,
+  interruption_boundary: "after-pending-receipt-destination-file-fsync-before-ledger-append",
+  metadata_replace: LEDGER_DURABILITY_CONTRACT.checkpoint_replace,
+  file_fsync_requested: true,
+  directory_fsync_guarantee: false,
   arbitrary_power_loss_guarantee: false,
+  toctou_guarantee: false,
 });
 
 const SUPPORTED_FAMILIES = Object.freeze(["transactional-kv", "actuator-command"]);
@@ -54,6 +63,79 @@ async function exists(target) {
     if (error?.code === "ENOENT") return false;
     throw error;
   }
+}
+
+function normalizedAbsolute(value) {
+  const absolute = path.resolve(value);
+  return process.platform === "win32" ? absolute.toLowerCase() : absolute;
+}
+
+function isContained(root, target) {
+  const relative = path.relative(root, target);
+  return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
+}
+
+async function assertContainedUnlinkedPath(
+  containmentRoot,
+  target,
+  label,
+  { allowMissing = false, kind = null } = {},
+) {
+  const root = path.resolve(containmentRoot);
+  const absolute = path.resolve(target);
+  if (!isContained(root, absolute)) refuse(`${label} escapes its declared containment root`);
+
+  let rootInformation;
+  try {
+    rootInformation = await lstat(root);
+  } catch (error) {
+    if (allowMissing && error?.code === "ENOENT" && absolute === root) return { exists: false };
+    throw error;
+  }
+  if (rootInformation.isSymbolicLink() || !rootInformation.isDirectory()) {
+    refuse(`${label} containment root is a symlink, reparse point, or non-directory`);
+  }
+  const rootReal = await realpath(root);
+  const relative = path.relative(root, absolute);
+  let cursor = root;
+  let information = rootInformation;
+  for (const segment of relative.split(path.sep).filter(Boolean)) {
+    cursor = path.join(cursor, segment);
+    try {
+      information = await lstat(cursor);
+    } catch (error) {
+      if (allowMissing && error?.code === "ENOENT") return { exists: false };
+      throw error;
+    }
+    if (information.isSymbolicLink()) {
+      refuse(`${label} contains a symlink or reparse point`);
+    }
+  }
+  const targetReal = await realpath(absolute);
+  if (!isContained(rootReal, targetReal)) refuse(`${label} resolves outside its declared containment root`);
+  const expectedReal = path.resolve(rootReal, relative);
+  if (normalizedAbsolute(targetReal) !== normalizedAbsolute(expectedReal)) {
+    refuse(`${label} resolves through a symlink or reparse point`);
+  }
+  if (kind === "file" && !information.isFile()) refuse(`${label} is not a regular file`);
+  if (kind === "directory" && !information.isDirectory()) refuse(`${label} is not a directory`);
+  return { exists: true, information, realpath: targetReal };
+}
+
+async function containedPathExists(root, target, label, kind = null) {
+  return (await assertContainedUnlinkedPath(root, target, label, {
+    allowMissing: true,
+    kind,
+  })).exists;
+}
+
+async function readContainedFile(root, file, label) {
+  await assertContainedUnlinkedPath(root, file, label, { kind: "file" });
+  return readFile(file);
+}
+
+async function readContainedJson(root, file, label) {
+  return JSON.parse((await readContainedFile(root, file, label)).toString("utf8"));
 }
 
 function validateConfig(config) {
@@ -295,28 +377,26 @@ function verifyEventIdentity(event, expected) {
   }
 }
 
-async function readJson(file) {
-  return JSON.parse(await readFile(file, "utf8"));
-}
-
-async function readRawEvents(rawPath) {
-  if (!(await exists(rawPath))) return [];
-  const raw = await readFile(rawPath, "utf8");
+async function readRawEvents(outputDirectory, rawPath) {
+  if (!(await containedPathExists(outputDirectory, rawPath, "persistent raw ledger", "file"))) return [];
+  const raw = (await readContainedFile(outputDirectory, rawPath, "persistent raw ledger")).toString("utf8");
   if (raw.length > 0 && !raw.endsWith("\n")) refuse("raw ledger has an incomplete record");
   return raw.split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line));
 }
 
-async function writeIdentity(file, identity) {
+async function writeIdentity(outputDirectory, file, identity) {
   const body = {
     schema: 1,
     identity,
     identity_sha256: hashCanonical(identity),
   };
-  await writeFile(file, `${JSON.stringify(body, null, 2)}\n`, { encoding: "utf8", flag: "wx" });
+  await assertContainedUnlinkedPath(outputDirectory, file, "run identity", { allowMissing: true });
+  await replaceDurableCheckpoint(file, `${JSON.stringify(body, null, 2)}\n`);
+  await assertContainedUnlinkedPath(outputDirectory, file, "run identity", { kind: "file" });
 }
 
-async function verifyIdentity(file, identity) {
-  const document = await readJson(file);
+async function verifyIdentity(outputDirectory, file, identity) {
+  const document = await readContainedJson(outputDirectory, file, "run identity");
   if (
     document?.schema !== 1
     || document.identity_sha256 !== hashCanonical(document.identity)
@@ -357,13 +437,62 @@ function verifyPendingReceipt(receipt, expected) {
   return body.event;
 }
 
-async function writePendingReceipt(file, event) {
-  const temporary = `${file}.tmp`;
-  await writeFile(temporary, `${JSON.stringify(pendingReceiptBody(event), null, 2)}\n`, {
-    encoding: "utf8",
-    flag: "wx",
+async function writePendingReceipt(outputDirectory, file, event) {
+  await assertContainedUnlinkedPath(outputDirectory, file, "pending receipt", { allowMissing: true });
+  await replaceDurableCheckpoint(
+    file,
+    `${JSON.stringify(pendingReceiptBody(event), null, 2)}\n`,
+  );
+  await assertContainedUnlinkedPath(outputDirectory, file, "pending receipt", { kind: "file" });
+}
+
+function durableTemporaryTarget(name) {
+  const match = /^(.*\.json)\.tmp-\d+-\d+$/.exec(name);
+  return match?.[1] ?? null;
+}
+
+async function cleanupMetadataTemporaries(outputDirectory) {
+  await assertContainedUnlinkedPath(outputDirectory, outputDirectory, "persistent output root", {
+    kind: "directory",
   });
-  await rename(temporary, file);
+  const locations = [
+    { directory: outputDirectory, pending: false },
+    { directory: path.join(outputDirectory, "pending"), pending: true },
+  ];
+  for (const location of locations) {
+    if (!(await containedPathExists(
+      outputDirectory,
+      location.directory,
+      location.pending ? "pending receipt directory" : "persistent output root",
+      "directory",
+    ))) continue;
+    for (const name of await readdir(location.directory)) {
+      const targetName = durableTemporaryTarget(name);
+      if (!targetName) continue;
+      const recognizedTopLevel = ["run-identity.json", "checkpoint.json", "run.json"]
+        .includes(targetName);
+      const recognizedPending = /^c010-operation-[0-9a-f]{64}\.json$/.test(targetName);
+      if ((!location.pending && !recognizedTopLevel) || (location.pending && !recognizedPending)) {
+        refuse(`unrecognized durable metadata temporary ${name}`);
+      }
+      const temporaryPath = path.join(location.directory, name);
+      const destinationPath = path.join(location.directory, targetName);
+      await assertContainedUnlinkedPath(outputDirectory, temporaryPath, "durable metadata temporary", {
+        kind: "file",
+      });
+      if (await containedPathExists(outputDirectory, destinationPath, "durable metadata destination", "file")) {
+        await rm(temporaryPath, { force: false });
+        continue;
+      }
+      if (!location.pending && ["checkpoint.json", "run.json"].includes(targetName)) {
+        // Both are derived from the authoritative raw ledger and durable state.
+        // A pre-rename temporary can be discarded and deterministically rebuilt.
+        await rm(temporaryPath, { force: false });
+        continue;
+      }
+      refuse(`durable metadata temporary has no authoritative destination: ${name}`);
+    }
+  }
 }
 
 function bodySha256(body) {
@@ -379,14 +508,20 @@ function parseDurableJson(body, label) {
 }
 
 async function recursiveFiles(root) {
+  await assertContainedUnlinkedPath(root, root, "persistent instance root", { kind: "directory" });
   const names = (await readdir(root, { recursive: true }))
     .map((name) => name.split(path.sep).join("/"))
     .sort();
   const files = [];
   for (const relative of names) {
     const absolute = path.join(root, ...relative.split("/"));
-    const information = await stat(absolute);
+    const { information } = await assertContainedUnlinkedPath(
+      root,
+      absolute,
+      `persistent history entry ${relative}`,
+    );
     if (information.isFile()) files.push(relative);
+    else if (!information.isDirectory()) refuse(`persistent history entry ${relative} has an unsupported file type`);
   }
   return files;
 }
@@ -417,8 +552,16 @@ async function inspectTransactionalKvHistory(instanceRoot) {
       refuse(`transactional-kv version ${version} is missing its integrity record`);
     }
     const [stateBody, integrityBody] = await Promise.all([
-      readFile(path.join(instanceRoot, ...stateRelative.split("/"))),
-      readFile(path.join(instanceRoot, ...integrityRelative.split("/"))),
+      readContainedFile(
+        instanceRoot,
+        path.join(instanceRoot, ...stateRelative.split("/")),
+        `transactional-kv state ${version}`,
+      ),
+      readContainedFile(
+        instanceRoot,
+        path.join(instanceRoot, ...integrityRelative.split("/")),
+        `transactional-kv integrity ${version}`,
+      ),
     ]);
     const state = parseDurableJson(stateBody, `transactional-kv version ${version}`);
     const integrity = parseDurableJson(integrityBody, `transactional-kv integrity ${version}`);
@@ -479,7 +622,11 @@ async function inspectActuatorHistory(instanceRoot) {
     if (!`/${relative}`.endsWith(expectedSuffix)) {
       refuse(`actuator durable generation sequence is not contiguous at ${version}`);
     }
-    const body = await readFile(path.join(instanceRoot, ...relative.split("/")));
+    const body = await readContainedFile(
+      instanceRoot,
+      path.join(instanceRoot, ...relative.split("/")),
+      `actuator generation ${version}`,
+    );
     const bundle = parseDurableJson(body, `actuator generation ${version}`);
     if (
       bundle?.schema !== 1
@@ -689,7 +836,7 @@ async function assertInstanceMatchesLedgerTip({
   const instanceRoot = path.join(instancesDirectory, instance.instance_id);
   const recorded = lastEventForInstance(rawEvents, instance.instance_id);
   if (!recorded) {
-    if (await exists(instanceRoot)) {
+    if (await containedPathExists(instancesDirectory, instanceRoot, "persistent instance root", "directory")) {
       const files = await recursiveFiles(instanceRoot);
       if (files.length > 0) {
         refuse(`instance ${instance.instance_id} has durable state without a completed ledger event`);
@@ -697,7 +844,7 @@ async function assertInstanceMatchesLedgerTip({
     }
     return;
   }
-  if (!(await exists(instanceRoot))) {
+  if (!(await containedPathExists(instancesDirectory, instanceRoot, "persistent instance root", "directory"))) {
     refuse(`durable instance is missing for completed operation ${recorded.operation_id}`);
   }
   const actual = await inspectPersistentState(instance.task_family, instanceRoot);
@@ -712,6 +859,16 @@ async function assertAllInstanceTips({
   rawEvents,
   pendingAdvanceInstanceIds = new Set(),
 }) {
+  const expectedInstanceIds = new Set(Object.values(identity.instances).map((row) => row.instance_id));
+  for (const name of await readdir(instancesDirectory)) {
+    if (!expectedInstanceIds.has(name)) refuse(`unexpected persistent instance root ${name}`);
+    await assertContainedUnlinkedPath(
+      instancesDirectory,
+      path.join(instancesDirectory, name),
+      `persistent instance root ${name}`,
+      { kind: "directory" },
+    );
+  }
   for (const instance of Object.values(identity.instances)) {
     await assertInstanceMatchesLedgerTip({
       instance,
@@ -726,7 +883,7 @@ async function summarizeInstances(identity, instancesDirectory) {
   const summaries = [];
   for (const instance of Object.values(identity.instances)) {
     const root = path.join(instancesDirectory, instance.instance_id);
-    if (await exists(root)) {
+    if (await containedPathExists(instancesDirectory, root, "persistent instance root", "directory")) {
       summaries.push({ ...instance, ...(await inspectPersistentState(instance.task_family, root)) });
     }
   }
@@ -753,6 +910,10 @@ export async function runPersistentServiceExperiment({
     if (!resume && outputExists) refuse("new output directory already exists");
     if (resume && !outputExists) refuse("resume output directory does not exist");
     if (!outputExists) await mkdir(outputDirectory, { recursive: true });
+    await assertContainedUnlinkedPath(outputDirectory, outputDirectory, "persistent output root", {
+      kind: "directory",
+    });
+    if (outputExists) await cleanupMetadataTemporaries(outputDirectory);
 
   const identityPath = path.join(outputDirectory, "run-identity.json");
   const rawPath = path.join(outputDirectory, "raw", "persistent-service-events.ndjson");
@@ -760,28 +921,60 @@ export async function runPersistentServiceExperiment({
   const pendingDirectory = path.join(outputDirectory, "pending");
   const instancesDirectory = path.join(outputDirectory, "instances");
   const runPath = path.join(outputDirectory, "run.json");
+  const rawDirectory = path.dirname(rawPath);
   await mkdir(pendingDirectory, { recursive: true });
   await mkdir(instancesDirectory, { recursive: true });
-  if (!resume) await writeIdentity(identityPath, identity);
-  else await verifyIdentity(identityPath, identity);
+  await mkdir(rawDirectory, { recursive: true });
+  await assertContainedUnlinkedPath(outputDirectory, pendingDirectory, "pending receipt directory", {
+    kind: "directory",
+  });
+  await assertContainedUnlinkedPath(outputDirectory, instancesDirectory, "persistent instances directory", {
+    kind: "directory",
+  });
+  await assertContainedUnlinkedPath(outputDirectory, rawDirectory, "persistent raw ledger directory", {
+    kind: "directory",
+  });
+  if (!resume) await writeIdentity(outputDirectory, identityPath, identity);
+  else await verifyIdentity(outputDirectory, identityPath, identity);
 
   const expectedById = new Map(identity.operations.map((operation) => [operation.operation_id, operation]));
   const pendingOperationIds = new Set();
   for (const name of await readdir(pendingDirectory)) {
     if (!/^c010-operation-[0-9a-f]{64}\.json$/.test(name)) refuse(`unexpected pending entry ${name}`);
+    await assertContainedUnlinkedPath(
+      outputDirectory,
+      path.join(pendingDirectory, name),
+      `pending receipt ${name}`,
+      { kind: "file" },
+    );
     const operationId = name.slice(0, -5);
     if (!expectedById.has(operationId)) refuse(`pending receipt is outside the frozen plan: ${operationId}`);
     pendingOperationIds.add(operationId);
   }
 
+  await assertContainedUnlinkedPath(outputDirectory, rawPath, "persistent raw ledger", { allowMissing: true });
+  await assertContainedUnlinkedPath(outputDirectory, checkpointPath, "persistent checkpoint", { allowMissing: true });
+  const guardedDurableIo = {
+    appendRecord: async (file, body) => {
+      await assertContainedUnlinkedPath(outputDirectory, file, "persistent raw ledger", { allowMissing: true });
+      await appendDurableRecord(file, body);
+      await assertContainedUnlinkedPath(outputDirectory, file, "persistent raw ledger", { kind: "file" });
+    },
+    replaceCheckpoint: async (file, body) => {
+      await assertContainedUnlinkedPath(outputDirectory, file, "persistent checkpoint", { allowMissing: true });
+      await replaceDurableCheckpoint(file, body);
+      await assertContainedUnlinkedPath(outputDirectory, file, "persistent checkpoint", { kind: "file" });
+    },
+  };
   const ledger = await openCheckpointLedger({
     rawPath,
     checkpointPath,
     scientificPayload: persistentServiceScientificPayload,
     workKey: (event) => event.operation_id,
     runIdentity: identity,
+    durableIo: guardedDurableIo,
   });
-  let rawEvents = await readRawEvents(rawPath);
+  let rawEvents = await readRawEvents(outputDirectory, rawPath);
   assertLongitudinalPrefix(rawEvents, identity);
   const uncompletedPending = [...pendingOperationIds].filter((operationId) => (
     !ledger.hasCompleted(operationId)
@@ -802,7 +995,9 @@ export async function runPersistentServiceExperiment({
     rawEvents,
     pendingAdvanceInstanceIds,
   });
-  const priorRun = await exists(runPath) ? await readJson(runPath) : null;
+  const priorRun = await containedPathExists(outputDirectory, runPath, "final run result", "file")
+    ? await readContainedJson(outputDirectory, runPath, "final run result")
+    : null;
   const reconciledOperationIds = new Set(priorRun?.reconciled_operation_ids ?? []);
   for (const operationId of reconciledOperationIds) {
     if (!expectedById.has(operationId)) {
@@ -813,11 +1008,15 @@ export async function runPersistentServiceExperiment({
   for (const operation of identity.operations) {
     const receiptPath = path.join(pendingDirectory, `${operation.operation_id}.json`);
     const instanceRoot = path.join(instancesDirectory, operation.instance_id);
-    const receiptExists = await exists(receiptPath);
+    const receiptExists = await containedPathExists(outputDirectory, receiptPath, "pending receipt", "file");
 
     if (ledger.hasCompleted(operation.operation_id)) {
       if (receiptExists) {
-        const receiptEvent = verifyPendingReceipt(await readJson(receiptPath), {
+        const receiptEvent = verifyPendingReceipt(await readContainedJson(
+          outputDirectory,
+          receiptPath,
+          "pending receipt",
+        ), {
           ...operation,
           run_id: identity.run_id,
           plan_sha256: identity.plan_sha256,
@@ -830,6 +1029,7 @@ export async function runPersistentServiceExperiment({
         ) {
           refuse(`completed ledger record disagrees with pending receipt ${operation.operation_id}`);
         }
+        await assertContainedUnlinkedPath(outputDirectory, receiptPath, "pending receipt", { kind: "file" });
         await rm(receiptPath, { force: false });
       }
       continue;
@@ -837,7 +1037,11 @@ export async function runPersistentServiceExperiment({
 
     let event;
     if (receiptExists) {
-      event = verifyPendingReceipt(await readJson(receiptPath), {
+      event = verifyPendingReceipt(await readContainedJson(
+        outputDirectory,
+        receiptPath,
+        "pending receipt",
+      ), {
         ...operation,
         run_id: identity.run_id,
         plan_sha256: identity.plan_sha256,
@@ -863,7 +1067,7 @@ export async function runPersistentServiceExperiment({
       });
       const durableState = await inspectPersistentState(operation.task_family, instanceRoot);
       event = eventForResult(identity, operation, result, durableState);
-      await writePendingReceipt(receiptPath, event);
+      await writePendingReceipt(outputDirectory, receiptPath, event);
       if (interruptAfterBackendFinalizeOperationId === operation.operation_id) {
         await ledger.saveCheckpoint({
           status: "interrupted-after-pending-receipt",
@@ -888,6 +1092,7 @@ export async function runPersistentServiceExperiment({
       status: "in-progress",
       reconciled_operation_ids: [...reconciledOperationIds],
     });
+    await assertContainedUnlinkedPath(outputDirectory, receiptPath, "pending receipt", { kind: "file" });
     await rm(receiptPath, { force: false });
     rawEvents.push(event);
     assertLongitudinalPrefix(rawEvents, identity);
@@ -911,15 +1116,14 @@ export async function runPersistentServiceExperiment({
     instances: await summarizeInstances(identity, instancesDirectory),
     reconciled_operation_ids: [...reconciledOperationIds],
   };
-  if (await exists(runPath)) {
-    if (canonicalize(await readJson(runPath)) !== canonicalize(result)) {
+  if (await containedPathExists(outputDirectory, runPath, "final run result", "file")) {
+    if (canonicalize(await readContainedJson(outputDirectory, runPath, "final run result")) !== canonicalize(result)) {
       refuse("existing final run result disagrees with recomputed persistent state");
     }
   } else {
-    await writeFile(runPath, `${JSON.stringify(result, null, 2)}\n`, {
-      encoding: "utf8",
-      flag: "wx",
-    });
+    await assertContainedUnlinkedPath(outputDirectory, runPath, "final run result", { allowMissing: true });
+    await replaceDurableCheckpoint(runPath, `${JSON.stringify(result, null, 2)}\n`);
+    await assertContainedUnlinkedPath(outputDirectory, runPath, "final run result", { kind: "file" });
   }
     return result;
   } finally {

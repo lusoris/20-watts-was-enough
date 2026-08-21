@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { lstat, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 export const RETRY_ROLLBACK_IMPLEMENTATION_ID = "candidate-010-two-lifecycle-retry-rollback-v1";
@@ -20,7 +21,63 @@ function finite(value, field) {
   return value;
 }
 
-function attemptSummary(result, { index, attemptRole, taskFamily, backendId, opportunityId }) {
+export async function observeFilesystemSnapshot(root) {
+  const entries = [];
+  async function visit(directory, relativeDirectory = "") {
+    const names = await readdir(directory);
+    names.sort();
+    for (const name of names) {
+      const absolute = path.join(directory, name);
+      const relative = path.posix.join(relativeDirectory, name);
+      const information = await lstat(absolute);
+      if (information.isSymbolicLink()) throw new Error("Retry/rollback snapshot refuses symbolic links.");
+      if (information.isDirectory()) {
+        entries.push({ path: relative, type: "directory" });
+        await visit(absolute, relative);
+      } else if (information.isFile()) {
+        const body = await readFile(absolute);
+        entries.push({ path: relative, type: "file", bytes: body.length, sha256: sha256(body) });
+      } else {
+        throw new Error(`Retry/rollback snapshot refuses unsupported entry: ${relative}`);
+      }
+    }
+  }
+  await visit(root);
+  const body = { schema: 1, entries };
+  return Object.freeze({
+    ...body,
+    files: entries.filter((entry) => entry.type === "file").length,
+    directories: entries.filter((entry) => entry.type === "directory").length,
+    bytes: entries.reduce((sum, entry) => sum + (entry.bytes ?? 0), 0),
+    snapshot_sha256: sha256(canonical(body)),
+  });
+}
+
+function validateFilesystemSnapshot(snapshot) {
+  if (snapshot?.schema !== 1 || !Array.isArray(snapshot.entries)) return false;
+  const paths = snapshot.entries.map((entry) => entry.path);
+  if (
+    paths.length !== new Set(paths).size
+    || paths.some((entry) => (
+      typeof entry !== "string"
+      || entry === ""
+      || entry.startsWith("/")
+      || entry.startsWith("../")
+      || entry.includes("/../")
+      || entry.includes("\\")
+    ))
+  ) return false;
+  if (snapshot.snapshot_sha256 !== sha256(canonical({ schema: 1, entries: snapshot.entries }))) return false;
+  const files = snapshot.entries.filter((entry) => entry.type === "file");
+  const directories = snapshot.entries.filter((entry) => entry.type === "directory");
+  return files.every((entry) => Number.isInteger(entry.bytes) && entry.bytes >= 0 && /^[0-9a-f]{64}$/.test(entry.sha256 ?? ""))
+    && snapshot.entries.length === files.length + directories.length
+    && snapshot.files === files.length
+    && snapshot.directories === directories.length
+    && snapshot.bytes === files.reduce((sum, entry) => sum + entry.bytes, 0);
+}
+
+function attemptSummary(result, filesystemSnapshot, { index, attemptRole, taskFamily, backendId, opportunityId }) {
   const summary = {
     index,
     attempt_role: attemptRole,
@@ -43,6 +100,7 @@ function attemptSummary(result, { index, attemptRole, taskFamily, backendId, opp
     durable_exists: result.filesystem?.durableExists,
     irreversible_violation: result.filesystem?.irreversible_violation === true,
     trace_output_sha256: result.filesystem?.trace_output_sha256,
+    filesystem_snapshot: filesystemSnapshot,
   };
   return {
     ...summary,
@@ -66,7 +124,7 @@ function logicalBoundaryId(ownership, attemptRole) {
   }));
 }
 
-export function validateRetryRollbackResult(result, expectedOwnership = null) {
+export function validateRetryRollbackResult(result, expectedOwnership = null, observedSnapshots = null) {
   const lineage = result?.comparator_lineage;
   const attempts = lineage?.attempts;
   if (
@@ -96,14 +154,46 @@ export function validateRetryRollbackResult(result, expectedOwnership = null) {
     || second.boundary_id !== logicalBoundaryId(ownership, "retry-action")
     || !validateAttemptEvidence(first)
     || !validateAttemptEvidence(second)
+    || !validateFilesystemSnapshot(first.filesystem_snapshot)
+    || !validateFilesystemSnapshot(second.filesystem_snapshot)
+    || (observedSnapshots && canonical(first.filesystem_snapshot) !== canonical(observedSnapshots[0]))
+    || (observedSnapshots && canonical(second.filesystem_snapshot) !== canonical(observedSnapshots[1]))
     || first.stage !== true
     || first.commit !== false
     || first.reset !== true
     || first.rollback_complete !== true
+    || first.commit_complete !== false
     || first.stage_exists !== false
     || first.durable_exists !== false
+    || first.durable_bytes_written !== 0
     || first.irreversible_violation !== false
+    || first.trace_output_sha256 !== second.trace_output_sha256
   ) throw new Error("Retry/rollback first action leaked state or did not complete rollback.");
+  if (
+    second.stage !== true
+    || second.commit === second.reset
+    || second.commit !== result.decision?.commit
+    || second.reset !== result.decision?.reset
+    || second.rollback_complete !== result.filesystem?.rollbackComplete
+    || second.commit_complete !== result.filesystem?.commitComplete
+    || second.stage_exists !== result.filesystem?.stageExists
+    || second.durable_exists !== result.filesystem?.durableExists
+    || second.irreversible_violation !== (result.filesystem?.irreversible_violation === true)
+    || second.trace_output_sha256 !== result.filesystem?.trace_output_sha256
+    || second.stage_exists !== false
+    || second.irreversible_violation !== false
+    || (second.commit && (
+      second.commit_complete !== true
+      || second.rollback_complete !== false
+      || second.durable_exists !== true
+    ))
+    || (second.reset && (
+      second.rollback_complete !== true
+      || second.commit_complete !== false
+      || second.durable_exists !== false
+      || second.durable_bytes_written !== 0
+    ))
+  ) throw new Error("Retry/rollback retry action lifecycle evidence is inconsistent.");
   const expectedStaged = first.staged_bytes_written + second.staged_bytes_written;
   const expectedBoundary = first.boundary_elapsed_ms + second.boundary_elapsed_ms;
   if (
@@ -159,7 +249,8 @@ export async function executeRetryRollbackComparatorTrial({
       reason: "mandatory-first-action-rollback",
     }),
   });
-  const firstSummary = attemptSummary(first, {
+  const firstSnapshot = await observeFilesystemSnapshot(firstRoot);
+  const firstSummary = attemptSummary(first, firstSnapshot, {
     index: 1,
     attemptRole: "first-action",
     taskFamily,
@@ -186,7 +277,8 @@ export async function executeRetryRollbackComparatorTrial({
     revealTrace: false,
     decideWithTrace: () => decideRetry(),
   });
-  const retrySummary = attemptSummary(retry, {
+  const retrySnapshot = await observeFilesystemSnapshot(retryRoot);
+  const retrySummary = attemptSummary(retry, retrySnapshot, {
     index: 2,
     attemptRole: "retry-action",
     taskFamily,
@@ -238,6 +330,6 @@ export async function executeRetryRollbackComparatorTrial({
     task_family: taskFamily,
     backend_id: backendId,
     opportunity_id: opportunity.id,
-  });
+  }, [firstSnapshot, retrySnapshot]);
   return result;
 }

@@ -10,6 +10,7 @@ import {
   remainingWorkUnits,
 } from "./checkpoint.mjs";
 import { evaluateExternalEnergyReading } from "./energy-provider.mjs";
+import { assertCandidate010RawEvent } from "./event-contract.mjs";
 import { buildFactorialDesign } from "./factorial-design.mjs";
 import {
   analyzeFactorialRun,
@@ -19,6 +20,7 @@ import {
 import { generateOpportunities } from "./generator.mjs";
 import { executeFilesystemTrial } from "./filesystem-track.mjs";
 import { armNames, decide, scoreDecision, shouldRevealTrace } from "./policies.mjs";
+import { traceBodyForJob } from "./trace-job.mjs";
 
 const root = process.cwd();
 const benchmarkRoot = path.join(root, "experiments", "workstation", "candidate-010");
@@ -248,6 +250,7 @@ export async function runExperiment({
           },
           filesystem,
         };
+        assertCandidate010RawEvent(event, { expectedKind: "smoke", requireIntegrity: false });
         await ledger.append(event);
         processedThisInvocation += 1;
         const state = ledger.summary();
@@ -345,11 +348,13 @@ export async function attachEnergyReading(outputDirectory, readingPath) {
 }
 
 export async function analyzeRun(outputDirectory) {
+  await validateRun(outputDirectory, { writeArtifact: false });
   const rawPath = path.join(outputDirectory, "raw", "events.ndjson");
   const lines = (await readFile(rawPath, "utf8")).trim().split(/\r?\n/).filter(Boolean);
   const byArm = new Map();
   for (const line of lines) {
     const event = JSON.parse(line);
+    assertCandidate010RawEvent(event, { expectedKind: "smoke" });
     const row = byArm.get(event.arm) ?? { opportunities: 0, false_commits: 0, false_rejects: 0, abstentions: 0, rollback_violations: 0, loss: 0, verifier_calls: 0, modeled_energy_j: 0, staged_bytes_written: 0, durable_bytes_written: 0, filesystem_boundary_ms: 0 };
     row.opportunities += 1;
     row.false_commits += Number(event.outcome.false_commit);
@@ -388,11 +393,27 @@ export async function analyzeRun(outputDirectory) {
   return summary;
 }
 
-export async function validateRun(outputDirectory) {
+export async function validateRun(outputDirectory, { writeArtifact = true } = {}) {
   const rawPath = path.join(outputDirectory, "raw", "events.ndjson");
-  const runPath = path.join(outputDirectory, "provenance", "run.json");
+  const provenanceDirectory = path.join(outputDirectory, "provenance");
+  const runPath = path.join(provenanceDirectory, "run.json");
   const lines = (await readFile(rawPath, "utf8")).trim().split(/\r?\n/).filter(Boolean);
-  const run = await loadJson(runPath);
+  const [run, config, seedDocument] = await Promise.all([
+    loadJson(runPath),
+    loadJson(path.join(provenanceDirectory, "config.json")),
+    loadJson(path.join(provenanceDirectory, "seeds.json")),
+  ]);
+  const seeds = seedDocument.seeds;
+  const runIdentity = {
+    profile: config.profile,
+    config_sha256: sha256(canonical(config)),
+    ordered_seed_pack_sha256: sha256(canonical(seeds)),
+    schedule: "seed-opportunity-arm-v1",
+  };
+  const expectedSchedule = new Map();
+  for (const unit of deterministicWorkUnits({ seeds, config, arms: armNames, generateOpportunities })) {
+    expectedSchedule.set(unit.key, unit);
+  }
   const digest = createHash("sha256");
   const keys = new Set();
   const errors = [];
@@ -423,9 +444,80 @@ export async function validateRun(outputDirectory) {
       errors.push(`raw line ${index + 1} is invalid JSON: ${error.message}`);
       continue;
     }
+    try {
+      assertCandidate010RawEvent(event, { expectedKind: "smoke" });
+    } catch (error) {
+      errors.push(`raw line ${index + 1} violates the runtime output contract: ${error.message}`);
+      continue;
+    }
     const key = `${event.opportunity_id}\u0000${event.arm}`;
     if (keys.has(key)) errors.push(`duplicate work unit: ${event.opportunity_id}/${event.arm}`);
     keys.add(key);
+    const expectedUnit = expectedSchedule.get(key);
+    if (!expectedUnit) {
+      errors.push(`work unit is not in the frozen schedule: ${event.opportunity_id}/${event.arm}`);
+    } else {
+      const expectedProjection = {
+        opportunity_id: expectedUnit.opportunity.id,
+        seed: expectedUnit.seed,
+        truth_unsafe: expectedUnit.opportunity.unsafe,
+        evidence: expectedUnit.opportunity.evidence,
+      };
+      const observedProjection = Object.fromEntries(
+        Object.keys(expectedProjection).map((field) => [field, event[field]]),
+      );
+      if (canonical(expectedProjection) !== canonical(observedProjection)) {
+        errors.push(`work unit input differs from the frozen schedule: ${event.opportunity_id}/${event.arm}`);
+      }
+      const policyOpportunity = {
+        id: expectedUnit.opportunity.id,
+        evidence: expectedUnit.opportunity.evidence,
+        ...(event.arm === "oracle-ceiling" ? { unsafe: expectedUnit.opportunity.unsafe } : {}),
+      };
+      const expectedTrace = traceBodyForJob(expectedUnit.opportunity, config);
+      const expectedReveal = shouldRevealTrace(event.arm, policyOpportunity, config);
+      const expectedDecision = decide(
+        event.arm,
+        policyOpportunity,
+        config,
+        expectedReveal ? expectedTrace.verifier : null,
+      );
+      const observedDecision = {
+        commit: event.decision?.commit,
+        abstain: event.decision?.abstain,
+        stage: event.decision?.stage,
+        reset: event.decision?.reset,
+        reason: event.decision?.reason,
+        score: event.decision?.score,
+      };
+      const expectedDecisionProjection = {
+        commit: expectedDecision.commit,
+        abstain: expectedDecision.abstain,
+        stage: expectedDecision.stage,
+        reset: expectedDecision.reset,
+        reason: expectedDecision.reason,
+        score: expectedDecision.score,
+      };
+      if (
+        canonical(observedDecision) !== canonical(expectedDecisionProjection)
+        || event.resources?.observations !== expectedDecision.observations
+        || event.resources?.verifier_calls !== expectedDecision.verifier_calls
+      ) errors.push(`decision differs from the frozen policy: ${event.opportunity_id}/${event.arm}`);
+      const expectedTraceSha256 = sha256(expectedTrace.body);
+      if (
+        event.trace?.revealed !== expectedReveal
+        || event.trace?.verifier !== (expectedReveal ? expectedTrace.verifier : null)
+        || event.trace?.output_sha256 !== expectedTraceSha256
+      ) errors.push(`temporary execution differs from the frozen trace job: ${event.opportunity_id}/${event.arm}`);
+      const scored = scoreDecision(expectedUnit.opportunity, expectedDecision, config);
+      if (
+        event.outcome?.false_commit !== scored.falseCommit
+        || event.outcome?.false_reject !== scored.falseReject
+        || event.outcome?.consequence_weighted_loss !== scored.loss
+        || event.outcome?.rollback_violation !== Boolean(expectedDecision.reset && !event.filesystem?.rollbackComplete)
+        || event.resources?.modeled_energy_j !== scored.modeledEnergy
+      ) errors.push(`scientific result differs from independent recomputation: ${event.opportunity_id}/${event.arm}`);
+    }
     if (event.schema !== 1 || event.artifact !== "candidate-010") {
       errors.push(`raw line ${index + 1} has the wrong schema or artifact`);
     }
@@ -502,6 +594,34 @@ export async function validateRun(outputDirectory) {
   if (previousRecordHash !== run.hash_chain_sha256) {
     errors.push("final hash-chain digest does not match provenance");
   }
+  if (
+    run.profile !== config.profile
+    || run.config_sha256 !== runIdentity.config_sha256
+    || run.ordered_seed_pack_sha256 !== runIdentity.ordered_seed_pack_sha256
+    || run.seed_count !== seeds.length
+    || expectedSchedule.size !== expectedRecords
+  ) errors.push("run provenance differs from the frozen config, seed pack, or schedule");
+  let checkpointState = null;
+  try {
+    const ledger = await openCheckpointLedger({
+      rawPath,
+      checkpointPath: path.join(provenanceDirectory, "checkpoint.json"),
+      scientificPayload,
+      workKey,
+      runIdentity,
+    });
+    checkpointState = ledger.summary();
+    const checkpoint = await loadJson(path.join(provenanceDirectory, "checkpoint.json"));
+    if (
+      checkpointState.checkpoint_status !== "current"
+      || checkpoint.complete !== true
+      || checkpoint.records !== lines.length
+      || checkpoint.scientific_payload_sha256 !== scientificDigest
+      || checkpoint.hash_chain_sha256 !== previousRecordHash
+    ) errors.push("completed run lacks a current complete checkpoint authority");
+  } catch (error) {
+    errors.push(`completed run checkpoint authority is invalid: ${error.message}`);
+  }
 
   const validation = {
     schema: 1,
@@ -515,10 +635,12 @@ export async function validateRun(outputDirectory) {
     external_energy_bound: Boolean(externalEnergyReading && normalizedEnergy),
     arm_level_energy_claim_eligible: false,
   };
-  const analysisDirectory = path.join(outputDirectory, "analysis");
-  await mkdir(analysisDirectory, { recursive: true });
-  await writeFile(path.join(analysisDirectory, "validation.json"), `${JSON.stringify(validation, null, 2)}\n`);
   if (errors.length) throw new Error(`Run validation failed:\n- ${errors.join("\n- ")}`);
+  if (writeArtifact) {
+    const analysisDirectory = path.join(outputDirectory, "analysis");
+    await mkdir(analysisDirectory, { recursive: true });
+    await writeFile(path.join(analysisDirectory, "validation.json"), `${JSON.stringify(validation, null, 2)}\n`);
+  }
   return validation;
 }
 
@@ -610,8 +732,8 @@ async function main() {
       }, null, 2));
       return;
     }
-    const summary = await analyzeFactorialRun(output);
     const validation = await validateFactorialRun(output);
+    const summary = await analyzeFactorialRun(output);
     console.log(JSON.stringify({ output, run: result.run, summary, validation }, null, 2));
     return;
   }
@@ -626,8 +748,8 @@ async function main() {
     console.log(JSON.stringify({ output, run: result.run, resume_command: `node experiments/workstation/candidate-010/runner.mjs ${action} --profile ${profile} --output ${output} --resume true` }, null, 2));
     return;
   }
-  const summary = await analyzeRun(output);
   const validation = await validateRun(output);
+  const summary = await analyzeRun(output);
   console.log(JSON.stringify({ output, run: result.run, summary, validation }, null, 2));
 }
 

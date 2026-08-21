@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import {
+  mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile,
+} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { canonicalize, sha256Hex } from "./checkpoint.mjs";
 import {
+  PERSISTENT_SERVICE_RECOVERY_SCOPE,
   createPersistentServicePlan,
   derivePersistentServiceRunIdentity,
   persistentServiceScientificPayload,
@@ -50,6 +53,19 @@ async function findRecursive(root, predicate) {
   const relative = names.find((name) => predicate(name.split(path.sep).join("/")));
   assert.ok(relative, `expected a matching durable file below ${root}`);
   return path.join(root, relative);
+}
+
+async function createHostileLinkOrSkip(context, target, link, type = "file") {
+  try {
+    await symlink(target, link, type);
+    return true;
+  } catch (error) {
+    if (["EPERM", "EACCES", "ENOSYS", "UNKNOWN"].includes(error?.code)) {
+      context.skip(`symlink/reparse creation is unavailable: ${error.code}`);
+      return false;
+    }
+    throw error;
+  }
 }
 
 test("persistent plan binds stable run, instance, operation, and expected-version identities", () => {
@@ -276,6 +292,120 @@ test("resume rejects corruption in an old actuator generation", async () => {
   });
 });
 
+test("resume refuses a linked historical actuator generation", async (context) => {
+  await withTemporaryRoot(async (root) => {
+    const outputDirectory = path.join(root, "linked-actuator-generation");
+    const result = await runPersistentServiceExperiment({ config, seed: 7_150, outputDirectory });
+    const actuator = result.instances.find((instance) => instance.task_family === "actuator-command");
+    const instanceRoot = path.join(outputDirectory, "instances", actuator.instance_id);
+    const generation = await findRecursive(instanceRoot, (name) => (
+      name.endsWith("/generations/generation-000000000001.json")
+    ));
+    const external = path.join(root, "external-actuator-generation.json");
+    await writeFile(external, await readFile(generation));
+    await rm(generation);
+    if (!(await createHostileLinkOrSkip(context, external, generation))) return;
+
+    await assert.rejects(
+      runPersistentServiceExperiment({
+        config,
+        seed: 7_150,
+        outputDirectory,
+        resume: true,
+      }),
+      /symlink|reparse point|resolves outside/,
+    );
+  });
+});
+
+test("resume refuses a linked historical transactional state", async (context) => {
+  await withTemporaryRoot(async (root) => {
+    const outputDirectory = path.join(root, "linked-transactional-state");
+    const result = await runPersistentServiceExperiment({ config, seed: 7_151, outputDirectory });
+    const transactional = result.instances.find((instance) => instance.task_family === "transactional-kv");
+    const instanceRoot = path.join(outputDirectory, "instances", transactional.instance_id);
+    const state = await findRecursive(instanceRoot, (name) => (
+      name.endsWith("/versions/000000000001/state.json")
+    ));
+    const external = path.join(root, "external-transactional-state.json");
+    await writeFile(external, await readFile(state));
+    await rm(state);
+    if (!(await createHostileLinkOrSkip(context, external, state))) return;
+
+    await assert.rejects(
+      runPersistentServiceExperiment({
+        config,
+        seed: 7_151,
+        outputDirectory,
+        resume: true,
+      }),
+      /symlink|reparse point|resolves outside/,
+    );
+  });
+});
+
+test("resume refuses linked identity and pending-receipt metadata", async (context) => {
+  await withTemporaryRoot(async (root) => {
+    const identityOutput = path.join(root, "linked-identity");
+    await runPersistentServiceExperiment({ config, seed: 7_152, outputDirectory: identityOutput });
+    const identityPath = path.join(identityOutput, "run-identity.json");
+    const externalIdentity = path.join(root, "external-run-identity.json");
+    await writeFile(externalIdentity, await readFile(identityPath));
+    await rm(identityPath);
+    if (!(await createHostileLinkOrSkip(context, externalIdentity, identityPath))) return;
+    await assert.rejects(
+      runPersistentServiceExperiment({
+        config,
+        seed: 7_152,
+        outputDirectory: identityOutput,
+        resume: true,
+      }),
+      /symlink|reparse point|resolves outside/,
+    );
+
+    const seed = 7_153;
+    const plan = createPersistentServicePlan({ config, seed });
+    const identity = derivePersistentServiceRunIdentity({ config, plan, sourceBundle });
+    const receiptOutput = path.join(root, "linked-receipt");
+    const operation = identity.operations[0];
+    await runPersistentServiceExperiment({
+      config,
+      seed,
+      plan,
+      outputDirectory: receiptOutput,
+      interruptAfterBackendFinalizeOperationId: operation.operation_id,
+    });
+    const receiptPath = path.join(receiptOutput, "pending", `${operation.operation_id}.json`);
+    const externalReceipt = path.join(root, "external-pending-receipt.json");
+    await writeFile(externalReceipt, await readFile(receiptPath));
+    await rm(receiptPath);
+    if (!(await createHostileLinkOrSkip(context, externalReceipt, receiptPath))) return;
+    await assert.rejects(
+      runPersistentServiceExperiment({ config, seed, plan, outputDirectory: receiptOutput, resume: true }),
+      /symlink|reparse point|resolves outside/,
+    );
+  });
+});
+
+test("resume refuses a linked persistent output root", async (context) => {
+  await withTemporaryRoot(async (root) => {
+    const realOutput = path.join(root, "real-output-root");
+    const linkedOutput = path.join(root, "linked-output-root");
+    await runPersistentServiceExperiment({ config, seed: 7_154, outputDirectory: realOutput });
+    if (!(await createHostileLinkOrSkip(context, realOutput, linkedOutput, "junction"))) return;
+
+    await assert.rejects(
+      runPersistentServiceExperiment({
+        config,
+        seed: 7_154,
+        outputDirectory: linkedOutput,
+        resume: true,
+      }),
+      /symlink|reparse point|non-directory/,
+    );
+  });
+});
+
 test("resume rejects a missing latest KV version instead of reporting a stale instance complete", async () => {
   await withTemporaryRoot(async (root) => {
     const outputDirectory = path.join(root, "missing-kv-tip");
@@ -333,4 +463,128 @@ test("persistent execution holds the shared exclusive output lock for every writ
     assert.equal(interrupted.status, "interrupted");
     assert.equal((await readdir(root)).includes(path.basename(runLockPath(outputDirectory))), false);
   });
+});
+
+test("derived checkpoint and final-run temporaries are cleaned and rebuilt from authoritative state", async () => {
+  await withTemporaryRoot(async (root) => {
+    const outputDirectory = path.join(root, "recover-derived-metadata");
+    const original = await runPersistentServiceExperiment({
+      config,
+      seed: 718,
+      outputDirectory,
+    });
+    const checkpointTemporary = path.join(outputDirectory, "checkpoint.json.tmp-999-1001");
+    const runTemporary = path.join(outputDirectory, "run.json.tmp-999-1002");
+    await rm(path.join(outputDirectory, "checkpoint.json"));
+    await rm(path.join(outputDirectory, "run.json"));
+    await writeFile(checkpointTemporary, "{\"torn\":", "utf8");
+    await writeFile(runTemporary, "{\"torn\":", "utf8");
+
+    const resumed = await runPersistentServiceExperiment({
+      config,
+      seed: 718,
+      outputDirectory,
+      resume: true,
+    });
+    assert.deepEqual(resumed, original);
+    const topLevel = await readdir(outputDirectory);
+    assert.equal(topLevel.includes(path.basename(checkpointTemporary)), false);
+    assert.equal(topLevel.includes(path.basename(runTemporary)), false);
+    assert.equal(JSON.parse(await readFile(path.join(outputDirectory, "checkpoint.json"), "utf8")).status, "complete");
+    assert.equal(JSON.parse(await readFile(path.join(outputDirectory, "run.json"), "utf8")).status, "complete");
+  });
+});
+
+test("uncommitted identity or pending-receipt temporaries fail closed and remain for audit", async () => {
+  await withTemporaryRoot(async (root) => {
+    const identityOnlyDirectory = path.join(root, "identity-temp-only");
+    await mkdir(identityOnlyDirectory);
+    const identityTemporary = path.join(
+      identityOnlyDirectory,
+      "run-identity.json.tmp-999-2001",
+    );
+    await writeFile(identityTemporary, "{\"schema\":1}\n", "utf8");
+    await assert.rejects(
+      runPersistentServiceExperiment({
+        config,
+        seed: 719,
+        outputDirectory: identityOnlyDirectory,
+        resume: true,
+      }),
+      /temporary has no authoritative destination/,
+    );
+    assert.equal((await readFile(identityTemporary, "utf8")).length > 0, true);
+
+    const outputDirectory = path.join(root, "pending-temp-only");
+    const plan = createPersistentServicePlan({ config, seed: 720 });
+    const identity = derivePersistentServiceRunIdentity({ config, plan, sourceBundle });
+    await runPersistentServiceExperiment({ config, seed: 720, plan, outputDirectory });
+    const pendingTemporary = path.join(
+      outputDirectory,
+      "pending",
+      `${identity.operations[0].operation_id}.json.tmp-999-2002`,
+    );
+    await writeFile(pendingTemporary, "{\"schema\":1}\n", "utf8");
+    await assert.rejects(
+      runPersistentServiceExperiment({
+        config,
+        seed: 720,
+        plan,
+        outputDirectory,
+        resume: true,
+      }),
+      /temporary has no authoritative destination/,
+    );
+    assert.equal((await readFile(pendingTemporary, "utf8")).length > 0, true);
+  });
+});
+
+test("torn identity, checkpoint, final-run, and pending-receipt metadata are never accepted", async () => {
+  await withTemporaryRoot(async (root) => {
+    for (const [index, target] of ["run-identity.json", "checkpoint.json", "run.json"].entries()) {
+      const outputDirectory = path.join(root, `torn-${index}`);
+      await runPersistentServiceExperiment({
+        config,
+        seed: 721 + index,
+        outputDirectory,
+      });
+      await writeFile(path.join(outputDirectory, target), "{\"torn\":", "utf8");
+      await assert.rejects(
+        runPersistentServiceExperiment({
+          config,
+          seed: 721 + index,
+          outputDirectory,
+          resume: true,
+        }),
+        (error) => error instanceof SyntaxError,
+      );
+    }
+
+    const seed = 724;
+    const plan = createPersistentServicePlan({ config, seed });
+    const identity = derivePersistentServiceRunIdentity({ config, plan, sourceBundle });
+    const outputDirectory = path.join(root, "torn-pending");
+    await runPersistentServiceExperiment({
+      config,
+      seed,
+      plan,
+      outputDirectory,
+      interruptAfterBackendFinalizeOperationId: identity.operations[0].operation_id,
+    });
+    const receiptPath = path.join(
+      outputDirectory,
+      "pending",
+      `${identity.operations[0].operation_id}.json`,
+    );
+    await writeFile(receiptPath, "{\"torn\":", "utf8");
+    await assert.rejects(
+      runPersistentServiceExperiment({ config, seed, plan, outputDirectory, resume: true }),
+      (error) => error instanceof SyntaxError,
+    );
+  });
+
+  assert.equal(PERSISTENT_SERVICE_RECOVERY_SCOPE.file_fsync_requested, true);
+  assert.equal(PERSISTENT_SERVICE_RECOVERY_SCOPE.directory_fsync_guarantee, false);
+  assert.equal(PERSISTENT_SERVICE_RECOVERY_SCOPE.arbitrary_power_loss_guarantee, false);
+  assert.equal(PERSISTENT_SERVICE_RECOVERY_SCOPE.toctou_guarantee, false);
 });

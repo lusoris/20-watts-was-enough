@@ -24,9 +24,14 @@ The current harness provides:
    rejection; complete ledger records and checkpoint replacements request file
    `fsync`, while directory-entry persistence and arbitrary power-loss recovery
    remain outside the claim;
-7. a byte-exact executable source bundle covering the generator, policies,
-   trace job, adapters, runner, analysis, release validator, configs, lockfile,
-   and current Git commit; resume and validation reject a changed bundle;
+7. a byte-exact source bundle covering the generator, policies, trace job,
+   adapters, runner, analysis, release validator, configs, lockfile, manifest,
+   every manifest-registered test, its golden fixture, and current Git-commit
+   metadata; direct worktree bytes, rather than index cleanliness, define the
+   source identity;
+   deterministic discovery rejects unlisted production modules, unregistered
+   tests, unclassified files, symlinks, and production or test imports outside
+   the frozen closure;
 8. a frozen-release contract that derives confirmation authority only after
    source, config, design, registry, preregistration, seed commitment, reveal,
    and cross-partition disjointness all verify; no real release exists yet;
@@ -38,8 +43,9 @@ The current harness provides:
    policies, equal-budget accounting, held-out task-family contracts, and a
    multiplicity-controlled confirmatory analyzer that refuses
    smoke/development claims; retry/rollback now executes and charges two real
-   effect lifecycles, while the independent-verifier arm uses a separately
-   implemented and provenance-checked detector;
+   effect lifecycles whose observed filesystem snapshots are recomputed, while
+   the independent-verifier arm uses a separately implemented detector whose
+   lineage hashes are regenerated from its frozen input and output;
 11. four common-interface effect boundaries: filesystem publication,
    hash-linked transactional KV, Ed25519-signed append-only publication, and a
    versioned local actuator simulator with physical actuation forbidden;
@@ -61,7 +67,11 @@ The current harness provides:
     confirmatory abstention/kill rules, and smoke reproducibility; and
 17. atomic, ownership-checked single-writer leases for factorial and persistent
     output roots, with contention rejected before mutation and no automatic
-    stale-lock breaking.
+    stale-lock breaking; and
+18. one executable raw-event contract shared by smoke and factorial writers,
+    readers, analyzers, and validators; it rejects unknown top-level fields and
+    recomputes identity, privilege, interval, finalization, byte-accounting,
+    energy-separation, and nonphysical-boundary relations before use.
 
 Run:
 
@@ -105,13 +115,22 @@ no real confirmation release document or revealed seed pack.
 - The factorial runner gives every opportunity–arm work unit a fresh isolated
   effect root. A separate longitudinal diagnostic now exercises persistent
   transactional-KV and actuator history, including stale-version refusal and
-  recovery from a declared interruption after backend finalization, but the
+  recovery from a declared interruption after backend finalization and the
+  pending-receipt destination-file `fsync`, but before ledger append. The
   main factorial does not yet test concurrent shared-service contention.
   Concurrent writers are refused rather than used as an experimental factor.
-- Ledger appends and checkpoint replacements request file `fsync`, and a
-  truncated final record fails closed. This does not establish directory-entry
+- Ledger appends, checkpoints, persistent run identity, pending receipts, and
+  final run metadata request temp-file and destination-file `fsync`; a
+  truncated final record fails closed. Derived orphan temporaries may be rebuilt
+  only from the authoritative ledger and state, while orphan identity or receipt
+  temporaries are preserved and refused. This does not establish directory-entry
   persistence, recovery by truncating a torn tail, or safety under arbitrary
   process, filesystem, or power-loss crashes.
+- The source bundle binds direct repository bytes and current commit metadata,
+  but the present in-process runners do not prove that already loaded ESM code
+  came from those same bytes, nor do they bind the exact Node runtime and
+  installed dependency tree. A real confirmation release therefore still
+  requires a fresh immutable bootstrap plus pre/post source and runtime checks.
 - Retry/rollback and independent verification now have distinct executable
   mechanics. They remain local synthetic comparators rather than evidence that
   either mechanism is independent or effective in a deployed system.

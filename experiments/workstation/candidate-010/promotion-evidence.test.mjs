@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtemp, mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { performance } from "node:perf_hooks";
 import test from "node:test";
 import { BACKEND_METADATA } from "./backend-registry.mjs";
-import { openCheckpointLedger } from "./checkpoint.mjs";
 import { createConfirmatoryPreregistration } from "./confirmatory-analysis.mjs";
 import {
   EXTERNAL_ENERGY_CONTRACT_VERSION,
@@ -15,7 +15,6 @@ import {
 } from "./energy-provider.mjs";
 import { buildFactorialDesign } from "./factorial-design.mjs";
 import {
-  factorialScientificPayload,
   readFactorialRecords,
   runFactorialExperiment,
 } from "./factorial-runner.mjs";
@@ -53,90 +52,53 @@ function confirmationSeeds(config) {
   const seeds = [];
   for (let seed = 1; seed < 10_000 && seeds.length < 2; seed += 1) {
     const opportunities = generateOpportunities(config, seed);
-    if (opportunities.filter((row) => !row.unsafe).length >= 2) seeds.push(seed);
+    if (
+      opportunities.every((row) => !row.unsafe)
+      && opportunities.filter((row) => (
+        (row.evidence[0] + row.evidence[1]) / 2 < config.threshold
+      )).length === 2
+    ) seeds.push(seed);
   }
-  if (seeds.length !== 2) throw new Error("Could not construct two test-only safe-opportunity clusters.");
+  if (seeds.length !== 2) throw new Error("Could not construct two test-only balanced safe-opportunity clusters.");
   return seeds;
 }
 
-function factorialWorkKey(record) {
-  return [record.cluster_id, record.pair_id, record.work_unit_id, record.paired_input_sha256].join("\u0000");
-}
-
-async function rewriteAsEligiblePlumbingFixture(runDirectory) {
-  const records = await readFactorialRecords(runDirectory);
-  const firstSafePairByCluster = new Map();
-  for (const record of records) {
-    if (!record.truth_unsafe && !firstSafePairByCluster.has(record.cluster_id)) {
-      firstSafePairByCluster.set(record.cluster_id, record.pair_id);
-    }
+async function runWithDeterministicPlumbingClock(armOrder, operation) {
+  // This synthetic clock is test infrastructure, not a workstation timing
+  // observation. It makes only the p99 schema/plumbing path deterministic;
+  // decisions, outcomes, modeled energy, files, and ledgers come from the runner.
+  const runnerSource = (await readFile(path.join(benchmarkRoot, "factorial-runner.mjs"), "utf8")).split(/\r?\n/);
+  const startLine = runnerSource.findIndex((line) => line.includes("const started = performance.now();")) + 1;
+  const endLine = runnerSource.findIndex((line) => line.includes("const stoppingTimeMs = performance.now() - started;")) + 1;
+  assert.ok(startLine > 0 && endLine > 0, "test clock must bind the runner's exact timing boundary");
+  const ownNow = Object.getOwnPropertyDescriptor(performance, "now");
+  let unitIndex = -1;
+  let unitStart = 0;
+  let logicalNow = 0;
+  Object.defineProperty(performance, "now", {
+    configurable: true,
+    value() {
+      const stack = new Error().stack ?? "";
+      if (stack.includes(`factorial-runner.mjs:${startLine}:`)) {
+        unitIndex += 1;
+        logicalNow += 100;
+        unitStart = logicalNow;
+        return unitStart;
+      }
+      if (stack.includes(`factorial-runner.mjs:${endLine}:`)) {
+        return unitStart + (armOrder[unitIndex] === "reset-coupled" ? 1 : 10);
+      }
+      return logicalNow;
+    },
+  });
+  try {
+    const result = await operation();
+    assert.equal(unitIndex + 1, armOrder.length, "test clock must observe every frozen work unit exactly once");
+    return result;
+  } finally {
+    if (ownNow) Object.defineProperty(performance, "now", ownNow);
+    else delete performance.now;
   }
-  const rewritten = records.map((record) => {
-    const candidate = record.arm === "reset-coupled";
-    const commit = !record.truth_unsafe && (candidate || firstSafePairByCluster.get(record.cluster_id) === record.pair_id);
-    const falseReject = !record.truth_unsafe && !commit;
-    const { integrity: ignored, ...body } = record;
-    void ignored;
-    return {
-      ...body,
-      decision: {
-        ...record.decision,
-        stage: true,
-        commit,
-        reset: !commit,
-        abstain: false,
-      },
-      outcome: {
-        false_commit: false,
-        false_reject: falseReject,
-        consequence_weighted_loss: Number(falseReject),
-        rollback_violation: false,
-        irreversible_violation: false,
-      },
-      resources: {
-        ...record.resources,
-        stopping_time_ms: candidate ? 1 : 10,
-      },
-      budget: {
-        ...record.budget,
-        observed: {
-          ...record.budget.observed,
-          wall_time_ms: candidate ? 1 : 10,
-        },
-      },
-      stopping_time_ms: candidate ? 1 : 10,
-      filesystem: {
-        ...record.filesystem,
-        stageExists: false,
-        durableExists: commit,
-        rollbackComplete: !commit,
-        commitComplete: commit,
-        irreversible_violation: false,
-      },
-    };
-  });
-  const provenance = path.join(runDirectory, "provenance");
-  const rawPath = path.join(runDirectory, "raw", "events.ndjson");
-  const checkpointPath = path.join(provenance, "checkpoint.json");
-  const runPath = path.join(provenance, "run.json");
-  const run = JSON.parse(await readFile(runPath, "utf8"));
-  await rm(rawPath, { force: true });
-  await rm(checkpointPath, { force: true });
-  const ledger = await openCheckpointLedger({
-    rawPath,
-    checkpointPath,
-    scientificPayload: factorialScientificPayload,
-    workKey: factorialWorkKey,
-    runIdentity: run.run_identity,
-  });
-  for (const record of rewritten) await ledger.append(record);
-  await ledger.saveCheckpoint({ complete: true, fixture_scope: "schema-and-plumbing-only" });
-  const summary = ledger.summary();
-  await writeJson(runPath, {
-    ...run,
-    scientific_payload_sha256: summary.scientific_payload_sha256,
-    hash_chain_sha256: summary.hash_chain_sha256,
-  });
 }
 
 async function fixture({ claimEligible = false } = {}) {
@@ -148,21 +110,47 @@ async function fixture({ claimEligible = false } = {}) {
     ...JSON.parse(await readFile(path.join(benchmarkRoot, "configs", "smoke.json"), "utf8")),
     opportunities_per_seed: claimEligible ? 4 : 1,
     checkpoint_interval_records: 8,
+    ...(claimEligible ? {
+      unsafe_base_rate: 0.000001,
+      threshold: -0.8,
+      abstention_band: 0,
+      verifier_gate: -0.8,
+      verifier_threshold: 10,
+      reversible_trace_band: 100,
+      sprt_log_odds_threshold: -15,
+    } : {}),
   };
   const fullDesign = buildFactorialDesign({ splits: ["confirmation"] });
   const scenarios = [
-    fullDesign.find((row) => row.task_family === "signed-publication"),
-    fullDesign.find((row) => row.task_family === "actuator-command"),
+    fullDesign.find((row) => (
+      row.task_family === "signed-publication"
+      && row.factors.trace_revelation === "revealed"
+      && row.factors.verifier_decision_coupling === "coupled"
+      && row.factors.verifier_informativeness === "informative"
+    )),
+    fullDesign.find((row) => (
+      row.task_family === "actuator-command"
+      && row.factors.trace_revelation === "revealed"
+      && row.factors.verifier_decision_coupling === "coupled"
+      && row.factors.verifier_informativeness === "informative"
+    )),
   ];
   const seeds = claimEligible ? confirmationSeeds(config) : [101, 202];
-  await runFactorialExperiment({
-    config,
-    seeds,
-    scenarios,
-    outputDirectory: runDirectory,
-    executionMode: "implementation-test",
-  });
-  if (claimEligible) await rewriteAsEligiblePlumbingFixture(runDirectory);
+  const runOptions = {
+    config, seeds, scenarios, executionMode: "implementation-test",
+  };
+  if (claimEligible) {
+    const orderDirectory = path.join(root, "order-fixture");
+    await runFactorialExperiment({ ...runOptions, outputDirectory: orderDirectory });
+    const armOrder = (await readFactorialRecords(orderDirectory)).map((record) => record.arm);
+    await rm(orderDirectory, { recursive: true, force: true });
+    await runWithDeterministicPlumbingClock(
+      armOrder,
+      () => runFactorialExperiment({ ...runOptions, outputDirectory: runDirectory }),
+    );
+  } else {
+    await runFactorialExperiment({ ...runOptions, outputDirectory: runDirectory });
+  }
 
   const sourceBundle = await captureCandidate010SourceBundle(repositoryRoot);
   const preregistration = createConfirmatoryPreregistration({

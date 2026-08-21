@@ -50,6 +50,7 @@
       "experiments/workstation/candidate-010/runner.test.mjs",
       "experiments/workstation/candidate-010/checkpoint.test.mjs",
       "experiments/workstation/candidate-010/energy-provider.test.mjs",
+      "experiments/workstation/candidate-010/event-contract.test.mjs",
       "experiments/workstation/candidate-010/factorial-design.test.mjs",
       "experiments/workstation/candidate-010/confirmatory-analysis.test.mjs",
       "experiments/workstation/candidate-010/fault-injection.test.mjs",
