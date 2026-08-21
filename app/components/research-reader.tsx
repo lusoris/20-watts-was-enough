@@ -31,8 +31,16 @@ function outlineFrom(body: string) {
 
 function sourceLabel(document: ResearchDocument): string {
   if (document.path.startsWith("sources/")) return "Historical source capture";
-  if (document.path.startsWith("experiments/"))
+  if (document.path === "experiments/test-coverage.md") return "Generated readiness report";
+  if (document.path.startsWith("experiments/workstation/")) return "Executable harness documentation";
+  if (
+    document.path.startsWith("experiments/candidates/") ||
+    document.path.startsWith("experiments/fixtures/")
+  )
     return "Pre-implementation experiment contract";
+  if (document.path.startsWith("experiments/") && document.kind === "json")
+    return "Machine-readable experiment data";
+  if (document.path.startsWith("experiments/")) return "Experiment programme documentation";
   if (document.kind === "mermaid") return "Editable diagram source";
   if (document.kind === "bibtex") return "Machine-readable bibliography";
   return "Canonical research text";
@@ -166,6 +174,9 @@ export function ResearchReader() {
           <kbd>/</kbd>
         </label>
         <div className="topbar-actions">
+          <a className="readiness-link" href="/readiness">
+            Readiness
+          </a>
           <a
             className="book-download"
             href="/downloads/20-watts-was-enough-full-concept-book.pdf"

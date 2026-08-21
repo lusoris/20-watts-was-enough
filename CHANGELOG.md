@@ -7,6 +7,32 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Decision 0009 and a generated global field-coverage census anchored to all
+  42 OECD FORD second-level fields, checked against all 49 DFG review boards
+  and ANZSRC taxonomy disagreements. The reproducible baseline was 20
+  dedicated, 14 adjacent, and 8 unreviewed OECD fields; after the first breadth
+  wave it is 23 dedicated, 12 adjacent, and 7 unreviewed. The finer DFG probe
+  moved from 24/13/12 to 26/14/9. A high-contrast SVG, machine record, drift
+  validator, anti-bias breadth scheduler, completed-wave record, and next gap
+  wave make the remaining agriculture/veterinary, social-science,
+  biotechnology, health, chemistry, physics, and humanities depth gaps visible.
+
+- Four field-centered breadth audits: soil/crop multi-resource co-limitation,
+  philosophy of science and theory choice, Indigenous data and knowledge
+  governance, and textual criticism/variant traditions. They add scoped claims
+  `C-1204`--`C-1240`, centralized scholarly or authoritative sources, hostile
+  tests, and exact candidate routing without inventing another principle.
+- A generated `/readiness` surface and shared book front matter separating
+  1,239 claims, 1,126 protocol-covered claims, zero workstation-executable
+  claims, 31 complete written protocols, one smoke harness, and zero
+  workstation-ready experiments. Candidate 010 exposes nine machine-checkable
+  promotion gates, three of which currently pass.
+- Candidate 010's smoke harness now sends every arm through the same real
+  stage--temporary-execution--commit/reset boundary, constructs verifier
+  information only during temporary execution, includes a trace-withholding
+  ablation, records a corruption-evident hash chain, and limits its execution
+  scope to `C-170`. It remains smoke-ready and cannot promote that claim.
+
 - A provenance capture and primary-source audit for empirical-versus-formal
   scientific-discovery evaluators, correcting the supplied dusty-plasma date
   and method, scoping FunSearch to executable program search, and defining
@@ -18,10 +44,11 @@ the exact diff; this file records why the project changed.
   and heuristic assurance classes; corrects the ice-storage phase-change
   example; and adds ten hostile test regimes without adding a principle or
   candidate.
-- A generated, downloadable 182-page A4 full-concept book assembled from the
-  README and all nineteen concept chapters, with a cover, contents page,
-  chapter boundaries, print-safe tables, equations, plots, and 47 rendered
-  Mermaid diagrams. A source digest makes the build reject a stale PDF.
+- A generated, downloadable 197-page A4 full-concept book assembled from the
+  README and all nineteen concept chapters, with generated readiness front
+  matter, the global-field-coverage appendix, a cover, contents page, chapter
+  boundaries, print-safe tables, equations, plots, and 47 rendered Mermaid
+  diagrams. A source digest makes the build reject a stale PDF.
 - Exact visible-text captures of the four supplied Google Docs, retained as
   dated research leads and routed into the existing endogenous-generation,
   constraint, mathematical-practice, and verification queues without being
@@ -49,9 +76,9 @@ the exact diff; this file records why the project changed.
   guilds, integrated as a perspective-level causal-attribution boundary with a
   guild-specific intervention refinement to the existing fungal audit; no new
   principle, central claim, or architecture candidate was promoted.
-- A generated test-coverage ledger that maps all 1,202 central claims to both
+- A generated test-coverage ledger that maps all 1,239 central claims to both
   claim-side and experiment-side relations, applies an eight-facet protocol
-  gate, and now separates 1,089 protocol-covered claims from zero
+  gate, and now separates 1,126 protocol-covered claims from zero
   workstation-ready executions.
 - Reviewed, machine-validated dispositions for every remaining ledger-only
   claim and a five-family proposed-artifact backlog covering the eight genuine

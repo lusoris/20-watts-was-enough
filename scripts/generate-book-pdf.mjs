@@ -116,8 +116,12 @@ if (!resolvedProfile.startsWith(resolvedSystemTemp)) {
 
 const sourceSnapshot = await bookSourceDigest(projectRoot);
 const bookMarkdown = sourceSnapshot.files.filter(
-  (file) => file === "README.md" || file.startsWith("concept/"),
+  (file) =>
+    file === "README.md" ||
+    file === "research/field-coverage.md" ||
+    file.startsWith("concept/"),
 );
+const expectedBookSections = bookMarkdown.length + 1;
 let expectedDiagrams = 0;
 for (const relative of bookMarkdown) {
   const body = await readFile(path.join(projectRoot, relative), "utf8");
@@ -214,7 +218,7 @@ try {
         if (errors.length) return { ready: false, errors, documents, diagrams, loading };
         if (
           document.readyState === 'complete' &&
-          documents === ${bookMarkdown.length} &&
+          documents === ${expectedBookSections} &&
           diagrams === ${expectedDiagrams} &&
           loading === 0 &&
           imagesReady
@@ -276,6 +280,7 @@ const manifest = {
   source_digest: sourceSnapshot.digest,
   source_files: sourceSnapshot.files,
   book_documents: bookMarkdown.length,
+  generated_front_matter_sections: 1,
   rendered_diagrams: expectedDiagrams,
   generated_at: new Date().toISOString(),
   size_bytes: pdfStats.size,

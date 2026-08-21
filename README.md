@@ -79,6 +79,7 @@ Supporting material:
 - [`research/references.bib`](research/references.bib) — primary-source bibliography
 - [`research/adoption-matrix.md`](research/adoption-matrix.md) — what to use, test, explore, or watch
 - [`research/principle-registry.md`](research/principle-registry.md) — canonical deduplicated problem–solution invariants
+- [`research/field-coverage.md`](research/field-coverage.md) — generated OECD/DFG field census, taxonomy blind spots, and breadth queue
 - [`research/domain-inventory.md`](research/domain-inventory.md) — audited, partial, and queued scientific fields
 - [`research/discovery-policy.md`](research/discovery-policy.md) — open-world search, extraction, deduplication, and promotion rules
 - [`research/normative-baseline.md`](research/normative-baseline.md) — EU/Germany default, source-role hierarchy, and applicability record
@@ -96,6 +97,7 @@ Supporting material:
 - [`experiments/fixtures/`](experiments/fixtures/README.md) — reusable cross-candidate stress benchmarks that add no architecture by themselves
 - [`experiments/test-coverage.md`](experiments/test-coverage.md) — generated
   claim-to-protocol coverage and workstation execution readiness
+- [`experiments/test-readiness-summary.json`](experiments/test-readiness-summary.json) — compact machine-readable readiness surface used by the site and book
 - [`CHANGELOG.md`](CHANGELOG.md) — human-readable evolution
 
 ## Editing rule

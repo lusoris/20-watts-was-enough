@@ -3,20 +3,33 @@
 import { useCallback } from "react";
 import { documents } from "../content";
 import { MarkdownDocument } from "./markdown-document";
+import { ReadinessOverview } from "./readiness-overview";
 
-const bookDocuments = documents.filter(
+const conceptDocuments = documents.filter(
   (document) =>
     document.kind === "markdown" &&
     (document.path === "README.md" ||
       (document.path.startsWith("concept/") &&
         document.path !== "concept/README.md")),
 );
+const appendixPaths = ["research/field-coverage.md"];
+const appendixDocuments = appendixPaths
+  .map((path) => documents.find((document) => document.path === path))
+  .filter((document) => document !== undefined);
+const bookDocuments = [...conceptDocuments, ...appendixDocuments];
 
 const bookDocumentPaths = new Set(bookDocuments.map((document) => document.path));
 const canonicalSite = "https://twenty-watts-was-enough.lusoris.chatgpt.site";
 
 function bookId(path: string) {
   return `book-${path.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+}
+
+function documentNumber(path: string, index: number) {
+  const appendixIndex = appendixDocuments.findIndex((document) => document.path === path);
+  return appendixIndex >= 0
+    ? `A${appendixIndex + 1}`
+    : String(index + 1).padStart(2, "0");
 }
 
 export function BookEdition() {
@@ -74,7 +87,9 @@ export function BookEdition() {
           </div>
           <div>
             <dt>Contents</dt>
-            <dd>{bookDocuments.length} canonical documents</dd>
+            <dd>
+              {conceptDocuments.length} canonical documents + {appendixDocuments.length} generated appendix
+            </dd>
           </div>
           <div>
             <dt>Length</dt>
@@ -91,16 +106,35 @@ export function BookEdition() {
         <span className="book-kicker">Navigation</span>
         <h2 id="book-toc-heading">Contents</h2>
         <ol>
+          <li>
+            <a href="#book-research-readiness">
+              <span>00</span>
+              <strong>Research readiness</strong>
+              <code>generated front matter</code>
+            </a>
+          </li>
           {bookDocuments.map((document, index) => (
             <li key={document.path}>
               <a href={`#${bookId(document.path)}`}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
+                <span>{documentNumber(document.path, index)}</span>
                 <strong>{document.title}</strong>
                 <code>{document.path}</code>
               </a>
             </li>
           ))}
         </ol>
+      </section>
+
+      <section
+        className="book-document book-readiness-frontmatter"
+        id="book-research-readiness"
+      >
+        <div className="book-document-meta">
+          <span>Generated front matter</span>
+          <code>experiments/test-readiness-summary.json</code>
+          <span>Current Git edition</span>
+        </div>
+        <ReadinessOverview mode="book" />
       </section>
 
       {bookDocuments.map((document, index) => (
@@ -110,7 +144,10 @@ export function BookEdition() {
           key={document.path}
         >
           <div className="book-document-meta">
-            <span>Chapter {String(index + 1).padStart(2, "0")}</span>
+            <span>
+              {appendixPaths.includes(document.path) ? "Appendix" : "Chapter"}{" "}
+              {documentNumber(document.path, index)}
+            </span>
             <code>{document.path}</code>
             <span>{document.words.toLocaleString()} words</span>
           </div>
