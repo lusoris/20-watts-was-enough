@@ -1,8 +1,58 @@
 import { createHash } from "node:crypto";
-import { appendFile, mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { mkdir, open, readFile, rename, rm } from "node:fs/promises";
 import path from "node:path";
 
 const ZERO_HASH = "0".repeat(64);
+
+export const LEDGER_DURABILITY_CONTRACT = Object.freeze({
+  version: "candidate-010-file-fsync-v1",
+  raw_append: "write-complete-record-then-filehandle-sync",
+  checkpoint_replace: "write-temporary-sync-rename-then-destination-sync",
+  torn_tail_policy: "detect-and-refuse; never silently truncate",
+  limitation: "File fsync is requested, but directory-entry persistence and arbitrary power-loss recovery are not claimed.",
+});
+
+export async function appendDurableRecord(file, recordLine) {
+  if (typeof recordLine !== "string" || !recordLine.endsWith("\n")) {
+    throw new TypeError("Durable ledger records must be complete newline-terminated strings.");
+  }
+  const handle = await open(file, "a");
+  try {
+    await handle.writeFile(recordLine, "utf8");
+    await handle.sync();
+  } finally {
+    await handle.close();
+  }
+}
+
+export async function replaceDurableCheckpoint(file, body) {
+  if (typeof body !== "string" || !body.endsWith("\n")) {
+    throw new TypeError("Durable checkpoint bodies must be complete newline-terminated strings.");
+  }
+  const temporaryPath = `${file}.tmp-${process.pid}-${Date.now()}`;
+  let renamed = false;
+  try {
+    const temporary = await open(temporaryPath, "wx");
+    try {
+      await temporary.writeFile(body, "utf8");
+      await temporary.sync();
+    } finally {
+      await temporary.close();
+    }
+    await rename(temporaryPath, file);
+    renamed = true;
+    // Windows rejects fsync on a read-only handle. Open the renamed file for
+    // update without modifying it so the final pathname is explicitly synced.
+    const destination = await open(file, "r+");
+    try {
+      await destination.sync();
+    } finally {
+      await destination.close();
+    }
+  } finally {
+    if (!renamed) await rm(temporaryPath, { force: true });
+  }
+}
 
 export function canonicalize(value) {
   if (value === null || typeof value === "boolean" || typeof value === "string") {
@@ -78,11 +128,19 @@ export async function openCheckpointLedger({
   scientificPayload,
   workKey,
   runIdentity = {},
+  durableIo = null,
 }) {
   if (typeof scientificPayload !== "function" || typeof workKey !== "function") {
     throw new TypeError("scientificPayload and workKey functions are required.");
   }
   canonicalize(runIdentity);
+  const io = durableIo ?? {
+    appendRecord: appendDurableRecord,
+    replaceCheckpoint: replaceDurableCheckpoint,
+  };
+  if (typeof io.appendRecord !== "function" || typeof io.replaceCheckpoint !== "function") {
+    throw new TypeError("durableIo must provide appendRecord and replaceCheckpoint functions.");
+  }
   await mkdir(path.dirname(rawPath), { recursive: true });
   await mkdir(path.dirname(checkpointPath), { recursive: true });
 
@@ -162,7 +220,7 @@ export async function openCheckpointLedger({
         record_sha256: recordHash,
       },
     };
-    await appendFile(rawPath, `${JSON.stringify(record)}\n`, { encoding: "utf8" });
+    await io.appendRecord(rawPath, `${JSON.stringify(record)}\n`);
     state.digest.update(payload);
     state.previousRecordHash = recordHash;
     state.completedKeys.add(key);
@@ -175,9 +233,7 @@ export async function openCheckpointLedger({
       if (reserved in extra) throw new Error(`Checkpoint metadata cannot replace reserved field ${reserved}.`);
     }
     const document = checkpointBody(state, { run_identity: runIdentity, ...extra });
-    const temporaryPath = `${checkpointPath}.tmp-${process.pid}-${Date.now()}`;
-    await writeFile(temporaryPath, `${JSON.stringify(document, null, 2)}\n`, { encoding: "utf8", flag: "wx" });
-    await rename(temporaryPath, checkpointPath);
+    await io.replaceCheckpoint(checkpointPath, `${JSON.stringify(document, null, 2)}\n`);
     checkpointStatus = "current";
     return document;
   }

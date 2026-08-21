@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import {
-  mkdir, mkdtemp, readFile, readdir, rm, writeFile,
+  access, mkdir, mkdtemp, readFile, readdir, rm, writeFile,
 } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -11,6 +11,7 @@ import { canonicalize, nextRecordHash } from "./checkpoint.mjs";
 import { analyzeConfirmatory, CONFIRMATORY_PREREGISTRATION } from "./confirmatory-analysis.mjs";
 import { buildFactorialDesign } from "./factorial-design.mjs";
 import { createFrozenSeedReleaseContract } from "./release-contract.mjs";
+import { RunLockContentionError, acquireRunLock } from "./run-lock.mjs";
 import { seedListCommitment } from "./seeds/seed-pack.mjs";
 import {
   CANDIDATE_010_SOURCE_FILES,
@@ -25,6 +26,56 @@ import {
   runFactorialExperiment,
   validateFactorialRun,
 } from "./factorial-runner.mjs";
+
+test("factorial writers fail closed before output mutation when another lease owns the run", async () => {
+  const temporary = await mkdtemp(path.join(os.tmpdir(), "20w-c010-factorial-lock-"));
+  const outputDirectory = path.join(temporary, "contended-output");
+  const lease = await acquireRunLock({ outputDirectory, runnerId: "hostile-existing-writer" });
+  try {
+    await assert.rejects(
+      runFactorialExperiment({
+        config: smokeConfig,
+        seeds: [1101],
+        scenarios: buildFactorialDesign({ splits: ["development"] }).slice(0, 1),
+        outputDirectory,
+      }),
+      (error) => error instanceof RunLockContentionError,
+    );
+    await assert.rejects(
+      analyzeFactorialRun(outputDirectory),
+      (error) => error instanceof RunLockContentionError,
+    );
+    await assert.rejects(
+      validateFactorialRun(outputDirectory),
+      (error) => error instanceof RunLockContentionError,
+    );
+    await assert.rejects(access(outputDirectory), (error) => error.code === "ENOENT");
+  } finally {
+    await lease.release();
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test("factorial execution releases its lease when a post-acquisition check fails", async () => {
+  const temporary = await mkdtemp(path.join(os.tmpdir(), "20w-c010-factorial-unlock-"));
+  const outputDirectory = path.join(temporary, "existing-output");
+  try {
+    await mkdir(outputDirectory);
+    await assert.rejects(
+      runFactorialExperiment({
+        config: smokeConfig,
+        seeds: [1101],
+        scenarios: buildFactorialDesign({ splits: ["development"] }).slice(0, 1),
+        outputDirectory,
+      }),
+      /already exists/,
+    );
+    const nextLease = await acquireRunLock({ outputDirectory, runnerId: "verified-next-writer" });
+    assert.equal(await nextLease.release(), true);
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
 
 const benchmarkRoot = path.dirname(new URL(import.meta.url).pathname.replace(/^\/(.:)/, "$1"));
 const repositoryRoot = path.resolve(benchmarkRoot, "..", "..", "..");
@@ -264,6 +315,22 @@ test("the complete 48-scenario matrix executes through four real isolated backen
       > Date.parse(record.measurement_interval.started_at)
     )));
     assert.ok(records.every((record) => record.resources.external_energy === null));
+    const retryRecords = records.filter((record) => record.arm === "retry-rollback");
+    assert.ok(retryRecords.every((record) => (
+      record.comparator_lineage?.implementation_id === "candidate-010-two-lifecycle-retry-rollback-v1"
+      && record.comparator_lineage.first_rollback_validated === true
+      && record.comparator_lineage.attempts.length === 2
+      && record.resources.policy_evaluations === 2
+      && record.filesystem.staged_bytes_written
+        === record.comparator_lineage.attempts.reduce((sum, attempt) => sum + attempt.staged_bytes_written, 0)
+    )));
+    const independentRecords = records.filter((record) => record.arm === "independent-verifier");
+    assert.ok(independentRecords.every((record) => (
+      record.comparator_lineage?.implementation_id === "candidate-010-independent-sha512-verifier-v1"
+      && record.comparator_lineage.shared_trace_implementation === false
+      && record.trace.revealed === false
+      && record.trace.verifier === null
+    )));
     const boundaryNames = await readdir(path.join(outputDirectory, "boundaries"));
     assert.ok(boundaryNames.every((name) => /^[0-9a-f]{64}$/.test(name)));
     assert.deepEqual(

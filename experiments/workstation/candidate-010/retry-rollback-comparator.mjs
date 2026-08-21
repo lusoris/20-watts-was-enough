@@ -1,0 +1,243 @@
+import { createHash } from "node:crypto";
+import path from "node:path";
+
+export const RETRY_ROLLBACK_IMPLEMENTATION_ID = "candidate-010-two-lifecycle-retry-rollback-v1";
+
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
+
+function canonical(value) {
+  if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function finite(value, field) {
+  if (!Number.isFinite(value) || value < 0) throw new Error(`Retry/rollback ${field} must be a non-negative finite number.`);
+  return value;
+}
+
+function attemptSummary(result, { index, attemptRole, taskFamily, backendId, opportunityId }) {
+  const summary = {
+    index,
+    attempt_role: attemptRole,
+    boundary_id: sha256(canonical({
+      schema: 1,
+      attempt_role: attemptRole,
+      task_family: taskFamily,
+      backend_id: backendId,
+      opportunity_id: opportunityId,
+    })),
+    staged_bytes_written: finite(result.filesystem?.staged_bytes_written, "staged bytes"),
+    durable_bytes_written: finite(result.filesystem?.durable_bytes_written, "durable bytes"),
+    boundary_elapsed_ms: finite(result.filesystem?.boundary_elapsed_ms, "boundary time"),
+    stage: result.decision?.stage,
+    commit: result.decision?.commit,
+    reset: result.decision?.reset,
+    rollback_complete: result.filesystem?.rollbackComplete,
+    commit_complete: result.filesystem?.commitComplete,
+    stage_exists: result.filesystem?.stageExists,
+    durable_exists: result.filesystem?.durableExists,
+    irreversible_violation: result.filesystem?.irreversible_violation === true,
+    trace_output_sha256: result.filesystem?.trace_output_sha256,
+  };
+  return {
+    ...summary,
+    state_evidence_sha256: sha256(canonical(summary)),
+  };
+}
+
+function validateAttemptEvidence(attempt) {
+  const { state_evidence_sha256: supplied, ...summary } = attempt;
+  return /^[0-9a-f]{64}$/.test(attempt.boundary_id ?? "")
+    && supplied === sha256(canonical(summary));
+}
+
+function logicalBoundaryId(ownership, attemptRole) {
+  return sha256(canonical({
+    schema: 1,
+    attempt_role: attemptRole,
+    task_family: ownership.task_family,
+    backend_id: ownership.backend_id,
+    opportunity_id: ownership.opportunity_id,
+  }));
+}
+
+export function validateRetryRollbackResult(result, expectedOwnership = null) {
+  const lineage = result?.comparator_lineage;
+  const attempts = lineage?.attempts;
+  if (
+    lineage?.schema !== 1
+    || lineage.comparator !== "retry-rollback"
+    || lineage.implementation_id !== RETRY_ROLLBACK_IMPLEMENTATION_ID
+    || lineage.first_action_executed !== true
+    || lineage.first_rollback_validated !== true
+    || lineage.retry_action_executed !== true
+    || lineage.state_isolated !== true
+    || !Array.isArray(attempts)
+    || attempts.length !== 2
+  ) throw new Error("Retry/rollback skipped a required lifecycle action.");
+  const ownership = lineage.ownership;
+  if (
+    !ownership
+    || typeof ownership.task_family !== "string"
+    || typeof ownership.backend_id !== "string"
+    || typeof ownership.opportunity_id !== "string"
+    || (expectedOwnership && Object.entries(expectedOwnership).some(([key, value]) => ownership[key] !== value))
+  ) throw new Error("Retry/rollback lineage ownership is absent or mismatched.");
+  const [first, second] = attempts;
+  if (
+    first.attempt_role !== "first-action"
+    || second.attempt_role !== "retry-action"
+    || first.boundary_id !== logicalBoundaryId(ownership, "first-action")
+    || second.boundary_id !== logicalBoundaryId(ownership, "retry-action")
+    || !validateAttemptEvidence(first)
+    || !validateAttemptEvidence(second)
+    || first.stage !== true
+    || first.commit !== false
+    || first.reset !== true
+    || first.rollback_complete !== true
+    || first.stage_exists !== false
+    || first.durable_exists !== false
+    || first.irreversible_violation !== false
+  ) throw new Error("Retry/rollback first action leaked state or did not complete rollback.");
+  const expectedStaged = first.staged_bytes_written + second.staged_bytes_written;
+  const expectedBoundary = first.boundary_elapsed_ms + second.boundary_elapsed_ms;
+  if (
+    result.filesystem?.staged_bytes_written !== expectedStaged
+    || result.filesystem?.durable_bytes_written !== second.durable_bytes_written
+    || result.filesystem?.boundary_elapsed_ms !== expectedBoundary
+    || result.policy_evaluations !== 2
+    || lineage.actual_lifecycle_count !== 2
+    || lineage.state_transition_count !== 4
+  ) throw new Error("Retry/rollback did not pay or report all lifecycle work.");
+  if (
+    result.decision?.stage !== true
+    || result.decision?.commit === result.decision?.reset
+    || (result.decision.commit && result.filesystem.commitComplete !== true)
+    || (result.decision.reset && result.filesystem.rollbackComplete !== true)
+  ) throw new Error("Retry/rollback second lifecycle did not finalize exactly once.");
+  return true;
+}
+
+export async function executeRetryRollbackComparatorTrial({
+  executeTrial,
+  root,
+  task_family: taskFamily,
+  backend_id: backendId,
+  opportunity,
+  config,
+  decideRetry,
+}) {
+  if (typeof executeTrial !== "function" || typeof decideRetry !== "function") {
+    throw new Error("Retry/rollback requires an executable backend and retry decision.");
+  }
+  const firstRoot = path.join(root, "first-action");
+  const retryRoot = path.join(root, "retry-action");
+  if (path.resolve(firstRoot) === path.resolve(retryRoot)) {
+    throw new Error("Retry/rollback requires physically isolated lifecycle roots.");
+  }
+  const first = await executeTrial({
+    task_family: taskFamily,
+    backend_id: backendId,
+    root: firstRoot,
+    opportunity,
+    arm: "retry-rollback",
+    config,
+    revealTrace: false,
+    decideWithTrace: () => ({
+      arm: "retry-rollback",
+      stage: true,
+      commit: false,
+      reset: true,
+      abstain: false,
+      observations: 1,
+      verifier_calls: 0,
+      reason: "mandatory-first-action-rollback",
+    }),
+  });
+  const firstSummary = attemptSummary(first, {
+    index: 1,
+    attemptRole: "first-action",
+    taskFamily,
+    backendId,
+    opportunityId: opportunity.id,
+  });
+  if (
+    firstSummary.stage !== true
+    || firstSummary.commit !== false
+    || firstSummary.reset !== true
+    || firstSummary.rollback_complete !== true
+    || firstSummary.stage_exists !== false
+    || firstSummary.durable_exists !== false
+    || firstSummary.irreversible_violation
+  ) throw new Error("Retry/rollback first staged action did not roll back cleanly.");
+
+  const retry = await executeTrial({
+    task_family: taskFamily,
+    backend_id: backendId,
+    root: retryRoot,
+    opportunity,
+    arm: "retry-rollback",
+    config,
+    revealTrace: false,
+    decideWithTrace: () => decideRetry(),
+  });
+  const retrySummary = attemptSummary(retry, {
+    index: 2,
+    attemptRole: "retry-action",
+    taskFamily,
+    backendId,
+    opportunityId: opportunity.id,
+  });
+  const comparatorLineage = Object.freeze({
+    schema: 1,
+    comparator: "retry-rollback",
+    implementation_id: RETRY_ROLLBACK_IMPLEMENTATION_ID,
+    first_action_executed: true,
+    first_rollback_validated: true,
+    retry_action_executed: true,
+    state_isolated: firstSummary.boundary_id !== retrySummary.boundary_id,
+    ownership: Object.freeze({
+      task_family: taskFamily,
+      backend_id: backendId,
+      opportunity_id: opportunity.id,
+    }),
+    actual_lifecycle_count: 2,
+    state_transition_count: 4,
+    attempts: Object.freeze([Object.freeze(firstSummary), Object.freeze(retrySummary)]),
+  });
+  const filesystem = {
+    ...retry.filesystem,
+    boundary: "retry-rollback-two-lifecycle-v1",
+    staged_bytes_written: firstSummary.staged_bytes_written + retrySummary.staged_bytes_written,
+    durable_bytes_written: retrySummary.durable_bytes_written,
+    boundary_elapsed_ms: firstSummary.boundary_elapsed_ms + retrySummary.boundary_elapsed_ms,
+    retry_rollback_lifecycle: comparatorLineage,
+  };
+  const decision = {
+    ...retry.decision,
+    observations: first.decision.observations + retry.decision.observations,
+    retry_lifecycle_count: 2,
+    first_action_rolled_back: true,
+  };
+  const additionalModeledEnergyJ = ["temporary_execution", "stage", "reset"]
+    .reduce((sum, field) => sum + finite(config.modeled_energy_j?.[field], `modeled ${field} energy`), 0);
+  const result = {
+    ...retry,
+    decision,
+    filesystem,
+    policy_evaluations: 2,
+    additional_modeled_energy_j: additionalModeledEnergyJ,
+    comparator_lineage: comparatorLineage,
+  };
+  validateRetryRollbackResult(result, {
+    task_family: taskFamily,
+    backend_id: backendId,
+    opportunity_id: opportunity.id,
+  });
+  return result;
+}

@@ -100,7 +100,7 @@ export function decide(arm, opportunity, config, revealedVerifier = null) {
   if (arm === "independent-verifier") {
     const eligible = score < config.verifier_gate;
     if (eligible && !Number.isFinite(revealedVerifier)) {
-      throw new Error("independent-verifier requires a trace revealed by temporary execution");
+      throw new Error("independent-verifier requires its separately implemented verifier result");
     }
     const commit = eligible && revealedVerifier < config.verifier_threshold;
     return {

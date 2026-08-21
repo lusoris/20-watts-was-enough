@@ -21,7 +21,9 @@ The current harness provides:
    record counter;
 6. a checkpoint identity bound to the configuration, ordered seed pack, and
    work schedule, with mismatch, duplicate, corruption, and truncated-tail
-   rejection—not arbitrary torn-write or missing-`fsync` crash recovery;
+   rejection; complete ledger records and checkpoint replacements request file
+   `fsync`, while directory-entry persistence and arbitrary power-loss recovery
+   remain outside the claim;
 7. a byte-exact executable source bundle covering the generator, policies,
    trace job, adapters, runner, analysis, release validator, configs, lockfile,
    and current Git commit; resume and validation reject a changed bundle;
@@ -35,10 +37,9 @@ The current harness provides:
 10. a bounded 48-scenario factorial contract, six registered comparator
    policies, equal-budget accounting, held-out task-family contracts, and a
    multiplicity-controlled confirmatory analyzer that refuses
-   smoke/development claims; four comparator policies are fully implemented,
-   while retry/rollback and independent-verifier remain explicitly typed proxy
-   controls until a second effect lifecycle and a separately implemented
-   detector exist;
+   smoke/development claims; retry/rollback now executes and charges two real
+   effect lifecycles, while the independent-verifier arm uses a separately
+   implemented and provenance-checked detector;
 11. four common-interface effect boundaries: filesystem publication,
    hash-linked transactional KV, Ed25519-signed append-only publication, and a
    versioned local actuator simulator with physical actuation forbidden;
@@ -46,10 +47,21 @@ The current harness provides:
     candidate through every backend, exercises trace/reset ablations, checks
     paired budgets and rollback/commit proofs, and remains claim-ineligible;
 13. deterministic scientific-payload hashes, a per-record SHA-256 hash chain,
-   corruption detection, and a committed golden smoke/checkpoint digest; and
-14. tests for generation, conditioning, trace revelation, rollback, commit,
+   corruption detection, and a committed golden smoke/checkpoint digest;
+14. a longitudinal diagnostic that drives transactional-KV and simulated-
+    actuator instances through commit, reset, later commit, and stale-version
+    refusal without recreating the service between operations, binds resume to
+    the complete executable source identity, and revalidates the full durable
+    history against the completed ledger;
+15. an eight-case deterministic fault campaign covering reset leakage,
+    incomplete rollback, precommit effects, delayed cleanup, stale or corrupt
+    verification, failed finalization, and an irreversible-effect sentinel;
+16. tests for generation, conditioning, trace revelation, rollback, commit,
     resume equivalence, seed sealing, energy rejection, budget parity,
-    confirmatory abstention/kill rules, and smoke reproducibility.
+    confirmatory abstention/kill rules, and smoke reproducibility; and
+17. atomic, ownership-checked single-writer leases for factorial and persistent
+    output roots, with contention rejected before mutation and no automatic
+    stale-lock breaking.
 
 Run:
 
@@ -91,20 +103,22 @@ no real confirmation release document or revealed seed pack.
 ## Exact implementation limits
 
 - The factorial runner gives every opportunity–arm work unit a fresh isolated
-  effect root. Backend unit tests exercise version transitions, but factorial
-  runs do not yet exercise persistent service history, cross-opportunity
-  version contention, or recovery of shared service state.
-- Checkpoint resume is tested after a declared record boundary and rejects a
-  truncated final ledger record. It is not a guarantee of recovery from an
-  arbitrary process, filesystem, power-loss, torn-write, or missing-`fsync`
-  crash.
-- `retry-rollback` currently proxies retry policy with another evidence step;
-  it does not execute a second staged effect lifecycle. `independent-verifier`
-  currently proxies detector gating with the shared synthetic trace generator;
-  it is not yet a separately implemented detector.
-- No factorial scenario currently injects reset leakage, precommit disclosure
-  or side effects, or incomplete rollback. Zero observed violations in the
-  implementation test therefore establish plumbing behavior only.
+  effect root. A separate longitudinal diagnostic now exercises persistent
+  transactional-KV and actuator history, including stale-version refusal and
+  recovery from a declared interruption after backend finalization, but the
+  main factorial does not yet test concurrent shared-service contention.
+  Concurrent writers are refused rather than used as an experimental factor.
+- Ledger appends and checkpoint replacements request file `fsync`, and a
+  truncated final record fails closed. This does not establish directory-entry
+  persistence, recovery by truncating a torn tail, or safety under arbitrary
+  process, filesystem, or power-loss crashes.
+- Retry/rollback and independent verification now have distinct executable
+  mechanics. They remain local synthetic comparators rather than evidence that
+  either mechanism is independent or effective in a deployed system.
+- The eight-case fault campaign actively produces and detects declared failure
+  modes, but it is a separate nonphysical diagnostic rather than a factorial or
+  external failure-rate result. Zero violations in ordinary implementation
+  scenarios still establish plumbing behavior only.
 - The strict release validator and promotion-evidence builder exist, but no
   real frozen confirmation or held-out release and no validated promotion
   evidence bundle exist.
@@ -119,7 +133,9 @@ threshold values exercise the pipeline; they are not frozen confirmatory
 choices. Confirmation and held-out seed files contain no disclosed seeds or
 commitment yet. The four implemented task families are local, synthetic effect
 boundaries; their passing tests establish executable contracts, not external
-validity. No calibrated hardware reading has been collected, and a whole-run
+validity. The persistent-service and injected-fault tracks likewise test
+declared local invariants, not superiority or field reliability. No calibrated
+hardware reading has been collected, and a whole-run
 reading cannot be silently allocated to interleaved arms. The synthetic trace
 generator is not evidence that a real temporary action exposes useful
 information. The 48-scenario run is therefore an implementation and

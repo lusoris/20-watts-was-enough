@@ -62,11 +62,21 @@ the exact diff; this file records why the project changed.
   boundaries with six registered comparator policies, one candidate arm, equal
   budgets, rollback proofs, resume mutation refusal, and no physical actuation.
   The executable source freeze now includes both the release validator and the
-  strict promotion-evidence builder. The factorial roots remain isolated per
-  work unit rather than persistent services; resume covers declared checkpoint
-  boundaries rather than arbitrary torn-write/`fsync` crashes; retry/rollback
-  and independent-verifier remain typed proxy comparators; and reset leakage,
-  precommit side effects, and incomplete-rollback injection are absent. No real
+  strict promotion-evidence builder. Retry/rollback now executes and charges two
+  real effect lifecycles, and the independent-verifier comparator uses a
+  separate implementation and provenance line. A longitudinal diagnostic
+  exercises persistent transactional-KV and simulated-actuator histories across
+  commit, reset, later commit, stale refusal, and declared-interruption
+  reconciliation, binds resume to the executable source identity, and verifies
+  complete durable history against the ledger. Atomic ownership-checked leases
+  reject concurrent factorial and persistent writers before mutation without
+  automatically breaking stale locks. An eight-case nonphysical fault campaign actively tests reset
+  leakage, incomplete rollback, precommit effects, delayed cleanup, stale or
+  corrupt verification, failed finalization, and an irreversible-effect
+  sentinel. Complete ledger appends and checkpoint replacements request file
+  `fsync`; directory-entry persistence, torn-tail repair, arbitrary power-loss,
+  concurrent shared-service contention, and external failure rates remain
+  outside the contract. No real
   frozen release, interval-owned calibrated energy observation, or validated
   promotion evidence exists. The 6/9 count remains structural, and no
   experimental result is claimed.

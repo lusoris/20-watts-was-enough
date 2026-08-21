@@ -22,17 +22,26 @@ produced.
 The executable layer is narrower than the full protocol below:
 
 - each factorial opportunity–arm receives a fresh isolated effect root, so the
-  current run does not test persistent service history, shared version
-  contention, or cross-opportunity recovery;
-- checkpoint resume is proven at declared record boundaries and fails closed
-  on a truncated ledger tail; arbitrary torn-write, missing-`fsync`, power-loss,
-  and filesystem crash recovery are not implemented;
-- the retry/rollback and independent-verifier arms are typed proxy comparators:
-  the former does not yet execute a second effect lifecycle, and the latter
-  does not yet use a separately implemented detector;
-- no scenario injects reset leakage, precommit disclosure or side effects, or
-  incomplete rollback, so zero implementation-test violations are not safety
-  evidence;
+  main run does not test concurrent shared-service contention; a separate
+  longitudinal diagnostic now tests persistent transactional-KV and actuator
+  histories through commit, reset, later commit, stale refusal, and a declared
+  interruption after backend finalization; its resume identity includes the
+  full executable source bundle and it revalidates all durable generations
+  against the ledger;
+- complete ledger records and checkpoint replacements request file `fsync` and
+  truncated tails fail closed, but directory-entry persistence, torn-tail
+  repair, arbitrary power-loss, and general filesystem crash recovery are not
+  established;
+- factorial and persistent output roots use ownership-checked exclusive writer
+  leases; contention is refused before mutation, stale locks are never broken
+  automatically, and concurrent shared-service behavior is not measured;
+- the retry/rollback arm now executes two real effect lifecycles, and the
+  independent-verifier arm uses a separately implemented detector; both remain
+  synthetic local comparators rather than deployed-system evidence;
+- a separate eight-case fault campaign injects reset leakage, incomplete
+  rollback, precommit effects, delayed cleanup, stale or corrupt verification,
+  failed finalization, and an irreversible-effect sentinel; it is a diagnostic,
+  not a measured external failure distribution;
 - a strict source-bound seed-release validator and promotion-evidence builder
   exist, but no real frozen confirmation/held-out release or validated evidence
   bundle exists; and

@@ -65,14 +65,26 @@ rollback, append-only raw events, declared-boundary checkpoint resume,
 external-energy provenance validation, frozen design/analysis modules, and
 reproducibility hashes. Its complete implementation test executes all 48
 factorial scenarios through four isolated local effect boundaries with no
-physical actuation.
+physical actuation. Retry/rollback now crosses two actual effect lifecycles, and
+the independent-verifier comparator uses a separately implemented detector.
+A separate persistent-service diagnostic exercises commit, reset, later
+commit, stale-version refusal, and declared-interruption reconciliation on
+transactional-KV and simulated-actuator instances. Resume is bound to the full
+executable source identity and revalidates complete durable history against the
+ledger. Atomic ownership-checked leases reject concurrent factorial and
+persistent writers before mutation. An eight-case deterministic
+fault campaign makes reset leakage, incomplete rollback, precommit effects,
+delayed cleanup, stale or corrupt verification, failed finalization, and an
+irreversible-effect sentinel observable to the validator.
 
 Those roots are isolated per opportunity–arm work unit, so the factorial path
-does not yet test persistent service history. Torn-write/`fsync` crash recovery,
-an actual retry effect lifecycle, a separately implemented independent
-verifier, and injected reset leakage, precommit side effects, or incomplete
-rollback are also absent. The strict seed-release and promotion-evidence
-builders exist, but no real frozen release, interval-owned calibrated energy
-observation, or validated evidence bundle exists. Six of nine **structural**
-promotion gates pass; no result claim or workstation-executable claim coverage
-follows from them.
+still does not test concurrent shared-service contention. File `fsync` is now
+requested for complete raw records and checkpoint replacements, while torn-tail
+repair, directory-entry persistence, and arbitrary power-loss recovery remain
+outside the contract. Writer contention is refused, not benchmarked, and stale
+locks are not broken automatically. The persistent and fault tracks are local diagnostics,
+not confirmation data. The strict seed-release and promotion-evidence builders
+exist, but no real frozen release, interval-owned calibrated energy observation,
+or validated evidence bundle exists. Six of nine **structural** promotion gates
+pass; no result claim or workstation-executable claim coverage follows from
+them.

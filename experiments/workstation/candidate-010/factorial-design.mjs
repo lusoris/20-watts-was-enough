@@ -13,13 +13,13 @@ export const COMPARATOR_IMPLEMENTATION = Object.freeze([
   Object.freeze({ id: "selective-abstention", status: "implemented-policy" }),
   Object.freeze({
     id: "retry-rollback",
-    status: "evidence-policy-proxy",
-    limit: "does not yet execute a second staged effect lifecycle",
+    status: "implemented-two-lifecycle-comparator",
+    implementation_id: "candidate-010-two-lifecycle-retry-rollback-v1",
   }),
   Object.freeze({
     id: "independent-verifier",
-    status: "shared-trace-generator-control",
-    limit: "does not yet provide implementation-failure independence",
+    status: "implemented-independent-verifier",
+    implementation_id: "candidate-010-independent-sha512-verifier-v1",
   }),
 ]);
 
@@ -65,7 +65,7 @@ export const EQUAL_BUDGET_CONTRACT = Object.freeze({
   maxima_per_opportunity: Object.freeze({
     observations: 3,
     verifier_calls: 1,
-    policy_evaluations: 1,
+    policy_evaluations: 2,
     staged_bytes: 4096,
     durable_bytes: 4096,
     wall_time_ms: 5_000,

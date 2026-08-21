@@ -4,6 +4,10 @@ import os from "node:os";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
 import {
+  executeIndependentVerifier,
+  validateIndependentVerifierLineage,
+} from "./independent-verifier.mjs";
+import {
   BACKEND_METADATA,
   backendForTaskFamily,
   executeBackendTrial,
@@ -19,7 +23,12 @@ import {
 } from "./factorial-design.mjs";
 import { generateOpportunities } from "./generator.mjs";
 import { decide, scoreDecision, shouldRevealTrace } from "./policies.mjs";
+import {
+  executeRetryRollbackComparatorTrial,
+  validateRetryRollbackResult,
+} from "./retry-rollback-comparator.mjs";
 import { openFrozenSeedRelease } from "./release-contract.mjs";
+import { acquireRunLock } from "./run-lock.mjs";
 import { captureCandidate010SourceBundle } from "./source-bundle.mjs";
 
 export const FACTORIAL_RUNNER_VERSION = "candidate-010-factorial-runner-v2";
@@ -200,6 +209,7 @@ export function factorialScientificPayload(event) {
     measurement_interval: event.measurement_interval,
     filesystem: event.filesystem,
     privileged_evidence: event.privileged_evidence,
+    comparator_lineage: event.comparator_lineage,
   };
 }
 
@@ -290,6 +300,18 @@ function candidatePolicy(scenario) {
 }
 
 function decisionContract({ arm, scenario, policyOpportunity, scenarioConfig }) {
+  if (arm === "independent-verifier") {
+    const independent = executeIndependentVerifier({ opportunity: policyOpportunity, config: scenarioConfig });
+    return {
+      revealTrace: false,
+      candidateVariant: null,
+      comparatorLineage: independent.lineage,
+      decideWithTrace: () => ({
+        ...decide("independent-verifier", policyOpportunity, scenarioConfig, independent.value),
+        verifier_implementation_id: independent.lineage.implementation_id,
+      }),
+    };
+  }
   if (arm !== "reset-coupled") {
     const revealTrace = shouldRevealTrace(arm, policyOpportunity, scenarioConfig);
     return {
@@ -492,8 +514,13 @@ export async function runFactorialExperiment({
       throw new Error("Factorial execution requires seeds.");
     }
   }
-  if (resume) await access(outputDirectory);
-  else await assertNewDirectory(outputDirectory);
+  const runLock = await acquireRunLock({
+    outputDirectory,
+    runnerId: `${FACTORIAL_RUNNER_VERSION}:execute`,
+  });
+  try {
+    if (resume) await access(outputDirectory);
+    else await assertNewDirectory(outputDirectory);
 
   const rawDirectory = path.join(outputDirectory, "raw");
   const provenanceDirectory = path.join(outputDirectory, "provenance");
@@ -604,21 +631,38 @@ export async function runFactorialExperiment({
     await rm(unitRoot, { recursive: true, force: true });
     const intervalStartedAtMilliseconds = Date.now();
     const started = performance.now();
-    const policyOpportunity = { id: opportunity.id, evidence: opportunity.evidence };
+    const policyOpportunity = {
+      id: opportunity.id,
+      evidence: opportunity.evidence,
+      trace_job: opportunity.trace_job,
+    };
     const contract = decisionContract({ arm, scenario, policyOpportunity, scenarioConfig });
-    const trial = await executeBackendTrial({
-      task_family: scenario.task_family,
-      backend_id: backend.backend_id,
-      root: unitRoot,
-      opportunity,
-      arm,
-      config: scenarioConfig,
-      revealTrace: contract.revealTrace,
-      decideWithTrace: contract.decideWithTrace,
-    });
+    const trial = arm === "retry-rollback"
+      ? await executeRetryRollbackComparatorTrial({
+          executeTrial: executeBackendTrial,
+          task_family: scenario.task_family,
+          backend_id: backend.backend_id,
+          root: unitRoot,
+          opportunity,
+          config: scenarioConfig,
+          decideRetry: () => contract.decideWithTrace(null),
+        })
+      : await executeBackendTrial({
+          task_family: scenario.task_family,
+          backend_id: backend.backend_id,
+          root: unitRoot,
+          opportunity,
+          arm,
+          config: scenarioConfig,
+          revealTrace: contract.revealTrace,
+          decideWithTrace: contract.decideWithTrace,
+        });
     const { decision, filesystem, revealedVerifier } = trial;
+    const policyEvaluations = trial.policy_evaluations ?? 1;
+    const comparatorLineage = trial.comparator_lineage ?? contract.comparatorLineage ?? null;
     const intervalEndedAtMilliseconds = await positiveUtcEnd(intervalStartedAtMilliseconds);
     const scored = scoreDecision(opportunity, decision, scenarioConfig);
+    const modeledEnergyJ = scored.modeledEnergy + (trial.additional_modeled_energy_j ?? 0);
     const stoppingTimeMs = performance.now() - started;
     const budget = accountEqualBudget({
       scenario,
@@ -626,7 +670,7 @@ export async function runFactorialExperiment({
       usage: {
         observations: decision.observations,
         verifier_calls: decision.verifier_calls,
-        policy_evaluations: 1,
+        policy_evaluations: policyEvaluations,
         staged_bytes: filesystem.staged_bytes_written,
         durable_bytes: filesystem.durable_bytes_written,
         wall_time_ms: stoppingTimeMs,
@@ -676,8 +720,8 @@ export async function runFactorialExperiment({
       resources: {
         observations: decision.observations,
         verifier_calls: decision.verifier_calls,
-        policy_evaluations: 1,
-        modeled_energy_j: scored.modeledEnergy,
+        policy_evaluations: policyEvaluations,
+        modeled_energy_j: modeledEnergyJ,
         external_energy: null,
         durable_bytes_written: filesystem.durable_bytes_written,
         staged_bytes_written: filesystem.staged_bytes_written,
@@ -691,6 +735,7 @@ export async function runFactorialExperiment({
       },
       filesystem,
       privileged_evidence: false,
+      comparator_lineage: comparatorLineage,
     };
     await ledger.append(event);
     processedThisInvocation += 1;
@@ -749,13 +794,16 @@ export async function runFactorialExperiment({
     resume_supported: true,
   };
   await writeFile(runPath, `${JSON.stringify(run, null, 2)}\n`, { flag: "wx" });
-  return {
-    run,
-    rawPath,
-    complete: true,
-    resumed: resume,
-    processed_this_invocation: processedThisInvocation,
-  };
+    return {
+      run,
+      rawPath,
+      complete: true,
+      resumed: resume,
+      processed_this_invocation: processedThisInvocation,
+    };
+  } finally {
+    await runLock.release();
+  }
 }
 
 export async function readFactorialRecords(outputDirectory) {
@@ -764,7 +812,12 @@ export async function readFactorialRecords(outputDirectory) {
 }
 
 export async function analyzeFactorialRun(outputDirectory) {
-  const records = await readFactorialRecords(outputDirectory);
+  const runLock = await acquireRunLock({
+    outputDirectory,
+    runnerId: `${FACTORIAL_RUNNER_VERSION}:analyze`,
+  });
+  try {
+    const records = await readFactorialRecords(outputDirectory);
   const byFamilyArm = new Map();
   for (const record of records) {
     const key = `${record.task_family}\u0000${record.arm}`;
@@ -804,11 +857,19 @@ export async function analyzeFactorialRun(outputDirectory) {
   const analysisDirectory = path.join(outputDirectory, "analysis");
   await mkdir(analysisDirectory, { recursive: true });
   await writeFile(path.join(analysisDirectory, "factorial-summary.json"), `${JSON.stringify(summary, null, 2)}\n`);
-  return summary;
+    return summary;
+  } finally {
+    await runLock.release();
+  }
 }
 
 export async function validateFactorialRun(outputDirectory) {
-  const provenanceDirectory = path.join(outputDirectory, "provenance");
+  const runLock = await acquireRunLock({
+    outputDirectory,
+    runnerId: `${FACTORIAL_RUNNER_VERSION}:validate`,
+  });
+  try {
+    const provenanceDirectory = path.join(outputDirectory, "provenance");
   const [run, config, seedDocument, designDocument, frozenSourceBundle] = await Promise.all([
     loadJson(path.join(provenanceDirectory, "run.json")),
     loadJson(path.join(provenanceDirectory, "config.json")),
@@ -940,6 +1001,34 @@ export async function validateFactorialRun(outputDirectory) {
     if (record.trace?.output_sha256 !== record.filesystem?.trace_output_sha256) {
       errors.push(`trace digest mismatch: ${assignmentKey}/${record.arm}`);
     }
+    if (record.arm === "independent-verifier") {
+      try {
+        validateIndependentVerifierLineage(record.comparator_lineage);
+        if (
+          record.trace?.revealed !== false
+          || record.trace?.verifier !== null
+          || record.decision?.verifier_implementation_id !== record.comparator_lineage.implementation_id
+        ) throw new Error("backend trace was reused or independent implementation identity is absent");
+      } catch (error) {
+        errors.push(`independent-verifier implementation invalid: ${assignmentKey}: ${error.message}`);
+      }
+    }
+    if (record.arm === "retry-rollback") {
+      try {
+        validateRetryRollbackResult({
+          decision: record.decision,
+          filesystem: record.filesystem,
+          policy_evaluations: record.resources?.policy_evaluations,
+          comparator_lineage: record.comparator_lineage,
+        }, {
+          task_family: record.task_family,
+          backend_id: record.backend_id,
+          opportunity_id: record.opportunity_id,
+        });
+      } catch (error) {
+        errors.push(`retry/rollback lifecycle invalid: ${assignmentKey}: ${error.message}`);
+      }
+    }
     const observedBudget = record.budget?.observed;
     if (
       observedBudget?.observations !== record.resources?.observations
@@ -961,7 +1050,10 @@ export async function validateFactorialRun(outputDirectory) {
     hashes.add(record.trace?.output_sha256);
     traceHashes.set(assignmentKey, hashes);
     const byteCounts = stagedByteCounts.get(assignmentKey) ?? new Set();
-    byteCounts.add(record.filesystem?.staged_bytes_written);
+    const comparableStagedBytes = record.arm === "retry-rollback"
+      ? record.comparator_lineage?.attempts?.[1]?.staged_bytes_written
+      : record.filesystem?.staged_bytes_written;
+    byteCounts.add(comparableStagedBytes);
     stagedByteCounts.set(assignmentKey, byteCounts);
     const inputs = pairedInputHashes.get(assignmentKey) ?? new Set();
     inputs.add(record.paired_input_sha256);
@@ -1020,5 +1112,8 @@ export async function validateFactorialRun(outputDirectory) {
   await mkdir(analysisDirectory, { recursive: true });
   await writeFile(path.join(analysisDirectory, "factorial-validation.json"), `${JSON.stringify(validation, null, 2)}\n`);
   if (errors.length) throw new Error(`Factorial validation failed:\n- ${errors.join("\n- ")}`);
-  return validation;
+    return validation;
+  } finally {
+    await runLock.release();
+  }
 }

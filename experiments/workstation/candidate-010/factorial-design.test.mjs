@@ -46,7 +46,25 @@ test("each scenario includes registered comparators, an excluded oracle, and an 
     assert.equal(scenario.execution_contract.rejection_always_resets, true);
   }
   assert.equal(COMPARATOR_IMPLEMENTATION.filter((row) => row.status === "implemented-policy").length, 4);
-  assert.equal(COMPARATOR_IMPLEMENTATION.filter((row) => row.status !== "implemented-policy").length, 2);
+  assert.deepEqual(
+    COMPARATOR_IMPLEMENTATION.filter((row) => row.status !== "implemented-policy").map((row) => ({
+      id: row.id,
+      status: row.status,
+      implementation_id: row.implementation_id,
+    })),
+    [
+      {
+        id: "retry-rollback",
+        status: "implemented-two-lifecycle-comparator",
+        implementation_id: "candidate-010-two-lifecycle-retry-rollback-v1",
+      },
+      {
+        id: "independent-verifier",
+        status: "implemented-independent-verifier",
+        implementation_id: "candidate-010-independent-sha512-verifier-v1",
+      },
+    ],
+  );
 });
 
 test("equal-budget accounting refuses excess and unequal assignments", () => {

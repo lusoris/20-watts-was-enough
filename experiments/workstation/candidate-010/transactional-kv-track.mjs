@@ -226,6 +226,12 @@ export async function executeTransactionalKvTrial({
     const bootstrapBytesWritten = await ensureGenesis(versionsDirectory, transactionsDirectory);
     const preChain = await readVersionChain(versionsDirectory);
     const preSnapshot = await durableSnapshot(versionsDirectory);
+    const expectedVersion = opportunity.transactional_kv?.expected_version
+      ?? opportunity.expected_version
+      ?? preChain.current.state.version;
+    if (!Number.isSafeInteger(expectedVersion) || expectedVersion < 0) {
+      refuse(`invalid expected version ${expectedVersion}`);
+    }
     const transactionId = sha256(`${arm}\u0000${opportunity.id}`).slice(0, 24);
     stagedUnit = path.join(transactionsDirectory, transactionId);
     if (await exists(stagedUnit)) refuse(`staging transaction ${transactionId} already exists`);
@@ -277,7 +283,9 @@ export async function executeTransactionalKvTrial({
     );
     let durableBytesWritten = 0;
     let expectedCommittedStateSha256 = null;
-    if (decision.commit) {
+    const staleVersionRefused = decision.commit
+      && expectedVersion !== preChain.current.state.version;
+    if (decision.commit && !staleVersionRefused) {
       const nextVersion = preChain.current.state.version + 1;
       const nextStateBody = jsonBody({
         schema: 1,
@@ -309,7 +317,7 @@ export async function executeTransactionalKvTrial({
       && sha256(jsonBody(postChain.current.state.entries[opportunity.id]))
         === sha256(jsonBody(job));
     const rollbackComplete = Boolean(
-      decision.reset
+      (decision.reset || staleVersionRefused)
       && !stageExists
       && !durableExists
       && postChain.current.state.version === preChain.current.state.version
@@ -350,8 +358,10 @@ export async function executeTransactionalKvTrial({
       temporary_execution_elapsed_ms: temporaryExecutionElapsedMs,
       finalize_elapsed_ms: finalizeElapsedMs,
       boundary_elapsed_ms: performance.now() - boundaryStarted,
+      expected_version: expectedVersion,
       pre_version: preChain.current.state.version,
       post_version: postChain.current.state.version,
+      stale_version_refused: staleVersionRefused,
       stageExists,
       durableExists,
       rollbackComplete,

@@ -52,6 +52,11 @@
       "experiments/workstation/candidate-010/energy-provider.test.mjs",
       "experiments/workstation/candidate-010/factorial-design.test.mjs",
       "experiments/workstation/candidate-010/confirmatory-analysis.test.mjs",
+      "experiments/workstation/candidate-010/fault-injection.test.mjs",
+      "experiments/workstation/candidate-010/independent-verifier.test.mjs",
+      "experiments/workstation/candidate-010/persistent-service-runner.test.mjs",
+      "experiments/workstation/candidate-010/retry-rollback-comparator.test.mjs",
+      "experiments/workstation/candidate-010/run-lock.test.mjs",
       "experiments/workstation/candidate-010/transactional-kv-track.test.mjs",
       "experiments/workstation/candidate-010/signed-publication-track.test.mjs",
       "experiments/workstation/candidate-010/actuator-command-track.test.mjs",
@@ -62,7 +67,10 @@
       "experiments/workstation/candidate-010/promotion-evidence.test.mjs"
     ],
     "full_tests": [
-      "experiments/workstation/candidate-010/factorial-runner.test.mjs"
+      "experiments/workstation/candidate-010/factorial-runner.test.mjs",
+      "experiments/workstation/candidate-010/fault-injection.test.mjs",
+      "experiments/workstation/candidate-010/persistent-service-runner.test.mjs",
+      "experiments/workstation/candidate-010/run-lock.test.mjs"
     ],
     "execution_claims": ["C-170"]
   },

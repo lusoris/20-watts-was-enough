@@ -4,9 +4,12 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import {
+  LEDGER_DURABILITY_CONTRACT,
+  appendDurableRecord,
   deterministicWorkUnits,
   openCheckpointLedger,
   remainingWorkUnits,
+  replaceDurableCheckpoint,
 } from "./checkpoint.mjs";
 import { generateOpportunities } from "./generator.mjs";
 import {
@@ -86,6 +89,49 @@ test("resume reproduces the uninterrupted scientific payload and hash chain", as
       await readFile(rawPath, "utf8"),
       await readFile(path.join(temporary, "full", "events.ndjson"), "utf8"),
     );
+  } finally {
+    assert.ok(temporary.startsWith(os.tmpdir()));
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test("raw records and checkpoints cross the declared fsync-backed file boundary", async () => {
+  const temporary = await mkdtemp(path.join(os.tmpdir(), "20w-c010-durable-io-"));
+  const rawPath = path.join(temporary, "events.ndjson");
+  const checkpointPath = path.join(temporary, "checkpoint.json");
+  const calls = [];
+  const durableIo = {
+    appendRecord: async (file, body) => {
+      calls.push({ operation: "append-record", file, newline: body.endsWith("\n") });
+      await appendDurableRecord(file, body);
+    },
+    replaceCheckpoint: async (file, body) => {
+      calls.push({ operation: "replace-checkpoint", file, newline: body.endsWith("\n") });
+      await replaceDurableCheckpoint(file, body);
+    },
+  };
+  try {
+    const ledger = await openCheckpointLedger({
+      rawPath,
+      checkpointPath,
+      scientificPayload: payload,
+      workKey,
+      durableIo,
+    });
+    const unit = [...deterministicWorkUnits({
+      seeds: [101],
+      config: { ...config, opportunities_per_seed: 1 },
+      arms,
+      generateOpportunities,
+    })][0];
+    await ledger.append(eventFor(unit));
+    await ledger.saveCheckpoint({ complete: true });
+    assert.deepEqual(calls.map((entry) => entry.operation), ["append-record", "replace-checkpoint"]);
+    assert.ok(calls.every((entry) => entry.newline));
+    assert.ok((await readFile(rawPath, "utf8")).endsWith("\n"));
+    assert.ok((await readFile(checkpointPath, "utf8")).endsWith("\n"));
+    assert.equal(LEDGER_DURABILITY_CONTRACT.torn_tail_policy, "detect-and-refuse; never silently truncate");
+    assert.match(LEDGER_DURABILITY_CONTRACT.limitation, /not claimed/);
   } finally {
     assert.ok(temporary.startsWith(os.tmpdir()));
     await rm(temporary, { recursive: true, force: true });

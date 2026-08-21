@@ -163,6 +163,43 @@ test("trace withholding changes disclosure but not staged or temporary work", as
   });
 });
 
+test("transactional KV refuses a stale expected version after doing staged validation work", async () => {
+  await withTemporaryRoot(async (root) => {
+    const opportunities = generateOpportunities(config, 405);
+    await executeTransactionalKvTrial({
+      root,
+      opportunity: { ...opportunities[0], transactional_kv: { expected_version: 0 } },
+      arm: "stale-arm",
+      config,
+      revealTrace: false,
+      decideWithTrace: () => ({ stage: true, commit: true, reset: false }),
+    });
+    const before = await durableFiles(root);
+    const stale = await executeTransactionalKvTrial({
+      root,
+      opportunity: { ...opportunities[1], transactional_kv: { expected_version: 0 } },
+      arm: "stale-arm",
+      config,
+      revealTrace: true,
+      decideWithTrace: (trace) => {
+        assert.equal(Number.isFinite(trace), true);
+        return { stage: true, commit: true, reset: false };
+      },
+    });
+
+    assert.deepEqual(await durableFiles(root), before);
+    assert.equal(stale.filesystem.expected_version, 0);
+    assert.equal(stale.filesystem.pre_version, 1);
+    assert.equal(stale.filesystem.post_version, 1);
+    assert.equal(stale.filesystem.stale_version_refused, true);
+    assert.equal(stale.filesystem.rollbackComplete, true);
+    assert.equal(stale.filesystem.commitComplete, false);
+    assert.equal(stale.filesystem.irreversible_violation, false);
+    assert.ok(stale.filesystem.staged_bytes_written > 0);
+    assert.ok(stale.filesystem.temporary_execution_elapsed_ms >= 0);
+  });
+});
+
 test("backend refuses staged or durable corruption without claiming completion", async () => {
   await withTemporaryRoot(async (root) => {
     const opportunities = generateOpportunities(config, 404);
