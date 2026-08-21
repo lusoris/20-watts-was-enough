@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
+import { traceBodyForJob } from "./trace-job.mjs";
 
 async function fileExists(file) {
   try {
@@ -14,24 +15,6 @@ async function fileExists(file) {
 
 function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
-}
-
-function normalFromNonce(nonce) {
-  const digest = createHash("sha256").update(String(nonce)).digest();
-  const u1 = Math.max(digest.readUInt32BE(0) / 0x1_0000_0000, Number.EPSILON);
-  const u2 = digest.readUInt32BE(4) / 0x1_0000_0000;
-  return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-}
-
-function executeTraceJob(job, config) {
-  const direction = job.trace_job.unsafe ? 1 : -1;
-  const commonWeight = config.verifier_common_mode_weight;
-  const residualWeight = Math.sqrt(1 - commonWeight ** 2);
-  return (
-    direction * config.verifier_signal
-    + commonWeight * job.trace_job.cheap_common_mode
-    + residualWeight * normalFromNonce(job.trace_job.nonce)
-  );
 }
 
 function unitName(value) {
@@ -68,8 +51,7 @@ export async function executeFilesystemTrial({
 
   const executionStarted = performance.now();
   const stagedJob = JSON.parse(await readFile(jobPath, "utf8"));
-  const verifier = executeTraceJob(stagedJob, config);
-  const traceBody = `${JSON.stringify({ schema: 1, verifier })}\n`;
+  const { verifier, body: traceBody } = traceBodyForJob(stagedJob, config);
   const tracePath = path.join(stagedUnit, "trace.json");
   await writeFile(tracePath, traceBody, { encoding: "utf8", flag: "wx" });
   const temporaryExecutionElapsedMs = performance.now() - executionStarted;
@@ -90,6 +72,9 @@ export async function executeFilesystemTrial({
   const stagedBytesWritten = Buffer.byteLength(jobBody) + Buffer.byteLength(traceBody);
   const filesystem = {
     boundary: "filesystem-stage-execute-finalize-v1",
+    task_family: "filesystem-publish",
+    backend_id: "filesystem-stage-execute-finalize-v1",
+    backend_implemented: true,
     trace_revealed: revealTrace,
     trace_output_sha256: sha256(traceBody),
     staged_bytes_written: stagedBytesWritten,
@@ -102,6 +87,8 @@ export async function executeFilesystemTrial({
     durableExists,
     rollbackComplete: decision.reset && !stageExists && !durableExists,
     commitComplete: decision.commit && !stageExists && durableExists,
+    irreversible_violation: false,
+    physical_actuation: false,
   };
   return { decision, filesystem, revealedVerifier };
 }

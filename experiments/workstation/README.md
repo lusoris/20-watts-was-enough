@@ -1,11 +1,13 @@
 # Workstation execution contract
 
-The current repository contains research and protocol specifications, not an
-executable experimental package. A test becomes workstation-ready only when its
+The repository now contains one executable smoke harness alongside research and
+protocol specifications, but no workstation-ready scientific package. A test
+becomes workstation-ready only when its
 checked manifest exists at `experiments/workstation/manifests/<artifact-id>.json`,
-passes `npm run validate:workstation`, declares `workstation-ready`, and names
-all six fields below. A `smoke-ready` manifest proves only that the deterministic
-plumbing runs; it does not upgrade any claim to workstation-executable.
+passes `npm run validate:workstation`, declares `workstation-ready`, names all
+six fields below, and binds a hashed multi-domain hardware-confirmation evidence
+bundle. A `smoke-ready` manifest proves only that the deterministic plumbing
+runs; it does not upgrade any claim to workstation-executable.
 
 1. **Command:** one non-interactive entry point with `prepare`, `smoke`, `run`,
    and `analyze` actions that returns a nonzero exit code when preparation,
@@ -59,6 +61,18 @@ non-empty JSON fields as proof of execution readiness.
 [Candidate 010](candidate-010/README.md) now has the first validated
 `smoke-ready` harness. It exercises deterministic paired opportunities, seven
 eligible null/candidate arms, an oracle ceiling, real filesystem staging and
-rollback, append-only raw events, and reproducibility hashes. It intentionally
-leaves claim coverage at zero workstation-executable until the full promotion
-contract is implemented.
+rollback, append-only raw events, declared-boundary checkpoint resume,
+external-energy provenance validation, frozen design/analysis modules, and
+reproducibility hashes. Its complete implementation test executes all 48
+factorial scenarios through four isolated local effect boundaries with no
+physical actuation.
+
+Those roots are isolated per opportunity–arm work unit, so the factorial path
+does not yet test persistent service history. Torn-write/`fsync` crash recovery,
+an actual retry effect lifecycle, a separately implemented independent
+verifier, and injected reset leakage, precommit side effects, or incomplete
+rollback are also absent. The strict seed-release and promotion-evidence
+builders exist, but no real frozen release, interval-owned calibrated energy
+observation, or validated evidence bundle exists. Six of nine **structural**
+promotion gates pass; no result claim or workstation-executable claim coverage
+follows from them.

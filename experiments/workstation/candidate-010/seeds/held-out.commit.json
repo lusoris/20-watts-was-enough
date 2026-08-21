@@ -1,7 +1,10 @@
 {
   "schema": 1,
   "partition": "held-out",
-  "state": "sealed",
+  "state": "pending-implementation-freeze",
+  "algorithm": "sha256-json-array-v1",
+  "seed_count": null,
   "commitment": null,
-  "note": "Held-out task templates and seeds will be committed before workstation-ready status."
+  "reveal": null,
+  "note": "Generate and seal a fresh unseen pack only after runner, backends, design, analysis, and meter contract are frozen. Previously visible planning seeds are ineligible."
 }

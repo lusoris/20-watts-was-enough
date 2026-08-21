@@ -44,12 +44,32 @@ the exact diff; this file records why the project changed.
   1,350 claims, 1,237 protocol-covered claims, zero workstation-executable
   claims, 31 complete written protocols, one smoke harness, and zero
   workstation-ready experiments. Candidate 010 exposes nine machine-checkable
-  promotion gates, three of which currently pass.
+  structural promotion gates, six of which currently pass.
 - Candidate 010's smoke harness now sends every arm through the same real
   stage--temporary-execution--commit/reset boundary, constructs verifier
   information only during temporary execution, includes a trace-withholding
   ablation, records a corruption-evident hash chain, and limits its execution
   scope to `C-170`. It remains smoke-ready and cannot promote that claim.
+- Candidate 010 now reconstructs deterministic resume state from its
+  append-only ledger, binds checkpoints to config and ordered seed identity,
+  rejects changed or corrupt continuations, freezes the byte-exact executable
+  source bundle and Git commit, validates a source/design/preregistration-bound
+  seed-release contract without creating a real release, and validates strict external
+  wall/rail-meter records without treating fixtures or telemetry as measured
+  energy, and freezes bounded factorial and confirmatory-analysis contracts.
+  Its full implementation test now executes all 48 scenarios through isolated
+  filesystem, transactional-KV, signed-publication, and simulated-actuator
+  boundaries with six registered comparator policies, one candidate arm, equal
+  budgets, rollback proofs, resume mutation refusal, and no physical actuation.
+  The executable source freeze now includes both the release validator and the
+  strict promotion-evidence builder. The factorial roots remain isolated per
+  work unit rather than persistent services; resume covers declared checkpoint
+  boundaries rather than arbitrary torn-write/`fsync` crashes; retry/rollback
+  and independent-verifier remain typed proxy comparators; and reset leakage,
+  precommit side effects, and incomplete-rollback injection are absent. No real
+  frozen release, interval-owned calibrated energy observation, or validated
+  promotion evidence exists. The 6/9 count remains structural, and no
+  experimental result is claimed.
 
 - A provenance capture and primary-source audit for empirical-versus-formal
   scientific-discovery evaluators, correcting the supplied dusty-plasma date

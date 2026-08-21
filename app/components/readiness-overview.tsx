@@ -210,7 +210,7 @@ export function ReadinessOverview({ mode = "page" }: ReadinessOverviewProps) {
             <p>{smokeArtifact.title}</p>
             <div className="readiness-gate-score">
               <strong>{passedPromotionGates}/{smokeArtifact.promotionChecks.length}</strong>
-              <span>machine-checkable promotion gates currently pass</span>
+              <span>machine-checkable structural promotion gates currently pass</span>
             </div>
             <ul className="readiness-gates">
               {smokeArtifact.promotionChecks.map((check) => (

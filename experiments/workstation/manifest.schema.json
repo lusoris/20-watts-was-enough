@@ -16,7 +16,8 @@
     "outputs",
     "implementation",
     "energy",
-    "resume"
+    "resume",
+    "promotion_evidence"
   ],
   "properties": {
     "schema": { "const": 1 },
@@ -115,6 +116,40 @@
       "properties": {
         "supported": { "type": "boolean" }
       }
+    },
+    "promotion_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "evidence_path",
+        "run_directory",
+        "release_root",
+        "release_path",
+        "energy_assignments_path",
+        "disjoint_seed_pack_paths"
+      ],
+      "properties": {
+        "status": { "enum": ["pending", "present"] },
+        "evidence_path": { "$ref": "#/$defs/repositoryPath" },
+        "run_directory": { "$ref": "#/$defs/repositoryPath" },
+        "release_root": { "$ref": "#/$defs/repositoryPath" },
+        "release_path": { "$ref": "#/$defs/repositoryPath" },
+        "energy_assignments_path": { "$ref": "#/$defs/repositoryPath" },
+        "disjoint_seed_pack_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/repositoryPath" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "repositoryPath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\.\\.).+$"
     }
   }
 }

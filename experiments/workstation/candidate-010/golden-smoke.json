@@ -3,8 +3,11 @@
   "artifact": "candidate-010",
   "profile": "smoke",
   "config_sha256": "148b7bc647176a40438cac96e8bef1f937c572112ce6ca5dff958e52e8d934cf",
+  "ordered_seed_pack_sha256": "4a3945a4f0e70e8a3d8173347ce7b5efda489c0d34c69d9bcc8ac418f55f9176",
   "scientific_payload_sha256": "7292e92f7aaba6a6b654c5c79974582a603e699b767a4208673e8e8c4e369a43",
   "hash_chain_sha256": "9b4ae1d80984438c51926515ab78e203109d297c809e257986a647f9034dcf1d",
+  "completed_work_units_sha256": "86ba752716bafbf02aaa6ee7e783369125e87b8267441f8dc26fc0b86f372549",
+  "checkpoint_sha256": "69b0f98f43acaccfb461a702e036298accc6328dd0fa1dfcebae661541b60eba",
   "records": 576,
-  "note": "This digest excludes timestamps, CPU timing, and unavailable measured energy. It validates deterministic scientific generation, decisions, outcomes, budgets, and filesystem effects; it is not a scientific result."
+  "note": "This digest excludes timestamps, CPU timing, and unavailable measured energy. It validates deterministic generation, decisions, outcomes, budgets, filesystem effects, work-unit completion, and checkpoint identity; it is not a scientific result."
 }

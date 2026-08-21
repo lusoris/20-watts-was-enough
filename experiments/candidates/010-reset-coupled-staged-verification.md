@@ -9,6 +9,38 @@ trace followed by a conditionally informative verifier and explicit reset beat
 calibrated thresholds, cascades, sequential tests, abstention, retries, and
 redundant verification at the same total budget?
 
+**Executable status:** the [Candidate 010 workstation harness](../workstation/candidate-010/README.md)
+passes 6 of 9 structural implementation gates. The complete 48-scenario implementation
+test now runs across four isolated local task backends, alongside append-only
+integrity, deterministic resume, and the external-meter contract. Freshly
+sealed confirmation/held-out seeds, calibrated hardware measurements, and a
+promotion evidence bundle are not present; no experimental claim has been
+produced.
+
+## Current executable limitations
+
+The executable layer is narrower than the full protocol below:
+
+- each factorial opportunity–arm receives a fresh isolated effect root, so the
+  current run does not test persistent service history, shared version
+  contention, or cross-opportunity recovery;
+- checkpoint resume is proven at declared record boundaries and fails closed
+  on a truncated ledger tail; arbitrary torn-write, missing-`fsync`, power-loss,
+  and filesystem crash recovery are not implemented;
+- the retry/rollback and independent-verifier arms are typed proxy comparators:
+  the former does not yet execute a second effect lifecycle, and the latter
+  does not yet use a separately implemented detector;
+- no scenario injects reset leakage, precommit disclosure or side effects, or
+  incomplete rollback, so zero implementation-test violations are not safety
+  evidence;
+- a strict source-bound seed-release validator and promotion-evidence builder
+  exist, but no real frozen confirmation/held-out release or validated evidence
+  bundle exists; and
+- no interval-owned calibrated energy observation has been collected.
+
+Accordingly, the 6/9 count describes structural gates only. It is neither a
+scientific result nor evidence for the held composition.
+
 ## Why this experiment exists
 
 Kinetic proofreading separates recognition from commitment. A candidate may

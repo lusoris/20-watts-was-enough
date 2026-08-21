@@ -2421,31 +2421,31 @@
           "id": "full-profile",
           "label": "Frozen full profile",
           "passed": true,
-          "detail": "data.full_profile references a repository file"
+          "detail": "data.full_profile identity and SHA-256 match the frozen repository file"
         },
         {
           "id": "full-tests",
-          "label": "Full scientific tests",
-          "passed": false,
-          "detail": "implementation.full_tests must name at least one existing test"
+          "label": "Full experiment-path tests",
+          "passed": true,
+          "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
         },
         {
           "id": "hash-chain",
           "label": "Corruption-evident output ledger",
           "passed": true,
-          "detail": "outputs.hash_chain is enabled"
+          "detail": "hash-chain output is wired through the tested checkpoint ledger"
         },
         {
           "id": "resume",
           "label": "Deterministic resume",
-          "passed": false,
-          "detail": "resume.supported must be true"
+          "passed": true,
+          "detail": "runner imports the declared, tested checkpoint/resume implementation"
         },
         {
           "id": "energy-provider",
           "label": "Measured-energy provider",
-          "passed": false,
-          "detail": "energy.required must be true and provider_config must reference an existing file"
+          "passed": true,
+          "detail": "external-meter provider capability, exclusions, test, and frozen config hash match"
         },
         {
           "id": "confirmation-seeds",
@@ -2460,10 +2460,10 @@
           "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
         },
         {
-          "id": "readiness-declaration",
-          "label": "Workstation-ready declaration",
+          "id": "promotion-evidence",
+          "label": "Strict recomputed promotion evidence",
           "passed": false,
-          "detail": "manifest currently declares smoke-ready"
+          "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
         }
       ],
       "executionClaims": [

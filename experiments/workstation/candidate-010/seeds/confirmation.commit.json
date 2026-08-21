@@ -1,7 +1,10 @@
 {
   "schema": 1,
   "partition": "confirmation",
-  "state": "sealed",
+  "state": "pending-implementation-freeze",
+  "algorithm": "sha256-json-array-v1",
+  "seed_count": null,
   "commitment": null,
-  "note": "The full seed list and SHA-256 commitment are intentionally absent while the benchmark is only smoke-ready."
+  "reveal": null,
+  "note": "Generate and seal a fresh unseen pack only after runner, backends, design, analysis, and meter contract are frozen. Previously visible planning seeds are ineligible."
 }

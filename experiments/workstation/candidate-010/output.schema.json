@@ -20,7 +20,22 @@
   "properties": {
     "schema": { "const": 1 },
     "artifact": { "const": "candidate-010" },
+    "run_kind": { "type": "string" },
     "profile": { "type": "string" },
+    "run_id": { "type": "string", "pattern": "^c010-run-[0-9a-f]{64}$" },
+    "phase": { "type": "string" },
+    "scenario_id": { "type": "string", "minLength": 1 },
+    "scenario_factors": { "type": "object" },
+    "task_family": { "type": "string", "minLength": 1 },
+    "backend_id": { "type": "string", "minLength": 1 },
+    "backend_implemented": { "type": "boolean" },
+    "verifier_id": { "type": "string", "minLength": 1 },
+    "cluster_id": { "type": "string", "pattern": "^c010-cluster-[0-9a-f]{64}$" },
+    "pair_id": { "type": "string", "pattern": "^c010-pair-[0-9a-f]{64}$" },
+    "work_unit_id": { "type": "string", "pattern": "^c010-work-[0-9a-f]{64}$" },
+    "paired_input_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "arm_order_schedule_id": { "type": "string", "pattern": "^c010-arm-order-[0-9a-f]{64}$" },
+    "arm_order_index": { "type": "integer", "minimum": 0 },
     "opportunity_id": { "type": "string" },
     "seed": { "type": "integer" },
     "arm": { "type": "string" },
@@ -36,8 +51,25 @@
     },
     "decision": { "type": "object" },
     "outcome": { "type": "object" },
+    "budget": { "type": "object" },
     "resources": { "type": "object" },
-    "filesystem": { "type": "object" },
+    "measurement_interval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["started_at", "ended_at", "clock_id"],
+      "properties": {
+        "started_at": { "type": "string", "format": "date-time" },
+        "ended_at": { "type": "string", "format": "date-time" },
+        "clock_id": { "const": "node-system-wall-clock-utc-v1" }
+      }
+    },
+    "filesystem": {
+      "type": "object",
+      "properties": {
+        "physical_actuation": { "type": "boolean" }
+      }
+    },
+    "privileged_evidence": { "type": "boolean" },
     "integrity": {
       "type": "object",
       "required": ["sequence", "previous_sha256", "record_sha256"],
@@ -47,5 +79,46 @@
         "record_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "run_kind": { "const": "factorial-diagnostic-v1" } },
+        "required": ["run_kind"]
+      },
+      "then": {
+        "required": [
+          "phase",
+          "run_id",
+          "scenario_id",
+          "scenario_factors",
+          "task_family",
+          "backend_id",
+          "backend_implemented",
+          "verifier_id",
+          "cluster_id",
+          "pair_id",
+          "work_unit_id",
+          "paired_input_sha256",
+          "arm_order_schedule_id",
+          "arm_order_index",
+          "budget",
+          "measurement_interval",
+          "privileged_evidence"
+        ],
+        "properties": {
+          "backend_implemented": { "const": true },
+          "privileged_evidence": { "const": false },
+          "filesystem": {
+            "required": ["task_family", "backend_id", "physical_actuation"],
+            "properties": {
+              "task_family": { "type": "string", "minLength": 1 },
+              "backend_id": { "type": "string", "minLength": 1 },
+              "physical_actuation": { "const": false }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "artifact": "candidate-010",
+  "provider_module": "experiments/workstation/candidate-010/energy-provider.mjs",
+  "contract_version": "candidate-010.external-energy-reading.v1",
+  "accepted_measurement_methods": [
+    "counter-delta",
+    "sampled-power"
+  ],
+  "accepted_boundaries": [
+    "wall",
+    "rail"
+  ],
+  "confirmation_record_kind": "hardware-observation",
+  "software_telemetry_is_measured_energy": false,
+  "test_fixtures_are_claim_eligible": false,
+  "modeled_energy_is_claim_eligible": false,
+  "require_calibration_identity": true,
+  "require_calibration_validity_interval": true,
+  "require_traceability_reference": true,
+  "require_uncertainty": true,
+  "require_explicit_measurement_interval": true,
+  "require_clock_integrity": true,
+  "require_raw_reading_copy_in_run_provenance": true,
+  "hardware_observation_requires_provenance_review": true,
+  "missing_or_invalid_reading_policy": "fail-confirmation-closed"
+}

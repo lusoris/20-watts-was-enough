@@ -1,0 +1,46 @@
+{
+  "contract_version": "candidate-010.external-energy-reading.v1",
+  "reading_id": "REPLACE_WITH_UNIQUE_READING_ID",
+  "record_kind": "hardware-observation",
+  "provider": {
+    "type": "external-meter",
+    "medium": "wall",
+    "provider_id": "REPLACE_WITH_PROVIDER_AND_MODEL",
+    "meter_id": "REPLACE_WITH_DEVICE_SERIAL_OR_ASSET_ID",
+    "boundary": "REPLACE_WITH_EXACT_INCLUDED_HARDWARE_BOUNDARY",
+    "hardware_configuration": "REPLACE_WITH_WORKSTATION_AND_PERIPHERAL_CONFIGURATION",
+    "software_telemetry": false
+  },
+  "calibration": {
+    "calibration_id": "REPLACE_WITH_CERTIFICATE_OR_VERIFICATION_ID",
+    "calibrated_at": "1970-01-01T00:00:00.000Z",
+    "valid_until": "1970-01-01T00:00:00.000Z",
+    "relative_standard_uncertainty": null,
+    "coverage_factor": null,
+    "traceability_reference": "REPLACE_WITH_TRACEABILITY_REFERENCE"
+  },
+  "interval": {
+    "started_at": "1970-01-01T00:00:00.000Z",
+    "ended_at": "1970-01-01T00:00:00.000Z",
+    "clock_id": "REPLACE_WITH_CLOCK_IDENTITY",
+    "clock_uncertainty_s": null,
+    "clock_discontinuity_observed": false
+  },
+  "integrity": {
+    "meter_reset_observed": false,
+    "negative_reading_observed": false
+  },
+  "measurement": {
+    "method": "counter-delta",
+    "start": {
+      "value": null,
+      "unit": "Wh",
+      "observed_at": "1970-01-01T00:00:00.000Z"
+    },
+    "end": {
+      "value": null,
+      "unit": "Wh",
+      "observed_at": "1970-01-01T00:00:00.000Z"
+    }
+  }
+}

@@ -9,7 +9,7 @@
     "dev": "vinext dev",
     "build": "npm run validate:book-pdf && vinext build",
     "start": "vinext start",
-    "test": "npm run lint && npm run validate:docs && npm run validate:coverage && npm run validate:math && npm run validate:workstation && npm run check:test-coverage && npm run test:readiness && npm run build",
+    "test": "npm run lint && npm run validate:docs && npm run validate:coverage && npm run validate:math && npm run validate:workstation && npm run test:workstation && npm run check:test-coverage && npm run test:readiness && npm run build",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "validate:docs": "pwsh -File scripts/validate-docs.ps1",
     "validate:math": "node scripts/validate-math.mjs",
