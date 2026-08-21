@@ -5,8 +5,9 @@ engineering sources. They preserve disagreements, boundary conditions, and
 failed deduplications that would be lost in the shorter claim ledger.
 
 Audit count is not field coverage. The generated
-[`field-coverage census`](../field-coverage.md) records which OECD and DFG
-areas have a dedicated audit, only adjacent evidence, or no durable review.
+[`field-coverage census`](../field-coverage.md) records which OECD, DFG, and
+ANZSRC areas have a dedicated audit, only adjacent evidence, or no durable
+review at the declared taxonomy resolution.
 
 ## Normative-source header
 
@@ -30,6 +31,11 @@ this default does not retroactively convert or invalidate them.
 
 | Date | Audit | Main outcome |
 | --- | --- | --- |
+| 2026-08-21 | [Direct social research, ethnography, and media](2026-08-21-direct-social-research-ethnography-media.md) | separates instrument-conditioned responses, category and invariance contracts, frame/access/nonresponse stages, observer role and reactivity, network interference, formal rules from enacted work, media selection and exposure stages, shared mixed-method failure roots, and distinct participant, gatekeeper, legal, ethics, and community authorities; adds eight CPU-only falsification contracts without adding a principle or candidate |
+| 2026-08-21 | [Molecular chemistry, synthesis, and adaptive molecular systems](2026-08-21-molecular-chemistry-synthesis-systems.md) | separates reversible correction from commitment, dynamic-library selection from intrinsic fitness, self-sorting from guaranteed orthogonality, context-qualified recognition, temporal catalytic control, candidate-set structure elucidation, and mature reaction-design nulls; adds eight CPU-only falsification contracts without adding a principle or candidate |
+| 2026-08-21 | [Polymer research: distributions, adaptive networks, and lifecycle](2026-08-21-polymer-research-adaptive-materials.md) | separates polymerization mechanism and population distributions, topology and entanglement, relaxation spectra, phase and assembly path, gel criteria, dynamic exchange, finite healing, stimulus response, ageing and fatigue, sequence, measurement operators, processing history, and circularity; adds twelve CPU-only falsification tracks without adding a principle or candidate |
+| 2026-08-21 | [Residual humanities: living heritage, rehearsal, conservation, and archival absence](2026-08-21-residual-humanities-living-heritage-practice.md) | separates staged archival selection from event absence, contextual authenticity from a universal scalar, living practice from frozen tokens, group-specific rehearsal history from free compression, re-treatability from byte rollback, and digital representation from identity; adds six synthetic protocols without adding a principle or candidate |
+| 2026-08-21 | [Mineralogy, petrology, and geochemistry](2026-08-21-mineralogy-petrology-geochemistry.md) | separates equilibrium state, kinetic path, material continuity, P–T–t record support, isotope and reservoir inverses, transport-limited weathering, multi-couple redox, target-specific upscaling, selected provenance, event-qualified dates, and preservation-filtered deep time; adds eight CPU fixtures without adding a principle or candidate |
 | 2026-08-21 | [Particle, nuclear, and high-energy experimentation](2026-08-21-particle-nuclear-high-energy-experimentation.md) | separates collision/event, trigger/selection, acceptance, efficiency, calibration, response, unfolding, nuisance, control region, local/global search, blinding, simulation, likelihood, workflow preservation, evaluated nuclear data, symmetry, and effective-model regime; adds eight CPU fixtures and corrects the DFG code to 3.24 without adding a principle or candidate |
 | 2026-08-21 | [Environmental and industrial biotechnology with chemistry/process nulls](2026-08-21-biotechnology-chemistry-process-systems.md) | separates metabolic flux control, dilution, composition, function, dynamical and evolutionary stability, catalyst state, intrinsic rate, transport, scale-up, separation, remediation mass/rebound, strain escape, optical measurement, physical circularity, attributed chain of custody, and lifecycle impact; adds eight synthetic fixtures without adding a principle or candidate |
 | 2026-08-21 | [Forestry, fisheries, aquaculture, and aquatic food systems](2026-08-21-forestry-fisheries-aquatic-food-systems.md) | separates stock, flow, cohort, age, space, recruitment, harvest, carbon pool, counterfactual, management loop, rights bundle, carrying-capacity type, externality, nutrient recovery, and edible endpoint; adds six synthetic renewable-resource tests without adding a principle or candidate |

@@ -17212,3 +17212,489 @@ describes the exact statement here, not a broader interpretation.
 - **Rationale:** lower-scale structure can be represented without resolving every high-scale degree of freedom only within a declared expansion and applicability regime.
 - **Open issue:** compare fixed-order, order-mixing, Bayesian truncation, alternate power counting, full/reference, learned residual, and candidate models across the registered breakdown boundary and symmetry-violating target.
 - **Used by:** [particle and nuclear experimentation audit](audits/2026-08-21-particle-nuclear-high-energy-experimentation.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1298
+
+- **Statement:** a computed petrological phase assemblage is conditional on bulk composition, components, pressure, temperature, admitted phases, thermodynamic data, and solution models; it does not by itself establish natural equilibration or a reaction path.
+- **Status:** established model and regime boundary.
+- **Primary sources:** `HollandPowell1998ThermodynamicData`, `HollandPowell2011ThermodynamicData`, `Connolly2005PhaseEquilibria`.
+- **Rationale:** constrained equilibrium calculations delimit states inside an encoded system, while kinetics, effective composition, open exchange, missing phases, and historical accessibility remain separate empirical questions.
+- **Open issue:** compare phase-list, dataset, solution-model, bulk-composition, equilibrium, kinetic-path, and observation alternatives under held-out compositions and histories at equal compute and measurement cost.
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md).
+
+### C-1299
+
+- **Statement:** interfacial and bulk driving terms can make a metastable polymorph nucleate faster than the equilibrium bulk phase under scoped solution conditions.
+- **Status:** established scoped kinetic result.
+- **Primary sources:** `SunEtAl2015AragoniteNucleation`.
+- **Rationale:** the lowest bulk free-energy state does not uniquely predict the first formed phase when nucleation barriers, interfaces, substrates, supersaturation, temperature, pressure, and kinetics differ.
+- **Open issue:** test whether transition-barrier and metastable-state models improve held-out path prediction beyond ordinary kinetic and search baselines without converting one mineral result into a universal optimization rule.
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1300
+
+- **Statement:** fluid-mediated interface-coupled dissolution and reprecipitation can replace a solid while preserving external morphology and some crystallographic relation, so preserved form does not prove material continuity.
+- **Status:** established material-transformation mechanism.
+- **Primary sources:** `PutnisPutnis2007Reequilibration`.
+- **Rationale:** visible continuity can survive constituent replacement and porosity generation; identity, function, lineage, and material persistence therefore require distinct observations.
+- **Open issue:** compare morphology-only, composition-aware, interface-front, solid-state-diffusion, and fluid-replacement hypotheses with independent spatial, chemical, and temporal measurements.
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1301
+
+- **Statement:** mineral assemblage, zoning, texture, diffusion, and dated domains can constrain only supported portions of a pressure–temperature–time–composition history; overprint, reset, fractionation, and non-identifiability prevent a lossless path claim.
+- **Status:** established inverse and preservation boundary.
+- **Primary sources:** `SpearEtAl1984PTPaths`, `Dodson1973ClosureTemperature`, `VanceEtAl2003Petrochronology`.
+- **Rationale:** a present record is a transformed and selectively preserved response to a history, with closure and reset behavior depending on mineral, geometry, diffusion, and path assumptions.
+- **Open issue:** report equivalence sets and identifiable functionals under alternate reset, diffusion, fractionation, phase, and observation models, then test prospective predictions on withheld material domains.
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1302
+
+- **Statement:** stable and radiogenic isotope ratios constrain sources and histories only under declared fractionation, concentration, endmember, exchange, time-integration, and open-system models.
+- **Status:** established tracer and inverse boundary.
+- **Primary sources:** `Urey1947IsotopicSubstances`, `DePaoloWasserburg1976NdIsotopes`.
+- **Rationale:** one ratio can be compatible with several temperature, transport, mixing, inheritance, reservoir, or exchange histories, and the admissible alternatives depend on other measured quantities.
+- **Open issue:** compare source labels, mixing models, fractionation models, reservoir histories, support-qualified intervals, and intervention or additional-measurement policies under known synthetic truth and real reference cases.
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1303
+
+- **Statement:** field-scale chemical-weathering flux can be limited by fluid residence time and approach to equilibrium rather than inheriting an intrinsic laboratory surface-rate law.
+- **Status:** established scoped field and model result.
+- **Primary sources:** `Maher2010WeatheringResidence`.
+- **Rationale:** realized transformation depends on transport, contact, reactive surface evolution, saturation, and removal as well as intrinsic kinetics, so a component rate is not automatically a delivered system rate.
+- **Open issue:** discriminate kinetic-, transport-, residence-, and mixed-control regimes across held-out flow, lithology, geometry, and chemistry while charging observation and simulation cost.
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md).
+
+### C-1304
+
+- **Statement:** multiple redox couples in natural groundwater can be mutually inconsistent and disagree with a single electrode indication, making one master Eh invalid for disequilibrated waters.
+- **Status:** established scoped field and measurement boundary.
+- **Primary sources:** `LindbergRunnells1984GroundwaterRedox`.
+- **Rationale:** a scalar redox summary can collapse couple-specific kinetics, sampling, electrode response, speciation, and nonequilibrium state into a value that supports no unique chemical interpretation.
+- **Open issue:** compare scalar Eh, couple-specific measurements, speciation models, multi-indicator state, and abstention under matrix effects, sampling delay, calibration drift, and withheld chemical regimes.
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1305
+
+- **Statement:** an equivalent coarse property is target- and boundary-qualified: preserving total flow need not preserve residence-time tails, local reaction, breakthrough, or effluent speciation.
+- **Status:** established multiscale modeling boundary.
+- **Primary sources:** `Dagan1986GroundwaterScales`, `RenardDeMarsily1997Permeability`, `SteefelEtAl2015ReactiveTransportCodes`.
+- **Rationale:** upscaling defines equivalence relative to selected observables, boundary conditions, heterogeneity, scale, and closure assumptions rather than producing one universally portable reduced model.
+- **Open issue:** preregister target observables and test coarse models across held-out boundaries, heterogeneity scales, reactive regimes, numerical implementations, and observation operators.
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md).
+
+### C-1306
+
+- **Statement:** mineral fertility, survival, sorting, recycling, preparation, analytical acceptance, and sample size separate an observed detrital-age fraction from source mass fraction.
+- **Status:** established sampling and provenance boundary.
+- **Primary sources:** `MalusaEtAl2013DetritalBias`, `Vermeesch2004GrainCount`.
+- **Rationale:** the observed provenance record is the output of source production, physical routing, preservation, laboratory selection, and finite sampling, not a direct census of source contribution.
+- **Open issue:** test selection-aware and route-aware inverse models under withheld sources, recycling, rare components, acceptance changes, and independent sediment fractions.
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1307
+
+- **Statement:** concordia, discordia, isochron, common-component, open-system, and correlated-error models estimate mineral-domain dates; petrological context is separately required to interpret an event.
+- **Status:** established geochronological inverse boundary.
+- **Primary sources:** `Wetherill1956DiscordantUPb`, `YorkEtAl2004LineFit`, `EngiEtAl2017Petrochronology`.
+- **Rationale:** numerical age agreement or a fitted line does not uniquely label crystallization, metamorphism, cooling, alteration, inheritance, or analytical disturbance.
+- **Open issue:** separate date estimation, calibration covariance, domain selection, open-system alternatives, event labeling, and independent geological validation in synthetic and interlaboratory tests.
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1308
+
+- **Statement:** hiatus, time averaging, exposure, sampling, detection, and age-model uncertainty can smear or remove rare deep-time events; zero preservation support does not support an absence claim.
+- **Status:** established preservation and non-detection boundary.
+- **Primary sources:** `Sadler1981StratigraphicCompleteness`, `SignorLipps1982SamplingBias`.
+- **Rationale:** the observed temporal record is discontinuous and scale-dependent, so apparent graduality, abruptness, or absence can arise from the preservation and sampling operator.
+- **Open issue:** compare event detection and onset inference across sedimentation, hiatus, time-averaging, age-error, exposure, sampling, and explicit zero-support regimes.
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1309
+
+- **Statement:** a surviving and discoverable record is the output of creation, appraisal, preservation, description, access, and use processes, so record absence is not event absence without a support model for those stages.
+- **Status:** established archival and inference boundary.
+- **Primary sources:** `SchwartzCook2002ArchivesPower`, `iso15489`.
+- **Rationale:** institutional selection and access can act as observation operators just as physical sensors do; unsupported negative evidence should yield bounds, alternatives, or abstention rather than certainty.
+- **Open issue:** test staged-selection, missing-data, support-detection, and partial-identification models under structural zeros, total noncapture, censored access, policy shifts, and group-conditional selection.
+- **Used by:** [residual humanities audit](audits/2026-08-21-residual-humanities-living-heritage-practice.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1310
+
+- **Statement:** heritage-authenticity judgements may depend on several culturally contextual sources and attributed values; one undisclosed scalar cannot represent that plurality as an objective measurement.
+- **Status:** established heritage-doctrine and representation boundary.
+- **Primary sources:** `ICOMOS1994NaraAuthenticity`.
+- **Rationale:** form, material, use, function, traditions, techniques, setting, and other sources can conflict or receive different purpose-qualified weight, while evaluator standing and disagreement remain governance questions.
+- **Open issue:** compare scalar, vector, evaluator-specific, and no-aggregation representations under purpose shifts, minority standing, correlated evaluators, missing attributes, and held-out contexts.
+- **Used by:** [residual humanities audit](audits/2026-08-21-residual-humanities-living-heritage-practice.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1311
+
+- **Statement:** the UNESCO intangible-heritage definition binds a living practice to community recognition, transmission, and continual recreation; freezing one canonical token is not equivalent to safeguarding the practice.
+- **Status:** established treaty-definition boundary; proposed system translation remains speculative.
+- **Primary sources:** `UNESCO2003IntangibleHeritage`.
+- **Rationale:** permitted variation, functional continuity, authority, access, harm, and derivation can change independently, so exact sequence retention and unconstrained mutation are both incomplete defaults.
+- **Open issue:** compare frozen, unconstrained, ordinary versioned, and community-authorized protocol arms under environmental and membership change with protected outcome vectors and refusal/remedy tests.
+- **Used by:** [residual humanities audit](audits/2026-08-21-residual-humanities-living-heritage-practice.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1312
+
+- **Statement:** repeated joint rehearsal can establish group- and task-specific anticipatory routines and shorter cues, but the compression depends on shared interaction history and may fail under newcomer, turnover, or task drift.
+- **Status:** plausible scoped empirical finding.
+- **Primary sources:** `SchmidtDeppermann2023Routines`.
+- **Rationale:** short instructions can encode collectively accumulated state rather than universally interpretable semantics, so rehearsal cost, membership, reconstruction, and repair must be charged.
+- **Open issue:** compare full instruction, cue-only, cue-plus-external-history, periodic rehearsal, centralized planning, and individual learning under partial turnover and structurally related held-out tasks.
+- **Used by:** [residual humanities audit](audits/2026-08-21-residual-humanities-living-heritage-practice.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1313
+
+- **Statement:** conservation-treatment reversibility is graded and process-specific; removability, cost, collateral harm, future compatibility, documentation, and re-treatability are distinct lifecycle properties.
+- **Status:** established conservation-practice boundary.
+- **Primary sources:** `Appelbaum1987Reversibility`.
+- **Rationale:** local state reset does not reverse disclosure, social reliance, physical damage, lost opportunity, or dependency change, and sometimes safe future retreatment matters more than literal removal.
+- **Open issue:** compare snapshots, event logs, typed treatment records, no-intervention, and fully reversible oracle arms under aging, hidden external effects, future tasks, and interaction between interventions.
+- **Used by:** [residual humanities audit](audits/2026-08-21-residual-humanities-living-heritage-practice.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1314
+
+- **Statement:** fixity, provenance, metadata, ontologies, and digitization can preserve a representation and its lifecycle dependencies without establishing identity with the represented object or practice, truth, authenticity, ownership, or authorized reuse.
+- **Status:** established representation and preservation boundary.
+- **Primary sources:** `ISO21127_2023`, `iso15489`, `premis30`, `EU2021CulturalHeritageDataSpace`.
+- **Rationale:** future renderability and interpretation depend on significant properties, formats, environments, migrations, rights, staffing, and target users; perfect checksums can preserve an incomplete or unauthorized representation.
+- **Open issue:** compare file-only, checksum, preservation-event, ontology-linked, emulated, and full-source packages under software loss, schema migration, rights change, future queries, and withdrawn authority.
+- **Used by:** [residual humanities audit](audits/2026-08-21-residual-humanities-living-heritage-practice.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1315
+
+- **Statement:** polymer populations require distribution-qualified claims: number-average, weight-average, dispersity, distribution tails, and composition can support different decisions, and one average is sufficient only after a task-specific sufficiency test.
+- **Status:** established representation and measurement boundary.
+- **Primary sources:** `Flory1936Distribution`, `MayoLewis1944`.
+- **Rationale:** polymer response depends on a population of chain lengths and compositions rather than a single interchangeable scalar, while the decision-relevant functional varies by task.
+- **Open issue:** compare full-distribution, moment, tail-risk, composition-aware, and single-average records under shifted populations, finite samples, operator noise, and equal storage and compute budgets.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1316
+
+- **Statement:** polymerization equations are mechanism contracts: step-growth, free-radical, controlled-radical, and copolymer models encode different active states, reactions, and failure regimes, so parameters cannot be transferred across a mechanism or transport change without validation.
+- **Status:** established mechanistic-model boundary.
+- **Primary sources:** `Flory1936Distribution`, `MayoLewis1944`, `Chiefari1998RAFT`.
+- **Rationale:** similar conversion or average molecular size can arise through different reaction networks whose state variables and parameter meanings are not interchangeable.
+- **Open issue:** attack mechanism switching, diffusional limitation, branching, inhibition, chain transfer, composition drift, and scale change with alternate kinetic models and held-out time courses.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1317
+
+- **Statement:** dynamic covalent exchange is a tradeoff rather than free plasticity: a network may exchange topology while retaining covalent connectivity, but temperature, catalyst, relaxation, creep, side reactions, ageing, and reprocessing outcome remain part of the contract.
+- **Status:** established scoped materials mechanism; broader evaluation clauses are project boundaries.
+- **Primary sources:** `MontarnalEtAl2011Vitrimer`.
+- **Rationale:** exchange kinetics can enable reshaping and repair while also changing dimensional stability, lifetime, activation burden, and the properties retained after repeated processing.
+- **Open issue:** compare permanent, dissociative, associative, supramolecular, and ordinary thermoplastic networks across cycle count, load, damage, ageing, catalyst loss, emissions, and lifecycle cost.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-1318
+
+- **Statement:** polymer healing claims are property-, damage-, inventory-, and recurrence-qualified: capsule, vascular, and reversible-association systems provide different repair access and repeatability, and recovered geometry or one mechanical metric does not establish complete restored function.
+- **Status:** established mechanism and evaluation boundary.
+- **Primary sources:** `white2001autonomic`, `toohey2007microvascular`, `cordier2008rubber`.
+- **Rationale:** repair depends on damage location and class, delivery or reversible-bond availability, trigger conditions, cure or exchange time, and the service metrics that matter after repair.
+- **Open issue:** plant unseen damage, depleted inventory, blocked transport, mixed-mode loading, repeated damage, adverse repair, and latent recurrence with independent geometry, strength, toughness, leakage, and lifetime measures.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1319
+
+- **Statement:** stimulus response is not arbitrary memory: shape-memory polymers recover a programmed response under a stimulus and declared cycle or protocol, while input preparation, actuation, latency, drift, and reset remain costs.
+- **Status:** established scoped materials capability and systems boundary.
+- **Primary sources:** `Tanaka1978GelCollapse`, `LendleinLanger2002ShapeMemory`.
+- **Rationale:** a material transition can store and release a constrained physical state without providing general symbolic storage, arbitrary policy, free sensing, or costless repeated operation.
+- **Open issue:** compare material, analog, digital, and hybrid controllers for the same task over programming, sensing, activation, cycle fatigue, environment, failure detection, replacement, and lifecycle energy.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1320
+
+- **Statement:** current polymer performance need not identify remaining life because fracture, fatigue, creep, physical ageing, and repair histories can produce similar present observations with different future response.
+- **Status:** established path-dependence and prognosis boundary.
+- **Primary sources:** `LakeThomas1967`, `LakeLindley1965Fatigue`, `CavailleEtAl1986Ageing`.
+- **Rationale:** hidden damage and structural relaxation carry history that a current scalar property or appearance may not reveal, making transition class and probing protocol part of any lifetime claim.
+- **Open issue:** compare snapshot, history-aware, active-probe, physics-of-failure, survival, and candidate predictors under censored lifetimes, repaired states, mechanism shifts, and independent specimens.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1321
+
+- **Statement:** sequence-defined polymer storage requires the complete write--address--read--decode boundary: exact monomer order can encode data, but synthesis and read errors, indexing, codebook, mixtures, latency, and lifecycle determine system value.
+- **Status:** established scoped storage capability and accounting boundary.
+- **Primary sources:** `LutzEtAl2013Sequence`, `MartensEtAl2018Storage`.
+- **Rationale:** chemical sequence capacity is not the same as usable system capacity, random access, retained semantic value, correct decoding, or lower end-to-end resource cost.
+- **Open issue:** compare molecular, optical, magnetic, solid-state, and archival storage at matched payload, error rate, access pattern, retention, redundancy, equipment, human work, energy, and end-of-life boundaries.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+
+### C-1322
+
+- **Statement:** polymer circularity claims require separate mass, quality, lineage, and lifecycle ledgers; laboratory depolymerization or monomer recovery proves a route under tested feed and process conditions, not universal closed-loop impact.
+- **Status:** established process and lifecycle accounting boundary.
+- **Primary sources:** `ChristensenEtAl2019PDK`, `TournierEtAl2020PET`, `HausslerEtAl2021ClosedLoop`, `iso14040`, `iso14044`.
+- **Rationale:** recovered mass, retained function, actual recirculation, attributed content, displaced virgin production, toxicity, energy, emissions, and service per functional unit answer different questions.
+- **Open issue:** require impurities, collection, sorting, yield, quality loss, additive fate, repeated cycles, allocation sensitivity, demand and rebound, transport, equipment, and counterfactual treatment at scale.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1323
+
+- **Statement:** polymer measurements are operator-qualified: size-exclusion chromatography, dynamic mechanical analysis, calorimetry, and mechanical tests observe different supports whose calibration, specimen, deformation mode, scan or path, and shared failure roots remain inference dependencies.
+- **Status:** established measurement boundary.
+- **Primary sources:** `ISO16014_1_2019`, `DIN6721_1_2019`, `DIN11357_1_2023`, `DIN527_1_2019`, `HonerkampWeese1989`.
+- **Rationale:** agreement between outputs does not imply independent validation when preparation, calibration, model, or specimen history is shared, and no one operator identifies every distribution, transition, structure, and service property.
+- **Open issue:** preregister measurands, support, traceability, specimen history, uncertainty, shared roots, orthogonal checks, interlaboratory transfer, and downstream decision consequences.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1324
+
+- **Statement:** polymer entanglement is a topological mobility constraint: reptation theory and scoped experiment support constrained chain motion and long renewal scales, not a universal scaling law for every polymer system.
+- **Status:** established mechanism with regime-qualified scaling.
+- **Primary sources:** `DeGennes1971Reptation`, `Klein1978ReptationEvidence`.
+- **Rationale:** surrounding chains restrict transverse motion and alter relaxation, but architecture, concentration, molecular-weight range, chemistry, dispersity, constraints, and measurement window determine applicability.
+- **Open issue:** compare tube/reptation, generalized viscoelastic, graph-topological, and learned models across branched, cross-linked, confined, heterogeneous, and constraint-release regimes.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1325
+
+- **Statement:** viscoelastic memory is spectrum- and bandwidth-qualified: a causal relaxation kernel can represent physical history, but finite noisy time or frequency support makes detailed relaxation-spectrum recovery regularization-dependent.
+- **Status:** established constitutive and inverse-problem boundary.
+- **Primary sources:** `WilliamsLandelFerry1955`, `HonerkampWeese1989`.
+- **Rationale:** many spectra can produce observationally similar response inside a limited window, so smooth or sparse recovery adds assumptions rather than revealing a model-free memory state.
+- **Open issue:** report identifiable functionals, resolution kernels, uncertainty, extrapolation, and downstream decision loss under alternate regularizers, windows, temperatures, and deformation histories.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1326
+
+- **Statement:** time--temperature superposition is conditional: shift factors and Williams--Landel--Ferry parameters are fitted within a tested thermo-rheological regime and do not license universal extrapolation.
+- **Status:** established empirical-model boundary.
+- **Primary sources:** `WilliamsLandelFerry1955`.
+- **Rationale:** superposition can extend an observation window only when the relevant relaxation processes shift compatibly; transitions, morphology changes, ageing, reactions, and multiple mechanisms can break that assumption.
+- **Open issue:** predefine shift estimation, uncertainty, support, breakdown detection, and held-out temperature/time regimes against no-superposition and mechanism-specific nulls.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1327
+
+- **Statement:** polymer phase and self-assembly outcomes are path- and defect-qualified: equilibrium models constrain possible phases, while boundaries, kinetics, annealing, barriers, and processing determine whether and how a low-defect morphology is reached.
+- **Status:** established thermodynamic and kinetic boundary.
+- **Primary sources:** `Flory1942Solution`, `CahnHilliard1958`, `Leibler1980Block`, `MatsenSchick1994`, `MajewskiYager2016`, `DoiseEtAl2019`.
+- **Rationale:** an equilibrium minimum neither specifies an accessible trajectory nor guarantees the desired orientation, grain structure, topology, defect density, or finite-time service state.
+- **Open issue:** compare equilibrium, phase-field, nucleation, annealing, directed-assembly, defect-repair, and candidate controllers at equal observations, interventions, time, and energy.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1328
+
+- **Statement:** a polymer gel claim must name its criterion and assumptions because mean-field connectivity, rheological criticality, finite-system spanning, and useful service are distinct outcomes affected by loops, correlations, functionality, bond lifetime, and observation.
+- **Status:** established gel criteria; the service distinction is a project evaluation boundary.
+- **Primary sources:** `Flory1941Gel`, `Stockmayer1943Gel`, `WinterChambon1986`.
+- **Rationale:** crossing one theoretical or measured threshold does not automatically establish the other notions of gelation or an application-level function.
+- **Open issue:** test correlated and finite networks, reversible bonds, heterogeneous functionality, loops, ageing, instrument bandwidth, and criterion disagreement with explicit abstention rules.
+- **Used by:** [polymer research audit](audits/2026-08-21-polymer-research-adaptive-materials.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1329
+
+- **Statement:** in the oxime-condensation system studied by Shen and colleagues, acid-enabled reversible oxime exchange supported error checking during catenane and macrocycle assembly, while switching exchange off under neutral conditions trapped the products; reversible exchange therefore did not itself provide both correction and persistence at once.
+- **Status:** established scoped molecular-synthesis mechanism.
+- **Primary sources:** `ShenEtAl2018Oxime`.
+- **Rationale:** correction requires accessible exchange, whereas durable retention can require a separate condition change that suppresses exchange; neither property follows from reversibility alone.
+- **Open issue:** compare reversible exchange plus a declared commit rule with backtracking, local repair, transactional rollback, simulated annealing, and irreversible construction under kinetic traps, mistimed commitment, changing constraints, and complete monitoring and reset cost.
+- **Used by:** [molecular chemistry audit](audits/2026-08-21-molecular-chemistry-synthesis-systems.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md).
+
+### C-1330
+
+- **Statement:** in the building-block system studied by Komáromy and colleagues, self-assembly directed dynamic covalent bond formation toward either product diversity or product specificity depending on the assembly pathway; reversibility alone did not determine one universal outcome.
+- **Status:** established scoped dynamic-covalent mechanism.
+- **Primary sources:** `KomaromyEtAl2017DiversitySpecificity`.
+- **Rationale:** the accessible assembly path, interaction landscape, concentration, and kinetic regime jointly determine whether exchange explores many products or amplifies a restricted product set.
+- **Open issue:** test reversible-construction policies across answer-uncorrelated energy landscapes, near-degenerate products, phase or sampling bias, early and late freeze rules, and exact, repair, MCMC, and annealing nulls at equal work.
+- **Used by:** [molecular chemistry audit](audits/2026-08-21-molecular-chemistry-synthesis-systems.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md).
+
+### C-1331
+
+- **Statement:** in the peptide replicator system studied by Carnall and colleagues, mechanical agitation affected fibre breakage and replication and thereby altered which replicators emerged; apparatus and agitation were part of the selection environment.
+- **Status:** established scoped selection-environment result.
+- **Primary sources:** `CarnallEtAl2010Mechanosensitive`.
+- **Rationale:** observed abundance can depend on mechanically mediated production and fragmentation as well as molecular interaction, so the vessel and operating protocol cannot be treated as a neutral observer of fitness.
+- **Open issue:** separate intrinsic interaction, replication, breakage, phase, recovery, detector, and agitation effects using causal interventions and held-out apparatus regimes before transferring any abundance-based selection rule.
+- **Used by:** [molecular chemistry audit](audits/2026-08-21-molecular-chemistry-synthesis-systems.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1332
+
+- **Statement:** the six-motif hydrogen-bonding network studied by Coubrough and colleagues exhibited high-fidelity and promiscuous recognition, narcissistic and social self-sorting, parallel cascades, and cross-talk; self-sorting depended on the measured interaction hierarchy and did not imply universal orthogonality.
+- **Status:** established scoped supramolecular-network result.
+- **Primary sources:** `CoubroughEtAl2019SelfSorting`.
+- **Rationale:** local compatibility can restrict an interaction graph, but near-degenerate, promiscuous, or newly introduced interfaces can also produce mixed complexes, scrambling, or cross-channel influence.
+- **Open issue:** compare local affinity-based coalition formation with type systems, explicit compatibility registries, matching, constraint solvers, and learned routers under unseen types, concentration imbalance, turnover, promiscuity, and answer-encoding controls.
+- **Used by:** [molecular chemistry audit](audits/2026-08-21-molecular-chemistry-synthesis-systems.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-1333
+
+- **Statement:** for the cucurbit[6]uril systems studied by Márquez, Hudgins and Nau, salt concentration, competing cations, guest size, and protonation affected binding constants and/or ingression kinetics; affinity, access rate, and residence behavior were not interchangeable context-free pair properties.
+- **Status:** established scoped host–guest and kinetic boundary.
+- **Primary sources:** `MarquezHudginsNau2004Cucurbituril`.
+- **Rationale:** a recognition record is valid only for a declared environment, timescale, protonation and competition state, while equilibrium occupancy, entry rate, exit rate, and residence time answer different questions.
+- **Open issue:** compare context-free lookup, explicit-context, hierarchical, state-space, calibrated-abstention, and versioned-observation arms under rank reversal, salt and pH changes, access barriers, aggregation, detector drift, and operator-version changes.
+- **Used by:** [molecular chemistry audit](audits/2026-08-21-molecular-chemistry-synthesis-systems.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1334
+
+- **Statement:** in the palladium-catalysed desymmetrization studied by Zhao, Neubauer and Feringa, light-induced state changes in a chiral bisphosphine ligand changed product stereoselectivity, including access to opposite product enantiomers under the reported conditions.
+- **Status:** established scoped photochemical-control capability.
+- **Primary sources:** `ZhaoNeubauerFeringa2015DynamicChirality`.
+- **Rationale:** one prepared component can expose more than one bounded catalytic regime, but commanded illumination is not the achieved molecular-state distribution and does not remove switching, lag, fatigue, readout, or energy cost.
+- **Open issue:** compare sparse regime switching with fixed schedules, gain scheduling, PID, hybrid automata, model-predictive control, and Bayesian schedule optimization under incomplete conversion, relaxation, fatigue, sensor lag, actuator saturation, and full control cost.
+- **Used by:** [molecular chemistry audit](audits/2026-08-21-molecular-chemistry-synthesis-systems.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1335
+
+- **Statement:** in the amine functionalization studied by Gunasekera and colleagues, alternating-current frequency altered competition between one- and two-electron oxidation pathways, and useful frequency depended on matching the redox environment to substrate reaction kinetics.
+- **Status:** established scoped electrochemical-control capability.
+- **Primary sources:** `GunasekeraEtAl2022ACOxidation`.
+- **Rationale:** temporal actuation can select among competing pathways only relative to reaction, charge-transfer, transport, and measurement timescales; frequency is not a context-free instruction.
+- **Open issue:** compare time-scale-qualified switching with constant, scheduled, feedback, and model-predictive controllers under substrate shifts, sensor and actuator delay, double-layer charging, transport limits, fouling, waveform distortion, safety envelopes, and complete electrical and analytical cost.
+- **Used by:** [molecular chemistry audit](audits/2026-08-21-molecular-chemistry-synthesis-systems.md), [Candidate 002](../experiments/candidates/002-multiscale-context-broadcast.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Fixture F-010](../experiments/fixtures/010-boundary-qualified-physical-computation.md).
+
+### C-1336
+
+- **Statement:** DP4 and blind computer-assisted structure-elucidation studies demonstrate probabilistic ranking or generation of candidate structures from declared analytical inputs; their conclusions remain conditional on the candidate set, forward/error model, supplied formula and spectra, and operator workflow.
+- **Status:** established scoped structure-elucidation capability and inverse boundary.
+- **Primary sources:** `SmithGoodman2010DP4`, `MoserEtAl2012CASEBlindTrials`.
+- **Rationale:** high probability within a proposed set does not establish that the true structure was present, and nominally identical spectra can change meaning with sample, acquisition, processing, calibration, or model version.
+- **Open issue:** compare constraint filtering, database or nearest-neighbour search, Bayesian ranking, calibrated candidate sets, active measurement, and versioned invalidation under scaffold holdout, spectral collision, symmetry, stereochemistry, candidate omission, missing modalities, and operator shift.
+- **Used by:** [molecular chemistry audit](audits/2026-08-21-molecular-chemistry-synthesis-systems.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-007](../experiments/fixtures/007-operator-qualified-optical-inference.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1337
+
+- **Statement:** published systems have demonstrated Bayesian reaction-condition optimization, learned-plus-symbolic retrosynthetic planning, machine-learning-guided automated reaction exploration, and mobile robotic experimental search; these are mature capability classes that any new generate–test–select proposal must include among its nulls.
+- **Status:** established capability existence; the comparator requirement is project policy, with no universal superiority claim.
+- **Primary sources:** `ShieldsEtAl2021BayesianReactionOptimization`, `SeglerPreussWaller2018SynthesisPlanning`, `GrandaEtAl2018SynthesisRobot`, `BurgerEtAl2020MobileRoboticChemist`.
+- **Rationale:** generation, experimentation, surrogate updating, planning, and automated execution already have conventional statistical, AI, and engineering implementations, so chemical-selection language alone supplies no architectural novelty.
+- **Open issue:** compare any proposed endogenous selection loop with design of experiments, constrained Bayesian optimization, evolutionary search, tree search, active learning, and laboratory scheduling on complete held-out reaction families at equal measurements, confirmation, safety, compute, human, and energy budgets.
+- **Used by:** [molecular chemistry audit](audits/2026-08-21-molecular-chemistry-synthesis-systems.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1338
+
+- **Statement:** a survey response is conditional on the instrument's wording, order, response scale, mode, reference period, language, and interactional context; it is not a context-free readout of a latent attribute.
+- **Status:** established survey-method finding.
+- **Primary sources:** `Schwarz1999SelfReports`, `Krosnick1991Satisficing`.
+- **Rationale:** question design and response production participate in the recorded observation, so instrument versions and administration conditions remain inferential dependencies rather than removable metadata.
+- **Open issue:** test whether versioned instrument records reduce false cross-language, cross-mode, cross-order, and cross-category comparisons beyond cognitive pretesting and mature multi-group measurement models at equal cost.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-1339
+
+- **Statement:** response rate is not nonresponse bias; bias depends on how frame inclusion, access, contact, participation, item response, and attrition relate to the target statistic.
+- **Status:** established sampling and nonresponse boundary.
+- **Primary sources:** `GrovesPeytcheva2008Nonresponse`.
+- **Rationale:** participation rate supplies only one part of the selection process, while the direction and magnitude of bias depend on the relation between selection and the estimand.
+- **Open issue:** compare design weights, response adjustment, calibration, doubly robust estimation, and non-ignorable-missingness sensitivity under zero support, gatekeeper selection, incentive-induced composition change, and attrition reversal.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1340
+
+- **Statement:** group or time comparisons of latent scores require measurement-invariance evidence adequate for the declared contrast.
+- **Status:** established psychometric method boundary.
+- **Primary sources:** `Meredith1993Invariance`.
+- **Rationale:** configural form, loadings, intercepts or thresholds, and residuals support different comparisons; acceptable global fit does not by itself identify a latent-mean contrast.
+- **Open issue:** test full, partial, alignment, and abstaining models under loading, threshold, language, mode, and category drift, including cases with no valid held-out anchor.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1341
+
+- **Statement:** a social category is a versioned measurement operation whose question, response options, classifier, context, mappings, exclusions, and uncertainty must remain attached to downstream claims.
+- **Status:** plausible cross-study measurement synthesis.
+- **Primary sources:** `WestbrookSaperstein2015Categories`, `TellesPaschel2014Classification`.
+- **Rationale:** category additions, mergers, translations, self-identification, and classification by others can change denominators, visibility, rankings, and meaning without supplying one universal ontology.
+- **Open issue:** compare raw-label, static-crosswalk, versioned-crosswalk, loss-bounded, and abstaining records under category splits, merges, classifier changes, contextual rank reversals, and unsupported mappings.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-1342
+
+- **Statement:** in participant observation, field access, researcher role, participant awareness, and observer–observed interaction are part of the observation process and can alter both visibility and behaviour.
+- **Status:** established ethnographic method boundary.
+- **Primary sources:** `SchwartzSchwartz1955ParticipantObservation`, `Becker1958InferenceProof`, `Burawoy1998ExtendedCase`.
+- **Rationale:** the researcher's relationship to a setting affects which events become observable and can also change the events, so role-free prevalence or mechanism claims require explicit support rather than prolonged presence alone.
+- **Open issue:** compare interview, trace, observation, multilevel selection/reactivity, and provenance-rich records across unseen researcher roles, access regimes, delayed reactivity, strategic performance, and unlogged work.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1343
+
+- **Statement:** reflexive and positional records can expose access, power, role, and interpretation dependencies, but they do not remove those dependencies or independently validate an interpretation.
+- **Status:** plausible ethnographic-method synthesis.
+- **Primary sources:** `SchwartzSchwartz1955ParticipantObservation`, `Burawoy1998ExtendedCase`.
+- **Rationale:** recording how the researcher enters knowledge production improves inspectability and challenge, but no memo reconstructs a universally accessible, role-free field truth.
+- **Open issue:** test whether declared role, access, interaction, negative-case, and interpretation trails improve error localization and transfer calibration beyond ordinary fieldnote provenance without treating identity matching as validation.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1344
+
+- **Statement:** verbal accounts and situated action can diverge because they answer different questions under different contexts; disagreement is not by itself evidence of deception or of one method's universal priority.
+- **Status:** established for the scoped methodological literature.
+- **Primary sources:** `JerolmackKhan2014TalkCheap`, `Becker1958InferenceProof`.
+- **Rationale:** an interview account, normative self-description, observed practice, trace, and retrospective explanation may differ in reference period, visibility, incentive, and target construct.
+- **Open issue:** test target-aware integration under accurate norm reports but inaccurate frequency reports, matched and mismatched reference periods, unobserved informal work, strategic accounts, and negative cases.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1345
+
+- **Statement:** social-network effects require explicit network measurement, exposure mappings, interference sets, and direct or spillover estimands; homophily, shared context, and contagion are not identified by diffusion correlation alone.
+- **Status:** established causal-identification boundary.
+- **Primary sources:** `Manski1993Reflection`, `HudgensHalloran2008Interference`, `shalizi2011homophily`, `centola2010spread`.
+- **Rationale:** neighbours' assignments can alter a unit's outcome, while similar observed trajectories can arise from selection, latent similarity, common shocks, or transmission; experimental effects remain behaviour-, population-, graph-, and exposure-qualified.
+- **Open issue:** compare randomization inference, exposure estimators, graph-cluster designs, sensitivity sets, and versioned records under latent homophily, common broadcasts, rewiring, missing edges, overlapping groups, and misspecified exposure maps.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1346
+
+- **Statement:** formal organizational rules, shared accounts of routines, and concrete performances can diverge and therefore require separate measurement with roles, resources, exceptions, reporting, and outcomes.
+- **Status:** plausible synthesis with established supporting organizational findings.
+- **Primary sources:** `MeyerRowan1977FormalStructure`, `FeldmanPentland2003Routines`.
+- **Rationale:** formal structure can be decoupled from ongoing activity, routine accounts differ from situated performances, and event logs can omit discretionary or informal work; neither every deviation nor every workaround has one fixed value.
+- **Open issue:** compare policy checking, process mining, resource-aware models, mixed methods, and versioned records under beneficial exceptions, strategic reporting, ceremonial audit preparation, role substitution, resource shocks, and unlogged work.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1347
+
+- **Statement:** media production, editorial selection, platform eligibility, ranking, delivery, opportunity to view, attention, comprehension, belief, and action are distinct stages; reach or impression counts alone do not establish persuasion.
+- **Status:** established communication-research method boundary.
+- **Primary sources:** `White1950GateKeeper`, `McCombsShaw1972AgendaSetting`, `Slater2007ReinforcingSpirals`, `BakshyMessingAdamic2015Exposure`, `BailEtAl2018OpposingViews`, `KallaBroockman2018Persuasion`.
+- **Rationale:** source, editorial, algorithmic, and audience selection operate before and after delivery, while salience, belief, and action can diverge and exhibit null, heterogeneous, or counter-intended effects.
+- **Open issue:** test stage-specific and sequential causal models under ranking shifts, missing impressions, selective attention, cross-platform exposure, common events, heterogeneous effects, and feedback between prior behaviour and future exposure.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1348
+
+- **Statement:** mixed-method agreement is not independent corroboration when methods share constructs, frames, participants, coders, calibrations, platforms, preprocessing, or other material failure roots.
+- **Status:** established mixed-method and measurement boundary.
+- **Primary sources:** `CampbellFiske1959MTMM`, `Jick1979Triangulation`, `GreeneCaracelliGraham1989MixedMethods`.
+- **Rationale:** nominally different formats can inherit one construct, selection, coder, or processing error, so method count is not an independence measure and agreement can reproduce shared bias.
+- **Open issue:** compare independence pooling, multitrait–multimethod, correlated-error, robust pooling, dependency graphs, and negative controls under shared-root topologies and all-method common error.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1349
+
+- **Statement:** mixed-method disagreement can reveal construct mismatch, selection, context, or mechanism and must be retained until a predeclared integration or adjudication rule resolves or bounds it.
+- **Status:** established mixed-method design distinctions; the retention rule is project policy.
+- **Primary sources:** `Jick1979Triangulation`, `GreeneCaracelliGraham1989MixedMethods`.
+- **Rationale:** convergence, complementarity, development, initiation, and expansion are different integration purposes; deleting contradiction or applying majority vote can conceal a subgroup, silence, or target mismatch.
+- **Open issue:** test disagreement-preserving workflows under zero-sensitivity methods, correlated access, numerical agreement on different constructs, genuine contradictions, subgroup effects, and common preprocessing failures.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1350
+
+- **Statement:** individual study agreement, GDPR consent, another GDPR legal basis, ethics review, gatekeeper permission, and named community authorization are distinct and cannot soundly be collapsed into one consent or compliance flag.
+- **Status:** established governance distinction within the cited EU/German legal and professional scopes.
+- **Primary sources:** `EU2016GDPR`, `DE2017BDSG`, `DFG2019CodeConduct`, `DGSBSiD2017EthicsCode`, `RatSWD2017ResearchEthics`, `EASA2018EthnographicDataGovernance`.
+- **Rationale:** each authority has a different holder, scope, purpose, expiry, refusal, review, and remedy; one layer neither grants the others nor proves scientific validity, while professional guidance is not legislation.
+- **Open issue:** test typed authority and derivative-invalidation records under purpose drift, withdrawal or objection, gatekeeper turnover, ethics amendment, plural authority, unresolved standing, and lawful processing without publication permission, with every legal decision reserved to qualified humans.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1351
+
+- **Statement:** a versioned, situated social-observation and authority record may reduce unsupported comparisons, causal claims, media attributions, and unauthorized reuse, but only if it beats complete mature method and governance stacks at equal lifecycle cost.
+- **Status:** speculative project composition.
+- **Primary sources:** `Schwarz1999SelfReports`, `GrovesPeytcheva2008Nonresponse`, `Meredith1993Invariance`, `SchwartzSchwartz1955ParticipantObservation`, `HudgensHalloran2008Interference`, `MeyerRowan1977FormalStructure`, `BakshyMessingAdamic2015Exposure`, `GreeneCaracelliGraham1989MixedMethods`, `EU2016GDPR`, `EASA2018EthnographicDataGovernance`.
+- **Rationale:** instrument, selection, role, interference, organization, exposure, error-root, authority, and lineage dependencies can be represented together, but documentation neatness is not an independent scientific or governance gain.
+- **Open issue:** require preregistered fresh-world confirmation against complete survey, ethnographic, causal, organizational, media, mixed-method, legal, ethics, access-control, and provenance nulls with false claims, rights outcomes, compute, storage, human review, participant burden, and measured energy inside one boundary.
+- **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).

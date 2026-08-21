@@ -9,14 +9,21 @@ the exact diff; this file records why the project changed.
 
 - Decision 0009 and a generated global field-coverage census anchored to all
   42 OECD FORD second-level fields, checked against all 49 DFG review boards
-  and ANZSRC taxonomy disagreements. The reproducible baseline was 20
-  dedicated, 14 adjacent, and 8 unreviewed OECD fields; after the first breadth
-  wave it was 23 dedicated, 12 adjacent, and 7 unreviewed; after the second it
-  is 28 dedicated, 13 adjacent, and 1 unreviewed. The finer DFG probe moved
-  from 24/13/12 through 26/14/9 to 29/17/3. A high-contrast SVG, machine record, drift
-  validator, anti-bias breadth scheduler, completed-wave record, and next gap
-  wave keep the remaining humanities, social-science, clinical, biotechnology,
-  chemistry, geoscience, water, manufacturing, and field-depth gaps visible.
+  and all 23 ANZSRC 2020 divisions. The final entry-audit census is 30
+  dedicated, 12 adjacent, and 0 wholly unreviewed OECD fields; 33/16/0 across
+  the DFG boards; and 23/0/0 across ANZSRC divisions. These are not completion
+  claims: the 214 DFG subjects, 213 ANZSRC groups, and 1,967 ANZSRC fields
+  remain explicit resolution debt. A high-contrast SVG, machine record,
+  path-closure validator, anti-bias scheduler, taxonomy-disagreement probe,
+  completed-wave record, and next gap wave keep subfield depth visible.
+
+- Five field-centered audits plus a third-taxonomy control in the third breadth
+  wave: residual humanities/living heritage; molecular chemistry; polymer
+  research; mineralogy/petrology/geochemistry; and direct social research,
+  ethnography, and media. Together they add 54 scoped central claims and 42
+  exact CPU-only protocol tracks while converting the last wholly unreviewed
+  OECD and DFG cells into bounded entry audits. No redundant principle or
+  architecture candidate was added.
 
 - Seven deliberately distant field audits in the second breadth wave: nursing
   and care science; animal/veterinary population health; environmental and
@@ -34,7 +41,7 @@ the exact diff; this file records why the project changed.
   `C-1204`--`C-1240`, centralized scholarly or authoritative sources, hostile
   tests, and exact candidate routing without inventing another principle.
 - A generated `/readiness` surface and shared book front matter separating
-  1,296 claims, 1,183 protocol-covered claims, zero workstation-executable
+  1,350 claims, 1,237 protocol-covered claims, zero workstation-executable
   claims, 31 complete written protocols, one smoke harness, and zero
   workstation-ready experiments. Candidate 010 exposes nine machine-checkable
   promotion gates, three of which currently pass.
@@ -55,7 +62,7 @@ the exact diff; this file records why the project changed.
   and heuristic assurance classes; corrects the ice-storage phase-change
   example; and adds ten hostile test regimes without adding a principle or
   candidate.
-- A generated, downloadable 198-page A4 full-concept book assembled from the
+- A generated, downloadable 205-page A4 full-concept book assembled from the
   README and all nineteen concept chapters, with generated readiness front
   matter, the global-field-coverage appendix, a cover, contents page, chapter
   boundaries, print-safe tables, equations, plots, and 47 rendered Mermaid
@@ -87,9 +94,9 @@ the exact diff; this file records why the project changed.
   guilds, integrated as a perspective-level causal-attribution boundary with a
   guild-specific intervention refinement to the existing fungal audit; no new
   principle, central claim, or architecture candidate was promoted.
-- A generated test-coverage ledger that maps all 1,296 central claims to both
+- A generated test-coverage ledger that maps all 1,350 central claims to both
   claim-side and experiment-side relations, applies an eight-facet protocol
-  gate, and now separates 1,183 protocol-covered claims from zero
+  gate, and now separates 1,237 protocol-covered claims from zero
   workstation-ready executions.
 - Reviewed, machine-validated dispositions for every remaining ledger-only
   claim and a five-family proposed-artifact backlog covering the eight genuine

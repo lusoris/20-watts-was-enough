@@ -66,9 +66,13 @@ if (data.dfgAreas.length !== data.taxonomies.dfg.expectedAreas) {
 if (data.dfgReviewBoards.length !== data.taxonomies.dfg.expectedReviewBoards) {
   fail(`expected ${data.taxonomies.dfg.expectedReviewBoards} DFG review boards, found ${data.dfgReviewBoards.length}`);
 }
+if (data.anzsrcDivisions.length !== data.taxonomies.anzsrc.declaredDivisions) {
+  fail(`expected ${data.taxonomies.anzsrc.declaredDivisions} ANZSRC divisions, found ${data.anzsrcDivisions.length}`);
+}
 
 validateUnique(data.oecdFields, "OECD fields");
 validateUnique(data.dfgReviewBoards, "DFG review boards");
+validateUnique(data.anzsrcDivisions, "ANZSRC divisions");
 validateUnique(data.taxonomyDivergences, "taxonomy divergences");
 
 for (const field of data.oecdFields) {
@@ -88,6 +92,25 @@ for (const field of data.oecdFields) {
   }
 }
 
+for (const board of data.dfgReviewBoards) {
+  const areaCode = board.code.split(".")[0];
+  if (!data.dfgAreas.some((area) => area.code === areaCode)) {
+    fail(`DFG review board ${board.code} has no research-area owner`);
+  }
+  if (!Array.isArray(board.audits)) {
+    fail(`DFG review board ${board.code} has no audits array`);
+  }
+  if (board.state === "unreviewed" && board.audits.length !== 0) {
+    fail(`unreviewed DFG review board ${board.code} must not claim an audit`);
+  }
+  if (board.state !== "unreviewed" && board.audits.length === 0) {
+    fail(`${board.state} DFG review board ${board.code} must name at least one adjacent or dedicated audit`);
+  }
+  for (const audit of board.audits) {
+    await access(path.join(root, audit));
+  }
+}
+
 for (const divergence of data.taxonomyDivergences) {
   if (!Array.isArray(divergence.audits)) {
     fail(`taxonomy divergence ${divergence.code} has no audits array`);
@@ -99,6 +122,21 @@ for (const divergence of data.taxonomyDivergences) {
     fail(`${divergence.state} taxonomy divergence ${divergence.code} must name an audit`);
   }
   for (const audit of divergence.audits) {
+    await access(path.join(root, audit));
+  }
+}
+
+for (const division of data.anzsrcDivisions) {
+  if (!Array.isArray(division.audits)) {
+    fail(`ANZSRC division ${division.code} has no audits array`);
+  }
+  if (division.state === "unreviewed" && division.audits.length !== 0) {
+    fail(`unreviewed ANZSRC division ${division.code} must not claim an audit`);
+  }
+  if (division.state !== "unreviewed" && division.audits.length === 0) {
+    fail(`${division.state} ANZSRC division ${division.code} must name an audit`);
+  }
+  for (const audit of division.audits) {
     await access(path.join(root, audit));
   }
 }
@@ -120,6 +158,11 @@ function percent(value, total) {
 
 const oecdCounts = countStates(data.oecdFields);
 const dfgCounts = countStates(data.dfgReviewBoards);
+const anzsrcCounts = countStates(data.anzsrcDivisions);
+const oecdUnreviewed = data.oecdFields.filter((field) => field.state === "unreviewed");
+const oecdEntrySummary = oecdUnreviewed.length > 0
+  ? `At entry-audit resolution, the wholly unreviewed OECD cells are ${oecdUnreviewed.map((field) => `${field.code} ${field.name}`).join(", ")}. This is not near-complete science coverage: a dedicated label means one field-centered audit exists, not that its constituent disciplines have been exhausted.`
+  : "No OECD second-level cell is wholly unreviewed at entry-audit resolution. That is an entry-census result, not near-complete science coverage: a dedicated label means one field-centered audit exists, while catch-all categories and most constituent subfields remain open.";
 const markdown = [];
 
 markdown.push(
@@ -139,7 +182,9 @@ markdown.push(
   "",
   `The finer DFG probe contains **${data.dfgReviewBoards.length} review boards and ${data.taxonomies.dfg.declaredSubjects} subjects**. At review-board resolution, the repository has ${dfgCounts.dedicated} dedicated, ${dfgCounts.adjacent} adjacent, and ${dfgCounts.unreviewed} unreviewed areas. That higher apparent coverage is not greater depth: one audit can touch a large review board while leaving most of its constituent subjects untouched.`,
   "",
-  "At entry-audit resolution, the only OECD cell still wholly unreviewed is the residual Other humanities category. That is not near-complete science coverage: a dedicated label means one field-centered audit exists, while large depth gaps remain in sociology and media studies, clinical medicine and medical biotechnology, agricultural biotechnology, analytical and food chemistry, molecular and polymer research, mineralogy/geochemistry, water and ocean research, nanotechnology, production engineering, finance and management, comparative theology, and many named subfields inside every broad cell.",
+  `The independent ANZSRC census contains **${data.anzsrcDivisions.length} divisions, ${data.taxonomies.anzsrc.declaredGroups} groups, and ${data.taxonomies.anzsrc.declaredFields.toLocaleString("en-US")} fields**. At the deliberately coarse division level, ${anzsrcCounts.dedicated} have a dedicated entry audit, ${anzsrcCounts.adjacent} have adjacent evidence only, and ${anzsrcCounts.unreviewed} are wholly unreviewed. This is a disagreement detector, not evidence that the ${data.taxonomies.anzsrc.declaredGroups} groups or ${data.taxonomies.anzsrc.declaredFields.toLocaleString("en-US")} fields have been audited.`,
+  "",
+  `${oecdEntrySummary} Large depth gaps remain in political science, public administration, stratification and broader communication studies; clinical medicine and medical biotechnology; agricultural biotechnology; analytical and food chemistry; inorganic and total-synthesis chemistry; water and ocean research; nanotechnology; production engineering; finance and management; comparative theology; and many named subfields inside every broad cell.`,
   "",
   "## What the states mean",
   "",
@@ -151,7 +196,7 @@ markdown.push(
   "",
   `- The global backbone is [${data.taxonomies.oecdFord.title}](${data.taxonomies.oecdFord.url}), ${data.taxonomies.oecdFord.edition}. OECD notes that the classification evolves and does not map perfectly to education or department structures.`,
   `- The granularity check is the [${data.taxonomies.dfg.title}](${data.taxonomies.dfg.url}) for ${data.taxonomies.dfg.edition}: ${data.taxonomies.dfg.expectedReviewBoards} review boards, ${data.taxonomies.dfg.declaredSubjects} subjects, and ${data.taxonomies.dfg.expectedAreas} research areas.`,
-  `- The disagreement check is [${data.taxonomies.anzsrc.title}](${data.taxonomies.anzsrc.url}), ${data.taxonomies.anzsrc.edition}: ${data.taxonomies.anzsrc.declaredDivisions} divisions, ${data.taxonomies.anzsrc.declaredGroups} groups, and ${data.taxonomies.anzsrc.declaredFields.toLocaleString("en-US")} fields. It is not a normative source for this EU/German project; it is used because a second classification can reveal concepts hidden by the first.`,
+  `- The independent census and disagreement check is [${data.taxonomies.anzsrc.title}](${data.taxonomies.anzsrc.url}), ${data.taxonomies.anzsrc.edition}: ${data.taxonomies.anzsrc.declaredDivisions} divisions, ${data.taxonomies.anzsrc.declaredGroups} groups, and ${data.taxonomies.anzsrc.declaredFields.toLocaleString("en-US")} fields. All divisions are recorded; group- and field-level depth remains open. It is not a normative source for this EU/German project.`,
   "- The ERC whole-science panel structure is a routing sanity check only. The ERC explicitly says its panels are not a complete scientific classification and do not express research priorities.",
   "- Catch-all categories remain open. Their presence cannot prove that unnamed or emerging disciplines have been sampled.",
   "",
@@ -199,10 +244,35 @@ for (const area of data.dfgAreas) {
     "",
   );
   for (const board of boards) {
-    markdown.push(`- **${board.code} ${board.name} — ${stateLabels[board.state]}.** ${board.gap}`);
+    markdown.push(`- **${board.code} ${board.name} — ${stateLabels[board.state]}.**`);
+    if (board.audits.length > 0) {
+      const links = board.audits
+        .map((audit) => `[${auditLabel(audit)}](${relativeAuditLink(audit)})`)
+        .join(", ");
+      markdown.push(`  - Current route: ${links}.`);
+    }
+    markdown.push(`  - Missing depth: ${board.gap}`);
   }
   markdown.push("");
 }
+
+markdown.push(
+  "## ANZSRC independent division census",
+  "",
+  `This third lens records all ${data.anzsrcDivisions.length} official divisions. Its much finer ${data.taxonomies.anzsrc.declaredGroups} groups and ${data.taxonomies.anzsrc.declaredFields.toLocaleString("en-US")} fields remain an explicit resolution debt; a green division means one entry audit, not comprehensive coverage.`,
+  "",
+);
+for (const division of data.anzsrcDivisions) {
+  markdown.push(`- **${division.code} ${division.name} — ${stateLabels[division.state]}.**`);
+  if (division.audits.length > 0) {
+    const links = division.audits
+      .map((audit) => `[${auditLabel(audit)}](${relativeAuditLink(audit)})`)
+      .join(", ");
+    markdown.push(`  - Current route: ${links}.`);
+  }
+  markdown.push(`  - Missing depth: ${division.gap}`);
+}
+markdown.push("");
 
 markdown.push(
   "## Taxonomy disagreement is a discovery signal",
@@ -257,13 +327,22 @@ markdown.push(
   "6. **Forestry, fisheries, aquaculture, and aquatic food systems:** added stock–flow–cohort–space–rights, carbon-pool, management-loop, externality, nutrient-recovery, and edible-endpoint tests; six protocols, no new principle.",
   "7. **Particle, nuclear, and high-energy experimentation:** added trigger support, detector response, unfolding, nuisance, blinding, search-family, simulation, preservation, covariance, and effective-model breakdown tests; eight protocols, no new principle.",
   "",
+  "### Wave 3 — independent taxonomy and remaining empty cells",
+  "",
+  "1. **Residual humanities and living heritage:** separated archival selection from event absence, contextual authenticity from a universal score, living practice from frozen tokens, rehearsal history from free compression, re-treatability from byte rollback, and representation from identity; six protocols, no new principle.",
+  "2. **Molecular chemistry and synthesis systems:** bounded dynamic covalent assembly, self-sorting, context-qualified recognition, temporal pathway control, structure elucidation, and automated discovery against mature chemical nulls; eight protocols, no new principle.",
+  "3. **Polymer research:** made distributions, mechanism, topology, relaxation spectra, phase path, gel criteria, healing, ageing, sequence storage, circularity, and measurement operators explicit; twelve protocols, no new principle.",
+  "4. **Mineralogy, petrology, and geochemistry:** separated equilibrium, kinetic trapping, material replacement, P–T–t records, tracer inverses, weathering, redox, upscaling, provenance, dates, and preservation-filtered deep time; eight protocols, no new principle.",
+  "5. **Direct social research, ethnography, and media:** separated instrumented response, nonresponse, category construction, measurement invariance, situated observation, reflexivity, talk/action, network interference, formal routine, media selection/exposure, mixed-method failure roots, and distinct authority bases; eight protocols, no new principle.",
+  "6. **Taxonomy control itself:** added all 23 ANZSRC divisions, 213 groups, and 1,967 fields as an independent disagreement probe beside OECD and DFG; division coverage never substitutes for group- or field-level review.",
+  "",
   "## Next gap wave",
   "",
-  "1. **Residual humanities and direct social research:** sample the OECD Other humanities catch-all plus sociology, media studies, ethnography, translation practice, theatre/dance/film, heritage conservation, and comparative religious studies without treating neighboring audits as coverage.",
-  "2. **The three wholly unreviewed DFG boards:** audit molecular synthesis, polymer research, and mineralogy/petrology/geochemistry as fields rather than importing catalysis, materials, or geology fragments.",
-  "3. **Measurement-heavy adjacent fields:** audit analytical and food chemistry, water research, ocean/atmospheric science, geophysics/geodesy, and chemical speciation with explicit operator, calibration, transport, and interlaboratory boundaries.",
-  "4. **Clinical and intervention depth:** sample clinical specialties, multimorbidity, diagnosis/treatment pathways, medical and agricultural biotechnology, antimicrobial stewardship, gene editing, biological control, and authorization separately from basic biology.",
-  "5. **Engineering depth plus execution:** audit production engineering, nanotechnology, manufacturing and maintenance systems, then convert the most discriminating new protocols into versioned workstation artifacts instead of accumulating prose-only readiness.",
+  "1. **Measurement-heavy adjacent fields:** audit analytical and food chemistry, water research, ocean/atmospheric science, geophysics/geodesy, and chemical speciation with explicit operator, calibration, transport, and interlaboratory boundaries.",
+  "2. **Clinical and intervention depth:** sample clinical specialties, multimorbidity, diagnosis/treatment pathways, medical and agricultural biotechnology, antimicrobial stewardship, gene editing, biological control, and authorization separately from basic biology.",
+  "3. **Engineering depth:** audit production engineering, nanotechnology, manufacturing, maintenance, communications hardware, and material qualification rather than inheriting coverage from neighboring systems work.",
+  "4. **Social-science depth:** sample political science, public administration, stratification, family/work/migration, collective action, criminology, digital ethnography, media systems, and community-specific methods beyond one direct-social entry audit.",
+  "5. **Subfield resolution plus execution:** sample the 214 DFG subjects and 213 ANZSRC groups explicitly, then convert the most discriminating protocols into versioned workstation artifacts instead of accumulating prose-only readiness.",
   "",
   "No item is promoted because it sounds novel. Every retained mechanism still passes the open-world extraction record, mature-null comparison, deduplication, and equal-budget rejection gate in the [discovery policy](discovery-policy.md).",
   "",
@@ -310,13 +389,26 @@ function renderRows(groups, { x, y, width, rowHeight, maxTotal }) {
     .join("");
 }
 
+function renderOverallBar(counts, total, { x, y, width, height = 24 }) {
+  let offset = 0;
+  return ["dedicated", "adjacent", "unreviewed"]
+    .map((state) => {
+      const count = counts[state];
+      const segmentWidth = (count / total) * width;
+      const segment = `<rect x="${x + offset}" y="${y}" width="${segmentWidth}" height="${height}" rx="${segmentWidth > 10 ? 4 : 0}" fill="${colors[state]}"><title>${count} ${state}</title></rect>`;
+      offset += segmentWidth;
+      return segment;
+    })
+    .join("");
+}
+
 const oecdGroups = taxonomyGroups(data.oecdFields, data.oecdBroadFields);
 const dfgGroups = taxonomyGroups(data.dfgReviewBoards, data.dfgAreas);
 const leadDivergence = data.taxonomyDivergences[0];
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="930" viewBox="0 0 1200 930" role="img" aria-labelledby="title description">
-  <title id="title">Repository field coverage against OECD and DFG classifications</title>
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1040" viewBox="0 0 1200 1040" role="img" aria-labelledby="title description">
+  <title id="title">Repository field coverage against OECD, DFG and ANZSRC classifications</title>
   <desc id="description">Stacked bars show dedicated audits, adjacent evidence, and unreviewed fields as of ${esc(data.asOf)}.</desc>
-  <rect width="1200" height="930" rx="24" fill="${colors.background}"/>
+  <rect width="1200" height="1040" rx="24" fill="${colors.background}"/>
   <text x="56" y="72" fill="${colors.text}" font-family="Georgia, serif" font-size="34" font-weight="700">How global is the research search?</text>
   <text x="56" y="104" fill="${colors.muted}" font-family="Segoe UI, sans-serif" font-size="16">Audit presence, not scientific completeness · ${esc(data.asOf)}</text>
   <g transform="translate(724 61)">
@@ -332,10 +424,14 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="930" v
   <text x="62" y="578" fill="${colors.text}" font-family="Georgia, serif" font-size="23" font-weight="700">DFG 2024–2028 · 49 review boards / 214 subjects</text>
   <text x="62" y="607" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="13">${dfgCounts.dedicated} dedicated · ${dfgCounts.adjacent} adjacent · ${dfgCounts.unreviewed} unreviewed</text>
   ${renderRows(dfgGroups, { x: 62, y: 630, width: 1015, rowHeight: 36, maxTotal: 19 })}
-  <rect x="36" y="794" width="1128" height="82" rx="16" fill="${statePanels[leadDivergence.state]}" stroke="${colors[leadDivergence.state]}"/>
-  <text x="62" y="828" fill="${colors[leadDivergence.state]}" font-family="Cascadia Mono, monospace" font-size="13" font-weight="700">CROSS-TAXONOMY SIGNAL · ${esc(leadDivergence.taxonomy)} ${esc(leadDivergence.code)}</text>
-  <text x="62" y="856" fill="${colors.text}" font-family="Georgia, serif" font-size="20" font-weight="700">${esc(leadDivergence.name)} — ${esc(stateLabels[leadDivergence.state])}; not separately visible in OECD / DFG</text>
-  <text x="56" y="910" fill="${colors.muted}" font-family="Segoe UI, sans-serif" font-size="12">A dedicated audit may cover only one subfield. Source and definitions: research/field-coverage.json</text>
+  <rect x="36" y="794" width="1128" height="82" rx="16" fill="${colors.panel}" stroke="${colors.grid}"/>
+  <text x="62" y="828" fill="${colors.text}" font-family="Georgia, serif" font-size="21" font-weight="700">ANZSRC 2020 · 23 divisions / 213 groups / 1,967 fields</text>
+  <text x="62" y="856" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="13">${anzsrcCounts.dedicated} dedicated · ${anzsrcCounts.adjacent} adjacent · ${anzsrcCounts.unreviewed} unreviewed at division resolution</text>
+  ${renderOverallBar(anzsrcCounts, data.anzsrcDivisions.length, { x: 730, y: 826, width: 385 })}
+  <rect x="36" y="894" width="1128" height="82" rx="16" fill="${statePanels[leadDivergence.state]}" stroke="${colors[leadDivergence.state]}"/>
+  <text x="62" y="928" fill="${colors[leadDivergence.state]}" font-family="Cascadia Mono, monospace" font-size="13" font-weight="700">CROSS-TAXONOMY SIGNAL · ${esc(leadDivergence.taxonomy)} ${esc(leadDivergence.code)}</text>
+  <text x="62" y="956" fill="${colors.text}" font-family="Georgia, serif" font-size="20" font-weight="700">${esc(leadDivergence.name)} — ${esc(stateLabels[leadDivergence.state])}; not separately visible in OECD / DFG</text>
+  <text x="56" y="1016" fill="${colors.muted}" font-family="Segoe UI, sans-serif" font-size="12">A dedicated audit may cover only one subfield. The 213 ANZSRC groups and 1,967 fields remain open. Source: research/field-coverage.json</text>
 </svg>\n`;
 
 const markdownText = `${markdown.join("\n")}\n`;
@@ -353,10 +449,10 @@ async function checkGenerated(filePath, expected) {
 if (checkOnly) {
   await checkGenerated(markdownPath, markdownText);
   await checkGenerated(plotPath, svg);
-  console.log(`Field coverage validated: ${data.oecdFields.length} OECD fields and ${data.dfgReviewBoards.length} DFG review boards.`);
+  console.log(`Field coverage validated: ${data.oecdFields.length} OECD fields, ${data.dfgReviewBoards.length} DFG review boards, and ${data.anzsrcDivisions.length} ANZSRC divisions.`);
 } else {
   await mkdir(path.dirname(plotPath), { recursive: true });
   await writeFile(markdownPath, markdownText, "utf8");
   await writeFile(plotPath, svg, "utf8");
-  console.log(`Generated ${path.relative(root, markdownPath)} and ${path.relative(root, plotPath)}.`);
+  console.log(`Generated ${path.relative(root, markdownPath)} and ${path.relative(root, plotPath)} from three taxonomy lenses.`);
 }

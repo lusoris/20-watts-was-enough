@@ -50,14 +50,14 @@
     }
   },
   "counts": {
-    "claims": 1296,
-    "testRouted": 1183,
-    "protocolCovered": 1183,
+    "claims": 1350,
+    "testRouted": 1237,
+    "protocolCovered": 1237,
     "executionReady": 0,
     "tierCounts": {
       "ledger-only": 113,
       "linked-description": 0,
-      "protocol-complete": 1183,
+      "protocol-complete": 1237,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
@@ -76,9 +76,9 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 893,
-        "plausible": 188,
-        "speculative": 56,
+        "established": 942,
+        "plausible": 192,
+        "speculative": 57,
         "disputed": 46,
         "unknown": 0
       },
@@ -101,7 +101,7 @@
     "protocolCompleteArtifacts": 31,
     "executionReadyArtifacts": 0,
     "smokeReadyArtifacts": 1,
-    "claimSideLinked": 965,
+    "claimSideLinked": 1019,
     "documentSideLinked": 1045,
     "reciprocalClaims": 690
   },
@@ -346,6 +346,8 @@
         "C-1192",
         "C-1256",
         "C-1284",
+        "C-1334",
+        "C-1335",
         "C-507",
         "C-513",
         "C-539",
@@ -453,6 +455,8 @@
         "C-1192",
         "C-1256",
         "C-1284",
+        "C-1334",
+        "C-1335",
         "C-507",
         "C-513",
         "C-539",
@@ -633,6 +637,10 @@
         "C-1262",
         "C-1286",
         "C-1292",
+        "C-1299",
+        "C-1330",
+        "C-1331",
+        "C-1337",
         "C-299",
         "C-595",
         "C-627",
@@ -780,6 +788,10 @@
         "C-1262",
         "C-1286",
         "C-1292",
+        "C-1299",
+        "C-1330",
+        "C-1331",
+        "C-1337",
         "C-299",
         "C-595",
         "C-627",
@@ -908,6 +920,7 @@
         "C-1046",
         "C-1051",
         "C-1053",
+        "C-1318",
         "C-199",
         "C-265",
         "C-304",
@@ -1043,6 +1056,7 @@
         "C-1046",
         "C-1051",
         "C-1053",
+        "C-1318",
         "C-199",
         "C-265",
         "C-304",
@@ -1204,6 +1218,13 @@
         "C-1202",
         "C-1280",
         "C-1283",
+        "C-1317",
+        "C-1319",
+        "C-1324",
+        "C-1325",
+        "C-1327",
+        "C-1329",
+        "C-1330",
         "C-467",
         "C-471",
         "C-474",
@@ -1377,6 +1398,13 @@
         "C-121",
         "C-1280",
         "C-1283",
+        "C-1317",
+        "C-1319",
+        "C-1324",
+        "C-1325",
+        "C-1327",
+        "C-1329",
+        "C-1330",
         "C-463",
         "C-464",
         "C-465",
@@ -1517,6 +1545,11 @@
         "C-1289",
         "C-1290",
         "C-1294",
+        "C-1302",
+        "C-1320",
+        "C-1342",
+        "C-1343",
+        "C-1351",
         "C-305",
         "C-441",
         "C-508",
@@ -1655,8 +1688,13 @@
         "C-129",
         "C-1290",
         "C-1294",
+        "C-1302",
         "C-131",
         "C-132",
+        "C-1320",
+        "C-1342",
+        "C-1343",
+        "C-1351",
         "C-305",
         "C-441",
         "C-508",
@@ -1917,6 +1955,24 @@
         "C-1295",
         "C-1296",
         "C-1297",
+        "C-1298",
+        "C-1301",
+        "C-1305",
+        "C-1307",
+        "C-1310",
+        "C-1313",
+        "C-1316",
+        "C-1317",
+        "C-1318",
+        "C-1320",
+        "C-1322",
+        "C-1323",
+        "C-1326",
+        "C-1328",
+        "C-1340",
+        "C-1348",
+        "C-1349",
+        "C-1351",
         "C-250",
         "C-251",
         "C-254",
@@ -2195,6 +2251,24 @@
         "C-1295",
         "C-1296",
         "C-1297",
+        "C-1298",
+        "C-1301",
+        "C-1305",
+        "C-1307",
+        "C-1310",
+        "C-1313",
+        "C-1316",
+        "C-1317",
+        "C-1318",
+        "C-1320",
+        "C-1322",
+        "C-1323",
+        "C-1326",
+        "C-1328",
+        "C-1340",
+        "C-1348",
+        "C-1349",
+        "C-1351",
         "C-145",
         "C-146",
         "C-147",
@@ -2416,6 +2490,8 @@
         "C-1291",
         "C-1292",
         "C-1293",
+        "C-1313",
+        "C-1329",
         "C-159",
         "C-160",
         "C-170",
@@ -2507,6 +2583,8 @@
         "C-1291",
         "C-1292",
         "C-1293",
+        "C-1313",
+        "C-1329",
         "C-159",
         "C-160",
         "C-170",
@@ -2595,6 +2673,7 @@
         "C-1272",
         "C-1280",
         "C-1281",
+        "C-1346",
         "C-173",
         "C-177",
         "C-178",
@@ -2742,6 +2821,7 @@
         "C-1272",
         "C-1280",
         "C-1281",
+        "C-1346",
         "C-173",
         "C-174",
         "C-175",
@@ -2921,6 +3001,9 @@
         "C-1248",
         "C-1268",
         "C-1284",
+        "C-1319",
+        "C-1334",
+        "C-1335",
         "C-172",
         "C-187",
         "C-192",
@@ -3167,6 +3250,9 @@
         "C-1248",
         "C-1268",
         "C-1284",
+        "C-1319",
+        "C-1334",
+        "C-1335",
         "C-172",
         "C-186",
         "C-187",
@@ -3348,6 +3434,9 @@
         "C-1288",
         "C-1289",
         "C-1297",
+        "C-1302",
+        "C-1303",
+        "C-1332",
         "C-207",
         "C-216",
         "C-495",
@@ -3463,6 +3552,9 @@
         "C-1288",
         "C-1289",
         "C-1297",
+        "C-1302",
+        "C-1303",
+        "C-1332",
         "C-204",
         "C-205",
         "C-206",
@@ -3724,6 +3816,49 @@
         "C-1291",
         "C-1294",
         "C-1296",
+        "C-1298",
+        "C-1299",
+        "C-1300",
+        "C-1301",
+        "C-1302",
+        "C-1303",
+        "C-1304",
+        "C-1305",
+        "C-1306",
+        "C-1307",
+        "C-1308",
+        "C-1309",
+        "C-1310",
+        "C-1314",
+        "C-1315",
+        "C-1316",
+        "C-1318",
+        "C-1320",
+        "C-1322",
+        "C-1323",
+        "C-1324",
+        "C-1325",
+        "C-1326",
+        "C-1327",
+        "C-1328",
+        "C-1331",
+        "C-1333",
+        "C-1336",
+        "C-1337",
+        "C-1338",
+        "C-1339",
+        "C-1340",
+        "C-1341",
+        "C-1342",
+        "C-1343",
+        "C-1344",
+        "C-1345",
+        "C-1346",
+        "C-1347",
+        "C-1348",
+        "C-1349",
+        "C-1350",
+        "C-1351",
         "C-218",
         "C-220",
         "C-221",
@@ -4296,6 +4431,49 @@
         "C-1291",
         "C-1294",
         "C-1296",
+        "C-1298",
+        "C-1299",
+        "C-1300",
+        "C-1301",
+        "C-1302",
+        "C-1303",
+        "C-1304",
+        "C-1305",
+        "C-1306",
+        "C-1307",
+        "C-1308",
+        "C-1309",
+        "C-1310",
+        "C-1314",
+        "C-1315",
+        "C-1316",
+        "C-1318",
+        "C-1320",
+        "C-1322",
+        "C-1323",
+        "C-1324",
+        "C-1325",
+        "C-1326",
+        "C-1327",
+        "C-1328",
+        "C-1331",
+        "C-1333",
+        "C-1336",
+        "C-1337",
+        "C-1338",
+        "C-1339",
+        "C-1340",
+        "C-1341",
+        "C-1342",
+        "C-1343",
+        "C-1344",
+        "C-1345",
+        "C-1346",
+        "C-1347",
+        "C-1348",
+        "C-1349",
+        "C-1350",
+        "C-1351",
         "C-218",
         "C-219",
         "C-220",
@@ -4646,6 +4824,12 @@
         "C-1253",
         "C-1254",
         "C-1255",
+        "C-1311",
+        "C-1312",
+        "C-1332",
+        "C-1338",
+        "C-1341",
+        "C-1351",
         "C-268",
         "C-269",
         "C-270",
@@ -4741,6 +4925,12 @@
         "C-1253",
         "C-1254",
         "C-1255",
+        "C-1311",
+        "C-1312",
+        "C-1332",
+        "C-1338",
+        "C-1341",
+        "C-1351",
         "C-268",
         "C-269",
         "C-270",
@@ -4923,6 +5113,13 @@
         "C-1295",
         "C-1296",
         "C-1297",
+        "C-1300",
+        "C-1306",
+        "C-1313",
+        "C-1314",
+        "C-1315",
+        "C-1321",
+        "C-1325",
         "C-334",
         "C-340",
         "C-341",
@@ -5022,6 +5219,13 @@
         "C-1295",
         "C-1296",
         "C-1297",
+        "C-1300",
+        "C-1306",
+        "C-1313",
+        "C-1314",
+        "C-1315",
+        "C-1321",
+        "C-1325",
         "C-325",
         "C-326",
         "C-327",
@@ -5130,6 +5334,13 @@
         "C-1271",
         "C-1289",
         "C-1295",
+        "C-1301",
+        "C-1306",
+        "C-1308",
+        "C-1309",
+        "C-1314",
+        "C-1315",
+        "C-1321",
         "C-333",
         "C-338",
         "C-339",
@@ -5230,6 +5441,13 @@
         "C-1271",
         "C-1289",
         "C-1295",
+        "C-1301",
+        "C-1306",
+        "C-1308",
+        "C-1309",
+        "C-1314",
+        "C-1315",
+        "C-1321",
         "C-325",
         "C-326",
         "C-327",
@@ -5324,6 +5542,9 @@
         "C-1281",
         "C-1282",
         "C-1286",
+        "C-1312",
+        "C-1345",
+        "C-1351",
         "C-343",
         "C-344",
         "C-345",
@@ -5481,6 +5702,9 @@
         "C-1281",
         "C-1282",
         "C-1286",
+        "C-1312",
+        "C-1345",
+        "C-1351",
         "C-343",
         "C-344",
         "C-345",
@@ -5624,6 +5848,11 @@
         "C-1270",
         "C-1274",
         "C-1275",
+        "C-1310",
+        "C-1311",
+        "C-1314",
+        "C-1350",
+        "C-1351",
         "C-368",
         "C-370",
         "C-372",
@@ -5760,6 +5989,11 @@
         "C-1270",
         "C-1274",
         "C-1275",
+        "C-1310",
+        "C-1311",
+        "C-1314",
+        "C-1350",
+        "C-1351",
         "C-368",
         "C-369",
         "C-370",
@@ -6220,6 +6454,9 @@
         "C-1209",
         "C-1210",
         "C-1211",
+        "C-1298",
+        "C-1303",
+        "C-1305",
         "C-881",
         "C-882",
         "C-883",
@@ -6319,6 +6556,9 @@
         "C-1209",
         "C-1210",
         "C-1211",
+        "C-1298",
+        "C-1303",
+        "C-1305",
         "C-881",
         "C-882",
         "C-883",
@@ -6536,6 +6776,7 @@
       "claimSideClaims": [
         "C-1000",
         "C-1001",
+        "C-1336",
         "C-970",
         "C-971",
         "C-972",
@@ -6604,6 +6845,7 @@
       "linkedClaims": [
         "C-1000",
         "C-1001",
+        "C-1336",
         "C-970",
         "C-971",
         "C-972",
@@ -7039,6 +7281,9 @@
         "C-1149",
         "C-1150",
         "C-1151",
+        "C-1319",
+        "C-1334",
+        "C-1335",
         "C-172"
       ],
       "documentSideClaims": [
@@ -7149,6 +7394,9 @@
         "C-1149",
         "C-1150",
         "C-1151",
+        "C-1319",
+        "C-1334",
+        "C-1335",
         "C-172"
       ]
     },
@@ -7218,7 +7466,10 @@
         "C-1200",
         "C-1201",
         "C-1202",
-        "C-1203"
+        "C-1203",
+        "C-1304",
+        "C-1333",
+        "C-1336"
       ],
       "documentSideClaims": [
         "C-1152",
@@ -7326,7 +7577,10 @@
         "C-1200",
         "C-1201",
         "C-1202",
-        "C-1203"
+        "C-1203",
+        "C-1304",
+        "C-1333",
+        "C-1336"
       ]
     }
   ],
@@ -25039,6 +25293,727 @@
         "candidate-009",
         "candidate-013",
         "candidate-017"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1298",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014",
+        "fixture-005"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1299",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-004",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1300",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-017"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1301",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014",
+        "candidate-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1302",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-013",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1303",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-013",
+        "candidate-014",
+        "fixture-005"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1304",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "fixture-011"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1305",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014",
+        "fixture-005"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1306",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-017",
+        "candidate-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1307",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1308",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1309",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1310",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1311",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-015",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1312",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-015",
+        "candidate-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1313",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-010",
+        "candidate-017"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1314",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-017",
+        "candidate-018",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1315",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-017",
+        "candidate-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1316",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1317",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-006",
+        "candidate-009"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1318",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-005",
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1319",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-006",
+        "candidate-012",
+        "fixture-010"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1320",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1321",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-017",
+        "candidate-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1322",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1323",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1324",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-006",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1325",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-006",
+        "candidate-014",
+        "candidate-017"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1326",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1327",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-006",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1328",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1329",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-006",
+        "candidate-010"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1330",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-004",
+        "candidate-006"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1331",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-004",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1332",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-013",
+        "candidate-015"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1333",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "fixture-011"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1334",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-002",
+        "candidate-012",
+        "fixture-010"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1335",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-002",
+        "candidate-012",
+        "fixture-010"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1336",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "fixture-007",
+        "fixture-011"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1337",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-004",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1338",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-015"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1339",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1340",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1341",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-015"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1342",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1343",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1344",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1345",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1346",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-011",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1347",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1348",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1349",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1350",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1351",
+      "status": "speculative",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-009",
+        "candidate-014",
+        "candidate-015",
+        "candidate-019",
+        "candidate-020"
       ],
       "disposition": null
     }

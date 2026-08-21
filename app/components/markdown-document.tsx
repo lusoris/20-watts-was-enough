@@ -152,6 +152,7 @@ export function MarkdownDocument({
 
   return (
     <ReactMarkdown
+      skipHtml
       remarkPlugins={[remarkGfm, remarkMath]}
       rehypePlugins={[rehypeSlug, rehypeKatex]}
       components={components}
