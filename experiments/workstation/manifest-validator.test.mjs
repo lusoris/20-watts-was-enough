@@ -136,19 +136,57 @@ test("changing only the readiness label still fails the full gate", async () => 
   }
 });
 
+test("the canonical Candidate 010 registry must exactly match its committed execution projection", async () => {
+  const temporary = await mkdtemp(path.join(root, "tmp-c010-execution-projection-"));
+  const manifestPath = path.join(
+    temporary,
+    "experiments",
+    "workstation",
+    "manifests",
+    "candidate-010.json",
+  );
+  const projectionPath = path.join(
+    temporary,
+    "experiments",
+    "workstation",
+    "candidate-010",
+    "execution-manifest.json",
+  );
+  try {
+    await mkdir(path.dirname(manifestPath), { recursive: true });
+    await mkdir(path.dirname(projectionPath), { recursive: true });
+    await mkdir(path.join(temporary, "research"), { recursive: true });
+    await writeFile(path.join(temporary, "research", "claims.md"), "### C-170\n[Candidate 010]\n");
+    await writeFile(manifestPath, await readFile(realManifest));
+    const projection = JSON.parse(await readFile(
+      path.join(root, "experiments", "workstation", "candidate-010", "execution-manifest.json"),
+      "utf8",
+    ));
+    projection.execution_contract.command.run = "node substituted-runner.mjs";
+    await writeFile(projectionPath, JSON.stringify(projection));
+    const result = await validateExecutionManifest(temporary, manifestPath, "candidate-010");
+    assert.ok(result.errors.some((error) => /does not exactly match the immutable projection/.test(error)));
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
 test("fake manifest hashes and a favorable summary JSON cannot replace strict evidence", async () => {
   const source = JSON.parse(await readFile(realManifest, "utf8"));
   source.readiness = "workstation-ready";
   const temporary = await mkdtemp(path.join(root, "tmp-c010-manifest-evidence-"));
   const relative = path.relative(root, temporary).replaceAll("\\", "/");
-  const evidencePath = path.join(temporary, "evidence.json");
-  const releasePath = path.join(temporary, "release.json");
-  const energyPath = path.join(temporary, "energy.json");
-  const disjointPath = path.join(temporary, "held-out.json");
-  const runDirectory = path.join(temporary, "run");
+    const evidencePath = path.join(temporary, "evidence.json");
+    const receiptPath = path.join(temporary, "promotion-validation-receipt.json");
+    const releaseRoot = path.join(temporary, "release");
+    const releasePath = path.join(releaseRoot, "release.json");
+    const runDirectory = path.join(temporary, "run");
+    const energyPath = path.join(runDirectory, "energy.json");
+    const disjointPath = path.join(releaseRoot, "held-out.json");
   const manifestPath = path.join(temporary, "candidate-010.json");
   try {
     await mkdir(runDirectory, { recursive: true });
+    await mkdir(releaseRoot, { recursive: true });
     await writeFile(evidencePath, JSON.stringify({
       schema: 1,
       artifact: "candidate-010",
@@ -171,17 +209,23 @@ test("fake manifest hashes and a favorable summary JSON cannot replace strict ev
         validation_errors: 0,
       },
     }));
+    await writeFile(receiptPath, JSON.stringify({
+      contract_version: "candidate-010.capsule-launch-receipt.v1",
+      status: "verified",
+      receipt_sha256: "f".repeat(64),
+    }));
     await writeFile(releasePath, "{}\n");
     await writeFile(energyPath, JSON.stringify({ schema: 1, valid: true }));
     await writeFile(disjointPath, JSON.stringify({ partition: "held-out", seeds: [999] }));
     source.promotion_evidence = {
       status: "present",
       evidence_path: `${relative}/evidence.json`,
+      promotion_validation_receipt_path: `${relative}/promotion-validation-receipt.json`,
       run_directory: `${relative}/run`,
-      release_root: relative,
-      release_path: `${relative}/release.json`,
-      energy_assignments_path: `${relative}/energy.json`,
-      disjoint_seed_pack_paths: [`${relative}/held-out.json`],
+      release_root: `${relative}/release`,
+      release_path: `${relative}/release/release.json`,
+      energy_assignments_path: `${relative}/run/energy.json`,
+      disjoint_seed_pack_paths: [`${relative}/release/held-out.json`],
       sha256: "e".repeat(64),
     };
     await writeFile(manifestPath, JSON.stringify(source));

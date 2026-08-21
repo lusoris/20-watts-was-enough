@@ -1,9 +1,22 @@
-import { createHash } from "node:crypto";
-import { access, mkdir, readFile, statfs, writeFile } from "node:fs/promises";
+import { createHash, randomUUID } from "node:crypto";
+import {
+  access,
+  link,
+  lstat,
+  mkdir,
+  open,
+  readFile,
+  realpath,
+  rename,
+  rm,
+  statfs,
+  writeFile,
+} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import process from "node:process";
 import { performance } from "node:perf_hooks";
+import { fileURLToPath } from "node:url";
 import {
   deterministicWorkUnits,
   openCheckpointLedger,
@@ -21,9 +34,22 @@ import { generateOpportunities } from "./generator.mjs";
 import { executeFilesystemTrial } from "./filesystem-track.mjs";
 import { armNames, decide, scoreDecision, shouldRevealTrace } from "./policies.mjs";
 import { traceBodyForJob } from "./trace-job.mjs";
+import { captureRuntimeIdentity } from "./runtime-identity.mjs";
+import { captureCandidate010SourceBundle } from "./source-bundle.mjs";
+import {
+  buildExecutionCapsule,
+  destroyExecutionCapsule,
+  verifyExecutionCapsule,
+} from "./execution-capsule.mjs";
+import {
+  launchVerifiedCapsuleAction,
+  validateCapsuleLaunchReceipt,
+} from "./capsule-bootstrap.mjs";
+import { RELEASE_CONTRACT_VERSION } from "./release-contract.mjs";
 
-const root = process.cwd();
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 const benchmarkRoot = path.join(root, "experiments", "workstation", "candidate-010");
+const PROMOTION_CHILD_OUTPUT_LIMIT_BYTES = 1024 * 1024;
 
 function parseArgs(argv) {
   const action = argv[2];
@@ -49,6 +75,617 @@ function sha256(value) {
 
 async function loadJson(file) {
   return JSON.parse(await readFile(file, "utf8"));
+}
+
+function isContained(rootValue, targetValue) {
+  const relative = path.relative(rootValue, targetValue);
+  return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
+}
+
+async function strictRoot(value, label) {
+  const absolute = path.resolve(value);
+  const information = await lstat(absolute);
+  if (information.isSymbolicLink() || !information.isDirectory()) {
+    throw new Error(`${label} must be a real directory, not a symlink or reparse point.`);
+  }
+  return realpath(absolute);
+}
+
+async function containedRegularFile(rootValue, fileValue, label) {
+  const rootPath = path.resolve(rootValue);
+  const target = path.isAbsolute(fileValue)
+    ? path.resolve(fileValue)
+    : path.resolve(rootPath, fileValue);
+  if (!isContained(rootPath, target)) throw new Error(`${label} escapes release-root.`);
+  const rootReal = await strictRoot(rootPath, "release-root");
+  let cursor = rootPath;
+  for (const component of path.relative(rootPath, target).split(path.sep).filter(Boolean)) {
+    cursor = path.join(cursor, component);
+    const information = await lstat(cursor);
+    if (information.isSymbolicLink()) {
+      throw new Error(`${label} traverses a symlink or reparse point.`);
+    }
+  }
+  const [targetReal, information] = await Promise.all([realpath(target), lstat(target)]);
+  if (!information.isFile() || !isContained(rootReal, targetReal)) {
+    throw new Error(`${label} is not a contained regular file.`);
+  }
+  return targetReal;
+}
+
+export function parseCapsuleConfirmationOptions(argv) {
+  const allowed = new Set([
+    "release-root",
+    "release",
+    "disjoint-with",
+    "output",
+    "resume",
+    "capsule-parent",
+    "stop-after-records",
+  ]);
+  if ((argv.length - 3) % 2 !== 0) {
+    throw new Error("capsule-confirmation options require explicit --name value pairs.");
+  }
+  const options = {};
+  for (let index = 3; index < argv.length; index += 2) {
+    const token = argv[index];
+    if (!/^--[a-z][a-z-]*$/.test(token ?? "")) {
+      throw new Error(`Invalid capsule-confirmation option ${token ?? "<missing>"}.`);
+    }
+    const key = token.slice(2);
+    if (!allowed.has(key)) throw new Error(`Unknown capsule-confirmation option --${key}.`);
+    if (Object.hasOwn(options, key)) throw new Error(`Duplicate capsule-confirmation option --${key}.`);
+    const value = argv[index + 1];
+    if (typeof value !== "string" || value.length === 0 || value.startsWith("--")) {
+      throw new Error(`capsule-confirmation option --${key} requires a value.`);
+    }
+    options[key] = value;
+  }
+  for (const required of ["release-root", "release", "disjoint-with", "output"]) {
+    if (!options[required]) throw new Error(`capsule-confirmation requires --${required}.`);
+  }
+  if (options.resume !== undefined && options.resume !== "true") {
+    throw new Error("capsule-confirmation only accepts --resume true.");
+  }
+  if (
+    options["stop-after-records"] !== undefined
+    && (!/^\d+$/.test(options["stop-after-records"]) || Number(options["stop-after-records"]) < 1)
+  ) throw new Error("capsule-confirmation --stop-after-records must be a positive integer.");
+  return options;
+}
+
+export function parseCapsulePromotionBuildOptions(argv) {
+  const required = new Set([
+    "run-directory",
+    "release-root",
+    "release",
+    "energy-assignments",
+    "disjoint-seed-packs",
+    "capsule-parent",
+    "evidence-output",
+    "receipt-output",
+  ]);
+  if ((argv.length - 3) % 2 !== 0) {
+    throw new Error("capsule-promotion-build options require explicit --name value pairs.");
+  }
+  const options = {};
+  for (let index = 3; index < argv.length; index += 2) {
+    const token = argv[index];
+    const key = token?.replace(/^--/, "");
+    const value = argv[index + 1];
+    if (!/^--[a-z][a-z-]*$/.test(token ?? "") || !required.has(key)) {
+      throw new Error(`Unknown capsule-promotion-build option ${token ?? "<missing>"}.`);
+    }
+    if (Object.hasOwn(options, key)) throw new Error(`Duplicate capsule-promotion-build option --${key}.`);
+    if (typeof value !== "string" || value.length === 0 || value.startsWith("--")) {
+      throw new Error(`capsule-promotion-build option --${key} requires a value.`);
+    }
+    options[key] = value;
+  }
+  if (canonical(Object.keys(options).sort()) !== canonical([...required].sort())) {
+    throw new Error(`capsule-promotion-build requires exactly: ${[...required].map((key) => `--${key}`).join(", ")}`);
+  }
+  return options;
+}
+
+async function atomicCreateJson(filePath, document) {
+  const serialized = `${JSON.stringify(document, null, 2)}\n`;
+  try {
+    const existing = await readFile(filePath, "utf8");
+    if (canonical(JSON.parse(existing)) !== canonical(document)) {
+      throw new Error(`Refusing to replace existing durable provenance: ${path.basename(filePath)}`);
+    }
+    return false;
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  await mkdir(path.dirname(filePath), { recursive: true });
+  const temporary = `${filePath}.${process.pid}.${randomUUID()}.tmp`;
+  let handle;
+  try {
+    handle = await open(temporary, "wx", 0o600);
+    await handle.writeFile(serialized);
+    await handle.sync();
+    await handle.close();
+    handle = null;
+    await link(temporary, filePath);
+    return true;
+  } catch (error) {
+    if (error.code === "EEXIST") {
+      const existing = JSON.parse(await readFile(filePath, "utf8"));
+      if (canonical(existing) === canonical(document)) return false;
+      throw new Error(`Concurrent durable provenance differs: ${path.basename(filePath)}`);
+    }
+    throw error;
+  } finally {
+    if (handle) await handle.close().catch(() => {});
+    await rm(temporary, { force: true }).catch(() => {});
+  }
+}
+
+function exactHashObject(value, keys, label) {
+  if (
+    !value
+    || typeof value !== "object"
+    || Array.isArray(value)
+    || canonical(Object.keys(value).sort()) !== canonical([...keys].sort())
+    || keys.some((key) => !/^[0-9a-f]{64}$/.test(value[key] ?? ""))
+  ) throw new Error(`${label} has an invalid exact hash binding.`);
+  return value;
+}
+
+async function persistConfirmationLaunchProvenance({
+  outputDirectory,
+  launchResult,
+  executionCapsule,
+  runtimeIdentity,
+  setupTimings,
+}) {
+  const provenanceDirectory = path.join(outputDirectory, "provenance");
+  const descriptor = executionCapsule.descriptor;
+  const receipt = launchResult.launch_receipt;
+  validateCapsuleLaunchReceipt(receipt, {
+    action: "candidate-010-confirmation",
+    executionDescriptorSha256: descriptor.descriptor_sha256,
+    sourceInventorySha256: descriptor.source.inventory_sha256,
+    dependencyInventorySha256: descriptor.dependencies.inventory.inventory_sha256,
+    runtimeIdentitySha256: runtimeIdentity.identity_sha256,
+  });
+  if (sha256(canonical(launchResult.action_result)) !== receipt.result_sha256) {
+    throw new Error("Parent launch action result differs from its verified receipt.");
+  }
+  const childActionElapsedMs = receipt.child_action_elapsed_ms;
+  const launchSetupElapsedMs = receipt.elapsed_ms - childActionElapsedMs;
+  if (
+    !Number.isFinite(childActionElapsedMs)
+    || childActionElapsedMs < 0
+    || !Number.isFinite(launchSetupElapsedMs)
+    || launchSetupElapsedMs < 0
+  ) throw new Error("Launch timing cannot separate child action work from setup overhead.");
+  const [operatorPrecommit, precommit, run, validation, summary, childSetup] = await Promise.all([
+    loadJson(path.join(provenanceDirectory, "capsule-launch-precommit.json")),
+    loadJson(path.join(provenanceDirectory, "launch-precommit.json")),
+    loadJson(path.join(provenanceDirectory, "run.json")),
+    loadJson(path.join(outputDirectory, "analysis", "factorial-validation.json")),
+    loadJson(path.join(outputDirectory, "analysis", "factorial-summary.json")),
+    loadJson(path.join(provenanceDirectory, "confirmation-child-setup.json")),
+  ]);
+  if (canonical(operatorPrecommit) !== canonical(launchResult.launch_precommit)) {
+    throw new Error("Parent-frozen launch precommit differs from the bootstrap result.");
+  }
+  const precommitFields = [
+    "launch_request_sha256",
+    "request_nonce_sha256",
+    "sanitized_environment_sha256",
+    "exec_argv_sha256",
+    "parent_pre_verification_sha256",
+  ];
+  exactHashObject(
+    Object.fromEntries(precommitFields.map((key) => [key, precommit[key]])),
+    precommitFields,
+    "Frozen launch precommit",
+  );
+  for (const key of precommitFields) {
+    if (precommit[key] !== receipt[key]) {
+      throw new Error(`Durable launch receipt differs from frozen precommit at ${key}.`);
+    }
+  }
+  if (
+    canonical(run.run_identity.official_launch_precommit) !== canonical(precommit)
+    || launchResult.action_result.run_sha256 !== sha256(canonical(run))
+    || launchResult.action_result.validation_sha256 !== sha256(canonical(validation))
+    || launchResult.action_result.analysis_sha256 !== sha256(canonical(summary))
+  ) throw new Error("Durable launch receipt is not causally joined to the completed run artifacts.");
+  if (
+    childSetup?.allocation !== "run-level-unallocated"
+    || childSetup.arm_level_allocation !== false
+    || childSetup.calibrated_energy !== false
+    || !Number.isFinite(childSetup.elapsed_ms)
+    || !Number.isSafeInteger(childSetup.bytes_verified)
+  ) throw new Error("Child setup accounting is invalid or allocates overhead to arms.");
+
+  const sourceBytes = descriptor.source.inventory.total_bytes;
+  const dependencyBytes = descriptor.dependencies.inventory.bytes;
+  const phases = {
+    runtime_identity_capture: {
+      elapsed_ms: setupTimings.runtime_capture_ms,
+      bytes_processed: Buffer.byteLength(canonical(runtimeIdentity)),
+    },
+    capsule_build: {
+      elapsed_ms: setupTimings.capsule_build_ms,
+      bytes_processed: sourceBytes + dependencyBytes,
+    },
+    capsule_parent_verification: {
+      elapsed_ms: setupTimings.capsule_verify_ms,
+      bytes_processed: sourceBytes + dependencyBytes,
+    },
+    child_spawn_and_verification_overhead: {
+      elapsed_ms: launchSetupElapsedMs,
+      bytes_processed: receipt.request_bytes + receipt.stdout_bytes + receipt.stderr_bytes,
+    },
+    capsule_source_runtime_authority_verification:
+      childSetup.phases.capsule_source_runtime_authority_verification,
+    release_and_source_verification: childSetup.phases.release_and_source_verification,
+  };
+  const normalizedPhases = Object.fromEntries(Object.entries(phases).map(([name, phase]) => {
+    const { bytes_verified: bytesVerified, ...rest } = phase;
+    return [name, {
+      ...rest,
+      bytes_processed: phase.bytes_processed ?? bytesVerified,
+      modeled_energy_j: phase.modeled_energy_j ?? null,
+      measured_energy_j: phase.measured_energy_j ?? null,
+      calibrated: false,
+    }];
+  }));
+  const setupAccounting = {
+    schema: 1,
+    artifact: "candidate-010",
+    contract_version: "candidate-010.confirmation-setup-accounting.v1",
+    allocation: "run-level-unallocated",
+    arm_level_allocation: false,
+    calibrated_energy: false,
+    launch_receipt_sha256: receipt.receipt_sha256,
+    launch_envelope_diagnostic: {
+      additive: false,
+      elapsed_ms: receipt.elapsed_ms,
+      child_action_elapsed_ms: childActionElapsedMs,
+      setup_overhead_elapsed_ms: launchSetupElapsedMs,
+    },
+    phases: normalizedPhases,
+    elapsed_ms: Object.values(normalizedPhases).reduce((sum, phase) => sum + phase.elapsed_ms, 0),
+    bytes_processed: Object.values(normalizedPhases).reduce((sum, phase) => sum + phase.bytes_processed, 0),
+    modeled_energy_j: null,
+    measured_energy_j: null,
+  };
+  await atomicCreateJson(path.join(provenanceDirectory, "capsule-launch-receipt.json"), receipt);
+  await atomicCreateJson(path.join(provenanceDirectory, "confirmation-setup-accounting.json"), setupAccounting);
+  return Object.freeze({ receipt, setup_accounting: setupAccounting });
+}
+
+export async function runCapsuleConfirmationOperator(options, dependencies = {}) {
+  const {
+    captureRuntime = captureRuntimeIdentity,
+    buildCapsule = buildExecutionCapsule,
+    verifyCapsule = verifyExecutionCapsule,
+    launchCapsule = launchVerifiedCapsuleAction,
+    destroyCapsule = destroyExecutionCapsule,
+    persistLaunchProvenance = persistConfirmationLaunchProvenance,
+  } = dependencies;
+  const allowedKeys = new Set([
+    "release-root", "release", "disjoint-with", "output", "resume", "capsule-parent", "stop-after-records",
+  ]);
+  if (!options || typeof options !== "object" || Object.keys(options).some((key) => !allowedKeys.has(key))) {
+    throw new Error("capsule-confirmation received missing or extra options.");
+  }
+  for (const required of ["release-root", "release", "disjoint-with", "output"]) {
+    if (typeof options[required] !== "string" || options[required].length === 0) {
+      throw new Error(`capsule-confirmation requires --${required}.`);
+    }
+  }
+  if (options.resume !== undefined && options.resume !== "true") {
+    throw new Error("capsule-confirmation only accepts --resume true.");
+  }
+  const stopAfterRecords = options["stop-after-records"] === undefined
+    ? null
+    : Number(options["stop-after-records"]);
+  if (stopAfterRecords !== null && (!Number.isSafeInteger(stopAfterRecords) || stopAfterRecords < 1)) {
+    throw new Error("capsule-confirmation --stop-after-records must be a positive integer.");
+  }
+
+  const bindingRoot = await strictRoot(options["release-root"], "release-root");
+  const releasePath = await containedRegularFile(bindingRoot, options.release, "release");
+  const releaseDocument = await loadJson(releasePath);
+  if (
+    releaseDocument.contract_version !== RELEASE_CONTRACT_VERSION
+    || releaseDocument.state !== "sealed-release"
+    || releaseDocument.partition !== "confirmation"
+    || releaseDocument.phase !== "confirmation"
+  ) throw new Error("capsule-confirmation requires an exact v3 confirmation sealed release.");
+
+  const boundJson = async (name) => {
+    const binding = releaseDocument.bindings?.[name];
+    if (!binding || typeof binding.path !== "string") {
+      throw new Error(`Release is missing its ${name} binding.`);
+    }
+    return loadJson(await containedRegularFile(bindingRoot, binding.path, `bound ${name}`));
+  };
+  const [expectedSourceBundle, config, design] = await Promise.all([
+    boundJson("source_bundle"),
+    boundJson("config"),
+    boundJson("design"),
+  ]);
+  if (!Array.isArray(design.scenarios) || design.scenarios.length === 0) {
+    throw new Error("Bound design must contain a non-empty scenarios array.");
+  }
+  const disjointPaths = options["disjoint-with"].split(",").map((value) => value.trim());
+  if (disjointPaths.length === 0 || disjointPaths.some((value) => value.length === 0)) {
+    throw new Error("--disjoint-with requires comma-separated artifact paths.");
+  }
+  const disjointWith = await Promise.all(disjointPaths.map(async (file, index) => (
+    loadJson(await containedRegularFile(bindingRoot, file, `disjoint pack ${index + 1}`))
+  )));
+  const outputDirectory = path.resolve(options.output);
+  const operatorPrecommitPath = path.join(
+    outputDirectory,
+    "provenance",
+    "capsule-launch-precommit.json",
+  );
+  const existingLaunchPrecommit = options.resume === "true"
+    ? await loadJson(operatorPrecommitPath)
+    : null;
+  const capsuleParent = options["capsule-parent"]
+    ? path.resolve(options["capsule-parent"])
+    : os.tmpdir();
+  await strictRoot(capsuleParent, "capsule-parent");
+
+  const runtimeCaptureStarted = performance.now();
+  const runtimeIdentity = await captureRuntime({
+    repositoryRoot: root,
+    candidateRoot: benchmarkRoot,
+  });
+  const runtimeCaptureMs = performance.now() - runtimeCaptureStarted;
+  let executionCapsule;
+  let launchResult;
+  let capsuleDestroyed = false;
+  try {
+    const capsuleBuildStarted = performance.now();
+    executionCapsule = await buildCapsule({
+      repositoryRoot: root,
+      executionParent: capsuleParent,
+      runtimeIdentity,
+      candidateDirectory: "experiments/workstation/candidate-010",
+    });
+    const capsuleBuildMs = performance.now() - capsuleBuildStarted;
+    const capsuleVerifyStarted = performance.now();
+    await verifyCapsule(executionCapsule);
+    const capsuleVerifyMs = performance.now() - capsuleVerifyStarted;
+    launchResult = await launchCapsule({
+      executionCapsule,
+      action: "candidate-010-confirmation",
+      launchPrecommit: existingLaunchPrecommit,
+      onLaunchPrecommit: async (precommit) => {
+        await atomicCreateJson(operatorPrecommitPath, precommit);
+      },
+      confirmationRequest: {
+        config,
+        scenarios: design.scenarios,
+        outputDirectory,
+        release: {
+          bindingRoot,
+          releasePath,
+          disjointWith,
+        },
+        resume: options.resume === "true",
+        ...(stopAfterRecords === null ? {} : { stopAfterRecords }),
+      },
+      expectedSourceBundle,
+    });
+    await persistLaunchProvenance({
+      outputDirectory,
+      launchResult,
+      executionCapsule,
+      runtimeIdentity,
+      setupTimings: {
+        runtime_capture_ms: runtimeCaptureMs,
+        capsule_build_ms: capsuleBuildMs,
+        capsule_verify_ms: capsuleVerifyMs,
+      },
+    });
+  } finally {
+    if (executionCapsule) capsuleDestroyed = await destroyCapsule(executionCapsule);
+  }
+  return Object.freeze({
+    ...launchResult,
+    cleanup_owner: "operator",
+    capsule_destroyed: capsuleDestroyed,
+  });
+}
+
+async function loadPromotionCapsuleBindings(paths) {
+  const expectedKeys = [
+    "disjointSeedPackPaths",
+    "energyAssignmentsPath",
+    "releaseBindingRoot",
+    "releasePath",
+    "runDirectory",
+  ];
+  if (
+    !paths
+    || typeof paths !== "object"
+    || Array.isArray(paths)
+    || canonical(Object.keys(paths).sort()) !== canonical(expectedKeys.sort())
+    || !Array.isArray(paths.disjointSeedPackPaths)
+    || paths.disjointSeedPackPaths.length === 0
+  ) throw new Error("Promotion paths have an invalid exact durable-input shape.");
+  const runDirectory = await strictRoot(paths.runDirectory, "promotion runDirectory");
+  const releaseBindingRoot = await strictRoot(paths.releaseBindingRoot, "promotion releaseBindingRoot");
+  const releasePath = await containedRegularFile(
+    releaseBindingRoot,
+    paths.releasePath,
+    "promotion release",
+  );
+  const release = await loadJson(releasePath);
+  const binding = async (name) => {
+    const relative = release.bindings?.[name]?.path;
+    if (typeof relative !== "string") throw new Error(`Promotion release lacks ${name} binding.`);
+    return loadJson(await containedRegularFile(releaseBindingRoot, relative, `promotion ${name}`));
+  };
+  const [runSourceBundle, expectedSourceBundle, executionDescriptor, runtimeIdentity] = await Promise.all([
+    loadJson(await containedRegularFile(
+      runDirectory,
+      path.join(runDirectory, "provenance", "source-bundle.json"),
+      "promotion run source bundle",
+    )),
+    binding("source_bundle"),
+    binding("execution_descriptor"),
+    binding("runtime_identity"),
+  ]);
+  const currentSourceBundle = await captureCandidate010SourceBundle(root);
+  if (
+    canonical(runSourceBundle) !== canonical(expectedSourceBundle)
+    || currentSourceBundle.source_sha256 !== expectedSourceBundle.source_sha256
+    || canonical(currentSourceBundle.files) !== canonical(expectedSourceBundle.files)
+    || canonical(currentSourceBundle.execution_manifest_projection)
+      !== canonical(expectedSourceBundle.execution_manifest_projection)
+    || expectedSourceBundle.vcs?.source_commit !== executionDescriptor.source?.head_commit
+    || canonical(executionDescriptor.runtime_identity) !== canonical(runtimeIdentity)
+    || !/^[0-9a-f]{40,64}$/.test(expectedSourceBundle.vcs?.source_commit ?? "")
+    || !/^[0-9a-f]{64}$/.test(executionDescriptor.descriptor_sha256 ?? "")
+    || !/^[0-9a-f]{64}$/.test(runtimeIdentity.identity_sha256 ?? "")
+  ) throw new Error("Promotion run/release source, execution, and runtime bindings disagree.");
+  return { expectedSourceBundle, executionDescriptor, runtimeIdentity };
+}
+
+async function atomicCreatePromotionPair({ evidenceOutput, receiptOutput, evidence, receipt }) {
+  const evidencePath = path.resolve(evidenceOutput);
+  const receiptPath = path.resolve(receiptOutput);
+  const targetDirectory = path.dirname(evidencePath);
+  if (
+    targetDirectory !== path.dirname(receiptPath)
+    || evidencePath === receiptPath
+    || path.basename(evidencePath) !== path.relative(targetDirectory, evidencePath)
+    || path.basename(receiptPath) !== path.relative(targetDirectory, receiptPath)
+  ) throw new Error("Promotion evidence and receipt outputs must be distinct direct files in one new directory.");
+  await mkdir(path.dirname(targetDirectory), { recursive: true });
+  const parent = await strictRoot(path.dirname(targetDirectory), "promotion output parent");
+  try {
+    await access(targetDirectory);
+    throw new Error("Promotion output directory already exists; evidence is never overwritten.");
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  const staging = path.join(parent, `.candidate-010-promotion-${randomUUID()}.tmp`);
+  await mkdir(staging);
+  try {
+    for (const [name, document] of [
+      [path.basename(evidencePath), evidence],
+      [path.basename(receiptPath), receipt],
+    ]) {
+      const handle = await open(path.join(staging, name), "wx", 0o600);
+      try {
+        await handle.writeFile(`${JSON.stringify(document, null, 2)}\n`);
+        await handle.sync();
+      } finally {
+        await handle.close();
+      }
+    }
+    await rename(staging, targetDirectory);
+  } catch (error) {
+    await rm(staging, { recursive: true, force: true }).catch(() => {});
+    throw error;
+  }
+  return Object.freeze({ evidence_path: evidencePath, receipt_path: receiptPath });
+}
+
+async function runCapsulePromotionAction(options, operation, dependencies = {}) {
+  const {
+    loadBindings = loadPromotionCapsuleBindings,
+    buildCapsule = buildExecutionCapsule,
+    verifyCapsule = verifyExecutionCapsule,
+    launchCapsule = launchVerifiedCapsuleAction,
+    destroyCapsule = destroyExecutionCapsule,
+    validateLaunchReceipt = validateCapsuleLaunchReceipt,
+  } = dependencies;
+  const capsuleParent = await strictRoot(options.capsuleParent, "capsuleParent");
+  const { runtimeIdentity, expectedSourceBundle, executionDescriptor } = await loadBindings(options.paths);
+  let executionCapsule;
+  let launchResult;
+  let capsuleDestroyed = false;
+  try {
+    executionCapsule = await buildCapsule({
+      repositoryRoot: root,
+      executionParent: capsuleParent,
+      runtimeIdentity,
+      candidateDirectory: "experiments/workstation/candidate-010",
+      sourceCommit: expectedSourceBundle.vcs.source_commit,
+    });
+    await verifyCapsule(executionCapsule);
+    if (executionCapsule.descriptor.descriptor_sha256 !== executionDescriptor.descriptor_sha256) {
+      throw new Error("Fresh promotion capsule differs from the release-bound execution descriptor.");
+    }
+    launchResult = await launchCapsule({
+      executionCapsule,
+      action: "candidate-010-promotion-evidence",
+      maxOutputBytes: PROMOTION_CHILD_OUTPUT_LIMIT_BYTES,
+      promotionRequest: {
+        operation,
+        ...(operation === "validate" ? { evidence: options.evidence } : {}),
+        paths: options.paths,
+      },
+      expectedSourceBundle,
+    });
+    validateLaunchReceipt(launchResult.launch_receipt, {
+      action: "candidate-010-promotion-evidence",
+      executionDescriptorSha256: executionCapsule.descriptor.descriptor_sha256,
+      sourceInventorySha256: executionCapsule.descriptor.source.inventory_sha256,
+      dependencyInventorySha256: executionCapsule.descriptor.dependencies.inventory.inventory_sha256,
+      runtimeIdentitySha256: runtimeIdentity.identity_sha256,
+    });
+    if (operation === "validate" && canonical(launchResult.action_result) !== canonical(options.evidence)) {
+      throw new Error("Fresh-child promotion validation returned substituted evidence.");
+    }
+  } finally {
+    if (executionCapsule) capsuleDestroyed = await destroyCapsule(executionCapsule);
+  }
+  return Object.freeze({
+    ...launchResult,
+    cleanup_owner: "operator",
+    capsule_destroyed: capsuleDestroyed,
+  });
+}
+
+export async function runCapsulePromotionValidationOperator(options, dependencies = {}) {
+  if (
+    !options
+    || typeof options !== "object"
+    || Array.isArray(options)
+    || canonical(Object.keys(options).sort()) !== canonical(["capsuleParent", "evidence", "paths"].sort())
+    || !options.evidence
+    || !options.paths
+    || typeof options.capsuleParent !== "string"
+  ) throw new Error("Promotion validation requires exactly evidence, paths, and capsuleParent.");
+  return runCapsulePromotionAction(options, "validate", dependencies);
+}
+
+export async function runCapsulePromotionBuildOperator(options, dependencies = {}) {
+  if (
+    !options
+    || typeof options !== "object"
+    || Array.isArray(options)
+    || canonical(Object.keys(options).sort())
+      !== canonical(["capsuleParent", "evidenceOutput", "paths", "receiptOutput"].sort())
+    || !options.paths
+    || ![options.capsuleParent, options.evidenceOutput, options.receiptOutput]
+      .every((value) => typeof value === "string" && value.length > 0)
+  ) throw new Error("Promotion build requires exactly paths, capsuleParent, evidenceOutput, and receiptOutput.");
+  const result = await runCapsulePromotionAction(options, "build", dependencies);
+  const persisted = await atomicCreatePromotionPair({
+    evidenceOutput: options.evidenceOutput,
+    receiptOutput: options.receiptOutput,
+    evidence: result.action_result,
+    receipt: result.launch_receipt,
+  });
+  return Object.freeze({ ...result, persisted });
 }
 
 async function assertNewDirectory(directory) {
@@ -657,6 +1294,31 @@ async function prepare(profile) {
 
 async function main() {
   const { action, options } = parseArgs(process.argv);
+  if (action === "capsule-confirmation") {
+    const capsuleOptions = parseCapsuleConfirmationOptions(process.argv);
+    const result = await runCapsuleConfirmationOperator(capsuleOptions);
+    console.log(canonical(result));
+    return;
+  }
+  if (action === "capsule-promotion-build") {
+    const promotionOptions = parseCapsulePromotionBuildOptions(process.argv);
+    const releaseBindingRoot = path.resolve(promotionOptions["release-root"]);
+    const result = await runCapsulePromotionBuildOperator({
+      paths: {
+        runDirectory: path.resolve(promotionOptions["run-directory"]),
+        releaseBindingRoot,
+        releasePath: path.resolve(releaseBindingRoot, promotionOptions.release),
+        energyAssignmentsPath: path.resolve(promotionOptions["energy-assignments"]),
+        disjointSeedPackPaths: promotionOptions["disjoint-seed-packs"].split(",")
+          .map((value) => path.resolve(releaseBindingRoot, value.trim())),
+      },
+      capsuleParent: path.resolve(promotionOptions["capsule-parent"]),
+      evidenceOutput: path.resolve(promotionOptions["evidence-output"]),
+      receiptOutput: path.resolve(promotionOptions["receipt-output"]),
+    });
+    console.log(canonical(result));
+    return;
+  }
   const profile = options.profile ?? (action === "smoke" ? "smoke" : "development");
   if (action === "prepare") {
     console.log(JSON.stringify(await prepare(profile), null, 2));
@@ -697,7 +1359,7 @@ async function main() {
     return;
   }
   if (action !== "smoke" && action !== "run" && action !== "factorial") {
-    throw new Error("Action must be prepare, smoke, run, factorial, analyze, or validate.");
+    throw new Error("Action must be prepare, smoke, run, factorial, capsule-confirmation, capsule-promotion-build, analyze, or validate.");
   }
   await prepare(profile);
   const config = await loadJson(path.join(benchmarkRoot, "configs", `${profile}.json`));

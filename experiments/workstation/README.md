@@ -86,9 +86,15 @@ still does not test concurrent shared-service contention. File `fsync` is now
 requested for complete raw records, persistent identity and receipt metadata,
 checkpoints, and final run replacements, while torn-tail repair, directory-entry
 persistence, and arbitrary power-loss recovery remain outside the contract.
-The current in-process harness also does not equate already loaded ESM modules
-with later source hashes or bind the installed dependency/runtime image; frozen
-hardware confirmation remains blocked on a fresh immutable bootstrap.
+The harness now inventories the exact local Node executable and installed
+production-dependency bytes, materializes clean-`HEAD` source plus capsule-local
+dependencies outside the repository, and launches a fixed child that verifies
+those identities before importing Candidate code. Confirmation refuses the
+ordinary worktree runner and requires a callback-scoped capsule capability plus
+a release binding the same source, descriptor, runtime, dependencies, config,
+design, and seeds. This is an implemented confirmation boundary, not a result:
+no real frozen release, calibrated interval-owned energy record, or promotion
+evidence bundle exists.
 Writer contention is refused, not benchmarked, and stale locks are not broken
 automatically. The persistent and fault tracks are local diagnostics,
 not confirmation data. The strict seed-release and promotion-evidence builders
@@ -96,3 +102,16 @@ exist, but no real frozen release, interval-owned calibrated energy observation,
 or validated evidence bundle exists. Six of nine **structural** promotion gates
 pass; no result claim or workstation-executable claim coverage follows from
 them.
+
+The future confirmation operator is the explicit `capsule-confirmation` action
+documented in the [Candidate 010 harness](candidate-010/README.md). It accepts a
+version-3 release root, release document, disjoint seed-pack artifacts, and an
+output directory; it does not accept a profile or raw confirmation seeds.
+Interrupted invocations reuse one durable launch precommit. The completed
+parent receipt and setup-cost record are separate from the earlier run identity,
+and the inclusive child envelope is never added to arm cost a second time.
+
+The same harness documents `capsule-promotion-build`, which creates evidence
+and its validation receipt together. A readiness check subsequently rebuilds
+the exact release-bound commit and recomputes the evidence; stored self-hashes
+alone cannot pass the final gate.

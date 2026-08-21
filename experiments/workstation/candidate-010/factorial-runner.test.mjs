@@ -1,22 +1,24 @@
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
-  access, mkdir, mkdtemp, readFile, readdir, rm, writeFile,
+  access, cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile,
 } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { promisify } from "node:util";
+import { pathToFileURL } from "node:url";
 import test from "node:test";
 import { BACKEND_METADATA } from "./backend-registry.mjs";
 import { canonicalize, nextRecordHash } from "./checkpoint.mjs";
 import { analyzeConfirmatory, CONFIRMATORY_PREREGISTRATION } from "./confirmatory-analysis.mjs";
 import { buildFactorialDesign } from "./factorial-design.mjs";
+import { buildExecutionCapsule, destroyExecutionCapsule } from "./execution-capsule.mjs";
 import { createFrozenSeedReleaseContract } from "./release-contract.mjs";
+import { captureRuntimeIdentity } from "./runtime-identity.mjs";
 import { RunLockContentionError, acquireRunLock } from "./run-lock.mjs";
 import { seedListCommitment } from "./seeds/seed-pack.mjs";
-import {
-  captureCandidate010SourceBundle,
-  computeSourceBundle,
-} from "./source-bundle.mjs";
+import { computeSourceBundle } from "./source-bundle.mjs";
 import {
   analyzeFactorialRun,
   deriveFactorialRecordIdentities,
@@ -25,6 +27,8 @@ import {
   runFactorialExperiment,
   validateFactorialRun,
 } from "./factorial-runner.mjs";
+
+const execFileAsync = promisify(execFile);
 
 test("factorial writers fail closed before output mutation when another lease owns the run", async () => {
   const temporary = await mkdtemp(path.join(os.tmpdir(), "20w-c010-factorial-lock-"));
@@ -174,88 +178,165 @@ async function writeJson(file, value) {
   await writeFile(file, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
-async function confirmationReleaseFixture({
-  config,
-  scenarios,
-  partition = "confirmation",
-  seeds = [4_040_401, 4_040_402],
-  mutateSource = false,
-}) {
-  const root = await mkdtemp(path.join(os.tmpdir(), "20w-c010-run-release-"));
-  const currentSource = await captureCandidate010SourceBundle(repositoryRoot);
-  const frozenSourceFiles = currentSource.files.map((entry) => entry.path);
-  for (const relative of frozenSourceFiles) {
-    const destination = path.join(root, ...relative.split("/"));
-    await mkdir(path.dirname(destination), { recursive: true });
-    await writeFile(destination, await readFile(path.join(repositoryRoot, ...relative.split("/"))));
+async function candidateProductionFiles(directory, repositoryRootPath, relativeDirectory = "") {
+  const files = [];
+  const entries = await readdir(directory, { withFileTypes: true });
+  entries.sort((left, right) => left.name.localeCompare(right.name));
+  for (const entry of entries) {
+    const relative = relativeDirectory ? `${relativeDirectory}/${entry.name}` : entry.name;
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await candidateProductionFiles(absolute, repositoryRootPath, relative));
+    else if (entry.isFile() && entry.name.endsWith(".mjs") && !entry.name.endsWith(".test.mjs")) {
+      files.push(path.relative(repositoryRootPath, absolute).replaceAll("\\", "/"));
+    }
   }
-  if (mutateSource) {
-    await writeFile(
-      path.join(root, "experiments", "workstation", "candidate-010", "generator.mjs"),
-      "export function generateOpportunities() { return []; }\n",
-      "utf8",
+  return files.sort();
+}
+
+async function git(cwd, ...args) {
+  return execFileAsync("git", ["-c", "core.autocrlf=false", ...args], { cwd, windowsHide: true });
+}
+
+async function temporaryCapsuleConfirmationFixture({ config, scenarios, seeds = [4_040_401] }) {
+  const container = await mkdtemp(path.join(os.tmpdir(), "20w-c010-authority-integration-"));
+  const fixtureRepository = path.join(container, "repository");
+  const candidateRelative = "experiments/workstation/candidate-010";
+  const fixtureCandidateRoot = path.join(fixtureRepository, ...candidateRelative.split("/"));
+  const currentCandidateRoot = path.join(repositoryRoot, ...candidateRelative.split("/"));
+  const executionParent = path.join(container, "execution-parent");
+  const bindingRoot = path.join(container, "release-bindings");
+  let executionCapsule = null;
+  try {
+    await mkdir(fixtureCandidateRoot, { recursive: true });
+    await mkdir(executionParent);
+    await mkdir(bindingRoot);
+    const currentProductionFiles = await candidateProductionFiles(
+      currentCandidateRoot,
+      repositoryRoot,
     );
+    for (const relative of currentProductionFiles) {
+      const destination = path.join(fixtureRepository, ...relative.split("/"));
+      await mkdir(path.dirname(destination), { recursive: true });
+      await cp(path.join(repositoryRoot, ...relative.split("/")), destination);
+    }
+    await cp(path.join(repositoryRoot, "package.json"), path.join(fixtureRepository, "package.json"));
+    await cp(path.join(repositoryRoot, "package-lock.json"), path.join(fixtureRepository, "package-lock.json"));
+    await mkdir(path.join(fixtureRepository, "node_modules"));
+    await cp(
+      path.join(repositoryRoot, "node_modules", "es-module-lexer"),
+      path.join(fixtureRepository, "node_modules", "es-module-lexer"),
+      { recursive: true },
+    );
+    await git(fixtureRepository, "init");
+    await git(fixtureRepository, "config", "user.email", "candidate-010-fixture@example.invalid");
+    await git(fixtureRepository, "config", "user.name", "Candidate 010 Fixture");
+    await git(fixtureRepository, "add", "--", "package.json", "package-lock.json", candidateRelative);
+    await git(fixtureRepository, "commit", "-m", "candidate 010 capsule fixture");
+    const { stdout } = await git(fixtureRepository, "rev-parse", "HEAD");
+    const sourceCommit = stdout.trim();
+    const sourceFiles = currentProductionFiles.sort();
+    const expectedSourceBundle = await computeSourceBundle({
+      root: fixtureRepository,
+      sourceFiles,
+      vcs: {
+        source_commit: sourceCommit,
+        worktree_state: "temporary-committed-capsule-fixture",
+      },
+    });
+    const runtimeIdentity = await captureRuntimeIdentity({
+      repositoryRoot: fixtureRepository,
+      candidateRoot: fixtureCandidateRoot,
+    });
+    executionCapsule = await buildExecutionCapsule({
+      repositoryRoot: fixtureRepository,
+      executionParent,
+      runtimeIdentity,
+      sourcePaths: sourceFiles,
+      candidateDirectory: candidateRelative,
+    });
+
+    const files = {
+      sourceBundlePath: "source-bundle.json",
+      executionDescriptorPath: "execution-descriptor.json",
+      runtimeIdentityPath: "runtime-identity.json",
+      configPath: "config.json",
+      designPath: "design.json",
+      backendRegistryPath: "backend-registry.mjs",
+      preregistrationPath: "preregistration.json",
+      commitmentPath: "seeds.commit.json",
+      revealPath: "seeds.reveal.json",
+    };
+    const commitment = seedListCommitment(seeds);
+    await writeJson(path.join(bindingRoot, files.sourceBundlePath), expectedSourceBundle);
+    await writeJson(
+      path.join(bindingRoot, files.executionDescriptorPath),
+      executionCapsule.descriptor,
+    );
+    await writeJson(
+      path.join(bindingRoot, files.runtimeIdentityPath),
+      executionCapsule.descriptor.runtime_identity,
+    );
+    await writeJson(path.join(bindingRoot, files.configPath), config);
+    await writeJson(path.join(bindingRoot, files.designPath), { scenarios });
+    await cp(
+      path.join(executionCapsule.local.source_root, ...candidateRelative.split("/"), "backend-registry.mjs"),
+      path.join(bindingRoot, files.backendRegistryPath),
+    );
+    await writeJson(path.join(bindingRoot, files.preregistrationPath), { id: "fixture-preregistration" });
+    await writeJson(path.join(bindingRoot, files.commitmentPath), {
+      schema: 1,
+      partition: "confirmation",
+      state: "sealed",
+      algorithm: "sha256-json-array-v1",
+      seed_count: seeds.length,
+      commitment,
+    });
+    await writeJson(path.join(bindingRoot, files.revealPath), {
+      schema: 1,
+      partition: "confirmation",
+      state: "frozen-reveal",
+      algorithm: "sha256-json-array-v1",
+      commitment,
+      seeds,
+    });
+    const contract = await createFrozenSeedReleaseContract({
+      bindingRoot,
+      sourceRoot: executionCapsule.local.source_root,
+      releaseVersion: 1,
+      partition: "confirmation",
+      phase: "confirmation",
+      ...files,
+    });
+    const releasePath = path.join(bindingRoot, "release.json");
+    await writeJson(releasePath, contract);
+    return {
+      container,
+      executionCapsule,
+      expectedSourceBundle,
+      bindingRoot,
+      contract,
+      commitment,
+      release: {
+        bindingRoot,
+        releasePath,
+        disjointWith: [{ partition: "held-out", seeds: [9_090_901] }],
+      },
+    };
+  } catch (error) {
+    if (executionCapsule) await destroyExecutionCapsule(executionCapsule).catch(() => {});
+    await rm(container, { recursive: true, force: true });
+    throw error;
   }
-  const sourceBundle = mutateSource
-    ? await computeSourceBundle({
-      root,
-        sourceFiles: frozenSourceFiles,
-        vcs: currentSource.vcs,
-      })
-    : currentSource;
-  const files = {
-    sourceBundlePath: "freeze/source-bundle.json",
-    configPath: "freeze/config.json",
-    designPath: "freeze/design.json",
-    backendRegistryPath: "experiments/workstation/candidate-010/backend-registry.mjs",
-    preregistrationPath: "freeze/preregistration.json",
-    commitmentPath: "freeze/seeds.commit.json",
-    revealPath: "freeze/seeds.reveal.json",
-  };
-  const commitment = seedListCommitment(seeds);
-  await writeJson(path.join(root, files.sourceBundlePath), sourceBundle);
-  await writeJson(path.join(root, files.configPath), config);
-  await writeJson(path.join(root, files.designPath), { scenarios });
-  await writeJson(path.join(root, files.preregistrationPath), { id: "fixture-preregistration" });
-  await writeJson(path.join(root, files.commitmentPath), {
-    schema: 1,
-    partition,
-    state: "sealed",
-    algorithm: "sha256-json-array-v1",
-    seed_count: seeds.length,
-    commitment,
-  });
-  await writeJson(path.join(root, files.revealPath), {
-    schema: 1,
-    partition,
-    state: "frozen-reveal",
-    algorithm: "sha256-json-array-v1",
-    commitment,
-    seeds,
-  });
-  const contract = await createFrozenSeedReleaseContract({
-    root,
-    releaseVersion: 1,
-    partition,
-    phase: partition,
-    ...files,
-  });
-  const releasePath = path.join(root, "freeze", "release.json");
-  await writeJson(releasePath, contract);
-  return {
-    root,
-    releasePath,
-    contract,
-    commitment,
-    release: {
-      root,
-      releasePath,
-      disjointWith: [
-        { partition: "development", seeds: [1_010_101] },
-        { partition: "held-out", seeds: [9_090_901] },
-      ],
-    },
-  };
+}
+
+async function usingTemporaryCapsuleConfirmationFixture(options, run) {
+  const fixture = await temporaryCapsuleConfirmationFixture(options);
+  try {
+    return await run(fixture);
+  } finally {
+    await destroyExecutionCapsule(fixture.executionCapsule);
+    await rm(fixture.container, { recursive: true, force: true });
+  }
 }
 
 function confirmationContext(phase = "implementation-test") {
@@ -273,6 +354,17 @@ function confirmationContext(phase = "implementation-test") {
       validated: true,
       within_budget: true,
     },
+  };
+}
+
+function confirmationLaunchProvenance(marker = "a") {
+  const hashes = [marker, "b", "c", "d", "e"].map((value) => value.repeat(64));
+  return {
+    launch_request_sha256: hashes[0],
+    request_nonce_sha256: hashes[1],
+    sanitized_environment_sha256: hashes[2],
+    exec_argv_sha256: hashes[3],
+    parent_pre_verification_sha256: hashes[4],
   };
 }
 
@@ -684,39 +776,169 @@ test("validation rejects a nonpositive record-owned measurement interval", async
   }
 });
 
-test("confirmation seeds and authority come only from an opened frozen release", async () => {
+test("confirmation executes, resumes, validates, and analyzes only inside one live capsule authority", async () => {
   const config = { ...smokeConfig, profile: "confirmation-fixture", opportunities_per_seed: 1 };
   const scenarios = [buildFactorialDesign({ splits: ["confirmation"] })[0]];
-  const fixture = await confirmationReleaseFixture({ config, scenarios });
-  const output = path.join(fixture.root, "confirmation-run");
-  try {
-    const interrupted = await runFactorialExperiment({
-      config,
-      scenarios,
-      outputDirectory: output,
-      executionMode: "confirmation",
-      release: fixture.release,
-      stopAfterRecords: 5,
+  await usingTemporaryCapsuleConfirmationFixture({ config, scenarios }, async (fixture) => {
+    const capsuleCandidateRoot = path.join(
+      fixture.executionCapsule.local.source_root,
+      "experiments",
+      "workstation",
+      "candidate-010",
+    );
+    const capsuleRunner = await import(pathToFileURL(path.join(capsuleCandidateRoot, "factorial-runner.mjs")).href);
+    const authorityModule = await import(pathToFileURL(path.join(
+      capsuleCandidateRoot,
+      "capsule-execution-authority.mjs",
+    )).href);
+    const output = path.join(fixture.bindingRoot, "confirmation-run");
+    let revokedAuthority;
+    await authorityModule.withVerifiedCapsuleExecutionAuthority({
+      executionCapsule: fixture.executionCapsule,
+      expectedSourceBundle: fixture.expectedSourceBundle,
+    }, async (executionAuthority) => {
+      revokedAuthority = executionAuthority;
+      const authorityOptions = {
+        executionAuthority,
+        executionCapsule: fixture.executionCapsule,
+        expectedSourceBundle: fixture.expectedSourceBundle,
+        launchProvenance: confirmationLaunchProvenance(),
+      };
+      const interrupted = await capsuleRunner.runFactorialExperiment({
+        config,
+        scenarios,
+        outputDirectory: output,
+        executionMode: "confirmation",
+        release: fixture.release,
+        stopAfterRecords: 5,
+        ...authorityOptions,
+      });
+      assert.equal(interrupted.complete, false);
+      const resumed = await capsuleRunner.runFactorialExperiment({
+        config,
+        scenarios,
+        outputDirectory: output,
+        executionMode: "confirmation",
+        release: fixture.release,
+        resume: true,
+        ...authorityOptions,
+      });
+      assert.equal(resumed.complete, true);
+      assert.equal(resumed.run.run_identity.frozen_release.release_sha256, fixture.contract.release_sha256);
+      assert.equal(resumed.run.run_identity.frozen_release.seed_commitment, fixture.commitment);
+      assert.equal(resumed.run.run_identity.frozen_release.partition, "confirmation");
+      assert.equal(
+        resumed.run.run_identity.frozen_release.execution_binding.descriptor_sha256,
+        fixture.executionCapsule.descriptor.descriptor_sha256,
+      );
+      assert.equal(
+        resumed.run.run_identity.frozen_release.runtime_binding.identity_sha256,
+        fixture.executionCapsule.descriptor.runtime_identity.identity_sha256,
+      );
+      assert.equal(
+        resumed.run.run_identity.capsule_execution_authority.execution_descriptor_sha256,
+        fixture.executionCapsule.descriptor.descriptor_sha256,
+      );
+      assert.equal(
+        resumed.run.run_identity.capsule_execution_authority.runtime_identity_sha256,
+        fixture.executionCapsule.descriptor.runtime_identity.identity_sha256,
+      );
+      assert.equal(
+        resumed.run.run_identity.official_launch_precommit.launch_request_sha256,
+        authorityOptions.launchProvenance.launch_request_sha256,
+      );
+      assert.match(resumed.run.run_identity.run_id, /^c010-run-[0-9a-f]{64}$/);
+      assert.equal((await capsuleRunner.validateFactorialRun(output, authorityOptions)).valid, true);
+      assert.equal((await capsuleRunner.analyzeFactorialRun(output, authorityOptions)).claim_eligible, false);
+      const {
+        launchProvenance: omittedLaunchProvenance,
+        ...authorityWithoutActiveLaunch
+      } = authorityOptions;
+      void omittedLaunchProvenance;
+      await assert.rejects(
+        capsuleRunner.analyzeFactorialRun(output, authorityWithoutActiveLaunch),
+        /capsule-launch-receipt\.json/,
+      );
+      const durableReceiptPath = path.join(output, "provenance", "capsule-launch-receipt.json");
+      await writeJson(durableReceiptPath, {
+        ...authorityOptions.launchProvenance,
+        action: "candidate-010-confirmation",
+        status: "verified",
+      });
+      await assert.rejects(
+        capsuleRunner.validateFactorialRun(output, authorityWithoutActiveLaunch),
+        /launch receipt shape or canonical digest is invalid/,
+      );
+      await rm(durableReceiptPath);
+
+      await assert.rejects(capsuleRunner.runFactorialExperiment({
+        config,
+        scenarios,
+        outputDirectory: path.join(fixture.bindingRoot, "forged-authority-run"),
+        executionMode: "confirmation",
+        release: fixture.release,
+        executionAuthority: Object.freeze(function forgedAuthority() {}),
+        executionCapsule: fixture.executionCapsule,
+        expectedSourceBundle: fixture.expectedSourceBundle,
+        launchProvenance: confirmationLaunchProvenance(),
+      }), /forged, cloned, foreign, or revoked/);
+      const serialized = JSON.parse(JSON.stringify({ executionAuthority }));
+      await assert.rejects(capsuleRunner.runFactorialExperiment({
+        config,
+        scenarios,
+        outputDirectory: path.join(fixture.bindingRoot, "serialized-authority-run"),
+        executionMode: "confirmation",
+        release: fixture.release,
+        executionAuthority: serialized.executionAuthority,
+        executionCapsule: fixture.executionCapsule,
+        expectedSourceBundle: fixture.expectedSourceBundle,
+        launchProvenance: confirmationLaunchProvenance(),
+      }), /forged, cloned, foreign, or revoked/);
+      await assert.rejects(capsuleRunner.runFactorialExperiment({
+        config: { ...config, threshold: config.threshold + 1 },
+        scenarios,
+        outputDirectory: path.join(fixture.bindingRoot, "config-substitution"),
+        executionMode: "confirmation",
+        release: fixture.release,
+        ...authorityOptions,
+      }), /config binding does not match/);
+      await assert.rejects(capsuleRunner.runFactorialExperiment({
+        config,
+        scenarios: [{ ...scenarios[0], id: `${scenarios[0].id}-substituted` }],
+        outputDirectory: path.join(fixture.bindingRoot, "design-substitution"),
+        executionMode: "confirmation",
+        release: fixture.release,
+        ...authorityOptions,
+      }), /design binding does not match/);
+      await assert.rejects(capsuleRunner.runFactorialExperiment({
+        config,
+        scenarios,
+        outputDirectory: output,
+        executionMode: "confirmation",
+        release: fixture.release,
+        resume: true,
+        ...authorityOptions,
+        launchProvenance: confirmationLaunchProvenance("f"),
+      }), /launch provenance differs/);
+
+      const authorityPath = path.join(output, "provenance", "capsule-execution-authority.json");
+      const frozenAuthority = JSON.parse(await readFile(authorityPath, "utf8"));
+      await writeJson(authorityPath, {
+        ...frozenAuthority,
+        runtime_identity_sha256: "0".repeat(64),
+      });
+      await assert.rejects(
+        capsuleRunner.validateFactorialRun(output, authorityOptions),
+        /differs from frozen factorial provenance/,
+      );
+      await writeJson(authorityPath, frozenAuthority);
     });
-    assert.equal(interrupted.complete, false);
-    const resumed = await runFactorialExperiment({
-      config,
-      scenarios,
-      outputDirectory: output,
-      executionMode: "confirmation",
-      release: fixture.release,
-      resume: true,
-    });
-    assert.equal(resumed.complete, true);
-    assert.equal(resumed.run.run_identity.frozen_release.release_sha256, fixture.contract.release_sha256);
-    assert.equal(resumed.run.run_identity.frozen_release.seed_commitment, fixture.commitment);
-    assert.equal(resumed.run.run_identity.frozen_release.partition, "confirmation");
-    assert.match(resumed.run.run_identity.run_id, /^c010-run-[0-9a-f]{64}$/);
-    assert.equal((await validateFactorialRun(output)).valid, true);
-  } finally {
-    assert.ok(fixture.root.startsWith(os.tmpdir()));
-    await rm(fixture.root, { recursive: true, force: true });
-  }
+    await assert.rejects(capsuleRunner.validateFactorialRun(output, {
+      executionAuthority: revokedAuthority,
+      executionCapsule: fixture.executionCapsule,
+      expectedSourceBundle: fixture.expectedSourceBundle,
+    }), /forged, cloned, foreign, or revoked/);
+  });
 });
 
 test("confirmation rejects raw seeds and caller-authored frozen flags", async () => {
@@ -744,70 +966,24 @@ test("confirmation rejects raw seeds and caller-authored frozen flags", async ()
   );
 });
 
-test("confirmation rejects wrong partition and source authority", async () => {
+test("direct worktree confirmation cannot open any release or mint capsule authority", async () => {
   const config = { ...smokeConfig, profile: "confirmation-hostile", opportunities_per_seed: 1 };
   const scenarios = [buildFactorialDesign({ splits: ["confirmation"] })[0]];
-  const wrongPartition = await confirmationReleaseFixture({
+  await assert.rejects(runFactorialExperiment({
     config,
     scenarios,
-    partition: "held-out",
-  });
-  const wrongSource = await confirmationReleaseFixture({ config, scenarios, mutateSource: true });
-  try {
-    await assert.rejects(
-      runFactorialExperiment({
-        config,
-        scenarios,
-        outputDirectory: path.join(wrongPartition.root, "run"),
-        executionMode: "confirmation",
-        release: wrongPartition.release,
-      }),
-      /exact partition and phase held-out/,
-    );
-    await assert.rejects(
-      runFactorialExperiment({
-        config,
-        scenarios,
-        outputDirectory: path.join(wrongSource.root, "run"),
-        executionMode: "confirmation",
-        release: wrongSource.release,
-      }),
-      /source authority does not match/,
-    );
-  } finally {
-    await rm(wrongPartition.root, { recursive: true, force: true });
-    await rm(wrongSource.root, { recursive: true, force: true });
-  }
-});
-
-test("confirmation rejects config and design substitution after release opening", async () => {
-  const config = { ...smokeConfig, profile: "confirmation-hostile", opportunities_per_seed: 1 };
-  const scenarios = [buildFactorialDesign({ splits: ["confirmation"] })[0]];
-  const fixture = await confirmationReleaseFixture({ config, scenarios });
-  try {
-    await assert.rejects(
-      runFactorialExperiment({
-        config: { ...config, threshold: config.threshold + 1 },
-        scenarios,
-        outputDirectory: path.join(fixture.root, "config-substitution"),
-        executionMode: "confirmation",
-        release: fixture.release,
-      }),
-      /config binding does not match/,
-    );
-    await assert.rejects(
-      runFactorialExperiment({
-        config,
-        scenarios: [{ ...scenarios[0], id: `${scenarios[0].id}-substituted` }],
-        outputDirectory: path.join(fixture.root, "design-substitution"),
-        executionMode: "confirmation",
-        release: fixture.release,
-      }),
-      /design binding does not match/,
-    );
-  } finally {
-    await rm(fixture.root, { recursive: true, force: true });
-  }
+    outputDirectory: path.join(os.tmpdir(), `20w-c010-worktree-confirmation-${Date.now()}`),
+    executionMode: "confirmation",
+    release: {
+      bindingRoot: repositoryRoot,
+      releasePath: path.join(repositoryRoot, "nonexistent-release.json"),
+      disjointWith: [],
+    },
+    executionAuthority: Object.freeze(function forgedAuthority() {}),
+    executionCapsule: {},
+    expectedSourceBundle: {},
+    launchProvenance: confirmationLaunchProvenance(),
+  }), /refuses import from a worktree|non-generated source root/);
 });
 
 test("validation recomputes factorial science instead of trusting consistently rehashed values", async () => {

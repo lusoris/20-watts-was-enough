@@ -25,16 +25,19 @@ The current harness provides:
    `fsync`, while directory-entry persistence and arbitrary power-loss recovery
    remain outside the claim;
 7. a byte-exact source bundle covering the generator, policies, trace job,
-   adapters, runner, analysis, release validator, configs, lockfile, manifest,
-   every manifest-registered test, its golden fixture, and current Git-commit
-   metadata; direct worktree bytes, rather than index cleanliness, define the
-   source identity;
+   adapters, runner, analysis, release validator, configs, lockfile, an
+   immutable execution-manifest projection, every registered test, its golden
+   fixture, and exact source-commit provenance. Mutable readiness state and
+   result locations are kept outside that projection, while changes to code,
+   tests, schemas, dependencies, commands, or claim scope change the identity;
    deterministic discovery rejects unlisted production modules, unregistered
    tests, unclassified files, symlinks, and production or test imports outside
    the frozen closure;
-8. a frozen-release contract that derives confirmation authority only after
-   source, config, design, registry, preregistration, seed commitment, reveal,
-   and cross-partition disjointness all verify; no real release exists yet;
+8. a version-3 frozen-release contract that derives confirmation authority only
+   after separate binding/source roots, source, execution-capsule descriptor,
+   exact runtime identity, config, design, registry, preregistration, seed
+   commitment, reveal, and cross-partition disjointness all verify; no real
+   release exists yet;
 9. separate modeled and measured energy paths: external wall/rail readings need
    meter, calibration, interval, clock, boundary, uncertainty, and integrity
    records; fixtures and software telemetry cannot become measured-energy
@@ -71,7 +74,23 @@ The current harness provides:
 18. one executable raw-event contract shared by smoke and factorial writers,
     readers, analyzers, and validators; it rejects unknown top-level fields and
     recomputes identity, privilege, interval, finalization, byte-accounting,
-    energy-separation, and nonphysical-boundary relations before use.
+    energy-separation, and nonphysical-boundary relations before use; and
+19. three claim-ineligible bootstrap layers: an exact local Node/runtime and
+    installed-production-dependency identity; an isolated capsule made only
+    from clean regular blobs at the current Git `HEAD`; and an outer execution
+    capsule that materializes only those dependencies into capsule-local
+    `node_modules`; and
+20. a fixed fresh-child protocol that requires an empty Node argument vector,
+    an exact allowlisted environment, and verified executable, source,
+    dependency, runtime, request, and entrypoint identities before dynamically
+    importing Candidate code. Confirmation then runs, validates, and analyzes
+    only inside a callback-scoped, nonserializable capsule capability; an
+    interrupted invocation reuses the exact durable launch precommit; and
+21. a parent-validated final launch receipt plus separate run-level setup
+    accounting. Capsule construction, source/runtime/release verification,
+    request bytes, and timings remain unallocated to arms; the inclusive child
+    envelope is non-additive and the experiment action is subtracted rather
+    than double-counted as setup.
 
 Run:
 
@@ -84,6 +103,28 @@ npm run workstation:candidate-010 -- analyze --output <run-directory>
 npm run workstation:candidate-010 -- validate --output <run-directory>
 npm run test:workstation
 ```
+
+After a real version-3 release exists, the only confirmation entrypoint is:
+
+```powershell
+node experiments/workstation/candidate-010/runner.mjs capsule-confirmation --release-root <release-root> --release <release.json> --disjoint-with <development-pack.json>,<held-out-pack.json> --output <run-directory>
+```
+
+`--release` and every comma-separated `--disjoint-with` path are relative to
+the explicit release root. An interrupted declared-boundary run is retried with
+the same arguments plus `--resume true`. The operator refuses `--profile`, raw
+seeds, legacy release roots, unknown options, and in-process confirmation.
+
+After the run has interval-owned reviewed meter records, the evidence and its
+fresh-child validation receipt are created together in one new directory:
+
+```powershell
+node experiments/workstation/candidate-010/runner.mjs capsule-promotion-build --run-directory <run-directory> --release-root <release-root> --release <release.json> --energy-assignments <energy-assignments.json> --disjoint-seed-packs <held-out-pack.json> --capsule-parent <existing-temporary-parent> --evidence-output <new-promotion-directory>/evidence.json --receipt-output <new-promotion-directory>/promotion-validation.launch-receipt.json
+```
+
+The builder refuses an existing target directory. A later readiness check does
+not trust those two files alone: it reconstructs the release-bound historical
+capsule and recomputes the evidence under a new live capability.
 
 Generated runs are ignored under `experiments/workstation/runs/`. Each run
 retains raw JSONL events, the exact config and seeds, environment identity, a
@@ -126,11 +167,23 @@ no real confirmation release document or revealed seed pack.
   temporaries are preserved and refused. This does not establish directory-entry
   persistence, recovery by truncating a torn tail, or safety under arbitrary
   process, filesystem, or power-loss crashes.
-- The source bundle binds direct repository bytes and current commit metadata,
-  but the present in-process runners do not prove that already loaded ESM code
-  came from those same bytes, nor do they bind the exact Node runtime and
-  installed dependency tree. A real confirmation release therefore still
-  requires a fresh immutable bootstrap plus pre/post source and runtime checks.
+- The source bundle binds direct selected repository bytes, an immutable
+  execution-manifest projection, and the exact execution commit. The mutable
+  registry manifest may later change only readiness, promotion status, and
+  result locations without changing that projection. Promotion reconstructs
+  the release-bound historical commit and also requires the current scoped
+  source hash to match, so a metadata-only follow-up commit is admissible but a
+  code, test, schema, dependency, or claim-contract substitution is not.
+  Runtime identity, immutable source capsule, dependency-local execution
+  capsule, and fixed child now compose into a freshly spawned process with
+  pre/post verification. Confirmation mode refuses the ordinary worktree path
+  and requires the live capsule capability plus a version-3 release binding the
+  same source, descriptor, runtime, dependencies, config, design, and seed
+  authority. This closes the ordinary loaded-ESM-versus-later-hash gap under the
+  declared local filesystem/process assumptions. The child rejects loaders,
+  preloads, inspector arguments, and unbound environment entries, but this does
+  not provide hostile-kernel or hostile-same-user isolation or prevent a
+  transient malicious mutation restored between checks.
 - Retry/rollback and independent verification now have distinct executable
   mechanics. They remain local synthetic comparators rather than evidence that
   either mechanism is independent or effective in a deployed system.
@@ -138,9 +191,9 @@ no real confirmation release document or revealed seed pack.
   modes, but it is a separate nonphysical diagnostic rather than a factorial or
   external failure-rate result. Zero violations in ordinary implementation
   scenarios still establish plumbing behavior only.
-- The strict release validator and promotion-evidence builder exist, but no
-  real frozen confirmation or held-out release and no validated promotion
-  evidence bundle exist.
+- The strict release validator, fresh-child confirmation and resume paths, and
+  atomic promotion-evidence builder exist, but no real frozen confirmation or
+  held-out release and no validated promotion evidence bundle exist.
 - No interval-owned calibrated energy observation has been collected or bound
   to factorial assignments. The current provider tests validate the contract,
   not an energy result.
@@ -165,9 +218,9 @@ future workstation-ready promotion, the other claims linked to Candidate 010
 remain protocol-only unless a manifest names and implements their own execution
 tracks.
 
-The next promotion step is therefore not a label change. Freeze the now-
+The next promotion step is therefore not a label change. Commit one clean
 executable package, generate genuinely unseen confirmation and held-out seed
-commitments, collect interval-owned calibrated meter observations on the target
-workstation, and build the validated confirmation bundle. Only then may the
-manifest change from `smoke-ready` to `workstation-ready` and upgrade claim
-coverage.
+commitments, create a version-3 release bound to the target runtime/capsule,
+collect interval-owned calibrated meter observations on the workstation, and
+build the validated confirmation bundle. Only then may the manifest change
+from `smoke-ready` to `workstation-ready` and upgrade claim coverage.

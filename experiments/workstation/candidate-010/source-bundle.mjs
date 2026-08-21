@@ -12,6 +12,10 @@ export const CANDIDATE_010_SOURCE_FILES = Object.freeze([
   "experiments/workstation/manifest.schema.json",
   "experiments/workstation/candidate-010/actuator-command-track.mjs",
   "experiments/workstation/candidate-010/backend-registry.mjs",
+  "experiments/workstation/candidate-010/capsule-bootstrap.mjs",
+  "experiments/workstation/candidate-010/capsule-child.mjs",
+  "experiments/workstation/candidate-010/capsule-confirmation-entry.mjs",
+  "experiments/workstation/candidate-010/capsule-execution-authority.mjs",
   "experiments/workstation/candidate-010/checkpoint.mjs",
   "experiments/workstation/candidate-010/configs/development.json",
   "experiments/workstation/candidate-010/configs/smoke.json",
@@ -19,11 +23,14 @@ export const CANDIDATE_010_SOURCE_FILES = Object.freeze([
   "experiments/workstation/candidate-010/energy-provider.config.json",
   "experiments/workstation/candidate-010/energy-provider.mjs",
   "experiments/workstation/candidate-010/event-contract.mjs",
+  "experiments/workstation/candidate-010/execution-manifest.json",
+  "experiments/workstation/candidate-010/execution-capsule.mjs",
   "experiments/workstation/candidate-010/factorial-design.mjs",
   "experiments/workstation/candidate-010/factorial-runner.mjs",
   "experiments/workstation/candidate-010/fault-injection.mjs",
   "experiments/workstation/candidate-010/filesystem-track.mjs",
   "experiments/workstation/candidate-010/generator.mjs",
+  "experiments/workstation/candidate-010/immutable-capsule.mjs",
   "experiments/workstation/candidate-010/independent-verifier.mjs",
   "experiments/workstation/candidate-010/output.schema.json",
   "experiments/workstation/candidate-010/persistent-service-runner.mjs",
@@ -33,6 +40,7 @@ export const CANDIDATE_010_SOURCE_FILES = Object.freeze([
   "experiments/workstation/candidate-010/retry-rollback-comparator.mjs",
   "experiments/workstation/candidate-010/run-lock.mjs",
   "experiments/workstation/candidate-010/runner.mjs",
+  "experiments/workstation/candidate-010/runtime-identity.mjs",
   "experiments/workstation/candidate-010/seeds/seed-pack.mjs",
   "experiments/workstation/candidate-010/signed-publication-track.mjs",
   "experiments/workstation/candidate-010/source-bundle.mjs",
@@ -41,6 +49,10 @@ export const CANDIDATE_010_SOURCE_FILES = Object.freeze([
 ]);
 
 export const CANDIDATE_010_MANIFEST_FILE = "experiments/workstation/manifests/candidate-010.json";
+export const CANDIDATE_010_EXECUTION_MANIFEST_FILE =
+  "experiments/workstation/candidate-010/execution-manifest.json";
+export const CANDIDATE_010_EXECUTION_MANIFEST_PROJECTION_VERSION =
+  "candidate-010.execution-manifest-projection.v1";
 
 export const CANDIDATE_010_TEST_SUPPORT_FILES = Object.freeze([
   // Loaded by runner.test.mjs as the deterministic expected-output fixture.
@@ -60,6 +72,92 @@ export const CANDIDATE_010_DISCOVERY_EXCLUSIONS = Object.freeze([
 
 function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
+}
+
+export function candidate010ExecutionManifestProjection(manifest) {
+  if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) {
+    throw new Error("Candidate 010 execution manifest projection requires an object.");
+  }
+  const {
+    readiness: ignoredReadiness,
+    promotion_evidence: promotionEvidence,
+    seeds,
+    ...executionContract
+  } = manifest;
+  void ignoredReadiness;
+  if (!promotionEvidence || typeof promotionEvidence !== "object" || Array.isArray(promotionEvidence)) {
+    throw new Error("Candidate 010 manifest omits its promotion-evidence contract.");
+  }
+  if (
+    !seeds
+    || typeof seeds !== "object"
+    || typeof seeds.development !== "string"
+    || typeof seeds.confirmation !== "string"
+    || typeof seeds.held_out !== "string"
+  ) throw new Error("Candidate 010 manifest omits its development/confirmation/held-out seed roles.");
+  const promotionFields = Object.keys(promotionEvidence).sort();
+  if (!promotionFields.includes("status")) {
+    throw new Error("Candidate 010 promotion-evidence contract omits status.");
+  }
+  const pathRoles = promotionFields.filter((field) => field !== "status");
+  if (pathRoles.length === 0 || pathRoles.some((field) => !field.endsWith("_path") && !field.endsWith("_paths") && field !== "run_directory" && field !== "release_root")) {
+    throw new Error("Candidate 010 promotion-evidence contract contains an unknown mutable result role.");
+  }
+  return Object.freeze({
+    contract_version: CANDIDATE_010_EXECUTION_MANIFEST_PROJECTION_VERSION,
+    execution_contract: Object.freeze({
+      ...executionContract,
+      seeds: Object.freeze({ development: seeds.development }),
+    }),
+    seed_release_contract: Object.freeze({
+      mutable_result_path_roles: Object.freeze(["confirmation", "held_out"]),
+      required_state_transition: "sealed-commit-to-frozen-reveal",
+    }),
+    promotion_contract: Object.freeze({
+      status_field: "status",
+      allowed_status_values: Object.freeze(["pending", "present"]),
+      result_path_roles: Object.freeze(pathRoles),
+    }),
+  });
+}
+
+function manifestFromExecutionProjection(projection, readiness) {
+  return {
+    ...projection.execution_contract,
+    seeds: {
+      ...projection.execution_contract?.seeds,
+      confirmation: "confirmation-result-path",
+      held_out: "held-out-result-path",
+    },
+    readiness,
+    promotion_evidence: Object.fromEntries([
+      [projection.promotion_contract.status_field, "pending"],
+      ...projection.promotion_contract.result_path_roles.map((field) => [field, field]),
+    ]),
+  };
+}
+
+function canonical(value) {
+  if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonical(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+export function assertCandidate010ExecutionManifestProjection({ manifest, projection }) {
+  const expected = candidate010ExecutionManifestProjection(manifest);
+  if (
+    !projection
+    || typeof projection !== "object"
+    || Array.isArray(projection)
+    || canonical(projection) !== canonical(expected)
+  ) {
+    throw new Error(
+      "Candidate 010 execution-manifest.json does not exactly match the immutable projection of the registry manifest.",
+    );
+  }
+  return expected;
 }
 
 function normalizedRelativePath(value) {
@@ -83,6 +181,71 @@ function sortedUnique(values, label) {
 function pathIsInside(root, target) {
   const relative = path.relative(root, target);
   return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
+}
+
+function samePath(left, right) {
+  return path.relative(left, right) === "" && path.relative(right, left) === "";
+}
+
+async function strictSourceRoot(sourceRoot) {
+  if (typeof sourceRoot !== "string" || sourceRoot.length === 0) {
+    throw new Error("Frozen source root must be a non-empty path.");
+  }
+  const absolute = path.resolve(sourceRoot);
+  const information = await lstat(absolute);
+  if (information.isSymbolicLink() || !information.isDirectory()) {
+    throw new Error("Frozen source root must be a regular directory, not a symbolic link or reparse point.");
+  }
+  const resolved = await realpath(absolute);
+  if (!samePath(absolute, resolved)) {
+    throw new Error("Frozen source root refuses symbolic-link or reparse-point traversal in its root path.");
+  }
+  return resolved;
+}
+
+async function exactRegularFileInventory(sourceRoot) {
+  const root = await strictSourceRoot(sourceRoot);
+  const files = [];
+  const directories = [];
+  async function visit(directory, relativeDirectory = "") {
+    const entries = await readdir(directory, { withFileTypes: true });
+    entries.sort((left, right) => left.name.localeCompare(right.name));
+    for (const entry of entries) {
+      const relative = relativeDirectory ? `${relativeDirectory}/${entry.name}` : entry.name;
+      const absolute = path.join(directory, entry.name);
+      const information = await lstat(absolute);
+      if (entry.isSymbolicLink() || information.isSymbolicLink()) {
+        throw new Error(`Frozen source root refuses symbolic links or reparse points: ${relative}`);
+      }
+      const resolved = await realpath(absolute);
+      if (!pathIsInside(root, resolved)) {
+        throw new Error(`Frozen source root entry resolves outside its root: ${relative}`);
+      }
+      if (information.isDirectory()) {
+        directories.push(relative);
+        await visit(absolute, relative);
+      }
+      else if (information.isFile()) files.push(relative);
+      else throw new Error(`Frozen source root contains an unsupported filesystem entry: ${relative}`);
+    }
+  }
+  await visit(root);
+  return Object.freeze({
+    root,
+    files: Object.freeze(files.sort()),
+    directories: Object.freeze(directories.sort()),
+  });
+}
+
+function requiredDirectoryInventory(files) {
+  const directories = new Set();
+  for (const file of files) {
+    const components = file.split("/").slice(0, -1);
+    for (let index = 1; index <= components.length; index += 1) {
+      directories.add(components.slice(0, index).join("/"));
+    }
+  }
+  return [...directories].sort();
 }
 
 async function assertNoSymbolicPathComponents(root, absolute, label) {
@@ -179,6 +342,7 @@ export async function discoverCandidate010SourceFiles({
   root = process.cwd(),
   candidateDirectory = "experiments/workstation/candidate-010",
   manifestFile = CANDIDATE_010_MANIFEST_FILE,
+  executionManifestFile = CANDIDATE_010_EXECUTION_MANIFEST_FILE,
   productionFiles = CANDIDATE_010_SOURCE_FILES,
   testSupportFiles = CANDIDATE_010_TEST_SUPPORT_FILES,
   exclusions = CANDIDATE_010_DISCOVERY_EXCLUSIONS,
@@ -186,6 +350,7 @@ export async function discoverCandidate010SourceFiles({
   const normalizedProduction = sortedUnique([...productionFiles], "Candidate 010 production source");
   const normalizedSupport = sortedUnique([...testSupportFiles], "Candidate 010 test-support source");
   const normalizedManifest = normalizedRelativePath(manifestFile);
+  const normalizedExecutionManifest = normalizedRelativePath(executionManifestFile);
   const normalizedCandidateDirectory = normalizedRelativePath(candidateDirectory).replace(/\/$/, "");
   const prefix = `${normalizedCandidateDirectory}/`;
   const discoveredRelative = await walkCandidateFiles(root, normalizedCandidateDirectory);
@@ -208,6 +373,13 @@ export async function discoverCandidate010SourceFiles({
     label: "Candidate 010 execution manifest",
   });
   const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  const { absolute: executionManifestPath } = await repositoryEntry(root, normalizedExecutionManifest, {
+    label: "Candidate 010 immutable execution manifest",
+  });
+  const executionManifestProjection = assertCandidate010ExecutionManifestProjection({
+    manifest,
+    projection: JSON.parse(await readFile(executionManifestPath, "utf8")),
+  });
   const registeredTests = manifest?.implementation?.tests;
   if (!Array.isArray(registeredTests) || registeredTests.length === 0) {
     throw new Error("Candidate 010 manifest must register a non-empty implementation.tests list.");
@@ -241,7 +413,6 @@ export async function discoverCandidate010SourceFiles({
     ...normalizedProduction,
     ...normalizedRegisteredTests,
     ...normalizedSupport,
-    normalizedManifest,
   ], "Candidate 010 complete source");
   const includedCandidateFiles = new Set(sourceFiles
     .filter((file) => file.startsWith(prefix))
@@ -264,12 +435,19 @@ export async function discoverCandidate010SourceFiles({
     registered_tests: Object.freeze(normalizedRegisteredTests),
     test_support_files: Object.freeze(normalizedSupport),
     manifest_file: normalizedManifest,
+    execution_manifest_file: normalizedExecutionManifest,
+    execution_manifest_projection: executionManifestProjection,
     import_closure: importClosure,
     exclusions: Object.freeze([...exclusionMap].map(([excludedPath, reason]) => Object.freeze({ path: excludedPath, reason }))),
   });
 }
 
-export async function computeSourceBundle({ root, sourceFiles, vcs = null }) {
+export async function computeSourceBundle({
+  root,
+  sourceFiles,
+  vcs = null,
+  executionManifestProjection = null,
+}) {
   if (!root || !Array.isArray(sourceFiles) || sourceFiles.length === 0) {
     throw new Error("Source-bundle root and a non-empty source-file list are required.");
   }
@@ -287,13 +465,131 @@ export async function computeSourceBundle({ root, sourceFiles, vcs = null }) {
     aggregate.update(`${Buffer.byteLength(relative)}:${relative}:${body.length}:`);
     aggregate.update(body);
   }
+  const manifestProjection = executionManifestProjection === null
+    ? null
+    : candidate010ExecutionManifestProjection(manifestFromExecutionProjection(
+        executionManifestProjection,
+        "projection-normalization",
+      ));
+  if (manifestProjection !== null) {
+    if (!normalized.includes(CANDIDATE_010_EXECUTION_MANIFEST_FILE)) {
+      throw new Error("A non-null execution-manifest projection requires its committed source file.");
+    }
+    const { absolute: projectionPath } = await repositoryEntry(
+      root,
+      CANDIDATE_010_EXECUTION_MANIFEST_FILE,
+      { label: "Candidate 010 committed execution-manifest projection" },
+    );
+    const committedProjection = JSON.parse(await readFile(projectionPath, "utf8"));
+    if (canonical(committedProjection) !== canonical(manifestProjection)) {
+      throw new Error("The source-bundle projection differs from committed execution-manifest.json bytes.");
+    }
+  }
+  const projectionBody = canonical(manifestProjection);
+  aggregate.update(`execution-manifest-projection:${Buffer.byteLength(projectionBody)}:`);
+  aggregate.update(projectionBody);
   return Object.freeze({
     schema: 1,
     bundle_id: "candidate-010-executable-source-v1",
     source_sha256: aggregate.digest("hex"),
     files: Object.freeze(files.map(Object.freeze)),
+    execution_manifest_projection: manifestProjection,
     vcs: vcs === null ? null : Object.freeze({ ...vcs }),
   });
+}
+
+function assertExactFrozenBundleShape(expectedBundle) {
+  const exactKeys = (value, keys) => (
+    value
+    && typeof value === "object"
+    && !Array.isArray(value)
+    && JSON.stringify(Object.keys(value).sort()) === JSON.stringify([...keys].sort())
+  );
+  if (
+    !exactKeys(expectedBundle, [
+      "schema",
+      "bundle_id",
+      "source_sha256",
+      "files",
+      "execution_manifest_projection",
+      "vcs",
+    ])
+    || expectedBundle.schema !== 1
+    || expectedBundle.bundle_id !== "candidate-010-executable-source-v1"
+    || !/^[0-9a-f]{64}$/.test(expectedBundle.source_sha256 ?? "")
+    || !Array.isArray(expectedBundle.files)
+    || expectedBundle.files.length === 0
+    || !exactKeys(expectedBundle.vcs, ["source_commit", "worktree_state"])
+    || !/^[0-9a-f]{40}$/.test(expectedBundle.vcs.source_commit ?? "")
+    || typeof expectedBundle.vcs.worktree_state !== "string"
+    || expectedBundle.vcs.worktree_state.length === 0
+  ) {
+    throw new Error("Expected frozen source bundle has an invalid exact identity shape.");
+  }
+  if (expectedBundle.execution_manifest_projection !== null) {
+    const projection = expectedBundle.execution_manifest_projection;
+    if (
+      projection?.contract_version !== CANDIDATE_010_EXECUTION_MANIFEST_PROJECTION_VERSION
+      || !projection.execution_contract
+      || !projection.promotion_contract
+      || canonical(candidate010ExecutionManifestProjection(manifestFromExecutionProjection(
+        projection,
+        "projection-validation",
+      ))) !== canonical(projection)
+    ) throw new Error("Expected frozen source bundle has an invalid execution-manifest projection.");
+  }
+  const paths = [];
+  for (const entry of expectedBundle.files) {
+    if (
+      !exactKeys(entry, ["path", "bytes", "sha256"])
+      || !Number.isSafeInteger(entry.bytes)
+      || entry.bytes < 0
+      || !/^[0-9a-f]{64}$/.test(entry.sha256 ?? "")
+    ) {
+      throw new Error("Expected frozen source bundle contains an invalid file identity.");
+    }
+    paths.push(normalizedRelativePath(entry.path));
+  }
+  const sorted = [...paths].sort();
+  if (new Set(paths).size !== paths.length || JSON.stringify(paths) !== JSON.stringify(sorted)) {
+    throw new Error("Expected frozen source bundle file inventory must be unique and sorted.");
+  }
+  return paths;
+}
+
+/**
+ * Verify a materialized frozen source tree without consulting `.git` or the
+ * caller's worktree. The source root must contain exactly the bound regular
+ * files and no links, reparse points, or unbound extras.
+ */
+export async function verifyCandidate010SourceBundleAtRoot({ sourceRoot, expectedBundle }) {
+  const expectedPaths = assertExactFrozenBundleShape(expectedBundle);
+  const expectedDirectories = requiredDirectoryInventory(expectedPaths);
+  const before = await exactRegularFileInventory(sourceRoot);
+  if (
+    JSON.stringify(before.files) !== JSON.stringify(expectedPaths)
+    || JSON.stringify(before.directories) !== JSON.stringify(expectedDirectories)
+  ) {
+    throw new Error("Frozen source root inventory does not exactly match the expected source bundle.");
+  }
+  const recomputed = await computeSourceBundle({
+    root: before.root,
+    sourceFiles: expectedPaths,
+    vcs: expectedBundle.vcs,
+    executionManifestProjection: expectedBundle.execution_manifest_projection,
+  });
+  if (canonical(recomputed) !== canonical(expectedBundle)) {
+    throw new Error("Frozen source root bytes or hashes do not match the expected source bundle.");
+  }
+  const after = await exactRegularFileInventory(sourceRoot);
+  if (
+    after.root !== before.root
+    || JSON.stringify(after.files) !== JSON.stringify(before.files)
+    || JSON.stringify(after.directories) !== JSON.stringify(before.directories)
+  ) {
+    throw new Error("Frozen source root inventory changed while it was being verified.");
+  }
+  return recomputed;
 }
 
 async function readOptional(file) {
@@ -339,5 +635,10 @@ export async function captureCandidate010SourceBundle(root = process.cwd()) {
     worktree_state: "source-files-hashed-directly; Git index cleanliness not inferred",
   };
   const coverage = await discoverCandidate010SourceFiles({ root });
-  return computeSourceBundle({ root, sourceFiles: coverage.source_files, vcs });
+  return computeSourceBundle({
+    root,
+    sourceFiles: coverage.source_files,
+    vcs,
+    executionManifestProjection: coverage.execution_manifest_projection,
+  });
 }

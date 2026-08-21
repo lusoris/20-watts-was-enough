@@ -50,9 +50,12 @@ The executable layer is narrower than the full protocol below:
   exist, but no real frozen confirmation/held-out release or validated evidence
   bundle exists; and
 - no interval-owned calibrated energy observation has been collected.
-- no fresh immutable execution bootstrap yet proves that loaded ESM code,
-  direct source hashes, the Node runtime, and installed dependencies share one
-  frozen identity.
+- a fresh fixed child now composes the clean-`HEAD` source capsule, exact Node
+  runtime, capsule-local dependency inventory, version-3 release, and a
+  callback-scoped execution capability before importing Candidate code. The
+  ordinary worktree cannot run confirmation. This establishes the executable
+  boundary under its declared local host assumptions, not a real confirmation
+  result or hostile-kernel isolation.
 
 Every smoke and factorial raw record now crosses one executable event contract
 before append and again before analysis or validation. The source freeze also

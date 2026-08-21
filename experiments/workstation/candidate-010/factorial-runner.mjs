@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { access, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { access, lstat, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
@@ -32,8 +32,17 @@ import {
 import { openFrozenSeedRelease } from "./release-contract.mjs";
 import { acquireRunLock } from "./run-lock.mjs";
 import { captureCandidate010SourceBundle } from "./source-bundle.mjs";
+import { validateCapsuleLaunchReceipt } from "./capsule-bootstrap.mjs";
 
 export const FACTORIAL_RUNNER_VERSION = "candidate-010-factorial-runner-v2";
+export const CONFIRMATION_LAUNCH_PRECOMMIT_VERSION = "candidate-010.confirmation-launch-precommit.v1";
+const LAUNCH_PROVENANCE_KEYS = Object.freeze([
+  "launch_request_sha256",
+  "request_nonce_sha256",
+  "sanitized_environment_sha256",
+  "exec_argv_sha256",
+  "parent_pre_verification_sha256",
+]);
 const repositoryRoot = path.resolve(
   path.dirname(new URL(import.meta.url).pathname.replace(/^\/(.:)/, "$1")),
   "..",
@@ -51,6 +60,135 @@ function canonical(value) {
 
 function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
+}
+
+function exactKeys(value, keys) {
+  return value
+    && typeof value === "object"
+    && !Array.isArray(value)
+    && canonical(Object.keys(value).sort()) === canonical([...keys].sort());
+}
+
+function validateLaunchProvenance(value) {
+  if (
+    !exactKeys(value, LAUNCH_PROVENANCE_KEYS)
+    || LAUNCH_PROVENANCE_KEYS.some((key) => !/^[0-9a-f]{64}$/.test(value[key] ?? ""))
+  ) {
+    throw new Error("Confirmation execution requires exact fresh-child launch provenance hashes.");
+  }
+  return Object.freeze(Object.fromEntries(LAUNCH_PROVENANCE_KEYS.map((key) => [key, value[key]])));
+}
+
+function validateLaunchPrecommitDocument(value) {
+  if (
+    !exactKeys(value, ["contract_version", ...LAUNCH_PROVENANCE_KEYS])
+    || value.contract_version !== CONFIRMATION_LAUNCH_PRECOMMIT_VERSION
+  ) throw new Error("Frozen fresh-child launch precommit has an invalid exact shape.");
+  return validateLaunchProvenance(Object.fromEntries(
+    LAUNCH_PROVENANCE_KEYS.map((key) => [key, value[key]]),
+  ));
+}
+
+function confirmationSetupAccounting({ capsuleElapsedMs, releaseElapsedMs, sourceBundle, executionCapsule }) {
+  const sourceBytes = sourceBundle.files.reduce((sum, row) => sum + row.bytes, 0);
+  const dependencyBytes = executionCapsule.descriptor.dependencies.inventory.bytes;
+  const phases = Object.freeze({
+    capsule_source_runtime_authority_verification: Object.freeze({
+      elapsed_ms: capsuleElapsedMs,
+      bytes_verified: sourceBytes + dependencyBytes,
+      modeled_energy_j: null,
+      measured_energy_j: null,
+      calibrated: false,
+    }),
+    release_and_source_verification: Object.freeze({
+      elapsed_ms: releaseElapsedMs,
+      bytes_verified: sourceBytes,
+      modeled_energy_j: null,
+      measured_energy_j: null,
+      calibrated: false,
+    }),
+  });
+  return Object.freeze({
+    schema: 1,
+    artifact: "candidate-010",
+    contract_version: "candidate-010.confirmation-child-setup-accounting.v1",
+    allocation: "run-level-unallocated",
+    arm_level_allocation: false,
+    calibrated_energy: false,
+    phases,
+    elapsed_ms: capsuleElapsedMs + releaseElapsedMs,
+    bytes_verified: Object.values(phases).reduce((sum, phase) => sum + phase.bytes_verified, 0),
+    modeled_energy_j: null,
+    measured_energy_j: null,
+  });
+}
+
+async function validatePersistedLaunchAuthority({
+  provenanceDirectory,
+  run,
+  launchProvenance,
+  capsuleAuthority,
+  executionCapsule,
+}) {
+  const receipt = await loadJson(path.join(provenanceDirectory, "capsule-launch-receipt.json"));
+  validateCapsuleLaunchReceipt(receipt, {
+    action: "candidate-010-confirmation",
+    executionDescriptorSha256: capsuleAuthority.execution_descriptor_sha256,
+    sourceInventorySha256: capsuleAuthority.source_inventory_sha256,
+    dependencyInventorySha256: capsuleAuthority.dependency_inventory_sha256,
+    runtimeIdentitySha256: capsuleAuthority.runtime_identity_sha256,
+  });
+  for (const key of LAUNCH_PROVENANCE_KEYS) {
+    if (receipt[key] !== launchProvenance[key]) {
+      throw new Error(`Persisted parent-verified launch receipt differs from run identity at ${key}.`);
+    }
+  }
+  if (
+    receipt.runtime_executable_sha256
+      !== executionCapsule.descriptor.runtime_identity.runtime.executable_sha256
+    || receipt.parent_pre_verification_sha256 !== receipt.parent_post_verification_sha256
+    || receipt.child_pre_verification_sha256 !== receipt.child_post_verification_sha256
+  ) throw new Error("Persisted launch receipt runtime or pre/post verification is inconsistent.");
+  const setup = await loadJson(path.join(provenanceDirectory, "confirmation-setup-accounting.json"));
+  const setupPhases = setup?.phases && typeof setup.phases === "object"
+    ? Object.values(setup.phases)
+    : [];
+  if (
+    setup?.contract_version !== "candidate-010.confirmation-setup-accounting.v1"
+    || setup.launch_receipt_sha256 !== receipt.receipt_sha256
+    || setup.allocation !== "run-level-unallocated"
+    || setup.arm_level_allocation !== false
+    || setup.calibrated_energy !== false
+    || setup.modeled_energy_j !== null
+    || setup.measured_energy_j !== null
+    || !Number.isFinite(setup.elapsed_ms)
+    || !Number.isSafeInteger(setup.bytes_processed)
+    || setup.elapsed_ms <= 0
+    || setup.bytes_processed <= 0
+    || setupPhases.length !== 6
+    || setup.launch_envelope_diagnostic?.additive !== false
+    || !Number.isFinite(setup.launch_envelope_diagnostic.elapsed_ms)
+    || !Number.isFinite(setup.launch_envelope_diagnostic.child_action_elapsed_ms)
+    || !Number.isFinite(setup.launch_envelope_diagnostic.setup_overhead_elapsed_ms)
+    || setup.launch_envelope_diagnostic.elapsed_ms
+      - setup.launch_envelope_diagnostic.child_action_elapsed_ms
+      !== setup.launch_envelope_diagnostic.setup_overhead_elapsed_ms
+    || setup.phases?.child_spawn_and_verification_overhead?.elapsed_ms
+      !== setup.launch_envelope_diagnostic.setup_overhead_elapsed_ms
+    || setupPhases.some((phase) => (
+      !Number.isFinite(phase?.elapsed_ms)
+      || phase.elapsed_ms < 0
+      || !Number.isSafeInteger(phase.bytes_processed)
+      || phase.bytes_processed <= 0
+      || phase.modeled_energy_j !== null
+      || phase.measured_energy_j !== null
+      || phase.calibrated !== false
+    ))
+    || setup.elapsed_ms !== setupPhases.reduce((sum, phase) => sum + phase.elapsed_ms, 0)
+    || setup.bytes_processed !== setupPhases.reduce((sum, phase) => sum + phase.bytes_processed, 0)
+    || run.setup_accounting !== "separate-run-level-unallocated-provenance"
+  ) throw new Error("Persisted confirmation setup accounting is invalid or allocated to arms.");
+  return receipt;
 }
 
 const taskFamilyById = new Map(TASK_FAMILIES.map((family) => [family.id, family]));
@@ -151,14 +289,32 @@ async function loadOptionalJson(file) {
   }
 }
 
-async function assertNewDirectory(directory) {
+async function assertNewDirectory(directory, { allowOperatorPrecommit = false } = {}) {
+  let exists = true;
   try {
     await access(directory);
-    throw new Error(`Output directory already exists; append-only runs cannot overwrite it: ${directory}`);
   } catch (error) {
-    if (error.code !== "ENOENT") throw error;
+    if (error.code === "ENOENT") exists = false;
+    else throw error;
   }
-  await mkdir(directory, { recursive: true });
+  if (!exists) {
+    await mkdir(directory, { recursive: true });
+    return;
+  }
+  if (!allowOperatorPrecommit) {
+    throw new Error(`Output directory already exists; append-only runs cannot overwrite it: ${directory}`);
+  }
+  const rootEntries = await readdir(directory);
+  const provenanceDirectory = path.join(directory, "provenance");
+  const provenanceEntries = await readdir(provenanceDirectory);
+  const precommitPath = path.join(provenanceDirectory, "capsule-launch-precommit.json");
+  const information = await lstat(precommitPath);
+  if (
+    canonical(rootEntries) !== canonical(["provenance"])
+    || canonical(provenanceEntries) !== canonical(["capsule-launch-precommit.json"])
+    || information.isSymbolicLink()
+    || !information.isFile()
+  ) throw new Error("New confirmation output may contain only its parent-frozen launch precommit.");
 }
 
 function mergeScenarioConfig(config, scenario) {
@@ -360,6 +516,8 @@ function provenanceIdentity({
   executionMode,
   sourceBundle,
   releaseAuthority = null,
+  capsuleAuthority = null,
+  launchProvenance = null,
 }) {
   const frozen = {
     runner: FACTORIAL_RUNNER_VERSION,
@@ -375,12 +533,62 @@ function provenanceIdentity({
       seed_commitment: releaseAuthority.seed_pack.commitment,
       partition: releaseAuthority.partition,
       release_version: releaseAuthority.release_version,
+      execution_binding: releaseAuthority.execution_binding,
+      runtime_binding: releaseAuthority.runtime_binding,
     },
     schedule: "cluster-pair-work-unit-v2",
   };
+  if (capsuleAuthority !== null) frozen.capsule_execution_authority = capsuleAuthority;
+  if (launchProvenance !== null) {
+    frozen.official_launch_precommit = {
+      contract_version: CONFIRMATION_LAUNCH_PRECOMMIT_VERSION,
+      ...launchProvenance,
+    };
+  }
   return {
     ...frozen,
     run_id: `c010-run-${sha256(canonical(frozen))}`,
+  };
+}
+
+function stableCapsuleAuthority(binding) {
+  if (!binding || typeof binding !== "object") {
+    throw new Error("Confirmation execution requires a verified capsule authority binding.");
+  }
+  const stable = {
+    authority_version: binding.authority_version,
+    execution_descriptor_sha256: binding.execution_descriptor_sha256,
+    source_bundle_sha256: binding.source_bundle_sha256,
+    source_inventory_sha256: binding.source_inventory_sha256,
+    runtime_identity_sha256: binding.runtime_identity_sha256,
+    dependency_inventory_sha256: binding.dependency_inventory_sha256,
+    head_commit: binding.head_commit,
+  };
+  if (
+    typeof stable.authority_version !== "string"
+    || !/^[0-9a-f]{64}$/.test(stable.execution_descriptor_sha256 ?? "")
+    || !/^[0-9a-f]{64}$/.test(stable.source_bundle_sha256 ?? "")
+    || !/^[0-9a-f]{64}$/.test(stable.source_inventory_sha256 ?? "")
+    || !/^[0-9a-f]{64}$/.test(stable.runtime_identity_sha256 ?? "")
+    || !/^[0-9a-f]{64}$/.test(stable.dependency_inventory_sha256 ?? "")
+    || !/^[0-9a-f]{40}$/.test(stable.head_commit ?? "")
+  ) throw new Error("Verified capsule authority returned an invalid stable identity.");
+  return Object.freeze(stable);
+}
+
+async function verifyCapsuleAuthority({ executionAuthority, executionCapsule, expectedSourceBundle }) {
+  if (!executionCapsule || !expectedSourceBundle) {
+    throw new Error("Confirmation execution requires an execution capsule and expected frozen source bundle.");
+  }
+  const { assertCapsuleExecutionAuthority } = await import("./capsule-execution-authority.mjs");
+  const binding = await assertCapsuleExecutionAuthority(executionAuthority, {
+    executionCapsule,
+    expectedSourceBundle,
+  });
+  return {
+    binding,
+    stable: stableCapsuleAuthority(binding),
+    sourceBundle: expectedSourceBundle,
   };
 }
 
@@ -445,27 +653,56 @@ function boundReleasePath(releaseRoot, relative) {
   return resolved;
 }
 
-async function openConfirmationAuthority({ release, config, scenarios, sourceBundle }) {
+async function openConfirmationAuthority({
+  release,
+  config,
+  scenarios,
+  sourceBundle,
+  sourceRoot,
+  executionDescriptor,
+  runtimeIdentity,
+  capsuleAuthority,
+}) {
   if (!release || typeof release !== "object") {
     throw new Error("Confirmation execution requires a frozen release contract, not raw seeds.");
   }
   if (typeof release.releasePath !== "string" || release.releasePath.trim() === "") {
     throw new Error("Confirmation execution requires a frozen release path.");
   }
-  const releaseRoot = path.resolve(release.root ?? repositoryRoot);
+  if (typeof release.bindingRoot !== "string" || release.bindingRoot.trim() === "") {
+    throw new Error("Confirmation execution requires an explicit release bindingRoot separate from capsule sourceRoot.");
+  }
+  if (release.root !== undefined) {
+    throw new Error("Confirmation execution refuses legacy single-root release authority.");
+  }
+  const releaseRoot = path.resolve(release.bindingRoot);
   const releasePath = path.resolve(release.releasePath ?? "");
   const opened = await openFrozenSeedRelease({
-    root: releaseRoot,
+    bindingRoot: releaseRoot,
+    sourceRoot,
     releasePath,
     expectedPartition: "confirmation",
     phase: "confirmation",
     disjointWith: release.disjointWith,
+    executionDescriptor,
+    runtimeIdentity,
   });
+  if (opened.source_root_mode !== "separate-exact-capsule-root-v1") {
+    throw new Error("Confirmation release did not open against the exact separate capsule source root.");
+  }
   if (
     opened.source_identity.source_sha256 !== sourceBundle.source_sha256
     || opened.source_identity.source_commit !== sourceBundle.vcs.source_commit
   ) {
     throw new Error("Frozen release source authority does not match the executable runner source bundle.");
+  }
+  if (
+    opened.execution_binding.descriptor_sha256 !== capsuleAuthority.execution_descriptor_sha256
+    || opened.execution_binding.source_inventory_sha256 !== capsuleAuthority.source_inventory_sha256
+    || opened.execution_binding.dependency_inventory_sha256 !== capsuleAuthority.dependency_inventory_sha256
+    || opened.runtime_binding.identity_sha256 !== capsuleAuthority.runtime_identity_sha256
+  ) {
+    throw new Error("Frozen release execution/runtime authority does not match the verified capsule authority.");
   }
   const releaseDocument = await loadJson(releasePath);
   const [boundConfig, boundDesign] = await Promise.all([
@@ -488,6 +725,10 @@ export async function runFactorialExperiment({
   outputDirectory,
   executionMode = "development",
   release = null,
+  executionAuthority = null,
+  executionCapsule = null,
+  expectedSourceBundle = null,
+  launchProvenance = null,
   frozen_release: callerFrozenRelease,
   resume = false,
   stopAfterRecords = null,
@@ -501,20 +742,59 @@ export async function runFactorialExperiment({
   }
   for (const scenario of scenarios) assertCanonicalScenarioBinding(scenario);
   assertExecutionMode(scenarios, executionMode);
-  const sourceBundle = await captureCandidate010SourceBundle(repositoryRoot);
+  let sourceBundle;
+  let capsuleAuthority = null;
   let releaseAuthority = null;
   let executionSeeds = seeds;
+  let normalizedLaunchProvenance = null;
+  let childSetupAccounting = null;
   if (executionMode === "confirmation") {
     if (seeds !== null && seeds !== undefined) {
       throw new Error("Confirmation execution refuses raw caller-provided seeds.");
     }
-    releaseAuthority = await openConfirmationAuthority({ release, config, scenarios, sourceBundle });
+    normalizedLaunchProvenance = validateLaunchProvenance(launchProvenance);
+    const capsuleVerificationStarted = performance.now();
+    const verifiedCapsule = await verifyCapsuleAuthority({
+      executionAuthority,
+      executionCapsule,
+      expectedSourceBundle,
+    });
+    const capsuleVerificationElapsed = performance.now() - capsuleVerificationStarted;
+    sourceBundle = verifiedCapsule.sourceBundle;
+    capsuleAuthority = verifiedCapsule.stable;
+    const releaseVerificationStarted = performance.now();
+    releaseAuthority = await openConfirmationAuthority({
+      release,
+      config,
+      scenarios,
+      sourceBundle,
+      sourceRoot: verifiedCapsule.binding.source_root,
+      executionDescriptor: executionCapsule.descriptor,
+      runtimeIdentity: executionCapsule.descriptor.runtime_identity,
+      capsuleAuthority,
+    });
+    const releaseVerificationElapsed = performance.now() - releaseVerificationStarted;
+    childSetupAccounting = confirmationSetupAccounting({
+      capsuleElapsedMs: capsuleVerificationElapsed,
+      releaseElapsedMs: releaseVerificationElapsed,
+      sourceBundle,
+      executionCapsule,
+    });
     executionSeeds = releaseAuthority.seeds;
   } else {
+    if (
+      executionAuthority !== null
+      || executionCapsule !== null
+      || expectedSourceBundle !== null
+      || launchProvenance !== null
+    ) {
+      throw new Error("Capsule execution authority is accepted only in confirmation mode.");
+    }
     if (release !== null) throw new Error("Frozen release contracts are only accepted in confirmation execution mode.");
     if (!Array.isArray(executionSeeds) || executionSeeds.length === 0) {
       throw new Error("Factorial execution requires seeds.");
     }
+    sourceBundle = await captureCandidate010SourceBundle(repositoryRoot);
   }
   const runLock = await acquireRunLock({
     outputDirectory,
@@ -522,7 +802,9 @@ export async function runFactorialExperiment({
   });
   try {
     if (resume) await access(outputDirectory);
-    else await assertNewDirectory(outputDirectory);
+    else await assertNewDirectory(outputDirectory, {
+      allowOperatorPrecommit: executionMode === "confirmation",
+    });
 
   const rawDirectory = path.join(outputDirectory, "raw");
   const provenanceDirectory = path.join(outputDirectory, "provenance");
@@ -538,6 +820,9 @@ export async function runFactorialExperiment({
   const designPath = path.join(provenanceDirectory, "factorial-design.json");
   const environmentPath = path.join(provenanceDirectory, "environment.json");
   const sourceBundlePath = path.join(provenanceDirectory, "source-bundle.json");
+  const capsuleAuthorityPath = path.join(provenanceDirectory, "capsule-execution-authority.json");
+  const launchPrecommitPath = path.join(provenanceDirectory, "launch-precommit.json");
+  const childSetupPath = path.join(provenanceDirectory, "confirmation-child-setup.json");
   const identity = provenanceIdentity({
     config,
     seeds: executionSeeds,
@@ -545,6 +830,8 @@ export async function runFactorialExperiment({
     executionMode,
     sourceBundle,
     releaseAuthority,
+    capsuleAuthority,
+    launchProvenance: normalizedLaunchProvenance,
   });
   const seedProvenance = releaseAuthority === null
     ? { seeds: executionSeeds }
@@ -553,6 +840,8 @@ export async function runFactorialExperiment({
         release_version: releaseAuthority.release_version,
         release_sha256: releaseAuthority.release_sha256,
         seed_commitment: releaseAuthority.seed_pack.commitment,
+        execution_binding: releaseAuthority.execution_binding,
+        runtime_binding: releaseAuthority.runtime_binding,
         seeds: executionSeeds,
       };
   let environment;
@@ -571,6 +860,19 @@ export async function runFactorialExperiment({
     if (canonical(existingSourceBundle) !== canonical(sourceBundle)) {
       throw new Error("Resume executable source bundle differs from the frozen factorial run.");
     }
+    if (executionMode === "confirmation") {
+      const [existingCapsuleAuthority, existingLaunchPrecommit] = await Promise.all([
+        loadJson(capsuleAuthorityPath),
+        loadJson(launchPrecommitPath),
+      ]);
+      if (canonical(existingCapsuleAuthority) !== canonical(capsuleAuthority)) {
+        throw new Error("Resume capsule execution authority differs from frozen factorial provenance.");
+      }
+      if (canonical(existingLaunchPrecommit) !== canonical(identity.official_launch_precommit)) {
+        throw new Error("Resume fresh-child launch provenance differs from frozen factorial provenance.");
+      }
+      await writeFile(childSetupPath, `${JSON.stringify(childSetupAccounting, null, 2)}\n`);
+    }
   } else {
     environment = {
       node: process.version,
@@ -583,14 +885,33 @@ export async function runFactorialExperiment({
       physical_actuation: false,
       measured_energy: null,
       claim_eligible: false,
+      ...(capsuleAuthority === null ? {} : { capsule_execution_authority: capsuleAuthority }),
     };
-    await Promise.all([
+    const provenanceWrites = [
       writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, { flag: "wx" }),
       writeFile(seedsPath, `${JSON.stringify(seedProvenance, null, 2)}\n`, { flag: "wx" }),
       writeFile(designPath, `${JSON.stringify({ scenarios }, null, 2)}\n`, { flag: "wx" }),
       writeFile(environmentPath, `${JSON.stringify(environment, null, 2)}\n`, { flag: "wx" }),
       writeFile(sourceBundlePath, `${JSON.stringify(sourceBundle, null, 2)}\n`, { flag: "wx" }),
-    ]);
+    ];
+    if (capsuleAuthority !== null) {
+      provenanceWrites.push(writeFile(
+        capsuleAuthorityPath,
+        `${JSON.stringify(capsuleAuthority, null, 2)}\n`,
+        { flag: "wx" },
+      ));
+      provenanceWrites.push(writeFile(
+        launchPrecommitPath,
+        `${JSON.stringify(identity.official_launch_precommit, null, 2)}\n`,
+        { flag: "wx" },
+      ));
+      provenanceWrites.push(writeFile(
+        childSetupPath,
+        `${JSON.stringify(childSetupAccounting, null, 2)}\n`,
+        { flag: "wx" },
+      ));
+    }
+    await Promise.all(provenanceWrites);
   }
 
   const ledger = await openCheckpointLedger({
@@ -780,7 +1101,9 @@ export async function runFactorialExperiment({
     readiness: "smoke-ready",
     execution_mode: executionMode,
     claim_eligible: false,
-    interpretation: "Implementation/falsification diagnostic only; fresh frozen seeds, calibrated measurements, and confirmation evidence are absent.",
+    interpretation: executionMode === "confirmation"
+      ? "Capsule-authorized frozen confirmation execution remains claim-ineligible; calibrated interval energy and promotion evidence are absent."
+      : "Implementation/falsification diagnostic only; fresh frozen seeds, calibrated measurements, and confirmation evidence are absent.",
     profile: config.profile,
     started_utc: environment.run_started_utc,
     completed_utc: new Date().toISOString(),
@@ -794,6 +1117,9 @@ export async function runFactorialExperiment({
     run_identity: identity,
     measured_energy_j: null,
     physical_actuation: false,
+    setup_accounting: executionMode === "confirmation"
+      ? "separate-run-level-unallocated-provenance"
+      : null,
     resume_supported: true,
   };
   await writeFile(runPath, `${JSON.stringify(run, null, 2)}\n`, { flag: "wx" });
@@ -818,13 +1144,24 @@ export async function readFactorialRecords(outputDirectory) {
   });
 }
 
-export async function analyzeFactorialRun(outputDirectory) {
+export async function analyzeFactorialRun(outputDirectory, {
+  executionAuthority = null,
+  executionCapsule = null,
+  expectedSourceBundle = null,
+  launchProvenance = null,
+} = {}) {
   const runLock = await acquireRunLock({
     outputDirectory,
     runnerId: `${FACTORIAL_RUNNER_VERSION}:analyze`,
   });
   try {
-    await validateFactorialRunLocked(outputDirectory, { writeArtifact: false });
+    await validateFactorialRunLocked(outputDirectory, {
+      writeArtifact: false,
+      executionAuthority,
+      executionCapsule,
+      expectedSourceBundle,
+      launchProvenance,
+    });
     const records = await readFactorialRecords(outputDirectory);
   const byFamilyArm = new Map();
   for (const record of records) {
@@ -871,7 +1208,13 @@ export async function analyzeFactorialRun(outputDirectory) {
   }
 }
 
-async function validateFactorialRunLocked(outputDirectory, { writeArtifact = true } = {}) {
+async function validateFactorialRunLocked(outputDirectory, {
+  writeArtifact = true,
+  executionAuthority = null,
+  executionCapsule = null,
+  expectedSourceBundle = null,
+  launchProvenance = null,
+} = {}) {
   const provenanceDirectory = path.join(outputDirectory, "provenance");
   const boundariesDirectory = path.join(outputDirectory, "boundaries");
   const [run, config, seedDocument, designDocument, frozenSourceBundle] = await Promise.all([
@@ -881,7 +1224,53 @@ async function validateFactorialRunLocked(outputDirectory, { writeArtifact = tru
     loadJson(path.join(provenanceDirectory, "factorial-design.json")),
     loadJson(path.join(provenanceDirectory, "source-bundle.json")),
   ]);
-  const currentSourceBundle = await captureCandidate010SourceBundle(repositoryRoot);
+  let currentSourceBundle;
+  let capsuleAuthority = null;
+  let frozenLaunchProvenance = null;
+  if (run.execution_mode === "confirmation") {
+    const verifiedCapsule = await verifyCapsuleAuthority({
+      executionAuthority,
+      executionCapsule,
+      expectedSourceBundle,
+    });
+    currentSourceBundle = verifiedCapsule.sourceBundle;
+    capsuleAuthority = verifiedCapsule.stable;
+    const frozenCapsuleAuthority = await loadJson(path.join(
+      provenanceDirectory,
+      "capsule-execution-authority.json",
+    ));
+    if (canonical(frozenCapsuleAuthority) !== canonical(capsuleAuthority)) {
+      throw new Error("Current capsule execution authority differs from frozen factorial provenance.");
+    }
+    frozenLaunchProvenance = validateLaunchPrecommitDocument(await loadJson(path.join(
+      provenanceDirectory,
+      "launch-precommit.json",
+    )));
+    if (launchProvenance !== null) {
+      const currentLaunchProvenance = validateLaunchProvenance(launchProvenance);
+      if (canonical(currentLaunchProvenance) !== canonical(frozenLaunchProvenance)) {
+        throw new Error("Current fresh-child launch provenance differs from frozen factorial provenance.");
+      }
+    } else {
+      await validatePersistedLaunchAuthority({
+        provenanceDirectory,
+        run,
+        launchProvenance: frozenLaunchProvenance,
+        capsuleAuthority,
+        executionCapsule,
+      });
+    }
+  } else {
+    if (
+      executionAuthority !== null
+      || executionCapsule !== null
+      || expectedSourceBundle !== null
+      || launchProvenance !== null
+    ) {
+      throw new Error("Capsule execution authority is accepted only for confirmation validation.");
+    }
+    currentSourceBundle = await captureCandidate010SourceBundle(repositoryRoot);
+  }
   if (canonical(frozenSourceBundle) !== canonical(currentSourceBundle)) {
     throw new Error("Current executable source bundle differs from frozen factorial provenance.");
   }
@@ -891,6 +1280,8 @@ async function validateFactorialRunLocked(outputDirectory, { writeArtifact = tru
         partition: seedDocument.partition,
         release_version: seedDocument.release_version,
         seed_pack: { commitment: seedDocument.seed_commitment },
+        execution_binding: seedDocument.execution_binding,
+        runtime_binding: seedDocument.runtime_binding,
       }
     : null;
   const identity = provenanceIdentity({
@@ -900,6 +1291,8 @@ async function validateFactorialRunLocked(outputDirectory, { writeArtifact = tru
     executionMode: run.execution_mode,
     sourceBundle: currentSourceBundle,
     releaseAuthority: validationReleaseAuthority,
+    capsuleAuthority,
+    launchProvenance: frozenLaunchProvenance,
   });
   const expectedSchedule = new Map();
   for (const unit of factorialWorkUnits({
@@ -1192,13 +1585,23 @@ async function validateFactorialRunLocked(outputDirectory, { writeArtifact = tru
   return validation;
 }
 
-export async function validateFactorialRun(outputDirectory) {
+export async function validateFactorialRun(outputDirectory, {
+  executionAuthority = null,
+  executionCapsule = null,
+  expectedSourceBundle = null,
+  launchProvenance = null,
+} = {}) {
   const runLock = await acquireRunLock({
     outputDirectory,
     runnerId: `${FACTORIAL_RUNNER_VERSION}:validate`,
   });
   try {
-    return await validateFactorialRunLocked(outputDirectory);
+    return await validateFactorialRunLocked(outputDirectory, {
+      executionAuthority,
+      executionCapsule,
+      expectedSourceBundle,
+      launchProvenance,
+    });
   } finally {
     await runLock.release();
   }

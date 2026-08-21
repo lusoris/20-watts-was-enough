@@ -99,7 +99,12 @@ function boundEnergy({ ownership, value, serial, readingId = `hardware-energy-${
   };
 }
 
-function records({ violation = false, rawEnergy = false } = {}) {
+function records({
+  violation = false,
+  rawEnergy = false,
+  candidateStoppingTimeMs = 3,
+  comparatorStoppingTimeMs = 9,
+} = {}) {
   const rows = [];
   let serial = 0;
   const arms = [CONFIRMATORY_PREREGISTRATION.candidate_arm, ...CONFIRMATORY_PREREGISTRATION.comparators];
@@ -147,7 +152,7 @@ function records({ violation = false, rawEnergy = false } = {}) {
             resources: {
               verifier_calls: candidate ? 0.2 : 0.8,
               durable_bytes_written: candidate ? 16 : 32,
-              stopping_time_ms: candidate ? 3 : 9,
+              stopping_time_ms: candidate ? candidateStoppingTimeMs : comparatorStoppingTimeMs,
               external_energy: energy.observation,
               ...(rawEnergy ? { measured_energy_j: candidate ? 0.001 : 0.004 } : {}),
             },
@@ -172,6 +177,12 @@ test("preregistration freezes registered comparators, endpoints, gate order, and
   assert.ok(CONFIRMATORY_PREREGISTRATION.endpoints.consequence_weighted_loss);
   assert.ok(CONFIRMATORY_PREREGISTRATION.endpoints.joules_per_correct_commit);
   assert.ok(CONFIRMATORY_PREREGISTRATION.endpoints.p99_stopping_time_ms);
+  assert.deepEqual(
+    CONFIRMATORY_PREREGISTRATION.gatekeeping.find((gate) => gate.stage === 3).endpoints,
+    ["joules_per_correct_commit"],
+  );
+  assert.match(CONFIRMATORY_PREREGISTRATION.endpoints.p99_stopping_time_ms.role, /reported/);
+  assert.match(CONFIRMATORY_PREREGISTRATION.latency_policy, /equal-budget wall-time ceiling/);
   assert.equal(CONFIRMATORY_PREREGISTRATION.endpoints.false_commits.margin, null);
   assert.equal(FROZEN_PLAN.endpoints.false_commits.margin, 0.005);
 });
@@ -216,6 +227,21 @@ test("frozen confirmation reports paired effects, uncertainty, and Holm decision
   const tested = report.effects.filter((effect) => effect.raw_p !== null);
   assert.ok(tested.length > 0);
   assert.ok(tested.every((effect) => effect.adjusted_p !== null));
+});
+
+test("energy Gate 3 does not manufacture universal p99 superiority over simpler nulls", () => {
+  const report = analyzeConfirmatory({
+    records: records({ candidateStoppingTimeMs: 12, comparatorStoppingTimeMs: 3 }),
+    context: confirmationContext(),
+    preregistration: FROZEN_PLAN,
+  });
+  assert.equal(report.decision, "eligible");
+  assert.equal(report.gates.resource_superiority, "passed");
+  const latency = report.effects.filter((effect) => effect.endpoint === "p99_stopping_time_ms");
+  assert.equal(latency.length, CONFIRMATORY_PREREGISTRATION.comparators.length);
+  assert.ok(latency.every((effect) => effect.effect > 0));
+  assert.ok(latency.every((effect) => effect.raw_p === null && effect.adjusted_p === null));
+  assert.ok(latency.every((effect) => effect.gate_status === "reported-only"));
 });
 
 test("rollback violation activates a kill rule before benefit testing", () => {

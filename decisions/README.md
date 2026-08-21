@@ -15,3 +15,4 @@ than silently changing its outcome.
 | [0007](0007-benchmark-fixtures-are-not-candidates.md) | Keep cross-candidate stress fixtures separate from architecture candidates | accepted |
 | [0008](0008-eu-germany-normative-default.md) | Use the European Union and Germany as the normative default | accepted |
 | [0009](0009-external-taxonomy-breadth-control.md) | Measure research breadth against external taxonomies | accepted |
+| [0010](0010-fresh-bound-confirmation-execution.md) | Execute confirmation under one fresh bound identity | accepted |

@@ -100,6 +100,28 @@ the exact diff; this file records why the project changed.
   immutable process binds loaded ESM code, source bytes, runtime, and installed
   dependencies to one identity.
 
+- Decision 0010 and Candidate 010's claim-ineligible fresh-process boundary: a typed
+  runtime identity for the exact Node executable, runtime fields, root lockfile,
+  and installed production-dependency bytes; an isolated, practically read-
+  only capsule materialized only from clean regular blobs at Git `HEAD`; a
+  dependency-local execution capsule; and a fixed child that verifies those
+  identities before dynamic import. A callback-scoped nonserializable
+  capability is now required by confirmation run, resume, validation, and
+  analysis, while release v3 separately binds source, descriptor, runtime,
+  dependencies, config, design, registry, preregistration, and seed authority.
+  The strict `capsule-confirmation` operator builds and destroys its owned
+  capsule, accepts only release-bound config/design and disjoint seed artifacts,
+  and returns a canonical child receipt. Exact launch precommits now support a
+  fresh-process resume, and setup work is recorded separately without adding
+  the inclusive experiment action twice. A committed execution-manifest
+  projection separates mutable readiness/result metadata from frozen code,
+  tests, schema, dependencies, commands, and claim scope. Promotion-evidence v2
+  can be built only inside the live capsule capability, is persisted atomically
+  with its validation receipt, and is later recomputed from the release-bound
+  historical commit rather than trusted from stored self-hashes.
+  This does not change the 6/9 structural state because no real frozen release,
+  calibrated interval-owned energy data, or validated promotion bundle exists.
+
 - A provenance capture and primary-source audit for empirical-versus-formal
   scientific-discovery evaluators, correcting the supplied dusty-plasma date
   and method, scoping FunSearch to executable program search, and defining

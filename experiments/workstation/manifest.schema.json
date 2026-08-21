@@ -123,6 +123,7 @@
       "required": [
         "status",
         "evidence_path",
+        "promotion_validation_receipt_path",
         "run_directory",
         "release_root",
         "release_path",
@@ -132,6 +133,7 @@
       "properties": {
         "status": { "enum": ["pending", "present"] },
         "evidence_path": { "$ref": "#/$defs/repositoryPath" },
+        "promotion_validation_receipt_path": { "$ref": "#/$defs/repositoryPath" },
         "run_directory": { "$ref": "#/$defs/repositoryPath" },
         "release_root": { "$ref": "#/$defs/repositoryPath" },
         "release_path": { "$ref": "#/$defs/repositoryPath" },

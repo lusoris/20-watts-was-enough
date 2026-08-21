@@ -15,9 +15,11 @@ import test from "node:test";
 import {
   CANDIDATE_010_SOURCE_FILES,
   CANDIDATE_010_TEST_SUPPORT_FILES,
+  candidate010ExecutionManifestProjection,
   captureCandidate010SourceBundle,
   computeSourceBundle,
   discoverCandidate010SourceFiles,
+  verifyCandidate010SourceBundleAtRoot,
 } from "./source-bundle.mjs";
 
 async function unlinkIfPresent(file) {
@@ -54,7 +56,11 @@ test("Candidate 010 source identity covers every executable layer and is determi
     assert.ok(coverage.source_files.includes(policyInput), `${policyInput} is absent from source identity`);
   }
   assert.equal(coverage.manifest_file, "experiments/workstation/manifests/candidate-010.json");
-  assert.ok(coverage.source_files.includes(coverage.manifest_file));
+  assert.equal(coverage.source_files.includes(coverage.manifest_file), false);
+  assert.equal(
+    coverage.execution_manifest_projection.contract_version,
+    "candidate-010.execution-manifest-projection.v1",
+  );
   assert.ok(coverage.import_closure.length > 0);
   assert.ok(coverage.import_closure.every((edge) => (
     (coverage.production_modules.includes(edge.importer) || coverage.registered_tests.includes(edge.importer))
@@ -97,12 +103,91 @@ test("one source byte changes the bundle and escaping or duplicate paths are ref
   }
 });
 
+test("a frozen bundle verifies at an exact capsule root without Git metadata", async () => {
+  const sourceRoot = await mkdtemp(path.join(os.tmpdir(), "20w-c010-frozen-source-"));
+  try {
+    await mkdir(path.join(sourceRoot, "nested"));
+    await writeFile(path.join(sourceRoot, "entry.mjs"), "export const value = 1;\n");
+    await writeFile(path.join(sourceRoot, "nested", "config.json"), "{\"schema\":1}\n");
+    const expectedBundle = await computeSourceBundle({
+      root: sourceRoot,
+      sourceFiles: ["entry.mjs", "nested/config.json"],
+      vcs: {
+        source_commit: "b".repeat(40),
+        worktree_state: "committed-capsule-fixture",
+      },
+    });
+    const verified = await verifyCandidate010SourceBundleAtRoot({ sourceRoot, expectedBundle });
+    assert.deepEqual(verified, expectedBundle);
+    await assert.rejects(readFile(path.join(sourceRoot, ".git", "HEAD")), /ENOENT/);
+  } finally {
+    await rm(sourceRoot, { recursive: true, force: true });
+  }
+});
+
+test("frozen source verification refuses substitutions, extras, escapes, and linked roots", async () => {
+  const container = await mkdtemp(path.join(os.tmpdir(), "20w-c010-hostile-source-"));
+  const sourceRoot = path.join(container, "source");
+  const linkedRoot = path.join(container, "linked-source");
+  await mkdir(sourceRoot);
+  try {
+    await writeFile(path.join(sourceRoot, "entry.mjs"), "export const value = 1;\n");
+    const expectedBundle = await computeSourceBundle({
+      root: sourceRoot,
+      sourceFiles: ["entry.mjs"],
+      vcs: {
+        source_commit: "c".repeat(40),
+        worktree_state: "committed-capsule-fixture",
+      },
+    });
+
+    await writeFile(path.join(sourceRoot, "entry.mjs"), "export const value = 2;\n");
+    await assert.rejects(
+      verifyCandidate010SourceBundleAtRoot({ sourceRoot, expectedBundle }),
+      /bytes or hashes/,
+    );
+    await writeFile(path.join(sourceRoot, "entry.mjs"), "export const value = 1;\n");
+    await writeFile(path.join(sourceRoot, "unbound.mjs"), "export {};\n");
+    await assert.rejects(
+      verifyCandidate010SourceBundleAtRoot({ sourceRoot, expectedBundle }),
+      /inventory does not exactly match/,
+    );
+    await rm(path.join(sourceRoot, "unbound.mjs"));
+    await mkdir(path.join(sourceRoot, "unbound-directory"));
+    await assert.rejects(
+      verifyCandidate010SourceBundleAtRoot({ sourceRoot, expectedBundle }),
+      /inventory does not exactly match/,
+    );
+    await rm(path.join(sourceRoot, "unbound-directory"), { recursive: true });
+
+    const escaping = {
+      ...expectedBundle,
+      files: [{ ...expectedBundle.files[0], path: "../entry.mjs" }],
+    };
+    await assert.rejects(
+      verifyCandidate010SourceBundleAtRoot({ sourceRoot, expectedBundle: escaping }),
+      /stay relative/,
+    );
+
+    await symlink(sourceRoot, linkedRoot, "junction");
+    await assert.rejects(
+      verifyCandidate010SourceBundleAtRoot({ sourceRoot: linkedRoot, expectedBundle }),
+      /symbolic link|reparse point/,
+    );
+  } finally {
+    await unlinkIfPresent(linkedRoot);
+    await rm(container, { recursive: true, force: true });
+  }
+});
+
 async function temporaryCoverageFixture() {
   const temporary = await mkdtemp(path.join(os.tmpdir(), "20w-c010-discovery-"));
   const candidateDirectory = "experiments/workstation/candidate-010";
   const candidateRoot = path.join(temporary, ...candidateDirectory.split("/"));
   const manifestFile = "experiments/workstation/manifests/candidate-010.json";
   const manifestPath = path.join(temporary, ...manifestFile.split("/"));
+  const executionManifestFile = `${candidateDirectory}/execution-manifest.json`;
+  const executionManifestPath = path.join(temporary, ...executionManifestFile.split("/"));
   await mkdir(candidateRoot, { recursive: true });
   await mkdir(path.dirname(manifestPath), { recursive: true });
   const entry = `${candidateDirectory}/entry.mjs`;
@@ -112,16 +197,44 @@ async function temporaryCoverageFixture() {
   await writeFile(path.join(candidateRoot, "helper.mjs"), "export const helper = 1;\n");
   await writeFile(path.join(candidateRoot, "helper.test.mjs"), 'import "./helper.mjs";\n');
   await writeFile(path.join(candidateRoot, "README.md"), "fixture documentation\n");
-  await writeFile(manifestPath, `${JSON.stringify({ implementation: { tests: [testFile] } }, null, 2)}\n`);
+  const manifest = {
+    schema: 1,
+    artifact: "candidate-010",
+    readiness: "smoke-ready",
+    command: { run: "node entry.mjs" },
+    seeds: {
+      development: "seeds/development.json",
+      confirmation: "seeds/confirmation.commit.json",
+      held_out: "seeds/held-out.commit.json",
+    },
+    implementation: {
+      entrypoint: entry,
+      tests: [testFile],
+      full_tests: [testFile],
+      execution_claims: ["C-170"],
+    },
+    promotion_evidence: {
+      status: "pending",
+      evidence_path: "promotion/evidence.json",
+      promotion_validation_receipt_path: "promotion/receipt.json",
+    },
+  };
+  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+  await writeFile(
+    executionManifestPath,
+    `${JSON.stringify(candidate010ExecutionManifestProjection(manifest), null, 2)}\n`,
+  );
   return {
     temporary,
     candidateRoot,
     manifestPath,
+    executionManifestPath,
     options: {
       root: temporary,
       candidateDirectory,
       manifestFile,
-      productionFiles: [entry, helper],
+      executionManifestFile,
+      productionFiles: [entry, executionManifestFile, helper],
       testSupportFiles: [],
       exclusions: [{ path: "README.md", reason: "fixture documentation" }],
     },
@@ -190,23 +303,63 @@ test("discovery enforces production and registered-test import closure and class
   }
 });
 
-test("registered test and execution-manifest bytes participate in the complete source hash", async () => {
+test("tests and immutable execution-manifest semantics participate while readiness/result state does not", async () => {
   const fixture = await temporaryCoverageFixture();
   try {
     const coverage = await discoverCandidate010SourceFiles(fixture.options);
-    const first = await computeSourceBundle({ root: fixture.temporary, sourceFiles: coverage.source_files });
+    const first = await computeSourceBundle({
+      root: fixture.temporary,
+      sourceFiles: coverage.source_files,
+      executionManifestProjection: coverage.execution_manifest_projection,
+    });
     await writeFile(path.join(fixture.candidateRoot, "helper.test.mjs"), 'import "./helper.mjs";\n// changed\n');
     const secondCoverage = await discoverCandidate010SourceFiles(fixture.options);
-    const second = await computeSourceBundle({ root: fixture.temporary, sourceFiles: secondCoverage.source_files });
+    const second = await computeSourceBundle({
+      root: fixture.temporary,
+      sourceFiles: secondCoverage.source_files,
+      executionManifestProjection: secondCoverage.execution_manifest_projection,
+    });
     assert.notEqual(first.source_sha256, second.source_sha256);
 
+    const stableManifest = JSON.parse(await readFile(fixture.manifestPath, "utf8"));
+    stableManifest.readiness = "workstation-ready";
+    stableManifest.promotion_evidence.status = "present";
+    stableManifest.promotion_evidence.evidence_path = "new-results/evidence.json";
+    stableManifest.promotion_evidence.promotion_validation_receipt_path = "new-results/receipt.json";
+    stableManifest.seeds.confirmation = "new-results/confirmation.reveal.json";
+    stableManifest.seeds.held_out = "new-results/held-out.reveal.json";
     await writeFile(
       fixture.manifestPath,
-      `${JSON.stringify({ implementation: { tests: [`${fixture.options.candidateDirectory}/helper.test.mjs`] }, note: "changed" }, null, 2)}\n`,
+      `${JSON.stringify(stableManifest, null, 2)}\n`,
     );
     const thirdCoverage = await discoverCandidate010SourceFiles(fixture.options);
-    const third = await computeSourceBundle({ root: fixture.temporary, sourceFiles: thirdCoverage.source_files });
-    assert.notEqual(second.source_sha256, third.source_sha256);
+    const third = await computeSourceBundle({
+      root: fixture.temporary,
+      sourceFiles: thirdCoverage.source_files,
+      executionManifestProjection: thirdCoverage.execution_manifest_projection,
+    });
+    assert.equal(second.source_sha256, third.source_sha256);
+
+    stableManifest.command.run = "node substituted-entry.mjs";
+    stableManifest.seeds.development = "substituted-development.json";
+    stableManifest.implementation.execution_claims = ["C-999"];
+    delete stableManifest.promotion_evidence.promotion_validation_receipt_path;
+    await writeFile(fixture.manifestPath, `${JSON.stringify(stableManifest, null, 2)}\n`);
+    await assert.rejects(
+      discoverCandidate010SourceFiles(fixture.options),
+      /does not exactly match the immutable projection/,
+    );
+    await writeFile(
+      fixture.executionManifestPath,
+      `${JSON.stringify(candidate010ExecutionManifestProjection(stableManifest), null, 2)}\n`,
+    );
+    const changedCoverage = await discoverCandidate010SourceFiles(fixture.options);
+    const changed = await computeSourceBundle({
+      root: fixture.temporary,
+      sourceFiles: changedCoverage.source_files,
+      executionManifestProjection: changedCoverage.execution_manifest_projection,
+    });
+    assert.notEqual(third.source_sha256, changed.source_sha256);
   } finally {
     await rm(fixture.temporary, { recursive: true, force: true });
   }

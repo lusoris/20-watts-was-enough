@@ -1,0 +1,124 @@
+{
+  "contract_version": "candidate-010.execution-manifest-projection.v1",
+  "execution_contract": {
+    "schema": 1,
+    "artifact": "candidate-010",
+    "command": {
+      "prepare": "node experiments/workstation/candidate-010/runner.mjs prepare --profile smoke",
+      "smoke": "node experiments/workstation/candidate-010/runner.mjs smoke --profile smoke",
+      "run": "node experiments/workstation/candidate-010/runner.mjs factorial --profile development --splits development",
+      "analyze": "node experiments/workstation/candidate-010/runner.mjs analyze --output <run-directory>",
+      "validate": "node experiments/workstation/candidate-010/runner.mjs validate --output <run-directory>"
+    },
+    "environment": {
+      "runtime": "Node.js >=22 on Windows x64; exact runtime captured per run",
+      "lockfiles": [
+        "package-lock.json"
+      ]
+    },
+    "hardware": {
+      "smoke": {
+        "cpu": "one x64 CPU thread or more",
+        "memory_bytes": 268435456,
+        "disk_bytes": 104857600,
+        "energy": "not required; measured joules remain null"
+      },
+      "workstation": {
+        "cpu": "x64 CPU",
+        "memory_bytes": 2147483648,
+        "disk_bytes": 1073741824,
+        "energy": "external calibrated wall or rail meter required before workstation-ready promotion"
+      }
+    },
+    "seeds": {
+      "development": "experiments/workstation/candidate-010/seeds/development.json"
+    },
+    "data": {
+      "generator": "experiments/workstation/candidate-010/generator.mjs",
+      "full_profile": "experiments/workstation/candidate-010/configs/development.json",
+      "full_profile_sha256": "3c6733e3b3c6062de3136188e054c411ff8776c045f9f4b526cf2bc8fb0a866a",
+      "external": []
+    },
+    "outputs": {
+      "directory": "experiments/workstation/runs/candidate-010-*",
+      "schema": "experiments/workstation/candidate-010/output.schema.json",
+      "append_only": true,
+      "hash_chain": true
+    },
+    "implementation": {
+      "entrypoint": "experiments/workstation/candidate-010/runner.mjs",
+      "tests": [
+        "experiments/workstation/candidate-010/runner.test.mjs",
+        "experiments/workstation/candidate-010/capsule-bootstrap.test.mjs",
+        "experiments/workstation/candidate-010/capsule-execution-authority.test.mjs",
+        "experiments/workstation/candidate-010/checkpoint.test.mjs",
+        "experiments/workstation/candidate-010/energy-provider.test.mjs",
+        "experiments/workstation/candidate-010/event-contract.test.mjs",
+        "experiments/workstation/candidate-010/execution-capsule.test.mjs",
+        "experiments/workstation/candidate-010/factorial-design.test.mjs",
+        "experiments/workstation/candidate-010/confirmatory-analysis.test.mjs",
+        "experiments/workstation/candidate-010/fault-injection.test.mjs",
+        "experiments/workstation/candidate-010/immutable-capsule.test.mjs",
+        "experiments/workstation/candidate-010/independent-verifier.test.mjs",
+        "experiments/workstation/candidate-010/persistent-service-runner.test.mjs",
+        "experiments/workstation/candidate-010/retry-rollback-comparator.test.mjs",
+        "experiments/workstation/candidate-010/run-lock.test.mjs",
+        "experiments/workstation/candidate-010/runtime-identity.test.mjs",
+        "experiments/workstation/candidate-010/transactional-kv-track.test.mjs",
+        "experiments/workstation/candidate-010/signed-publication-track.test.mjs",
+        "experiments/workstation/candidate-010/actuator-command-track.test.mjs",
+        "experiments/workstation/candidate-010/backend-registry.test.mjs",
+        "experiments/workstation/candidate-010/factorial-runner.test.mjs",
+        "experiments/workstation/candidate-010/source-bundle.test.mjs",
+        "experiments/workstation/candidate-010/release-contract.test.mjs",
+        "experiments/workstation/candidate-010/promotion-evidence.test.mjs"
+      ],
+      "full_tests": [
+        "experiments/workstation/candidate-010/capsule-bootstrap.test.mjs",
+        "experiments/workstation/candidate-010/capsule-execution-authority.test.mjs",
+        "experiments/workstation/candidate-010/execution-capsule.test.mjs",
+        "experiments/workstation/candidate-010/factorial-runner.test.mjs",
+        "experiments/workstation/candidate-010/fault-injection.test.mjs",
+        "experiments/workstation/candidate-010/persistent-service-runner.test.mjs",
+        "experiments/workstation/candidate-010/run-lock.test.mjs"
+      ],
+      "execution_claims": [
+        "C-170"
+      ]
+    },
+    "energy": {
+      "mode": "external-calibrated-reading-v1",
+      "required": true,
+      "provider_config": "experiments/workstation/candidate-010/energy-provider.config.json",
+      "provider_config_sha256": "e6b0395f2def73d4c54729f0b70bdd7963c35d5321d01c02167ec68cea5f1812"
+    },
+    "resume": {
+      "supported": true,
+      "module": "experiments/workstation/candidate-010/checkpoint.mjs",
+      "test": "experiments/workstation/candidate-010/checkpoint.test.mjs"
+    }
+  },
+  "seed_release_contract": {
+    "mutable_result_path_roles": [
+      "confirmation",
+      "held_out"
+    ],
+    "required_state_transition": "sealed-commit-to-frozen-reveal"
+  },
+  "promotion_contract": {
+    "status_field": "status",
+    "allowed_status_values": [
+      "pending",
+      "present"
+    ],
+    "result_path_roles": [
+      "disjoint_seed_pack_paths",
+      "energy_assignments_path",
+      "evidence_path",
+      "promotion_validation_receipt_path",
+      "release_path",
+      "release_root",
+      "run_directory"
+    ]
+  }
+}

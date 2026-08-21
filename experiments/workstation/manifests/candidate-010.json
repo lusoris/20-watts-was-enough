@@ -48,16 +48,21 @@
     "entrypoint": "experiments/workstation/candidate-010/runner.mjs",
     "tests": [
       "experiments/workstation/candidate-010/runner.test.mjs",
+      "experiments/workstation/candidate-010/capsule-bootstrap.test.mjs",
+      "experiments/workstation/candidate-010/capsule-execution-authority.test.mjs",
       "experiments/workstation/candidate-010/checkpoint.test.mjs",
       "experiments/workstation/candidate-010/energy-provider.test.mjs",
       "experiments/workstation/candidate-010/event-contract.test.mjs",
+      "experiments/workstation/candidate-010/execution-capsule.test.mjs",
       "experiments/workstation/candidate-010/factorial-design.test.mjs",
       "experiments/workstation/candidate-010/confirmatory-analysis.test.mjs",
       "experiments/workstation/candidate-010/fault-injection.test.mjs",
+      "experiments/workstation/candidate-010/immutable-capsule.test.mjs",
       "experiments/workstation/candidate-010/independent-verifier.test.mjs",
       "experiments/workstation/candidate-010/persistent-service-runner.test.mjs",
       "experiments/workstation/candidate-010/retry-rollback-comparator.test.mjs",
       "experiments/workstation/candidate-010/run-lock.test.mjs",
+      "experiments/workstation/candidate-010/runtime-identity.test.mjs",
       "experiments/workstation/candidate-010/transactional-kv-track.test.mjs",
       "experiments/workstation/candidate-010/signed-publication-track.test.mjs",
       "experiments/workstation/candidate-010/actuator-command-track.test.mjs",
@@ -68,6 +73,9 @@
       "experiments/workstation/candidate-010/promotion-evidence.test.mjs"
     ],
     "full_tests": [
+      "experiments/workstation/candidate-010/capsule-bootstrap.test.mjs",
+      "experiments/workstation/candidate-010/capsule-execution-authority.test.mjs",
+      "experiments/workstation/candidate-010/execution-capsule.test.mjs",
       "experiments/workstation/candidate-010/factorial-runner.test.mjs",
       "experiments/workstation/candidate-010/fault-injection.test.mjs",
       "experiments/workstation/candidate-010/persistent-service-runner.test.mjs",
@@ -89,12 +97,13 @@
   "promotion_evidence": {
     "status": "pending",
     "evidence_path": "experiments/workstation/promotion/candidate-010/evidence.json",
+    "promotion_validation_receipt_path": "experiments/workstation/promotion/candidate-010/promotion-validation.launch-receipt.json",
     "run_directory": "experiments/workstation/runs/candidate-010-confirmation",
-    "release_root": ".",
+    "release_root": "experiments/workstation/releases/candidate-010",
     "release_path": "experiments/workstation/releases/candidate-010/confirmation.release.json",
     "energy_assignments_path": "experiments/workstation/runs/candidate-010-confirmation/energy-assignments.json",
     "disjoint_seed_pack_paths": [
-      "experiments/workstation/candidate-010/seeds/held-out.reveal.json"
+      "experiments/workstation/releases/candidate-010/held-out.reveal.json"
     ]
   }
 }

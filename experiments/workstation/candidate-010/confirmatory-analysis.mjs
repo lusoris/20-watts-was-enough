@@ -11,7 +11,7 @@ const ELIGIBLE_COMPARATORS = Object.freeze([
 
 export const CONFIRMATORY_PREREGISTRATION = Object.freeze({
   schema: 1,
-  id: "candidate-010-confirmatory-v1",
+  id: "candidate-010-confirmatory-v2",
   candidate_arm: "reset-coupled",
   comparators: ELIGIBLE_COMPARATORS,
   oracle_is_ineligible: true,
@@ -24,7 +24,11 @@ export const CONFIRMATORY_PREREGISTRATION = Object.freeze({
     consequence_weighted_loss: Object.freeze({ role: "benefit", estimand: "paired mean difference", margin: 0 }),
     false_rejects: Object.freeze({ role: "primary-reported", estimand: "paired risk difference", margin: null }),
     joules_per_correct_commit: Object.freeze({ role: "resource", estimand: "paired cluster ratio difference", margin: 0 }),
-    p99_stopping_time_ms: Object.freeze({ role: "resource", estimand: "paired cluster p99 difference", margin: 0 }),
+    p99_stopping_time_ms: Object.freeze({
+      role: "resource-reported-under-frozen-wall-time-ceiling",
+      estimand: "paired cluster p99 difference",
+      margin: null,
+    }),
     abstention_rate: Object.freeze({ role: "secondary", estimand: "paired risk difference", margin: null }),
     verifier_calls: Object.freeze({ role: "secondary", estimand: "paired mean difference", margin: null }),
     durable_bytes: Object.freeze({ role: "secondary", estimand: "paired mean difference", margin: null }),
@@ -32,11 +36,12 @@ export const CONFIRMATORY_PREREGISTRATION = Object.freeze({
   gatekeeping: Object.freeze([
     Object.freeze({ stage: 1, endpoints: Object.freeze(["irreversible_violations", "false_commits"]), test: "noninferiority" }),
     Object.freeze({ stage: 2, endpoints: Object.freeze(["consequence_weighted_loss"]), test: "superiority" }),
-    Object.freeze({ stage: 3, endpoints: Object.freeze(["joules_per_correct_commit", "p99_stopping_time_ms"]), test: "superiority" }),
+    Object.freeze({ stage: 3, endpoints: Object.freeze(["joules_per_correct_commit"]), test: "superiority" }),
   ]),
   multiplicity: "Holm within each opened gate; later gates remain closed unless every earlier comparison passes",
   missingness: "typed missing outcomes trigger confirmatory abstention; assigned opportunities are never silently excluded",
-  decision_rule: "lower is better for every registered contrast; oracle data are never eligible",
+  decision_rule: "lower is better for every tested contrast; p99 latency is reported under the frozen equal-budget wall-time ceiling, not required to beat every simpler null; oracle data are never eligible",
+  latency_policy: "Report paired p99 stopping time for every comparator and require the independently validated frozen equal-budget wall-time ceiling; do not claim universal latency superiority.",
   minimum_implemented_task_families: 2,
   minimum_independent_clusters_per_family: 2,
   energy_observation_kind: "candidate-010.normalized-external-energy-observation.v1",
@@ -427,7 +432,7 @@ function buildContrasts(records, preregistration) {
         raw_p: null,
         adjusted_p: null,
         passes: null,
-        gate_status: preregistration.endpoints[endpoint].role.includes("primary") ? "reported-only" : "not-opened",
+        gate_status: preregistration.endpoints[endpoint].role.includes("reported") ? "reported-only" : "not-opened",
       });
     }
   }

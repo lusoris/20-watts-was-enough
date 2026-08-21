@@ -1,8 +1,14 @@
 import { createHash } from "node:crypto";
 import { access, lstat, readFile, readdir, realpath } from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { validatePromotionEvidence } from "../../experiments/workstation/candidate-010/promotion-evidence.mjs";
+import { validateDurablePromotionEvidence } from "../../experiments/workstation/candidate-010/promotion-evidence.mjs";
+import { runCapsulePromotionValidationOperator } from "../../experiments/workstation/candidate-010/runner.mjs";
+import {
+  CANDIDATE_010_EXECUTION_MANIFEST_FILE,
+  assertCandidate010ExecutionManifestProjection,
+} from "../../experiments/workstation/candidate-010/source-bundle.mjs";
 
 const readinessLevels = new Set(["scaffold", "smoke-ready", "workstation-ready"]);
 const commandActions = ["prepare", "smoke", "run", "analyze", "validate"];
@@ -199,6 +205,23 @@ async function validateRuntimeSchemaBinding(root, manifest) {
     }
   }
   return errors;
+}
+
+async function validateCandidate010ExecutionProjection(root, manifestPath, manifest) {
+  const registryPath = path.resolve(root, "experiments/workstation/manifests/candidate-010.json");
+  if (manifest.artifact !== "candidate-010" || path.resolve(manifestPath) !== registryPath) return [];
+  try {
+    const projectionPath = await repositoryRegularFile(
+      root,
+      CANDIDATE_010_EXECUTION_MANIFEST_FILE,
+      "candidate-010 immutable execution manifest",
+    );
+    const projection = JSON.parse(await readFile(projectionPath, "utf8"));
+    assertCandidate010ExecutionManifestProjection({ manifest, projection });
+    return [];
+  } catch (error) {
+    return [`candidate-010 immutable execution manifest is invalid: ${error.message}`];
+  }
 }
 
 async function validateExecutionClaimScope(root, manifest, executionClaims) {
@@ -435,6 +458,7 @@ export async function workstationPromotionChecks(root, manifest) {
     && manifest.implementation?.tests?.some((value) => /checkpoint|runner/.test(value));
   const promotion = manifest.promotion_evidence;
   const promotionEvidencePath = localPath(root, promotion?.evidence_path);
+  const promotionValidationReceiptPath = localPath(root, promotion?.promotion_validation_receipt_path);
   const promotionRunDirectory = localPath(root, promotion?.run_directory);
   const promotionReleaseRoot = localPath(root, promotion?.release_root);
   const promotionReleasePath = localPath(root, promotion?.release_path);
@@ -448,6 +472,7 @@ export async function workstationPromotionChecks(root, manifest) {
     manifest.readiness === "workstation-ready"
     && promotion?.status === "present"
     && promotionEvidencePath
+    && promotionValidationReceiptPath
     && promotionRunDirectory
     && promotionReleaseRoot
     && promotionReleasePath
@@ -455,6 +480,7 @@ export async function workstationPromotionChecks(root, manifest) {
     && promotionDisjointPaths.length > 0
     && promotionDisjointPaths.every(Boolean)
     && await exists(promotionEvidencePath)
+    && await exists(promotionValidationReceiptPath)
     && await exists(promotionRunDirectory)
     && await exists(promotionReleaseRoot)
     && await exists(promotionReleasePath)
@@ -463,17 +489,50 @@ export async function workstationPromotionChecks(root, manifest) {
     && manifest.implementation?.tests?.includes("experiments/workstation/candidate-010/promotion-evidence.test.mjs")
   ) {
     try {
-      const evidence = JSON.parse(await readFile(promotionEvidencePath, "utf8"));
-      const validation = await validatePromotionEvidence(evidence, {
-        repositoryRoot: root,
+      const [evidenceFile, receiptFile] = await Promise.all([
+        repositoryRegularFile(root, promotionEvidencePath, "promotion evidence", { absoluteInput: true }),
+        repositoryRegularFile(
+          root,
+          promotionValidationReceiptPath,
+          "promotion validation launch receipt",
+          { absoluteInput: true },
+        ),
+      ]);
+      const [evidence, launchReceipt] = await Promise.all([
+        readFile(evidenceFile, "utf8").then(JSON.parse),
+        readFile(receiptFile, "utf8").then(JSON.parse),
+      ]);
+      const promotionPaths = {
         runDirectory: promotionRunDirectory,
-        releaseRoot: promotionReleaseRoot,
+        releaseBindingRoot: promotionReleaseRoot,
         releasePath: promotionReleasePath,
         energyAssignmentsPath: promotionEnergyPath,
         disjointSeedPackPaths: promotionDisjointPaths,
+      };
+      const persistedValidation = await validateDurablePromotionEvidence(
+        evidence,
+        launchReceipt,
+        promotionPaths,
+      );
+      // The stored v1 receipt is self-digested diagnostic provenance only.
+      // Claim authority comes from this new live capsule recomputation.
+      const fresh = await runCapsulePromotionValidationOperator({
+        evidence,
+        paths: promotionPaths,
+        capsuleParent: os.tmpdir(),
       });
-      promotionEvidenceValid = validation.valid === true;
-      if (promotionEvidenceValid) promotionEvidenceDetail = "strict promotion evidence was recomputed from every bound input";
+      const freshValidation = await validateDurablePromotionEvidence(
+        evidence,
+        fresh.launch_receipt,
+        promotionPaths,
+      );
+      promotionEvidenceValid = persistedValidation.valid === true
+        && freshValidation.valid === true
+        && fresh.capsule_destroyed === true
+        && fresh.action_result?.evidence_sha256 === evidence.evidence_sha256;
+      if (promotionEvidenceValid) {
+        promotionEvidenceDetail = "fresh live capsule recomputation validated every bound input; stored receipt integrity is diagnostic, not authenticity";
+      }
     } catch (error) {
       promotionEvidenceValid = false;
       promotionEvidenceDetail = `strict promotion evidence validation failed: ${error.message}`;
@@ -637,6 +696,7 @@ export async function validateExecutionManifest(root, manifestPath, expectedArti
     }
   }
   errors.push(...await validateRuntimeSchemaBinding(root, manifest));
+  errors.push(...await validateCandidate010ExecutionProjection(root, manifestPath, manifest));
 
   if (manifest.readiness === "workstation-ready") {
     if (manifest.outputs?.hash_chain !== true) errors.push("workstation-ready outputs.hash_chain must be true");
