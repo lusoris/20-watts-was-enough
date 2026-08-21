@@ -142,6 +142,32 @@ Every derived claim or alert carries:
 - population/subgroup, co-intervention, context, interaction reference model,
   response scale, schedule, and benchmark-response decision model.
 
+For scientific model comparison, append the
+[philosophy-of-science and theory-choice contract](../../research/audits/2026-08-21-philosophy-of-science-theory-choice.md):
+
+- claim target: within-support fit, prospective prediction, regime transfer,
+  causal effect, causal structure, mechanism, ontology, or formal statement;
+- represented alternative-set version, equivalence classes, generation and
+  search procedures, exclusions with reasons, complete search/review budget,
+  live rivals, and unresolved alternative debt;
+- auxiliary-assumption dependency graph, including background theory,
+  boundaries, latent/nuisance structure, solver, numerical method, and fixed
+  model components;
+- evidence-use role, complete model/human/evaluator access DAG, freeze and
+  preregistration hashes, and later role reclassification;
+- named rival or error, the observation/intervention expected to distinguish
+  it, and error-specific detection-power or sensitivity boundary;
+- method roots for data/specimen, instrument/calibration, preprocessing,
+  theory/model, software/solver, corpus/evaluator, and analyst/review, including
+  known covariance and discordant results;
+- explicitly blocked inheritance among claim targets; and
+- theory-choice outcome vector, intended use, false-accept/false-reject owner,
+  permitted action, weight version, and sensitivity analysis.
+
+Failure to generate a rival cannot promote a surviving model to unique causal,
+mechanistic, or ontological status. A purpose-qualified action is a separate
+record from evidential support.
+
 ## Metrological completeness and invalidation
 
 The contract must distinguish a raw indication from a measurement result,
@@ -201,7 +227,13 @@ Build a synthetic multi-sensor world with a known latent population and:
 - adaptive follow-up that changes the future sample; and
 - mixed per-event, rolling-window, delayed-label, and retained-log supports;
 - exact degeneracies and finite-realization uncertainty that more exposure
-  cannot remove.
+  cannot remove;
+- a sealed causal alternative absent from the initial family but reachable
+  through a declared representation expansion;
+- hidden access from confirmation data or equivalent summaries into
+  construction, tuning, selection, and stopping; and
+- apparently different pipelines sharing a calibration, preprocessing, theory,
+  solver, data, or review failure root.
 
 ## Arms
 
@@ -250,6 +282,16 @@ Hold constant:
 13. adaptive intervention under exposure lag, heterogeneous response, selected
     observation, tolerance/sensitization, abrupt versus tapered removal,
     rebound, and delayed multi-endpoint harm.
+14. theory-space release in which a later viable rival explains the initial
+    observations but differs under a purchasable sealed observation or
+    intervention.
+15. evidence-use ancestry with chronological order crossed independently from
+    construction, tuning, selection, post-hoc diagnosis, sealed confirmation,
+    and independent replication access.
+16. common-root robustness with concordant pipelines sharing one hidden root
+    and a discordant pipeline varying the relevant measurement principle.
+17. acceptance-target separation across fit, prediction, transfer, causal
+    effect, causal structure, mechanism, ontology, and checked formal result.
 
 ## Measurements
 
@@ -263,7 +305,16 @@ Hold constant:
 - stale-contract and superseded-claim use;
 - follow-up value, diversity, and self-confirmation rate;
 - compute, storage, reviewer time, messages, and joules;
-- abstention on structurally non-identifiable directions; and
+- abstention on structurally non-identifiable directions;
+- viable-rival yield, represented equivalence-set recall, false unique
+  identification, and time/calls/joules to the first viable rival;
+- access-DAG and evidence-role classification, false confirmation, and time to
+  scoped invalidation after planted leakage;
+- false causal, mechanistic, ontological, and empirical-from-formal promotion;
+- method--failure-root recall, false robust promotion, covariance recovery, and
+  preserved discordance;
+- stability of the evidence state under intended-use or consequence changes,
+  with purpose-qualified decisions reported separately; and
 - commanded-versus-realized intervention error, engagement calibration,
   benefit/harm coverage, subgroup tail risk, adaptation-state error,
   withdrawal/rebound events, and post-removal native capability and reserve.
@@ -289,8 +340,11 @@ intervals for stratum coverage, calibration and bias, population-parameter
 error, false/missed association, complete-family error, alert precision/recall
 and wasted work, stale-contract use, invalidation recall, self-confirmation,
 abstention, benefit/harm coverage, subgroup tail risk, and compute/storage/
-reviewer/joule cost. Hierarchical or cluster-resampled uncertainty must retain
-shared calibration, covariance, selection, and adaptive-follow-up dependence.
+  reviewer/joule cost, viable-rival yield, false unique and cross-target
+  promotion, access-role classification, common-root localization, and
+  preserved discordance. Hierarchical or cluster-resampled uncertainty must
+  retain shared calibration, covariance, selection, alternative-family,
+  access-path, failure-root, and adaptive-follow-up dependence.
 Propagate Monte Carlo, calibration, measurement, and model-form uncertainty
 separately where identifiable.
 
@@ -337,14 +391,22 @@ oracle latent state is a ceiling and cannot determine promotion.
 - replace the measurand with a bare metric name;
 - treat calibration, verification, and validation as one boolean;
 - delete shared covariance while retaining marginal uncertainties;
-- record provenance without dependency-triggered re-evaluation; and
+- record provenance without dependency-triggered re-evaluation;
 - drop receiver history, competence version, or window support while retaining
   the external signal;
 - retain observation metadata while deleting plant/controller dependencies;
 - replace the intervention chain with commanded amount or cumulative amount;
-- merge engagement, benefit, and harm into one score; and
+- merge engagement, benefit, and harm into one score;
 - delete adaptation/withdrawal and removal-rate fields while retaining ordinary
-  outcome monitoring.
+  outcome monitoring;
+- delete alternative-set identity and search/exclusion records while retaining
+  one selected model;
+- delete auxiliary dependencies while retaining the focal equation;
+- delete evidence-use/access ancestry while retaining timestamps;
+- count named methods as independent after deleting their common-root graph;
+- permit one confidence score to promote fit into prediction, causation,
+  mechanism, ontology, or empirical applicability of a proof; and
+- merge the evidence state with intended use and false-error consequences.
 
 ## Kill criteria
 
@@ -355,7 +417,16 @@ Reject the composition if:
 - the contract is carried but ignored at decision time;
 - a version mismatch does not trigger abstention or invalidation;
 - follow-up policy increases confirmation bias or misses novel classes;
-- uncertainty remains overconfident under response misspecification; or
+- a new viable rival leaves affected uniqueness, causal-structure, mechanism,
+  or ontology admissions active;
+- evidence used in construction, tuning, or selection remains labeled sealed
+  confirmation after its access path is revealed;
+- correlated pipelines are counted as independent corroboration or discordant
+  evidence is suppressed by aggregation;
+- a stronger claim target inherits from fit, prediction, intervention, mechanism,
+  or proof without its own admission event;
+- changing intended use or false-error costs rewrites evidential support;
+- uncertainty remains overconfident under response misspecification;
 - association and selection dependencies cannot be propagated without making
   the system less accurate or operationally unusable;
 - a standard hierarchical state-space model, event-time schema, or the simple
@@ -373,6 +444,7 @@ adaptive-follow-up setting at equal lifecycle cost.
 
 ## Evidence links
 
+- [Philosophy of science and theory choice](../../research/audits/2026-08-21-philosophy-of-science-theory-choice.md)
 - [Astronomy remote-inference audit](../../research/audits/2026-08-05-astronomy-remote-inference.md)
 - [Geology and geomorphology audit](../../research/audits/2026-08-05-geology-geomorphology.md)
 - [C-218](../../research/claims.md#c-218)–[C-231](../../research/claims.md#c-231)

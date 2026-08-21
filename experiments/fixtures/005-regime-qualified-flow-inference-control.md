@@ -8,6 +8,7 @@
   [Candidate 012](../candidates/012-latency-qualified-authority.md), and
   [Candidate 014](../candidates/014-versioned-observation-contract.md)
 - **Evidence source:** [fluid-dynamics and turbulence audit](../../research/audits/2026-08-05-fluid-dynamics-turbulence.md)
+- **Theory-choice boundary:** [philosophy-of-science and theory-choice audit](../../research/audits/2026-08-21-philosophy-of-science-theory-choice.md)
 - **Mathematics:** [regime-qualified flow contract](../../math/regime-qualified-flow-contract.md)
 
 ## Evidence links
@@ -86,6 +87,48 @@ Editable source:
 
 All tracks share the same resource ledger but keep their outcomes separate. A
 method can pass one track and fail another; no adjacent success is inherited.
+
+## Theory-choice overlays
+
+Apply three crossed overlays to T2 closure portability, T5 observation and
+assimilation, T7 closed-loop control, and T10 extremes. They refine the
+evaluator; they do not add a fluid principle or another architecture.
+
+### E1 — physical equifinality
+
+Construct two latent closures, mechanisms, or plant decompositions that agree
+under the development observation kernel and initial forcing but disagree under
+a sealed forcing, sensor, boundary perturbation, or intervention. The initial
+represented family omits one alternative, which remains reachable through a
+declared representation expansion. Report the represented equivalence set,
+viable-rival yield, false unique promotion, discrimination intervention, and
+abstention when the available actuator or sensor cannot distinguish the rivals.
+
+Good field rollout or control value may support prediction or operation. It may
+not silently promote the selected closure to a unique causal mechanism or
+ontology.
+
+### E2 — prediction and access ancestry
+
+Cross whether the model, closure location, detector, filter, threshold, quantity
+of interest, and stopping rule are frozen before the sealed stream or selected
+after viewing the stream or an information-equivalent summary. Cross chronology
+independently so a later timestamp is not automatically use-novel. Record the
+complete model, human, solver, and evaluator access DAG; reclassify affected
+evidence when a planted hidden path is released.
+
+### E3 — common-root robustness
+
+Run nominally different solvers, closures, estimators, and detectors that share
+one hidden truth model, grid lineage, calibration, preprocessing, forcing,
+training corpus, code component, or review decision. Include a discordant arm
+that varies the relevant measurement or numerical root. Report the method--root
+graph, known covariance, false robust promotion, common-root localization, and
+preserved discordance. Method count is not an independence measure.
+
+The overlays keep within-support fit, prospective prediction, regime transfer,
+causal actuator response, component/mechanism support, ontology, and formal
+equation properties as distinct evidence targets.
 
 ## Hidden regime generator
 
@@ -200,6 +243,10 @@ Report all of these outcome families separately by track and hidden regime:
     synchronization, covariance, uncertainty propagation, and instrument drift.
 15. **Energy and resources:** every count, byte, second, person-hour, power row,
     operational joule row, embodied/maintenance row, and service-life assumption.
+16. **Theory status:** represented alternatives and auxiliaries, evidence-use
+    role/access ancestry, prospective and transfer support, causal-response
+    evidence, component/mechanism tests, ontology hypotheses, method--failure-
+    root graph, discordance, blocked inheritance, and purpose-qualified action.
 
 No scalar average may compensate for wrong flux direction, an unstable control
 stratum, a missed extreme, an uncalibrated posterior, or negative net energy.
@@ -219,8 +266,14 @@ Run F5 with each component removed while its freed resource remains unused:
 9. observability-aware state and covariance calibration;
 10. latency/authority-qualified control and abstention;
 11. transition-class and competing-hazard state;
-12. natural-distribution tail calibration; and
-13. complete lifecycle energy and human-work accounting.
+12. natural-distribution tail calibration;
+13. complete lifecycle energy and human-work accounting;
+14. alternative-set, auxiliary, and physical-equifinality records;
+15. evidence-use role and complete access ancestry while retaining timestamps;
+16. method--failure-root graph and discordance while retaining nominal method
+    names; and
+17. separation of prediction, causal response, mechanism, ontology, and formal
+    equation status.
 
 Also intervene on solver, grid/order, closure location, filter, detector,
 observation kernel, sensor layout, estimator covariance, ROM rank, refinement
@@ -283,10 +336,19 @@ any relevant condition fires:
     importance sampling matches tails, or enriched frequency is left unweighted;
 17. any gain disappears on hidden geometry, forcing, regime, solver, grid,
     observation, transition, model, physical plant, or hardware strata;
-18. no ablation isolates value beyond the mature stack; or
+18. no ablation isolates value beyond the mature stack;
 19. the advantage disappears after failures, data/reference generation,
     sensing, actuation, communication, calibration, maintenance, human work,
-    facility load, embodied cost, and lifecycle joules are charged.
+    facility load, embodied cost, and lifecycle joules are charged;
+20. a model is promoted from field prediction or control success to causal
+    mechanism or unique ontology without the corresponding discrimination and
+    component tests;
+21. a result is called prospectively confirmed after its model, detector,
+    threshold, target, or stopping rule used the sealed outcome or an equivalent
+    summary; or
+22. correlated pipelines are counted as independent corroboration, a released
+    shared root does not narrow affected robustness claims, or discordant
+    evidence is hidden by aggregation.
 
 A pass refines the six owner candidates only on the literal outcomes passed.
 It does not create another principle or candidate.

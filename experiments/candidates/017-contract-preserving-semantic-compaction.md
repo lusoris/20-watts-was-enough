@@ -265,3 +265,55 @@ The [mathematical contract](../../math/query-registered-preservation.md) and
 define the state. Retire this track if ordinary packaging, versioned schemas and
 vocabularies, retained source, and query-regression tests match the frontier.
 It refines Candidate 017; it is not an archival-intelligence candidate.
+
+## Witness and critical-apparatus preservation track
+
+The
+[textual-criticism audit](../../research/audits/2026-08-21-textual-criticism-variant-traditions.md)
+adds a hostile case in which a compact apparatus must preserve distinctions
+among physical witness, transcription, normalization, collated reading,
+stemmatic hypothesis, adopted lemma, conjecture, translation, and
+interpretation. A selected reading is not a lossless substitute for its rejected
+or omitted variants, and a reconstructed edition is not historical ground truth.
+
+For each compact apparatus version, retain:
+
+1. witness, image, transcription, hand, fragment, and lacuna identifiers;
+2. diplomatic, normalized, and collated reading IDs with tokenization,
+   equivalence, and alignment versions;
+3. exact attestation, conjectural status, responsibility, uncertainty, and
+   editorial rationale;
+4. apparatus inclusion and omission policy, base/copy text, edition objective,
+   and registered query family;
+5. stemma or transmission-network version, rooting, lost nodes, edge support,
+   contamination and recurrent-change alternatives, and local ancestry where
+   used;
+6. authorial-revision partial order and translation source-expression
+   derivation where applicable; and
+7. retained-source access, recovery route, dependency invalidation, and a typed
+   `covered`, `source-recovery-required`, or `unsupported` result.
+
+The matched null stack is a full versioned witness and facsimile repository;
+TEI P5 critical apparatus and primary-source markup; CollateX or equivalent
+collation and variant-graph export; ordinary source control, indexes, cold
+archive, and query regression; established tree, network, local-stemma, and
+contamination analyses; and qualified editorial review. Match byte-years,
+collation and query work, image/transcription access, human review, restore
+horizon, and joules.
+
+Freeze the apparatus and manifest before revealing hidden questions about
+spelling, punctuation, hand, correction layer, layout, transposition, omitted
+subvariants, witness reconstruction, local ancestry, conjecture responsibility,
+translation source, and newly discovered witnesses. Perturb tokenization,
+normalization, alignment, source-image version, and one contamination edge.
+Report query-native error, correct abstention, source-recovery success,
+evidence-link and witness-reconstruction recall, false independent support,
+unreported semantic loss, restore seconds, bytes, editor/reviewer minutes, and
+energy.
+
+Reject the track if the compact representation launders conjecture into
+attestation, forces a contaminated tradition into one tree, counts dependent
+witnesses as independent, treats one normalization as source fact, claims exact
+recovery against unknowable real historical truth, or loses any registered
+reading or responsibility relation. Retire it if the complete TEI/collation/
+archive/review null reaches the same preservation–query–cost frontier.

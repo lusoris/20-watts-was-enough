@@ -11,6 +11,8 @@
   and [019 — audited cumulative inheritance](../candidates/019-audited-cumulative-inheritance.md)
 - **Evidence source:**
   [mathematical-practice and proof-discovery audit](../../research/audits/2026-08-05-mathematical-practice-proof-discovery.md)
+- **Theory-choice boundary:**
+  [philosophy-of-science and theory-choice audit](../../research/audits/2026-08-21-philosophy-of-science-theory-choice.md)
 - **Mathematics:**
   [proof-discovery and verification contract](../../math/proof-discovery-verification-contract.md)
 
@@ -45,16 +47,28 @@ in the [mathematical contract](../../math/proof-discovery-verification-contract.
    source-library versions;
 3. retrieval index, corpus cutoff, generated-family identity, and training,
    prompt, retrieval, evaluation, proof-trace, and human-hint access;
-4. solver, parser, elaborator, preprocessor, certificate calculus, checker,
+4. construction, tuning, selection, post-hoc diagnostic, sealed confirmation,
+   and independent-reconstruction roles plus the complete access-DAG and freeze
+   hashes;
+5. solver, parser, elaborator, preprocessor, certificate calculus, checker,
    build tool, and hardware versions; and
-5. hidden-family generator, paired random seed, resource ceilings, and release
-   schedule.
+6. hidden-family and alternative-formalization generators, paired random seed,
+   resource ceilings, and release schedule.
 
 Every input, proposal, proof DAG, model, certificate, checker verdict,
 publication, dependency change, repair, and retraction is append-only and bound
 to immutable hashes. Hash equality establishes byte identity only; independent
 statement review and adversarial examples test whether the encoding captures
 the intended problem.
+
+Discovery history and derivational validity remain separate. A proof accepted
+by the named kernel for the exact proposition and dependencies remains accepted
+whether the conjecture was predicted, accommodated after examples, retrieved,
+or leaked. Those histories change discovery credit and transfer evidence. A
+defective formalization changes what was proved, not whether the kernel accepted
+the submitted derivation. Failure to find a proof remains `unknown`; it cannot
+be promoted to unprovability without a checked refutation, model, exhaustive
+bound, or impossibility result.
 
 ```mermaid
 flowchart LR
@@ -137,6 +151,11 @@ confirmatory suite contains at least these families:
    definition changes, theorem migrations, contributor or model turnover,
    stale indexes, broken proof ancestors, seeded checker or preprocessing
    defects, reviewer disagreement, and delayed retractions.
+7. **Discovery history and alternative formalization.** Matched checked proofs
+   whose conjectures were prospectively generated, accommodated after examples,
+   retrieved through hidden ancestry, or exposed by evaluator feedback; cross
+   independently written equivalent formalizations with near-equivalent
+   statements that differ on hidden cases or physical interpretation.
 
 Each family has unseen construction grammars, source lineages, proof shapes,
 definitions, and release changes. At least one confirmatory stratum combines a
@@ -247,6 +266,12 @@ Report the full vector by hidden task family and lifecycle phase:
   peak bytes; and shared producer/checker trust roots;
 - source, ancestor, restatement, generated-sibling, theorem-dependency,
   formalization, retrieval, evaluator, and human-feedback leakage rates;
+- construction/tuning/selection/diagnostic/confirmation/reconstruction role
+  classification, access-DAG recall, and deterministic role changes after a
+  planted hidden path is released;
+- formalization-equivalence classes, hidden semantic disagreements, and the
+  separation of checked validity from discovery credit, significance, and
+  empirical applicability;
 - closure and calibration on seen, ancestor-disjoint, definition-shifted,
   symbol-renamed, new-theory, new-library, and hidden-construction families;
 - reverse-dependency invalidation precision and recall, quarantine latency,
@@ -280,7 +305,12 @@ Run F4 with each component removed while its unused resource remains unused:
     `retracted` states;
 11. immutable publication plus reverse-dependency invalidation; and
 12. formalization, review, checking, maintenance, person-hour, and joule
-    accounting.
+    accounting;
+13. evidence-use roles and complete access ancestry while retaining dates;
+14. independent alternative formalizations and hidden semantic-difference
+    checks; and
+15. shared producer/checker/formalizer failure-root disclosure while retaining
+    the count of nominally different tools.
 
 Also intervene on abstraction choice, representation, premise access,
 counterexample order, decomposition hints, checker diversity, certificate
@@ -356,7 +386,12 @@ relevant rule fires:
 16. no ablation identifies value beyond the complete mature stack; or
 17. the advantage vanishes after failed searches, formalization, review,
     certificate generation/checking, storage, rebuild, repair, person-hours,
-    peak memory, and lifecycle joules are charged.
+    peak memory, and lifecycle joules are charged;
+18. prediction, accommodation, retrieval, or leakage changes the validity state
+    of an otherwise identical checked proof rather than its discovery-credit or
+    transfer record; or
+19. failure to find a proof is labeled false or unprovable without a checked
+    refutation, model, exhaustive bound, or impossibility certificate.
 
 A pass lets the seven owner candidates cite one shared benchmark result. It
 does not create another principle or candidate, and each candidate still needs

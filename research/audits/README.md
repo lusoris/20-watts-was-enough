@@ -4,6 +4,10 @@ Audits are dated, scoped passes through primary literature or authoritative
 engineering sources. They preserve disagreements, boundary conditions, and
 failed deduplications that would be lost in the shorter claim ledger.
 
+Audit count is not field coverage. The generated
+[`field-coverage census`](../field-coverage.md) records which OECD and DFG
+areas have a dedicated audit, only adjacent evidence, or no durable review.
+
 ## Normative-source header
 
 An audit that uses law, regulation, a standard, regulator guidance, or another
@@ -26,6 +30,10 @@ this default does not retroactively convert or invalidate them.
 
 | Date | Audit | Main outcome |
 | --- | --- | --- |
+| 2026-08-21 | [Textual criticism and variant traditions](2026-08-21-textual-criticism-variant-traditions.md) | separates witness, inscription, transcription, normalization, collation, lineage hypothesis, adopted reading, conjecture, revision, translation, and interpretation; makes critical apparatus query-qualified compaction and adds a hostile preservation track to Candidate 017 without treating an edition as historical ground truth or adding a principle |
+| 2026-08-21 | [Indigenous data and knowledge governance](2026-08-21-indigenous-data-knowledge-governance.md) | uses Indigenous-led and authoritative sources to distinguish collective standing, authority, purpose, refusal, responsibility, benefit, lineage, and remedy from FAIR reuse, individual consent, generic licensing, or automated classification; adds a community-authorized governance track to Candidate 020 without extracting community knowledge or adding a principle |
+| 2026-08-21 | [Philosophy of science and theory choice](2026-08-21-philosophy-of-science-theory-choice.md) | makes every empirical promotion relative to a versioned alternative set, auxiliary bundle, observation process, access history, test discrimination, shared failure roots, and intended decision; blocks automatic inheritance from fit through prediction, causation, mechanism, ontology, or formal proof; no new principle or candidate added |
+| 2026-08-21 | [Soil, crop, and multi-resource co-limitation](2026-08-21-soil-crop-multiresource-colimitation.md) | separates stock, form, transport, uptake, internal pool, conversion, endpoint service, loss, residual state, and service window; makes scalar availability a special case and adds vector/factorial workstation falsifiers to Candidate 013; no new principle added |
 | 2026-08-06 | [Scientific-discovery evaluator contracts](2026-08-06-scientific-discovery-evaluator-contracts.md) | separates empirical observation, inverse-model, and intervention tests from formal specification, execution, certificate, and proof checks; corrects the supplied dusty-plasma and FunSearch examples; no claim, principle, candidate, or fixture added |
 | 2026-08-06 | [Biomimetics transfer methodology](2026-08-06-biomimetics-transfer-methodology.md) | formalizes phenomenon-push and problem-pull discovery through one abstraction, deduplication, substrate-redesign, and equal-budget rejection gate; no claim, principle, or candidate added |
 | 2026-08-05 | [Memory, replay, and forgetting](2026-08-05-memory-replay-forgetting.md) | selective replay, schema-sensitive consolidation, reconsolidation limits, and active forgetting |

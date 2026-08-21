@@ -49,6 +49,13 @@ module:
 - versioned memory by information lifetime under
   [P-012](../../research/principle-registry.md#p-012--memory-matched-to-information-lifetime).
 
+The [philosophy-of-science and theory-choice audit](../../research/audits/2026-08-21-philosophy-of-science-theory-choice.md)
+adds a narrower boundary: proposal search is always relative to a represented
+alternative set and finite budget. Failure to generate a rival cannot promote
+the surviving proposal to a unique causal, mechanistic, or ontological account.
+Evidence used in construction, tuning, selection, diagnosis, sealed
+confirmation, and independent replication remains separately typed.
+
 ## Candidate loop
 
 ```mermaid
@@ -181,6 +188,15 @@ transfer frontier over fixed curricula, tuned spaced-repetition schedules, and
 standard knowledge tracing without worsening fluency, calibration, motivation,
 or protected outcomes.
 
+### H6 — alternative-set closure
+
+At equal proposal, representation-expansion, evaluator, intervention, human,
+time, memory, and energy budgets, explicit alternative generation and targeted
+discrimination reduce premature unique causal promotion beyond a fixed-family
+selector and the strongest ordinary multi-representation search and independent
+red-team portfolio. “No rival found” is a search result, not positive evidence
+of uniqueness.
+
 ### Joint null
 
 The closed loop offers no material advantage once a strong sampler, active
@@ -250,6 +266,12 @@ multiple graphs may be observationally equivalent.
    replaced midstream; tests recovery and memory invalidation.
 6. **Adversarial redundancy:** many proposals are syntactic variants of the
    same hypothesis; tests duplicate control.
+7. **Sealed alternative release:** initial observations make a represented
+   hypothesis and a hidden causal mechanism equivalent. The hidden mechanism is
+   absent from the initial family but reachable through a declared, sealed
+   representation-expansion operator; one affordable intervention makes the
+   mechanisms disagree. This tests rival discovery, preserved uncertainty, and
+   premature closure rather than impossible enumeration of all theories.
 
 ## Track B — compositional executable construction
 
@@ -348,6 +370,16 @@ knowledge tracing, fixed mastery criteria, and fixed worked-example fading.
 Each receives the same item bank, learner observations, help and feedback
 interfaces, and total instructional budget as the candidate.
 
+### B9 — complete alternative-generation and red-team search
+
+Use fixed-family Bayesian model selection, symbolic and system-identification
+search, multiple preregistered representations, independent proposer/red-team
+search, semantic equivalence testing, and conventional Bayesian experimental
+design. Charge every proposal, representation expansion, reviewer interaction,
+evaluator call, intervention, retained byte, second, and joule. B9 is the
+decisive Track-A comparator for H6; the candidate earns no credit for beating a
+single narrow hypothesis grammar.
+
 ### C — closed endogenous curriculum
 
 Use structured proposals, targeted acquisition, independent evaluation,
@@ -369,6 +401,7 @@ For each paired episode, methods receive identical:
 - maximum generated candidates $K=\sum_tK_t$;
 - environment interaction budget $B_I$;
 - evaluator-call budget $B_V$;
+- alternative-generation and representation-expansion call budgets;
 - accessible memory bytes $B_M$;
 - maximum serialized candidate and lineage bytes;
 - wall-clock deadline and accelerator allocation;
@@ -377,7 +410,8 @@ For each paired episode, methods receive identical:
 - maximum learning events, examples viewed, retrieval attempts, hints, retries,
   and feedback information;
 - learner/model active time plus evaluator or teacher preparation and response
-  time; and
+  time;
+- independent proposer/red-team and equivalence-review time; and
 - identical preregistered immediate, retention-horizon, and transfer tests.
 
 Methods may leave a budget unused. They may not convert unused evaluator calls
@@ -399,6 +433,15 @@ parent_candidate_ids
 generator_version
 context_and_memory_versions
 stochastic_seed_or_sampling_record
+claim_target
+alternative_set_version_and_equivalence_relation
+alternative_generation_search_and_exclusion_record
+unresolved_alternative_debt
+auxiliary_bundle_and_observation_operator_versions
+evidence_use_role_and_access_DAG_hash
+freeze_and_preregistration_hash
+named_rival_or_error_and_discrimination_test
+method_data_calibration_code_theory_and_review_roots
 predicted_distinctions
 selected_intervention_or_test
 measured_result
@@ -428,14 +471,20 @@ failure retention, and invalidation rather than from more storage.
 6. prevent memory promotion between episodes;
 7. remove explicit duplicate detection;
 8. provide targeted acquisition to the best stochastic baseline;
-9. provide lineage memory to the best evolutionary baseline; and
+9. provide lineage memory to the best evolutionary baseline;
 10. randomize proposal ancestry labels to test whether lineage content rather
-    than extra metadata produces the effect.
+    than extra metadata produces the effect;
 11. replace skill-local support with one global competence score;
 12. replace horizon-qualified scheduling with current-accuracy scheduling;
 13. use fixed fading while preserving examples, hints, and feedback; and
 14. optimize acquisition alone while hiding delayed retention, transfer,
-    calibration, motivation, and cost from the scheduler.
+    calibration, motivation, and cost from the scheduler;
+15. remove alternative-set identity while preserving candidate count;
+16. remove representation expansion and independent rival search;
+17. replace semantic equivalence classes with syntactic proposal counts;
+18. remove evidence-use and access ancestry while retaining timestamps; and
+19. count agreeing proposal pipelines as independent after giving them a shared
+    generator, data, or evaluator root.
 
 ## Measurements
 
@@ -458,6 +507,21 @@ failure retention, and invalidation rather than from more storage.
 - revision depth and lineage branching factor;
 - invalid, unsafe, timed-out, and evaluator-rejected proposals; and
 - contribution of each acquired observation to posterior or test-result change.
+
+### Theory-choice behavior
+
+- represented and released alternative-set sizes and semantic equivalence
+  classes;
+- viable-rival yield, false unique promotion, and preserved equivalence-set
+  recall;
+- proposal/evaluator calls, seconds, and joules to first viable rival;
+- intervention choice and downstream regret when leading rivals disagree;
+- evidence-use/access-DAG classification and deterministic reclassification
+  after planted leakage;
+- shared generator, data, evaluator, and review roots among agreeing proposals;
+  and
+- separate fit, prospective-prediction, causal-effect, causal-structure,
+  mechanism, and ontology promotion attempts.
 
 ### Acquisition and evaluation
 
@@ -547,7 +611,8 @@ energy from TDP or operation counts.
 - Report paired bootstrap confidence intervals across task instances and seeds
   for each primary axis.
 - Correct the confirmatory family across H1–H4; H5 has its own preregistered
-  retention and transfer family, and remaining comparisons are exploratory.
+  retention and transfer family; H6 has its own alternative-release and false-
+  closure family; remaining comparisons are exploratory.
 - Keep immediate acquisition, each delayed retention horizon, and every
   transfer-distance stratum separate; model learner/model initialization,
   item, skill, teacher/evaluator, and cohort where those sampling levels exist.
@@ -583,6 +648,12 @@ Reject the closed-loop candidate if any of the following holds:
 12. calibration improves only by indiscriminate uncertainty, fluency gains
     trade against error, motivation losses increase attrition, or scheduler
     overhead consumes the saved learning work.
+13. B9 matches viable-rival discovery, false-closure avoidance, discriminating
+    intervention choice, and downstream regret at equal lifecycle budget; or
+14. causal, mechanistic, or ontological confidence rises merely because the
+    candidate's own proposal process failed to generate the sealed alternative,
+    evidence used for selection is relabeled confirmation, or correlated
+    proposal pipelines are counted as independent support.
 
 Promote only the operations that survive their ablations. A possible result is
 that targeted experiment design wins while learned variation and lineage memory

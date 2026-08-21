@@ -63,6 +63,20 @@ For each module version, record distinct fields:
    credential/key/attestation epoch, revocation freshness, approval-domain
    independence, observation age, named adversary, compromise horizon, and
    evidence for a clean recovery root.
+10. **Scientific-claim assurance:** claim target; represented alternative set
+    and search record; auxiliary, observation, and intervention dependencies;
+    construction/tuning/selection/diagnostic/confirmation/replication access
+    ancestry; named rival or error; method--failure-root graph; blocked evidence
+    inheritance; discordant results; and purpose-qualified decision record.
+
+The tenth field comes from the
+[philosophy-of-science and theory-choice audit](../../research/audits/2026-08-21-philosophy-of-science-theory-choice.md).
+It is not an ontology oracle or a new assurance method. “No rival found” remains
+a finite search result. Within-support fit, prospective prediction, transfer,
+causal effect, causal structure, mechanism, ontology, and formal proof remain
+different targets. In particular, the envelope forbids automatic promotion
+from fit to prediction, prediction to causation, causal effect to mechanism,
+mechanism to unique ontology, or formal proof to empirical applicability.
 
 The empirical envelope is itself a measurement result, not a free-form score.
 It names the measurand or construct, procedure, calibration/reference state,
@@ -238,6 +252,35 @@ p50/p99 authorization latency, bytes, joules, and operator-hours. Retire the
 security profile if credential lifetime tuning and conventional recovery match
 the harm and recovery frontier at equal cost.
 
+### G — scientific overpromotion and common-root assurance
+
+Construct paired scientific records containing:
+
+1. a model that fits but fails sealed prospective data;
+2. predictively equivalent causal models that differ under intervention;
+3. correct intervention response with a wrong internal component organization;
+4. a how-possibly mechanism that fails component replacement or reconstitution;
+5. one supported mechanism compatible with rival ontologies;
+6. a checked theorem with a defective informal or physical mapping;
+7. evidence secretly used during construction, tuning, or selection but labeled
+   confirmation; and
+8. three agreeing pipelines with one shared calibration, preprocessing, theory,
+   code, data, or review fault root.
+
+Compare a scalar confidence/verified label, ordinary provenance and validation,
+an explicit evidence-type schema without cross-layer invalidation, and the full
+envelope. Equalize candidate and evaluator calls, interventions, data, human
+review, bytes, wall time, and energy. Measure cross-target promotion errors,
+false unique identification, access-role misclassification, false robust
+promotion, common-root localization, preserved discordance, time to downgrade
+after a new rival or leaked access path, and downstream decisions made under
+stale assurance.
+
+Use the same evidence under two registered intended uses with different false-
+accept and false-reject consequences. The evidence state must remain unchanged;
+only a declared purpose-qualified decision may differ. Hidden scalarization or
+unversioned theory-value weights are contract failures.
+
 ## Measurements and units
 
 Use one cross-experiment outcome record while retaining each field's native
@@ -302,6 +345,13 @@ Candidate 009 is not distinct if this composed stack matches outcomes and cost.
 11. Remove key/attestation epochs while keeping short credential lifetimes.
 12. Share one identity, approval, telemetry, and recovery control plane while
     reporting the logical components as independent.
+13. Remove the represented alternative-set and finite-search record.
+14. Remove evidence-use/access ancestry while preserving timestamps.
+15. Remove the method--failure-root graph while retaining method names.
+16. Permit prediction, causation, mechanism, ontology, and proof fields to
+    inherit from one confidence score.
+17. Merge the evidence record with intended use, false-error consequences, and
+    theory-value weights.
 
 ## Statistical analysis plan
 
@@ -323,7 +373,7 @@ detection, containment, redeployment, and secure recovery as time-to-event
 outcomes; unresolved runs at the fixed horizon are right-censored and remain in
 the unresolved fraction.
 
-Each experiment A--F has a predeclared primary contrast against its strongest
+Each experiment A--G has a predeclared primary contrast against its strongest
 applicable conventional arm. Apply one declared multiplicity procedure across
 the finite primary outcome family; proof classes, monitor classes, dependency
 types, attacks, and human-facing strata not named before the holdout opens are
@@ -369,6 +419,10 @@ Advance only if, at equal lifecycle budget:
    favorable recall–precision–cost frontier.
 6. Reversible specialization restores or compensates every effect named in its
    contract inside the declared window.
+7. Scientific-claim assurance reduces cross-target promotion, false robustness,
+   and stale uniqueness beyond the complete ordinary evidence/provenance stack;
+   discovered rivals, access leakage, and common roots trigger the scoped
+   downgrade without erasing unaffected observations or checked proofs.
 
 Success retains a systems composition; each field keeps its native guarantee.
 
@@ -383,6 +437,14 @@ Reject or narrow when:
 - authority relies on instructions rather than enforced capabilities;
 - monitors omit channels or respond after irreversible effects;
 - provenance raises confidence without source-quality or entailment checks;
+- fit, prediction, causal effect, causal structure, mechanism, ontology, or
+  formal proof silently promotes another target;
+- “no rival found” or the count of agreeing methods is treated as a uniqueness
+  or independence certificate;
+- discovered access leakage or a shared failure root does not reclassify and
+  invalidate affected downstream assurance;
+- changing intended use or false-error consequences rewrites the evidence
+  record rather than a separate decision record;
 - rollback cannot read new state or compensate external effects;
 - invalidation misses more stale assurances than it saves in rechecks;
 - engineer-hours, p99 latency, storage, or joules exceed avoided incident cost;

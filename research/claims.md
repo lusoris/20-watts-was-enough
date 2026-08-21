@@ -16366,3 +16366,336 @@ describes the exact statement here, not a broader interpretation.
 - **Rationale:** authoritative workflows separate sampling, blanks, recovery, separation, calibration, identification support, and exposure rules.
 - **Open issue:** neither a library match nor an odor report establishes source, concentration, exposure, or safety without confirmation and an authoritative rule.
 - **Used by:** [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md), [principle registry](principle-registry.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md), [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md).
+
+### C-1204
+
+- **Statement:** an empirical test constrains a focal hypothesis together with the auxiliary assumptions and observation process required to derive and measure its consequences.
+- **Status:** established.
+- **Primary sources:** `Duhem1954AimStructure`, `Quine1951TwoDogmas`.
+- **Rationale:** a prediction is not produced by an isolated hypothesis; calibration, preprocessing, boundary conditions, nuisance assumptions, and other dependencies participate in the tested bundle.
+- **Open issue:** version each dependency and test which failed component or equivalence class can actually be localized rather than assigning every residual to the component currently open for learning.
+- **Used by:** [theory-choice audit](audits/2026-08-21-philosophy-of-science-theory-choice.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md).
+
+### C-1205
+
+- **Statement:** serious scientific alternatives have repeatedly appeared after earlier investigators failed to conceive them, but the frequency and present-day generality of this pattern remain disputed.
+- **Status:** plausible.
+- **Primary sources:** `Stanford2001DevilsBargain`, `Stanford2006UnconceivedAlternatives`, `Chakravartty2008Unconceived`.
+- **Rationale:** detailed historical cases establish a real premature-closure risk without yielding a calibrated probability that any current theory is false.
+- **Open issue:** measure viable-rival yield, equivalence-set recall, and false unique promotion under sealed alternative-release tests rather than assigning confidence to an unknowable outside family.
+- **Used by:** [theory-choice audit](audits/2026-08-21-philosophy-of-science-theory-choice.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-1206
+
+- **Statement:** failure to find a rival is evidence only relative to the declared representation, search process, and budget; it does not establish that no serious alternative exists.
+- **Status:** established.
+- **Primary sources:** `Stanford2001DevilsBargain`, `Stanford2006UnconceivedAlternatives`.
+- **Rationale:** a finite search can enumerate only candidates reachable through its grammar, data, proposal operators, evaluator feedback, human access, and resource envelope.
+- **Open issue:** preserve alternative debt and require discriminating observations or interventions against the strongest represented rivals.
+- **Used by:** [theory-choice audit](audits/2026-08-21-philosophy-of-science-theory-choice.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1207
+
+- **Statement:** chronological novelty alone does not establish evidential independence or test severity.
+- **Status:** established.
+- **Primary sources:** `HitchcockSober2004PredictionAccommodation`, `Mayo1991NovelEvidence`, `Iseda1999UseNovelty`.
+- **Rationale:** evidence may be temporally new yet leak through equivalent benchmarks or feedback, while older evidence can support a severe test when it was not used to construct or select the hypothesis and has power against a named error.
+- **Open issue:** record an access graph and estimate error-specific detection probability under frozen procedures; do not compress these into a universal novelty score.
+- **Used by:** [theory-choice audit](audits/2026-08-21-philosophy-of-science-theory-choice.md), [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md).
+
+### C-1208
+
+- **Statement:** agreement among several models, instruments, codes, or analysts is not independent corroboration when they share material failure roots.
+- **Status:** established.
+- **Primary sources:** `OrzackSober1993Robustness`, `Weisberg2006Robustness`, `Stegenga2009Robustness`, `Schupbach2018Robustness`, `StegengaMenon2017IndependentEvidence`.
+- **Rationale:** shared data, calibration, preprocessing, background theory, code, specimens, or review chains can make nominally different methods fail together.
+- **Open issue:** retain a method-to-failure-root graph, preserve discordant results, and validate dependence handling with planted common-mode faults.
+- **Used by:** [theory-choice audit](audits/2026-08-21-philosophy-of-science-theory-choice.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md).
+
+### C-1209
+
+- **Statement:** predictive adequacy does not entail a causal interpretation because observationally equivalent models can disagree under intervention.
+- **Status:** established.
+- **Primary sources:** `Woodward2003MakingThingsHappen`.
+- **Rationale:** a model can reproduce observations while encoding a different response to an intervention or a different causal structure.
+- **Open issue:** keep within-support fit, prospective prediction, transfer, causal effect, and causal structure as separate evidence targets with distinct tests.
+- **Used by:** [theory-choice audit](audits/2026-08-21-philosophy-of-science-theory-choice.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md).
+
+### C-1210
+
+- **Statement:** in domains where mechanistic explanation is appropriate, predictive success alone does not establish the entities or components, activities, organization, and productive relevance of a mechanism.
+- **Status:** plausible.
+- **Primary sources:** `MachamerDardenCraver2000Mechanisms`, `Craver2006MechanisticModels`.
+- **Rationale:** data summaries and how-possibly sketches can predict while remaining wrong about component organization or productive relations.
+- **Open issue:** define domain-qualified localization, intervention, replacement, and reconstitution tests without imposing one account of mechanism on every science.
+- **Used by:** [theory-choice audit](audits/2026-08-21-philosophy-of-science-theory-choice.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md).
+
+### C-1211
+
+- **Statement:** successful prediction, intervention, or mechanistic modeling does not mechanically settle which ontology should be accepted.
+- **Status:** disputed.
+- **Primary sources:** `VanFraassen1980ScientificImage`, `Hacking1983RepresentingIntervening`, `Cartwright1983LawsLie`, `Laudan1981ConvergentRealism`, `Stanford2006UnconceivedAlternatives`.
+- **Rationale:** constructive empiricism, entity and selective realism, and historical antirealism disagree about what kinds of commitment the same scientific success warrants.
+- **Open issue:** record explicit rival ontological interpretations and block automatic inheritance from fit, prediction, causation, mechanism, or formal proof.
+- **Used by:** [theory-choice audit](audits/2026-08-21-philosophy-of-science-theory-choice.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Fixture F-004](../experiments/fixtures/004-versioned-proof-discovery.md), [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md).
+
+### C-1212
+
+- **Statement:** recurrent theory-choice values such as accuracy, consistency, scope, simplicity, and fruitfulness can conflict and do not define one context-free choice algorithm.
+- **Status:** established.
+- **Primary sources:** `Kuhn1977TheoryChoice`.
+- **Rationale:** operational proxies and trade-offs among these values require an explicit owner, purpose, version, and sensitivity analysis.
+- **Open issue:** report a vector and Pareto set in native units before any declared weighting or lexicographic decision rule.
+- **Used by:** [theory-choice audit](audits/2026-08-21-philosophy-of-science-theory-choice.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-1213
+
+- **Statement:** consequences of false acceptance and false rejection can change a purpose-qualified action threshold without changing the underlying evidence record.
+- **Status:** plausible.
+- **Primary sources:** `Rudner1953ValueJudgments`, `Douglas2000InductiveRisk`.
+- **Rationale:** acting under asymmetric harms is a governance decision layered on evidence, not a reason to rewrite what the tests observed or supported.
+- **Open issue:** identify legitimate owners of the consequence model, expose sensitivity, and prevent hidden value choices from being encoded as scientific confidence.
+- **Used by:** [theory-choice audit](audits/2026-08-21-philosophy-of-science-theory-choice.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1214
+
+- **Statement:** factorial resource responses can represent single-resource, independent, simultaneous, serial, additive, super-additive, sub-additive, or community-level limitation, so a positive interaction alone does not identify one co-limitation mechanism.
+- **Status:** established.
+- **Primary sources:** `HarpoleEtAl2011NutrientColimitation`.
+- **Rationale:** the quantitative synthesis explicitly separates several response classes that can otherwise be hidden behind the same “synergy” label.
+- **Open issue:** generate each class under known truth and add sequential interventions when factorial endpoints leave serial and simultaneous explanations compatible.
+- **Used by:** [soil and crop audit](audits/2026-08-21-soil-crop-multiresource-colimitation.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1215
+
+- **Statement:** standardized multi-nutrient grassland experiments found that several nutrients can constrain aboveground production, with response form and magnitude varying across sites and years.
+- **Status:** established.
+- **Primary sources:** `FayEtAl2015GrasslandNutrients`, `FayEtAl2025NutrientPrecipitation`, `FayEtAl2025Dryad`.
+- **Rationale:** factorial N, P, K, and micronutrient experiments across 42 sites and later 71 sites reject a universal one-dimensional nutrient account for the measured grassland endpoint.
+- **Open issue:** the aggregate public data can test response typing and held-out site/year generalization but cannot validate an unobserved routing mechanism or complete root transport process.
+- **Used by:** [soil and crop audit](audits/2026-08-21-soil-crop-multiresource-colimitation.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1216
+
+- **Statement:** equal total nutrient stock or soil-solution concentration need not imply equal deliverable flux or plant uptake.
+- **Status:** established.
+- **Primary sources:** `OlsenWatanabe1963PhosphorusDiffusion`, `BhadoriaEtAl1991PhosphateDiffusion`, `ClaassenBarber1974NutrientFlux`, `ClaassenBarber1976UptakeModel`.
+- **Rationale:** texture, water content, bulk density, buffering, diffusion, geometry, and receiver kinetics altered phosphorus delivery or uptake in the studied systems.
+- **Open issue:** retain total stock, accessible form, location, transport, receiver capacity, uptake, internal pool, and endpoint service as separately measured states.
+- **Used by:** [soil and crop audit](audits/2026-08-21-soil-crop-multiresource-colimitation.md), [material-service mathematics](../math/material-service-state.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1217
+
+- **Statement:** water and nitrogen effects can interact in crops because water is both a required resource and part of nutrient delivery and use.
+- **Status:** established.
+- **Primary sources:** `KimEtAl2008NitrogenWater`, `Sadras2004WaterNitrogen`.
+- **Rationale:** the studied maize and semiarid wheat systems showed coupled water–nitrogen responses, including changes in water-use efficiency, soil-N use, and yield gaps.
+- **Open issue:** the sign and magnitude remain crop-, soil-, treatment-, climate-, endpoint-, and timescale-qualified rather than universal.
+- **Used by:** [soil and crop audit](audits/2026-08-21-soil-crop-multiresource-colimitation.md), [material-service mathematics](../math/material-service-state.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1218
+
+- **Statement:** localized root proliferation is resource-specific and does not by itself establish greater resource capture or endpoint service.
+- **Status:** established.
+- **Primary sources:** `Drew1975LocalizedSupply`, `Robinson1996RootProliferation`.
+- **Rationale:** barley root responses differed by nutrient, and quantitative analysis showed that proliferation can add little capture benefit for a mobile resource even when it helps for a less-mobile resource.
+- **Open issue:** score structural growth only after measuring delivered flux, endpoint service, construction, maintenance, retirement, geometry, and patch lifetime.
+- **Used by:** [soil and crop audit](audits/2026-08-21-soil-crop-multiresource-colimitation.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1219
+
+- **Statement:** resource timing can change realized crop service even when the broad resource type and episode total are unchanged.
+- **Status:** established.
+- **Primary sources:** `ZhangEtAl2019DeficitIrrigation`.
+- **Rationale:** staged irrigation deficits affected different maize yield components and grain-filling processes across the tested growth windows.
+- **Open issue:** qualify every commitment by its service window and test whether late abundance can or cannot compensate for a missed earlier service in each regime.
+- **Used by:** [soil and crop audit](audits/2026-08-21-soil-crop-multiresource-colimitation.md), [material-service mathematics](../math/material-service-state.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1220
+
+- **Statement:** mechanistic transport-plus-uptake models and balanced-nutrient models are mature comparators for any proposed multi-resource routing system.
+- **Status:** established.
+- **Primary sources:** `ClaassenBarber1974NutrientFlux`, `ClaassenBarber1976UptakeModel`, `JanssenEtAl1990QUEFTS`, `SinclairPark1993Liebig`.
+- **Rationale:** classical models already couple concentration, transport, uptake, changing marginal return, or mutually conditioned nutrient supply under declared assumptions.
+- **Open issue:** calibrate applicable implementations and expose support rather than treating any model as ground truth or comparing only with a total-stock heuristic.
+- **Used by:** [soil and crop audit](audits/2026-08-21-soil-crop-multiresource-colimitation.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1221
+
+- **Statement:** coupled crop-system simulation, predictive irrigation control, and stochastic irrigation planning are mature null families for staged resource decisions.
+- **Status:** established.
+- **Primary sources:** `JonesEtAl2003DSSAT`, `HolzworthEtAl2014APSIM`, `StedutoEtAl2009AquaCrop`, `SaleemEtAl2016IrrigationMPC`, `LiHu2020StochasticIrrigation`.
+- **Rationale:** these methods already combine varying subsets of soil, weather, crop, management, forecast, uncertainty, staged action, and recourse.
+- **Open issue:** equalize observations, model access, state, action deadlines, tuning, compute, energy, water, nutrients, and human effort before attributing a residual advantage to a new router.
+- **Used by:** [soil and crop audit](audits/2026-08-21-soil-crop-multiresource-colimitation.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1222
+
+- **Statement:** representing usable capacity as a time-qualified vector of typed deliverable resources may reduce phantom capacity and stranded commitments relative to a scalar availability state.
+- **Status:** speculative.
+- **Primary sources:** `HarpoleEtAl2011NutrientColimitation`, `OlsenWatanabe1963PhosphorusDiffusion`, `ClaassenBarber1976UptakeModel`.
+- **Rationale:** the source disciplines establish distinct resource forms, transport limits, complementary requirements, and service windows, but they do not test this project's vector contract or routing composition.
+- **Open issue:** compare scalar, typed-ledger, mechanistic, vector control, stochastic/receding-horizon, and learned arms under false-capacity, timing, complementarity, toxicity, and second-event stress tests.
+- **Used by:** [soil and crop audit](audits/2026-08-21-soil-crop-multiresource-colimitation.md), [material-service mathematics](../math/material-service-state.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1223
+
+- **Statement:** FAIR data practices and CARE Indigenous data-governance principles address different questions; findability and reuse do not establish collective authority, benefit, responsibility, or ethics.
+- **Status:** established.
+- **Primary sources:** `wilkinson2016fair`, `CarrollEtAl2020CARE`, `CarrollEtAl2021CAREFAIR`.
+- **Rationale:** FAIR specifies properties of scientific data stewardship, while CARE was developed to foreground people, purpose, power, collective benefit, authority to control, responsibility, and ethics.
+- **Open issue:** test whether a combined enforcement envelope prevents unauthorized use without hiding burden, delay, false refusal, or unequal benefit behind a single compliance score.
+- **Used by:** [Indigenous data and knowledge governance audit](audits/2026-08-21-indigenous-data-knowledge-governance.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1224
+
+- **Statement:** Indigenous data-sovereignty and governance frameworks are tied to named peoples, communities, authorities, relationships, and jurisdictions and are not interchangeable instances of one universal policy.
+- **Status:** established.
+- **Primary sources:** `CarrollEtAl2020CARE`, `HudsonEtAl2023IndigenousDataRights`, `TeManaRaraunga2018Principles`, `MaiamNayriWingara2018Principles`, `FNIGC2022OCAP`.
+- **Rationale:** the frameworks share concerns but explicitly retain distinct standing, histories, procedures, and scopes; OCAP, for example, is First Nations-specific rather than a label for all Indigenous peoples.
+- **Open issue:** represent heterogeneous and disputed authority without collapsing it to a master policy, majority vote, confidence score, or least-restrictive rule.
+- **Used by:** [Indigenous data and knowledge governance audit](audits/2026-08-21-indigenous-data-knowledge-governance.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1225
+
+- **Statement:** UNDRIP recognizes Indigenous peoples' participation, consent, and control interests, including rights concerning cultural heritage and traditional knowledge, while domestic legal effects and procedures remain jurisdiction-specific.
+- **Status:** established.
+- **Primary sources:** `UNGA2007UNDRIP`.
+- **Rationale:** Articles 18, 19, 31, and 32 provide an authoritative international minimum-standard context but do not define one executable global authorization procedure.
+- **Open issue:** resolve the applicable community, authority, legal instrument, domestic implementation, purpose, and dispute route before any irreversible research or model action.
+- **Used by:** [Indigenous data and knowledge governance audit](audits/2026-08-21-indigenous-data-knowledge-governance.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-1226
+
+- **Statement:** a Local Contexts Notice identifies a governance concern or request for engagement but is not community permission; community Labels are applied through community authority rather than researcher self-certification.
+- **Status:** established.
+- **Primary sources:** `LocalContextsLabelsNotices`.
+- **Rationale:** the Local Contexts documentation distinguishes Notices from Labels and describes both as practical extra-legal mechanisms whose meaning depends on authority and relationship.
+- **Open issue:** fail stale or unresolved, preserve exact semantics through APIs and derivatives, and prevent a notice, label, license, or public webpage from being coerced into a generic allow bit.
+- **Used by:** [Indigenous data and knowledge governance audit](audits/2026-08-21-indigenous-data-knowledge-governance.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-1227
+
+- **Statement:** applicable GDPR rights remain mandatory for personal data in the EU, but an individual-rights framework does not exhaust collective cultural or knowledge authority.
+- **Status:** established.
+- **Primary sources:** `EU2016GDPR`, `CarrollEtAl2020CARE`, `HudsonEtAl2023IndigenousDataRights`.
+- **Rationale:** GDPR regulates personal data and data-subject rights, while collective governance frameworks address relationships and interests that may persist beyond an identifiable natural person's individual permission.
+- **Open issue:** compose both rule sets, expose conflicts, and prevent either an individual or collective decision from silently cancelling an independently applicable right or obligation.
+- **Used by:** [Indigenous data and knowledge governance audit](audits/2026-08-21-indigenous-data-knowledge-governance.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-1228
+
+- **Statement:** public availability, a generic license, prior publication, or one person's consent does not by itself establish collective authorization for a new purpose.
+- **Status:** established.
+- **Primary sources:** `CarrollEtAl2020CARE`, `HudsonEtAl2023IndigenousDataRights`, `LocalContextsLabelsNotices`, `CBD2010NagoyaProtocol`.
+- **Rationale:** authority, material, purpose, recipient, derivative, duration, benefit, and jurisdiction are separately scoped in the relevant governance frameworks and instruments.
+- **Open issue:** retain purpose and lineage through datasets, embeddings, retrieval indexes, adapters, outputs, publications, and backups so changed authority can trigger a declared remedy rather than a false promise of complete erasure.
+- **Used by:** [Indigenous data and knowledge governance audit](audits/2026-08-21-indigenous-data-knowledge-governance.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1229
+
+- **Statement:** a model or content classifier cannot create legitimate collective standing or authority; those are externally governed relationships that the system may record and enforce only under a declared source and scope.
+- **Status:** plausible.
+- **Primary sources:** `CarrollEtAl2020CARE`, `HudsonEtAl2023IndigenousDataRights`, `TeManaRaraunga2018Principles`, `FNIGC2022OCAP`.
+- **Rationale:** automated screening may route a case to review, but linguistic or topical similarity cannot identify the legitimate decision maker, agreement, protocol, or jurisdiction.
+- **Open issue:** measure missed governance, false routing, sensitive bytes disclosed to the detector, unresolved cases, and authority-shopping under heterogeneous and disputed synthetic protocols.
+- **Used by:** [Indigenous data and knowledge governance audit](audits/2026-08-21-indigenous-data-knowledge-governance.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1230
+
+- **Statement:** a typed, versioned governance envelope with derivative invalidation may enforce purpose, authority, refusal, remedy, and benefit obligations more faithfully than a scalar consent or compliance flag.
+- **Status:** speculative.
+- **Primary sources:** `CarrollEtAl2020CARE`, `CarrollEtAl2021CAREFAIR`, `LocalContextsLabelsNotices`.
+- **Rationale:** the sources establish multidimensional governance requirements but do not validate this project's proposed enforcement composition or its lifecycle costs.
+- **Open issue:** compare the complete legal, ethics, agreement, Local Contexts, identity/access, provenance, and human-review stack with Candidate 020 under purpose drift, plural authority, API staleness, derivative withdrawal, disputes, benefit deadlines, false blocks, burden, and energy.
+- **Used by:** [Indigenous data and knowledge governance audit](audits/2026-08-21-indigenous-data-knowledge-governance.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1231
+
+- **Statement:** a textual tradition can contain several identifiable witnesses and several readings at one locus, while a critical apparatus records a declared selection or collection rather than mechanically selecting the historically correct reading.
+- **Status:** established.
+- **Primary sources:** `TEIP5CriticalApparatus`, `Berti2019CriticalApparatus`, `Tarrant2016ReadingApparatus`.
+- **Rationale:** scholarly editions explicitly separate witness inventory, variant reporting, adopted lemma, and editorial policy.
+- **Open issue:** preserve minority and rejected readings in reconstructible form while measuring storage, migration, source recovery, and review costs.
+- **Used by:** [textual criticism audit](audits/2026-08-21-textual-criticism-variant-traditions.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1232
+
+- **Statement:** TEI can encode witnesses, lemmas, readings, hands, responsibility, certainty, fragments, lacunae, and revision layers, but valid representation does not establish transcription accuracy, lineage, or editorial truth.
+- **Status:** established.
+- **Primary sources:** `TEIP5CriticalApparatus`, `TEIP5PrimarySources`.
+- **Rationale:** the standard supplies a typed vocabulary and linking methods while leaving inclusion, normalization, transcription, and editorial decisions explicit.
+- **Open issue:** test schema-valid but substantively wrong records and require source images, policy versions, responsibility, and uncertainty to survive transformation.
+- **Used by:** [textual criticism audit](audits/2026-08-21-textual-criticism-variant-traditions.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1233
+
+- **Statement:** contamination and source mixing violate a simple one-parent tree model of textual transmission and can require network or locus-qualified ancestry.
+- **Status:** established.
+- **Primary sources:** `AndrewsMace2013TreeTexts`, `Hoenen2019Contamination`.
+- **Rationale:** a witness may draw readings from several exemplars, comparison sources, or remembered variants, so one global parent can misrepresent local derivation.
+- **Open issue:** distinguish contamination from recurrent change, reversal, transcription error, and missing intermediaries and abstain when these alternatives are not identifiable.
+- **Used by:** [textual criticism audit](audits/2026-08-21-textual-criticism-variant-traditions.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1234
+
+- **Statement:** artificial textual traditions with known genealogy permit exact comparison of computational stemmatic methods, and performance varies materially by method and variant treatment.
+- **Status:** established.
+- **Primary sources:** `RoosHeikkila2009Stemmatology`, `Andrews2016VariationSignificance`.
+- **Rationale:** controlled copying provides rare known history and exposes method and feature-selection sensitivity.
+- **Open issue:** synthetic accuracy does not calibrate every historical language, genre, scribal culture, preservation regime, or real tradition with lost witnesses.
+- **Used by:** [textual criticism audit](audits/2026-08-21-textual-criticism-variant-traditions.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1235
+
+- **Statement:** an editorial conjecture is a proposal rather than witness attestation, and repetition through dependent editions, translations, corpora, or models does not convert it into independent historical evidence.
+- **Status:** established.
+- **Primary sources:** `TEIP5CriticalApparatus`, `Tarrant2016ReadingApparatus`.
+- **Rationale:** textual criticism records conjecture responsibility and separates proposed readings from surviving witness readings.
+- **Open issue:** recover dependency ancestry, prevent conjecture laundering, and add any later independent attestation without rewriting the conjecture's earlier historical status.
+- **Used by:** [textual criticism audit](audits/2026-08-21-textual-criticism-variant-traditions.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1236
+
+- **Statement:** drafts, cancellations, additions, proofs, and revised editions can be meaningful authorial or collaborative stages rather than corrupt copies of one final object.
+- **Status:** established.
+- **Primary sources:** `Bryant2002FluidText`, `Miglietti2014AuthorialRevision`, `VanHulle2016GeneticCriticism`, `HaentjensDekkerEtAl2015CollateX`.
+- **Rationale:** genetic criticism and revision scholarship treat the documentary dossier and partial production sequence as objects of study.
+- **Open issue:** preserve uncertain order and agency without manufacturing authorial motive, one total creative sequence, or automatic final-version priority.
+- **Used by:** [textual criticism audit](audits/2026-08-21-textual-criticism-variant-traditions.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1237
+
+- **Statement:** translations and revisions are derived expressions whose source chain, audience, purpose, constraints, and responsible agents qualify evaluation; one unqualified reference string is not universal historical or interpretive ground truth.
+- **Status:** plausible.
+- **Primary sources:** `IFLA2024LibraryReferenceModel`, `MelbyEtAl2011TranslationQuality`.
+- **Rationale:** bibliographic identity models represent derivation, including translation through an intermediary, while translation-quality specifications make purpose and audience explicit.
+- **Open issue:** preserve qualified plurality without excusing demonstrable omission, reversal, unsupported addition, source error, or failure against the declared task.
+- **Used by:** [textual criticism audit](audits/2026-08-21-textual-criticism-variant-traditions.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1238
+
+- **Statement:** a selective or normalized critical apparatus is query-qualified compaction: it can answer registered questions while losing spelling, layout, hand, material, sequence, or omitted-variant evidence needed by future questions.
+- **Status:** established.
+- **Primary sources:** `TEIP5CriticalApparatus`, `Berti2019CriticalApparatus`, `Tarrant2016ReadingApparatus`, `SchmidtColomb2009Multiversion`.
+- **Rationale:** apparatus policies and multi-version representations choose which distinctions remain available, so compactness and future recoverability must be evaluated together.
+- **Open issue:** compare full retention, TEI apparatus, extractive indexes, cold archive, and Candidate 017 under hidden future queries and complete byte-year, restore, migration, review, and energy costs.
+- **Used by:** [textual criticism audit](audits/2026-08-21-textual-criticism-variant-traditions.md), [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md).
+
+### C-1239
+
+- **Statement:** complete provenance can establish which witnesses, transcriptions, rules, and editors contributed to an edition without establishing that its adopted reading is true.
+- **Status:** established.
+- **Primary sources:** `TEIP5CriticalApparatus`, `Greg1950CopyText`, `McKenzie1999SociologyTexts`.
+- **Rationale:** lineage improves auditability and independence accounting, but substantive evidence and editorial objectives can still support several readings.
+- **Open issue:** keep evidence ancestry, editorial policy, uncertainty, and adoption decisions separate and test false support caused by dependent descendants or copied editions.
+- **Used by:** [textual criticism audit](audits/2026-08-21-textual-criticism-variant-traditions.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1240
+
+- **Statement:** for most real historical textual traditions, the original copying history and lost readings are unobserved, so exact recovery accuracy requires controlled or synthetic traditions with independently known history.
+- **Status:** established.
+- **Primary sources:** `RoosHeikkila2009Stemmatology`, `AndrewsMace2013TreeTexts`, `Hoenen2019Contamination`.
+- **Rationale:** several lineage, change, loss, and contamination histories can explain the same surviving witness set under different transcription and collation choices.
+- **Open issue:** report predictive checks, held-out-witness behavior, model sensitivity, response to newly discovered evidence, uncertainty, and correct abstention instead of unknowable real-world recovery percentages.
+- **Used by:** [textual criticism audit](audits/2026-08-21-textual-criticism-variant-traditions.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).

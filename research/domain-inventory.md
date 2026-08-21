@@ -2,8 +2,10 @@
 
 “Collect everything” is an open-world research program, not a claim that one
 search pass—or this table—is exhaustive. Every empirical, formal, and
-engineering science is admissible. This inventory makes current coverage and
-gaps explicit; the governing method is the
+engineering science is admissible. This is the detailed mechanism work queue;
+it is not the completeness baseline. Global presence and absence are measured
+against external classifications in the generated
+[field-coverage census](field-coverage.md). The governing method is the
 [open-world discovery policy](discovery-policy.md). A domain stays here even
 when all of its useful observations deduplicate into an existing principle.
 

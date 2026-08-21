@@ -7,6 +7,10 @@ an adaptive computational system also faces.
 
 This is an open-world policy, not a claim that the inventory is exhaustive.
 New fields and subfields remain admissible without changing the project scope.
+Actual breadth is measured in the generated
+[global field-coverage census](field-coverage.md), using OECD FORD as the
+backbone, DFG as a finer German/European probe, and disagreements with other
+classifications as discovery signals. See [decision 0009](../decisions/0009-external-taxonomy-breadth-control.md).
 
 ## Normative sources are a distinct evidence role
 
@@ -214,3 +218,10 @@ Research proceeds in alternating waves:
 
 This preserves the ambition to borrow from every field without turning the
 repository into an unstructured encyclopedia.
+
+The coverage census adds a binding breadth scheduler to this cadence: each
+wave takes one item from the least-covered OECD broad field, one hidden DFG
+subfield gap inside an apparently represented field, and one methodologically
+distant field before another familiar AI-, computing-, neuroscience-, or
+engineering-adjacent breadth pass. Apparent AI relevance receives no breadth
+priority by itself.

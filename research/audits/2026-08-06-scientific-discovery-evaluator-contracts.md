@@ -330,12 +330,17 @@ running and may not inherit assurance from another track.
 
 | Track | Hidden confirmatory changes | Required comparators | Decisive outputs |
 | --- | --- | --- | --- |
+| E0 alternative-space challenge | true mechanism outside the initial family but reachable through a sealed representation-expansion operator; equivalent initial predictions; auxiliary swaps | fixed-family Bayesian selection, independent red-team and multi-representation search, symbolic/system identification, complete conventional composition | viable-rival yield, false unique promotion, equivalence-set recall, time/calls to rival, abstention, intervention regret |
 | E1 measurement | calibration, sampling, noise, missing channels, preprocessing, selection | calibrated classical estimator and matched learned model | residuals, uncertainty coverage, traceability, failure detection |
-| E2 identification | alternative latent mechanisms, equivalent equations, wrong decomposition, parameter anchors | system identification, symbolic regression, SINDy, Bayesian model comparison, physics-informed and unconstrained neural baselines | exact-recovery rate when truth exists, equivalence set, posterior or profile support, false identification |
-| E3 regime transfer | apparatus, geometry, scale, forcing, operating range, observation operator | best domain-adaptation and invariant/structured baselines | calibration and predictive error by held-out regime; abstention quality |
+| E2 identification | alternative latent mechanisms, equivalent equations, wrong decomposition, parameter anchors, and changed auxiliaries | system identification, symbolic regression, SINDy, Bayesian model comparison, physics-informed and unconstrained neural baselines | exact-recovery rate when truth exists, represented equivalence set, posterior or profile support, false identification, dependence on the enumerated family |
+| E3a prospective prediction | frozen candidate; sealed outcome; indirect benchmark, summary, human, or evaluator access crossed independently of chronology | preregistered prediction, nested validation, leakage audit, matched accommodative fit | access-DAG recall, evidence-role classification, calibration, planted-error detection power, false confirmation |
+| E3b regime transfer | apparatus, geometry, scale, forcing, operating range, observation operator | best domain-adaptation and invariant/structured baselines | calibration and predictive error by held-out regime; abstention quality |
 | E4 intervention | perturbations that make leading mechanisms disagree | preregistered conventional experimental design and causal baselines | likelihood ratio or other declared discrimination statistic, harm, time, energy, human effort |
+| E5 mechanism discrimination | predictively or interventionally matched candidates with changed components, organization, mediation, lesion, replacement, or reconstitution | domain mechanistic model, causal graph, system-identification and surrogate baselines | false mechanistic promotion, component localization, intervention prediction, reconstruction of organized dependencies |
+| E6 robustness and replication | agreeing pipelines share hidden data, calibration, preprocessing, theory, code, or review roots; a discordant channel varies the relevant root | independent replication, multiverse/specification analysis, conventional covariance and sensitivity analysis | false robust promotion, root localization, preserved discordance, coverage after shared covariance |
 | F1 executable construction | unseen task families, evaluator inputs, skeletons, resource limits | enumeration, genetic programming, CEGIS, Bayesian optimization, matched model sampling | valid constructions, best score, success distribution, evaluator calls, joules, human-hours |
 | F2 certificate or proof | proposition, definitions, axioms, library, checker, generated-family ancestry | interactive/automated theorem proving, SAT/SMT/CP, exact search and independent checking | accepted certificates, counterexamples, checker agreement, proof bytes, dependency robustness |
+| D0 purpose-qualified choice | identical evidence under uses with different accuracy, scope, simplicity, tail-risk, false-accept, false-reject, compute, and energy priorities | explicit Pareto analysis and ordinary decision analysis | unchanged evidence state, exposed trade-off vector, versioned owner/weights, purpose-qualified action, sensitivity |
 
 For every track, report candidate count, model calls, evaluator calls,
 wall-seconds, CPU/GPU-seconds, peak bytes, electrical joules, and human-hours.
@@ -343,6 +348,32 @@ Do not call a fitted equation “discovered” without stating the hypothesis
 grammar and competing observationally equivalent models. Do not call an
 executed construction “proved” without naming the exact checked property and
 checker chain.
+
+The [philosophy-of-science and theory-choice audit](2026-08-21-philosophy-of-science-theory-choice.md)
+adds a versioned qualification to every empirical promotion. Record the claim
+target, represented alternative set and search budget, auxiliary-assumption
+bundle, observation or intervention operator, construction/tuning/selection/
+confirmation access ancestry, named rival or error, method--failure-root graph,
+discordant evidence, and purpose-qualified decision. “No rival found” is a
+finite search result, not a certificate that no serious alternative exists.
+
+The evaluator enforces these blocked implications:
+
+```text
+within-support fit -/-> prospective prediction
+prediction -/-> causal effect or causal structure
+causal effect -/-> complete mechanism
+mechanism support -/-> unique ontology
+formal proof -/-> empirical applicability
+deployment decision -/-> theory truth
+```
+
+A newly viable rival invalidates affected uniqueness, causal-structure,
+mechanism, or ontology admissions without erasing observations. Discovered
+access leakage reclassifies the evidence role. A newly discovered common root
+narrows a robustness claim without automatically negating each constituent
+result. Changing the intended use or consequence weights changes the decision
+record rather than the evidence record.
 
 ## Deduplication and repository routing
 
@@ -356,6 +387,7 @@ checker chain.
 | formal construction and verification | [Fixture F-004](../../experiments/fixtures/004-versioned-proof-discovery.md) | FunSearch is a mature comparator for efficiently evaluable construction tasks |
 | graded difference between fit, component validation, transfer, and replication | [Candidate 009](../../experiments/candidates/009-graded-assurance-envelopes.md) | secondary assurance vocabulary only |
 | selectively open proposal block with fixed constraints | [Candidate 004](../../experiments/candidates/004-closed-endogenous-curriculum.md), [Candidate 009](../../experiments/candidates/009-graded-assurance-envelopes.md), and [Candidate 014](../../experiments/candidates/014-versioned-observation-contract.md) | no new architecture; add coupling, typed-assurance, and invalidation tests |
+| alternative-set, access-ancestry, common-root, and non-inheritance qualification | [theory-choice audit](2026-08-21-philosophy-of-science-theory-choice.md), Candidates 004/009/014, and Fixtures F-004/F-005 | evaluator refinement only; no new principle, candidate, fixture, or automatic ontology verdict |
 | scoped local composition and model-error absorption | [C-150](../claims.md#c-150), [C-153](../claims.md#c-153), [C-155](../claims.md#c-155), [C-868](../claims.md#c-868), [C-869](../claims.md#c-869), and [C-894](../claims.md#c-894) | existing claims already require true disjointness or explicit compatibility and warn that learned corrections can absorb upstream errors |
 
 The source therefore adds a better test split and a corrected case study. It

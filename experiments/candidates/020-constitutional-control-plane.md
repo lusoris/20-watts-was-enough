@@ -291,3 +291,121 @@ workflows, and calibrated decision rules under equal authority, information,
 human effort, delay, compute, and energy. Reject if governance is invoked
 without distinct protected interests or if the conventional stack matches both
 task and procedural outcomes.
+
+## Community-authorized data and knowledge governance track
+
+The
+[Indigenous data and knowledge governance audit](../../research/audits/2026-08-21-indigenous-data-knowledge-governance.md)
+adds an applicability class in which a specific Indigenous people, nation,
+community, group, clan, or other community-recognized collective has standing
+over data, knowledge, collections, territories, relations, or their governed
+derivatives. This is normative authority supplied by the relevant collective
+and applicable legal instruments. The model may not infer or self-certify it.
+
+### Applicability and non-substitution gates
+
+Invoke this track only for an identified or disclosed Indigenous relationship
+or when a data holder has a credible unresolved reason to believe one exists.
+Do not scan or expose restricted material merely to classify it as Indigenous.
+An institutional or researcher Local Contexts Notice opens engagement state; it
+does not open access. Public availability, copyright or license status, FAIR
+metadata, GDPR lawful basis, research-ethics approval, and individual consent
+do not substitute for applicable collective authority. Collective approval in
+turn does not remove a natural person's applicable EU data-protection rights.
+
+If authority, scope, or permission is unknown or disputed, preserve the material
+under its current confidentiality and suspend new external disclosure,
+irreversible derivation, and purpose expansion until the relevant authorized
+process resolves the issue. A model confidence score, majority vote, government
+list, least-restrictive rule, or authority shopping cannot resolve standing.
+
+### Governance-envelope state
+
+For each governed artifact and lineage, keep separate typed records for:
+
+1. the specific people, nation, community, group, clan, family, knowledge
+   holder, material, place, relation, and derivative scopes asserted;
+2. community-recognized authorities, roles, procedures, evidence, term, limits,
+   succession, and dispute state;
+3. applicable community protocols, Indigenous law, UNDRIP, EU and Member-State
+   law, national law, contract, ethics, and institutional rules;
+4. provenance and relationship metadata, including the full current Local
+   Contexts Label description and identifier where supplied;
+5. a purpose matrix distinguishing collection, preservation, community access,
+   research access, linkage, analysis, indexing, training, generation,
+   publication, commercialization, onward transfer, retention, and destruction;
+6. individual permissions and rights, collective consent/approval/refusal,
+   review, expiry, change, withdrawal, and notification state;
+7. copies and derivatives including features, embeddings, indexes, prompts,
+   weights, outputs, evaluations, publications, and backups;
+8. attribution, access, reciprocity, capacity, monetary and non-monetary benefit,
+   reporting, and remedy obligations with community-defined acceptance; and
+9. an append-only record of proposals, decisions, uses, disclosures, changes,
+   disputes, failed propagation, and remedies.
+
+Bind the current governance-envelope version to Candidate 009 authority and
+assurance capabilities. Candidate 014 carries it through observation and
+derivative lineage; Candidate 015 preserves protocol semantics and version
+migration; Candidates 017 and 019 preserve obligations through compaction and
+institutional turnover. None of those candidates supplies legitimate authority.
+
+### Lifecycle experiment `H` — collective authority under purpose drift
+
+Use synthetic governance records and synthetic content only. Cross:
+
+- community-applied Label, institution-applied Notice, both, or neither;
+- valid individual permission, valid collective authorization, both, or
+  neither;
+- one or several authorities with non-overlapping, overlapping, and disputed
+  scope;
+- preservation, community access, research, indexing, model training,
+  generation, publication, commercialization, and onward-transfer purposes;
+- stable, expired, changed, refused, withdrawn, restored, and stale authority;
+- raw data, clean copy, feature, embedding, index, adapter, output,
+  publication, third-party copy, and backup derivatives; and
+- GDPR personal-data scope, non-personal collective knowledge, Nagoya-scoped
+  genetic-resource use, and contract-only cases.
+
+Compare the candidate with the full stack of applicable EU and national law,
+research ethics, individual consent, data-use/material-transfer agreements,
+intellectual-property and access-and-benefit-sharing review, typed IAM,
+independent review, FAIR and provenance metadata, Local Contexts Notices and
+Label synchronization, retention/deletion, append-only lineage, human liaison,
+and legal review. Equalize authority information, community and legal
+person-minutes, proposal and review opportunities, enforcement, compute,
+storage, messages, and energy.
+
+Measure unauthorized irreversible or external actions per governance lineage,
+false-authority acceptance, false refusal, purpose-transition escapes,
+relationship/Label survival, derivative-node remedy recall and precision,
+update and invalidation latency in seconds, unauthorized bytes or records
+exposed, worst protected-interest loss, legitimate community-access delay,
+unresolved disputes, incomplete benefit obligations, community and legal
+person-minutes, storage bytes, communication bytes, and joules. Keep every
+quantity separate; metadata volume, veto count, consultation count, or reduced
+data use is not a benefit by itself.
+
+### Change, refusal, and remedy contract
+
+A changed or withdrawn permission creates a versioned invalidation event. The
+authorized remedy may suspend future use, revoke capability, remove active
+indexes, quarantine copies, correct attribution, notify recipients, return or
+repatriate material, retrain or unlearn a model, retire an artifact, compensate,
+or preserve restricted evidence. Report unreachable copies and unverifiable
+weight influence. Do not promise deletion or machine unlearning beyond what the
+lineage and verification test demonstrate.
+
+### Promotion and rejection gates
+
+Advance this track only if first-class collective authority and purpose state
+prevents consequential unauthorized use or improves remedy completeness beyond
+the entire conventional stack in at least two independent synthetic task
+families, without unacceptable false blocking, disclosure during screening,
+community burden, legal burden, latency, or lifecycle cost.
+
+Reject it if it produces one pan-Indigenous policy, permits researcher or model
+self-certification, treats Notices as permission, converts community review to
+unpaid benchmark labor, collapses benefit to scalar reward, fails to propagate
+changed authority to derivatives, overrides GDPR or community law, or cannot
+outperform the composed law–ethics–agreement–Local Contexts–IAM–provenance–human
+review baseline.
