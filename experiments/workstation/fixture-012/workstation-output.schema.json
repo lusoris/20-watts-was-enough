@@ -73,7 +73,7 @@
       "required": ["schema", "contract_version", "command_role", "command_sha256", "executable_sha256", "monotonic_started_ns", "monotonic_ended_ns", "exit_code", "signal", "timed_out", "termination", "stdout_sha256", "stderr_sha256", "stdout_bytes", "stderr_bytes"],
       "properties": {
         "schema": { "const": 1 },
-        "contract_version": { "const": "fixture-012.process-attempt.v1" },
+        "contract_version": { "const": "fixture-012.process-attempt.v2" },
         "command_role": { "type": "string", "minLength": 1 },
         "command_sha256": { "$ref": "#/$defs/digest" },
         "executable_sha256": { "$ref": "#/$defs/digest" },
@@ -82,7 +82,7 @@
         "exit_code": { "type": ["integer", "null"] },
         "signal": { "type": ["string", "null"] },
         "timed_out": { "type": "boolean" },
-        "termination": { "enum": ["natural-exit", "posix-process-group-terminated", "fixture-direct-child-terminated"] },
+        "termination": { "enum": ["natural-exit", "posix-process-group-terminated", "fixture-direct-child-terminated", "windows-job-terminated"] },
         "stdout_sha256": { "$ref": "#/$defs/digest" },
         "stderr_sha256": { "$ref": "#/$defs/digest" },
         "stdout_bytes": { "type": "integer", "minimum": 0 },

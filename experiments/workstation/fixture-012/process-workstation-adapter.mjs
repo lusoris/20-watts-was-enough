@@ -22,8 +22,9 @@ import {
   isPathInside,
 } from "./workstation-path-safety.mjs";
 
-export const FIXTURE_012_PROCESS_ADAPTER_CONFIG_VERSION = "fixture-012.process-adapter-config.v2";
-export const FIXTURE_012_PROCESS_ADAPTER_VERSION = "fixture-012.process-workstation-adapter.v2";
+export const FIXTURE_012_PROCESS_ADAPTER_CONFIG_VERSION = "fixture-012.process-adapter-config.v3";
+export const FIXTURE_012_PROCESS_ADAPTER_VERSION = "fixture-012.process-workstation-adapter.v3";
+export const FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION = "fixture-012.windows-job-supervisor.v1";
 
 const tokenPattern = /\{([a-z_]+)\}/gu;
 const allowedTokens = new Set([
@@ -31,7 +32,7 @@ const allowedTokens = new Set([
   "artifact_dir", "executable_path", "layout_manifest_path", "phase",
   "pair", "order_position",
 ]);
-const forbiddenEnvironment = /^(NODE_OPTIONS|NODE_PATH|LD_PRELOAD|LD_LIBRARY_PATH|DYLD_.+|BASH_ENV|ENV|PROMPT_COMMAND)$/i;
+const forbiddenEnvironment = /^(NODE_OPTIONS|NODE_PATH|LD_PRELOAD|LD_LIBRARY_PATH|DYLD_.+|BASH_ENV|ENV|PROMPT_COMMAND|DOTNET_.+|CORECLR_.+|COMPLUS_.+|COR_.+|PSMODULEPATH|POWERSHELL_.+|PYTHONPATH|PYTHONSTARTUP|RUBYOPT|PERL5OPT|JAVA_TOOL_OPTIONS|_JAVA_OPTIONS|JDK_JAVA_OPTIONS|GCONV_PATH)$/i;
 
 export class Fixture012ProcessAttemptError extends Error {
   constructor(code, message, attempt = null, cause = undefined) {
@@ -64,7 +65,7 @@ function positive(value, label) {
 }
 
 function args(value, label) {
-  if (!Array.isArray(value) || value.some((item) => typeof item !== "string")) throw new Error(`${label} must be a string array.`);
+  if (!Array.isArray(value) || value.some((item) => typeof item !== "string" || item.includes("\0"))) throw new Error(`${label} must be a NUL-free string array.`);
   return value;
 }
 
@@ -79,6 +80,7 @@ function command(value, label, extras = []) {
   digest(value.version_stdout_sha256, `${label}.version_stdout_sha256`);
   args(value.args, `${label}.args`);
   positive(value.timeout_ms, `${label}.timeout_ms`);
+  if (value.timeout_ms > 86_400_000) throw new Error(`${label} timeout exceeds 24 hours.`);
   positive(value.max_output_bytes, `${label}.max_output_bytes`);
   if (value.max_output_bytes > 16 * 1024 * 1024) throw new Error(`${label} output cap exceeds 16 MiB.`);
   for (const [index, argument] of value.args.entries()) {
@@ -92,7 +94,7 @@ export function validateFixture012ProcessAdapterConfig(config) {
   exactObject(config, [
     "schema", "artifact", "contract_version", "adapter_id", "adapter_version",
     "working_directory", "effective_environment", "thermal_sensor_ids",
-    "frequency_sensor_ids", "build", "run", "telemetry", "energy",
+    "frequency_sensor_ids", "windows_job_supervisor", "build", "run", "telemetry", "energy",
   ], "process adapter config");
   if (config.schema !== 1 || config.artifact !== "fixture-012" || config.contract_version !== FIXTURE_012_PROCESS_ADAPTER_CONFIG_VERSION) throw new Error("Process adapter config identity is invalid.");
   for (const key of ["adapter_id", "adapter_version", "working_directory"]) {
@@ -103,10 +105,38 @@ export function validateFixture012ProcessAdapterConfig(config) {
   if (!Array.isArray(config.effective_environment.allowlist) || new Set(config.effective_environment.allowlist).size !== config.effective_environment.allowlist.length) throw new Error("Environment allowlist is invalid.");
   exactObject(config.effective_environment.values, config.effective_environment.allowlist, "effective environment values");
   for (const [key, value] of Object.entries(config.effective_environment.values)) {
-    if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(key) || forbiddenEnvironment.test(key) || typeof value !== "string") throw new Error(`Effective environment entry is unsafe: ${key}.`);
+    if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(key) || forbiddenEnvironment.test(key) || typeof value !== "string" || value.includes("\0")) throw new Error(`Effective environment entry is unsafe: ${key}.`);
   }
   for (const [label, values] of [["thermal_sensor_ids", config.thermal_sensor_ids], ["frequency_sensor_ids", config.frequency_sensor_ids]]) {
     if (!Array.isArray(values) || values.length === 0 || new Set(values).size !== values.length || values.some((value) => !/^[a-z0-9][a-z0-9._-]+$/i.test(value))) throw new Error(`${label} is invalid.`);
+  }
+  if (config.windows_job_supervisor !== null) {
+    exactObject(config.windows_job_supervisor, [
+      "protocol_version", "host_executable", "host_executable_sha256",
+      "version_stdout_sha256", "harness_path",
+      "harness_sha256", "source_path", "source_sha256", "assembly_path",
+      "assembly_sha256", "outer_timeout_margin_ms",
+    ], "windows_job_supervisor");
+    if (config.windows_job_supervisor.protocol_version !== FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION) throw new Error("Windows supervisor protocol identity is invalid.");
+    for (const field of ["host_executable", "assembly_path"]) {
+      if (!path.isAbsolute(config.windows_job_supervisor[field])) throw new Error(`windows_job_supervisor.${field} must be absolute.`);
+    }
+    for (const field of ["harness_path", "source_path"]) {
+      nonEmpty(config.windows_job_supervisor[field], `windows_job_supervisor.${field}`);
+      if (path.isAbsolute(config.windows_job_supervisor[field])) throw new Error(`windows_job_supervisor.${field} must be repository-relative.`);
+    }
+    for (const field of [
+      "host_executable_sha256", "version_stdout_sha256", "harness_sha256",
+      "source_sha256", "assembly_sha256",
+    ]) digest(config.windows_job_supervisor[field], `windows_job_supervisor.${field}`);
+    positive(config.windows_job_supervisor.outer_timeout_margin_ms, "windows_job_supervisor.outer_timeout_margin_ms");
+    if (config.windows_job_supervisor.outer_timeout_margin_ms < 15_000 || config.windows_job_supervisor.outer_timeout_margin_ms > 60_000) throw new Error("Windows supervisor outer timeout margin must be 15--60 seconds so exceptional Job cleanup can finish.");
+    const environmentKeys = config.effective_environment.allowlist.map((key) => key.toUpperCase());
+    if (new Set(environmentKeys).size !== environmentKeys.length) throw new Error("Windows supervisor environment names must be case-insensitively unique.");
+    for (const required of ["SYSTEMROOT", "TEMP", "TMP"]) {
+      const actual = Object.keys(config.effective_environment.values).find((key) => key.toUpperCase() === required);
+      if (actual === undefined || !path.isAbsolute(config.effective_environment.values[actual])) throw new Error(`Windows supervisor requires an absolute ${required} environment value.`);
+    }
   }
   command(config.build, "build", ["output_executable", "output_layout_manifest"]);
   for (const field of ["output_executable", "output_layout_manifest"]) {
@@ -120,6 +150,7 @@ export function validateFixture012ProcessAdapterConfig(config) {
   digest(config.run.version_stdout_sha256, "run.version_stdout_sha256");
   args(config.run.args, "run.args");
   positive(config.run.timeout_ms, "run.timeout_ms");
+  if (config.run.timeout_ms > 86_400_000) throw new Error("run timeout exceeds 24 hours.");
   positive(config.run.max_output_bytes, "run.max_output_bytes");
   if (config.run.max_output_bytes > 16 * 1024 * 1024) throw new Error("run output cap exceeds 16 MiB.");
   command(config.telemetry, "telemetry");
@@ -230,11 +261,10 @@ async function terminatePosixGroup(processGroupId, { graceMilliseconds = 1000 } 
  * The performance interval begins immediately before spawn and ends as the
  * first operation in the exit callback. The launcher still waits for close so
  * termination and pipe drainage are complete, but hashing and JSON parsing
- * occur only after the end timestamp. On Windows this function is callable only for a
- * fixture-marked test adapter; production acquisition is disabled until a
- * reviewed Job Object supervisor exists.
+ * occur only after the end timestamp. This direct launcher is used for POSIX
+ * process groups and the explicitly injected Windows fixture adapter only.
  */
-async function launchProcess({
+async function launchDirectProcess({
   role,
   executable,
   executableSha256,
@@ -243,14 +273,7 @@ async function launchProcess({
   environment,
   timeoutMs,
   maxOutputBytes,
-  fixtureProcessExecution,
 }) {
-  if (process.platform === "win32" && !fixtureProcessExecution) {
-    throw new Fixture012ProcessAttemptError(
-      "WINDOWS_JOB_OBJECT_REQUIRED",
-      "Real Windows execution is disabled until a reviewed Job Object process-tree supervisor is configured.",
-    );
-  }
   const commandSha256 = sha256(canonical({
     role,
     executable,
@@ -364,6 +387,228 @@ async function launchProcess({
   });
 }
 
+async function collectBoundedProcess(child, { input, timeoutMs, stdoutLimit, stderrLimit }) {
+  return new Promise((resolve, reject) => {
+    const stdout = [];
+    const stderr = [];
+    let stdoutBytes = 0;
+    let stderrBytes = 0;
+    let failure = null;
+    let exited = null;
+    const timeout = setTimeout(() => {
+      failure = new Error("Supervisor host exceeded its outer timeout.");
+      child.kill("SIGKILL");
+    }, timeoutMs);
+    timeout.unref();
+    const collect = (target, which, limit) => (chunk) => {
+      if (which === "stdout") stdoutBytes += chunk.length;
+      else stderrBytes += chunk.length;
+      const total = which === "stdout" ? stdoutBytes : stderrBytes;
+      if (total > limit && failure === null) {
+        failure = new Error(`Supervisor host ${which} exceeded its protocol bound.`);
+        child.kill("SIGKILL");
+        return;
+      }
+      if (failure === null) target.push(chunk);
+    };
+    child.stdout.on("data", collect(stdout, "stdout", stdoutLimit));
+    child.stderr.on("data", collect(stderr, "stderr", stderrLimit));
+    child.once("error", (error) => { failure = error; });
+    child.once("exit", (exitCode, signal) => { exited = { exitCode, signal }; });
+    child.once("close", (exitCode, signal) => {
+      clearTimeout(timeout);
+      if (failure !== null) reject(failure);
+      else resolve({
+        exitCode: exited?.exitCode ?? exitCode,
+        signal: exited?.signal ?? signal,
+        stdout: Buffer.concat(stdout),
+        stderr: Buffer.concat(stderr),
+      });
+    });
+    child.stdin.once("error", (error) => {
+      if (error.code !== "EPIPE" && failure === null) failure = error;
+    });
+    child.stdin.end(input);
+  });
+}
+
+async function verifyWindowsSupervisorFiles(supervisor) {
+  let harnessBytes = null;
+  for (const [label, file, expected] of [
+    ["Windows supervisor host", supervisor.host_executable, supervisor.host_executable_sha256],
+    ["Windows supervisor harness", supervisor.harness_path, supervisor.harness_sha256],
+    ["Windows supervisor source", supervisor.source_path, supervisor.source_sha256],
+    ["Windows supervisor assembly", supervisor.assembly_path, supervisor.assembly_sha256],
+  ]) {
+    const actual = await assertAbsoluteRegularFile(file, label);
+    const bytes = await readFile(actual);
+    if (shaBuffer(bytes) !== expected) throw new Error(`${label} content identity mismatch.`);
+    if (file === supervisor.harness_path) harnessBytes = bytes;
+  }
+  if (harnessBytes === null) throw new Error("Windows supervisor harness snapshot is missing.");
+  const harnessText = new TextDecoder("utf-8", { fatal: true }).decode(harnessBytes);
+  if (!Buffer.from(harnessText, "utf8").equals(harnessBytes) || harnessText.startsWith("\ufeff")) {
+    throw new Error("Windows supervisor harness must be canonical BOM-free UTF-8.");
+  }
+  // PowerShell executes this already-hashed snapshot directly. It never opens
+  // the mutable harness pathname while interpreting the command.
+  return Buffer.from(harnessText, "utf16le").toString("base64");
+}
+
+async function invokeWindowsSupervisorHost(supervisor, { request = null, version = false, timeoutMs, maxOutputBytes }) {
+  const encodedHarness = await verifyWindowsSupervisorFiles(supervisor);
+  const hostArgs = [
+    "-NoLogo", "-NoProfile", "-NonInteractive", "-EncodedCommand", encodedHarness,
+  ];
+  const hostEnvironment = {
+    ...supervisor.host_environment,
+    FIXTURE012_ASSEMBLY_PATH: supervisor.assembly_path,
+    FIXTURE012_ASSEMBLY_SHA256: supervisor.assembly_sha256,
+    FIXTURE012_VERSION: version ? "1" : "0",
+  };
+  let child;
+  try {
+    child = spawn(supervisor.host_executable, hostArgs, {
+      cwd: supervisor.repository_root,
+      env: hostEnvironment,
+      shell: false,
+      windowsHide: true,
+      detached: false,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+  } catch (error) {
+    throw new Fixture012ProcessAttemptError("WINDOWS_SUPERVISOR_FAILURE", error.message, null, error);
+  }
+  try {
+    return await collectBoundedProcess(child, {
+      input: request === null ? Buffer.alloc(0) : Buffer.from(JSON.stringify(request), "utf8"),
+      timeoutMs,
+      stdoutLimit: version ? 1_048_576 : Math.ceil(maxOutputBytes * 4 / 3) + 65_536,
+      stderrLimit: 1_048_576,
+    });
+  } catch (error) {
+    throw new Fixture012ProcessAttemptError("WINDOWS_SUPERVISOR_FAILURE", error.message, null, error);
+  }
+}
+
+async function verifyWindowsSupervisor(supervisor) {
+  const result = await invokeWindowsSupervisorHost(supervisor, {
+    version: true,
+    timeoutMs: 15_000,
+    maxOutputBytes: 1_048_576,
+  });
+  if (result.exitCode !== 0 || result.signal !== null || shaBuffer(result.stdout) !== supervisor.version_stdout_sha256) {
+    throw new Fixture012ProcessAttemptError(
+      "WINDOWS_SUPERVISOR_IDENTITY_MISMATCH",
+      "Windows supervisor version identity mismatch.",
+    );
+  }
+}
+
+async function launchWindowsSupervisedProcess({
+  role,
+  executable,
+  executableSha256,
+  args: commandArgs,
+  cwd,
+  environment,
+  timeoutMs,
+  maxOutputBytes,
+  windowsSupervisor,
+  lockedInputs,
+}) {
+  const commandSha256 = sha256(canonical({
+    role,
+    executable,
+    executable_sha256: executableSha256,
+    args: commandArgs,
+    cwd,
+    effective_environment_sha256: sha256(canonical(environment)),
+  }));
+  const request = {
+    schema: 1,
+    protocol_version: FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+    executable,
+    executable_sha256: executableSha256,
+    args: commandArgs,
+    cwd,
+    environment,
+    locked_inputs: lockedInputs,
+    timeout_ms: timeoutMs,
+    max_output_bytes: maxOutputBytes,
+  };
+  const outer = await invokeWindowsSupervisorHost(windowsSupervisor, {
+    request,
+    timeoutMs: timeoutMs + windowsSupervisor.outer_timeout_margin_ms,
+    maxOutputBytes,
+  });
+  if (outer.exitCode !== 0 || outer.signal !== null || outer.stderr.length !== 0) {
+    throw new Fixture012ProcessAttemptError(
+      "WINDOWS_SUPERVISOR_FAILURE",
+      `Windows supervisor failed with exit ${outer.exitCode ?? "null"} and stderr SHA-256 ${shaBuffer(outer.stderr)}.`,
+    );
+  }
+  let response;
+  try {
+    response = JSON.parse(outer.stdout.toString("utf8"));
+    exactObject(response, [
+      "schema", "protocol_version", "status", "monotonic_started_ns",
+      "monotonic_ended_ns", "exit_code", "termination", "stdout_base64",
+      "stderr_base64", "kill_on_job_close", "assigned_before_resume",
+    ], "Windows supervisor response");
+    if (response.schema !== 1 || response.protocol_version !== FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION) throw new Error("response identity is invalid");
+    if (!new Set(["completed", "timeout", "output-limit", "descendant-survived", "path-identity-break"]).has(response.status)) throw new Error("response status is invalid");
+    if (response.kill_on_job_close !== true || response.assigned_before_resume !== true) throw new Error("Job Object invariants were not established before execution");
+    if (!/^[0-9]+$/.test(response.monotonic_started_ns) || !/^[0-9]+$/.test(response.monotonic_ended_ns) || BigInt(response.monotonic_ended_ns) <= BigInt(response.monotonic_started_ns)) throw new Error("monotonic interval is invalid");
+    if (!Number.isInteger(response.exit_code) || response.exit_code < 0 || response.exit_code > 0xffff_ffff) throw new Error("exit code is invalid");
+    if (!new Set(["natural-exit", "windows-job-terminated"]).has(response.termination)) throw new Error("termination identity is invalid");
+    if (typeof response.stdout_base64 !== "string" || typeof response.stderr_base64 !== "string") throw new Error("encoded output is invalid");
+    const expectedTermination = response.status === "completed" ? "natural-exit" : "windows-job-terminated";
+    if (response.termination !== expectedTermination) throw new Error("status and termination are inconsistent");
+  } catch (error) {
+    throw new Fixture012ProcessAttemptError("WINDOWS_SUPERVISOR_PROTOCOL_FAILURE", error.message, null, error);
+  }
+  const stdout = Buffer.from(response.stdout_base64, "base64");
+  const stderr = Buffer.from(response.stderr_base64, "base64");
+  if (stdout.toString("base64") !== response.stdout_base64 || stderr.toString("base64") !== response.stderr_base64) {
+    throw new Fixture012ProcessAttemptError("WINDOWS_SUPERVISOR_PROTOCOL_FAILURE", "Supervisor output is not canonical base64.");
+  }
+  if (stdout.length + stderr.length > maxOutputBytes) {
+    throw new Fixture012ProcessAttemptError("WINDOWS_SUPERVISOR_PROTOCOL_FAILURE", "Supervisor retained output above the command bound.");
+  }
+  const attempt = attemptDocument({
+    role,
+    commandSha256,
+    executableSha256,
+    started: BigInt(response.monotonic_started_ns),
+    ended: BigInt(response.monotonic_ended_ns),
+    exitCode: response.exit_code,
+    signal: null,
+    timedOut: response.status === "timeout",
+    termination: response.termination,
+    stdout,
+    stderr,
+  });
+  if (response.status === "timeout") throw new Fixture012ProcessAttemptError("PROCESS_TIMEOUT", `${role} timed out`, attempt);
+  if (response.status === "output-limit") throw new Fixture012ProcessAttemptError("OUTPUT_LIMIT", `${role} exceeded output limit`, attempt);
+  if (response.status === "descendant-survived") throw new Fixture012ProcessAttemptError("PROCESS_TREE_LEAK", `${role} left a live descendant after leader exit`, attempt);
+  if (response.status === "path-identity-break") throw new Fixture012ProcessAttemptError("PATH_IDENTITY_BREAK", `${role} lost a guarded path identity during execution`, attempt);
+  return { attempt, stdout, stderr };
+}
+
+async function launchProcess(options) {
+  if (process.platform === "win32" && !options.fixtureProcessExecution) {
+    if (options.windowsSupervisor === null) {
+      throw new Fixture012ProcessAttemptError(
+        "WINDOWS_JOB_OBJECT_REQUIRED",
+        "Real Windows execution requires a content-identified Job Object supervisor.",
+      );
+    }
+    return launchWindowsSupervisedProcess(options);
+  }
+  return launchDirectProcess(options);
+}
+
 function commandBinding(role, value) {
   const body = {
     role,
@@ -390,7 +635,7 @@ async function parseJson(buffer, keys, label, attempt) {
   }
 }
 
-async function verifyVersion({ binding, cwd, environment, fixtureProcessExecution }) {
+async function verifyVersion({ binding, cwd, environment, fixtureProcessExecution, windowsSupervisor, lockedInputs }) {
   const result = await launchProcess({
     role: `${binding.role}-version`,
     executable: binding.executable_path,
@@ -401,6 +646,8 @@ async function verifyVersion({ binding, cwd, environment, fixtureProcessExecutio
     timeoutMs: 10_000,
     maxOutputBytes: 1_048_576,
     fixtureProcessExecution,
+    windowsSupervisor,
+    lockedInputs,
   });
   if (result.attempt.exit_code !== 0 || result.attempt.termination !== "natural-exit" || result.attempt.stdout_sha256 !== binding.version_stdout_sha256) {
     throw new Fixture012ProcessAttemptError("VERSION_IDENTITY_MISMATCH", `${binding.role} version identity mismatch`, result.attempt);
@@ -424,6 +671,56 @@ export async function createFixture012ProcessWorkstationAdapter({
     label: "adapter working directory",
     finalType: "directory",
   });
+  if (process.platform === "win32" && !fixtureProcessExecution && adapterConfig.windows_job_supervisor === null) {
+    throw new Fixture012ProcessAttemptError(
+      "WINDOWS_JOB_OBJECT_REQUIRED",
+      "Real Windows execution requires a content-identified Job Object supervisor configuration.",
+    );
+  }
+  let windowsSupervisor = null;
+  if (adapterConfig.windows_job_supervisor !== null) {
+    const configured = adapterConfig.windows_job_supervisor;
+    const hostExecutable = await assertAbsoluteRegularFile(configured.host_executable, "Windows supervisor host");
+    const assemblyPath = await assertAbsoluteRegularFile(configured.assembly_path, "Windows supervisor assembly");
+    const harnessPath = await assertSafePathBelow({
+      root,
+      target: path.join(root, configured.harness_path),
+      label: "Windows supervisor harness",
+      finalType: "file",
+    });
+    const sourcePath = await assertSafePathBelow({
+      root,
+      target: path.join(root, configured.source_path),
+      label: "Windows supervisor source",
+      finalType: "file",
+    });
+    windowsSupervisor = Object.freeze({
+      protocol_version: configured.protocol_version,
+      host_executable: hostExecutable,
+      host_executable_sha256: configured.host_executable_sha256,
+      version_stdout_sha256: configured.version_stdout_sha256,
+      harness_path: harnessPath,
+      harness_sha256: configured.harness_sha256,
+      source_path: sourcePath,
+      source_sha256: configured.source_sha256,
+      assembly_path: assemblyPath,
+      assembly_sha256: configured.assembly_sha256,
+      outer_timeout_margin_ms: configured.outer_timeout_margin_ms,
+      repository_root: root,
+      host_environment: Object.freeze({
+        SYSTEMROOT: adapterConfig.effective_environment.values[
+          Object.keys(adapterConfig.effective_environment.values).find((key) => key.toUpperCase() === "SYSTEMROOT")
+        ],
+        TEMP: adapterConfig.effective_environment.values[
+          Object.keys(adapterConfig.effective_environment.values).find((key) => key.toUpperCase() === "TEMP")
+        ],
+        TMP: adapterConfig.effective_environment.values[
+          Object.keys(adapterConfig.effective_environment.values).find((key) => key.toUpperCase() === "TMP")
+        ],
+      }),
+    });
+    await verifyWindowsSupervisorFiles(windowsSupervisor);
+  }
   const commandEntries = [
     ["build", adapterConfig.build],
     ["telemetry", adapterConfig.telemetry],
@@ -446,24 +743,30 @@ export async function createFixture012ProcessWorkstationAdapter({
   const trustedManifest = JSON.parse(await readFile(manifestPath, "utf8"));
   validateTrustedInputManifest(trustedManifest);
   if (sha256(canonical(trustedManifest)) !== experimentConfig.trusted_inputs.manifest_sha256) throw new Error("Trusted input manifest digest mismatch.");
+  const trustedFiles = [];
   for (const file of trustedManifest.files) {
     const absolute = await assertSafePathBelow({ root, target: path.join(root, file.path), label: `trusted ${file.role}`, finalType: "file" });
     if (await shaFile(absolute) !== file.sha256) throw new Error(`Trusted ${file.role} identity mismatch.`);
+    trustedFiles.push(Object.freeze({ role: file.role, path: absolute, sha256: file.sha256 }));
   }
   const sourcePath = fileURLToPath(import.meta.url);
   const sourceSha256 = await shaFile(sourcePath);
-  const configLocator = adapterConfigPath === null
+  const configFilePath = adapterConfigPath === null
     ? null
-    : path.relative(root, await assertSafePathBelow({
+    : await assertSafePathBelow({
       root,
       target: adapterConfigPath,
       label: "adapter config file",
       finalType: "file",
-    })).replaceAll("\\", "/");
+    });
+  const configLocator = configFilePath === null
+    ? null
+    : path.relative(root, configFilePath).replaceAll("\\", "/");
   if (!fixtureProcessExecution && configLocator === null) {
     throw new Error("Real process adapter requires its repository config-file identity.");
   }
   const environment = Object.freeze({ ...adapterConfig.effective_environment.values });
+  const lockedInputs = Object.freeze(trustedFiles.map((file) => Object.freeze({ path: file.path, sha256: file.sha256 })));
   const bindings = commandEntries.map(([role, value]) => commandBinding(role, value));
   const binding = Object.freeze({
     schema: 1,
@@ -477,6 +780,30 @@ export async function createFixture012ProcessWorkstationAdapter({
     effective_environment: environment,
     environment_sha256: sha256(canonical(environment)),
     commands: bindings,
+    process_supervisor: windowsSupervisor === null ? null : {
+      protocol_version: windowsSupervisor.protocol_version,
+      host_executable_path: windowsSupervisor.host_executable,
+      host_executable_sha256: windowsSupervisor.host_executable_sha256,
+      version_stdout_sha256: windowsSupervisor.version_stdout_sha256,
+      harness_locator: path.relative(root, windowsSupervisor.harness_path).replaceAll("\\", "/"),
+      harness_sha256: windowsSupervisor.harness_sha256,
+      source_locator: path.relative(root, windowsSupervisor.source_path).replaceAll("\\", "/"),
+      source_sha256: windowsSupervisor.source_sha256,
+      assembly_path: windowsSupervisor.assembly_path,
+      assembly_sha256: windowsSupervisor.assembly_sha256,
+      identity_sha256: sha256(canonical({
+        protocol_version: windowsSupervisor.protocol_version,
+        host_executable_path: windowsSupervisor.host_executable,
+        host_executable_sha256: windowsSupervisor.host_executable_sha256,
+        version_stdout_sha256: windowsSupervisor.version_stdout_sha256,
+        harness_locator: path.relative(root, windowsSupervisor.harness_path).replaceAll("\\", "/"),
+        harness_sha256: windowsSupervisor.harness_sha256,
+        source_locator: path.relative(root, windowsSupervisor.source_path).replaceAll("\\", "/"),
+        source_sha256: windowsSupervisor.source_sha256,
+        assembly_path: windowsSupervisor.assembly_path,
+        assembly_sha256: windowsSupervisor.assembly_sha256,
+      })),
+    },
     trusted_inputs: {
       manifest_path: experimentConfig.trusted_inputs.manifest_path,
       manifest_sha256: experimentConfig.trusted_inputs.manifest_sha256,
@@ -484,7 +811,21 @@ export async function createFixture012ProcessWorkstationAdapter({
     },
   });
 
+  async function revalidateFrozenInputs() {
+    if (await shaFile(sourcePath) !== sourceSha256) throw new Error("Process adapter source changed before launch.");
+    if (configFilePath !== null) {
+      const currentConfig = JSON.parse(await readFile(configFilePath, "utf8"));
+      if (sha256(canonical(currentConfig)) !== binding.config_sha256) throw new Error("Process adapter config changed before launch.");
+    }
+    const currentManifest = JSON.parse(await readFile(manifestPath, "utf8"));
+    if (canonical(currentManifest) !== canonical(trustedManifest)) throw new Error("Trusted input manifest changed before launch.");
+    for (const file of trustedFiles) {
+      if (await shaFile(file.path) !== file.sha256) throw new Error(`Trusted ${file.role} changed before launch.`);
+    }
+  }
+
   async function checkedLaunch({ role, executable, expectedSha256, commandArgs, timeoutMs, maxOutputBytes }) {
+    await revalidateFrozenInputs();
     const actualPath = await assertAbsoluteRegularFile(executable, `${role} executable`);
     if (await shaFile(actualPath) !== expectedSha256) throw new Error(`${role} executable changed before launch.`);
     return launchProcess({
@@ -497,6 +838,8 @@ export async function createFixture012ProcessWorkstationAdapter({
       timeoutMs,
       maxOutputBytes,
       fixtureProcessExecution,
+      windowsSupervisor,
+      lockedInputs,
     });
   }
 
@@ -555,14 +898,10 @@ export async function createFixture012ProcessWorkstationAdapter({
   return Object.freeze({
     binding,
     async prepare() {
-      if (process.platform === "win32" && !fixtureProcessExecution) {
-        throw new Fixture012ProcessAttemptError(
-          "WINDOWS_JOB_OBJECT_REQUIRED",
-          "Real Windows acquisition remains disabled until a reviewed Job Object supervisor is implemented.",
-        );
-      }
+      await revalidateFrozenInputs();
+      if (process.platform === "win32" && !fixtureProcessExecution) await verifyWindowsSupervisor(windowsSupervisor);
       for (const commandBindingValue of bindings) {
-        await verifyVersion({ binding: commandBindingValue, cwd: workingDirectory, environment, fixtureProcessExecution });
+        await verifyVersion({ binding: commandBindingValue, cwd: workingDirectory, environment, fixtureProcessExecution, windowsSupervisor, lockedInputs });
       }
       await telemetry();
       if (adapterConfig.energy) await energy();
@@ -585,7 +924,9 @@ export async function createFixture012ProcessWorkstationAdapter({
           runtime: `Node.js ${process.version}`,
         },
         clock: {
-          source: "node:process.hrtime.bigint",
+          source: process.platform === "win32" && !fixtureProcessExecution
+            ? "windows:QueryPerformanceCounter"
+            : "node:process.hrtime.bigint",
           monotonic: true,
           measurement_boundary: experimentConfig.measurement_boundary,
         },

@@ -20,7 +20,7 @@ export const FIXTURE_012_WORKSTATION_CONFIG_VERSION = "fixture-012.workstation-c
 export const FIXTURE_012_WORKSTATION_LEDGER_VERSION = "fixture-012.workstation-layout-record.v2";
 export const FIXTURE_012_WORKSTATION_RUNNER_VERSION = "fixture-012.workstation-acquisition.v2";
 export const FIXTURE_012_LAYOUT_MANIFEST_VERSION = "fixture-012.normalized-layout-manifest.v1";
-export const FIXTURE_012_PROCESS_ATTEMPT_VERSION = "fixture-012.process-attempt.v1";
+export const FIXTURE_012_PROCESS_ATTEMPT_VERSION = "fixture-012.process-attempt.v2";
 
 const VARIANTS = Object.freeze(["baseline", "candidate"]);
 const ZERO_HASH = "0".repeat(64);
@@ -371,7 +371,7 @@ function assertProcessAttempt(value, label) {
   if (!(value.exit_code === null || Number.isInteger(value.exit_code))) fail("INVALID_ATTEMPT", `${label} exit code is invalid`);
   if (!(value.signal === null || typeof value.signal === "string")) fail("INVALID_ATTEMPT", `${label} signal is invalid`);
   if (typeof value.timed_out !== "boolean") fail("INVALID_ATTEMPT", `${label} timeout flag is invalid`);
-  if (!new Set(["natural-exit", "posix-process-group-terminated", "fixture-direct-child-terminated"]).has(value.termination)) {
+  if (!new Set(["natural-exit", "posix-process-group-terminated", "fixture-direct-child-terminated", "windows-job-terminated"]).has(value.termination)) {
     fail("INVALID_ATTEMPT", `${label} termination contract is invalid`);
   }
   digest(value.stdout_sha256, `${label}.stdout_sha256`, "INVALID_ATTEMPT");
@@ -385,7 +385,7 @@ function assertAdapterBinding(binding) {
   exactObject(binding, [
     "schema", "adapter_id", "adapter_version", "fixture_only", "source_locator",
     "source_sha256", "config_locator", "config_sha256", "effective_environment", "environment_sha256",
-    "commands", "trusted_inputs",
+    "commands", "process_supervisor", "trusted_inputs",
   ], "adapter binding", "INVALID_ADAPTER");
   if (binding.schema !== 1 || typeof binding.fixture_only !== "boolean") fail("INVALID_ADAPTER", "adapter binding identity is invalid");
   nonEmpty(binding.adapter_id, "adapter ID", "INVALID_ADAPTER");
@@ -426,6 +426,26 @@ function assertAdapterBinding(binding) {
     }));
     if (command.command_identity_sha256 !== identity) fail("INVALID_ADAPTER", "command identity digest is invalid");
   }
+  if (binding.process_supervisor !== null) {
+    exactObject(binding.process_supervisor, [
+      "protocol_version", "host_executable_path", "host_executable_sha256",
+      "version_stdout_sha256", "harness_locator", "harness_sha256",
+      "source_locator", "source_sha256", "assembly_path", "assembly_sha256",
+      "identity_sha256",
+    ], "process supervisor binding", "INVALID_ADAPTER");
+    for (const key of ["protocol_version", "host_executable_path", "harness_locator", "source_locator", "assembly_path"]) {
+      nonEmpty(binding.process_supervisor[key], `process supervisor ${key}`, "INVALID_ADAPTER");
+    }
+    for (const key of [
+      "host_executable_sha256", "version_stdout_sha256", "harness_sha256",
+      "source_sha256", "assembly_sha256", "identity_sha256",
+    ]) digest(binding.process_supervisor[key], `process supervisor ${key}`, "INVALID_ADAPTER");
+    const supervisorBody = { ...binding.process_supervisor };
+    delete supervisorBody.identity_sha256;
+    if (binding.process_supervisor.identity_sha256 !== sha256(canonical(supervisorBody))) {
+      fail("INVALID_ADAPTER", "process supervisor identity digest is invalid");
+    }
+  }
   exactObject(binding.trusted_inputs, ["manifest_path", "manifest_sha256", "manifest"], "adapter trusted inputs", "INVALID_ADAPTER");
   validateTrustedInputManifest(binding.trusted_inputs.manifest);
   if (binding.trusted_inputs.manifest_sha256 !== sha256(canonical(binding.trusted_inputs.manifest))) {
@@ -458,7 +478,10 @@ function assertPreparation(value, config, binding) {
   positiveInteger(value.machine.logical_cpus, "logical CPUs", "INVALID_PREFLIGHT");
   positiveInteger(value.machine.memory_bytes, "memory", "INVALID_PREFLIGHT");
   exactObject(value.clock, ["source", "monotonic", "measurement_boundary"], "clock", "INVALID_PREFLIGHT");
-  if (value.clock.source !== "node:process.hrtime.bigint" || value.clock.monotonic !== true || value.clock.measurement_boundary !== config.measurement_boundary) {
+  const expectedClockSource = binding.fixture_only === false && binding.process_supervisor !== null
+    ? "windows:QueryPerformanceCounter"
+    : "node:process.hrtime.bigint";
+  if (value.clock.source !== expectedClockSource || value.clock.monotonic !== true || value.clock.measurement_boundary !== config.measurement_boundary) {
     fail("INVALID_PREFLIGHT", "clock boundary is invalid");
   }
   exactObject(value.telemetry, ["thermal_sensor_ids", "frequency_sensor_ids"], "telemetry inventory", "INVALID_PREFLIGHT");
@@ -1098,6 +1121,36 @@ async function validateAdapterAndInputs(repositoryRoot, binding, config) {
       return { ...body, command_identity_sha256: sha256(canonical(body)) };
     });
     if (canonical(configuredCommands) !== canonical(binding.commands)) fail("ADAPTER_BINDING_MISMATCH", "adapter command identities differ from frozen config");
+    if ((adapterConfig.windows_job_supervisor === null) !== (binding.process_supervisor === null)) {
+      fail("ADAPTER_BINDING_MISMATCH", "adapter supervisor presence differs from frozen config");
+    }
+    if (binding.process_supervisor !== null) {
+      const configured = adapterConfig.windows_job_supervisor;
+      const expectedSupervisor = {
+        protocol_version: configured.protocol_version,
+        host_executable_path: path.resolve(configured.host_executable),
+        host_executable_sha256: configured.host_executable_sha256,
+        version_stdout_sha256: configured.version_stdout_sha256,
+        harness_locator: path.relative(repositoryRoot, path.resolve(repositoryRoot, configured.harness_path)).replaceAll("\\", "/"),
+        harness_sha256: configured.harness_sha256,
+        source_locator: path.relative(repositoryRoot, path.resolve(repositoryRoot, configured.source_path)).replaceAll("\\", "/"),
+        source_sha256: configured.source_sha256,
+        assembly_path: path.resolve(configured.assembly_path),
+        assembly_sha256: configured.assembly_sha256,
+      };
+      expectedSupervisor.identity_sha256 = sha256(canonical(expectedSupervisor));
+      if (canonical(expectedSupervisor) !== canonical(binding.process_supervisor)) fail("ADAPTER_BINDING_MISMATCH", "adapter supervisor identity differs from frozen config");
+      const host = await assertAbsoluteRegularFile(binding.process_supervisor.host_executable_path, "supervisor host");
+      const assembly = await assertAbsoluteRegularFile(binding.process_supervisor.assembly_path, "supervisor assembly");
+      const harness = await assertSafePathBelow({ root: repositoryRoot, target: path.join(repositoryRoot, binding.process_supervisor.harness_locator), label: "supervisor harness", finalType: "file" });
+      const sourceFile = await assertSafePathBelow({ root: repositoryRoot, target: path.join(repositoryRoot, binding.process_supervisor.source_locator), label: "supervisor source", finalType: "file" });
+      for (const [file, expected, label] of [
+        [host, binding.process_supervisor.host_executable_sha256, "host"],
+        [assembly, binding.process_supervisor.assembly_sha256, "assembly"],
+        [harness, binding.process_supervisor.harness_sha256, "harness"],
+        [sourceFile, binding.process_supervisor.source_sha256, "source"],
+      ]) if (await sha256File(file) !== expected) fail("ADAPTER_BINDING_MISMATCH", `supervisor ${label} changed`);
+    }
     const workingDirectory = await assertSafePathBelow({
       root: repositoryRoot,
       target: path.resolve(repositoryRoot, adapterConfig.working_directory),

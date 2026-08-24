@@ -10,7 +10,7 @@
     "validate": "node experiments/workstation/fixture-012/runner.mjs validate --output <run-directory>"
   },
   "environment": {
-    "runtime": "Node.js >=22.13.0 on Windows x64",
+    "runtime": "Node.js >=22.13.0 on Windows 10+ or Windows Server 2016+ x64 (PROC_THREAD_ATTRIBUTE_JOB_LIST, R oplocks, and readable NTFS per-file USNs required; guarded paths restricted to the protected Windows system-volume drive)",
     "lockfiles": ["package-lock.json"]
   },
   "hardware": {
@@ -21,7 +21,7 @@
       "energy": "modeled fixture value only; no measured joules"
     },
     "workstation": {
-      "cpu": "x64 CPU; development-only process acquisition is disabled on Windows until a reviewed Job Object supervisor exists, and compiler/linker/workload release identities remain unfrozen",
+      "cpu": "x64 CPU; Windows development acquisition requires the content-identified built-in Job Object supervisor, while compiler/linker/workload release identities remain unfrozen",
       "memory_bytes": 1073741824,
       "disk_bytes": 1073741824,
       "energy": "calibrated external wall or rail meter required before workstation-ready promotion"
@@ -60,16 +60,19 @@
     ],
     "execution_claims": ["C-1407"],
     "physical_lane": {
-      "status": "development-only-windows-disabled-without-job-object",
+      "status": "development-only-windows-job-object-supervised",
       "entrypoint": "experiments/workstation/fixture-012/workstation-cli.mjs",
       "experiment_config_template": "experiments/workstation/fixture-012/configs/workstation-development.template.json",
       "adapter_config_template": "experiments/workstation/fixture-012/configs/process-adapter.template.json",
       "trusted_input_manifest_template": "experiments/workstation/fixture-012/configs/workload-manifest.template.json",
       "output_schema": "experiments/workstation/fixture-012/workstation-output.schema.json",
+      "windows_supervisor_source": "experiments/workstation/fixture-012/windows-job-supervisor.cs",
+      "windows_supervisor_harness": "experiments/workstation/fixture-012/windows-job-supervisor.ps1",
+      "windows_supervisor_builder": "experiments/workstation/fixture-012/build-windows-job-supervisor.ps1",
       "resume_boundary": "completed-layout-record",
       "checkpoint_authority": "raw-layouts-jsonl-ledger",
       "single_writer": true,
-      "windows_process_execution": "disabled-until-reviewed-job-object-supervisor",
+      "windows_process_execution": "content-identified-create-suspended-job-object-supervisor-required",
       "claim_eligible": false
     }
   },

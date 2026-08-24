@@ -58,19 +58,50 @@ npm run workstation:fixture-012:physical -- validate --config <experiment.json> 
 ```
 
 The lane is development-only and is not the manifest's canonical confirmation
-runner. Physical Windows execution currently fails closed with
-`WINDOWS_JOB_OBJECT_REQUIRED`; the test-only direct-child bypass is not exposed
-as a CLI option. A reviewed Job Object supervisor is required before the lane
-can execute arbitrary workstation commands on Windows. POSIX execution uses a
-detached process group and waits for termination. The default configuration is
-latency-only. Selecting joules additionally requires a positive uncertainty
+runner. Physical Windows execution now requires the checked-in C# Job Object
+supervisor, its PowerShell harness, a locally compiled assembly, and the exact
+PowerShell host binary to be content-identified in the adapter configuration.
+On Windows 10/Server 2016 or later, the supervisor establishes
+`KILL_ON_JOB_CLOSE` and uses `PROC_THREAD_ATTRIBUTE_JOB_LIST` to assign each
+suspended target atomically during creation, before its first instruction, then resumes
+it, records QueryPerformanceCounter launch-to-exit timestamps, and kills and
+waits for all remaining job descendants on every handled exit. A host crash is
+contained eventually by Windows closing the last kill-on-close Job handle; the
+crashed host cannot itself wait. The adapter executes the already-hashed
+  PowerShell harness snapshot through an encoded command under a separate minimal
+  host environment. The C# helper rejects reparse-point paths, acquires monitored
+  directory R oplocks parent-before-child, rejects every root except the protected
+  Windows system-volume drive, and requires each identified leaf to have one
+  hard-link name and a readable NTFS per-file USN. It denies ordinary and mapped
+  writes under the Windows sharing contract, then rechecks file ID, attributes,
+  reparse tag, link count, USN, directory guards, and the suspended process image
+  before resume and throughout execution. A guard break or USN change terminates
+  the whole job and is retained as `PATH_IDENTITY_BREAK`.
+  A zero-exit leader that leaves a
+live descendant is retained as `PROCESS_TREE_LEAK`, not accepted. A missing or changed supervisor
+identity still fails closed with `WINDOWS_JOB_OBJECT_REQUIRED` or an identity
+error; the fixture-only direct-child path is not a CLI option. POSIX execution
+uses a detached process group and waits for termination. The default
+configuration is latency-only. Selecting joules additionally requires a positive uncertainty
 floor and an unexpired, content-identified calibration certificate for an
 external cumulative-energy provider whose samples enclose every measured
 interval; energy-claim authority still remains false.
 
+The supervisor is an evidence-integrity and process-containment mechanism, not
+a security sandbox or a security guarantee. “Fail closed” applies only to the
+declared adapter contract and handled failure paths; it does not cover a
+misqualified ACL boundary, compromised operating system, PowerShell or .NET
+runtime, local-administrator access, or kernel compromise. The operator
+runbook's [canonical Windows behavior inventory](WORKSTATION-RUNBOOK.md#canonical-windows-behavior-inventory)
+separates behavior exercised directly by a scoped test from behavior supported
+only through a shared implementation invariant.
+
 Current limits are binding: synthetic smoke timing and energy remain modeled,
-physical development seeds are visible, the Windows process-tree boundary is
-not implemented, no compiler/linker/workload release is frozen, no real
+physical development seeds are visible, the PowerShell-host supervisor and
+10-ms path/USN polling overhead have not been characterized for performance or
+energy work, the operator must qualify the ACL-protected operating-system
+PowerShell/.NET installation that remains the bootstrap trust root, no
+compiler/linker/workload release is frozen, no real
 confirmation or independent replication has been recorded, and confirmation
 and held-out seed commitments remain pending. Consequently every synthetic and
 development output retains `claim_eligible: false` and

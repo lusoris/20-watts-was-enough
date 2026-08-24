@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "artifact": "fixture-012",
-  "contract_version": "fixture-012.process-adapter-config.v2",
+  "contract_version": "fixture-012.process-adapter-config.v3",
   "adapter_id": "replace-with-local-adapter-id",
   "adapter_version": "1.0.0",
   "working_directory": ".",
@@ -15,6 +15,19 @@
   },
   "thermal_sensor_ids": ["cpu-package"],
   "frequency_sensor_ids": ["cpu-effective"],
+  "windows_job_supervisor": {
+    "protocol_version": "fixture-012.windows-job-supervisor.v1",
+    "host_executable": "C:/Program Files/PowerShell/7/pwsh.exe",
+    "host_executable_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+    "version_stdout_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+    "harness_path": "experiments/workstation/fixture-012/windows-job-supervisor.ps1",
+    "harness_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+    "source_path": "experiments/workstation/fixture-012/windows-job-supervisor.cs",
+    "source_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+    "assembly_path": "REPLACE_WITH_ABSOLUTE_COMPILED_SUPERVISOR_DLL",
+    "assembly_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+    "outer_timeout_margin_ms": 15000
+  },
   "build": {
     "executable": "REPLACE_WITH_ABSOLUTE_REGULAR_FILE",
     "executable_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",

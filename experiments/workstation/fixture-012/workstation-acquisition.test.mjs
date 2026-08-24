@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
+  access,
+  appendFile,
+  link,
   mkdir,
   mkdtemp,
   readFile,
@@ -10,11 +14,14 @@ import {
 } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
+import { promisify } from "node:util";
 
 import { canonical, sha256 } from "./contract.mjs";
 import { main as workstationCli } from "./workstation-cli.mjs";
 import {
   FIXTURE_012_PROCESS_ADAPTER_CONFIG_VERSION,
+  FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+  createFixture012ProcessWorkstationAdapter,
   validateFixture012ProcessAdapterConfig,
 } from "./process-workstation-adapter.mjs";
 import {
@@ -45,9 +52,12 @@ const telemetryScript = path.join(fixtureDirectory, "telemetry fixture.mjs");
 const workloadScript = path.join(fixtureDirectory, "workload fixture.mjs");
 const inputFile = path.join(fixtureDirectory, "input fixture.json");
 const referenceFile = path.join(fixtureDirectory, "reference fixture.txt");
+const descendantScript = path.join(fixtureDirectory, "descendant fixture.mjs");
+const reparseAliasFixture = path.join(root, "experiments", "workstation", "fixture-012", "test-fixtures", "set-reparse-alias-fixture.ps1");
 const correctnessSha256 = sha256("fixture-012-correct-output\n");
 const emptySha256 = sha256("");
 const zeroSha256 = "0".repeat(64);
+const execFileAsync = promisify(execFile);
 
 async function shaFile(file) {
   return createHash("sha256").update(await readFile(file)).digest("hex");
@@ -233,6 +243,7 @@ function controlledAdapter(context, {
     effective_environment: {},
     environment_sha256: sha256(canonical({})),
     commands: [],
+    process_supervisor: null,
     trusted_inputs: {
       manifest_path: context.config.trusted_inputs.manifest_path,
       manifest_sha256: context.config.trusted_inputs.manifest_sha256,
@@ -392,6 +403,7 @@ async function processAdapterConfig(context) {
     },
     thermal_sensor_ids: ["cpu-package"],
     frequency_sensor_ids: ["cpu-effective"],
+    windows_job_supervisor: null,
     build: {
       executable: process.execPath,
       executable_sha256: nodeSha256,
@@ -432,7 +444,113 @@ async function processAdapterConfig(context) {
   return { config, configPath };
 }
 
-test("v2 config freezes trusted inputs and an exact counterbalanced schedule", async () => {
+async function addWindowsJobSupervisor(context, adapter) {
+  assert.equal(process.platform, "win32");
+  const assemblyPath = path.join(context.parent, "fixture-012 windows job supervisor.dll");
+  const buildSupervisor = path.join(root, "experiments", "workstation", "fixture-012", "build-windows-job-supervisor.ps1");
+  const result = await execFileAsync("pwsh", [
+    "-NoLogo", "-NoProfile", "-NonInteractive", "-File", buildSupervisor,
+    "-OutputAssembly", assemblyPath,
+  ], { cwd: root, windowsHide: true, maxBuffer: 4 * 1024 * 1024 });
+  const receipt = JSON.parse(result.stdout);
+  adapter.config.adapter_version = "3.0.0-windows-job-object";
+  adapter.config.windows_job_supervisor = {
+    protocol_version: FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+    host_executable: receipt.host_executable,
+    host_executable_sha256: receipt.host_executable_sha256,
+    version_stdout_sha256: receipt.version_stdout_sha256,
+    harness_path: relative(receipt.harness_path),
+    harness_sha256: receipt.harness_sha256,
+    source_path: relative(receipt.source_path),
+    source_sha256: receipt.source_sha256,
+    assembly_path: receipt.assembly_path,
+    assembly_sha256: receipt.assembly_sha256,
+    outer_timeout_margin_ms: 15_000,
+  };
+  await writeFile(adapter.configPath, `${JSON.stringify(adapter.config, null, 2)}\n`);
+  return { ...receipt, config: adapter.config, configPath: adapter.configPath };
+}
+
+async function invokeSupervisor(receipt, request) {
+  const harnessBytes = await readFile(receipt.harness_path);
+  assert.equal(sha256(harnessBytes), receipt.harness_sha256);
+  const encodedHarness = Buffer.from(harnessBytes.toString("utf8"), "utf16le").toString("base64");
+  const result = await new Promise((resolve, reject) => {
+    const child = execFile(receipt.host_executable, [
+      "-NoLogo", "-NoProfile", "-NonInteractive", "-EncodedCommand", encodedHarness,
+    ], {
+      cwd: root,
+      env: process.platform === "win32" ? {
+        SYSTEMROOT: process.env.SYSTEMROOT,
+        TEMP: process.env.TEMP,
+        TMP: process.env.TMP,
+        FIXTURE012_ASSEMBLY_PATH: receipt.assembly_path,
+        FIXTURE012_ASSEMBLY_SHA256: receipt.assembly_sha256,
+        FIXTURE012_VERSION: "0",
+      } : {},
+      windowsHide: true,
+      timeout: request.timeout_ms + 15_000,
+      maxBuffer: 24 * 1024 * 1024,
+    }, (error, stdout, stderr) => {
+      if (error) reject(Object.assign(error, { stdout, stderr }));
+      else resolve({ stdout, stderr });
+    });
+    child.stdin.end(JSON.stringify(request));
+  });
+  return JSON.parse(result.stdout);
+}
+
+async function pathExists(file) {
+  try {
+    await access(file);
+    return true;
+  } catch (error) {
+    if (error.code === "ENOENT") return false;
+    throw error;
+  }
+}
+
+async function waitForPath(file, timeoutMs = 5_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (await pathExists(file)) return;
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
+  throw new Error(`Timed out waiting for ${file}`);
+}
+
+async function createTemporarySubst(target) {
+  const executable = path.join(process.env.SYSTEMROOT, "System32", "subst.exe");
+  for (const letter of ["Z", "Y", "X", "W", "V"]) {
+    const drive = `${letter}:`;
+    try {
+      await execFileAsync(executable, [drive, target], { windowsHide: true });
+      return { drive, executable };
+    } catch {
+      // Existing or policy-reserved drive: try the next bounded candidate.
+    }
+  }
+  throw new Error("No temporary drive letter was available for the SUBST adversarial test.");
+}
+
+async function buildReparseAliasFixture(assemblyPath) {
+  await execFileAsync("pwsh", [
+    "-NoLogo", "-NoProfile", "-NonInteractive", "-File", reparseAliasFixture,
+    "-Mode", "Build",
+    "-AssemblyPath", assemblyPath,
+  ], { cwd: root, windowsHide: true, maxBuffer: 4 * 1024 * 1024 });
+}
+
+async function applyReparseAlias(mode, targetPath, assemblyPath) {
+  await execFileAsync("pwsh", [
+    "-NoLogo", "-NoProfile", "-NonInteractive", "-File", reparseAliasFixture,
+    "-Mode", mode,
+    "-Path", targetPath,
+    "-AssemblyPath", assemblyPath,
+  ], { cwd: root, windowsHide: true, maxBuffer: 4 * 1024 * 1024 });
+}
+
+test("v3 config freezes trusted inputs and an exact counterbalanced schedule", async () => {
   const context = await makeContext("schedule");
   try {
     assert.equal(validateFixture012WorkstationConfig(context.config), context.config);
@@ -719,6 +837,26 @@ test("process config requires absolute content-identified commands and a frozen 
       }),
       /unsafe/,
     );
+    assert.throws(
+      () => validateFixture012ProcessAdapterConfig({
+        ...config,
+        effective_environment: {
+          allowlist: ["SYSTEMROOT", "TEMP", "TMP", "DOTNET_STARTUP_HOOKS"],
+          values: {
+            ...config.effective_environment.values,
+            DOTNET_STARTUP_HOOKS: "C:\\unbound-hook.dll",
+          },
+        },
+      }),
+      /unsafe/,
+    );
+    assert.throws(
+      () => validateFixture012ProcessAdapterConfig({
+        ...config,
+        run: { ...config.run, args: ["visible\0truncated"] },
+      }),
+      /NUL-free/,
+    );
   } finally {
     await cleanup(context);
   }
@@ -883,6 +1021,477 @@ test("real Windows CLI remains fail-closed without a Job Object supervisor", asy
       ]),
       /WINDOWS_JOB_OBJECT_REQUIRED|Job Object/,
     );
+  } finally {
+    await cleanup(context);
+  }
+});
+
+test("Windows Job Object supervisor runs the physical adapter with bound QPC timing", async () => {
+  if (process.platform !== "win32") return;
+  const context = await makeContext("windows-supervised-physical");
+  try {
+    const configured = await processAdapterConfig(context);
+    await addWindowsJobSupervisor(context, configured);
+    const adapter = await createFixture012ProcessWorkstationAdapter({
+      adapterConfig: configured.config,
+      experimentConfig: context.config,
+      repositoryRoot: root,
+      adapterConfigPath: configured.configPath,
+    });
+    const prepared = await prepareFixture012WorkstationAcquisition({ config: context.config, adapter });
+    assert.equal(prepared.preparation.clock.source, "windows:QueryPerformanceCounter");
+    assert.equal(adapter.binding.fixture_only, false);
+    assert.equal(adapter.binding.process_supervisor.protocol_version, FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION);
+    assert.match(adapter.binding.process_supervisor.identity_sha256, /^[0-9a-f]{64}$/);
+
+    const partial = await runFixture012WorkstationAcquisition({
+      config: context.config,
+      adapter,
+      output: context.output,
+      repositoryRoot: root,
+      stopAfterLayouts: 1,
+    });
+    assert.equal(partial.status, "incomplete-at-clean-layout-boundary");
+    const record = JSON.parse((await readFile(path.join(context.output, "raw-layouts.jsonl"), "utf8")).trim());
+    for (const observation of record.measurements) {
+      assert.equal(observation.execution.attempt.termination, "natural-exit");
+      assert.equal(observation.latency_ns, Number(
+        BigInt(observation.execution.attempt.monotonic_ended_ns)
+          - BigInt(observation.execution.attempt.monotonic_started_ns),
+      ));
+    }
+  } finally {
+    await cleanup(context);
+  }
+});
+
+test("Windows supervisor assignment-before-resume contains immediate descendants", async () => {
+  if (process.platform !== "win32") return;
+  const context = await makeContext("windows-descendant-containment");
+  try {
+    const configured = await processAdapterConfig(context);
+    const receipt = await addWindowsJobSupervisor(context, configured);
+    const executableSha256 = await shaFile(process.execPath);
+    const markers = [];
+    for (let index = 0; index < 8; index += 1) {
+      const marker = path.join(context.parent, `escaped descendant ${index}.txt`);
+      markers.push(marker);
+      const response = await invokeSupervisor(receipt, {
+        schema: 1,
+        protocol_version: FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+        executable: process.execPath,
+        executable_sha256: executableSha256,
+        args: [descendantScript, "--parent", marker],
+        cwd: fixtureDirectory,
+        environment: {
+          SYSTEMROOT: process.env.SYSTEMROOT,
+          TEMP: process.env.TEMP,
+          TMP: process.env.TMP,
+        },
+        locked_inputs: [],
+        timeout_ms: 5_000,
+        max_output_bytes: 65_536,
+      });
+      assert.equal(response.status, "descendant-survived");
+      assert.equal(response.termination, "windows-job-terminated");
+      assert.equal(response.kill_on_job_close, true);
+      assert.equal(response.assigned_before_resume, true);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1_800));
+    for (const marker of markers) assert.equal(await pathExists(marker), false);
+  } finally {
+    await cleanup(context);
+  }
+});
+
+test("Windows supervisor timeout and output cap terminate the whole Job Object", async () => {
+  if (process.platform !== "win32") return;
+  const context = await makeContext("windows-job-termination");
+  try {
+    const configured = await processAdapterConfig(context);
+    const receipt = await addWindowsJobSupervisor(context, configured);
+    const executableSha256 = await shaFile(process.execPath);
+    const marker = path.join(context.parent, "timeout descendant escaped.txt");
+    const base = {
+      schema: 1,
+      protocol_version: FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+      executable: process.execPath,
+      executable_sha256: executableSha256,
+      cwd: fixtureDirectory,
+      environment: {
+        SYSTEMROOT: process.env.SYSTEMROOT,
+        TEMP: process.env.TEMP,
+        TMP: process.env.TMP,
+      },
+      locked_inputs: [],
+    };
+    const timedOut = await invokeSupervisor(receipt, {
+      ...base,
+      args: [descendantScript, "--parent-wait", marker],
+      timeout_ms: 200,
+      max_output_bytes: 65_536,
+    });
+    assert.equal(timedOut.status, "timeout");
+    assert.equal(timedOut.termination, "windows-job-terminated");
+
+    const outputLimited = await invokeSupervisor(receipt, {
+      ...base,
+      args: [descendantScript, "--output-flood-fast", marker],
+      timeout_ms: 5_000,
+      max_output_bytes: 32_768,
+    });
+    assert.equal(outputLimited.status, "output-limit");
+    assert.equal(outputLimited.termination, "windows-job-terminated");
+    assert.equal(Buffer.from(outputLimited.stdout_base64, "base64").length <= 32_768, true);
+    await assert.rejects(
+      () => invokeSupervisor(receipt, {
+        ...base,
+        args: [descendantScript, "--output-flood-fast", marker],
+        timeout_ms: 5_000,
+        max_output_bytes: 32_768,
+        undeclared_protocol_field: true,
+      }),
+      /inexact field set|Command failed/,
+    );
+    await assert.rejects(
+      () => invokeSupervisor(receipt, {
+        ...base,
+        args: [descendantScript, "--parent", `visible\0truncated`],
+        timeout_ms: 5_000,
+        max_output_bytes: 65_536,
+      }),
+      /NUL-free|Command failed/,
+    );
+    await assert.rejects(
+      () => invokeSupervisor(receipt, {
+        ...base,
+        args: ["--version"],
+        environment: { ...base.environment, DOTNET_STARTUP_HOOKS: "C:\\unbound-hook.dll" },
+        timeout_ms: 5_000,
+        max_output_bytes: 65_536,
+      }),
+      /runtime-injection|Command failed/,
+    );
+    await new Promise((resolve) => setTimeout(resolve, 1_800));
+    assert.equal(await pathExists(marker), false);
+  } finally {
+    await cleanup(context);
+  }
+});
+
+test("Windows supervisor terminates the Job Object when a guarded directory identity changes", async () => {
+  if (process.platform !== "win32") return;
+  const context = await makeContext("windows-directory-identity-break");
+  try {
+    const configured = await processAdapterConfig(context);
+    const receipt = await addWindowsJobSupervisor(context, configured);
+    const guardedCwd = path.join(context.parent, "guarded cwd");
+    const signals = path.join(context.parent, "unguarded signals");
+    const mutation = path.join(guardedCwd, "namespace mutation.txt");
+    const marker = path.join(signals, "directory-break descendant escaped.txt");
+    const ready = path.join(signals, "directory-break target ready.txt");
+    await mkdir(guardedCwd);
+    await mkdir(signals);
+    let supervisorSettled = false;
+    let supervisorOutcome = null;
+    const responsePromise = invokeSupervisor(receipt, {
+      schema: 1,
+      protocol_version: FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+      executable: process.execPath,
+      executable_sha256: await shaFile(process.execPath),
+      args: [descendantScript, "--parent-wait", marker, ready, "5000"],
+      cwd: guardedCwd,
+      environment: {
+        SYSTEMROOT: process.env.SYSTEMROOT,
+        TEMP: process.env.TEMP,
+        TMP: process.env.TMP,
+      },
+      locked_inputs: [{ path: descendantScript, sha256: await shaFile(descendantScript) }],
+      timeout_ms: 30_000,
+      max_output_bytes: 65_536,
+    });
+    responsePromise.then(
+      (response) => { supervisorSettled = true; supervisorOutcome = response; },
+      (error) => { supervisorSettled = true; supervisorOutcome = { error: error.message }; },
+    );
+    await waitForPath(ready);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    assert.equal(supervisorSettled, false, JSON.stringify(supervisorOutcome));
+    await writeFile(mutation, "break the guarded directory R oplock\n", { flag: "wx" });
+    const response = await responsePromise;
+    assert.equal(response.status, "path-identity-break");
+    assert.equal(response.termination, "windows-job-terminated");
+    await new Promise((resolve) => setTimeout(resolve, 5_500));
+    assert.equal(await pathExists(marker), false);
+  } finally {
+    await cleanup(context);
+  }
+});
+
+test("Windows supervisor terminates the Job Object when guarded leaf metadata changes and is restored", async () => {
+  if (process.platform !== "win32") return;
+  const context = await makeContext("windows-leaf-identity-break");
+  const guardedInputs = path.join(context.parent, "guarded inputs");
+  const signals = path.join(context.parent, "unguarded signals");
+  const lockedInput = path.join(guardedInputs, "locked empty input.bin");
+  const reparseFixtureAssembly = path.join(context.parent, "reparse alias fixture.dll");
+  const marker = path.join(signals, "leaf-break descendant escaped.txt");
+    const ready = path.join(signals, "leaf-break target ready.txt");
+  try {
+    const configured = await processAdapterConfig(context);
+    const receipt = await addWindowsJobSupervisor(context, configured);
+    await mkdir(guardedInputs);
+    await mkdir(signals);
+    await writeFile(lockedInput, Buffer.alloc(0), { flag: "wx" });
+    await buildReparseAliasFixture(reparseFixtureAssembly);
+    let supervisorSettled = false;
+    let supervisorOutcome = null;
+    const responsePromise = invokeSupervisor(receipt, {
+      schema: 1,
+      protocol_version: FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+      executable: process.execPath,
+      executable_sha256: await shaFile(process.execPath),
+      args: [descendantScript, "--parent-wait", marker, ready, "5000"],
+      cwd: fixtureDirectory,
+      environment: {
+        SYSTEMROOT: process.env.SYSTEMROOT,
+        TEMP: process.env.TEMP,
+        TMP: process.env.TMP,
+      },
+      locked_inputs: [{ path: lockedInput, sha256: emptySha256 }],
+      timeout_ms: 30_000,
+      max_output_bytes: 65_536,
+    });
+    responsePromise.then(
+      (response) => { supervisorSettled = true; supervisorOutcome = response; },
+      (error) => { supervisorSettled = true; supervisorOutcome = { error: error.message }; },
+    );
+    await Promise.race([
+      waitForPath(ready, 10_000),
+      responsePromise.then(
+        (response) => { throw new Error(`Supervisor settled before ready: ${JSON.stringify(response)}`); },
+        (error) => { throw error; },
+      ),
+    ]);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    assert.equal(supervisorSettled, false, JSON.stringify(supervisorOutcome));
+    assert.equal(await pathExists(marker), false);
+    const mutationStartedAt = Date.now();
+    await applyReparseAlias("Pulse", lockedInput, reparseFixtureAssembly);
+    const mutationElapsedMs = Date.now() - mutationStartedAt;
+    const responseWaitStartedAt = Date.now();
+    const response = await responsePromise;
+    const responseWaitElapsedMs = Date.now() - responseWaitStartedAt;
+    const measuredElapsedMs = Number(
+      BigInt(response.monotonic_ended_ns) - BigInt(response.monotonic_started_ns),
+    ) / 1e6;
+    assert.equal(response.status, "path-identity-break");
+    assert.equal(response.termination, "windows-job-terminated");
+    await new Promise((resolve) => setTimeout(resolve, 5_500));
+    assert.equal(
+      await pathExists(marker),
+      false,
+      `mutation helper took ${mutationElapsedMs} ms; response wait took ${responseWaitElapsedMs} ms; measured leader interval was ${measuredElapsedMs} ms`,
+    );
+  } finally {
+    await cleanup(context);
+  }
+});
+
+test("Windows supervisor rejects an identified file with another hard-link name", async () => {
+  if (process.platform !== "win32") return;
+  const context = await makeContext("windows-hard-link-input");
+  try {
+    const configured = await processAdapterConfig(context);
+    const receipt = await addWindowsJobSupervisor(context, configured);
+    const guardedInputs = path.join(context.parent, "guarded inputs");
+    const aliasDirectory = path.join(context.parent, "outside aliases");
+    const lockedInput = path.join(guardedInputs, "locked input.bin");
+    const alias = path.join(aliasDirectory, "second hard-link name.bin");
+    await mkdir(guardedInputs);
+    await mkdir(aliasDirectory);
+    await writeFile(lockedInput, Buffer.alloc(0), { flag: "wx" });
+    await link(lockedInput, alias);
+    const executableSha256 = await shaFile(process.execPath);
+    await assert.rejects(
+      () => invokeSupervisor(receipt, {
+        schema: 1,
+        protocol_version: FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+        executable: process.execPath,
+        executable_sha256: executableSha256,
+        args: ["--version"],
+        cwd: fixtureDirectory,
+        environment: {
+          SYSTEMROOT: process.env.SYSTEMROOT,
+          TEMP: process.env.TEMP,
+          TMP: process.env.TMP,
+        },
+        locked_inputs: [{ path: lockedInput, sha256: emptySha256 }],
+        timeout_ms: 5_000,
+        max_output_bytes: 65_536,
+      }),
+      /exactly one hard-link|Command failed/,
+    );
+  } finally {
+    await cleanup(context);
+  }
+});
+
+test("Windows supervisor rejects reparse-point input paths inside the helper", async () => {
+  if (process.platform !== "win32") return;
+  const context = await makeContext("windows-reparse-input");
+  try {
+    const configured = await processAdapterConfig(context);
+    const receipt = await addWindowsJobSupervisor(context, configured);
+    const realInputDirectory = path.join(context.parent, "real guarded inputs");
+    const inputJunction = path.join(context.parent, "guarded input junction");
+    const inputName = "locked input.txt";
+    await mkdir(realInputDirectory);
+    await writeFile(path.join(realInputDirectory, inputName), "frozen input\n", { flag: "wx" });
+    await symlink(realInputDirectory, inputJunction, "junction");
+    const reparseInput = path.join(inputJunction, inputName);
+    const executableSha256 = await shaFile(process.execPath);
+    const inputSha256 = await shaFile(reparseInput);
+    await assert.rejects(
+      () => invokeSupervisor(receipt, {
+        schema: 1,
+        protocol_version: FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+        executable: process.execPath,
+        executable_sha256: executableSha256,
+        args: ["--version"],
+        cwd: fixtureDirectory,
+        environment: {
+          SYSTEMROOT: process.env.SYSTEMROOT,
+          TEMP: process.env.TEMP,
+          TMP: process.env.TMP,
+        },
+        locked_inputs: [{ path: reparseInput, sha256: inputSha256 }],
+        timeout_ms: 5_000,
+        max_output_bytes: 65_536,
+      }),
+      /reparse point|Command failed/,
+    );
+  } finally {
+    await cleanup(context);
+  }
+});
+
+test("Windows supervisor rejects mutable SUBST drive roots inside the helper", async () => {
+  if (process.platform !== "win32") return;
+  const context = await makeContext("windows-subst-input");
+  let subst = null;
+  try {
+    const configured = await processAdapterConfig(context);
+    const receipt = await addWindowsJobSupervisor(context, configured);
+    const inputName = "locked input.txt";
+    await writeFile(path.join(context.parent, inputName), "frozen input\n", { flag: "wx" });
+    subst = await createTemporarySubst(context.parent);
+    const redirectedInput = `${subst.drive}\\${inputName}`;
+    const executableSha256 = await shaFile(process.execPath);
+    const inputSha256 = await shaFile(path.join(context.parent, inputName));
+    await assert.rejects(
+      () => invokeSupervisor(receipt, {
+        schema: 1,
+        protocol_version: FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+        executable: process.execPath,
+        executable_sha256: executableSha256,
+        args: ["--version"],
+        cwd: fixtureDirectory,
+        environment: {
+          SYSTEMROOT: process.env.SYSTEMROOT,
+          TEMP: process.env.TEMP,
+          TMP: process.env.TMP,
+        },
+        locked_inputs: [{ path: redirectedInput, sha256: inputSha256 }],
+        timeout_ms: 5_000,
+        max_output_bytes: 65_536,
+      }),
+      /protected Windows system-volume|SUBST|Command failed/,
+    );
+  } finally {
+    if (subst !== null) await execFileAsync(subst.executable, [subst.drive, "/D"], { windowsHide: true });
+    await cleanup(context);
+  }
+});
+
+test("Windows physical adapter refuses a changed supervisor assembly", async () => {
+  if (process.platform !== "win32") return;
+  const context = await makeContext("windows-supervisor-tamper");
+  try {
+    const configured = await processAdapterConfig(context);
+    const receipt = await addWindowsJobSupervisor(context, configured);
+    const adapter = await createFixture012ProcessWorkstationAdapter({
+      adapterConfig: configured.config,
+      experimentConfig: context.config,
+      repositoryRoot: root,
+      adapterConfigPath: configured.configPath,
+    });
+    await appendFile(receipt.assembly_path, Buffer.from([0]));
+    await assert.rejects(
+      () => prepareFixture012WorkstationAcquisition({ config: context.config, adapter }),
+      /supervisor assembly content identity mismatch/i,
+    );
+  } finally {
+    await cleanup(context);
+  }
+});
+
+test("KILL_ON_JOB_CLOSE contains descendants when the supervisor host crashes", async () => {
+  if (process.platform !== "win32") return;
+  const context = await makeContext("windows-supervisor-host-crash");
+  try {
+    const configured = await processAdapterConfig(context);
+    const receipt = await addWindowsJobSupervisor(context, configured);
+    const signals = path.join(context.parent, "unguarded signals");
+    const marker = path.join(signals, "host-crash descendant escaped.txt");
+    const ready = path.join(signals, "host-crash target ready.txt");
+    const lockedSupport = path.join(context.parent, "locked support input.txt");
+    await mkdir(signals);
+    await writeFile(lockedSupport, "frozen support input\n", { flag: "wx" });
+    const request = {
+      schema: 1,
+      protocol_version: FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+      executable: process.execPath,
+      executable_sha256: await shaFile(process.execPath),
+      args: [descendantScript, "--parent-wait", marker, ready],
+      cwd: fixtureDirectory,
+      environment: {
+        SYSTEMROOT: process.env.SYSTEMROOT,
+        TEMP: process.env.TEMP,
+        TMP: process.env.TMP,
+      },
+      locked_inputs: [{ path: lockedSupport, sha256: await shaFile(lockedSupport) }],
+      timeout_ms: 30_000,
+      max_output_bytes: 65_536,
+    };
+    const harnessBytes = await readFile(receipt.harness_path);
+    const encodedHarness = Buffer.from(harnessBytes.toString("utf8"), "utf16le").toString("base64");
+    let hostChild;
+    const hostClosed = new Promise((resolve) => {
+      hostChild = execFile(receipt.host_executable, [
+        "-NoLogo", "-NoProfile", "-NonInteractive", "-EncodedCommand", encodedHarness,
+      ], {
+        cwd: root,
+        env: {
+          ...request.environment,
+          FIXTURE012_ASSEMBLY_PATH: receipt.assembly_path,
+          FIXTURE012_ASSEMBLY_SHA256: receipt.assembly_sha256,
+          FIXTURE012_VERSION: "0",
+        },
+        windowsHide: true,
+        maxBuffer: 4 * 1024 * 1024,
+      }, () => resolve());
+      hostChild.stdin.end(JSON.stringify(request));
+    });
+    await waitForPath(ready);
+    await assert.rejects(
+      () => writeFile(lockedSupport, "mid-launch mutation\n"),
+      (error) => new Set(["EBUSY", "EPERM", "EACCES"]).has(error.code),
+    );
+    hostChild.kill("SIGKILL");
+    await hostClosed;
+    await new Promise((resolve) => setTimeout(resolve, 1_800));
+    assert.equal(await pathExists(marker), false);
   } finally {
     await cleanup(context);
   }
