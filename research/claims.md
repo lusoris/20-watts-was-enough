@@ -2167,6 +2167,8 @@ describes the exact statement here, not a broader interpretation.
 - **Open issue:** The magnitude and presence of metric gaming are empirical and
   require withheld multidimensional outcomes.
 - **Used by:** [economics audit](audits/2026-08-05-economics-market-design-incentives.md),
+  [FM-T10 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t10--incentive-gaming-and-proxy-distortion),
+  [F-019 FM-T10](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t10--incentive-gaming-and-proxy-distortion),
   [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
   [P-009](principle-registry.md#p-009--maintenance-plane).
 
@@ -2248,6 +2250,8 @@ describes the exact statement here, not a broader interpretation.
   observable, and beat calibrated routers, primal–dual control, bandits, and
   randomized evaluation only in the strategic private-information regime.
 - **Used by:** [economics audit](audits/2026-08-05-economics-market-design-incentives.md),
+  [FM-T10 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t10--incentive-gaming-and-proxy-distortion),
+  [F-019 FM-T10](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t10--incentive-gaming-and-proxy-distortion),
   [P-001](principle-registry.md#p-001--selective-allocation),
   [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
   [P-007](principle-registry.md#p-007--prediction-error-allocation),
@@ -9794,6 +9798,8 @@ describes the exact statement here, not a broader interpretation.
   conditions must hold; the relation says nothing by itself about tails,
   correctness, utility, or optimal control.
 - **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [FM-T08 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t08--queueing-variability-and-capacity-headroom),
+  [F-019 FM-T08](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t08--queueing-variability-and-capacity-headroom),
   [material-service contract](../math/material-service-state.md),
   [neurogenesis and routing](../concept/10-neurogenesis-and-routing.md), and
   [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
@@ -9810,6 +9816,8 @@ describes the exact statement here, not a broader interpretation.
   service discipline, failures, preemption, abandonment, nonstationarity, and
   tail delay require direct evaluation.
 - **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [FM-T08 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t08--queueing-variability-and-capacity-headroom),
+  [F-019 FM-T08](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t08--queueing-variability-and-capacity-headroom),
   [material-service contract](../math/material-service-state.md), and
   [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
 
@@ -9826,6 +9834,8 @@ describes the exact statement here, not a broader interpretation.
   and stationarity assumptions must match; otherwise use a more appropriate
   queueing or simulation null.
 - **Used by:** [supply-chain/operations audit](audits/2026-08-05-supply-chain-operations-research.md),
+  [FM-T08 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t08--queueing-variability-and-capacity-headroom),
+  [F-019 FM-T08](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t08--queueing-variability-and-capacity-headroom),
   [material-service contract](../math/material-service-state.md),
   [neurogenesis and routing](../concept/10-neurogenesis-and-routing.md), and
   [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md).
@@ -17139,12 +17149,30 @@ describes the exact statement here, not a broader interpretation.
 
 ### C-1285
 
-- **Statement:** a bioremediation endpoint requires parent and daughter products, total mass, spatial support, terminal products or toxicity, intervention history, and post-treatment rebound; concentration at one time and location is not durable removal.
+- **Statement:** a transformative-treatment or bioremediation endpoint requires
+  parent and daughter products, total mass, spatial support, terminal products
+  or biological effects, intervention history, post-treatment age, and rebound;
+  parent concentration at one time and location is neither durable removal nor
+  evidence of safety.
 - **Status:** established boundary supported by scoped field interventions.
-- **Primary sources:** `major2002`, `anderson2003`, `wu2007`.
-- **Rationale:** transformation can stall at harmful intermediates, apparent depletion can reflect movement or sampling, and reduced species can reoxidize when environmental conditions change.
-- **Open issue:** test alternative transport paths, unobserved zones, daughter-product toxicity, electron donors/acceptors, oxygen ingress, monitoring wells, cessation, rebound, and independent mass closure.
-- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md), [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+- **Primary sources:** `major2002`, `anderson2003`, `wu2007`,
+  `HuberEtAl2005Ozonation`, `GuldeEtAl2021Products`,
+  `SchneiderEtAl2020Toxicity`.
+- **Rationale:** transformation can stall at harmful intermediates, apparent
+  depletion can reflect movement or sampling, reduced species can reoxidize,
+  and strong parent removal can coexist with transformation products or
+  post-treatment effect changes.
+- **Open issue:** test alternative transport paths, unobserved zones, parent
+  and daughter-product fate, target and non-target observations, elemental
+  closure, biological effects, post-treatment age, electron donors/acceptors,
+  oxygen ingress, monitoring support, cessation, rebound, and independent mass
+  closure.
+- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md),
+  [ENV-T08 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t08--transformation-product-and-effect-closure),
+  [F-018 ENV-T08](../experiments/fixtures/018-environmental-process-state-control.md#env-t08--transformation-product-and-effect-closure),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
 
 ### C-1286
 
@@ -17170,8 +17198,16 @@ describes the exact statement here, not a broader interpretation.
 - **Status:** established metric and standards boundary.
 - **Primary sources:** `trost1991`, `iso14040`, `iso14044`, `iso22095`, `iso220952`, `iso59020`, `eu2021pef`.
 - **Rationale:** the measures use different numerators, denominators, boundaries, allocation rules, physical claims, attribute models, impacts, and decision purposes.
-- **Open issue:** require physical and attribute balance, function equivalence, allocation sensitivity, energy, toxicity, water, durability, safety, end-of-life, double-counting attacks, and current standard/version identity.
-- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+- **Open issue:** require physical and attribute balance, function and service
+  equivalence, explicit counterfactual and uptake, allocation and substitution
+  sensitivity, induced demand, energy, toxicity, water, durability, safety,
+  end-of-life, double-counting attacks, and current standard/version identity.
+- **Used by:** [biotechnology and chemistry/process audit](audits/2026-08-21-biotechnology-chemistry-process-systems.md),
+  [ENV-T09 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t09--lifecycle-substitution-and-rebound),
+  [F-018 ENV-T09](../experiments/fixtures/018-environmental-process-state-control.md#env-t09--lifecycle-substitution-and-rebound),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
 
 ### C-1289
 
@@ -17304,9 +17340,17 @@ describes the exact statement here, not a broader interpretation.
 - **Statement:** field-scale chemical-weathering flux can be limited by fluid residence time and approach to equilibrium rather than inheriting an intrinsic laboratory surface-rate law.
 - **Status:** established scoped field and model result.
 - **Primary sources:** `Maher2010WeatheringResidence`.
+- **Related transport source:** `Danckwerts1953RTD` establishes the narrower
+  continuous-flow boundary that equal mean residence time need not imply equal
+  contact history.
 - **Rationale:** realized transformation depends on transport, contact, reactive surface evolution, saturation, and removal as well as intrinsic kinetics, so a component rate is not automatically a delivered system rate.
 - **Open issue:** discriminate kinetic-, transport-, residence-, and mixed-control regimes across held-out flow, lithology, geometry, and chemistry while charging observation and simulation cost.
-- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md).
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md),
+  [ENV-T01 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t01--rtd-bypass-and-flow-history-contract),
+  [F-018 ENV-T01](../experiments/fixtures/018-environmental-process-state-control.md#env-t01--rtd-bypass-and-flow-history-contract),
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md).
 
 ### C-1304
 
@@ -17324,7 +17368,12 @@ describes the exact statement here, not a broader interpretation.
 - **Primary sources:** `Dagan1986GroundwaterScales`, `RenardDeMarsily1997Permeability`, `SteefelEtAl2015ReactiveTransportCodes`.
 - **Rationale:** upscaling defines equivalence relative to selected observables, boundary conditions, heterogeneity, scale, and closure assumptions rather than producing one universally portable reduced model.
 - **Open issue:** preregister target observables and test coarse models across held-out boundaries, heterogeneity scales, reactive regimes, numerical implementations, and observation operators.
-- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md).
+- **Used by:** [mineralogy, petrology, and geochemistry audit](audits/2026-08-21-mineralogy-petrology-geochemistry.md),
+  [environmental-engineering audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#c-1478--unit-efficiency-does-not-identify-net-service-level-benefit),
+  [F-018 ENV-T09](../experiments/fixtures/018-environmental-process-state-control.md#env-t09--lifecycle-substitution-and-rebound),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Fixture F-005](../experiments/fixtures/005-regime-qualified-flow-inference-control.md).
 
 ### C-1306
 
@@ -18337,7 +18386,8 @@ describes the exact statement here, not a broader interpretation.
 - **Evidence status:** established conservation and regulatory measurement
   boundary; transfer benefit remains untested.
 - **Primary/authoritative sources:** `WMO168_2008`, `EU2000_60_2026`,
-  `EU2009_90`, `EU2020_2184`, `DE_OGewV_2016`.
+  `EU2009_90`, `EU2020_2184`, `DE_OGewV_2016`, `Danckwerts1953RTD`,
+  `McCleafEtAl2017PFAS`, `LiuWernerBellona2019PFAS`.
 - **Rationale:** WMO hydrological practice distinguishes measured hydrological
   variables and network-derived information; EU water law defines monitoring,
   status, sampling points, analytical performance, and treatment-qualified
@@ -18358,6 +18408,10 @@ describes the exact statement here, not a broader interpretation.
   full mass balance, residence-time distribution, reaction/transport modelling,
   process monitoring, and decision-specific sampling are present?
 - **Used by:** [measurement-heavy analytical, water, and Earth-observation audit](audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md#ws-meao-05--catchment-load-and-treatment-breakthrough),
+  [ENV-T01 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t01--rtd-bypass-and-flow-history-contract),
+  [F-018 ENV-T01](../experiments/fixtures/018-environmental-process-state-control.md#env-t01--rtd-bypass-and-flow-history-contract),
+  [ENV-T06 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t06--competitive-adsorption-and-breakthrough),
+  [F-018 ENV-T06](../experiments/fixtures/018-environmental-process-state-control.md#env-t06--competitive-adsorption-and-breakthrough),
   [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
   [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
 
@@ -19864,6 +19918,8 @@ describes the exact statement here, not a broader interpretation.
 - **Open question:** does it beat complete public-performance evaluation with
   independent outcomes and a no-gaming alternative?
 - **Used by:** [SS7-T03](audits/2026-08-24-political-administrative-stratification-media-depth.md#ss7-t03--public-service-targets-improvement-and-gaming),
+  [FM-T10 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t10--incentive-gaming-and-proxy-distortion),
+  [F-019 FM-T10](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t10--incentive-gaming-and-proxy-distortion),
   [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
   [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
   and [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
@@ -20929,3 +20985,692 @@ describes the exact statement here, not a broader interpretation.
   and [020](../experiments/candidates/020-constitutional-control-plane.md).
 - **Disposition:** rights-bounded value-of-information hypothesis; no legal
   verdict or universal resolution target.
+
+### C-1470
+
+- **Statement:** In a non-ideal continuous-flow system, nominal hydraulic
+  retention time $V/Q$ does not identify early escape, tailing, recirculation,
+  dead volume, or reactive exposure; prediction therefore requires a
+  residence-time distribution or an equivalent flow-history state.
+- **Status:** established.
+- **Evidence note:** This is an established continuous-flow and reactor-design
+  boundary. An RTD alone does not identify a reactive, multiphase,
+  time-varying, or internally unobservable system.
+- **Primary source:** `Danckwerts1953RTD`.
+- **Rationale:** Systems with the same mean residence time can have different
+  conversion and blending performance because their contact histories differ.
+- **Proposed AI translation:** Keep queue dwell time, route history, and
+  exposure distributions distinct from mean latency whenever state or loss is
+  path-dependent.
+- **Efficiency mechanism:** Retain a tested sufficient flow-history state
+  instead of replaying every parcel or event.
+- **Failure modes:** reactive or sorbing tracer; outlet-only
+  non-identifiability; time-varying flow; sensor lag mistaken for dispersion;
+  an insufficient tanks-in-series family; unit mismatch.
+- **Measurable prediction:** An RTD-aware mature model will reduce paired
+  early-escape and conversion loss by at least 20% relative to an ideal $V/Q$
+  model on frozen confirmation worlds, with positive held-out transfer.
+- **Open question:** Which compact, versioned flow-history state remains
+  sufficient when flow, reaction, observation support, and routing change?
+- **Used by:** [ENV-T01 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t01--rtd-bypass-and-flow-history-contract),
+  [F-018 ENV-T01](../experiments/fixtures/018-environmental-process-state-control.md#env-t01--rtd-bypass-and-flow-history-contract),
+  [neurogenesis and routing](../concept/10-neurogenesis-and-routing.md),
+  [sparse predictive compute](../concept/30-sparse-predictive-compute.md),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [energy model](../concept/80-energy-model.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+- **Disposition:** Adds RTD evidence to C-1303/C-1381 and maps to P-012/P-013;
+  no flow-memory principle or architecture is promoted.
+
+### C-1471
+
+- **Statement:** Where solids or functional populations are retained,
+  recycled, attached, or selectively retired, hydraulic residence time and
+  biological or component retention time are distinct state variables; their
+  population selection, washout, and recovery dynamics cannot be inferred
+  from request or token latency alone.
+- **Status:** established.
+- **Evidence note:** The distinction is established for scoped
+  suspended-growth biological treatment. Temperature, oxygen, substrate,
+  inhibition, immigration, biofilms, and granules qualify any threshold.
+- **Primary sources:** `HellingaEtAl1998SHARON`, `LiuWang2014SRT`.
+- **Rationale:** Flow-through lifetime and retained-population lifetime can be
+  changed independently and produce different selection and recovery behavior.
+- **Proposed AI translation:** Record component lifetime, retention,
+  replication, retirement, and population composition separately from request
+  latency.
+- **Efficiency mechanism:** Allocate retention and renewal by
+  function-specific lifetime instead of retaining all state equally.
+- **Failure modes:** once-through system; biofilm age distribution collapsed
+  to one scalar; measured-SRT error; temperature or oxygen confounding;
+  washout attributed to one variable.
+- **Measurable prediction:** An explicit retention-time and population model
+  will reduce ammonium-and-nitrite load-prediction loss by at least 25% relative
+  to an HRT-only model, with washout timing reported separately.
+- **Open question:** When does a compact lifetime/population record add value
+  beyond a complete mature population-dynamics model at equal cost?
+- **Used by:** [ENV-T02 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t02--hrt-srt-and-population-washout),
+  [F-018 ENV-T02](../experiments/fixtures/018-environmental-process-state-control.md#env-t02--hrt-srt-and-population-washout),
+  [neurogenesis and routing](../concept/10-neurogenesis-and-routing.md),
+  [sparse predictive compute](../concept/30-sparse-predictive-compute.md),
+  [memory and consolidation](../concept/40-memory-and-consolidation.md),
+  [system synthesis](../concept/70-system-synthesis.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+- **Disposition:** Maps to P-004/P-005/P-006/P-012; no organism guild or
+  wastewater kinetic constant is imported as an AI constant.
+
+### C-1472
+
+- **Statement:** In a coupled flow system, a locally beneficial action can
+  export delay, storage, flooding risk, pollutant load, energy demand, or
+  failure probability to a neighbouring subsystem, so control must be tested
+  over the coupled system boundary and its delays.
+- **Status:** plausible.
+- **Evidence note:** The general boundary is grounded in scoped full-scale and
+  benchmark evidence; superiority of the proposed project composition remains
+  unvalidated and site-specific.
+- **Primary sources:** `SeggelkeEtAl2013IntegratedRTC`,
+  `AmandEtAl2014AmmoniumControl`; authoritative benchmark:
+  `JeppssonEtAl2007BSM2`.
+- **Rationale:** Joint sewer, plant, and receiving-system state can reveal
+  downstream consequences that independent local objectives omit.
+- **Proposed AI translation:** Give locally optimized modules a shared state,
+  protected downstream constraints, delayed-effect accounting, and local safe
+  fallback.
+- **Efficiency mechanism:** Act locally under ordinary conditions and
+  escalate only when shared constraints or consequential uncertainty require
+  coordination.
+- **Failure modes:** forecast error; communication loss; actuator saturation;
+  omitted downstream state; scalar objective hiding trade-offs; controller
+  maintenance exceeding benefit.
+- **Measurable prediction:** Integrated control will reduce total
+  receiving-water nitrogen load by at least 15% relative to independent local
+  rules while protecting flooding, COD, compliance, and simulated electricity
+  separately.
+- **Open question:** Can local-first escalation beat robust integrated MPC
+  after communication, sensing, actuator, maintenance, and fallback costs?
+- **Used by:** [ENV-T03 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t03--integrated-wet-weather-control),
+  [F-018 ENV-T03](../experiments/fixtures/018-environmental-process-state-control.md#env-t03--integrated-wet-weather-control),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [energy model](../concept/80-energy-model.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+- **Disposition:** Maps to P-002/P-006/P-008/P-011/P-013 and operationalizes
+  Candidates 012/013/014; robust integrated MPC remains the mature null.
+
+### C-1473
+
+- **Statement:** A measurement anomaly, sensor fault, and process disturbance
+  are not interchangeable diagnoses; reliable monitoring requires sensor
+  history, calibration and maintenance state, multivariate process context,
+  and set-valued attribution where unique isolation is unsupported.
+- **Status:** established.
+- **Evidence note:** The process-monitoring and identifiability boundary is
+  established, but successful detection in one plant does not supply a
+  universal fault isolator or authorize autonomous control.
+- **Primary sources:** `RosenLennox2001Monitoring`,
+  `HaimiEtAl2016Anomaly`.
+- **Rationale:** Nonstationary process events and instrument failures can
+  generate similar residuals on different timescales.
+- **Proposed AI translation:** Observation records carry sensor and model
+  version, calibration, maintenance, support, uncertainty, and an equivalence
+  set when attribution is not identifiable.
+- **Efficiency mechanism:** Use multivariate residuals and maintenance
+  provenance to target recalibration or inspection rather than treating every
+  anomaly as a system-wide failure.
+- **Failure modes:** correlated faults; missing maintenance; an adaptive model
+  learning a slow fault; process change mimicking drift; forced unique
+  diagnosis; bad observations entering control before isolation.
+- **Measurable prediction:** Provenance-bearing multivariate monitoring will
+  reduce a frozen false-alarm, delay, wrong-isolation, and unsafe-control loss
+  by at least 20% relative to static univariate thresholds while preserving
+  set-valued answers for non-identifiable cases.
+- **Open question:** Can versioned observation contracts add value beyond
+  multiscale PCA, observer/residual banks, maintenance records, calibrated
+  abstention, and constrained control at equal resources?
+- **Used by:** [ENV-T04 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t04--sensor-and-process-anomaly-isolation),
+  [F-018 ENV-T04](../experiments/fixtures/018-environmental-process-state-control.md#env-t04--sensor-and-process-anomaly-isolation),
+  [sensorimotor grounding](../concept/20-sensorimotor-grounding.md),
+  [hardening and factual memory](../concept/60-hardening-and-factual-memory.md),
+  [system synthesis](../concept/70-system-synthesis.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+- **Disposition:** Maps to P-007/P-009/P-013 and strengthens Candidates
+  007/011/014; no general anomaly-detector principle is promoted.
+
+### C-1474
+
+- **Statement:** Membrane resistance and usable flux depend on feed and
+  operating history, reversible deposition, irreversible resistance, and
+  cleaning sequence; critical flux is operationally conditioned rather than a
+  universal material constant.
+- **Status:** established.
+- **Evidence note:** This is an established scoped membrane-operation
+  boundary. Membrane, hydrodynamics, temperature, feed, solids, chemistry,
+  observation time, and cleaning qualify the result.
+- **Primary sources:** `FieldEtAl1995CriticalFlux`,
+  `ShanNeufeld2007Fouling`.
+- **Rationale:** Repeated filtration and cleaning can accumulate irreversible
+  resistance even when an operating threshold appears acceptable in a shorter
+  test.
+- **Proposed AI translation:** Maintenance, resets, compaction, and
+  irreversible degradation update state and remaining capability rather than
+  merely clearing an alert.
+- **Efficiency mechanism:** Condition cleaning and replacement on estimated
+  recoverable and irreversible state instead of a fixed schedule.
+- **Failure modes:** short test missing ageing; below-threshold operation
+  treated as zero fouling; aggressive cleaning shortening life; chemical
+  burden omitted; shutdown time deleted.
+- **Measurable prediction:** A reversible/irreversible fouling-history model
+  will reduce unmet-service and noncompliant-production loss by at least 15%
+  relative to a fixed critical-flux or cleaning schedule without extra quality
+  or pressure-limit violations.
+- **Open question:** Does lineage-aware maintenance beat a nonlinear
+  fouling-state estimator with constrained MPC after cleaning, downtime,
+  chemical, replacement, and pressure costs?
+- **Used by:** [ENV-T05 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t05--membrane-fouling-and-cleaning-history),
+  [F-018 ENV-T05](../experiments/fixtures/018-environmental-process-state-control.md#env-t05--membrane-fouling-and-cleaning-history),
+  [memory and consolidation](../concept/40-memory-and-consolidation.md),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [energy model](../concept/80-energy-model.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+- **Disposition:** Maps to P-005/P-009/P-012 and recovery fragility under
+  Candidates 003/005; no fixed cleaning percentage, flux, or lifetime is
+  promoted.
+
+### C-1475
+
+- **Statement:** In multicomponent adsorptive treatment, batch capacity or a
+  fixed removal percentage does not identify bed service life, which depends
+  on transport, competition, matrix composition, media age, loading history,
+  breakthrough, and possible desorption.
+- **Status:** established.
+- **Evidence note:** The dynamic-adsorption boundary is established for scoped
+  GAC/PFAS systems; it does not establish every sorbent, matrix, or solute.
+- **Primary sources:** `McCleafEtAl2017PFAS`,
+  `LiuWernerBellona2019PFAS`.
+- **Rationale:** Long-duration column and pilot results show compound-specific
+  selectivity, matrix effects, desorption, and disagreement with batch-derived
+  behavior.
+- **Proposed AI translation:** Finite support stores carry lineage, loading,
+  competition, saturation, release, and replacement state rather than a fixed
+  hit rate.
+- **Efficiency mechanism:** Sample and replace by predicted breakthrough risk
+  and value of information rather than uniform intervals.
+- **Failure modes:** analytical censoring; unmeasured competitors;
+  batch-to-column extrapolation; regeneration release; scale-dependent
+  hydrodynamics; one solute hiding another.
+- **Measurable prediction:** A competitive transport-aware model will reduce
+  integrated above-limit load by at least 30% relative to independent batch
+  isotherms or fixed-removal models, with breakthrough-time error reported
+  separately.
+- **Open question:** Can active sampling and media-lineage state beat a mature
+  multicomponent column model after assay, media, service, and failure costs?
+- **Used by:** [ENV-T06 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t06--competitive-adsorption-and-breakthrough),
+  [F-018 ENV-T06](../experiments/fixtures/018-environmental-process-state-control.md#env-t06--competitive-adsorption-and-breakthrough),
+  [memory and consolidation](../concept/40-memory-and-consolidation.md),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [energy model](../concept/80-energy-model.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+- **Disposition:** Refines C-1381 and maps to P-005/P-009/P-010/P-012; no
+  PFAS-specific affinity becomes a general memory or routing constant.
+
+### C-1476
+
+- **Statement:** In buffered anaerobic treatment, a visible endpoint such as
+  pH can lag precursor accumulation, so reliable overload detection requires
+  delayed-state inference from a context-dependent combination of volatile
+  fatty acids, alkalinity, gas variables, hydrogen, feed, and inhibition state.
+- **Status:** established.
+- **Evidence note:** The delayed, multi-indicator monitoring boundary is
+  established for scoped anaerobic processes; the best panel depends on
+  reactor, substrate, temperature, inhibition, mixing, and assay availability.
+- **Primary sources:** `BoeEtAl2010Indicators`,
+  `BjornssonEtAl2001Monitoring`; mature model: `BatstoneEtAl2002ADM1`.
+- **Rationale:** Buffer capacity can postpone an endpoint response while
+  precursor variables and latent process state already approach failure.
+- **Proposed AI translation:** Buffered outputs can lag latent overload;
+  authority depends on precursor state, delay, uncertainty, and safe fallback
+  rather than one visible endpoint.
+- **Efficiency mechanism:** Allocate expensive assays only when cheap signals
+  leave a consequential state ambiguity.
+- **Failure modes:** hydrogen false alarm; VFA assay delay; sensor drift;
+  model mismatch under ammonia or long-chain fatty acids; unsafe action under
+  broad uncertainty; truncated recovery window.
+- **Measurable prediction:** Delayed buffered-state inference will reduce the
+  frozen dimensioned upset, lost-feed, and unsafe-action loss by at least 25%
+  relative to pH-only protection, with calibrated uncertainty.
+- **Open question:** Can staged active assays beat ADM1-family estimation and
+  constrained multi-indicator control at equal assay, compute, delay, and
+  service cost?
+- **Used by:** [ENV-T07 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t07--buffered-anaerobic-overload),
+  [F-018 ENV-T07](../experiments/fixtures/018-environmental-process-state-control.md#env-t07--buffered-anaerobic-overload),
+  [sensorimotor grounding](../concept/20-sensorimotor-grounding.md),
+  [sparse predictive compute](../concept/30-sparse-predictive-compute.md),
+  [memory and consolidation](../concept/40-memory-and-consolidation.md),
+  [system synthesis](../concept/70-system-synthesis.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+- **Disposition:** Maps to P-006/P-007/P-009/P-012 and delayed authority under
+  Candidate 012; no universal indicator panel or trigger is proposed.
+
+### C-1478
+
+- **Statement:** Unit-process efficiency does not identify net service-level
+  benefit; resource recovery or efficiency must be evaluated against an
+  explicit service counterfactual and lifecycle boundary that includes
+  infrastructure, operations, direct emissions, substitution, and demand
+  response.
+- **Status:** disputed.
+- **Evidence note:** The need to declare lifecycle and service boundaries is
+  established. The sign and magnitude of rebound or displacement remain
+  disputed and context-dependent.
+- **Primary sources:** `FoleyEtAl2010LCI`, `MaierEtAl2022Recycling`,
+  `CameronHarpHendricks2025Efficiency`; authoritative method:
+  `DINENISO14040_2021`, `DINENISO14044_2021`.
+- **Rationale:** Material and energy trade-offs, incomplete potable
+  displacement, and context-dependent demand response can separate nominal
+  unit efficiency from net service benefit.
+- **Proposed AI translation:** Efficiency claims declare a service
+  denominator, counterfactual demand, upstream and capital inputs, displaced
+  activity, direct emissions, and induced use.
+- **Efficiency mechanism:** Keep a versioned service ledger so changes in
+  grid, demand, substitution, or policy recompute only affected terms.
+- **Failure modes:** wrong counterfactual; double-counted avoided burden;
+  static grid; hidden quality difference; leakage; post-hoc functional unit;
+  unit-process result presented as net benefit.
+- **Measurable prediction:** A service-level lifecycle/counterfactual model
+  will reduce policy-selection regret by at least 25% relative to plant-gate
+  efficiency or nominal one-for-one substitution.
+- **Open question:** Does a versioned service ledger improve decisions beyond
+  complete DIN EN ISO 14040/14044-qualified lifecycle modeling with frozen
+  uptake, substitution, uncertainty, and rebound scenarios?
+- **Used by:** [ENV-T09 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t09--lifecycle-substitution-and-rebound),
+  [F-018 ENV-T09](../experiments/fixtures/018-environmental-process-state-control.md#env-t09--lifecycle-substitution-and-rebound),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [energy model](../concept/80-energy-model.md),
+  [research roadmap](../concept/90-research-roadmap.md), and
+  [efficiency model](../math/efficiency-model.md).
+- **Disposition:** Qualifies C-1288/C-1305, maps to P-013 and
+  compensation-aware recovery under Candidate 005; no rebound coefficient or
+  scalar sustainability score is promoted.
+
+### C-1479
+
+- **Statement:** Neither centralized nor decentralized treatment is a
+  universal environmental or reliability winner; density, topography,
+  conveyance, reuse opportunity, correlated hazards, maintenance access,
+  operator capacity, spare parts, and treatment requirements determine the
+  feasible Pareto frontier.
+- **Status:** plausible.
+- **Evidence note:** A scoped LCA supports context dependence. German and EU
+  instruments constrain applicability but are not empirical proof that either
+  topology is superior.
+- **Primary source:** `RischEtAl2021Decentralisation`.
+- **Authoritative constraints:** `GermanyWHG`, `EU2020WaterReuse`.
+- **Rationale:** Apparent redundancy, scale economy, or local reuse can reverse
+  when shared dependencies, operator capability, conveyance, monitoring,
+  maintenance, or common-cause hazards enter the boundary.
+- **Proposed AI translation:** Select modularity and centralization under
+  workload topology, communication, shared resources, operator capacity,
+  common-cause failure, and service constraints.
+- **Efficiency mechanism:** Use local service and fallback where cheaper and
+  reliable, and shared capacity or specialist maintenance where scale or
+  assurance dominates.
+- **Failure modes:** shared power or operator defeating nominal redundancy;
+  average cost hiding unequal outage; local reuse omitting monitoring burden;
+  central expertise omitted; maintenance access assumed; correlated failure
+  treated as independent.
+- **Measurable prediction:** Context-qualified architecture selection will
+  reduce constrained architecture regret by at least 15% relative to
+  central-only or fully local heuristics, with held-out urban, rural, and
+  common-cause transfer.
+- **Open question:** Can a modular local-first composition beat complete
+  facility-location, hydraulic, reliability, maintenance, and lifecycle
+  optimization across held-out contexts at equal resources?
+- **Used by:** [ENV-T10 audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md#env-t10--context-qualified-centralisation),
+  [F-018 ENV-T10](../experiments/fixtures/018-environmental-process-state-control.md#env-t10--context-qualified-centralisation),
+  [neurogenesis and routing](../concept/10-neurogenesis-and-routing.md),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [energy model](../concept/80-energy-model.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+- **Disposition:** Maps to P-002/P-008/P-009/P-013 and deficit routing under
+  Candidate 013; no universal centralization ratio or module size is proposed.
+
+### C-1480
+
+- **Statement:** Value-at-Risk need not be subadditive, while a carefully
+  defined Expected Shortfall is coherent under its mathematical conditions;
+  neither measure validates the loss variable, horizon, confidence level,
+  dependence model, sample support, valuation, liquidity, or intervention
+  assumptions.
+- **Status:** established.
+- **Evidence note:** The risk-functional results are formal. Estimator quality,
+  model selection, operational transfer, and liquidity remain empirical and
+  decision-qualified.
+- **Primary sources:** `ArtznerEtAl1999CoherentRisk`,
+  `AcerbiTasche2002ExpectedShortfall`.
+- **Rationale:** An aggregation rule and an estimated tail are separate.
+  Coherence constrains the functional; it does not prove that the fitted
+  distribution, dependence, or operational boundary is correct.
+- **Proposed AI translation:** Every pooled failure or risk claim carries loss
+  units, horizon, tail level, aggregation rule, dependence version, effective
+  tail count, liquidity/action model, uncertainty, and abstention state.
+- **Efficiency mechanism:** Allocate expensive tail simulation and scenario
+  expansion only where a cheaper bound cannot resolve a registered decision;
+  charge abstention, tail sampling, and model maintenance.
+- **Failure modes:** coherence called calibration; tiny effective tail sample;
+  mixed units; post-hoc tail level; component count called diversification;
+  omitted common roots; static losses despite action feedback; regulatory
+  percentile transferred as a scientific constant.
+- **Measurable prediction:** A typed ES/scenario record will expose false-safe
+  aggregation decisions that a scalar VaR or diagonal-covariance report
+  accepts, while abstention and estimation cost remain visible.
+- **Open question:** Can a compact tail/dependence record improve decisions
+  beyond proper ES, scenario stress, covariance propagation, robust
+  optimization, and calibrated abstention at equal compute and coverage?
+- **Used by:** [FM-T01 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t01--tail-aggregation-and-estimator-boundary),
+  [F-019 FM-T01](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t01--tail-aggregation-and-estimator-boundary),
+  [sparse predictive compute](../concept/30-sparse-predictive-compute.md),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [energy model](../concept/80-energy-model.md),
+  [research roadmap](../concept/90-research-roadmap.md),
+  [measurement contract](../math/measurement-contract.md), and
+  [efficiency model](../math/efficiency-model.md).
+- **Disposition:** promotes audit-local `REC-AFR-06`, qualifies C-183, C-525,
+  C-671, and C-1268, and maps to P-004/P-009; no new principle.
+
+### C-1481
+
+- **Statement:** In the cited models, funding constraints, margins or solvency
+  limits, forced sales, price impact, and overlapping exposures can form a
+  positive-feedback loop in which individually defensive actions amplify
+  system loss.
+- **Status:** established.
+- **Evidence note:** Established inside the cited financial models. An AI
+  translation is plausible only when the same action--shared-state--forced-
+  response structure exists.
+- **Primary sources:** `BrunnermeierPedersen2009Liquidity`,
+  `CifuentesFerrucciShin2005Contagion`.
+- **Rationale:** The action changes the shared state used to trigger the next
+  action; an exogenous one-pass risk score therefore misses the fixed point.
+- **Proposed AI translation:** Apply only when reclamation, migration,
+  throttling, deactivation, or reserve calls reduce shared headroom or fallback
+  quality and force other modules to respond. Ordinary congestion without this
+  feedback remains a queue/control problem.
+- **Efficiency mechanism:** Solve the feedback fixed point or a certified bound
+  only near action thresholds; use cheaper one-pass estimates when the measured
+  impact parameter is effectively zero.
+- **Failure modes:** market terminology applied to cooperative modules;
+  arbitrary price-impact coefficient; no forced-action threshold; centralized
+  controller omitted; solvent state confused with deadline liquidity; static
+  correlation substituted for action feedback; intervention cost externalized.
+- **Measurable prediction:** One-pass and fixed-point models coincide when
+  impact is zero, but their forecast error separates as overlap, impact, and
+  funding sensitivity rise; a staged controller earns credit only against the
+  full fixed-point and centralized-control nulls.
+- **Open question:** Does an approximate local feedback model ever beat mature
+  fixed-point clearing, constrained control, and robust optimization after
+  communication, reserve, and convergence costs?
+- **Used by:** [FM-T02 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t02--liquidity-leverage-and-endogenous-feedback),
+  [F-019 FM-T02](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t02--liquidity-leverage-and-endogenous-feedback),
+  [working architecture](../concept/01-working-architecture.md),
+  [neurogenesis and routing](../concept/10-neurogenesis-and-routing.md),
+  [sparse predictive compute](../concept/30-sparse-predictive-compute.md),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [energy model](../concept/80-energy-model.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+- **Disposition:** maps to P-006 feedback, P-008 containment, P-009 maintenance,
+  and Candidates 012/013; no liquidity principle.
+
+### C-1482
+
+- **Statement:** Mean--variance selection depends on expected returns,
+  covariance, weights, and constraints; under estimation error, a
+  non-negativity constraint can reduce out-of-sample risk even when it is not a
+  true population constraint, so asset or expert count alone does not establish
+  diversification or optimality.
+- **Status:** established.
+- **Evidence note:** The result is model-, estimator-, and sample-qualified. A
+  constraint can exclude a real hedge in another regime.
+- **Primary sources:** `Markowitz1952PortfolioSelection`,
+  `JagannathanMa2003Constraints`.
+- **Rationale:** Optimization can amplify error in estimated moments. A
+  constraint may act as regularization, but is not universally safer.
+- **Proposed AI translation:** Ensemble or expert portfolios report exposure
+  factors, estimated dependence, weight concentration, turnover, regime,
+  effective sample size, liquidity/switch cost, and out-of-sample risk.
+- **Efficiency mechanism:** Prefer simple or regularized allocation while
+  estimation uncertainty dominates the forecast benefit of a more flexible
+  optimizer; spend extra estimation only when it changes the decision.
+- **Failure modes:** oracle covariance; same data for selection and evaluation;
+  static dependence; hidden shorting or negative routing; survivor selection;
+  transaction and switching costs omitted; constrained result declared
+  universally safer.
+- **Measurable prediction:** Unconstrained sample optimization becomes less
+  stable as dimension/sample ratio rises; constraints or shrinkage improve some
+  out-of-sample regimes but lose that advantage when estimates are sufficiently
+  accurate or a required hedge is excluded.
+- **Open question:** Can an adaptive constraint selector beat shrinkage,
+  factor, norm, turnover, and robust-optimization nulls without selecting its
+  regime on test outcomes?
+- **Used by:** [FM-T03 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t03--estimated-portfolios-and-diversification-limits),
+  [F-019 FM-T03](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t03--estimated-portfolios-and-diversification-limits),
+  [neurogenesis and routing](../concept/10-neurogenesis-and-routing.md),
+  [sparse predictive compute](../concept/30-sparse-predictive-compute.md),
+  [grokking and pruning](../concept/50-grokking-and-pruning.md),
+  [system synthesis](../concept/70-system-synthesis.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+- **Disposition:** refines C-183/C-525 and P-001/P-004; no finance-derived
+  diversity principle.
+
+### C-1483
+
+- **Statement:** Organizational rules, resources, relationships, and
+  communication procedures can determine which issues and responses receive
+  decision-maker attention; supplying more information therefore need not
+  increase detection or action under a fixed attention budget.
+- **Status:** plausible.
+- **Evidence note:** The source is a primary theoretical organizational
+  framework, not a universal causal effect and not evidence that transformer
+  attention is human or organizational attention.
+- **Primary source:** `Ocasio1997Attention`.
+- **Rationale:** Information must enter a finite noticing, interpretation,
+  prioritization, acknowledgement, decision, and action path before it can
+  change an outcome.
+- **Proposed AI translation:** Treat reviewer/operator attention as a queue with
+  routing rules, deadlines, source/status bias, interruption cost, protected
+  sampling, escalation authority, and missed-work opportunity cost.
+- **Efficiency mechanism:** Allocate scarce review to calibrated expected
+  consequence while retaining a protected reference channel that can reveal
+  score drift and low-score severe events.
+- **Failure modes:** tokens, FLOPs, and human attention collapsed; omniscient
+  severity score; alert volume used as detection; no reviewer-service
+  distribution; silent queue displacement; authority without response
+  capacity; synthetic result generalized to employees.
+- **Measurable prediction:** Under fixed reviewer-minutes, undifferentiated
+  alert inflation increases rare severe misses or routine displacement;
+  calibrated priority plus protected low-score sampling improves the joint
+  frontier only in the registered regimes.
+- **Open question:** Can a learned attention router beat calibrated priority,
+  earliest-deadline, queue-aware, protected-sampling, and constrained-scheduling
+  baselines without privileged severity or extra reviewer time?
+- **Used by:** [FM-T04 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t04--organizational-attention-under-overload),
+  [F-019 FM-T04](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t04--organizational-attention-under-overload),
+  [working architecture](../concept/01-working-architecture.md),
+  [sparse predictive compute](../concept/30-sparse-predictive-compute.md),
+  [hardening and factual memory](../concept/60-hardening-and-factual-memory.md),
+  [system synthesis](../concept/70-system-synthesis.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+- **Disposition:** maps to P-001/P-002/P-007/P-009/P-011/P-013 and Candidates
+  011/012/020; no attention principle.
+
+### C-1484
+
+- **Statement:** In the cited stochastic investment model, uncertainty plus
+  irreversible commitment can make waiting valuable even when immediate net
+  present value is positive; this is not a universal rule to delay because
+  expiry, delay loss, reversibility, observability, and alternative
+  opportunities can remove or reverse the value.
+- **Status:** established.
+- **Evidence note:** Established within the formal stopping model; transfer to
+  staged AI deployment is unvalidated.
+- **Primary source:** `McDonaldSiegel1986Waiting`.
+- **Rationale:** “Act now” and “retain the right to act later” are different
+  feasible sets.
+- **Proposed AI translation:** Value staged deployment, pilot, shadow
+  execution, reserved capacity, rollback, or deferred structural commitment
+  only after charging delay, observation, reservation, lost-service, and
+  irreversible partial effects.
+- **Efficiency mechanism:** Preserve an option only when expected information
+  or state change can alter a later decision enough to repay the reservation
+  and delay cost.
+- **Failure modes:** procrastination called optionality; option assumed to
+  survive; rollback leaks external effects; risk-neutral valuation imported
+  without justification; future information not modeled; reservation capacity
+  free; sunk and recoverable costs mixed.
+- **Measurable prediction:** Exact dynamic-programming value minus immediate-
+  rule value rises with uncertainty and unrecoverable commitment in the defined
+  model, but shrinks with short expiry, high delay loss, or cheap reversibility.
+- **Open question:** Can a cheap staged policy match exact or robust dynamic
+  programming under jump, drift, and misspecified information value after
+  reservation and rollback leakage are charged?
+- **Used by:** [FM-T05 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t05--real-options-under-uncertainty-and-irreversibility),
+  [F-019 FM-T05](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t05--real-options-under-uncertainty-and-irreversibility),
+  [working architecture](../concept/01-working-architecture.md),
+  [memory and consolidation](../concept/40-memory-and-consolidation.md),
+  [hardening and factual memory](../concept/60-hardening-and-factual-memory.md),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [research roadmap](../concept/90-research-roadmap.md), and
+  [state-qualified intervention](../math/state-qualified-intervention.md).
+- **Disposition:** maps to P-003/P-004/P-009/P-012 and Candidates
+  001/005/009/010. Real-option mathematics is a mature commitment null, not a
+  new principle.
+
+### C-1485
+
+- **Statement:** Control effectiveness depends on the controlled risk,
+  organizational complexity and change, evidence roots, authority, information
+  access, reviewer resources, queueing, and correction path; role separation or
+  checklist completion alone does not establish effective control.
+- **Status:** plausible.
+- **Evidence note:** The scientific study is observational and US financial-
+  reporting scoped. European/German sources impose or describe governance
+  expectations; neither source type proves the proposed AI composition.
+- **Scientific source:** `DoyleGeMcVay2007InternalControl`.
+- **Normative sources:** `EU2024CRDVI`, `EBA2021InternalGovernance`,
+  `GermanyAktG91`, and `BaFin2024MaRisk`.
+- **Rationale:** Nominal independence does not separate correlated evidence
+  roots, and a control that cannot receive information or act inside the
+  decision window is not operationally effective.
+- **Proposed AI translation:** Record proposer, approver, executor, monitor,
+  evidence roots, shared dependencies, authority, capacity, sampling frame,
+  queue, exceptions, override, remediation, and verified effect.
+- **Efficiency mechanism:** Use risk-based review and independently rooted
+  reconciliation where expected severe-loss reduction repays review work;
+  retain direct automation for low-consequence, fully observable cases.
+- **Failure modes:** compliance equals correctness; two roles share model,
+  data, or credential roots; overloaded reviewer; independence without access;
+  controls frozen through change; false blocks and bypass omitted; management
+  self-certifies; audit queue externalized.
+- **Measurable prediction:** A same-root two-person check adds little against
+  planted shared-source failures, while independently rooted evidence and risk-
+  based review reduce severe escapes only while authority and review capacity
+  remain adequate.
+- **Open question:** Can a versioned control selector outperform mature RBAC,
+  reconciliation, sampled audit, anomaly detection, change control, and
+  independent review without control proliferation or hidden queue cost?
+- **Used by:** [FM-T06 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t06--internal-control-independence-and-adaptation),
+  [F-019 FM-T06](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t06--internal-control-independence-and-adaptation),
+  [hardening and factual memory](../concept/60-hardening-and-factual-memory.md),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [research roadmap](../concept/90-research-roadmap.md),
+  [contestable decision record](../math/contestable-decision-record.md), and
+  [measurement contract](../math/measurement-contract.md).
+- **Disposition:** refines C-525, C-1265, C-1269, P-008/P-009/P-013, and
+  Candidates 009/014/020; no “three lines” principle.
+
+### C-1486
+
+- **Statement:** For in-scope financial entities, DORA requires governance,
+  function-qualified continuity and recovery objectives, response/recovery
+  arrangements, testing, learning, and third-party-risk management; backup
+  existence, mean uptime, capital adequacy, or an incident report does not by
+  itself establish restoration within a declared service and data-loss
+  tolerance.
+- **Status:** established.
+- **Evidence note:** Established as a scoped legal/governance statement. Any
+  claim that the practices improve an AI system remains an empirical
+  hypothesis.
+- **Authoritative source:** `EU2022DORA`, especially Articles 5--6, 11--13 and
+  24--27.
+- **Rationale:** Continuity, degraded service, recovery time, recovery point,
+  correctness, dependency closure, and second-event readiness can move in
+  different directions.
+- **Proposed AI translation:** Identify critical service, dependency closure,
+  accepted/correct service, impact tolerance, RTO, RPO, backup lineage, restore
+  test, degraded mode, authority, third party, second-event state, and full
+  reserve/drill cost.
+- **Efficiency mechanism:** Rehearse and retain recovery paths in proportion to
+  declared criticality and failure exposure; do not maintain every path at the
+  same cost without a service case.
+- **Failure modes:** DORA label used outside scope; paper plan untested;
+  failover shares root; backup is corrupt or inaccessible; RTO excludes
+  diagnosis or authorization; recovery produces stale or wrong service;
+  third-party concentration omitted; one event consumes all reserve.
+- **Measurable prediction:** Tested restoration with independent roots reduces
+  synthetic RTO/RPO breaches versus untested redundancy for covered failures,
+  but no claimed advantage survives omitted compound/common-cause failures or
+  unmatched reserve.
+- **Open question:** Do Candidates 011/012 add anything beyond a mature SRE,
+  continuity, tested-backup, dependency, incident-command, and change-control
+  stack at equal reserve and operator work?
+- **Used by:** [FM-T07 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t07--operational-resilience-and-dependency-concentration),
+  [F-019 FM-T07](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t07--operational-resilience-and-dependency-concentration),
+  [reliability under mission profiles](../concept/26-reliability-under-mission-profiles.md),
+  [hardening and factual memory](../concept/60-hardening-and-factual-memory.md),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [energy model](../concept/80-energy-model.md), and
+  [research roadmap](../concept/90-research-roadmap.md).
+- **Disposition:** refines C-175, C-178, C-183, C-184, C-185,
+  P-002/P-003/P-008/P-009/P-012/P-013, and Candidates 011/012. The residue is a
+  mature governance/evaluation contract.
+
+### C-1487
+
+- **Statement:** In the cited decentralized-firm model, a market or internal
+  transfer price aligns divisional decisions with the whole-firm objective only
+  under specified competition, opportunity-cost, demand, capacity, and
+  interdependence conditions; local profit or cost reduction alone does not
+  establish system efficiency.
+- **Status:** established.
+- **Evidence note:** Established within the formal model. BaFin allocation
+  requirements are a scoped normative comparator, not scientific validation of
+  one price rule.
+- **Primary source:** `Hirshleifer1956TransferPricing`.
+- **Normative comparator:** `BaFin2024MaRisk`.
+- **Rationale:** A local ledger can omit system externalities, alternate uses,
+  shared constraints, and downstream service loss.
+- **Proposed AI translation:** Internal compute tokens, quotas, shadow prices,
+  chargebacks, or module scores must reconcile to accepted system service,
+  externalities, constraints, and opportunity costs in native units.
+- **Efficiency mechanism:** Decentralize with a simple price only when its
+  assumptions and reconciliation hold; otherwise use full-system or primal--
+  dual control and charge coordination.
+- **Failure modes:** internal token called money; local ledger excludes latency,
+  energy, quality, reserve, or displaced work; competitive-market assumptions
+  absent; transfer price chosen after results; nonconvex setup or capacity
+  ignored; centralized full-information null omitted.
+- **Measurable prediction:** Local/system sign reversals appear when
+  externalities, scarce capacity, or alternate uses are omitted; the reversal
+  disappears in the registered frictionless/aligned case.
+- **Open question:** Can a learned internal allocator beat centralized,
+  decomposition, robust, and ordinary shadow-price controllers under private
+  information without invoking market language as the mechanism?
+- **Used by:** [FM-T09 audit](audits/2026-08-24-finance-management-risk-attention-governance.md#fm-t09--accounting-boundaries-and-transfer-price-alignment),
+  [F-019 FM-T09](../experiments/fixtures/019-finance-risk-attention-governance.md#fm-t09--accounting-boundaries-and-transfer-price-alignment),
+  [neurogenesis and routing](../concept/10-neurogenesis-and-routing.md),
+  [sparse predictive compute](../concept/30-sparse-predictive-compute.md),
+  [system synthesis](../concept/70-system-synthesis.md),
+  [energy model](../concept/80-energy-model.md),
+  [research roadmap](../concept/90-research-roadmap.md), and
+  [material-service state](../math/material-service-state.md).
+- **Disposition:** maps to P-001/P-006/P-009/P-013 and Candidates 008/013; no
+  market principle.

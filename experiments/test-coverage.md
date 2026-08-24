@@ -9,16 +9,16 @@ experiment contracts, or disposition fragments.
 
 The four rows below are mutually exclusive highest-reached tiers.
 
-| Highest coverage tier | Claims | Share of 1438 | Meaning |
+| Highest coverage tier | Claims | Share of 1478 | Meaning |
 | --- | ---: | ---: | --- |
-| ledger-only | 92 | 6.4% | no exact direct relation to a numbered experiment artifact |
+| ledger-only | 92 | 6.2% | no exact direct relation to a numbered experiment artifact |
 | linked test description | 0 | 0.0% | related experiment prose exists, but at least one required protocol facet is absent |
-| protocol-complete test contract | 1346 | 93.6% | at least one linked artifact contains all eight required facets |
+| protocol-complete test contract | 1386 | 93.8% | at least one linked artifact contains all eight required facets |
 | workstation-executable | 0 | 0.0% | checked execution manifest and runnable scientific harness exist |
 
-The short answer is therefore **1346 claims have a complete
+The short answer is therefore **1386 claims have a complete
 test description, but 0 are executable on the workstation**.
-Across both description tiers, 1346 claims have an exact direct
+Across both description tiers, 1386 claims have an exact direct
 relation to at least one experiment artifact. These are aggregate candidate
 tests: they evaluate engineering translations supported by several claims; they
 do not independently reproduce every source paper.
@@ -29,7 +29,7 @@ do not independently reproduce every source paper.
 | --- | ---: | ---: | ---: | ---: | ---: |
 | ledger-only | 79 | 9 | 0 | 4 | 0 |
 | linked-description | 0 | 0 | 0 | 0 | 0 |
-| protocol-complete | 1033 | 199 | 59 | 46 | 9 |
+| protocol-complete | 1065 | 205 | 60 | 47 | 9 |
 | workstation-executable | 0 | 0 | 0 | 0 | 0 |
 
 ## Why ledger-only claims remain unlinked
@@ -77,13 +77,13 @@ A relation exists when either side states it exactly:
 
 Inclusive ranges are expanded only when both endpoints have exact matching
 links. Prose numbers and indirect adoption-matrix associations do not count.
-The union yields 1346 linked claims: 1128
-appear on the claim side, 1067 on the document side, and
-712 have at least one reciprocal same-artifact relation.
+The union yields 1386 linked claims: 1169
+appear on the claim side, 1086 on the document side, and
+732 have at least one reciprocal same-artifact relation.
 
 ## Artifact coverage
 
-There are 37 experiment artifacts: 37
+There are 39 experiment artifacts: 39
 pass the written-protocol gate, a validated smoke harness exists for
 3, and 0 pass the full execution gate.
 Smoke readiness verifies deterministic plumbing but cannot promote a claim.
@@ -92,24 +92,24 @@ Smoke readiness verifies deterministic plumbing but cannot promote a claim.
 | --- | ---: | --- | --- |
 | [candidate-001](candidates/001-adaptive-topology.md) | 71 | complete description | not executable |
 | [candidate-002](candidates/002-multiscale-context-broadcast.md) | 93 | complete description | not executable |
-| [candidate-003](candidates/003-recovery-dynamics-fragility.md) | 48 | complete description | not executable |
+| [candidate-003](candidates/003-recovery-dynamics-fragility.md) | 49 | complete description | not executable |
 | [candidate-004](candidates/004-closed-endogenous-curriculum.md) | 116 | complete description | not executable |
 | [candidate-005](candidates/005-severity-ordered-containment.md) | 111 | complete description | not executable |
 | [candidate-006](candidates/006-reversible-physical-skill.md) | 157 | complete description | not executable |
-| [candidate-007](candidates/007-endogenous-observation-surveillance.md) | 155 | complete description | not executable |
+| [candidate-007](candidates/007-endogenous-observation-surveillance.md) | 158 | complete description | not executable |
 | [candidate-008](candidates/008-contestable-modular-allocation.md) | 24 | complete description | not executable |
-| [candidate-009](candidates/009-graded-assurance-envelopes.md) | 289 | complete description | not executable |
-| [candidate-010](candidates/010-reset-coupled-staged-verification.md) | 80 | complete description | smoke-ready; not executable |
-| [candidate-011](candidates/011-dual-loop-operational-assurance.md) | 136 | complete description | not executable |
-| [candidate-012](candidates/012-latency-qualified-authority.md) | 223 | complete description | not executable |
-| [candidate-013](candidates/013-deficit-capability-routing.md) | 99 | complete description | not executable |
-| [candidate-014](candidates/014-versioned-observation-contract.md) | 616 | complete description | not executable |
-| [candidate-015](candidates/015-versioned-repairable-conventions.md) | 74 | complete description | not executable |
+| [candidate-009](candidates/009-graded-assurance-envelopes.md) | 299 | complete description | not executable |
+| [candidate-010](candidates/010-reset-coupled-staged-verification.md) | 81 | complete description | smoke-ready; not executable |
+| [candidate-011](candidates/011-dual-loop-operational-assurance.md) | 138 | complete description | not executable |
+| [candidate-012](candidates/012-latency-qualified-authority.md) | 228 | complete description | not executable |
+| [candidate-013](candidates/013-deficit-capability-routing.md) | 102 | complete description | not executable |
+| [candidate-014](candidates/014-versioned-observation-contract.md) | 632 | complete description | not executable |
+| [candidate-015](candidates/015-versioned-repairable-conventions.md) | 75 | complete description | not executable |
 | [candidate-016](candidates/016-conflict-bounded-unit-transition.md) | 29 | complete description | not executable |
-| [candidate-017](candidates/017-contract-preserving-semantic-compaction.md) | 97 | complete description | not executable |
-| [candidate-018](candidates/018-value-reconstructability-aware-tiering.md) | 101 | complete description | not executable |
-| [candidate-019](candidates/019-audited-cumulative-inheritance.md) | 140 | complete description | not executable |
-| [candidate-020](candidates/020-constitutional-control-plane.md) | 122 | complete description | not executable |
+| [candidate-017](candidates/017-contract-preserving-semantic-compaction.md) | 98 | complete description | not executable |
+| [candidate-018](candidates/018-value-reconstructability-aware-tiering.md) | 108 | complete description | not executable |
+| [candidate-019](candidates/019-audited-cumulative-inheritance.md) | 143 | complete description | not executable |
+| [candidate-020](candidates/020-constitutional-control-plane.md) | 128 | complete description | not executable |
 | [fixture-001](fixtures/001-shared-clock-free-coadaptation.md) | 36 | complete description | not executable |
 | [fixture-002](fixtures/002-versioned-reconstructive-design.md) | 19 | complete description | not executable |
 | [fixture-003](fixtures/003-opportunity-history-qualified-action.md) | 38 | complete description | not executable |
@@ -121,12 +121,14 @@ Smoke readiness verifies deterministic plumbing but cannot promote a claim.
 | [fixture-009](fixtures/009-operator-qualified-active-acoustic-inference.md) | 46 | complete description | not executable |
 | [fixture-010](fixtures/010-boundary-qualified-physical-computation.md) | 56 | complete description | not executable |
 | [fixture-011](fixtures/011-operator-qualified-active-chemical-sensing.md) | 55 | complete description | not executable |
-| [fixture-012](fixtures/012-layout-randomized-performance-inference.md) | 1 | complete description | smoke-ready; not executable |
+| [fixture-012](fixtures/012-layout-randomized-performance-inference.md) | 3 | complete description | smoke-ready; not executable |
 | [fixture-013](fixtures/013-immune-state-lifecycle-evaluation.md) | 15 | complete description | not executable |
 | [fixture-014](fixtures/014-continual-memory-lifecycle.md) | 2 | complete description | not executable |
 | [fixture-015](fixtures/015-sensorimotor-grounding-transfer.md) | 1 | complete description | not executable |
 | [fixture-016](fixtures/016-versioned-evidence-retrieval-feedback.md) | 2 | complete description | not executable |
 | [fixture-017](fixtures/017-low-bit-model-hardware-crossover.md) | 1 | complete description | not executable |
+| [fixture-018](fixtures/018-environmental-process-state-control.md) | 14 | complete description | not executable |
+| [fixture-019](fixtures/019-finance-risk-attention-governance.md) | 14 | complete description | not executable |
 
 ## Immediate gaps
 

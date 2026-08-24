@@ -7,18 +7,65 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Independently reviewed environmental-engineering and finance/management
+  depth audits add 17 bounded claims (`C-1470`--`C-1476`, `C-1478`--`C-1487`),
+  20 CPU-only falsification protocols, and Fixtures F-018 and F-019 as complete
+  pre-implementation contracts. The environmental track closes residence-time,
+  coupled-control, anomaly-isolation, fouling, adsorption, anaerobic-buffering,
+  transformation-product, lifecycle, and infrastructure-topology boundaries;
+  the finance track closes tail-risk, endogenous-feedback, portfolio-estimation,
+  attention-queue, real-option, internal-control, operational-resilience,
+  queueing, transfer-price, and incentive-gaming boundaries. All 47 new
+  scientific and authoritative records passed a separate metadata audit; two
+  incorrect/incomplete records were corrected before release. No principle or
+  architecture candidate was promoted, and neither fixture contains a
+  scientific, legal-compliance, financial, or energy result. The generated
+  census now records 1,386/1,478 protocol-covered claims, 92 reviewed
+  ledger-only claims, 39 complete written artifacts, three smoke-ready
+  harnesses, and zero workstation-executable research claims.
+
+- Three independently reviewed depth audits add operating/distributed-system,
+  geotechnical/long-life-asset, and spatial-geography boundaries. They add 23
+  scoped ledger claims (`C-1440`--`C-1469`, with the existing numbering gap
+  retained), 24 CPU-only falsification protocol specifications, and a
+  deduplicated primary/authoritative-source bibliography without promoting a
+  new universal principle or architecture candidate. Review hardened exact
+  epoch activation and release, world-cluster inference, native-Linux evidence
+  limits, Eurocode factor formats, rare-event uncertainty, change-of-support
+  conservation, spatial transfer splits, preferential-sampling comparators,
+  and protocol-versus-result wording.
+
+- Two maintainable analytical plots now expose path-dependent internal state
+  and support-width spatial filtering from editable JSON. The full A4 book now
+  includes all 24 mathematical notes alongside the concept chapters and field-
+  coverage appendix. Mathematical source normalization and validation reject
+  unsupported delimiters, unbalanced inline notation, and multiline inline
+  equations before publication.
+
+- The Windows live-preview watcher excludes workspace `tmp/` and workstation
+  `runs/` output directories and treats Markdown, Mermaid, and BibTeX inputs as
+  raw assets during hot
+  reload. This prevents locked F012 test DLLs from terminating Vite and prevents
+  edited research documents from being reparsed as JavaScript while preserving
+  immediate canonical-source updates.
+
 - Fixture F-012 now has a claim-ineligible workstation-development acquisition
   lane with true process launch-to-exit timing, frozen executable/environment/
   workload identities, an exact counterbalanced schedule, structural layout
   proofs, exclusive locking, authoritative-ledger checkpoint recovery, closed-
   schema rejection evidence, calibrated-meter bindings, and full validation
-  recomputation. Its 27 tests include real child-process and CLI execution,
-  paths with spaces, stale checkpoints, competing writers, corrupted artifacts,
-  rehashed-but-semantically changed command bindings, path escape/junction
-  refusal, and Windows fail-closed behavior. Windows physical execution remains
-  disabled until a reviewed Job Object supervisor can own the whole process
-  tree; no scientific or energy result exists and readiness remains
-  `smoke-ready`.
+  recomputation. Its native Windows lane uses atomic pre-resume Job Object
+  assignment, `KILL_ON_JOB_CLOSE`, QPC timing, directory R oplocks, persistent
+  per-file NTFS USNs, and file-ID, attribute, reparse-tag, and link-count
+  validation. The 21 scoped acquisition tests cover real CLI execution, spaces,
+  immediate descendants, timeout/output containment, directory and transient
+  leaf mutation, multi-hardlink, reparse and SUBST refusal, supervisor-assembly
+  substitution, and supervisor-host crash containment. This is a measurement
+  boundary, not a security sandbox: it requires a protected Windows system-
+  volume NTFS path, single-link identified files, and operator-qualified
+  PowerShell/.NET trust roots. No scientific or energy result exists, readiness
+  remains `smoke-ready`, and timing/energy overhead characterization remains
+  pending.
 
 - Fixtures F-015--F-017 close the remaining engineering-protocol backlog with
   bounded contracts for hidden sensorimotor transfer (`C-007`), versioned

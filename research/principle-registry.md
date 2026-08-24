@@ -170,6 +170,67 @@ reliability are assurance and authority boundaries for Candidates 009/012/020,
 not architecture primitives. The eight protocols `GT-T01`--`GT-T08` enter the
 mature-null stack with no permission to act on a real asset.
 
+### Environmental process-state and service-boundary contract
+
+The [environmental-engineering audit](audits/2026-08-24-environmental-engineering-water-waste-remediation.md)
+promotes no principle or candidate. Its durable residue is a process-state and
+evaluation contract: distinguish mean residence time from contact history
+([C-1470](claims.md#c-1470)); hydraulic flow-through time from retained
+population lifetime ([C-1471](claims.md#c-1471)); local action from exported
+coupled-system load ([C-1472](claims.md#c-1472)); process disturbance from
+sensor fault ([C-1473](claims.md#c-1473)); and nominal capacity or visible
+endpoint from path-, maintenance-, competition-, and delay-qualified state
+([C-1474](claims.md#c-1474)–[C-1476](claims.md#c-1476)). Parent removal remains
+inside existing [C-1285](claims.md#c-1285), now extended to target, non-target,
+mass, product, post-treatment-age, and biological-effect closure. Unit
+efficiency and infrastructure topology remain service-counterfactual- and
+context-qualified ([C-1478](claims.md#c-1478)–[C-1479](claims.md#c-1479)).
+
+These records sharpen existing bundles: P-012/P-013 own flow and lifetime
+state; P-004/P-005/P-006 own population, topology, and feedback; P-002/P-008/
+P-011 own local action, containment, and conditional coordination; P-007/P-009
+own uncertainty-directed observation and maintenance; and P-010 owns physical
+support-state constraints. Candidates 003/005 retain recovery fragility,
+007/011/014 retain observation and provenance, 012 retains latency-qualified
+authority, and 013 retains deficit routing. Existing [C-1288](claims.md#c-1288),
+[C-1303](claims.md#c-1303), [C-1305](claims.md#c-1305), and
+[C-1381](claims.md#c-1381) remain the mature ledger, residence/transport,
+target-qualified reduction, and conservation boundaries rather than being
+duplicated.
+
+The ten `ENV-T01`--`ENV-T10` tracks in
+[Fixture F-018](../experiments/fixtures/018-environmental-process-state-control.md)
+therefore enter the mature-null stack. They are frozen CPU-only specifications,
+not implemented runners or evidence of effects, energy savings, environmental
+benefit, compliance, or deployable control. No environmental-process, flow-
+memory, fouling, rebound, or decentralization principle—and no additional
+candidate—is created.
+
+### Finance and management evaluation contract
+
+The [finance and management audit](audits/2026-08-24-finance-management-risk-attention-governance.md)
+promotes no principle or candidate. It adds decision and measurement
+qualifications: distinguish coherent risk functionals from estimator and
+operational validity ([C-1480](claims.md#c-1480)); model forced action through
+shared state as endogenous feedback only when that causal structure exists
+([C-1481](claims.md#c-1481)); qualify diversification by estimated dependence,
+weights, constraints, turnover, and transfer ([C-1482](claims.md#c-1482)); and
+treat organizational attention, irreversible commitment, independently rooted
+control, service-qualified recovery, and internal accounting as bounded
+resources or decision contracts rather than metaphors
+([C-1483](claims.md#c-1483)–[C-1487](claims.md#c-1487)).
+
+These residues map to P-001/P-004 for allocation and diversity, P-006 for
+feedback, P-002/P-007 for attention and escalation, P-003/P-012 for staged
+commitment, P-008/P-009 for independently evidenced control and recovery, and
+P-013 for shared records and externalities. Queue/capacity work in `FM-T08`
+strengthens existing [C-659](claims.md#c-659)–[C-661](claims.md#c-661), while
+incentive and target work in `FM-T10` strengthens [C-139](claims.md#c-139),
+[C-1433](claims.md#c-1433), and [C-144](claims.md#c-144). The ten protocols
+`FM-T01`--`FM-T10` therefore enter the mature-null stack; no finance-labelled
+principle, market primitive, resilience primitive, or additional candidate is
+created.
+
 ### Immune-state lifecycle evaluation contract
 
 The [immune audit](audits/2026-08-05-immune-tolerance-trained-immunity.md)

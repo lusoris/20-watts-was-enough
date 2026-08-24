@@ -50,14 +50,14 @@
     }
   },
   "counts": {
-    "claims": 1438,
-    "testRouted": 1346,
-    "protocolCovered": 1346,
+    "claims": 1478,
+    "testRouted": 1386,
+    "protocolCovered": 1386,
     "executionReady": 0,
     "tierCounts": {
       "ledger-only": 92,
       "linked-description": 0,
-      "protocol-complete": 1346,
+      "protocol-complete": 1386,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
@@ -76,10 +76,10 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1033,
-        "plausible": 199,
-        "speculative": 59,
-        "disputed": 46,
+        "established": 1065,
+        "plausible": 205,
+        "speculative": 60,
+        "disputed": 47,
         "unknown": 9
       },
       "workstation-executable": {
@@ -97,13 +97,13 @@
       "new-artifact-needed": 0
     },
     "proposedArtifactFamilies": 0,
-    "artifacts": 37,
-    "protocolCompleteArtifacts": 37,
+    "artifacts": 39,
+    "protocolCompleteArtifacts": 39,
     "executionReadyArtifacts": 0,
     "smokeReadyArtifacts": 3,
-    "claimSideLinked": 1128,
-    "documentSideLinked": 1067,
-    "reciprocalClaims": 712
+    "claimSideLinked": 1169,
+    "documentSideLinked": 1086,
+    "reciprocalClaims": 732
   },
   "artifacts": [
     {
@@ -537,6 +537,7 @@
         "C-1410",
         "C-1411",
         "C-1425",
+        "C-1441",
         "C-301",
         "C-312",
         "C-322",
@@ -605,6 +606,7 @@
         "C-1410",
         "C-1411",
         "C-1425",
+        "C-1441",
         "C-301",
         "C-312",
         "C-322",
@@ -1614,6 +1616,9 @@
         "C-1430",
         "C-1433",
         "C-1439",
+        "C-1463",
+        "C-1467",
+        "C-1469",
         "C-305",
         "C-441",
         "C-508",
@@ -1789,6 +1794,9 @@
         "C-1430",
         "C-1433",
         "C-1439",
+        "C-1463",
+        "C-1467",
+        "C-1469",
         "C-305",
         "C-441",
         "C-508",
@@ -2098,6 +2106,16 @@
         "C-1436",
         "C-1438",
         "C-1439",
+        "C-1440",
+        "C-1442",
+        "C-1453",
+        "C-1454",
+        "C-1457",
+        "C-1460",
+        "C-1461",
+        "C-1462",
+        "C-1466",
+        "C-1469",
         "C-250",
         "C-251",
         "C-254",
@@ -2425,8 +2443,18 @@
         "C-1436",
         "C-1438",
         "C-1439",
+        "C-1440",
+        "C-1442",
         "C-145",
+        "C-1453",
+        "C-1454",
+        "C-1457",
         "C-146",
+        "C-1460",
+        "C-1461",
+        "C-1462",
+        "C-1466",
+        "C-1469",
         "C-147",
         "C-148",
         "C-149",
@@ -2650,6 +2678,7 @@
         "C-1329",
         "C-1378",
         "C-1393",
+        "C-1442",
         "C-159",
         "C-160",
         "C-170",
@@ -2745,6 +2774,7 @@
         "C-1329",
         "C-1378",
         "C-1393",
+        "C-1442",
         "C-159",
         "C-160",
         "C-170",
@@ -2853,6 +2883,8 @@
         "C-1421",
         "C-1429",
         "C-1433",
+        "C-1442",
+        "C-1450",
         "C-173",
         "C-177",
         "C-178",
@@ -3020,6 +3052,8 @@
         "C-1421",
         "C-1429",
         "C-1433",
+        "C-1442",
+        "C-1450",
         "C-173",
         "C-174",
         "C-175",
@@ -3220,6 +3254,11 @@
         "C-1422",
         "C-1429",
         "C-1430",
+        "C-1440",
+        "C-1441",
+        "C-1450",
+        "C-1454",
+        "C-1457",
         "C-172",
         "C-187",
         "C-192",
@@ -3487,6 +3526,11 @@
         "C-1422",
         "C-1429",
         "C-1430",
+        "C-1440",
+        "C-1441",
+        "C-1450",
+        "C-1454",
+        "C-1457",
         "C-172",
         "C-186",
         "C-187",
@@ -3674,6 +3718,9 @@
         "C-1397",
         "C-1410",
         "C-1411",
+        "C-1460",
+        "C-1463",
+        "C-1466",
         "C-207",
         "C-216",
         "C-495",
@@ -3795,6 +3842,9 @@
         "C-1397",
         "C-1410",
         "C-1411",
+        "C-1460",
+        "C-1463",
+        "C-1466",
         "C-204",
         "C-205",
         "C-206",
@@ -4174,6 +4224,22 @@
         "C-1437",
         "C-1438",
         "C-1439",
+        "C-1441",
+        "C-1450",
+        "C-1452",
+        "C-1453",
+        "C-1454",
+        "C-1455",
+        "C-1456",
+        "C-1460",
+        "C-1461",
+        "C-1462",
+        "C-1463",
+        "C-1464",
+        "C-1465",
+        "C-1467",
+        "C-1468",
+        "C-1469",
         "C-218",
         "C-220",
         "C-221",
@@ -4864,6 +4930,22 @@
         "C-1437",
         "C-1438",
         "C-1439",
+        "C-1441",
+        "C-1450",
+        "C-1452",
+        "C-1453",
+        "C-1454",
+        "C-1455",
+        "C-1456",
+        "C-1460",
+        "C-1461",
+        "C-1462",
+        "C-1463",
+        "C-1464",
+        "C-1465",
+        "C-1467",
+        "C-1468",
+        "C-1469",
         "C-218",
         "C-219",
         "C-220",
@@ -5223,6 +5305,7 @@
         "C-1362",
         "C-1403",
         "C-1419",
+        "C-1442",
         "C-268",
         "C-269",
         "C-270",
@@ -5327,6 +5410,7 @@
         "C-1362",
         "C-1403",
         "C-1419",
+        "C-1442",
         "C-268",
         "C-269",
         "C-270",
@@ -5518,6 +5602,7 @@
         "C-1325",
         "C-1423",
         "C-1424",
+        "C-1451",
         "C-334",
         "C-340",
         "C-341",
@@ -5626,6 +5711,7 @@
         "C-1325",
         "C-1423",
         "C-1424",
+        "C-1451",
         "C-325",
         "C-326",
         "C-327",
@@ -5748,6 +5834,13 @@
         "C-1430",
         "C-1435",
         "C-1437",
+        "C-1456",
+        "C-1463",
+        "C-1464",
+        "C-1465",
+        "C-1467",
+        "C-1468",
+        "C-1469",
         "C-333",
         "C-338",
         "C-339",
@@ -5862,6 +5955,13 @@
         "C-1430",
         "C-1435",
         "C-1437",
+        "C-1456",
+        "C-1463",
+        "C-1464",
+        "C-1465",
+        "C-1467",
+        "C-1468",
+        "C-1469",
         "C-325",
         "C-326",
         "C-327",
@@ -5970,6 +6070,9 @@
         "C-1421",
         "C-1423",
         "C-1437",
+        "C-1451",
+        "C-1455",
+        "C-1456",
         "C-343",
         "C-344",
         "C-345",
@@ -6141,6 +6244,9 @@
         "C-1421",
         "C-1423",
         "C-1437",
+        "C-1451",
+        "C-1455",
+        "C-1456",
         "C-343",
         "C-344",
         "C-345",
@@ -6305,6 +6411,12 @@
         "C-1434",
         "C-1436",
         "C-1439",
+        "C-1457",
+        "C-1460",
+        "C-1461",
+        "C-1465",
+        "C-1466",
+        "C-1469",
         "C-368",
         "C-370",
         "C-372",
@@ -6462,6 +6574,12 @@
         "C-1434",
         "C-1436",
         "C-1439",
+        "C-1457",
+        "C-1460",
+        "C-1461",
+        "C-1465",
+        "C-1466",
+        "C-1469",
         "C-368",
         "C-369",
         "C-370",
@@ -8181,13 +8299,17 @@
         "C-1407"
       ],
       "claimSideClaims": [
-        "C-1407"
+        "C-1407",
+        "C-1443",
+        "C-1444"
       ],
       "documentSideClaims": [
         "C-1407"
       ],
       "linkedClaims": [
-        "C-1407"
+        "C-1407",
+        "C-1443",
+        "C-1444"
       ]
     },
     {
@@ -8356,6 +8478,128 @@
       ],
       "linkedClaims": [
         "C-013"
+      ]
+    },
+    {
+      "id": "fixture-018",
+      "path": "experiments/fixtures/018-environmental-process-state-control.md",
+      "title": "Fixture F-018 — Environmental process, state, and infrastructure control",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "absent",
+      "executionManifest": null,
+      "executionMissing": [
+        "manifest"
+      ],
+      "executionPromotionChecks": [],
+      "executionClaims": [],
+      "claimSideClaims": [
+        "C-1285",
+        "C-1288",
+        "C-1303",
+        "C-1305",
+        "C-1381",
+        "C-1470",
+        "C-1471",
+        "C-1472",
+        "C-1473",
+        "C-1474",
+        "C-1475",
+        "C-1476",
+        "C-1478",
+        "C-1479"
+      ],
+      "documentSideClaims": [
+        "C-1285",
+        "C-1470",
+        "C-1471",
+        "C-1472",
+        "C-1473",
+        "C-1474",
+        "C-1475",
+        "C-1476",
+        "C-1478",
+        "C-1479"
+      ],
+      "linkedClaims": [
+        "C-1285",
+        "C-1288",
+        "C-1303",
+        "C-1305",
+        "C-1381",
+        "C-1470",
+        "C-1471",
+        "C-1472",
+        "C-1473",
+        "C-1474",
+        "C-1475",
+        "C-1476",
+        "C-1478",
+        "C-1479"
+      ]
+    },
+    {
+      "id": "fixture-019",
+      "path": "experiments/fixtures/019-finance-risk-attention-governance.md",
+      "title": "Fixture F-019 — Finance-risk, attention, and governance controls",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "absent",
+      "executionManifest": null,
+      "executionMissing": [
+        "manifest"
+      ],
+      "executionPromotionChecks": [],
+      "executionClaims": [],
+      "claimSideClaims": [
+        "C-139",
+        "C-1433",
+        "C-144",
+        "C-1480",
+        "C-1481",
+        "C-1482",
+        "C-1483",
+        "C-1484",
+        "C-1485",
+        "C-1486",
+        "C-1487",
+        "C-659",
+        "C-660",
+        "C-661"
+      ],
+      "documentSideClaims": [
+        "C-139",
+        "C-1433",
+        "C-144",
+        "C-1480",
+        "C-1481",
+        "C-1482",
+        "C-1483",
+        "C-1484",
+        "C-1485",
+        "C-1486",
+        "C-1487",
+        "C-659",
+        "C-660",
+        "C-661"
+      ],
+      "linkedClaims": [
+        "C-139",
+        "C-1433",
+        "C-144",
+        "C-1480",
+        "C-1481",
+        "C-1482",
+        "C-1483",
+        "C-1484",
+        "C-1485",
+        "C-1486",
+        "C-1487",
+        "C-659",
+        "C-660",
+        "C-661"
       ]
     }
   ],
@@ -10244,7 +10488,8 @@
       "protocolCovered": true,
       "executionReady": false,
       "artifacts": [
-        "candidate-008"
+        "candidate-008",
+        "fixture-019"
       ],
       "disposition": null
     },
@@ -10308,7 +10553,8 @@
       "protocolCovered": true,
       "executionReady": false,
       "artifacts": [
-        "candidate-008"
+        "candidate-008",
+        "fixture-019"
       ],
       "disposition": null
     },
@@ -16952,7 +17198,8 @@
         "candidate-014",
         "candidate-017",
         "candidate-018",
-        "candidate-020"
+        "candidate-020",
+        "fixture-019"
       ],
       "disposition": null
     },
@@ -16972,7 +17219,8 @@
         "candidate-014",
         "candidate-017",
         "candidate-018",
-        "candidate-020"
+        "candidate-020",
+        "fixture-019"
       ],
       "disposition": null
     },
@@ -16992,7 +17240,8 @@
         "candidate-014",
         "candidate-017",
         "candidate-018",
-        "candidate-020"
+        "candidate-020",
+        "fixture-019"
       ],
       "disposition": null
     },
@@ -25802,7 +26051,8 @@
       "artifacts": [
         "candidate-003",
         "candidate-007",
-        "candidate-014"
+        "candidate-014",
+        "fixture-018"
       ],
       "disposition": null
     },
@@ -25843,7 +26093,8 @@
       "artifacts": [
         "candidate-009",
         "candidate-013",
-        "candidate-014"
+        "candidate-014",
+        "fixture-018"
       ],
       "disposition": null
     },
@@ -26049,7 +26300,8 @@
       "artifacts": [
         "candidate-013",
         "candidate-014",
-        "fixture-005"
+        "fixture-005",
+        "fixture-018"
       ],
       "disposition": null
     },
@@ -26076,7 +26328,8 @@
       "artifacts": [
         "candidate-009",
         "candidate-014",
-        "fixture-005"
+        "fixture-005",
+        "fixture-018"
       ],
       "disposition": null
     },
@@ -27092,7 +27345,8 @@
       "executionReady": false,
       "artifacts": [
         "candidate-007",
-        "candidate-014"
+        "candidate-014",
+        "fixture-018"
       ],
       "disposition": null
     },
@@ -27808,7 +28062,8 @@
       "artifacts": [
         "candidate-007",
         "candidate-011",
-        "candidate-014"
+        "candidate-014",
+        "fixture-019"
       ],
       "disposition": null
     },
@@ -27892,6 +28147,524 @@
         "candidate-009",
         "candidate-014",
         "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1440",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-012"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1441",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-003",
+        "candidate-012",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1442",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-010",
+        "candidate-011",
+        "candidate-015"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1443",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-012"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1444",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-012"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1450",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-011",
+        "candidate-012",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1451",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-017",
+        "candidate-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1452",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1453",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1454",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-012",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1455",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1456",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-018",
+        "candidate-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1457",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-012",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1460",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-013",
+        "candidate-014",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1461",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1462",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1463",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-013",
+        "candidate-014",
+        "candidate-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1464",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1465",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-018",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1466",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-013",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1467",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-014",
+        "candidate-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1468",
+      "status": "speculative",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1469",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-009",
+        "candidate-014",
+        "candidate-018",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1470",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1471",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1472",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1473",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1474",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1475",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1476",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1478",
+      "status": "disputed",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1479",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1480",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1481",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1482",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1483",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1484",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1485",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1486",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1487",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-019"
       ],
       "disposition": null
     }
