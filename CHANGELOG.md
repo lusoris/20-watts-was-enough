@@ -7,6 +7,17 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Six bounded field-depth audits spanning analytical measurement and Earth
+  observation, clinical and agricultural biotechnology, economy and education,
+  computing systems, medical engineering, and atomic/molecular/condensed-matter/
+  plasma science. They add 54 ledger claims (`C-1377`--`C-1430`), 55 complete
+  CPU-only falsification protocols, and 212 deduplicated bibliography records.
+  The updated census records 37/5/0 OECD and 42/7/0 DFG fields as
+  dedicated/adjacent/unreviewed while retaining explicit subfield gaps; all 23
+  ANZSRC divisions remain entry-audited. Documentation validation now also
+  rejects duplicate or out-of-order claim definitions and duplicate BibTeX
+  keys, after catching and correcting one misplaced integration block.
+
 - Decision 0012 and the second executable smoke harness: Fixture F-007 now has
   a deterministic null-space-honesty track for claims `C-970` and `C-972`.
   Eight registered tests cover the full 8,192-event development profile,

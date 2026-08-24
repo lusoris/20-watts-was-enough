@@ -18140,3 +18140,1578 @@ describes the exact statement here, not a broader interpretation.
 - **Used by:** [social-science depth audit](audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md),
   [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
   [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1377
+
+- **Statement:** Chemical amount, identity, species distribution, and
+  operationally defined fraction are distinct measurands. Sampling,
+  preservation, preparation, interconversion, recovery, selectivity, matrix
+  response, and calibration range determine which one an analytical result can
+  support; a total-element or nominal-analyte result does not reconstruct the
+  unchanged in-situ species vector.
+- **Evidence status:** established analytical-chemistry boundary; the proposed
+  systems transfer is plausible but unvalidated.
+- **Primary/authoritative sources:** `TempletonEtAl2000Speciation`,
+  `MatuszewskiEtAl2003Matrix`, `EU2021_808`, `EurachemValidation2025`,
+  `jcgm200`.
+- **Rationale:** IUPAC distinguishes species and operational fractions; current
+  EU residue rules explicitly define matrix effects and require matrix,
+  interference, stability, and validation checks; VIM ties a result to a
+  specified measurand and procedure.
+- **Proposed AI translation:** attach identity, support, preparation and response
+  operators to every chemical/environmental feature instead of treating a
+  column name or sensor channel as latent-state truth.
+- **Efficiency mechanism:** avoid training, routing, or follow-up on analytically
+  non-equivalent values; reuse an observation only while its operator and
+  applicability roots remain valid.
+- **Failure modes:** species conversion during storage; extraction-dependent
+  fraction presented as total; matrix suppression/enhancement; unmatched spike;
+  isomer/interference; calibration extrapolation; learned correction hiding a
+  changed preparation path.
+- **Measurable prediction:** in held-out matrix and preparation shifts, an
+  operator-bound model will reduce species-specific false decisions and
+  miscalibration relative to solvent-calibrated or label-only models, while a
+  complete matrix-matched analytical null may erase the proposed systems gain.
+- **Open question:** does the versioned dependency record improve decisions
+  beyond matrix-matched calibration, internal standards, standard addition,
+  isotope dilution, validated speciation models, and ordinary laboratory
+  provenance at equal sample and labour cost?
+- **Used by:** [measurement-heavy analytical, water, and Earth-observation audit](audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md#ws-meao-01--speciation-preparation-and-matrix-transfer),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1378
+
+- **Statement:** Detection, identification, quantification, and conformity are
+  separate decisions. A detection capability is conditional on blank/null,
+  decision statistic, calibration and variance model, declared false-positive
+  and false-negative probabilities, matrix, procedure, and time; a
+  quantification limit additionally requires fit-for-purpose bias/precision or
+  uncertainty, and neither limit alone decides compliance.
+- **Evidence status:** established.
+- **Primary/authoritative sources:** `Currie1995Detection`,
+  `EurachemValidation2025`, `EU2009_90`, `EU2023_2782`, `jcgm106`.
+- **Rationale:** IUPAC supplies the critical-value/detection-capability error
+  structure; current EU water and food instruments define scoped performance
+  and decision rules rather than one universal signal multiple.
+- **Proposed AI translation:** represent observations below, near, and above a
+  decision boundary with likelihood/censoring and decision provenance instead
+  of zero filling or a global confidence threshold.
+- **Efficiency mechanism:** reserve confirmatory work for cases where it can
+  change the decision while preventing cheap screening from masquerading as a
+  quantitative result.
+- **Failure modes:** blank contamination; heteroscedasticity; multiple analytes;
+  calibration drift; treating non-detect as zero; deriving LOQ from instrument
+  noise only; double use of confirmation data; changing the decision threshold
+  after viewing results.
+- **Measurable prediction:** probability-calibrated detection plus explicit
+  quantification and conformity stages will meet preregistered error rates under
+  low-level heteroscedastic and censored data more often than fixed
+  signal-to-noise cut-offs.
+- **Open question:** can a learned cascade beat current statistical detection,
+  validated screening/confirmation, and conformity-decision practice after
+  confirmation load, false negatives, and uncertainty are charged?
+- **Used by:** [measurement-heavy analytical, water, and Earth-observation audit](audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md#ws-meao-02--detection-quantification-and-censoring),
+  [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1379
+
+- **Statement:** An analytical result for a delivered test portion does not by
+  itself establish the property of a food lot, water body, sediment, soil, or
+  other sampling target. Target definition, frame, increment/site selection,
+  spatial and temporal support, aggregation, homogenization, preparation,
+  preservation, rejected or inaccessible units, and sampling uncertainty are
+  part of the inference.
+- **Evidence status:** established.
+- **Primary/authoritative sources:** `EurachemSampling2019`, `EU2023_2782`,
+  `EU2017_625`, `DE_LFGB_2026`, `EU2000_60_2026`.
+- **Rationale:** Eurachem explicitly includes sampling and preparation in the
+  measurement process for target-level measurands; current EU mycotoxin rules
+  distinguish lot, increments, aggregate, and laboratory sample because
+  contamination can be highly heterogeneous.
+- **Proposed AI translation:** keep the population/target, acquisition design,
+  accessible frame, physical aggregation, and test portion as typed levels;
+  never split nested units across training and confirmation.
+- **Efficiency mechanism:** spend laboratory assays on designs that reduce
+  target-level decision uncertainty rather than increasing replicate precision
+  on one convenience sample.
+- **Failure modes:** clustered contamination; seasonal aliasing; sampler access
+  bias; inadequate increments; segregation during transport; incomplete
+  homogenization; compositing that hides extremes; pseudo-replication;
+  laboratory-only uncertainty budget.
+- **Measurable prediction:** target-aware hierarchical sampling will reduce lot-
+  or water-body false release/classification at equal analytical count compared
+  with convenience sampling; if the applicable prescribed or mature design
+  matches it, no project residual survives.
+- **Open question:** when does adaptive sampling improve a declared decision
+  without making future observations endogenous or violating a prescribed
+  official-control plan?
+- **Used by:** [measurement-heavy analytical, water, and Earth-observation audit](audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md#ws-meao-03--lot-and-environmental-sampling),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1380
+
+- **Statement:** Metrological traceability, suitable reference material,
+  method validation, within-laboratory quality control, interlaboratory
+  comparison, proficiency testing, and fitness for the intended matrix and
+  decision are distinct evidence. Agreement or a consensus assigned value can
+  retain shared calibration, method, commutability, matrix, or preparation bias.
+- **Evidence status:** established measurement-science boundary.
+- **Primary/authoritative sources:** `jcgm200`, `iso17025`, `iso17034`,
+  `iso17043`, `iso13528`, `ISO13528_Amd1_2026`, `BIPM_CCQM_2026`.
+- **Rationale:** VIM says traceability does not guarantee adequate uncertainty or
+  absence of mistakes; ISO standards allocate different roles to laboratories,
+  reference-material producers, PT providers, and PT statistics; CCQM runs
+  matrix- and measurand-specific comparisons rather than granting universal
+  chemical equivalence.
+- **Proposed AI translation:** model calibration ancestry as a covariance and
+  applicability graph, not a binary `calibrated` flag or an assumption that
+  independent organisations have independent errors.
+- **Efficiency mechanism:** target independent comparisons at unshared roots and
+  invalidate only descendants affected by a changed standard, material,
+  software, or matrix scope.
+- **Failure modes:** common calibrator bias; non-commutable CRM; consensus of
+  similarly biased methods; PT item unlike routine samples; laboratory ranking
+  without uncertainty; reference drift; duplicated nominally independent roots.
+- **Measurable prediction:** root-aware hierarchical comparison will produce
+  better interval coverage and shared-bias alarms than independence-assuming
+  pooling under seeded common-mode failures, but should tie a complete
+  covariance-aware metrology null.
+- **Open question:** can dependency invalidation reduce revalidation work without
+  missing correlated descendants compared with ordinary LIMS/QMS, calibration
+  hierarchy, PT, and uncertainty records?
+- **Used by:** [measurement-heavy analytical, water, and Earth-observation audit](audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md#ws-meao-04--calibration-hierarchy-and-interlaboratory-comparison),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1381
+
+- **Statement:** Point concentration, discharge, constituent load, stored mass,
+  exposure, water-body status, treatment-stage removal, transformation product,
+  and compliance at a defined point are different quantities. Hydrologic and
+  treatment claims require aligned flow, volume, residence time, reaction,
+  bypass, sampling support, uncertainty, and mass-balance boundaries.
+- **Evidence status:** established conservation and regulatory measurement
+  boundary; transfer benefit remains untested.
+- **Primary/authoritative sources:** `WMO168_2008`, `EU2000_60_2026`,
+  `EU2009_90`, `EU2020_2184`, `DE_OGewV_2016`.
+- **Rationale:** WMO hydrological practice distinguishes measured hydrological
+  variables and network-derived information; EU water law defines monitoring,
+  status, sampling points, analytical performance, and treatment-qualified
+  drinking-water compliance at different levels.
+- **Proposed AI translation:** enforce unit-bearing water and constituent
+  balance nodes before learning residual corrections or action policies.
+- **Efficiency mechanism:** diagnose which unmeasured flux, reaction, or support
+  dominates a decision before adding sensors or model capacity.
+- **Failure modes:** concentration/load confusion; storm aliasing; discharge and
+  chemistry sampled at different times; unrecorded bypass; species conversion;
+  retained mass later released; apparent removal caused by dilution; sampling
+  upstream of the actual point of compliance.
+- **Measurable prediction:** a conservation- and operator-aware model will
+  improve held-out load, storage, and breakthrough prediction over
+  concentration-only models, particularly during pulses and flow changes; a
+  standard calibrated state-space/process model may fully match it.
+- **Open question:** does the versioned observation contract add anything after
+  full mass balance, residence-time distribution, reaction/transport modelling,
+  process monitoring, and decision-specific sampling are present?
+- **Used by:** [measurement-heavy analytical, water, and Earth-observation audit](audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md#ws-meao-05--catchment-load-and-treatment-breakthrough),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1382
+
+- **Statement:** Groundwater wells and lake samples/profiles constrain a
+  support-weighted state under heterogeneous flow, screened interval, pumping,
+  transport, reaction, stratification, mixing, season, depth, and network
+  design; they do not identify a unique aquifer field, whole-lake state, source,
+  or trend without an explicit forward model and support analysis.
+- **Evidence status:** established inverse/support boundary with field-specific
+  primary evidence.
+- **Primary/authoritative sources:** `beven1989hydrology`,
+  `bloeschl1995scale`, `EU2006_118_2026`, `DE_GrwV_2022`,
+  `JaneEtAl2021Lakes`, `WoolwayMerchant2019`.
+- **Rationale:** hydrological models are scale- and structure-qualified; current
+  EU/German groundwater rules require coherent representative networks rather
+  than equating one point with a body; lake oxygen and mixing evidence depends
+  on depth profiles and temporal structure.
+- **Proposed AI translation:** expose observability and support maps, competing
+  model families, and abstention regions alongside interpolated latent fields.
+- **Efficiency mechanism:** allocate wells, profiles, or sampling times to
+  decision-relevant unresolved modes rather than uniformly densifying a grid.
+- **Failure modes:** equifinality; anisotropy; preferential flow; well mixing;
+  pumping-induced capture; seasonally aliased trends; surface-only lake sample;
+  moving thermocline; sensor fouling; network changes mistaken for state change.
+- **Measurable prediction:** support-aware ensembles will improve predictive
+  coverage at held-out wells/depths and abstain in unresolved modes more
+  reliably than smooth interpolation; adaptive placement must beat conventional
+  optimal design at equal field cost.
+- **Open question:** can active sampling avoid self-confirming models when the
+  sampling action changes local flow, mixes a well, or preferentially observes
+  predicted anomalies?
+- **Used by:** [measurement-heavy analytical, water, and Earth-observation audit](audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md#ws-meao-06--groundwater-and-lake-observability),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1383
+
+- **Statement:** Oceanic or atmospheric observation, quality-controlled
+  observation, gridded product, analysis, and reanalysis are distinct. A field
+  estimate is conditional on platform and instrument mix, sampling support,
+  calibration and drift, selection/quality control, observation operator,
+  background dynamics, error covariance, assimilation version, and changing
+  observing-system coverage.
+- **Evidence status:** established observing-system and data-assimilation
+  boundary.
+- **Primary/authoritative sources:** `WongEtAl2020Argo`, `GOOS_EOV_2026`,
+  `WMO_GAW_QA_2026`, `GCOS_ECV_2026`, `Evensen1994EnKF`,
+  `HersbachEtAl2020ERA5`.
+- **Rationale:** Argo documents changing coverage, vertical resolution, sensor
+  issues, and QC; GOOS/GCOS/WMO define requirements, metadata, calibration,
+  overlap, and network quality; ERA5 explicitly combines an evolving observing
+  system with model and assimilation machinery.
+- **Proposed AI translation:** bind training examples and trend claims to the
+  observing-system and assimilation vintage that generated them; retain raw or
+  lower-level evidence for independent checks.
+- **Efficiency mechanism:** reprocess only affected products after operator or
+  calibration change and prioritize observations by forecast/decision value
+  under coverage constraints.
+- **Failure modes:** platform drift; coverage shift manufacturing a trend;
+  correlated satellite channels; rejected observations omitted from lineage;
+  bias correction anchored to a changing subset; reanalysis grid treated as
+  measured truth; extreme smoothing; model error absorbed as observation bias.
+- **Measurable prediction:** version-aware assimilation will reduce false trends
+  and interval undercoverage during seeded network transitions; if standard
+  observing-system experiments and covariance-aware assimilation match it, the
+  project-specific layer should be retired.
+- **Open question:** how much lifecycle benefit remains after mature WIGOS/GAW,
+  GOOS/Argo, GCOS, data-assimilation, bias-correction, and reprocessing practice?
+- **Used by:** [measurement-heavy analytical, water, and Earth-observation audit](audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md#ws-meao-07--ocean--atmosphere-analysis-under-network-change),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1384
+
+- **Statement:** A geodetic coordinate or velocity and a geophysical inverse
+  estimate are qualified by reference system/frame, realization, epoch, station
+  motion and discontinuities, transformation, covariance, forward sensitivity
+  kernel, regularization or prior, null space, and averaging-kernel resolution;
+  coordinate or model-grid precision does not establish physical accuracy or
+  resolving power.
+- **Evidence status:** established.
+- **Primary/authoritative sources:** `IERS2010Conventions`,
+  `AltamimiEtAl2023ITRF2020`, `EUREF_ETRS89`, `ISO19111_2019`,
+  `EU1089_2010`, `backus1968resolution`.
+- **Rationale:** IERS/ITRF/EUREF define time-dependent reference realization;
+  ISO and INSPIRE require reference-system metadata; Backus--Gilbert shows that
+  inverse results are spatial averages determined by data kernels and the
+  resolution--variance trade-off.
+- **Proposed AI translation:** treat frames, epochs, transformations, covariance,
+  forward kernels, and averaging kernels as executable dependencies of every
+  spatial feature and learned target.
+- **Efficiency mechanism:** prevent expensive retraining and false anomaly
+  response caused by coordinate/frame mismatch; localize which inverse modes
+  justify further observations.
+- **Failure modes:** mixed ETRS89/ITRF/WGS84-like realizations; missing coordinate
+  epoch; equipment or earthquake offset fitted as velocity; diagonal covariance
+  assumption; over-regularized field; fine output grid sold as fine resolution;
+  shared reference-station error.
+- **Measurable prediction:** frame- and kernel-aware models will sharply reduce
+  false deformation/anomaly calls and provide calibrated coverage during frame,
+  station, and operator changes; complete geodetic and inverse-theory nulls
+  should already obtain most of the gain.
+- **Open question:** does cross-layer invalidation catch materially more
+  descendants than established reference-frame registries, covariance-aware
+  adjustment, geospatial metadata, and inverse-resolution reporting?
+- **Used by:** [measurement-heavy analytical, water, and Earth-observation audit](audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md#ws-meao-08--reference-frame-and-geophysical-resolution),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1385
+
+- **Statement:** An Earth-observation pixel, fundamental data record, thematic
+  product, and retrieved geophysical state are different levels. Spectral
+  response, radiometric calibration, point-spread function, sampling and
+  geolocation, atmosphere/cloud and surface nuisance state, sub-pixel mixture,
+  forward model, prior/training support, quality screening, retrieval version,
+  averaging kernel, and validation support bound the inference.
+- **Evidence status:** established remote-sensing/metrology boundary; learned-
+  system lifecycle benefit is speculative.
+- **Primary/authoritative sources:** `rodgers2000inverse`, `QA4EO2009`,
+  `GasconEtAl2017Sentinel2`, `ISO19157_1_2023`, `EU2007_2_2024`.
+- **Rationale:** optimal-estimation theory exposes prior sensitivity and
+  averaging kernels; QA4EO requires measurand, traceability, uncertainty, and
+  product-level quality; Sentinel-2 calibration/validation demonstrates the
+  distinct radiometric, geometric, and product checks in a European mission.
+- **Proposed AI translation:** train against the forward observation and support
+  model, retain per-example product/operator version, and score retrieval at its
+  actual averaging support rather than against a nominal pixel label.
+- **Efficiency mechanism:** route high-cost correction or independent reference
+  acquisition only where nuisance uncertainty or decision value warrants it;
+  reuse products only inside validated support.
+- **Failure modes:** cloud screening selection; atmospheric-correction error;
+  adjacency; sub-pixel mixture; PSF/grid confusion; geolocation mismatch;
+  prior-dominated retrieval; synthetic-to-real forward-model gap; validation at
+  unmatched support; confident learned inverse outside training physics.
+- **Measurable prediction:** a forward/operator-aware hybrid will improve
+  uncertainty calibration and false-change control under atmosphere, mixture,
+  and prior shifts compared with a pixel-label inverse; it must beat calibrated
+  optimal estimation and QA4EO-style product practice, not only a naive network.
+- **Open question:** is there a systems residual after mature radiative transfer,
+  optimal estimation, Cal/Val, uncertainty propagation, analysis-ready data,
+  and versioned geospatial metadata are composed?
+- **Used by:** [measurement-heavy analytical, water, and Earth-observation audit](audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md#ws-meao-09--remote-sensing-retrieval-and-effective-resolution),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1386
+
+- **Statement:** Perioperative outcome depends separately on complication
+  occurrence and rescue after a complication; a risk score or technically
+  successful procedure does not establish timely detection, acknowledgement,
+  responder capacity, authorized treatment, or survival.
+- **Status:** established observational and operational boundary.
+- **Primary sources:** `W5CSB_GhaferiEtAl2009HospitalMortality`,
+  `W5CSB_GhaferiEtAl2009ComplicationsRescue`.
+- **Rationale:** the cited risk-adjusted surgical studies found that differences
+  in death after complications explained important hospital mortality variation
+  despite smaller complication-rate differences, while not identifying one
+  universally causal rescue mechanism.
+- **Open issue:** compare calibrated risk, early-warning, queue/capacity,
+  survival, constrained-control, and typed rescue policies under equal staffing,
+  observation, alert, intervention, transfer, and follow-up budgets with
+  complication incidence and case fatality reported separately.
+- **Used by:** [this specialty/biotechnology audit](audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md#1-surgery-and-perioperative-rescue),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1387
+
+- **Statement:** Medical-image model performance is conditional on the physical
+  state, modality, acquisition site/device/protocol, positioning, dose or exposure
+  where relevant, reconstruction/preprocessing version, target/reference process,
+  and population; internal discrimination does not establish transport or
+  test-and-action utility.
+- **Status:** established for the cited multi-site and shortcut studies; broader
+  modality effect sizes remain unresolved.
+- **Primary sources:** `W5CSB_ZechEtAl2018RadiographGeneralization`,
+  `W5CSB_DeGraveEtAl2021RadiographShortcuts`.
+- **Rationale:** models in the cited radiograph studies learned site/acquisition
+  information and exhibited external or counterfactual failure, demonstrating
+  that an image input distribution can encode operator context rather than only
+  pathology.
+- **Open issue:** test person/site-safe splits, unseen operator combinations,
+  counterfactual shortcut reversals, reference drift, calibration, abstention,
+  reacquisition, authorized action, and complete imaging/work/dose cost across
+  mature external-validation and QA nulls.
+- **Used by:** [this specialty/biotechnology audit](audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md#2-medical-imaging-is-operator-qualified),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1388
+
+- **Statement:** Paediatric extrapolation must distinguish size, maturation,
+  organ function, formulation, route, exposure, disease, response, and
+  developmental support; linear body-weight scaling alone is not a generally
+  valid bridge from adults or another paediatric stratum.
+- **Status:** established developmental and model-support boundary; exact
+  functions remain drug-, route-, age-, disease-, and population-specific.
+- **Primary sources:** `W5CSB_BackEtAl2019PediatricPK`,
+  `W5CSB_ChangEtAl2022PediatricPBPK`, `W5CSB_EMA_ICH_E11A_2024`.
+- **Rationale:** the empirical PK models required size and maturation or
+  time-varying physiology in their stated settings, while ICH E11A makes
+  extrapolation an iterative evidence-gap programme rather than automatic
+  borrowing.
+- **Open issue:** compare mg/kg, allometric, maturation, population-PK, PBPK,
+  hierarchical borrowing, and support-gated models under preterm age, organ
+  impairment, formulation/disease shift, sparse sampling, exposure tails, and
+  explicit no-support abstention.
+- **Used by:** [this specialty/biotechnology audit](audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md#3-paediatric-development-is-not-linear-weight-scaling),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1389
+
+- **Statement:** Equal psychiatric symptom totals can encode different item
+  configurations, risk factors, impairment, trajectories, safety-critical states,
+  and treatment-relevant histories; a total score is a versioned aggregation, not
+  a unique mechanism or person state.
+- **Status:** established measurement/information boundary for the cited
+  depression cohorts; general psychiatric ontology remains unresolved.
+- **Primary sources:** `W5CSB_FriedEtAl2014SymptomRiskFactors`,
+  `W5CSB_FriedNesse2015STARDProfiles`.
+- **Rationale:** individual symptoms showed different risk-factor associations,
+  and many profiles shared diagnostic/total-score support in STAR*D, proving the
+  aggregation is many-to-one without proving that one item/network model is true.
+- **Open issue:** compare totals, IRT, latent classes, HMM/state-space, networks,
+  mixed trajectories, and versioned item packets under equal-total cases, rater
+  shift, item drift, informative visits, treatment feedback, protected-event
+  dilution, and genuinely total-sufficient worlds.
+- **Used by:** [this specialty/biotechnology audit](audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md#4-psychiatric-totals-erase-configuration-and-time),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1390
+
+- **Statement:** Obstetric evidence is qualified by gestational time origin,
+  pregnancy ascertainment/entry, treatment timing, maternal--fetal--delivery--
+  infant endpoint definition, and competing events; restricting to or ordinarily
+  censoring live births can bias absolute risks and effects when its assumptions
+  fail.
+- **Status:** established causal-analysis boundary with scenario-specific
+  simulation magnitudes.
+- **Primary sources:** `W5CSB_LatourEtAl2026HealthyLiveBirthCompeting`,
+  `W5CSB_LeungEtAl2021LiveBirthSelection`.
+- **Rationale:** both simulation studies demonstrate data-generating conditions
+  under which selection/censoring on live birth distorts the target quantity;
+  neither supplies an effect estimate for an unstudied real intervention.
+- **Open issue:** require declared inception, risk set, event type, estimand,
+  component outcomes, loss mechanism, gestational clock, and treatment support;
+  compare Aalen--Johansen, cause-specific, subdistribution, multi-state, g-method,
+  and joint-model nulls under planted assumption failures.
+- **Used by:** [this specialty/biotechnology audit](audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md#5-obstetric-evidence-has-a-gestational-clock-and-competing-endpoints),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1391
+
+- **Statement:** Dental-caries lesion detection/severity and lesion
+  activity/progression are different observations; one image or examination does
+  not establish current activity, future progression, or the need for an
+  irreversible intervention.
+- **Status:** established longitudinal clinical-measurement boundary; activity
+  assessment remains examiner-, method-, population-, and follow-up-qualified.
+- **Primary sources:** `W5CSB_NyvadEtAl1999CariesReliability`,
+  `W5CSB_NyvadEtAl2003CariesValidity`.
+- **Rationale:** the cited criteria and longitudinal validation explicitly
+  distinguish active/inactive and cavitated/non-cavitated states, while their
+  imperfect reliability prevents treating an activity label as infallible truth.
+- **Open issue:** compare detection/severity thresholds, calibrated activity
+  rules, interval-censored survival, Markov/HMM, and observation-contract models
+  under examiner/acquisition drift, surface dependence, access missingness,
+  restoration censoring, and progression/pain versus overtreatment endpoints.
+- **Used by:** [this specialty/biotechnology audit](audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md#6-dentistry-requires-lesion-activity-and-progression-not-presence-alone),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1392
+
+- **Statement:** For gene and cell therapies, identity, purity, viability,
+  composition, quantitative biological potency, process/site comparability,
+  administration, recipient exposure, and long-term safety/efficacy are separate
+  evidence axes; a nominal construct or cell count cannot inherit the others.
+- **Status:** established product/development boundary; clinical associations and
+  assay adequacy remain product-, process-, mechanism-, and population-specific.
+- **Primary sources:** `W5CSB_FraiettaEtAl2018CARTDeterminants`,
+  `W5CSB_EMA_ATMP_ClinicalTrials_2025`,
+  `W5CSB_EMA_CellBasedProducts_2008`,
+  `W5CSB_EMA_GeneTherapy_2018`, `W5CSB_EMA_GeneFollowup_2010`.
+- **Rationale:** the CAR-T study found scoped product-feature associations, while
+  current EMA guidance separately treats characterization, potency,
+  comparability, administration and delayed follow-up rather than accepting
+  nominal identity as a complete release or outcome claim.
+- **Open issue:** compare univariate release, SPC, multivariate/QbD, hierarchical,
+  formal comparability, and lineage-aware gates under donor/site/reagent/process
+  shifts, assay drift, rare contamination, administration delay, potency/outcome
+  discordance, and complete follow-up cost.
+- **Used by:** [this specialty/biotechnology audit](audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md#7-gene-and-cell-therapies-are-process-qualified-living-products),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1393
+
+- **Statement:** An intended small genome edit and successful local amplicon do
+  not bound on-target structural damage, mosaic/lineage variation, or off-target
+  events; every non-detection is conditional on specimen, variant class, allele
+  fraction, assay operator/support, and shared failure roots.
+- **Status:** established for the cited CRISPR--Cas systems; frequencies and
+  clinical significance remain editor-, locus-, cell-, delivery-, selection-,
+  assay-, and application-specific.
+- **Primary sources:** `W5CSB_TsaiEtAl2015GUIDESeq`,
+  `W5CSB_KosickiEtAl2018LargeDeletions`,
+  `W5CSB_LeibowitzEtAl2021Chromothripsis`.
+- **Rationale:** the studies directly demonstrate off-target sites, large
+  on-target deletions/rearrangements, and chromothripsis-like on-target
+  consequences that local intended-edit assays can miss.
+- **Open issue:** compare local, genome-wide, long-read/range, copy-number,
+  cytogenetic, single-cell/clone, and functional assays under planted variant
+  classes, primer/mapping dropout, low mosaic fractions, clone selection, shared
+  extraction failures, and adaptive versus uniform verification work.
+- **Used by:** [this specialty/biotechnology audit](audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md#8-intended-gene-edits-do-not-bound-realized-genome-outcomes),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 010](../experiments/candidates/010-reset-coupled-staged-verification.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1394
+
+- **Statement:** Agricultural-biotechnology and biological-control efficacy is
+  conditional on site, season, crop/target/non-target community, landscape,
+  dispersal, exposure, implementation and monitoring, while selection can erode
+  function; laboratory efficacy or one average field effect does not establish
+  durable field control.
+- **Status:** established field-transport and evolutionary boundary with
+  organism-, intervention-, region-, and horizon-specific effects.
+- **Primary sources:** `W5CSB_KarpEtAl2018LandscapePests`,
+  `W5CSB_RattoEtAl2022Biocontrol`,
+  `W5CSB_TabashnikEtAl2013BtResistance`,
+  `W5CSB_UncklessEtAl2017GeneDriveResistance`.
+- **Rationale:** the cited field syntheses show context/heterogeneity, while Bt
+  field evidence and gene-drive models establish that resistance dynamics depend
+  on selection, inheritance, refuge/migration and population assumptions.
+- **Open issue:** compare hierarchical field trials, spatial GLMMs,
+  reaction--diffusion/metapopulation, IPM, refuge/rotation/mixture, robust MPC and
+  Bayesian adaptive policies under unseen landscapes, immigration, compliance,
+  non-target/secondary-pest effects, resistance costs, rebound, labor and full
+  monitoring/application budgets.
+- **Used by:** [this specialty/biotechnology audit](audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md#9-agricultural-biotechnology-and-biological-control-operate-in-fields-that-evolve),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1395
+
+- **Statement:** A tax's legal liability or remitting actor, cash receipt,
+  national-accounts accrual/classification, government allocation, and economic
+  incidence are distinct; an incidence estimate must name behavioural and
+  equilibrium assumptions, population, price basis, distributional operator,
+  and horizon.
+- **Status:** established.
+- **Primary sources:** `Harberger1962CorporateTaxIncidence`,
+  `EU2013ESA2010`, `Destatis2026PublicFinanceCash`,
+  `Destatis2026ESAGNIInventory`.
+- **Rationale:** ESA and German official methods define accounting operators,
+  while general-equilibrium tax analysis demonstrates that statutory
+  remittance does not determine real burden.
+- **Open issue:** compare legal/cash-only, ESA bridge, microsimulation,
+  behavioural/general-equilibrium sensitivity, and typed records under
+  mobility, market power, transfers, revisions, multiple governments, and
+  equal data, compute, storage, reviewer, and energy budgets.
+- **Used by:** [this audit](audits/2026-08-24-economy-education-institutions.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1396
+
+- **Statement:** An organizational practice can be offered, adopted, enacted,
+  combined, maintained, abandoned, or diffused; effects of a practice bundle
+  need not equal isolated component effects, and persistence can depend on
+  complementary routines, implementation capacity, roles, and turnover.
+- **Status:** plausible.
+- **Primary sources:** `BloomEtAl2013ManagementIndia`,
+  `BloomEtAl2020ManagementPersistence`, `IchniowskiEtAl1997HRMProductivity`,
+  `FeldmanPentland2003Routines`.
+- **Rationale:** the cited field experiment and follow-up separate offer,
+  adoption, outcome, persistence, and abandonment in selected textile plants;
+  the steel-line study supports complementarity in its process; neither
+  establishes a universal management bundle.
+- **Open issue:** require factorial and configurational designs, actual
+  enactment, resource/turnover histories, quality and worker outcomes,
+  persistence, and fresh-industry replication against process-mining and
+  workflow nulls.
+- **Used by:** [this audit](audits/2026-08-24-economy-education-institutions.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1397
+
+- **Statement:** Labour-force status, registered status, stocks, gross
+  transitions, persons, jobs, contracts, hours, occupations, tasks, skills,
+  earnings, and job quality are different quantities; net employment or a
+  stable occupational label cannot identify churn, task change, capability, or
+  welfare.
+- **Status:** established.
+- **Primary sources:** `EU2019IntegratedSocialStatistics`,
+  `Eurostat2026LFSMethodology`, `Destatis2026ILOUnemployment`,
+  `AutorLevyMurnane2003Tasks`, `MortensenPissarides1994JobCreationDestruction`.
+- **Rationale:** EU/German official statistics define mutually exclusive
+  reference-period states and separate registered concepts, while labour
+  research models gross transitions and measures changing tasks inside
+  nominal categories.
+- **Open issue:** compare net-rate, multistate/spell, job-task, and typed-unit
+  systems under multiple jobs, hours changes, classification breaks, survey
+  attrition, population turnover, task relabeling, and equal budgets.
+- **Used by:** [this audit](audits/2026-08-24-economy-education-institutions.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1398
+
+- **Statement:** A dynamic fiscal or development-policy response is conditional
+  on the intervention or shock definition, announcement and implementation
+  timing, agents' information set, automatic policy responses, exposure unit,
+  accounting and price basis, interference, regime, estimator, horizon, and
+  target support; a budget identity or time-series innovation does not by
+  itself identify that response.
+- **Status:** established.
+- **Primary sources:** `BlanchardPerotti2002FiscalEffects`,
+  `MertensRavn2010FiscalAnticipation`, `Duflo2001SchoolConstruction`.
+- **Rationale:** the fiscal studies use different institutional/information
+  assumptions to identify dynamic innovations, and the school-construction
+  study uses cohort-by-region exposure; their estimates remain design- and
+  setting-specific.
+- **Open issue:** compare structural VAR, narrative/event, local-projection,
+  cohort/DiD, interference, regime, sensitivity, and typed-lineage methods on
+  anticipated, revised, sign-changing, and transported worlds at equal cost.
+- **Used by:** [this audit](audits/2026-08-24-economy-education-institutions.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1399
+
+- **Statement:** Intended curriculum, institutional/teacher implementation,
+  accessible opportunity to learn, attempted activity, assessment sampling,
+  immediate performance, attained learning, delayed retention, and transfer
+  are distinct layers; a standard, coverage flag, or aligned score does not
+  establish the later layers.
+- **Status:** established.
+- **Primary sources:** `IEA2021TIMSS2023Frameworks`,
+  `SchmidtWangMcKnight2005CurriculumCoherence`,
+  `KMK2026EducationStandards`.
+- **Rationale:** IEA and KMK explicitly separate curriculum expectation,
+  implementation, monitoring, and attainment, while coherence research
+  operationalizes only selected relations among represented content.
+- **Open issue:** compare standards-only, curriculum mapping,
+  opportunity-to-learn, knowledge tracing, learning-science scheduling, and
+  typed-layer records on delayed and transfer outcomes with access, teacher
+  work, attempts, feedback, compute, and energy matched.
+- **Used by:** [this audit](audits/2026-08-24-economy-education-institutions.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1400
+
+- **Statement:** Educational-assessment validity concerns a proposed score
+  interpretation and use, not a test name or score alone; scoring,
+  generalization, extrapolation, cross-group/system comparability, decision,
+  consequence, authority, review, and appeal require separately relevant
+  evidence.
+- **Status:** established.
+- **Primary sources:** `Kane2013ScoreValidity`,
+  `OECD2024PISA2022Technical`, `Meredith1993Invariance`.
+- **Rationale:** argument-based validation separates inferential steps and
+  score uses, while international assessment requires explicit sampling,
+  scaling, invariance, linking, and uncertainty procedures.
+- **Open issue:** test multigroup psychometrics, accessibility, validity
+  argument, consequential monitoring, human review, and dependency records
+  under construct drift, DIF, mode/language change, leaked items, new uses, and
+  equal lifecycle budgets.
+- **Used by:** [this audit](audits/2026-08-24-economy-education-institutions.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1401
+
+- **Statement:** Inclusive education cannot be inferred from placement,
+  enrolment, or an average score alone; access, non-exclusion, reasonable
+  accommodation, support received, presence, participation, belonging,
+  learning, progression, transition, voice, and remedy remain distinct, with
+  applicable rights acting as constraints rather than learned reward weights.
+- **Status:** established.
+- **Primary sources:** `EU2010UNCRPD`, `EU2022SchoolSuccess`,
+  `RuijsPeetsma2009InclusionReview`.
+- **Rationale:** the Convention and EU recommendation retain multiple duties
+  and support routes, while the research review reports heterogeneous academic
+  and socio-emotional findings rather than one placement effect.
+- **Open issue:** compare average/gap dashboards, multidimensional inclusion,
+  missingness, accessibility, individualized support, protected floors, voice,
+  and remedy under capacity limits and equal human/compute/resource budgets.
+- **Used by:** [this audit](audits/2026-08-24-economy-education-institutions.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1402
+
+- **Statement:** A vocational qualification or training-hour total does not by
+  itself establish current occupational competence: regulated outcomes,
+  workplace and school venues, trainer/venue capability, supervised task
+  practice, employer commitment, assessment independence, competent-body
+  oversight, critical-task coverage, transfer, and technology version can all
+  be material.
+- **Status:** established.
+- **Primary sources:** `DE2025BBiG`, `BIBB2025TrainingRegulations`,
+  `EU2020VETRecommendation`, `DustmannSchoenberg2012VETCommitment`.
+- **Rationale:** German law and BIBB define a multi-actor, multi-venue route;
+  the cited economic model and evidence identify commitment as one condition
+  for firm-based training, not proof of every programme's execution.
+- **Open issue:** compare hours/certificate, competency matrix, multi-venue
+  logs, independent exam, audit, commitment, critical-task, and renewal records
+  under employer exit, rare tasks, copied logs, task drift, and equal budgets.
+- **Used by:** [this audit](audits/2026-08-24-economy-education-institutions.md),
+  [Candidate 004](../experiments/candidates/004-closed-endogenous-curriculum.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1403
+
+- **Statement:** Comparing or transporting education-system effects and
+  qualifications requires compatible constructs, treatment/outcome versions,
+  cohort and reform timing, institutional components, target overlap, effect
+  modifiers, interference, and recognition authority; a country, migration-
+  background, tracking, qualification, or EQF-level label does not supply
+  those conditions.
+- **Status:** established.
+- **Primary sources:** `EU2017EQF`, `OECD2024PISA2022Technical`,
+  `HanushekWoessmann2006Tracking`, `Duflo2001SchoolConstruction`.
+- **Rationale:** EQF is a transparency framework, PISA expends substantial
+  effort on comparability, and the empirical studies identify scoped contrasts
+  under specific system, cohort, and measurement assumptions.
+- **Open issue:** compare pooled/country-label, multilevel, invariance,
+  component-map, overlap/reweighting, sensitivity/bounds, and qualified legal
+  recognition under reforms, language/access changes, migrant selection,
+  labour-demand shifts, and unsupported targets.
+- **Used by:** [this audit](audits/2026-08-24-economy-education-institutions.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1404
+
+- **Statement:** Compiler correctness is a conditional semantic-refinement
+  relation over named source and target semantics, successful transformation,
+  permitted observations, and explicit preconditions; an execution with
+  undefined source behaviour, an implementation choice outside the relation, or
+  an omitted preprocessing/linking/runtime boundary is not made correct by the
+  compiler theorem.
+- **Status:** established for the cited formal models and language standard;
+  whole-toolchain transfer remains scope-qualified.
+- **Primary sources:** `Leroy2009CACM`, `Leroy2009JAR`,
+  `CompCertManual_3_17`, `ISOIEC9899_2024`, `WangEtAl2013UB`.
+- **Rationale:** CompCert's machine-checked result names formal semantics and
+  successful compilation; the C standard defines interpretation and portability
+  boundaries; optimization-unstable code shows why UB-sensitive expectations
+  cannot act as a general target oracle.
+- **Open issue:** graph compilers, quantizers, sparse routers, kernel fusion, and
+  accelerator lowering need a registered numerical/concurrency relation,
+  unsupported result, complete trusted boundary, and invalidation rule before
+  they inherit this assurance pattern.
+- **Used by:** [this audit](audits/2026-08-24-computing-compilers-networking-visualization.md#comp-01--compiler-correctness-is-a-conditional-semantic-relation),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  and Candidate [009](../experiments/candidates/009-graded-assurance-envelopes.md).
+
+### C-1405
+
+- **Statement:** Differential and metamorphic compiler testing can efficiently
+  expose divergence only under preserved source validity, equivalent
+  environments, and a registered behaviour relation; disagreement and compiler
+  majority are bug-triage evidence, not by themselves a ground-truth verdict.
+- **Status:** established methodology and oracle limitation; bug yield is
+  generator/compiler/version qualified.
+- **Primary sources:** `YangEtAl2011Csmith`, `LeEtAl2014EMI`,
+  `ISOIEC9899_2024`.
+- **Rationale:** Csmith's avoidance of undefined/unspecified oracle destruction
+  and EMI's input-qualified equivalence demonstrate that the generator and
+  relation create the oracle; shared defects, nondeterminism, timeouts, and
+  implementation choices can defeat raw voting.
+- **Open issue:** compare validity-preserving generation, EMI/metamorphic
+  relations, reduction, formal interpreters, sanitizers, translation validation,
+  and independent adjudication at equal executions and review cost, including
+  shared-backend defects.
+- **Used by:** [this audit](audits/2026-08-24-computing-compilers-networking-visualization.md#comp-02--differential-disagreement-is-triage-not-ground-truth),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-009](principle-registry.md#p-009--maintenance-plane), and Candidates
+  [009](../experiments/candidates/009-graded-assurance-envelopes.md) and
+  [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1406
+
+- **Statement:** Profile-guided and just-in-time optimization are mature
+  conditional-specialization nulls whose net benefit is qualified by profile
+  support and age, code/configuration version, workload shift, warm-up,
+  compilation/deoptimization/fallback cost, code footprint, protected rare
+  paths, and full deployment latency/energy rather than steady-state mean alone.
+- **Status:** established optimization family; workload-shift robustness and net
+  benefit are empirical and implementation-specific.
+- **Primary sources:** `ArnoldEtAl2005AdaptiveVM`, `ChenEtAl2016AutoFDO`,
+  `LLVM_PGO_2026`, `PettisHansen1990`.
+- **Rationale:** runtime monitoring and feedback-directed specialization are
+  established practice; representative/stale profiles, tiering, compilation,
+  and layout are explicit engineering boundaries rather than free information.
+- **Open issue:** require held-out stationary, gradual, abrupt, cyclic, rare-path,
+  and code-version shifts with all profile/compile/deopt work amortized, then
+  compare static robust optimization, PGO, tiered JIT, AutoFDO-like sampling,
+  recency adaptation, and candidate mechanisms.
+- **Used by:** [this audit](audits/2026-08-24-computing-compilers-networking-visualization.md#perf-01--pgo-and-jit-optimize-an-empirical-workload-contract),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  and Candidate [001](../experiments/candidates/001-adaptive-topology.md).
+
+### C-1407
+
+- **Statement:** Software-performance conclusions are conditional on the
+  independent-unit hierarchy and setup distribution: code, data, stack, and
+  environment layout can interact with a variant, so repeated executions of one
+  binary do not estimate a layout-population effect without randomized layouts,
+  blocked order, and hierarchy-aware uncertainty.
+- **Status:** established measurement-bias mechanism; magnitude is
+  system-specific.
+- **Primary sources:** `MytkowiczEtAl2009`, `CurtsingerBerger2013`,
+  `KaliberaJones2013`.
+- **Rationale:** innocuous environment/link-order changes can reverse apparent
+  conclusions; layout rerandomization and multilevel replication expose the
+  missing variation that repeated iterations of one layout cannot supply.
+- **Open issue:** benchmark compiled AI kernels and services across layouts,
+  rebuilds, invocations, machines, thermal/frequency states, workload strata,
+  tails, joules, and correctness, with a frozen estimand and no post-hoc outlier
+  deletion.
+- **Used by:** [this audit](audits/2026-08-24-computing-compilers-networking-visualization.md#perf-02--executable-layout-is-a-randomized-experimental-factor),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  and Candidate [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1408
+
+- **Statement:** An intermediate implementation can improve performance or
+  provide a useful partial check, but a function whose complete correctness
+  depends on endpoint application knowledge still requires endpoint
+  verification; placing or duplicating the function moves execution,
+  communication, state, trust, and failure costs rather than erasing them.
+- **Status:** established design argument with scoped examples; not a universal
+  placement theorem.
+- **Primary source:** `SaltzerReedClark1984`.
+- **Rationale:** the end-to-end argument distinguishes complete implementation
+  from lower-layer performance enhancement, preventing early checks, caches, or
+  transport guarantees from being misreported as application correctness.
+- **Open issue:** compare endpoint-only, intermediate-only, hybrid, expected-cost,
+  robust/scenario, and authority-aware placement under reuse, early rejection,
+  stale state, common-mode faults, privacy, endpoint availability, bytes,
+  latency, joules, and invalid acceptance.
+- **Used by:** [this audit](audits/2026-08-24-computing-compilers-networking-visualization.md#arch-01--function-placement-does-not-erase-endpoint-obligation),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  [P-013](principle-registry.md#p-013--externalized-shared-state), and
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1409
+
+- **Statement:** Network delay, loss, queue, and throughput results are
+  measurement-operator outputs qualified by packet type, direction, endpoints,
+  observation points, path/version, clocks, timestamp placement, sampling,
+  timeout/censoring, and collection; active probes add or modify traffic and
+  therefore perturb measured conditions to some degree.
+- **Status:** established IPPM/ETSI metric-method boundary.
+- **Primary sources:** `RFC7799`, `RFC7679`, `RFC7680`, `RFC2681`,
+  `ETSI_EG_202765_3`.
+- **Rationale:** authoritative metric definitions keep singleton, sample,
+  statistic, Type-P, path, clock uncertainty, loss threshold, and active/passive
+  method distinct; RTT also joins forward and reverse paths.
+- **Open issue:** compare calibrated active, passive, hybrid, and joint
+  state/observation models across path asymmetry, clock drift, Type-P treatment,
+  route change, timeouts, export loss, reactive networks, and probe load, scoring
+  downstream decisions rather than metric fit alone.
+- **Used by:** [this audit](audits/2026-08-24-computing-compilers-networking-visualization.md#net-01--network-measurements-are-operator--and-intervention-qualified),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-009](principle-registry.md#p-009--maintenance-plane), and Candidates
+  [003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1410
+
+- **Statement:** Congestion, propagation and queuing delay, random or policy
+  loss, receiver/application limitation, and path change are coupled but
+  non-identical mechanisms, while applications, senders, routers/queues, and
+  operators have different observations and actuators; gains must be measured
+  on accepted service, fairness, tails, retransmission, and full work against
+  mature transport/AQM nulls.
+- **Status:** established mechanisms and standards; relative controller benefit
+  is path/workload/deployment qualified.
+- **Primary sources:** `Jacobson1988`, `CardwellEtAl2016BBR`, `RFC9438`,
+  `RFC8289`, `RFC8290`, `RFC9331`, plus queueing nulls `little1961`,
+  `kingman1961`, and `jackson1957`.
+- **Rationale:** end-host congestion control, model-based control, queue
+  scheduling/AQM, and explicit marking operate at different boundaries; one
+  observed loss, RTT, or queue value does not uniquely identify mechanism or
+  safe action.
+- **Open issue:** cross CUBIC-, BBR-, ECN-, CoDel/FQ-CoDel-, fair-queueing-,
+  admission-, selector-, and constrained-control arms under random loss, AQM
+  change, heterogeneous RTT, reverse-path load, receiver limitation, capacity
+  shift, competing protocols, and missing/bleached feedback.
+- **Used by:** [this audit](audits/2026-08-24-computing-compilers-networking-visualization.md#net-02--congestion-signals-mechanisms-and-operators-are-distinct),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-005](principle-registry.md#p-005--use-dependent-topology),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
+  [P-011](principle-registry.md#p-011--transient-communication-coalitions),
+  and Candidates [001](../experiments/candidates/001-adaptive-topology.md),
+  [003](../experiments/candidates/003-recovery-dynamics-fragility.md), and
+  [013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1411
+
+- **Statement:** A fan-out request's latency is an order statistic of the joint
+  branch distribution, so scale and dependence can amplify rare component
+  delays; hedging/replication can reduce the tail only by spending capacity and
+  cancellation work and can worsen the same tail through added queue load.
+- **Status:** established under the cited mathematical assumptions and systems
+  evidence; benefit boundary is workload/queue/dependence qualified.
+- **Primary sources:** `DeanBarroso2013`, `VulimiriEtAl2013`,
+  `GardnerEtAl2017`, plus queueing nulls `little1961`, `kingman1961`, and
+  `jackson1957`.
+- **Rationale:** under independence the all-branch CDF multiplies, while shared
+  causes change that relation; redundancy exchanges spare capacity for a
+  minimum-of-copies completion and exact benefits depend on service and cancel
+  assumptions.
+- **Open issue:** cross no-hedge load balancing, delayed hedge, retry,
+  redundancy-\(d\), capacity reserve, load shedding, partial completion, and
+  adaptive guard policies across branch count, tail dependence, utilization,
+  common shocks, deadline, cancellation latency, useful work, and p99.9.
+- **Used by:** [this audit](audits/2026-08-24-computing-compilers-networking-visualization.md#dist-01--fan-out-tails-depend-on-scale-dependence-and-added-load),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
+  [P-006](principle-registry.md#p-006--homeostatic-negative-feedback), and
+  Candidates [003](../experiments/candidates/003-recovery-dynamics-fragility.md)
+  and [013](../experiments/candidates/013-deficit-capability-routing.md).
+
+### C-1412
+
+- **Statement:** A visualization or scalar software score is a task- and
+  viewer-qualified observation operator over uncertain, vector-valued state:
+  encoding-dependent perceptual/decision error, accessibility alternatives,
+  the complete quality vector, applicability, hard legal constraints, evidence
+  age, and support/vulnerability/incident lifecycle cannot be inferred from or
+  compensated by the scalar summary alone.
+- **Status:** established for the cited graphical-perception tasks, SQuaRE model,
+  and applicable legal requirements; a universal display or aggregator is not
+  established.
+- **Primary sources:** `ClevelandMcGill1984`, `CorrellGleicher2014`,
+  `FernandesEtAl2018`, `ISOIEC25010_2023`, `ISOIEC25040_2024`,
+  `EN301549_3_2_1`, `EU_CRA_2024_2847`, `EU_NIS2_2022_2555`,
+  `DE_BSIG_2025`.
+- **Rationale:** graphical encodings produce different decoding behaviour;
+  uncertainty representations alter judgment; ISO/IEC 25010 defines nine
+  quality characteristics rather than one score; CRA, NIS2/BSIG, and applicable
+  accessibility requirements create typed lifecycle constraints, not
+  compensable performance penalties.
+- **Open issue:** synthetic reader and lifecycle tests can reject fragile
+  encodings/gates but cannot establish human accessibility, legal applicability,
+  or conformity; successful designs need preregistered accessible human studies
+  and actor/product-specific legal assessment.
+- **Used by:** [this audit](audits/2026-08-24-computing-compilers-networking-visualization.md#visq-01--displays-and-scalar-scores-are-lossy-quality-operators),
+  [P-008](principle-registry.md#p-008--compartmentalized-interaction),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-013](principle-registry.md#p-013--externalized-shared-state), and
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1413
+
+- **Statement:** A diagnostic score, image prioritization, control command, or
+  other device output is not a clinical pathway outcome. Evidence must
+  separately preserve intended purpose, report/message, authorized action,
+  physical execution or delivery, verified effect, and patient-relevant
+  endpoint for the deployed sensor--processor--user--actuator--fallback chain.
+- **Status:** established pathway boundary with a current randomized null for
+  local diagnostic prioritization and a positive randomized example for an
+  evaluated closed-loop therapeutic system; effects remain device-, pathway-,
+  population-, comparator-, and endpoint-specific.
+- **Primary sources:** `W6MDE_WoznitzaEtAl2026LungIMPACT`,
+  `W6MDE_BrownEtAl2019ClosedLoop`.
+- **Rationale:** LungIMPACT improved report timing without improving its CT,
+  diagnosis, or treatment timings, while the cited closed-loop insulin trial
+  improved time in range for the evaluated integrated system. Together they
+  reject both automatic pathway inheritance and a universal anti-device null.
+- **Open issue:** compare accuracy-only, priority, queue/capacity, typed
+  authority, delivery verification, constrained closed-loop, and fallback arms
+  under equal work, latency, false-action, energy, maintenance, and follow-up
+  budgets.
+- **Used by:** [this audit](audits/2026-08-24-medical-devices-biomedical-engineering.md#1-diagnostic-and-therapeutic-output-must-survive-the-pathway),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1414
+
+- **Statement:** A biomedical signal or image-derived estimate is conditional
+  on the body/specimen and interface, acquisition geometry/protocol,
+  signal-quality state, device and processing version, reference method and
+  pairing time, environment, and population support; the estimate is not the
+  latent physiological or pathological state.
+- **Status:** established measurement boundary in the cited pulse-oximetry
+  studies; magnitudes do not transfer automatically across device, body site,
+  pigmentation measure, perfusion, motion, condition, reference, or population.
+- **Primary sources:** `W6MDE_BicklerEtAl2005PulseOximetry`,
+  `W6MDE_SjodingEtAl2020PulseOximetry`.
+- **Rationale:** the cited controlled and paired clinical studies demonstrate
+  device/body/reference-dependent disagreement and clinically material occult
+  hypoxaemia patterns. They do not justify race as a biological calibration
+  constant or one correction for all oximeters.
+- **Open issue:** test forward/operator models, device-specific calibration,
+  state estimation, signal-quality gating, lag-aware reference pairing,
+  subgroup/worst-support error, abstention, and reacquisition under unseen
+  nuisance combinations and decision costs.
+- **Used by:** [this audit](audits/2026-08-24-medical-devices-biomedical-engineering.md#2-biomedical-signals-and-images-are-operator-qualified-observations),
+  [C-1387](#c-1387),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1415
+
+- **Statement:** Offline prosthetic or assistive decoder accuracy does not
+  establish closed-loop function, safety, effort, wear, comfort, adoption, or
+  home transfer; evaluation must include user--device co-adaptation,
+  socket/electrode and mechanical state, feedback, task/environment, workload,
+  failure recovery, and functional endpoints.
+- **Status:** established scoped home-use boundary with narrow experimental
+  support for feedback; general effect sizes remain device-, impairment-,
+  interface-, training-, task-, environment-, and horizon-specific.
+- **Primary sources:** `W6MDE_SimonEtAl2023Prosthesis`,
+  `W6MDE_ClementeEtAl2019SensoryFeedback`.
+- **Rationale:** the randomized-order home study reported high offline
+  calibration accuracy but mixed functional outcomes, while the intraneural
+  feedback study supports a possible functional contribution in a narrow
+  setting rather than universal benefit.
+- **Open issue:** compare direct control, fixed and adaptive decoders, scheduled
+  recalibration, feedback, shared control, and safety constraints under
+  electrode rotation, impedance, socket shift, fatigue, object dynamics,
+  feedback delay, equal training, and long-horizon wear.
+- **Used by:** [this audit](audits/2026-08-24-medical-devices-biomedical-engineering.md#3-prosthetic-decoder-accuracy-is-not-closed-loop-assistive-function),
+  [Candidate 006](../experiments/candidates/006-reversible-physical-skill.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1416
+
+- **Statement:** Technical function, standards conformance, training completion,
+  or satisfaction does not establish safe medical-device use. Representative
+  intended users must perform safety-critical tasks in realistic use scenarios
+  and environments, with modes, interruptions, alarms, foreseeable use errors,
+  recovery, and residual risk observed separately.
+- **Status:** established human-factors and use-related-risk boundary; error
+  frequencies remain interface-, task-, user-, training-, environment-, and
+  study-design-specific.
+- **Primary sources:** `W6MDE_GarmerEtAl2002InfusionUsability`,
+  `W6MDE_IEC62366_1_2015A1_2020`, `EU2017MDR`.
+- **Rationale:** the cited infusion-pump study found faster and less problematic
+  use with a redesigned interface while errors remained. IEC usability
+  engineering supplies technical process and MDR supplies applicable legal
+  safety framing; neither is itself clinical outcome evidence.
+- **Open issue:** preregister critical tasks and severity; test novices and
+  experts, high-risk modes, unit/decimal/context errors, interruptions,
+  degraded states, handoff, emergency actions, and recovery under equal
+  training, prompt, and time budgets.
+- **Used by:** [this audit](audits/2026-08-24-medical-devices-biomedical-engineering.md#4-human-factors-is-a-safety-property-of-use-not-satisfaction),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1417
+
+- **Statement:** Calibration, adjustment, verification, and validation are
+  different records, and any calibration is dated evidence rather than a
+  guarantee against drift. Ongoing validity requires the measurand, unit,
+  range, reference and uncertainty, environment, use/wear and intervention
+  history, version, drift detection, triggered checks, and downstream decision
+  sensitivity.
+- **Status:** established metrology/device boundary with a scoped continuous
+  blood-pressure example; drift rate and acceptable error remain device-,
+  measurand-, reference-, environment-, use-, and decision-specific.
+- **Primary sources:** `W6MDE_LakhalEtAl2016CNAP`,
+  `W6MDE_ISO14971_2019`, `W6MDE_DE_MPBetreibV2025`.
+- **Rationale:** the cited device evaluation observed time-dependent
+  disagreement before recalibration. ISO risk management is technical practice,
+  while German MPBetreibV section 15 creates binding metrological-control duties
+  only for its listed products and conditions.
+- **Open issue:** compare one-time, periodic, residual-triggered, redundant-
+  reference, common-cause, uncertainty-aware, quarantine, and abstention arms
+  under gradual drift, shocks, temperature, wear, intervention dynamics,
+  reference bias, check cost, downtime, and clinical threshold errors.
+- **Used by:** [this audit](audits/2026-08-24-medical-devices-biomedical-engineering.md#5-calibration-is-dated-evidence-drift-is-a-lifecycle-process),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1418
+
+- **Statement:** A medical-device alarm is not equivalent to a valid event,
+  actionable priority, successful delivery, receipt, acknowledgement,
+  authorized response, or resolution. Alarm safety is an end-to-end property of
+  signal quality, configuration, nonactionable load, responder queue/capacity,
+  escalation, fallback, and verified closure.
+- **Status:** established observational alarm-burden and response-time boundary;
+  causal coefficients and safe configurations remain device-, unit-, patient-
+  mix-, staffing-, workflow-, and endpoint-specific.
+- **Primary sources:** `W6MDE_DrewEtAl2014AlarmFatigue`,
+  `W6MDE_BonafideEtAl2015AlarmResponse`,
+  `W6MDE_IEC60601_1_8_2006A2_2020`.
+- **Rationale:** the cited ICU and children's-hospital studies document large
+  alarm burdens, high nonactionable fractions, and slower response after recent
+  nonactionable alarms. IEC 60601-1-8 supplies technical alarm requirements,
+  not proof of configured ward response.
+- **Open issue:** compare threshold, persistence, hysteresis, multimodal
+  signal-quality, priority, queue-aware escalation, acknowledgement receipt,
+  alternate routing, and resolution verification under equal responder time
+  and planted correlated alarm storms.
+- **Used by:** [this audit](audits/2026-08-24-medical-devices-biomedical-engineering.md#6-alarm-performance-includes-a-human-response-queue),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1419
+
+- **Statement:** Successful medical-data transport, parsing, schema validation,
+  or a standards label does not establish semantic, unit, temporal, identity,
+  laterality, scaling, provenance, version, or workflow interoperability;
+  required meaning and safe state transitions must survive profile-specific
+  multivendor validation and repair.
+- **Status:** established standards/implementation boundary from original DICOM
+  work through current DICOM conformance text; exact failures remain profile-,
+  product-, version-, network-, terminology-, and workflow-specific.
+- **Primary sources:** `W6MDE_Prior1993DICOM`, `W6MDE_DICOM2026c`,
+  `W6MDE_HL7FHIR_R5`, `W6MDE_IEC80001_1_2021`.
+- **Rationale:** Prior stated that a communication standard cannot ensure
+  multivendor interoperability, and DICOM PS3.2 2026c retains an explicit
+  non-guarantee plus specific-equipment validation responsibility. FHIR R5 is
+  current while R6 ballot5 is draft.
+- **Open issue:** test transport, base schemas, profiles, terminology, canonical
+  units, identity/provenance binding, clocks, image scaling, state machines,
+  quarantine, and auditable repair across version skew and compound faults.
+- **Used by:** [this audit](audits/2026-08-24-medical-devices-biomedical-engineering.md#7-standards-based-transport-is-not-semantic-interoperability),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-1420
+
+- **Statement:** Medical-device cybersecurity is a lifecycle property coupled
+  to safety, effectiveness, and availability. Confidentiality, authentication,
+  a vulnerability scan, or a penetration-test pass alone does not establish
+  least privilege, integrity, anti-replay, secure update/rollback,
+  vulnerability response, emergency access, local interlocks, safe degraded
+  therapy, recovery, or manufacturer--operator--network responsibility.
+- **Status:** established cyber-physical attack and lifecycle boundary; no
+  current prevalence or vulnerability claim is made for an untested product.
+- **Primary sources:** `W6MDE_HalperinEtAl2008ICD`,
+  `W6MDE_MDCG2019_16r1`, `W6MDE_IEC81001_5_1_2021`,
+  `W6MDE_BSI_ManiMed`, `W6MDE_DE_MPBetreibV2025`.
+- **Rationale:** the primary experiment demonstrated privacy, integrity,
+  reprogramming, and availability attacks against a historical ICD. The
+  remaining sources provide non-binding guidance, technical lifecycle practice,
+  authoritative German technical evidence, and a narrowly scoped German
+  operator duty rather than product effectiveness proof.
+- **Open issue:** compare mature authenticated/segmented/update-managed stacks
+  with safety-envelope, verified-delivery, offline/degraded, emergency-access,
+  rollback, component-inventory, disclosure, and rehearsed-recovery
+  compositions under compound attacks and equal latency, energy, and labor.
+- **Used by:** [this audit](audits/2026-08-24-medical-devices-biomedical-engineering.md#8-cybersecurity-is-coupled-to-safety-and-availability),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1421
+
+- **Statement:** Scientific validity, analytical performance, clinical
+  performance, clinical utility, safety, and current post-market state are
+  separate evidence axes. Complaint or incident counts cannot estimate field
+  incidence without exposure and ascertainment; surveillance must preserve
+  device/version/lot, population/site/time, denominator, reporting process,
+  comparator, sequential error control, confirmation, corrective action, and
+  verified effectiveness.
+- **Status:** established regulatory/surveillance boundary with a successful
+  scoped active-registry demonstration; validity remains data-source-,
+  confounding-, endpoint-, device-, comparator-, and reporting-process-specific.
+- **Primary sources:** `W6MDE_ResnicEtAl2017Surveillance`,
+  `EU2017MDR`, `EU2017IVDR`, `W6MDE_MDCG2025_10`,
+  `W6MDE_MDCG2023_3r2`, `W6MDE_BfArM_FSCA`.
+- **Rationale:** the registry study detected and independently confirmed a
+  device safety signal using denominators, a comparator, adjustment, and
+  prospective monitoring. Binding EU PMS duties, non-binding guidance, and
+  German FSCA information retain distinct normative and evidentiary roles.
+- **Open issue:** compare raw counts, disproportionality, exposure-adjusted
+  rates, risk-adjusted sequential monitoring, delayed-report correction,
+  negative controls, version/lot localization, independent confirmation, and
+  corrective-action verification under market and reporting shifts.
+- **Used by:** [this audit](audits/2026-08-24-medical-devices-biomedical-engineering.md#9-clinicalperformance-evidence-and-post-market-state-are-distinct),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1422
+
+- **Statement:** A precision atomic-frequency result is conditional on a
+  versioned interrogation sensitivity, duty cycle, servo history, signed
+  influence-quantity intervention matrix, shared-reference covariance, and
+  systematic-shift budget; synchronous or differential comparison can reject
+  local-oscillator noise without rejecting a common systematic shift.
+- **Status:** established
+- **Evidence note:** The measurement boundary is established; the systems
+  transfer is unproven.
+- **Primary sources:** `LudlowEtAl2015OpticalClocks`,
+  `NicholsonEtAl2015Clock`, `BIPMStdFreq2026`,
+  `jcgm100`.
+- **Rationale:** optical-clock evaluations explicitly separate short-term
+  instability, dead-time/LO effects, and interleaved evaluations of lattice,
+  magnetic, blackbody, density, and other shifts. BIPM recommended values are
+  adjusted from comparison evidence, not read from one indication.
+- **Proposed AI translation:** store each high-precision estimate with the
+  signed probes that identify nuisance directions, sampling kernel, shared
+  roots, support envelope, and independent-operation evidence.
+- **Efficiency mechanism:** spend expensive reference or counterfactual probes
+  only on nuisance directions that remain rank-deficient or decision-relevant;
+  reuse common-mode cancellation without mistaking it for accuracy evidence.
+- **Failure modes:** collinear interventions; shared BBR/calibrator bias;
+  aliased oscillator noise; servo transient; post-selection of stable windows;
+  covariance dropped after differencing; zero-support extrapolation.
+- **Measurable prediction:** under held-out shared-shift and duty-cycle changes,
+  a sensitivity- and root-aware estimator will reduce false precision-qualified
+  releases at equal interrogation count versus naive averaging, ordinary
+  synchronous differencing, and robust GLS.
+- **Open question:** does any proposed cross-layer record improve the frontier
+  after lock-in design, GLS, GUM uncertainty, clock-network closure, and
+  independent comparisons are fully implemented?
+- **Used by:** [PS-W01](audits/2026-08-24-atomic-molecular-plasma-condensed-matter.md#ps-w01--timed-precision-interrogation-matrix),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  with [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md)
+  as consumers.
+- **Disposition:** scoped central claim; no principle or candidate promotion.
+
+### C-1423
+
+- **Statement:** Assigned molecular transition wavenumbers form a weighted
+  difference graph: level energies are identifiable only within connected
+  components after fixing an origin, redundant cycles test consistency, and
+  derived levels and uncertainties must be recomputed when an edge,
+  assignment, or uncertainty changes.
+- **Status:** established
+- **Evidence note:** The graph boundary is established in high-resolution
+  molecular spectroscopy; the systems translation is plausible but unproven.
+- **Primary sources:** `FurtenbacherEtAl2007MARVEL`,
+  `FurtenbacherCsaszar2012MARVEL`.
+- **Rationale:** the Ritz relation is linear, while assignment, connectivity,
+  robust weighting, and component structure decide which empirical levels are
+  supported. Cycle tension is evidence of inconsistency, not automatic
+  localization of the faulty transition.
+- **Proposed AI translation:** preserve primitive pairwise constraints and
+  their dependency graph rather than only materialized node scores; choose new
+  edges by connectivity and posterior covariance reduction.
+- **Efficiency mechanism:** one bridging or cycle-closing observation can
+  reduce uncertainty for many derived vertices, while unsupported components
+  remain explicitly unjoined.
+- **Failure modes:** wrong state labels; blended lines; underestimated
+  uncertainty; a single bad edge contaminating many cycles; disconnected
+  components joined by a model pseudo-line; energy origin confused with an
+  absolute measurement.
+- **Measurable prediction:** at equal measured-edge count, graph-aware
+  acquisition and robust inversion will improve held-out level coverage and
+  bad-edge localization versus local band fits and uncertainty-blind
+  least-squares.
+- **Open question:** is there any residual beyond robust graph least squares,
+  effective-Hamiltonian model comparison, and E/A-optimal edge selection?
+- **Used by:** [PS-W02](audits/2026-08-24-atomic-molecular-plasma-condensed-matter.md#ps-w02--molecular-transition-graph-and-active-edge-choice),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md),
+  and [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+- **Disposition:** scoped central claim; ordinary graph inference is the kill
+  null.
+
+### C-1424
+
+- **Statement:** Quantum-measurement economy is relative to a declared
+  observable family and measurement channel: randomized snapshots can be
+  reused to estimate many bounded observables with controlled error, but they
+  do not provide uniform full-state tomography, and drift, readout error,
+  basis cost, correlations, and observable-specific shadow norms remain in the
+  claim.
+- **Status:** established
+- **Evidence note:** The theorem and experimental measurement boundary are
+  established; the AI transfer is unproven.
+- **Primary sources:** `BakrEtAl2009Microscope`,
+  `HuangEtAl2020ClassicalShadows`.
+- **Rationale:** site-resolved microscopes expose shot-level configurations,
+  while shadow methods make measurement count depend on target observables
+  rather than requiring a global state estimate. Both depend on preparation and
+  readout operators.
+- **Proposed AI translation:** register a future query family and acquire
+  reusable randomized sketches only where its norm/noise model supports those
+  queries; abstain outside that family.
+- **Efficiency mechanism:** amortize one bounded set of measurements across
+  many local/correlation queries and avoid exponential global reconstruction.
+- **Failure modes:** unsupported high-weight observables; non-IID drift;
+  miscalibrated readout confusion; basis switching charged as free; multiple
+  testing; treating a non-positive snapshot as a physical state; query-family
+  leakage during tuning.
+- **Measurable prediction:** calibrated observable-aware designs will lower
+  worst-query error per shot/CPU-second than separate measurement and generic
+  local shadows when the registered family is structured, while tying or
+  abstaining outside support.
+- **Open question:** can a learned basis policy beat commuting groups,
+  derandomized/classical shadows, and optimal shot allocation after all basis,
+  calibration, storage, and compute costs are charged?
+- **Used by:** [PS-W03](audits/2026-08-24-atomic-molecular-plasma-condensed-matter.md#ps-w03--observable-family-quantum-snapshots),
+  [P-001](principle-registry.md#p-001--selective-allocation),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 017](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
+  and [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+- **Disposition:** scoped central claim; no “quantum-inspired” mechanism is
+  promoted.
+
+### C-1425
+
+- **Statement:** Evidence for a phase from a finite quantum simulator,
+  condensed-matter device, or numerical lattice must retain size, boundary,
+  aspect ratio, trap/inhomogeneity, preparation and equilibration time,
+  correlation length, observation operator, scaling correction, and
+  first-order/crossover alternatives; finite-system order is not by itself a
+  thermodynamic phase.
+- **Status:** established
+- **Evidence note:** The finite-size boundary is established.
+- **Primary sources:** `MazurenkoEtAl2017Antiferromagnet`,
+  `BinderLandau1984FiniteSize`.
+- **Rationale:** long-range antiferromagnetic order in a finite ultracold
+  Hubbard system was argued through structure factor and correlation length
+  reaching the system size; finite-size theory shows rounding and
+  boundary-dependent scaling.
+- **Proposed AI translation:** never promote a regime label from one model or
+  scale; carry a scale-flow record and explicit competing transition classes.
+- **Efficiency mechanism:** allocate larger simulations or experiments only
+  where smaller sizes discriminate scaling hypotheses; stop when all remaining
+  alternatives predict the same decision.
+- **Failure modes:** largest-size thresholding; pseudocritical point reported
+  as asymptotic; trapped coexistence; autocorrelated samples; correction terms
+  fitted post hoc; one observable selected after seeing the crossing.
+- **Measurable prediction:** joint size/correlation/alternative modeling will
+  reduce false phase declarations under crossover, first-order, boundary, and
+  non-equilibrium hostile families versus one-size classifiers and naive
+  crossings.
+- **Open question:** does a cross-domain scale-flow contract add utility after
+  standard finite-size scaling, simulation-based calibration, and model
+  comparison?
+- **Used by:** [PS-W04](audits/2026-08-24-atomic-molecular-plasma-condensed-matter.md#ps-w04--finite-size-phase-and-crossover-discrimination),
+  [Candidate 003](../experiments/candidates/003-recovery-dynamics-fragility.md)
+  only for transition-class typing and
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md)
+  for observation support.
+- **Disposition:** scoped central claim; no general criticality principle.
+
+### C-1426
+
+- **Statement:** In quenched disordered systems, thermal/quantum variation
+  within a realization and variation across disorder realizations are distinct;
+  representative performance requires size-indexed distributions,
+  pseudocritical variation, tail outcomes, and a tested self-averaging rate
+  rather than one large sample or an IID standard error over internal
+  measurements.
+- **Status:** established
+- **Evidence note:** The result is established for scoped random critical and
+  localization regimes; it is not universal to all disorder.
+- **Primary sources:** `AharonyHarris1996SelfAveraging`,
+  `WisemanDomany1998SelfAveraging`,
+  `AbrahamsEtAl1979Localization`.
+- **Rationale:** random critical systems can exhibit weak or absent
+  self-averaging, and localization theory makes conductance flow with length
+  scale central.
+- **Proposed AI translation:** treat deployment/environment realizations as a
+  higher sampling level; report distributional scale flow and worst supported
+  quantiles before declaring robust sparse behavior.
+- **Efficiency mechanism:** allocate replicas between within-realization
+  precision and new realizations according to the measured variance
+  components, avoiding wasted repeats inside an unrepresentative world.
+- **Failure modes:** annealed/quenched confusion; correlated disorder seeds;
+  ratio-of-means instability; rare-region truncation; tuning on the confirmation
+  ensemble; mean success hiding non-vanishing failure fraction.
+- **Measurable prediction:** a two-level self-averaging-aware design will attain
+  calibrated tail decisions with fewer total samples than uniform replication
+  and fewer false robustness claims than single-realization evaluation.
+- **Open question:** can adaptive realization allocation beat hierarchical
+  Bayesian/bootstrap designs and standard finite-size localization scaling?
+- **Used by:** [PS-W05](audits/2026-08-24-atomic-molecular-plasma-condensed-matter.md#ps-w05--quenched-disorder-ensemble-and-self-averaging),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+- **Disposition:** scoped central claim; distribution-aware evaluation already
+  has project owners.
+
+### C-1427
+
+- **Statement:** A clean bulk band invariant, a finite/disordered real-space
+  topological marker, a spectral or mobility gap, an edge-localization
+  observation, and a finite-temperature contacted transport coefficient are
+  different evidential objects; a service claim must state the operator and
+  bridge them with disorder, boundary, contact, interaction, dephasing, and
+  size tests.
+- **Status:** established
+- **Evidence note:** The theoretical and experimental-inference boundary is
+  established.
+- **Primary sources:** `ThoulessEtAl1982TKNN`,
+  `BiancoResta2011ChernMarker`, `ShengEtAl2003MobilityGap`.
+- **Rationale:** TKNN links Hall conductance to a clean periodic invariant under
+  its assumptions; real-space markers address finite/open systems; disordered
+  Hall studies distinguish invariant and mobility-gap collapse.
+- **Proposed AI translation:** type structural certificates separately from
+  accessible end-to-end service and require a tested bridge under deployment
+  boundaries.
+- **Efficiency mechanism:** use cheap local/structural markers to screen
+  candidates, then spend transport/contact tests only near decision or validity
+  boundaries.
+- **Failure modes:** clean-model label applied to disordered device; edge state
+  confused with quantized service; contact bottleneck; finite-size hybridized
+  edges; dephasing/temperature; interaction model mismatch; data leakage from
+  transport into a “structure-only” predictor.
+- **Measurable prediction:** a typed marker--gap--transport contract will reduce
+  false service-qualified topological assertions at equal diagonalization and
+  transport budget versus invariant-only classifiers.
+- **Open question:** does any learned screening layer beat Bott/local-marker,
+  Kubo/NEGF, mobility-edge, and size-scaling nulls?
+- **Used by:** [PS-W06](audits/2026-08-24-atomic-molecular-plasma-condensed-matter.md#ps-w06--bulk-marker-gap-edge-and-contacted-transport)
+  and
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+  [P-005](principle-registry.md#p-005--use-dependent-topology) and
+  [Candidate 001](../experiments/candidates/001-adaptive-topology.md) are
+  explicitly not supported.
+- **Disposition:** scoped central claim; no topology principle.
+
+### C-1428
+
+- **Statement:** A plasma line intensity, ratio, interferometric chord, or probe
+  indication constrains plasma parameters only through a versioned
+  non-equilibrium kinetic/atomic model, spatial and temporal support, opacity
+  or sheath assumptions, instrument response, and cross-diagnostic
+  consistency; an electron temperature is conditional on the stated EEDF or
+  closure.
+- **Status:** established
+- **Evidence note:** The plasma-diagnostic boundary is established.
+- **Primary sources:** `Fantz2006PlasmaSpectroscopy`,
+  `MunozBurgosEtAl2016Helium`, `LuntinenEtAl2023EEDF`,
+  `ITERDiagnostics2026`.
+- **Rationale:** collisional--radiative coefficients translate populations and
+  line emission into density/temperature; time-dependent metastables, atomic
+  cross sections, weak lines, opacity, geometry, and non-Maxwellian EEDFs alter
+  the inverse.
+- **Proposed AI translation:** bind each compact diagnostic feature to its
+  kinetic forward model, support, atomic-data covariance, and alternative
+  closure; request an orthogonal diagnostic when model disagreement dominates.
+- **Efficiency mechanism:** acquire weak or local diagnostics only where they
+  separate EEDF/geometry/atomic alternatives; reprocess dependents when a rate
+  coefficient or calibration root changes.
+- **Failure modes:** Maxwellian by default; line-of-sight/local confusion;
+  steady-state populations during transients; opacity ignored; atomic-rate
+  uncertainty omitted; probe sheath distortion; same model used for generator
+  and verifier.
+- **Measurable prediction:** multi-diagnostic kinetic inference will improve
+  held-out profile/decision coverage under non-Maxwellian and atomic-data shift
+  versus Boltzmann, fixed-line-ratio, and Maxwellian CR inversions.
+- **Open question:** does a versioned dependency layer improve the frontier
+  after flexible-EEDF collisional--radiative Bayesian inversion and synthetic
+  diagnostics?
+- **Used by:** [PS-W07](audits/2026-08-24-atomic-molecular-plasma-condensed-matter.md#ps-w07--non-equilibrium-plasma-synthetic-diagnostics),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+- **Disposition:** scoped central claim; generic inverse sensing remains the
+  owner.
+
+### C-1429
+
+- **Statement:** Feedback on a magnetically confined plasma must be conditioned
+  on a timestamped, force-balance-consistent state estimate with diagnostic and
+  conducting-structure validity, model/constraint residual, latency, actuator
+  limits, and fallback; a fast learned map or small sensor residual is not
+  sufficient when vessel currents, internal profiles, or off-support
+  equilibria are unresolved.
+- **Status:** established
+- **Evidence note:** The control and instrumentation boundary is established;
+  the learned composition is unproven.
+- **Primary sources:** `FerronEtAl1998Equilibrium`,
+  `MoretEtAl2015LIUQE`, `FeliciEtAl2011CurrentProfile`,
+  `ITER2018ResearchPlan`.
+- **Rationale:** real-time equilibrium reconstruction fits diagnostics subject
+  to force balance; LIUQE explicitly models vessel currents and runs at a
+  cadence set by plant dynamics; ITER planning requires validation and
+  cross-checks before protection/control use.
+- **Proposed AI translation:** attach constraint defect, evidence age,
+  validity/support, and safe authority to every low-latency state estimate;
+  learned surrogates may accelerate but not self-certify.
+- **Efficiency mechanism:** warm-start constrained reduced models and escalate
+  to slower reconstruction or conservative fallback only on typed residual,
+  support, or freshness failure.
+- **Failure modes:** stale warm start; sensor/common-model fault; elongated
+  equilibrium instability; omitted eddy currents; actuator saturation;
+  constraint residual learned away; unsafe exploration; average latency hiding
+  deadline misses.
+- **Measurable prediction:** guarded reduced reconstruction will reduce
+  deadline misses at non-inferior boundary/profile error and zero additional
+  protected constraint violations versus full reconstruction, while
+  outperforming unguarded regression under held-out equilibria.
+- **Open question:** is there a residual beyond reduced-order equilibrium
+  solvers, Kalman/robust observers, constrained MPC, runtime assurance, and
+  ordinary fallback?
+- **Used by:** [PS-W08](audits/2026-08-24-atomic-molecular-plasma-condensed-matter.md#ps-w08--constraint--and-latency-qualified-plasma-reconstructioncontrol),
+  [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  and [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+- **Disposition:** scoped central claim; control novelty rejected unless the
+  complete mature stack loses.
+
+### C-1430
+
+- **Statement:** Accelerator beam profile, centroid, phase-space density,
+  projected/geometric/normalized emittance, coupling, halo, and accepted
+  brightness are distinct; emittance inference requires multiple
+  well-conditioned optics or direct phase-space sampling with monitor response,
+  dispersion, space charge, coupling, and interceptive bunch/energy cost
+  declared.
+- **Status:** established
+- **Evidence note:** The accelerator-instrumentation boundary is established.
+- **Primary sources:** `CourantSnyder1958`,
+  `Forck2024BeamInstrumentation`, `Zhang1996Emittance`.
+- **Rationale:** linear beam optics transports a covariance ellipse, so multiple
+  projections identify its moments. CERN instrumentation practice distinguishes
+  monitor modalities and destructive/interceptive limits; slit/pepper-pot
+  formulas infer rather than directly reveal emittance.
+- **Proposed AI translation:** combine cheap continual projected monitors with
+  sparse high-information anchors only when observability or invalidation
+  demands them; keep coupling, nonlinear, and tail state outside a scalar health
+  score.
+- **Efficiency mechanism:** optimize optics and anchor timing for covariance or
+  decision information per interrupted bunch and deposited joule, not per
+  image.
+- **Failure modes:** one-screen inference; ill-conditioned quadrupole scan;
+  space charge/nonlinearity fitted by linear optics; PSF/background ignored;
+  clipped halo; x--y coupling hidden; normalized/geometric units mixed;
+  destructive diagnostic cost omitted.
+- **Measurable prediction:** an observability- and intervention-cost-aware
+  schedule will maintain emittance/halo decision coverage with fewer
+  interceptive bunches than periodic scanning, while tying phase-space
+  tomography at equal information.
+- **Open question:** does any adaptive schedule beat quadrupole/slit/pepper-pot
+  scans, phase-space tomography, Kalman tracking, and optimal experiment design
+  under the same bunch, optics, and protection budget?
+- **Used by:** [PS-W09](audits/2026-08-24-atomic-molecular-plasma-condensed-matter.md#ps-w09--phase-space-inference-with-interceptive-cost),
+  [P-007](principle-registry.md#p-007--prediction-error-allocation),
+  [P-009](principle-registry.md#p-009--maintenance-plane),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+- **Disposition:** scoped central claim; accelerator instrumentation, not
+  particle-event analysis or AI compute acceleration.

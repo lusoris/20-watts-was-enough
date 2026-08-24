@@ -65,8 +65,17 @@ if (-not (Test-Path -LiteralPath $claimsPath)) {
 } else {
     $claimsText = Get-Content -Raw -LiteralPath $claimsPath
     $definedClaims = [System.Collections.Generic.HashSet[string]]::new()
+    $previousClaimNumber = $null
     foreach ($match in [regex]::Matches($claimsText, '(?m)^### (C-\d{3,4})\s*$')) {
-        [void]$definedClaims.Add($match.Groups[1].Value)
+        $claimId = $match.Groups[1].Value
+        $claimNumber = [int]$claimId.Substring(2)
+        if (-not $definedClaims.Add($claimId)) {
+            $errors.Add("Duplicate claim definition in research/claims.md: ${claimId}")
+        }
+        if ($null -ne $previousClaimNumber -and $claimNumber -le $previousClaimNumber) {
+            $errors.Add("Claim definitions are out of numeric order in research/claims.md: ${claimId} follows C-$($previousClaimNumber.ToString('000'))")
+        }
+        $previousClaimNumber = $claimNumber
     }
 
     $canonicalFiles = $markdownFiles | Where-Object {
@@ -162,11 +171,14 @@ if (-not (Test-Path -LiteralPath $bibPath)) {
     $bibText = Get-Content -Raw -LiteralPath $bibPath
     $bibKeys = [System.Collections.Generic.HashSet[string]]::new()
     foreach ($match in [regex]::Matches($bibText, '(?m)^@\w+\{([^,]+),')) {
-        [void]$bibKeys.Add($match.Groups[1].Value)
+        $bibKey = $match.Groups[1].Value
+        if (-not $bibKeys.Add($bibKey)) {
+            $errors.Add("Duplicate bibliography key in research/references.bib: ${bibKey}")
+        }
     }
 
     $claimsText = Get-Content -Raw -LiteralPath $claimsPath
-    $primarySourcePattern = [regex]'(?ms)^- \*\*Primary sources?:\*\*\s*(?<value>.*?)(?=^- \*\*|\z)'
+    $primarySourcePattern = [regex]'(?ms)^- \*\*Primary(?:/authoritative)? sources?:\*\*\s*(?<value>.*?)(?=^- \*\*|\z)'
     foreach ($sourceField in $primarySourcePattern.Matches($claimsText)) {
         foreach ($match in [regex]::Matches($sourceField.Groups['value'].Value, '`([^`]+)`')) {
             $key = $match.Groups[1].Value
