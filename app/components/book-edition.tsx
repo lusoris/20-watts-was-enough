@@ -1,38 +1,55 @@
 "use client";
 
-import { useCallback } from "react";
-import { documents } from "../content";
+import { useCallback, useMemo } from "react";
+import type { ResearchDocument } from "../content";
 import { MarkdownDocument } from "./markdown-document";
 import { ReadinessOverview } from "./readiness-overview";
 
-const conceptDocuments = documents.filter(
-  (document) =>
-    document.kind === "markdown" &&
-    (document.path === "README.md" ||
-      (document.path.startsWith("concept/") &&
-        document.path !== "concept/README.md")),
-);
 const appendixPaths = ["research/field-coverage.md"];
-const appendixDocuments = appendixPaths
-  .map((path) => documents.find((document) => document.path === path))
-  .filter((document) => document !== undefined);
-const bookDocuments = [...conceptDocuments, ...appendixDocuments];
-
-const bookDocumentPaths = new Set(bookDocuments.map((document) => document.path));
 const canonicalSite = "https://twenty-watts-was-enough.lusoris.chatgpt.site";
 
 function bookId(path: string) {
   return `book-${path.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 }
 
-function documentNumber(path: string, index: number) {
+function documentNumber(
+  path: string,
+  index: number,
+  appendixDocuments: ResearchDocument[],
+) {
   const appendixIndex = appendixDocuments.findIndex((document) => document.path === path);
   return appendixIndex >= 0
     ? `A${appendixIndex + 1}`
     : String(index + 1).padStart(2, "0");
 }
 
-export function BookEdition() {
+export function BookEdition({ documents }: { documents: ResearchDocument[] }) {
+  const conceptDocuments = useMemo(
+    () =>
+      documents.filter(
+        (document) =>
+          document.kind === "markdown" &&
+          (document.path === "README.md" ||
+            (document.path.startsWith("concept/") &&
+              document.path !== "concept/README.md")),
+      ),
+    [documents],
+  );
+  const appendixDocuments = useMemo(
+    () =>
+      appendixPaths
+        .map((path) => documents.find((document) => document.path === path))
+        .filter((document): document is ResearchDocument => document !== undefined),
+    [documents],
+  );
+  const bookDocuments = useMemo(
+    () => [...conceptDocuments, ...appendixDocuments],
+    [appendixDocuments, conceptDocuments],
+  );
+  const bookDocumentPaths = useMemo(
+    () => new Set(bookDocuments.map((document) => document.path)),
+    [bookDocuments],
+  );
   const totalWords = bookDocuments.reduce(
     (sum, document) => sum + document.words,
     0,
@@ -51,7 +68,7 @@ export function BookEdition() {
     url.searchParams.set("doc", path);
     url.hash = hash;
     return url.toString();
-  }, []);
+  }, [bookDocumentPaths]);
 
   return (
     <main className="book-shell">
@@ -116,7 +133,7 @@ export function BookEdition() {
           {bookDocuments.map((document, index) => (
             <li key={document.path}>
               <a href={`#${bookId(document.path)}`}>
-                <span>{documentNumber(document.path, index)}</span>
+                <span>{documentNumber(document.path, index, appendixDocuments)}</span>
                 <strong>{document.title}</strong>
                 <code>{document.path}</code>
               </a>
@@ -146,7 +163,7 @@ export function BookEdition() {
           <div className="book-document-meta">
             <span>
               {appendixPaths.includes(document.path) ? "Appendix" : "Chapter"}{" "}
-              {documentNumber(document.path, index)}
+              {documentNumber(document.path, index, appendixDocuments)}
             </span>
             <code>{document.path}</code>
             <span>{document.words.toLocaleString("en-US")} words</span>

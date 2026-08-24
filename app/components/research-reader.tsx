@@ -1,21 +1,35 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  documentGroups,
-  documents,
-  documentsByPath,
-  type ResearchDocument,
-} from "../content";
+import type { ResearchDocument } from "../content";
 import { outlineFromMarkdown } from "../lib/heading-outline";
 import { MarkdownDocument } from "./markdown-document";
 
 const DEFAULT_DOCUMENT = "README.md";
+const GROUP_ORDER = [
+  "Project",
+  "Concept",
+  "Research",
+  "Experiments",
+  "Mathematics",
+  "Decisions",
+  "Graphics",
+  "Source archive",
+];
 
-function requestedDocumentPath(): string {
+function requestedDocumentPath(
+  documentsByPath: Map<string, ResearchDocument>,
+): string {
   if (typeof window === "undefined") return DEFAULT_DOCUMENT;
   const requested = new URLSearchParams(window.location.search).get("doc");
   return requested && documentsByPath.has(requested) ? requested : DEFAULT_DOCUMENT;
+}
+
+function groupDocuments(documents: ResearchDocument[]) {
+  return GROUP_ORDER.map((group) => ({
+    group,
+    documents: documents.filter((document) => document.group === group),
+  })).filter(({ documents: groupEntries }) => groupEntries.length > 0);
 }
 
 function navigationSubgroup(document: ResearchDocument): string {
@@ -58,7 +72,10 @@ function navigationSubgroups(groupDocuments: ResearchDocument[]) {
   }));
 }
 
-function initialCollapsedGroups(activeDocument: ResearchDocument): Set<string> {
+function initialCollapsedGroups(
+  activeDocument: ResearchDocument,
+  documentGroups: ReturnType<typeof groupDocuments>,
+): Set<string> {
   return new Set(
     documentGroups
       .map(({ group }) => group)
@@ -66,7 +83,10 @@ function initialCollapsedGroups(activeDocument: ResearchDocument): Set<string> {
   );
 }
 
-function initialCollapsedSubgroups(activeDocument: ResearchDocument): Set<string> {
+function initialCollapsedSubgroups(
+  activeDocument: ResearchDocument,
+  documentGroups: ReturnType<typeof groupDocuments>,
+): Set<string> {
   const activeKey = subgroupKey(
     activeDocument.group,
     navigationSubgroup(activeDocument),
@@ -101,7 +121,18 @@ function sourceLabel(document: ResearchDocument): string {
   return "Canonical research text";
 }
 
-export function ResearchReader({ initialPath = DEFAULT_DOCUMENT }: { initialPath?: string }) {
+export function ResearchReader({
+  documents,
+  initialPath = DEFAULT_DOCUMENT,
+}: {
+  documents: ResearchDocument[];
+  initialPath?: string;
+}) {
+  const documentsByPath = useMemo(
+    () => new Map(documents.map((document) => [document.path, document])),
+    [documents],
+  );
+  const documentGroups = useMemo(() => groupDocuments(documents), [documents]);
   const resolvedInitialPath = documentsByPath.has(initialPath)
     ? initialPath
     : DEFAULT_DOCUMENT;
@@ -110,10 +141,10 @@ export function ResearchReader({ initialPath = DEFAULT_DOCUMENT }: { initialPath
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
-    () => initialCollapsedGroups(initialDocument),
+    () => initialCollapsedGroups(initialDocument, documentGroups),
   );
   const [collapsedSubgroups, setCollapsedSubgroups] = useState<Set<string>>(
-    () => initialCollapsedSubgroups(initialDocument),
+    () => initialCollapsedSubgroups(initialDocument, documentGroups),
   );
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -144,7 +175,7 @@ export function ResearchReader({ initialPath = DEFAULT_DOCUMENT }: { initialPath
         )
         .map((document) => document.path),
     );
-  }, [query]);
+  }, [documents, query]);
 
   const navigate = useCallback((path: string, hash = "") => {
     const nextDocument = documentsByPath.get(path);
@@ -174,11 +205,11 @@ export function ResearchReader({ initialPath = DEFAULT_DOCUMENT }: { initialPath
       if (hash) document.getElementById(hash)?.scrollIntoView();
       else document.querySelector(".reader-main")?.scrollTo({ top: 0 });
     });
-  }, []);
+  }, [documentsByPath]);
 
   useEffect(() => {
     const onPopState = () => {
-      const path = requestedDocumentPath();
+      const path = requestedDocumentPath(documentsByPath);
       const requestedDocument = documentsByPath.get(path)!;
       setCurrentPath(path);
       setCollapsedGroups((groups) => {
@@ -210,7 +241,7 @@ export function ResearchReader({ initialPath = DEFAULT_DOCUMENT }: { initialPath
       window.removeEventListener("popstate", onPopState);
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, []);
+  }, [documentsByPath]);
 
   return (
     <div className="research-shell">

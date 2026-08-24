@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BookEdition } from "../components/book-edition";
+import { documents } from "../content";
 
 export const metadata: Metadata = {
   title: "20 Watts Was Enough — Full Concept Book",
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function BookPage() {
-  return <BookEdition />;
+  return <BookEdition documents={documents} />;
 }
