@@ -21,7 +21,7 @@
       "energy": "modeled fixture value only; no measured joules"
     },
     "workstation": {
-      "cpu": "x64 CPU with frozen compiler, linker, executable-layout randomization, and launch adapter",
+      "cpu": "x64 CPU; development-only process acquisition is disabled on Windows until a reviewed Job Object supervisor exists, and compiler/linker/workload release identities remain unfrozen",
       "memory_bytes": 1073741824,
       "disk_bytes": 1073741824,
       "energy": "calibrated external wall or rail meter required before workstation-ready promotion"
@@ -49,14 +49,29 @@
     "tests": [
       "experiments/workstation/fixture-012/contract.test.mjs",
       "experiments/workstation/fixture-012/runner.test.mjs",
-      "experiments/workstation/fixture-012/manifest.test.mjs"
+      "experiments/workstation/fixture-012/manifest.test.mjs",
+      "experiments/workstation/fixture-012/workstation-acquisition.test.mjs"
     ],
     "full_tests": [
       "experiments/workstation/fixture-012/contract.test.mjs",
       "experiments/workstation/fixture-012/runner.test.mjs",
-      "experiments/workstation/fixture-012/manifest.test.mjs"
+      "experiments/workstation/fixture-012/manifest.test.mjs",
+      "experiments/workstation/fixture-012/workstation-acquisition.test.mjs"
     ],
-    "execution_claims": ["C-1407"]
+    "execution_claims": ["C-1407"],
+    "physical_lane": {
+      "status": "development-only-windows-disabled-without-job-object",
+      "entrypoint": "experiments/workstation/fixture-012/workstation-cli.mjs",
+      "experiment_config_template": "experiments/workstation/fixture-012/configs/workstation-development.template.json",
+      "adapter_config_template": "experiments/workstation/fixture-012/configs/process-adapter.template.json",
+      "trusted_input_manifest_template": "experiments/workstation/fixture-012/configs/workload-manifest.template.json",
+      "output_schema": "experiments/workstation/fixture-012/workstation-output.schema.json",
+      "resume_boundary": "completed-layout-record",
+      "checkpoint_authority": "raw-layouts-jsonl-ledger",
+      "single_writer": true,
+      "windows_process_execution": "disabled-until-reviewed-job-object-supervisor",
+      "claim_eligible": false
+    }
   },
   "energy": {
     "mode": "modeled-fixture-only",

@@ -41,8 +41,13 @@ $\kappa$ is carryover in `ns`, and $\epsilon$ is synthetic timing noise in
 always runs the candidate first. The mature arms sample every configured
 layout and counterbalance order.
 
-This is a measurement-inference fixture. It does not execute a compiler,
-relink binaries, or measure wall-clock latency on physical hardware.
+The deterministic diagnostic slice is a measurement-inference fixture: it does
+not execute a compiler, relink binaries, or measure latency on physical
+hardware. A separate [workstation-development acquisition
+lane](../workstation/fixture-012/WORKSTATION-RUNBOOK.md) now performs those
+operations with operator-supplied build, telemetry, and optional calibrated
+meter commands. That lane remains development-only and supplies no result in
+this repository by itself.
 
 ## Arms and strongest nulls
 
@@ -188,6 +193,16 @@ The [runner](../workstation/fixture-012/README.md) implements `prepare`,
 C-1407. It uses a versioned runtime validator, exclusive raw-ledger creation,
 per-event SHA-256 chaining, deterministic development generation, recomputed
 analysis, and hostile corruption tests.
+
+The physical acquisition companion implements a separate `prepare`, `acquire`,
+and `validate` surface. It freezes a visible development schedule, requires
+fresh layout-seeded build and linker-map proofs, alternates build order,
+counterbalances warmup and measured pairs, measures process launch-to-exit with
+a monotonic nanosecond clock, samples declared thermal/frequency sensors before
+and after every invocation, enforces output correctness, and either records no
+joules or requires a calibrated external cumulative-energy provider. One
+durable hash-chained record is appended per complete layout; rejected layouts
+remain in the raw ledger and cannot be resumed as successes.
 
 The fixture proves that this code detects its constructed bias. It does not
 estimate how often layout bias occurs, its magnitude on a real toolchain, or

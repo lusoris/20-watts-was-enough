@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "artifact": "fixture-012",
+  "contract_version": "fixture-012.process-adapter-config.v2",
+  "adapter_id": "replace-with-local-adapter-id",
+  "adapter_version": "1.0.0",
+  "working_directory": ".",
+  "effective_environment": {
+    "allowlist": ["SYSTEMROOT", "TEMP", "TMP"],
+    "values": {
+      "SYSTEMROOT": "REPLACE_WITH_ABSOLUTE_WINDOWS_DIRECTORY",
+      "TEMP": "REPLACE_WITH_ABSOLUTE_TEMP_DIRECTORY",
+      "TMP": "REPLACE_WITH_ABSOLUTE_TEMP_DIRECTORY"
+    }
+  },
+  "thermal_sensor_ids": ["cpu-package"],
+  "frequency_sensor_ids": ["cpu-effective"],
+  "build": {
+    "executable": "REPLACE_WITH_ABSOLUTE_REGULAR_FILE",
+    "executable_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+    "version_args": ["--version"],
+    "version_stdout_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+    "args": [
+      "--variant", "{variant}",
+      "--layout-seed", "{layout_seed}",
+      "--output", "{executable_path}",
+      "--layout-manifest", "{layout_manifest_path}"
+    ],
+    "output_executable": "benchmark.exe",
+    "output_layout_manifest": "layout-manifest.json",
+    "timeout_ms": 120000,
+    "max_output_bytes": 1048576
+  },
+  "run": {
+    "version_args": ["--version"],
+    "version_stdout_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+    "args": [],
+    "timeout_ms": 30000,
+    "max_output_bytes": 1048576
+  },
+  "telemetry": {
+    "executable": "REPLACE_WITH_ABSOLUTE_REGULAR_FILE",
+    "executable_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+    "version_args": ["--version"],
+    "version_stdout_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+    "args": [],
+    "timeout_ms": 5000,
+    "max_output_bytes": 65536
+  },
+  "energy": null
+}

@@ -71,6 +71,15 @@ modeled-work, and modeled-energy budgets. The append-only SHA-256 ledger and
 recomputed analysis are hostile-tested, but timings and joules remain modeled
 and no confirmation or held-out release exists.
 
+F-012 also has a separate physical workstation-development acquisition lane.
+It can rebuild seed-qualified executable layouts, measure real process latency,
+capture thermal/frequency telemetry, enforce exact correctness, and optionally
+bind calibrated cumulative-energy samples. Its append-only layout records can
+resume only at complete layout boundaries. This narrows the implementation gap
+but does not change manifest readiness: the physical lane uses visible
+development inputs and has no frozen release, confirmation analysis, independent
+replication, or promotion evidence.
+
 [Candidate 010](candidate-010/README.md) now has the first validated
 `smoke-ready` harness. It exercises deterministic paired opportunities, seven
 eligible null/candidate arms, an oracle ceiling, real filesystem staging and

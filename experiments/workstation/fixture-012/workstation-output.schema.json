@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-012.workstation-layout-record.schema.json",
+  "title": "Fixture 012 workstation-development layout record",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "workstation-acquisition.mjs",
+    "export": "assertFixture012WorkstationRecord",
+    "version_export": "FIXTURE_012_WORKSTATION_LEDGER_VERSION",
+    "contract_version": "fixture-012.workstation-layout-record.v2",
+    "test": "workstation-acquisition.test.mjs"
+  },
+  "required": [
+    "schema", "contract_version", "runner_version", "artifact", "lane",
+    "run_id", "sequence", "previous_sha256", "work_unit", "status",
+    "adapter_binding_sha256", "builds", "warmups", "measurements", "checks",
+    "failure", "claim_eligible", "scientific_result", "energy_claim_eligible",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-012.workstation-layout-record.v2" },
+    "runner_version": { "const": "fixture-012.workstation-acquisition.v2" },
+    "artifact": { "const": "fixture-012" },
+    "lane": { "const": "workstation-development" },
+    "run_id": { "$ref": "#/$defs/digest" },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "previous_sha256": { "$ref": "#/$defs/digest" },
+    "work_unit": { "$ref": "#/$defs/workUnit" },
+    "status": { "enum": ["complete", "rejected"] },
+    "adapter_binding_sha256": { "$ref": "#/$defs/digest" },
+    "builds": { "type": "array", "maxItems": 2, "items": { "$ref": "#/$defs/build" } },
+    "warmups": { "type": "array", "items": { "$ref": "#/$defs/observation" } },
+    "measurements": { "type": "array", "items": { "$ref": "#/$defs/observation" } },
+    "checks": { "$ref": "#/$defs/checks" },
+    "failure": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/failure" }] },
+    "claim_eligible": { "const": false },
+    "scientific_result": { "const": false },
+    "energy_claim_eligible": { "const": false },
+    "record_sha256": { "$ref": "#/$defs/digest" }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "ns": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" },
+    "variant": { "enum": ["baseline", "candidate"] },
+    "variantOrder": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [{ "$ref": "#/$defs/variant" }, { "$ref": "#/$defs/variant" }],
+      "items": false
+    },
+    "workUnit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["work_unit_id", "study", "layout_slot", "layout_id", "layout_seed", "build_order", "warmup_orders", "measurement_orders", "schedule_sha256"],
+      "properties": {
+        "work_unit_id": { "type": "string", "minLength": 1 },
+        "study": { "type": "integer", "minimum": 0 },
+        "layout_slot": { "type": "integer", "minimum": 0 },
+        "layout_id": { "type": "integer", "minimum": 0 },
+        "layout_seed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "build_order": { "$ref": "#/$defs/variantOrder" },
+        "warmup_orders": { "type": "array", "items": { "$ref": "#/$defs/variantOrder" } },
+        "measurement_orders": { "type": "array", "items": { "$ref": "#/$defs/variantOrder" } },
+        "schedule_sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "contract_version", "command_role", "command_sha256", "executable_sha256", "monotonic_started_ns", "monotonic_ended_ns", "exit_code", "signal", "timed_out", "termination", "stdout_sha256", "stderr_sha256", "stdout_bytes", "stderr_bytes"],
+      "properties": {
+        "schema": { "const": 1 },
+        "contract_version": { "const": "fixture-012.process-attempt.v1" },
+        "command_role": { "type": "string", "minLength": 1 },
+        "command_sha256": { "$ref": "#/$defs/digest" },
+        "executable_sha256": { "$ref": "#/$defs/digest" },
+        "monotonic_started_ns": { "$ref": "#/$defs/ns" },
+        "monotonic_ended_ns": { "$ref": "#/$defs/ns" },
+        "exit_code": { "type": ["integer", "null"] },
+        "signal": { "type": ["string", "null"] },
+        "timed_out": { "type": "boolean" },
+        "termination": { "enum": ["natural-exit", "posix-process-group-terminated", "fixture-direct-child-terminated"] },
+        "stdout_sha256": { "$ref": "#/$defs/digest" },
+        "stderr_sha256": { "$ref": "#/$defs/digest" },
+        "stdout_bytes": { "type": "integer", "minimum": 0 },
+        "stderr_bytes": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "ordinal", "size_bytes", "content_sha256"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "ordinal": { "type": "integer", "minimum": 0 },
+        "size_bytes": { "type": "integer", "minimum": 1 },
+        "content_sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "symbol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name_sha256", "section", "ordinal", "size_bytes"],
+      "properties": {
+        "name_sha256": { "$ref": "#/$defs/digest" },
+        "section": { "type": "string", "minLength": 1 },
+        "ordinal": { "type": "integer", "minimum": 0 },
+        "size_bytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "layoutManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "contract_version", "artifact", "variant", "layout_seed", "sections", "symbols"],
+      "properties": {
+        "schema": { "const": 1 },
+        "contract_version": { "const": "fixture-012.normalized-layout-manifest.v1" },
+        "artifact": { "const": "fixture-012" },
+        "variant": { "$ref": "#/$defs/variant" },
+        "layout_seed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "sections": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/section" } },
+        "symbols": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/symbol" } }
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "variant", "layout_seed", "artifact_locator", "executable_sha256", "executable_version_stdout_sha256", "executable_version_attempt", "artifact_command_identity_sha256", "layout_manifest_locator", "layout_manifest_sha256", "layout_manifest", "layout_structure_sha256", "build_log_sha256", "attempt"],
+      "properties": {
+        "schema": { "const": 1 },
+        "variant": { "$ref": "#/$defs/variant" },
+        "layout_seed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "artifact_locator": { "type": "string", "minLength": 1 },
+        "executable_sha256": { "$ref": "#/$defs/digest" },
+        "executable_version_stdout_sha256": { "$ref": "#/$defs/digest" },
+        "executable_version_attempt": { "$ref": "#/$defs/attempt" },
+        "artifact_command_identity_sha256": { "$ref": "#/$defs/digest" },
+        "layout_manifest_locator": { "type": "string", "minLength": 1 },
+        "layout_manifest_sha256": { "$ref": "#/$defs/digest" },
+        "layout_manifest": { "$ref": "#/$defs/layoutManifest" },
+        "layout_structure_sha256": { "$ref": "#/$defs/digest" },
+        "build_log_sha256": { "$ref": "#/$defs/digest" },
+        "attempt": { "$ref": "#/$defs/attempt" }
+      }
+    },
+    "telemetry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "captured_at_utc", "monotonic_ns", "thermal_c", "frequency_hz", "raw_sha256", "attempt"],
+      "properties": {
+        "schema": { "const": 1 },
+        "captured_at_utc": { "type": "string", "format": "date-time" },
+        "monotonic_ns": { "$ref": "#/$defs/ns" },
+        "thermal_c": { "type": "object", "additionalProperties": { "type": "number" } },
+        "frequency_hz": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } },
+        "raw_sha256": { "$ref": "#/$defs/digest" },
+        "attempt": { "$ref": "#/$defs/attempt" }
+      }
+    },
+    "energySnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "captured_at_utc", "monotonic_ns", "cumulative_j", "raw_uncertainty_j", "raw_sha256", "attempt"],
+      "properties": {
+        "schema": { "const": 1 },
+        "captured_at_utc": { "type": "string", "format": "date-time" },
+        "monotonic_ns": { "$ref": "#/$defs/ns" },
+        "cumulative_j": { "type": "number", "minimum": 0 },
+        "raw_uncertainty_j": { "type": "number", "minimum": 0 },
+        "raw_sha256": { "$ref": "#/$defs/digest" },
+        "attempt": { "$ref": "#/$defs/attempt" }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "status", "stdout_sha256", "stderr_sha256", "correctness_sha256", "attempt"],
+      "properties": {
+        "schema": { "const": 1 },
+        "status": { "const": "ok" },
+        "stdout_sha256": { "$ref": "#/$defs/digest" },
+        "stderr_sha256": { "$ref": "#/$defs/digest" },
+        "correctness_sha256": { "$ref": "#/$defs/digest" },
+        "attempt": { "$ref": "#/$defs/attempt" }
+      }
+    },
+    "energy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "measured_j", "raw_uncertainty_j", "uncertainty_floor_j", "uncertainty_j", "before", "after"],
+      "properties": {
+        "mode": { "enum": ["latency-only", "external-calibrated-cumulative-joules"] },
+        "measured_j": { "type": ["number", "null"] },
+        "raw_uncertainty_j": { "type": ["number", "null"] },
+        "uncertainty_floor_j": { "type": ["number", "null"] },
+        "uncertainty_j": { "type": ["number", "null"] },
+        "before": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/energySnapshot" }] },
+        "after": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/energySnapshot" }] }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "phase", "analysis_role", "pair", "variant", "order_position", "monotonic_started_ns", "monotonic_ended_ns", "latency_ns", "telemetry_before", "telemetry_after", "execution", "energy"],
+      "properties": {
+        "schema": { "const": 1 },
+        "phase": { "enum": ["warmup", "measure"] },
+        "analysis_role": { "enum": ["excluded-warmup", "latency-observation"] },
+        "pair": { "type": "integer", "minimum": 0 },
+        "variant": { "$ref": "#/$defs/variant" },
+        "order_position": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "monotonic_started_ns": { "$ref": "#/$defs/ns" },
+        "monotonic_ended_ns": { "$ref": "#/$defs/ns" },
+        "latency_ns": { "type": "integer", "minimum": 1 },
+        "telemetry_before": { "$ref": "#/$defs/telemetry" },
+        "telemetry_after": { "$ref": "#/$defs/telemetry" },
+        "execution": { "$ref": "#/$defs/execution" },
+        "energy": { "$ref": "#/$defs/energy" }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["builds_complete", "layout_proofs_distinct", "warmups_complete", "measurements_complete", "order_counterbalanced", "correctness_complete", "telemetry_complete", "energy_boundary_preserved"],
+      "properties": {
+        "builds_complete": { "type": "boolean" },
+        "layout_proofs_distinct": { "type": "boolean" },
+        "warmups_complete": { "type": "boolean" },
+        "measurements_complete": { "type": "boolean" },
+        "order_counterbalanced": { "type": "boolean" },
+        "correctness_complete": { "type": "boolean" },
+        "telemetry_complete": { "type": "boolean" },
+        "energy_boundary_preserved": { "type": "boolean" }
+      }
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message", "attempt"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "attempt": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/attempt" }] }
+      }
+    }
+  }
+}

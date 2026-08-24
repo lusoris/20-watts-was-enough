@@ -20,4 +20,5 @@ dist/
 .vite/
 .wrangler/
 experiments/workstation/runs/
+experiments/workstation/fixture-012/configs/*.local.json
 *.tsbuildinfo

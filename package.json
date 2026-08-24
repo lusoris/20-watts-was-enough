@@ -19,6 +19,7 @@
     "workstation:candidate-010": "node experiments/workstation/candidate-010/runner.mjs",
     "workstation:fixture-007": "node experiments/workstation/fixture-007/runner.mjs",
     "workstation:fixture-012": "node experiments/workstation/fixture-012/runner.mjs",
+    "workstation:fixture-012:physical": "node experiments/workstation/fixture-012/workstation-cli.mjs",
     "generate:plots": "node scripts/generate-plots.mjs && node scripts/generate-field-coverage.mjs",
     "generate:coverage": "node scripts/generate-field-coverage.mjs",
     "validate:coverage": "node scripts/generate-field-coverage.mjs --check",

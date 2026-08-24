@@ -37,9 +37,42 @@ The smoke profile writes 1,536 events. The deterministic development profile
 writes 27,648 events. Output directories and the raw ledger are created
 exclusively; reruns must use a new directory.
 
-Current limits are binding: timing and energy are modeled, development seeds
-are visible, no compiler/linker or real executable layout is invoked, no
-thermal/frequency/machine hierarchy is sampled, and confirmation and held-out
-seed commitments remain pending. Consequently all summaries retain
-`claim_eligible: false`, `scientific_result: false`, and
-`measured_energy_present: false`.
+## Physical workstation-development lane
+
+The separate [operator runbook](WORKSTATION-RUNBOOK.md) defines a bounded
+process-acquisition lane. It performs fresh seed-qualified rebuilds, requires
+normalized structural layout manifests, randomizes layout order,
+counterbalances variant order, excludes declared warmups, records exact
+launcher start/exit timestamps, captures thermal and frequency samples,
+checks exact stdout correctness, and stores content-identified provenance.
+Complete layouts form a durable SHA-256 ledger with exact layout-boundary
+resume, an authoritative-ledger checkpoint, and an exclusive campaign lock.
+The process/CLI integration suite exercises paths containing spaces, stale
+checkpoint repair, concurrent-writer refusal, binding corruption, raw-ledger
+corruption, and redirected-path rejection.
+
+```powershell
+npm run workstation:fixture-012:physical -- prepare --config <experiment.json> --adapter-config <adapter.json>
+npm run workstation:fixture-012:physical -- acquire --config <experiment.json> --adapter-config <adapter.json> --output <run-directory>
+npm run workstation:fixture-012:physical -- validate --config <experiment.json> --output <run-directory>
+```
+
+The lane is development-only and is not the manifest's canonical confirmation
+runner. Physical Windows execution currently fails closed with
+`WINDOWS_JOB_OBJECT_REQUIRED`; the test-only direct-child bypass is not exposed
+as a CLI option. A reviewed Job Object supervisor is required before the lane
+can execute arbitrary workstation commands on Windows. POSIX execution uses a
+detached process group and waits for termination. The default configuration is
+latency-only. Selecting joules additionally requires a positive uncertainty
+floor and an unexpired, content-identified calibration certificate for an
+external cumulative-energy provider whose samples enclose every measured
+interval; energy-claim authority still remains false.
+
+Current limits are binding: synthetic smoke timing and energy remain modeled,
+physical development seeds are visible, the Windows process-tree boundary is
+not implemented, no compiler/linker/workload release is frozen, no real
+confirmation or independent replication has been recorded, and confirmation
+and held-out seed commitments remain pending. Consequently every synthetic and
+development output retains `claim_eligible: false` and
+`scientific_result: false`; workstation records additionally retain
+`energy_claim_eligible: false`. The manifest remains `smoke-ready`.
