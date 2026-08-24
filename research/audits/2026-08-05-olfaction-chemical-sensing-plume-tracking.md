@@ -181,7 +181,7 @@ $$
 $$
 
 where $\rho_i$ is in `kg/m^3`, pressure $P$ is in pascals, molar mass $M_i$ is
-in `kg/mol`, the molar gas constant $R=8.314462618\ \mathrm{J/(mol\,K)}`,
+in `kg/mol`, the molar gas constant $R=8.314462618\ \mathrm{J/(mol\,K)}$,
 temperature $T$ is in kelvins, and $x_i$ is dimensionless. A ppm-to-`mg/m^3`
 conversion without $M_i$, $T$, and $P$ is incomplete.
 

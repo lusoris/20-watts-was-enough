@@ -636,7 +636,7 @@ and placement controllers change the replica set.
 entries, or seconds; quorum size is nodes/votes; throughput is operations per
 second; recovery and rebalance traffic is bytes per second.
 
-**Resource cost.** (r\)-fold copies, network write amplification, quorum
+**Resource cost.** $r$-fold copies, network write amplification, quorum
 latency, logs and snapshots, leader or coordinator load, anti-entropy, repair,
 rebalancing, and spare capacity during faults.
 

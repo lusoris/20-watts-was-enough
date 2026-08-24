@@ -193,8 +193,8 @@ Q(a\mid s_t)=
 -\rho\widehat{P}_{\mathrm{fail}}(s_t,a),
 $$
 
-where all hatted terms are preregistered predictions, $\alpha,\beta,\gamma,
-\lambda,\rho$ convert them to one scheduling utility, and
+where all hatted terms are preregistered predictions,
+$\alpha,\beta,\gamma,\lambda,\rho$ convert them to one scheduling utility, and
 $\widehat{P}_{\mathrm{fail}}$ is the probability that the learner cannot
 successfully process the event even with registered feedback. This equation is
 a testable policy class, not a psychological law.

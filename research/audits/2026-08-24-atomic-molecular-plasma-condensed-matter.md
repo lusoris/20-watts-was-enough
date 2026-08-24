@@ -146,41 +146,41 @@ device.
 
 ### Timed spectroscopy is a signed intervention model
 
-For interrogation \(i\), write the fractional indication as
+For interrogation $i$, write the fractional indication as
 
-\[
+$$
 y_i=\frac{\hat{\nu}_i-\nu_{\rm ref}}{\nu_{\rm ref}}
    = a_i\theta+\mathbf{x}_i^\mathsf{T}\boldsymbol{\beta}
    +\int g_i(t)\,\delta y_{\rm LO}(t)\,dt+\epsilon_i .
-\]
+$$
 
-Here \(\theta\) is the target fractional frequency offset, \(a_i\) is its signed
-sensitivity, \(\mathbf{x}_i\) records reversals or influence quantities,
-\(\boldsymbol{\beta}\) are systematic-shift coefficients, \(g_i(t)\) is the
-interrogation sensitivity function, and \(\delta y_{\rm LO}\) is local-oscillator
+Here $\theta$ is the target fractional frequency offset, $a_i$ is its signed
+sensitivity, $\mathbf{x}_i$ records reversals or influence quantities,
+$\boldsymbol{\beta}$ are systematic-shift coefficients, $g_i(t)$ is the
+interrogation sensitivity function, and $\delta y_{\rm LO}$ is local-oscillator
 fractional noise. Synchronous differencing can cancel the final integral when
 two clocks share it. It cannot identify a shift that is also shared and
-collinear with \(a_i\). Rank, conditioning, covariance, duty cycle, servo
+collinear with $a_i$. Rank, conditioning, covariance, duty cycle, servo
 history, and zero-support interventions therefore precede precision digits.
 
 ### Molecular spectra are weighted difference graphs
 
-For transition edge \(e=(l,u)\),
+For transition edge $e=(l,u)$,
 
-\[
+$$
 \tilde{\nu}_e = \frac{E_u-E_l}{hc}+\epsilon_e,\qquad
 \mathbf{s}=\mathbf{B}\mathbf{e}+\boldsymbol{\epsilon},
-\]
+$$
 
-where \(\mathbf{B}\) is an oriented incidence matrix, energies in
-\(\mathbf{e}\) are in cm\(^{-1}\), and \(\mathbf{s}\) contains measured
-wavenumbers in cm\(^{-1}\). One origin must be fixed per connected component.
-For any signed cycle vector \(\mathbf{c}\) satisfying
-\(\mathbf{c}^{\mathsf T}\mathbf{B}=0\),
+where $\mathbf{B}$ is an oriented incidence matrix, energies in
+$\mathbf{e}$ are in cm$^{-1}$, and $\mathbf{s}$ contains measured
+wavenumbers in cm$^{-1}$. One origin must be fixed per connected component.
+For any signed cycle vector $\mathbf{c}$ satisfying
+$\mathbf{c}^{\mathsf T}\mathbf{B}=0$,
 
-\[
+$$
 \mathbf{c}^{\mathsf T}\mathbf{s}=0
-\]
+$$
 
 within covariance if assignments and measurement models are mutually
 consistent. Robust weighted least squares can localize tension; it cannot
@@ -188,49 +188,49 @@ decide the correct physical label without spectroscopic evidence.
 
 ### Quantum efficiency is observable-relative
 
-For state \(\rho\), measurement channel \(\mathcal M\), and observable \(O_j\),
-a randomized outcome \(b_i,U_i\) gives a snapshot
+For state $\rho$, measurement channel $\mathcal M$, and observable $O_j$,
+a randomized outcome $b_i,U_i$ gives a snapshot
 
-\[
+$$
 \hat{\rho}_i=\mathcal M^{-1}\!\left(
  U_i^\dagger |b_i\rangle\langle b_i|U_i\right),\qquad
 \hat{o}_j=\frac{1}{N}\sum_{i=1}^{N}\mathrm{Tr}(O_j\hat{\rho}_i).
-\]
+$$
 
-The useful shot count depends on error \(\varepsilon\), failure probability
-\(\delta\), observable count \(M\), the state/preparation process, readout
+The useful shot count depends on error $\varepsilon$, failure probability
+$\delta$, observable count $M$, the state/preparation process, readout
 noise, and an observable/ensemble-specific shadow norm. The often-cited
-logarithmic dependence on \(M\) does not remove a large shadow norm, correlated
+logarithmic dependence on $M$ does not remove a large shadow norm, correlated
 shots, drift, basis cost, or exponential full-tomography boundary.
 
 ### Phase claims require a size and regime map
 
-For reduced control parameter \(t=(\lambda-\lambda_c)/\lambda_c\), an observable
+For reduced control parameter $t=(\lambda-\lambda_c)/\lambda_c$, an observable
 may obey
 
-\[
+$$
 X(L,t)=L^{-\kappa/\nu}
  f_X(tL^{1/\nu})\left[1+bL^{-\omega}+\cdots\right].
-\]
+$$
 
-The correlation length \(\xi\), boundary condition, aspect ratio, trap,
+The correlation length $\xi$, boundary condition, aspect ratio, trap,
 preparation time, equilibration, dynamic exponent where relevant, and
 first-order/crossover alternatives must be declared. A Binder-like cumulant
-\(U_L=1-\langle m^4\rangle/(3\langle m^2\rangle^2)\) is one diagnostic, not an
+$U_L=1-\langle m^4\rangle/(3\langle m^2\rangle^2)$ is one diagnostic, not an
 automatic phase oracle.
 
 ### Quenched disorder has two probability layers
 
-Let \(\langle X\rangle_{\rm th|r}\) be the thermal/quantum expectation within
-realization \(r\), and \([\cdot]_{\rm dis}\) the disorder average. The relative
+Let $\langle X\rangle_{\rm th|r}$ be the thermal/quantum expectation within
+realization $r$, and $[\cdot]_{\rm dis}$ the disorder average. The relative
 sample variance
 
-\[
+$$
 R_X(L)=
 \frac{[\langle X\rangle_{\rm th|r}^2]_{\rm dis}
       -[\langle X\rangle_{\rm th|r}]_{\rm dis}^2}
      {[\langle X\rangle_{\rm th|r}]_{\rm dis}^2}
-\]
+$$
 
 tests self-averaging. It can approach zero rapidly, weakly, or not at all.
 Thermal sweeps inside one frozen sample do not increase the disorder
@@ -240,69 +240,69 @@ replication count.
 
 For a clean periodic band model, a Chern number can be written
 
-\[
+$$
 C=\frac{1}{2\pi}\sum_{n\in{\rm occ}}
 \int_{\rm BZ}\Omega_n(\mathbf{k})\,d^2k.
-\]
+$$
 
 A finite disordered sample may instead use a real-space marker or Bott index.
 The two-terminal service is separately conditioned by leads:
 
-\[
+$$
 G(E_F)=\frac{e^2}{h}
 \mathrm{Tr}\!\left[
 \Gamma_L G^r\Gamma_R G^a
 \right].
-\]
+$$
 
 Agreement is a regime-dependent prediction, not an identity. Boundary
 termination, contact self-energies, dephasing, temperature, interactions,
-spectral/mobility gaps, disorder ensemble, and \(L\)-scaling remain visible.
+spectral/mobility gaps, disorder ensemble, and $L$-scaling remain visible.
 
 ### Plasma radiation is a kinetic forward model
 
-For electron-energy distribution \(f_e(E)\),
+For electron-energy distribution $f_e(E)$,
 
-\[
+$$
 q_{ij}[f_e]=\int_0^\infty \sigma_{ij}(E)v(E)f_e(E)\,dE,
-\]
+$$
 
 and level populations obey a collisional--radiative system
 
-\[
+$$
 \dot{\mathbf n}=\mathbf K(f_e,n_e,\mathbf a)\mathbf n+\mathbf s,\qquad
 \varepsilon_{ul}=n_uA_{ul}h\nu_{ul}.
-\]
+$$
 
 Measured spectral radiance is
 
-\[
+$$
 I_\lambda=
 \mathcal R_\lambda\!\left[
 \int_{\rm LOS}\mathcal T_\lambda(\ell)\,
 \varepsilon_\lambda(\ell,t)\,d\ell
 \right]+\eta_\lambda ,
-\]
+$$
 
-where \(\mathbf a\) denotes atomic data, \(\mathcal T\) opacity/transport, and
-\(\mathcal R\) the instrument. A Maxwellian line-ratio table is a special case.
+where $\mathbf a$ denotes atomic data, $\mathcal T$ opacity/transport, and
+$\mathcal R$ the instrument. A Maxwellian line-ratio table is a special case.
 
 ### Reconstruction must be fast relative to the controlled plasma
 
 An axisymmetric equilibrium estimate satisfies a Grad--Shafranov-type
 constraint
 
-\[
+$$
 \Delta^\star\psi=-\mu_0 Rj_\phi(\psi),\qquad
 \mathbf y_k=\mathbf H\psi_k+\mathbf D\mathbf i_{v,k}+\boldsymbol\eta_k,
-\]
+$$
 
 while conducting-structure currents may evolve as
 
-\[
+$$
 \boldsymbol\tau_v\dot{\mathbf i}_v
 =-\mathbf i_v+\mathbf G_v\mathbf u .
-\]
+$$
 
 The estimator/controller contract includes residual, constraint defect,
 latency, timestamp, sensor validity, vessel-current model, actuator saturation,
@@ -311,21 +311,21 @@ is not a fast state estimate.
 
 ### Beam emittance is inferred from transported moments
 
-For horizontal phase space \(\mathbf z=(x,x')^\mathsf T\),
+For horizontal phase space $\mathbf z=(x,x')^\mathsf T$,
 
-\[
+$$
 \boldsymbol\Sigma_x=\mathrm{Cov}(\mathbf z),\qquad
 \varepsilon_x=\sqrt{\det\boldsymbol\Sigma_x},\qquad
 \varepsilon_{n,x}=\beta_{\rm rel}\gamma_{\rm rel}\varepsilon_x .
-\]
+$$
 
-A screen after optics row \(\mathbf r_j\) measures
+A screen after optics row $\mathbf r_j$ measures
 
-\[
+$$
 \sigma_{x,j}^2=
 \mathbf r_j^\mathsf T\boldsymbol\Sigma_x\mathbf r_j
 +\sigma_{{\rm PSF},j}^2+\sigma_{{\rm bg},j}^2 .
-\]
+$$
 
 At least three well-conditioned projections are required for an uncoupled
 second-moment fit; 4-D coupling, dispersion, space charge, nonlinearity, halo,
@@ -917,12 +917,12 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   temperature offset; (3) colored LO noise and duty-cycle change causing
   aliasing; (4) nonlinear/cross-coupled lattice, Zeeman, density, BBR, and servo
   shifts with one zero-support operating regime. Truth fractional offsets span
-  \(\pm5\times10^{-16}\); systematic terms span
-  \(10^{-19}\)--\(10^{-15}\).
+  $\pm5\times10^{-16}$; systematic terms span
+  $10^{-19}$--$10^{-15}$.
 - **Observation model and units:** use the shared timed model above. Record
   frequency in Hz, fractional frequency dimensionless, temperature in K,
-  magnetic field in \(\mu\)T, lattice depth in recoil-energy units, time in s,
-  and cycle/shot counts. Interventions reverse \(m_F\), lattice depth, atom
+  magnetic field in $\mu$T, lattice depth in recoil-energy units, time in s,
+  and cycle/shot counts. Interventions reverse $m_F$, lattice depth, atom
   number, and thermal set point under a fixed 10% diagnostic-cycle budget.
 - **Arms and mature nulls:** A, mean/Allan analysis treating residuals as
   independent and applying nominal corrections; B, covariance-aware GLS with
@@ -938,12 +938,12 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   10--200 s; one shift-model sign error.
 - **Metrics:** held-out fractional bias and RMSE; nominal-95% interval coverage
   and width; false precision-qualified release when absolute error exceeds the
-  stated \(2u\); missed shift-root invalidation; abstention; diagnostic cycles;
+  stated $2u$; missed shift-root invalidation; abstention; diagnostic cycles;
   CPU-s, peak MiB, and bytes. The registered primary is false release per world.
 - **Invariant checks:** timestamps strictly increase; identical cycles reach all
   arms; intervention columns and units round-trip; injected and recorded shared
   roots match; truth frequency plus every shift reconciles with generated
-  indication to \(10^{-13}\) Hz; no hidden coefficient enters D.
+  indication to $10^{-13}$ Hz; no hidden coefficient enters D.
 - **Promotion gate:** versus C, D must reduce false releases by at least 40%
   and shift-root invalidation misses by at least 50%, maintain 92--98% coverage,
   keep supported-regime RMSE non-inferior within 5%, use no more than the same
@@ -973,10 +973,10 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   scarcity; (3) 1--5% blended/misassigned lines and underestimated
   uncertainties; (4) disconnected components plus Hamiltonian-predicted
   pseudo-lines and a held-out isotopologue shift.
-- **Truth and units:** level energies \(E_i/(hc)\) span
-  0--20,000 cm\(^{-1}\); transition error is
-  \(10^{-6}\)--\(10^{-2}\) cm\(^{-1}\) (about 30 kHz--300 MHz). The incidence
-  equation \(\mathbf s=\mathbf B\mathbf e+\epsilon\) is exact before noise.
+- **Truth and units:** level energies $E_i/(hc)$ span
+  0--20,000 cm$^{-1}$; transition error is
+  $10^{-6}$--$10^{-2}$ cm$^{-1}$ (about 30 kHz--300 MHz). The incidence
+  equation $\mathbf s=\mathbf B\mathbf e+\epsilon$ is exact before noise.
   Each acquired edge costs 1--100 synthetic instrument-seconds and one line.
 - **Arms and mature nulls:** A, independent local band fits and inverse-variance
   averaging without global cycles; B, robust weighted global graph inversion
@@ -988,14 +988,14 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
 - **Perturbations:** graph density, bridge count, cycle length, correlated
   calibration batch, edge-cost heterogeneity, blend rate, wrong state label,
   uncertainty compression, and pseudo-line model discrepancy.
-- **Metrics:** held-out transition RMSE and level RMSE in cm\(^{-1}\);
+- **Metrics:** held-out transition RMSE and level RMSE in cm$^{-1}$;
   nominal-95% level coverage/width; component-connectivity recall; bad-edge
   localization set precision/recall; invalidated-level recall; instrument-s,
   edge count, CPU-s, MiB, and bytes. Primary is supported-level RMSE at fixed
   instrument-s, protected by coverage and no false component joining.
 - **Invariant checks:** incidence rows contain exactly one -1 and one +1;
   anchors only set origins; true cycle sums close below
-  \(10^{-12}\) cm\(^{-1}\); all candidate edges are hidden until acquired;
+  $10^{-12}$ cm$^{-1}$; all candidate edges are hidden until acquired;
   no pseudo-line is tagged experimental; edge deletion deterministically
   recomputes every descendant.
 - **Promotion gate:** versus C, D must lower supported-level RMSE by 25% or
@@ -1017,8 +1017,8 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
 - **Claim/hypothesis:** C-1424. A registered, noise-calibrated observable-aware
   measurement design may amortize shots across useful queries; it must beat
   commuting-group and classical-shadow nulls without implying full tomography.
-- **Independent unit and size:** one \(n=8,10,\) or 12 spin-\(1/2\) state and a
-  registered family of \(M=64,256,\) or 1,024 observables. A world permits
+- **Independent unit and size:** one $n=8,10,$ or 12 spin-$1/2$ state and a
+  registered family of $M=64,256,$ or 1,024 observables. A world permits
   50,000 state preparations/shots and stores every basis/outcome pair. Exact or
   tensor-network truth is computed independently on CPU.
 - **Generator families:** (1) product/stabilizer states and low-weight Pauli
@@ -1028,7 +1028,7 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   readout-confusion change, and correlated blocks violating naive IID.
 - **Observation and units:** local Pauli or allowed Clifford bases; outcomes
   are bits; expectation values dimensionless in [-1,1]; Hamiltonian energies
-  are in coupling units \(J_0\); basis changes, shots, CPU-s, MiB, and stored
+  are in coupling units $J_0$; basis changes, shots, CPU-s, MiB, and stored
   bytes are charged. A calibration allowance of 5,000 shots is inside the
   50,000 total.
 - **Arms and mature nulls:** A, equal shots per observable; B, strongest
@@ -1043,12 +1043,12 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   block correlation 0--0.8, post-freeze addition of 10 supported and 10
   unsupported queries.
 - **Metrics:** maximum and weighted median absolute expectation error;
-  Hamiltonian-energy error in \(J_0\); simultaneous-95% family coverage; false
+  Hamiltonian-energy error in $J_0$; simultaneous-95% family coverage; false
   confident unsupported answers; supported future-query reuse; shots, basis
   changes, CPU-s, MiB, and bytes. Primary is worst registered-query error at
   fixed shots, protected by simultaneous coverage.
 - **Invariant checks:** density/state generator normalizes to
-  \(10^{-12}\); exact observables are computed by a separate implementation;
+  $10^{-12}$; exact observables are computed by a separate implementation;
   all arms use the same shot uniforms conditional on basis; calibration shots
   are excluded from estimation unless declared; no outcome is duplicated as an
   independent shot; D's query weights freeze before confirmation.
@@ -1072,15 +1072,15 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   alternative-class modeling should prevent false thermodynamic-phase
   declarations; standard finite-size scaling is the strongest null.
 - **Independent unit and size:** one synthetic lattice campaign. Simulate
-  \(L=8,12,16,24,32\) with periodic/open boundaries, 21 control-parameter
+  $L=8,12,16,24,32$ with periodic/open boundaries, 21 control-parameter
   points, and 24 independent chains per point after registered burn-in. Each
   seed supplies one complete campaign.
 - **Generator families:** (1) 2-D Ising continuous transition; (2) 2-D
-  \(q=10\) Potts first-order transition; (3) no-transition finite correlation
+  $q=10$ Potts first-order transition; (3) no-transition finite correlation
   crossover/rounded analytic mixture; (4) trapped spatial gradient, slow
   anneal, metastability, or boundary field that creates apparent ordered
-  domains. Couplings are in \(J_0\); \(k_BT/J_0\) is dimensionless.
-- **Observations:** magnetization \(m\), energy per site in \(J_0\), structure
+  domains. Couplings are in $J_0$; $k_BT/J_0$ is dimensionless.
+- **Observations:** magnetization $m$, energy per site in $J_0$, structure
   factor, second-moment correlation length in lattice sites, Binder cumulant,
   autocorrelation time in sweeps, and snapshots convolved with a 1--2-site
   readout kernel and 0--5% site error.
@@ -1093,21 +1093,21 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   alternatives, sequential value-of-information size selection, and
   zero-support abstention. C is the kill null.
 - **Perturbations:** size range truncation; boundary; aspect ratio 1--4;
-  gradient 0--0.15 \(J_0\)/site; anneal duration; metastable chain fraction;
+  gradient 0--0.15 $J_0$/site; anneal duration; metastable chain fraction;
   correction exponent; readout blur/error; omitted largest size; chain
   autocorrelation.
 - **Metrics:** transition-class accuracy; false thermodynamic-phase rate in
-  families 3/4; \(\lambda_c\) error in \(k_BT/J_0\); exponent error; correlation
+  families 3/4; $\lambda_c$ error in $k_BT/J_0$; exponent error; correlation
   length error in sites; nominal-95% interval coverage; simulated
   site-sweeps, CPU-s, MiB, and bytes. Primary is false phase declaration,
-  protected by non-inferior \(\lambda_c\) accuracy in family 1.
+  protected by non-inferior $\lambda_c$ accuracy in family 1.
 - **Invariant checks:** exact Ising reference point is used only as verifier;
   energy/magnetization ranges hold; chains have independent substreams;
   effective sample size and burn-in pass preregistered diagnostics; truth
   class is unavailable to arms; all post-selection observables are flagged.
 - **Promotion gate:** versus C, D must reduce false phase declarations by at
   least 50%, retain 92--98% coverage, keep continuous-transition
-  \(\lambda_c\) RMSE within 5%, correctly label at least 80% of first-order
+  $\lambda_c$ RMSE within 5%, correctly label at least 80% of first-order
   campaigns, and reduce site-sweeps by at least 20% through stopping/selection
   without omitting any protected family.
 - **Kill/rejection gate:** kill if C ties within 5%, if benefit vanishes after
@@ -1123,10 +1123,10 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
 ### PS-W05 — Quenched-disorder ensemble and self-averaging
 
 - **Claim/hypothesis:** C-1426. Separating within-realization and
-  between-realization uncertainty and testing \(R_X(L)\) should improve tail
+  between-realization uncertainty and testing $R_X(L)$ should improve tail
   decisions; hierarchical/bootstrap and size-scaling methods are mature nulls.
 - **Independent unit and size:** one disorder campaign with
-  \(L=16,24,32,48,64\), 64 independent realizations/size, and 64 conditional
+  $L=16,24,32,48,64$, 64 independent realizations/size, and 64 conditional
   thermal/noise repeats/realization. Generate resistor networks and a matched
   single-particle Anderson chain/lattice summary so the result cannot depend on
   one solver.
@@ -1134,30 +1134,30 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   strong self-averaging; (2) bond-percolation networks near threshold; (3)
   spatially correlated/clustered disorder; (4) rare bottleneck or Griffiths-like
   mixtures with a non-vanishing bad-realization fraction.
-- **Truth and units:** edge conductance is 0--1,000 \(\mu\)S; network effective
-  conductance \(G_L\) in \(\mu\)S is computed by sparse Kirchhoff solve with
-  independent residual verification. Anderson conductance is in \(e^2/h\);
+- **Truth and units:** edge conductance is 0--1,000 $\mu$S; network effective
+  conductance $G_L$ in $\mu$S is computed by sparse Kirchhoff solve with
+  independent residual verification. Anderson conductance is in $e^2/h$;
   disorder strength in eV and localization length in sites. Thermal/noise and
   disorder substreams are distinct.
 - **Arms and mature nulls:** A, one largest realization plus within-world
   repeats; B, disorder mean with naive pooled IID standard error; C, strongest
   mature null: two-level hierarchical/bootstrap distribution, realization
-  quantiles, and conventional \(L\)-scaling; D, C plus explicit self-averaging
+  quantiles, and conventional $L$-scaling; D, C plus explicit self-averaging
   model selection, sample-specific pseudocritical state, adaptive allocation
   between repeats and new realizations, and decision-tail abstention. C is
   mature; an oracle variance allocation is a ceiling only.
-- **Perturbations:** disorder correlation length 0--\(L/3\); conductance
-  contrast \(10^0\)--\(10^8\); distance to percolation; rare fraction 0--10%;
+- **Perturbations:** disorder correlation length 0--$L/3$; conductance
+  contrast $10^0$--$10^8$; distance to percolation; rare fraction 0--10%;
   canonical/grand-canonical disorder count; truncated failed solves; number of
   realizations/repeats.
-- **Metrics:** mean and 5th-percentile \(G_L\) error in \(\mu\)S or \(e^2/h\);
-  \(R_X(L)\) slope/class error; false claim that 5th-percentile conductance
+- **Metrics:** mean and 5th-percentile $G_L$ error in $\mu$S or $e^2/h$;
+  $R_X(L)$ slope/class error; false claim that 5th-percentile conductance
   exceeds a registered service threshold; interval coverage; new
   realizations, repeats, sparse-solver CPU-s, MiB, and bytes. Primary is false
   tail-safe decision.
 - **Invariant checks:** every disorder field hash is unique; within-world
-  repeats never increment disorder \(n\); Kirchhoff current closes relative
-  \(10^{-10}\); conductance is nonnegative; solver failures remain outcomes;
+  repeats never increment disorder $n$; Kirchhoff current closes relative
+  $10^{-10}$; conductance is nonnegative; solver failures remain outcomes;
   ratio metrics report denominator-near-zero strata; arm allocations share a
   fixed maximum budget.
 - **Promotion gate:** versus C, D must reduce false tail-safe decisions by 40%
@@ -1171,7 +1171,7 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
 - **Required artifacts:** every disorder field/seed/hash, correlation and rare
   region parameters, conditional-repeat map, Kirchhoff/Anderson solver
   residuals, realization-level outcomes, pseudocritical estimates,
-  \(R_X(L)\) distributions/fits, allocation trace, tail decisions, and common
+  $R_X(L)$ distributions/fits, allocation trace, tail decisions, and common
   artifacts.
 
 ### PS-W06 — Bulk marker, gap, edge, and contacted transport
@@ -1180,7 +1180,7 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   reject false service claims from clean invariants, but it must beat standard
   real-space topology plus Kubo/NEGF and size-scaling nulls.
 - **Independent unit and size:** one two-band square-lattice Chern-insulator
-  campaign with \(L=12,18,24,30\), four boundary/lead geometries, 21 Fermi
+  campaign with $L=12,18,24,30$, four boundary/lead geometries, 21 Fermi
   energies, and 32 disorder realizations per point. Sparse diagonalization and
   recursive/sparse Green-function calculations stay under the common CPU cap.
 - **Generator families:** (1) clean topological/trivial Qi--Wu--Zhang regimes;
@@ -1190,7 +1190,7 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   dephasing self-energy, and spatially inhomogeneous mass domains.
 - **Truth and units:** hopping/mass/disorder/Fermi energy in eV; spectral and
   mobility gaps in eV; local marker/Bott index dimensionless; localization
-  length in sites; two-terminal \(G\) in \(e^2/h\). Service truth is the
+  length in sites; two-terminal $G$ in $e^2/h$. Service truth is the
   independently computed contacted conductance and its size/disorder
   distribution, not the generator's phase label.
 - **Arms and mature nulls:** A, clean periodic Chern number or parameter-region
@@ -1202,16 +1202,16 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   abstention. B/C are mature.
 - **Perturbations:** mass distance to phase boundary; disorder 0--6 eV;
   correlation length; boundary roughness; strip width; lead bandwidth/coupling;
-  \(k_BT=0\)--0.2 eV; dephasing 0--0.2 eV; Fermi-energy calibration error;
+  $k_BT=0$--0.2 eV; dephasing 0--0.2 eV; Fermi-energy calibration error;
   trivial edge conductance.
 - **Metrics:** phase/marker classification; gap error in eV; false
-  service-qualified claim that \(G\) lies within 10% of \(e^2/h\); 5th
+  service-qualified claim that $G$ lies within 10% of $e^2/h$; 5th
   percentile conductance error; abstention; diagonalizations, NEGF solves,
   CPU-s, MiB, and bytes. Primary is false service claim at a fixed NEGF-solve
   budget, protected by marker/gap reporting.
 - **Invariant checks:** clean periodic implementation reproduces integer Chern
-  values within \(10^{-8}\); Hamiltonians are Hermitian to \(10^{-12}\) eV;
-  spectral projectors are idempotent within \(10^{-9}\); NEGF transmission is
+  values within $10^{-8}$; Hamiltonians are Hermitian to $10^{-12}$ eV;
+  spectral projectors are idempotent within $10^{-9}$; NEGF transmission is
   nonnegative and bounded by channel count; independent code paths verify 5%
   of worlds; D cannot see service truth before escalation.
 - **Promotion gate:** versus C at the same maximum solver budget, D must reduce
@@ -1235,17 +1235,17 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   collisional--radiative Bayesian inverse is the mature kill null.
 - **Independent unit and size:** one 1-D plasma chord with 64 cells, 12 atomic
   levels, 8 spectral lines from 350--800 nm, 4 viewing chords, and 1,000 time
-  steps of 10 \(\mu\)s. Generate spectra, interferometric chord density, and one
+  steps of 10 $\mu$s. Generate spectra, interferometric chord density, and one
   local probe/Thomson-like reference under a fixed acquisition budget.
 - **Generator families:** (1) steady optically thin Maxwellian plasma; (2)
   kappa or bi-Maxwellian EEDF; (3) transient metastable populations and
   transport during a 0.1--2 ms pulse; (4) opacity, spatial gradients, atomic
   cross-section common-mode bias, weak-line censoring, and probe sheath bias.
-- **Truth and units:** \(n_e=10^{16}\)--\(10^{20}\) m\(^{-3}\);
-  electron-energy scale 1--200 eV; rate coefficients m\(^3\)/s; populations
-  m\(^{-3}\); wavelength nm; emissivity W m\(^{-3}\) sr\(^{-1}\); radiance
-  W m\(^{-2}\) sr\(^{-1}\) nm\(^{-1}\); chord length m; time \(\mu\)s/ms.
-  Rates integrate declared synthetic cross sections over \(f_e(E)\).
+- **Truth and units:** $n_e=10^{16}$--$10^{20}$ m$^{-3}$;
+  electron-energy scale 1--200 eV; rate coefficients m$^3$/s; populations
+  m$^{-3}$; wavelength nm; emissivity W m$^{-3}$ sr$^{-1}$; radiance
+  W m$^{-2}$ sr$^{-1}$ nm$^{-1}$; chord length m; time $\mu$s/ms.
+  Rates integrate declared synthetic cross sections over $f_e(E)$.
 - **Arms and mature nulls:** A, Boltzmann plot/two-line Maxwellian ratio with
   local interpretation; B, steady optically thin Maxwellian
   collisional--radiative inversion; C, strongest mature null: time-dependent
@@ -1255,18 +1255,18 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   targeted orthogonal-diagnostic acquisition, invalidation, and explicit
   nonidentifiability abstention. B/C are mature.
 - **Perturbations:** kappa 2--20; hot fraction 0--20%; population relaxation
-  10--1,000 \(\mu\)s; density/temperature gradient length; optical depth 0--3;
+  10--1,000 $\mu$s; density/temperature gradient length; optical depth 0--3;
   line-spread width 0.05--1 nm; gain/background drift; line censoring; atomic
   rate bias/correlation 0--30%; chord geometry error 0--5%.
-- **Metrics:** profile RMSE for \(n_e\) in m\(^{-3}\) and energy scale in eV;
+- **Metrics:** profile RMSE for $n_e$ in m$^{-3}$ and energy scale in eV;
   EEDF-family classification; nominal-95% profile coverage; false local/hot
   declaration; atomic-root invalidation recall; abstention; photons/count
   proxies, reference acquisitions, CPU-s, MiB, and bytes. Primary is false
   local/hot decision, protected by profile coverage.
 - **Invariant checks:** level populations/nonnegative EEDF normalize to
-  \(10^{-10}\); particle bookkeeping closes to \(10^{-8}\); line radiance from
+  $10^{-10}$; particle bookkeeping closes to $10^{-8}$; line radiance from
   the independent forward renderer matches stored noise-free spectra to
-  \(10^{-9}\) relative; all units dimensionally check; inverse and verifier do
+  $10^{-9}$ relative; all units dimensionally check; inverse and verifier do
   not share numerical quadrature; censored lines remain censored.
 - **Promotion gate:** versus C, D must reduce reference acquisitions by 25% or
   invalidation misses by 50% without worse than 5% on the other, keep false
@@ -1289,7 +1289,7 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   latency without losing physical validity; it must beat fast conventional
   equilibrium reconstruction, robust observers, constrained MPC, and fallback.
 - **Independent unit and size:** one 2 s synthetic tokamak episode sampled at
-  1 ms on a 28 by 65 \((R,Z)\) grid with 96 magnetic/flux diagnostics, 12 coil
+  1 ms on a 28 by 65 $(R,Z)$ grid with 96 magnetic/flux diagnostics, 12 coil
   currents, 8 vessel-current modes, and a boundary represented by 64 points.
   Each arm controls the same hidden episode from the same indication stream.
 - **Generator families:** (1) in-support slow equilibrium sequence; (2) fast
@@ -1298,8 +1298,8 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   equilibrium, internal-profile change, actuator saturation, and model error.
 - **Truth and units:** poloidal flux Wb, magnetic field T, plasma/coil current
   MA/kA, coil voltage V, position/clearance mm, time ms, constraint defect
-  normalized by Wb/m\(^2\). A finite-difference
-  \(\Delta^\star\psi=-\mu_0Rj_\phi\) solver and separate sensor renderer create
+  normalized by Wb/m$^2$. A finite-difference
+  $\Delta^\star\psi=-\mu_0Rj_\phi$ solver and separate sensor renderer create
   truth; controller updates face a 1 ms simulated deadline, while actual CPU
   latency is also recorded.
 - **Arms and mature nulls:** A, static linear reconstruction plus independent
@@ -1317,11 +1317,11 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
 - **Metrics:** boundary RMS/max error in mm; internal-profile/current error;
   normalized Grad--Shafranov defect; false-valid state releases; clearance or
   actuator constraint violations; simulated and actual p50/p99 latency/deadline
-  miss; fallback time; control effort V\(^2\)s and kA-change; CPU-s, MiB, bytes.
+  miss; fallback time; control effort V$^2$s and kA-change; CPU-s, MiB, bytes.
   Primary is p99 actual latency among physically valid releases, protected by
   zero additional safety/constraint violations and boundary error.
 - **Invariant checks:** independent PDE residual recomputation; coil/vessel
-  dynamics reconcile to \(10^{-8}\) relative; arms see identical sensor epochs;
+  dynamics reconcile to $10^{-8}$ relative; arms see identical sensor epochs;
   future truth is inaccessible; wall-clock timing excludes file serialization
   but includes reconstruction/guard/control; fallback commands obey limits;
   any missed deadline marks that update invalid.
@@ -1356,11 +1356,11 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   x--y coupling and dispersion/energy spread; (3) space-charge/nonlinear
   transport and quadrupole calibration error; (4) non-Gaussian core--halo,
   clipped screen, PSF/background drift, and abrupt source change.
-- **Truth and units:** \(x,y\) in mm, \(x',y'\) in mrad, geometric/normalized
+- **Truth and units:** $x,y$ in mm, $x',y'$ in mrad, geometric/normalized
   emittance in mm mrad, energy 3--200 MeV, energy spread %, charge 0.1--2 nC,
   bunch count, deposited/intercepted energy J, time s. For a fully intercepted
   bunch, deposited energy is
-  \((Q/e)E_{\rm MeV}(1.602176634\times10^{-13})\) J before declared escape.
+  $(Q/e)E_{\rm MeV}(1.602176634\times10^{-13})$ J before declared escape.
 - **Arms and mature nulls:** A, one-screen width with design Twiss prior; B,
   calibrated multi-setting quadrupole WLS for uncoupled second moments; C,
   strongest mature stack: 4-D covariance/phase-space tomography, response and
@@ -1379,7 +1379,7 @@ that a candidate works. Exactly nine protocols follow, one per reserved claim.
   setting changes, CPU-s, MiB, and bytes. Primary is intercepted bunches needed
   to maintain protected emittance/halo decisions.
 - **Invariant checks:** covariance matrices remain positive semidefinite;
-  symplectic linear maps preserve eigen-emittances to \(10^{-9}\) absent
+  symplectic linear maps preserve eigen-emittances to $10^{-9}$ absent
   declared nonlinearity; all monitors use an independent response renderer;
   screen image integrates to observed charge after clipping accounting;
   normalized/geometric unit conversion round-trips; each intercepted bunch and

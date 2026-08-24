@@ -93,18 +93,18 @@ closest prior project nulls are:
 
 ### Passive overdamped dynamics
 
-A passive Brownian configuration \(x\) can be represented locally as
+A passive Brownian configuration $x$ can be represented locally as
 
 $$
 \dot{x}=-M\nabla U(x)+\sqrt{2k_BTM}\,\xi(t).
 $$
 
-\(x\) has the coordinates appropriate to the substrate, \(M\) is mobility,
-\(U\) is potential energy in joules, \(k_B\) is the Boltzmann constant in
-joules per kelvin, \(T\) is temperature in kelvin, and \(\xi\) is normalized
-white noise. For one translational coordinate, \(M\) has units
-\(\mathrm{m/(N\,s)}\), so both deterministic and stochastic terms have units
-\(\mathrm{m/s}\). This dynamics can find low-energy configurations without a
+$x$ has the coordinates appropriate to the substrate, $M$ is mobility,
+$U$ is potential energy in joules, $k_B$ is the Boltzmann constant in
+joules per kelvin, $T$ is temperature in kelvin, and $\xi$ is normalized
+white noise. For one translational coordinate, $M$ has units
+$\mathrm{m/(N\,s)}$, so both deterministic and stochastic terms have units
+$\mathrm{m/s}$. This dynamics can find low-energy configurations without a
 represented objective or online policy update.
 
 At equilibrium,
@@ -113,8 +113,8 @@ $$
 p(x)=Z^{-1}\exp\left[-\frac{U(x)}{k_BT}\right],
 $$
 
-where \(p\) is a probability density and \(Z\) normalizes it. DNA-mediated
-colloidal assembly can program \(U\) through binding specificity, but the
+where $p$ is a probability density and $Z$ normalizes it. DNA-mediated
+colloidal assembly can program $U$ through binding specificity, but the
 assembly process is not thereby an adaptive search policy.
 
 ### Active Brownian dynamics
@@ -129,12 +129,12 @@ $$
 \dot{\theta}_i=\sqrt{2D_r}\,\eta_i(t).
 $$
 
-\(\mathbf r_i\) is position in metres, \(v_0\) is propulsion speed in
-metres/second, \(\mathbf p_i=(\cos\theta_i,\sin\theta_i)\) is a dimensionless
-orientation, \(\mu\) is translational mobility in
-\(\mathrm{m/(N\,s)}\), \(\mathbf F_i\) is force in newtons, \(D_t\) is
-translational diffusion in \(\mathrm{m^2/s}\), and \(D_r\) is rotational
-diffusion in \(\mathrm{s^{-1}}\). The noises are delta-correlated with the
+$\mathbf r_i$ is position in metres, $v_0$ is propulsion speed in
+metres/second, $\mathbf p_i=(\cos\theta_i,\sin\theta_i)$ is a dimensionless
+orientation, $\mu$ is translational mobility in
+$\mathrm{m/(N\,s)}$, $\mathbf F_i$ is force in newtons, $D_t$ is
+translational diffusion in $\mathrm{m^2/s}$, and $D_r$ is rotational
+diffusion in $\mathrm{s^{-1}}$. The noises are delta-correlated with the
 normalization implied by the prefactors.
 
 Two declared persistence measures are
@@ -147,7 +147,7 @@ $$
 \quad [1],
 $$
 
-where \(a\) is particle radius in metres. Other Péclet conventions exist and
+where $a$ is particle radius in metres. Other Péclet conventions exist and
 must not be mixed without conversion. A mechanical propulsion estimate is
 
 $$
@@ -158,7 +158,7 @@ P_a\approx F_av_0=\frac{v_0^2}{\mu}
 \quad [\mathrm{W}].
 $$
 
-\(P_a\) is only the particle-scale mechanical power scale. It excludes laser
+$P_a$ is only the particle-scale mechanical power scale. It excludes laser
 losses, fuel preparation, pumps, cameras, computers, field generators, and
 thermal management.
 
@@ -170,9 +170,9 @@ $$
 \boldsymbol{\sigma}^{a}=-\alpha\mathbf Q.
 $$
 
-\(\boldsymbol{\sigma}^{a}\) and \(\alpha\) are in pascals, while the nematic
-order tensor \(\mathbf Q\) is dimensionless. Under one sign convention,
-positive and negative \(\alpha\) distinguish contractile and extensile stress;
+$\boldsymbol{\sigma}^{a}$ and $\alpha$ are in pascals, while the nematic
+order tensor $\mathbf Q$ is dimensionless. Under one sign convention,
+positive and negative $\alpha$ distinguish contractile and extensile stress;
 authors' conventions must be reported. A local mechanical power density is
 
 $$
@@ -180,8 +180,8 @@ $$
 \quad [\mathrm{W/m^3}],
 $$
 
-where velocity \(\mathbf u\) is in metres/second and
-\(\nabla\mathbf u\) in inverse seconds. Its sign can vary locally; the
+where velocity $\mathbf u$ is in metres/second and
+$\nabla\mathbf u$ in inverse seconds. Its sign can vary locally; the
 integrated energy balance must include viscous dissipation and boundary work.
 
 For an ATP-driven material, the chemical input scale is
@@ -192,13 +192,13 @@ P_{\mathrm{chem}}
 \quad [\mathrm{W}],
 $$
 
-where \(\dot n_{\mathrm{ATP}}\) is ATP consumption in moles/second and
-\(\Delta G_{\mathrm{ATP}}\) is operating free energy per mole in joules/mole.
+where $\dot n_{\mathrm{ATP}}$ is ATP consumption in moles/second and
+$\Delta G_{\mathrm{ATP}}$ is operating free energy per mole in joules/mole.
 Concentration, temperature, and reaction conditions must accompany the value.
 
 ### Flocking order and local rule
 
-For \(N\) equal-speed particles, polarization is
+For $N$ equal-speed particles, polarization is
 
 $$
 \Phi=\frac{1}{Nv_0}
@@ -206,7 +206,7 @@ $$
 \qquad 0\leq\Phi\leq1.
 $$
 
-\(\Phi\) is dimensionless, \(\mathbf v_i\) and \(v_0\) are in
+$\Phi$ is dimensionless, $\mathbf v_i$ and $v_0$ are in
 metres/second. In the Vicsek model the heading is updated from neighboring
 headings plus noise, while position advances at fixed speed. This is a fixed
 local rule, not evidence that particles infer goals or learn whom to follow.
@@ -222,10 +222,10 @@ U_{ij}
 \Theta(\sigma_{ij}-r_{ij}),
 $$
 
-where \(U_{ij}\) and \(\varepsilon\) are joules, \(r_{ij}\) and
-\(\sigma_{ij}\) are metres, \(\beta\) is dimensionless, and \(\Theta\) is the
-dimensionless step function. Packing fraction \(\phi\) and coordination
-number \(z\) are dimensionless; stress and elastic moduli are pascals.
+where $U_{ij}$ and $\varepsilon$ are joules, $r_{ij}$ and
+$\sigma_{ij}$ are metres, $\beta$ is dimensionless, and $\Theta$ is the
+dimensionless step function. Packing fraction $\phi$ and coordination
+number $z$ are dimensionless; stress and elastic moduli are pascals.
 Thresholds depend on dimension, particle shape, friction, potential, boundary,
 preparation, and the operational definition of jammed.
 
@@ -237,11 +237,11 @@ I=\frac{\dot\gamma d}{\sqrt{P/\rho_s}},
 \mu_{\mathrm{eff}}=\frac{\tau}{P}.
 $$
 
-\(I\) and \(\mu_{\mathrm{eff}}\) are dimensionless,
-\(\dot\gamma\) is shear rate in \(\mathrm{s^{-1}}\), \(d\) is grain diameter
-in metres, \(P\) and shear stress \(\tau\) are pascals, and solid density
-\(\rho_s\) is in \(\mathrm{kg/m^3}\). A constitutive relation
-\(\mu_{\mathrm{eff}}(I)\) is a regime-specific material model, not a policy.
+$I$ and $\mu_{\mathrm{eff}}$ are dimensionless,
+$\dot\gamma$ is shear rate in $\mathrm{s^{-1}}$, $d$ is grain diameter
+in metres, $P$ and shear stress $\tau$ are pascals, and solid density
+$\rho_s$ is in $\mathrm{kg/m^3}$. A constitutive relation
+$\mu_{\mathrm{eff}}(I)$ is a regime-specific material model, not a policy.
 
 ### Whole-system energy
 
@@ -335,9 +335,9 @@ $$
 s=\frac{1}{2\pi}\oint_C d\theta,
 $$
 
-where \(s\) is dimensionless, \(C\) is a closed path in metres, and
-\(\theta\) is director angle in radians with nematic identification
-\(\theta\equiv\theta+\pi\). Half-integer defects are topologically allowed.
+where $s$ is dimensionless, $C$ is a closed path in metres, and
+$\theta$ is director angle in radians with nematic identification
+$\theta\equiv\theta+\pi$. Half-integer defects are topologically allowed.
 Topology constrains admissible charge and transformations; it does not by
 itself detect semantic errors, choose a correction, preserve truth, or supply
 fault tolerance.
@@ -590,11 +590,11 @@ contract, or lifecycle control already owned elsewhere.
 
 - **Task:** maintain cohesion and target transport under density changes,
   occlusion, delayed observations, adversarial agents, and link failure.
-- **Nulls:** metric-radius alignment, fixed-\(k\) topological consensus,
+- **Nulls:** metric-radius alignment, fixed-$k$ topological consensus,
   k-nearest-neighbor control, global broadcast, and centralized estimation.
 - **Hold constant:** propulsion work, localization accuracy, neighbor-query
   rate, communication byte/s, and collision risk.
-- **Measurements:** polarization \(\Phi\), target error metres, collisions/hour,
+- **Measurements:** polarization $\Phi$, target error metres, collisions/hour,
   disconnections/hour, p99 response milliseconds, and joules/metre.
 - **Kill:** topological/local rules win only when discovery or communication is
   free, or a conventional consensus controller ties them.

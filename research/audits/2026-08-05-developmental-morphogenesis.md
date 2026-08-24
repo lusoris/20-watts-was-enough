@@ -115,10 +115,10 @@ $$
 =D\nabla^2c-kc+s(\mathbf x,t).
 $$
 
-\(c\) is concentration in \(\mathrm{mol/m^3}\), \(D\) diffusion coefficient
-in \(\mathrm{m^2/s}\), \(k\) first-order removal rate in
-\(\mathrm{s^{-1}}\), and \(s\) source rate in
-\(\mathrm{mol/(m^3\,s)}\). For a linear steady diffusion–degradation model, a
+$c$ is concentration in $\mathrm{mol/m^3}$, $D$ diffusion coefficient
+in $\mathrm{m^2/s}$, $k$ first-order removal rate in
+$\mathrm{s^{-1}}$, and $s$ source rate in
+$\mathrm{mol/(m^3\,s)}$. For a linear steady diffusion–degradation model, a
 characteristic length is
 
 $$
@@ -129,8 +129,8 @@ This is one model, not the definition of a morphogen. Transport can include
 advection, receptor binding, internalization, extracellular retention,
 relay, growth, and moving boundaries.
 
-For a locally exponential profile \(c(x)=c_0e^{-x/\lambda}\), a threshold
-\(\theta\) gives
+For a locally exponential profile $c(x)=c_0e^{-x/\lambda}$, a threshold
+$\theta$ gives
 
 $$
 x_\theta=\lambda\ln\left(\frac{c_0}{\theta}\right)\quad[\mathrm{m}],
@@ -140,25 +140,25 @@ x_\theta=\lambda\ln\left(\frac{c_0}{\theta}\right)\quad[\mathrm{m}],
 \quad[\mathrm{m}].
 $$
 
-\(c_0,\theta,\sigma_c\) are in \(\mathrm{mol/m^3}\);
-\(\partial c/\partial x\) is in \(\mathrm{mol/m^4}\). The uncertainty formula
+$c_0,\theta,\sigma_c$ are in $\mathrm{mol/m^3}$;
+$\partial c/\partial x$ is in $\mathrm{mol/m^4}$. The uncertainty formula
 is a local linearization. It exposes why gradient precision, receiver noise,
 embryo scaling, correlations, and downstream correction must be measured
 separately.
 
 ### Concentration, duration, and competence
 
-Let \(a(c,q)\in[0,1]\) be normalized pathway activity determined by signal
-concentration \(c\) and local competence state \(q\). An integrated exposure
+Let $a(c,q)\in[0,1]$ be normalized pathway activity determined by signal
+concentration $c$ and local competence state $q$. An integrated exposure
 is
 
 $$
 I(T)=\int_0^T a(c(t),q(t))\,dt\quad[\mathrm{s}].
 $$
 
-Distinct fates may depend on instantaneous \(a\), duration \(T\), integral
-\(I\), rate of change, or sequence. A static threshold cannot be assumed.
-Competence \(q\) may contain receptor abundance, chromatin accessibility,
+Distinct fates may depend on instantaneous $a$, duration $T$, integral
+$I$, rate of change, or sequence. A static threshold cannot be assumed.
+Competence $q$ may contain receptor abundance, chromatin accessibility,
 transcription factors, cell-cycle state, position, and prior signals.
 
 ### Lateral inhibition
@@ -173,12 +173,12 @@ $$
 =\beta_D g(N_i)-\gamma_DD_i.
 $$
 
-\(N_i\) and \(D_i\) are receptor-response and ligand concentrations in
-\(\mathrm{mol/m^3}\); \(\beta_N,\beta_D\) are production scales in
-\(\mathrm{mol/(m^3\,s)}\); \(\gamma_N,\gamma_D\) are removal rates in
-\(\mathrm{s^{-1}}\); \(w_{ij}\) and \(f,g\) are dimensionless. Lateral
-inhibition requires \(g\) to decrease sufficiently with \(N_i\) in the
-relevant regime. Pattern depends on graph \(\mathcal N_i\), delay, mobility,
+$N_i$ and $D_i$ are receptor-response and ligand concentrations in
+$\mathrm{mol/m^3}$; $\beta_N,\beta_D$ are production scales in
+$\mathrm{mol/(m^3\,s)}$; $\gamma_N,\gamma_D$ are removal rates in
+$\mathrm{s^{-1}}$; $w_{ij}$ and $f,g$ are dimensionless. Lateral
+inhibition requires $g$ to decrease sufficiently with $N_i$ in the
+relevant regime. Pattern depends on graph $\mathcal N_i$, delay, mobility,
 initial asymmetry, feedback gain, and noise. "One winner per neighborhood" is
 not a universal consequence.
 
@@ -193,11 +193,11 @@ K\sum_{j\in\mathcal N_i}
 \sin\left[\phi_j(t-\tau)-\phi_i(t)\right].
 $$
 
-\(\phi_i\) is phase in radians, \(\omega_i\) intrinsic angular frequency in
-\(\mathrm{rad/s}\), \(K\) coupling rate in \(\mathrm{s^{-1}}\), and
-\(\tau\) communication delay in seconds. If a front moves at speed \(v_f\)
-in \(\mathrm{m/s}\) and one boundary is fixed per oscillation of period
-\(T_c\) seconds, the simplest length estimate is
+$\phi_i$ is phase in radians, $\omega_i$ intrinsic angular frequency in
+$\mathrm{rad/s}$, $K$ coupling rate in $\mathrm{s^{-1}}$, and
+$\tau$ communication delay in seconds. If a front moves at speed $v_f$
+in $\mathrm{m/s}$ and one boundary is fixed per oscillation of period
+$T_c$ seconds, the simplest length estimate is
 
 $$
 L_s=v_fT_c\quad[\mathrm{m}].
@@ -217,8 +217,8 @@ $$
 \quad[\mathrm{cells/s}],
 $$
 
-where \(N\) is cell count, \(b\) birth/differentiation inflow, \(d\) death,
-\(i\) migration into the boundary, and \(o\) migration out, all in
+where $N$ is cell count, $b$ birth/differentiation inflow, $d$ death,
+$i$ migration into the boundary, and $o$ migration out, all in
 cells/second. Cell number alone omits cell size, matrix, transport, and
 function.
 
@@ -234,7 +234,7 @@ P_{\mathrm{signal}}+P_{\mathrm{synthesis}}+P_{\mathrm{transport}}
 \right)dt.
 $$
 
-Every \(P\) is watts and \(E_{\mathrm{dev}}\) is joules. Also report material
+Every $P$ is watts and $E_{\mathrm{dev}}$ is joules. Also report material
 mass in kilograms or moles, elapsed time in seconds, peak power in watts,
 discarded state in bytes or kilograms, and accepted functional units. Growth
 followed by apoptosis can be efficient for a constrained organism while being
@@ -248,10 +248,10 @@ $$
 z=\alpha+\beta E+\epsilon,
 $$
 
-where phenotype \(z\) has a declared unit, environment \(E\) has a declared
-unit, \(\beta\) converts environment units to phenotype units, and
-\(\epsilon\) is residual variation in phenotype units. Plasticity is
-\(\beta\neq0\). Adaptive plasticity additionally requires higher expected
+where phenotype $z$ has a declared unit, environment $E$ has a declared
+unit, $\beta$ converts environment units to phenotype units, and
+$\epsilon$ is residual variation in phenotype units. Plasticity is
+$\beta\neq0$. Adaptive plasticity additionally requires higher expected
 fitness or task utility than a suitable fixed policy:
 
 $$
@@ -259,9 +259,9 @@ $$
 \mathbb E[W_{\mathrm{plastic}}-W_{\mathrm{fixed}}],
 $$
 
-where \(W\) is reproductive output or declared task utility in one common
-unit. The sign of \(\Delta W\) cannot be inferred from the existence or
-direction of \(\beta\).
+where $W$ is reproductive output or declared task utility in one common
+unit. The sign of $\Delta W$ cannot be inferred from the existence or
+direction of $\beta$.
 
 ## Mechanism-family audit
 
@@ -534,13 +534,13 @@ adaptations.
 precision can improve between an upstream gradient and a downstream boundary,
 so robustness may be distributed across multiple inputs and interactions.
 
-For output \(y\) and perturbation \(u\), local sensitivity is
+For output $y$ and perturbation $u$, local sensitivity is
 
 $$
 S_{yu}=\frac{\partial y}{\partial u},
 $$
 
-with units of \(y\) per unit of \(u\). Canalization is scoped low sensitivity
+with units of $y$ per unit of $u$. Canalization is scoped low sensitivity
 over declared perturbations and outcomes. It can hide latent fragility,
 increase maintenance cost, or block needed adaptation. One flat derivative
 does not imply global robustness.

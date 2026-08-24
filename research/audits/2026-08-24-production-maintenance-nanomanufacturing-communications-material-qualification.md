@@ -350,8 +350,8 @@ $$
 
 where $O_i$ is observation scope, $G_i$ goal/constraints, $A_i$ action and
 actuator set, $R_i$ shared resources, $\tau_i$ latency/timescale, $H_i$ authority,
-$F_i$ fallback, and $V_i$ outcome verifier. A dependency edge $i\leftrightarrow
-j$ exists when shared actuators/resources, nested goals, observation effects, or
+$F_i$ fallback, and $V_i$ outcome verifier. A dependency edge $i\leftrightarrow j$
+exists when shared actuators/resources, nested goals, observation effects, or
 incompatible actions can change either loop's outcome. Local stability of each
 isolated $L_i$ does not establish stability of the composed graph.
 

@@ -97,7 +97,7 @@ sensor/readout boundary included.
 | Mechanical/metamaterial logic | Unit-cell geometry, connectivity, bistable-state pattern | Force, displacement, snap-through sequence | Electronic logic near mechanical inputs/outputs | Drive force, transduction, area, latency, fabrication tolerance, reset | Reverse actuation or explicit initialization | Low density/speed; fatigue; crosstalk; reset can dominate | Established special-purpose hardware |
 | Reprogrammable mechanical memory | Metastable equilibrium of each unit | Elastic response under read load | Repeated software selection of material properties | Write actuation, addressing, readout, state verification | Switch units back or rewrite | Finite states, hysteresis variation, cycling fatigue | Established non-volatile material state |
 | Physical reservoir | Fixed nonlinear dynamics and trainable readout weights | Transient oscillator, optical, electrical, fluid, or body state | Digital recurrent state update | Input encoding, drive, ADC/DAC or optics, state sampling, readout | Washout/relaxation; recalibrate readout | Memory–nonlinearity tradeoff, drift, observability, timing match | Established P-010 null |
-| Reaction–diffusion patterning | Reaction network, rates, boundary conditions, initial/source fields | Spatial concentration field | Central coordinate calculation and per-site messaging | Reagents/free energy, diffusion time, containment, sensing/readout | Flush, reverse chemistry, regrow, or discard | \(L^2/D\) scaling, parameter sensitivity, limited addressability | Established decentralized field computation |
+| Reaction–diffusion patterning | Reaction network, rates, boundary conditions, initial/source fields | Spatial concentration field | Central coordinate calculation and per-site messaging | Reagents/free energy, diffusion time, containment, sensing/readout | Flush, reverse chemistry, regrow, or discard | $L^2/D$ scaling, parameter sensitivity, limited addressability | Established decentralized field computation |
 | Molecular self-assembly | Component shapes and binding sequences | Population of intermediates and local bonds | Placement of every component by a central fabricator | Component synthesis, concentration/temperature control, annealing, purification, yield loss | Denature/disassemble if reversible; otherwise remake | Kinetic traps, defects, finite targets, slow equilibration | Established bottom-up fabrication |
 | Robot programmable matter | Local programs, target bitmap/shape, module state | Position, local messages, battery state, attachments | Central motion planning and placement | One controller/actuator/power source per module, localization, collisions | Local retries, undocking, replacement | Coordination time, congestion, hardware count, target still preprogrammed | Distributed robotics, not controller-free matter |
 | Hysteretic material memory | Metastable microstructure or history-dependent response | Configuration during cyclic drive/read probe | Explicit storage of recent drive thresholds or extrema | Training cycles, nonequilibrium maintenance/noise, probing, low-density readout | Overdrive, anneal, noise, or reverse cycling | Often transient, aggregate, analog, and not randomly addressable | Established physical memory |
@@ -117,28 +117,28 @@ f(z,u,\theta,\xi),
 y=h(z,u,\theta)+\epsilon.
 $$
 
-\(z\) is physical state, \(u\) the input or applied stimulus, \(y\) the measured
-output, \(\theta\) fabricated or programmed parameters, \(\xi\) environmental
-conditions and disturbances, \(M\) an inertia/capacitance/storage operator,
-and \(\epsilon\) readout noise. The units are substrate-specific. A mechanical
-\(z\) may combine metres and metres per second; a chemical \(z\) may be
+$z$ is physical state, $u$ the input or applied stimulus, $y$ the measured
+output, $\theta$ fabricated or programmed parameters, $\xi$ environmental
+conditions and disturbances, $M$ an inertia/capacitance/storage operator,
+and $\epsilon$ readout noise. The units are substrate-specific. A mechanical
+$z$ may combine metres and metres per second; a chemical $z$ may be
 mol/m³; an oscillator may use voltage, phase, or magnetization.
 
-The program is usually \(\theta\), including topology, geometry, stiffness,
+The program is usually $\theta$, including topology, geometry, stiffness,
 binding affinity, reaction rate, delay, or bias. Short-term memory is the
-dependence of \(z(t)\) on recent inputs. Long-term material memory requires a
-metastable or structurally changed component of \(z\) or \(\theta\).
+dependence of $z(t)$ on recent inputs. Long-term material memory requires a
+metastable or structurally changed component of $z$ or $\theta$.
 
 This framing prevents two category errors:
 
-- Dynamics that naturally map \(u\) to \(y\) are real computation for an
+- Dynamics that naturally map $u$ to $y$ are real computation for an
   application, but do not imply general programmability.
 - Zero static power in a bistable state does not imply zero write, read,
   conversion, or reset energy.
 
 ### Lifecycle energy and break-even
 
-For \(N\) deployed uses, a minimum boundary is
+For $N$ deployed uses, a minimum boundary is
 
 $$
 E_{\mathrm{life}} =
@@ -158,8 +158,8 @@ $$
 
 Every term is joules over a declared boundary. Embodied manufacturing energy
 may be reported separately when measurement is unavailable, but it cannot be
-silently assigned zero. If a digital reference costs \(E_d\) joules/use and
-the deployed physical path costs \(E_p\) joules/use, a simplified break-even
+silently assigned zero. If a digital reference costs $E_d$ joules/use and
+the deployed physical path costs $E_p$ joules/use, a simplified break-even
 use count is
 
 $$
@@ -193,8 +193,8 @@ E_{\mathrm{life}}
 },
 $$
 
-where \(N_{\mathrm{accepted}}\) is the number of outputs passing predeclared
-quality and safety tests and \(U_{\mathrm{task}}\) is declared task utility,
+where $N_{\mathrm{accepted}}$ is the number of outputs passing predeclared
+quality and safety tests and $U_{\mathrm{task}}$ is declared task utility,
 not raw operations. Joules per correct decision, metre of stable locomotion,
 valid assembly, or recovered function are preferable to an incomparable
 operations-per-watt extrapolation.
@@ -344,9 +344,9 @@ x_{t+1}=F_\theta(x_t,u_t,\xi_t),
 \hat y_t=W_{\mathrm{out}}\phi(x_t).
 $$
 
-\(x_t\) is reservoir state, \(u_t\) input, \(\theta\) fixed physical
-parameters, \(\xi_t\) noise/drift, \(\phi\) sampled features, and
-\(W_{\mathrm{out}}\) the trained readout. The reservoir must combine nonlinear
+$x_t$ is reservoir state, $u_t$ input, $\theta$ fixed physical
+parameters, $\xi_t$ noise/drift, $\phi$ sampled features, and
+$W_{\mathrm{out}}$ the trained readout. The reservoir must combine nonlinear
 separation with fading memory. Too much damping erases useful history; too
 little forgetting retains irrelevant history or destabilizes reproducibility.
 
@@ -379,7 +379,7 @@ f_{\mathrm{sample}},
 \right),
 $$
 
-where \(K\) is the number of effective temporal distinctions available in the
+where $K$ is the number of effective temporal distinctions available in the
 memory interval. This is an engineering heuristic, not a universal theorem; it
 forces every benchmark to expose drive, sample, settling, and memory scales.
 
@@ -397,11 +397,11 @@ E_{\mathrm{calibrate}}.
 $$
 
 Claims of a passive or zero-power reservoir refer only to
-\(E_{\mathrm{reservoir}}\). Lasers, oscillators, bias currents, motors,
+$E_{\mathrm{reservoir}}$. Lasers, oscillators, bias currents, motors,
 photodetectors, ADCs, DACs, and a trained digital readout may dominate.
 
 Precision is limited by thermal and device noise, sensor resolution, component
-variation, state observability, and drift. Retraining \(W_{\mathrm{out}}\) can
+variation, state observability, and drift. Retraining $W_{\mathrm{out}}$ can
 compensate within the span of observed states, but cannot restore a vanished
 dynamical mode or correct an unobserved failure. Physical reservoirs are
 especially plausible at the sensor edge for noisy temporal inference, and
@@ -420,7 +420,7 @@ than digitizing the raw signal and running a matched digital reservoir.
 
 ### State and transformation
 
-For concentration field \(c(x,t)\in\mathbb{R}^m\),
+For concentration field $c(x,t)\in\mathbb{R}^m$,
 
 $$
 \frac{\partial c}{\partial t}
@@ -429,8 +429,8 @@ D\nabla^2 c+
 R(c;\theta)+s(x,t),
 $$
 
-\(D\) is a diffusion matrix in m²/s, \(R\) local reaction rates in
-concentration/s, \(s\) sources/sinks, and \(\theta\) kinetic parameters.
+$D$ is a diffusion matrix in m²/s, $R$ local reaction rates in
+concentration/s, $s$ sources/sinks, and $\theta$ kinetic parameters.
 Turing showed that diffusion coupled to reaction can destabilize a homogeneous
 state and generate spatial structure
 ([Turing 1952](https://royalsocietypublishing.org/doi/10.1098/rstb.1952.0012)).
@@ -458,7 +458,7 @@ $$
 \tau_{\mathrm{diff}}\sim\frac{L^2}{D},
 $$
 
-where \(L\) is distance in metres and \(D\) diffusivity in m²/s. Doubling
+where $L$ is distance in metres and $D$ diffusivity in m²/s. Doubling
 linear scale roughly quadruples diffusion time when other conditions remain
 fixed. Advection, active transport, relays, or hierarchical patterning can
 change the scaling only by adding mechanisms and energy.
@@ -518,7 +518,7 @@ The state and cost ledger is concrete:
 - **reset:** strand displacement, denaturation, or destructive remake,
   depending on design.
 
-If fraction \(Y\) of input material becomes acceptable product, a simple
+If fraction $Y$ of input material becomes acceptable product, a simple
 non-recycling lower bound is
 
 $$
@@ -530,7 +530,7 @@ E_{\mathrm{separation}}}
 {N_{\mathrm{input}}Y}.
 $$
 
-\(Y\) is measured yield and \(N_{\mathrm{input}}\) the intended object count.
+$Y$ is measured yield and $N_{\mathrm{input}}$ the intended object count.
 Purification and discarded material make low yield an energy and waste cost,
 not merely an accuracy metric.
 
@@ -695,8 +695,8 @@ A system qualifies only if:
    measured at the same boundary as the engineering nulls.
 
 This is best understood as **compilation across physics**, not a new model
-class. The learned system chooses \(\theta\); the substrate repeatedly realizes
-\(F_\theta\); the digital shadow preserves auditability and handles exceptions.
+class. The learned system chooses $\theta$; the substrate repeatedly realizes
+$F_\theta$; the digital shadow preserves auditability and handles exceptions.
 
 ### Candidate control loop
 
@@ -944,7 +944,7 @@ assign the next stable claim IDs.
 - **Primary sources:** turing1952morphogenesis; basu2005pattern; tabor2009edge.
 - **Rationale:** Decentralized pattern computation is already formal and
   experimentally engineered.
-- **Boundary:** Diffusion time scales as \(L^2/D\) in the simple regime, while
+- **Boundary:** Diffusion time scales as $L^2/D$ in the simple regime, while
   reagents, noise, growth, environmental sensitivity, and reset constrain use.
 - **Affected principles:** P-006, P-010.
 

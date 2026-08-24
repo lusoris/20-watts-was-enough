@@ -122,8 +122,8 @@ $$
 \operatorname{value}(e) \lor \exists e'.\; e \rightarrow e'.
 $$
 
-Here \(\Gamma\) is the typing environment, \(e\) and \(e'\) are expressions,
-\(\tau\) is a type, and \(\rightarrow\) is one evaluation step. The unit of the
+Here $\Gamma$ is the typing environment, $e$ and $e'$ are expressions,
+$\tau$ is a type, and $\rightarrow$ is one evaluation step. The unit of the
 claim is a derivable term under a defined semantics, not an arbitrary deployed
 program. “Does not get stuck for a type error” is not “does the right thing.”
 Wright and Felleisen made this syntactic proof method precise
@@ -131,7 +131,7 @@ Wright and Felleisen made this syntactic proof method precise
 
 ### Assurance has a lifecycle cost
 
-For \(N\) executions and \(U\) updates, use at least
+For $N$ executions and $U$ updates, use at least
 
 $$
 C_{\mathrm{assure}} =
@@ -144,7 +144,7 @@ U(C_{\mathrm{reprove}}+C_{\mathrm{migration}}+C_{\mathrm{revalidation}}) +
 C_{\mathrm{incident}}.
 $$
 
-Each \(C\) must be reported in an explicit unit: engineer-hours, checker CPU
+Each $C$ must be reported in an explicit unit: engineer-hours, checker CPU
 seconds, proof bytes, added instructions, joules, latency, memory, downtime, or
 incident loss. They cannot be summed into one scalar without declared exchange
 weights. Proof checking may be cheap relative to proof construction, while a
@@ -206,7 +206,7 @@ $$
 \{x:\tau \mid \varphi(x)\},
 $$
 
-where \(\varphi\) is a logical predicate. Dependent types let types mention
+where $\varphi$ is a logical predicate. Dependent types let types mention
 values more generally. Xi and Pfenning demonstrated restricted dependent types
 for practical programming
 ([Xi and Pfenning 1999](https://doi.org/10.1145/292540.292560)); Liquid Types
@@ -219,7 +219,7 @@ SMT-backed system, generated verification conditions must be valid in the
 supported theory; in a proof-assistant setting, a proof term must check in the
 kernel.
 
-**Trusted base.** Specification \(\varphi\), logical encoding, VC generator or
+**Trusted base.** Specification $\varphi$, logical encoding, VC generator or
 elaborator, axioms, solver and proof reconstruction path, kernel, compiler, and
 runtime/FFI model. An inconsistent axiom or wrong specification can prove the
 wrong thing perfectly.
@@ -260,8 +260,8 @@ proof.
 
 ## 3. Contracts, higher-order boundaries, and blame
 
-For a function contract \(C_d \rightarrow C_r\), a wrapper checks the argument
-against domain contract \(C_d\) and the result against range contract \(C_r\).
+For a function contract $C_d \rightarrow C_r$, a wrapper checks the argument
+against domain contract $C_d$ and the result against range contract $C_r$.
 Higher-order contracts wrap functions so obligations follow later calls;
 negative positions reverse responsibility. Findler and Felleisen formalized
 this monitoring and blame discipline
@@ -280,13 +280,13 @@ assumptions for predicates where required.
 export; calls and returned values cross a wrapper; checks emit pass, failure,
 blame, and optionally a trace to the maintenance plane.
 
-**Cost.** If boundary event \(i\) executes check \(k_i\), runtime work is roughly
+**Cost.** If boundary event $i$ executes check $k_i$, runtime work is roughly
 
 $$
 T_{\mathrm{contract}} = \sum_{i=1}^{M} c(k_i),
 $$
 
-where \(M\) is the number of mediated crossings and \(c(k_i)\) includes proxies,
+where $M$ is the number of mediated crossings and $c(k_i)$ includes proxies,
 deep traversal, allocation, and logging. Higher-order and mutable values can
 retain wrappers and amplify cost.
 
@@ -319,7 +319,7 @@ $$
 \Gamma \vdash e : \tau\;!\;\epsilon,
 $$
 
-where \(\epsilon\) conservatively describes effects such as reads, writes,
+where $\epsilon$ conservatively describes effects such as reads, writes,
 exceptions, I/O, nondeterminism, or region access. Lucassen and Gifford's
 polymorphic effect system statically approximated side effects and regions
 ([Lucassen and Gifford 1988](https://doi.org/10.1145/73560.73564)).
@@ -362,9 +362,9 @@ they are not the capabilities themselves.
 
 ## 5. Capability systems and local authority
 
-Let \(\operatorname{Auth}(m)\) be the rights represented by capabilities held by
-module \(m\). A requested operation \(o\) is admitted only when a presented
-unforgeable capability covers \(o\) and the reference monitor accepts it.
+Let $\operatorname{Auth}(m)$ be the rights represented by capabilities held by
+module $m$. A requested operation $o$ is admitted only when a presented
+unforgeable capability covers $o$ and the reference monitor accepts it.
 Capsicum demonstrates capability mode and fine-grained rights on UNIX file
 descriptors while denying ambient global namespaces
 ([Watson et al. 2010](https://www.usenix.org/conference/usenixsecurity10/legacy-presentation/capsicum-practical-capabilities-unix)).
@@ -407,21 +407,21 @@ expiry, but the principle is not new.
 
 ## 6. Proof-carrying code
 
-Proof-carrying code (PCC) sends code \(b\) with proof \(\pi\). The consumer
+Proof-carrying code (PCC) sends code $b$ with proof $\pi$. The consumer
 accepts only if
 
 $$
 \operatorname{Check}(P,b,\pi)=\mathsf{true},
 $$
 
-where \(P\) is the consumer's safety policy. Necula's formulation moves proof
+where $P$ is the consumer's safety policy. Necula's formulation moves proof
 construction to the producer and lets the host validate evidence before loading
 untrusted native code
 ([Necula 1997](https://doi.org/10.1145/263699.263712)).
 
-**Exact guarantee.** Accepted code satisfies policy \(P\) with respect to the
+**Exact guarantee.** Accepted code satisfies policy $P$ with respect to the
 formal machine semantics and proof rules, assuming the checker and trusted base
-are sound. It proves exactly \(P\), not general safety.
+are sound. It proves exactly $P$, not general safety.
 
 **Trusted base.** Policy, formal instruction semantics, proof logic, checker,
 loader, memory/hardware model, and binding between checked bits and executed bits.
@@ -468,7 +468,7 @@ $$
 \text{when } C \text{ does not modify the resources described by } R.
 $$
 
-The separating conjunction \(P * R\) asserts disjoint owned resources. Reynolds
+The separating conjunction $P * R$ asserts disjoint owned resources. Reynolds
 developed separation logic for shared mutable data structures and local
 reasoning
 ([Reynolds 2002](https://doi.org/10.1109/LICS.2002.1029817)).
@@ -519,9 +519,9 @@ $$
 \gamma\!\left(\operatorname{lfp}(F^{\#})\right),
 $$
 
-where \(\operatorname{Reach}(P)\) is the concrete reachable-state set,
-\(F^{\#}\) is an abstract transformer, \(\operatorname{lfp}\) its computed
-least fixpoint or sound post-fixpoint, and \(\gamma\) concretization. Cousot and
+where $\operatorname{Reach}(P)$ is the concrete reachable-state set,
+$F^{\#}$ is an abstract transformer, $\operatorname{lfp}$ its computed
+least fixpoint or sound post-fixpoint, and $\gamma$ concretization. Cousot and
 Cousot established the lattice/fixpoint foundation
 ([Cousot and Cousot 1977](https://doi.org/10.1145/512950.512973)).
 
@@ -564,7 +564,7 @@ an independent biological principle.
 
 ## 9. Runtime verification
 
-For an observed prefix \(\sigma_{0:t}\), a three-valued monitor can report
+For an observed prefix $\sigma_{0:t}$, a three-valued monitor can report
 
 $$
 M_{\varphi}(\sigma_{0:t})
@@ -666,8 +666,8 @@ consistency, isolation, and durability
 parameterized by a database invariant, isolation level, durability model, and
 failure assumptions; “transactional” alone is incomplete.
 
-For a long-lived saga \(T_1;\ldots;T_n\), failure after \(T_k\) can trigger
-compensations \(C_k;\ldots;C_1\)
+For a long-lived saga $T_1;\ldots;T_n$, failure after $T_k$ can trigger
+compensations $C_k;\ldots;C_1$
 ([Garcia-Molina and Salem 1987](https://doi.org/10.1145/38713.38742)). In general,
 
 $$
@@ -872,7 +872,7 @@ flowchart LR
     K --> B
 ```
 
-For module \(m\), grant only
+For module $m$, grant only
 
 $$
 \operatorname{Grant}(m)=

@@ -975,8 +975,7 @@ and abstention?
 1. Draw 12–48 hosts, 24–192 guests, and contexts with salt, pH, temperature,
    competitor concentration, and instrument/protocol version.
 2. Let $K^\circ=1$ L mol$^{-1}$ and generate the dimensionless latent response
-   $\kappa_{hgc}=\log_{10}(K_{a,hgc}/K^\circ)
-   =\alpha_h+\beta_g+z_c^\top\gamma+\eta_{hg}+\xi_{hgc}$,
+   $\kappa_{hgc}=\log_{10}(K_{a,hgc}/K^\circ)=\alpha_h+\beta_g+z_c^\top\gamma+\eta_{hg}+\xi_{hgc}$,
    with family-specific interactions and optional rank reversals. Separately
    generate ingress and egress barriers so affinity, on-rate, and residence time
    cannot be interchanged.
@@ -1156,8 +1155,8 @@ open-loop and feedback controllers?
 - **Primary quality:** correct net completed cycles minus wrong-direction cycles
   per horizon, subject to the equilibrium-zero-current and ledger checks.
 - **Primary cost:** total dimensionless supplied work
-  $\widetilde W_{\rm tot}=N_f\Delta\mu/(k_BT)+w_{\rm control}
-  +w_{\rm read}+w_{\rm reset}$ per correct net cycle. Each lower-case
+  $\widetilde W_{\rm tot}=N_f\Delta\mu/(k_BT)+w_{\rm control}+w_{\rm read}+w_{\rm reset}$
+  per correct net cycle. Each lower-case
   nonchemical term is a preregistered dimensionless abstract work charge swept
   over a common range; it is not presented as a molecular value.
 - **Secondary:** current, wrong-direction fraction, stalled fraction, entropy

@@ -364,8 +364,8 @@ retention of rare cases.
 
 ### Signaling equilibria depend on utilities and population process
 
-For meaning $m$, signal $s$, receiver action $a$, sender policy $\sigma(s\mid
-m)$, receiver policy $\rho(a\mid s)$, and channel $p(o\mid s)$, expected task
+For meaning $m$, signal $s$, receiver action $a$, sender policy $\sigma(s\mid m)$,
+receiver policy $\rho(a\mid s)$, and channel $p(o\mid s)$, expected task
 utility can be written
 
 $$

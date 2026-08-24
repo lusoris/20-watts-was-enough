@@ -476,6 +476,123 @@ function crossPlatformReach(spec) {
   });
 }
 
+function spatialSupportTransfer(spec) {
+  const { ratio_min: min, ratio_max: max, samples } = spec.parameters;
+  const yMin = -0.3;
+  const yMax = 1.05;
+  const response = (ratio) => (
+    ratio === 0 ? 1 : Math.sin(Math.PI * ratio) / (Math.PI * ratio)
+  );
+  const values = Array.from({ length: samples }, (_, index) => {
+    const ratio = min + (index / (samples - 1)) * (max - min);
+    const value = response(ratio);
+    return { ratio, value };
+  });
+  const signedPath = linePath(values.map(({ ratio, value }) => [
+    sx(ratio, min, max),
+    sy(value, yMin, yMax),
+  ]));
+  const magnitudePath = linePath(values.map(({ ratio, value }) => [
+    sx(ratio, min, max),
+    sy(Math.abs(value), yMin, yMax),
+  ]));
+  const zeroY = sy(0, yMin, yMax);
+  const unityX = sx(1, min, max);
+  const negativeRatio = 1.43;
+  const negativeX = sx(negativeRatio, min, max);
+  const negativeY = sy(response(negativeRatio), yMin, yMax);
+  const content = `${grid(
+    [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
+    [-0.2, 0, 0.2, 0.4, 0.6, 0.8, 1],
+    (value) => sx(value, min, max),
+    (value) => sy(value, yMin, yMax),
+    (value) => value.toFixed(value % 1 === 0 ? 0 : 2),
+    (value) => value.toFixed(1),
+  )}<line x1="${plot.left}" y1="${zeroY}" x2="${plot.right}" y2="${zeroY}" stroke="${colors.text}" stroke-width="2" opacity=".85"/>
+  <path d="${magnitudePath}" fill="none" stroke="${colors.violet}" stroke-width="3" stroke-dasharray="10 8" opacity=".95"/>
+  <path d="${signedPath}" fill="none" stroke="${colors.amber}" stroke-width="7" stroke-linecap="round"/>
+  <line x1="${unityX}" y1="${plot.top}" x2="${unityX}" y2="${plot.bottom}" stroke="${colors.cyan}" stroke-width="3" stroke-dasharray="7 7"/>
+  <circle cx="${unityX}" cy="${zeroY}" r="9" fill="${colors.cyan}" stroke="${colors.text}" stroke-width="2"/>
+  <text x="${unityX + 16}" y="${zeroY - 18}" fill="${colors.cyan}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700">support width = wavelength → zero response</text>
+  <circle cx="${negativeX}" cy="${negativeY}" r="8" fill="${colors.coral}" stroke="${colors.text}" stroke-width="2"/>
+  <text x="${negativeX + 16}" y="${negativeY + 32}" fill="${colors.coral}" font-family="Segoe UI, sans-serif" font-size="14" font-weight="700">signed lobe: apparent phase reversal</text>
+  <line x1="760" y1="82" x2="804" y2="82" stroke="${colors.amber}" stroke-width="6"/><text x="816" y="87" fill="${colors.muted}" font-family="Segoe UI, sans-serif" font-size="13">signed retained amplitude H</text>
+  <line x1="760" y1="110" x2="804" y2="110" stroke="${colors.violet}" stroke-width="3" stroke-dasharray="9 7"/><text x="816" y="115" fill="${colors.muted}" font-family="Segoe UI, sans-serif" font-size="13">retained magnitude |H|</text>`;
+  return frame(spec, content, {
+    xLabel: "support width r / field wavelength lambda",
+    yLabel: "retained sinusoidal amplitude (dimensionless)",
+    badge: "CHANGE OF SUPPORT · ANALYTICAL",
+    footer: "Centered box average of a sinusoid · no observed geographic data",
+  });
+}
+
+function stressPathMemory(spec) {
+  const {
+    threshold_kpa: threshold,
+    elastic_modulus_kpa: elasticModulus,
+    history_modulus_kpa: historyModulus,
+    high_path_kpa: highPath,
+    low_path_kpa: lowPath,
+  } = spec.parameters;
+  const evolve = (history) => {
+    let state = Math.max(history[0] - threshold, Math.min(0, history[0] + threshold));
+    return history.map((stress, index) => {
+      if (index > 0) {
+        state = Math.min(Math.max(state, stress - threshold), stress + threshold);
+      }
+      return {
+        stress,
+        state,
+        strain: (stress - state) / elasticModulus + state / historyModulus,
+      };
+    });
+  };
+  const high = evolve(highPath);
+  const low = evolve(lowPath);
+  const xMin = Math.min(...highPath, ...lowPath) - 0.5;
+  const xMax = Math.max(...highPath, ...lowPath) + 0.5;
+  const allStrains = [...high, ...low].map(({ strain }) => strain);
+  const yPadding = 0.008;
+  const yMin = Math.min(...allStrains) - yPadding;
+  const yMax = Math.max(...allStrains) + yPadding;
+  const map = ({ stress, strain }) => [sx(stress, xMin, xMax), sy(strain, yMin, yMax)];
+  const highPoints = high.map(map);
+  const lowPoints = low.map(map);
+  const highEnd = high.at(-1);
+  const lowEnd = low.at(-1);
+  const highEndPoint = map(highEnd);
+  const lowEndPoint = map(lowEnd);
+  const endpointX = highEndPoint[0];
+  const midpointY = (highEndPoint[1] + lowEndPoint[1]) / 2;
+  const markers = (points, color) => points.map(([x, y], index) => (
+    `<circle cx="${x}" cy="${y}" r="${index === points.length - 1 ? 8 : 3.5}" fill="${color}" stroke="${colors.text}" stroke-width="${index === points.length - 1 ? 2 : 0}"/>`
+  )).join("");
+  const content = `${grid(
+    [-5, -3, -1, 1, 3, 5],
+    [-0.06, -0.03, 0, 0.03, 0.06],
+    (value) => sx(value, xMin, xMax),
+    (value) => sy(value, yMin, yMax),
+    (value) => value.toFixed(0),
+    (value) => value.toFixed(2),
+  )}<line x1="${plot.left}" y1="${sy(0, yMin, yMax)}" x2="${plot.right}" y2="${sy(0, yMin, yMax)}" stroke="${colors.text}" stroke-width="2" opacity=".75"/>
+  <path d="${linePath(highPoints)}" fill="none" stroke="${colors.coral}" stroke-width="6" stroke-linejoin="round"/>
+  <path d="${linePath(lowPoints)}" fill="none" stroke="${colors.cyan}" stroke-width="6" stroke-linejoin="round"/>
+  ${markers(highPoints, colors.coral)}${markers(lowPoints, colors.cyan)}
+  <line x1="${endpointX + 22}" y1="${highEndPoint[1]}" x2="${endpointX + 22}" y2="${lowEndPoint[1]}" stroke="${colors.amber}" stroke-width="4"/>
+  <line x1="${endpointX + 14}" y1="${highEndPoint[1]}" x2="${endpointX + 30}" y2="${highEndPoint[1]}" stroke="${colors.amber}" stroke-width="4"/>
+  <line x1="${endpointX + 14}" y1="${lowEndPoint[1]}" x2="${endpointX + 30}" y2="${lowEndPoint[1]}" stroke="${colors.amber}" stroke-width="4"/>
+  <text x="${endpointX + 42}" y="${midpointY - 8}" fill="${colors.amber}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700">same final stress: ${highEnd.stress} kPa</text>
+  <text x="${endpointX + 42}" y="${midpointY + 14}" fill="${colors.amber}" font-family="Cascadia Mono, monospace" font-size="12">z = ${highEnd.state.toFixed(0)} vs ${lowEnd.state.toFixed(0)} kPa</text>
+  <line x1="720" y1="82" x2="764" y2="82" stroke="${colors.coral}" stroke-width="6"/><text x="778" y="87" fill="${colors.muted}" font-family="Segoe UI, sans-serif" font-size="13">positive excursion first</text>
+  <line x1="720" y1="110" x2="764" y2="110" stroke="${colors.cyan}" stroke-width="6"/><text x="778" y="115" fill="${colors.muted}" font-family="Segoe UI, sans-serif" font-size="13">negative excursion first</text>`;
+  return frame(spec, content, {
+    xLabel: "input stress sigma_t (kPa)",
+    yLabel: "toy response strain epsilon_t (dimensionless)",
+    badge: "PATH-DEPENDENCE ORACLE · ANALYTICAL",
+    footer: `r=${threshold} kPa · E=${elasticModulus} kPa · H=${historyModulus} kPa · not a soil law`,
+  });
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -485,6 +602,8 @@ const renderers = {
   "fixture-007-identifiability": fixtureIdentifiability,
   "fixture-012-layout-selection": fixtureLayoutSelection,
   "cross-platform-reach-overlap": crossPlatformReach,
+  "spatial-support-transfer": spatialSupportTransfer,
+  "stress-path-memory": stressPathMemory,
 };
 
 for (const spec of specs) {

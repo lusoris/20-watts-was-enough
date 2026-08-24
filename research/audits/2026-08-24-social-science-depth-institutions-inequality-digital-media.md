@@ -477,9 +477,9 @@ claimed universal laws of society.
 For person or case (i), organization (o), frontline role (j), and time
 (t), represent a delivered outcome as
 
-\[
+$$
 Y_{iojt}=F(R_{it},A_{ot},K_{ot},D_{jot},B_{it},Q_{iot},U_{it}),
-\]
+$$
 
 where:
 
@@ -500,9 +500,9 @@ documents, failures, or a validated scale. These are not silently summed.
 
 Write an estimate as
 
-\[
+$$
 \widehat{I}=\mathcal I(X; u,e,c,w,S,g,t,k,m),
-\]
+$$
 
 where (X) is the resource or origin--destination table, (u) the unit, (e)
 an equivalence or scaling rule, (c) the category system, (w) the survey or
@@ -513,9 +513,9 @@ a registered sensitivity analysis exposes their effect.
 
 For household (h),
 
-\[
+$$
 X_h=\sum_{i\in h}x_{ih}
-\]
+$$
 
 does not identify the vector ((x_{1h},\ldots,x_{n_hh})), time-use vector, or
 decision-authority vector. Many allocations have the same total. Equivalising
@@ -526,9 +526,9 @@ decision-authority vector. Many allocations have the same total. Equivalising
 Let latent movement events be (M^ast). An official series is more accurately
 represented as
 
-\[
+$$
 M^{obs}_{g,t}=\mathcal O_M(M^ast; r_{12},s_g,a_g,d_g,v_t),
-\]
+$$
 
 where (r_{12}) is the twelve-month usual-residence criterion, (s_g) the
 source system, (a_g) arrival registration, (d_g) departure de-registration
@@ -540,11 +540,11 @@ contribute multiple flow events, so the units must not be merged.
 
 A synthetic threshold world may use
 
-\[
-A_i=\mathbf 1\!left[
+$$
+A_i=\mathbf 1\!\left[
 E_i\{G_i(A_{-i},N_i)\}-C_i-R_i+L_i \ge 0
 \right],
-\]
+$$
 
 where (A_i) is observed participation, (A_{-i}) others' participation,
 (N_i) a declared network or reference set, (G_i) expected gain, (C_i)
@@ -557,20 +557,20 @@ defines a hostile generator, not a validated psychological model. Neither
 
 For place/group (g) and time (t), use
 
-\[
+$$
 Y^{rec}_{g,t}=\mathcal O_C
 \left(I^ast_{g,t};q^{vis}_{g,t},q^{rep}_{g,t},d_{g,t},q^{det}_{g,t},
 L_t,K_t,V_t\right),
-\]
+$$
 
 where (I^ast) is latent incidence, (q^{vis}) visibility, (q^{rep})
 reporting, (d) deployment, (q^{det}) conditional detection, (L_t) the
 legal/classification regime, (K_t) counting rules, and (V_t) the recording
 version. If
 
-\[
+$$
 d_{g,t+1}=\pi(Y^{rec}_{g,\le t},Z_{g,\le t}),
-\]
+$$
 
 then future observations depend on prior recorded outputs through policy
 (pi). Independent audits, randomized or otherwise justified exploration,
@@ -581,9 +581,9 @@ assumed lawful or sufficient for real deployment.
 
 Represent a trace dataset as
 
-\[
+$$
 T_v=\mathcal O_P(B;P_v,I_v,E_v,A_v,H_v,Q_v,t),
-\]
+$$
 
 where (B) is the broader behaviour of interest, (P_v) the platform version,
 (I_v) interface, (E_v) eligibility/ranking, (A_v) API/access path, (H_v)
@@ -593,9 +593,9 @@ hash of returned rows is not sufficient provenance if any argument is missing.
 For transport from media system (s) to (s'), require a declared context
 vector
 
-\[
+$$
 Z_s=(O_s,F_s,P_s,R_s,D_s,L_s),
-\]
+$$
 
 covering ownership/control (O), financing (F), professional/editorial
 institutions (P), regulation/state relation (R), distribution/platform

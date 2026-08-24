@@ -108,5 +108,31 @@
       "samples": 101
     },
     "status": "Set-union identity with an illustrative equal-platform sweep; no audience measurement or empirical overlap estimate is asserted."
+  },
+  {
+    "id": "spatial-support-transfer",
+    "title": "Areal support is a spatial filter",
+    "equation": "H(r/lambda) = sin(pi r/lambda) / (pi r/lambda)",
+    "source": "research/audits/2026-08-24-spatial-geography-support-scale-mobility-place.md#a-value-is-a-support-qualified-observation",
+    "parameters": {
+      "ratio_min": 0,
+      "ratio_max": 2,
+      "samples": 401
+    },
+    "status": "Analytic centered box-average response for a one-dimensional sinusoidal field; it illustrates support sensitivity and is not an empirical geographic result."
+  },
+  {
+    "id": "stress-path-memory",
+    "title": "Same endpoint, different internal state",
+    "equation": "z_t = clip(z_(t-1), sigma_t - r, sigma_t + r)",
+    "source": "research/audits/2026-08-24-geotechnical-long-life-assets-infrastructure-monitoring.md#endpoint-equality-does-not-imply-path-equality",
+    "parameters": {
+      "threshold_kpa": 2,
+      "elastic_modulus_kpa": 200,
+      "history_modulus_kpa": 50,
+      "high_path_kpa": [0, 1, 2, 3, 4, 5, 4, 3],
+      "low_path_kpa": [0, -1, -2, -3, -4, -5, -4, -3, -2, -1, 0, 1, 2, 3]
+    },
+    "status": "Analytic output of the audit's bounded-play toy oracle; the paths and coefficients are illustrative and are not a calibrated soil model."
   }
 ]

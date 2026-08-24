@@ -246,9 +246,9 @@ flowchart LR
 
 ### Latent state, operator, and intervention
 
-Let the latent state at time \(t\) be \(x_t\), the measurement or transformation
-action be \(a_t\), configuration/environment be \(e_t\), and recorded result be
-\(y_t\):
+Let the latent state at time $t$ be $x_t$, the measurement or transformation
+action be $a_t$, configuration/environment be $e_t$, and recorded result be
+$y_t$:
 
 $$
 y_t = H_{v,t}(x_t,a_t,e_t)+\varepsilon_t,
@@ -256,18 +256,18 @@ y_t = H_{v,t}(x_t,a_t,e_t)+\varepsilon_t,
 x_{t+1}=F_t(x_t,u_t,a_t,\xi_t).
 $$
 
-\(H_{v,t}\) is a versioned observation operator, \(\varepsilon_t\) is
-observation error in the native result unit, \(u_t\) denotes ordinary
-workload/control, and \(\xi_t\) is process disturbance. The second equation
+$H_{v,t}$ is a versioned observation operator, $\varepsilon_t$ is
+observation error in the native result unit, $u_t$ denotes ordinary
+workload/control, and $\xi_t$ is process disturbance. The second equation
 matters: compilation changes the executable, PGO changes placement, probing adds
 traffic, hedging adds work, and presentation can change a human decision.
 “Observe” is not always a passive verb.
 
 ### Semantic refinement and preconditions
 
-For source program \(p\), input/environment \(\iota\), compiler \(c\), source
-behaviour set \(\mathcal B_S(p,\iota)\), and target behaviour set
-\(\mathcal B_T(c(p),\iota)\), a simplified refinement obligation is
+For source program $p$, input/environment $\iota$, compiler $c$, source
+behaviour set $\mathcal B_S(p,\iota)$, and target behaviour set
+$\mathcal B_T(c(p),\iota)$, a simplified refinement obligation is
 
 $$
 V_S(p,\iota)\land c(p)=q
@@ -275,14 +275,14 @@ V_S(p,\iota)\land c(p)=q
 \mathcal B_T(q,\iota)\preceq\mathcal B_S(p,\iota),
 $$
 
-where \(V_S\in\{0,1\}\) states the semantic preconditions and
-\(\preceq\) is the theorem's allowed-behaviour refinement relation. Neither side
-has a physical unit. If \(V_S=0\), equality of intended outputs is not recovered
+where $V_S\in\{0,1\}$ states the semantic preconditions and
+$\preceq$ is the theorem's allowed-behaviour refinement relation. Neither side
+has a physical unit. If $V_S=0$, equality of intended outputs is not recovered
 by comparing more compilers. CompCert proves a much more precise theorem under
 its formal definitions [@Leroy2009CACM; @Leroy2009JAR].
 
-For differential testing with compilers \(c_1,\ldots,c_m\), harness \(h\), and
-registered oracle equivalence \(\approx_{\mathcal O}\), define
+For differential testing with compilers $c_1,\ldots,c_m$, harness $h$, and
+registered oracle equivalence $\approx_{\mathcal O}$, define
 
 $$
 D(p,\iota)=
@@ -292,16 +292,16 @@ h(c_k(p),\iota)
 \right].
 $$
 
-\(D\) is a dimensionless disagreement flag. A bug verdict additionally needs
+$D$ is a dimensionless disagreement flag. A bug verdict additionally needs
 validity, deterministic/replayable conditions, implementation-choice controls,
 and either a trusted semantic oracle or defensible reduction and adjudication.
 Majority output is only a heuristic.
 
 ### Workload-qualified optimization
 
-For compiled policy/binary \(\pi\), workload distribution \(P\), latency
-\(T_\pi(w)\) in seconds/request, energy \(E_\pi(w)\) in joules/request, code
-footprint \(M_\pi(w)\) in bytes, and correctness loss \(L_\pi(w)\), define
+For compiled policy/binary $\pi$, workload distribution $P$, latency
+$T_\pi(w)$ in seconds/request, energy $E_\pi(w)$ in joules/request, code
+footprint $M_\pi(w)$ in bytes, and correctness loss $L_\pi(w)$, define
 
 $$
 J(\pi;P)=\mathbb E_{w\sim P}
@@ -310,7 +310,7 @@ J(\pi;P)=\mathbb E_{w\sim P}
 $$
 
 Weights convert non-time quantities to the declared decision unit; the raw
-vector must also be reported. For \(N\) deployment requests, the net mean
+vector must also be reported. For $N$ deployment requests, the net mean
 latency benefit of a specialization is
 
 $$
@@ -322,15 +322,15 @@ $$
 \quad[\mathrm{s/request}].
 $$
 
-The deployment distribution \(P_t\), profile distribution \(P_0\), code/config
+The deployment distribution $P_t$, profile distribution $P_0$, code/config
 version, profile age, coverage, JIT tier state, and change points are part of the
 result. A distribution distance such as Jensen--Shannon divergence is a
 dimensionless diagnostic, not a universal invalidation threshold.
 
 ### Hierarchical performance estimand
 
-For variant \(v\in\{0,1\}\), layout \(\ell\), process invocation \(b\), and
-repeat \(r\), a minimal model is
+For variant $v\in\{0,1\}$, layout $\ell$, process invocation $b$, and
+repeat $r$, a minimal model is
 
 $$
 Y_{v\ell br}=\mu+\tau_v+u_\ell+(\tau u)_{v\ell}+u_b+
@@ -348,18 +348,18 @@ $$
 \quad[\mathrm{ms/request}].
 $$
 
-Repeating \(r\) with the same \(\ell\) does not identify
-\(\Delta_{\mathrm{layout}}\). Randomized layouts, rebuilds, process restarts,
+Repeating $r$ with the same $\ell$ does not identify
+$\Delta_{\mathrm{layout}}$. Randomized layouts, rebuilds, process restarts,
 blocked run order, thermal/frequency state, warm-up, and the independent unit
 must match the estimand [@MytkowiczEtAl2009; @CurtsingerBerger2013;
 @KaliberaJones2013].
 
 ### End-to-end placement cost
 
-For function \(f\) placed at node/layer \(n\), state \(s\), expected execution
-cost \(C_{\mathrm{exec}}\), transferred bytes \(B\), link energy
-\(e_{\mathrm{bit}}\), verification cost \(C_{\mathrm{verify}}\), and expected
-failure loss \(C_{\mathrm{fail}}\),
+For function $f$ placed at node/layer $n$, state $s$, expected execution
+cost $C_{\mathrm{exec}}$, transferred bytes $B$, link energy
+$e_{\mathrm{bit}}$, verification cost $C_{\mathrm{verify}}$, and expected
+failure loss $C_{\mathrm{fail}}$,
 
 $$
 C(f,n)=\mathbb E_s\left[
@@ -376,9 +376,9 @@ only endpoints possess the complete correctness context
 
 ### Path, queue, delay, and probe operator
 
-For a path with forward propagation/serialization/host delay \(d_f\), reverse
-counterpart \(d_r\), queue \(q_i(t)\) in bits, service capacity \(C_i(t)\) in
-bit/s, and measurement error \(\epsilon_R\), a diagnostic decomposition is
+For a path with forward propagation/serialization/host delay $d_f$, reverse
+counterpart $d_r$, queue $q_i(t)$ in bits, service capacity $C_i(t)$ in
+bit/s, and measurement error $\epsilon_R$, a diagnostic decomposition is
 
 $$
 R(t)=d_f(t)+d_r(t)
@@ -402,7 +402,7 @@ $$
 \qquad q(t)>0,
 $$
 
-where \(A\) is ordinary arrival rate, \(r_p\) active-probe rate, and \(S\)
+where $A$ is ordinary arrival rate, $r_p$ active-probe rate, and $S$
 service rate. Probe-load fraction and probe-conditioned bias are
 
 $$
@@ -412,11 +412,11 @@ b_p=\mathbb E[\hat\theta\mid r_p>0]
 -\mathbb E[\hat\theta\mid r_p=0].
 $$
 
-\(\phi_p\) is dimensionless; \(b_p\) has the metric's unit. Active traffic can
+$\phi_p$ is dimensionless; $b_p$ has the metric's unit. Active traffic can
 change the quantity it measures, and Type-P treatment can make its path
 nonrepresentative [@RFC7799; @ETSI_EG_202765_3].
 
-The bandwidth--delay product at bottleneck rate \(C_b\) and baseline RTT \(R_0\)
+The bandwidth--delay product at bottleneck rate $C_b$ and baseline RTT $R_0$
 is
 
 $$
@@ -432,21 +432,21 @@ nulls, not weak baselines [@CardwellEtAl2016BBR; @RFC9438; @RFC8289; @RFC8290;
 
 ### Fan-out and hedging
 
-If a request completes after all \(n\) branches and branch latencies have joint
-CDF \(F_{1:n}\), then \(T_{\max}=\max_i T_i\). Only under independence,
+If a request completes after all $n$ branches and branch latencies have joint
+CDF $F_{1:n}$, then $T_{\max}=\max_i T_i$. Only under independence,
 
 $$
 \Pr(T_{\max}\le t)=\prod_{i=1}^{n}F_i(t),
 $$
 
-and for identical \(F\), this is \(F(t)^n\). If each branch independently has a
-slow event with probability \(p\), the whole request sees at least one with
-probability \(1-(1-p)^n\). Shared queues, hosts, racks, software versions, and
+and for identical $F$, this is $F(t)^n$. If each branch independently has a
+slow event with probability $p$, the whole request sees at least one with
+probability $1-(1-p)^n$. Shared queues, hosts, racks, software versions, and
 upstream pauses violate independence.
 
-For arrival rate \(\lambda\) requests/s, primary service work \(S_1\) in CPU-s,
-hedge indicator \(I_H\), backup work before cancellation
-\(S_2^{\mathrm{used}}\), and \(m\) CPU-s/s capacity,
+For arrival rate $\lambda$ requests/s, primary service work $S_1$ in CPU-s,
+hedge indicator $I_H$, backup work before cancellation
+$S_2^{\mathrm{used}}$, and $m$ CPU-s/s capacity,
 
 $$
 \rho_H=
@@ -459,8 +459,8 @@ everyone's queueing tail [@DeanBarroso2013; @VulimiriEtAl2013;
 
 ### Visualization as a decision operator
 
-For latent target \(\theta\), data \(y\), display encoding \(d=V_e(y)\), task
-\(\tau\), viewer state \(k\), decoded estimate \(\hat\theta\), and action \(a\),
+For latent target $\theta$, data $y$, display encoding $d=V_e(y)$, task
+$\tau$, viewer state $k$, decoded estimate $\hat\theta$, and action $a$,
 
 $$
 \hat\theta=P(d,\tau,k)+\epsilon_P,
@@ -489,7 +489,7 @@ $$
 $$
 
 corresponding to the nine ISO/IEC 25010:2023 characteristics under declared
-conditions. For two products, \(A\) Pareto-dominates \(B\) only if
+conditions. For two products, $A$ Pareto-dominates $B$ only if
 
 $$
 q_i(A)\ge q_i(B)\ \forall i,
@@ -497,9 +497,9 @@ q_i(A)\ge q_i(B)\ \forall i,
 q_j(A)>q_j(B)\ \text{for at least one }j.
 $$
 
-A weighted scalar \(w^Tq\) embeds stakeholder exchange rates and cannot absorb
-hard constraints. Let \(g_\ell(z,t,s)\le0\) denote obligation \(\ell\) under
-scope facts \(s\) and date \(t\). A release is feasible only if every applicable
+A weighted scalar $w^Tq$ embeds stakeholder exchange rates and cannot absorb
+hard constraints. Let $g_\ell(z,t,s)\le0$ denote obligation $\ell$ under
+scope facts $s$ and date $t$. A release is feasible only if every applicable
 hard constraint holds:
 
 $$
@@ -802,9 +802,9 @@ quality evaluation; and an applicability-specific EU/German compliance matrix.
   conditional residual latency exceeds its marginal load cost. Benefit requires
   diversity/spare capacity and fast cancellation; correlation and saturation
   destroy it.
-- **Mature null and deduplication:** join-the-shortest-queue, power-of-\(d\),
+- **Mature null and deduplication:** join-the-shortest-queue, power-of-$d$,
   capacity reservation, static percentile hedge, adaptive hedge, timeout retry,
-  redundancy-\(d\), request splitting, approximate/partial completion, and load
+  redundancy-$d$, request splitting, approximate/partial completion, and load
   shedding.
 - **Failure modes:** independent copies assumed under common pause; backup work
   counted as zero after cancel; p99 estimated from too few requests; branch p99
@@ -897,7 +897,7 @@ quality evaluation; and an applicability-specific EU/German compliance matrix.
   contract with the strongest tuned mature null using paired seed-level effects.
   Report median, 5th/95th percentiles, and two-sided 95% percentile-bootstrap
   intervals from 10,000 resamples. Apply Holm correction across the ten
-  protocol-level primary promotion tests. Report raw and corrected \(p\)-values
+  protocol-level primary promotion tests. Report raw and corrected $p$-values
   only alongside effect sizes and intervals.
 - **Tail analysis:** use a mergeable quantile sketch only for online control;
   retain exact confirmation latencies for final p50/p95/p99/p99.9. A protocol
@@ -1057,13 +1057,13 @@ quality evaluation; and an applicability-specific EU/German compliance matrix.
 - **Perturbations:** profile sample rate, profile age, hot-path concentration,
   phase length, cache size, compile cost, deoptimization cost, code size,
   protected-path weight, change detector false alarms, and profile mismatch.
-- **Metrics:** mean/p95/p99 simulated \(\mu\)s/request by phase; net
-  \(\mu\)s/request including amortized profile/compile/deopt; code bytes;
+- **Metrics:** mean/p95/p99 simulated $\mu$s/request by phase; net
+  $\mu$s/request including amortized profile/compile/deopt; code bytes;
   compile/profile CPU-s; requests to amortization crossover; negative-transfer
   rate; protected-path deadline misses per 100,000; fallback delay in requests;
   actual simulator CPU-s, MiB, and measured J.
 - **Invariants:** every arm executes the same semantic work; request traces are
-  paired; cache and compile accounting closes to \(10^{-9}\) relative; code
+  paired; cache and compile accounting closes to $10^{-9}$ relative; code
   version mismatch cannot consume an old profile without an explicit arm rule.
 - **Promotion gate:** D must reduce post-shift negative-transfer episode rate by
   at least 50% versus the better of B/C, retain at least 80% of that comparator's
@@ -1106,7 +1106,7 @@ quality evaluation; and an applicability-specific EU/German compliance matrix.
   autocorrelation, thermal slope, outlier mechanism, effect size, sample
   allocation, and workload-stratum imbalance.
 - **Metrics:** false-positive rate at zero effect; wrong-sign decision rate for
-  \(|\Delta|\ge0.5\%\); power at 1% and 2%; 95% coverage/width; optimization
+  $|\Delta|\ge0.5\%$; power at 1% and 2%; 95% coverage/width; optimization
   regret in percentage points; builds/runs; CPU-s; and analyst-proxy minutes.
 - **Invariants:** paired variants share latent workload and machine block but
   not the same forced address; total run count matches; fit never sees true
@@ -1135,7 +1135,7 @@ quality evaluation; and an applicability-specific EU/German compliance matrix.
   functions across endpoint, edge, and core layers and 50,000 requests.
 - **Generator:** functions include compression, cache, checksum, authentication,
   schema validation, semantic validation, deduplication, retry, and final commit.
-  Each has layer-specific compute in \(\mu\)s, bytes, joules, trust exposure,
+  Each has layer-specific compute in $\mu$s, bytes, joules, trust exposure,
   state freshness, detection coverage, false reject/accept rates, and failure
   consequence. Generate 0--80% early-reject prevalence, 0--95% cache reuse,
   correlated/common-mode defects, stale state, asymmetric bandwidth, privacy
@@ -1210,7 +1210,7 @@ quality evaluation; and an applicability-specific EU/German compliance matrix.
   cause-class macro-F1; false congestion actions per 1,000; deadline misses;
   probe/export bytes and capacity percent; probe-induced p99 increase in ms;
   CPU-s and MiB.
-- **Invariants:** queue/link conservation closes to \(10^{-8}\) relative;
+- **Invariants:** queue/link conservation closes to $10^{-8}$ relative;
   timestamp errors equal stored clock model; timeouts remain censored rather
   than infinite delay; ordinary and probe Type-P labels are immutable; arms do
   not receive route/cause truth.
@@ -1262,7 +1262,7 @@ quality evaluation; and an applicability-specific EU/German compliance matrix.
   fairness; link utilization percent; loss/mark rates; controller oscillation
   events/min; recovery seconds; and CPU-s/flow-s.
 - **Invariants:** offered, accepted, dropped, marked, and retransmitted bytes
-  reconcile to \(10^{-7}\) relative; all arms share arrivals/topology; no arm
+  reconcile to $10^{-7}$ relative; all arms share arrivals/topology; no arm
   except G sees capacity/cause labels; each mature mechanism passes its own
   smoke-regime direction checks before confirmation.
 - **Promotion gate:** E/F must reduce normalized regret versus the best eligible
@@ -1298,7 +1298,7 @@ quality evaluation; and an applicability-specific EU/German compliance matrix.
   accepted/partial outcomes, and charged work. Future service times, latent
   common shocks, and unused replica outcomes are hidden from A--F.
 - **Arms and mature nulls:** (A) join-shortest-queue with no hedge; (B) timeout
-  retry after failure; (C) static p95 delayed hedge; (D) redundancy-\(d=2\)
+  retry after failure; (C) static p95 delayed hedge; (D) redundancy-$d=2$
   with first completion and cancellation; (E) adaptive conditional-residual-
   latency hedge with token/load/correlation guard; (F) capacity reservation plus
   no hedge; (G) future-service oracle, diagnostic only.
@@ -1635,7 +1635,7 @@ exact statement, not to broader slogans.
   minimum-of-copies completion and exact benefits depend on service and cancel
   assumptions.
 - **Open issue:** cross no-hedge load balancing, delayed hedge, retry,
-  redundancy-\(d\), capacity reserve, load shedding, partial completion, and
+  redundancy-$d$, capacity reserve, load shedding, partial completion, and
   adaptive guard policies across branch count, tail dependence, utilization,
   common shocks, deadline, cancellation latency, useful work, and p99.9.
 - **Used by:** [this audit](#dist-01--fan-out-tails-depend-on-scale-dependence-and-added-load),

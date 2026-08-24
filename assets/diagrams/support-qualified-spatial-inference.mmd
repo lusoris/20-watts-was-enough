@@ -1,0 +1,25 @@
+flowchart LR
+  classDef source fill:#0f766e,color:#fff,stroke:#5eead4,stroke-width:2px
+  classDef operator fill:#1d4ed8,color:#fff,stroke:#93c5fd,stroke-width:2px
+  classDef audit fill:#7c3aed,color:#fff,stroke:#c4b5fd,stroke-width:2px
+  classDef decision fill:#b45309,color:#fff,stroke:#fcd34d,stroke-width:2px
+  classDef stop fill:#991b1b,color:#fff,stroke:#fca5a5,stroke-width:2px
+
+  FIELD[(Latent field or population)]:::source
+  PATHS[(Paths, schedules, capability)]:::source
+  GEOM[(Versioned geometry and crosswalk)]:::source
+  SENSE[Observation and placement operator]:::operator
+  SUPPORT[Extensive/intensive support operator]:::operator
+  CONTEXT[Reachability and exposure operator]:::operator
+  SCALE{Partition, scale, and prediction-domain audit}:::audit
+  STABLE[Decision with support envelope]:::decision
+  ESCALATE[Acquire or recompute the next justified level]:::decision
+  REFUSE[Refuse unsupported cross-level or stale claim]:::stop
+
+  FIELD --> SENSE --> SUPPORT --> SCALE
+  GEOM --> SUPPORT
+  PATHS --> CONTEXT --> SCALE
+  GEOM --> CONTEXT
+  SCALE -->|stable across admissible supports| STABLE
+  SCALE -->|decision-sensitive and permitted| ESCALATE --> SENSE
+  SCALE -->|unit mismatch, missing lineage, or rights gate| REFUSE

@@ -74,7 +74,7 @@ and availability is not preservation of model quality.
 | Regenerating and local-repair codes | Reduce traffic and fan-in of reconstruction | Replacement contacts selected surviving nodes; helpers send fragments or functions | Storage–bandwidth–locality tradeoff | Exact or functional coded-node repair, depending on code | Does not infer a new desired function; locality can reduce distance or add redundancy | Established null for repair locality |
 | Checkpoint/restart | Avoid repeating an entire computation after fail-stop loss | Task periodically writes recoverable state; recovery reads latest valid checkpoint | Checkpoint I/O, storage, pause or copy overhead, lost work, restart latency | Exact rollback to saved state | Corrupt/stale checkpoint, latent error before checkpoint, external side effects, semantic failure | Established P-009/P-013 mechanism |
 | Crash-fault replication and log consensus | Keep one ordered state despite crashes and partitions | Leader/orderer replicates log entries to a quorum; followers acknowledge | Multiple copies, write amplification, quorum latency, log/checkpoint storage | Consistent replicated state while a quorum is available | Byzantine behavior, common-mode bugs, minority partition availability, bad commands faithfully replicated | Established P-004/P-013 mechanism |
-| Byzantine state-machine replication | Preserve an ordered service despite bounded arbitrary faulty replicas | Authenticated client and replica messages; pre-prepare/prepare/commit quorums | At least \(3f+1\) replicas, all-to-all phases, cryptography, logs/checkpoints | Safety with at most \(f\) Byzantine replicas; liveness only under timing/progress assumptions | More than \(f\) faults, shared implementation/credential compromise, nondeterminism, privacy leakage | Established adversarial null |
+| Byzantine state-machine replication | Preserve an ordered service despite bounded arbitrary faulty replicas | Authenticated client and replica messages; pre-prepare/prepare/commit quorums | At least $3f+1$ replicas, all-to-all phases, cryptography, logs/checkpoints | Safety with at most $f$ Byzantine replicas; liveness only under timing/progress assumptions | More than $f$ faults, shared implementation/credential compromise, nondeterminism, privacy leakage | Established adversarial null |
 | Failure detectors | Supply suspicions needed by recovery/consensus despite ambiguous delay | Heartbeats, probes, acknowledgements, timeouts, or other observations | Monitoring traffic, timeout latency, false suspicions | Completeness/accuracy class, not perfect diagnosis in pure asynchrony | Cannot intrinsically distinguish a slow process from a failed one | Established sensing layer; not repair |
 | Integrity scrubbing | Discover latent corruption before redundancy is exhausted | Scanner reads all reachable blocks, verifies checksums, fetches good replica/parity on mismatch | Full-scan I/O, contention, read energy, repair writes | Detection of checksum mismatch; exact repair only when valid redundancy remains | No valid copy, collision/bug outside integrity boundary, semantic invalidity | Established P-009 maintenance loop |
 | Self-stabilization | Recover from arbitrary transient state without an external checkpoint | Local processes repeatedly read permitted state and apply transition rules | Convergence steps, messages, transient service loss, rule-execution energy | Eventual convergence to an encoded legitimate-state set under scheduler/model assumptions | Permanent/adversarial faults, unfair execution, wrong legitimate set, no preservation of prior semantics | Established P-006/P-009 null |
@@ -85,9 +85,9 @@ and availability is not preservation of model quality.
 
 ### Problem and formal guarantee
 
-For a \(q\)-ary block code \(C \subseteq \mathbb{F}_q^n\), let \(n\) be the
-number of stored or transmitted symbols, \(k\) the number of source symbols for
-a linear code, and \(d_{\min}\) the minimum Hamming distance between distinct
+For a $q$-ary block code $C \subseteq \mathbb{F}_q^n$, let $n$ be the
+number of stored or transmitted symbols, $k$ the number of source symbols for
+a linear code, and $d_{\min}$ the minimum Hamming distance between distinct
 codewords. Distance gives exact bounded-fault statements:
 
 $$
@@ -102,19 +102,19 @@ count of known-location erasures that is uniquely recoverable. Hamming's
 foundational treatment makes redundancy and minimum distance an engineering
 recovery mechanism, not an analogy ([Hamming 1950](https://onlinelibrary.wiley.com/doi/10.1002/j.1538-7305.1950.tb00463.x)).
 
-An \([n,k]\) Reed–Solomon code is maximum-distance separable under its finite
+An $[n,k]$ Reed–Solomon code is maximum-distance separable under its finite
 field and code-length assumptions, so
 
 $$
 d_{\min}=n-k+1.
 $$
 
-Any \(k\) valid symbols reconstruct the source; therefore up to \(n-k\) known
-erasures or \(\lfloor(n-k)/2\rfloor\) unknown symbol errors are correctable
+Any $k$ valid symbols reconstruct the source; therefore up to $n-k$ known
+erasures or $\lfloor(n-k)/2\rfloor$ unknown symbol errors are correctable
 ([Reed and Solomon 1960](https://epubs.siam.org/doi/10.1137/0108018)). The
-storage expansion is \(n/k\), or redundancy fraction \((n-k)/k\) relative to
+storage expansion is $n/k$, or redundancy fraction $(n-k)/k$ relative to
 the uncoded source. Reads, finite-field arithmetic, memory traffic, and network
-movement must be charged separately; “only \(n-k\) parity symbols” is not an
+movement must be charged separately; “only $n-k$ parity symbols” is not an
 energy measurement.
 
 ### Information path and assumptions
@@ -143,10 +143,10 @@ budget.
 ### Repair bandwidth and locality
 
 Full reconstruction may recover the original object but still be wasteful for
-one missing node. In the regenerating-code model, a file of \(B\) symbols is
-stored across \(n\) nodes, any \(k\) of which recover it. Each node stores
-\(\alpha\) symbols. A replacement contacts \(d_h\) surviving helper nodes and
-downloads \(\beta\) symbols from each, so repair bandwidth is
+one missing node. In the regenerating-code model, a file of $B$ symbols is
+stored across $n$ nodes, any $k$ of which recover it. Each node stores
+$\alpha$ symbols. A replacement contacts $d_h$ surviving helper nodes and
+downloads $\beta$ symbols from each, so repair bandwidth is
 
 $$
 \gamma=d_h\beta,
@@ -159,16 +159,16 @@ B \leq \sum_{i=0}^{k-1}
 \min\!\left(\alpha,(d_h-i)\beta\right).
 $$
 
-Here \(d_h\) is the helper count, not code distance. This formalizes an
+Here $d_h$ is the helper count, not code distance. This formalizes an
 unavoidable storage–repair-bandwidth tradeoff. The original construction
 permits **functional repair**: the replacement need not contain the same bits
-as the lost node, but the global “any \(k\) nodes recover the file” invariant
+as the lost node, but the global “any $k$ nodes recover the file” invariant
 must remain true ([Dimakis et al. 2010](https://arxiv.org/abs/0803.0632)). This
 is already a non-identical repair that preserves function, but the function is
 an explicitly encoded data-recovery invariant.
 
-For a linear code with information-symbol locality \(r\), a coordinate is
-locally repairable when it can be recovered by reading \(r\) other coordinates.
+For a linear code with information-symbol locality $r$, a coordinate is
+locally repairable when it can be recovered by reading $r$ other coordinates.
 The Gopalan et al. bound can be written
 
 $$
@@ -182,8 +182,8 @@ additional local structure reduces fragments read, network bandwidth, I/O, and
 degraded-read latency while retaining low storage overhead
 ([Huang et al. 2012](https://www.usenix.org/conference/atc12/technical-sessions/presentation/huang)).
 
-For energy accounting, if a repair reads \(b_r\) bytes, transmits \(b_n\)
-bytes, writes \(b_w\) bytes, and performs \(N_{ff}\) finite-field operations,
+For energy accounting, if a repair reads $b_r$ bytes, transmits $b_n$
+bytes, writes $b_w$ bytes, and performs $N_{ff}$ finite-field operations,
 a minimally honest model is
 
 $$
@@ -192,7 +192,7 @@ b_r e_{\mathrm{read}} + b_n e_{\mathrm{net}} +
 b_w e_{\mathrm{write}} + N_{ff}e_{ff},
 $$
 
-where each \(e\) is measured in joules per byte or joules per operation on a
+where each $e$ is measured in joules per byte or joules per operation on a
 declared hardware and placement configuration. The terms change with device,
 topology, load, and code implementation; none should be imported as a universal
 constant.
@@ -214,10 +214,10 @@ constant.
 Checkpoint/restart periodically stores enough application state to restart
 from a prior point after a fail-stop event. Let:
 
-- \(T\) be useful computation time between checkpoints, in seconds;
-- \(C\) be checkpoint duration, in seconds;
-- \(M\) be mean time to failure under the assumed Poisson model, in seconds;
-- \(R\) be restart/reload time, in seconds.
+- $T$ be useful computation time between checkpoints, in seconds;
+- $C$ be checkpoint duration, in seconds;
+- $M$ be mean time to failure under the assumed Poisson model, in seconds;
+- $R$ be restart/reload time, in seconds.
 
 A first-order lost-time fraction is
 
@@ -275,13 +275,13 @@ choices, but their existence is not a biological contribution.
 Raft is a representative crash-fault consensus null model. A leader receives a
 command, appends it to its log, sends it to followers, and commits after a
 majority has stored it; followers then apply the ordered command to their state
-machines. For \(N=2f+1\) replicas, a majority quorum can make progress with up
-to \(f\) crashed or unreachable replicas, provided a majority can communicate
+machines. For $N=2f+1$ replicas, a majority quorum can make progress with up
+to $f$ crashed or unreachable replicas, provided a majority can communicate
 and stable state obeys the protocol. Membership changes use overlapping
 majorities ([Ongaro and Ousterhout 2014](https://www.usenix.org/conference/atc14/technical-sessions/presentation/ongaro)).
 
 The normal information path is client → leader → followers → majority
-acknowledgement → commit/application → response. The system pays \(N\)-way log
+acknowledgement → commit/application → response. The system pays $N$-way log
 storage (subject to snapshotting), write amplification, at least a quorum round
 trip before safe acknowledgement, heartbeats, election traffic, and recovery
 transfer for lagging replicas. It remains available only on the majority side
@@ -306,7 +306,7 @@ assumptions.
 ### Byzantine state-machine replication
 
 PBFT extends replication to arbitrary faulty behavior under authenticated
-communication and a bounded number of faulty replicas. To tolerate \(f\)
+communication and a bounded number of faulty replicas. To tolerate $f$
 Byzantine replicas, the protocol uses at least
 
 $$
@@ -315,7 +315,7 @@ $$
 
 A primary proposes an order; replicas exchange prepare and commit evidence;
 clients accept sufficient matching replies; view change replaces a suspected
-primary. Normal prepare/commit exchange is \(O(N^2)\) replica messages in the
+primary. Normal prepare/commit exchange is $O(N^2)$ replica messages in the
 original protocol, in addition to cryptographic work, replicated state, logs,
 checkpoints, and state transfer. The 1999 implementation reported one measured
 NFS configuration only; that historical overhead is not a portable cost
@@ -326,7 +326,7 @@ bound assumptions. Liveness requires progress/timing conditions sufficient for
 timeouts and view changes; a fully asynchronous network cannot promise a fixed
 completion time. PBFT does not make outputs semantically correct, conceal data
 from replicas, or survive a common implementation bug that makes more than
-\(f\) replicas fail identically.
+$f$ replicas fail identically.
 
 ### Replication deduplication result
 
@@ -351,7 +351,7 @@ are not suspected, and when), then show which detector classes suffice for
 consensus under stated crash assumptions
 ([Chandra and Toueg 1996](https://doi.org/10.1145/226643.226647)).
 
-If each monitored edge sends one heartbeat of \(b\) bytes every \(h\) seconds,
+If each monitored edge sends one heartbeat of $b$ bytes every $h$ seconds,
 the nominal monitoring traffic is
 
 $$
@@ -359,9 +359,9 @@ $$
 \quad\text{bytes/s},
 $$
 
-where \(E_m\) is the directed set of monitored relationships. A timeout
-\(\theta\) bounds suspicion latency only relative to timing assumptions; a
-smaller \(\theta\) tends to raise false suspicions during queueing, overload,
+where $E_m$ is the directed set of monitored relationships. A timeout
+$\theta$ bounds suspicion latency only relative to timing assumptions; a
+smaller $\theta$ tends to raise false suspicions during queueing, overload,
 or partitions. Recovery policy must therefore expose both missed-failure delay
 and false-repair rate.
 
@@ -381,8 +381,8 @@ out of date. The documentation explicitly notes that the operation is
 I/O-intensive and serializes with resilvering
 ([OpenZFS 2024](https://openzfs.github.io/openzfs-docs/man/v2.3/8/zpool-scrub.8.html)).
 
-For \(D\) bytes of reachable state, sustained scan bandwidth \(v\) bytes/s,
-and measured read energy \(e_r\) joules/byte, lower-bound accounting is
+For $D$ bytes of reachable state, sustained scan bandwidth $v$ bytes/s,
+and measured read energy $e_r$ joules/byte, lower-bound accounting is
 
 $$
 T_{\mathrm{scrub}} \geq \frac{D}{v},
@@ -420,20 +420,20 @@ specified distributed-control model
 engineering counterexample to a claim that repair always requires a stored
 copy.
 
-Let \(S\) be the state space, \(L\subseteq S\) the legitimate-state set, and
-\(F:S\to 2^S\) the permitted transition relation under a scheduler. A standard
+Let $S$ be the state space, $L\subseteq S$ the legitimate-state set, and
+$F:S\to 2^S$ the permitted transition relation under a scheduler. A standard
 stabilization obligation has two parts:
 
-1. **Convergence:** from every \(s_0\in S\), every fair execution reaches some
-   \(s_t\in L\) in finite time.
-2. **Closure:** once in \(L\), permitted executions remain in \(L\), absent a
+1. **Convergence:** from every $s_0\in S$, every fair execution reaches some
+   $s_t\in L$ in finite time.
+2. **Closure:** once in $L$, permitted executions remain in $L$, absent a
    new fault.
 
 No checkpoint needs to encode the exact target state. However, the legitimate
 set and transition rules encode what counts as repaired. During convergence,
 service may be wrong or unavailable; bounds depend on the topology, scheduler,
 fault model, and algorithm. Persistent Byzantine faults, an unfair scheduler,
-or a mistaken \(L\) can invalidate the guarantee.
+or a mistaken $L$ can invalidate the guarantee.
 
 This mechanism largely deduplicates the repair reading of
 [P-006](../principle-registry.md#p-006--homeostatic-negative-feedback) and
@@ -469,10 +469,10 @@ P(t)
 \bigr),
 $$
 
-where task quality \(Q_{\mathrm{task}}\) is dimensionless or task-specific,
-tail latency \(L_{p99}\) is seconds, availability \(A\) is a fraction, residual
-safety risk \(R_{\mathrm{safety}}\) is defined per decision/exposure, coverage
-\(C_{\mathrm{coverage}}\) is a declared fraction, and power \(P\) is watts.
+where task quality $Q_{\mathrm{task}}$ is dimensionless or task-specific,
+tail latency $L_{p99}$ is seconds, availability $A$ is a fraction, residual
+safety risk $R_{\mathrm{safety}}$ is defined per decision/exposure, coverage
+$C_{\mathrm{coverage}}$ is a declared fraction, and power $P$ is watts.
 Report components rather than hiding them in one “resilience score.” This is
 consistent with the opposing stability dimensions in
 [C-057](../claims.md#c-057) and [C-060](../claims.md#c-060).
@@ -525,8 +525,8 @@ A repair qualifies for this candidate only if all of the following hold:
 5. It beats engineering nulls on a predeclared multi-objective frontier rather
    than on recovery accuracy alone.
 
-Let failed system \(M_f\), context \(x\), repair action \(a\), required
-constraints \(g_j\), preserved capability set \(U\), and resource costs be
+Let failed system $M_f$, context $x$, repair action $a$, required
+constraints $g_j$, preserved capability set $U$, and resource costs be
 given. A minimal formulation is
 
 $$
@@ -541,10 +541,10 @@ g_j(M_f\oplus a,x)\leq 0,\quad j=1,\ldots,m,\\
 \end{aligned}
 $$
 
-\(E\) is joules, \(T\) seconds, \(S\) bytes of new/changed state,
-\(\Delta_U\) a declared dimensionless regression loss on unaffected
-capabilities, \(g_j\) measurable constraint violations, \(\rho\) a risk bound,
-and \(\mathcal{A}_{\mathrm{rollback}}\) the set of actions with preserved
+$E$ is joules, $T$ seconds, $S$ bytes of new/changed state,
+$\Delta_U$ a declared dimensionless regression loss on unaffected
+capabilities, $g_j$ measurable constraint violations, $\rho$ a risk bound,
+and $\mathcal{A}_{\mathrm{rollback}}$ the set of actions with preserved
 provenance and reversible deployment. The coefficients convert unlike units
 only if their interpretation is declared; otherwise report a Pareto frontier.
 
@@ -624,10 +624,10 @@ should assign the next stable `C-` IDs.
 
 ### C-FT-01 — Distance bounds exact correction guarantees
 
-- **Statement:** For a code with minimum Hamming distance \(d_{\min}\), unique
+- **Statement:** For a code with minimum Hamming distance $d_{\min}$, unique
   bounded-distance decoding corrects at most
-  \(\lfloor(d_{\min}-1)/2\rfloor\) unknown-location symbol errors or
-  \(d_{\min}-1\) known erasures under the code and decoder assumptions.
+  $\lfloor(d_{\min}-1)/2\rfloor$ unknown-location symbol errors or
+  $d_{\min}-1$ known erasures under the code and decoder assumptions.
 - **Proposed status:** established.
 - **Primary sources:** `hamming1950error`; `reed1960polynomial` for the MDS
   Reed–Solomon specialization.
@@ -682,8 +682,8 @@ should assign the next stable `C-` IDs.
 ### C-FT-05 — Replication guarantees are fault-model bounded
 
 - **Statement:** Majority crash-fault replication maintains an ordered log
-  while a quorum is available, whereas PBFT requires at least \(3f+1\)
-  replicas to tolerate \(f\) Byzantine faults under its model; neither protects
+  while a quorum is available, whereas PBFT requires at least $3f+1$
+  replicas to tolerate $f$ Byzantine faults under its model; neither protects
   against unrestricted common-mode semantic failure.
 - **Proposed status:** established.
 - **Primary sources:** `ongaro2014raft`; `castro1999pbft`.

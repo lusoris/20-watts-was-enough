@@ -566,8 +566,8 @@ unless the varied quantity is the preregistered independent variable.
 - **Arms:** proposed system; strongest ordinary stack; ablations for algorithm,
   device, hierarchy, facility, and replacement policy.
 - **Measure:** a preregistered vector
-  $(Q,L,R,E_{\mathrm{device}},E_{\mathrm{circuit}},e_{\mathrm{IT}},
-  e_{\mathrm{facility}},e_{\mathrm{life}})$ containing quality, latency, risk,
+  $(Q,L,R,E_{\mathrm{device}},E_{\mathrm{circuit}},e_{\mathrm{IT}},e_{\mathrm{facility}},e_{\mathrm{life}})$
+  containing quality, latency, risk,
   and boundary-specific energy with intervals; no scalarization after results.
 - **Kill rule:** retire the broad claim if no Pareto improvement survives under
   plausible allocation and uncertainty choices, even when a component metric

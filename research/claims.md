@@ -19110,7 +19110,7 @@ describes the exact statement here, not a broader interpretation.
   minimum-of-copies completion and exact benefits depend on service and cancel
   assumptions.
 - **Open issue:** cross no-hedge load balancing, delayed hedge, retry,
-  redundancy-\(d\), capacity reserve, load shedding, partial completion, and
+  redundancy-$d$, capacity reserve, load shedding, partial completion, and
   adaptive guard policies across branch count, tail dependence, utilization,
   common shocks, deadline, cancellation latency, useful work, and p99.9.
 - **Used by:** [this audit](audits/2026-08-24-computing-compilers-networking-visualization.md#dist-01--fan-out-tails-depend-on-scale-dependence-and-added-load),
@@ -20099,3 +20099,833 @@ describes the exact statement here, not a broader interpretation.
   and [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
 - **Disposition:** scoped platform-administrative observation claim; no
   moderation action or legal-compliance judgment.
+
+### C-1440
+
+- **Statement:** A time-bounded lease does not by itself exclude delayed
+  effects from a prior holder after authority changes; stale-holder exclusion
+  requires the protected resource to validate a monotonically ordered,
+  resource-scoped epoch or lock sequencer, or an equivalent conditional-update
+  boundary, and accept only the exact generation durably activated for that
+  resource; both stale and not-yet-activated future generations are rejected.
+- **Status:** established.
+- **Evidence note:** The boundary is established for the cited lease and Chubby
+  sequencer designs; performance and complete authorization remain workload-
+  and implementation-specific.
+- **Primary sources:** `GrayCheriton1989Leases`, `Burrows2006Chubby`.
+- **Rationale:** lease expiry limits authority under clock and recovery
+  assumptions, while a checked generation orders effects at the resource even
+  when an old process resumes or a delayed request arrives.
+- **Proposed AI translation:** carry authenticated resource/scope/mode/payload
+  identity and a monotone authority generation to every effect boundary, with a
+  durable activation acknowledgement before a new holder acts.
+- **Efficiency mechanism:** use short leases for reclamation and availability
+  while one compact checked generation blocks delayed stale work without global
+  synchronization on every read.
+- **Failure modes:** resource never checks token; token not bound to resource or
+  payload; new epoch acts before durable activation; wraparound/incarnation
+  reuse; clock/recovery assumption violated; rejection and renewal work hidden.
+- **Measurable prediction:** resource-checked epochs will eliminate stale-writer
+  effects across pause, delay, expiry, renewal, and failover schedules where a
+  lease-only arm cannot.
+- **Open question:** does the composition beat a mature lease, conditional-write,
+  lock-generation, IAM, and durable-resource protocol at equal availability,
+  latency, messages, and lifecycle cost?
+- **Used by:** [OSD-T01](audits/2026-08-24-operating-systems-distributed-consistency-recovery-measurement.md#osd-t01--lease-expiry-epoch-activation-and-stale-writer-fencing),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [sensorimotor grounding](../concept/20-sensorimotor-grounding.md).
+- **Disposition:** systems safety boundary; no universal fencing performance
+  claim.
+
+### C-1441
+
+- **Statement:** Deterministic consensus has a possible nonterminating execution
+  in the fully asynchronous one-crash FLP model; a liveness claim must therefore
+  name an additional progress assumption, such as a specified partial-
+  synchrony or failure-detector condition, separately from safety.
+- **Status:** established.
+- **Evidence note:** The impossibility and partial-synchrony boundaries are
+  established for their formal models; implementation latency and availability
+  remain empirical.
+- **Primary sources:** `FischerLynchPaterson1985FLP`,
+  `DworkLynchStockmeyer1988PartialSynchrony`, `chandra1996failure`.
+- **Rationale:** timeouts and suspicions can enable progress under extended
+  assumptions but do not turn network delay into ground-truth failure or make
+  safety and liveness interchangeable.
+- **Proposed AI translation:** bind every distributed progress claim to channel,
+  process, clock, stabilization, randomness, membership, quorum, adversary, and
+  fault-count assumptions and report safety separately.
+- **Efficiency mechanism:** adapt timeout and failure-detector effort only
+  inside the declared progress model while retaining a safety-preserving
+  unavailable state when the model is not supported.
+- **Failure modes:** FLP generalized beyond its model; timeout equals crash;
+  liveness asserted during unbounded partition; safety relaxed silently;
+  false-suspicion downtime omitted; one schedule treated representative.
+- **Measurable prediction:** assumption-typed reporting will refuse unsupported
+  bounded-progress claims without increasing seeded safety violations.
+- **Open question:** can adaptive progress qualification beat mature partial-
+  synchrony, failure-detector, randomized-consensus, and availability reporting
+  at equal faults, messages, latency, and unavailable time?
+- **Used by:** [OSD-T02](audits/2026-08-24-operating-systems-distributed-consistency-recovery-measurement.md#osd-t02--partial-synchrony-suspicions-and-progress-qualification),
+  Candidates [003](../experiments/candidates/003-recovery-dynamics-fragility.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [014](../experiments/candidates/014-versioned-observation-contract.md).
+- **Disposition:** formal model boundary; no generic impossibility slogan.
+
+### C-1442
+
+- **Statement:** After an unknown remote outcome, safe retry of a non-idempotent
+  operation requires a stable request identity and durable duplicate/result
+  state atomically coupled to the protected receiving effect, or an equivalent
+  receiver-side conditional contract; sender retry or transport acknowledgement
+  alone cannot guarantee an exactly-once external effect.
+- **Status:** established.
+- **Evidence note:** The boundary and mechanism are established in the cited
+  HTTP and RIFL scopes; arbitrary cross-system or physical exactly-once effects
+  are not claimed.
+- **Primary sources:** `RFC9110HTTP`, `LeeEtAl2015RIFL`,
+  `SaltzerReedClark1984`.
+- **Rationale:** a response can be lost after an effect commits. Duplicate
+  suppression works only while identity, result metadata, effect atomicity,
+  migration, and retention remain inside the receiver's recovery boundary.
+- **Proposed AI translation:** bind tool/action request identity, client
+  incarnation, payload hash, protected effect, duplicate/result retention,
+  migration, and reconciliation to one receiver-side contract.
+- **Efficiency mechanism:** replay a compact durable result instead of
+  repeating expensive or irreversible work while retaining finite, explicit
+  duplicate-state lifecycle cost.
+- **Failure modes:** client identity reused; payload alias; dedup expiry; state
+  migrates without duplicate record; crash at commit edge; several receivers;
+  physical side effect outside transaction; receipt lost; reconciliation hidden.
+- **Measurable prediction:** receiver-coupled duplicate/result state will
+  eliminate duplicate protected effects across every seeded unknown-outcome
+  crash edge inside its declared retention boundary.
+- **Open question:** does it beat idempotency keys, conditional writes,
+  transactional outbox/inbox, reconciliation, and explicit at-least-once
+  semantics at equal storage, latency, recovery, and external-effect cost?
+- **Used by:** [OSD-T03](audits/2026-08-24-operating-systems-distributed-consistency-recovery-measurement.md#osd-t03--unknown-outcomes-idempotence-and-duplicate-effects),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [010](../experiments/candidates/010-reset-coupled-staged-verification.md),
+  [011](../experiments/candidates/011-dual-loop-operational-assurance.md), and
+  [015](../experiments/candidates/015-versioned-repairable-conventions.md).
+- **Disposition:** receiver-effect boundary; no universal exactly-once messaging
+  claim.
+
+### C-1443
+
+- **Statement:** A completion-paced or blocking load generator can suppress
+  intended arrivals while the system stalls and thereby report an optimistically
+  selected latency distribution; valid service-tail claims must identify the
+  workload model and retain intended arrival-to-terminal outcomes, offered load,
+  timeouts, and generator saturation.
+- **Status:** established.
+- **Evidence note:** The measurement-bias mechanism has primary empirical
+  demonstrations; magnitude is workload-, system-, and generator-specific.
+- **Primary sources:** `SchroederWiermanHarcholBalter2006OpenClosed`,
+  `FriedrichWingerathRitter2017CoordinatedOmission`, `DeanBarroso2013`.
+- **Rationale:** when arrivals depend on completions, slow intervals reduce both
+  load and observation. Dispatch-to-completion quantiles answer a different
+  estimand from independently arriving users' response time.
+- **Proposed AI translation:** store intended arrival, dispatch, completion,
+  timeout/rejection, offered and achieved load, generator saturation, fan-out,
+  and exact raw latency outcomes with every performance and energy claim.
+- **Efficiency mechanism:** use low-cost smoke generators only for
+  claim-ineligible diagnostics, then acquire open-arrival evidence only at
+  promotion boundaries.
+- **Failure modes:** completion pacing; dispatch clock substituted for arrival;
+  timeouts deleted; overload absent from denominator; shared generator stalls;
+  branch p99 reported end-to-end; quantiles averaged; achieved throughput
+  substituted for offered load.
+- **Measurable prediction:** open-arrival or correctly reconstructed histories
+  will recover seeded stall-tail mass that completion-paced measurement omits.
+- **Open question:** can an adaptive acquisition design reduce benchmark cost
+  while matching complete open/trace-replay tail inference across burst,
+  overload, timeout, and fan-out regimes?
+- **Used by:** [OSD-T05](audits/2026-08-24-operating-systems-distributed-consistency-recovery-measurement.md#osd-t05--openclosed-load-coordinated-omission-and-tail-truth),
+  [representative performance](../concept/22-representative-adaptive-performance.md),
+  [energy model](../concept/80-energy-model.md), and
+  [Fixture F-012](../experiments/fixtures/012-layout-randomized-performance-inference.md).
+- **Disposition:** performance-measurement boundary; no universal workload
+  generator.
+
+### C-1444
+
+- **Statement:** Linux cgroup v2 resource controls and Pressure Stall
+  Information are controller- and scope-specific: CPU allocation does not
+  establish memory, I/O, accelerator, network, helper-process, or energy
+  isolation, while CPU, memory, and I/O stall time remain distinct observations.
+- **Status:** established.
+- **Evidence note:** The interface and scope distinctions are authoritative for
+  the cited Linux documentation; cross-platform behavior and performance
+  effects remain empirical.
+- **Primary sources:** `LinuxCgroupV2_2026`, `LinuxPSI_2026`.
+- **Rationale:** a process label or CPU quota cannot bound work and waiting on
+  resources governed, accounted, or shared through other mechanisms; CPU time
+  is not a calibrated joule measure.
+- **Proposed AI translation:** make controller membership, helpers, CPU,
+  memory/reclaim, I/O/page cache, accelerator, network, thermal, meter, and
+  accepted-service boundaries part of every system comparison.
+- **Efficiency mechanism:** escalate isolation and measurement only on the
+  resource axes whose pressure or leakage can change the decision.
+- **Failure modes:** helper escapes cgroup; only CPU constrained; page cache or
+  reclaim charged elsewhere; accelerator/network omitted; PSI treated causal;
+  process counters treated joules; throttling reduces accepted service.
+- **Measurable prediction:** vector-scoped containment and measurement will
+  expose cross-resource work and stalls hidden by CPU-only process accounting.
+- **Open question:** does staged vector isolation beat a complete cgroup,
+  namespace, device, network, meter, thermal, and accepted-service baseline at
+  equal setup and measurement cost?
+- **Used by:** [OSD-T06](audits/2026-08-24-operating-systems-distributed-consistency-recovery-measurement.md#osd-t06--controller-scope-cross-resource-pressure-and-accepted-service),
+  [representative performance](../concept/22-representative-adaptive-performance.md),
+  [physical-computation boundaries](../concept/28-physical-computation-boundaries.md),
+  [energy model](../concept/80-energy-model.md), and
+  [Fixture F-012](../experiments/fixtures/012-layout-randomized-performance-inference.md).
+- **Disposition:** Linux-scoped resource/measurement boundary; no whole-system
+  isolation or energy claim.
+
+### C-1450
+
+- **Statement:** The observational method requires a range of foreseeable
+  ground and ground-structure responses, thresholds, design variants, and
+  contingency measures that permit a safe transition when observations cross a
+  boundary. Progressive failure, missing observables, delayed reporting, and
+  non-executable changes are explicit reasons the method can fail.
+- **Status:** established geotechnical design-method boundary.
+- **Evidence note:** The sources establish method requirements and engineering
+  rationale, not a universal cost or safety effect.
+- **Primary sources:** `Peck1969ObservationalMethod`,
+  `CEN2024EN1997Part1`, `JRC2024GeotechnicalReliability`,
+  `JRC2024DesignDuringExecution`.
+- **Rationale:** Peck's observational method requires more than collecting
+  measurements; observation-driven change is valid only inside a predesigned
+  verification and action contract.
+- **Proposed AI translation:** an adaptive deployed system may rely on
+  observation-driven change only when plausible regimes, protected limits,
+  trigger statistics, raw observables, decision latency, authorized variants,
+  rollback/containment paths, and responsible actors are committed before the
+  evidence used to choose the variant is revealed.
+- **Efficiency mechanism:** begin with a cheaper admissible variant and spend
+  monitoring, analysis, and intervention resources only where observations
+  resolve consequential epistemic uncertainty.
+- **Failure modes:** dashboard without contingency; omitted response family;
+  progressive failure outruns the trigger; post-hoc threshold; lagging proxy;
+  unavailable staff, material, or authority; no safe transition path.
+- **Measurable prediction:** under synthetic staged systems with the same
+  sensors and action set, a precommitted observation-to-action contract reduces
+  protected-limit violations versus post-hoc threshold reaction; any project
+  composition must then beat the complete finite-horizon mature null in compute
+  or evidence cost at equal safety.
+- **Open question:** can the project composition beat ordinary constrained
+  staged control after action feasibility, latency, stopping, and false-stop
+  costs are protected?
+- **Used by:** [GT-T01](audits/2026-08-24-geotechnical-long-life-assets-infrastructure-monitoring.md#gt-t01--observation-to-action-window),
+  Candidates [011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [014](../experiments/candidates/014-versioned-observation-contract.md), and the
+  [geotechnical evidence-to-authority contract](principle-registry.md#geotechnical-evidence-to-authority-contract).
+- **Disposition:** scoped design-verification boundary; no universal safety,
+  cost, or real construction-authority claim.
+
+### C-1451
+
+- **Statement:** Tests and analyses should follow conditions relevant to the
+  field stress path; the same endpoint, peak, or cumulative total does not make
+  histories exchangeable when constitutive state evolves.
+- **Status:** established soil-mechanics method and path-dependence boundary;
+  effect size is material-, state-, and path-specific.
+- **Evidence note:** A stress path does not guarantee a correct constitutive
+  model, representative sampling, or field transfer.
+- **Primary sources:** `Lambe1967StressPath`, `JRC2024GroundModel`,
+  `CEN2024EN1997Part1`.
+- **Rationale:** Lambe's stress-path method selects laboratory tests and
+  analyses consistent with conditions followed by the field structure, while
+  EN 1997 guidance separates measured and derived values and requires attention
+  to stress/strain level and path.
+- **Proposed AI translation:** evaluation sets with equal final load, token
+  count, loss, or aggregate exposure should include order-reversed,
+  load-unload, cyclic, dwell, and staged paths; internal-state models must be
+  compared with endpoint-only and full-history mature nulls.
+- **Efficiency mechanism:** retain a tested sufficient internal state rather
+  than replaying all history when that state reconstructs protected path
+  queries within error bounds.
+- **Failure modes:** endpoint leakage; path and magnitude changed together;
+  sequence effect confused with time drift; confirmation-tuned path feature;
+  recurrent ID memorization; full history withheld from the mature null.
+- **Measurable prediction:** path-aware state estimation reduces next-probe
+  error for endpoint-matched histories in path-dependent worlds and ties the
+  endpoint model in memoryless worlds.
+- **Open question:** can a compact reconstructible state match a full-history
+  model across registered path queries while reducing total retained footprint?
+- **Used by:** [GT-T02](audits/2026-08-24-geotechnical-long-life-assets-infrastructure-monitoring.md#gt-t02--endpoint-matched-stress-path-challenge),
+  Candidates [017](../experiments/candidates/017-contract-preserving-semantic-compaction.md)
+  and [019](../experiments/candidates/019-audited-cumulative-inheritance.md), and
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+- **Disposition:** evidence-path qualification for an existing memory bundle;
+  no new memory mechanism or constitutive form.
+
+### C-1452
+
+- **Statement:** A ground-property representative value is selected for a
+  relevant limit state and its sensitivity to spatial variability over the
+  affected ground volume; more samples do not license one global statistic for
+  a local weak zone and a broad averaging mode.
+- **Status:** established European geotechnical definition and design-guidance
+  boundary.
+- **Evidence note:** The guidance does not select a universal random-field
+  family, correlation length, sample plan, or characteristic value.
+- **Primary sources:** `JRC2024GroundModel`,
+  `JRC2025RepresentativeGroundValues`, `CEN2024EN1997Part1`.
+- **Rationale:** Second-generation Eurocode 7 guidance distinguishes measured,
+  derived, representative, characteristic or nominal, and design values; the
+  decision support and limit state are part of the estimand.
+- **Proposed AI translation:** every aggregate evidence value carries an
+  observation support, decision support, aggregation operator, spatial or graph
+  dependence model, target limit state, and uncertainty. Local bottleneck and
+  distributed-average queries must not share an unqualified pooled mean.
+- **Efficiency mechanism:** allocate new measurements where support-weighted
+  posterior decision uncertainty is largest instead of sampling uniformly.
+- **Failure modes:** point sample treated field average; global mean hides local
+  weak cell; global minimum overconstrains broad response; spatial correlation
+  ignored; decision support changes after redesign; interpolation represented
+  as observation; shared calibration bias omitted.
+- **Measurable prediction:** support-aware conditional simulation improves
+  interval coverage and reduces false-safe decisions for both local and broad
+  limit states versus global-mean, point-minimum, and IID-sample baselines.
+- **Open question:** does Candidate 014's support record beat ordinary
+  geostatistics at equal information, calibration, sample count, and compute?
+- **Used by:** [GT-T03](audits/2026-08-24-geotechnical-long-life-assets-infrastructure-monitoring.md#gt-t03--spatial-support-representative-values),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and the [geotechnical evidence-to-authority contract](principle-registry.md#geotechnical-evidence-to-authority-contract).
+- **Disposition:** scoped decision-support and zone-of-influence boundary;
+  conservative remapping and support-aware geostatistics remain mature nulls.
+
+### C-1453
+
+- **Statement:** Partial factors are calibrated placements on typed actions,
+  properties, resistances, geometry, and model uncertainties within a declared
+  verification format; moving a factor, counting a margin twice, or treating it
+  as posterior confidence changes the problem.
+- **Status:** established reliability and code-format boundary.
+- **Evidence note:** Values and formats remain standard-, Design-Approach-,
+  National-Annex-, limit-state-, and applicability-specific; no numerical
+  factor is imported as a project constant.
+- **Primary sources:** `JRC2024EurocodeReliability`,
+  `JRC2024GeotechnicalReliability`, `JRC2025RepresentativeGroundValues`,
+  `CEN2023EN1990`, `CEN2024EN1997Part1`.
+- **Rationale:** Eurocode reliability guidance separates representative values,
+  actions, resistances, geometrical quantities, model uncertainties, design
+  situations, and verification formats.
+- **Proposed AI translation:** safety margins carry the uncertainty type,
+  variable, direction of unfavourability, unit, correlation scope, reference
+  period, limit state, calibration basis, version, and authority that owns the
+  target.
+- **Efficiency mechanism:** typed margins permit local recomputation when one
+  uncertainty or authority changes and expose double-counting before expensive
+  simulation.
+- **Failure modes:** universal confidence multiplier; resistance factor used as
+  action factor; conservative mean factored twice; model bias omitted;
+  correlated variables factored independently; ULS factor reused for SLS;
+  National Annex or version dropped.
+- **Measurable prediction:** typed verification records reduce false-safe and
+  false-reject decisions under factor-placement and correlation changes versus
+  one scalar safety score, while exact reliability calculation remains the
+  strongest null.
+- **Open question:** can typed assurance records improve factor-lineage error or
+  compute beyond an exact format/version-aware conventional solver?
+- **Used by:** [GT-T04](audits/2026-08-24-geotechnical-long-life-assets-infrastructure-monitoring.md#gt-t04--typed-factor-placement-and-limit-states),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+- **Disposition:** typed assurance record; no new learning rule, universal
+  safety factor, or code value.
+
+### C-1454
+
+- **Statement:** Passing an applied proof load does not reveal actual
+  resistance or directly measure reliability; at its simplest it establishes
+  that resistance at the test time exceeded the applied load effect, subject to
+  load-to-effect and measurement uncertainty.
+- **Status:** established assessment-inference boundary; detailed stop-criterion
+  evidence is bridge-class and failure-mode bounded.
+- **Evidence note:** The cited bridge study concerns reinforced-concrete slab
+  bridges and leaves further shear validation; it does not generalize to every
+  asset or brittle mode.
+- **Primary sources:** `JRC2024EurocodeReliability`,
+  `LantsoghtEtAl2017ProofLoad`.
+- **Rationale:** Proof-load preparation, instrumentation, staged loading, and
+  mode-specific stop criteria are part of what makes the censored inference
+  valid and safe to acquire.
+- **Proposed AI translation:** a passed stress, red-team, or load test updates
+  only the tested version, route, mode, load/effect conversion, observation
+  operator, and test time. Untested modes, higher loads, future drift, and
+  sibling assets remain separate claims.
+- **Efficiency mechanism:** bounded censoring updates can retire unnecessary
+  conservatism without running destructive capacity searches.
+- **Failure modes:** survivorship treated exact capacity; brittle mode
+  unobserved; test damage; service path mismatch; sensor latency; sibling
+  transport; deterioration ignored; failed or aborted test removed.
+- **Measurable prediction:** censored Bayesian updating improves calibrated
+  capacity bounds over ignoring the test while producing fewer unsupported
+  mode/lifetime certifications than pass-equals-safe extrapolation.
+- **Open question:** can the bounded update reduce compute or retained evidence
+  beyond conventional Bayesian proof-test inference without weakening stop
+  safety, execution, information gain, coverage, or sharpness?
+- **Used by:** [GT-T05](audits/2026-08-24-geotechnical-long-life-assets-infrastructure-monitoring.md#gt-t05--proof-load-censoring-and-stop-rules),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [014](../experiments/candidates/014-versioned-observation-contract.md).
+- **Disposition:** bounded assessment inference; no automated real proof-load
+  policy or untested capacity/lifetime certificate.
+
+### C-1455
+
+- **Statement:** German DIN 1076 bridge-condition records evaluate detected
+  damage against structural safety, traffic safety, and durability; an aggregate
+  condition grade is a planning-oriented record summary, not direct physical
+  capacity, remaining life, or evidence of completed repair.
+- **Status:** established German inspection-record boundary.
+- **Evidence note:** Public records do not validate a universal mapping from
+  condition labels to failure probability or remaining life; the 2017
+  RI-EBW-PRUEF interaction with DIN 1076:2026-01 must be version-checked.
+- **Primary sources:** `DIN2026DIN1076`, `BMV2020BridgeInspection`,
+  `BMV2017RIEBWPRUEF`.
+- **Rationale:** DIN 1076:2026-01 preserves the three criteria, adds monitoring
+  and digital inventory provisions, and states that condition capture supports
+  maintenance planning but does not regulate damage removal.
+- **Proposed AI translation:** retain component, defect, location, extent,
+  inspection access and operator, three criterion evaluations, evidence age,
+  standard/rule version, restriction, work order, completed intervention, and
+  independent verification separately from an aggregate state label.
+- **Efficiency mechanism:** coarse grades screen a portfolio; component-level
+  records are loaded only for decisions that cross a safety, access, or
+  intervention boundary.
+- **Failure modes:** ordinal grade treated continuous RUL; average hides a
+  critical criterion; rule-version shift appears deterioration; inaccessible
+  component treated sound; recommended repair treated completed; asset-type
+  transport; inspector dependence omitted.
+- **Measurable prediction:** component- and criterion-preserving records reduce
+  false capacity/RUL assertions and version-induced ranking reversals versus
+  overall-grade-only models at equal inspection observations.
+- **Open question:** does the project record add anything beyond a conventional
+  versioned component-level bridge-management database with calibrated ordinal,
+  measurement-error, survival, and reliability models?
+- **Used by:** [GT-T06](audits/2026-08-24-geotechnical-long-life-assets-infrastructure-monitoring.md#gt-t06--german-condition-record-semantics),
+  Candidates [014](../experiments/candidates/014-versioned-observation-contract.md)
+  and [019](../experiments/candidates/019-audited-cumulative-inheritance.md), and
+  [P-009](principle-registry.md#p-009--maintenance-plane).
+- **Disposition:** German inspection-record semantics; no direct capacity,
+  remaining-life, completed-repair, or legal-compliance conclusion.
+
+### C-1456
+
+- **Statement:** Existing-structure assessment differs from new design: current
+  measurements can update prior variables and models, while construction,
+  modification, repair, deterioration, damage, misuse, changed actions or
+  boundaries, and remaining service life can make the original design state
+  incomplete.
+- **Status:** established European existing-structure assessment boundary.
+- **Evidence note:** EN 1990-2 does not provide project-specific rules for
+  initiating an assessment or undertaking a resulting intervention; national
+  adoption, National Annex, transition, authority, and project applicability
+  remain unresolved, and current evidence never removes all uncertainty.
+- **Primary sources:** `CEN2026EN1990Part2`,
+  `JRC2024EurocodeReliability`; `CEN2020TS17440` is historical/transition
+  context.
+- **Rationale:** Assessment proceeds in stages because each acquisition has
+  cost and uncertainty, and intervention can change both physical state and the
+  valid model segment.
+- **Proposed AI translation:** treat the initial specification or training state
+  as prior evidence. Bind later capability claims to configuration genealogy,
+  interventions, use/load history, observation/model versions, changed
+  boundaries, current measurements, remaining horizon, and expiry.
+- **Efficiency mechanism:** staged value-of-information assessment escalates
+  from documents and cheap screening to targeted inspection, testing, or model
+  refinement only when the decision can change.
+- **Failure modes:** design values treated measured current values; repair resets
+  age but not model; pre/post-repair pooling; undocumented alteration; survivor
+  bias; acquisition despite no actionable decision; unauthenticated genealogy.
+- **Measurable prediction:** intervention-segmented staged assessment improves
+  current-state coverage and decision cost versus original-design-only,
+  latest-snapshot-only, and unsegmented-history baselines.
+- **Open question:** can project lineage beat an ordinary authenticated,
+  versioned asset register and Bayesian staged assessment at equal acquisition,
+  compute, storage, and false-certification cost?
+- **Used by:** [GT-T07](audits/2026-08-24-geotechnical-long-life-assets-infrastructure-monitoring.md#gt-t07--staged-current-state-assessment-and-genealogy),
+  Candidates [014](../experiments/candidates/014-versioned-observation-contract.md),
+  [018](../experiments/candidates/018-value-reconstructability-aware-tiering.md),
+  and [019](../experiments/candidates/019-audited-cumulative-inheritance.md), and
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+- **Disposition:** existing-asset evidence and genealogy boundary; no project-
+  specific intervention, current-state oracle, or new universal principle.
+
+### C-1457
+
+- **Statement:** Reliability acceptance is indexed by failure mode, direct and
+  indirect consequences, reference period, remaining service life, and the
+  cost/feasibility of safety measures; economic optimization does not erase a
+  declared minimum human-safety constraint.
+- **Status:** established structural-reliability framework and normative
+  boundary; no universal numerical target is asserted.
+- **Evidence note:** Target values depend on the applicable standard, National
+  Annex, asset, consequences, reference period, and competent authority; a
+  reliability model remains conditional on its failure modes and probability
+  assumptions.
+- **Primary sources:** `JRC2024EurocodeReliability`,
+  `JRC2024GeotechnicalReliability`, `CEN2023EN1990`.
+- **Rationale:** The numerical target and legitimate authority are governance
+  inputs, not values inferred from model fit.
+- **Proposed AI translation:** report mean utility only after enforcing
+  authority-owned prohibited outcomes, tail/reliability constraints, affected
+  populations, failure-mode coverage, and reference period; keep economic,
+  environmental, social, heritage, and human-safety consequences disaggregated.
+- **Efficiency mechanism:** cheap analytic bounds screen ordinary cases while
+  importance sampling or exact rare-event analysis is reserved for decisions
+  near a protected boundary.
+- **Failure modes:** annual/lifetime probability swap; one consequence class;
+  zero sampled failures treated zero risk; mean loss hides catastrophe;
+  correlated consequences double-counted; brittle/ductile modes pooled;
+  prohibited outcome bought out; target changed after results.
+- **Measurable prediction:** consequence- and period-qualified gates reduce
+  false acceptance of low-frequency/high-consequence policies versus mean-only
+  selection, without forcing the same target on low-consequence cases.
+- **Open question:** can the project composition improve rare-event error or
+  compute beyond exact/convergence-qualified reliability analysis without
+  altering authority targets or any prohibited-outcome boundary?
+- **Used by:** [GT-T08](audits/2026-08-24-geotechnical-long-life-assets-infrastructure-monitoring.md#gt-t08--rare-consequence-reliability-boundary),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [012](../experiments/candidates/012-latency-qualified-authority.md), and
+  [020](../experiments/candidates/020-constitutional-control-plane.md).
+- **Disposition:** authority- and reference-period-qualified acceptance
+  boundary; no universal AI safety factor or automated authority.
+
+### C-1460
+
+- **Statement:** Estimates computed from spatially aggregated data can change
+  with zone scale and zone configuration even when the underlying fine-scale
+  observations are unchanged; partition and spatial-weight definitions are
+  therefore inputs to the estimator rather than presentation metadata.
+- **Status:** established.
+- **Evidence note:** Zone-system sensitivity and spatial dependence are
+  established; no universally correct partition or weight matrix follows.
+- **Primary sources:** `Openshaw1978ZoneDesign`,
+  `Moran1950SpatialPhenomena`.
+- **Rationale:** Openshaw changes the aggregation system in an empirical
+  regression study and obtains materially different results; Moran formalises
+  dependence between spatially related observations.
+- **Proposed AI translation:** attach support, partition/geometry version,
+  denominators, spatial weights, and a registered set of admissible alternative
+  partitions to spatial state and allocation claims.
+- **Efficiency mechanism:** evaluate extra partitions only where a sign, rank,
+  threshold, or action is unstable rather than recomputing every map at maximum
+  resolution.
+- **Failure modes:** cherry-picked zones; one scale; outcome-aligned boundaries;
+  denominator changes; post-hoc weights; between-partition uncertainty omitted;
+  within-world zones treated as independent replications.
+- **Measurable prediction:** a support-ensemble record will reduce sign and
+  threshold reversals on unseen admissible partitions at equal fine-cell data.
+- **Open question:** does it beat a complete multilevel spatial model with
+  change-of-support uncertainty and registered decision sensitivity?
+- **Used by:** [SG-T01](audits/2026-08-24-spatial-geography-support-scale-mobility-place.md#sg-t01--zoning-and-scale-stress-matrix),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [013](../experiments/candidates/013-deficit-capability-routing.md),
+  [014](../experiments/candidates/014-versioned-observation-contract.md), and
+  [020](../experiments/candidates/020-constitutional-control-plane.md).
+- **Disposition:** established spatial observation boundary; proposed
+  engineering gain remains unvalidated.
+
+### C-1461
+
+- **Statement:** An association between aggregates does not in general identify
+  the corresponding association between individuals or events inside those
+  aggregates.
+- **Status:** established.
+- **Evidence note:** The cross-level estimand distinction is established;
+  multilevel or ecological-inference models add assumptions rather than erase
+  it.
+- **Primary source:** `Robinson1950EcologicalCorrelations`.
+- **Rationale:** Robinson demonstrates that ecological and individual
+  correlations can differ substantially and are not interchangeable.
+- **Proposed AI translation:** type every relational claim by unit level and
+  prohibit automatic descent from region, cohort, cluster, or batch summaries
+  to a member-level prediction.
+- **Efficiency mechanism:** acquire or retain unit-level sufficient information
+  only when the actual decision is unit-level; otherwise keep the aggregate
+  claim explicitly aggregate.
+- **Failure modes:** group mean attributed to member; within/between effects
+  pooled; denominator mismatch; unequal zone sizes; latent composition change;
+  protected-group inference from place.
+- **Measurable prediction:** unit-typed abstention will eliminate unsupported
+  member-level assertions while preserving aggregate decisions at equal data.
+- **Open question:** can typing improve utility after a complete hierarchical
+  model, partial identification, and no-individual-decision baseline?
+- **Used by:** [SG-T02](audits/2026-08-24-spatial-geography-support-scale-mobility-place.md#sg-t02--aggregate-to-unit-refusal-test),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [014](../experiments/candidates/014-versioned-observation-contract.md), and
+  [020](../experiments/candidates/020-constitutional-control-plane.md).
+- **Disposition:** hard cross-level estimand boundary.
+
+### C-1462
+
+- **Statement:** Under spatial dependence, random record-level folds can
+  estimate a different and easier prediction task than transfer to a separated
+  location, region, boundary version, or future spatial regime; validation
+  geometry must match the declared prediction domain.
+- **Status:** plausible.
+- **Evidence note:** Spatial dependence and the prediction-task distinction are
+  established. The claimed calibration improvement is supported here by a
+  methodological synthesis, not yet by a direct primary controlled comparison;
+  split geometry and separation scale remain task-specific.
+- **Primary foundation:** `Moran1950SpatialPhenomena`.
+- **Synthesis source:** `RobertsEtAl2017StructuredCrossValidation`.
+- **Primary controlled evaluation:** not yet entered in the ledger.
+- **Rationale:** dependence invalidates an independent-record interpretation of
+  random folds, while structured cross-validation targets different spatial or
+  temporal transfer distances.
+- **Proposed AI translation:** bind every validation split to an explicit
+  interpolation, new-site, new-region, changed-boundary, or moving-population
+  prediction contract.
+- **Efficiency mechanism:** choose the cheapest registered split conservative
+  for the deployment geometry and escalate only when residual dependence or
+  decision instability remains.
+- **Failure modes:** random split reported as regional transfer; arbitrary block
+  size; covariate shift hidden; training-size loss confounded with separation;
+  preprocessing leakage; fold family selected after outcomes.
+- **Measurable prediction:** geometry-matched validation will improve risk-
+  estimate interval coverage for its declared deployment domain versus random
+  folds.
+- **Open question:** can a learned selector beat registered variogram, graph,
+  cluster, and leave-region-out baselines without using test outcomes?
+- **Used by:** [SG-T03](audits/2026-08-24-spatial-geography-support-scale-mobility-place.md#sg-t03--prediction-geometry-validation-selector),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md)
+  and [014](../experiments/candidates/014-versioned-observation-contract.md).
+- **Disposition:** established evaluation boundary; no universal spatial fold.
+
+### C-1463
+
+- **Statement:** Residence-based or static administrative context can differ
+  from an individual's feasible and experienced space--time context, and
+  contextual variables or associations can change across defensible
+  activity-space delineations.
+- **Status:** established.
+- **Evidence note:** Formal feasibility constraints and scoped empirical
+  sensitivity are established; transport to a new population, place, or
+  outcome remains open.
+- **Primary sources:** `Miller1991SpaceTimePrism`,
+  `Kwan2012UncertainContext`, `ZhaoKwanZhou2018ActivitySpace`.
+- **Rationale:** space--time prisms formalise network and schedule feasibility,
+  while the Guangzhou study compares multiple activity-space definitions and
+  demonstrates sensitivity of contextual variables and associations.
+- **Proposed AI translation:** represent context as a time-indexed reachable and
+  observed support with purpose, network, schedule, capability, and uncertainty
+  rather than a static nearest-zone embedding.
+- **Efficiency mechanism:** compute detailed path context only where mobility
+  dominates decision uncertainty; otherwise retain a coarse proxy and its error
+  envelope.
+- **Failure modes:** tracking treated as consent; GPS gaps; capability ignored;
+  endogenous routes; work/care anchors omitted; one activity geometry declared
+  true; privacy and governance cost excluded.
+- **Measurable prediction:** prism-qualified context will improve exposure and
+  reachable-opportunity interval coverage under schedule and network changes.
+- **Open question:** does the gain survive a mature network-accessibility model,
+  trajectory uncertainty, selection correction, and strict privacy budget?
+- **Used by:** [SG-T04](audits/2026-08-24-spatial-geography-support-scale-mobility-place.md#sg-t04--residence-proxy-versus-feasible-space-time-context),
+  Candidates [007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [013](../experiments/candidates/013-deficit-capability-routing.md),
+  [014](../experiments/candidates/014-versioned-observation-contract.md), and
+  [018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+- **Disposition:** scoped context boundary; no authority to collect real traces.
+
+### C-1464
+
+- **Statement:** A redistribution of an extensive areal quantity can preserve
+  zone totals and nonnegativity while remaining non-unique; smoothness is an
+  additional reconstruction assumption rather than recovered ground truth.
+- **Status:** established.
+- **Evidence note:** Conservative nonnegative interpolation is established;
+  field reconstruction between aggregate constraints remains model-dependent.
+- **Primary source:** `Tobler1979Pycnophylactic`.
+- **Rationale:** pycnophylactic interpolation explicitly imposes conservation
+  and nonnegativity while selecting a smooth surface among possible fields.
+- **Proposed AI translation:** type spatial tensors and records as extensive or
+  intensive, require conservation residuals for extensive remapping, and keep
+  the reconstruction prior in provenance.
+- **Efficiency mechanism:** preserve totals through sparse overlap matrices and
+  refine only cells whose reconstruction uncertainty changes a decision.
+- **Failure modes:** total drift; count/density confusion; negative values;
+  coastline error; false fine-resolution precision; ancillary leakage;
+  smoothness suppresses a real discontinuity.
+- **Measurable prediction:** typed conservative remapping will eliminate mass-
+  balance error and reduce decision reversals after boundary changes.
+- **Open question:** does a learned conservative operator beat sparse areal
+  weighting, dasymetric, and model-averaged geostatistical baselines at equal
+  data and compute?
+- **Used by:** [SG-T05](audits/2026-08-24-spatial-geography-support-scale-mobility-place.md#sg-t05--extensiveintensive-change-of-support-test),
+  Candidates [014](../experiments/candidates/014-versioned-observation-contract.md)
+  and [018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+- **Disposition:** conservation boundary plus unvalidated learned-operator
+  hypothesis.
+
+### C-1465
+
+- **Statement:** Statistical and administrative regions, memberships, and
+  typologies change over time, so regional comparison requires an explicit
+  classification version and documented crosswalk or reconstruction.
+- **Status:** established.
+- **Evidence note:** Current Eurostat versioning and correspondence practice are
+  authoritative within their stated scope; they are not comparative scientific
+  evidence or a universal geographic ontology.
+- **Primary sources:** `EurostatNUTS2024`, `EurostatLAU2026`,
+  `EurostatNUTSCorrespondence2026`.
+- **Rationale:** Eurostat publishes effective classification versions and
+  correspondence material for NUTS and frequently changing LAUs.
+- **Proposed AI translation:** store immutable geometry hashes, effective dates,
+  parent/child relations, split/merge weights, denominator versions, and
+  non-bijective crosswalk uncertainty.
+- **Efficiency mechanism:** cache sparse crosswalk operators and recompute only
+  descendants of changed boundaries.
+- **Failure modes:** same code assumed same geometry; invalid split weights;
+  silent historical restatement; policy transported across non-equivalent
+  units; land/water/support change ignored.
+- **Measurable prediction:** versioned crosswalk lineage will reduce false trend
+  alarms and stale-policy reuse after splits and mergers.
+- **Open question:** does dependency-targeted recomputation outperform complete
+  restatement after realistic chains of boundary change?
+- **Used by:** [SG-T06](audits/2026-08-24-spatial-geography-support-scale-mobility-place.md#sg-t06--boundary-version-lineage-and-targeted-recomputation),
+  Candidates [014](../experiments/candidates/014-versioned-observation-contract.md),
+  [018](../experiments/candidates/018-value-reconstructability-aware-tiering.md),
+  and [020](../experiments/candidates/020-constitutional-control-plane.md).
+- **Disposition:** authoritative statistical-version boundary; no empirical
+  superiority claim.
+
+### C-1466
+
+- **Statement:** The magnitude and geographic scale of spatial segregation are
+  distinct dimensions; systems with similar scalar segregation can have
+  different local-to-regional profiles.
+- **Status:** established.
+- **Evidence note:** The distinction is established in the studied metropolitan
+  sample and method; population, kernel, boundary, and transport remain scoped.
+- **Primary source:** `ReardonEtAl2008SegregationScale`.
+- **Rationale:** the primary study develops scale-sensitive profiles and finds
+  only modest correlation between segregation level and scale in its sample.
+- **Proposed AI translation:** evaluate distribution, access, error, and service
+  separation as a registered function of scale rather than at one convenient
+  aggregation.
+- **Efficiency mechanism:** use a coarse-to-fine scale sweep and stop where the
+  decision and uncertainty envelope stabilise.
+- **Failure modes:** protected groups inferred from location; one kernel;
+  edge effects; denominator drift; post-hoc scale; descriptive profile treated
+  causal or normative.
+- **Measurable prediction:** scale profiles will distinguish micro-separation
+  from regional separation that one scalar ranks as equivalent.
+- **Open question:** can a scale-adaptive audit improve detection without
+  increasing disclosure or automating allocation from description?
+- **Used by:** [SG-T07](audits/2026-08-24-spatial-geography-support-scale-mobility-place.md#sg-t07--multiscale-separation-profile),
+  Candidates [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [013](../experiments/candidates/013-deficit-capability-routing.md), and
+  [020](../experiments/candidates/020-constitutional-control-plane.md).
+- **Disposition:** scoped descriptive estimand with strict rights limits.
+
+### C-1467
+
+- **Statement:** When observation locations depend on the latent spatial field
+  or a correlated process, analysis that assumes non-preferential sampling can
+  be biased; locations, eligibility, activation, and failure are then part of
+  the likelihood or design record.
+- **Status:** established.
+- **Evidence note:** The effect is established in the stated geostatistical
+  model and biomonitoring application; sign and magnitude are application-
+  specific and model misspecification remains possible.
+- **Primary source:** `DiggleMenezesSu2010PreferentialSampling`.
+- **Rationale:** the joint location/field model and application show material
+  inference changes when preferential placement is modelled.
+- **Proposed AI translation:** record proposal, eligibility, placement,
+  activation, failure, and observation probabilities for adaptive sensors and
+  retain a probability/reference sample.
+- **Efficiency mechanism:** concentrate sensing while sparse reference
+  observations and importance/joint-model correction preserve field
+  calibration.
+- **Failure modes:** anomaly chasing inflates prevalence; correlated sensor
+  failures omitted; unlogged manual placement; intensity misspecification;
+  undersized reference; correction variance explosion.
+- **Measurable prediction:** reference-anchored adaptive placement will improve
+  hotspot detection at equal samples without losing field-mean interval
+  coverage.
+- **Open question:** can it beat registered stratified and balanced spatial
+  designs across smooth, discontinuous, adversarial, and drifting fields?
+- **Used by:** [SG-T08](audits/2026-08-24-spatial-geography-support-scale-mobility-place.md#sg-t08--preferential-sensor-placement-with-reference-anchor),
+  Candidates [007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [014](../experiments/candidates/014-versioned-observation-contract.md), and
+  [018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+- **Disposition:** spatial specialization of endogenous observation.
+
+### C-1468
+
+- **Statement:** A versioned record containing support, partition ensemble,
+  extensive/intensive type, crosswalk, prediction geometry, and decision
+  sensitivity may reduce unsupported spatial claims and stale reuse.
+- **Status:** speculative.
+- **Evidence note:** No direct comparative systems validation exists;
+  constituent boundaries are `C-1460`--`C-1467`.
+- **Primary sources:** no direct source for the proposed composition;
+  constituent sources are listed under [C-1460](#c-1460) through
+  [C-1467](#c-1467).
+- **Rationale:** the proposed value is typed composition and selective
+  invalidation rather than a new spatial theorem.
+- **Proposed AI translation:** add a spatial-support contract to Candidate 014
+  and propagate invalidation through Candidate 018's value and
+  reconstructability tiers.
+- **Efficiency mechanism:** invalidate only outputs whose support lineage or
+  decision envelope intersects a changed field, boundary, or crosswalk.
+- **Failure modes:** schema without enforcement; arbitrary partition ensemble;
+  hashes without semantics; derived denominator omitted; record cost exceeds
+  saved work; false stability across sampled partitions.
+- **Measurable prediction:** dependency-targeted invalidation will match full-
+  recomputation decisions with fewer recomputed cells and records.
+- **Open question:** does it beat a spatial database with temporal tables,
+  lineage, materialized-view invalidation, and complete statistical metadata?
+- **Used by:** [SG-T09](audits/2026-08-24-spatial-geography-support-scale-mobility-place.md#sg-t09--support-lineage-selective-invalidation),
+  Candidates [014](../experiments/candidates/014-versioned-observation-contract.md)
+  and [018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+- **Disposition:** proposed composition; no new candidate or principle.
+
+### C-1469
+
+- **Statement:** Finer spatial or temporal resolution can improve some
+  estimands while increasing acquisition, computation, and disclosure burden;
+  an appropriate resolution is decision-, population-, threat-, purpose-, and
+  jurisdiction-dependent.
+- **Status:** plausible.
+- **Evidence note:** Inferential value and disclosure/governance burden are
+  supported as a trade-off, but no universal optimum or numeric privacy score
+  is established.
+- **Primary sources:** `Kwan2012UncertainContext`,
+  `EurostatStatisticalConfidentiality2026`,
+  `EurostatMicrodataProtection2026`.
+- **Rationale:** space--time context research motivates finer data for some
+  estimands, while EU statistical guidance treats direct and indirect
+  identifiability and disclosure controls as hard constraints.
+- **Proposed AI translation:** choose acquisition and retention resolution by
+  marginal decision value inside non-negotiable purpose, access, retention,
+  deletion, and disclosure envelopes.
+- **Efficiency mechanism:** retain coarse summaries by default and escalate
+  only when expected decision value exceeds measurement, compute, energy,
+  governance, and disclosure costs.
+- **Failure modes:** privacy monetised away; risk score treated compliance;
+  stale linkage threat; small groups exposed; average utility hides subgroup
+  loss; irreversible raw traces retained; synthetic result authorizes real
+  collection.
+- **Measurable prediction:** staged resolution will match full-resolution
+  synthetic decisions while retaining fewer fine cells and lowering calculated
+  disclosure exposure.
+- **Open question:** can automation remain useful after strict minimisation,
+  purpose, access, deletion, and human authority are hard constraints rather
+  than soft penalties?
+- **Used by:** [SG-T10](audits/2026-08-24-spatial-geography-support-scale-mobility-place.md#sg-t10--rights-bounded-spatial-resolution-escalation),
+  Candidates [007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [014](../experiments/candidates/014-versioned-observation-contract.md),
+  [018](../experiments/candidates/018-value-reconstructability-aware-tiering.md),
+  and [020](../experiments/candidates/020-constitutional-control-plane.md).
+- **Disposition:** rights-bounded value-of-information hypothesis; no legal
+  verdict or universal resolution target.

@@ -738,8 +738,8 @@ $\varepsilon$ also has units of $Y$. For binary $z$, $\beta$ and $\gamma$ have
 units of $Y$. Interaction estimates are descriptive or causal only under the
 design and model that generated them.
 
-Let adoption state $S_{kot}\in\{\text{offered},\text{adopted},\text{enacted},
-\text{maintained},\text{abandoned}\}$. Persistence at horizon $h$ is
+Let adoption state $S_{kot}\in\{\text{offered},\text{adopted},\text{enacted},\text{maintained},\text{abandoned}\}$.
+Persistence at horizon $h$ is
 
 $$
 \pi_k(h)=\Pr(S_{ko,t+h}=\text{maintained}\mid S_{kot}=\text{enacted}),

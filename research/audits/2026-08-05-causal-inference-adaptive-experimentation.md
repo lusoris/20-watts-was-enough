@@ -307,8 +307,7 @@ where $n_{r,j}$ is the number of people in role $r$ performing activity $j$ and
 $t_{r,j}$ is hours per person; $H_m^{\mathrm{human}}$ is person-hours. Record
 design, implementation, data work, monitoring, adjudication, red-team exposure,
 incident response, review, replication, and repair separately. Harm remains a
-vector $K_m=(K_m^{\mathrm{safety}},K_m^{\mathrm{privacy}},
-K_m^{\mathrm{labor}},K_m^{\mathrm{environment}},K_m^{\mathrm{opportunity}})$
+vector $K_m=(K_m^{\mathrm{safety}},K_m^{\mathrm{privacy}},K_m^{\mathrm{labor}},K_m^{\mathrm{environment}},K_m^{\mathrm{opportunity}})$
 with native units; a scalarization is allowed only with preregistered weights.
 
 An equal-budget comparison enforces a common feasible envelope

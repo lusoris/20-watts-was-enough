@@ -106,6 +106,70 @@ experimental discrimination to receive a stable `P-` ID.
 | Audited cumulative inheritance | P-003, P-004, P-005, P-009, P-012, P-013 | generation, social transmission, repositories, versioning, search, evaluation, governance, and network effects are established scoped mechanisms; the residual is preservation and recombination of validated capability across real learner turnover | [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md) must beat the complete centralized continual-learning, retrieval, versioning, workflow, and governance stack at equal cumulative effort |
 | Constitutionalized multi-level control plane | P-002, P-004, P-008, P-009, P-011, P-013 | aggregation limits, IAM, constrained control, delegation models, veto theory, polycentricity, policy-as-code, review, lineage, incident response, and change management are established scoped mechanisms; the residual composition applies only with real asymmetric information, conflicting incentives, spillovers, or authorized standing | [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md) must beat the full ordinary governance stack on task-native and protected outcomes after capture, gridlock, concentration, human attention, and lifecycle cost |
 
+### Operating and distributed-systems contract
+
+The [operating/distributed-systems audit](audits/2026-08-24-operating-systems-distributed-consistency-recovery-measurement.md)
+promotes no principle or candidate. Lease expiry plus resource-checked fencing
+is a mature authority null for P-002 and Candidate 012, not a new local-control
+principle ([C-1440](claims.md#c-1440)). FLP, partial synchrony, and failure
+detectors qualify liveness assumptions rather than add a coordination
+architecture ([C-1441](claims.md#c-1441)). Receiver-side durable duplicate
+state qualifies temporary traces, maintenance, and external records without
+making transport “exactly once” ([C-1442](claims.md#c-1442)). Open-arrival tail
+measurement and controller-scoped Linux isolation are evaluation boundaries,
+not routing or energy mechanisms ([C-1443](claims.md#c-1443),
+[C-1444](claims.md#c-1444)).
+
+The six protocols `OSD-T01`--`OSD-T06` therefore enter the mature-null and
+measurement stack. Checkpoint/log/replay recovery, consistency models,
+crash/Byzantine separation, tail-at-scale, end-to-end verification, and generic
+provenance remain owned by their earlier claims; relabeling them as AI memory,
+agents, or resilience creates no new bundle.
+
+### Spatial-support evaluation contract
+
+The [spatial-geography audit](audits/2026-08-24-spatial-geography-support-scale-mobility-place.md)
+promotes no principle or candidate. Its durable residue is an evaluation
+contract: preserve spatial/temporal support, extensive or intensive type,
+population unit, partition and geometry version, spatial relation, prediction
+domain, activity-space approximation, observation-location process,
+confidentiality boundary, and decision sensitivity
+([C-1460](claims.md#c-1460)–[C-1469](claims.md#c-1469)).
+
+Partition ensembles and multiscale profiles are evaluation operators rather
+than a new form of multiscale computation. Space--time prisms qualify existing
+accessibility and routing rather than add a routing principle. Preferential
+sampling qualifies P-007 only because an adaptive sensing policy changes the
+observation distribution. Boundary/crosswalk lineage qualifies Candidate 014
+and P-013 only when the shared geographic state remains versioned and linked to
+what it supports. Conservative remapping is a mature numerical null, not an AI
+primitive. The ten synthetic protocols `SG-T01`--`SG-T10` test these
+distinctions without real traces, addresses, protected attributes, or resource
+decisions.
+
+### Geotechnical evidence-to-authority contract
+
+The [geotechnical and long-life-asset audit](audits/2026-08-24-geotechnical-long-life-assets-infrastructure-monitoring.md)
+promotes no principle or candidate. Its durable residue is an evaluation
+contract: observation-driven change is precommitted to forecast bands,
+latency, executable variants, and authority ([C-1450](claims.md#c-1450)); path
+evidence is matched to evolving internal state ([C-1451](claims.md#c-1451));
+ground values retain the limit state and decision support they represent
+([C-1452](claims.md#c-1452)); and factors, proof tests, inspection grades,
+asset genealogy, and reliability targets remain typed, versioned, mode-,
+time-, consequence-, and authority-bounded
+([C-1453](claims.md#c-1453)–[C-1457](claims.md#c-1457)).
+
+These findings sharpen existing bundles rather than create another control or
+memory metaphor. Observational design and support-weighted acquisition qualify
+P-007 and Candidates 011/012/014; stress path and intervention-segmented history
+qualify P-012 and Candidates 017/019; inspection, proof-test updating, and
+staged assessment qualify P-009; versioned support, condition, and genealogy
+records qualify P-013. Typed factor placement and consequence-qualified
+reliability are assurance and authority boundaries for Candidates 009/012/020,
+not architecture primitives. The eight protocols `GT-T01`--`GT-T08` enter the
+mature-null stack with no permission to act on a real asset.
+
 ### Immune-state lifecycle evaluation contract
 
 The [immune audit](audits/2026-08-05-immune-tolerance-trained-immunity.md)
@@ -687,6 +751,15 @@ the observation model, not a detachable input source
 ([C-586](claims.md#c-586)–[C-596](claims.md#c-596)). Motor prediction adds a
 command-correlated signal without identifying one universal neural
 implementation ([C-601](claims.md#c-601)).
+Preferential spatial placement adds a stricter observation boundary: proposal,
+eligibility, activation, failure, and reference-sample probabilities remain in
+the evidence record because the location process can depend on the field
+([C-1467](claims.md#c-1467)).
+Geotechnical observational design adds a precommitted action window, while
+limit-state-specific ground values make the decision support part of where new
+evidence is valuable; constrained staged control and support-aware
+geostatistics remain the mature nulls ([C-1450](claims.md#c-1450),
+[C-1452](claims.md#c-1452)).
 
 **Candidate AI primitive.** Calibrated residual router that can buy another
 layer, modality, sensor action, memory lookup, or human query.
@@ -765,6 +838,10 @@ Commissioning, post-occupancy evaluation, and asset management add measured
 feedback and lifecycle governance while keeping observation, implemented
 change, accepted postcondition, and realized service separate
 ([C-715](claims.md#c-715), [C-723](claims.md#c-723)).
+Proof-load passage, bridge-condition grades, and original design records add
+bounded evidence rather than repair or current-state truth; stop safety,
+component criteria, intervention genealogy, and staged reassessment remain
+separate maintenance-plane obligations ([C-1454](claims.md#c-1454)–[C-1456](claims.md#c-1456)).
 
 **Candidate AI primitive.** Auditable lifecycle controller with limited
 actions, shadow evaluation, and rollback.
@@ -860,6 +937,10 @@ service evidence have distinct retention/reconstruction needs
 Legal records add authority-, review-, limitation-, finality-, and reopening-
 qualified lifetimes without making an authoritative or final statement true
 ([C-694](claims.md#c-694)–[C-698](claims.md#c-698)).
+Stress-path state and intervention-segmented asset genealogy add domain-specific
+history and expiry requirements; they qualify what must be retained without
+creating a new memory medium ([C-1451](claims.md#c-1451),
+[C-1456](claims.md#c-1456)).
 
 **Candidate AI primitive.** A versioned memory hierarchy spanning transient
 state, episodic records, slow skills, and externally attributable facts.
@@ -902,6 +983,15 @@ review scope determine what that shared state can do
 BIM and IFC provide versioned shared information, but correspondence to the
 current asset still requires supported observation and validation
 ([C-714](claims.md#c-714)).
+Statistical regions and crosswalks are also shared external state: codes,
+geometries, membership, denominators, effective dates, and non-bijective
+split/merge relations must remain versioned before derived spatial claims can
+be reused ([C-1465](claims.md#c-1465), [C-1468](claims.md#c-1468)).
+Ground decision supports, component-level bridge-condition records, and asset
+genealogies likewise coordinate later decisions only when observation support,
+criterion, rule/model version, intervention status, and evidence age remain
+attached ([C-1452](claims.md#c-1452), [C-1455](claims.md#c-1455),
+[C-1456](claims.md#c-1456)).
 
 **Candidate AI primitive.** A versioned shared workspace where modules publish
 compact observations, partial results, route pressure, and unresolved questions
