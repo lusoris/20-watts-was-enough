@@ -157,125 +157,125 @@ audit only narrows named gaps.
 
 For election rule version (r), write
 
-\[
+$$
 \mathbf{s}=A_r(\mathbf{v};\mathbf{d},\mathbf{m},\boldsymbol{\tau},
 \mathbf{t},\mathbf{e}),
-\]
+$$
 
-where \(\mathbf{v}\) is the vector of valid vote counts (votes),
-\(\mathbf{d}\) assigns votes to districts, \(\mathbf{m}\) gives district
-magnitudes (seats), \(\boldsymbol{\tau}\) contains legal/effective thresholds
-(fractions), \(\mathbf{t}\) defines allocation tiers and compensation, and
-\(\mathbf{e}\) contains eligibility and exception rules. The output
-\(\mathbf{s}\) is a seat-count vector. A coalition or government map
-\(G(\mathbf{s},\mathcal C)\) additionally needs coalition set \(\mathcal C\);
-it is not part of \(A_r\).
+where $\mathbf{v}$ is the vector of valid vote counts (votes),
+$\mathbf{d}$ assigns votes to districts, $\mathbf{m}$ gives district
+magnitudes (seats), $\boldsymbol{\tau}$ contains legal/effective thresholds
+(fractions), $\mathbf{t}$ defines allocation tiers and compensation, and
+$\mathbf{e}$ contains eligibility and exception rules. The output
+$\mathbf{s}$ is a seat-count vector. A coalition or government map
+$G(\mathbf{s},\mathcal C)$ additionally needs coalition set $\mathcal C$;
+it is not part of $A_r$.
 
 ### Recorded roll calls are selected observations
 
-For legislator \(i\) and potential motion \(j\), a spatial vote model may use
+For legislator $i$ and potential motion $j$, a spatial vote model may use
 
-\[
+$$
 P(Y_{ij}=1)=\sigma\!\left(\alpha_j+
 \boldsymbol{\beta}_j^{\mathsf T}\boldsymbol{\theta}_i+w_{ij}\right),
 \qquad
 P(R_j=1)=\sigma(\gamma_0+\gamma_1 q_j+\gamma_2 c_j+\gamma_3 a_j),
-\]
+$$
 
-where \(Y_{ij}\) is a yes/no vote, \(\boldsymbol{\theta}_i\) is a latent ideal
-point, \(w_{ij}\) is whip or strategic pressure, \(R_j\) marks a recorded roll
-call, \(q_j\) is expected position-taking value, \(c_j\) party-cohesion
-contrast, and \(a_j\) agenda state. Estimating the first equation only where
-\(R_j=1\) requires assumptions about the second.
+where $Y_{ij}$ is a yes/no vote, $\boldsymbol{\theta}_i$ is a latent ideal
+point, $w_{ij}$ is whip or strategic pressure, $R_j$ marks a recorded roll
+call, $q_j$ is expected position-taking value, $c_j$ party-cohesion
+contrast, and $a_j$ agenda state. Estimating the first equation only where
+$R_j=1$ requires assumptions about the second.
 
 ### Target metrics are observation and incentive operators
 
-For service unit \(u\) and period \(t\), let
+For service unit $u$ and period $t$, let
 
-\[
+$$
 M_{ut}=h_r(\mathbf{Q}_{ut},\mathbf{X}_{ut},\mathbf{G}_{ut})+\epsilon_{ut},
-\]
+$$
 
-where \(M_{ut}\) is the reported target metric, \(\mathbf{Q}_{ut}\) is the
-service-quality vector, \(\mathbf{X}_{ut}\) case mix and demand, and
-\(\mathbf{G}_{ut}\) classification, timing, diversion, or gaming actions.
-The residual \(\epsilon_{ut}\) is zero-mean reporting and measurement error in
-the same registered unit as \(M_{ut}\).
-Rule version \(r\) specifies the clock, denominator, censoring, and threshold.
-Observed \(M_{ut}\) cannot identify \(\mathbf{Q}_{ut}\) without constraints or
+where $M_{ut}$ is the reported target metric, $\mathbf{Q}_{ut}$ is the
+service-quality vector, $\mathbf{X}_{ut}$ case mix and demand, and
+$\mathbf{G}_{ut}$ classification, timing, diversion, or gaming actions.
+The residual $\epsilon_{ut}$ is zero-mean reporting and measurement error in
+the same registered unit as $M_{ut}$.
+Rule version $r$ specifies the clock, denominator, censoring, and threshold.
+Observed $M_{ut}$ cannot identify $\mathbf{Q}_{ut}$ without constraints or
 independent outcomes.
 
 ### Capacity is indexed by actor, task, level, and time
 
-Let \(\mathbf{k}_{a\ell qt}\) contain fiscal, personnel, informational,
-organizational, and implementation capacities for actor \(a\), government
-level \(\ell\), task \(q\), and time \(t\). A latent index
+Let $\mathbf{k}_{a\ell qt}$ contain fiscal, personnel, informational,
+organizational, and implementation capacities for actor $a$, government
+level $\ell$, task $q$, and time $t$. A latent index
 
-\[
+$$
 z_n=\boldsymbol{\lambda}^{\mathsf T}\mathbf{x}_n+\eta_n
-\]
+$$
 
-is a model of indicators \(\mathbf{x}_n\), loading vector
-\(\boldsymbol{\lambda}\), and residual \(\eta_n\). It does not imply
-\(\mathbf{k}_{a\ell qt}=z_n\mathbf{1}\), particularly for an agency or task
+is a model of indicators $\mathbf{x}_n$, loading vector
+$\boldsymbol{\lambda}$, and residual $\eta_n$. It does not imply
+$\mathbf{k}_{a\ell qt}=z_n\mathbf{1}$, particularly for an agency or task
 outside the index's support.
 
 ### Wealth tails combine observation and model choices
 
-For household wealth \(W_h\) in euros and threshold quantile \(p\), the top
+For household wealth $W_h$ in euros and threshold quantile $p$, the top
 share is
 
-\[
+$$
 S_p=\frac{\sum_h W_h\,\mathbb{1}[W_h\ge q_p]}
            {\sum_h W_h}.
-\]
+$$
 
-In a sample, inclusion probability \(\pi_h\), response probability \(\rho_h\),
+In a sample, inclusion probability $\pi_h$, response probability $\rho_h$,
 weights, stochastic imputations, asset valuation, and any fitted tail above
-\(w_{\min}\) alter the estimator. For a Pareto tail,
-\(P(W>w\mid W>w_{\min})=(w_{\min}/w)^\alpha\); \(\alpha\) and
-\(w_{\min}\) are assumptions with uncertainty, not observed constants.
+$w_{\min}$ alter the estimator. For a Pareto tail,
+$P(W>w\mid W>w_{\min})=(w_{\min}/w)^\alpha$; $\alpha$ and
+$w_{\min}$ are assumptions with uncertainty, not observed constants.
 
 ### A correspondence effect is stage- and signal-specific
 
-For randomized application signal \(Z\) and callback \(Y^{(1)}\),
+For randomized application signal $Z$ and callback $Y^{(1)}$,
 
-\[
+$$
 \tau_{1}=E[Y^{(1)}(1)-Y^{(1)}(0)\mid V\in\mathcal F],
-\]
+$$
 
-where \(\mathcal F\) is the sampled vacancy frame. This does not identify the
-interview, offer, wage, retention, or motive estimands \(\tau_2,\ldots,\tau_k\)
+where $\mathcal F$ is the sampled vacancy frame. This does not identify the
+interview, offer, wage, retention, or motive estimands $\tau_2,\ldots,\tau_k$
 without new interventions and support.
 
 ### Cumulative inequality is a trajectory, not a snapshot
 
-For person \(i\), state \(x_{it}\) in declared units evolves as
+For person $i$, state $x_{it}$ in declared units evolves as
 
-\[
+$$
 x_{i,t+1}=x_{it}+g_t(x_{it},e_{it},o_{it},\mathbf{c}_{it})+\epsilon_{it},
-\]
+$$
 
-where \(e_{it}\) is current input, \(o_{it}\) opportunity or exposure, and
-\(\mathbf{c}_{it}\) institutional context; \(\epsilon_{it}\) is a zero-mean
-innovation and measurement residual in the same declared unit as \(x_{it}\).
-Equal \(e_{it}\) at one time does
-not erase unequal \(x_{it}\), opportunity histories, or state-dependent
-returns. The function \(g_t\) may amplify, compensate, reverse, or ignore
+where $e_{it}$ is current input, $o_{it}$ opportunity or exposure, and
+$\mathbf{c}_{it}$ institutional context; $\epsilon_{it}$ is a zero-mean
+innovation and measurement residual in the same declared unit as $x_{it}$.
+Equal $e_{it}$ at one time does
+not erase unequal $x_{it}$, opportunity histories, or state-dependent
+returns. The function $g_t$ may amplify, compensate, reverse, or ignore
 prior advantage; cumulative advantage is not assumed universally.
 
 ### Cross-platform reach is a set union over resolved people
 
-Let \(E_{pdkt}\in\{0,1\}\) record whether person \(p\), through device/account
-\(d\), platform \(k\), and time \(t\), meets an exposure rule. Then
+Let $E_{pdkt}\in\{0,1\}$ record whether person $p$, through device/account
+$d$, platform $k$, and time $t$, meets an exposure rule. Then
 
-\[
+$$
 R=\left|\left\{p:\max_{d,k,t}E_{pdkt}=1\right\}\right|,
 \qquad
 F_p=\sum_{d,k,t}E_{pdkt}.
-\]
+$$
 
-Reach \(R\) is in people and frequency \(F_p\) in qualifying exposures per
+Reach $R$ is in people and frequency $F_p$ in qualifying exposures per
 person. Summing platform "unique" accounts double-counts unresolved people;
 deduplication is an inference with error, not a formatting operation.
 
@@ -287,16 +287,16 @@ an illustration of the set identity, not an estimate of real audience overlap.
 
 ### Moderation records are selected process outputs
 
-For content item \(j\), moderation record \(D_j\) can be written
+For content item $j$, moderation record $D_j$ can be written
 
-\[
+$$
 D_j=O_r(C_j,L_j,N_j,A_j,H_j,U_j),
-\]
+$$
 
-where \(C_j\) is underlying content/context, \(L_j\) applicable law or terms,
-\(N_j\) notices/orders, \(A_j\) automated detection, \(H_j\) human review,
-\(U_j\) user complaint/appeal, and \(O_r\) the versioned reporting operator.
-Counts of \(D_j\) lack the unmoderated denominator and do not alone identify
+where $C_j$ is underlying content/context, $L_j$ applicable law or terms,
+$N_j$ notices/orders, $A_j$ automated detection, $H_j$ human review,
+$U_j$ user complaint/appeal, and $O_r$ the versioned reporting operator.
+Counts of $D_j$ lack the unmoderated denominator and do not alone identify
 prevalence, false positives/negatives, exposure, or harm.
 
 ## Evidence synthesis and integrated claims
@@ -595,7 +595,7 @@ The following rules are part of all nine protocols and are not optional prose.
   treat people, households, motions, impressions, or decisions within a seed
   as independent confirmation replicates. Report a two-sided 99% bootstrap
   interval over seed differences and apply Holm correction across the nine
-  registered primary comparisons at familywise \(\alpha=0.05\).
+  registered primary comparisons at familywise $\alpha=0.05$.
 - **Joint resource gate:** C must use no more than B plus 5% CPU-seconds,
   peak RAM, stored bytes, and inference latency; any dimension above the bound
   fails noninferiority even if the scientific metric improves.
