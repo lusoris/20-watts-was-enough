@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "partition": "confirmation",
+  "state": "pending-implementation-freeze",
+  "algorithm": "sha256-json-array-v1",
+  "seed_count": null,
+  "commitment": null,
+  "reveal": null,
+  "note": "Seal a fresh unseen confirmation pack only after the generator, layout population, thresholds, comparator set, resource accounting, and workstation profile are frozen."
+}

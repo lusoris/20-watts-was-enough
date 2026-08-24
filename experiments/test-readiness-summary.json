@@ -2,14 +2,14 @@
   "schema": 1,
   "generatedFrom": "experiments/test-coverage.json",
   "claims": {
-    "total": 1375,
-    "testRouted": 1262,
-    "protocolCovered": 1262,
+    "total": 1429,
+    "testRouted": 1316,
+    "protocolCovered": 1316,
     "executionReady": 0,
     "tierCounts": {
       "ledger-only": 113,
       "linked-description": 0,
-      "protocol-complete": 1262,
+      "protocol-complete": 1316,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
@@ -28,11 +28,11 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 966,
-        "plausible": 193,
+        "established": 1010,
+        "plausible": 194,
         "speculative": 57,
         "disputed": 46,
-        "unknown": 0
+        "unknown": 9
       },
       "workstation-executable": {
         "established": 0,
@@ -54,16 +54,16 @@
     "proposedArtifactFamilies": 5
   },
   "artifacts": {
-    "total": 31,
-    "protocolComplete": 31,
-    "smokeReady": 1,
+    "total": 32,
+    "protocolComplete": 32,
+    "smokeReady": 3,
     "workstationReady": 0,
     "items": [
       {
         "id": "candidate-001",
         "path": "experiments/candidates/001-adaptive-topology.md",
         "title": "Candidate 001 — Adaptive logical topology under changing flow",
-        "linkedClaims": 68,
+        "linkedClaims": 71,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -89,7 +89,7 @@
         "id": "candidate-003",
         "path": "experiments/candidates/003-recovery-dynamics-fragility.md",
         "title": "Candidate 003: recovery dynamics as latent fragility sensing",
-        "linkedClaims": 44,
+        "linkedClaims": 48,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -102,7 +102,7 @@
         "id": "candidate-004",
         "path": "experiments/candidates/004-closed-endogenous-curriculum.md",
         "title": "Candidate 004: closed endogenous curriculum",
-        "linkedClaims": 111,
+        "linkedClaims": 116,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -115,7 +115,7 @@
         "id": "candidate-005",
         "path": "experiments/candidates/005-severity-ordered-containment.md",
         "title": "Candidate 005: severity-ordered containment and triage",
-        "linkedClaims": 110,
+        "linkedClaims": 111,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -128,7 +128,7 @@
         "id": "candidate-006",
         "path": "experiments/candidates/006-reversible-physical-skill.md",
         "title": "Candidate 006: reversible physical skill compilation",
-        "linkedClaims": 156,
+        "linkedClaims": 157,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -141,7 +141,7 @@
         "id": "candidate-007",
         "path": "experiments/candidates/007-endogenous-observation-surveillance.md",
         "title": "Candidate 007: intervention-aware surveillance under endogenous observation",
-        "linkedClaims": 133,
+        "linkedClaims": 153,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -167,7 +167,7 @@
         "id": "candidate-009",
         "path": "experiments/candidates/009-graded-assurance-envelopes.md",
         "title": "Candidate 009: versioned graded assurance envelopes",
-        "linkedClaims": 264,
+        "linkedClaims": 284,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -180,7 +180,7 @@
         "id": "candidate-010",
         "path": "experiments/candidates/010-reset-coupled-staged-verification.md",
         "title": "Candidate 010: reset-coupled staged verification",
-        "linkedClaims": 78,
+        "linkedClaims": 80,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "smoke-ready",
@@ -250,7 +250,7 @@
         "id": "candidate-011",
         "path": "experiments/candidates/011-dual-loop-operational-assurance.md",
         "title": "Candidate 011: dual-loop operational assurance",
-        "linkedClaims": 125,
+        "linkedClaims": 135,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -263,7 +263,7 @@
         "id": "candidate-012",
         "path": "experiments/candidates/012-latency-qualified-authority.md",
         "title": "Candidate 012: latency-qualified authority envelopes",
-        "linkedClaims": 213,
+        "linkedClaims": 223,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -276,7 +276,7 @@
         "id": "candidate-013",
         "path": "experiments/candidates/013-deficit-capability-routing.md",
         "title": "Candidate 013: bidirectional deficit–capability routing",
-        "linkedClaims": 96,
+        "linkedClaims": 99,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -289,7 +289,7 @@
         "id": "candidate-014",
         "path": "experiments/candidates/014-versioned-observation-contract.md",
         "title": "Candidate 014: versioned observation contracts",
-        "linkedClaims": 561,
+        "linkedClaims": 607,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -302,7 +302,7 @@
         "id": "candidate-015",
         "path": "experiments/candidates/015-versioned-repairable-conventions.md",
         "title": "Candidate 015: versioned, repairable conventions",
-        "linkedClaims": 72,
+        "linkedClaims": 74,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -328,7 +328,7 @@
         "id": "candidate-017",
         "path": "experiments/candidates/017-contract-preserving-semantic-compaction.md",
         "title": "Candidate 017: contract-preserving semantic compaction",
-        "linkedClaims": 95,
+        "linkedClaims": 97,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -341,7 +341,7 @@
         "id": "candidate-018",
         "path": "experiments/candidates/018-value-reconstructability-aware-tiering.md",
         "title": "Candidate 018: value- and reconstructability-aware artifact tiering",
-        "linkedClaims": 94,
+        "linkedClaims": 99,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -354,7 +354,7 @@
         "id": "candidate-019",
         "path": "experiments/candidates/019-audited-cumulative-inheritance.md",
         "title": "Candidate 019: audited cumulative inheritance",
-        "linkedClaims": 132,
+        "linkedClaims": 139,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -367,7 +367,7 @@
         "id": "candidate-020",
         "path": "experiments/candidates/020-constitutional-control-plane.md",
         "title": "Candidate 020: constitutionalized multi-level control plane",
-        "linkedClaims": 113,
+        "linkedClaims": 118,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -461,11 +461,69 @@
         "linkedClaims": 33,
         "protocolComplete": true,
         "missingFacets": [],
-        "executionReadiness": "absent",
+        "executionReadiness": "smoke-ready",
         "executionReady": false,
-        "executionManifest": null,
-        "executionClaims": [],
-        "promotionChecks": []
+        "executionManifest": "experiments/workstation/manifests/fixture-007.json",
+        "executionClaims": [
+          "C-970",
+          "C-972"
+        ],
+        "promotionChecks": [
+          {
+            "id": "execution-claim-scope",
+            "label": "Explicit execution-track claim scope",
+            "passed": true,
+            "detail": "execution track is limited to C-970, C-972"
+          },
+          {
+            "id": "full-profile",
+            "label": "Frozen full profile",
+            "passed": true,
+            "detail": "data.full_profile identity and SHA-256 match the frozen repository file"
+          },
+          {
+            "id": "full-tests",
+            "label": "Full experiment-path tests",
+            "passed": true,
+            "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
+          },
+          {
+            "id": "hash-chain",
+            "label": "Corruption-evident output ledger",
+            "passed": false,
+            "detail": "outputs.hash_chain must be wired through a tested ledger implementation"
+          },
+          {
+            "id": "resume",
+            "label": "Deterministic resume",
+            "passed": false,
+            "detail": "resume must declare an existing module/test and be integrated by the runner"
+          },
+          {
+            "id": "energy-provider",
+            "label": "Measured-energy provider",
+            "passed": false,
+            "detail": "energy provider config/module/test and frozen hash must enforce external measured-energy boundaries"
+          },
+          {
+            "id": "confirmation-seeds",
+            "label": "Frozen confirmation seeds",
+            "passed": false,
+            "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "held_out-seeds",
+            "label": "Frozen held-out seeds",
+            "passed": false,
+            "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "promotion-evidence",
+            "label": "Strict recomputed promotion evidence",
+            "passed": false,
+            "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
+          }
+        ]
       },
       {
         "id": "fixture-008",
@@ -518,6 +576,76 @@
         "executionManifest": null,
         "executionClaims": [],
         "promotionChecks": []
+      },
+      {
+        "id": "fixture-012",
+        "path": "experiments/fixtures/012-layout-randomized-performance-inference.md",
+        "title": "Fixture F-012 — Layout-randomized performance inference",
+        "linkedClaims": 1,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "smoke-ready",
+        "executionReady": false,
+        "executionManifest": "experiments/workstation/manifests/fixture-012.json",
+        "executionClaims": [
+          "C-1407"
+        ],
+        "promotionChecks": [
+          {
+            "id": "execution-claim-scope",
+            "label": "Explicit execution-track claim scope",
+            "passed": true,
+            "detail": "execution track is limited to C-1407"
+          },
+          {
+            "id": "full-profile",
+            "label": "Frozen full profile",
+            "passed": true,
+            "detail": "data.full_profile identity and SHA-256 match the frozen repository file"
+          },
+          {
+            "id": "full-tests",
+            "label": "Full experiment-path tests",
+            "passed": true,
+            "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
+          },
+          {
+            "id": "hash-chain",
+            "label": "Corruption-evident output ledger",
+            "passed": false,
+            "detail": "outputs.hash_chain must be wired through a tested ledger implementation"
+          },
+          {
+            "id": "resume",
+            "label": "Deterministic resume",
+            "passed": false,
+            "detail": "resume must declare an existing module/test and be integrated by the runner"
+          },
+          {
+            "id": "energy-provider",
+            "label": "Measured-energy provider",
+            "passed": false,
+            "detail": "energy provider config/module/test and frozen hash must enforce external measured-energy boundaries"
+          },
+          {
+            "id": "confirmation-seeds",
+            "label": "Frozen confirmation seeds",
+            "passed": false,
+            "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "held_out-seeds",
+            "label": "Frozen held-out seeds",
+            "passed": false,
+            "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "promotion-evidence",
+            "label": "Strict recomputed promotion evidence",
+            "passed": false,
+            "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
+          }
+        ]
       }
     ]
   }

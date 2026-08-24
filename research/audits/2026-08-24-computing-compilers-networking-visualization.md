@@ -1538,7 +1538,8 @@ exact statement, not to broader slogans.
 - **Used by:** [this audit](#perf-02--executable-layout-is-a-randomized-experimental-factor),
   [P-009](../principle-registry.md#p-009--maintenance-plane),
   [P-010](../principle-registry.md#p-010--structural-offloading-and-co-design),
-  and Candidate [014](../../experiments/candidates/014-versioned-observation-contract.md).
+  Candidate [014](../../experiments/candidates/014-versioned-observation-contract.md),
+  and [Fixture F-012](../../experiments/fixtures/012-layout-randomized-performance-inference.md).
 
 ### C-1408
 

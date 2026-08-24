@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "partition": "held-out",
+  "state": "pending-implementation-freeze",
+  "algorithm": "sha256-json-array-v1",
+  "seed_count": null,
+  "commitment": null,
+  "reveal": null,
+  "note": "Seal a fresh unseen held-out layout/noise/carryover family only after implementation freeze; visible development seeds and setup families are ineligible."
+}

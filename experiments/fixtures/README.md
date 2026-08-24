@@ -5,8 +5,10 @@ architecture candidates. Each fixture combines mechanisms owned elsewhere and
 tests whether their composition survives strong ordinary baselines, equal
 budgets, withheld regimes, perturbations, and explicit rejection rules.
 
-The first executable fixture slice is the
-[F-007 null-space-honesty smoke harness](../workstation/fixture-007/README.md).
+The executable fixture slices are the
+[F-007 null-space-honesty smoke harness](../workstation/fixture-007/README.md)
+and the [F-012 layout-randomized performance-inference
+harness](../workstation/fixture-012/README.md).
 Execution readiness is tracked separately from the completeness of each full
 fixture contract.
 
@@ -23,3 +25,4 @@ fixture contract.
 | F-009 | [Operator-qualified active acoustic inference](009-operator-qualified-active-acoustic-inference.md) | 002, 006, 007, 009, 012, 014 |
 | F-010 | [Boundary-qualified physical computation](010-boundary-qualified-physical-computation.md) | 001, 005, 006, 009, 010, 012, 014, 017, 018 |
 | F-011 | [Operator-qualified active chemical sensing](011-operator-qualified-active-chemical-sensing.md) | 002, 006, 007, 009, 010, 012, 014, 017, 018 |
+| F-012 | [Layout-randomized performance inference](012-layout-randomized-performance-inference.md) | 009 and 014; cross-cutting measurement null for compiled candidates |

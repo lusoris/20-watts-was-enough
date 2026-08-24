@@ -84,5 +84,17 @@
       "samples": 321
     },
     "status": "Analytical likelihoods from the Fixture 007 smoke configuration; this visualizes identifiability and is not an empirical result."
+  },
+  {
+    "id": "fixture-012-layout-selection",
+    "title": "Layout selection can manufacture a speedup",
+    "equation": "s = (mean Y_baseline - mean Y_candidate) / mean Y_baseline",
+    "source": "experiments/fixtures/012-layout-randomized-performance-inference.md",
+    "parameters": {
+      "config_path": "experiments/workstation/fixture-012/configs/smoke.json",
+      "seed": 0,
+      "study": 0
+    },
+    "status": "Noise-free synthetic expectations generated from the Fixture 012 smoke configuration; this is a design diagnostic, not an empirical performance result."
   }
 ]

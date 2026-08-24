@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "artifact": "fixture-012",
+  "readiness": "smoke-ready",
+  "command": {
+    "prepare": "node experiments/workstation/fixture-012/runner.mjs prepare --profile smoke",
+    "smoke": "node experiments/workstation/fixture-012/runner.mjs smoke --profile smoke --output <run-directory>",
+    "run": "node experiments/workstation/fixture-012/runner.mjs run --profile development --output <run-directory>",
+    "analyze": "node experiments/workstation/fixture-012/runner.mjs analyze --output <run-directory>",
+    "validate": "node experiments/workstation/fixture-012/runner.mjs validate --output <run-directory>"
+  },
+  "environment": {
+    "runtime": "Node.js >=22.13.0 on Windows x64",
+    "lockfiles": ["package-lock.json"]
+  },
+  "hardware": {
+    "smoke": {
+      "cpu": "one x64 CPU thread or more",
+      "memory_bytes": 134217728,
+      "disk_bytes": 52428800,
+      "energy": "modeled fixture value only; no measured joules"
+    },
+    "workstation": {
+      "cpu": "x64 CPU with frozen compiler, linker, executable-layout randomization, and launch adapter",
+      "memory_bytes": 1073741824,
+      "disk_bytes": 1073741824,
+      "energy": "calibrated external wall or rail meter required before workstation-ready promotion"
+    }
+  },
+  "seeds": {
+    "development": "experiments/workstation/fixture-012/seeds/development.json",
+    "confirmation": "experiments/workstation/fixture-012/seeds/confirmation.commit.json",
+    "held_out": "experiments/workstation/fixture-012/seeds/held-out.commit.json"
+  },
+  "data": {
+    "generator": "experiments/workstation/fixture-012/generator.mjs",
+    "full_profile": "experiments/workstation/fixture-012/configs/development.json",
+    "full_profile_sha256": "4a50d8200bebbe7974de9b604ac7646c3dd6ca3260176456526b2869ee7f761e",
+    "external": []
+  },
+  "outputs": {
+    "directory": "experiments/workstation/runs/fixture-012-*",
+    "schema": "experiments/workstation/fixture-012/output.schema.json",
+    "append_only": true,
+    "hash_chain": true
+  },
+  "implementation": {
+    "entrypoint": "experiments/workstation/fixture-012/runner.mjs",
+    "tests": [
+      "experiments/workstation/fixture-012/contract.test.mjs",
+      "experiments/workstation/fixture-012/runner.test.mjs",
+      "experiments/workstation/fixture-012/manifest.test.mjs"
+    ],
+    "full_tests": [
+      "experiments/workstation/fixture-012/contract.test.mjs",
+      "experiments/workstation/fixture-012/runner.test.mjs",
+      "experiments/workstation/fixture-012/manifest.test.mjs"
+    ],
+    "execution_claims": ["C-1407"]
+  },
+  "energy": {
+    "mode": "modeled-fixture-only",
+    "required": false
+  },
+  "resume": {
+    "supported": false
+  },
+  "promotion_evidence": {
+    "status": "pending",
+    "evidence_path": "experiments/workstation/promotion/fixture-012/evidence.json",
+    "promotion_validation_receipt_path": "experiments/workstation/promotion/fixture-012/promotion-validation.launch-receipt.json",
+    "run_directory": "experiments/workstation/runs/fixture-012-confirmation",
+    "release_root": "experiments/workstation/releases/fixture-012",
+    "release_path": "experiments/workstation/releases/fixture-012/confirmation.release.json",
+    "energy_assignments_path": "experiments/workstation/runs/fixture-012-confirmation/energy-assignments.json",
+    "disjoint_seed_pack_paths": [
+      "experiments/workstation/releases/fixture-012/held-out.reveal.json"
+    ]
+  }
+}

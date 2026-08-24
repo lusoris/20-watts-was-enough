@@ -1,5 +1,6 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
+import { generateLayoutStudy } from "../experiments/workstation/fixture-012/generator.mjs";
 
 const root = process.cwd();
 const specs = JSON.parse(
@@ -338,6 +339,95 @@ function fixtureIdentifiability(spec) {
   });
 }
 
+async function fixtureLayoutSelection(spec) {
+  const { config_path: configPath, seed, study } = spec.parameters;
+  const absoluteConfigPath = path.resolve(root, configPath);
+  const relativeConfigPath = path.relative(root, absoluteConfigPath);
+  if (relativeConfigPath.startsWith("..") || path.isAbsolute(relativeConfigPath)) {
+    throw new Error(`Fixture 012 plot config escapes the repository: ${configPath}`);
+  }
+  const sourceConfig = JSON.parse(await readFile(absoluteConfigPath, "utf8"));
+  const analyticConfig = {
+    ...sourceConfig,
+    process_noise_fraction: 0,
+    repeat_noise_fraction: 0,
+  };
+  const generated = generateLayoutStudy({ seed, study, config: analyticConfig });
+  const meanLatency = (rows, variant) => {
+    const selected = rows.filter((row) => row.variant === variant);
+    return selected.reduce((sum, row) => sum + row.latency_ns, 0) / selected.length;
+  };
+  const speedup = (rows) => {
+    const baseline = meanLatency(rows, "baseline");
+    const candidate = meanLatency(rows, "candidate");
+    return {
+      baseline,
+      candidate,
+      percent: 100 * (baseline - candidate) / baseline,
+    };
+  };
+  const fixed = speedup(generated.fixed);
+  const complete = speedup(generated.randomized);
+  const rows = [
+    {
+      name: "Fixed favorable layout",
+      detail: `layout 0 repeated · ${sourceConfig.layouts_per_study} equal-budget slots`,
+      result: fixed,
+      color: colors.coral,
+      interpretation: "false speedup",
+    },
+    {
+      name: "Complete layout population",
+      detail: `${sourceConfig.layouts_per_study} layouts · counterbalanced order`,
+      result: complete,
+      color: colors.green,
+      interpretation: "population null",
+    },
+    {
+      name: "Operator-qualified parity",
+      detail: "identical mature payload and budget",
+      result: complete,
+      color: colors.cyan,
+      interpretation: "exact parity",
+    },
+  ];
+  const axisLeft = 474;
+  const axisRight = 1008;
+  const xMin = 0;
+  const xMax = 8;
+  const xMap = (value) => axisLeft + ((value - xMin) / (xMax - xMin)) * (axisRight - axisLeft);
+  const rowY = [252, 362, 472];
+  const ticks = [0, 2, 4, 6, 8];
+  const tickMarkup = ticks.map((tick) => {
+    const x = xMap(tick);
+    return `<line x1="${x}" y1="${plot.top + 44}" x2="${x}" y2="${plot.bottom - 30}" stroke="${colors.grid}" stroke-width="1" opacity=".8"/><text x="${x}" y="${plot.bottom - 6}" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="middle">${tick}%</text>`;
+  }).join("");
+  const rowMarkup = rows.map((row, index) => {
+    const y = rowY[index];
+    const valueX = xMap(Math.max(xMin, Math.min(xMax, row.result.percent)));
+    const percent = Math.abs(row.result.percent) < 0.0005 ? "0.00%" : `${row.result.percent.toFixed(2)}%`;
+    const means = `${(row.result.baseline / 1e6).toFixed(3)} → ${(row.result.candidate / 1e6).toFixed(3)} ms`;
+    return `<text x="138" y="${y - 8}" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="17" font-weight="700">${esc(row.name)}</text>
+      <text x="138" y="${y + 16}" fill="${colors.muted}" font-family="Segoe UI, sans-serif" font-size="12">${esc(row.detail)}</text>
+      <line x1="${axisLeft}" y1="${y}" x2="${valueX}" y2="${y}" stroke="${row.color}" stroke-width="8" stroke-linecap="round" opacity=".65"/>
+      <circle cx="${valueX}" cy="${y}" r="10" fill="${row.color}" stroke="${colors.text}" stroke-width="2"/>
+      <text x="${Math.min(axisRight - 4, valueX + 18)}" y="${y - 12}" fill="${row.color}" font-family="Cascadia Mono, monospace" font-size="17" font-weight="700" text-anchor="${valueX > axisRight - 80 ? "end" : "start"}">${percent}</text>
+      <text x="${Math.min(axisRight - 4, valueX + 18)}" y="${y + 18}" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="${valueX > axisRight - 80 ? "end" : "start"}">${esc(means)} · ${esc(row.interpretation)}</text>`;
+  }).join("");
+  const content = `${tickMarkup}
+  <line x1="${axisLeft}" y1="${plot.top + 36}" x2="${axisLeft}" y2="${plot.bottom - 30}" stroke="${colors.text}" stroke-width="3"/>
+  <text x="${axisLeft}" y="${plot.top + 24}" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" text-anchor="middle">no speedup</text>
+  ${rowMarkup}
+  <rect x="138" y="${plot.bottom - 50}" width="302" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
+  <text x="289" y="${plot.bottom - 30}" fill="${colors.amber}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700" text-anchor="middle">synthetic mean latency: baseline → candidate</text>`;
+  return frame(spec, content, {
+    xLabel: "apparent candidate mean-latency reduction (%)",
+    yLabel: "evaluation design",
+    badge: "SYNTHETIC FIXTURE · ANALYTICAL",
+    footer: `${configPath} · noise disabled · no measured runtime`,
+  });
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -345,12 +435,13 @@ const renderers = {
   "lifecycle-break-even": lifecycle,
   "candidate-010-metering-scale": meteringScale,
   "fixture-007-identifiability": fixtureIdentifiability,
+  "fixture-012-layout-selection": fixtureLayoutSelection,
 };
 
 for (const spec of specs) {
   const renderer = renderers[spec.id];
   if (!renderer) throw new Error(`No plot renderer for ${spec.id}`);
-  const svg = renderer(spec);
+  const svg = await renderer(spec);
   await writeFile(path.join(outputDirectory, `${spec.id}.svg`), `${svg}\n`, "utf8");
 }
 

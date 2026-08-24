@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "artifact": "fixture-012",
+  "profile": "development",
+  "opportunities_per_seed": 12,
+  "studies_per_seed": 12,
+  "layouts_per_study": 16,
+  "invocations_per_layout": 3,
+  "repeats_per_invocation": 2,
+  "base_latency_ns": 1000000,
+  "layout_interaction_fraction": 0.06,
+  "layout_offset_fraction": 0.08,
+  "process_noise_fraction": 0.01,
+  "repeat_noise_fraction": 0.005,
+  "order_carryover_fraction": 0.01,
+  "speedup_threshold_fraction": 0.02,
+  "null_tolerance_fraction": 0.01,
+  "modeled_work_units_per_observation": 1000,
+  "modeled_energy_j_per_observation": 0.000002
+}

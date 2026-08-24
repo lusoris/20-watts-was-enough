@@ -1,9 +1,11 @@
 # Workstation execution contract
 
-The repository now contains two executable smoke harnesses alongside research
+The repository now contains three executable smoke harnesses alongside research
 and protocol specifications, but no workstation-ready scientific package:
 [Candidate 010](candidate-010/README.md) exercises staged verification and
-[Fixture F-007](fixture-007/README.md) exercises optical null-space honesty.
+[Fixture F-007](fixture-007/README.md) exercises optical null-space honesty;
+[Fixture F-012](fixture-012/README.md) exercises layout-population performance
+inference.
 A test becomes workstation-ready only when its
 checked manifest exists at `experiments/workstation/manifests/<artifact-id>.json`,
 passes `npm run validate:workstation`, declares `workstation-ready`, names all
@@ -59,6 +61,15 @@ inside the repository. The coverage audit no longer treats six arbitrary
 non-empty JSON fields as proof of execution readiness.
 
 ## Current implementation
+
+[Fixture F-012](fixture-012/README.md) provides a deterministic synthetic
+negative control for fixed-layout performance claims. Its complete mature null
+randomizes the declared layout population, counterbalances variant order, and
+uses independent studies for uncertainty. An identically informed
+operator-qualified arm must match the null exactly at equal observation,
+modeled-work, and modeled-energy budgets. The append-only SHA-256 ledger and
+recomputed analysis are hostile-tested, but timings and joules remain modeled
+and no confirmation or held-out release exists.
 
 [Candidate 010](candidate-010/README.md) now has the first validated
 `smoke-ready` harness. It exercises deterministic paired opportunities, seven

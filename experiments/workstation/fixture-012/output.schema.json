@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-012.raw-event.schema.json",
+  "title": "Fixture 012 layout-randomized performance raw event",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "contract.mjs",
+    "export": "assertFixture012Record",
+    "version_export": "FIXTURE_012_EVENT_CONTRACT_VERSION",
+    "contract_version": "fixture-012.raw-event.v1",
+    "test": "contract.test.mjs"
+  },
+  "required": [
+    "schema",
+    "contract_version",
+    "artifact",
+    "run_id",
+    "sequence",
+    "seed",
+    "study",
+    "arm",
+    "estimand",
+    "setup_policy",
+    "observation_id",
+    "layout_slot",
+    "layout_id",
+    "invocation",
+    "repeat",
+    "variant",
+    "run_position",
+    "latency_ns",
+    "true_population_effect_fraction",
+    "modeled_work_units",
+    "modeled_energy_j",
+    "previous_hash",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-012.raw-event.v1" },
+    "artifact": { "const": "fixture-012" },
+    "run_id": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "seed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+    "study": { "type": "integer", "minimum": 0 },
+    "arm": {
+      "enum": [
+        "fixed-layout-negative-control",
+        "mature-randomized-counterbalanced",
+        "operator-qualified-randomized"
+      ]
+    },
+    "estimand": { "const": "candidate-minus-baseline-layout-population-mean-v1" },
+    "setup_policy": {
+      "enum": [
+        "fixed-single-pair-repeated",
+        "randomized-counterbalanced-layout-population"
+      ]
+    },
+    "observation_id": { "type": "string", "minLength": 1 },
+    "layout_slot": { "type": "integer", "minimum": 0 },
+    "layout_id": { "type": "integer", "minimum": 0 },
+    "invocation": { "type": "integer", "minimum": 0 },
+    "repeat": { "type": "integer", "minimum": 0 },
+    "variant": { "enum": ["baseline", "candidate"] },
+    "run_position": { "enum": [0, 1] },
+    "latency_ns": { "type": "integer", "minimum": 1 },
+    "true_population_effect_fraction": { "const": 0 },
+    "modeled_work_units": { "type": "integer", "minimum": 1 },
+    "modeled_energy_j": { "type": "number", "exclusiveMinimum": 0 },
+    "previous_hash": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      ]
+    },
+    "record_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

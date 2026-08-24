@@ -18,6 +18,16 @@ the exact diff; this file records why the project changed.
   rejects duplicate or out-of-order claim definitions and duplicate BibTeX
   keys, after catching and correcting one misplaced integration block.
 
+- Fixture F-012 adds a deterministic layout-population performance-inference
+  smoke harness for `C-1407`. Sixteen tests cover a 1,536-event smoke profile
+  and a frozen 27,648-event development profile, including an exact noise-free
+  population-null check, equal modeled work and energy, append-only SHA-256 raw
+  records, replay/corruption refusal, and byte-identical mature/operator paths.
+  Its generated analytical plot makes the synthetic failure visible: selecting
+  one favorable layout reports a false 7.53% speedup while the complete,
+  counterbalanced layout population and its operator-qualified copy both return
+  exactly 0.00%. The harness remains smoke-only and claim-ineligible.
+
 - Decision 0012 and the second executable smoke harness: Fixture F-007 now has
   a deterministic null-space-honesty track for claims `C-970` and `C-972`.
   Eight registered tests cover the full 8,192-event development profile,
