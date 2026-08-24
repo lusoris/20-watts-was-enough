@@ -442,14 +442,10 @@ Report $\Delta_{k,j}$ in the native unit of outcome $j$ with a 95% uncertainty
 interval over independent scene, operator, regime, device, site, and seed
 strata.
 
-The residual is retired when the complete mature null composition matches the
-preregistered protected vector at equal information, hardware, person-hours,
-and lifecycle joules; when a gain depends on hidden prior, operator, calibration,
-or test-query leakage; when a route loses on held-out devices or regimes; or
-when no preregistered ablation isolates value beyond conventional inverse
-methods, uncertainty quantification, phase retrieval, compressed sensing,
-computational imaging, adaptive optics and control, digital acceleration,
-passive optics, hybrid co-design, and calibration.
-
-Editable system diagram:
+Retire the residual when an equal-budget mature-null composition matches the
+protected vector; when a gain depends on hidden prior, operator, calibration,
+or query leakage; when it fails held-out devices or regimes; or when no
+preregistered ablation isolates value beyond the registered inverse,
+uncertainty, sensing, control, acceleration, optical, hybrid-design, and
+calibration baselines. The editable source for the system diagram is
 [operator-qualified-physical-inference.mmd](../assets/diagrams/operator-qualified-physical-inference.mmd).

@@ -1,5 +1,6 @@
+/* eslint-disable @next/next/no-html-link-for-pages -- Vinext's next/link
+ * client runtime fails during RSC prefetch; plain anchors preserve navigation. */
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ReadinessOverview } from "../components/readiness-overview";
 
 export const metadata: Metadata = {
@@ -12,9 +13,9 @@ export default function ReadinessPage() {
   return (
     <main className="readiness-page">
       <nav className="readiness-page-nav" aria-label="Research readiness navigation">
-        <Link href="/">← Research library</Link>
-        <Link href="/?doc=experiments%2Ftest-coverage.md">Full coverage report</Link>
-        <Link href="/book">Printable book</Link>
+        <a href="/">← Research library</a>
+        <a href="/?doc=experiments%2Ftest-coverage.md">Full coverage report</a>
+        <a href="/book">Printable book</a>
       </nav>
       <ReadinessOverview />
     </main>
