@@ -35,8 +35,8 @@ the rule is retained as memory, or the implementation is impaired.
 
 ## Representation, recognition, and permission
 
-Let $\mathcal S$ be the declared scenario set and $\mathcal R_t\subseteq
-\mathcal S$ the scenarios represented by current evidence. Representation
+Let $\mathcal S$ be the declared scenario set and $\mathcal R_t\subseteq\mathcal S$
+the scenarios represented by current evidence. Representation
 coverage is
 
 $$

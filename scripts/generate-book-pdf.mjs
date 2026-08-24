@@ -119,7 +119,8 @@ const bookMarkdown = sourceSnapshot.files.filter(
   (file) =>
     file === "README.md" ||
     file === "research/field-coverage.md" ||
-    file.startsWith("concept/"),
+    file.startsWith("concept/") ||
+    file.startsWith("math/"),
 );
 const expectedBookSections = bookMarkdown.length + 1;
 let expectedDiagrams = 0;
@@ -236,6 +237,13 @@ try {
         documents: document.querySelectorAll('.book-document').length,
         diagrams: document.querySelectorAll('.diagram').length,
         loading: document.querySelectorAll('.diagram-loading').length,
+        incompleteImages: [...document.images]
+          .filter((image) => !image.complete || image.naturalWidth <= 0)
+          .map((image) => ({
+            src: image.currentSrc || image.src,
+            complete: image.complete,
+            naturalWidth: image.naturalWidth,
+          })),
         errors: [...document.querySelectorAll('.diagram-error')]
           .map((node) => node.textContent?.slice(0, 500) ?? 'unknown diagram error'),
       };
@@ -266,6 +274,13 @@ try {
   if (browserProcess) await stopProcess(browserProcess);
   await stopProcess(server);
   await rm(resolvedProfile, { recursive: true, force: true });
+}
+
+const finalSourceSnapshot = await bookSourceDigest(projectRoot);
+if (finalSourceSnapshot.digest !== sourceSnapshot.digest) {
+  throw new Error(
+    "Book sources changed during rendering; the PDF was not manifested. Re-run from a stable source tree.",
+  );
 }
 
 const pdfStats = await stat(outputPdf);

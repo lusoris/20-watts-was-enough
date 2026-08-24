@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { Fragment, useCallback, useMemo } from "react";
 import type { ResearchDocument } from "../content";
 import { MarkdownDocument } from "./markdown-document";
 import { ReadinessOverview } from "./readiness-overview";
@@ -14,13 +14,22 @@ function bookId(path: string) {
 
 function documentNumber(
   path: string,
-  index: number,
+  conceptDocuments: ResearchDocument[],
+  mathDocuments: ResearchDocument[],
   appendixDocuments: ResearchDocument[],
 ) {
   const appendixIndex = appendixDocuments.findIndex((document) => document.path === path);
-  return appendixIndex >= 0
-    ? `A${appendixIndex + 1}`
-    : String(index + 1).padStart(2, "0");
+  if (appendixIndex >= 0) return `A${appendixIndex + 1}`;
+  const mathIndex = mathDocuments.findIndex((document) => document.path === path);
+  if (mathIndex >= 0) return `M${String(mathIndex + 1).padStart(2, "0")}`;
+  const conceptIndex = conceptDocuments.findIndex((document) => document.path === path);
+  return String(conceptIndex + 1).padStart(2, "0");
+}
+
+function documentLabel(path: string) {
+  if (appendixPaths.includes(path)) return "Appendix";
+  if (path.startsWith("math/")) return "Mathematical note";
+  return "Chapter";
 }
 
 export function BookEdition({ documents }: { documents: ResearchDocument[] }) {
@@ -42,9 +51,19 @@ export function BookEdition({ documents }: { documents: ResearchDocument[] }) {
         .filter((document): document is ResearchDocument => document !== undefined),
     [documents],
   );
+  const mathDocuments = useMemo(
+    () =>
+      documents.filter(
+        (document) =>
+          document.kind === "markdown" &&
+          document.path.startsWith("math/") &&
+          document.path !== "math/README.md",
+      ),
+    [documents],
+  );
   const bookDocuments = useMemo(
-    () => [...conceptDocuments, ...appendixDocuments],
-    [appendixDocuments, conceptDocuments],
+    () => [...conceptDocuments, ...mathDocuments, ...appendixDocuments],
+    [appendixDocuments, conceptDocuments, mathDocuments],
   );
   const bookDocumentPaths = useMemo(
     () => new Set(bookDocuments.map((document) => document.path)),
@@ -105,7 +124,7 @@ export function BookEdition({ documents }: { documents: ResearchDocument[] }) {
           <div>
             <dt>Contents</dt>
             <dd>
-              {conceptDocuments.length} canonical documents + {appendixDocuments.length} generated appendix
+              {conceptDocuments.length} concept documents + {mathDocuments.length} mathematical notes + {appendixDocuments.length} generated appendix
             </dd>
           </div>
           <div>
@@ -130,14 +149,30 @@ export function BookEdition({ documents }: { documents: ResearchDocument[] }) {
               <code>generated front matter</code>
             </a>
           </li>
-          {bookDocuments.map((document, index) => (
-            <li key={document.path}>
-              <a href={`#${bookId(document.path)}`}>
-                <span>{documentNumber(document.path, index, appendixDocuments)}</span>
-                <strong>{document.title}</strong>
-                <code>{document.path}</code>
-              </a>
-            </li>
+          {[
+            ["Concept", conceptDocuments],
+            ["Mathematical notes", mathDocuments],
+            ["Appendix", appendixDocuments],
+          ].map(([label, sectionDocuments]) => (
+            <Fragment key={label as string}>
+              <li className="book-toc-section">{label as string}</li>
+              {(sectionDocuments as ResearchDocument[]).map((document) => (
+                <li key={document.path}>
+                  <a href={`#${bookId(document.path)}`}>
+                    <span>
+                      {documentNumber(
+                        document.path,
+                        conceptDocuments,
+                        mathDocuments,
+                        appendixDocuments,
+                      )}
+                    </span>
+                    <strong>{document.title}</strong>
+                    <code>{document.path}</code>
+                  </a>
+                </li>
+              ))}
+            </Fragment>
           ))}
         </ol>
       </section>
@@ -154,7 +189,7 @@ export function BookEdition({ documents }: { documents: ResearchDocument[] }) {
         <ReadinessOverview mode="book" />
       </section>
 
-      {bookDocuments.map((document, index) => (
+      {bookDocuments.map((document) => (
         <section
           className="book-document"
           id={bookId(document.path)}
@@ -162,8 +197,13 @@ export function BookEdition({ documents }: { documents: ResearchDocument[] }) {
         >
           <div className="book-document-meta">
             <span>
-              {appendixPaths.includes(document.path) ? "Appendix" : "Chapter"}{" "}
-              {documentNumber(document.path, index, appendixDocuments)}
+              {documentLabel(document.path)}{" "}
+              {documentNumber(
+                document.path,
+                conceptDocuments,
+                mathDocuments,
+                appendixDocuments,
+              )}
             </span>
             <code>{document.path}</code>
             <span>{document.words.toLocaleString("en-US")} words</span>

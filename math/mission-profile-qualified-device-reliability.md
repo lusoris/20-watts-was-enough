@@ -268,8 +268,8 @@ d_{\mathrm{sup}}(x)=
 \left\|x-x'\right\|_{\Sigma^{-1}},
 $$
 
-where $\Sigma$ is a fixed covariance or scale matrix, $\|v\|_{\Sigma^{-1}}
-=\sqrt{v^{\top}\Sigma^{-1}v}$ is dimensionless Mahalanobis distance, and
+where $\Sigma$ is a fixed covariance or scale matrix,
+$\|v\|_{\Sigma^{-1}}=\sqrt{v^{\top}\Sigma^{-1}v}$ is dimensionless Mahalanobis distance, and
 $d_{\mathrm{sup}}$ is dimensionless. A prediction is out of support when
 $d_{\mathrm{sup}}(x)>d_{\max}$ for preregistered dimensionless threshold
 $d_{\max}$.

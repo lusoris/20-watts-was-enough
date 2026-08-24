@@ -92,8 +92,8 @@ the complete circuit and controls [J], $E^{\mathrm{IT}}$ is metered IT energy
 for the complete workload [J], $E^{\mathrm{fac}}$ is allocated facility energy
 [J], and $E^{\mathrm{emb}}$ is allocated fabrication-to-retirement energy [J].
 The vector is not a sum: boundaries can be nested. A report must state whether
-$E^{\mathrm{dev}}\subset E^{\mathrm{circ}}\subset E^{\mathrm{IT}}
-\subset E^{\mathrm{fac}}$ for its meters.
+$E^{\mathrm{dev}}\subset E^{\mathrm{circ}}\subset E^{\mathrm{IT}}\subset E^{\mathrm{fac}}$
+for its meters.
 
 Per-accepted-outcome intensity at boundary $b$ is
 

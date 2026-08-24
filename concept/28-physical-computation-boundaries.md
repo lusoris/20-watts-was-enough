@@ -187,8 +187,8 @@ where the components are respectively theorem-qualified fundamental lower bound,
 device-terminal energy, complete circuit/control energy, workload IT energy,
 allocated facility energy, and allocated embodied energy [J]. The vector is not
 a sum: in many measurements
-$E^{\mathrm{dev}}\subset E^{\mathrm{circ}}\subset E^{\mathrm{IT}}
-\subset E^{\mathrm{fac}}$. For boundary $b$, useful intensity is
+$E^{\mathrm{dev}}\subset E^{\mathrm{circ}}\subset E^{\mathrm{IT}}\subset E^{\mathrm{fac}}$.
+For boundary $b$, useful intensity is
 
 $$
 e^b=\frac{E^b}{N_{\mathrm{acc}}}

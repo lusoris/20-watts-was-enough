@@ -9,9 +9,9 @@ Candidate 010's first external-energy contract attached one calibrated reading
 to every opportunity–arm record. The nominal confirmation matrix contains 24
 scenarios, seven arms, 10,000 opportunities per seed, and at least two seeds:
 
-\[
+$$
 24 \times 7 \times 10{,}000 \times 2 = 3{,}360{,}000
-\]
+$$
 
 work units. Treating every millisecond-scale work unit as a separately metered
 interval would require millions of readings and review artifacts while asking

@@ -404,8 +404,7 @@ where:
 - $[t_{\mathrm{from}},t_{\mathrm{to}})$ is the asserted validity interval;
 - $v_r$ is the immutable record version;
 - $\pi$ is the access, retention, and jurisdiction policy; and
-- $\sigma\in\{\text{active},\text{superseded},\text{revoked},
-  \text{disputed}\}$ is record status.
+- $\sigma\in\{\text{active},\text{superseded},\text{revoked},\text{disputed}\}$ is record status.
 
 Timestamps use UTC with declared resolution. Differences between timestamps
 are reported in seconds. A record may also carry source-supplied confidence or

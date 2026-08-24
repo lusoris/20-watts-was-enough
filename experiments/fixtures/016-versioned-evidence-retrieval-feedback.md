@@ -568,8 +568,8 @@ energy gates.
 ### C-798 vector: feedback lifecycle and causal mechanisms
 
 The mature feedback comparator set is exactly R4 and R5. Let
-$G_A=\{\text{mistaken},\text{delayed},\text{exposure-biased},
-\text{poisoned}\}$ and let an overbar denote an equal-weight mean over those
+$G_A=\{\text{mistaken},\text{delayed},\text{exposure-biased},\text{poisoned}\}$
+and let an overbar denote an equal-weight mean over those
 four regime-specific seed metrics. V passes C-798 only if every outer entry
 passes:
 

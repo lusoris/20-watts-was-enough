@@ -18,6 +18,8 @@ async function markdownFiles(directory) {
 export async function bookSourceFiles(projectRoot) {
   const conceptFiles = (await markdownFiles(path.join(projectRoot, "concept")))
     .filter((file) => path.basename(file) !== "README.md");
+  const mathFiles = (await markdownFiles(path.join(projectRoot, "math")))
+    .filter((file) => path.basename(file) !== "README.md");
   const supportFiles = [
     "README.md",
     "app/book/page.tsx",
@@ -34,11 +36,12 @@ export async function bookSourceFiles(projectRoot) {
     "research/field-coverage.md",
     "scripts/book-source.mjs",
     "scripts/generate-book-pdf.mjs",
+    "vite.config.ts",
   ].map((file) => path.join(projectRoot, file));
   const plotFiles = await readdir(path.join(projectRoot, "public", "plots"), {
     withFileTypes: true,
   });
-  return [...supportFiles, ...conceptFiles, ...plotFiles
+  return [...supportFiles, ...conceptFiles, ...mathFiles, ...plotFiles
     .filter((entry) => entry.isFile())
     .map((entry) => path.join(projectRoot, "public", "plots", entry.name))]
     .sort((left, right) => left.localeCompare(right));

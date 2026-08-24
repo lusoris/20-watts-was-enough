@@ -1994,6 +1994,17 @@ button {
   border-bottom: 1px solid var(--line);
 }
 
+.book-toc li.book-toc-section {
+  padding: 28px 4px 8px;
+  border-bottom: 2px solid var(--green-strong);
+  color: var(--green-strong);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .book-toc a {
   display: grid;
   grid-template-columns: 42px minmax(0, 1fr) auto;
@@ -2188,6 +2199,11 @@ button {
   .book-toc a > span,
   .book-toc code {
     font-size: 6.5pt;
+  }
+
+  .book-toc li.book-toc-section {
+    padding: 4mm 1mm 1.5mm;
+    font-size: 7pt;
   }
 
   .book-document {

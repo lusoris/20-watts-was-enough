@@ -13,6 +13,7 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "validate:docs": "pwsh -File scripts/validate-docs.ps1",
     "validate:math": "node scripts/validate-math.mjs",
+    "format:math": "node scripts/normalize-math-delimiters.mjs --write",
     "validate:workstation": "node scripts/validate-workstation.mjs",
     "test:workstation": "node --test --test-isolation=none experiments/workstation/**/*.test.mjs",
     "test:readiness": "node --test --test-isolation=none scripts/readiness-summary.test.mjs",

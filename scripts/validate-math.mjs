@@ -26,7 +26,7 @@ async function collectMarkdown(directory) {
 }
 
 function maskCodeFences(markdown) {
-  return markdown.replace(/```[\s\S]*?```/g, (block) =>
+  return markdown.replace(/(?:```[\s\S]*?```|~~~[\s\S]*?~~~)/g, (block) =>
     block.replace(/[^\n]/g, " "),
   );
 }
@@ -65,6 +65,11 @@ let fileCount = 0;
 for (const file of files) {
   const markdown = await readFile(file, "utf8");
   const masked = maskCodeFences(markdown);
+  for (const match of masked.matchAll(/\\\(|\\\)|^\s*\\\[\s*$|^\s*\\\]\s*$/gm)) {
+    failures.push(
+      `${path.relative(root, file)}:${lineAt(masked, match.index ?? 0)}: unsupported ${match[0].trim()} math delimiter; use $ for inline or $$ for display math so GitHub and the private site render the same source`,
+    );
+  }
   const delimiters = masked.match(/\$\$/g)?.length ?? 0;
 
   if (delimiters % 2 !== 0) {
@@ -104,6 +109,15 @@ for (const file of files) {
   const inlineMasked = masked.replace(/\$\$[\s\S]*?\$\$/g, (block) =>
     block.replace(/[^\n]/g, " "),
   );
+  const inlineLines = inlineMasked.split("\n");
+  for (const [index, line] of inlineLines.entries()) {
+    const delimiters = line.match(/(?<!\\)\$(?!\$)/g)?.length ?? 0;
+    if (delimiters % 2 !== 0) {
+      failures.push(
+        `${path.relative(root, file)}:${index + 1}: unbalanced inline $ delimiters; inline math must open and close on the same source line`,
+      );
+    }
+  }
   for (const match of inlineMasked.matchAll(
     /(?<!\\)\$(?!\$)([^$\n]*?)(?<!\\)\$(?!\$)/g,
   )) {

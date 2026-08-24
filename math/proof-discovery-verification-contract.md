@@ -105,8 +105,9 @@ $$
 z_i=(p_i,\theta_i,O_i,H_i,q_i,I_e).
 $$
 
-For a universally quantified candidate $p_i\equiv\forall x\in\mathcal X_i:
-P_i(x)$, an exact counterexample is an element $x^*\in\mathcal X_i$ such that
+For a universally quantified candidate
+$p_i\equiv\forall x\in\mathcal X_i:P_i(x)$, an exact counterexample is an element
+$x^*\in\mathcal X_i$ such that
 
 $$
 P_i(x^*)=\mathrm{false}.

@@ -239,7 +239,7 @@ also stated.
 
 Lifecycle energy through $N$ **fixed-work processed output-token positions** is
 
-\[
+$$
 \begin{aligned}
 E_{a,s,h,k}(N)={}&
 \frac{E_{\mathrm{data},a,s}+E_{\mathrm{tune},a,s}}{16}
@@ -247,7 +247,7 @@ E_{a,s,h,k}(N)={}&
 &+E_{\mathrm{compile},a,s,h,k}+E_{\mathrm{convert},a,s,h,k}
 +E_{\mathrm{retrain},a,s,h,k}+N e_{\mathrm{infer},a,s,h,k}.
 \end{aligned}
-\]
+$$
 
 Here $a$ is the arm, $s\in\{S,L\}$ the scale, $h$ the primary backend, and
 $k$ one paired confirmation training seed/checkpoint. Every term is in joules
@@ -274,11 +274,11 @@ $N_H=10{,}000{,}000{,}000$ processed output-token positions. For a candidate
 $T$ and any systems-cost comparator $B$, the paired diagnostic break-even horizon
 is
 
-\[
+$$
 N^*_{s,h,k}=
 \frac{E_{\mathrm{fixed},T,s,h,k}-E_{\mathrm{fixed},B,s,h,k}}
      {e_{\mathrm{infer},B,s,h,k}-e_{\mathrm{infer},T,s,h,k}},
-\]
+$$
 
 only when the denominator is positive and both energies share a calibrated
 boundary. Otherwise $N^*$ is undefined, not infinite savings. Promotion

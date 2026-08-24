@@ -44,8 +44,9 @@ The same files are also rendered as a private research site. The site is a
 generated reading surface—not a second document store. Saving a Markdown,
 equation, bibliography, or Mermaid file updates the local preview through hot
 reload; publishing creates an owner-only online edition from a committed Git
-state. The site also provides a downloadable A4 book containing this README and
-all canonical concept chapters, generated from the same files and checked for
+state. The site also provides a downloadable A4 book containing this README,
+all canonical concept chapters, the mathematical notes, and a generated field-
+coverage appendix. It is generated from the same files and checked for
 staleness during the build. See
 [decision 0005](decisions/0005-rendered-private-edition.md).
 
@@ -124,7 +125,7 @@ GitHub-style tables, LaTeX equations, the bibliography, and editable Mermaid
 sources are rendered in the same searchable reader.
 
 Regenerate the full concept book after changing the README, a concept chapter,
-diagram renderer, plot, or book stylesheet:
+mathematical note, diagram renderer, plot, or book stylesheet:
 
 ```powershell
 npm run generate:book-pdf

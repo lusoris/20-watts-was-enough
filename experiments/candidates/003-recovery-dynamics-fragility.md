@@ -220,8 +220,7 @@ The last scheduled pulse is at $t=6,900$ s.
 
 - Cost per pulse: **4 RE** of synthetic work.
 - Maximum completed-episode traffic cost: $36\times4=144$ RE.
-- Nominal two-hour traffic: $700\ \mathrm{RE/s}\times7,200\ \mathrm{s}
-  =5,040,000$ RE.
+- Nominal two-hour traffic: $700\ \mathrm{RE/s}\times7,200\ \mathrm{s}=5,040,000$ RE.
 - Maximum traffic overhead: $144/5,040,000=0.002857\%$.
 - Maximum modeled immediate queue-delay increment at the selected service:
   $4\ \mathrm{RE}\times4\ \mathrm{ms/RE}=16$ ms before propagation.
