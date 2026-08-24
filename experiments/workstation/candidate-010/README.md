@@ -90,7 +90,32 @@ The current harness provides:
     accounting. Capsule construction, source/runtime/release verification,
     request bytes, and timings remain unallocated to arms; the inclusive child
     envelope is non-additive and the experiment action is subtracted rather
-    than double-counted as setup.
+    than double-counted as setup;
+22. a claim-ineligible external-energy block scheduler and importer that bind
+    exact ordered input manifests, rotate and reverse arm order from frozen
+    identities, preserve warm-up and idle observations separately, and reject
+    unresolved, overlapping, duplicated, linked, or unreviewed meter records;
+23. a deterministic confirmation preflight that treats the seed as the
+    independent unit, derives the powered seed requirement from hashed pilot
+    variance and endpoint effects, projects record/block/time/byte/file/disk
+    demand, rejects per-event metering, and never creates or reveals seeds; and
+24. a commitment-only seed-release operator that jointly generates disjoint
+    confirmation and held-out packs, publishes only commitments and frozen
+    identities, and keeps the seed values in separate AES-256-GCM escrow until
+    an explicit source/runtime/capsule-matched reveal. Injected fixture entropy
+    is permanently claim-ineligible;
+25. a claim-ineligible paired-block executor that consumes the frozen schedule,
+    sends the exact ordered opportunities through a fixture-only adapter,
+    persists complete immutable block prefixes, and resumes only at block
+    boundaries without inventing external-meter observations;
+26. a seed-level energy analyzer that joins those execution outcomes to the
+    reviewed acquisition bundle, aggregates repetitions and scenarios inside
+    each seed, refuses zero correct-commit denominators or invalid metrology,
+    and performs paired inference across seeds rather than blocks; and
+27. a fixture-only release-v4 envelope that binds the v3 source authority,
+    seed-operator plan and reveal attestation, powered preflight, held-out pack,
+    paired acquisition policy, and exact energy schedule without minting
+    confirmation or promotion authority.
 
 Run:
 
@@ -115,8 +140,9 @@ the explicit release root. An interrupted declared-boundary run is retried with
 the same arguments plus `--resume true`. The operator refuses `--profile`, raw
 seeds, legacy release roots, unknown options, and in-process confirmation.
 
-After the run has interval-owned reviewed meter records, the evidence and its
-fresh-child validation receipt are created together in one new directory:
+The existing per-work-unit promotion path remains useful for adversarial
+plumbing tests. It is not the real metering path selected by
+[Decision 0011](../../../decisions/0011-measure-energy-in-paired-blocks.md):
 
 ```powershell
 node experiments/workstation/candidate-010/runner.mjs capsule-promotion-build --run-directory <run-directory> --release-root <release-root> --release <release.json> --energy-assignments <energy-assignments.json> --disjoint-seed-packs <held-out-pack.json> --capsule-parent <existing-temporary-parent> --evidence-output <new-promotion-directory>/evidence.json --receipt-output <new-promotion-directory>/promotion-validation.launch-receipt.json
@@ -136,6 +162,24 @@ entered. A single whole-run reading can exercise the non-factorial plumbing but
 is rejected for the interleaved factorial package because it cannot be assigned
 to arms without a declared interval design.
 
+## Why external energy is now measured in blocks
+
+The nominal confirmation shape has 24 scenarios, seven arms, 10,000
+opportunities per seed, and at least two seeds. Per-work-unit metering would
+therefore demand 3,360,000 readings and the same number of review records. The
+current two-repetition block design needs 864 observed arm/idle blocks, or 1,728
+reading-plus-review artifacts. That is a configuration calculation, not a
+runtime or energy result.
+
+![Calculated Candidate 010 metering artifact scale](../../../public/plots/candidate-010-metering-scale.svg)
+
+Editable assumptions: [`core-models.json`](../../../assets/plots/core-models.json).
+The block importer still leaves every bundle claim-ineligible. A successor
+analyzer now implements the required aggregation: blocks and scenarios collapse
+inside each seed before paired seed-level inference. It still cannot open the
+energy gate without a real calibrated acquisition, frozen non-fixture release,
+and the existing promotion authority chain.
+
 ## Current structural gate state: 6/9
 
 The structural gates currently pass exact claim scope, frozen-profile hash,
@@ -146,10 +190,12 @@ They still fail confirmation seeds, held-out seeds, and the final readiness
 declaration with validated hardware evidence.
 
 This is deliberate. Seed packs will be freshly generated and sealed only after
-the runner, task backends, design, analysis, and meter contract are frozen.
+the runner, task backends, block analysis, powered seed plan, resource
+preflight, and target-meter contract are frozen.
 Seeds that were visible during implementation are ineligible for confirmation.
-The release validator is executable, but the repository deliberately contains
-no real confirmation release document or revealed seed pack.
+The release validator and encrypted seed escrow operator are executable, but
+the repository deliberately contains no real confirmation commitment, escrow,
+release document, or revealed seed pack.
 
 ## Exact implementation limits
 
@@ -195,8 +241,16 @@ no real confirmation release document or revealed seed pack.
   atomic promotion-evidence builder exist, but no real frozen confirmation or
   held-out release and no validated promotion evidence bundle exist.
 - No interval-owned calibrated energy observation has been collected or bound
-  to factorial assignments. The current provider tests validate the contract,
-  not an energy result.
+  to factorial assignments. The provider, paired-block schedule/importer,
+  fixture block executor, preflight, and seed-level block analyzer validate the
+  complete data-shape and aggregation path only. The production confirmation
+  command and promotion-evidence builder still use the older per-work-unit
+  resource path; moving them onto the release-v4 block bundle remains required
+  before a real block-measured run.
+- The seed-release operator has no built-in key custodian, witness, password
+  manager, or hardware security module. It accepts an external 32-byte key and
+  never persists it. Key custody and the reveal ceremony must be selected and
+  recorded before a real commitment is created.
 
 ## Why this does not yet count as an experiment result
 
@@ -218,9 +272,12 @@ future workstation-ready promotion, the other claims linked to Candidate 010
 remain protocol-only unless a manifest names and implements their own execution
 tracks.
 
-The next promotion step is therefore not a label change. Commit one clean
-executable package, generate genuinely unseen confirmation and held-out seed
-commitments, create a version-3 release bound to the target runtime/capsule,
-collect interval-owned calibrated meter observations on the workstation, and
-build the validated confirmation bundle. Only then may the manifest change
-from `smoke-ready` to `workstation-ready` and upgrade claim coverage.
+The next promotion step is therefore not seed generation or a label change.
+First run a target-hardware development pilot with a real calibrated meter,
+freeze the powered preflight from those pilot measurements, migrate the
+confirmation/promotion entrypoint to the release-v4 block bundle, and complete
+a scaled claim-ineligible rehearsal. Only then seal genuinely unseen
+confirmation and held-out commitments, create the real release, execute the
+fixed paired blocks, and build the validated confirmation bundle. Only that
+completed chain may change the manifest from
+`smoke-ready` to `workstation-ready` and upgrade claim coverage.

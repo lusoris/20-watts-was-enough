@@ -17698,3 +17698,445 @@ describes the exact statement here, not a broader interpretation.
 - **Rationale:** instrument, selection, role, interference, organization, exposure, error-root, authority, and lineage dependencies can be represented together, but documentation neatness is not an independent scientific or governance gain.
 - **Open issue:** require preregistered fresh-world confirmation against complete survey, ethnographic, causal, organizational, media, mixed-method, legal, ethics, access-control, and provenance nulls with false claims, rights outcomes, compute, storage, human review, participant burden, and measured energy inside one boundary.
 - **Used by:** [direct social-research audit](audits/2026-08-21-direct-social-research-ethnography-media.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1352
+
+- **Statement:** Independently defensible single-condition recommendations can conflict, interact, or impose infeasible aggregate burden when composed for a person with multimorbidity.
+- **Status:** established.
+- **Primary sources:** `BoydEtAl2005MultimorbidityGuidelines`.
+- **Rationale:** disease-specific evidence and performance measures do not solve joint contraindication, timing, monitoring, burden, function, goal, and preference constraints.
+- **Open issue:** compare guideline union, curated rule/constraint systems, multidisciplinary review, and learned proposal systems on held-out condition combinations without treating unknown interactions as absent.
+- **Used by:** [clinical-intervention audit](audits/2026-08-24-clinical-intervention-pathways.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1353
+
+- **Statement:** Generating or implementing more medication-optimization recommendations does not by itself improve adverse events or hospital admissions; uptake, realized changes, comparator care, follow-up, and person-level outcomes remain part of the intervention.
+- **Status:** established.
+- **Primary sources:** `OMahonyEtAl2020SENATOR`, `BlumEtAl2021OPERAM`.
+- **Rationale:** SENATOR had low implementation and no adverse-reaction benefit; OPERAM improved prescribing-process measures without improving its primary drug-related-admission endpoint.
+- **Open issue:** identify which recommendations, people, delivery structures, and monitoring paths change protected outcomes rather than process surrogates.
+- **Used by:** [clinical-intervention audit](audits/2026-08-24-clinical-intervention-pathways.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md).
+
+### C-1354
+
+- **Statement:** Diagnostic accuracy, faster identification, or biomarker association does not establish clinical utility; utility belongs to the complete test--interpret--authorize--act--monitor pathway against a declared comparator.
+- **Status:** established.
+- **Primary sources:** `BanerjeeEtAl2015RapidPCR`, `FreidlinMcShaneKorn2010BiomarkerUtility`, `EU2017IVDR`.
+- **Rationale:** a randomized rapid-PCR trial separated result latency, comments, stewardship, antimicrobial decisions, and clinical outcomes; IVDR intended purpose and companion-diagnostic rules preserve the test/product scope.
+- **Open issue:** evaluate test-and-treatment strategies under prevalence, turnaround, action-effect, uptake, availability, and workflow shifts.
+- **Used by:** [clinical-intervention audit](audits/2026-08-24-clinical-intervention-pathways.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1355
+
+- **Statement:** A prognostic association is not a predictive treatment marker; treatment-effect modification requires a treatment comparison and a scoped interaction analysis.
+- **Status:** established.
+- **Primary sources:** `Ballman2015PredictivePrognostic`.
+- **Rationale:** outcome association under one treatment distribution cannot identify differential benefit from another treatment.
+- **Open issue:** interaction scale, multiplicity, calibration, external support, and clinically relevant decision thresholds remain population-specific.
+- **Used by:** [clinical-intervention audit](audits/2026-08-24-clinical-intervention-pathways.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1356
+
+- **Statement:** A dynamic treatment regime is a sequence of decision rules over evolving observed history whose value is qualified by population, horizon, outcome, action set, observation process, and support.
+- **Status:** established.
+- **Primary sources:** `Murphy2003DynamicRegimes`.
+- **Rationale:** sequential treatment selection is a policy-evaluation problem, not a static prediction or universally optimal individual action.
+- **Open issue:** sequential exchangeability, consistency, positivity, interference, adherence, and transport must be diagnosed or designed away.
+- **Used by:** [clinical-intervention audit](audits/2026-08-24-clinical-intervention-pathways.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1357
+
+- **Statement:** A SMART identifies stage contrasts or adaptive interventions embedded in its specified sequential randomizations; it does not validate arbitrary policies outside those actions and histories.
+- **Status:** established.
+- **Primary sources:** `NahumShaniEtAl2012SMART`, `KasariEtAl2014SMART`.
+- **Rationale:** repeated randomization protects specified contrasts, while action menu, tailoring variables, rerandomization eligibility, sample size, and population still bound the inference.
+- **Open issue:** require raw regime uncertainty, support diagnostics, external validation, and abstention before transferring a learned sequential policy.
+- **Used by:** [clinical-intervention audit](audits/2026-08-24-clinical-intervention-pathways.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1358
+
+- **Statement:** EUCAST antimicrobial S, I, and R categories are versioned organism--agent interpretations linked to exposure assumptions; I denotes susceptibility with increased exposure rather than resistance.
+- **Status:** established.
+- **Primary sources:** `EUCAST2026BreakpointsV16_1`, `EUCAST2019DefinitionsCurrent2026`.
+- **Rationale:** clinical breakpoints and categories bind method, organism, agent, dosing/exposure, site, evidence, and current table version; EUCAST explicitly rejects grouping I with R.
+- **Open issue:** preserve method, quality flags, breakpoint updates, dosing assumptions, and decision consequences through laboratory and clinical APIs.
+- **Used by:** [clinical-intervention audit](audits/2026-08-24-clinical-intervention-pathways.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1359
+
+- **Statement:** Antimicrobial policies require separate patient and population/ecological outcomes; a simple cycling schedule did not reduce resistant Gram-negative carriage versus mixing in a European ICU cluster-crossover trial.
+- **Status:** established, strategy- and setting-qualified.
+- **Primary sources:** `VanDuijnEtAl2018CyclingMixing`, `ECDC2025EARSNet2024`, `EUCouncil2023AMR`.
+- **Rationale:** immediate clinical adequacy, antimicrobial exposure, carriage, acquisition, transmission, infection control, and future resistance are different outcomes and timescales; intuitive diversity scheduling failed one rigorous direct comparison.
+- **Open issue:** test stewardship policies across pathogens, institutions, contact structures, external importation, monitoring, breakpoint versions, and infection-prevention capacity at matched total cost.
+- **Used by:** [clinical-intervention audit](audits/2026-08-24-clinical-intervention-pathways.md), [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1360
+
+- **Statement:** Recommendation, authorization, order, dispensing, administration, receipt/adherence, response, adverse event, and stopping are distinct states; product or research authorization does not self-authorize an individual treatment action.
+- **Status:** established operational and legal boundary.
+- **Primary sources:** `EU2014ClinicalTrials`, `EU2017MDR`, `EU2017IVDR`, `EU2024AIActConsolidated2026`, `EU2026AIActAmendment`, `EMA2024CompanionDiagnostics`.
+- **Rationale:** EU clinical-trial, product, conformity, surveillance, and sectoral-AI routes attach to different actors and applicability hooks, while IVDR expressly leaves national organization and professional-use conditions intact.
+- **Open issue:** resolve actual intended purpose, product class, deployment, professional role, German implementation, emergency path, consent/refusal, and monitoring responsibility before any clinical use.
+- **Used by:** [clinical-intervention audit](audits/2026-08-24-clinical-intervention-pathways.md), [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md), [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md), [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md), [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md), [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1361
+
+- **Statement:** Statistical process state, control limits, product
+  specifications, capability/performance statistics, and unit-conformance
+  decisions are distinct; pooling drift, mixtures, dependence, or measurement
+  change can make a capability value unsupported.
+- **Status:** established statistical process-management boundary.
+- **Primary sources:** `ISO7870_2_2023`, `ISO22514_1_2014`,
+  `ISO22514_2_2026`.
+- **Rationale:** control limits arise from a declared process-state/sampling
+  model, specifications arise from requirements, and ISO 22514-2:2026 expressly
+  treats time-dependent processes that do not remain in statistical control.
+- **Open issue:** compare pooled capability, conventional SPC/change detection,
+  time-dependent models, and uncertainty-aware conformance under autocorrelation,
+  drift, mixtures, rare tails, subgroup changes, and measurement-system change.
+- **Used by:** [this engineering-depth audit](audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md#engd-01--statistical-process-state-is-not-product-permission),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1362
+
+- **Statement:** A qualified process window is a versioned multidimensional
+  region tied to declared outputs, material, equipment, site, measurement,
+  procedure, configuration, and risk; a nominal recipe or combined one-factor
+  ranges does not establish interaction coverage or authorize change.
+- **Status:** established, sector-bounded qualification practice; the stochastic
+  set representation is a plausible project formalization.
+- **Primary sources:** `IAEA_TECDOC_1910_2020`, `ECSS_Q_ST_70C_Rev2`.
+- **Rationale:** IAEA nuclear-manufacturing guidance describes trial-batch
+  qualification of a process window and controlled changes, while ECSS binds
+  material/process/configuration evidence and re-evaluation in its space-project
+  scope.
+- **Open issue:** test factorial, response-surface, robust-design, Bayesian, and
+  version-bridging methods under nonlinear interactions, protected tails,
+  site/supplier/equipment change, scale-up, measurement change, and finite
+  qualification budgets.
+- **Used by:** [this engineering-depth audit](audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md#engd-02--a-qualified-process-window-is-versioned-and-multidimensional),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 015](../experiments/candidates/015-versioned-repairable-conventions.md).
+
+### C-1363
+
+- **Statement:** Reliability-centred maintenance selects failure-management
+  policies from required function, functional failure, failure mode/effect,
+  consequence, and task applicability/effectiveness; neither universal age-based
+  work nor universal predictive maintenance is justified across heterogeneous
+  modes.
+- **Status:** established within the cited RCM method scope.
+- **Primary sources:** `nowlan1978rcm`, `IEC60300_3_11_2009`,
+  `DIN_EN_13306_2018`.
+- **Rationale:** RCM distinguishes functions, modes, consequences, hidden
+  functions, and applicable/effective failure-management tasks instead of
+  inferring one policy from asset age or monitoring availability.
+- **Open issue:** compare RCM logic with optimized renewal, inspection,
+  condition-based, predictive, failure-finding, redesign, and run-to-failure
+  policies under mode uncertainty, common cause, induced maintenance faults,
+  hidden protection, and full task/support cost.
+- **Used by:** [this engineering-depth audit](audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md#engd-03--rcm-selects-failure-management-by-function-and-consequence),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1364
+
+- **Statement:** Condition or prognostic information earns operational value only
+  through a feasible maintenance decision before its deadline after uncertainty,
+  information age, authorization, logistics, access, action, verification, and
+  total monitoring/false-action cost; prediction accuracy alone is not the
+  outcome.
+- **Status:** established decision and prognostics boundary.
+- **Primary sources:** `ISO17359_2018`, `ISO13381_1_2025`,
+  `KamariotisEtAl2024`.
+- **Rationale:** condition monitoring and prognosis define information processes,
+  while decision-oriented prognostics research shows that downstream maintenance
+  policy and long-run cost can rank algorithms differently from prediction-only
+  metrics.
+- **Open issue:** test joint sensing/prognosis/policy selection under censoring,
+  calibration shift, intervention feedback, lower-tail deadline risk, constrained
+  crews/spares, false maintenance, and safety constraints that cannot be traded
+  for average cost.
+- **Used by:** [this engineering-depth audit](audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md#engd-04--prognosis-has-value-only-through-a-feasible-decision),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1365
+
+- **Statement:** Maintainability and supportability are designed properties:
+  detection and diagnosis do not determine restoration because isolation,
+  authorization, access, interfaces, spares, tools, skills, instructions, repair,
+  testing, and verified return to service remain separate stages.
+- **Status:** established dependability-engineering boundary.
+- **Primary sources:** `IEC60300_3_10_2025`, `DIN_EN_13306_2018`.
+- **Rationale:** IEC 60300-3-10 treats maintainability/maintenance programmes and
+  their lifecycle interfaces with reliability, availability, and supportability;
+  shortening detection cannot silently receive credit for the rest of the
+  restoration chain.
+- **Open issue:** compare detection-only, runbook, modular replacement,
+  compatibility registry, rollback, and verification stacks under authorization
+  queues, stale topology, state-transfer cost, spare/tool/skill scarcity, induced
+  faults, and verifier blind spots.
+- **Used by:** [this engineering-depth audit](audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md#engd-05--maintainability-and-supportability-are-designed-not-detected),
+  [Candidate 005](../experiments/candidates/005-severity-ordered-containment.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1366
+
+- **Statement:** A nanoscale image or nominal dimension does not establish
+  population conformance: sampling frame, size/shape or defect distribution,
+  spatial and lot hierarchy, preparation, measurement operator and uncertainty,
+  process history, and function-level acceptance remain necessary and scoped.
+- **Status:** established measurement/classification boundary with process-
+  specific primary evidence.
+- **Primary sources:** `EU_Recommendation_2022_C229_01`,
+  `RauscherEtAl2023Nanomaterial`, `ISO21363_2020`,
+  `OrjiEtAl2011Nanomanufacturing`, `DoiseEtAl2019`.
+- **Rationale:** the EU recommendation is population/distribution-based rather
+  than a performance grade; ISO 21363 conditions TEM distributions on capture,
+  analysis, uncertainty, and instrument performance; nanomanufacturing studies
+  expose metrological timelines and process/history-dependent rare defects.
+- **Open issue:** compare random, stratified, hierarchical, spatial, adaptive,
+  and risk-based inspection under clustered rare defects, zero detections,
+  surface/volume mismatch, operator drift, resolution limits, lot shift, and
+  downstream functional escapes.
+- **Used by:** [this engineering-depth audit](audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md#engd-06--nanomanufacturing-evidence-is-population--and-operator-qualified),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1367
+
+- **Statement:** Adaptive modulation/coding and related link control are mature
+  conditional-computation nulls whose benefit is qualified by channel-estimate
+  error and age, feedback delay/outage and cost, switching, retransmission,
+  receiver/baseband work, spectrum, and accepted end-to-end service rather than
+  raw physical-layer rate.
+- **Status:** established communications mechanism; AI-system benefit remains
+  transfer- and workload-qualified.
+- **Primary sources:** `GoldsmithChua1998`,
+  `ETSI_EN_302307_2_V1_4_1`, `ETSI_TS_138214_V18_10_0`.
+- **Rationale:** adaptive coded modulation already changes computation and
+  protection conditional on link state, while standards expose real mode,
+  coding, feedback, CSI, and procedure boundaries; idealized gains do not include
+  every implementation and end-to-end cost.
+- **Open issue:** require fair comparisons with static robust and mature adaptive
+  nulls across coherence time, stale/noisy/missing feedback, traffic and receiver
+  power, retransmission, spectrum, service tails, fallback, and measured full-
+  boundary joule per accepted payload bit.
+- **Used by:** [this engineering-depth audit](audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md#engd-07--adaptive-link-control-is-a-hard-conditional-computation-null),
+  [Candidate 001](../experiments/candidates/001-adaptive-topology.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md).
+
+### C-1368
+
+- **Statement:** Multiple automation loops acting on shared or related network
+  entities require declared scope, authority, lifecycle, timescale, dependencies,
+  conflict coordination, fallback, and independently verified effect; isolated
+  loop stability or self-reported fulfilment does not establish safe composition.
+- **Status:** established design hazard and bounded ETSI ZSM
+  specification/study result.
+- **Primary sources:** `ETSI_GR_ZSM009_3_V1_1_1`,
+  `ETSI_GS_ZSM016_V1_1_1`.
+- **Rationale:** ETSI ZSM sources explicitly treat interdependent loops, shared-
+  resource action conflict, grouping/coordination, locality/latency, oversight,
+  intent lifecycle, status/outcome reporting, and fallback; they do not prove one
+  universal deployed solution.
+- **Open issue:** compare hierarchy, priority, peer coordination, merged control,
+  conflict graphs, supervisory control, and distributed optimization under
+  timescale separation, partial dependencies, state-version skew, coordinator
+  delay/failure, starvation, misleading reports, and end-to-end service shift.
+- **Used by:** [this engineering-depth audit](audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md#engd-08--interacting-network-loops-need-explicit-coordination-and-verification),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 012](../experiments/candidates/012-latency-qualified-authority.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1369
+
+- **Statement:** Material qualification and traceable lineage are distinct:
+  qualification is bounded to declared material/process/supplier/site/
+  configuration/service evidence, while lineage reconstructs lot, split, merge,
+  rework, test, storage, substitution, and version history but does not itself
+  prove conformity, record truth, or substitution authority.
+- **Status:** established within the cited space-project and metallic-inspection-
+  document scopes; the general system translation remains to be tested.
+- **Primary sources:** `ECSS_Q_ST_70C_Rev2`, `DIN_EN_10204_2005`.
+- **Rationale:** ECSS separates qualification/change evidence from unique
+  identification and history reconstruction; DIN EN 10204 classifies inspection
+  documents, which cannot by type alone prove correct association, completeness,
+  or fitness for an unstated use.
+- **Open issue:** compare flat certificates, immutable event logs, typed genealogy,
+  qualification envelopes, and mature MES/QMS/configuration management under
+  split/merge/rework, record corruption, physical-digital misassociation,
+  supplier/site/process change, expiry, and unauthorized substitution.
+- **Used by:** [this engineering-depth audit](audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md#engd-09--qualification-and-traceable-lineage-are-distinct),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+
+### C-1370
+
+- **Statement:** An adopted eligibility or policy rule does not by itself
+  determine delivered public service: multilevel institutional arrangements,
+  organizational capacity, frontline discretion, and citizen learning,
+  psychological, and compliance costs can mediate implementation and take-up.
+- **Status:** established.
+- **Primary sources:** `MoynihanHerdHarvey2015AdministrativeBurden`,
+  `AndreottiColettoRio2024StreetLevelDiscretion`.
+- **Rationale:** the formal rule, discretion granted, discretion used, citizen
+  burden, take-up, delivered service, and outcome are distinct variables; the
+  cited Italian comparison is direct but scoped evidence that one policy can
+  be implemented differently across institutional arrangements.
+- **Open issue:** compare rule-only, full conventional implementation-study,
+  administrative-burden, process/resource, and versioned-context methods under
+  non-applicant missingness, capacity shocks, beneficial and harmful
+  discretion, appeal reversals, subgroup burden, and equal data, reviewer,
+  compute, storage, and energy budgets.
+- **Used by:** [social-science depth audit](audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1371
+
+- **Statement:** An inequality or mobility estimate is conditional on its
+  resource or outcome, unit, household-equivalence rule, class or category
+  scheme, target population and support, weights, geography, time or cohort,
+  and absolute or relative comparison operator; materially changing these can
+  change the comparison.
+- **Status:** established.
+- **Primary sources:** `Eurostat2026EUSILCMethodology`,
+  `Eurostat2021EUSILCUserGuide`, `Breen2004SocialMobilityEurope`,
+  `BukodiGoldthorpe2021PrimaryFactorsMobility`.
+- **Rationale:** EU-SILC indicators explicitly construct household and
+  equivalised income, while European mobility research distinguishes absolute
+  movement from relative chances under declared class tables, marginals,
+  populations, sex, countries, and periods.
+- **Open issue:** compare a headline-index workflow, complete survey and
+  sensitivity practice, and a dependency-bearing operator record under
+  category, scale, support, cohort, price-base, imputation, absolute/relative,
+  and aggregation reversals at equal lifecycle cost.
+- **Used by:** [social-science depth audit](audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1372
+
+- **Statement:** A household-level income, resource, or membership aggregate
+  does not by itself identify each member's access to resources, paid and
+  unpaid workload, bargaining position, preferences, or decision authority.
+- **Status:** established.
+- **Primary sources:** `Chiappori1992CollectiveLaborSupply`,
+  `Eurofound2025UnpaidCareEU`, `Eurostat2026EUSILCMethodology`.
+- **Rationale:** multiple within-household allocations and authority structures
+  are compatible with the same aggregate, collective household models make the
+  sharing rule explicit, and European care evidence requires paid/unpaid,
+  carer/recipient, time-use, and policy definitions to remain distinct.
+- **Open issue:** test aggregate, collective-household, allocation-bounded, and
+  context-record approaches under equal-total/unequal-access, simultaneous
+  care, non-co-resident care, household change, proxy response, missing
+  authority, and genuinely unitary worlds without inferring allocation from
+  protected attributes.
+- **Used by:** [social-science depth audit](audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1373
+
+- **Statement:** Observed participation or nonparticipation does not by itself
+  identify private support: interdependent expectations, threshold
+  distributions, resources, exclusion, ordinary costs, and repression can
+  alter visible action, and repression has no context-free universal effect
+  sign.
+- **Status:** established.
+- **Primary sources:** `granovetter1978threshold`,
+  `OppRoehl1990RepressionProtest`.
+- **Rationale:** the threshold result separates average disposition from the
+  distribution that produces aggregate action, while the bounded West German
+  panel supports direct deterrent and conditional indirect mobilizing paths;
+  neither result identifies every real movement or private stance.
+- **Open issue:** compare aggregate, threshold, partial-identification,
+  multi-channel survey/field/network, and context-record models across equal-
+  mean/different-distribution, deterrence, mobilization, cancellation,
+  strategic silence, exclusion, network change, and non-threshold worlds.
+- **Used by:** [social-science depth audit](audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+
+### C-1374
+
+- **Statement:** Police-recorded crime is an output of incident visibility,
+  victim or witness reporting, deployment, detection, legal classification,
+  counting, and recording; it does not by itself identify latent incidence or
+  support direct place/time comparison, and adaptive deployment can make later
+  observations endogenous.
+- **Status:** established.
+- **Primary sources:** `Eurostat2024CrimeMethodologicalGuide`,
+  `Eurostat2026CrimeInformation`, `Eurostat2026CrimeMetadata`,
+  `EnsignEtAl2018RunawayFeedback`.
+- **Rationale:** Eurostat expressly documents administrative-stage, definition,
+  unit, recording, and comparability limits, while Ensign and colleagues prove
+  and simulate deployment--discovery feedback in their declared predictive-
+  policing model; the feedback magnitude in any real system remains
+  unresolved.
+- **Open issue:** compare recorded-count, multichannel official-statistics,
+  independent-audit or victimization-like, feedback-aware, and versioned-
+  observation methods under reporting, patrol, law, counting, unit, source,
+  feedback, and regime shifts, with no real person-level risk or deployment
+  output and with qualified EU/German legal review as a mandatory gate.
+- **Used by:** [social-science depth audit](audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1375
+
+- **Statement:** A digital trace dataset is conditional on platform, interface,
+  eligibility and ranking, API or access route, query, user visibility
+  practices, policy, and version; it is not a census of behaviour, and access
+  or version changes can invalidate collection methods and descendant claims.
+- **Status:** established.
+- **Primary sources:** `Tufekci2014SocialMediaBigData`,
+  `Freelon2018PostAPIAge`.
+- **Rationale:** single-platform and hashtag frames have denominator,
+  representativeness, meaning, and field-effect limits, while provider-
+  controlled API closure supplies a direct example of an external dependency
+  making a method obsolete.
+- **Open issue:** compare returned-row, mature frame-aware computational and
+  digital-ethnographic, and dependency-bearing records under API closure,
+  eligibility drift, account/person mismatch, silent and off-platform action,
+  deletion, common events, provider-correlated roots, and equal researcher,
+  data, storage, compute, and energy budgets.
+- **Used by:** [social-science depth audit](audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+
+### C-1376
+
+- **Statement:** News diversity, exposure, and effects are nested in media-
+  system context including ownership and control, financing, professional and
+  political institutions, regulation, public-service provision, market and
+  language structure, and distribution; transport across systems requires
+  measured overlap, explicit assumptions, or abstention.
+- **Status:** plausible.
+- **Primary sources:** `BruggemannEtAl2014MediaSystems`,
+  `HumprechtEsser2018OnlineNewsDiversity`, `EUI2025MediaPluralismMonitor`.
+- **Rationale:** comparative research demonstrates meaningful meso- and macro-
+  level variation and bounded associations with observed diversity, but fitted
+  media-system types and normative pluralism-risk indicators are neither
+  immutable national essences nor causal truth labels.
+- **Open issue:** compare item/platform-only, complete multilevel comparative,
+  transport-sensitivity, and context-record methods under ownership-control,
+  financing, public-service, language-market, distribution, regulatory,
+  typology-outlier, and system-transition shifts at equal lifecycle cost.
+- **Used by:** [social-science depth audit](audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).

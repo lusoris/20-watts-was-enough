@@ -51,6 +51,9 @@
       "experiments/workstation/candidate-010/capsule-bootstrap.test.mjs",
       "experiments/workstation/candidate-010/capsule-execution-authority.test.mjs",
       "experiments/workstation/candidate-010/checkpoint.test.mjs",
+      "experiments/workstation/candidate-010/confirmation-preflight.test.mjs",
+      "experiments/workstation/candidate-010/energy-block-analysis.test.mjs",
+      "experiments/workstation/candidate-010/energy-block-runner.test.mjs",
       "experiments/workstation/candidate-010/energy-provider.test.mjs",
       "experiments/workstation/candidate-010/event-contract.test.mjs",
       "experiments/workstation/candidate-010/execution-capsule.test.mjs",
@@ -70,15 +73,20 @@
       "experiments/workstation/candidate-010/factorial-runner.test.mjs",
       "experiments/workstation/candidate-010/source-bundle.test.mjs",
       "experiments/workstation/candidate-010/release-contract.test.mjs",
+      "experiments/workstation/candidate-010/release-contract-v4.test.mjs",
       "experiments/workstation/candidate-010/promotion-evidence.test.mjs"
     ],
     "full_tests": [
       "experiments/workstation/candidate-010/capsule-bootstrap.test.mjs",
       "experiments/workstation/candidate-010/capsule-execution-authority.test.mjs",
+      "experiments/workstation/candidate-010/confirmation-preflight.test.mjs",
+      "experiments/workstation/candidate-010/energy-block-analysis.test.mjs",
+      "experiments/workstation/candidate-010/energy-block-runner.test.mjs",
       "experiments/workstation/candidate-010/execution-capsule.test.mjs",
       "experiments/workstation/candidate-010/factorial-runner.test.mjs",
       "experiments/workstation/candidate-010/fault-injection.test.mjs",
       "experiments/workstation/candidate-010/persistent-service-runner.test.mjs",
+      "experiments/workstation/candidate-010/release-contract-v4.test.mjs",
       "experiments/workstation/candidate-010/run-lock.test.mjs"
     ],
     "execution_claims": ["C-170"]

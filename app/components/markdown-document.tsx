@@ -3,6 +3,9 @@
 import {
   Children,
   isValidElement,
+  useEffect,
+  useRef,
+  useState,
   type ComponentPropsWithoutRef,
   type MouseEvent,
 } from "react";
@@ -66,8 +69,27 @@ function DiagramAwarePre({ children, ...props }: ComponentPropsWithoutRef<"pre">
 // The overflow region must receive keyboard focus so arrow-key users can scroll it.
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 function ResponsiveTable(props: ComponentPropsWithoutRef<"table">) {
+  const regionRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
+  const [overflows, setOverflows] = useState(false);
+
+  useEffect(() => {
+    const region = regionRef.current;
+    const table = tableRef.current;
+    if (!region || !table) return;
+
+    const measure = () => {
+      setOverflows(table.scrollWidth > region.clientWidth + 1);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(region);
+    observer.observe(table);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="table-frame">
+    <div className={`table-frame ${overflows ? "table-overflowing" : ""}`}>
       <div className="table-scroll-cue" aria-hidden="true">
         <span>Wide table</span>
         <span>Scroll horizontally ↔</span>
@@ -77,8 +99,9 @@ function ResponsiveTable(props: ComponentPropsWithoutRef<"table">) {
         role="region"
         aria-label="Scrollable data table"
         tabIndex={0}
+        ref={regionRef}
       >
-        <table {...props} />
+        <table ref={tableRef} {...props} />
       </div>
     </div>
   );

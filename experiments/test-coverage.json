@@ -50,14 +50,14 @@
     }
   },
   "counts": {
-    "claims": 1350,
-    "testRouted": 1237,
-    "protocolCovered": 1237,
+    "claims": 1375,
+    "testRouted": 1262,
+    "protocolCovered": 1262,
     "executionReady": 0,
     "tierCounts": {
       "ledger-only": 113,
       "linked-description": 0,
-      "protocol-complete": 1237,
+      "protocol-complete": 1262,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
@@ -76,8 +76,8 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 942,
-        "plausible": 192,
+        "established": 966,
+        "plausible": 193,
         "speculative": 57,
         "disputed": 46,
         "unknown": 0
@@ -101,7 +101,7 @@
     "protocolCompleteArtifacts": 31,
     "executionReadyArtifacts": 0,
     "smokeReadyArtifacts": 1,
-    "claimSideLinked": 1019,
+    "claimSideLinked": 1044,
     "documentSideLinked": 1045,
     "reciprocalClaims": 690
   },
@@ -136,6 +136,7 @@
         "C-1053",
         "C-1142",
         "C-1279",
+        "C-1367",
         "C-465",
         "C-495",
         "C-496",
@@ -225,6 +226,7 @@
         "C-1053",
         "C-1142",
         "C-1279",
+        "C-1367",
         "C-465",
         "C-495",
         "C-496",
@@ -921,6 +923,8 @@
         "C-1051",
         "C-1053",
         "C-1318",
+        "C-1363",
+        "C-1365",
         "C-199",
         "C-265",
         "C-304",
@@ -1057,6 +1061,8 @@
         "C-1051",
         "C-1053",
         "C-1318",
+        "C-1363",
+        "C-1365",
         "C-199",
         "C-265",
         "C-304",
@@ -1550,6 +1556,14 @@
         "C-1342",
         "C-1343",
         "C-1351",
+        "C-1354",
+        "C-1356",
+        "C-1357",
+        "C-1359",
+        "C-1364",
+        "C-1366",
+        "C-1367",
+        "C-1374",
         "C-305",
         "C-441",
         "C-508",
@@ -1695,6 +1709,14 @@
         "C-1342",
         "C-1343",
         "C-1351",
+        "C-1354",
+        "C-1356",
+        "C-1357",
+        "C-1359",
+        "C-1364",
+        "C-1366",
+        "C-1367",
+        "C-1374",
         "C-305",
         "C-441",
         "C-508",
@@ -1973,6 +1995,12 @@
         "C-1348",
         "C-1349",
         "C-1351",
+        "C-1360",
+        "C-1361",
+        "C-1362",
+        "C-1366",
+        "C-1369",
+        "C-1375",
         "C-250",
         "C-251",
         "C-254",
@@ -2269,6 +2297,12 @@
         "C-1348",
         "C-1349",
         "C-1351",
+        "C-1360",
+        "C-1361",
+        "C-1362",
+        "C-1366",
+        "C-1369",
+        "C-1375",
         "C-145",
         "C-146",
         "C-147",
@@ -2674,6 +2708,14 @@
         "C-1280",
         "C-1281",
         "C-1346",
+        "C-1353",
+        "C-1360",
+        "C-1361",
+        "C-1363",
+        "C-1364",
+        "C-1365",
+        "C-1368",
+        "C-1370",
         "C-173",
         "C-177",
         "C-178",
@@ -2822,6 +2864,14 @@
         "C-1280",
         "C-1281",
         "C-1346",
+        "C-1353",
+        "C-1360",
+        "C-1361",
+        "C-1363",
+        "C-1364",
+        "C-1365",
+        "C-1368",
+        "C-1370",
         "C-173",
         "C-174",
         "C-175",
@@ -3004,6 +3054,14 @@
         "C-1319",
         "C-1334",
         "C-1335",
+        "C-1352",
+        "C-1356",
+        "C-1360",
+        "C-1363",
+        "C-1364",
+        "C-1365",
+        "C-1367",
+        "C-1368",
         "C-172",
         "C-187",
         "C-192",
@@ -3253,6 +3311,14 @@
         "C-1319",
         "C-1334",
         "C-1335",
+        "C-1352",
+        "C-1356",
+        "C-1360",
+        "C-1363",
+        "C-1364",
+        "C-1365",
+        "C-1367",
+        "C-1368",
         "C-172",
         "C-186",
         "C-187",
@@ -3859,6 +3925,26 @@
         "C-1349",
         "C-1350",
         "C-1351",
+        "C-1352",
+        "C-1354",
+        "C-1355",
+        "C-1356",
+        "C-1357",
+        "C-1358",
+        "C-1359",
+        "C-1360",
+        "C-1361",
+        "C-1362",
+        "C-1364",
+        "C-1366",
+        "C-1369",
+        "C-1370",
+        "C-1371",
+        "C-1372",
+        "C-1373",
+        "C-1374",
+        "C-1375",
+        "C-1376",
         "C-218",
         "C-220",
         "C-221",
@@ -4474,6 +4560,26 @@
         "C-1349",
         "C-1350",
         "C-1351",
+        "C-1352",
+        "C-1354",
+        "C-1355",
+        "C-1356",
+        "C-1357",
+        "C-1358",
+        "C-1359",
+        "C-1360",
+        "C-1361",
+        "C-1362",
+        "C-1364",
+        "C-1366",
+        "C-1369",
+        "C-1370",
+        "C-1371",
+        "C-1372",
+        "C-1373",
+        "C-1374",
+        "C-1375",
+        "C-1376",
         "C-218",
         "C-219",
         "C-220",
@@ -4830,6 +4936,7 @@
         "C-1338",
         "C-1341",
         "C-1351",
+        "C-1362",
         "C-268",
         "C-269",
         "C-270",
@@ -4931,6 +5038,7 @@
         "C-1338",
         "C-1341",
         "C-1351",
+        "C-1362",
         "C-268",
         "C-269",
         "C-270",
@@ -5545,6 +5653,9 @@
         "C-1312",
         "C-1345",
         "C-1351",
+        "C-1359",
+        "C-1369",
+        "C-1373",
         "C-343",
         "C-344",
         "C-345",
@@ -5705,6 +5816,9 @@
         "C-1312",
         "C-1345",
         "C-1351",
+        "C-1359",
+        "C-1369",
+        "C-1373",
         "C-343",
         "C-344",
         "C-345",
@@ -5853,6 +5967,13 @@
         "C-1314",
         "C-1350",
         "C-1351",
+        "C-1352",
+        "C-1360",
+        "C-1368",
+        "C-1370",
+        "C-1372",
+        "C-1373",
+        "C-1376",
         "C-368",
         "C-370",
         "C-372",
@@ -5994,6 +6115,13 @@
         "C-1314",
         "C-1350",
         "C-1351",
+        "C-1352",
+        "C-1360",
+        "C-1368",
+        "C-1370",
+        "C-1372",
+        "C-1373",
+        "C-1376",
         "C-368",
         "C-369",
         "C-370",
@@ -26013,6 +26141,345 @@
         "candidate-014",
         "candidate-015",
         "candidate-019",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1352",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-012",
+        "candidate-014",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1353",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-011"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1354",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1355",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1356",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-012",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1357",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1358",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1359",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-014",
+        "candidate-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1360",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-011",
+        "candidate-012",
+        "candidate-014",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1361",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-011",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1362",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014",
+        "candidate-015"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1363",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-005",
+        "candidate-011",
+        "candidate-012"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1364",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-011",
+        "candidate-012",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1365",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-005",
+        "candidate-011",
+        "candidate-012"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1366",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1367",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-001",
+        "candidate-007",
+        "candidate-012"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1368",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-011",
+        "candidate-012",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1369",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014",
+        "candidate-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1370",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-011",
+        "candidate-014",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1371",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1372",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1373",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-019",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1374",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1375",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1376",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
         "candidate-020"
       ],
       "disposition": null

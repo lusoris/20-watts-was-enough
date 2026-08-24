@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "asOf": "2026-08-21",
+  "asOf": "2026-08-24",
   "states": {
     "dedicated": "At least one durable audit is centered on evidence from this field. This does not mean the field is complete.",
     "adjacent": "The field contributes evidence to another audit, but has no field-centered audit of its own.",
@@ -136,10 +136,11 @@
       "state": "dedicated",
       "audits": [
         "research/audits/2026-08-05-power-grids-protection-and-recovery.md",
-        "research/audits/2026-08-05-semiconductor-device-reliability.md"
+        "research/audits/2026-08-05-semiconductor-device-reliability.md",
+        "research/audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md"
       ],
-      "scopeGap": "Power and device reliability are represented; communications, RF, signal processing, sensors, and control hardware need dedicated comparison.",
-      "nextQuestion": "Which protection and coding mechanisms preserve service with less sensing, communication, and margin?"
+      "scopeGap": "Power, device reliability, adaptive link control, and interacting network-loop operations are represented; RF device and antenna design, signal processing, sensors, electromagnetic compatibility, and control hardware remain uneven.",
+      "nextQuestion": "Which protection, coding, state-age, and loop-coordination mechanisms preserve accepted service with less sensing, communication, and margin?"
     },
     {
       "code": "2.3",
@@ -147,10 +148,11 @@
       "state": "dedicated",
       "audits": [
         "research/audits/2026-08-05-mechanical-civil-resilience.md",
-        "research/audits/2026-08-05-biomechanics-motor-control.md"
+        "research/audits/2026-08-05-biomechanics-motor-control.md",
+        "research/audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md"
       ],
-      "scopeGap": "Mechanics and resilience are represented; tribology, manufacturing, machine design, and thermal machines are shallow.",
-      "nextQuestion": "When can geometry, compliance, hysteresis, or passive dynamics replace sensing and active control?"
+      "scopeGap": "Mechanics and resilience plus bounded production-process, RCM, maintainability, support and restoration evidence are represented; tribology, machine design, thermal machines, factory systems and process-specific manufacturing remain shallow.",
+      "nextQuestion": "When can geometry, compliance, hysteresis, passive dynamics, maintainability, or mode-specific maintenance replace sensing, active control, and universal service schedules?"
     },
     {
       "code": "2.4",
@@ -167,9 +169,10 @@
       "audits": [
         "research/audits/2026-08-05-adaptive-materials-and-self-assembly.md",
         "research/audits/2026-08-05-semiconductor-device-reliability.md",
-        "research/audits/2026-08-21-polymer-research-adaptive-materials.md"
+        "research/audits/2026-08-21-polymer-research-adaptive-materials.md",
+        "research/audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md"
       ],
-      "scopeGap": "Adaptive materials, polymer distributions/topology/rheology/healing, and device degradation are represented; metallurgy, ceramics, composites, coatings, manufacturing qualification, and production variation remain shallow.",
+      "scopeGap": "Adaptive materials, polymer distributions/topology/rheology/healing, device degradation, and bounded material qualification/lineage are represented; metallurgy, ceramics, composites, joining, coatings, and most production physics remain shallow.",
       "nextQuestion": "Which functions can be compiled into material response without losing distribution support, inspectability, repairability, remaining-life knowledge, or lifecycle advantage?"
     },
     {
@@ -210,13 +213,14 @@
     {
       "code": "2.10",
       "name": "Nano-technology",
-      "state": "adjacent",
+      "state": "dedicated",
       "audits": [
         "research/audits/2026-08-05-adaptive-materials-and-self-assembly.md",
-        "research/audits/2026-08-05-soft-active-matter.md"
+        "research/audits/2026-08-05-soft-active-matter.md",
+        "research/audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md"
       ],
-      "scopeGap": "Nanoscale oscillators, DNA origami, and nanoparticle assembly occur in neighboring audits, but no dedicated nanotechnology audit exists.",
-      "nextQuestion": "Which nanoscale assembly, sensing, transport, and error mechanisms remain useful after device and fabrication costs are included?"
+      "scopeGap": "Nanoscale assembly mechanisms plus a bounded direct audit of population distributions, measurement operators, process history, and rare manufacturing defects are represented; nanodevice transport and sensing, toxicology, safety, fabrication breadth, and scale-up remain incomplete.",
+      "nextQuestion": "Which nanoscale assembly, sensing, transport, inspection, and defect-control mechanisms retain calibrated population evidence and lifecycle advantage after fabrication costs are included?"
     },
     {
       "code": "2.11",
@@ -241,13 +245,14 @@
     {
       "code": "3.2",
       "name": "Clinical medicine",
-      "state": "adjacent",
+      "state": "dedicated",
       "audits": [
         "research/audits/2026-08-05-pathology-rehabilitation.md",
-        "research/audits/2026-08-05-pharmacology-toxicology.md"
+        "research/audits/2026-08-05-pharmacology-toxicology.md",
+        "research/audits/2026-08-24-clinical-intervention-pathways.md"
       ],
-      "scopeGap": "Pathology, rehabilitation, and pharmacology provide clinical fragments; most specialties, diagnosis, surgery, multimorbidity, and longitudinal care are not audited at field level.",
-      "nextQuestion": "Which staged diagnosis, treatment, monitoring, and escalation contracts work under incomplete observation and interacting failures?"
+      "scopeGap": "Pathology, rehabilitation, pharmacology, multimorbidity, diagnostic-to-action coupling, adaptive treatment pathways, antimicrobial stewardship, and intervention authorization now have bounded direct entries; surgery, most specialties, longitudinal disease management, and much diagnostic and therapeutic practice remain unsampled.",
+      "nextQuestion": "Which staged test, authorization, realized-treatment, monitoring, and stopping contracts improve person-level and population outcomes under incomplete observation, interactions, and bounded support?"
     },
     {
       "code": "3.3",
@@ -359,10 +364,11 @@
       "audits": [
         "research/audits/2026-08-21-direct-social-research-ethnography-media.md",
         "research/audits/2026-08-05-cultural-evolution-archaeology.md",
-        "research/audits/2026-08-05-high-reliability-organizations-incident-learning.md"
+        "research/audits/2026-08-05-high-reliability-organizations-incident-learning.md",
+        "research/audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md"
       ],
-      "scopeGap": "Direct survey, category, measurement-invariance, sampling/nonresponse, ethnographic, network, organizational, mixed-method and media-observation boundaries now have a bounded field audit; stratification, family, work, education, migration, urban/rural sociology, social movements, deviance, health, science and technology studies, and historical sociology remain incomplete.",
-      "nextQuestion": "Which substantive sociological mechanisms survive explicit construct, access, selection, interference, positionality, institutional-practice, exposure, and shared-error-root tests?"
+      "scopeGap": "Direct social-research methods plus bounded stratification, household allocation, paid/unpaid work, migration measurement, collective-action, criminology, and digital-field entries are represented; education, urban/rural and health sociology, science and technology studies, social work, historical sociology, population breadth, and most substantive theory remain incomplete.",
+      "nextQuestion": "Which substantive sociological results survive explicit construct, inequality operator, household allocation, migration denominator, participation cost, crime-observation, platform, positionality, and shared-error-root tests?"
     },
     {
       "code": "5.5",
@@ -375,10 +381,10 @@
     {
       "code": "5.6",
       "name": "Political science",
-      "state": "adjacent",
-      "audits": ["research/audits/2026-08-05-social-choice-institutions.md"],
-      "scopeGap": "Formal governance is represented, but public administration, comparative politics, international relations, and policy implementation are not.",
-      "nextQuestion": "How do authority, veto, capture, legitimacy, and implementation gaps change multi-agent governance designs?"
+      "state": "dedicated",
+      "audits": ["research/audits/2026-08-05-social-choice-institutions.md", "research/audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md"],
+      "scopeGap": "Formal governance plus bounded policy-implementation, administrative-burden, participation, collective-action, and repression mechanisms are represented; parties, elections, legislatures, executives, courts, comparative regimes, international relations, conflict, public finance, and policy breadth remain incomplete.",
+      "nextQuestion": "How do authority, veto, capture, administrative burden, participation cost, legitimacy, and implementation gaps change governance designs without treating visible action as private support?"
     },
     {
       "code": "5.7",
@@ -394,10 +400,10 @@
     {
       "code": "5.8",
       "name": "Media and communications",
-      "state": "adjacent",
-      "audits": ["research/audits/2026-08-05-linguistics-communication.md"],
-      "scopeGap": "Communication mechanisms are represented, but media institutions, platforms, agenda setting, diffusion, journalism, and audience measurement are not.",
-      "nextQuestion": "How do channels, platforms, gatekeepers, incentives, and repeated exposure alter shared state and error propagation?"
+      "state": "dedicated",
+      "audits": ["research/audits/2026-08-05-linguistics-communication.md", "research/audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md"],
+      "scopeGap": "Communication mechanisms plus bounded platform-conditioned methods and comparative media-system operators are represented; journalism practice and history, media industries, interpersonal, intercultural, organizational, health and environmental communication, and audience breadth remain incomplete.",
+      "nextQuestion": "How do channels, provider-controlled interfaces, media institutions, platforms, gatekeepers, ownership, financing, incentives, and repeated exposure alter observation, shared state, and error propagation?"
     },
     {
       "code": "5.9",
@@ -480,14 +486,14 @@
     { "code": "1.18", "name": "Philosophie", "state": "dedicated", "audits": ["research/audits/2026-08-21-philosophy-of-science-theory-choice.md"], "gap": "Philosophy of science and theory choice are audited; most other philosophical subfields remain unsampled." },
     { "code": "1.21", "name": "Erziehungswissenschaft und Bildungsforschung", "state": "dedicated", "audits": ["research/audits/2026-08-05-learning-science-skill-acquisition.md"], "gap": "Institutions and professional practice remain partial." },
     { "code": "1.22", "name": "Psychologie", "state": "dedicated", "audits": ["research/audits/2026-08-05-comparative-cognition-tool-use.md", "research/audits/2026-08-05-endogenous-generation-creativity.md", "research/audits/2026-08-05-learning-science-skill-acquisition.md"], "gap": "Clinical, organizational, and personality work remain uneven." },
-    { "code": "1.23", "name": "Sozialwissenschaften", "state": "dedicated", "audits": ["research/audits/2026-08-21-direct-social-research-ethnography-media.md", "research/audits/2026-08-05-social-choice-institutions.md"], "gap": "Empirical social research and communication/media selection and exposure now have a bounded direct audit, with limited treatment of sociological theory, organizations, categories and interaction; political science, public administration, journalism practice, communication history, media industries, and substantive sociological breadth remain incomplete." },
+    { "code": "1.23", "name": "Sozialwissenschaften", "state": "dedicated", "audits": ["research/audits/2026-08-21-direct-social-research-ethnography-media.md", "research/audits/2026-08-05-social-choice-institutions.md", "research/audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md"], "gap": "Empirical social research plus bounded policy implementation, administrative burden, inequality, household/work/care allocation, migration, collective action, criminology, platform methods and media-system operators are represented; parties, elections, comparative politics, international relations, journalism practice/history, media industries, education, urban/rural and health sociology, social work, and most substantive breadth remain incomplete." },
     { "code": "1.24", "name": "Wirtschaftswissenschaften", "state": "dedicated", "audits": ["research/audits/2026-08-05-economics-market-design-incentives.md", "research/audits/2026-08-05-supply-chain-operations-research.md", "research/audits/2026-08-21-accounting-audit-actuarial-insurance.md"], "gap": "Market design, operations, accounting, audit, actuarial reserves, and insurance boundaries are audited; finance, management, marketing, taxation, organization studies, and much empirical institutional work remain unsampled." },
     { "code": "1.25", "name": "Rechtswissenschaften", "state": "dedicated", "audits": ["research/audits/2026-08-05-legal-evidence-procedure.md"], "gap": "Evidence and procedure dominate; substantive fields remain partial." },
     { "code": "2.11", "name": "Grundlagen der Biologie und Medizin", "state": "dedicated", "audits": ["research/audits/2026-08-05-cellular-quality-control.md", "research/audits/2026-08-05-developmental-morphogenesis.md"], "gap": "Genomics and structural biology remain uneven." },
     { "code": "2.12", "name": "Pflanzenwissenschaften", "state": "dedicated", "audits": ["research/audits/2026-08-05-plant-distributed-control.md", "research/audits/2026-08-21-soil-crop-multiresource-colimitation.md"], "gap": "Field and crop contexts remain partial." },
     { "code": "2.13", "name": "Zoologie", "state": "adjacent", "audits": ["research/audits/2026-08-05-animal-navigation-sensory-ecology.md", "research/audits/2026-08-05-comparative-cognition-tool-use.md"], "gap": "Behavior and navigation are present, but morphology, systematics, physiology, and evo-devo are not field-centered." },
     { "code": "2.21", "name": "Mikrobiologie, Virologie und Immunologie", "state": "dedicated", "audits": ["research/audits/2026-08-05-microbial-ecology-biofilms.md", "research/audits/2026-08-05-immune-tolerance-trained-immunity.md"], "gap": "Virology and parasitology are major gaps." },
-    { "code": "2.22", "name": "Medizin", "state": "adjacent", "audits": ["research/audits/2026-08-05-pathology-rehabilitation.md", "research/audits/2026-08-05-pharmacology-toxicology.md", "research/audits/2026-08-05-epidemiology-and-surveillance-control.md", "research/audits/2026-08-21-nursing-care-health-services.md"], "gap": "Only a small fraction of 33 listed medical subjects is directly sampled." },
+    { "code": "2.22", "name": "Medizin", "state": "dedicated", "audits": ["research/audits/2026-08-05-pathology-rehabilitation.md", "research/audits/2026-08-05-pharmacology-toxicology.md", "research/audits/2026-08-05-epidemiology-and-surveillance-control.md", "research/audits/2026-08-21-nursing-care-health-services.md", "research/audits/2026-08-24-clinical-intervention-pathways.md"], "gap": "Pathology, rehabilitation, pharmacology, multimorbidity, diagnostic-to-action coupling, adaptive treatment pathways, antimicrobial stewardship, and intervention authorization have bounded entries; only a small fraction of the 33 listed medical subjects is directly sampled." },
     { "code": "2.23", "name": "Neurowissenschaften", "state": "dedicated", "audits": ["research/audits/2026-08-05-neurodevelopment-global-control.md", "research/audits/2026-08-05-memory-replay-forgetting.md"], "gap": "Strongest life-science concentration; still not exhaustive." },
     { "code": "2.31", "name": "Agrar-, Forstwissenschaften und Tiermedizin", "state": "dedicated", "audits": ["research/audits/2026-08-21-soil-crop-multiresource-colimitation.md", "research/audits/2026-08-21-animal-veterinary-population-health.md", "research/audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md"], "gap": "Soil/crop co-limitation, animal production, welfare, breeding, rumen ecology, veterinary population health, forestry, fisheries, aquaculture, and aquatic food systems are audited; many species, production systems, food science, farm economics, and clinical veterinary breadth remain unsampled." },
     { "code": "3.11", "name": "Molekülchemie", "state": "dedicated", "audits": ["research/audits/2026-08-21-molecular-chemistry-synthesis-systems.md"], "gap": "Dynamic covalent assembly, self-sorting, context-qualified recognition, photochemical/electrochemical pathway control, structure elucidation and automated discovery nulls now have a bounded audit; inorganic/organometallic breadth, total synthesis, radical/pericyclic/C–H activation, flow/scale-up, impurity fate and reproducibility remain incomplete." },
@@ -509,21 +515,21 @@
     { "code": "3.44", "name": "Mineralogie, Petrologie und Geochemie", "state": "dedicated", "audits": ["research/audits/2026-08-21-mineralogy-petrology-geochemistry.md"], "gap": "Phase equilibria, kinetic trapping and replacement, P–T–t records, isotope and reservoir inverses, weathering/redox, reactive upscaling, detrital provenance, geochronology, preservation and metrology now have a bounded field audit; experimental mineral physics/crystallography, igneous and mantle processes, ore/economic geology, cosmochemistry, and analytical breadth remain incomplete." },
     { "code": "3.45", "name": "Geographie", "state": "adjacent", "audits": ["research/audits/2026-08-05-built-environment-urban-systems.md", "research/audits/2026-08-05-geology-geomorphology.md"], "gap": "Physical and human geography are not audited directly." },
     { "code": "3.46", "name": "Wasserforschung", "state": "adjacent", "audits": ["research/audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md", "research/audits/2026-08-21-mineralogy-petrology-geochemistry.md", "research/audits/2026-08-21-biotechnology-chemistry-process-systems.md"], "gap": "Receiving-water capacity and aquatic flows provide adjacent evidence; hydrology, limnology, hydraulics, water treatment, groundwater, and water governance lack a field-centered audit." },
-    { "code": "4.11", "name": "Produktionstechnik", "state": "adjacent", "audits": ["research/audits/2026-08-05-supply-chain-operations-research.md", "research/audits/2026-08-05-process-engineering.md"], "gap": "Manufacturing and factory systems lack a field-centered audit." },
+    { "code": "4.11", "name": "Produktionstechnik", "state": "dedicated", "audits": ["research/audits/2026-08-05-supply-chain-operations-research.md", "research/audits/2026-08-05-process-engineering.md", "research/audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md"], "gap": "Statistical process state, qualified process windows, maintenance policy/support, manufacturing genealogy and bounded nanomanufacturing evidence have a direct audit; factory planning/layout, production logistics, machining, forming, joining, additive manufacture, human work and most process-specific production technologies remain incomplete." },
     { "code": "4.12", "name": "Mechanik und konstruktiver Maschinenbau", "state": "dedicated", "audits": ["research/audits/2026-08-05-mechanical-civil-resilience.md", "research/audits/2026-08-05-biomechanics-motor-control.md"], "gap": "Design and product development remain shallow." },
     { "code": "4.21", "name": "Verfahrenstechnik und Technische Chemie", "state": "dedicated", "audits": ["research/audits/2026-08-05-process-engineering.md", "research/audits/2026-08-21-biotechnology-chemistry-process-systems.md"], "gap": "Process engineering now includes a direct bioprocess/biotechnology audit; product-specific manufacturing, validation, downstream breadth, contamination control, and industrial authorization remain partial." },
     { "code": "4.22", "name": "Strömungsmechanik, Technische Thermodynamik und Thermische Energietechnik", "state": "dedicated", "audits": ["research/audits/2026-08-05-fluid-dynamics-turbulence.md"], "gap": "Energy machinery and applied thermal systems remain partial." },
-    { "code": "4.31", "name": "Werkstofftechnik", "state": "adjacent", "audits": ["research/audits/2026-08-05-adaptive-materials-and-self-assembly.md", "research/audits/2026-08-21-polymer-research-adaptive-materials.md"], "gap": "Adaptive-material and polymer-mechanism audits provide adjacent evidence; manufacturing-qualified metallurgy, ceramics, composites, joining, surface engineering and production variation still lack a field-centered audit." },
+    { "code": "4.31", "name": "Werkstofftechnik", "state": "dedicated", "audits": ["research/audits/2026-08-05-adaptive-materials-and-self-assembly.md", "research/audits/2026-08-21-polymer-research-adaptive-materials.md", "research/audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md"], "gap": "Adaptive-material/polymer mechanisms plus bounded material qualification, inspection-document, lineage, substitution and requalification evidence are represented; metallurgy, ceramics, composites, joining, surface engineering, degradation and most production variation remain incomplete." },
     { "code": "4.32", "name": "Materialwissenschaft", "state": "dedicated", "audits": ["research/audits/2026-08-05-adaptive-materials-and-self-assembly.md", "research/audits/2026-08-21-polymer-research-adaptive-materials.md", "research/audits/2026-08-05-semiconductor-device-reliability.md"], "gap": "Adaptive-material, polymer and device-reliability mechanisms are represented; biomaterials, electronic/quantum materials, composite interfaces and multiscale design remain partial." },
     { "code": "4.41", "name": "Systemtechnik", "state": "dedicated", "audits": ["research/audits/2026-08-05-engineering-analogues.md", "research/audits/2026-08-05-aerospace-maritime-autonomy.md"], "gap": "Transport and microsystems remain uneven." },
-    { "code": "4.42", "name": "Elektrotechnik und Informationstechnik", "state": "dedicated", "audits": ["research/audits/2026-08-05-power-grids-protection-and-recovery.md", "research/audits/2026-08-05-semiconductor-device-reliability.md"], "gap": "Communication and RF systems remain shallow." },
+    { "code": "4.42", "name": "Elektrotechnik und Informationstechnik", "state": "dedicated", "audits": ["research/audits/2026-08-05-power-grids-protection-and-recovery.md", "research/audits/2026-08-05-semiconductor-device-reliability.md", "research/audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md"], "gap": "Power, device reliability, adaptive link control and interacting network-operations loops are represented; antenna/RF device design, electromagnetic compatibility, signal processing, sensors, control hardware and communications-system breadth remain incomplete." },
     { "code": "4.43", "name": "Informatik", "state": "dedicated", "audits": ["research/audits/2026-08-05-databases-storage.md", "research/audits/2026-08-05-programming-languages-verification.md", "research/audits/2026-08-05-security-cryptography.md", "research/audits/2026-08-05-hci-human-factors.md"], "gap": "Several subfields are represented; visualization and software engineering remain partial." },
     { "code": "4.51", "name": "Bauwesen und Architektur", "state": "dedicated", "audits": ["research/audits/2026-08-05-built-environment-urban-systems.md", "research/audits/2026-08-05-mechanical-civil-resilience.md"], "gap": "Construction production and water engineering remain partial." }
   ],
   "anzsrcDivisions": [
     { "code": "30", "name": "Agricultural, veterinary and food sciences", "state": "dedicated", "audits": ["research/audits/2026-08-21-soil-crop-multiresource-colimitation.md", "research/audits/2026-08-21-animal-veterinary-population-health.md", "research/audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md"], "gap": "Soil, crop, livestock, veterinary population health, forestry, fisheries and aquaculture now have direct audits; food science, farm systems, horticulture, reproductive biotechnology and many species remain unsampled." },
     { "code": "31", "name": "Biological sciences", "state": "dedicated", "audits": ["research/audits/2026-08-05-cellular-quality-control.md", "research/audits/2026-08-05-collective-ecological-resilience.md", "research/audits/2026-08-05-developmental-morphogenesis.md", "research/audits/2026-08-05-microbial-ecology-biofilms.md", "research/audits/2026-08-05-plant-distributed-control.md"], "gap": "Cellular control, development, ecology, microbes and plants are represented; taxonomy, anatomy, marine biology, genomics, parasitology and most organismal breadth remain incomplete." },
-    { "code": "32", "name": "Biomedical and clinical sciences", "state": "dedicated", "audits": ["research/audits/2026-08-05-pathology-rehabilitation.md", "research/audits/2026-08-05-pharmacology-toxicology.md", "research/audits/2026-08-05-epidemiology-and-surveillance-control.md", "research/audits/2026-08-21-nursing-care-health-services.md"], "gap": "Pathology, rehabilitation, pharmacology, toxicology, epidemiology, nursing and care systems are direct entries; most clinical specialties, diagnosis and treatment pathways, multimorbidity and medical biotechnology remain unsampled." },
+    { "code": "32", "name": "Biomedical and clinical sciences", "state": "dedicated", "audits": ["research/audits/2026-08-05-pathology-rehabilitation.md", "research/audits/2026-08-05-pharmacology-toxicology.md", "research/audits/2026-08-05-epidemiology-and-surveillance-control.md", "research/audits/2026-08-21-nursing-care-health-services.md", "research/audits/2026-08-24-clinical-intervention-pathways.md"], "gap": "Pathology, rehabilitation, pharmacology, toxicology, epidemiology, nursing/care systems, multimorbidity, diagnostic-to-action coupling, adaptive treatment pathways, antimicrobial stewardship and intervention authorization are bounded direct entries; most clinical specialties, surgery, longitudinal disease management and medical biotechnology remain unsampled." },
     { "code": "33", "name": "Built environment and design", "state": "dedicated", "audits": ["research/audits/2026-08-05-built-environment-urban-systems.md", "research/audits/2026-08-05-mechanical-civil-resilience.md", "research/audits/2026-08-05-visual-art-design-cognition.md"], "gap": "Urban systems, structural resilience and design cognition are represented; architecture practice, construction production, landscape architecture, planning law and building operation remain partial." },
     { "code": "34", "name": "Chemical sciences", "state": "dedicated", "audits": ["research/audits/2026-08-05-chemistry-reaction-networks-proofreading.md", "research/audits/2026-08-21-biotechnology-chemistry-process-systems.md", "research/audits/2026-08-21-molecular-chemistry-synthesis-systems.md", "research/audits/2026-08-21-polymer-research-adaptive-materials.md"], "gap": "Reaction networks, proofreading, molecular assembly/control, catalysis, process chemistry and polymer mechanisms are represented; analytical, surface, theoretical and much inorganic, organometallic, total-synthesis and scale-up chemistry remain uneven." },
     { "code": "35", "name": "Commerce, management, tourism and services", "state": "dedicated", "audits": ["research/audits/2026-08-05-supply-chain-operations-research.md", "research/audits/2026-08-21-accounting-audit-actuarial-insurance.md"], "gap": "Operations, accounting, audit, actuarial reserves and insurance are represented; organization studies, management, marketing, finance, taxation, tourism and most service professions remain unsampled." },
@@ -531,14 +537,14 @@
     { "code": "37", "name": "Earth sciences", "state": "dedicated", "audits": ["research/audits/2026-08-05-earth-system-transition-signals.md", "research/audits/2026-08-05-geology-geomorphology.md", "research/audits/2026-08-05-astronomy-remote-inference.md", "research/audits/2026-08-21-mineralogy-petrology-geochemistry.md"], "gap": "Geology, geomorphology, mineralogy/petrology/geochemistry, Earth-system transitions and remote inference are represented; geophysics, geodesy, ocean and atmospheric sciences, experimental mineral physics, ore geology and cosmochemistry remain uneven." },
     { "code": "38", "name": "Economics", "state": "dedicated", "audits": ["research/audits/2026-08-05-economics-market-design-incentives.md", "research/audits/2026-08-05-social-choice-institutions.md"], "gap": "Market design, incentives and social choice are represented; macroeconomics, development, labor, public finance, economic history and empirical identification breadth remain incomplete." },
     { "code": "39", "name": "Education", "state": "dedicated", "audits": ["research/audits/2026-08-05-learning-science-skill-acquisition.md"], "gap": "Learning and skill acquisition are direct entries; institutions, curriculum, inclusion, assessment, vocational education and comparative education systems remain partial." },
-    { "code": "40", "name": "Engineering", "state": "dedicated", "audits": ["research/audits/2026-08-05-engineering-analogues.md", "research/audits/2026-08-05-mechanical-civil-resilience.md", "research/audits/2026-08-05-process-engineering.md", "research/audits/2026-08-05-power-grids-protection-and-recovery.md", "research/audits/2026-08-21-polymer-research-adaptive-materials.md"], "gap": "Several engineering families and polymer/material lifecycle mechanisms are represented; production, mining, transport, communications, robotics hardware, maintenance, manufacturing qualification and many material systems remain uneven." },
+    { "code": "40", "name": "Engineering", "state": "dedicated", "audits": ["research/audits/2026-08-05-engineering-analogues.md", "research/audits/2026-08-05-mechanical-civil-resilience.md", "research/audits/2026-08-05-process-engineering.md", "research/audits/2026-08-05-power-grids-protection-and-recovery.md", "research/audits/2026-08-21-polymer-research-adaptive-materials.md", "research/audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md"], "gap": "Several engineering families plus bounded production/process capability, maintenance/support, nanomanufacturing evidence, adaptive communications/network operations, and material qualification/lineage are represented; mining, transport, factory/layout and production-technology breadth, RF hardware, robotics hardware and many material systems remain uneven." },
     { "code": "41", "name": "Environmental sciences", "state": "dedicated", "audits": ["research/audits/2026-08-05-earth-system-transition-signals.md", "research/audits/2026-08-05-collective-ecological-resilience.md", "research/audits/2026-08-21-biotechnology-chemistry-process-systems.md"], "gap": "Earth systems, ecological resilience, remediation and environmental biotechnology are represented; water, ocean, atmospheric, contamination, conservation-management and environmental-policy breadth remain partial." },
     { "code": "42", "name": "Health sciences", "state": "dedicated", "audits": ["research/audits/2026-08-05-epidemiology-and-surveillance-control.md", "research/audits/2026-08-05-pathology-rehabilitation.md", "research/audits/2026-08-21-nursing-care-health-services.md"], "gap": "Population surveillance, rehabilitation, nursing and health services are represented; public-health interventions, allied health, nutrition, health economics and implementation science remain uneven." },
     { "code": "43", "name": "History, heritage and archaeology", "state": "dedicated", "audits": ["research/audits/2026-08-05-cultural-evolution-archaeology.md", "research/audits/2026-08-05-quantitative-history-demography.md", "research/audits/2026-08-21-textual-criticism-variant-traditions.md", "research/audits/2026-08-21-residual-humanities-living-heritage-practice.md"], "gap": "Archaeological inference, quantitative history, textual traditions, living heritage, archival absence and conservation boundaries are represented; oral history, museum and curatorial practice, heritage conflict, and most periods and regions remain unsampled." },
-    { "code": "44", "name": "Human society", "state": "dedicated", "audits": ["research/audits/2026-08-21-direct-social-research-ethnography-media.md", "research/audits/2026-08-05-social-choice-institutions.md", "research/audits/2026-08-21-indigenous-data-knowledge-governance.md", "research/audits/2026-08-21-theology-religious-practice-ritual.md"], "gap": "Direct social-research methods now give bounded depth to anthropology and sociology, including ethnographic observation, sampling, categories, networks, organizations and participant/community authority; criminology, demography, human geography, policy and administration, political science, social work, and most substantive anthropology and sociology remain incomplete." },
+    { "code": "44", "name": "Human society", "state": "dedicated", "audits": ["research/audits/2026-08-21-direct-social-research-ethnography-media.md", "research/audits/2026-08-05-social-choice-institutions.md", "research/audits/2026-08-21-indigenous-data-knowledge-governance.md", "research/audits/2026-08-21-theology-religious-practice-ritual.md", "research/audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md"], "gap": "Direct social-research methods plus bounded policy/administration, political science, inequality, household/work/care allocation, migration, collective action, criminology and digital-field depth are represented; human geography, social work, education, urban/rural and health sociology, historical sociology, comparative politics/international relations, and most substantive anthropology and sociology remain incomplete." },
     { "code": "45", "name": "Indigenous studies", "state": "dedicated", "audits": ["research/audits/2026-08-21-indigenous-data-knowledge-governance.md"], "gap": "Indigenous data and knowledge governance has an Indigenous-led-source entry audit; languages, law, land, health, education, histories and community-specific knowledge require their own authorities and cannot be inferred from that entry." },
     { "code": "46", "name": "Information and computing sciences", "state": "dedicated", "audits": ["research/audits/2026-08-05-databases-storage.md", "research/audits/2026-08-05-programming-languages-verification.md", "research/audits/2026-08-05-security-cryptography.md", "research/audits/2026-08-05-hci-human-factors.md"], "gap": "Storage, programming languages, verification, security and HCI are represented; networking, compilers, visualization, software engineering and many applied information systems remain uneven." },
-    { "code": "47", "name": "Language, communication and culture", "state": "dedicated", "audits": ["research/audits/2026-08-05-linguistics-communication.md", "research/audits/2026-08-21-textual-criticism-variant-traditions.md", "research/audits/2026-08-21-direct-social-research-ethnography-media.md"], "gap": "Linguistics, textual criticism, translation qualification, and bounded communication/media gatekeeping, delivery, attention and effects are represented; journalism practice and history, media industries, interpersonal and intercultural communication, interpreting, cultural studies, rhetoric, and most language traditions remain incomplete." },
+    { "code": "47", "name": "Language, communication and culture", "state": "dedicated", "audits": ["research/audits/2026-08-05-linguistics-communication.md", "research/audits/2026-08-21-textual-criticism-variant-traditions.md", "research/audits/2026-08-21-direct-social-research-ethnography-media.md", "research/audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md"], "gap": "Linguistics, textual criticism, translation qualification, bounded communication/media gatekeeping and effects, platform-conditioned methods, and comparative media-system operators are represented; journalism practice/history, media industries, interpersonal/intercultural/organizational communication, interpreting, cultural studies, rhetoric and most language traditions remain incomplete." },
     { "code": "48", "name": "Law and legal studies", "state": "dedicated", "audits": ["research/audits/2026-08-05-legal-evidence-procedure.md"], "gap": "Evidence and procedure are direct entries; substantive private, public, criminal, labor, environmental and international law remain partial and jurisdiction-specific." },
     { "code": "49", "name": "Mathematical sciences", "state": "dedicated", "audits": ["research/audits/2026-08-05-mathematical-practice-proof-discovery.md"], "gap": "Formal discovery and proof practice are represented; most pure, applied, statistical and computational subfields remain unsampled." },
     { "code": "50", "name": "Philosophy and religious studies", "state": "dedicated", "audits": ["research/audits/2026-08-21-philosophy-of-science-theory-choice.md", "research/audits/2026-08-21-theology-religious-practice-ritual.md"], "gap": "Theory choice, theology, religious practice and ritual are direct entries; ethics, philosophy of mind and technology, comparative religion and most traditions remain unsampled." },

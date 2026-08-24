@@ -54,5 +54,21 @@
       "horizon_contours": [1, 100, 10000, 1000000]
     },
     "status": "The accounting identity is canonical; all axes are normalized illustrative ratios."
+  },
+  {
+    "id": "candidate-010-metering-scale",
+    "title": "Metering artifact scale",
+    "equation": "A_event = 2 F A S Q;  A_block = 2 F S K (A + 2)",
+    "source": "decisions/0011-measure-energy-in-paired-blocks.md",
+    "parameters": {
+      "scenarios": 24,
+      "arms": 7,
+      "seeds": 2,
+      "opportunities_per_seed": 10000,
+      "measurement_repetitions": 2,
+      "idle_observations_per_repetition": 2,
+      "artifacts_per_observation": 2
+    },
+    "status": "Calculated from the current nominal Candidate 010 matrix; this is an artifact-count comparison, not an energy or runtime measurement."
   }
 ]

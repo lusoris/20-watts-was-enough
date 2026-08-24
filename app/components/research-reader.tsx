@@ -7,26 +7,81 @@ import {
   documentsByPath,
   type ResearchDocument,
 } from "../content";
+import { outlineFromMarkdown } from "../lib/heading-outline";
 import { MarkdownDocument } from "./markdown-document";
 
 const DEFAULT_DOCUMENT = "README.md";
 
-function initialDocumentPath(): string {
+function requestedDocumentPath(): string {
   if (typeof window === "undefined") return DEFAULT_DOCUMENT;
   const requested = new URLSearchParams(window.location.search).get("doc");
   return requested && documentsByPath.has(requested) ? requested : DEFAULT_DOCUMENT;
 }
 
-function outlineFrom(body: string) {
-  return [...body.matchAll(/^(#{2,3})\s+(.+)$/gm)].map((match) => ({
-    depth: match[1].length,
-    title: match[2].replace(/\[(.+?)\]\(.+?\)/g, "$1").replace(/[*_`]/g, ""),
-    id: match[2]
-      .toLowerCase()
-      .replace(/[^\p{L}\p{N}\s-]/gu, "")
-      .trim()
-      .replace(/\s+/g, "-"),
+function navigationSubgroup(document: ResearchDocument): string {
+  if (document.group === "Research") {
+    if (document.path === "research/audits/README.md") return "Audit index";
+    const auditDate = document.path.match(/^research\/audits\/(\d{4}-\d{2}-\d{2})-/)?.[1];
+    if (auditDate) return `Audits · ${auditDate}`;
+    if (document.kind === "bibtex") return "Bibliography";
+    return "Ledgers, maps & methods";
+  }
+  if (document.group === "Experiments") {
+    if (document.path.startsWith("experiments/workstation/")) return "Workstation";
+    if (document.path.startsWith("experiments/candidates/")) return "Candidates";
+    if (document.path.startsWith("experiments/fixtures/")) return "Fixtures";
+    return "Programme & readiness";
+  }
+  if (document.group === "Graphics") {
+    if (document.path.startsWith("assets/diagrams/")) return "Diagrams";
+    if (document.path.startsWith("assets/plots/")) return "Plots";
+    return "Graphics index";
+  }
+  return "Documents";
+}
+
+function subgroupKey(group: string, subgroup: string): string {
+  return `${group}::${subgroup}`;
+}
+
+function navigationSubgroups(groupDocuments: ResearchDocument[]) {
+  const subgroups = new Map<string, ResearchDocument[]>();
+  for (const document of groupDocuments) {
+    const subgroup = navigationSubgroup(document);
+    const entries = subgroups.get(subgroup) ?? [];
+    entries.push(document);
+    subgroups.set(subgroup, entries);
+  }
+  return [...subgroups].map(([subgroup, subgroupDocuments]) => ({
+    subgroup,
+    documents: subgroupDocuments,
   }));
+}
+
+function initialCollapsedGroups(activeDocument: ResearchDocument): Set<string> {
+  return new Set(
+    documentGroups
+      .map(({ group }) => group)
+      .filter((group) => group !== activeDocument.group),
+  );
+}
+
+function initialCollapsedSubgroups(activeDocument: ResearchDocument): Set<string> {
+  const activeKey = subgroupKey(
+    activeDocument.group,
+    navigationSubgroup(activeDocument),
+  );
+  return new Set(
+    documentGroups.flatMap(({ group, documents: groupDocuments }) =>
+      navigationSubgroups(groupDocuments)
+        .filter(
+          ({ subgroup, documents: subgroupDocuments }) =>
+            subgroupDocuments.length >= 12 || subgroup.startsWith("Audits ·"),
+        )
+        .map(({ subgroup }) => subgroupKey(group, subgroup))
+        .filter((key) => key !== activeKey),
+    ),
+  );
 }
 
 function sourceLabel(document: ResearchDocument): string {
@@ -46,12 +101,19 @@ function sourceLabel(document: ResearchDocument): string {
   return "Canonical research text";
 }
 
-export function ResearchReader() {
-  const [currentPath, setCurrentPath] = useState(DEFAULT_DOCUMENT);
+export function ResearchReader({ initialPath = DEFAULT_DOCUMENT }: { initialPath?: string }) {
+  const resolvedInitialPath = documentsByPath.has(initialPath)
+    ? initialPath
+    : DEFAULT_DOCUMENT;
+  const initialDocument = documentsByPath.get(resolvedInitialPath)!;
+  const [currentPath, setCurrentPath] = useState(resolvedInitialPath);
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
-    () => new Set(),
+    () => initialCollapsedGroups(initialDocument),
+  );
+  const [collapsedSubgroups, setCollapsedSubgroups] = useState<Set<string>>(
+    () => initialCollapsedSubgroups(initialDocument),
   );
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -66,7 +128,7 @@ export function ResearchReader() {
       ? documents[currentIndex + 1]
       : null;
   const outline = useMemo(
-    () => outlineFrom(currentDocument.body),
+    () => outlineFromMarkdown(currentDocument.body),
     [currentDocument.body],
   );
 
@@ -96,6 +158,13 @@ export function ResearchReader() {
       nextGroups.delete(nextDocument.group);
       return nextGroups;
     });
+    setCollapsedSubgroups((subgroups) => {
+      const key = subgroupKey(nextDocument.group, navigationSubgroup(nextDocument));
+      if (!subgroups.has(key)) return subgroups;
+      const nextSubgroups = new Set(subgroups);
+      nextSubgroups.delete(key);
+      return nextSubgroups;
+    });
     const url = new URL(window.location.href);
     url.searchParams.set("doc", path);
     url.hash = hash;
@@ -108,20 +177,23 @@ export function ResearchReader() {
   }, []);
 
   useEffect(() => {
-    const requestedPath = initialDocumentPath();
-    const requestedGroup = documentsByPath.get(requestedPath)?.group;
-    const initialFrame = window.requestAnimationFrame(() => {
-      setCurrentPath(requestedPath);
-      if (requestedGroup) {
-        setCollapsedGroups((groups) => {
-          if (!groups.has(requestedGroup)) return groups;
-          const nextGroups = new Set(groups);
-          nextGroups.delete(requestedGroup);
-          return nextGroups;
-        });
-      }
-    });
-    const onPopState = () => setCurrentPath(initialDocumentPath());
+    const onPopState = () => {
+      const path = requestedDocumentPath();
+      const requestedDocument = documentsByPath.get(path)!;
+      setCurrentPath(path);
+      setCollapsedGroups((groups) => {
+        const nextGroups = new Set(groups);
+        nextGroups.delete(requestedDocument.group);
+        return nextGroups;
+      });
+      setCollapsedSubgroups((subgroups) => {
+        const nextSubgroups = new Set(subgroups);
+        nextSubgroups.delete(
+          subgroupKey(requestedDocument.group, navigationSubgroup(requestedDocument)),
+        );
+        return nextSubgroups;
+      });
+    };
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "/" && document.activeElement?.tagName !== "INPUT") {
         event.preventDefault();
@@ -135,7 +207,6 @@ export function ResearchReader() {
     window.addEventListener("popstate", onPopState);
     window.addEventListener("keydown", onKeyDown);
     return () => {
-      window.cancelAnimationFrame(initialFrame);
       window.removeEventListener("popstate", onPopState);
       window.removeEventListener("keydown", onKeyDown);
     };
@@ -196,20 +267,39 @@ export function ResearchReader() {
           <span>Canonical library</span>
           <p>{documents.length} versioned documents rendered from the private Git source.</p>
           <div className="library-actions" aria-label="Document-section display">
-            <button type="button" onClick={() => setCollapsedGroups(new Set())}>
+            <button
+              type="button"
+              onClick={() => {
+                setCollapsedGroups(new Set());
+                setCollapsedSubgroups(new Set());
+              }}
+            >
               Show all
             </button>
             <button
               type="button"
-              onClick={() =>
+              onClick={() => {
                 setCollapsedGroups(
                   new Set(
                     documentGroups
                       .map(({ group }) => group)
                       .filter((group) => group !== currentDocument.group),
                   ),
-                )
-              }
+                );
+                const activeKey = subgroupKey(
+                  currentDocument.group,
+                  navigationSubgroup(currentDocument),
+                );
+                setCollapsedSubgroups(
+                  new Set(
+                    documentGroups.flatMap(({ group, documents: groupDocuments }) =>
+                      navigationSubgroups(groupDocuments)
+                        .map(({ subgroup }) => subgroupKey(group, subgroup))
+                        .filter((key) => key !== activeKey),
+                    ),
+                  ),
+                );
+              }}
             >
               Current section
             </button>
@@ -221,6 +311,7 @@ export function ResearchReader() {
               visiblePaths.has(document.path),
             );
             if (visibleDocuments.length === 0) return null;
+            const subgroups = navigationSubgroups(visibleDocuments);
             const groupOpen =
               Boolean(query.trim()) ||
               !collapsedGroups.has(group);
@@ -245,21 +336,57 @@ export function ResearchReader() {
                 </button>
                 {groupOpen ? (
                   <div className="nav-group-items">
-                    {visibleDocuments.map((document) => (
-                      <button
-                        type="button"
-                        key={document.path}
-                        className={`nav-item ${document.path === currentDocument.path ? "active" : ""}`}
-                        onClick={() => navigate(document.path)}
-                        title={document.path}
-                      >
-                        <span>{document.title}</span>
-                        {document.path.startsWith("concept/") &&
-                        /^concept\/\d+/.test(document.path) ? (
-                          <small>{document.path.match(/^concept\/(\d+)/)?.[1]}</small>
-                        ) : null}
-                      </button>
-                    ))}
+                    {subgroups.map(({ subgroup, documents: subgroupDocuments }) => {
+                      const key = subgroupKey(group, subgroup);
+                      const showSubgroup = subgroups.length > 1;
+                      const subgroupOpen =
+                        Boolean(query.trim()) || !collapsedSubgroups.has(key);
+                      return (
+                        <section
+                          className={`nav-subgroup ${subgroupOpen ? "" : "collapsed"}`}
+                          key={key}
+                        >
+                          {showSubgroup ? (
+                            <button
+                              type="button"
+                              className="nav-subgroup-toggle"
+                              aria-expanded={subgroupOpen}
+                              onClick={() =>
+                                setCollapsedSubgroups((current) => {
+                                  const next = new Set(current);
+                                  if (subgroupOpen) next.add(key);
+                                  else next.delete(key);
+                                  return next;
+                                })
+                              }
+                            >
+                              <span>{subgroup}</span>
+                              <small>{subgroupDocuments.length}</small>
+                              <i aria-hidden="true">⌄</i>
+                            </button>
+                          ) : null}
+                          {subgroupOpen ? (
+                            <div className="nav-subgroup-items">
+                              {subgroupDocuments.map((document) => (
+                                <button
+                                  type="button"
+                                  key={document.path}
+                                  className={`nav-item ${document.path === currentDocument.path ? "active" : ""}`}
+                                  onClick={() => navigate(document.path)}
+                                  title={document.path}
+                                >
+                                  <span>{document.title}</span>
+                                  {document.path.startsWith("concept/") &&
+                                  /^concept\/\d+/.test(document.path) ? (
+                                    <small>{document.path.match(/^concept\/(\d+)/)?.[1]}</small>
+                                  ) : null}
+                                </button>
+                              ))}
+                            </div>
+                          ) : null}
+                        </section>
+                      );
+                    })}
                   </div>
                 ) : null}
               </section>

@@ -50,21 +50,26 @@ function linePath(points) {
     .join(" ");
 }
 
-function frame(spec, content, { xLabel, yLabel, legend = "" }) {
+function frame(spec, content, {
+  xLabel,
+  yLabel,
+  legend = "",
+  badge = "MATHEMATICAL MODEL · ILLUSTRATIVE",
+  footer = "No measurements · assumptions in assets/plots/core-models.json",
+}) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc">
   <title id="title">${esc(spec.title)}</title>
   <desc id="desc">${esc(spec.status)}</desc>
   <rect width="${W}" height="${H}" rx="24" fill="${colors.background}"/>
   <rect x="36" y="30" width="272" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
-  <text x="52" y="50" fill="${colors.green}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">MATHEMATICAL MODEL · ILLUSTRATIVE</text>
+  <text x="52" y="50" fill="${colors.green}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">${esc(badge)}</text>
   <text x="54" y="94" fill="${colors.text}" font-family="Georgia, serif" font-size="32" font-weight="700">${esc(spec.title)}</text>
   <text x="54" y="123" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="14">${esc(spec.equation)}</text>
   <rect x="${plot.left}" y="${plot.top}" width="${plot.right - plot.left}" height="${plot.bottom - plot.top}" rx="8" fill="${colors.panel}" stroke="#315047"/>
   ${content}
   <text x="${(plot.left + plot.right) / 2}" y="617" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="15" text-anchor="middle">${esc(xLabel)}</text>
   <text x="28" y="${(plot.top + plot.bottom) / 2}" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="15" text-anchor="middle" transform="rotate(-90 28 ${(plot.top + plot.bottom) / 2})">${esc(yLabel)}</text>
-  ${legend}
-  <text x="1040" y="638" fill="${colors.muted}" font-family="Segoe UI, sans-serif" font-size="11" text-anchor="end">No measurements · assumptions in assets/plots/core-models.json</text>
+${legend ? `  ${legend}\n` : ""}  <text x="1040" y="638" fill="${colors.muted}" font-family="Segoe UI, sans-serif" font-size="11" text-anchor="end">${esc(footer)}</text>
 </svg>`;
 }
 
@@ -229,11 +234,62 @@ function lifecycle(spec) {
   });
 }
 
+function meteringScale(spec) {
+  const {
+    scenarios,
+    arms,
+    seeds,
+    opportunities_per_seed: opportunities,
+    measurement_repetitions: repetitions,
+    idle_observations_per_repetition: idleObservations,
+    artifacts_per_observation: artifactsPerObservation,
+  } = spec.parameters;
+  const perEvent = artifactsPerObservation * scenarios * arms * seeds * opportunities;
+  const perBlock = artifactsPerObservation * scenarios * seeds * repetitions * (arms + idleObservations);
+  const reduction = perEvent / perBlock;
+  const minimum = 1_000;
+  const maximum = 10_000_000;
+  const yMap = (value) => sy(Math.log10(value), Math.log10(minimum), Math.log10(maximum));
+  const bars = [
+    { x: 256, width: 260, value: perEvent, color: colors.coral, label: "per work unit", detail: "reading + review for every arm event", labelInside: true },
+    { x: 648, width: 260, value: perBlock, color: colors.green, label: "paired meter blocks", detail: "arm + idle blocks, reading + review", labelInside: false },
+  ];
+  const content = `${grid(
+    [],
+    [1_000, 10_000, 100_000, 1_000_000, 10_000_000],
+    (value) => value,
+    yMap,
+    String,
+    (value) => `10^${Math.log10(value)}`,
+  )}${bars.map((bar) => {
+    const top = yMap(bar.value);
+    const labelY = bar.labelInside ? plot.bottom - 48 : top - 62;
+    const detailY = bar.labelInside ? plot.bottom - 24 : top - 40;
+    const labelColor = bar.labelInside ? colors.background : colors.text;
+    const detailColor = bar.labelInside ? colors.background : colors.muted;
+    return `<rect x="${bar.x}" y="${top}" width="${bar.width}" height="${plot.bottom - top}" rx="10" fill="${bar.color}" opacity=".9"/>
+      <text x="${bar.x + bar.width / 2}" y="${top - 18}" fill="${colors.text}" font-family="Cascadia Mono, monospace" font-size="22" font-weight="700" text-anchor="middle">${bar.value.toLocaleString("en-US")}</text>
+      <text x="${bar.x + bar.width / 2}" y="${labelY}" fill="${labelColor}" font-family="Segoe UI, sans-serif" font-size="18" font-weight="700" text-anchor="middle">${esc(bar.label)}</text>
+      <text x="${bar.x + bar.width / 2}" y="${detailY}" fill="${detailColor}" font-family="Segoe UI, sans-serif" font-size="11" text-anchor="middle">${esc(bar.detail)}</text>`;
+  }).join("")}
+  <path d="M520,250 C570,215 600,215 644,250" fill="none" stroke="${colors.amber}" stroke-width="4" marker-end="url(#scaleArrow)"/>
+  <defs><marker id="scaleArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="${colors.amber}"/></marker></defs>
+  <text x="582" y="196" fill="${colors.amber}" font-family="Segoe UI, sans-serif" font-size="26" font-weight="700" text-anchor="middle">${Math.round(reduction).toLocaleString("en-US")}× fewer</text>
+  <text x="582" y="222" fill="${colors.muted}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">at the same nominal 24 × 7 × 2 design</text>`;
+  return frame(spec, content, {
+    xLabel: "external-energy acquisition design",
+    yLabel: "reading + review artifacts (logarithmic)",
+    badge: "EXPERIMENT SCALE · CALCULATED",
+    footer: "Configuration calculation · no runtime or energy result",
+  });
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
   "sparse-locality-break-even": sparseBreakEven,
   "lifecycle-break-even": lifecycle,
+  "candidate-010-metering-scale": meteringScale,
 };
 
 for (const spec of specs) {

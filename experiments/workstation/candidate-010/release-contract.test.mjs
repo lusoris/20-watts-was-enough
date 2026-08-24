@@ -1,18 +1,35 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { execFile as executeFileCallback } from "node:child_process";
 import {
-  mkdir, mkdtemp, readFile, rm, symlink, writeFile,
+  cp, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile,
 } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { promisify } from "node:util";
+import { BACKEND_METADATA } from "./backend-registry.mjs";
+import { createConfirmatoryPreregistration } from "./confirmatory-analysis.mjs";
+import { buildFactorialDesign } from "./factorial-design.mjs";
 import {
   RELEASE_CONTRACT_VERSION,
   createFrozenSeedReleaseContract,
   openFrozenSeedRelease,
 } from "./release-contract.mjs";
 import { seedListCommitment } from "./seeds/seed-pack.mjs";
-import { computeSourceBundle } from "./source-bundle.mjs";
+import {
+  CANDIDATE_010_MANIFEST_FILE,
+  CANDIDATE_010_SOURCE_FILES,
+  computeSourceBundle,
+  discoverCandidate010SourceFiles,
+} from "./source-bundle.mjs";
+import {
+  revealSeedReleaseSet,
+  sealSeedReleaseSet,
+  validateSeedReleaseOperatorArtifacts,
+} from "./seed-release-operator.mjs";
+
+const executeFile = promisify(executeFileCallback);
 
 function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
@@ -412,4 +429,238 @@ test("missing actual objects and a correctly rehashed v2 release cannot open v3 
       /Invalid or corrupted frozen release contract/,
     );
   });
+});
+
+async function operatorGit(cwd, ...args) {
+  return executeFile("git", ["-c", "core.autocrlf=false", ...args], { cwd, windowsHide: true });
+}
+
+function deterministicFixtureEntropy() {
+  let counter = 0;
+  return (size) => {
+    const chunks = [];
+    let length = 0;
+    while (length < size) {
+      const chunk = createHash("sha256").update(`candidate-010-seed-fixture-${counter}`).digest();
+      counter += 1;
+      chunks.push(chunk);
+      length += chunk.length;
+    }
+    return Buffer.concat(chunks).subarray(0, size);
+  };
+}
+
+async function makeSeedOperatorFixture() {
+  const repositoryRoot = process.cwd();
+  const container = await mkdtemp(path.join(os.tmpdir(), "20w-c010-seed-operator-"));
+  const repository = path.join(container, "repository");
+  const candidateRoot = path.join(repository, "experiments", "workstation", "candidate-010");
+  const inputsRoot = path.join(repository, "seed-release-inputs");
+  const capsuleParent = path.join(container, "capsules");
+  const bindingDirectory = path.join(container, "bindings");
+  const escrowDirectory = path.join(container, "private-escrow");
+  await mkdir(candidateRoot, { recursive: true });
+  await mkdir(inputsRoot);
+  await mkdir(capsuleParent);
+  const coverage = await discoverCandidate010SourceFiles({
+    root: repositoryRoot,
+    productionFiles: [...new Set([
+      ...CANDIDATE_010_SOURCE_FILES,
+      "experiments/workstation/candidate-010/energy-acquisition.mjs",
+      "experiments/workstation/candidate-010/seed-release-operator.mjs",
+    ])].sort(),
+  });
+  for (const relative of [...coverage.source_files, CANDIDATE_010_MANIFEST_FILE]) {
+    const destination = path.join(repository, ...relative.split("/"));
+    await mkdir(path.dirname(destination), { recursive: true });
+    await cp(path.join(repositoryRoot, ...relative.split("/")), destination);
+  }
+  await mkdir(path.join(repository, "node_modules"));
+  await cp(
+    path.join(repositoryRoot, "node_modules", "es-module-lexer"),
+    path.join(repository, "node_modules", "es-module-lexer"),
+    { recursive: true },
+  );
+  const developmentConfig = JSON.parse(await readFile(
+    path.join(repositoryRoot, "experiments", "workstation", "candidate-010", "configs", "development.json"),
+    "utf8",
+  ));
+  const inputPaths = {
+    configPath: path.join(inputsRoot, "confirmation-config.json"),
+    designPath: path.join(inputsRoot, "confirmation-design.json"),
+    backendRegistryPath: path.join(inputsRoot, "backend-registry.json"),
+    preregistrationPath: path.join(inputsRoot, "preregistration.json"),
+  };
+  await writeJson(inputPaths.configPath, { ...developmentConfig, profile: "confirmation" });
+  await writeJson(inputPaths.designPath, {
+    scenarios: buildFactorialDesign({ splits: ["confirmation"] }),
+  });
+  await writeJson(inputPaths.backendRegistryPath, { backends: BACKEND_METADATA });
+  await writeJson(inputPaths.preregistrationPath, createConfirmatoryPreregistration({
+    irreversible_violation_margin: 0,
+    false_commit_margin: 0,
+  }));
+  await operatorGit(repository, "init");
+  await operatorGit(repository, "config", "user.email", "seed-operator@example.invalid");
+  await operatorGit(repository, "config", "user.name", "Seed Operator Fixture");
+  await operatorGit(repository, "add", "--", ".");
+  await operatorGit(repository, "commit", "-m", "freeze seed operator fixture");
+  return {
+    container,
+    repository,
+    candidateRoot,
+    capsuleParent,
+    bindingDirectory,
+    escrowDirectory,
+    inputPaths,
+    encryptionKey: Buffer.alloc(32, 0x5a),
+  };
+}
+
+async function filesBelow(root) {
+  const values = [];
+  async function visit(directory) {
+    for (const entry of await readdir(directory, { withFileTypes: true })) {
+      const absolute = path.join(directory, entry.name);
+      if (entry.isDirectory()) await visit(absolute);
+      else values.push(absolute);
+    }
+  }
+  await visit(root);
+  return values.sort();
+}
+
+test("seed-release operator seals unseen disjoint packs and fixture provenance cannot be relabelled", async () => {
+  const value = await makeSeedOperatorFixture();
+  try {
+    const sealOptions = {
+      repositoryRoot: value.repository,
+      bindingDirectory: value.bindingDirectory,
+      escrowDirectory: value.escrowDirectory,
+      capsuleParent: value.capsuleParent,
+      ...value.inputPaths,
+      confirmationSeedCount: 3,
+      heldOutSeedCount: 2,
+      releaseVersion: 1,
+      encryptionKey: value.encryptionKey,
+    };
+    await assert.rejects(sealSeedReleaseSet({
+      ...sealOptions,
+      seeds: [1, 2],
+      claimEligible: true,
+    }, { randomBytes: deterministicFixtureEntropy() }), /never accepts caller-provided seeds or eligibility flags/);
+    const sealed = await sealSeedReleaseSet(sealOptions, {
+      randomBytes: deterministicFixtureEntropy(),
+    });
+    assert.equal(sealed.state, "commitments-sealed");
+    assert.equal(sealed.claim_eligible, false);
+    assert.equal(sealed.reveal_paths, null);
+    assert.deepEqual(await readdir(value.capsuleParent), []);
+    const sealedFiles = await filesBelow(value.bindingDirectory);
+    assert.equal(sealedFiles.some((file) => file.endsWith(".reveal.json")), false);
+    for (const partition of ["confirmation", "held-out"]) {
+      const commitment = JSON.parse(await readFile(
+        path.join(value.bindingDirectory, `${partition}.commit.json`),
+        "utf8",
+      ));
+      const escrow = JSON.parse(await readFile(
+        path.join(value.escrowDirectory, `${partition}.seed-escrow.json`),
+        "utf8",
+      ));
+      assert.equal(Object.hasOwn(commitment, "seeds"), false);
+      assert.equal(Object.hasOwn(escrow, "seeds"), false);
+    }
+    assert.equal(JSON.stringify(sealed).includes("encryptionKey"), false);
+    assert.equal(JSON.stringify(sealed).includes(value.encryptionKey.toString("hex")), false);
+    assert.deepEqual(await validateSeedReleaseOperatorArtifacts({
+      bindingDirectory: value.bindingDirectory,
+    }), {
+      valid: true,
+      state: "commitments-sealed",
+      claim_eligible: false,
+      release_set_id: sealed.release_set_id,
+      plan_sha256: sealed.plan_sha256,
+      attestation_sha256: null,
+    });
+    await assert.rejects(validateSeedReleaseOperatorArtifacts({
+      bindingDirectory: value.bindingDirectory,
+      requireClaimEligible: true,
+    }), /permanently claim-ineligible/);
+    await assert.rejects(revealSeedReleaseSet({
+      repositoryRoot: value.repository,
+      bindingDirectory: value.bindingDirectory,
+      escrowDirectory: value.escrowDirectory,
+      capsuleParent: value.capsuleParent,
+      encryptionKey: value.encryptionKey,
+      claimEligible: true,
+    }), /never accepts caller eligibility flags/);
+
+    await writeFile(path.join(value.repository, "seed-release-metadata.txt"), "metadata-only commit\n");
+    await operatorGit(value.repository, "add", "--", "seed-release-metadata.txt");
+    await operatorGit(value.repository, "commit", "-m", "publish metadata only");
+    await assert.rejects(revealSeedReleaseSet({
+      repositoryRoot: value.repository,
+      bindingDirectory: value.bindingDirectory,
+      escrowDirectory: value.escrowDirectory,
+      capsuleParent: value.capsuleParent,
+      encryptionKey: Buffer.alloc(32, 0x33),
+    }), /authentication or decryption failed/);
+    assert.equal(await readdir(value.bindingDirectory).then((rows) => rows.includes("revealed")), false);
+
+    const policyPath = path.join(value.candidateRoot, "policies.mjs");
+    const originalPolicy = await readFile(policyPath);
+    await writeFile(policyPath, Buffer.concat([originalPolicy, Buffer.from("\n// hostile source mutation\n")]));
+    await operatorGit(value.repository, "add", "--", path.relative(value.repository, policyPath));
+    await operatorGit(value.repository, "commit", "-m", "mutate frozen source");
+    await assert.rejects(revealSeedReleaseSet({
+      repositoryRoot: value.repository,
+      bindingDirectory: value.bindingDirectory,
+      escrowDirectory: value.escrowDirectory,
+      capsuleParent: value.capsuleParent,
+      encryptionKey: value.encryptionKey,
+    }), /source, execution capsule, or runtime differs/);
+    await writeFile(policyPath, originalPolicy);
+    await operatorGit(value.repository, "add", "--", path.relative(value.repository, policyPath));
+    await operatorGit(value.repository, "commit", "-m", "restore exact frozen source");
+
+    const revealed = await revealSeedReleaseSet({
+      repositoryRoot: value.repository,
+      bindingDirectory: value.bindingDirectory,
+      escrowDirectory: value.escrowDirectory,
+      capsuleParent: value.capsuleParent,
+      encryptionKey: value.encryptionKey,
+    });
+    assert.equal(revealed.state, "explicitly-revealed");
+    assert.equal(revealed.claim_eligible, false);
+    assert.equal(revealed.release_v3_arguments, null);
+    assert.deepEqual(await readdir(value.capsuleParent), []);
+    const confirmationReveal = JSON.parse(await readFile(
+      path.join(revealed.reveal_directory, "confirmation.reveal.json"),
+      "utf8",
+    ));
+    const heldOutReveal = JSON.parse(await readFile(
+      path.join(revealed.reveal_directory, "held-out.reveal.json"),
+      "utf8",
+    ));
+    assert.equal(seedListCommitment(confirmationReveal.seeds), confirmationReveal.commitment);
+    assert.equal(seedListCommitment(heldOutReveal.seeds), heldOutReveal.commitment);
+    assert.equal(confirmationReveal.seeds.some((seed) => heldOutReveal.seeds.includes(seed)), false);
+    const validated = await validateSeedReleaseOperatorArtifacts({
+      bindingDirectory: value.bindingDirectory,
+    });
+    assert.equal(validated.state, "explicitly-revealed");
+    assert.equal(validated.claim_eligible, false);
+
+    const planPath = path.join(value.bindingDirectory, "seed-release-plan.json");
+    const plan = JSON.parse(await readFile(planPath, "utf8"));
+    plan.claim_eligible = true;
+    delete plan.plan_sha256;
+    plan.plan_sha256 = sha256(canonical(plan));
+    await writeJson(planPath, plan);
+    await assert.rejects(validateSeedReleaseOperatorArtifacts({
+      bindingDirectory: value.bindingDirectory,
+    }), /Invalid or corrupted/);
+  } finally {
+    await rm(value.container, { recursive: true, force: true });
+  }
 });

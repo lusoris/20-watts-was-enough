@@ -195,6 +195,71 @@ can rank systems differently from software estimates or device-only counters;
 the existence, sign, and frequency of such reversals are measured outcomes,
 not constants ([C-536](../research/claims.md#c-536)).
 
+### Paired meter blocks and seed-level inference
+
+Fast work units can be shorter than a meter's sampling, clock-alignment, or
+resolution limits. Candidate 010 therefore freezes ordered opportunity blocks,
+counterbalances arm order within each scenario-seed cluster, and records
+warm-up and idle intervals separately. This reduces acquisition and review
+overhead without changing the inferential unit.
+
+For seed $s$, arm $a$, and its set of measured blocks
+$\mathcal{B}_{s,a}$, define
+
+$$
+\widehat e_{s,a}
+=
+\frac{\sum_{b\in\mathcal{B}_{s,a}}E_b^{\mathrm{gross}}}
+{\sum_{b\in\mathcal{B}_{s,a}}C_b},
+$$
+
+where $E_b^{\mathrm{gross}}$ is measured block energy in joules and $C_b$
+is the count of correct commits in that block. Thus $\widehat e_{s,a}$ has
+units J/correct commit. Every repetition and scenario is aggregated inside
+the seed before a candidate-baseline contrast is formed:
+
+$$
+d_s=\widehat e_{s,C}-\widehat e_{s,B}.
+$$
+
+With $n$ independently generated seeds, the paired mean and its two-sided
+Student-$t$ interval are
+
+$$
+\bar d=\frac{1}{n}\sum_{s=1}^{n}d_s,
+\qquad
+\bar d\pm t_{1-\alpha/2,n-1}\frac{s_d}{\sqrt n},
+$$
+
+where $s_d$ is the sample standard deviation of the seed contrasts in
+J/correct commit. Blocks, scenarios, power samples, and repeated measurements
+contribute precision and diagnostic information; none increases $n$.
+
+Let $u_{s,a}$ be the declared conservative expanded measurement allowance for
+one seed-arm aggregate, including calibration contributions and half a meter
+resolution quantum per block, divided by its correct-commit count. A simple
+worst-direction reporting envelope widens the statistical interval by
+
+$$
+\bar u=\frac{1}{n}\sum_{s=1}^{n}(u_{s,C}+u_{s,B}).
+$$
+
+This envelope is deliberately conservative and does not replace a fuller
+covariance model. A zero correct-commit denominator, missing block, invalid
+review, expired calibration, excessive clock uncertainty, or fixture-shaped
+meter record makes the comparison undefined rather than silently dropping a
+seed.
+
+The nominal two-seed design would create 6,720,000 reading-plus-review files
+under per-work-unit metering but 1,728 under the current paired-block design.
+That is an artifact-count calculation, not an energy result or a larger sample
+size.
+
+![Calculated metering artifact scale for Candidate 010](../public/plots/candidate-010-metering-scale.svg)
+
+Editable assumptions:
+[`../assets/plots/core-models.json`](../assets/plots/core-models.json).
+
 ### Lifecycle energy
 
 For candidate $C$ over horizon $H$, define the disjoint lifecycle total

@@ -122,6 +122,42 @@ the exact diff; this file records why the project changed.
   This does not change the 6/9 structural state because no real frozen release,
   calibrated interval-owned energy data, or validated promotion bundle exists.
 
+- Decision 0011 replaces Candidate 010's operationally infeasible per-work-unit
+  energy plan with claim-ineligible paired meter blocks. Exact ordered input
+  manifests, deterministic arm rotation/reversal, separate warm-up and idle
+  observations, configurable sampling/clock/resolution/uncertainty thresholds,
+  immutable reviewed imports, and a calculated scale plot reduce the nominal
+  two-seed energy artifact count from 6,720,000 to 1,728 without pretending that
+  a block is an independent replicate. A new preflight requires seed-level pilot
+  variance, powered endpoint effects, complete hardware/meter/calibration/clock/
+  thermal/power-plan identities, and explicit record/block/time/byte/file/disk
+  ceilings before any reveal. A separate clean-freeze operator can publish
+  disjoint confirmation/held-out commitments while retaining their values in
+  AES-256-GCM escrow. These layers generate no real seeds, do not open Gate 3,
+  and remain ineligible until seed-level block analysis, key custody, release
+  binding, target-meter acquisition, and scaled rehearsal are complete.
+
+- Candidate 010 now carries the paired design through a complete fixture
+  rehearsal path: an exact-order block executor with block-boundary resume, a
+  seed-level analyzer that collapses all repetitions and scenarios before
+  paired inference, and a release-v4 envelope binding the seed operator,
+  powered preflight, held-out evidence, acquisition policy, and schedule to the
+  existing v3 source authority. The analyzer exposes Student-t and conservative
+  measurement-uncertainty intervals while explicitly reporting that blocks and
+  scenarios contribute zero independent replicates. All three layers remain
+  non-promotable until the production entrypoint uses the block bundle and real
+  calibrated target-meter evidence exists.
+
+- Three field-depth audits add 25 bounded claims and 23 CPU-only hostile-test
+  contracts across clinical intervention pathways; production, maintenance,
+  nanomanufacturing, communications, and material qualification; and
+  institutions, inequality, collective action, recorded crime, digital traces,
+  and media systems. The audits keep measurement operators, implementation
+  pathways, decision utility, authority, traceability, and EU/German normative
+  applicability explicit. They deepen existing candidate protocols without
+  inventing a redundant principle or architecture candidate, and they do not
+  convert synthetic protocol descriptions into experimental results.
+
 - A provenance capture and primary-source audit for empirical-versus-formal
   scientific-discovery evaluators, correcting the supplied dusty-plasma date
   and method, scoping FunSearch to executable program search, and defining

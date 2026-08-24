@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="660" viewBox="0 0 1100 660" role="img" aria-labelledby="title desc">
+  <title id="title">Metering artifact scale</title>
+  <desc id="desc">Calculated from the current nominal Candidate 010 matrix; this is an artifact-count comparison, not an energy or runtime measurement.</desc>
+  <rect width="1100" height="660" rx="24" fill="#101c18"/>
+  <rect x="36" y="30" width="272" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
+  <text x="52" y="50" fill="#36d399" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">EXPERIMENT SCALE · CALCULATED</text>
+  <text x="54" y="94" fill="#fffaf0" font-family="Georgia, serif" font-size="32" font-weight="700">Metering artifact scale</text>
+  <text x="54" y="123" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="14">A_event = 2 F A S Q;  A_block = 2 F S K (A + 2)</text>
+  <rect x="112" y="150" width="928" height="406" rx="8" fill="#14251f" stroke="#315047"/>
+  <line x1="112" y1="556" x2="1040" y2="556" stroke="#315047" stroke-width="1" opacity=".7"/><text x="96" y="560" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="end">10^3</text><line x1="112" y1="454.5" x2="1040" y2="454.5" stroke="#315047" stroke-width="1" opacity=".7"/><text x="96" y="458.5" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="end">10^4</text><line x1="112" y1="353" x2="1040" y2="353" stroke="#315047" stroke-width="1" opacity=".7"/><text x="96" y="357" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="end">10^5</text><line x1="112" y1="251.5" x2="1040" y2="251.5" stroke="#315047" stroke-width="1" opacity=".7"/><text x="96" y="255.5" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="end">10^6</text><line x1="112" y1="150" x2="1040" y2="150" stroke="#315047" stroke-width="1" opacity=".7"/><text x="96" y="154" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="end">10^7</text><rect x="256" y="167.52201878503678" width="260" height="388.4779812149632" rx="10" fill="#ff6b6b" opacity=".9"/>
+      <text x="386" y="149.52201878503678" fill="#fffaf0" font-family="Cascadia Mono, monospace" font-size="22" font-weight="700" text-anchor="middle">6,720,000</text>
+      <text x="386" y="508" fill="#101c18" font-family="Segoe UI, sans-serif" font-size="18" font-weight="700" text-anchor="middle">per work unit</text>
+      <text x="386" y="532" fill="#101c18" font-family="Segoe UI, sans-serif" font-size="11" text-anchor="middle">reading + review for every arm event</text><rect x="648" y="531.8893105784982" width="260" height="24.110689421501775" rx="10" fill="#36d399" opacity=".9"/>
+      <text x="778" y="513.8893105784982" fill="#fffaf0" font-family="Cascadia Mono, monospace" font-size="22" font-weight="700" text-anchor="middle">1,728</text>
+      <text x="778" y="469.8893105784982" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="18" font-weight="700" text-anchor="middle">paired meter blocks</text>
+      <text x="778" y="491.8893105784982" fill="#aabbb4" font-family="Segoe UI, sans-serif" font-size="11" text-anchor="middle">arm + idle blocks, reading + review</text>
+  <path d="M520,250 C570,215 600,215 644,250" fill="none" stroke="#ffb04a" stroke-width="4" marker-end="url(#scaleArrow)"/>
+  <defs><marker id="scaleArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ffb04a"/></marker></defs>
+  <text x="582" y="196" fill="#ffb04a" font-family="Segoe UI, sans-serif" font-size="26" font-weight="700" text-anchor="middle">3,889× fewer</text>
+  <text x="582" y="222" fill="#aabbb4" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">at the same nominal 24 × 7 × 2 design</text>
+  <text x="576" y="617" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="15" text-anchor="middle">external-energy acquisition design</text>
+  <text x="28" y="353" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="15" text-anchor="middle" transform="rotate(-90 28 353)">reading + review artifacts (logarithmic)</text>
+  <text x="1040" y="638" fill="#aabbb4" font-family="Segoe UI, sans-serif" font-size="11" text-anchor="end">Configuration calculation · no runtime or energy result</text>
+</svg>

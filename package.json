@@ -26,6 +26,7 @@
     "check:test-coverage": "node scripts/audit-test-coverage.mjs --check"
   },
   "dependencies": {
+    "github-slugger": "^2.0.0",
     "katex": "^0.18.1",
     "mermaid": "^11.16.1",
     "react": "19.2.6",

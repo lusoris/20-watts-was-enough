@@ -4,6 +4,86 @@ export const EXTERNAL_ENERGY_CONTRACT_VERSION = "candidate-010.external-energy-r
 export const MODELED_ENERGY_CONTRACT_VERSION = "candidate-010.modeled-energy.v1";
 export const NORMALIZED_EXTERNAL_ENERGY_OBSERVATION = "candidate-010.normalized-external-energy-observation.v1";
 
+const closedObject = (required, properties) => Object.freeze({
+  type: "object",
+  additionalProperties: false,
+  required: Object.freeze(required),
+  properties: Object.freeze(properties),
+});
+
+/** Machine-readable shape mirrored by validateExternalEnergyReading. */
+export const EXTERNAL_ENERGY_READING_SCHEMA = closedObject([
+  "contract_version", "reading_id", "record_kind", "provider", "calibration", "interval", "integrity", "measurement",
+], {
+  contract_version: { const: EXTERNAL_ENERGY_CONTRACT_VERSION },
+  reading_id: { type: "string", minLength: 1 },
+  record_kind: { enum: ["hardware-observation", "test-fixture"] },
+  provider: closedObject([
+    "type", "medium", "provider_id", "meter_id", "boundary", "hardware_configuration", "software_telemetry",
+  ], {
+    type: { const: "external-meter" },
+    medium: { enum: ["wall", "rail"] },
+    provider_id: { type: "string", minLength: 1 },
+    meter_id: { type: "string", minLength: 1 },
+    boundary: { type: "string", minLength: 1 },
+    hardware_configuration: { type: "string", minLength: 1 },
+    software_telemetry: { const: false },
+  }),
+  calibration: closedObject([
+    "calibration_id", "calibrated_at", "valid_until", "relative_standard_uncertainty", "coverage_factor", "traceability_reference",
+  ], {
+    calibration_id: { type: "string", minLength: 1 },
+    calibrated_at: { type: "string", format: "date-time" },
+    valid_until: { type: "string", format: "date-time" },
+    relative_standard_uncertainty: { type: "number", exclusiveMinimum: 0, exclusiveMaximum: 1 },
+    coverage_factor: { type: "number", minimum: 1 },
+    traceability_reference: { type: "string", minLength: 1 },
+  }),
+  interval: closedObject([
+    "started_at", "ended_at", "clock_id", "clock_uncertainty_s", "clock_discontinuity_observed",
+  ], {
+    started_at: { type: "string", format: "date-time" },
+    ended_at: { type: "string", format: "date-time" },
+    clock_id: { type: "string", minLength: 1 },
+    clock_uncertainty_s: { type: "number", minimum: 0 },
+    clock_discontinuity_observed: { const: false },
+  }),
+  integrity: closedObject(["meter_reset_observed", "negative_reading_observed"], {
+    meter_reset_observed: { const: false },
+    negative_reading_observed: { const: false },
+  }),
+  measurement: {
+    oneOf: [
+      closedObject(["method", "start", "end"], {
+        method: { const: "counter-delta" },
+        start: closedObject(["value", "unit", "observed_at"], {
+          value: { type: "number", minimum: 0 },
+          unit: { enum: ["J", "mJ", "Wh", "kWh"] },
+          observed_at: { type: "string", format: "date-time" },
+        }),
+        end: closedObject(["value", "unit", "observed_at"], {
+          value: { type: "number", minimum: 0 },
+          unit: { enum: ["J", "mJ", "Wh", "kWh"] },
+          observed_at: { type: "string", format: "date-time" },
+        }),
+      }),
+      closedObject(["method", "integration", "samples"], {
+        method: { const: "sampled-power" },
+        integration: { const: "trapezoidal" },
+        samples: {
+          type: "array",
+          minItems: 2,
+          items: closedObject(["value", "unit", "observed_at"], {
+            value: { type: "number", minimum: 0 },
+            unit: { enum: ["W", "mW", "kW"] },
+            observed_at: { type: "string", format: "date-time" },
+          }),
+        },
+      }),
+    ],
+  },
+});
+
 const ENERGY_TO_JOULES = Object.freeze({ J: 1, mJ: 1e-3, Wh: 3600, kWh: 3.6e6 });
 const POWER_TO_WATTS = Object.freeze({ W: 1, mW: 1e-3, kW: 1e3 });
 
@@ -22,6 +102,15 @@ function fail(code, message) {
 function record(value, field) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     fail("INVALID_OBJECT", `${field} must be an object`);
+  }
+  return value;
+}
+
+function exactKeys(value, expected, field) {
+  const actual = Object.keys(record(value, field)).sort();
+  const required = [...expected].sort();
+  if (JSON.stringify(actual) !== JSON.stringify(required)) {
+    fail("INVALID_SHAPE", `${field} must contain exactly ${required.join(", ")}`);
   }
   return value;
 }
@@ -86,7 +175,16 @@ function convert(value, unit, units, field) {
 }
 
 function validateCommon(input) {
-  const contract = record(input, "reading");
+  const contract = exactKeys(input, [
+    "contract_version",
+    "reading_id",
+    "record_kind",
+    "provider",
+    "calibration",
+    "interval",
+    "integrity",
+    "measurement",
+  ], "reading");
   if (contract.contract_version !== EXTERNAL_ENERGY_CONTRACT_VERSION) {
     fail("UNSUPPORTED_VERSION", `contract_version must be ${EXTERNAL_ENERGY_CONTRACT_VERSION}`);
   }
@@ -95,7 +193,15 @@ function validateCommon(input) {
     fail("INVALID_RECORD_KIND", "record_kind must be hardware-observation or test-fixture");
   }
 
-  const provider = record(contract.provider, "provider");
+  const provider = exactKeys(contract.provider, [
+    "type",
+    "medium",
+    "provider_id",
+    "meter_id",
+    "boundary",
+    "hardware_configuration",
+    "software_telemetry",
+  ], "provider");
   if (provider.type !== "external-meter") {
     fail("NON_EXTERNAL_PROVIDER", "provider.type must be external-meter; software telemetry is not a meter");
   }
@@ -108,7 +214,14 @@ function validateCommon(input) {
   nonEmpty(provider.hardware_configuration, "provider.hardware_configuration");
   exactBoolean(provider.software_telemetry, "provider.software_telemetry", false);
 
-  const calibration = record(contract.calibration, "calibration");
+  const calibration = exactKeys(contract.calibration, [
+    "calibration_id",
+    "calibrated_at",
+    "valid_until",
+    "relative_standard_uncertainty",
+    "coverage_factor",
+    "traceability_reference",
+  ], "calibration");
   nonEmpty(calibration.calibration_id, "calibration.calibration_id");
   nonEmpty(calibration.traceability_reference, "calibration.traceability_reference");
   const calibratedAt = instant(calibration.calibrated_at, "calibration.calibrated_at");
@@ -122,7 +235,13 @@ function validateCommon(input) {
   if (relativeUncertainty >= 1) fail("INVALID_CALIBRATION", "relative calibration uncertainty must be less than 1");
   const coverageFactor = finite(calibration.coverage_factor, "calibration.coverage_factor", { minimum: 1 });
 
-  const interval = record(contract.interval, "interval");
+  const interval = exactKeys(contract.interval, [
+    "started_at",
+    "ended_at",
+    "clock_id",
+    "clock_uncertainty_s",
+    "clock_discontinuity_observed",
+  ], "interval");
   const startedAt = instant(interval.started_at, "interval.started_at");
   const endedAt = instant(interval.ended_at, "interval.ended_at");
   if (endedAt <= startedAt) fail("INVALID_CLOCK", "measurement end must be after start");
@@ -132,7 +251,10 @@ function validateCommon(input) {
   if (calibratedAt > startedAt) fail("INVALID_CALIBRATION", "calibration occurs after measurement start");
   if (validUntil < endedAt) fail("EXPIRED_CALIBRATION", "calibration expires before measurement end");
 
-  const integrity = record(contract.integrity, "integrity");
+  const integrity = exactKeys(contract.integrity, [
+    "meter_reset_observed",
+    "negative_reading_observed",
+  ], "integrity");
   exactBoolean(integrity.meter_reset_observed, "integrity.meter_reset_observed", false);
   exactBoolean(integrity.negative_reading_observed, "integrity.negative_reading_observed", false);
 
@@ -151,8 +273,9 @@ function validateCommon(input) {
 }
 
 function counterDelta(common, measurement) {
-  const start = record(measurement.start, "measurement.start");
-  const end = record(measurement.end, "measurement.end");
+  exactKeys(measurement, ["method", "start", "end"], "measurement");
+  const start = exactKeys(measurement.start, ["value", "unit", "observed_at"], "measurement.start");
+  const end = exactKeys(measurement.end, ["value", "unit", "observed_at"], "measurement.end");
   const startAt = instant(start.observed_at, "measurement.start.observed_at");
   const endAt = instant(end.observed_at, "measurement.end.observed_at");
   if (startAt !== common.startedAt || endAt !== common.endedAt) {
@@ -167,6 +290,7 @@ function counterDelta(common, measurement) {
 }
 
 function sampledPower(common, measurement) {
+  exactKeys(measurement, ["method", "integration", "samples"], "measurement");
   if (measurement.integration !== "trapezoidal") {
     fail("INVALID_INTEGRATION", "sampled power requires explicit trapezoidal integration");
   }
@@ -174,7 +298,7 @@ function sampledPower(common, measurement) {
     fail("INSUFFICIENT_SAMPLES", "sampled power requires at least two samples");
   }
   const samples = measurement.samples.map((sample, index) => {
-    record(sample, `measurement.samples[${index}]`);
+    exactKeys(sample, ["value", "unit", "observed_at"], `measurement.samples[${index}]`);
     return {
       milliseconds: instant(sample.observed_at, `measurement.samples[${index}].observed_at`),
       watts: convert(sample.value, sample.unit, POWER_TO_WATTS, `measurement.samples[${index}]`),

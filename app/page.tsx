@@ -7,6 +7,13 @@ export const metadata: Metadata = {
     "A privately rendered research blueprint for sparse, grounded, continual, energy-efficient AI.",
 };
 
-export default function Home() {
-  return <ResearchReader />;
+type HomeProps = {
+  searchParams?: Promise<{ doc?: string | string[] }>;
+};
+
+export default async function Home({ searchParams }: HomeProps) {
+  const parameters = await searchParams;
+  const requested = parameters?.doc;
+  const initialPath = Array.isArray(requested) ? requested[0] : requested;
+  return <ResearchReader initialPath={initialPath} />;
 }
