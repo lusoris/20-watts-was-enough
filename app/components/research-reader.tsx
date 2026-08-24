@@ -402,7 +402,7 @@ export function ResearchReader({ initialPath = DEFAULT_DOCUMENT }: { initialPath
         <div className="document-wrap">
           <div className="document-meta">
             <span>{sourceLabel(currentDocument)}</span>
-            <span>{currentDocument.words.toLocaleString()} words</span>
+            <span>{currentDocument.words.toLocaleString("en-US")} words</span>
             <code>{currentDocument.path}</code>
           </div>
           {currentDocument.path.startsWith("sources/") &&

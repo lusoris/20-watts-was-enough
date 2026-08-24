@@ -93,7 +93,7 @@ export function BookEdition() {
           </div>
           <div>
             <dt>Length</dt>
-            <dd>{totalWords.toLocaleString()} words</dd>
+            <dd>{totalWords.toLocaleString("en-US")} words</dd>
           </div>
           <div>
             <dt>Source</dt>
@@ -149,7 +149,7 @@ export function BookEdition() {
               {documentNumber(document.path, index)}
             </span>
             <code>{document.path}</code>
-            <span>{document.words.toLocaleString()} words</span>
+            <span>{document.words.toLocaleString("en-US")} words</span>
           </div>
           <article className="prose book-prose">
             <MarkdownDocument
