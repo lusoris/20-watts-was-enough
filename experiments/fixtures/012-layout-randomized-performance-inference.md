@@ -115,9 +115,11 @@ the additive candidate interactions cancel exactly, and counterbalanced order
 gives $d_s^{(a)}=0$ exactly. With noise enabled, the finite development sample
 need not equal zero even though the generating population effect is zero.
 
-The [noise-free analytical fixture plot](../../public/plots/fixture-012-layout-selection.svg)
-makes the selection effect visible: it compares the favorable fixed-layout
-control with the complete layout population and its operator-qualified copy.
+![Noise-free synthetic expectation: favorable fixed-layout selection manufactures an apparent speedup, while complete-layout and operator-qualified analyses recover the population null](../../public/plots/fixture-012-layout-selection.svg)
+
+The noise-free analytical fixture plot makes the selection effect visible: it
+compares the favorable fixed-layout control with the complete layout population
+and its operator-qualified copy.
 The plotted means are generated from the smoke configuration with synthetic
 process and repeat noise set to zero; they are not hardware measurements.
 
