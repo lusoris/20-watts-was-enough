@@ -1,8 +1,10 @@
 # Workstation execution contract
 
-The repository now contains one executable smoke harness alongside research and
-protocol specifications, but no workstation-ready scientific package. A test
-becomes workstation-ready only when its
+The repository now contains two executable smoke harnesses alongside research
+and protocol specifications, but no workstation-ready scientific package:
+[Candidate 010](candidate-010/README.md) exercises staged verification and
+[Fixture F-007](fixture-007/README.md) exercises optical null-space honesty.
+A test becomes workstation-ready only when its
 checked manifest exists at `experiments/workstation/manifests/<artifact-id>.json`,
 passes `npm run validate:workstation`, declares `workstation-ready`, names all
 six fields below, and binds a hashed multi-domain hardware-confirmation evidence

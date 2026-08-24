@@ -1,6 +1,8 @@
 # Fixture F-007 — Operator-qualified optical inference
 
 - **Status:** hostile benchmark fixture; no new principle or candidate
+- **Executable slice:**
+  [T1 null-space-honesty smoke harness](../workstation/fixture-007/README.md)
 - **Primary owners:**
   [Candidate 001 — adaptive topology](../candidates/001-adaptive-topology.md),
   [Candidate 006 — reversible physical skill](../candidates/006-reversible-physical-skill.md),

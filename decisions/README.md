@@ -17,3 +17,4 @@ than silently changing its outcome.
 | [0009](0009-external-taxonomy-breadth-control.md) | Measure research breadth against external taxonomies | accepted |
 | [0010](0010-fresh-bound-confirmation-execution.md) | Execute confirmation under one fresh bound identity | accepted |
 | [0011](0011-measure-energy-in-paired-blocks.md) | Measure external energy in counterbalanced paired blocks and infer across seeds | accepted |
+| [0012](0012-executable-slices-must-respect-mature-nulls.md) | Require negative controls and complete mature nulls in every executable slice | accepted |

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-007.raw-event.schema.json",
+  "title": "Fixture 007 null-space honesty raw event",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "contract.mjs",
+    "export": "assertFixture007Record",
+    "version_export": "FIXTURE_007_EVENT_CONTRACT_VERSION",
+    "contract_version": "fixture-007.raw-event.v1",
+    "test": "contract.test.mjs"
+  },
+  "required": [
+    "schema",
+    "contract_version",
+    "artifact",
+    "run_id",
+    "sequence",
+    "seed",
+    "episode",
+    "arm",
+    "operator_version",
+    "base_observation",
+    "active_observation",
+    "true_label",
+    "decision",
+    "abstained",
+    "active_measurement",
+    "photons",
+    "modeled_energy_j",
+    "previous_hash",
+    "record_sha256"
+  ]
+}

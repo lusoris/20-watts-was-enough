@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "artifact": "fixture-007",
+  "profile": "smoke",
+  "opportunities_per_seed": 64,
+  "base_noise_std": 0.25,
+  "active_noise_std": 0.25,
+  "active_photons": 32,
+  "modeled_energy_j_per_active_observation": 0.002
+}

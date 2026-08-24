@@ -5,6 +5,11 @@ architecture candidates. Each fixture combines mechanisms owned elsewhere and
 tests whether their composition survives strong ordinary baselines, equal
 budgets, withheld regimes, perturbations, and explicit rejection rules.
 
+The first executable fixture slice is the
+[F-007 null-space-honesty smoke harness](../workstation/fixture-007/README.md).
+Execution readiness is tracked separately from the completeness of each full
+fixture contract.
+
 | ID | Fixture | Candidate owners |
 | --- | --- | --- |
 | F-001 | [Shared-clock-free predictive co-adaptation](001-shared-clock-free-coadaptation.md) | 002, 015, 019, plus the held entrainable local phase state |

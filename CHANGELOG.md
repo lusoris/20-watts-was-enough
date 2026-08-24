@@ -7,6 +7,16 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Decision 0012 and the second executable smoke harness: Fixture F-007 now has
+  a deterministic null-space-honesty track for claims `C-970` and `C-972`.
+  Eight registered tests cover the full 8,192-event development profile,
+  byte-identical replay, runtime-schema validation, hash-chain corruption,
+  false-specificity detection, justified abstention, active-measurement
+  resource accounting, and exact parity with the complete mature active null.
+  Its analytical identifiability plot exposes where information enters the
+  operator. The readiness registry now validates two smoke-ready manifests;
+  the new fixture output remains outside workstation promotion authority.
+
 - Decision 0009 and a generated global field-coverage census anchored to all
   42 OECD FORD second-level fields, checked against all 49 DFG review boards
   and all 23 ANZSRC 2020 divisions. The final entry-audit census is 30

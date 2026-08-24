@@ -234,7 +234,7 @@ async function validateExecutionClaimScope(root, manifest, executionClaims) {
   const artifactNumber = manifest.artifact?.split("-")[1];
   const artifactLabel = manifest.artifact?.startsWith("candidate-")
     ? `Candidate ${artifactNumber}`
-    : `Fixture ${artifactNumber}`;
+    : `Fixture F-${artifactNumber}`;
   for (const claim of executionClaims) {
     const start = claims.indexOf(`### ${claim}\n`);
     if (start < 0) return false;

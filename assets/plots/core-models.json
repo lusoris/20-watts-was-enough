@@ -70,5 +70,19 @@
       "artifacts_per_observation": 2
     },
     "status": "Calculated from the current nominal Candidate 010 matrix; this is an artifact-count comparison, not an energy or runtime measurement."
+  },
+  {
+    "id": "fixture-007-identifiability",
+    "title": "Identical likelihood versus added evidence",
+    "equation": "p(y_b | z=+1) = p(y_b | z=-1);  y_a = z + N(0, sigma_a^2)",
+    "source": "experiments/workstation/fixture-007/README.md",
+    "parameters": {
+      "observation_min": -2.5,
+      "observation_max": 2.5,
+      "base_noise_std": 0.25,
+      "active_noise_std": 0.25,
+      "samples": 321
+    },
+    "status": "Analytical likelihoods from the Fixture 007 smoke configuration; this visualizes identifiability and is not an empirical result."
   }
 ]

@@ -6,6 +6,13 @@ import { validateExecutionManifest } from "../../scripts/lib/workstation-manifes
 
 const root = process.cwd();
 const realManifest = path.join(root, "experiments", "workstation", "manifests", "candidate-010.json");
+const fixture007Manifest = path.join(
+  root,
+  "experiments",
+  "workstation",
+  "manifests",
+  "fixture-007.json",
+);
 
 async function runtimeBindingFixture({
   runtime = {},
@@ -87,6 +94,18 @@ test("smoke readiness cannot promote an artifact to workstation-ready", async ()
   assert.deepEqual(
     result.promotionChecks.filter((check) => !check.passed).map((check) => check.id),
     ["confirmation-seeds", "held_out-seeds", "promotion-evidence"],
+  );
+});
+
+test("fixture execution scope resolves the canonical F-prefixed ledger label", async () => {
+  const result = await validateExecutionManifest(root, fixture007Manifest, "fixture-007");
+  assert.equal(result.readiness, "smoke-ready");
+  assert.equal(result.ready, false);
+  assert.deepEqual(result.errors, []);
+  assert.deepEqual(result.executionClaims, ["C-970", "C-972"]);
+  assert.equal(
+    result.promotionChecks.find((check) => check.id === "execution-claim-scope").passed,
+    true,
   );
 });
 

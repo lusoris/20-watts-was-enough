@@ -341,6 +341,10 @@ drift attribution and fallback, optical/digital service curves, multi-device
 fabrication and thermal variation, and physical compaction under future queries.
 Its null is the complete inverse-method, experiment-design, control, fusion,
 digital/analog acceleration, calibration, and lifecycle-accounting stack.
+The first T1 slice is now executable as the
+[F-007 null-space-honesty smoke harness](../experiments/workstation/fixture-007/README.md):
+it must expose false specificity, accept justified abstention, and exactly tie
+the complete mature active null rather than manufacture a novelty advantage.
 Semiconductor reliability contributes
 [Fixture F-008](../experiments/fixtures/008-mission-profile-qualified-device-reliability.md)
 across Candidates 001/005/006/009/010/012/014/017/018. It binds accepted

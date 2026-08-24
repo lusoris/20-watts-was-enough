@@ -284,12 +284,67 @@ function meteringScale(spec) {
   });
 }
 
+function fixtureIdentifiability(spec) {
+  const {
+    observation_min: min,
+    observation_max: max,
+    base_noise_std: baseNoise,
+    active_noise_std: activeNoise,
+    samples,
+  } = spec.parameters;
+  const density = (value, mean, standardDeviation) => (
+    Math.exp(-0.5 * ((value - mean) / standardDeviation) ** 2)
+    / (standardDeviation * Math.sqrt(2 * Math.PI))
+  );
+  const baseSigma = Math.sqrt(1 + baseNoise ** 2);
+  const yMax = 1.75;
+  const series = Array.from({ length: samples }, (_, index) => (
+    min + (index / (samples - 1)) * (max - min)
+  ));
+  const base = series.map((value) => [
+    sx(value, min, max),
+    sy(density(value, 0, baseSigma), 0, yMax),
+  ]);
+  const negative = series.map((value) => [
+    sx(value, min, max),
+    sy(density(value, -1, activeNoise), 0, yMax),
+  ]);
+  const positive = series.map((value) => [
+    sx(value, min, max),
+    sy(density(value, 1, activeNoise), 0, yMax),
+  ]);
+  const content = `${grid(
+    [-2, -1, 0, 1, 2],
+    [0, 0.4, 0.8, 1.2, 1.6],
+    (value) => sx(value, min, max),
+    (value) => sy(value, 0, yMax),
+    (value) => value.toFixed(0),
+    (value) => value.toFixed(1),
+  )}<path d="${linePath(base)}" fill="none" stroke="${colors.amber}" stroke-width="7" opacity=".95"/>
+  <path d="${linePath(base)}" fill="none" stroke="${colors.text}" stroke-width="2" stroke-dasharray="8 7" opacity=".9"/>
+  <path d="${linePath(negative)}" fill="none" stroke="${colors.cyan}" stroke-width="5"/>
+  <path d="${linePath(positive)}" fill="none" stroke="${colors.green}" stroke-width="5"/>
+  <line x1="${sx(0, min, max)}" y1="${plot.top}" x2="${sx(0, min, max)}" y2="${plot.bottom}" stroke="${colors.muted}" stroke-width="2" stroke-dasharray="5 7"/>
+  <text x="${sx(0, min, max)}" y="${plot.top + 28}" fill="${colors.amber}" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700" text-anchor="middle">base likelihoods coincide</text>
+  <text x="${sx(-1, min, max)}" y="${plot.top + 30}" fill="${colors.cyan}" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700" text-anchor="middle">active z = −1</text>
+  <text x="${sx(1, min, max)}" y="${plot.top + 30}" fill="${colors.green}" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700" text-anchor="middle">active z = +1</text>
+  <rect x="702" y="500" width="316" height="38" rx="19" fill="#203b31" stroke="#3f6b5b"/>
+  <text x="860" y="525" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="14" font-weight="700" text-anchor="middle">information comes from the added operator</text>`;
+  return frame(spec, content, {
+    xLabel: "observation value y (normalized)",
+    yLabel: "conditional likelihood density",
+    badge: "IDENTIFIABILITY MODEL · ANALYTICAL",
+    footer: "Fixture configuration · no empirical or superiority result",
+  });
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
   "sparse-locality-break-even": sparseBreakEven,
   "lifecycle-break-even": lifecycle,
   "candidate-010-metering-scale": meteringScale,
+  "fixture-007-identifiability": fixtureIdentifiability,
 };
 
 for (const spec of specs) {

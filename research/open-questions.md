@@ -358,6 +358,7 @@ project choice.
   embodied cost remain explicit? This is an evaluation fixture, not a principle
   or candidate promotion. See [C-970](claims.md#c-970)–[C-1001](claims.md#c-1001),
   [Fixture F-007](../experiments/fixtures/007-operator-qualified-optical-inference.md),
+  the [executable T1 smoke slice](../experiments/workstation/fixture-007/README.md),
   and the [optics audit](audits/2026-08-05-optics-photonics-inverse-sensing.md#verdict).
 - **OQ-063:** Does a mission-profile-qualified degradation and recovery contract
   improve accepted quality, silent-error risk, tail latency, availability,
