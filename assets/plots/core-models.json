@@ -96,5 +96,17 @@
       "study": 0
     },
     "status": "Noise-free synthetic expectations generated from the Fixture 012 smoke configuration; this is a design diagnostic, not an empirical performance result."
+  },
+  {
+    "id": "cross-platform-reach-overlap",
+    "title": "Summed platform counts are not unique reach",
+    "equation": "R_union = |A ∪ B| = |A| + |B| - |A ∩ B|",
+    "source": "research/audits/2026-08-24-political-administrative-stratification-media-depth.md#cross-platform-reach-is-a-set-union-over-resolved-people",
+    "parameters": {
+      "platform_a_people": 1000,
+      "platform_b_people": 1000,
+      "samples": 101
+    },
+    "status": "Set-union identity with an illustrative equal-platform sweep; no audience measurement or empirical overlap estimate is asserted."
   }
 ]

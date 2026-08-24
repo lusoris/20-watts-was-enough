@@ -7,6 +7,57 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Fixture F-012 now has a claim-ineligible workstation-development acquisition
+  lane with true process launch-to-exit timing, frozen executable/environment/
+  workload identities, an exact counterbalanced schedule, structural layout
+  proofs, exclusive locking, authoritative-ledger checkpoint recovery, closed-
+  schema rejection evidence, calibrated-meter bindings, and full validation
+  recomputation. Its 27 tests include real child-process and CLI execution,
+  paths with spaces, stale checkpoints, competing writers, corrupted artifacts,
+  rehashed-but-semantically changed command bindings, path escape/junction
+  refusal, and Windows fail-closed behavior. Windows physical execution remains
+  disabled until a reviewed Job Object supervisor can own the whole process
+  tree; no scientific or energy result exists and readiness remains
+  `smoke-ready`.
+
+- Fixtures F-015--F-017 close the remaining engineering-protocol backlog with
+  bounded contracts for hidden sensorimotor transfer (`C-007`), versioned
+  evidence retrieval and hostile feedback (`C-797`, `C-798`), and a matched
+  ternary-model/native-hardware crossover (`C-013`). The low-bit ledger now
+  distinguishes current open checkpoint/kernel evidence from this project's
+  unexecuted quality, native-path, and lifecycle-energy hypotheses. The
+  contracts survived a separate adversarial pass that closed chronology
+  recovery, boundary-null randomization, planning-alternative, comparator-
+  selection, repeated-block allocation, multiplicity, lineage, and joint-stage
+  power ambiguities. The
+  generated coverage answer is 1,346/1,438 protocol-covered claims (93.6%), 92
+  reviewed ledger-only evidence or source-reproduction claims, 37 complete
+  written artifacts, three smoke-ready harnesses, zero partial descriptions,
+  zero unresolved engineering dispositions, and zero workstation-executable
+  claims. Protocol numbering records a falsifiable design, not a result.
+
+- A political science, public-administration, stratification, and media-depth
+  audit adds nine bounded claims (`C-1431`--`C-1439`), nine CPU-only
+  falsification protocols, and 22 deduplicated bibliography records. Independent
+  review corrected a disclosed/overlapping confirmation-seed formula,
+  abstention gaming, one mixed metric unit, an overbroad audience-dependency
+  claim, an unsupported absolute, and an infeasible undifferentiated compute
+  cap. The audit now has separate smoke/full feasibility gates, sealed disjoint
+  seed bundles, answer-coverage noninferiority, and an explicit `not measured`
+  energy boundary. A generated high-contrast set-union plot shows why summed
+  platform account counts can overstate person-level reach without presenting
+  synthetic values as audience evidence.
+
+- Fixtures F-013 and F-014 convert 17 reviewed ledger-only claims into complete
+  falsification contracts: 13 bounded immunology reproductions plus two
+  immune-state systems claims, and two fast/slow-memory and offline-replay
+  claims. Post-draft review tightened F-013 to 39 fixed conjunctive component
+  contrasts with exact ablation signatures and separated source/AI authority;
+  F-014 now isolates replay presence, offline timing, replay selection, and both
+  memory tiers against frozen mature nulls, with an exact causal event order,
+  deterministic numeric privacy canaries, and joint 18-entry power and Pareto
+  procedures. Neither fixture contains an empirical result.
+
 - Six bounded field-depth audits spanning analytical measurement and Earth
   observation, clinical and agricultural biotechnology, economy and education,
   computing systems, medical engineering, and atomic/molecular/condensed-matter/
@@ -19,7 +70,7 @@ the exact diff; this file records why the project changed.
   keys, after catching and correcting one misplaced integration block.
 
 - Fixture F-012 adds a deterministic layout-population performance-inference
-  smoke harness for `C-1407`. Sixteen tests cover a 1,536-event smoke profile
+  smoke harness for `C-1407`. Its original sixteen tests cover a 1,536-event smoke profile
   and a frozen 27,648-event development profile, including an exact noise-free
   population-null check, equal modeled work and energy, append-only SHA-256 raw
   records, replay/corruption refusal, and byte-identical mature/operator paths.

@@ -169,7 +169,8 @@ describes the exact statement here, not a broader interpretation.
 - **Open issue:** Define comparable data, capacity, and intervention-based
   evaluation.
 - **Used by:** [sensorimotor grounding](../concept/20-sensorimotor-grounding.md),
-  [roadmap](../concept/90-research-roadmap.md).
+  [roadmap](../concept/90-research-roadmap.md), and
+  [Fixture F-015](../experiments/fixtures/015-sensorimotor-grounding-transfer.md).
 
 ### C-008
 
@@ -183,7 +184,8 @@ describes the exact statement here, not a broader interpretation.
   untested.
 - **Open issue:** What information crosses tiers, when, and under which safety
   check.
-- **Used by:** [memory and consolidation](../concept/40-memory-and-consolidation.md).
+- **Used by:** [memory and consolidation](../concept/40-memory-and-consolidation.md),
+  [Fixture F-014](../experiments/fixtures/014-continual-memory-lifecycle.md).
 
 ### C-009
 
@@ -205,7 +207,8 @@ describes the exact statement here, not a broader interpretation.
 - **Rationale:** Computational experiments support the mechanism in bounded
   settings; “sleep” is not evidence for one mandatory implementation.
 - **Open issue:** Replay selection, privacy, coverage, and compute cost.
-- **Used by:** [memory and consolidation](../concept/40-memory-and-consolidation.md).
+- **Used by:** [memory and consolidation](../concept/40-memory-and-consolidation.md),
+  [Fixture F-014](../experiments/fixtures/014-continual-memory-lifecycle.md).
 
 ### C-011
 
@@ -236,14 +239,20 @@ describes the exact statement here, not a broader interpretation.
 - **Statement:** Ternary-weight language models can preserve full-precision
   quality at equal model size and training tokens while reducing selected
   inference costs.
-- **Status:** plausible; the central BitNet b1.58 evidence is a preprint and the
-  result must be reproduced under project workloads.
-- **Primary source:** `ma2024bitnet`.
-- **Rationale:** Supports extreme quantization as a research candidate, not an
-  automatic post-training “myelination” step.
+- **Status:** plausible; the evidence consists of preprints, technical reports,
+  and an open implementation whose exact matched-quality and physical-cost
+  claims still require independent project reproduction.
+- **Primary sources:** `ma2024bitnet`, `wang2024bitnetcpp`,
+  `ma2025bitnet2b4t`; implementation record `microsoft2026bitnet`.
+- **Rationale:** Later open checkpoints and CPU/GPU kernels strengthen the case
+  that ternary inference can be practical. They do not supply the exact
+  equal-architecture/data/training comparison, strongest supported INT4/INT8
+  nulls, or full measured lifecycle boundary required here; this remains a
+  research candidate, not an automatic post-training “myelination” step.
 - **Open issue:** Training recipe, activation precision, kernels, and total
   system energy.
-- **Used by:** [hardening and factual memory](../concept/60-hardening-and-factual-memory.md).
+- **Used by:** [hardening and factual memory](../concept/60-hardening-and-factual-memory.md)
+  and [Fixture F-017](../experiments/fixtures/017-low-bit-model-hardware-crossover.md).
 
 ### C-014
 
@@ -10852,7 +10861,9 @@ describes the exact statement here, not a broader interpretation.
   remain explicit.
 - **Used by:** principles [P-004](principle-registry.md#p-004--diversity-selection-and-protection)
   and [P-009](principle-registry.md#p-009--maintenance-plane), and the
-  [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+  [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract),
+  with its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-728
 
@@ -10880,7 +10891,9 @@ describes the exact statement here, not a broader interpretation.
   and distinction from ignorance, active suppression, exhaustion, and resource
   shortage require separate observation.
 - **Used by:** [principle P-003](principle-registry.md#p-003--temporary-trace-before-commitment)
-  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract),
+  with its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-730
 
@@ -10896,7 +10909,9 @@ describes the exact statement here, not a broader interpretation.
   by these studies.
 - **Used by:** principles [P-002](principle-registry.md#p-002--local-autonomy-with-exception-escalation)
   and [P-008](principle-registry.md#p-008--compartmentalized-interaction), and
-  the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+  the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract),
+  with its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-731
 
@@ -10909,7 +10924,9 @@ describes the exact statement here, not a broader interpretation.
 - **Open issue:** Infection model, lineage trajectory, functional substate,
   measurement panel, causal drivers, and transfer to other chronic contexts
   remain bounded.
-- **Used by:** the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+- **Used by:** the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract)
+  and its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-732
 
@@ -10942,7 +10959,9 @@ describes the exact statement here, not a broader interpretation.
   context-specific.
 - **Used by:** principles [P-001](principle-registry.md#p-001--selective-allocation),
   [P-004](principle-registry.md#p-004--diversity-selection-and-protection), and
-  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+  [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  with its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-734
 
@@ -10957,7 +10976,9 @@ describes the exact statement here, not a broader interpretation.
   migration, carrying capacity, stopping, and external task benefit must be
   charged in an AI comparison.
 - **Used by:** [principle P-004](principle-registry.md#p-004--diversity-selection-and-protection)
-  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract),
+  with its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-735
 
@@ -10972,7 +10993,9 @@ describes the exact statement here, not a broader interpretation.
   independent behavior, failure domains, useful coverage, and the cost of
   maintaining alternatives.
 - **Used by:** [principle P-004](principle-registry.md#p-004--diversity-selection-and-protection)
-  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract),
+  with its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-736
 
@@ -10988,7 +11011,9 @@ describes the exact statement here, not a broader interpretation.
   remain unresolved.
 - **Used by:** principles [P-003](principle-registry.md#p-003--temporary-trace-before-commitment)
   and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
-  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract),
+  with its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-737
 
@@ -11004,7 +11029,9 @@ describes the exact statement here, not a broader interpretation.
   be measured separately.
 - **Used by:** principles [P-009](principle-registry.md#p-009--maintenance-plane)
   and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
-  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract),
+  with its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-738
 
@@ -11036,7 +11063,9 @@ describes the exact statement here, not a broader interpretation.
   memory quality, attrition, and recall after platform change must enter the
   lifecycle boundary.
 - **Used by:** principles [P-009](principle-registry.md#p-009--maintenance-plane)
-  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime).
+  and [P-012](principle-registry.md#p-012--memory-matched-to-information-lifetime),
+  with its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-740
 
@@ -11052,7 +11081,9 @@ describes the exact statement here, not a broader interpretation.
   rare-mode coverage, shared failure, measurement error, and evaluation cost
   must be separated.
 - **Used by:** [principle P-004](principle-registry.md#p-004--diversity-selection-and-protection)
-  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+  and the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract),
+  with its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-741
 
@@ -11068,7 +11099,9 @@ describes the exact statement here, not a broader interpretation.
   missed remote events, maintenance energy, and generality across tissues and
   threats remain bounded.
 - **Used by:** principles [P-001](principle-registry.md#p-001--selective-allocation)
-  and [P-010](principle-registry.md#p-010--structural-offloading-and-co-design).
+  and [P-010](principle-registry.md#p-010--structural-offloading-and-co-design),
+  with its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-742
 
@@ -11085,7 +11118,9 @@ describes the exact statement here, not a broader interpretation.
   outcome must be measured jointly.
 - **Used by:** principles [P-006](principle-registry.md#p-006--homeostatic-negative-feedback),
   [P-009](principle-registry.md#p-009--maintenance-plane), and the
-  [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract).
+  [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract),
+  with its direct-reproduction protocol in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md).
 
 ### C-743
 
@@ -11149,7 +11184,9 @@ describes the exact statement here, not a broader interpretation.
   ordinary state machine, calibrated risk model, least-privilege policy, and
   resource-aware controller under equal information and lifecycle budgets.
 - **Used by:** the [immune-state evaluation contract](principle-registry.md#immune-state-lifecycle-evaluation-contract)
-  and [OQ-055](open-questions.md#oq-055); it is not a principle or candidate.
+  and [OQ-055](open-questions.md#oq-055), with its AI-system test in
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md);
+  it is not a principle or candidate.
 
 ### C-747
 
@@ -11167,7 +11204,9 @@ describes the exact statement here, not a broader interpretation.
   storage, time, and lifecycle-energy budgets and survive immune-state
   ablations.
 - **Used by:** the [immune audit](audits/2026-08-05-immune-tolerance-trained-immunity.md)
-  as a rejection boundary; no principle or candidate is promoted.
+  as a rejection boundary and
+  [Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md)
+  as the AI-system frontier test; no principle or candidate is promoted.
 
 ### C-748
 
@@ -11947,7 +11986,8 @@ describes the exact statement here, not a broader interpretation.
   and downstream tokens while measuring task loss, citation support,
   calibration, diversity, and tail performance.
 - **Used by:** principles [P-001](principle-registry.md#p-001--selective-allocation)
-  and [P-007](principle-registry.md#p-007--prediction-error-allocation).
+  and [P-007](principle-registry.md#p-007--prediction-error-allocation), and
+  [Fixture F-016](../experiments/fixtures/016-versioned-evidence-retrieval-feedback.md).
 
 ### C-798
 
@@ -11962,7 +12002,8 @@ describes the exact statement here, not a broader interpretation.
   equal interactions, labels, compute, latency, and reviewer effort under
   mistaken and poisoned feedback.
 - **Used by:** principles [P-003](principle-registry.md#p-003--temporary-trace-before-commitment)
-  and [P-007](principle-registry.md#p-007--prediction-error-allocation).
+  and [P-007](principle-registry.md#p-007--prediction-error-allocation), and
+  [Fixture F-016](../experiments/fixtures/016-versioned-evidence-retrieval-feedback.md).
 
 ### C-799
 
@@ -19716,3 +19757,345 @@ describes the exact statement here, not a broader interpretation.
   and [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
 - **Disposition:** scoped central claim; accelerator instrumentation, not
   particle-event analysis or AI compute acceleration.
+
+### C-1431
+
+- **Statement:** An electoral result is a typed chain from eligible electorate
+  and valid ballots through district/tier allocation, formula, threshold,
+  exception, representative selection, and only then majority, coalition, or
+  government formation; votes, vote shares, seats, representatives,
+  parliamentary control, and government are not interchangeable units.
+- **Status:** established.
+- **Evidence note:** The mathematical and current German legal/operational
+  boundary is established; no cited source identifies one universally best
+  electoral design.
+- **Primary sources:** `Gallagher1991Proportionality`,
+  `DE2026Bundeswahlgesetz`, `DE2026FederalReturningOfficerElectoralSystem`,
+  `BVerfG2024FederalElectionsAct`.
+- **Rationale:** proportionality and seat allocation depend on the declared
+  operator, while the current Bundestag method supplies a concrete versioned
+  example in which second votes, allocation tiers, constituency-seat coverage,
+  threshold treatment, and a court-imposed condition jointly determine seats.
+- **Proposed AI translation:** bind every electoral aggregate to contest,
+  electorate, ballot/denominator, district/tier, formula, threshold/exception,
+  tie, legal version, and downstream institutional phase.
+- **Efficiency mechanism:** invalidate and recompute only descendants of a
+  changed rule or result component, and refuse unsupported downstream control
+  claims.
+- **Failure modes:** vote/seat unit swap; national vote used for district
+  seats; invalid-vote denominator drift; exception omitted; obsolete rule;
+  hidden tie; seats equated with government or policy control.
+- **Measurable prediction:** at equal inputs and CPU budget, a versioned
+  operator record will reduce false seat, majority, and government claims under
+  formula, threshold, district, exception, and rule-version changes versus a
+  vote-share baseline.
+- **Open question:** does the project record improve anything after exact
+  electoral software, property tests, provenance, and a separate coalition
+  phase are mandatory?
+- **Used by:** [SS7-T01](audits/2026-08-24-political-administrative-stratification-media-depth.md#ss7-t01--vote-to-seat-and-downstream-phase-provenance),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+- **Disposition:** scoped political-method claim; social-choice algorithms
+  remain the owner of aggregation.
+
+### C-1432
+
+- **Statement:** Recorded roll calls are a potentially endogenous subset of
+  legislative choices; an ideal point, party-cohesion score, or dimensionality
+  estimate is conditional on the agenda and roll-call request mechanism,
+  unrecorded votes, party pressure, missingness/abstention, identification
+  anchors, dimensionality, and the fitted choice model.
+- **Status:** established.
+- **Evidence note:** The selection and latent-model boundary is established;
+  any magnitude is chamber-, period-, and procedure-specific.
+- **Primary sources:** `ClintonJackmanRivers2004RollCall`,
+  `CarrubbaGabelHug2008RollCallSelection`.
+- **Rationale:** spatial models estimate rather than observe positions, and
+  roll-call requests can depend on position-taking or party-cohesion value,
+  selecting the sample used to estimate those same quantities.
+- **Proposed AI translation:** retain the potential-motion frame,
+  agenda/request rule, pressure alternatives, missing-vote process,
+  identification anchors, dimensionality, support, and posterior uncertainty
+  with every legislative latent score.
+- **Efficiency mechanism:** run cheap selection and support diagnostics before
+  fitting or transporting an expensive latent-position model.
+- **Failure modes:** recorded votes treated IID; polarity swap; whip mistaken
+  for preference; abstentions discarded; one dimension forced; sparse member;
+  score transported across agenda, chamber, or institutional rule.
+- **Measurable prediction:** selection-aware or abstaining models will reduce
+  false legislator-rank and party-cohesion claims under position-taking,
+  whipping, missingness, and multidimensional hostile generators.
+- **Open question:** can a project envelope beat registered selection-sensitive
+  ideal-point workflows and posterior-predictive checks at equal cost?
+- **Used by:** [SS7-T02](audits/2026-08-24-political-administrative-stratification-media-depth.md#ss7-t02--selected-roll-calls-and-legislative-latent-positions),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  and [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+- **Disposition:** scoped legislative-observation claim; no preference-reading
+  mechanism.
+
+### C-1433
+
+- **Statement:** Administrative target attainment does not by itself identify
+  service quality or gaming: target definition and clock, demand, case mix,
+  capacity, classification, queue movement, effort substitution, independent
+  quality dimensions, and downstream outcomes can produce genuine improvement,
+  dysfunction, both, or neither.
+- **Status:** established.
+- **Evidence note:** Gaming mechanisms and scoped instances are established;
+  the universal claim that targets necessarily produce dysfunction is
+  contradicted by direct evidence and rejected.
+- **Primary sources:** `BevanHood2006Targets`, `Hood2006Targetworld`,
+  `KelmanFriedman2009PerformanceDysfunction`.
+- **Rationale:** target systems can induce ratchet, threshold, and distortion
+  responses, yet the English emergency wait-time study found major improvement
+  without evidence for the tested dysfunctional effects; target and quality
+  therefore require joint, symmetric alternatives.
+- **Proposed AI translation:** represent target version/clock, demand/case mix,
+  operational response, independent quality vector, distributional effects,
+  and outcome rather than mapping target crossing to one label.
+- **Efficiency mechanism:** trigger independent outcome audits where threshold
+  bunching, denominator shifts, or target--outcome residuals concentrate risk.
+- **Failure modes:** automatic gaming accusation; real improvement dismissed;
+  queue shifted; easy cases selected; clock/denominator changed; unmeasured
+  quality worsens; target crossing treated causal.
+- **Measurable prediction:** a multi-outcome target record will reduce both
+  false quality claims and false gaming accusations versus target-only
+  detection under equal records and compute.
+- **Open question:** does it beat complete public-performance evaluation with
+  independent outcomes and a no-gaming alternative?
+- **Used by:** [SS7-T03](audits/2026-08-24-political-administrative-stratification-media-depth.md#ss7-t03--public-service-targets-improvement-and-gaming),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 011](../experiments/candidates/011-dual-loop-operational-assurance.md),
+  and [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+- **Disposition:** scoped public-administration observation claim; no universal
+  Goodhart detector.
+
+### C-1434
+
+- **Statement:** Administrative or state capacity is conditional on actor,
+  government level, task, time, and dimension; a national latent index depends
+  on its indicators, loadings, support, and model and does not certify the
+  capacity, legality, desirability, or delivery performance of a named agency
+  or workflow.
+- **Status:** established.
+- **Evidence note:** Multidimensional measurement and construct disagreement
+  are established; the proposed record's incremental value is unproven.
+- **Primary sources:** `HansonSigman2021StateCapacity`,
+  `Fukuyama2013Governance`.
+- **Rationale:** state-capacity work separates core dimensions and estimates a
+  latent model, while governance measurement distinguishes capacity, autonomy,
+  procedure, and outputs and documents substantial within-state variation.
+- **Proposed AI translation:** attach actor/level/task/time, fiscal/personnel/
+  information/organizational components, autonomy, workload, indicator model,
+  support, and output operator to capacity claims.
+- **Efficiency mechanism:** use broad indices only for screening and acquire
+  task-specific evidence near a decision boundary.
+- **Failure modes:** national-to-local ecological fallacy; output equals
+  capacity; dimension compensation hides a critical deficit; new task outside
+  support; indicator leakage/drift; capacity used as legal or rights authority.
+- **Measurable prediction:** task-indexed vectors will reduce false
+  agency-service capacity certification under cross-level, cross-task, and
+  indicator shifts relative to one latent score.
+- **Open question:** can project claim typing improve the frontier after a
+  multilevel vector model and abstention are complete?
+- **Used by:** [SS7-T04](audits/2026-08-24-political-administrative-stratification-media-depth.md#ss7-t04--actortasklevel-administrative-capacity),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+- **Disposition:** scoped measurement claim; no scalar capacity controller.
+
+### C-1435
+
+- **Statement:** A wealth-distribution or top-share estimate is conditional on
+  asset/liability and valuation definitions, household/person unit, price
+  date, sample frame, affluent oversampling, unit/item nonresponse, weights,
+  imputation, external-tail coverage, tail family and threshold, and their
+  uncertainty; a survey's observed maximum does not identify its population
+  tail.
+- **Status:** established.
+- **Evidence note:** The survey and tail-model boundary is established; no one
+  universal tail law or threshold is supported.
+- **Primary sources:** `Vermeulen2018TopWealthTail`,
+  `ECB2023HFCSMethodology`, `Eurostat2026ICWExperimental`.
+- **Rationale:** HFCS documents oversampling, nonresponse, multiple imputation,
+  and cross-country affluent-coverage differences; Monte Carlo and combined
+  survey/rich-list evidence show that missing a few extreme observations can
+  materially bias top shares; Eurostat marks its matched joint distribution
+  experimental and not directly accuracy-identifiable.
+- **Proposed AI translation:** retain the entire design, valuation, imputation,
+  external-source, tail-model, threshold, support, and uncertainty dependency
+  chain.
+- **Efficiency mechanism:** allocate collection and model review to tail
+  regions dominating decision uncertainty instead of uniformly enlarging the
+  sample.
+- **Failure modes:** income substituted for wealth; liabilities omitted;
+  weights ignored; rich list treated census; Pareto threshold tuned post hoc;
+  valuation/version drift; household wealth attributed to members; false
+  precision after statistical matching.
+- **Measurable prediction:** design- and tail-aware inference will improve
+  top-1% share interval coverage under wealth-dependent nonresponse at equal
+  responding-household count.
+- **Open question:** does dependency-aware reconstruction beat complete survey
+  design, imputation, model-averaged tail sensitivity, and partial
+  identification?
+- **Used by:** [SS7-T05](audits/2026-08-24-political-administrative-stratification-media-depth.md#ss7-t05--wealth-top-tail-reconstruction),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+- **Disposition:** scoped stratification-measurement claim.
+
+### C-1436
+
+- **Statement:** A correspondence experiment identifies the causal effect of
+  its randomized signal on its recorded decision stage within its sampled
+  vacancy, job, region, and period support; it does not directly identify
+  later-stage treatment, employer motive, individual identity, legal liability,
+  or the total structure of labour-market inequality.
+- **Status:** established.
+- **Evidence note:** The randomized callback estimand and its scope are
+  established; effects and signals remain heterogeneous across studies.
+- **Primary sources:** `BertrandMullainathan2004Callbacks`,
+  `LippensVermeirenBaert2023HiringDiscrimination`,
+  `EU2000EmploymentEquality`, `DE2006AGG`.
+- **Rationale:** matched randomized applications support a callback-stage
+  effect for the manipulated signal, while the large correspondence-study
+  synthesis documents heterogeneity by ground, outcome coding, region, and
+  period; legal scope and remedy remain separate normative questions.
+- **Proposed AI translation:** bind the result to signal construction, frame,
+  strata, response definition, pairing/clustering, interference/detection
+  risk, stage, support, uncertainty, and typed legal applicability.
+- **Efficiency mechanism:** acquire or request later-stage evidence only when
+  the proposed claim crosses beyond the randomized callback stage.
+- **Failure modes:** signal equals identity; callback equals offer/pay/
+  retention; sampled vacancies equal labour market; motive inferred;
+  experiment detection/interference ignored; protected-ground scope automated.
+- **Measurable prediction:** stage-qualified audit records are hypothesized to
+  reduce the registered unsupported callback-to-offer/pay assertion rate to
+  zero while retaining callback-effect power at equal application count.
+- **Open question:** does the project record improve over a best-practice
+  correspondence analysis that already refuses every unsupported stage?
+- **Used by:** [SS7-T06](audits/2026-08-24-political-administrative-stratification-media-depth.md#ss7-t06--correspondence-audit-stage-transport),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+- **Disposition:** scoped experimental-inference claim; no automated liability
+  or applicant decision.
+
+### C-1437
+
+- **Statement:** A cross-sectional inequality gap or equality of current input
+  does not identify a cumulative-advantage process: starting stock, prior
+  exposures and opportunities, state-dependent returns, institutional regime,
+  selection, attrition, and the current flow must be separated, and dynamics
+  may amplify, compensate, reverse, or ignore prior advantage.
+- **Status:** established family of scoped mechanisms; universal amplification
+  rejected.
+- **Evidence note:** The theoretical and empirical family is established, but
+  no single cumulative law transports across domains.
+- **Primary sources:** `merton1968matthew`,
+  `DiPreteEirich2006CumulativeAdvantage`.
+- **Rationale:** the Matthew-effect case and later review show multiple forms
+  in which favourable state can become a resource for later gains, while also
+  separating mechanisms and empirical domains; persistence alone is not
+  diagnostic.
+- **Proposed AI translation:** preserve event histories or tested sufficient
+  state summaries and compare amplifying, compensatory, constant-return,
+  reversal, memoryless, and selection-only alternatives.
+- **Efficiency mechanism:** compact history only when decision-relevant
+  reconstructability survives and acquire anchors where dynamics diverge.
+- **Failure modes:** current parity equals historical parity; survivor sample;
+  regression to mean omitted; group path assigned to person; structural break
+  ignored; all persistence labelled cumulative advantage.
+- **Measurable prediction:** history-aware models will reduce future-gap and
+  intervention-effect error under state-dependent returns while tying snapshot
+  models in memoryless worlds.
+- **Open question:** can dependency-preserving summaries beat conventional
+  longitudinal/state-space/causal models at equal lifecycle cost?
+- **Used by:** [SS7-T07](audits/2026-08-24-political-administrative-stratification-media-depth.md#ss7-t07--cumulative-inequality-versus-snapshot-parity),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  [Candidate 018](../experiments/candidates/018-value-reconstructability-aware-tiering.md),
+  and [Candidate 019](../experiments/candidates/019-audited-cumulative-inheritance.md).
+- **Disposition:** stratification evaluation boundary; temporal mechanisms are
+  deduplicated into existing owners.
+
+### C-1438
+
+- **Statement:** Accounts, devices, households, panelists, people, impressions,
+  qualified exposures, reach, frequency, time, attention, and exposure
+  diversity are distinct audience units or operators. Person-level
+  cross-platform reach inferred from account/device data requires declared
+  frame/coverage, identity resolution, qualification, deduplication,
+  uncertainty, and methodology version; exposure-diversity estimands require
+  their declared respondent/event frame, content mapping, weighting and
+  qualification where applicable, uncertainty, and version, without making
+  device/account resolution universally mandatory.
+- **Status:** established.
+- **Evidence note:** Audience duplication and exposure-diversity measurement
+  boundaries are established; the correct metric remains purpose-specific.
+- **Primary sources:** `Ksiazek2011CrossPlatformAudience`,
+  `MoeHovdenKarppinen2021ExposureDiversity`, `EU2024MediaFreedomAct`.
+- **Rationale:** cross-platform duplication admits different analytic
+  operators, exposure diversity differs from structural/content diversity,
+  and EMFA Article 24 explicitly requires transparent, comparable, verifiable,
+  inclusive, and independently audited methodology in scope.
+- **Proposed AI translation:** attach target population, frame/panel,
+  identity unit, exposure qualification, content map, platform coverage,
+  weights, linkage/deduplication model, uncertainty, audit, and version.
+- **Efficiency mechanism:** acquire identity anchors only where overlap
+  uncertainty dominates a reach or diversity decision.
+- **Failure modes:** sum of platform uniques; device/person collapse; logged-in
+  only; shared household device; bot/person pool; content-ID mismatch;
+  viewability equals attention; proprietary methodology drift.
+- **Measurable prediction:** identity- and operator-aware inference will
+  improve net-reach and exposure-diversity interval coverage under account/
+  device fragmentation at equal event count.
+- **Open question:** does project claim typing add value after an independently
+  audited cross-media measurement workflow is complete?
+- **Used by:** [SS7-T08](audits/2026-08-24-political-administrative-stratification-media-depth.md#ss7-t08--cross-platform-audience-reach-and-diversity),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  and [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md).
+- **Disposition:** scoped audience-measurement claim; no universal attention or
+  pluralism score.
+
+### C-1439
+
+- **Statement:** A platform moderation count is a versioned administrative
+  decision-process output conditional on eligible content/action denominator,
+  detection, notice/order path, law or terms basis, automated/human review,
+  restriction type, language, exposure, complaint, appeal, reversal, and
+  reporting method; it does not alone estimate violating-content prevalence,
+  accuracy, fairness, harm, effectiveness, or legal compliance.
+- **Status:** established.
+- **Evidence note:** The EU reporting schema and observation boundary are
+  established; empirical database findings remain provider-, period-, and
+  version-scoped.
+- **Primary sources:** `EU2022DigitalServicesAct`,
+  `EU2024DSATransparencyTemplates`, `DergachevaEtAl2023OneDayModeration`,
+  `GroeschEtAl2026DSATransparency`.
+- **Rationale:** the DSA and its reporting template distinguish sources,
+  reasons, restrictions, automation, complaints, reversals, and versions;
+  empirical analyses show provider heterogeneity and database-design/
+  reliability limits that prevent treating decision counts as a content census.
+- **Proposed AI translation:** retain item/action identity, denominator,
+  detection/authority path, legal/terms basis, policy/report version, language,
+  action/visibility, automation/human stages, appeal/reinstatement, exposure,
+  and independent-audit roots.
+- **Efficiency mechanism:** allocate independent sampling/adjudication to
+  service--language--action cells with high denominator or reversal
+  uncertainty.
+- **Failure modes:** decisions/users equals prevalence; repeat actions counted
+  unique content; removal/demotion pooled; law/terms pooled; appeals random;
+  reversal equals all error; report change equals behaviour change; provider
+  self-report treated independent.
+- **Measurable prediction:** denominator- and process-aware analysis will
+  reduce false prevalence, accuracy, and effectiveness claims under platform,
+  language, detection, action, appeal, and reporting shifts at equal record
+  count.
+- **Open question:** can the project record beat a DSA-schema-aware workflow
+  plus independent probability audit and appeal-selection sensitivity?
+- **Used by:** [SS7-T09](audits/2026-08-24-political-administrative-stratification-media-depth.md#ss7-t09--moderation-decisions-prevalence-and-appeal-selection),
+  [Candidate 007](../experiments/candidates/007-endogenous-observation-surveillance.md),
+  [Candidate 009](../experiments/candidates/009-graded-assurance-envelopes.md),
+  [Candidate 014](../experiments/candidates/014-versioned-observation-contract.md),
+  and [Candidate 020](../experiments/candidates/020-constitutional-control-plane.md).
+- **Disposition:** scoped platform-administrative observation claim; no
+  moderation action or legal-compliance judgment.

@@ -36,34 +36,10 @@
       "targets": []
     },
     {
-      "id": "C-007",
-      "disposition": "new-artifact-needed",
-      "rationale": "The predicted transfer advantage of temporally aligned perception, action, and outcome training lacks a matched text-centric and passive-training protocol.",
-      "targets": [
-        "proposed:sensorimotor-grounding-transfer"
-      ]
-    },
-    {
-      "id": "C-008",
-      "disposition": "new-artifact-needed",
-      "rationale": "No current artifact isolates rapid episodic acquisition plus slow validated integration under one continual-learning lifecycle budget.",
-      "targets": [
-        "proposed:continual-memory-lifecycle"
-      ]
-    },
-    {
       "id": "C-009",
       "disposition": "evidence-input",
       "rationale": "Elastic Weight Consolidation is an established continual-learning baseline, not the proposed memory architecture.",
       "targets": []
-    },
-    {
-      "id": "C-010",
-      "disposition": "new-artifact-needed",
-      "rationale": "Current candidates use replay as a component or null but do not isolate replay selection, interference, privacy, retention, and energy.",
-      "targets": [
-        "proposed:continual-memory-lifecycle"
-      ]
     },
     {
       "id": "C-011",
@@ -76,14 +52,6 @@
       "disposition": "evidence-input",
       "rationale": "The lottery-ticket result is a pruning baseline scoped to its published settings.",
       "targets": []
-    },
-    {
-      "id": "C-013",
-      "disposition": "new-artifact-needed",
-      "rationale": "The ternary-model claim needs project-workload reproduction with real kernels, activation precision, matched quality, and end-to-end energy.",
-      "targets": [
-        "proposed:low-bit-model-hardware-crossover"
-      ]
     },
     {
       "id": "C-014",

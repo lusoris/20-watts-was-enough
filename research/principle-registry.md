@@ -119,6 +119,11 @@ with typed state machines, calibrated risk and abstention, least privilege,
 supervisory and constrained control, evolutionary and AIS search, replay,
 placement, and lifecycle accounting. If those nulls reproduce its decisions,
 the immune terminology adds no systems mechanism ([C-747](claims.md#c-747)).
+The two-track falsification contract is
+[Fixture F-013](../experiments/fixtures/013-immune-state-lifecycle-evaluation.md):
+its source modules reproduce bounded immunology claims, while its separately
+budgeted systems track tests C-746 and C-747 without treating one track as
+evidence for the other.
 
 ### Shared-clock-free predictive co-adaptation benchmark
 

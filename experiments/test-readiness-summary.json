@@ -2,21 +2,21 @@
   "schema": 1,
   "generatedFrom": "experiments/test-coverage.json",
   "claims": {
-    "total": 1429,
-    "testRouted": 1316,
-    "protocolCovered": 1316,
+    "total": 1438,
+    "testRouted": 1346,
+    "protocolCovered": 1346,
     "executionReady": 0,
     "tierCounts": {
-      "ledger-only": 113,
+      "ledger-only": 92,
       "linked-description": 0,
-      "protocol-complete": 1316,
+      "protocol-complete": 1346,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
       "ledger-only": {
-        "established": 93,
-        "plausible": 14,
-        "speculative": 2,
+        "established": 79,
+        "plausible": 9,
+        "speculative": 0,
         "disputed": 4,
         "unknown": 0
       },
@@ -28,9 +28,9 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1010,
-        "plausible": 194,
-        "speculative": 57,
+        "established": 1033,
+        "plausible": 199,
+        "speculative": 59,
         "disputed": 46,
         "unknown": 9
       },
@@ -44,18 +44,18 @@
     }
   },
   "ledgerOnly": {
-    "total": 113,
+    "total": 92,
     "dispositionCounts": {
       "evidence-input": 81,
-      "source-reproduction": 24,
+      "source-reproduction": 11,
       "existing-artifact-gap": 0,
-      "new-artifact-needed": 8
+      "new-artifact-needed": 0
     },
-    "proposedArtifactFamilies": 5
+    "proposedArtifactFamilies": 0
   },
   "artifacts": {
-    "total": 32,
-    "protocolComplete": 32,
+    "total": 37,
+    "protocolComplete": 37,
     "smokeReady": 3,
     "workstationReady": 0,
     "items": [
@@ -141,7 +141,7 @@
         "id": "candidate-007",
         "path": "experiments/candidates/007-endogenous-observation-surveillance.md",
         "title": "Candidate 007: intervention-aware surveillance under endogenous observation",
-        "linkedClaims": 153,
+        "linkedClaims": 155,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -167,7 +167,7 @@
         "id": "candidate-009",
         "path": "experiments/candidates/009-graded-assurance-envelopes.md",
         "title": "Candidate 009: versioned graded assurance envelopes",
-        "linkedClaims": 284,
+        "linkedClaims": 289,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -250,7 +250,7 @@
         "id": "candidate-011",
         "path": "experiments/candidates/011-dual-loop-operational-assurance.md",
         "title": "Candidate 011: dual-loop operational assurance",
-        "linkedClaims": 135,
+        "linkedClaims": 136,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -289,7 +289,7 @@
         "id": "candidate-014",
         "path": "experiments/candidates/014-versioned-observation-contract.md",
         "title": "Candidate 014: versioned observation contracts",
-        "linkedClaims": 607,
+        "linkedClaims": 616,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -341,7 +341,7 @@
         "id": "candidate-018",
         "path": "experiments/candidates/018-value-reconstructability-aware-tiering.md",
         "title": "Candidate 018: value- and reconstructability-aware artifact tiering",
-        "linkedClaims": 99,
+        "linkedClaims": 101,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -354,7 +354,7 @@
         "id": "candidate-019",
         "path": "experiments/candidates/019-audited-cumulative-inheritance.md",
         "title": "Candidate 019: audited cumulative inheritance",
-        "linkedClaims": 139,
+        "linkedClaims": 140,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -367,7 +367,7 @@
         "id": "candidate-020",
         "path": "experiments/candidates/020-constitutional-control-plane.md",
         "title": "Candidate 020: constitutionalized multi-level control plane",
-        "linkedClaims": 118,
+        "linkedClaims": 122,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",
@@ -646,6 +646,71 @@
             "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
           }
         ]
+      },
+      {
+        "id": "fixture-013",
+        "path": "experiments/fixtures/013-immune-state-lifecycle-evaluation.md",
+        "title": "Fixture F-013 — Immune-state lifecycle evidence and systems frontier",
+        "linkedClaims": 15,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-014",
+        "path": "experiments/fixtures/014-continual-memory-lifecycle.md",
+        "title": "Fixture F-014 — Continual-memory lifecycle under interference",
+        "linkedClaims": 2,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-015",
+        "path": "experiments/fixtures/015-sensorimotor-grounding-transfer.md",
+        "title": "Fixture F-015 — Sensorimotor grounding and hidden transfer",
+        "linkedClaims": 1,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-016",
+        "path": "experiments/fixtures/016-versioned-evidence-retrieval-feedback.md",
+        "title": "Fixture F-016 — Versioned evidence retrieval and feedback",
+        "linkedClaims": 2,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-017",
+        "path": "experiments/fixtures/017-low-bit-model-hardware-crossover.md",
+        "title": "Fixture F-017 — Low-bit model and native-hardware crossover",
+        "linkedClaims": 1,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
       }
     ]
   }

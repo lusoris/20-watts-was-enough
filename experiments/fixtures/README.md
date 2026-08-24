@@ -26,3 +26,8 @@ fixture contract.
 | F-010 | [Boundary-qualified physical computation](010-boundary-qualified-physical-computation.md) | 001, 005, 006, 009, 010, 012, 014, 017, 018 |
 | F-011 | [Operator-qualified active chemical sensing](011-operator-qualified-active-chemical-sensing.md) | 002, 006, 007, 009, 010, 012, 014, 017, 018 |
 | F-012 | [Layout-randomized performance inference](012-layout-randomized-performance-inference.md) | 009 and 014; cross-cutting measurement null for compiled candidates |
+| F-013 | [Immune-state lifecycle evidence and systems frontier](013-immune-state-lifecycle-evaluation.md) | source-domain reproductions plus 005, 009, 011, 012, 014, and 018 for the AI frontier |
+| F-014 | [Continual-memory lifecycle under interference](014-continual-memory-lifecycle.md) | fast/slow memory and selective replay; cross-cutting continual-learning test for C-008 and C-010 |
+| F-015 | [Sensorimotor grounding and hidden transfer](015-sensorimotor-grounding-transfer.md) | aligned perception--action--outcome learning; cross-cutting hidden-transfer test for C-007 |
+| F-016 | [Versioned evidence retrieval and feedback](016-versioned-evidence-retrieval-feedback.md) | retrieval and reversible feedback lifecycle; cross-cutting test for C-797 and C-798 |
+| F-017 | [Low-bit model and native-hardware crossover](017-low-bit-model-hardware-crossover.md) | ternary training, native execution, and lifecycle accounting; cross-cutting test for C-013 |

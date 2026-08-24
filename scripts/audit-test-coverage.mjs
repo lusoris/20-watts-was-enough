@@ -529,6 +529,12 @@ const markdownReport = `# Test coverage\n\nThis report is generated from the cen
 
 const renderedMarkdownReport = markdownReport
   .replace(
+    `The ${dispositionCounts["new-artifact-needed"]} unresolved engineering claims\ncollapse into ${proposedArtifactFamilies.length} proposed experiment families.\nTheir minimum promotion contracts are kept in the\n[proposed-artifact backlog](proposed/README.md). The source fragments and schema\nare in [claim dispositions](claim-dispositions/README.md).`,
+    dispositionCounts["new-artifact-needed"] === 0
+      ? "No unresolved `new-artifact-needed` disposition remains. Promoted family\nrecords are retained as design provenance in the\n[experiment-family provenance](proposed/README.md). The source fragments and\nschema are in [claim dispositions](claim-dispositions/README.md)."
+      : `The ${dispositionCounts["new-artifact-needed"]} unresolved engineering claims\ncollapse into ${proposedArtifactFamilies.length} proposed experiment families.\nTheir minimum promotion contracts are kept in the\n[proposed-artifact backlog](proposed/README.md). The source fragments and schema\nare in [claim dispositions](claim-dispositions/README.md).`,
+  )
+  .replace(
     `There are ${counts.artifacts} experiment artifacts: ${counts.protocolCompleteArtifacts}\npass the written-protocol gate, and ${counts.executionReadyArtifacts} pass the\nexecution gate.`,
     `There are ${counts.artifacts} experiment artifacts: ${counts.protocolCompleteArtifacts}\npass the written-protocol gate, a validated smoke harness exists for\n${counts.smokeReadyArtifacts}, and ${counts.executionReadyArtifacts} pass the full execution gate.\nSmoke readiness verifies deterministic plumbing but cannot promote a claim.`,
   )

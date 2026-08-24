@@ -428,6 +428,54 @@ async function fixtureLayoutSelection(spec) {
   });
 }
 
+function crossPlatformReach(spec) {
+  const {
+    platform_a_people: platformA,
+    platform_b_people: platformB,
+    samples,
+  } = spec.parameters;
+  const smaller = Math.min(platformA, platformB);
+  const summed = platformA + platformB;
+  const xMap = (value) => sx(value, 0, 1);
+  const yMap = (value) => sy(value, 0, summed * 1.1);
+  const values = Array.from({ length: samples }, (_, index) => {
+    const fraction = index / (samples - 1);
+    const overlap = fraction * smaller;
+    return {
+      fraction,
+      union: summed - overlap,
+      naive: summed,
+    };
+  });
+  const unionPath = linePath(values.map((point) => [xMap(point.fraction), yMap(point.union)]));
+  const naivePath = linePath(values.map((point) => [xMap(point.fraction), yMap(point.naive)]));
+  const gapArea = `${unionPath} L${xMap(1)},${yMap(summed)} L${xMap(0)},${yMap(summed)} Z`;
+  const endUnion = summed - smaller;
+  const endOvercount = summed / endUnion - 1;
+  const content = `${grid(
+    [0, 0.25, 0.5, 0.75, 1],
+    [0, 500, 1000, 1500, 2000],
+    xMap,
+    yMap,
+    (value) => `${Math.round(value * 100)}%`,
+    (value) => value.toLocaleString("en-US"),
+  )}<path d="${gapArea}" fill="${colors.coral}" opacity=".18"/>
+  <path d="${naivePath}" fill="none" stroke="${colors.coral}" stroke-width="6" stroke-dasharray="12 8"/>
+  <path d="${unionPath}" fill="none" stroke="${colors.green}" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="${xMap(1)}" cy="${yMap(endUnion)}" r="9" fill="${colors.green}" stroke="${colors.text}" stroke-width="2"/>
+  <text x="${xMap(0.04)}" y="${yMap(summed) - 16}" fill="${colors.coral}" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">naive sum: ${summed.toLocaleString("en-US")} accounts</text>
+  <text x="${xMap(0.58)}" y="${yMap(summed - 0.58 * smaller) + 30}" fill="${colors.green}" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">set union: resolved people</text>
+  <rect x="${xMap(0.60)}" y="${yMap(720)}" width="350" height="72" rx="12" fill="#203b31" stroke="#3f6b5b"/>
+  <text x="${xMap(0.60) + 175}" y="${yMap(720) + 28}" fill="${colors.text}" font-family="Cascadia Mono, monospace" font-size="14" font-weight="700" text-anchor="middle">100% overlap → ${endUnion.toLocaleString("en-US")} people</text>
+  <text x="${xMap(0.60) + 175}" y="${yMap(720) + 52}" fill="${colors.coral}" font-family="Cascadia Mono, monospace" font-size="13" text-anchor="middle">naive overcount: ${(endOvercount * 100).toFixed(0)}%</text>`;
+  return frame(spec, content, {
+    xLabel: "overlap as share of the smaller platform audience",
+    yLabel: "reported unique reach (people)",
+    badge: "SET IDENTITY · ILLUSTRATIVE",
+    footer: `${platformA.toLocaleString("en-US")} + ${platformB.toLocaleString("en-US")} platform accounts · no observed audience data`,
+  });
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -436,6 +484,7 @@ const renderers = {
   "candidate-010-metering-scale": meteringScale,
   "fixture-007-identifiability": fixtureIdentifiability,
   "fixture-012-layout-selection": fixtureLayoutSelection,
+  "cross-platform-reach-overlap": crossPlatformReach,
 };
 
 for (const spec of specs) {

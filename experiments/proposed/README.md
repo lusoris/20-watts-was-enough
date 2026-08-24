@@ -1,14 +1,18 @@
-# Proposed experiment backlog
+# Experiment-family provenance
 
-These families are unresolved engineering hypotheses referenced by
-[claim-disposition fragments](../claim-dispositions/README.md). They are not
-numbered candidates or fixtures, do not count as test coverage, and contain no
-accepted project claim. A family graduates only after a full protocol defines
-its question, system, strongest nulls, equal-budget boundary, measurements,
-ablations, confirmatory analysis, and ex-ante rejection rule.
+These entries preserve the design provenance of experiment families that began
+as unresolved engineering hypotheses. Every family on this page has now been
+promoted to a numbered fixture and no longer counts as a disposition backlog
+item. Promotion records a complete written falsification contract, not an
+empirical result or execution-ready implementation. Generator, hardware,
+release, metering, and independent-reproduction gates remain those stated by
+each fixture.
 
 ## `proposed:sensorimotor-grounding-transfer`
 
+- **Promotion state:** promoted on 2026-08-24 to
+  [Fixture F-015](../fixtures/015-sensorimotor-grounding-transfer.md). This entry
+  remains as design provenance and is no longer an unnumbered backlog item.
 - **Claims:** [C-007](../../research/claims.md#c-007).
 - **Unresolved question:** Does temporally aligned perception, action, and
   outcome training improve intervention-sensitive physical transfer beyond
@@ -27,7 +31,7 @@ ablations, confirmatory analysis, and ex-ante rejection rule.
   quality, calibration, negative transfer, protected failures, adaptation
   events, latency, bytes, and joules across changed objects, dynamics, bodies,
   and environments.
-- **Promotion condition:** Draft a numbered protocol only after two materially
+- **Original promotion condition:** Draft a numbered protocol only after two materially
   different task families and a frozen generator can distinguish temporal
   alignment from extra data or interaction. The aligned arm must improve a
   preregistered transfer--risk--cost frontier over the strongest passive arm,
@@ -35,6 +39,9 @@ ablations, confirmatory analysis, and ex-ante rejection rule.
 
 ## `proposed:continual-memory-lifecycle`
 
+- **Promotion state:** promoted on 2026-08-24 to
+  [Fixture F-014](../fixtures/014-continual-memory-lifecycle.md). This entry
+  remains as design provenance and is no longer an unnumbered backlog item.
 - **Claims:** [C-008](../../research/claims.md#c-008) and
   [C-010](../../research/claims.md#c-010).
 - **Unresolved question:** Does rapid episodic acquisition followed by slow,
@@ -56,7 +63,7 @@ ablations, confirmatory analysis, and ex-ante rejection rule.
   retention, forward and backward transfer, rare and safety-critical memory,
   calibration, duplicate or stale replay, privacy leakage, interference,
   recovery, bytes, latency, and joules.
-- **Promotion condition:** A numbered contract requires at least two continual
+- **Original promotion condition:** A numbered contract requires at least two continual
   streams with different recurrence and interference structure, frozen
   protected slices, and independent retention horizons. The complete system
   must improve the retention--adaptation--risk--energy frontier over the best
@@ -65,6 +72,11 @@ ablations, confirmatory analysis, and ex-ante rejection rule.
 
 ## `proposed:low-bit-model-hardware-crossover`
 
+- **Promotion state:** promoted on 2026-08-24 to
+  [Fixture F-017](../fixtures/017-low-bit-model-hardware-crossover.md). This
+  entry remains as design provenance. Native kernels, sealed confirmation
+  bundles, calibrated meter data, and independent reproduction remain required
+  before any performance or energy result exists.
 - **Claims:** [C-013](../../research/claims.md#c-013).
 - **Unresolved question:** Can a ternary-weight model preserve task quality at
   matched model size and training data while reducing end-to-end inference cost
@@ -83,7 +95,7 @@ ablations, confirmatory analysis, and ex-ante rejection rule.
   training stability, wall energy, power, p50/p99 latency, throughput, peak
   memory, data movement, conversion, compilation, training, and retraining
   cost.
-- **Promotion condition:** Number the work only when native kernels and frozen
+- **Original promotion condition:** Number the work only when native kernels and frozen
   workloads exist on at least two relevant hardware classes. Ternary execution
   must occupy a better matched-quality latency--memory--energy frontier than
   the strongest supported low-bit baseline after training and engineering
@@ -91,6 +103,10 @@ ablations, confirmatory analysis, and ex-ante rejection rule.
 
 ## `proposed:immune-state-lifecycle-evaluation`
 
+- **Promotion state:** promoted on 2026-08-24 to
+  [Fixture F-013](../fixtures/013-immune-state-lifecycle-evaluation.md). This
+  entry remains as design provenance and is no longer an unnumbered backlog
+  item; F-013 separates source-domain reproduction from the AI-system test.
 - **Claims:** [C-746](../../research/claims.md#c-746) and
   [C-747](../../research/claims.md#c-747).
 - **Unresolved question:** Does keeping recognition, authorization, activation,
@@ -114,7 +130,7 @@ ablations, confirmatory analysis, and ex-ante rejection rule.
   availability, recovery and recurrence, retained capability, calibration,
   state-transition errors, reserve use, operator time, latency, bytes, and
   joules.
-- **Promotion condition:** Before numbering, the state contract must predict
+- **Original promotion condition:** Before numbering, the state contract must predict
   distinct errors in two materially different service families. The complete
   composition must beat the strongest ordinary stack on protected
   outcome--cost frontiers, and merging each claimed state distinction must
@@ -123,6 +139,10 @@ ablations, confirmatory analysis, and ex-ante rejection rule.
 
 ## `proposed:versioned-evidence-retrieval-feedback`
 
+- **Promotion state:** promoted on 2026-08-24 to
+  [Fixture F-016](../fixtures/016-versioned-evidence-retrieval-feedback.md).
+  This entry remains as design provenance and is no longer an unnumbered
+  backlog item.
 - **Claims:** [C-797](../../research/claims.md#c-797) and
   [C-798](../../research/claims.md#c-798).
 - **Unresolved question:** Can adaptive evidence routing and a versioned,
@@ -147,7 +167,7 @@ ablations, confirmatory analysis, and ex-ante rejection rule.
   calibration, evidence diversity, tail and protected-query performance,
   mistaken/poisoned-feedback damage, recovery after rollback, evidence-base
   integrity, reviewer effort, bytes, latency, and joules.
-- **Promotion condition:** A numbered protocol requires frozen benign,
+- **Original promotion condition:** A numbered protocol requires frozen benign,
   mistaken, delayed, exposure-biased, and poisoned feedback generators across
   at least two corpora or task families. The versioned arm must improve the
   supported-answer--risk--cost frontier over the best hybrid baseline, preserve

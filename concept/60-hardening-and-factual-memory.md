@@ -617,7 +617,7 @@ contract.
 | adaptive early exit | [C-004](../research/claims.md#c-004) | established on evaluated BERT tasks; shift and rare-risk gating open |
 | fast acquisition versus slow integration | [C-008](../research/claims.md#c-008) | plausible architectural separation; exact tiers unvalidated |
 | structured consolidation and pruning | [C-012](../research/claims.md#c-012) | established in scoped experiments; physical saving not automatic |
-| ternary-weight models | [C-013](../research/claims.md#c-013) | plausible preprint evidence; project workload and full energy unresolved |
+| ternary-weight models | [C-013](../research/claims.md#c-013) | plausible preprint, technical-report, and open-kernel evidence; matched project workload and measured lifecycle frontier remain unresolved |
 | parametric plus non-parametric memory | [C-014](../research/claims.md#c-014) | established on evaluated RAG tasks; freshness and conflict remain open |
 | retrieval-sensitive updating | [C-039](../research/claims.md#c-039), [C-040](../research/claims.md#c-040) | scoped observation; precise general mismatch gate disputed |
 | reversible mature constraint | [C-044](../research/claims.md#c-044), [C-045](../research/claims.md#c-045) | scoped biological intervention; digital rollback contract experimental |

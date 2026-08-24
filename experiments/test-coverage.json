@@ -50,21 +50,21 @@
     }
   },
   "counts": {
-    "claims": 1429,
-    "testRouted": 1316,
-    "protocolCovered": 1316,
+    "claims": 1438,
+    "testRouted": 1346,
+    "protocolCovered": 1346,
     "executionReady": 0,
     "tierCounts": {
-      "ledger-only": 113,
+      "ledger-only": 92,
       "linked-description": 0,
-      "protocol-complete": 1316,
+      "protocol-complete": 1346,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
       "ledger-only": {
-        "established": 93,
-        "plausible": 14,
-        "speculative": 2,
+        "established": 79,
+        "plausible": 9,
+        "speculative": 0,
         "disputed": 4,
         "unknown": 0
       },
@@ -76,9 +76,9 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1010,
-        "plausible": 194,
-        "speculative": 57,
+        "established": 1033,
+        "plausible": 199,
+        "speculative": 59,
         "disputed": 46,
         "unknown": 9
       },
@@ -92,18 +92,18 @@
     },
     "dispositionCounts": {
       "evidence-input": 81,
-      "source-reproduction": 24,
+      "source-reproduction": 11,
       "existing-artifact-gap": 0,
-      "new-artifact-needed": 8
+      "new-artifact-needed": 0
     },
-    "proposedArtifactFamilies": 5,
-    "artifacts": 32,
-    "protocolCompleteArtifacts": 32,
+    "proposedArtifactFamilies": 0,
+    "artifacts": 37,
+    "protocolCompleteArtifacts": 37,
     "executionReadyArtifacts": 0,
     "smokeReadyArtifacts": 3,
-    "claimSideLinked": 1098,
-    "documentSideLinked": 1046,
-    "reciprocalClaims": 691
+    "claimSideLinked": 1128,
+    "documentSideLinked": 1067,
+    "reciprocalClaims": 712
   },
   "artifacts": [
     {
@@ -1612,6 +1612,8 @@
         "C-1424",
         "C-1428",
         "C-1430",
+        "C-1433",
+        "C-1439",
         "C-305",
         "C-441",
         "C-508",
@@ -1785,6 +1787,8 @@
         "C-1424",
         "C-1428",
         "C-1430",
+        "C-1433",
+        "C-1439",
         "C-305",
         "C-441",
         "C-508",
@@ -2089,6 +2093,11 @@
         "C-1420",
         "C-1422",
         "C-1428",
+        "C-1432",
+        "C-1434",
+        "C-1436",
+        "C-1438",
+        "C-1439",
         "C-250",
         "C-251",
         "C-254",
@@ -2411,6 +2420,11 @@
         "C-1420",
         "C-1422",
         "C-1428",
+        "C-1432",
+        "C-1434",
+        "C-1436",
+        "C-1438",
+        "C-1439",
         "C-145",
         "C-146",
         "C-147",
@@ -2838,6 +2852,7 @@
         "C-1420",
         "C-1421",
         "C-1429",
+        "C-1433",
         "C-173",
         "C-177",
         "C-178",
@@ -3004,6 +3019,7 @@
         "C-1420",
         "C-1421",
         "C-1429",
+        "C-1433",
         "C-173",
         "C-174",
         "C-175",
@@ -4149,6 +4165,15 @@
         "C-1428",
         "C-1429",
         "C-1430",
+        "C-1431",
+        "C-1432",
+        "C-1433",
+        "C-1434",
+        "C-1435",
+        "C-1436",
+        "C-1437",
+        "C-1438",
+        "C-1439",
         "C-218",
         "C-220",
         "C-221",
@@ -4830,6 +4855,15 @@
         "C-1428",
         "C-1429",
         "C-1430",
+        "C-1431",
+        "C-1432",
+        "C-1433",
+        "C-1434",
+        "C-1435",
+        "C-1436",
+        "C-1437",
+        "C-1438",
+        "C-1439",
         "C-218",
         "C-219",
         "C-220",
@@ -5712,6 +5746,8 @@
         "C-1426",
         "C-1428",
         "C-1430",
+        "C-1435",
+        "C-1437",
         "C-333",
         "C-338",
         "C-339",
@@ -5824,6 +5860,8 @@
         "C-1426",
         "C-1428",
         "C-1430",
+        "C-1435",
+        "C-1437",
         "C-325",
         "C-326",
         "C-327",
@@ -5931,6 +5969,7 @@
         "C-1402",
         "C-1421",
         "C-1423",
+        "C-1437",
         "C-343",
         "C-344",
         "C-345",
@@ -6101,6 +6140,7 @@
         "C-1402",
         "C-1421",
         "C-1423",
+        "C-1437",
         "C-343",
         "C-344",
         "C-345",
@@ -6261,6 +6301,10 @@
         "C-1401",
         "C-1403",
         "C-1416",
+        "C-1431",
+        "C-1434",
+        "C-1436",
+        "C-1439",
         "C-368",
         "C-370",
         "C-372",
@@ -6414,6 +6458,10 @@
         "C-1401",
         "C-1403",
         "C-1416",
+        "C-1431",
+        "C-1434",
+        "C-1436",
+        "C-1439",
         "C-368",
         "C-369",
         "C-370",
@@ -8141,6 +8189,174 @@
       "linkedClaims": [
         "C-1407"
       ]
+    },
+    {
+      "id": "fixture-013",
+      "path": "experiments/fixtures/013-immune-state-lifecycle-evaluation.md",
+      "title": "Fixture F-013 — Immune-state lifecycle evidence and systems frontier",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "absent",
+      "executionManifest": null,
+      "executionMissing": [
+        "manifest"
+      ],
+      "executionPromotionChecks": [],
+      "executionClaims": [],
+      "claimSideClaims": [
+        "C-727",
+        "C-729",
+        "C-730",
+        "C-731",
+        "C-733",
+        "C-734",
+        "C-735",
+        "C-736",
+        "C-737",
+        "C-739",
+        "C-740",
+        "C-741",
+        "C-742",
+        "C-746",
+        "C-747"
+      ],
+      "documentSideClaims": [
+        "C-727",
+        "C-729",
+        "C-730",
+        "C-731",
+        "C-733",
+        "C-734",
+        "C-735",
+        "C-736",
+        "C-737",
+        "C-739",
+        "C-740",
+        "C-741",
+        "C-742",
+        "C-746",
+        "C-747"
+      ],
+      "linkedClaims": [
+        "C-727",
+        "C-729",
+        "C-730",
+        "C-731",
+        "C-733",
+        "C-734",
+        "C-735",
+        "C-736",
+        "C-737",
+        "C-739",
+        "C-740",
+        "C-741",
+        "C-742",
+        "C-746",
+        "C-747"
+      ]
+    },
+    {
+      "id": "fixture-014",
+      "path": "experiments/fixtures/014-continual-memory-lifecycle.md",
+      "title": "Fixture F-014 — Continual-memory lifecycle under interference",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "absent",
+      "executionManifest": null,
+      "executionMissing": [
+        "manifest"
+      ],
+      "executionPromotionChecks": [],
+      "executionClaims": [],
+      "claimSideClaims": [
+        "C-008",
+        "C-010"
+      ],
+      "documentSideClaims": [
+        "C-008",
+        "C-010"
+      ],
+      "linkedClaims": [
+        "C-008",
+        "C-010"
+      ]
+    },
+    {
+      "id": "fixture-015",
+      "path": "experiments/fixtures/015-sensorimotor-grounding-transfer.md",
+      "title": "Fixture F-015 — Sensorimotor grounding and hidden transfer",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "absent",
+      "executionManifest": null,
+      "executionMissing": [
+        "manifest"
+      ],
+      "executionPromotionChecks": [],
+      "executionClaims": [],
+      "claimSideClaims": [
+        "C-007"
+      ],
+      "documentSideClaims": [
+        "C-007"
+      ],
+      "linkedClaims": [
+        "C-007"
+      ]
+    },
+    {
+      "id": "fixture-016",
+      "path": "experiments/fixtures/016-versioned-evidence-retrieval-feedback.md",
+      "title": "Fixture F-016 — Versioned evidence retrieval and feedback",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "absent",
+      "executionManifest": null,
+      "executionMissing": [
+        "manifest"
+      ],
+      "executionPromotionChecks": [],
+      "executionClaims": [],
+      "claimSideClaims": [
+        "C-797",
+        "C-798"
+      ],
+      "documentSideClaims": [
+        "C-797",
+        "C-798"
+      ],
+      "linkedClaims": [
+        "C-797",
+        "C-798"
+      ]
+    },
+    {
+      "id": "fixture-017",
+      "path": "experiments/fixtures/017-low-bit-model-hardware-crossover.md",
+      "title": "Fixture F-017 — Low-bit model and native-hardware crossover",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "absent",
+      "executionManifest": null,
+      "executionMissing": [
+        "manifest"
+      ],
+      "executionPromotionChecks": [],
+      "executionClaims": [],
+      "claimSideClaims": [
+        "C-013"
+      ],
+      "documentSideClaims": [
+        "C-013"
+      ],
+      "linkedClaims": [
+        "C-013"
+      ]
     }
   ],
   "claims": [
@@ -8239,38 +8455,26 @@
     {
       "id": "C-007",
       "status": "speculative",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-007",
-        "disposition": "new-artifact-needed",
-        "rationale": "The predicted transfer advantage of temporally aligned perception, action, and outcome training lacks a matched text-centric and passive-training protocol.",
-        "targets": [
-          "proposed:sensorimotor-grounding-transfer"
-        ],
-        "source": "experiments/claim-dispositions/001-085.json"
-      }
+      "artifacts": [
+        "fixture-015"
+      ],
+      "disposition": null
     },
     {
       "id": "C-008",
       "status": "plausible",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-008",
-        "disposition": "new-artifact-needed",
-        "rationale": "No current artifact isolates rapid episodic acquisition plus slow validated integration under one continual-learning lifecycle budget.",
-        "targets": [
-          "proposed:continual-memory-lifecycle"
-        ],
-        "source": "experiments/claim-dispositions/001-085.json"
-      }
+      "artifacts": [
+        "fixture-014"
+      ],
+      "disposition": null
     },
     {
       "id": "C-009",
@@ -8291,20 +8495,14 @@
     {
       "id": "C-010",
       "status": "plausible",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-010",
-        "disposition": "new-artifact-needed",
-        "rationale": "Current candidates use replay as a component or null but do not isolate replay selection, interference, privacy, retention, and energy.",
-        "targets": [
-          "proposed:continual-memory-lifecycle"
-        ],
-        "source": "experiments/claim-dispositions/001-085.json"
-      }
+      "artifacts": [
+        "fixture-014"
+      ],
+      "disposition": null
     },
     {
       "id": "C-011",
@@ -8341,20 +8539,14 @@
     {
       "id": "C-013",
       "status": "plausible",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-013",
-        "disposition": "new-artifact-needed",
-        "rationale": "The ternary-model claim needs project-workload reproduction with real kernels, activation precision, matched quality, and end-to-end energy.",
-        "targets": [
-          "proposed:low-bit-model-hardware-crossover"
-        ],
-        "source": "experiments/claim-dispositions/001-085.json"
-      }
+      "artifacts": [
+        "fixture-017"
+      ],
+      "disposition": null
     },
     {
       "id": "C-014",
@@ -17890,18 +18082,14 @@
     {
       "id": "C-727",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-727",
-        "disposition": "source-reproduction",
-        "rationale": "Clonal deletion in the defined mouse T-cell system is an immunology result whose direct test requires source-domain reproduction.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-728",
@@ -17918,50 +18106,38 @@
     {
       "id": "C-729",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-729",
-        "disposition": "source-reproduction",
-        "rationale": "Persistence with functional silencing in the cited transgenic B-cell preparation is a biological result, not an AI-system claim.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-730",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-730",
-        "disposition": "source-reproduction",
-        "rationale": "The Foxp3 and regulatory T-cell tolerance result requires mouse-system reproduction rather than an AI evaluation.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-731",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-731",
-        "disposition": "source-reproduction",
-        "rationale": "The distinct molecular program of exhausted CD8 cells in chronic LCMV is a bounded immunology observation.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-732",
@@ -17979,82 +18155,62 @@
     {
       "id": "C-733",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-733",
-        "disposition": "source-reproduction",
-        "rationale": "Expansion, contraction, persistence, and recall of antigen-specific CD8 populations are biological source observations.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-734",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-734",
-        "disposition": "source-reproduction",
-        "rationale": "The germinal-center presentation, help, return, and expansion loop is a source-domain mouse result.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-735",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-735",
-        "disposition": "source-reproduction",
-        "rationale": "Coexisting maturing lineages during affinity maturation are an empirical immunology result, not an AI hypothesis.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-736",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-736",
-        "disposition": "source-reproduction",
-        "rationale": "Persistent innate-response changes after fungal or BCG exposure require biological and human-volunteer reproduction.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-737",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-737",
-        "disposition": "source-reproduction",
-        "rationale": "Epigenetic, metabolic, and progenitor substrates of trained immunity are source-domain mechanistic observations.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-738",
@@ -18071,66 +18227,50 @@
     {
       "id": "C-739",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-739",
-        "disposition": "source-reproduction",
-        "rationale": "Antigen-independent CD8 memory maintenance and cytokine support are biological findings requiring source-domain study.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-740",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-740",
-        "disposition": "source-reproduction",
-        "rationale": "Somatic receptor rearrangement and sampling-qualified repertoire diversity are immunological observations.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-741",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-741",
-        "disposition": "source-reproduction",
-        "rationale": "Tissue-resident memory persistence and rapid local protection are bounded mouse-tissue results.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-742",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-742",
-        "disposition": "source-reproduction",
-        "rationale": "Metabolic and mitochondrial interventions altering T-cell outcomes require biological source-study reproduction.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-743",
@@ -18178,38 +18318,26 @@
     {
       "id": "C-746",
       "status": "plausible",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-746",
-        "disposition": "new-artifact-needed",
-        "rationale": "The predicted reduction in unsafe reactivation and false deletion from separately typed immune-like states is an untested AI evaluation contract.",
-        "targets": [
-          "proposed:immune-state-lifecycle-evaluation"
-        ],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-747",
       "status": "speculative",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-747",
-        "disposition": "new-artifact-needed",
-        "rationale": "The full tolerance-training-memory-residency composition asserts a systems-frontier advantage that no current artifact isolates against its complete null stack.",
-        "targets": [
-          "proposed:immune-state-lifecycle-evaluation"
-        ],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-013"
+      ],
+      "disposition": null
     },
     {
       "id": "C-748",
@@ -18835,38 +18963,26 @@
     {
       "id": "C-797",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-797",
-        "disposition": "new-artifact-needed",
-        "rationale": "No current protocol performs the required equal-budget comparison of adaptive evidence routing with mature sparse, dense, and hybrid retrieval.",
-        "targets": [
-          "proposed:versioned-evidence-retrieval-feedback"
-        ],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-016"
+      ],
+      "disposition": null
     },
     {
       "id": "C-798",
       "status": "plausible",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-798",
-        "disposition": "new-artifact-needed",
-        "rationale": "No current artifact isolates versioned query-model feedback, exploration, rollback, and evidence-base preservation under mistaken and poisoned feedback.",
-        "targets": [
-          "proposed:versioned-evidence-retrieval-feedback"
-        ],
-        "source": "experiments/claim-dispositions/312-1203.json"
-      }
+      "artifacts": [
+        "fixture-016"
+      ],
+      "disposition": null
     },
     {
       "id": "C-799",
@@ -27653,6 +27769,129 @@
         "candidate-012",
         "candidate-014",
         "candidate-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1431",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1432",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1433",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-011",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1434",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1435",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-018"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1436",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014",
+        "candidate-020"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1437",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-014",
+        "candidate-018",
+        "candidate-019"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1438",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-009",
+        "candidate-014"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1439",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "candidate-007",
+        "candidate-009",
+        "candidate-014",
+        "candidate-020"
       ],
       "disposition": null
     }

@@ -9,16 +9,16 @@ experiment contracts, or disposition fragments.
 
 The four rows below are mutually exclusive highest-reached tiers.
 
-| Highest coverage tier | Claims | Share of 1429 | Meaning |
+| Highest coverage tier | Claims | Share of 1438 | Meaning |
 | --- | ---: | ---: | --- |
-| ledger-only | 113 | 7.9% | no exact direct relation to a numbered experiment artifact |
+| ledger-only | 92 | 6.4% | no exact direct relation to a numbered experiment artifact |
 | linked test description | 0 | 0.0% | related experiment prose exists, but at least one required protocol facet is absent |
-| protocol-complete test contract | 1316 | 92.1% | at least one linked artifact contains all eight required facets |
+| protocol-complete test contract | 1346 | 93.6% | at least one linked artifact contains all eight required facets |
 | workstation-executable | 0 | 0.0% | checked execution manifest and runnable scientific harness exist |
 
-The short answer is therefore **1316 claims have a complete
+The short answer is therefore **1346 claims have a complete
 test description, but 0 are executable on the workstation**.
-Across both description tiers, 1316 claims have an exact direct
+Across both description tiers, 1346 claims have an exact direct
 relation to at least one experiment artifact. These are aggregate candidate
 tests: they evaluate engineering translations supported by several claims; they
 do not independently reproduce every source paper.
@@ -27,9 +27,9 @@ do not independently reproduce every source paper.
 
 | Highest tier | Established | Plausible | Speculative | Disputed | Unknown |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| ledger-only | 93 | 14 | 2 | 4 | 0 |
+| ledger-only | 79 | 9 | 0 | 4 | 0 |
 | linked-description | 0 | 0 | 0 | 0 | 0 |
-| protocol-complete | 1010 | 194 | 57 | 46 | 9 |
+| protocol-complete | 1033 | 199 | 59 | 46 | 9 |
 | workstation-executable | 0 | 0 | 0 | 0 | 0 |
 
 ## Why ledger-only claims remain unlinked
@@ -40,15 +40,14 @@ classification itself as a test.
 | Disposition | Claims | Meaning |
 | --- | ---: | --- |
 | evidence-input | 81 | scientific or engineering evidence that constrains a translation but is not itself a standalone AI-system hypothesis |
-| source-reproduction | 24 | a source-domain result whose direct test would reproduce the cited study rather than evaluate this project's AI system |
+| source-reproduction | 11 | a source-domain result whose direct test would reproduce the cited study rather than evaluate this project's AI system |
 | existing-artifact-gap | 0 | an engineering consequence belongs in an existing artifact, but its exact traceability or track is still missing |
-| new-artifact-needed | 8 | a project engineering hypothesis needs a new experiment contract |
+| new-artifact-needed | 0 | a project engineering hypothesis needs a new experiment contract |
 
-The 8 unresolved engineering claims
-collapse into 5 proposed experiment families.
-Their minimum promotion contracts are kept in the
-[proposed-artifact backlog](proposed/README.md). The source fragments and schema
-are in [claim dispositions](claim-dispositions/README.md).
+No unresolved `new-artifact-needed` disposition remains. Promoted family
+records are retained as design provenance in the
+[experiment-family provenance](proposed/README.md). The source fragments and
+schema are in [claim dispositions](claim-dispositions/README.md).
 
 ## What “complete test description” means
 
@@ -78,13 +77,13 @@ A relation exists when either side states it exactly:
 
 Inclusive ranges are expanded only when both endpoints have exact matching
 links. Prose numbers and indirect adoption-matrix associations do not count.
-The union yields 1316 linked claims: 1098
-appear on the claim side, 1046 on the document side, and
-691 have at least one reciprocal same-artifact relation.
+The union yields 1346 linked claims: 1128
+appear on the claim side, 1067 on the document side, and
+712 have at least one reciprocal same-artifact relation.
 
 ## Artifact coverage
 
-There are 32 experiment artifacts: 32
+There are 37 experiment artifacts: 37
 pass the written-protocol gate, a validated smoke harness exists for
 3, and 0 pass the full execution gate.
 Smoke readiness verifies deterministic plumbing but cannot promote a claim.
@@ -97,20 +96,20 @@ Smoke readiness verifies deterministic plumbing but cannot promote a claim.
 | [candidate-004](candidates/004-closed-endogenous-curriculum.md) | 116 | complete description | not executable |
 | [candidate-005](candidates/005-severity-ordered-containment.md) | 111 | complete description | not executable |
 | [candidate-006](candidates/006-reversible-physical-skill.md) | 157 | complete description | not executable |
-| [candidate-007](candidates/007-endogenous-observation-surveillance.md) | 153 | complete description | not executable |
+| [candidate-007](candidates/007-endogenous-observation-surveillance.md) | 155 | complete description | not executable |
 | [candidate-008](candidates/008-contestable-modular-allocation.md) | 24 | complete description | not executable |
-| [candidate-009](candidates/009-graded-assurance-envelopes.md) | 284 | complete description | not executable |
+| [candidate-009](candidates/009-graded-assurance-envelopes.md) | 289 | complete description | not executable |
 | [candidate-010](candidates/010-reset-coupled-staged-verification.md) | 80 | complete description | smoke-ready; not executable |
-| [candidate-011](candidates/011-dual-loop-operational-assurance.md) | 135 | complete description | not executable |
+| [candidate-011](candidates/011-dual-loop-operational-assurance.md) | 136 | complete description | not executable |
 | [candidate-012](candidates/012-latency-qualified-authority.md) | 223 | complete description | not executable |
 | [candidate-013](candidates/013-deficit-capability-routing.md) | 99 | complete description | not executable |
-| [candidate-014](candidates/014-versioned-observation-contract.md) | 607 | complete description | not executable |
+| [candidate-014](candidates/014-versioned-observation-contract.md) | 616 | complete description | not executable |
 | [candidate-015](candidates/015-versioned-repairable-conventions.md) | 74 | complete description | not executable |
 | [candidate-016](candidates/016-conflict-bounded-unit-transition.md) | 29 | complete description | not executable |
 | [candidate-017](candidates/017-contract-preserving-semantic-compaction.md) | 97 | complete description | not executable |
-| [candidate-018](candidates/018-value-reconstructability-aware-tiering.md) | 99 | complete description | not executable |
-| [candidate-019](candidates/019-audited-cumulative-inheritance.md) | 139 | complete description | not executable |
-| [candidate-020](candidates/020-constitutional-control-plane.md) | 118 | complete description | not executable |
+| [candidate-018](candidates/018-value-reconstructability-aware-tiering.md) | 101 | complete description | not executable |
+| [candidate-019](candidates/019-audited-cumulative-inheritance.md) | 140 | complete description | not executable |
+| [candidate-020](candidates/020-constitutional-control-plane.md) | 122 | complete description | not executable |
 | [fixture-001](fixtures/001-shared-clock-free-coadaptation.md) | 36 | complete description | not executable |
 | [fixture-002](fixtures/002-versioned-reconstructive-design.md) | 19 | complete description | not executable |
 | [fixture-003](fixtures/003-opportunity-history-qualified-action.md) | 38 | complete description | not executable |
@@ -123,12 +122,17 @@ Smoke readiness verifies deterministic plumbing but cannot promote a claim.
 | [fixture-010](fixtures/010-boundary-qualified-physical-computation.md) | 56 | complete description | not executable |
 | [fixture-011](fixtures/011-operator-qualified-active-chemical-sensing.md) | 55 | complete description | not executable |
 | [fixture-012](fixtures/012-layout-randomized-performance-inference.md) | 1 | complete description | smoke-ready; not executable |
+| [fixture-013](fixtures/013-immune-state-lifecycle-evaluation.md) | 15 | complete description | not executable |
+| [fixture-014](fixtures/014-continual-memory-lifecycle.md) | 2 | complete description | not executable |
+| [fixture-015](fixtures/015-sensorimotor-grounding-transfer.md) | 1 | complete description | not executable |
+| [fixture-016](fixtures/016-versioned-evidence-retrieval-feedback.md) | 2 | complete description | not executable |
+| [fixture-017](fixtures/017-low-bit-model-hardware-crossover.md) | 1 | complete description | not executable |
 
 ## Immediate gaps
 
-- 113 claims remain ledger-only: 81
-  evidence inputs, 24 source-domain
-  reproductions, and 8 claims needing
+- 92 claims remain ledger-only: 81
+  evidence inputs, 11 source-domain
+  reproductions, and 0 claims needing
   a new project experiment artifact.
 - 0 ledger-only claims still belong
   in an existing artifact but lack an exact traceability or test track.
