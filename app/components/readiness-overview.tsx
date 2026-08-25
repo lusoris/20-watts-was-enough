@@ -11,6 +11,13 @@ type ReadinessOverviewProps = {
   mode?: "page" | "book";
 };
 
+const canonicalSite = "https://twenty-watts-was-enough.lusoris.chatgpt.site";
+
+function readinessDocumentHref(path: string, mode: "page" | "book") {
+  const href = researchDocumentHref(path);
+  return mode === "book" ? new URL(href, canonicalSite).toString() : href;
+}
+
 const tierLabels = {
   "ledger-only": "Ledger only",
   "linked-description": "Linked description",
@@ -200,7 +207,7 @@ export function ReadinessOverview({ mode = "page" }: ReadinessOverviewProps) {
             experiment families. Evidence inputs and source reproductions are not falsely counted
             as project tests.
           </p>
-          <a href={researchDocumentHref("experiments/proposed/README.md")}>Open the proposed backlog</a>
+          <a href={readinessDocumentHref("experiments/proposed/README.md", mode)}>Open the proposed backlog</a>
         </section>
 
         {smokeArtifact ? (
@@ -224,8 +231,8 @@ export function ReadinessOverview({ mode = "page" }: ReadinessOverviewProps) {
               ))}
             </ul>
             <div className="readiness-card-links">
-              <a href={researchDocumentHref(smokeArtifact.path)}>Open the experiment contract</a>
-              <a href={researchDocumentHref("experiments/workstation/candidate-010/README.md")}>Open the harness notes</a>
+              <a href={readinessDocumentHref(smokeArtifact.path, mode)}>Open the experiment contract</a>
+              <a href={readinessDocumentHref("experiments/workstation/candidate-010/README.md", mode)}>Open the harness notes</a>
             </div>
           </section>
         ) : null}

@@ -78,7 +78,11 @@ function headingBeforeLine(body: string, line?: number): string | undefined {
 
 function DiagramAwarePre({ children, ...props }: ComponentPropsWithoutRef<"pre">) {
   const onlyChild = Children.count(children) === 1 ? Children.only(children) : null;
-  if (isValidElement(onlyChild) && onlyChild.type === MermaidDiagram) {
+  if (
+    isValidElement<{ className?: string }>(onlyChild) &&
+    (onlyChild.type === MermaidDiagram ||
+      onlyChild.props.className?.split(/\s+/).includes("language-mermaid"))
+  ) {
     return onlyChild;
   }
   return <pre {...props}>{children}</pre>;
