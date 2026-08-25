@@ -363,31 +363,61 @@
     },
     {
       "level": "anzsrc-field",
+      "code": "310110",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-relative-sensing-scale-symmetry.md"
+      ],
+      "claims": ["C-1543", "C-1548"],
+      "rationale": "The Wnt/β-catenin interface and EGF/HGF receptor-abundance memory claims directly test how membrane-proximal state and internal readout support finite-range relative sensing.",
+      "scopeGap": "Two signalling examples do not cover receptor families, membrane transport, trafficking, lipid biology, electrophysiology, or tissue diversity.",
+      "nextQuestion": "Which receptor and membrane states are causally necessary for relative sensing after alternative intracellular reference mechanisms are controlled?"
+    },
+    {
+      "level": "anzsrc-field",
       "code": "310111",
-      "state": "adjacent",
+      "state": "dedicated",
       "audits": [
         "research/audits/2026-08-25-developmental-regeneration-depth.md",
-        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md",
+        "research/audits/2026-08-25-relative-sensing-scale-symmetry.md"
       ],
       "claims": [
         "C-1508", "C-1509", "C-1510",
-        "C-1518", "C-1520", "C-1521", "C-1524", "C-1525"
+        "C-1518", "C-1520", "C-1521", "C-1524", "C-1525",
+        "C-1541", "C-1542", "C-1543", "C-1544", "C-1545", "C-1546", "C-1547", "C-1548"
       ],
-      "rationale": "Developmental claims C-1508--C-1510 test positional and collective signals; plant claims C-1518, C-1520, C-1521, C-1524, and C-1525 test priming, systemic waves, hydraulic integration, source--sink control, and resource-dependent signalling.",
-      "scopeGap": "Neither audit surveys receptor families, intracellular cascades, signalling chemistry, or all taxa.",
-      "nextQuestion": "Which signal representations retain causal value across developmental and plant stress contexts after channel-specific ablation?"
+      "rationale": "The earlier audits cover positional, collective, hydraulic and plant-stress signals; C-1541--C-1548 directly compare relative, absolute and difference statistics across named bacterial, mammalian, amoebal and plant signalling interfaces.",
+      "scopeGap": "The routed claims sample bounded pathways and do not survey receptor families, second messengers, post-translational networks, tissues, disease states, or all taxa.",
+      "nextQuestion": "Which signal statistic and reference mechanism remain causal when interface, stimulus history, saturation and downstream target are varied independently?"
     },
     {
       "level": "anzsrc-field",
       "code": "310114",
-      "state": "adjacent",
+      "state": "dedicated",
       "audits": [
-        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+        "research/audits/2026-08-25-developmental-regeneration-depth.md",
+        "research/audits/2026-08-25-relative-sensing-scale-symmetry.md"
       ],
-      "claims": ["C-1508", "C-1509", "C-1514", "C-1515"],
-      "rationale": "These claims require system-level positional inference, error correction, scale coupling, and maturation control.",
-      "scopeGap": "No field-wide systems-biology or multi-omics integration programme is provided.",
-      "nextQuestion": "Can interventions identify a minimal causal systems model that transfers across geometry and developmental stage?"
+      "claims": [
+        "C-1508", "C-1509", "C-1514", "C-1515",
+        "C-1540", "C-1541", "C-1542", "C-1543", "C-1544", "C-1545", "C-1546", "C-1547", "C-1548", "C-1549"
+      ],
+      "rationale": "The earlier claims require system-level positional inference and maturation control; C-1540--C-1549 directly formulate input--output symmetry, causal circuit alternatives, interface qualification and observation-dependent identifiability.",
+      "scopeGap": "The audits do not provide field-wide systems biology, multi-omics integration, broad network reconstruction, or exhaustive organism and pathway coverage.",
+      "nextQuestion": "Which scale symmetries survive causal interventions and hostile protocols while retaining absolute variables needed for downstream control?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310202",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-relative-sensing-scale-symmetry.md"
+      ],
+      "claims": ["C-1540", "C-1541", "C-1549"],
+      "rationale": "These claims directly analyze whole-trajectory input symmetry, alternative network motifs, equivariance and observation-dependent structural identifiability.",
+      "scopeGap": "Network inference, topology statistics, multi-omics integration, stochastic network reconstruction and broad dynamical-network analysis remain outside the fixture.",
+      "nextQuestion": "Which interventions distinguish network mechanisms that are observationally equivalent under step inputs and one output map?"
     },
     {
       "level": "anzsrc-field",
@@ -596,6 +626,18 @@
     },
     {
       "level": "anzsrc-field",
+      "code": "310701",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-relative-sensing-scale-symmetry.md"
+      ],
+      "claims": ["C-1542"],
+      "rationale": "C-1542 directly uses E. coli FRET and microfluidic chemotaxis evidence to bound relative sensing and behavior within finite ligand regimes.",
+      "scopeGap": "One chemotaxis system does not cover bacterial physiology, diversity, ecology, pathogenesis, metabolism, genetics, communities, or other sensory pathways.",
+      "nextQuestion": "Which bacterial taxa and receptor architectures retain response rescaling after ligand identity, growth state, transport and ecological context change?"
+    },
+    {
+      "level": "anzsrc-field",
       "code": "310804",
       "state": "dedicated",
       "audits": [
@@ -611,12 +653,13 @@
       "code": "310806",
       "state": "dedicated",
       "audits": [
-        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md",
+        "research/audits/2026-08-25-relative-sensing-scale-symmetry.md"
       ],
-      "claims": ["C-1518", "C-1519", "C-1520", "C-1521", "C-1522", "C-1523", "C-1524", "C-1525"],
-      "rationale": "The eight selected claims directly cover plant physiological acclimation, signalling, hydraulics, growth, transport, and allocation.",
-      "scopeGap": "The field route is bounded and excludes large parts of metabolism, nutrition, reproduction, environmental physiology, and taxonomic diversity.",
-      "nextQuestion": "Which results reproduce in intact plants with complete water, carbon, ion, and energy accounting?"
+      "claims": ["C-1518", "C-1519", "C-1520", "C-1521", "C-1522", "C-1523", "C-1524", "C-1525", "C-1547"],
+      "rationale": "The earlier claims cover plant acclimation, signalling, hydraulics, growth, transport and allocation; C-1547 adds an approximate, finite-regime chlorophyll-fluorescence response to relative light steps.",
+      "scopeGap": "The route excludes large parts of metabolism, nutrition, reproduction, field ecology and taxonomic diversity; C-1547 is one Arabidopsis assay and does not establish whole-plant light control.",
+      "nextQuestion": "Which relative and absolute light-response components reproduce in intact plants across acclimation, genotype and field histories with complete water, carbon, damage and energy accounting?"
     },
     {
       "level": "anzsrc-field",

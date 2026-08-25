@@ -323,6 +323,26 @@ uncertainty—not an oracle.
 | hazard/safety | chemical-, route-, population-, endpoint- and averaging-time-specific rule | odor threshold, intensity, preference or aversion |
 | efficiency | protected outcomes plus evidence, time, bytes, actions, person-hours, consumables, exposure and lifecycle joules | event count, inference power or organism metabolism |
 
+### Relative gradients are valid only for the field transformation tested
+
+Multiplying an entire positive concentration field by a constant preserves its
+shape and every local ratio, but adding a background, changing transport, or
+clipping a receptor does not. The *E. coli* evidence links response rescaling
+to search only inside finite concentration regimes
+([C-1542](../research/claims.md#c-1542)); the social-amoeba evidence adds a
+density-qualified secrete-and-sense boundary rather than generic
+density-independence ([C-1546](../research/claims.md#c-1546)).
+
+An active-search policy therefore records which field transformation it is
+expected to ignore. It is challenged with same-ratio/different-difference and
+same-difference/different-ratio fields, additive backgrounds, unseen source
+strengths, saturation, transport change and values near zero. A relative
+channel may guide search only while its support gate remains valid; an
+absolute-critical exposure or load stays on a calibrated absolute channel.
+The full mathematical and protocol boundary is kept in
+[Interface-qualified scale symmetry](../math/interface-qualified-scale-symmetry.md)
+and [Fixture F-026](../experiments/fixtures/026-interface-qualified-relative-sensing.md).
+
 ### Use action to change observability, not to obtain a free second dataset
 
 At decision time $t$, choose

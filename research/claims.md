@@ -23416,3 +23416,309 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   early surrogate without erasing its saving?
 - **Direct test:** [`ECM-T10`](../experiments/fixtures/025-electrochemistry-interface-memory-degradation.md#ecm-t10-delayed-degradation-aware-policy-search).
 - **Traceability:** [source audit](audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1539) · [affected chapters](../concept/80-energy-model.md) and [research roadmap](../concept/90-research-roadmap.md).
+
+### C-1540
+
+- **Claim:** For a positive-input initialized dynamical system, exact
+  fold-change detection is invariance of the complete output trajectory when
+  an admissible input history and its background are multiplied by the same
+  positive scale factor. Exact adaptation and Weber-like peak equality are
+  necessary consequences in the cited formulation but are not sufficient for
+  full-trajectory invariance.
+- **Status:** established formal result under the source's deterministic
+  system, positivity, initialization and input-symmetry assumptions; not a
+  universal empirical law.
+- **Primary source:** [Shoval et al. 2010](https://doi.org/10.1073/pnas.1002352107).
+- **Rationale:** a final value or peak can hide different latency, duration and
+  tails, so the symmetry must be tested on the complete causal response.
+- **AI translation:** treat multiplicative input scaling as a declared group
+  action and expose absolute, relative and support channels rather than
+  labelling any normalization operation FCD.
+- **Efficiency mechanism:** a scale-qualified policy may avoid per-amplitude
+  calibration or retraining if one causal representation transfers across
+  admissible source strengths.
+- **Failure modes:** step-only testing, wrong adapted initialization,
+  future-aware normalization, additive rather than multiplicative shift,
+  near-zero input, saturation, equal peaks with different trajectories, and
+  hidden absolute-critical targets.
+- **Measurable prediction:** across held-out positive scale factors and
+  non-step histories, a qualified relative arm has lower full-trajectory
+  discrepancy than raw and static-normalization nulls while remaining
+  noninferior on protected absolute targets.
+- **Open question:** how wide can the admissible scale group be before noise,
+  clipping, saturation or reference-maintenance cost removes the advantage?
+- **Direct test:** [`RSD-T01`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t01--full-trajectory-symmetry-versus-weaker-lookalikes).
+- **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1540) · [mathematical contract](../math/interface-qualified-scale-symmetry.md).
+
+### C-1541
+
+- **Claim:** A properly parameterized type-1 incoherent feed-forward loop can
+  realize fold-change detection, but the motif alone does not establish the
+  function; moreover, fast-output or instantaneous approximations can retain a
+  nonzero scale-invariance error even as nominal timescale separation grows.
+- **Status:** established theoretical sufficiency and formal limitation for
+  the cited models; natural mechanism attribution remains system-specific.
+- **Primary sources:** [Goentoro et al. 2009](https://doi.org/10.1016/j.molcel.2009.11.018)
+  and [Skataric, Nikolaev, and Sontag 2015](https://doi.org/10.1049/iet-syb.2014.0006).
+- **Rationale:** similar step responses can be produced by feed-forward,
+  feedback, receptor-memory, static-normalization and explicit-transform
+  mechanisms, so topology and step fit are not identification.
+- **AI translation:** compare causal mechanism families after their step
+  behavior is matched, then use pulses, ramps, resets and internal
+  interventions to separate them.
+- **Efficiency mechanism:** a minimal causal reference loop could use less
+  state than a generic recurrent model if its update, reset and approximation
+  errors remain inside the registered envelope.
+- **Failure modes:** topology-as-function inference, singular-limit overclaim,
+  saturated activation, unobserved internal state, step-only validation, and a
+  log-ratio or state-space null matching the result.
+- **Measurable prediction:** non-step interventions identify the generator
+  family more reliably than motif labels or step residuals, and a protected
+  fast/slow family exposes the registered nonzero trajectory-error floor.
+- **Open question:** which minimal interventions distinguish mechanisms before
+  acquisition cost exceeds the value of attribution?
+- **Direct test:** [`RSD-T02`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02--mechanism-discrimination-under-matched-step-behavior).
+- **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1541) · [mathematical contract](../math/interface-qualified-scale-symmetry.md).
+
+### C-1542
+
+- **Claim:** In the cited *E. coli* chemotaxis experiments, intracellular FRET
+  responses and ensemble migration were approximately invariant under matched
+  multiplicative rescaling within declared concentration regimes, while
+  adaptation time was approximately background-invariant over a wider range;
+  no single unlimited FCD regime follows.
+- **Status:** established scoped FRET, microfluidic and model evidence with
+  finite concentration regimes and interfaces.
+- **Primary source:** [Lazova et al. 2011](https://doi.org/10.1073/pnas.1108608108).
+- **Rationale:** relative sensing can couple to active behavior when the input
+  field has multiplicative scalar symmetry, but receptor and transport regimes
+  bound that transfer.
+- **AI translation:** use causal relative gradient histories for active search
+  only under a support gate that retains additive background, saturation and
+  low-signal failure.
+- **Efficiency mechanism:** one search policy may transfer across source
+  strengths without a dense amplitude-indexed policy or repeated calibration.
+- **Failure modes:** receptor saturation, ligand-specific regimes, additive
+  offsets, changed spatial width or transport, near-zero concentration, extra
+  sensing, and a state-space plume controller matching the result.
+- **Measurable prediction:** in multiplicatively rescaled synthetic fields,
+  the qualified relative arm preserves success and path geometry across
+  held-out amplitudes; additive and saturated transfer is rejected or loses
+  the advantage visibly.
+- **Open question:** does a relative search policy still save complete work
+  after calibration, path length, sensing and fallback are charged?
+- **Direct test:** [`RSD-T03`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t03--multiplicatively-rescaled-active-chemical-search).
+- **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1542) · [affected chapter](../concept/25-active-chemical-sensing.md).
+
+### C-1543
+
+- **Claim:** In the cited mammalian-cell and *Xenopus* studies, post/pre
+  β-catenin fold change was more robust than final absolute β-catenin within a
+  limited perturbation range, and downstream outputs tracked perturbations
+  preserving that fold statistic; identical full trajectories under scaled
+  extracellular Wnt inputs were not established.
+- **Status:** established scoped experiment and model at the internal
+  β-catenin-to-output interface.
+- **Primary source:** [Goentoro and Kirschner 2009](https://doi.org/10.1016/j.molcel.2009.11.017).
+- **Rationale:** an internal relative code can reduce sensitivity to component
+  gain while remaining insufficient for a target that depends on absolute
+  magnitude.
+- **AI translation:** test downstream decoders under independently varied
+  internal gain, initial state, ratio-defined target and absolute-defined
+  counter-target.
+- **Efficiency mechanism:** a compact relative internal code may reduce
+  gain-specific parameters and recalibration.
+- **Failure modes:** support-exceeding perturbation, upstream/downstream
+  interface confusion, absolute-target deletion, correlated gain and target,
+  and ordinary gain augmentation or state-space estimation matching the
+  decoder.
+- **Measurable prediction:** relative decoding transfers across held-out
+  internal gains for ratio-defined targets but fails the protected
+  absolute-defined target unless a calibrated absolute channel is retained.
+- **Open question:** what is the cheapest side channel that preserves absolute
+  sufficiency without rebuilding the full dense state?
+- **Direct test:** [`RSD-T04`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t04--internal-gain-robustness-and-absolute-counter-task).
+- **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1543) · [affected chapter](../concept/20-sensorimotor-grounding.md).
+
+### C-1544
+
+- **Claim:** In same-cell TNF-treated HeLa measurements, maximum nuclear RelA
+  fold change was the strongest tested single predictor of NFKBIA, IL8 and
+  TNFAIP3 transcript counts, with reported $R^2$ values of $0.52$, $0.61$ and
+  $0.67$, respectively; this does not establish a universal NF-κB decoder or
+  extracellular-cytokine FCD.
+- **Status:** established scoped association and model result for three early
+  response genes in the cited cell system.
+- **Primary source:** [Lee et al. 2014](https://doi.org/10.1016/j.molcel.2014.01.026).
+- **Rationale:** heterogeneous baselines can make a derived within-unit
+  statistic more predictive than absolute abundance, but the sufficient
+  statistic remains target- and interface-specific.
+- **AI translation:** compare causal absolute, additive-change, fold-change,
+  integral and recurrent predictors on heterogeneous baselines with calibrated
+  held-out count prediction.
+- **Efficiency mechanism:** a compact derived statistic may replace redundant
+  baseline-specific parameters when it preserves downstream prediction.
+- **Failure modes:** gene specificity, correlation mistaken for mechanism,
+  maximum computed after the decision deadline, same-cell selection effects,
+  overdispersion, and flexible recurrent nulls matching the statistic.
+- **Measurable prediction:** fold change wins only for ratio-generated
+  downstream targets under causal windows; selectors choose another statistic
+  or abstain on absolute, additive, integral and unresolved families.
+- **Open question:** can the useful statistic be selected online without
+  future leakage or a selector that costs more than it saves?
+- **Direct test:** [`RSD-T05`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t05--heterogeneous-baseline-to-downstream-count).
+- **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1544) · [affected chapter](../concept/30-sparse-predictive-compute.md).
+
+### C-1545
+
+- **Claim:** Under the cited dynamic TNF and IL-1β protocols, nuclear NF-κB
+  responses approximately followed $\log(\Delta C + 1)$ for positive additive
+  dose increments, while decreases strongly suppressed nuclear AUC. This is
+  not a log ratio. Because the protocol and interface differ from C-1544, the
+  two results forbid a pathway-wide statistic but do not directly contradict
+  each other.
+- **Status:** established scoped microfluidic, single-cell and model evidence;
+  not a universal NF-κB derivative law.
+- **Primary source:** [Son et al. 2021](https://doi.org/10.1126/scisignal.aaz4382).
+- **Rationale:** level, additive difference, derivative and ratio can become
+  correlated under limited protocols, so statistic claims require factorial
+  input histories and an explicit interface.
+- **AI translation:** make statistic selection an interface- and
+  protocol-qualified causal inference problem with an abstention outcome.
+- **Efficiency mechanism:** selecting the smallest sufficient statistic may
+  avoid maintaining unnecessary transforms or state after selection cost is
+  included.
+- **Failure modes:** linear ramps that confound difference and derivative,
+  response-delay mismatch, rectification hidden in a generic derivative,
+  pathway-name shortcuts, post-hoc selection, and recurrent null dominance.
+- **Measurable prediction:** on balanced absolute, difference, derivative and
+  ratio DGPs, a qualified selector identifies the correct statistic or
+  abstains on unresolved worlds; a ratio-only arm fails the protected
+  difference family.
+- **Open question:** which causal perturbation set makes these statistics
+  identifiable under a realistic observation budget?
+- **Direct test:** [`RSD-T06`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t06--statistic-selection-across-interfaces-and-protocols).
+- **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1545) · [affected chapter](../concept/30-sparse-predictive-compute.md).
+
+### C-1546
+
+- **Claim:** In the cited *Dictyostelium* work, single-cell cAMP relay magnitude
+  depended predominantly on extracellular cAMP fold change over a declared
+  range; population oscillation support aligned with that range, and modelling
+  showed how scale invariance can arise when FCD cells are embedded in a
+  secrete-and-sense system under density transformation.
+- **Status:** established scoped live-cell evidence and conditional model;
+  generic density-independent coordination is not established.
+- **Primary source:** [Kamino et al. 2017](https://doi.org/10.1073/pnas.1702181114).
+- **Rationale:** a cell-local relative response can propagate to collective
+  behavior only through transport, secretion, degradation, topology and
+  refractory dynamics.
+- **AI translation:** test relative sensing in a communicating agent
+  population while varying density and communication physics independently.
+- **Efficiency mechanism:** local ratio-coded relay may avoid global
+  renormalization as group size changes.
+- **Failure modes:** density-dependent transport, delay, degradation, relay
+  saturation, topology fragmentation, stale reference, communication burden,
+  and consensus or coupled-oscillator nulls matching the result.
+- **Measurable prediction:** the relative relay retains coordination only
+  inside a registered density--transport envelope; transport or degradation
+  changes expose its boundary and complete communication cost decides whether
+  an advantage remains.
+- **Open question:** can a local support gate detect loss of the collective
+  scale symmetry before coordination fails?
+- **Direct test:** [`RSD-T07`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t07--density-qualified-secrete-and-sense-relay).
+- **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1546) · [affected chapter](../concept/25-active-chemical-sensing.md).
+
+### C-1547
+
+- **Claim:** Arabidopsis PSII chlorophyll-a fluorescence showed approximate
+  fold-change-dependent pulse amplitude and exact adaptation for abrupt
+  low-to-medium-light steps in the cited study; pulse shapes were not
+  identical, and response saturation/loss of exact adaptation at higher light
+  bound the result.
+- **Status:** established approximate finite-regime experiment with a
+  model-qualified IFFL-like contribution; neither exact full-trajectory FCD
+  nor a separate biological absolute-hazard channel is established.
+- **Primary source:** [Tendler et al. 2018](https://doi.org/10.1016/j.isci.2018.09.019).
+- **Rationale:** similar relative peaks can coexist with shape differences and
+  regime failure, so an artificial controller needs both a trajectory test and
+  an independently justified absolute-risk counter-task.
+- **AI translation:** combine relative sensitivity inside a declared benign
+  support with an engineered absolute gate; the latter is a falsification
+  requirement, not a source-attributed plant mechanism.
+- **Efficiency mechanism:** a relative channel may retain sensitivity across
+  benign backgrounds while a cheap absolute path prevents normalization from
+  hiding dangerous magnitude.
+- **Failure modes:** peak equality called exact FCD, saturation, slow-ramp
+  hazard, stale reference, sensor clipping, unsupported biological analogy,
+  and a standard threshold plus state-space null matching the result.
+- **Measurable prediction:** a dual-channel controller transfers across benign
+  multiplicative backgrounds and preserves a protected synthetic absolute
+  stop; ratio-only and adaptation-only arms violate that gate.
+- **Open question:** when does the extra absolute path preserve safety with
+  less cost than simply retaining the raw signal everywhere?
+- **Direct test:** [`RSD-T08`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t08--relative-benign-response-with-absolute-hazard).
+- **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1547) · [affected chapter](../concept/30-sparse-predictive-compute.md).
+
+### C-1548
+
+- **Claim:** In the cited EGF/HGF--PI3K--Akt systems, background-dependent
+  down-regulation of cognate surface receptors provided a ligand-specific
+  stored reference sufficient and experimentally consistent with approximate
+  relative sensing over finite ranges; the evidence does not establish that
+  receptor abundance is the unique memory mechanism.
+- **Status:** established scoped experiment with finite ligand-range evidence
+  and receptor-trafficking analytical/computational support.
+- **Primary source:** [Lyashenko et al. 2020](https://doi.org/10.7554/eLife.50342).
+- **Rationale:** a resource-bearing interface can store background state and
+  perform part of a relative computation before downstream processing.
+- **AI translation:** store channel-specific reference state in an interface
+  while exposing its age, support, production, reset and cross-channel
+  lifecycle.
+- **Efficiency mechanism:** interface-local reference memory may reduce
+  downstream calibration traffic if construction, turnover and recovery are
+  cheaper than the avoided work.
+- **Failure modes:** stale memory, missing observations, channel switch,
+  cross-channel contamination, slow recovery, stopped production, saturation,
+  nonunique mechanism, and EMA/state-space references matching performance.
+- **Measurable prediction:** a channel-specific reference beats generic
+  streaming normalization only under registered background and turnover
+  families; the claim is killed if mature nulls match specificity or
+  maintenance removes the task--resource advantage.
+- **Open question:** which reference lifecycles justify embedding state at an
+  interface instead of retaining it in an ordinary estimator?
+- **Direct test:** [`RSD-T09`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t09--channel-specific-reference-memory-lifecycle).
+- **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1548) · [affected chapter](../concept/40-memory-and-consolidation.md).
+
+### C-1549
+
+- **Claim:** For the cited initialized-model definitions, exact trajectory
+  invariance at a selected observation interface can make the transformed
+  parameter or scale structurally unidentifiable from that interface alone;
+  recoverability changes with the observation map, known-parameter set,
+  initialization and added calibrated outputs.
+- **Status:** established formal relationship and correction under the stated
+  model assumptions; not a universal law that robust representations destroy
+  information irreversibly.
+- **Primary sources:** [Sontag 2017](https://doi.org/10.1371/journal.pcbi.1005447)
+  and [Villaverde and Banga 2017](https://doi.org/10.1371/journal.pcbi.1005878).
+- **Rationale:** robustness of one output and recoverability of a hidden
+  quantity are different objectives whose apparent conflict depends on what is
+  measured and known.
+- **AI translation:** measure nuisance-scale robustness and protected absolute
+  recoverability separately, then price any calibrated absolute side channel.
+- **Efficiency mechanism:** discard a nuisance scale only when it is irrelevant
+  to all registered targets; otherwise retain the least costly observation
+  that restores needed recoverability.
+- **Failure modes:** parameter/input invariance confusion, model
+  non-identifiability called a system benefit, privileged evaluator state,
+  changed target, uncharged calibration, and claims of universal information
+  loss after one observation map.
+- **Measurable prediction:** an invariant-only representation improves
+  robustness to multiplicative nuisance scale but cannot recover that scale
+  from the invariant interface; adding a calibrated absolute channel moves the
+  system along a measurable robustness--recoverability--compute frontier.
+- **Open question:** how should observation design retain future target
+  flexibility without paying for every absolute variable at every step?
+- **Direct test:** [`RSD-T10`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t10--robustness-recoverability-and-compute-frontier).
+- **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1549) · [mathematical contract](../math/interface-qualified-scale-symmetry.md).

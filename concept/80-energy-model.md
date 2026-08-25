@@ -424,6 +424,31 @@ associated with erasing one bit under its physical assumptions; $k_B$ is the
 Boltzmann constant in joules/kelvin and $T$ is absolute temperature in kelvin.
 It is not an estimator for an inference, multiply, or memory transfer.
 
+### Relative sensing has a reference-maintenance ledger
+
+A relative channel can appear cheaper by deleting amplitude-indexed parameters
+while silently importing a maintained reference. For reference state $r_t$,
+the candidate ledger therefore separates
+
+$$
+E_{\mathrm{relative}}
+=
+E_{\mathrm{sense}}
++E_{\mathrm{reference\ update}}
++E_{\mathrm{selector}}
++E_{\mathrm{fallback}}
++E_{\mathrm{state\ movement}}.
+$$
+
+Each term is measured in joules only at a calibrated workstation boundary;
+before that, operations, writes, bytes and seconds remain separate. Channel-
+specific receptor abundance is biological evidence that a reference can be
+stored in interface structure ([C-1548](../research/claims.md#c-1548)), not
+evidence that such storage is free. F-026 rejects the efficiency hypothesis if
+an explicit log ratio, streaming estimator, state-space model or compact
+recurrent state reaches the same task/risk frontier with lower complete
+maintenance cost.
+
 ### Reduction and closure work stays inside the ledger
 
 A coarse model is not credited with avoiding fine computation when its usable

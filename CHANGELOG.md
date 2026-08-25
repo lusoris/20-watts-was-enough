@@ -7,6 +7,28 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A relative-sensing and scale-symmetry depth package adds ten bounded claims
+  (`C-1540`--`C-1549`) and Fixture F-026. It distinguishes full-trajectory
+  fold-change detection from adaptation, equal peaks, static normalization and
+  additive-change coding; keeps every conclusion tied to its observation
+  interface and validity range; and separates robust relative readout from
+  recoverability of absolute scale. Twelve primary bibliography records, six
+  exact ANZSRC child routes, a mathematical equivariance contract and an
+  editable state-orbit/trajectory plot make the package traceable and
+  falsifiable. All ten protocols are written but unexecuted, and no principle,
+  architecture candidate, performance result or energy result is promoted.
+
+- Fixture F-025 now has a deterministic public-development smoke harness for
+  the `ECM-T03` validity-gate slice. Thirteen focused tests cover the frozen
+  registry, binary64 generator, corruption families, gate ordering,
+  append-only hash chain, byte-identical replay, resume and tamper rejection.
+  A complete smoke execution returned `diagnostic-pass` with `NO_RESULT`;
+  confirmation, hostile transfer, physical apparatus, calibrated energy and
+  claim authority remain absent. Regenerated coverage now records 1,448/1,540
+  protocol-covered claims, 92 reviewed ledger-only claims, 46/46 complete
+  written artifacts, eight smoke-ready harnesses and zero workstation-ready or
+  workstation-executable research claims.
+
 - A field-gap audit adds electrochemistry as a direct research domain rather
   than a loose battery metaphor. Ten bounded claims (`C-1530`--`C-1539`) and
   Fixture F-025 separate interface kinetics from terminal command, finite

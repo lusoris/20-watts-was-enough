@@ -64,6 +64,24 @@ The path has six stages:
 6. **Capture an episode.** The adaptation loop receives an attributable record
    rather than an unexplained parameter change.
 
+### The runtime preserves both relative and absolute authority
+
+The predictive state may expose absolute level, additive change, derivative,
+ratio, reference age and support as different fields. A router does not choose
+one of them from a modality or pathway name. It chooses from the registered
+task and observation interface: relative sensing can transfer across a
+multiplicative nuisance scale, while absolute load, dose, damage and capacity
+remain on calibrated channels.
+
+Every relative route therefore carries the reference identity and age that
+made it valid, plus a fallback when the input approaches zero, changes sign,
+clips, saturates or leaves the learned scale support. Removing the absolute
+channel is a reversible ablation, not a default compression. The
+robustness--recoverability trade is tested explicitly in
+[RSD-T10](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t10--robustness-recoverability-and-compute-frontier)
+and derived in
+[Interface-qualified scale symmetry](../math/interface-qualified-scale-symmetry.md).
+
 ### Authority is split across control planes
 
 The system uses four control planes with different authority:

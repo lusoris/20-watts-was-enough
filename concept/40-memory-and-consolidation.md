@@ -118,6 +118,22 @@ fields:
 | retrieval gate | which recurrence, query, or context lets it influence action? | recurrent state, keyed retrieval, and calibrated classifier |
 | reset boundary | which evidence authorizes weakening, deletion, or reinitialization? | no reset, fixed reset, evidence-gated reset, and ordinary adaptation |
 
+A relative-sensing reference is one concrete instance of this lifecycle. In
+the cited EGF/HGF system, background-dependent surface-receptor abundance is
+consistent with a ligand-specific stored reference, while production,
+delivery, turnover and recovery maintain it
+([C-1548](../research/claims.md#c-1548)). The artificial translation therefore
+stores channel identity, reference value, age, support, writer, reset and
+maintenance cost together. A current ratio without those fields is not a
+complete memory record.
+
+This reference state competes directly with an exponential moving average,
+state-space estimator and compact recurrent state. It survives only when its
+channel specificity and task value remain after missing observations,
+cross-channel stimulation, stale state, forced reset and accelerated turnover,
+and after every reference write and fallback is charged. The lifecycle track is
+[RSD-T09](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t09--channel-specific-reference-memory-lifecycle).
+
 ### Hysteresis is state, not reset authority
 
 A minimal binary hysteretic state makes the history dependence explicit. For

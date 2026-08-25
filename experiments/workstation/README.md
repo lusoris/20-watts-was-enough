@@ -1,6 +1,6 @@
 # Workstation execution contract
 
-The repository now contains seven executable smoke harnesses alongside research
+The repository now contains eight executable smoke harnesses alongside research
 and protocol specifications, but no workstation-ready scientific package:
 [Candidate 010](candidate-010/README.md) exercises staged verification and
 [Fixture F-007](fixture-007/README.md) exercises optical null-space honesty;
@@ -12,7 +12,8 @@ corruption and fallback boundary;
 [Fixture F-023](fixture-023/README.md) exercises the PLM-T01 duration-memory and
 PLM-T02 lifecycle-reset boundaries; and
 [Fixture F-024](fixture-024/README.md) exercises the AMR-T01 projected-memory
-development path.
+development path; and [Fixture F-025](fixture-025/README.md) exercises the
+ECM-T03 record, amplitude, repeat-consistency, and equivalence gate order.
 A test becomes workstation-ready only when its
 checked manifest exists at `experiments/workstation/manifests/<artifact-id>.json`,
 passes `npm run validate:workstation`, declares `workstation-ready`, names all
@@ -99,6 +100,16 @@ ledger. The exact augmented arm is an analytical ceiling with evaluator state,
 not a matched-information confirmation comparator. No confirmation or transfer
 seed or commitment has been created; no comparison, performance result, energy
 conclusion, or claim eligibility follows.
+
+[Fixture F-025](fixture-025/README.md) implements the first bounded
+public-development execution slice for C-1532 / ECM-T03. It generates five
+balanced spectrum classes, executes ungated, residual-screen, and ordered-gate
+paths, and requires record/provenance failure to stop before physics probes,
+nonlinearity to stop at the amplitude gate, and terminal-equivalent circuits
+to remain non-identifying. Its repeat statistic is a smoke surrogate rather
+than the registered finite-band Kramers--Kronig calibration. The other nine
+tracks, private partitions, physical apparatus, and scientific adjudication
+remain absent; every event is `NO_RESULT`.
 
 The machine-readable contract is
 [`manifest.schema.json`](manifest.schema.json). Referenced lockfiles, seed

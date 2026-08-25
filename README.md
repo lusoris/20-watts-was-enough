@@ -96,6 +96,7 @@ Supporting material:
 - [`research/audits/2026-08-25-plant-plasticity-memory-signalling.md`](research/audits/2026-08-25-plant-plasticity-memory-signalling.md) — plant memory modes, lifecycle reset, systemic routes, sense-by-growth admission, boundary sensing, and integrated context
 - [`research/audits/2026-08-25-applied-multiscale-reduction.md`](research/audits/2026-08-25-applied-multiscale-reduction.md) — projection memory, slow-manifold validity, heterogeneous micro-queries, and equation-free closure
 - [`research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md`](research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md) — interface/transport separation, finite diffusion memory, impedance validity, timescale resolution, passivation, hysteresis, identifiability, and delayed degradation
+- [`research/audits/2026-08-25-relative-sensing-scale-symmetry.md`](research/audits/2026-08-25-relative-sensing-scale-symmetry.md) — full-trajectory scale symmetry, interface-qualified biological evidence, finite support, statistic-selection counterexamples, and observation-dependent recoverability
 - [`research/neuroscience-opportunity-map.md`](research/neuroscience-opportunity-map.md) — underused neural mechanisms and falsifiable translations
 - [`research/comparative-biology.md`](research/comparative-biology.md) — candidates from animals, plants, immune systems, and adaptive networks
 - [`research/source-crosswalk.md`](research/source-crosswalk.md) — imported ideas mapped into evidence and principle bundles
@@ -104,6 +105,7 @@ Supporting material:
 - [`math/visual-models.md`](math/visual-models.md) — interpretable plots of the
   current efficiency equations and break-even boundaries
 - [`math/multiscale-reduction-contract.md`](math/multiscale-reduction-contract.md) — exact memory, slow-manifold, micro-query, lifting, healing, and closure boundaries
+- [`math/interface-qualified-scale-symmetry.md`](math/interface-qualified-scale-symmetry.md) — fold-change symmetry, equivariance, absolute counter-tasks, trajectory discrepancy, and reference-maintenance cost
 - [`assets/`](assets/README.md) — editable diagram and future figure sources
 - [`decisions/`](decisions/README.md) — durable project decisions
 - [`experiments/candidates/`](experiments/candidates/README.md) — falsifiable, equal-budget experiment contracts
@@ -114,9 +116,11 @@ Supporting material:
 - [`experiments/fixtures/023-plant-plasticity-memory-signalling.md`](experiments/fixtures/023-plant-plasticity-memory-signalling.md) — ten complete CPU-only plant plasticity and signalling contracts with no execution results
 - [`experiments/fixtures/024-applied-multiscale-reduction.md`](experiments/fixtures/024-applied-multiscale-reduction.md) — four complete CPU-only multiscale-reduction contracts with no execution results
 - [`experiments/fixtures/025-electrochemistry-interface-memory-degradation.md`](experiments/fixtures/025-electrochemistry-interface-memory-degradation.md) — ten complete CPU-only electrochemistry contracts with no execution results
+- [`experiments/fixtures/026-interface-qualified-relative-sensing.md`](experiments/fixtures/026-interface-qualified-relative-sensing.md) — ten complete CPU-only relative-sensing and scale-symmetry contracts with no execution results
 - [`experiments/workstation/fixture-022/`](experiments/workstation/fixture-022/README.md) — deterministic DEV-T01 corruption, abstention, and charged-fallback development smoke path
 - [`experiments/workstation/fixture-023/`](experiments/workstation/fixture-023/README.md) — deterministic PLM-T01 duration-memory and PLM-T02 lifecycle-reset development smoke paths
 - [`experiments/workstation/fixture-024/`](experiments/workstation/fixture-024/README.md) — deterministic AMR-T01 development smoke path with no confirmation or energy authority
+- [`experiments/workstation/fixture-025/`](experiments/workstation/fixture-025/README.md) — deterministic ECM-T03 validity-gate development smoke path with no confirmation or energy authority
 - [`experiments/test-coverage.md`](experiments/test-coverage.md) — generated
   claim-to-protocol coverage and workstation execution readiness
 - [`experiments/test-readiness-summary.json`](experiments/test-readiness-summary.json) — compact machine-readable readiness surface used by the site and book

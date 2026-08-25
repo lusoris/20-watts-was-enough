@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "artifact": "fixture-025",
+  "profile": "smoke",
+  "worlds_per_seed": 5,
+  "frequency_count": 61,
+  "minimum_frequency_hz": 0.001,
+  "maximum_frequency_hz": 10000,
+  "diagnostic_bundles_cap": 9,
+  "harmonic_ratio_threshold": 0.0075,
+  "repeat_residual_threshold": 0.05,
+  "noise_fraction": 0.0005,
+  "max_loss": 100
+}

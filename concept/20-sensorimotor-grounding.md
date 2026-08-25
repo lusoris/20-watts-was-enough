@@ -173,6 +173,27 @@ simulation-checked evidence stack. The candidate must abstain on response null
 spaces and exact degeneracies rather than buy more observations that cannot
 identify the missing direction ([C-229](../research/claims.md#c-229)).
 
+### Derived observations inherit an interface and a support
+
+A ratio, difference, derivative, normalized innovation, or latent coordinate
+is an observation operator, not a neutral rewrite of the raw signal. The
+operator record must name its input interface, reference state, causal window,
+positive-domain and saturation support, units, timestamp, calibration and any
+absolute information it removes. The statistic can legitimately change across
+the external-input, internal-state, downstream-readout and action interfaces:
+the Wnt/β-catenin result is an internal fold readout
+([C-1543](../research/claims.md#c-1543)), while the two NF-κB studies address
+different upstream and downstream arrows
+([C-1544](../research/claims.md#c-1544),
+[C-1545](../research/claims.md#c-1545)).
+
+An invariant observation can make a transformed scale unidentifiable from that
+interface without proving that the information is universally destroyed.
+Adding a calibrated absolute observation or changing the output map can change
+recoverability ([C-1549](../research/claims.md#c-1549)). The trajectory record
+therefore retains both the derived value and the smallest raw or calibrated
+side channel required by registered downstream targets.
+
 ### Missingness is observed state, not a zero tensor
 
 For modality $r$ and decision time $t$, define

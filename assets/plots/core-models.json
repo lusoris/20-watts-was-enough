@@ -374,5 +374,32 @@
       "samples": 321
     },
     "status": "Exact geometry of the dimensionless fold normal form on its attracting branch. It illustrates loss of normal hyperbolicity and is not a universal online threshold."
+  },
+  {
+    "id": "interface-qualified-scale-symmetry",
+    "title": "Same relative trace, different absolute gate state",
+    "equation": "tau_r dr/dt = u-r; y = ln(u/r); rho_p(u,r) = (p u,p r)",
+    "source": "math/interface-qualified-scale-symmetry.md#worked-reference-model",
+    "layout": {
+      "kind": "scale-orbit-and-interface-gate",
+      "width": 980,
+      "height": 820,
+      "theme": "ocean"
+    },
+    "parameters": {
+      "time_min_s": 0,
+      "time_max_s": 10,
+      "samples": 401,
+      "pulse_start_s": 2,
+      "pulse_end_s": 6,
+      "reference_time_constant_s": 1.25,
+      "backgrounds_u": [1, 4],
+      "fold_multiplier": 2,
+      "absolute_gate_u": 6,
+      "state_min_u": 0.75,
+      "state_max_u": 9,
+      "ratio_contours": [0.5, 1, 2]
+    },
+    "status": "Exact trajectories of the displayed positive-domain reference model. Input scales, time constant, pulse, and absolute gate are illustrative; no biological, trained-model, safety, or efficiency result is shown."
   }
 ]

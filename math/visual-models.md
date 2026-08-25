@@ -197,6 +197,11 @@ duplicating every full-size image here.
    Analytical likelihoods that coincide under a base operator and separate
    after an added measurement. First used in
    [Operator-qualified sensing](../concept/24-operator-qualified-sensing.md#separate-measured-information-from-prior-supported-reconstruction).
+7. **Interface-qualified scale symmetry.**
+   Two exact geometrically scaled paths produce the same
+   $y=\ln(u/r)$ trajectory in a positive-domain reference model while a
+   separate illustrative absolute gate distinguishes them. First used in
+   [Interface-qualified scale symmetry](interface-qualified-scale-symmetry.md#worked-reference-model).
 
 Every value in these figures is labeled analytical or illustrative. None is a
 workstation result, a promoted claim, or a recommended deployment threshold.

@@ -16,7 +16,7 @@ EuroSciVoc is the EU-level multilingual science vocabulary. The DFG hierarchy
 adds German review granularity. ANZSRC is an independent omission detector,
 not the normative framework for the project.
 
-**Explicit child routes recorded:** 60. All other children are unassigned.
+**Explicit child routes recorded:** 63. All other children are unassigned.
 
 ## EuroSciVoc 1.6: European science vocabulary
 
@@ -1839,7 +1839,7 @@ route.
 
 **Parent route:** dedicated parent-level audit via [cellular quality control](../audits/2026-08-05-cellular-quality-control.md), [collective ecological resilience](../audits/2026-08-05-collective-ecological-resilience.md), [developmental morphogenesis](../audits/2026-08-05-developmental-morphogenesis.md), [microbial ecology biofilms](../audits/2026-08-05-microbial-ecology-biofilms.md), [plant distributed control](../audits/2026-08-05-plant-distributed-control.md), [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md), [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md).
 
-**Fine-grained status:** 0 of 10 groups and 13 of 98 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 10 groups and 16 of 98 fields have an explicit child-level routing assignment.
 
 #### 3101 Biochemistry and cell biology
 
@@ -1854,11 +1854,11 @@ route.
 - **310107 — Glycobiology.** Routing: unassigned.
 - **310108 — Protein trafficking.** Routing: unassigned.
 - **310109 — Proteomics and intermolecular interactions (excl. medical proteomics).** Routing: unassigned.
-- **310110 — Receptors and membrane biology.** Routing: unassigned.
-- **310111 — Signal transduction.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1510](../claims.md#c-1510), [C-1518](../claims.md#c-1518), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
+- **310110 — Receptors and membrane biology.** Routing: dedicated child-level evidence via [relative sensing scale symmetry](../audits/2026-08-25-relative-sensing-scale-symmetry.md). Claims: [C-1543](../claims.md#c-1543), [C-1548](../claims.md#c-1548).
+- **310111 — Signal transduction.** Routing: dedicated child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md), [relative sensing scale symmetry](../audits/2026-08-25-relative-sensing-scale-symmetry.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1510](../claims.md#c-1510), [C-1518](../claims.md#c-1518), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525), [C-1541](../claims.md#c-1541), [C-1542](../claims.md#c-1542), [C-1543](../claims.md#c-1543), [C-1544](../claims.md#c-1544), [C-1545](../claims.md#c-1545), [C-1546](../claims.md#c-1546), [C-1547](../claims.md#c-1547), [C-1548](../claims.md#c-1548).
 - **310112 — Structural biology (incl. macromolecular modelling).** Routing: unassigned.
 - **310113 — Synthetic biology.** Routing: unassigned.
-- **310114 — Systems biology.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1514](../claims.md#c-1514), [C-1515](../claims.md#c-1515).
+- **310114 — Systems biology.** Routing: dedicated child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [relative sensing scale symmetry](../audits/2026-08-25-relative-sensing-scale-symmetry.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1514](../claims.md#c-1514), [C-1515](../claims.md#c-1515), [C-1540](../claims.md#c-1540), [C-1541](../claims.md#c-1541), [C-1542](../claims.md#c-1542), [C-1543](../claims.md#c-1543), [C-1544](../claims.md#c-1544), [C-1545](../claims.md#c-1545), [C-1546](../claims.md#c-1546), [C-1547](../claims.md#c-1547), [C-1548](../claims.md#c-1548), [C-1549](../claims.md#c-1549).
 - **310199 — Biochemistry and cell biology not elsewhere classified.** Routing: unassigned.
 
 #### 3102 Bioinformatics and computational biology
@@ -1866,7 +1866,7 @@ route.
 **Routing: unassigned.** **Named fields:** 9.
 
 - **310201 — Bioinformatic methods development.** Routing: unassigned.
-- **310202 — Biological network analysis.** Routing: unassigned.
+- **310202 — Biological network analysis.** Routing: dedicated child-level evidence via [relative sensing scale symmetry](../audits/2026-08-25-relative-sensing-scale-symmetry.md). Claims: [C-1540](../claims.md#c-1540), [C-1541](../claims.md#c-1541), [C-1549](../claims.md#c-1549).
 - **310203 — Computational ecology and phylogenetics.** Routing: unassigned.
 - **310204 — Genomics and transcriptomics.** Routing: unassigned.
 - **310205 — Proteomics and metabolomics.** Routing: unassigned.
@@ -1941,7 +1941,7 @@ route.
 
 **Routing: unassigned.** **Named fields:** 7.
 
-- **310701 — Bacteriology.** Routing: unassigned.
+- **310701 — Bacteriology.** Routing: adjacent child-level evidence via [relative sensing scale symmetry](../audits/2026-08-25-relative-sensing-scale-symmetry.md). Claims: [C-1542](../claims.md#c-1542).
 - **310702 — Infectious agents.** Routing: unassigned.
 - **310703 — Microbial ecology.** Routing: unassigned.
 - **310704 — Microbial genetics.** Routing: unassigned.
@@ -1958,7 +1958,7 @@ route.
 - **310803 — Plant cell and molecular biology.** Routing: adjacent child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1516](../claims.md#c-1516), [C-1517](../claims.md#c-1517), [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1523](../claims.md#c-1523), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
 - **310804 — Plant developmental and reproductive biology.** Routing: dedicated child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1516](../claims.md#c-1516), [C-1517](../claims.md#c-1517), [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1522](../claims.md#c-1522), [C-1523](../claims.md#c-1523).
 - **310805 — Plant pathology.** Routing: unassigned.
-- **310806 — Plant physiology.** Routing: dedicated child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1522](../claims.md#c-1522), [C-1523](../claims.md#c-1523), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
+- **310806 — Plant physiology.** Routing: dedicated child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md), [relative sensing scale symmetry](../audits/2026-08-25-relative-sensing-scale-symmetry.md). Claims: [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1522](../claims.md#c-1522), [C-1523](../claims.md#c-1523), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525), [C-1547](../claims.md#c-1547).
 - **310899 — Plant biology not elsewhere classified.** Routing: unassigned.
 
 #### 3109 Zoology

@@ -2,15 +2,18 @@
 
 <!-- markdownlint-disable MD013 -->
 
-- **Status:** complete preimplementation CPU-only experiment contract
-- **Direct claim proposals:**
-  [C-1530](../../research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1530)--[C-1539](../../research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1539)
+- **Status:** complete CPU-only experiment contract with one bounded
+  development smoke slice
+- **Direct claims:**
+  [C-1530](../../research/claims.md#c-1530)–[C-1539](../../research/claims.md#c-1539)
 - **Source audit:** [electrochemistry: interfaces, memory, and degradation](../../research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md)
 - **Audit snapshot:** SHA-256 `30A513FCC222F8A9EBAF0F39C24B8787FF8AA2CBA93C2D2DE2E46FD00A11D6CB`
 - **Fixture ID:** `F-025`
 - **Protocol IDs:** `ECM-T01`--`ECM-T10`
-- **Execution state:** no runner, sealed-seed manifest, generated data,
-  reference-workstation manifest, execution artifact, or result exists
+- **Execution state:** a deterministic `ECM-T03` public-development smoke
+  harness and smoke-ready manifest validate authority and artifact plumbing;
+  no confirmation/transfer execution, complete ten-track runner, measured
+  energy, or scientific result exists
 - **Physical boundary:** no cell, battery, electrolyte, chemical, potentiostat,
   electrodeposition, laboratory procedure, safety claim, or conformity claim
 - **Registry disposition:** no new P-series principle, architecture candidate,

@@ -1419,6 +1419,234 @@ function missionProfileDamage(spec) {
   return analyticalDocument(spec, layout, content);
 }
 
+function interfaceQualifiedScaleSymmetry(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 980,
+    height: 820,
+    kind: "scale-orbit-and-interface-gate",
+    theme: "ocean",
+  });
+  const { width, theme } = layout;
+  const {
+    time_min_s: timeMin,
+    time_max_s: timeMax,
+    samples,
+    pulse_start_s: pulseStart,
+    pulse_end_s: pulseEnd,
+    reference_time_constant_s: tau,
+    backgrounds_u: backgrounds,
+    fold_multiplier: multiplier,
+    absolute_gate_u: absoluteGate,
+    state_min_u: stateMin,
+    state_max_u: stateMax,
+    ratio_contours: ratioContours,
+  } = spec.parameters;
+  const scalarParameters = [
+    timeMin,
+    timeMax,
+    pulseStart,
+    pulseEnd,
+    tau,
+    multiplier,
+    absoluteGate,
+    stateMin,
+    stateMax,
+  ];
+  if (!scalarParameters.every((value) => Number.isFinite(value))) {
+    throw new Error(`${spec.id} requires finite scalar parameters`);
+  }
+  if (!Number.isInteger(samples) || samples < 2) {
+    throw new Error(`${spec.id} requires an integer samples value of at least 2`);
+  }
+  if (
+    !Array.isArray(backgrounds)
+    || backgrounds.length !== 2
+    || !backgrounds.every((value) => Number.isFinite(value) && value > 0)
+    || backgrounds[0] >= backgrounds[1]
+  ) {
+    throw new Error(`${spec.id} requires exactly two backgrounds_u values`);
+  }
+  if (
+    !Array.isArray(ratioContours)
+    || ratioContours.length === 0
+    || !ratioContours.every((value, index) =>
+      Number.isFinite(value)
+      && value > 0
+      && (index === 0 || value > ratioContours[index - 1]))
+  ) {
+    throw new Error(`${spec.id} requires positive, strictly sorted ratio_contours`);
+  }
+  if (!(timeMin < pulseStart && pulseStart < pulseEnd && pulseEnd < timeMax)) {
+    throw new Error(`${spec.id} has invalid pulse timing`);
+  }
+  if (!(tau > 0) || !(multiplier > 1) || !(stateMin > 0) || !(stateMax > stateMin)) {
+    throw new Error(`${spec.id} has an invalid positive-domain parameter`);
+  }
+  const lowPeak = backgrounds[0] * multiplier;
+  const highPeak = backgrounds[1] * multiplier;
+  if (!(stateMin <= backgrounds[0] && stateMax >= highPeak && absoluteGate > stateMin && absoluteGate < stateMax)) {
+    throw new Error(`${spec.id} state bounds do not contain the displayed trajectories and gate`);
+  }
+  if (!(
+    backgrounds.every((background) => background < absoluteGate)
+    && lowPeak < absoluteGate
+    && absoluteGate <= highPeak
+  )) {
+    throw new Error(`${spec.id} gate must stay closed at both backgrounds and open only for the high pulse`);
+  }
+
+  const stateBox = { left: 88, right: width - 54, top: 154, bottom: 470 };
+  const tracePanel = { left: 88, right: width - 54, top: 548, bottom: 690 };
+  const traceBox = { left: 88, right: width - 54, top: 584, bottom: 690 };
+  const stateX = (value) => localLogScale(value, stateMin, stateMax, stateBox.left, stateBox.right);
+  const stateY = (value) => localLogScale(value, stateMin, stateMax, stateBox.bottom, stateBox.top);
+  const traceX = (value) => localScale(value, timeMin, timeMax, traceBox.left, traceBox.right);
+  const colors = [theme.primary, theme.secondary];
+
+  function referenceAt(time, background) {
+    if (time < pulseStart) return background;
+    if (time < pulseEnd) {
+      return background * (
+        multiplier - (multiplier - 1) * Math.exp(-(time - pulseStart) / tau)
+      );
+    }
+    const q = (multiplier - 1) * (1 - Math.exp(-(pulseEnd - pulseStart) / tau));
+    return background * (1 + q * Math.exp(-(time - pulseEnd) / tau));
+  }
+
+  const times = Array.from(
+    { length: samples },
+    (_, index) => timeMin + (index / (samples - 1)) * (timeMax - timeMin),
+  );
+  const beforePulse = times.filter((time) => time < pulseStart);
+  const insidePulse = times.filter((time) => time > pulseStart && time < pulseEnd);
+  const afterPulse = times.filter((time) => time > pulseEnd);
+  const statePaths = backgrounds.map((background, index) => {
+    const pulseInput = background * multiplier;
+    const referenceAtPulseEnd = referenceAt(pulseEnd, background);
+    const points = [
+      ...beforePulse.map(() => [stateX(background), stateY(background)]),
+      [stateX(background), stateY(background)],
+      [stateX(background), stateY(pulseInput)],
+      ...insidePulse.map((time) => [
+        stateX(referenceAt(time, background)),
+        stateY(pulseInput),
+      ]),
+      [stateX(referenceAtPulseEnd), stateY(pulseInput)],
+      [stateX(referenceAtPulseEnd), stateY(background)],
+      ...afterPulse.map((time) => [
+        stateX(referenceAt(time, background)),
+        stateY(background),
+      ]),
+    ];
+    const pathData = points.map(([x, y], pointIndex) => `${pointIndex ? "L" : "M"}${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
+    return `<path d="${pathData}" fill="none" stroke="${colors[index]}" stroke-width="${index ? 4 : 7}" ${index ? 'stroke-dasharray="12 8"' : ""} stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="${stateX(background)}" cy="${stateY(background)}" r="7" fill="${colors[index]}"/>
+      <circle cx="${stateX(background)}" cy="${stateY(background * multiplier)}" r="6" fill="${theme.background}" stroke="${colors[index]}" stroke-width="4"/>`;
+  }).join("");
+
+  const contourMarkup = ratioContours.map((ratio) => {
+    const candidates = [
+      [stateMin, stateMin * ratio],
+      [stateMax, stateMax * ratio],
+      [stateMin / ratio, stateMin],
+      [stateMax / ratio, stateMax],
+    ].filter(([reference, input]) =>
+      reference >= stateMin && reference <= stateMax && input >= stateMin && input <= stateMax
+    );
+    const endpoints = candidates.filter((point, index, all) =>
+      all.findIndex(([a, b]) => Math.abs(a - point[0]) < 1e-12 && Math.abs(b - point[1]) < 1e-12) === index
+    );
+    if (endpoints.length < 2) return "";
+    const [[r1, u1], [r2, u2]] = endpoints;
+    const emphasis = ratio === 1;
+    const labelReference = Math.sqrt(r1 * r2);
+    const labelInput = Math.sqrt(u1 * u2);
+    return `<line x1="${stateX(r1)}" y1="${stateY(u1)}" x2="${stateX(r2)}" y2="${stateY(u2)}" stroke="${emphasis ? theme.accent : theme.grid}" stroke-width="${emphasis ? 3 : 2}" stroke-dasharray="8 7"/>
+      <text x="${stateX(labelReference)}" y="${stateY(labelInput) - 9}" fill="${emphasis ? theme.accent : theme.muted}" stroke="${theme.panel}" stroke-width="5" paint-order="stroke fill" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">u/r=${ratio}</text>`;
+  }).join("");
+
+  const gateY = stateY(absoluteGate);
+  const inputTicks = [...new Set([
+    ...backgrounds,
+    ...backgrounds.map((background) => background * multiplier),
+  ])].sort((a, b) => a - b).filter((value) => value >= stateMin && value <= stateMax);
+  const gridMarkup = inputTicks.map((value) => `<line x1="${stateX(value)}" y1="${stateBox.top}" x2="${stateX(value)}" y2="${stateBox.bottom}" stroke="${theme.grid}" opacity=".55"/>
+    <line x1="${stateBox.left}" y1="${stateY(value)}" x2="${stateBox.right}" y2="${stateY(value)}" stroke="${theme.grid}" opacity=".55"/>
+    <text x="${stateX(value)}" y="${stateBox.bottom + 22}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${value}</text>
+    <text x="${stateBox.left - 12}" y="${stateY(value) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${value}</text>`).join("");
+
+  const relativeBackground = backgrounds[0];
+  const relativePulseInput = relativeBackground * multiplier;
+  const relativeReferenceAtEnd = referenceAt(pulseEnd, relativeBackground);
+  const relativeSamples = [
+    ...beforePulse.map((time) => [time, 0]),
+    [pulseStart, 0],
+    [pulseStart, Math.log(multiplier)],
+    ...insidePulse.map((time) => [
+      time,
+      Math.log(relativePulseInput / referenceAt(time, relativeBackground)),
+    ]),
+    [pulseEnd, Math.log(relativePulseInput / relativeReferenceAtEnd)],
+    [pulseEnd, Math.log(relativeBackground / relativeReferenceAtEnd)],
+    ...afterPulse.map((time) => [
+      time,
+      Math.log(relativeBackground / referenceAt(time, relativeBackground)),
+    ]),
+  ];
+  const traceMagnitude = Math.max(...relativeSamples.map(([, value]) => Math.abs(value)));
+  const traceLimit = traceMagnitude > 0 ? traceMagnitude * 1.08 : 1;
+  const traceY = (value) => localScale(value, -traceLimit, traceLimit, traceBox.bottom, traceBox.top);
+  const relativePoints = relativeSamples.map(([time, value]) => [traceX(time), traceY(value)]);
+  const relativePath = relativePoints.map(([x, y], index) => `${index ? "L" : "M"}${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
+  const timeTicks = Array.from(
+    { length: 6 },
+    (_, index) => timeMin + (index / 5) * (timeMax - timeMin),
+  );
+  const formatTimeTick = (value) => String(Number(value.toFixed(2)));
+  const traceGrid = timeTicks.map((value) => `<line x1="${traceX(value)}" y1="${traceBox.top}" x2="${traceX(value)}" y2="${traceBox.bottom}" stroke="${theme.grid}" opacity=".55"/>
+    <text x="${traceX(value)}" y="710" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${formatTimeTick(value)}</text>`).join("");
+
+  const content = `${analyticalHeader(spec, layout, { badge: "EXACT TOY MODEL · INTERFACE FIREWALL" })}
+  <defs>
+    <clipPath id="interface-state-clip"><rect x="${stateBox.left}" y="${stateBox.top}" width="${stateBox.right - stateBox.left}" height="${stateBox.bottom - stateBox.top}" rx="16"/></clipPath>
+    <clipPath id="interface-trace-clip"><rect x="${tracePanel.left + 2}" y="${traceBox.top}" width="${tracePanel.right - tracePanel.left - 4}" height="${traceBox.bottom - traceBox.top - 2}"/></clipPath>
+  </defs>
+  <rect x="${stateBox.left}" y="${stateBox.top}" width="${stateBox.right - stateBox.left}" height="${stateBox.bottom - stateBox.top}" rx="16" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  <text x="${stateBox.left + 18}" y="${stateBox.top + 28}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="800">STATE PLANE · GEOMETRICALLY SCALED ORBITS</text>
+  ${gridMarkup}
+  <g clip-path="url(#interface-state-clip)">
+    <rect x="${stateBox.left}" y="${stateBox.top}" width="${stateBox.right - stateBox.left}" height="${Math.max(0, gateY - stateBox.top)}" fill="${theme.danger}" fill-opacity=".08"/>
+    ${contourMarkup}
+    <line x1="${stateBox.left}" y1="${gateY}" x2="${stateBox.right}" y2="${gateY}" stroke="${theme.danger}" stroke-width="4"/>
+    ${statePaths}
+  </g>
+  <text x="${stateBox.left + 14}" y="${gateY - 10}" fill="${theme.danger}" stroke="${theme.panel}" stroke-width="5" paint-order="stroke fill" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800" text-anchor="start">separate absolute gate · u=${absoluteGate}</text>
+  <line x1="${stateBox.left + 20}" y1="${stateBox.top + 78}" x2="${stateBox.left + 70}" y2="${stateBox.top + 78}" stroke="${colors[0]}" stroke-width="7"/><text x="${stateBox.left + 82}" y="${stateBox.top + 83}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13">${backgrounds[0]}→${backgrounds[0] * multiplier}</text>
+  <line x1="${stateBox.left + 20}" y1="${stateBox.top + 106}" x2="${stateBox.left + 70}" y2="${stateBox.top + 106}" stroke="${colors[1]}" stroke-width="4" stroke-dasharray="12 8"/><text x="${stateBox.left + 82}" y="${stateBox.top + 111}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13">${backgrounds[1]}→${backgrounds[1] * multiplier}</text>
+  <text x="${(stateBox.left + stateBox.right) / 2}" y="${stateBox.bottom + 48}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">reference state r · input units · logarithmic scale</text>
+  <text x="26" y="${(stateBox.top + stateBox.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle" transform="rotate(-90 26 ${(stateBox.top + stateBox.bottom) / 2})">current input u · input units · log scale</text>
+  <rect x="${tracePanel.left}" y="${tracePanel.top}" width="${tracePanel.right - tracePanel.left}" height="${tracePanel.bottom - tracePanel.top}" rx="16" fill="${theme.panelAlt}" stroke="${theme.grid}" stroke-width="2"/>
+  <text x="${tracePanel.left + 18}" y="${tracePanel.top + 26}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="800">RELATIVE READOUT · COMPLETE TRAJECTORIES COINCIDE</text>
+  ${traceGrid}
+  <line x1="${traceBox.left}" y1="${traceY(0)}" x2="${traceBox.right}" y2="${traceY(0)}" stroke="${theme.grid}" stroke-width="2"/>
+  <g clip-path="url(#interface-trace-clip)">
+    <path d="${relativePath}" fill="none" stroke="${colors[0]}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="${relativePath}" fill="none" stroke="${colors[1]}" stroke-width="4" stroke-dasharray="12 8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <rect x="${tracePanel.left}" y="${tracePanel.top}" width="${tracePanel.right - tracePanel.left}" height="${tracePanel.bottom - tracePanel.top}" rx="16" fill="none" stroke="${theme.grid}" stroke-width="2"/>
+  <text x="${traceBox.left - 12}" y="${traceY(0) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">0</text>
+  <text x="${traceBox.left - 12}" y="${traceY(Math.log(multiplier)) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">ln ${multiplier}</text>
+  <text x="${(traceBox.left + traceBox.right) / 2}" y="733" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">time t (s)</text>
+  <text x="26" y="${(traceBox.top + traceBox.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle" transform="rotate(-90 26 ${(traceBox.top + traceBox.bottom) / 2})">y = ln(u/r)</text>
+  <rect x="${traceBox.left}" y="746" width="${traceBox.right - traceBox.left}" height="46" rx="12" fill="${theme.panel}" stroke="${theme.grid}"/>
+  <text x="${traceBox.left + 14}" y="765" fill="${colors[0]}" font-family="Segoe UI, sans-serif" font-size="11" font-weight="800">LOW SCALE · absolute gate remains closed</text>
+  <rect x="${traceBox.left + 14}" y="775" width="12" height="9" rx="3" fill="${theme.danger}"/>
+  <text x="${traceBox.left + 34}" y="784" fill="${colors[1]}" font-family="Segoe UI, sans-serif" font-size="11" font-weight="800">HIGH SCALE · gate opens at t=${pulseStart}–${pulseEnd} s</text>
+  <text x="${width - 42}" y="810" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10" text-anchor="end">input levels and gate are illustrative · no biological or trained-system result</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -1439,6 +1667,7 @@ const renderers = {
   "memory-kernel-truncation": memoryKernelTruncation,
   "slow-manifold-fold-boundary": slowManifoldFoldBoundary,
   "mission-profile-damage": missionProfileDamage,
+  "interface-qualified-scale-symmetry": interfaceQualifiedScaleSymmetry,
 };
 
 for (const spec of specs) {

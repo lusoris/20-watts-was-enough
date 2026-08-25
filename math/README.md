@@ -70,6 +70,10 @@ notation.
   slow-manifold reduction by normal hyperbolicity, prices macro-to-micro
   reconstruction, and treats post-healing lift dependence as a closure test
   for Fixture F-024.
+- [`interface-qualified-scale-symmetry.md`](interface-qualified-scale-symmetry.md)
+  defines full-trajectory fold-change detection, state equivariance,
+  observation-qualified recoverability, absolute counter-tasks, and the
+  reference-maintenance boundary for Fixture F-026.
 - [`representative-adaptive-performance.md`](representative-adaptive-performance.md)
   defines actual observation/action opportunity, acquisition and opponent
   history, resource/damage state, anticipation and interception, retention and

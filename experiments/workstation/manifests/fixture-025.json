@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "artifact": "fixture-025",
+  "readiness": "smoke-ready",
+  "command": {
+    "prepare": "node experiments/workstation/fixture-025/runner.mjs prepare --profile smoke",
+    "smoke": "node experiments/workstation/fixture-025/runner.mjs smoke --profile smoke --output <run-directory> --resume false",
+    "run": "node experiments/workstation/fixture-025/runner.mjs run --profile development --output <run-directory> --resume false",
+    "analyze": "node experiments/workstation/fixture-025/runner.mjs analyze --output <run-directory>",
+    "validate": "node experiments/workstation/fixture-025/runner.mjs validate --output <run-directory>"
+  },
+  "environment": {
+    "runtime": "Node.js >=22.13.0 on a little-endian CPU; binary64 arithmetic only",
+    "lockfiles": ["package-lock.json"]
+  },
+  "hardware": {
+    "smoke": {
+      "cpu": "one ordinary little-endian CPU thread or more",
+      "memory_bytes": 134217728,
+      "disk_bytes": 52428800,
+      "energy": "not measured or modeled; energy conclusions forbidden"
+    },
+    "workstation": {
+      "cpu": "ordinary little-endian CPU; no workstation claim is registered",
+      "memory_bytes": 1073741824,
+      "disk_bytes": 1073741824,
+      "energy": "not applicable to this development smoke slice; energy conclusions forbidden"
+    }
+  },
+  "seeds": {
+    "development": "experiments/workstation/fixture-025/seeds/development.reveal.json",
+    "confirmation": "experiments/workstation/fixture-025/seeds/confirmation.unavailable.json",
+    "held_out": "experiments/workstation/fixture-025/seeds/transfer.unavailable.json"
+  },
+  "data": {
+    "generator": "experiments/workstation/fixture-025/generator.mjs",
+    "full_profile": "experiments/workstation/fixture-025/configs/development.json",
+    "full_profile_sha256": "d41f52e40ce08a83ed44623cc0a8fc8b8f79aaaa4288269f779c2252e41ba663",
+    "external": []
+  },
+  "outputs": {
+    "directory": "experiments/workstation/runs/fixture-025-*",
+    "schema": "experiments/workstation/fixture-025/output.schema.json",
+    "append_only": true,
+    "hash_chain": true
+  },
+  "implementation": {
+    "entrypoint": "experiments/workstation/fixture-025/runner.mjs",
+    "tests": [
+      "experiments/workstation/fixture-025/contract.test.mjs",
+      "experiments/workstation/fixture-025/runner.test.mjs"
+    ],
+    "full_tests": [
+      "experiments/workstation/fixture-025/contract.test.mjs",
+      "experiments/workstation/fixture-025/runner.test.mjs"
+    ],
+    "execution_claims": ["C-1532"]
+  },
+  "energy": {
+    "mode": "not-measured",
+    "required": false,
+    "applicability": "not-applicable-to-scoped-claim",
+    "energy_conclusion_allowed": false,
+    "scope_binding": "fixture-025.c-1532.development-smoke.non-energy.v1",
+    "not_applicable_reason": "ECM-T03 smoke validation records synthetic gate order and deterministic work counters only; it has no joule, watt, carbon, physical-cell, or energy-efficiency endpoint."
+  },
+  "resume": {
+    "supported": true,
+    "module": "experiments/workstation/lib/checkpoint-ledger.mjs",
+    "test": "experiments/workstation/fixture-025/runner.test.mjs"
+  },
+  "promotion_evidence": {
+    "status": "pending",
+    "evidence_path": "experiments/workstation/promotion/fixture-025/evidence.json",
+    "promotion_validation_receipt_path": "experiments/workstation/promotion/fixture-025/promotion-validation.launch-receipt.json",
+    "run_directory": "experiments/workstation/runs/fixture-025-confirmation",
+    "release_root": "experiments/workstation/releases/fixture-025",
+    "release_path": "experiments/workstation/releases/fixture-025/confirmation.release.json",
+    "energy_assignments_path": "experiments/workstation/runs/fixture-025-confirmation/non-energy-boundary.json",
+    "disjoint_seed_pack_paths": [
+      "experiments/workstation/fixture-025/seeds/transfer.unavailable.json"
+    ],
+    "protocol_eligibility": {
+      "status": "blocked",
+      "protocol_version": "F-025/ECM-T03-development-smoke-v1",
+      "claim_scope": ["C-1532"],
+      "blockers": [
+        "Only a public development gate-order diagnostic is implemented; the registered Boukamp and power-calibration procedures are absent.",
+        "The full 512-world generator, circuit fitting, equivalence quotient, and confirmatory statistical route are absent.",
+        "No confirmation or transfer seed, commitment, physical apparatus, release, or promotion evidence exists."
+      ]
+    }
+  }
+}

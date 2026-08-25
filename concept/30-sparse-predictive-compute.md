@@ -128,6 +128,58 @@ different questions. Predictive regulation adds the same separation between
 forecast value, feedback correction, integrated action exposure, reserve
 debit, and later outcome ([C-1494](../research/claims.md#c-1494)).
 
+### Relative sensing is a symmetry, not a normalization label
+
+The same separation applies when a gate should respond to change relative to a
+background. For a positive input $u(t)$ and reference $r(t)$, a log ratio
+
+$$
+z(t)=\ln\frac{u(t)}{r(t)}
+$$
+
+is invariant to the common transformation $(u,r)\mapsto(pu,pr)$. That algebra
+does not establish how $r$ is acquired, how long it remains valid, or whether
+the downstream target is itself scale-invariant. Exact fold-change detection
+is stronger: the complete output trajectory must remain the same after the
+input history and its adapted initial state are scaled together
+([C-1540](../research/claims.md#c-1540)). Exact adaptation or equal peaks cannot
+substitute for that test.
+
+Biological evidence shows why the interface must be recorded. Bacterial
+chemotaxis connects finite-regime intracellular rescaling to active migration
+([C-1542](../research/claims.md#c-1542)); nuclear RelA fold change predicts three
+downstream transcripts in one cell system ([C-1544](../research/claims.md#c-1544));
+yet dynamic extracellular cytokine protocols support a rectified dose-change
+statistic at the upstream cytokine-to-NF-κB interface
+([C-1545](../research/claims.md#c-1545)). The pathway name therefore cannot
+select the statistic.
+
+The runtime carries a typed candidate-statistic record
+
+$$
+\mathcal V_t^{(\mathrm{rel})}=
+\left[
+u_t,\;u_t-r_t,\;\dot u_t,\;\ln(u_t/r_t),\;
+\tau_t^{(\mathrm{ref})},\;\chi_t^{(\mathrm{sup})}
+\right],
+$$
+
+where $\tau_t^{(\mathrm{ref})}$ is reference age in seconds and
+$\chi_t^{(\mathrm{sup})}$ is a typed support/validity state. A selector may
+route a ratio-qualified task through the relative channel, but the record's
+fields retain their individual units and types; it is not an ordinary numeric
+vector. An absolute load, dose, damage, or safety target retains a calibrated
+absolute path. Near zero, after sign changes, under clipping, or with stale
+reference state, the log-ratio path must abstain or fall back.
+
+This design must beat explicit log-ratio, difference, future-free streaming
+normalization, state-space and compact recurrent nulls while charging reference
+updates, selector execution, fallback and state writes. The exact model,
+interface firewall, scale-orbit plot, and trajectory discrepancy are derived in
+[Interface-qualified scale symmetry](../math/interface-qualified-scale-symmetry.md);
+the reciprocal ten-track test is
+[Fixture F-026](../experiments/fixtures/026-interface-qualified-relative-sensing.md).
+
 ### Command, interface work, transport, and observation are different stages
 
 An adaptive gate often mistakes its command for the work that actually crossed
