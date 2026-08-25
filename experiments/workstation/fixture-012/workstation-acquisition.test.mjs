@@ -1223,7 +1223,13 @@ test("Windows supervisor terminates the Job Object when a guarded directory iden
       (response) => { supervisorSettled = true; supervisorOutcome = response; },
       (error) => { supervisorSettled = true; supervisorOutcome = { error: error.message }; },
     );
-    await waitForPath(ready);
+    await Promise.race([
+      waitForPath(ready, 10_000),
+      responsePromise.then(
+        (response) => { throw new Error(`Supervisor settled before ready: ${JSON.stringify(response)}`); },
+        (error) => { throw error; },
+      ),
+    ]);
     await new Promise((resolve) => setTimeout(resolve, 100));
     assert.equal(supervisorSettled, false, JSON.stringify(supervisorOutcome));
     await writeFile(mutation, "break the guarded directory R oplock\n", { flag: "wx" });
