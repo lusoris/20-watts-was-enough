@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "artifact": "fixture-022",
+  "readiness": "smoke-ready",
+  "command": {
+    "prepare": "node experiments/workstation/fixture-022/runner.mjs prepare --profile smoke",
+    "smoke": "node experiments/workstation/fixture-022/runner.mjs smoke --profile smoke --output <run-directory> --resume false",
+    "run": "node experiments/workstation/fixture-022/runner.mjs run --profile development --output <run-directory> --resume false",
+    "analyze": "node experiments/workstation/fixture-022/runner.mjs analyze --output <run-directory>",
+    "validate": "node experiments/workstation/fixture-022/runner.mjs validate --output <run-directory>"
+  },
+  "environment": {
+    "runtime": "Node.js >=22.13.0 on a little-endian CPU; binary64 arithmetic only",
+    "lockfiles": ["package-lock.json"]
+  },
+  "hardware": {
+    "smoke": {
+      "cpu": "one ordinary little-endian CPU thread or more",
+      "memory_bytes": 134217728,
+      "disk_bytes": 52428800,
+      "energy": "not measured or modeled; energy conclusions forbidden"
+    },
+    "workstation": {
+      "cpu": "ordinary little-endian CPU; the F-022 reference-workstation contract is not implemented by this slice",
+      "memory_bytes": 1073741824,
+      "disk_bytes": 1073741824,
+      "energy": "not measured or modeled; energy conclusions forbidden"
+    }
+  },
+  "seeds": {
+    "development": "experiments/workstation/fixture-022/seeds/development.reveal.json",
+    "confirmation": "experiments/workstation/fixture-022/seeds/confirmation.unavailable.json",
+    "held_out": "experiments/workstation/fixture-022/seeds/transfer.unavailable.json"
+  },
+  "data": {
+    "generator": "experiments/workstation/fixture-022/generator.mjs",
+    "full_profile": "experiments/workstation/fixture-022/configs/development.json",
+    "full_profile_sha256": "5d0c53c087fc61b32d7361093bf49ca3fa3ade5aac8cd5da32005f915a581f95",
+    "external": []
+  },
+  "outputs": {
+    "directory": "experiments/workstation/runs/fixture-022-*",
+    "schema": "experiments/workstation/fixture-022/output.schema.json",
+    "append_only": true,
+    "hash_chain": true
+  },
+  "implementation": {
+    "entrypoint": "experiments/workstation/fixture-022/runner.mjs",
+    "tests": [
+      "experiments/workstation/fixture-022/contract.test.mjs",
+      "experiments/workstation/fixture-022/runner.test.mjs"
+    ],
+    "full_tests": [
+      "experiments/workstation/fixture-022/contract.test.mjs",
+      "experiments/workstation/fixture-022/runner.test.mjs"
+    ],
+    "execution_claims": ["C-1506"]
+  },
+  "energy": {
+    "mode": "not-measured",
+    "required": false,
+    "applicability": "not-applicable-to-scoped-claim",
+    "energy_conclusion_allowed": false,
+    "scope_binding": "fixture-022.c-1506.dev-t01-development-smoke.non-energy.v2",
+    "not_applicable_reason": "DEV-T01 smoke records graph messages, bytes, memory operations, and protected outcome counts only. These synthetic counters are not joules, watts, carbon, or an energy-efficiency endpoint."
+  },
+  "resume": {
+    "supported": true,
+    "module": "experiments/workstation/lib/checkpoint-ledger.mjs",
+    "test": "experiments/workstation/fixture-022/runner.test.mjs"
+  },
+  "promotion_evidence": {
+    "status": "pending",
+    "evidence_path": "experiments/workstation/promotion/fixture-022/evidence.json",
+    "promotion_validation_receipt_path": "experiments/workstation/promotion/fixture-022/promotion-validation.launch-receipt.json",
+    "run_directory": "experiments/workstation/runs/fixture-022-confirmation",
+    "release_root": "experiments/workstation/releases/fixture-022",
+    "release_path": "experiments/workstation/releases/fixture-022/confirmation.release.json",
+    "energy_assignments_path": "experiments/workstation/runs/fixture-022-confirmation/non-energy-boundary.json",
+    "disjoint_seed_pack_paths": [
+      "experiments/workstation/fixture-022/seeds/transfer.unavailable.json"
+    ],
+    "protocol_eligibility": {
+      "status": "blocked",
+      "protocol_version": "F-022/DEV-T01-development-smoke-v2",
+      "claim_scope": ["C-1506"],
+      "blockers": [
+        "Only a discrete public-development DEV-T01 generator and diagnostic arm slice is implemented.",
+        "The registered Potts/total-variation alpha-expansion null, noisy vector memory, service timeline, full artifact set, and paired statistical adjudication are not implemented.",
+        "No confirmation or transfer seed, commitment, reference-workstation freeze, release, metered-energy boundary, or promotion evidence exists.",
+        "Smoke diagnostics remain NO_RESULT and cannot support C-1506 or a quality, resource, energy, or deployment claim."
+      ]
+    }
+  }
+}

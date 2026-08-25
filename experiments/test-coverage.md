@@ -9,16 +9,16 @@ experiment contracts, or disposition fragments.
 
 The four rows below are mutually exclusive highest-reached tiers.
 
-| Highest coverage tier | Claims | Share of 1520 | Meaning |
+| Highest coverage tier | Claims | Share of 1530 | Meaning |
 | --- | ---: | ---: | --- |
-| ledger-only | 92 | 6.1% | no exact direct relation to a numbered experiment artifact |
+| ledger-only | 92 | 6.0% | no exact direct relation to a numbered experiment artifact |
 | linked test description | 0 | 0.0% | related experiment prose exists, but at least one required protocol facet is absent |
-| protocol-complete test contract | 1428 | 93.9% | at least one linked artifact contains all eight required facets |
+| protocol-complete test contract | 1438 | 94.0% | at least one linked artifact contains all eight required facets |
 | workstation-executable | 0 | 0.0% | checked execution manifest and runnable scientific harness exist |
 
-The short answer is therefore **1428 claims have a complete
+The short answer is therefore **1438 claims have a complete
 test description, but 0 are executable on the workstation**.
-Across both description tiers, 1428 claims have an exact direct
+Across both description tiers, 1438 claims have an exact direct
 relation to at least one experiment artifact. These are aggregate candidate
 tests: they evaluate engineering translations supported by several claims; they
 do not independently reproduce every source paper.
@@ -29,7 +29,7 @@ do not independently reproduce every source paper.
 | --- | ---: | ---: | ---: | ---: | ---: |
 | ledger-only | 79 | 9 | 0 | 4 | 0 |
 | linked-description | 0 | 0 | 0 | 0 | 0 |
-| protocol-complete | 1103 | 209 | 60 | 47 | 9 |
+| protocol-complete | 1113 | 209 | 60 | 47 | 9 |
 | workstation-executable | 0 | 0 | 0 | 0 | 0 |
 
 ## Why ledger-only claims remain unlinked
@@ -77,15 +77,15 @@ A relation exists when either side states it exactly:
 
 Inclusive ranges are expanded only when both endpoints have exact matching
 links. Prose numbers and indirect adoption-matrix associations do not count.
-The union yields 1428 linked claims: 1211
+The union yields 1438 linked claims: 1221
 appear on the claim side, 1128 on the document side, and
 774 have at least one reciprocal same-artifact relation.
 
 ## Artifact coverage
 
-There are 44 experiment artifacts: 44
+There are 45 experiment artifacts: 45
 pass the written-protocol gate, a validated smoke harness exists for
-5, and 0 pass the full execution gate.
+7, and 0 pass the full execution gate.
 Smoke readiness verifies deterministic plumbing but cannot promote a claim.
 
 | Artifact | Directly related claims | Protocol status | Execution status |
@@ -131,9 +131,10 @@ Smoke readiness verifies deterministic plumbing but cannot promote a claim.
 | [fixture-019](fixtures/019-finance-risk-attention-governance.md) | 14 | complete description | smoke-ready; not executable |
 | [fixture-020](fixtures/020-integrative-comparative-physiology.md) | 9 | complete description | not executable |
 | [fixture-021](fixtures/021-tribology-contact-adaptive-interfaces.md) | 9 | complete description | not executable |
-| [fixture-022](fixtures/022-regenerative-positional-memory.md) | 10 | complete description | not executable |
-| [fixture-023](fixtures/023-plant-plasticity-memory-signalling.md) | 10 | complete description | not executable |
+| [fixture-022](fixtures/022-regenerative-positional-memory.md) | 10 | complete description | smoke-ready; not executable |
+| [fixture-023](fixtures/023-plant-plasticity-memory-signalling.md) | 10 | complete description | smoke-ready; not executable |
 | [fixture-024](fixtures/024-applied-multiscale-reduction.md) | 4 | complete description | smoke-ready; not executable |
+| [fixture-025](fixtures/025-electrochemistry-interface-memory-degradation.md) | 10 | complete description | not executable |
 
 ## Immediate gaps
 
@@ -145,7 +146,7 @@ Smoke readiness verifies deterministic plumbing but cannot promote a claim.
   in an existing artifact but lack an exact traceability or test track.
 - 0 claims reach only a partial description.
   The missing facets are concentrated in no artifact.
-- 5 artifact(s) have a validated smoke manifest and
+- 7 artifact(s) have a validated smoke manifest and
   deterministic harness. They remain non-executable for claim coverage until
   confirmation seeds, held-out generators, complete analysis, resume and
   corruption checks, and measured-energy instrumentation satisfy the

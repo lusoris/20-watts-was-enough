@@ -28,7 +28,7 @@ constraints* behind that fact can become engineering requirements:
 
 ## Project status
 
-**Stage:** concept and evidence framework with five development-only smoke
+**Stage:** concept and evidence framework with seven development-only smoke
 harnesses. There is no integrated model implementation or claim-eligible
 workstation result yet. The generated
 [test-coverage report](experiments/test-coverage.md) keeps those states
@@ -95,6 +95,7 @@ Supporting material:
 - [`research/audits/2026-08-25-developmental-regeneration-depth.md`](research/audits/2026-08-25-developmental-regeneration-depth.md) — positional memory, repair instruction, field scaling, receiver geometry, mechanical boundaries, redundancy, and symmetry-breaking boundaries
 - [`research/audits/2026-08-25-plant-plasticity-memory-signalling.md`](research/audits/2026-08-25-plant-plasticity-memory-signalling.md) — plant memory modes, lifecycle reset, systemic routes, sense-by-growth admission, boundary sensing, and integrated context
 - [`research/audits/2026-08-25-applied-multiscale-reduction.md`](research/audits/2026-08-25-applied-multiscale-reduction.md) — projection memory, slow-manifold validity, heterogeneous micro-queries, and equation-free closure
+- [`research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md`](research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md) — interface/transport separation, finite diffusion memory, impedance validity, timescale resolution, passivation, hysteresis, identifiability, and delayed degradation
 - [`research/neuroscience-opportunity-map.md`](research/neuroscience-opportunity-map.md) — underused neural mechanisms and falsifiable translations
 - [`research/comparative-biology.md`](research/comparative-biology.md) — candidates from animals, plants, immune systems, and adaptive networks
 - [`research/source-crosswalk.md`](research/source-crosswalk.md) — imported ideas mapped into evidence and principle bundles
@@ -112,6 +113,9 @@ Supporting material:
 - [`experiments/fixtures/022-regenerative-positional-memory.md`](experiments/fixtures/022-regenerative-positional-memory.md) — ten complete CPU-only developmental/regeneration contracts with no execution results
 - [`experiments/fixtures/023-plant-plasticity-memory-signalling.md`](experiments/fixtures/023-plant-plasticity-memory-signalling.md) — ten complete CPU-only plant plasticity and signalling contracts with no execution results
 - [`experiments/fixtures/024-applied-multiscale-reduction.md`](experiments/fixtures/024-applied-multiscale-reduction.md) — four complete CPU-only multiscale-reduction contracts with no execution results
+- [`experiments/fixtures/025-electrochemistry-interface-memory-degradation.md`](experiments/fixtures/025-electrochemistry-interface-memory-degradation.md) — ten complete CPU-only electrochemistry contracts with no execution results
+- [`experiments/workstation/fixture-022/`](experiments/workstation/fixture-022/README.md) — deterministic DEV-T01 corruption, abstention, and charged-fallback development smoke path
+- [`experiments/workstation/fixture-023/`](experiments/workstation/fixture-023/README.md) — deterministic PLM-T01 duration-memory and PLM-T02 lifecycle-reset development smoke paths
 - [`experiments/workstation/fixture-024/`](experiments/workstation/fixture-024/README.md) — deterministic AMR-T01 development smoke path with no confirmation or energy authority
 - [`experiments/test-coverage.md`](experiments/test-coverage.md) — generated
   claim-to-protocol coverage and workstation execution readiness

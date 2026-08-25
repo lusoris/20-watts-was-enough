@@ -20,7 +20,9 @@
 - **Central ledger:** [C-1516](../claims.md#c-1516)--[C-1525](../claims.md#c-1525)
 - **Execution state:** ten CPU-only synthetic falsification protocols are
   frozen in [Fixture F-023](../../experiments/fixtures/023-plant-plasticity-memory-signalling.md);
-  no runner, generated data, result, or workstation-energy measurement exists
+  PLM-T01--PLM-T02 have bounded public-development smoke paths, while
+  PLM-T03--PLM-T10 remain unimplemented and no claim-eligible result or
+  workstation-energy measurement exists
 - **Repository constraint:** this standalone audit does not edit the central
   claim ledger, bibliography, audit index, taxonomy routing, generated
   coverage, concept or math chapters, plots, changelog, application, or PDF

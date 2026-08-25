@@ -309,6 +309,42 @@ An event is assigned to exactly one term. A migration byte, for example, may
 appear in the movement ledger but its energy is not also charged as ordinary
 serving traffic.
 
+Protection is also a lifecycle state, not a free subtraction from damage. The
+electrochemical solid--electrolyte interphase is a useful accounting example:
+it can suppress an immediate parasitic reaction while consuming inventory,
+adding resistance, continuing to grow, and changing regime
+([C-1535](../research/claims.md#c-1535)). For an artificial barrier, define
+
+$$
+E_B(H)=E_{B,\mathrm{build}}+E_{B,\mathrm{monitor}}(H)
++E_{B,\mathrm{repair}}(H)+E_{B,\mathrm{replace}}(H)
++E_{B,\mathrm{traffic}}(H),
+$$
+
+with every term measured in joules at the same boundary. The result also keeps
+separate native-unit axes for consumed capacity, added latency, blocked useful
+work, false quarantine, damage admitted, and recovery. A filter, cache, trust
+layer, quarantine boundary, or checkpoint barrier wins only when its avoided
+downstream loss exceeds these construction, carrying, resistance, maintenance,
+and failure costs against fixed-barrier, rate-limiter, rollback, and no-barrier
+nulls. Cracking and repair in F-025 are synthetic engineering stressors, not
+effects attributed to the cited interphase sources.
+
+Delayed damage prevents short evaluations from closing that ledger. If
+$d_t$ is accumulated damage in a declared damage unit and $\psi$ is a
+state-, action-, temperature-, and mode-dependent damage rate in damage units
+per second, then
+
+$$
+d_{t+1}=d_t+\Delta t\,\psi(u_t,x_t,T_t,m_t)
+$$
+
+is dimensionally valid for step duration $\Delta t$ in seconds. Early outcome
+prediction may reduce the number of full-horizon trials, but reserve trials,
+false rankings, calendar exposure, and late failures remain charged
+([C-1539](../research/claims.md#c-1539)). A policy selected by a short proxy is
+not yet a lifecycle result.
+
 Lifecycle energy per qualified event is
 
 $$

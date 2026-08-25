@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "artifact": "fixture-023",
+  "partition": "confirmation",
+  "state": "not-created",
+  "contains_seeds": false,
+  "contains_commitment": false,
+  "reason": "Development-only smoke harness; no confirmation seed or commitment has been created."
+}

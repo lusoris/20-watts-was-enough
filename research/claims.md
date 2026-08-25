@@ -23123,3 +23123,296 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   establish that the selected observables are sufficient.
 - **Direct test:** [`AMR-T04`](../experiments/fixtures/024-applied-multiscale-reduction.md#amr-t04--c-1529-liftevolverestrict-and-closure).
 - **Traceability:** [source audit](audits/2026-08-25-applied-multiscale-reduction.md#c-1529) · [affected chapter](../concept/30-sparse-predictive-compute.md#a-timescale-label-is-not-a-closure-certificate).
+
+### C-1530
+
+- **Claim:** Electrochemical interfacial current is a nonlinear function of a
+  declared thermodynamic driving force, activities, temperature, and kinetic
+  closure, while terminal response can also include transport, double-layer,
+  and ohmic contributions; commanded voltage is not achieved reaction flux.
+- **Status:** established theoretical framework; the closure and parameters
+  remain system- and regime-specific.
+- **Primary sources:** [Ferguson and Bazant 2012](https://doi.org/10.1149/2.048212jes)
+  and [Bazant 2013](https://doi.org/10.1021/ar300145c).
+- **Rationale:** interface transfer, internal transport, and terminal
+  observation are different operators even when a controller exposes one
+  command scalar.
+- **AI translation:** separate command, local drive, interface transfer,
+  transport saturation, and observation rather than treating activation as
+  all five.
+- **Efficiency mechanism:** a qualified interface model can avoid overdrive
+  and redundant probes when transport or saturation limits useful work.
+- **Failure modes:** wrong kinetic family, non-identifiable exchange current
+  and transport, temperature drift, hidden series loss, a full estimator/MPC
+  matching the result, or model overhead exceeding avoided actions.
+- **Measurable prediction:** on held-out kinetic/transport combinations, the
+  qualified arm reduces constraint violation or probing at non-inferior flux
+  tracking versus a nonlinear state-space/MPC null with identical information
+  and authority; benefit disappears when command is already sufficient.
+- **Open question:** can the boundary be learned without leaking hidden
+  interfacial concentration?
+- **Direct test:** [`ECM-T01`](../experiments/fixtures/025-electrochemistry-interface-memory-degradation.md#ecm-t01-interface-kinetics-versus-transport).
+- **Traceability:** [source audit](audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1530) · [affected chapter](../concept/30-sparse-predictive-compute.md).
+
+### C-1531
+
+- **Claim:** Diffusion-controlled electrochemical response has a
+  history-dependent impedance whose low-frequency form changes with finite
+  length, relaxation, and reflective or transmissive boundary conditions; a
+  semi-infinite Warburg law is not boundary-free.
+- **Status:** established within the cited diffusion and generalized-boundary
+  theory; empirical model selection remains system-specific.
+- **Primary source:** [Criado et al. 2000](https://doi.org/10.1016/S0022-0728(00)00188-1).
+- **Rationale:** eliminating a distributed transport field produces nonlocal
+  input--output memory, while boundaries truncate or reshape that memory.
+- **AI translation:** select memory horizon and kernel family from measured
+  support and boundary regime rather than hard-coding an infinite power law.
+- **Efficiency mechanism:** a finite ladder or truncated kernel can preserve
+  useful response with less state than dense history while avoiding one-step
+  Markov bias.
+- **Failure modes:** narrow-band exponent mimicry, time variance,
+  reaction--diffusion confounding, discretisation error, an exact state-space
+  realization matching the result, or memory costing more than replay.
+- **Measurable prediction:** finite-boundary models beat a one-lag null in
+  long-memory regimes and an infinite-Warburg arm after boundary turnover,
+  unless a balanced finite-state null erases the apparent special advantage.
+- **Open question:** what is the smallest observation-supported realization
+  after boundary uncertainty is charged?
+- **Direct test:** [`ECM-T02`](../experiments/fixtures/025-electrochemistry-interface-memory-degradation.md#ecm-t02-finite-diffusion-memory).
+- **Traceability:** [source audit](audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1531) · [affected chapter](../concept/40-memory-and-consolidation.md).
+
+### C-1532
+
+- **Claim:** A linear Kramers--Kronig transform can diagnose whether sampled
+  immittance is compatible with a relaxed causal, stable, linear,
+  time-invariant representation, but compliance identifies neither a unique
+  circuit nor a unique mechanism.
+- **Status:** established validation method and interpretation boundary for
+  the cited formulation; finite band, noise, drift, and nonlinear excitation
+  limit its power.
+- **Primary source:** [Boukamp 1995](https://doi.org/10.1149/1.2044210).
+- **Rationale:** constitutive consistency can reject some records before
+  interpretation without solving the inverse problem.
+- **AI translation:** put a validity gate before latent or mechanism
+  inference and permit `invalid` and `non-identifying` outcomes.
+- **Efficiency mechanism:** early rejection can avoid expensive fitting and
+  unsafe updating on drifted or nonlinear records.
+- **Failure modes:** low-power residual tests, truncated-band artifacts,
+  over-rejection, hidden nonlinearity that passes, treating compliance as
+  truth, or ordinary residual/change-point checks matching the result.
+- **Measurable prediction:** the gate reduces confident mechanism actions on
+  invalid records without degrading valid-record calibration and remains
+  noncommittal among observationally equivalent compliant circuits.
+- **Open question:** how much invalidity can be detected without acquisition
+  cost erasing the saved computation?
+- **Direct test:** [`ECM-T03`](../experiments/fixtures/025-electrochemistry-interface-memory-degradation.md#ecm-t03-impedance-validity-before-interpretation).
+- **Traceability:** [source audit](audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1532) · [affected chapter](../concept/20-sensorimotor-grounding.md).
+
+### C-1533
+
+- **Claim:** Distribution-of-relaxation-times and
+  distribution-of-diffusion-times methods can recover characteristic-time
+  structure through a declared forward kernel, but finite frequency support,
+  noise, discretisation, and regularisation limit resolution and make the
+  result operator-dependent.
+- **Status:** established method capability in the cited impedance and
+  diffusion frameworks; unique physical attribution of every peak is not
+  established.
+- **Primary sources:** [Schichlein et al. 2002](https://doi.org/10.1023/A:1020599525160)
+  and [Song and Bazant 2018](https://doi.org/10.1103/PhysRevLett.120.116001).
+- **Rationale:** distributed systems expose timescale spectra through an
+  ill-conditioned inverse problem rather than a self-interpreting list of
+  mechanisms.
+- **AI translation:** attach resolution and perturbation-stability
+  certificates to inferred multiscale latent decompositions.
+- **Efficiency mechanism:** resolvable time groups can support sparse targeted
+  updates if inversion and uncertainty cost less than the saved work.
+- **Failure modes:** split, merged, or spurious peaks; penalty cherry-picking;
+  wrong kernels; unstable decompositions; and parametric or direct-predictor
+  nulls matching downstream performance.
+- **Measurable prediction:** certified peaks retain frozen separation and
+  coverage across noise and band perturbations; below the resolution floor the
+  method merges or abstains instead of inventing mechanisms.
+- **Open question:** does the distribution still help after acquisition,
+  regularisation search, grid, and uncertainty are charged?
+- **Direct test:** [`ECM-T04`](../experiments/fixtures/025-electrochemistry-interface-memory-degradation.md#ecm-t04-regularised-time-distribution-resolution).
+- **Traceability:** [source audit](audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1533) · [affected chapter](../concept/30-sparse-predictive-compute.md).
+
+### C-1534
+
+- **Claim:** In the cited electrochemical phase-field model of LiFePO4
+  nanoparticles, low current admitted nucleation or spinodal separation,
+  while above a critical current the unstable region disappeared and filling
+  became more homogeneous; separation was rate- and scale-qualified rather
+  than inevitable.
+- **Status:** established theoretical/model result for the cited material and
+  assumptions; universal battery phase behaviour or lifetime benefit is not
+  established.
+- **Primary source:** [Bai, Cogswell, and Bazant 2011](https://doi.org/10.1021/nl202764f).
+- **Rationale:** external drive can move a system across a morphology boundary
+  and suppress an equilibrium tendency.
+- **AI translation:** permit specialization or segregation only inside a
+  measured regime map containing drive rate, module size, and coupling.
+- **Efficiency mechanism:** avoiding unnecessary split/merge operations when
+  drive homogenizes state can reduce structural churn.
+- **Failure modes:** material-specific free energy, wrong critical rate,
+  numerical phase diffusion, hidden nucleation, morphology mistaken for task
+  specialization, or a hybrid detector/MPC matching the result.
+- **Measurable prediction:** a regime-qualified policy reduces structural
+  changes at non-inferior task loss across rate and size sweeps, loses its
+  advantage under hostile energy or boundary changes, and receives no credit
+  merely for producing domains.
+- **Open question:** is explicit phase state useful beyond ordinary
+  change-point or hybrid-system selection?
+- **Direct test:** [`ECM-T05`](../experiments/fixtures/025-electrochemistry-interface-memory-degradation.md#ecm-t05-rate-dependent-phase-regime).
+- **Traceability:** [source audit](audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1534) · [affected chapter](../concept/50-grokking-and-pruning.md).
+
+### C-1535
+
+- **Claim:** The solid--electrolyte interphase can passivate a reactive
+  electrode while its formation and continued growth consume cyclable
+  inventory, add transport resistance or impedance, and change regime with
+  operating conditions; protection is neither free nor necessarily static.
+- **Status:** established model and model-qualified growth-regime evidence in
+  the cited alkali-metal and lithium-ion contexts; composition and dominant
+  long-term mechanism remain chemistry- and protocol-specific.
+- **Primary sources:** [Peled 1979](https://doi.org/10.1149/1.2128859),
+  [Single, Latz, and Horstmann 2018](https://doi.org/10.1002/cssc.201800077),
+  and [von Kolzenberg, Latz, and Horstmann 2020](https://doi.org/10.1002/cssc.202000867).
+- **Rationale:** a boundary layer can suppress immediate damage while imposing
+  inventory, resistance, maintenance, and damage costs over longer horizons.
+- **AI translation:** model protective filters, caches, trust layers, and
+  quarantine barriers as stateful infrastructure with growth, resistance,
+  cracking, repair, and replacement.
+- **Source boundary:** cracking and repair are synthetic engineering stressors
+  in ECM-T06; the cited electrochemical sources establish the narrower
+  passivation, inventory, resistance, continued-growth, and regime boundary.
+- **Efficiency mechanism:** a correctly sized barrier can prevent more
+  downstream damage than its construction and latency cost.
+- **Failure modes:** uncharged formation, hidden resource loss, thickening,
+  crack-driven resets, stale blocking, chemical nonuniversality, or a
+  stateless limiter/rollback null matching the result.
+- **Measurable prediction:** an adaptive barrier reduces cumulative damage at
+  lower lifecycle cost than no barrier, a fixed barrier, and mature
+  limiter/rollback nulls, while inventory, impedance, and crack transfer stay
+  protected axes.
+- **Open question:** can protection state be inferred before probing and
+  maintenance exceed avoided damage?
+- **Direct test:** [`ECM-T06`](../experiments/fixtures/025-electrochemistry-interface-memory-degradation.md#ecm-t06-passivation-with-inventory-and-resistance).
+- **Traceability:** [source audit](audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1535) · [affected chapter](../concept/80-energy-model.md).
+
+### C-1536
+
+- **Claim:** In Chazalviel's dilute-electrolyte, high-field,
+  blocking-contact model, anion depletion created space charge near the
+  cathode and preceded ramified metallic growth; this is a geometry- and
+  regime-qualified result, not a universal dendrite law.
+- **Status:** established theoretical/numerical result for the cited model;
+  transfer to other electrolytes, solids, currents, or morphologies needs
+  independent evidence.
+- **Primary source:** [Chazalviel 1990](https://doi.org/10.1103/PhysRevA.42.7355).
+- **Rationale:** local carrier depletion can invalidate a stabilising
+  approximation, concentrate a field, and amplify protrusions.
+- **AI translation:** observe local resource concentration and geometry, not
+  only global throughput, before enabling positive-feedback allocation.
+- **Efficiency mechanism:** an early depletion gate can avoid costly runaway
+  repair while preserving throughput inside support.
+- **Failure modes:** wrong depletion model, false alarms, hidden local state,
+  grid-driven branching, conservative throttling, or robust queue/load
+  control matching the result.
+- **Measurable prediction:** a local concentration- and geometry-aware policy
+  reduces runaway exposure at matched throughput versus mean-load control and
+  abstains or fails visibly when transference, geometry, or boundary support
+  changes.
+- **Open question:** can local depletion be estimated without sensing and
+  communication becoming the dominant cost?
+- **Direct test:** [`ECM-T07`](../experiments/fixtures/025-electrochemistry-interface-memory-degradation.md#ecm-t07-depletion-before-ramified-growth).
+- **Traceability:** [source audit](audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1536) · [affected chapter](../concept/30-sparse-predictive-compute.md).
+
+### C-1537
+
+- **Claim:** For the cited lithium-ion single-particle model, only grouped
+  parameter combinations were identifiable from terminal response under the
+  stated model and open-circuit-voltage conditions; low residual alone did not
+  make every physical parameter recoverable.
+- **Status:** established structural/practical identifiability analysis for
+  the cited model; chemistry, model, excitation, and sensing changes can alter
+  the identifiable combinations.
+- **Primary source:** [Bizeray et al. 2019](https://doi.org/10.1109/TCST.2018.2838097).
+- **Rationale:** hidden parameters can enter observations only through
+  lower-dimensional groups unless experiments excite independent
+  sensitivities.
+- **AI translation:** require rank, conditioning, profile, and intervention
+  evidence before assigning semantics to latent parameters.
+- **Efficiency mechanism:** active excitation can target unresolved
+  directions and stop redundant observation.
+- **Failure modes:** local rather than global identifiability, numerical
+  derivative error, prior-dominated estimates, flat voltage regions, model
+  mismatch, unsafe excitation, or direct prediction solving the task without
+  parameter recovery.
+- **Measurable prediction:** an identifiability-aware design recovers only
+  declared groups with calibrated uncertainty and fewer probes than random
+  excitation while refusing semantic claims in null-space directions.
+- **Open question:** when is physical parameter recovery more valuable than a
+  calibrated direct predictor under the same budget?
+- **Direct test:** [`ECM-T08`](../experiments/fixtures/025-electrochemistry-interface-memory-degradation.md#ecm-t08-identifiability-aware-excitation).
+- **Traceability:** [source audit](audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1537) · [affected chapter](../concept/20-sensorimotor-grounding.md).
+
+### C-1538
+
+- **Claim:** The cited multiparticle insertion model and experiments support
+  charge/discharge hysteresis that can persist toward low rate and arise from
+  sequential particle-population state, so equal scalar occupancy can map to
+  different terminal voltage and apparent equilibria.
+- **Status:** established scoped model plus experimental interpretation for
+  the cited insertion systems; neither one universal mechanism nor one
+  universal hysteresis width is established.
+- **Primary source:** [Dreyer et al. 2010](https://doi.org/10.1038/nmat2730).
+- **Rationale:** a macroscopic fraction can omit distribution and path
+  variables needed to predict a hysteretic observable.
+- **AI translation:** retain minimal path or population state only when
+  interventions show scalar-state closure failure.
+- **Efficiency mechanism:** a compact distributed-state summary can avoid
+  full replay while preventing invalid state reuse.
+- **Failure modes:** slow relaxation mistaken for hysteresis, measurement
+  offset, excessive state, a direction bit proving sufficient, changed
+  population, or a recurrent/state-space null matching the result.
+- **Measurable prediction:** a distributed-state arm improves held-out loop
+  and reversal prediction over scalar state but does not beat direction-bit or
+  compact recurrent nulls unless minor loops require the extra state.
+- **Open question:** what is the smallest sufficient path state across rate,
+  dwell, and population shift?
+- **Direct test:** [`ECM-T09`](../experiments/fixtures/025-electrochemistry-interface-memory-degradation.md#ecm-t09-path-dependent-apparent-equilibria).
+- **Traceability:** [source audit](audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1538) · [affected chapter](../concept/40-memory-and-consolidation.md).
+
+### C-1539
+
+- **Claim:** In the cited commercial-cell study, calendar capacity loss
+  depended nonlinearly on state of charge, graphite-electrode potential, and
+  temperature; a separate closed-loop campaign demonstrated early-outcome
+  prediction and Bayesian optimization for one declared fast-charge
+  protocol/cell family. Neither supplies a universal ageing law or policy.
+- **Status:** established scoped experimental observations and optimization
+  capability; cross-chemistry, temperature, protocol, and mechanism transfer
+  remains unresolved.
+- **Primary sources:** [Keil et al. 2016](https://doi.org/10.1149/2.0411609jes)
+  and [Attia et al. 2020](https://doi.org/10.1038/s41586-020-1994-5).
+- **Rationale:** damage accumulates during operation and rest, depends on
+  internal state, and can appear long after the action selected by an
+  optimizer.
+- **AI translation:** include exposure state and delayed-damage uncertainty in
+  policy search; use early prediction only inside validated support.
+- **Efficiency mechanism:** early elimination of damaging policies can reduce
+  full-horizon trials if false ranking, reserve trials, and delayed validation
+  are all charged.
+- **Failure modes:** proxy leakage, survivor censoring, missing calendar time,
+  mechanism shift, knee onset, chemistry transfer, optimizer overconfidence,
+  and early-predictor bias.
+- **Measurable prediction:** exposure-aware safe optimization reaches a
+  non-inferior final task--damage frontier with fewer full-horizon evaluations
+  than mature early-stopping/BO nulls; hostile chemistry or temperature shift
+  triggers calibrated abstention.
+- **Open question:** how many long-horizon reserve evaluations validate an
+  early surrogate without erasing its saving?
+- **Direct test:** [`ECM-T10`](../experiments/fixtures/025-electrochemistry-interface-memory-degradation.md#ecm-t10-delayed-degradation-aware-policy-search).
+- **Traceability:** [source audit](audits/2026-08-25-electrochemistry-interface-memory-degradation.md#c-1539) · [affected chapters](../concept/80-energy-model.md) and [research roadmap](../concept/90-research-roadmap.md).

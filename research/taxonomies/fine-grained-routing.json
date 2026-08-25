@@ -785,6 +785,78 @@
       "rationale": "The elliptic heterogeneous-multiscale protocol in C-1528 is a bounded partial-differential-equation application.",
       "scopeGap": "Parabolic, hyperbolic, nonlinear, stochastic, moving-boundary, and coupled PDEs are not audited.",
       "nextQuestion": "Does the HMM contract remain valid beyond the elliptic case under explicit boundary and regularity stress?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "3.13-01",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md"
+      ],
+      "claims": ["C-1530", "C-1531", "C-1532", "C-1533", "C-1536"],
+      "rationale": "The audit directly treats physical chemistry at charged interfaces through nonequilibrium kinetics, finite transport, immittance validity, inverse time distributions, and depletion-driven field change.",
+      "scopeGap": "Molecular spectroscopy, photochemistry, colloids, broad biophysical chemistry, molecular dynamics, statistical mechanics, and real-apparatus breadth remain unreviewed.",
+      "nextQuestion": "Which interface and transport conclusions survive chemistry, geometry, temperature, frequency-band, and observation-operator transfer?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "3.12-02",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md"
+      ],
+      "claims": ["C-1534", "C-1535", "C-1536", "C-1537", "C-1538", "C-1539"],
+      "rationale": "Phase, passivation, ramified growth, insertion hysteresis, parameter identification, and degradation touch solid-state and surface characterization, but the audit is centered on electrochemical mechanism contracts.",
+      "scopeGap": "General solid-state synthesis, diffraction and microscopy, adsorption, surface reconstruction, catalysis, corrosion, and material-characterization practice remain outside scope.",
+      "nextQuestion": "Do the inferred phase, interface, and degradation states remain identifiable under independent structural and surface measurements?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "340604",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md"
+      ],
+      "claims": ["C-1530", "C-1531", "C-1532", "C-1533", "C-1534", "C-1535", "C-1536", "C-1537", "C-1538", "C-1539"],
+      "rationale": "All ten claims are formulated from electrochemical interface, transport, impedance, phase, passivation, deposition, identifiability, hysteresis, or ageing sources.",
+      "scopeGap": "Corrosion, electrocatalysis breadth, bioelectrochemistry, electroanalysis, industrial electrolysis, and experimental apparatus qualification remain incomplete.",
+      "nextQuestion": "Which bounded mechanisms survive independent cells, chemistries, operators, and measurement systems after full uncertainty and lifecycle cost are charged?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "400404",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md"
+      ],
+      "claims": ["C-1534", "C-1535", "C-1536", "C-1537", "C-1538", "C-1539"],
+      "rationale": "Several claims use storage-material phase, interphase, deposition, state estimation, hysteresis, and lifetime optimization, without surveying storage and conversion engineering as a field.",
+      "scopeGap": "Cell and pack design, thermal management, manufacturing, safety, power electronics, fuel cells, supercapacitors, system integration, recycling, and qualification remain outside scope.",
+      "nextQuestion": "Do the mechanisms improve an accepted storage service after cell, pack, control, safety, maintenance, and end-of-life burdens are included?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "4e705211-8770-4a2a-8596-dbc25b41c83b",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md"
+      ],
+      "claims": ["C-1530", "C-1531", "C-1532", "C-1533", "C-1534", "C-1535", "C-1536", "C-1537", "C-1538", "C-1539"],
+      "rationale": "The field-gap audit is explicitly centered on electrochemical mechanisms, measurements, inverse problems, state, and degradation.",
+      "scopeGap": "The audit samples ten mechanisms and does not imply complete electrochemistry coverage or inherit coverage to every narrower concept.",
+      "nextQuestion": "Which interface, transport, inverse, and lifetime mechanisms remain useful after hostile regime and apparatus transfer?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "2322520f-4e32-45e3-8f8b-bedc5ab4ba9b",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md"
+      ],
+      "claims": ["C-1534", "C-1535", "C-1536", "C-1537", "C-1538", "C-1539"],
+      "rationale": "Battery phase, interphase, deposition, identifiability, hysteresis, and ageing provide direct examples, while the audit's target is transferable mechanism discipline rather than battery engineering.",
+      "scopeGap": "Battery chemistries, formats, manufacturing, management systems, safety, performance qualification, reuse, recycling, and grid or mobility integration remain incomplete.",
+      "nextQuestion": "Which state and degradation contracts transfer across chemistry and format without hiding pack, thermal, safety, or lifecycle costs?"
     }
   ]
 }

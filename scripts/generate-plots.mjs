@@ -1093,6 +1093,165 @@ function memoryKernelTruncation(spec) {
   return analyticalDocument(spec, layout, content);
 }
 
+function hystereticMemoryLoop(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 1180,
+    height: 760,
+    kind: "hysteretic-state-loop",
+    theme: "ocean",
+  });
+  const { width, height, theme } = layout;
+  const {
+    input_min: xMin,
+    input_max: xMax,
+    threshold_off: thresholdOff,
+    threshold_on: thresholdOn,
+    probe_input: probeInput,
+  } = spec.parameters;
+  if (!(xMin < thresholdOff && thresholdOff < probeInput && probeInput < thresholdOn && thresholdOn < xMax)) {
+    throw new Error("Hysteretic-memory thresholds must be ordered inside the input range.");
+  }
+  const box = { left: 94, right: 830, top: 154, bottom: height - 92 };
+  const panel = { left: 868, right: width - 38, top: 154, bottom: height - 92 };
+  const xMap = (value) => localScale(value, xMin, xMax, box.left, box.right);
+  const yMap = (value) => localScale(value, -0.12, 1.12, box.bottom, box.top);
+  const rising = [
+    [xMap(xMin), yMap(0)],
+    [xMap(thresholdOn), yMap(0)],
+    [xMap(thresholdOn), yMap(1)],
+    [xMap(xMax), yMap(1)],
+  ];
+  const falling = [
+    [xMap(xMax), yMap(1)],
+    [xMap(thresholdOff), yMap(1)],
+    [xMap(thresholdOff), yMap(0)],
+    [xMap(xMin), yMap(0)],
+  ];
+  const xTicks = [xMin, thresholdOff, probeInput, thresholdOn, xMax];
+  const gridMarkup = [
+    ...xTicks.map((tick) => `<line x1="${xMap(tick)}" y1="${box.top}" x2="${xMap(tick)}" y2="${box.bottom}" stroke="${theme.grid}"/><text x="${xMap(tick)}" y="${box.bottom + 24}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${tick.toFixed(2)}</text>`),
+    ...[0, 1].map((tick) => `<line x1="${box.left}" y1="${yMap(tick)}" x2="${box.right}" y2="${yMap(tick)}" stroke="${theme.grid}"/><text x="${box.left - 14}" y="${yMap(tick) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="end">${tick}</text>`),
+  ].join("");
+  const probeX = xMap(probeInput);
+  const content = `${analyticalHeader(spec, layout, { badge: "SCHMITT MEMORY RULE · EXACT" })}
+  <defs>
+    <marker id="hysteresisUpArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="${theme.primary}"/></marker>
+    <marker id="hysteresisDownArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="${theme.accent}"/></marker>
+  </defs>
+  <rect x="${box.left}" y="${box.top}" width="${box.right - box.left}" height="${box.bottom - box.top}" rx="16" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  <rect x="${xMap(thresholdOff)}" y="${box.top}" width="${xMap(thresholdOn) - xMap(thresholdOff)}" height="${box.bottom - box.top}" fill="${theme.secondary}" fill-opacity=".10"/>
+  ${gridMarkup}
+  <text x="${(xMap(thresholdOff) + xMap(thresholdOn)) / 2}" y="${box.top + 28}" fill="${theme.secondary}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800" text-anchor="middle">same input · two possible states</text>
+  <path d="${linePath(rising)}" fill="none" stroke="${theme.primary}" stroke-width="7" stroke-linejoin="round" marker-end="url(#hysteresisUpArrow)"/>
+  <path d="${linePath(falling)}" fill="none" stroke="${theme.accent}" stroke-width="4" stroke-dasharray="10 7" stroke-linejoin="round" marker-end="url(#hysteresisDownArrow)"/>
+  <line x1="${probeX}" y1="${yMap(0)}" x2="${probeX}" y2="${yMap(1)}" stroke="${theme.text}" stroke-width="2" stroke-dasharray="5 6"/>
+  <circle cx="${probeX}" cy="${yMap(0)}" r="8" fill="${theme.primary}" stroke="${theme.text}" stroke-width="2"/>
+  <circle cx="${probeX}" cy="${yMap(1)}" r="8" fill="${theme.accent}" stroke="${theme.text}" stroke-width="2"/>
+  <text x="${xMap(thresholdOn) + 12}" y="${yMap(0) - 14}" fill="${theme.primary}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800">write 1 at theta_on</text>
+  <text x="${xMap(thresholdOff) - 12}" y="${yMap(1) + 24}" fill="${theme.accent}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" text-anchor="end">write 0 at theta_off</text>
+  <text x="${(box.left + box.right) / 2}" y="${height - 38}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle">observed input u_t · dimensionless</text>
+  <text x="28" y="${(box.top + box.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle" transform="rotate(-90 28 ${(box.top + box.bottom) / 2})">retained state m_t · binary</text>
+  <rect x="${panel.left}" y="${panel.top}" width="${panel.right - panel.left}" height="${panel.bottom - panel.top}" rx="16" fill="${theme.panelAlt}" stroke="${theme.grid}" stroke-width="2"/>
+  <text x="${panel.left + 22}" y="${panel.top + 34}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" font-weight="800">UPDATE CONTRACT</text>
+  <text x="${panel.left + 22}" y="${panel.top + 76}" fill="${theme.primary}" font-family="Cascadia Mono, monospace" font-size="11">u ≥ theta_on  → 1</text>
+  <text x="${panel.left + 22}" y="${panel.top + 103}" fill="${theme.accent}" font-family="Cascadia Mono, monospace" font-size="11">u ≤ theta_off → 0</text>
+  <text x="${panel.left + 22}" y="${panel.top + 130}" fill="${theme.secondary}" font-family="Cascadia Mono, monospace" font-size="11">between       → keep m_t</text>
+  <rect x="${panel.left + 18}" y="${panel.top + 166}" width="${panel.right - panel.left - 36}" height="132" rx="12" fill="${theme.background}" fill-opacity=".55"/>
+  <text x="${panel.left + 32}" y="${panel.top + 196}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800">At u = ${probeInput.toFixed(2)}</text>
+  <text x="${panel.left + 32}" y="${panel.top + 222}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="11">rising history retains 0</text>
+  <text x="${panel.left + 32}" y="${panel.top + 246}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="11">falling history retains 1</text>
+  <text x="${panel.left + 32}" y="${panel.top + 275}" fill="${theme.secondary}" font-family="Segoe UI, sans-serif" font-size="10">current input alone is insufficient</text>
+  <text x="${panel.left + 22}" y="${panel.bottom - 72}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="11" font-weight="800">Ordinary engineering null</text>
+  <text x="${panel.left + 22}" y="${panel.bottom - 49}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="10">Schmitt trigger / finite-state latch</text>
+  <text x="${panel.left + 22}" y="${panel.bottom - 28}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="10">write and reset authority stay external</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
+function finiteDiffusionBoundaryTurnover(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 1180,
+    height: 760,
+    kind: "diffusion-boundary-turnover",
+    theme: "ember",
+  });
+  const { width, height, theme } = layout;
+  const {
+    normalized_frequency_min: qMin,
+    normalized_frequency_max: qMax,
+    samples,
+    boundary_turnover: turnover,
+  } = spec.parameters;
+  if (!(qMin > 0 && qMax > qMin && samples >= 3 && turnover > qMin && turnover < qMax)) {
+    throw new Error("Finite-diffusion turnover parameters are invalid.");
+  }
+  const box = { left: 98, right: 846, top: 154, bottom: height - 92 };
+  const panel = { left: 880, right: width - 38, top: 154, bottom: height - 92 };
+  const yMin = 0.005;
+  const yMax = 20000;
+  const xMap = (value) => localLogScale(value, qMin, qMax, box.left, box.right);
+  const yMap = (value) => localLogScale(value, yMin, yMax, box.bottom, box.top);
+  const tanhOverRootIqMagnitude = (q, blocking) => {
+    const a = Math.sqrt(q / 2);
+    const denominator = Math.cosh(2 * a) + Math.cos(2 * a);
+    let real = Math.sinh(2 * a) / denominator;
+    let imaginary = Math.sin(2 * a) / denominator;
+    if (blocking) {
+      const squaredMagnitude = real * real + imaginary * imaginary;
+      [real, imaginary] = [real / squaredMagnitude, -imaginary / squaredMagnitude];
+    }
+    const quotientReal = (real + imaginary) / (2 * a);
+    const quotientImaginary = (imaginary - real) / (2 * a);
+    return Math.hypot(quotientReal, quotientImaginary);
+  };
+  const values = Array.from({ length: samples }, (_, index) => {
+    const q = 10 ** (Math.log10(qMin) + (index / (samples - 1)) * (Math.log10(qMax) - Math.log10(qMin)));
+    return {
+      q,
+      semi: 1 / Math.sqrt(q),
+      transmissive: tanhOverRootIqMagnitude(q, false),
+      blocking: tanhOverRootIqMagnitude(q, true),
+    };
+  });
+  const curve = (key) => linePath(values.map((entry) => [xMap(entry.q), yMap(entry[key])]));
+  const xTicks = [1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100, 1000, 10000];
+  const yTicks = [0.01, 0.1, 1, 10, 100, 1000, 10000];
+  const tickLabel = (value) => value === 1 ? "1" : `10^${Math.round(Math.log10(value))}`;
+  const gridMarkup = [
+    ...xTicks.map((tick) => `<line x1="${xMap(tick)}" y1="${box.top}" x2="${xMap(tick)}" y2="${box.bottom}" stroke="${theme.grid}"/><text x="${xMap(tick)}" y="${box.bottom + 23}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10" text-anchor="middle">${tickLabel(tick)}</text>`),
+    ...yTicks.map((tick) => `<line x1="${box.left}" y1="${yMap(tick)}" x2="${box.right}" y2="${yMap(tick)}" stroke="${theme.grid}"/><text x="${box.left - 13}" y="${yMap(tick) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10" text-anchor="end">${tickLabel(tick)}</text>`),
+  ].join("");
+  const turnoverX = xMap(turnover);
+  const legendRows = [
+    [theme.primary, "semi-infinite", "|Z| ~ q^(-1/2)"],
+    [theme.secondary, "finite · transmissive", "|Z| → 1"],
+    [theme.accent, "finite · blocking", "|Z| ~ q^(-1)"],
+  ].map(([color, label, limit], index) => {
+    const y = panel.top + 96 + index * 76;
+    return `<line x1="${panel.left + 22}" y1="${y - 5}" x2="${panel.left + 58}" y2="${y - 5}" stroke="${color}" stroke-width="5"/><text x="${panel.left + 70}" y="${y}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800">${label}</text><text x="${panel.left + 70}" y="${y + 20}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10">${limit}</text>`;
+  }).join("");
+  const content = `${analyticalHeader(spec, layout, { badge: "FINITE DIFFUSION · EXACT NORMALIZED CURVES" })}
+  <rect x="${box.left}" y="${box.top}" width="${box.right - box.left}" height="${box.bottom - box.top}" rx="16" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  ${gridMarkup}
+  <rect x="${box.left}" y="${box.top}" width="${turnoverX - box.left}" height="${box.bottom - box.top}" fill="${theme.danger}" fill-opacity=".055"/>
+  <line x1="${turnoverX}" y1="${box.top}" x2="${turnoverX}" y2="${box.bottom}" stroke="${theme.danger}" stroke-width="2" stroke-dasharray="8 7"/>
+  <text x="${turnoverX + 10}" y="${box.top + 25}" fill="${theme.danger}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800">boundary becomes visible · q ≈ 1</text>
+  <path d="${curve("semi")}" fill="none" stroke="${theme.primary}" stroke-width="5" stroke-dasharray="9 7"/>
+  <path d="${curve("transmissive")}" fill="none" stroke="${theme.secondary}" stroke-width="6"/>
+  <path d="${curve("blocking")}" fill="none" stroke="${theme.accent}" stroke-width="6"/>
+  <text x="${(box.left + box.right) / 2}" y="${height - 38}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle">normalized angular frequency q = omega tau_D · logarithmic</text>
+  <text x="28" y="${(box.top + box.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle" transform="rotate(-90 28 ${(box.top + box.bottom) / 2})">normalized impedance magnitude · logarithmic</text>
+  <rect x="${panel.left}" y="${panel.top}" width="${panel.right - panel.left}" height="${panel.bottom - panel.top}" rx="16" fill="${theme.panelAlt}" stroke="${theme.grid}" stroke-width="2"/>
+  <text x="${panel.left + 22}" y="${panel.top + 34}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" font-weight="800">SAME HIGH-FREQUENCY TAIL</text>
+  <text x="${panel.left + 22}" y="${panel.top + 57}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="11">three different low-frequency memories</text>
+  ${legendRows}
+  <rect x="${panel.left + 18}" y="${panel.bottom - 132}" width="${panel.right - panel.left - 36}" height="108" rx="12" fill="${theme.background}" fill-opacity=".55"/>
+  <text x="${panel.left + 32}" y="${panel.bottom - 98}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800">Interpretation rule</text>
+  <text x="${panel.left + 32}" y="${panel.bottom - 74}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="10">a q^(-1/2) band does not prove</text>
+  <text x="${panel.left + 32}" y="${panel.bottom - 54}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="10">an infinite kernel; measure until</text>
+  <text x="${panel.left + 32}" y="${panel.bottom - 34}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="10">the boundary can—or cannot—appear</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
 function slowManifoldFoldBoundary(spec) {
   const layout = analyticalLayout(spec, {
     width: 1180,
@@ -1275,6 +1434,8 @@ const renderers = {
   "active-acquisition-frontier": activeAcquisitionFrontier,
   "recovery-time-fragility": recoveryTimeFragility,
   "memory-action-price-envelope": memoryActionPriceEnvelope,
+  "hysteretic-memory-loop": hystereticMemoryLoop,
+  "finite-diffusion-boundary-turnover": finiteDiffusionBoundaryTurnover,
   "memory-kernel-truncation": memoryKernelTruncation,
   "slow-manifold-fold-boundary": slowManifoldFoldBoundary,
   "mission-profile-damage": missionProfileDamage,

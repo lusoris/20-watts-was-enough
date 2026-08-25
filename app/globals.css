@@ -465,6 +465,58 @@ button {
   white-space: nowrap;
 }
 
+.document-part-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin: -12px 0 30px;
+  padding: 13px 15px;
+  border: 1px solid #b8c9bc;
+  border-left: 3px solid var(--green);
+  border-radius: 5px;
+  background: #eef4ed;
+}
+
+.document-part-nav > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.document-part-nav strong,
+.document-part-nav span {
+  color: #30493a;
+  font-size: 12px;
+}
+
+.document-part-nav span {
+  color: #5b6b61;
+}
+
+.document-part-nav button {
+  padding: 7px 10px;
+  border: 1px solid #9fb4a5;
+  border-radius: 4px;
+  background: #f8faf5;
+  color: #244632;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.document-part-nav button:hover:not(:disabled) {
+  border-color: var(--green);
+  background: #e2eee3;
+}
+
+.document-part-nav button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
 .source-warning {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -1166,6 +1218,17 @@ button {
   .document-meta {
     flex-wrap: wrap;
     margin-bottom: 25px;
+  }
+
+  .document-part-nav,
+  .document-part-nav > div {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .document-part-nav > div:last-child {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
   .source-warning {

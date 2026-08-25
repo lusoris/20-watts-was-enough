@@ -300,6 +300,45 @@
     "status": "Analytical Arrhenius-rate illustration with two constructed equal-mean temperature histories; parameters are hypothetical and the curves are not calibrated device damage."
   },
   {
+    "id": "hysteretic-memory-loop",
+    "title": "A hysteretic state remembers which threshold was crossed",
+    "equation": "m_(t+1)=1 if u_t>=theta_on; 0 if u_t<=theta_off; otherwise m_t",
+    "source": "concept/40-memory-and-consolidation.md#hysteresis-is-state-not-reset-authority",
+    "layout": {
+      "kind": "hysteretic-state-loop",
+      "width": 1180,
+      "height": 760,
+      "theme": "ocean"
+    },
+    "parameters": {
+      "input_min": 0,
+      "input_max": 1,
+      "threshold_off": 0.35,
+      "threshold_on": 0.65,
+      "probe_input": 0.5
+    },
+    "status": "Exact input-state loop for the displayed binary Schmitt rule with illustrative dimensionless thresholds. It is an ordinary engineering null, not a fitted biological or artificial memory result."
+  },
+  {
+    "id": "finite-diffusion-boundary-turnover",
+    "title": "A finite boundary changes the apparent memory law",
+    "equation": "Z_open=tanh(sqrt(i q))/sqrt(i q); Z_block=coth(sqrt(i q))/sqrt(i q); q=omega tau_D",
+    "source": "concept/40-memory-and-consolidation.md#hysteresis-is-state-not-reset-authority",
+    "layout": {
+      "kind": "diffusion-boundary-turnover",
+      "width": 1180,
+      "height": 760,
+      "theme": "ember"
+    },
+    "parameters": {
+      "normalized_frequency_min": 0.0001,
+      "normalized_frequency_max": 10000,
+      "samples": 481,
+      "boundary_turnover": 1
+    },
+    "status": "Exact magnitudes of three normalized linear diffusion impedances. The curves expose finite transmissive and blocking low-frequency limits; they are not fits to a cell, software system, or universal memory kernel."
+  },
+  {
     "id": "memory-kernel-truncation",
     "title": "A finite memory window leaves a measurable tail",
     "equation": "R(H) = integral_H^inf K(tau) d tau / integral_0^inf K(tau) d tau = exp(-H/tau_m)",

@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "artifact": "fixture-023",
+  "readiness": "smoke-ready",
+  "command": {
+    "prepare": "node experiments/workstation/fixture-023/runner.mjs prepare --profile smoke",
+    "smoke": "node experiments/workstation/fixture-023/runner.mjs smoke --profile smoke --output <run-directory> --resume false",
+    "run": "node experiments/workstation/fixture-023/runner.mjs run --profile development --output <run-directory> --resume false",
+    "analyze": "node experiments/workstation/fixture-023/runner.mjs analyze --output <run-directory>",
+    "validate": "node experiments/workstation/fixture-023/runner.mjs validate --output <run-directory>"
+  },
+  "environment": {
+    "runtime": "Node.js >=22.13.0 on a little-endian CPU; binary64 arithmetic only",
+    "lockfiles": ["package-lock.json"]
+  },
+  "hardware": {
+    "smoke": {
+      "cpu": "one ordinary little-endian CPU thread or more",
+      "memory_bytes": 268435456,
+      "disk_bytes": 104857600,
+      "energy": "not measured or modeled; energy conclusions forbidden"
+    },
+    "workstation": {
+      "cpu": "ordinary little-endian CPU; no workstation claim is registered",
+      "memory_bytes": 1073741824,
+      "disk_bytes": 1073741824,
+      "energy": "not applicable to this development smoke slice; energy conclusions forbidden"
+    }
+  },
+  "seeds": {
+    "development": "experiments/workstation/fixture-023/seeds/development.reveal.json",
+    "confirmation": "experiments/workstation/fixture-023/seeds/confirmation.unavailable.json",
+    "held_out": "experiments/workstation/fixture-023/seeds/transfer.unavailable.json"
+  },
+  "data": {
+    "generator": "experiments/workstation/fixture-023/generator.mjs",
+    "full_profile": "experiments/workstation/fixture-023/configs/development.json",
+    "full_profile_sha256": "af46ddce662f5f8b83124284df708d15e8952b931050c416c7f17692a4b44fd2",
+    "external": []
+  },
+  "outputs": {
+    "directory": "experiments/workstation/runs/fixture-023-*",
+    "schema": "experiments/workstation/fixture-023/output.schema.json",
+    "append_only": true,
+    "hash_chain": true
+  },
+  "implementation": {
+    "entrypoint": "experiments/workstation/fixture-023/runner.mjs",
+    "tests": [
+      "experiments/workstation/fixture-023/contract.test.mjs",
+      "experiments/workstation/fixture-023/runner.test.mjs"
+    ],
+    "full_tests": [
+      "experiments/workstation/fixture-023/contract.test.mjs",
+      "experiments/workstation/fixture-023/runner.test.mjs"
+    ],
+    "execution_claims": ["C-1516", "C-1517"]
+  },
+  "energy": {
+    "mode": "not-measured",
+    "required": false,
+    "applicability": "not-applicable-to-scoped-claim",
+    "energy_conclusion_allowed": false,
+    "scope_binding": "fixture-023.c-1516-c-1517.development-smoke.non-energy.v4",
+    "not_applicable_reason": "PLM-T01 and PLM-T02 smoke validation records synthetic task loss, state, writes, operations, resets, and abstentions only; it has no joule, watt, carbon, or energy-efficiency endpoint."
+  },
+  "resume": {
+    "supported": true,
+    "module": "experiments/workstation/lib/checkpoint-ledger.mjs",
+    "test": "experiments/workstation/fixture-023/runner.test.mjs"
+  },
+  "promotion_evidence": {
+    "status": "pending",
+    "evidence_path": "experiments/workstation/promotion/fixture-023/evidence.json",
+    "promotion_validation_receipt_path": "experiments/workstation/promotion/fixture-023/promotion-validation.launch-receipt.json",
+    "run_directory": "experiments/workstation/runs/fixture-023-confirmation",
+    "release_root": "experiments/workstation/releases/fixture-023",
+    "release_path": "experiments/workstation/releases/fixture-023/confirmation.release.json",
+    "energy_assignments_path": "experiments/workstation/runs/fixture-023-confirmation/non-energy-boundary.json",
+    "disjoint_seed_pack_paths": [
+      "experiments/workstation/fixture-023/seeds/transfer.unavailable.json"
+    ],
+    "protocol_eligibility": {
+      "status": "blocked",
+      "protocol_version": "F-023/PLM-T01+PLM-T02-development-smoke-v4",
+      "claim_scope": ["C-1516", "C-1517"],
+      "blockers": [
+        "All 64 formula-derived public development seeds per track are registered, but reduced world counts and fixed plumbing proxies are implemented.",
+        "The full comparator families, equal development tuning, ablations, sensitivity analysis, paired inference, and all ten F-023 tracks are absent.",
+        "No confirmation or transfer seed, commitment, reveal, independent review, statistical adjudication, promotion evidence, or release exists."
+      ]
+    }
+  }
+}

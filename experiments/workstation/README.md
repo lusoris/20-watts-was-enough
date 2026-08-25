@@ -1,12 +1,16 @@
 # Workstation execution contract
 
-The repository now contains five executable smoke harnesses alongside research
+The repository now contains seven executable smoke harnesses alongside research
 and protocol specifications, but no workstation-ready scientific package:
 [Candidate 010](candidate-010/README.md) exercises staged verification and
 [Fixture F-007](fixture-007/README.md) exercises optical null-space honesty;
 [Fixture F-012](fixture-012/README.md) exercises layout-population performance
 inference; [Fixture F-019](fixture-019/README.md) exercises the FM-T02
-endogenous-feedback forecast boundary; and
+endogenous-feedback forecast boundary;
+[Fixture F-022](fixture-022/README.md) exercises the DEV-T01 positional-memory
+corruption and fallback boundary;
+[Fixture F-023](fixture-023/README.md) exercises the PLM-T01 duration-memory and
+PLM-T02 lifecycle-reset boundaries; and
 [Fixture F-024](fixture-024/README.md) exercises the AMR-T01 projected-memory
 development path.
 A test becomes workstation-ready only when its
@@ -68,6 +72,24 @@ frozen aggregate endpoint is effectively seed-invariant
 under the protocol's symmetric shocks and proportional sales, so confirmation
 is explicitly blocked pending a reviewed protocol revision. No result or
 energy conclusion follows.
+
+[Fixture F-022](fixture-022/README.md) implements a bounded public-development
+smoke path for C-1506 / DEV-T01. It exercises valid, independent, local-patch,
+and common-mode positional-memory states against an open-write diagnostic, a
+robust propagation null, and a gated proposal. Common-mode corruption must
+trigger abstention and charge the complete null fallback; valid memory must not
+trigger a false fallback. The registered Potts/total-variation null, private
+partitions, paired inference, and reference-workstation contract remain
+unimplemented, so every output is `NO_RESULT`.
+
+[Fixture F-023](fixture-023/README.md) implements bounded public-development
+smoke paths for C-1516--C-1517 / PLM-T01--PLM-T02. The first path exercises
+duration accumulation, a conventional duration filter, and independent
+latches under interruption and missingness. The second exercises carried
+state, a change-point null, and evidence-gated fractional reset; duplicate,
+delayed, or missing lifecycle boundaries force reset-capable arms to abstain.
+The two paths share closed accounting and authority contracts but make no
+comparative, scientific, energy, or promotion claim.
 
 [Fixture F-024](fixture-024/README.md) implements a bounded public-development
 smoke path for C-1526 / AMR-T01. It generates stable two-variable linear

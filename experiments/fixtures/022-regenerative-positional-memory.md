@@ -5,9 +5,11 @@
 - **Status:** complete preimplementation CPU-only experiment contract
 - **Direct claims:** [`C-1506`](../../research/claims.md#c-1506)--[`C-1515`](../../research/claims.md#c-1515)
 - **Source audit:** [developmental biology and regeneration depth](../../research/audits/2026-08-25-developmental-regeneration-depth.md)
-- **Audit snapshot:** SHA-256 `78CB6D0A1BD984213B8E170D7F460665C43BBC8F6DFE6AD4BB9A41C11FDF1E3A`
+- **Audit snapshot:** SHA-256 `EC44E024D3A4A10FBDBE26D1F616EF6839D7554C7FAA8A1AE0D83DFBF774EC7D`
 - **Protocol IDs:** `DEV-T01`--`DEV-T10`
-- **Execution state:** no runner, reference-workstation manifest, sealed seed pack, generated data, or result exists
+- **Execution state:** DEV-T01 has a deterministic public-development smoke
+  runner and `smoke-ready` manifest; DEV-T02--DEV-T10 remain unimplemented,
+  and no reference-workstation freeze, private partition, or result exists
 - **Registry disposition:** no new P-series principle, architecture candidate, claimed AI effect, biological-energy estimate, or deployment claim
 
 This fixture converts ten source-qualified developmental observations into ten
@@ -663,7 +665,8 @@ pack, property tests, independent evaluator, and reduced smoke manifest exist.
 It is only **workstation-ready** when the exact reference-workstation manifest,
 resource caps, full public pack, and artifact validation pass. It is only
 **confirmation-ready** after code/config/schema hashes and private commitments
-are frozen. None of those states exists now.
+are frozen. DEV-T01 is `smoke-ready`; none of the workstation or confirmation
+states exists.
 
 ## Promotion, rejection, and interpretation rules
 
@@ -684,7 +687,9 @@ are frozen. None of those states exists now.
 
 ## Current execution state
 
-All ten protocols are `NO_RESULT`. The source-audit snapshot is frozen above,
-but no runner or workstation manifest exists, no development or private seed
-has been executed, and no result artifact exists. This document is only a
-prospective preimplementation contract.
+All ten protocols are `NO_RESULT`. The source-audit snapshot is frozen above.
+[The DEV-T01 development harness](../workstation/fixture-022/README.md) executes
+only public smoke/development inputs and keeps comparison, energy, performance,
+and claim authority disabled. DEV-T02--DEV-T10 have no runner; no private seed,
+reference-workstation freeze, confirmation analysis, or result artifact exists.
+The full fixture remains a prospective experiment contract.

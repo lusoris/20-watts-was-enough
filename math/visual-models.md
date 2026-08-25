@@ -99,6 +99,52 @@ longer histories. It does not supply a cutoff for another kernel, observable,
 horizon, or intervention. Those require an empirical closure test under the
 [multiscale reduction contract](multiscale-reduction-contract.md).
 
+## Finite diffusion boundary turnover
+
+![A semi-infinite diffusion law and two finite-boundary laws coincide in their high-frequency slope but separate below the boundary timescale.](../public/plots/finite-diffusion-boundary-turnover.svg)
+
+Let $q=\omega\tau_D$ be dimensionless angular frequency and use normalized
+linear diffusion impedances
+
+$$
+Z_{\infty}(q)=\frac{1}{\sqrt{iq}},\qquad
+Z_{T}(q)=\frac{\tanh\sqrt{iq}}{\sqrt{iq}},\qquad
+Z_{B}(q)=\frac{\coth\sqrt{iq}}{\sqrt{iq}}.
+$$
+
+$Z_T$ is the displayed transmissive finite-boundary form and $Z_B$ the
+blocking form. All three have the same $q^{-1/2}$ magnitude slope at high
+frequency. Below $q\approx1$, $|Z_T|$ approaches a constant while $|Z_B|$
+grows as $q^{-1}$. The exact normalized curves therefore visualize the
+identification problem in [C-1531](../research/claims.md#c-1531): a finite
+observation band can make physically different memory supports look alike.
+The curves are not fitted data and do not prescribe an artificial memory
+kernel.
+
+## Hysteretic memory loop
+
+![For a binary Schmitt rule, rising and falling input histories form a loop; an input inside the threshold band is compatible with either retained state.](../public/plots/hysteretic-memory-loop.svg)
+
+For ordered dimensionless thresholds
+$\theta_{\mathrm{off}}<\theta_{\mathrm{on}}$, the exact update rule is
+
+$$
+m_{t+1}=
+\begin{cases}
+1, & u_t\geq\theta_{\mathrm{on}},\\
+0, & u_t\leq\theta_{\mathrm{off}},\\
+m_t, & \theta_{\mathrm{off}}<u_t<\theta_{\mathrm{on}}.
+\end{cases}
+$$
+
+$u_t$ is the current input and $m_t\in\{0,1\}$ is the retained state; both are
+dimensionless in this normalized example. The shaded band is not uncertainty:
+it is the region in which history is required to determine the next state. The
+displayed thresholds are illustrative. The rule is included as a mature
+engineering null for population, analogue, or biological-memory translations,
+and it grants no authority to reset a state. That separate lifecycle boundary
+is specified in [Budgeted memory lifecycle](memory-lifecycle.md).
+
 ## Slow-manifold fold boundary
 
 ![In the fold normal form, the attracting spectral gap falls to zero while the slow-state sensitivity diverges.](../public/plots/slow-manifold-fold-boundary.svg)

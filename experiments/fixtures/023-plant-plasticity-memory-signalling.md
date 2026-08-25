@@ -6,11 +6,13 @@
 - **Direct claim proposals:**
   [C-1516](../../research/claims.md#c-1516)--[C-1525](../../research/claims.md#c-1525)
 - **Source audit:** [plant plasticity, stress memory, and distributed signalling](../../research/audits/2026-08-25-plant-plasticity-memory-signalling.md)
-- **Audit snapshot:** SHA-256 `ECF80056D94EA6260AFA2B0DE3E6D629933A566F110BFAED10CCDF07FBF7214A`
+- **Audit snapshot:** SHA-256 `76C84AC84012E6B441B088C309E0007D01B137F6D3D4C8EE4C628A511F2B9238`
 - **Fixture ID:** `F-023`
 - **Protocol IDs:** `PLM-T01`--`PLM-T10`
-- **Execution state:** no runner, sealed-seed manifest, generated data,
-  reference-workstation manifest, execution artifact, or result exists
+- **Execution state:** PLM-T01--PLM-T02 have deterministic public-development
+  smoke paths and a `smoke-ready` manifest; PLM-T03--PLM-T10 remain
+  unimplemented, and no private partition, reference-workstation freeze, or
+  result exists
 - **Registry disposition:** no new P-series principle, architecture candidate,
   biological inference, or claimed efficiency effect
 
@@ -968,15 +970,14 @@ If implementation never occurs, the durable disposition is `preimplementation
 
 ## Implementation and artifact boundary
 
-This specification intentionally creates no runner, package dependency,
-generated fixture data, benchmark result, workstation manifest, plot, PDF,
-central claim entry, bibliography entry, routing update, or site content. A
-future implementation is a separate reviewed change and must not alter this
-contract while using the same version identifier.
+The [separate development harness](../workstation/fixture-023/README.md) now
+implements bounded PLM-T01 and PLM-T02 shakedowns without changing this full
+protocol. It creates only public development records with closed `NO_RESULT`
+authority; it does not implement the registered 64-seed procedure, paired
+inference, hostile transfer, or the remaining eight tracks.
 
-The first implementation milestone is deterministic development-only
-shakedown for all ten tracks. It is not authorization to reveal confirmation
-seeds, report an effect, run a biological experiment, or claim workstation
-energy. Registrar reveal and full execution require a separately reviewed
-freeze showing that equal information, state, reserve, communication,
-construction, and resource accounting are mechanically enforced.
+This milestone is not authorization to reveal confirmation seeds, report an
+effect, run a biological experiment, or claim workstation energy. Registrar
+reveal and full execution require a separately reviewed freeze showing that
+equal information, state, reserve, communication, construction, and resource
+accounting are mechanically enforced.

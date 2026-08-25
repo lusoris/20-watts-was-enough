@@ -10,6 +10,8 @@ The executable fixture slices are the
 the [F-012 layout-randomized performance-inference
 harness](../workstation/fixture-012/README.md), the
 [F-019 endogenous-feedback smoke harness](../workstation/fixture-019/README.md),
+the [F-022 positional-memory smoke harness](../workstation/fixture-022/README.md),
+the [F-023 plant-memory smoke harness](../workstation/fixture-023/README.md),
 and the [F-024 projected-memory smoke harness](../workstation/fixture-024/README.md).
 Execution readiness is tracked separately from the completeness of each full
 fixture contract.
@@ -40,3 +42,4 @@ fixture contract.
 | F-022 | [Regenerative positional memory](022-regenerative-positional-memory.md) | mature checkpoint, robust-field, scaling, observability, adaptive-routing, boundary, redundancy, reaction--diffusion, and symmetry-breaking nulls; complete CPU-only contracts for C-1506--C-1515 with no execution results |
 | F-023 | [Plant plasticity, memory, and signalling](023-plant-plasticity-memory-signalling.md) | mature latch, reset, state-space, systemic-routing, active-sensing, structural-admission, resource, wave, and context-integration nulls; complete CPU-only contracts for C-1516--C-1525 with no execution results |
 | F-024 | [Applied multiscale reduction](024-applied-multiscale-reduction.md) | mature autoregressive, delay, balanced-truncation, singular-perturbation, adaptive-integration, surrogate, multigrid/domain-decomposition, and ensemble closure nulls; complete CPU-only contracts for C-1526--C-1529 with no execution results |
+| F-025 | [Electrochemistry: interfaces, memory, and degradation](025-electrochemistry-interface-memory-degradation.md) | mature state-space/MPC, finite-memory, circuit/validity, regularised inverse, hybrid-regime, barrier/rollback, queue/load, identifiability, recurrent-state, and safe-optimisation nulls; complete CPU-only contracts for C-1530--C-1539 with no execution results |

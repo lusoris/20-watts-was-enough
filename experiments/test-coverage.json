@@ -50,14 +50,14 @@
     }
   },
   "counts": {
-    "claims": 1520,
-    "testRouted": 1428,
-    "protocolCovered": 1428,
+    "claims": 1530,
+    "testRouted": 1438,
+    "protocolCovered": 1438,
     "executionReady": 0,
     "tierCounts": {
       "ledger-only": 92,
       "linked-description": 0,
-      "protocol-complete": 1428,
+      "protocol-complete": 1438,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
@@ -76,7 +76,7 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1103,
+        "established": 1113,
         "plausible": 209,
         "speculative": 60,
         "disputed": 47,
@@ -97,11 +97,11 @@
       "new-artifact-needed": 0
     },
     "proposedArtifactFamilies": 0,
-    "artifacts": 44,
-    "protocolCompleteArtifacts": 44,
+    "artifacts": 45,
+    "protocolCompleteArtifacts": 45,
     "executionReadyArtifacts": 0,
-    "smokeReadyArtifacts": 5,
-    "claimSideLinked": 1211,
+    "smokeReadyArtifacts": 7,
+    "claimSideLinked": 1221,
     "documentSideLinked": 1128,
     "reciprocalClaims": 774
   },
@@ -8762,13 +8762,70 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
-      "executionReadiness": "absent",
-      "executionManifest": null,
+      "executionReadiness": "smoke-ready",
+      "executionManifest": "experiments/workstation/manifests/fixture-022.json",
       "executionMissing": [
-        "manifest"
+        "readiness=smoke-ready"
       ],
-      "executionPromotionChecks": [],
-      "executionClaims": [],
+      "executionPromotionChecks": [
+        {
+          "id": "execution-claim-scope",
+          "label": "Explicit execution-track claim scope",
+          "passed": false,
+          "detail": "implementation.execution_claims must name at least one exact claim ID"
+        },
+        {
+          "id": "full-profile",
+          "label": "Frozen full profile",
+          "passed": false,
+          "detail": "data.full_profile must be a valid profile with a matching full_profile_sha256"
+        },
+        {
+          "id": "full-tests",
+          "label": "Full experiment-path tests",
+          "passed": true,
+          "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
+        },
+        {
+          "id": "hash-chain",
+          "label": "Corruption-evident output ledger",
+          "passed": true,
+          "detail": "hash-chain output is wired through the tested checkpoint ledger"
+        },
+        {
+          "id": "resume",
+          "label": "Deterministic resume",
+          "passed": true,
+          "detail": "runner imports the declared, tested checkpoint/resume implementation"
+        },
+        {
+          "id": "energy-provider",
+          "label": "Measured-energy or explicit non-energy boundary",
+          "passed": false,
+          "detail": "energy provider config/module/test and frozen hash must enforce measured energy, or a non-energy claim must explicitly forbid energy conclusions"
+        },
+        {
+          "id": "confirmation-seeds",
+          "label": "Frozen confirmation seeds",
+          "passed": false,
+          "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+        },
+        {
+          "id": "held_out-seeds",
+          "label": "Frozen held-out seeds",
+          "passed": false,
+          "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+        },
+        {
+          "id": "promotion-evidence",
+          "label": "Strict recomputed promotion evidence",
+          "passed": false,
+          "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
+        }
+      ],
+      "executionClaims": [
+        "C-1506"
+      ],
       "claimSideClaims": [
         "C-1506",
         "C-1507",
@@ -8813,13 +8870,71 @@
       "protocolComplete": true,
       "missingFacets": [],
       "executionReady": false,
-      "executionReadiness": "absent",
-      "executionManifest": null,
+      "executionReadiness": "smoke-ready",
+      "executionManifest": "experiments/workstation/manifests/fixture-023.json",
       "executionMissing": [
-        "manifest"
+        "readiness=smoke-ready"
       ],
-      "executionPromotionChecks": [],
-      "executionClaims": [],
+      "executionPromotionChecks": [
+        {
+          "id": "execution-claim-scope",
+          "label": "Explicit execution-track claim scope",
+          "passed": false,
+          "detail": "implementation.execution_claims must name at least one exact claim ID"
+        },
+        {
+          "id": "full-profile",
+          "label": "Frozen full profile",
+          "passed": false,
+          "detail": "data.full_profile must be a valid profile with a matching full_profile_sha256"
+        },
+        {
+          "id": "full-tests",
+          "label": "Full experiment-path tests",
+          "passed": true,
+          "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
+        },
+        {
+          "id": "hash-chain",
+          "label": "Corruption-evident output ledger",
+          "passed": true,
+          "detail": "hash-chain output is wired through the tested checkpoint ledger"
+        },
+        {
+          "id": "resume",
+          "label": "Deterministic resume",
+          "passed": true,
+          "detail": "runner imports the declared, tested checkpoint/resume implementation"
+        },
+        {
+          "id": "energy-provider",
+          "label": "Measured-energy or explicit non-energy boundary",
+          "passed": false,
+          "detail": "energy provider config/module/test and frozen hash must enforce measured energy, or a non-energy claim must explicitly forbid energy conclusions"
+        },
+        {
+          "id": "confirmation-seeds",
+          "label": "Frozen confirmation seeds",
+          "passed": false,
+          "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+        },
+        {
+          "id": "held_out-seeds",
+          "label": "Frozen held-out seeds",
+          "passed": false,
+          "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+        },
+        {
+          "id": "promotion-evidence",
+          "label": "Strict recomputed promotion evidence",
+          "passed": false,
+          "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
+        }
+      ],
+      "executionClaims": [
+        "C-1516",
+        "C-1517"
+      ],
       "claimSideClaims": [
         "C-1516",
         "C-1517",
@@ -8945,6 +9060,46 @@
         "C-1527",
         "C-1528",
         "C-1529"
+      ]
+    },
+    {
+      "id": "fixture-025",
+      "path": "experiments/fixtures/025-electrochemistry-interface-memory-degradation.md",
+      "title": "Fixture F-025 — Electrochemistry: interfaces, memory, and degradation",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "absent",
+      "executionManifest": null,
+      "executionMissing": [
+        "manifest"
+      ],
+      "executionPromotionChecks": [],
+      "executionClaims": [],
+      "claimSideClaims": [
+        "C-1530",
+        "C-1531",
+        "C-1532",
+        "C-1533",
+        "C-1534",
+        "C-1535",
+        "C-1536",
+        "C-1537",
+        "C-1538",
+        "C-1539"
+      ],
+      "documentSideClaims": [],
+      "linkedClaims": [
+        "C-1530",
+        "C-1531",
+        "C-1532",
+        "C-1533",
+        "C-1534",
+        "C-1535",
+        "C-1536",
+        "C-1537",
+        "C-1538",
+        "C-1539"
       ]
     }
   ],
@@ -29514,6 +29669,126 @@
       "executionReady": false,
       "artifacts": [
         "fixture-024"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1530",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-025"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1531",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-025"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1532",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-025"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1533",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-025"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1534",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-025"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1535",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-025"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1536",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-025"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1537",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-025"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1538",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-025"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1539",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-025"
       ],
       "disposition": null
     }

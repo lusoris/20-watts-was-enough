@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-022.dev-t01-event.schema.json",
+  "title": "Fixture 022 DEV-T01 development smoke event",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "contract.mjs",
+    "export": "assertFixture022Record",
+    "version_export": "FIXTURE_022_EVENT_CONTRACT_VERSION",
+    "contract_version": "fixture-022.dev-t01-event.v3",
+    "test": "contract.test.mjs"
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "nonnegativeInteger": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unitFraction": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-022.dev-t01-event.v3" },
+    "artifact": { "const": "fixture-022" },
+    "track": { "const": "DEV-T01" },
+    "run_id": { "$ref": "#/$defs/sha256" },
+    "profile": { "enum": ["smoke", "development"] },
+    "pack": { "const": "public-development" },
+    "seed": { "type": "integer", "minimum": 1516001, "maximum": 1516064 },
+    "world_index": { "$ref": "#/$defs/nonnegativeInteger" },
+    "world_id": { "type": "string", "pattern": "^1516[0-9]{3}:[0-9]+$" },
+    "corruption_family": {
+      "enum": ["valid", "independent-permutation", "local-patch-shift", "common-mode-shift"]
+    },
+    "arm": {
+      "enum": ["open-write-majority", "robust-propagation-null", "gated-memory-with-null-fallback"]
+    },
+    "attempt": { "const": 0 },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "node": { "const": "node" },
+        "count": { "const": "count" },
+        "message": { "const": "B" },
+        "fraction": { "const": "1" }
+      },
+      "required": ["node", "count", "message", "fraction"]
+    },
+    "input_sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "audit": { "$ref": "#/$defs/sha256" },
+        "fixture": { "$ref": "#/$defs/sha256" },
+        "runner": { "$ref": "#/$defs/sha256" },
+        "config_smoke": { "$ref": "#/$defs/sha256" },
+        "config_development": { "$ref": "#/$defs/sha256" },
+        "schema": { "$ref": "#/$defs/sha256" }
+      },
+      "required": ["audit", "fixture", "runner", "config_smoke", "config_development", "schema"]
+    },
+    "observation_sha256": { "$ref": "#/$defs/sha256" },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_solver_rounds": { "type": "integer", "minimum": 1 },
+        "bytes_per_message": { "type": "integer", "minimum": 1 },
+        "message_budget_bytes": { "type": "integer", "minimum": 1 },
+        "memory_write_budget": { "type": "integer", "minimum": 1 }
+      },
+      "required": ["max_solver_rounds", "bytes_per_message", "message_budget_bytes", "memory_write_budget"]
+    },
+    "budget_equal_by_contract": { "const": true },
+    "hidden_truth_exposed": { "const": false },
+    "nodes_total": { "type": "integer", "minimum": 4 },
+    "wounded_nodes": { "type": "integer", "minimum": 1 },
+    "attempted_tasks": { "type": "integer", "minimum": 1 },
+    "accepted_tasks": { "$ref": "#/$defs/nonnegativeInteger" },
+    "wrong_role_count": { "$ref": "#/$defs/nonnegativeInteger" },
+    "unsafe_write_count": { "$ref": "#/$defs/nonnegativeInteger" },
+    "support_miss_count": { "$ref": "#/$defs/nonnegativeInteger" },
+    "memory_abstention_count": { "$ref": "#/$defs/nonnegativeInteger" },
+    "fallback_invoked": { "type": "boolean" },
+    "corruption_detected": { "type": "boolean" },
+    "role_error_rate": { "$ref": "#/$defs/unitFraction" },
+    "accepted_service_fraction": { "$ref": "#/$defs/unitFraction" },
+    "messages_count": { "$ref": "#/$defs/nonnegativeInteger" },
+    "message_bytes": { "$ref": "#/$defs/nonnegativeInteger" },
+    "memory_reads": { "$ref": "#/$defs/nonnegativeInteger" },
+    "memory_writes": { "$ref": "#/$defs/nonnegativeInteger" },
+    "rollback_count": { "$ref": "#/$defs/nonnegativeInteger" },
+    "solver_rounds": { "$ref": "#/$defs/nonnegativeInteger" },
+    "converged": { "type": "boolean" },
+    "failure": { "type": "boolean" },
+    "failure_reason": {
+      "enum": [
+        "message-budget-exhausted",
+        "memory-write-budget-exhausted",
+        "solver-nonconvergence",
+        "numerical-failure",
+        "policy-exception",
+        "evaluator-exception",
+        null
+      ]
+    },
+    "failure_detail": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "stage": { "enum": ["policy", "evaluator", null] },
+        "signal": {
+          "enum": [
+            "message-attempt-exceeds-cap",
+            "memory-write-count-exceeds-cap",
+            "maximum-rounds-without-convergence",
+            "non-finite-policy-output",
+            "non-finite-evaluator-output",
+            "invalid-policy-output",
+            "invalid-evaluator-output",
+            "policy-threw",
+            "evaluator-threw",
+            null
+          ]
+        },
+        "outcome_observation_complete": { "type": "boolean" },
+        "resource_observation_complete": { "type": "boolean" }
+      },
+      "required": [
+        "stage",
+        "signal",
+        "outcome_observation_complete",
+        "resource_observation_complete"
+      ]
+    },
+    "observed_loss": {
+      "oneOf": [
+        { "type": "number", "minimum": 0, "maximum": 100 },
+        { "type": "null" }
+      ]
+    },
+    "loss": { "type": "number", "minimum": 0, "maximum": 100 },
+    "charged_resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "messages_count": { "$ref": "#/$defs/nonnegativeInteger" },
+        "message_bytes": { "$ref": "#/$defs/nonnegativeInteger" },
+        "memory_reads": { "$ref": "#/$defs/nonnegativeInteger" },
+        "memory_writes": { "$ref": "#/$defs/nonnegativeInteger" },
+        "solver_rounds": { "$ref": "#/$defs/nonnegativeInteger" }
+      },
+      "required": ["messages_count", "message_bytes", "memory_reads", "memory_writes", "solver_rounds"]
+    },
+    "status": { "const": "development-smoke-only" },
+    "measured_energy_present": { "const": false },
+    "energy_conclusion_allowed": { "const": false },
+    "claim_eligible": { "const": false },
+    "scientific_result": { "const": false },
+    "performance_result": { "const": false },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sequence": { "$ref": "#/$defs/nonnegativeInteger" },
+        "previous_sha256": { "$ref": "#/$defs/sha256" },
+        "record_sha256": { "$ref": "#/$defs/sha256" }
+      },
+      "required": ["sequence", "previous_sha256", "record_sha256"]
+    }
+  },
+  "required": [
+    "schema",
+    "contract_version",
+    "artifact",
+    "track",
+    "run_id",
+    "profile",
+    "pack",
+    "seed",
+    "world_index",
+    "world_id",
+    "corruption_family",
+    "arm",
+    "attempt",
+    "units",
+    "input_sha256",
+    "observation_sha256",
+    "budget",
+    "budget_equal_by_contract",
+    "hidden_truth_exposed",
+    "nodes_total",
+    "wounded_nodes",
+    "attempted_tasks",
+    "accepted_tasks",
+    "wrong_role_count",
+    "unsafe_write_count",
+    "support_miss_count",
+    "memory_abstention_count",
+    "fallback_invoked",
+    "corruption_detected",
+    "role_error_rate",
+    "accepted_service_fraction",
+    "messages_count",
+    "message_bytes",
+    "memory_reads",
+    "memory_writes",
+    "rollback_count",
+    "solver_rounds",
+    "converged",
+    "failure",
+    "failure_reason",
+    "failure_detail",
+    "observed_loss",
+    "loss",
+    "charged_resources",
+    "status",
+    "measured_energy_present",
+    "energy_conclusion_allowed",
+    "claim_eligible",
+    "scientific_result",
+    "performance_result",
+    "integrity"
+  ]
+}

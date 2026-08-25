@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "artifact": "fixture-023",
+  "profile": "smoke",
+  "tracks": ["PLM-T01", "PLM-T02"],
+  "t01_episodes_per_seed": 6,
+  "t01_steps_per_episode": 96,
+  "t01_decision_center_s": 48,
+  "t01_decision_scale_s": 8,
+  "t01_flip_probability": 0.1,
+  "t01_missing_probability": 0.08,
+  "t01_latches": 32,
+  "t01_latch_hazard": 0.08,
+  "t02_lifecycles_per_seed": 8,
+  "t02_tasks_per_lifecycle": 24,
+  "t02_feature_dimensions": 8,
+  "state_budget_bytes": 256,
+  "operation_budget_per_world": 200000,
+  "max_loss": 100
+}

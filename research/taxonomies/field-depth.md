@@ -16,7 +16,7 @@ EuroSciVoc is the EU-level multilingual science vocabulary. The DFG hierarchy
 adds German review granularity. ANZSRC is an independent omission detector,
 not the normative framework for the project.
 
-**Explicit child routes recorded:** 54. All other children are unassigned.
+**Explicit child routes recorded:** 60. All other children are unassigned.
 
 ## EuroSciVoc 1.6: European science vocabulary
 
@@ -560,7 +560,7 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### natural sciences
 
-**Deutsch:** Naturwissenschaften. **Fine-grained status:** 13 of 413 concepts in this branch have an explicit routing assignment.
+**Deutsch:** Naturwissenschaften. **Fine-grained status:** 15 of 413 concepts in this branch have an explicit routing assignment.
 
 - **natural sciences.** Routing: unassigned.
   - **biological sciences.** Deutsch: Biowissenschaften. Routing: unassigned.
@@ -659,10 +659,10 @@ are retained below; neither a label nor a parent route counts as evidence review
       - **biocatalysis.** Deutsch: Biokatalyse. Routing: unassigned.
       - **electrocatalysis.** Deutsch: Elektrokatalyse. Routing: unassigned.
       - **photocatalysis.** Deutsch: Photokatalyse. Routing: unassigned.
-    - **electrochemistry.** Deutsch: Elektrochemie. Routing: unassigned.
+    - **electrochemistry.** Deutsch: Elektrochemie. Routing: dedicated child-level evidence via [electrochemistry interface memory degradation](../audits/2026-08-25-electrochemistry-interface-memory-degradation.md). Claims: [C-1530](../claims.md#c-1530), [C-1531](../claims.md#c-1531), [C-1532](../claims.md#c-1532), [C-1533](../claims.md#c-1533), [C-1534](../claims.md#c-1534), [C-1535](../claims.md#c-1535), [C-1536](../claims.md#c-1536), [C-1537](../claims.md#c-1537), [C-1538](../claims.md#c-1538), [C-1539](../claims.md#c-1539).
       - **bioelectrochemistry.** Deutsch: Bioelektrochemie. Routing: unassigned.
         - **electroporation.** Deutsch: Elektroporation. Routing: unassigned.
-      - **electric batteries.** Deutsch: elektrische Batterien. Routing: unassigned.
+      - **electric batteries.** Deutsch: elektrische Batterien. Routing: adjacent child-level evidence via [electrochemistry interface memory degradation](../audits/2026-08-25-electrochemistry-interface-memory-degradation.md). Claims: [C-1534](../claims.md#c-1534), [C-1535](../claims.md#c-1535), [C-1536](../claims.md#c-1536), [C-1537](../claims.md#c-1537), [C-1538](../claims.md#c-1538), [C-1539](../claims.md#c-1539).
       - **electrolysis.** Deutsch: Elektrolyse. Routing: unassigned.
       - **electrophoresis.** Deutsch: Elektrophorese. Routing: unassigned.
     - **inorganic chemistry.** Deutsch: anorganische Chemie. Routing: unassigned.
@@ -1404,20 +1404,20 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### 3.12 Chemische Festkörper- und Oberflächenforschung
 
-**Parent route:** adjacent parent-level evidence via [adaptive materials and self assembly](../audits/2026-08-05-adaptive-materials-and-self-assembly.md), [semiconductor device reliability](../audits/2026-08-05-semiconductor-device-reliability.md).
+**Parent route:** adjacent parent-level evidence via [adaptive materials and self assembly](../audits/2026-08-05-adaptive-materials-and-self-assembly.md), [semiconductor device reliability](../audits/2026-08-05-semiconductor-device-reliability.md), [electrochemistry interface memory degradation](../audits/2026-08-25-electrochemistry-interface-memory-degradation.md).
 
-**Fine-grained status:** 0 of 2 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 1 of 2 subjects have an explicit child-level routing assignment.
 
 - **3.12-01 — Festkörper- und Oberflächenchemie, Materialsynthese.** Routing: unassigned.
-- **3.12-02 — Physikalische Chemie von Festkörpern und Oberflächen, Materialcharakterisierung.** Routing: unassigned.
+- **3.12-02 — Physikalische Chemie von Festkörpern und Oberflächen, Materialcharakterisierung.** Routing: adjacent child-level evidence via [electrochemistry interface memory degradation](../audits/2026-08-25-electrochemistry-interface-memory-degradation.md). Claims: [C-1534](../claims.md#c-1534), [C-1535](../claims.md#c-1535), [C-1536](../claims.md#c-1536), [C-1537](../claims.md#c-1537), [C-1538](../claims.md#c-1538), [C-1539](../claims.md#c-1539).
 
 ### 3.13 Physikalische Chemie
 
-**Parent route:** adjacent parent-level evidence via [chemistry reaction networks proofreading](../audits/2026-08-05-chemistry-reaction-networks-proofreading.md), [information thermodynamics physical computation](../audits/2026-08-05-information-thermodynamics-physical-computation.md).
+**Parent route:** dedicated parent-level audit via [chemistry reaction networks proofreading](../audits/2026-08-05-chemistry-reaction-networks-proofreading.md), [information thermodynamics physical computation](../audits/2026-08-05-information-thermodynamics-physical-computation.md), [electrochemistry interface memory degradation](../audits/2026-08-25-electrochemistry-interface-memory-degradation.md).
 
-**Fine-grained status:** 0 of 1 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 1 of 1 subjects have an explicit child-level routing assignment.
 
-- **3.13-01 — Physikalische Chemie von Molekülen, Flüssigkeiten und Grenzflächen, Biophysikalische Chemie.** Routing: unassigned.
+- **3.13-01 — Physikalische Chemie von Molekülen, Flüssigkeiten und Grenzflächen, Biophysikalische Chemie.** Routing: dedicated child-level evidence via [electrochemistry interface memory degradation](../audits/2026-08-25-electrochemistry-interface-memory-degradation.md). Claims: [C-1530](../claims.md#c-1530), [C-1531](../claims.md#c-1531), [C-1532](../claims.md#c-1532), [C-1533](../claims.md#c-1533), [C-1536](../claims.md#c-1536).
 
 ### 3.14 Analytische Chemie
 
@@ -2288,9 +2288,9 @@ route.
 
 ### 34 CHEMICAL SCIENCES
 
-**Parent route:** dedicated parent-level audit via [chemistry reaction networks proofreading](../audits/2026-08-05-chemistry-reaction-networks-proofreading.md), [biotechnology chemistry process systems](../audits/2026-08-21-biotechnology-chemistry-process-systems.md), [molecular chemistry synthesis systems](../audits/2026-08-21-molecular-chemistry-synthesis-systems.md), [polymer research adaptive materials](../audits/2026-08-21-polymer-research-adaptive-materials.md), [measurement heavy analytical water earth observation](../audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md).
+**Parent route:** dedicated parent-level audit via [chemistry reaction networks proofreading](../audits/2026-08-05-chemistry-reaction-networks-proofreading.md), [biotechnology chemistry process systems](../audits/2026-08-21-biotechnology-chemistry-process-systems.md), [molecular chemistry synthesis systems](../audits/2026-08-21-molecular-chemistry-synthesis-systems.md), [polymer research adaptive materials](../audits/2026-08-21-polymer-research-adaptive-materials.md), [measurement heavy analytical water earth observation](../audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md), [electrochemistry interface memory degradation](../audits/2026-08-25-electrochemistry-interface-memory-degradation.md).
 
-**Fine-grained status:** 0 of 8 groups and 0 of 63 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 8 groups and 1 of 63 fields have an explicit child-level routing assignment.
 
 #### 3401 Analytical chemistry
 
@@ -2370,7 +2370,7 @@ route.
 - **340601 — Catalysis and mechanisms of reactions.** Routing: unassigned.
 - **340602 — Chemical thermodynamics and energetics.** Routing: unassigned.
 - **340603 — Colloid and surface chemistry.** Routing: unassigned.
-- **340604 — Electrochemistry.** Routing: unassigned.
+- **340604 — Electrochemistry.** Routing: dedicated child-level evidence via [electrochemistry interface memory degradation](../audits/2026-08-25-electrochemistry-interface-memory-degradation.md). Claims: [C-1530](../claims.md#c-1530), [C-1531](../claims.md#c-1531), [C-1532](../claims.md#c-1532), [C-1533](../claims.md#c-1533), [C-1534](../claims.md#c-1534), [C-1535](../claims.md#c-1535), [C-1536](../claims.md#c-1536), [C-1537](../claims.md#c-1537), [C-1538](../claims.md#c-1538), [C-1539](../claims.md#c-1539).
 - **340605 — Molecular imaging (incl. electron microscopy and neutron diffraction).** Routing: unassigned.
 - **340606 — Photochemistry.** Routing: unassigned.
 - **340607 — Reaction kinetics and dynamics.** Routing: unassigned.
@@ -2876,9 +2876,9 @@ route.
 
 ### 40 ENGINEERING
 
-**Parent route:** dedicated parent-level audit via [engineering analogues](../audits/2026-08-05-engineering-analogues.md), [mechanical civil resilience](../audits/2026-08-05-mechanical-civil-resilience.md), [process engineering](../audits/2026-08-05-process-engineering.md), [power grids protection and recovery](../audits/2026-08-05-power-grids-protection-and-recovery.md), [polymer research adaptive materials](../audits/2026-08-21-polymer-research-adaptive-materials.md), [production maintenance nanomanufacturing communications material qualification](../audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md), [computing compilers networking visualization](../audits/2026-08-24-computing-compilers-networking-visualization.md), [medical devices biomedical engineering](../audits/2026-08-24-medical-devices-biomedical-engineering.md), [environmental engineering water waste remediation](../audits/2026-08-24-environmental-engineering-water-waste-remediation.md), [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md).
+**Parent route:** dedicated parent-level audit via [engineering analogues](../audits/2026-08-05-engineering-analogues.md), [mechanical civil resilience](../audits/2026-08-05-mechanical-civil-resilience.md), [process engineering](../audits/2026-08-05-process-engineering.md), [power grids protection and recovery](../audits/2026-08-05-power-grids-protection-and-recovery.md), [polymer research adaptive materials](../audits/2026-08-21-polymer-research-adaptive-materials.md), [production maintenance nanomanufacturing communications material qualification](../audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md), [computing compilers networking visualization](../audits/2026-08-24-computing-compilers-networking-visualization.md), [medical devices biomedical engineering](../audits/2026-08-24-medical-devices-biomedical-engineering.md), [environmental engineering water waste remediation](../audits/2026-08-24-environmental-engineering-water-waste-remediation.md), [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md), [electrochemistry interface memory degradation](../audits/2026-08-25-electrochemistry-interface-memory-degradation.md).
 
-**Fine-grained status:** 0 of 20 groups and 3 of 196 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 20 groups and 4 of 196 fields have an explicit child-level routing assignment.
 
 #### 4001 Aerospace engineering
 
@@ -2928,7 +2928,7 @@ route.
 - **400401 — Carbon capture engineering (excl. sequestration).** Routing: unassigned.
 - **400402 — Chemical and thermal processes in energy and combustion.** Routing: unassigned.
 - **400403 — Chemical engineering design.** Routing: unassigned.
-- **400404 — Electrochemical energy storage and conversion.** Routing: unassigned.
+- **400404 — Electrochemical energy storage and conversion.** Routing: adjacent child-level evidence via [electrochemistry interface memory degradation](../audits/2026-08-25-electrochemistry-interface-memory-degradation.md). Claims: [C-1534](../claims.md#c-1534), [C-1535](../claims.md#c-1535), [C-1536](../claims.md#c-1536), [C-1537](../claims.md#c-1537), [C-1538](../claims.md#c-1538), [C-1539](../claims.md#c-1539).
 - **400405 — Food engineering.** Routing: unassigned.
 - **400406 — Powder and particle technology.** Routing: unassigned.
 - **400407 — Process control and simulation.** Routing: unassigned.

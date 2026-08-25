@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { ResearchDocument } from "../content";
+import type { ResearchDocument, ResearchDocumentSummary } from "../content";
 import { outlineFromMarkdown } from "../lib/heading-outline";
 import { MarkdownDocument } from "./markdown-document";
 
@@ -17,22 +17,14 @@ const GROUP_ORDER = [
   "Source archive",
 ];
 
-function requestedDocumentPath(
-  documentsByPath: Map<string, ResearchDocument>,
-): string {
-  if (typeof window === "undefined") return DEFAULT_DOCUMENT;
-  const requested = new URLSearchParams(window.location.search).get("doc");
-  return requested && documentsByPath.has(requested) ? requested : DEFAULT_DOCUMENT;
-}
-
-function groupDocuments(documents: ResearchDocument[]) {
+function groupDocuments(documents: ResearchDocumentSummary[]) {
   return GROUP_ORDER.map((group) => ({
     group,
     documents: documents.filter((document) => document.group === group),
   })).filter(({ documents: groupEntries }) => groupEntries.length > 0);
 }
 
-function navigationSubgroup(document: ResearchDocument): string {
+function navigationSubgroup(document: ResearchDocumentSummary): string {
   if (document.group === "Research") {
     if (document.path === "research/audits/README.md") return "Audit index";
     const auditDate = document.path.match(/^research\/audits\/(\d{4}-\d{2}-\d{2})-/)?.[1];
@@ -58,8 +50,16 @@ function subgroupKey(group: string, subgroup: string): string {
   return `${group}::${subgroup}`;
 }
 
-function navigationSubgroups(groupDocuments: ResearchDocument[]) {
-  const subgroups = new Map<string, ResearchDocument[]>();
+function decodedAnchor(hash: string): string {
+  try {
+    return decodeURIComponent(hash.replace(/^#/, ""));
+  } catch {
+    return hash.replace(/^#/, "");
+  }
+}
+
+function navigationSubgroups(groupDocuments: ResearchDocumentSummary[]) {
+  const subgroups = new Map<string, ResearchDocumentSummary[]>();
   for (const document of groupDocuments) {
     const subgroup = navigationSubgroup(document);
     const entries = subgroups.get(subgroup) ?? [];
@@ -73,7 +73,7 @@ function navigationSubgroups(groupDocuments: ResearchDocument[]) {
 }
 
 function initialCollapsedGroups(
-  activeDocument: ResearchDocument,
+  activeDocument: ResearchDocumentSummary,
   documentGroups: ReturnType<typeof groupDocuments>,
 ): Set<string> {
   return new Set(
@@ -84,7 +84,7 @@ function initialCollapsedGroups(
 }
 
 function initialCollapsedSubgroups(
-  activeDocument: ResearchDocument,
+  activeDocument: ResearchDocumentSummary,
   documentGroups: ReturnType<typeof groupDocuments>,
 ): Set<string> {
   const activeKey = subgroupKey(
@@ -123,33 +123,28 @@ function sourceLabel(document: ResearchDocument): string {
 
 export function ResearchReader({
   documents,
-  initialPath = DEFAULT_DOCUMENT,
+  currentDocument,
+  currentPart,
 }: {
-  documents: ResearchDocument[];
-  initialPath?: string;
+  documents: ResearchDocumentSummary[];
+  currentDocument: ResearchDocument;
+  currentPart: { index: number; total: number };
 }) {
   const documentsByPath = useMemo(
     () => new Map(documents.map((document) => [document.path, document])),
     [documents],
   );
   const documentGroups = useMemo(() => groupDocuments(documents), [documents]);
-  const resolvedInitialPath = documentsByPath.has(initialPath)
-    ? initialPath
-    : DEFAULT_DOCUMENT;
-  const initialDocument = documentsByPath.get(resolvedInitialPath)!;
-  const [currentPath, setCurrentPath] = useState(resolvedInitialPath);
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
-    () => initialCollapsedGroups(initialDocument, documentGroups),
+    () => initialCollapsedGroups(currentDocument, documentGroups),
   );
   const [collapsedSubgroups, setCollapsedSubgroups] = useState<Set<string>>(
-    () => initialCollapsedSubgroups(initialDocument, documentGroups),
+    () => initialCollapsedSubgroups(currentDocument, documentGroups),
   );
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const currentDocument =
-    documentsByPath.get(currentPath) ?? documentsByPath.get(DEFAULT_DOCUMENT)!;
   const currentIndex = documents.findIndex(
     (document) => document.path === currentDocument.path,
   );
@@ -169,7 +164,7 @@ export function ResearchReader({
     return new Set(
       documents
         .filter((document) =>
-          `${document.title}\n${document.path}\n${document.body}`
+          `${document.title}\n${document.path}`
             .toLocaleLowerCase()
             .includes(needle),
         )
@@ -181,50 +176,50 @@ export function ResearchReader({
     const nextDocument = documentsByPath.get(path);
     if (!nextDocument) return;
 
-    setCurrentPath(path);
     setMenuOpen(false);
-    setCollapsedGroups((groups) => {
-      if (!groups.has(nextDocument.group)) return groups;
-      const nextGroups = new Set(groups);
-      nextGroups.delete(nextDocument.group);
-      return nextGroups;
-    });
-    setCollapsedSubgroups((subgroups) => {
-      const key = subgroupKey(nextDocument.group, navigationSubgroup(nextDocument));
-      if (!subgroups.has(key)) return subgroups;
-      const nextSubgroups = new Set(subgroups);
-      nextSubgroups.delete(key);
-      return nextSubgroups;
-    });
-    const url = new URL(window.location.href);
+    const anchor = decodedAnchor(hash);
+    const targetPart = anchor
+      ? nextDocument.anchorParts[anchor] ?? 0
+      : 0;
+    if (path === currentDocument.path && targetPart === currentPart.index) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("doc", path);
+      if (targetPart > 0) url.searchParams.set("part", String(targetPart + 1));
+      else url.searchParams.delete("part");
+      url.hash = anchor;
+      window.history.pushState({ path }, "", url);
+      window.requestAnimationFrame(() => {
+        if (anchor) document.getElementById(anchor)?.scrollIntoView();
+        else document.querySelector(".reader-main")?.scrollTo({ top: 0 });
+      });
+      return;
+    }
+    const url = new URL("/", window.location.origin);
     url.searchParams.set("doc", path);
-    url.hash = hash;
-    window.history.pushState({ path }, "", url);
+    if (targetPart > 0) url.searchParams.set("part", String(targetPart + 1));
+    url.hash = anchor;
+    window.location.assign(url.toString());
+  }, [currentDocument.path, currentPart.index, documentsByPath]);
 
-    window.requestAnimationFrame(() => {
-      if (hash) document.getElementById(hash)?.scrollIntoView();
-      else document.querySelector(".reader-main")?.scrollTo({ top: 0 });
-    });
-  }, [documentsByPath]);
+  const navigateToPart = useCallback((partIndex: number) => {
+    if (partIndex < 0 || partIndex >= currentPart.total) return;
+    const url = new URL("/", window.location.origin);
+    url.searchParams.set("doc", currentDocument.path);
+    if (partIndex > 0) url.searchParams.set("part", String(partIndex + 1));
+    window.location.assign(url.toString());
+  }, [currentDocument.path, currentPart.total]);
 
   useEffect(() => {
-    const onPopState = () => {
-      const path = requestedDocumentPath(documentsByPath);
-      const requestedDocument = documentsByPath.get(path)!;
-      setCurrentPath(path);
-      setCollapsedGroups((groups) => {
-        const nextGroups = new Set(groups);
-        nextGroups.delete(requestedDocument.group);
-        return nextGroups;
-      });
-      setCollapsedSubgroups((subgroups) => {
-        const nextSubgroups = new Set(subgroups);
-        nextSubgroups.delete(
-          subgroupKey(requestedDocument.group, navigationSubgroup(requestedDocument)),
-        );
-        return nextSubgroups;
-      });
-    };
+    const anchor = decodedAnchor(window.location.hash);
+    const activeSummary = documentsByPath.get(currentDocument.path);
+    const anchorPart = anchor ? activeSummary?.anchorParts[anchor] : undefined;
+    if (anchorPart !== undefined && anchorPart !== currentPart.index) {
+      const url = new URL(window.location.href);
+      if (anchorPart > 0) url.searchParams.set("part", String(anchorPart + 1));
+      else url.searchParams.delete("part");
+      window.location.replace(url.toString());
+      return;
+    }
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "/" && document.activeElement?.tagName !== "INPUT") {
         event.preventDefault();
@@ -235,13 +230,11 @@ export function ResearchReader({
         searchRef.current?.blur();
       }
     };
-    window.addEventListener("popstate", onPopState);
     window.addEventListener("keydown", onKeyDown);
     return () => {
-      window.removeEventListener("popstate", onPopState);
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [documentsByPath]);
+  }, [currentDocument.path, currentPart.index, documentsByPath]);
 
   return (
     <div className="research-shell">
@@ -270,8 +263,8 @@ export function ResearchReader({
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search claims, mechanisms, equations…"
-            aria-label="Search all research documents"
+            placeholder="Search documents and paths…"
+            aria-label="Search document titles and paths"
           />
           <kbd>/</kbd>
         </label>
@@ -436,6 +429,30 @@ export function ResearchReader({
             <span>{currentDocument.words.toLocaleString("en-US")} words</span>
             <code>{currentDocument.path}</code>
           </div>
+          {currentPart.total > 1 ? (
+            <nav className="document-part-nav" aria-label="Large document sections">
+              <div>
+                <strong>Part {currentPart.index + 1} of {currentPart.total}</strong>
+                <span>The complete canonical document is rendered in bounded sections.</span>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  disabled={currentPart.index === 0}
+                  onClick={() => navigateToPart(currentPart.index - 1)}
+                >
+                  ← Previous part
+                </button>
+                <button
+                  type="button"
+                  disabled={currentPart.index + 1 === currentPart.total}
+                  onClick={() => navigateToPart(currentPart.index + 1)}
+                >
+                  Next part →
+                </button>
+              </div>
+            </nav>
+          ) : null}
           {currentDocument.path.startsWith("sources/") &&
           currentDocument.path !== "sources/README.md" ? (
             <aside className="source-warning">

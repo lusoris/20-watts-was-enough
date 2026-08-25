@@ -2,14 +2,14 @@
   "schema": 1,
   "generatedFrom": "experiments/test-coverage.json",
   "claims": {
-    "total": 1520,
-    "testRouted": 1428,
-    "protocolCovered": 1428,
+    "total": 1530,
+    "testRouted": 1438,
+    "protocolCovered": 1438,
     "executionReady": 0,
     "tierCounts": {
       "ledger-only": 92,
       "linked-description": 0,
-      "protocol-complete": 1428,
+      "protocol-complete": 1438,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
@@ -28,7 +28,7 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1103,
+        "established": 1113,
         "plausible": 209,
         "speculative": 60,
         "disputed": 47,
@@ -54,9 +54,9 @@
     "proposedArtifactFamilies": 0
   },
   "artifacts": {
-    "total": 44,
-    "protocolComplete": 44,
-    "smokeReady": 5,
+    "total": 45,
+    "protocolComplete": 45,
+    "smokeReady": 7,
     "workstationReady": 0,
     "items": [
       {
@@ -828,11 +828,68 @@
         "linkedClaims": 10,
         "protocolComplete": true,
         "missingFacets": [],
-        "executionReadiness": "absent",
+        "executionReadiness": "smoke-ready",
         "executionReady": false,
-        "executionManifest": null,
-        "executionClaims": [],
-        "promotionChecks": []
+        "executionManifest": "experiments/workstation/manifests/fixture-022.json",
+        "executionClaims": [
+          "C-1506"
+        ],
+        "promotionChecks": [
+          {
+            "id": "execution-claim-scope",
+            "label": "Explicit execution-track claim scope",
+            "passed": false,
+            "detail": "implementation.execution_claims must name at least one exact claim ID"
+          },
+          {
+            "id": "full-profile",
+            "label": "Frozen full profile",
+            "passed": false,
+            "detail": "data.full_profile must be a valid profile with a matching full_profile_sha256"
+          },
+          {
+            "id": "full-tests",
+            "label": "Full experiment-path tests",
+            "passed": true,
+            "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
+          },
+          {
+            "id": "hash-chain",
+            "label": "Corruption-evident output ledger",
+            "passed": true,
+            "detail": "hash-chain output is wired through the tested checkpoint ledger"
+          },
+          {
+            "id": "resume",
+            "label": "Deterministic resume",
+            "passed": true,
+            "detail": "runner imports the declared, tested checkpoint/resume implementation"
+          },
+          {
+            "id": "energy-provider",
+            "label": "Measured-energy or explicit non-energy boundary",
+            "passed": false,
+            "detail": "energy provider config/module/test and frozen hash must enforce measured energy, or a non-energy claim must explicitly forbid energy conclusions"
+          },
+          {
+            "id": "confirmation-seeds",
+            "label": "Frozen confirmation seeds",
+            "passed": false,
+            "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "held_out-seeds",
+            "label": "Frozen held-out seeds",
+            "passed": false,
+            "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "promotion-evidence",
+            "label": "Strict recomputed promotion evidence",
+            "passed": false,
+            "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
+          }
+        ]
       },
       {
         "id": "fixture-023",
@@ -841,11 +898,69 @@
         "linkedClaims": 10,
         "protocolComplete": true,
         "missingFacets": [],
-        "executionReadiness": "absent",
+        "executionReadiness": "smoke-ready",
         "executionReady": false,
-        "executionManifest": null,
-        "executionClaims": [],
-        "promotionChecks": []
+        "executionManifest": "experiments/workstation/manifests/fixture-023.json",
+        "executionClaims": [
+          "C-1516",
+          "C-1517"
+        ],
+        "promotionChecks": [
+          {
+            "id": "execution-claim-scope",
+            "label": "Explicit execution-track claim scope",
+            "passed": false,
+            "detail": "implementation.execution_claims must name at least one exact claim ID"
+          },
+          {
+            "id": "full-profile",
+            "label": "Frozen full profile",
+            "passed": false,
+            "detail": "data.full_profile must be a valid profile with a matching full_profile_sha256"
+          },
+          {
+            "id": "full-tests",
+            "label": "Full experiment-path tests",
+            "passed": true,
+            "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
+          },
+          {
+            "id": "hash-chain",
+            "label": "Corruption-evident output ledger",
+            "passed": true,
+            "detail": "hash-chain output is wired through the tested checkpoint ledger"
+          },
+          {
+            "id": "resume",
+            "label": "Deterministic resume",
+            "passed": true,
+            "detail": "runner imports the declared, tested checkpoint/resume implementation"
+          },
+          {
+            "id": "energy-provider",
+            "label": "Measured-energy or explicit non-energy boundary",
+            "passed": false,
+            "detail": "energy provider config/module/test and frozen hash must enforce measured energy, or a non-energy claim must explicitly forbid energy conclusions"
+          },
+          {
+            "id": "confirmation-seeds",
+            "label": "Frozen confirmation seeds",
+            "passed": false,
+            "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "held_out-seeds",
+            "label": "Frozen held-out seeds",
+            "passed": false,
+            "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "promotion-evidence",
+            "label": "Strict recomputed promotion evidence",
+            "passed": false,
+            "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
+          }
+        ]
       },
       {
         "id": "fixture-024",
@@ -916,6 +1031,19 @@
             "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
           }
         ]
+      },
+      {
+        "id": "fixture-025",
+        "path": "experiments/fixtures/025-electrochemistry-interface-memory-degradation.md",
+        "title": "Fixture F-025 — Electrochemistry: interfaces, memory, and degradation",
+        "linkedClaims": 10,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
       }
     ]
   }

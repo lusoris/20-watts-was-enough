@@ -128,6 +128,44 @@ different questions. Predictive regulation adds the same separation between
 forecast value, feedback correction, integrated action exposure, reserve
 debit, and later outcome ([C-1494](../research/claims.md#c-1494)).
 
+### Command, interface work, transport, and observation are different stages
+
+An adaptive gate often mistakes its command for the work that actually crossed
+an interface. Electrochemistry supplies a sharp counterexample. In one common
+charge-transfer form,
+
+$$
+j=j_0\left[
+\exp\!\left(\frac{\alpha_a F\eta}{R_gT}\right)
+-\exp\!\left(-\frac{\alpha_c F\eta}{R_gT}\right)
+\right],
+$$
+
+where $j$ and $j_0$ are current densities in amperes per square metre,
+$\eta$ is overpotential in volts, $\alpha_a$ and $\alpha_c$ are dimensionless
+transfer coefficients, $F$ is the Faraday constant in coulombs per mole,
+$R_g$ is the molar gas constant in joules per mole-kelvin, and $T$ is absolute
+temperature in kelvin. Even when this local closure is correct, bulk
+transport, double-layer state, and series loss still separate commanded
+voltage from realized flux and terminal observation
+([C-1530](../research/claims.md#c-1530)).
+
+The corresponding artificial contract records a five-stage chain:
+
+1. the controller issues a command under declared authority;
+2. receiver-local state converts the command into a driving force;
+3. an interface transfers bounded useful work;
+4. internal transport accepts, delays, or saturates that transfer; and
+5. an observation operator reports a noisy, delayed projection of the result.
+
+A candidate may compress this chain only after an intervention shows that the
+omitted stage is conditionally redundant. Otherwise, a low command error can
+coexist with wrong realized service. A validity check may reject an observation
+before interpretation, but passing such a check does not identify a unique
+mechanism ([C-1532](../research/claims.md#c-1532)). Likewise, a low prediction
+residual cannot give physical semantics to unidentifiable latent parameters
+([C-1537](../research/claims.md#c-1537)).
+
 ### Observation is affected by action
 
 The acquisition model must also represent how sensing and response change the
@@ -486,6 +524,16 @@ receiver feasibility.
 [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md)
 tests moving demand and resource patches, delay, topology churn, strategic
 over-reporting, reversible allocation, slow growth, and second events.
+
+Electrochemical depletion adds a geometry-sensitive failure case. A healthy
+global mean can conceal a receiving boundary whose local carrier supply is
+approaching zero; once the support assumptions change, positive feedback can
+amplify a protrusion rather than merely serve more demand
+([C-1536](../research/claims.md#c-1536)). The artificial analogue must therefore
+bind every growth or allocation action to a local support estimate and expose
+an `unknown` or fallback state when that estimate is not observable. Ordinary
+queue, backpressure, and robust load controllers remain the nulls, and the
+local estimator's sensing, messages, throttling, and false alarms are charged.
 
 ### Engineering null models
 

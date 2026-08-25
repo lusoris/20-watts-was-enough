@@ -7,6 +7,19 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A field-gap audit adds electrochemistry as a direct research domain rather
+  than a loose battery metaphor. Ten bounded claims (`C-1530`--`C-1539`) and
+  Fixture F-025 separate interface kinetics from terminal command, finite
+  diffusion memory from a boundary-free kernel, impedance validity from
+  mechanism identification, inverse timescale resolution from visually
+  persuasive peaks, driven phase regime from universal morphology,
+  passivation from free protection, local depletion from mean load, parameter
+  fit from identifiability, scalar occupancy from path state, and early policy
+  ranking from final degradation evidence. Fifteen deduplicated primary-source
+  records and six exact DFG/ANZSRC/EuroSciVoc child routes make the package
+  traceable; all ten CPU-only protocols remain unexecuted and add no P-series
+  principle or architecture candidate.
+
 - Three independently reviewed depth packages add 24 bounded claims
   (`C-1506`--`C-1529`) and Fixtures F-022--F-024. Developmental and
   regenerative biology now separates positional instruction, repair workforce,
@@ -22,8 +35,9 @@ the exact diff; this file records why the project changed.
   bibliography records were imported after key/DOI/title deduplication; the
   existing New Phytologist DOI `10.1111/nph.20418` remains a research-agenda
   Letter rather than evidence for a duplicate claim. Exact child routing now
-  contains 54 explicit assignments across EuroSciVoc, DFG, and ANZSRC without
-  inherited parent coverage or a new P-series principle/candidate.
+  contains 54 assignments from these three packages across EuroSciVoc, DFG,
+  and ANZSRC without inherited parent coverage or a new P-series
+  principle/candidate; electrochemistry raises the repository total to 60.
 
 - Decision 0014, a dedicated multiscale-reduction math contract, and two
   editable analytical plots make coarse-state validity visible: memory-tail
@@ -34,9 +48,36 @@ the exact diff; this file records why the project changed.
   AMR-T01 smoke harness with Markov-only, finite-memory, and exact augmented
   paths, immutable-input hashes, append-only hash chaining, checkpoint/resume,
   and nine focused tests. It explicitly forbids energy and scientific-result
-  conclusions. Generated coverage now records 1,428/1,520 protocol-covered
-  claims, 92 reviewed ledger-only claims, 44/44 complete written artifacts,
-  five smoke-ready harnesses, and zero workstation-executable research claims.
+  conclusions. Generated coverage now records 1,438/1,530 protocol-covered
+  claims, 92 reviewed ledger-only claims, 45/45 complete written artifacts,
+  seven smoke-ready harnesses, and zero workstation-executable research claims.
+
+- Fixtures F-022 and F-023 now have deterministic development-only smoke
+  harnesses. F-022 exercises balanced positional-memory corruption, explicit
+  abstention, and a fully charged robust-null fallback across 24 records.
+  F-023 exercises population duration memory and authenticated lifecycle reset
+  across 84 records, including typed corrupt-boundary abstention. Forty-seven
+  focused tests independently verify closed schemas, immutable-input hashes,
+  exact regenerated work content and order, observed-versus-charged loss and
+  resources, denominator-preserving cap/invalid/numerical/exception paths, generator
+  cardinality, append-only chains, byte-identical replay, transient-failure
+  resume, checkpoint and derived-run recovery, tamper rejection, and uniform
+  `NO_RESULT` authority. The repository therefore has seven smoke-ready
+  harnesses and still has zero workstation-ready or claim-eligible scientific
+  executions.
+
+- A new editable analytical hysteresis plot replaces prose-only discussion of
+  binary retained state with an inspectable Schmitt-rule loop. It shows the
+  two history-qualified states available inside the threshold band, defines
+  every symbol, names the mature finite-state null, and keeps persistence
+  mechanics separate from lifecycle reset authority. The parameter source and
+  deterministic SVG generator remain versioned beside the rendered figure.
+
+- A second editable memory figure plots the exact normalized semi-infinite,
+  finite-transmissive, and finite-blocking diffusion impedances. It makes the
+  boundary turnover and low-frequency disagreement visible even when all three
+  laws share an apparent high-frequency $q^{-1/2}$ tail, directly supporting
+  the finite-memory identification contract in C-1531.
 
 - The independently reviewed tribology and adaptive-contact-interface audit is
   now central as Fixture F-021. Nine bounded claims (`C-1497`--`C-1505`) and
@@ -823,6 +864,13 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- The private reader now sends only document metadata plus the selected body to
+  the browser, and renders oversized files as complete, addressable bounded
+  sections. Previously every route hydrated roughly 13 MiB of canonical source
+  text and a 1.5 MiB ledger still produced one enormous DOM, which could make
+  content appear missing or hang navigation. Cross-document links now request
+  the selected document section from the server, deep claim anchors resolve to
+  their exact section, and same-section anchors remain local.
 - Full-book heading anchors now clear the sticky action bar at desktop widths;
   the previous 28-pixel offset could hide the selected heading.
 - Mathematical validation now excludes ephemeral workstation-test directories,

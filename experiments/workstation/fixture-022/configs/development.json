@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "artifact": "fixture-022",
+  "profile": "development",
+  "grid_width_nodes": 24,
+  "grid_height_nodes": 24,
+  "worlds_per_corruption_family": 8,
+  "wound_radius_min_nodes": 3,
+  "wound_radius_max_nodes": 6,
+  "max_solver_rounds": 64,
+  "bytes_per_message": 8,
+  "message_budget_per_arm_bytes": 2000000,
+  "memory_write_budget_per_arm": 576,
+  "common_mode_mismatch_threshold": 0.5,
+  "max_loss": 100
+}

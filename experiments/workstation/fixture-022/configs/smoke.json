@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "artifact": "fixture-022",
+  "profile": "smoke",
+  "grid_width_nodes": 12,
+  "grid_height_nodes": 12,
+  "worlds_per_corruption_family": 1,
+  "wound_radius_min_nodes": 2,
+  "wound_radius_max_nodes": 3,
+  "max_solver_rounds": 24,
+  "bytes_per_message": 8,
+  "message_budget_per_arm_bytes": 200000,
+  "memory_write_budget_per_arm": 144,
+  "common_mode_mismatch_threshold": 0.5,
+  "max_loss": 100
+}

@@ -6,6 +6,12 @@ export type DocumentHeading = {
   id: string;
 };
 
+type ParsedHeading = {
+  depth: number;
+  title: string;
+  id: string;
+};
+
 function visibleHeadingText(source: string): string {
   return source
     .replace(/\s+#+\s*$/, "")
@@ -18,9 +24,9 @@ function visibleHeadingText(source: string): string {
 
 // rehype-slug uses github-slugger as well. Processing every ATX heading keeps
 // duplicate suffixes aligned even though the outline displays only h2/h3.
-export function outlineFromMarkdown(body: string): DocumentHeading[] {
+function parseMarkdownHeadings(body: string): ParsedHeading[] {
   const slugger = new GithubSlugger();
-  const headings: DocumentHeading[] = [];
+  const headings: ParsedHeading[] = [];
   let fence: "```" | "~~~" | null = null;
 
   for (const line of body.split(/\r?\n/)) {
@@ -38,10 +44,22 @@ export function outlineFromMarkdown(body: string): DocumentHeading[] {
     const depth = match[1].length;
     const title = visibleHeadingText(match[2]);
     const id = slugger.slug(title);
-    if (depth === 2 || depth === 3) {
-      headings.push({ depth, title, id });
-    }
+    headings.push({ depth, title, id });
   }
 
   return headings;
+}
+
+export function outlineFromMarkdown(body: string): DocumentHeading[] {
+  return parseMarkdownHeadings(body)
+    .filter((heading) => heading.depth === 2 || heading.depth === 3)
+    .map(({ depth, title, id }) => ({
+      depth: depth as 2 | 3,
+      title,
+      id,
+    }));
+}
+
+export function headingIdsFromMarkdown(body: string): string[] {
+  return parseMarkdownHeadings(body).map(({ id }) => id);
 }

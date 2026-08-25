@@ -118,6 +118,66 @@ fields:
 | retrieval gate | which recurrence, query, or context lets it influence action? | recurrent state, keyed retrieval, and calibrated classifier |
 | reset boundary | which evidence authorizes weakening, deletion, or reinitialization? | no reset, fixed reset, evidence-gated reset, and ordinary adaptation |
 
+### Hysteresis is state, not reset authority
+
+A minimal binary hysteretic state makes the history dependence explicit. For
+dimensionless input $u_t$, retained state $m_t\in\{0,1\}$, and ordered
+thresholds $\theta_{\mathrm{off}}<\theta_{\mathrm{on}}$,
+
+$$
+m_{t+1}=
+\begin{cases}
+1, & u_t\geq\theta_{\mathrm{on}},\\
+0, & u_t\leq\theta_{\mathrm{off}},\\
+m_t, & \theta_{\mathrm{off}}<u_t<\theta_{\mathrm{on}}.
+\end{cases}
+$$
+
+![An exact hysteresis loop for a binary Schmitt rule: inside the band, the same current input retains either zero or one according to the previously crossed threshold.](../public/plots/hysteretic-memory-loop.svg)
+
+Inside the band, $u_t$ alone does not identify $m_{t+1}$; the prior state is a
+necessary input. This is useful precisely because it supplies a strong ordinary
+null: a proposed population memory must beat a Schmitt trigger, quantized
+accumulator, or finite-state latch under equal state, random-number, write,
+reset, and error budgets. The rule also keeps two questions separate. It
+defines how state persists, but it does not decide which authenticated event is
+allowed to reset that state at a lifecycle boundary.
+
+Two electrochemical results sharpen the test. First, eliminating a distributed
+diffusion field can yield a memory kernel whose apparent power law changes when
+a finite boundary becomes visible; the memory horizon is therefore a property
+of the support and observation band, not a free architectural constant
+([C-1531](../research/claims.md#c-1531)). Second, insertion systems can expose
+the same scalar occupancy with different terminal responses because the
+particle population followed different paths
+([C-1538](../research/claims.md#c-1538)). A single direction bit, finite-state
+latch, compact recurrent state, and balanced state-space realization are the
+required nulls before retaining a larger history or population state.
+
+For a linear diffusion field $\partial_t c=D\,\partial_{zz}c$ on length $L$,
+the characteristic time
+
+$$
+\tau_D=\frac{L^2}{D}
+$$
+
+has units of seconds because $L$ is measured in metres and the diffusion
+coefficient $D$ in square metres per second. A proposed memory window shorter
+than the supported fraction of $\tau_D$ must reveal its truncation error; a
+window much longer than required must pay for retained state and movement. The
+full [ECM-T02 and ECM-T09 contracts](../experiments/fixtures/025-electrochemistry-interface-memory-degradation.md)
+test both cases without assuming that an electrochemical kernel is the best
+software realization.
+
+![Three normalized diffusion impedances share a high-frequency tail but split into transmissive, blocking, and semi-infinite low-frequency behavior when the boundary becomes observable.](../public/plots/finite-diffusion-boundary-turnover.svg)
+
+With $q=\omega\tau_D$, the plotted normalized finite-boundary forms are
+$\tanh(\sqrt{iq})/\sqrt{iq}$ and
+$\coth(\sqrt{iq})/\sqrt{iq}$. Their magnitudes approach different
+low-frequency limits even though both can resemble the semi-infinite
+$1/\sqrt{iq}$ law over a higher-frequency band. The visible turnover is why a
+fitted fractional-looking kernel cannot establish infinite memory by itself.
+
 These fields expose three shortcuts to review: encoding duration with
 unjustified precision, calling incidental decay a designed reset, and treating
 trace correlation as the sole memory carrier. They also make reserve bytes,

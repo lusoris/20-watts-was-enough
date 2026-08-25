@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-023.plm-development-event.v4.schema.json",
+  "title": "Fixture 023 PLM-T01 and PLM-T02 public-development event",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "contract.mjs",
+    "export": "assertFixture023Record",
+    "version_export": "FIXTURE_023_EVENT_CONTRACT_VERSION",
+    "contract_version": "fixture-023.plm-development-event.v4",
+    "test": "contract.test.mjs"
+  },
+  "required": [
+    "schema",
+    "contract_version",
+    "artifact",
+    "track",
+    "claim_id",
+    "run_id",
+    "profile",
+    "pack",
+    "seed",
+    "world_index",
+    "world_id",
+    "arm",
+    "intervention_cell",
+    "input_sha256",
+    "observation_sha256",
+    "units",
+    "outcome",
+    "accounting",
+    "failure",
+    "authority",
+    "integrity"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-023.plm-development-event.v4" },
+    "artifact": { "const": "fixture-023" },
+    "track": { "enum": ["PLM-T01", "PLM-T02"] },
+    "claim_id": { "enum": ["C-1516", "C-1517"] },
+    "run_id": { "$ref": "#/$defs/sha256" },
+    "profile": { "enum": ["smoke", "development"] },
+    "pack": { "const": "public-development" },
+    "seed": { "type": "integer", "minimum": 0 },
+    "world_index": { "type": "integer", "minimum": 0 },
+    "world_id": { "type": "string", "pattern": "^w23_[0-9a-f]{32}$" },
+    "arm": {
+      "enum": [
+        "quantized-accumulator",
+        "duration-filter-null",
+        "independent-latches",
+        "carry-prior",
+        "change-point-null",
+        "evidence-gated-reset"
+      ]
+    },
+    "intervention_cell": { "type": "string", "minLength": 3 },
+    "input_sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "audit",
+        "fixture",
+        "runner",
+        "configuration",
+        "schema",
+        "public_seeds",
+        "confirmation_partition",
+        "transfer_partition"
+      ],
+      "properties": {
+        "audit": { "$ref": "#/$defs/sha256" },
+        "fixture": { "$ref": "#/$defs/sha256" },
+        "runner": { "$ref": "#/$defs/sha256" },
+        "configuration": { "$ref": "#/$defs/sha256" },
+        "schema": { "$ref": "#/$defs/sha256" },
+        "public_seeds": { "$ref": "#/$defs/sha256" },
+        "confirmation_partition": { "$ref": "#/$defs/sha256" },
+        "transfer_partition": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "observation_sha256": { "$ref": "#/$defs/sha256" },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["time", "state", "loss"],
+      "properties": {
+        "time": { "const": "s" },
+        "state": { "const": "B" },
+        "loss": { "const": "dimensionless" }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prediction_probability",
+        "target_probability",
+        "target_label",
+        "brier_loss",
+        "log_loss",
+        "log_loss_sum",
+        "evaluation_count",
+        "evaluation_predictions",
+        "evaluation_labels",
+        "premature_commitment",
+        "boundary_authenticated",
+        "boundary_state",
+        "reset_fraction",
+        "reset_performed",
+        "abstained",
+        "unauthorized_reset",
+        "observed_loss",
+        "finite_loss"
+      ],
+      "properties": {
+        "prediction_probability": { "anyOf": [{ "$ref": "#/$defs/probability" }, { "type": "null" }] },
+        "target_probability": { "$ref": "#/$defs/probability" },
+        "target_label": { "type": ["integer", "null"], "minimum": 0, "maximum": 1 },
+        "brier_loss": { "anyOf": [{ "$ref": "#/$defs/probability" }, { "type": "null" }] },
+        "log_loss": { "type": ["number", "null"], "minimum": 0 },
+        "log_loss_sum": { "type": ["number", "null"], "minimum": 0 },
+        "evaluation_count": { "type": "integer", "minimum": 1 },
+        "evaluation_predictions": {
+          "type": ["array", "null"],
+          "items": { "anyOf": [{ "$ref": "#/$defs/probability" }, { "type": "null" }] }
+        },
+        "evaluation_labels": {
+          "type": ["array", "null"],
+          "items": { "type": "integer", "minimum": 0, "maximum": 1 }
+        },
+        "premature_commitment": { "type": ["boolean", "null"] },
+        "boundary_authenticated": { "type": ["boolean", "null"] },
+        "boundary_state": { "type": ["string", "null"], "enum": ["authentic", "duplicate", "delayed", "missing", null] },
+        "reset_fraction": { "$ref": "#/$defs/probability" },
+        "reset_performed": { "type": "boolean" },
+        "abstained": { "type": "boolean" },
+        "unauthorized_reset": { "const": false },
+        "observed_loss": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "finite_loss": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observations",
+        "state_budget_bytes",
+        "state_bytes_charged",
+        "operation_budget",
+        "operation_count",
+        "operation_count_charged",
+        "persistent_writes",
+        "persistent_writes_charged",
+        "reset_operations",
+        "reset_operations_charged",
+        "cleared_bytes",
+        "cleared_bytes_charged",
+        "rng_updates",
+        "rng_updates_charged"
+      ],
+      "properties": {
+        "observations": { "type": "integer", "minimum": 1 },
+        "state_budget_bytes": { "const": 256 },
+        "state_bytes_charged": { "const": 256 },
+        "operation_budget": { "type": "integer", "minimum": 1 },
+        "operation_count": { "type": "integer", "minimum": 0 },
+        "operation_count_charged": { "type": "integer", "minimum": 0 },
+        "persistent_writes": { "type": "integer", "minimum": 0 },
+        "persistent_writes_charged": { "type": "integer", "minimum": 0 },
+        "reset_operations": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "reset_operations_charged": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "cleared_bytes": { "type": "integer", "minimum": 0, "maximum": 256 },
+        "cleared_bytes_charged": { "type": "integer", "minimum": 0, "maximum": 256 },
+        "rng_updates": { "type": "integer", "minimum": 0 },
+        "rng_updates_charged": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["failed", "reason"],
+      "properties": {
+        "failed": { "type": "boolean" },
+        "reason": {
+          "enum": [
+            "operation-budget-exhausted",
+            "numerical-failure",
+            "policy-exception",
+            "evaluator-exception",
+            null
+          ]
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "comparison_inference_permitted",
+        "measured_energy_present",
+        "energy_conclusion_allowed",
+        "claim_eligible",
+        "scientific_result",
+        "performance_result"
+      ],
+      "properties": {
+        "status": { "const": "NO_RESULT" },
+        "comparison_inference_permitted": { "const": false },
+        "measured_energy_present": { "const": false },
+        "energy_conclusion_allowed": { "const": false },
+        "claim_eligible": { "const": false },
+        "scientific_result": { "const": false },
+        "performance_result": { "const": false }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "previous_sha256", "record_sha256"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 0 },
+        "previous_sha256": { "$ref": "#/$defs/sha256" },
+        "record_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "probability": { "type": "number", "minimum": 0, "maximum": 1 }
+  }
+}

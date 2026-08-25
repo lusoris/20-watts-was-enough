@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="760" viewBox="0 0 1180 760" role="img" aria-labelledby="title desc" data-layout="hysteretic-state-loop" data-theme="ocean">
+  <title id="title">A hysteretic state remembers which threshold was crossed</title>
+  <desc id="desc">Exact input-state loop for the displayed binary Schmitt rule with illustrative dimensionless thresholds. It is an ordinary engineering null, not a fitted biological or artificial memory result.</desc>
+  <rect width="1180" height="760" fill="#071b2b"/>
+  <rect x="54" y="26" width="255.39999999999998" height="28" rx="14" fill="#12364e" stroke="#38d6ba"/>
+  <text x="70" y="45" fill="#38d6ba" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" letter-spacing="1.1">SCHMITT MEMORY RULE · EXACT</text>
+  <text x="54" y="78" fill="#f7fbff" font-family="Georgia, serif" font-size="30" font-weight="700">A hysteretic state remembers which threshold was crossed</text>
+  <text x="54" y="112" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="13">m_(t+1)=1 if u_t&gt;=theta_on; 0 if u_t&lt;=theta_off; otherwise m_t</text>
+  <text x="1138" y="45" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">hysteretic-state-loop · no measurements</text>
+  <defs>
+    <marker id="hysteresisUpArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#38d6ba"/></marker>
+    <marker id="hysteresisDownArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#ffc857"/></marker>
+  </defs>
+  <rect x="94" y="154" width="736" height="514" rx="16" fill="#0d2a3e" stroke="#31566d" stroke-width="2"/>
+  <rect x="351.59999999999997" y="154" width="220.80000000000013" height="514" fill="#59b7ff" fill-opacity=".10"/>
+  <line x1="94" y1="154" x2="94" y2="668" stroke="#31566d"/><text x="94" y="692" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">0.00</text><line x1="351.59999999999997" y1="154" x2="351.59999999999997" y2="668" stroke="#31566d"/><text x="351.59999999999997" y="692" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">0.35</text><line x1="462" y1="154" x2="462" y2="668" stroke="#31566d"/><text x="462" y="692" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">0.50</text><line x1="572.4000000000001" y1="154" x2="572.4000000000001" y2="668" stroke="#31566d"/><text x="572.4000000000001" y="692" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">0.65</text><line x1="830" y1="154" x2="830" y2="668" stroke="#31566d"/><text x="830" y="692" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">1.00</text><line x1="94" y1="618.258064516129" x2="830" y2="618.258064516129" stroke="#31566d"/><text x="80" y="622.258064516129" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="end">0</text><line x1="94" y1="203.74193548387098" x2="830" y2="203.74193548387098" stroke="#31566d"/><text x="80" y="207.74193548387098" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="end">1</text>
+  <text x="462" y="182" fill="#59b7ff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800" text-anchor="middle">same input · two possible states</text>
+  <path d="M94.00,618.26 L572.40,618.26 L572.40,203.74 L830.00,203.74" fill="none" stroke="#38d6ba" stroke-width="7" stroke-linejoin="round" marker-end="url(#hysteresisUpArrow)"/>
+  <path d="M830.00,203.74 L351.60,203.74 L351.60,618.26 L94.00,618.26" fill="none" stroke="#ffc857" stroke-width="4" stroke-dasharray="10 7" stroke-linejoin="round" marker-end="url(#hysteresisDownArrow)"/>
+  <line x1="462" y1="618.258064516129" x2="462" y2="203.74193548387098" stroke="#f7fbff" stroke-width="2" stroke-dasharray="5 6"/>
+  <circle cx="462" cy="618.258064516129" r="8" fill="#38d6ba" stroke="#f7fbff" stroke-width="2"/>
+  <circle cx="462" cy="203.74193548387098" r="8" fill="#ffc857" stroke="#f7fbff" stroke-width="2"/>
+  <text x="584.4000000000001" y="604.258064516129" fill="#38d6ba" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800">write 1 at theta_on</text>
+  <text x="339.59999999999997" y="227.74193548387098" fill="#ffc857" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" text-anchor="end">write 0 at theta_off</text>
+  <text x="462" y="722" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle">observed input u_t · dimensionless</text>
+  <text x="28" y="411" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle" transform="rotate(-90 28 411)">retained state m_t · binary</text>
+  <rect x="868" y="154" width="274" height="514" rx="16" fill="#12364e" stroke="#31566d" stroke-width="2"/>
+  <text x="890" y="188" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="14" font-weight="800">UPDATE CONTRACT</text>
+  <text x="890" y="230" fill="#38d6ba" font-family="Cascadia Mono, monospace" font-size="11">u ≥ theta_on  → 1</text>
+  <text x="890" y="257" fill="#ffc857" font-family="Cascadia Mono, monospace" font-size="11">u ≤ theta_off → 0</text>
+  <text x="890" y="284" fill="#59b7ff" font-family="Cascadia Mono, monospace" font-size="11">between       → keep m_t</text>
+  <rect x="886" y="320" width="238" height="132" rx="12" fill="#071b2b" fill-opacity=".55"/>
+  <text x="900" y="350" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800">At u = 0.50</text>
+  <text x="900" y="376" fill="#acc7d6" font-family="Segoe UI, sans-serif" font-size="11">rising history retains 0</text>
+  <text x="900" y="400" fill="#acc7d6" font-family="Segoe UI, sans-serif" font-size="11">falling history retains 1</text>
+  <text x="900" y="429" fill="#59b7ff" font-family="Segoe UI, sans-serif" font-size="10">current input alone is insufficient</text>
+  <text x="890" y="596" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="11" font-weight="800">Ordinary engineering null</text>
+  <text x="890" y="619" fill="#acc7d6" font-family="Segoe UI, sans-serif" font-size="10">Schmitt trigger / finite-state latch</text>
+  <text x="890" y="640" fill="#acc7d6" font-family="Segoe UI, sans-serif" font-size="10">write and reset authority stay external</text>
+</svg>

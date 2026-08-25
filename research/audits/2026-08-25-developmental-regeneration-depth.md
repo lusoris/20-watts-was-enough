@@ -9,7 +9,10 @@
 - **Scope:** writable positional memory, separation of regenerative capacity and instruction, compensating pattern sources, finite scaling envelopes, boundary-conditioned sensing, mechanochemical reinforcement, active compartment boundaries, conditional regulatory redundancy, local/global pattern composition, and symmetry breaking
 - **Promotion state:** ten bounded claim proposals are reserved as [`C-1506`](#c-1506)--[`C-1515`](#c-1515); no P-series principle or architecture candidate is proposed
 - **Central ledger:** [C-1506](../claims.md#c-1506)--[C-1515](../claims.md#c-1515)
-- **Execution state:** ten CPU-only synthetic falsification protocols are frozen in [Fixture F-022](../../experiments/fixtures/022-regenerative-positional-memory.md); none has been implemented or executed
+- **Execution state:** ten CPU-only synthetic falsification protocols are
+  frozen in [Fixture F-022](../../experiments/fixtures/022-regenerative-positional-memory.md);
+  DEV-T01 has a bounded public-development smoke harness, while DEV-T02--DEV-T10
+  remain unimplemented and no claim-eligible execution exists
 - **Repository constraint:** this standalone depth audit does not edit the central claim ledger, bibliography, audit index, taxonomy routing, generated coverage, concept/math chapters, plots, application, changelog, or PDF
 
 ## Executive finding

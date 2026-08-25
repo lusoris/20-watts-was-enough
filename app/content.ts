@@ -1,9 +1,21 @@
+import { headingIdsFromMarkdown } from "./lib/heading-outline";
+
 export type ResearchDocument = {
   path: string;
   title: string;
   group: string;
   body: string;
   kind: "markdown" | "mermaid" | "bibtex" | "json";
+  words: number;
+};
+
+export type ResearchDocumentSummary = Omit<ResearchDocument, "body"> & {
+  partCount: number;
+  anchorParts: Record<string, number>;
+};
+
+export type ResearchDocumentPart = {
+  body: string;
   words: number;
 };
 
@@ -115,6 +127,92 @@ function renderableBody(
   return body;
 }
 
+const MAX_READER_PART_CHARACTERS = 85_000;
+
+function wordCount(body: string): number {
+  return body.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function markdownSections(body: string): string[] {
+  const boundaries = [0];
+  let offset = 0;
+  let fence: "```" | "~~~" | null = null;
+  for (const line of body.match(/[^\n]*(?:\n|$)/g) ?? []) {
+    const fenceMatch = line.match(/^\s*(```|~~~)/);
+    if (fenceMatch) {
+      const marker = fenceMatch[1] as "```" | "~~~";
+      if (fence === marker) fence = null;
+      else if (fence === null) fence = marker;
+    } else if (fence === null && /^(?:##|###)\s+/.test(line) && offset > 0) {
+      boundaries.push(offset);
+    }
+    offset += line.length;
+  }
+  boundaries.push(body.length);
+  return boundaries
+    .slice(0, -1)
+    .map((start, index) => body.slice(start, boundaries[index + 1]))
+    .filter(Boolean);
+}
+
+function packSections(sections: string[]): string[] {
+  const parts: string[] = [];
+  let current = "";
+  for (const section of sections) {
+    if (
+      current.length > 0
+      && current.length + section.length > MAX_READER_PART_CHARACTERS
+    ) {
+      parts.push(current);
+      current = section;
+    } else {
+      current += section;
+    }
+  }
+  if (current) parts.push(current);
+  return parts;
+}
+
+function markdownParts(document: ResearchDocument): string[] {
+  const packed = packSections(markdownSections(document.body));
+  if (packed.length <= 1) return packed;
+  return packed.map((part, index) => (
+    index === 0
+      ? part
+      : `# ${document.title} — Part ${index + 1} of ${packed.length}\n\n`
+        + `> Continued from the canonical \`${document.path}\` document.\n\n`
+        + part.trimStart()
+  ));
+}
+
+function bibtexParts(document: ResearchDocument): string[] {
+  const opening = "```bibtex\n";
+  const codeStart = document.body.indexOf(opening);
+  const codeEnd = document.body.lastIndexOf("\n```");
+  if (codeStart < 0 || codeEnd <= codeStart) return [document.body];
+  const source = document.body.slice(codeStart + opening.length, codeEnd);
+  const entries = source.split(/(?=^@)/m).filter((entry) => entry.trim());
+  const packed = packSections(entries);
+  if (packed.length <= 1) return [document.body];
+  return packed.map((part, index) => (
+    `# Bibliography — Part ${index + 1} of ${packed.length}\n\n`
+    + "This is the canonical machine-readable reference ledger.\n\n"
+    + `\`\`\`bibtex\n${part.trim()}\n\`\`\``
+  ));
+}
+
+function paginateDocument(document: ResearchDocument): ResearchDocumentPart[] {
+  if (document.body.length <= MAX_READER_PART_CHARACTERS) {
+    return [{ body: document.body, words: document.words }];
+  }
+  const bodies = document.kind === "bibtex"
+    ? bibtexParts(document)
+    : document.kind === "markdown"
+      ? markdownParts(document)
+      : [document.body];
+  return bodies.map((body) => ({ body, words: wordCount(body) }));
+}
+
 export const documents: ResearchDocument[] = Object.entries(rawModules)
   .map(([modulePath, rawBody]) => {
     const path = modulePath.replace(/^\//, "");
@@ -143,6 +241,25 @@ export const documents: ResearchDocument[] = Object.entries(rawModules)
 
 export const documentsByPath = new Map(
   documents.map((document) => [document.path, document]),
+);
+
+export const documentPartsByPath = new Map(
+  documents.map((document) => [document.path, paginateDocument(document)]),
+);
+
+export const documentSummaries: ResearchDocumentSummary[] = documents.map(
+  ({ path, title, group, kind, words }) => {
+    const parts = documentPartsByPath.get(path)!;
+    const anchorParts: Record<string, number> = {};
+    if (parts.length > 1) {
+      for (const [partIndex, part] of parts.entries()) {
+        for (const anchor of headingIdsFromMarkdown(part.body)) {
+          if (!Object.hasOwn(anchorParts, anchor)) anchorParts[anchor] = partIndex;
+        }
+      }
+    }
+    return { path, title, group, kind, words, partCount: parts.length, anchorParts };
+  },
 );
 
 export const documentGroups = GROUP_ORDER.map((group) => ({
