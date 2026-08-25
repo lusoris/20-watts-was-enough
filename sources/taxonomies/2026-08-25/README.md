@@ -1,6 +1,6 @@
 # Official fine-grained research taxonomies
 
-**Imported:** 2026-08-25  
+**Imported:** 2026-08-25
 **Role:** immutable source material for the repository's fine-grained field
 inventory. These classifications route searches; they do not establish
 scientific evidence, completeness, quality, or priority.

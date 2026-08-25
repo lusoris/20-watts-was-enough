@@ -204,7 +204,7 @@ lines.push(
   "",
 );
 
-const rendered = `${lines.join("\n")}\n`;
+const rendered = `${lines.join("\n").trimEnd()}\n`;
 
 if (checkOnly) {
   const current = await readFile(outputPath, "utf8");

@@ -376,7 +376,9 @@ def main() -> None:
         return
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(rendered, encoding="utf-8")
+    # Keep generated Git artifacts byte-stable across Windows and Unix.
+    with args.output.open("w", encoding="utf-8", newline="\n") as output:
+        output.write(rendered)
     print(f"Wrote {args.output}: {summary}.")
 
 
