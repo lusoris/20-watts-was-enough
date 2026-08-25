@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-08-25",
+  "scope": "Explicit child-level audit routes only. Missing records are unassigned; parent coverage is never inherited.",
+  "states": {
+    "dedicated": "A field-centered audit directly addresses the named child classification.",
+    "adjacent": "A durable audit touches the child classification but is not centered on it."
+  },
+  "assignments": []
+}

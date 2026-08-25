@@ -35,3 +35,12 @@ captured body text. They route research questions; they do not support claims.
 | 2026-08-06 | Combinatorial account of creativity | [`2026-08-06/google-doc-1tQnOxql.md`](2026-08-06/google-doc-1tQnOxql.md) |
 | 2026-08-06 | Empirical-versus-formal evaluator boundaries in scientific discovery | [`2026-08-06/google-doc-1q3PvYWS.md`](2026-08-06/google-doc-1q3PvYWS.md) |
 | 2026-08-06 | Selectively relaxed research domains inside a modular constraint architecture | [`2026-08-06/google-doc-1JvM_XQy.md`](2026-08-06/google-doc-1JvM_XQy.md) |
+
+## Official taxonomy snapshots
+
+The dated [`taxonomies/2026-08-25/`](taxonomies/2026-08-25/README.md)
+directory preserves the EU EuroSciVoc 1.6 scheme and hierarchy, the official
+DFG 2024--2028 classification, and the corrected ANZSRC 2020 FoR data cube used
+to expand the whole-science routing inventory. These files define names and
+hierarchy only; they do not support scientific claims or imply that a field has
+been researched.

@@ -1,12 +1,21 @@
 {
   "schemaVersion": 1,
-  "asOf": "2026-08-24",
+  "asOf": "2026-08-25",
   "states": {
     "dedicated": "At least one durable audit is centered on evidence from this field. This does not mean the field is complete.",
     "adjacent": "The field contributes evidence to another audit, but has no field-centered audit of its own.",
     "unreviewed": "No durable field-centered evidence audit is present. Mentions and source leads do not count."
   },
   "taxonomies": {
+    "euroscivoc": {
+      "title": "European Science Vocabulary (EuroSciVoc)",
+      "edition": "1.6.0",
+      "url": "https://op.europa.eu/en/web/eu-vocabularies/euroscivoc",
+      "role": "EU-level multilingual fine-grained science inventory",
+      "declaredTopConcepts": 6,
+      "declaredConcepts": 1064,
+      "languages": 6
+    },
     "oecdFord": {
       "title": "OECD Fields of Research and Development (FORD)",
       "edition": "Frascati Manual 2015, Table 2.2",

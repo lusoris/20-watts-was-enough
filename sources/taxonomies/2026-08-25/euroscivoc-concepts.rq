@@ -1,0 +1,19 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+
+SELECT DISTINCT ?concept ?broader ?enLabel ?deLabel WHERE {
+  ?concept skos:inScheme
+    <http://data.europa.eu/8mn/euroscivoc/40c0f173-baa3-48a3-9fe6-d6e8fb366a00> .
+  OPTIONAL { ?concept skos:broader ?broader . }
+  OPTIONAL {
+    ?concept skosxl:prefLabel ?enNode .
+    ?enNode skosxl:literalForm ?enLabel .
+    FILTER(lang(?enLabel) = "en")
+  }
+  OPTIONAL {
+    ?concept skosxl:prefLabel ?deNode .
+    ?deNode skosxl:literalForm ?deLabel .
+    FILTER(lang(?deLabel) = "de")
+  }
+}
+ORDER BY ?concept ?broader

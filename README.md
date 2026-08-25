@@ -81,6 +81,7 @@ Supporting material:
 - [`research/adoption-matrix.md`](research/adoption-matrix.md) — what to use, test, explore, or watch
 - [`research/principle-registry.md`](research/principle-registry.md) — canonical deduplicated problem–solution invariants
 - [`research/field-coverage.md`](research/field-coverage.md) — generated OECD/DFG field census, taxonomy blind spots, and breadth queue
+- [`research/taxonomies/field-depth.md`](research/taxonomies/field-depth.md) — searchable inventory of 1,064 EU EuroSciVoc concepts, 214 DFG subjects, 213 ANZSRC groups, and 1,967 fields without inherited coverage
 - [`research/domain-inventory.md`](research/domain-inventory.md) — audited, partial, and queued scientific fields
 - [`research/discovery-policy.md`](research/discovery-policy.md) — open-world search, extraction, deduplication, and promotion rules
 - [`research/normative-baseline.md`](research/normative-baseline.md) — EU/Germany default, source-role hierarchy, and applicability record
