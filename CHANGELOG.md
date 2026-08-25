@@ -7,6 +7,45 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- The independently reviewed tribology and adaptive-contact-interface audit is
+  now central as Fixture F-021. Nine bounded claims (`C-1497`--`C-1505`) and
+  nine reciprocal CPU-only contracts separate friction coefficient from
+  transmitted work, aggregate load from contact-state distribution,
+  lubrication regime from scalar friction, wear rate from cumulative damage,
+  stick--slip stability from mean friction, third-body inventory from
+  unobserved disturbance, texture from universal benefit, reversible adaptive
+  interfaces from fixed policies, and coupon metrics from accepted-service and
+  lifecycle burden. Twenty new scientific and DIN/EN/ISO bibliography records
+  were added after DOI, title, and semantic deduplication; the existing DFG and
+  ANZSRC taxonomy records were reused. Explicit child routing marks DFG
+  4.12-01, ANZSRC 401708, and EuroSciVoc `tribology` and `lubrication` as
+  dedicated, with DFG 4.12-02/4.31-03 and ANZSRC 401706 adjacent; no parent
+  inheritance, new P-series principle, candidate, runner, result, or energy
+  claim is introduced. Generated coverage now records 1,404/1,496
+  protocol-covered claims, 92 reviewed ledger-only claims, 41/41 complete
+  written artifacts, four smoke-ready harnesses, and zero
+  workstation-executable research claims.
+
+- The independently reviewed integrative comparative-physiology depth audit is
+  now central: nine bounded claims (`C-1488`--`C-1496`; eight established and
+  one plausible) separate aggregate supply from local delivery/utilisation,
+  conditional branching from universal rules, geometry from exchanger
+  effectiveness, filtration from transport/excretion/balance, mean state from
+  delayed control, regional benefit from global cost, prospective regulation
+  from cumulative burden, synchrony from coupling/function, and fast action
+  from slow structural adaptation. Fixture F-020 preserves all nine complete
+  CPU-only contracts and frozen A/B/C policies without a runner, manifest,
+  output, physiological result, AI-performance result, or energy result.
+  Twenty-one new scientific DOI records and two new EU/German animal-research
+  applicability sentinels were added after key, DOI, and semantic deduplication.
+  Explicit child routing marks DFG 2.13-05, ANZSRC 310912, and EuroSciVoc
+  `physiology` as dedicated, and ANZSRC 310910/320803 as adjacent; no parent
+  route, ANZSRC 310303 ecological-physiology route, new principle, or candidate
+  is inferred.
+  Generated coverage now records 1,395/1,487 protocol-covered claims, 92
+  reviewed ledger-only claims, 40/40 complete written artifacts, four
+  smoke-ready harnesses, and zero workstation-executable research claims.
+
 - EuroSciVoc 1.6 adds an official EU concept-level discovery lens: 1,064
   English/German concepts are preserved beside 214 DFG subjects, 213 ANZSRC
   groups, and 1,967 ANZSRC fields. Generated routing pages and validators keep

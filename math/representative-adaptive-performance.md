@@ -146,7 +146,10 @@ V_{m,c}(\tau)=L_{m,-c}(\tau)-L_{m,\mathrm{all}}(\tau),
 $$
 
 also in bits per event. Here $L_{m,-c}$ is measured under removal or
-neutralization of channel $c$, not inferred from gaze or saliency.
+neutralization of channel $c$, not inferred from gaze or saliency. Predictive
+regulation must additionally retain false-alarm action, reserve debit,
+recovery, and cumulative exposure instead of treating cue value as the whole
+outcome ([C-1494](../research/claims.md#c-1494)).
 
 Physical coupling is reported separately as
 
@@ -284,7 +287,10 @@ both a registered response in $\Gamma_{ij}$ and reduced task-variable error.
 Here $u_i$ and $u_j$ are recorded in their native contribution units,
 $\eta_i$ is a registered perturbation in the unit of agent $i$'s action or
 state, and $\Gamma_{ij}$ has the product unit of the two contributions;
-correlation or synchrony without intervention is insufficient.
+correlation or synchrony without intervention is insufficient. Common-drive
+and edge-intervention controls are therefore mandatory before mapped synchrony
+can be credited with useful coordination
+([C-1495](../research/claims.md#c-1495)).
 
 For teammate $j$'s future action or intent $b_{j,n}$ and agent $i$'s predictive
 belief $p_i$, shared-information quality is

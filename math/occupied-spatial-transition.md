@@ -149,6 +149,10 @@ decision authority. The primary feasibility condition is
 $N_{\mathrm{hard\ violation}}=0$ for every protected scenario—not a favorable
 mean.
 
+Fast reversible allocation and slow structural adaptation therefore retain
+different action, deficit, build, carry, and stranded-capacity coordinates
+([C-1496](../research/claims.md#c-1496)).
+
 ## Commitment and recovery
 
 Let $K_{v,k}$ be the set of material or legal commitments already made. A
@@ -163,6 +167,10 @@ $$
 where $r$ is dimensionless and $\mathcal R$ is the set of reachable, verified
 states. When $r_{v,k}=0$, the record must name a reachable safe-stop or forward-
 recovery state; calling the transition reversible is false.
+
+Recovery after a demand-regime reversal is part of the structural decision,
+not an optional endpoint after the selected regime has already been scored
+([C-1496](../research/claims.md#c-1496)).
 
 Recovery is complete only after target service, evidence validity, open-defect
 limits, and reserve are restored. For each service component $m$,

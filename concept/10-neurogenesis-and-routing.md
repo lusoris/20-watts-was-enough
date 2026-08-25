@@ -252,7 +252,9 @@ Equalize initial capacity, maximum stored capacity, active work, optimizer
 updates, training examples, router information, tuning trials, migration bytes,
 validation work, and wall-clock opportunity. Charge candidate failures and
 discarded births. Otherwise growth buys more search while the null models are
-asked to solve the task in place.
+asked to solve the task in place. A stylized optimum such as a fixed branching
+exponent belongs in this null stack only inside its verified objective,
+transport law, and constraint regime ([C-1489](../research/claims.md#c-1489)).
 
 ### A topology change carries state
 
@@ -263,6 +265,10 @@ wear, calibration, maintenance obligations, and shared protection dependencies
 ([C-501](../research/claims.md#c-501),
 [C-510](../research/claims.md#c-510)). Two endpoint configurations can both be
 feasible while the path between them is unsafe ([C-512](../research/claims.md#c-512)).
+Static branching relations do not remove that transition state
+([C-1489](../research/claims.md#c-1489)); fast allocation and slow structural
+adaptation must retain separate action, deficit, build, stranded-capacity, and
+recovery histories ([C-1496](../research/claims.md#c-1496)).
 
 For digital modules, use a typed transition inventory rather than pretending
 that bytes obey material conservation. For state class $k$,

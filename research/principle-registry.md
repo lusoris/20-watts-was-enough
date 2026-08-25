@@ -231,6 +231,54 @@ incentive and target work in `FM-T10` strengthens [C-139](claims.md#c-139),
 principle, market primitive, resilience primitive, or additional candidate is
 created.
 
+### Integrative comparative physiology evaluation contract
+
+The [integrative comparative-physiology audit](audits/2026-08-25-integrative-comparative-physiology.md)
+and [Fixture F-020](../experiments/fixtures/020-integrative-comparative-physiology.md)
+promote no principle or candidate. Their bounded manifestations map local
+delivery/utilisation to P-001/P-009/P-013
+([C-1488](claims.md#c-1488)); conditional branching to P-010
+([C-1489](claims.md#c-1489)); finite exchange to P-008/P-010/P-012
+([C-1490](claims.md#c-1490)); typed renal material handling to
+P-009/P-012/P-013 ([C-1491](claims.md#c-1491)); delayed autoregulation to
+P-002/P-006/P-007/P-009/P-012 ([C-1492](claims.md#c-1492)); regional/global
+matching to P-002/P-006/P-008/P-013 ([C-1493](claims.md#c-1493)); predictive
+regulation to P-006/P-007/P-012 ([C-1494](claims.md#c-1494)); synchrony,
+coupling, and functional intervention to P-006/P-011/P-013
+([C-1495](claims.md#c-1495)); and fast/slow adaptation to P-005/P-009/P-012
+([C-1496](claims.md#c-1496)).
+
+Murray's relation, countercurrent orientation, allostasis, synchrony, and
+remodelling remain source-qualified phenomena or mature nulls rather than
+architecture labels. `ICP-T01`--`ICP-T09` therefore enter the CPU-only
+mature-null stack with no result, energy claim, clinical inference,
+animal-study authority, or taxonomy-parent inheritance.
+
+### Tribology and adaptive-interface evaluation contract
+
+The [tribology and adaptive-contact audit](audits/2026-08-25-tribology-contact-adaptive-interfaces.md)
+and [Fixture F-021](../experiments/fixtures/021-tribology-contact-adaptive-interfaces.md)
+promote no principle or candidate. Their bounded manifestations map typed,
+evidence-aged interface state to P-006/P-007/P-012/P-013
+([C-1497](claims.md#c-1497)); local contact tails to P-001/P-008/P-012
+([C-1498](claims.md#c-1498)); regime-qualified mediation to
+P-002/P-006/P-008/P-009/P-012 ([C-1499](claims.md#c-1499)); path-qualified
+wear state to P-009/P-012 ([C-1500](claims.md#c-1500)); event-triggered
+instability estimation to P-002/P-006/P-007/P-012
+([C-1501](claims.md#c-1501)); conserved mediator inventory to
+P-008/P-009/P-012/P-013 ([C-1502](claims.md#c-1502)); workload-qualified
+surface structure to P-005/P-010 ([C-1503](claims.md#c-1503)); bounded local
+adaptation to P-005/P-006/P-009/P-010/P-012
+([C-1504](claims.md#c-1504)); and accepted-service lifecycle selection to
+P-009/P-010/P-012/P-013 ([C-1505](claims.md#c-1505)).
+
+Friction coefficients, film correlations, Archard wear, rate/state dynamics,
+third-body circulation, texture, adaptive coatings, and lifecycle models remain
+source- and support-qualified mechanisms or mature nulls rather than
+architecture labels. `TAI-T01`--`TAI-T09` enter the CPU-only mature-null stack
+with no tribological result, AI advantage, workstation-energy measurement,
+material recommendation, conformity claim, or taxonomy-parent inheritance.
+
 ### Immune-state lifecycle evaluation contract
 
 The [immune audit](audits/2026-08-05-immune-tolerance-trained-immunity.md)

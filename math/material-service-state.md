@@ -26,7 +26,12 @@ unit: on-hand $I$, receipts $\operatorname{Rec}$, inbound/outbound transfer
 $T$, issued work $S$, and expiry/damage $X$. The explicit receipt symbol avoids
 reusing $R$ for both receipts and reservations. Forecasts, requests,
 allocations, and record corrections do not appear as physical flow unless an
-observed transition links them to it.
+observed transition links them to it. Filtration, internal recovery,
+reintroduction, final egress, and storage change likewise remain separate
+ledger terms ([C-1491](../research/claims.md#c-1491)). A third-body interface
+inventory also requires generation, transport, transformation,
+reincorporation, and escape closure before retain/remove optimization
+([C-1502](../research/claims.md#c-1502)).
 
 With accepted but unfinished work,
 
@@ -62,6 +67,10 @@ $Q^{\mathrm{internal}}$ is an already delivered, remobilizable internal pool.
 The operational compartments are mutually exclusive and use one declared
 mass, count, or task-native resource unit. Total stock and solution
 concentration are derived without adding unlike or overlapping states:
+
+Aggregate stock or inflow therefore cannot establish local arrival, uptake,
+useful consumption, or deficit at the receiver's support
+([C-1488](../research/claims.md#c-1488)).
 
 $$
 S^{\mathrm{tot}}_{ik,t}=\mathbf 1^{\mathsf T}\mathbf x_{ik,t},
@@ -101,7 +110,9 @@ resource unit occupies one compartment; transition columns conserve it unless
 a declared transformation or loss is represented explicitly. Uptake into
 $Q^{\mathrm{internal}}$ is an internal transition; it must not also be
 subtracted as a boundary flow. Internal form changes can conserve an element
-while changing its deliverability.
+while changing its deliverability. A lubricant, buffer, cache, or reserve used
+as an interface mediator remains a typed, regime-qualified resource rather
+than an automatically beneficial label ([C-1499](../research/claims.md#c-1499)).
 
 Observed uptake over $\Delta t$ is bounded separately from stock:
 
@@ -146,7 +157,9 @@ event, availability, and decision times when they differ.
 
 The tuple is deliberately not a scalar “available resource.” A valid record
 does not create physical stock; a route plan does not complete transport; a
-shipment does not prove correct or timely service.
+shipment does not prove correct or timely service. The renal accounting
+boundary supplies an independent instance of why intermediate throughput is
+not final service ([C-1491](../research/claims.md#c-1491)).
 
 ### Jointly executable service
 

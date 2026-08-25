@@ -16,7 +16,7 @@ EuroSciVoc is the EU-level multilingual science vocabulary. The DFG hierarchy
 adds German review granularity. ANZSRC is an independent omission detector,
 not the normative framework for the project.
 
-**Explicit child routes recorded:** 0. All other children are unassigned.
+**Explicit child routes recorded:** 12. All other children are unassigned.
 
 ## EuroSciVoc 1.6: European science vocabulary
 
@@ -74,7 +74,7 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### engineering and technology
 
-**Deutsch:** Technik und Technologie. **Fine-grained status:** 0 of 226 concepts in this branch have an explicit routing assignment.
+**Deutsch:** Technik und Technologie. **Fine-grained status:** 2 of 226 concepts in this branch have an explicit routing assignment.
 
 - **engineering and technology.** Routing: unassigned.
   - **chemical engineering.** Deutsch: Chemieingenieurwesen. Routing: unassigned.
@@ -257,8 +257,8 @@ are retained below; neither a label nor a parent route counts as evidence review
     - **mechatronics.** Deutsch: Mechatronik. Routing: unassigned.
     - **thermodynamic engineering.** Deutsch: Thermodynamik. Routing: unassigned.
       - **heat engineering.** Deutsch: Heizungstechnik. Routing: unassigned.
-    - **tribology.** Deutsch: Tribologie. Routing: unassigned.
-      - **lubrication.** Deutsch: Schmierung. Routing: unassigned.
+    - **tribology.** Deutsch: Tribologie. Routing: dedicated child-level evidence via [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md). Claims: [C-1497](../claims.md#c-1497), [C-1498](../claims.md#c-1498), [C-1499](../claims.md#c-1499), [C-1500](../claims.md#c-1500), [C-1501](../claims.md#c-1501), [C-1502](../claims.md#c-1502), [C-1503](../claims.md#c-1503), [C-1504](../claims.md#c-1504), [C-1505](../claims.md#c-1505).
+      - **lubrication.** Deutsch: Schmierung. Routing: dedicated child-level evidence via [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md). Claims: [C-1499](../claims.md#c-1499).
     - **vehicle engineering.** Deutsch: Fahrzeugbau. Routing: unassigned.
       - **aerospace engineering.** Deutsch: Luft- und Raumfahrttechnik. Routing: unassigned.
         - **aeronautical engineering.** Deutsch: Luftfahrttechnik. Routing: unassigned.
@@ -377,7 +377,7 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### medical and health sciences
 
-**Deutsch:** Medizin- und Gesundheitswissenschaften. **Fine-grained status:** 0 of 178 concepts in this branch have an explicit routing assignment.
+**Deutsch:** Medizin- und Gesundheitswissenschaften. **Fine-grained status:** 1 of 178 concepts in this branch have an explicit routing assignment.
 
 - **medical and health sciences.** Routing: unassigned.
   - **basic medicine.** Deutsch: Grundlagenmedizin. Routing: unassigned.
@@ -411,7 +411,7 @@ are retained below; neither a label nor a parent route counts as evidence review
         - **antivirals.** Routing: unassigned.
         - **vaccines.** Deutsch: Impfstoff. Routing: unassigned.
       - **pharmacokinetics.** Deutsch: Pharmakokinetik. Routing: unassigned.
-    - **physiology.** Deutsch: Physiologie. Routing: unassigned.
+    - **physiology.** Deutsch: Physiologie. Routing: dedicated child-level evidence via [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md). Claims: [C-1488](../claims.md#c-1488), [C-1489](../claims.md#c-1489), [C-1490](../claims.md#c-1490), [C-1491](../claims.md#c-1491), [C-1492](../claims.md#c-1492), [C-1493](../claims.md#c-1493), [C-1494](../claims.md#c-1494), [C-1495](../claims.md#c-1495), [C-1496](../claims.md#c-1496).
       - **cytology.** Deutsch: Zytologie. Routing: unassigned.
       - **homeostasis.** Deutsch: Homöostase. Routing: unassigned.
       - **pathophysiology.** Deutsch: Pathophysiologie. Routing: unassigned.
@@ -1296,15 +1296,15 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### 2.13 Zoologie
 
-**Parent route:** adjacent parent-level evidence via [animal navigation sensory ecology](../audits/2026-08-05-animal-navigation-sensory-ecology.md), [comparative cognition tool use](../audits/2026-08-05-comparative-cognition-tool-use.md).
+**Parent route:** dedicated parent-level audit via [animal navigation sensory ecology](../audits/2026-08-05-animal-navigation-sensory-ecology.md), [comparative cognition tool use](../audits/2026-08-05-comparative-cognition-tool-use.md), [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md).
 
-**Fine-grained status:** 0 of 6 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 1 of 6 subjects have an explicit child-level routing assignment.
 
 - **2.13-01 — Systematik und Morphologie der Tiere.** Routing: unassigned.
 - **2.13-02 — Evolution, Anthropologie.** Routing: unassigned.
 - **2.13-03 — Ökologie und Biodiversität der Tiere und Ökosysteme, Organismische Interaktionen.** Routing: unassigned.
 - **2.13-04 — Biologie des Verhaltens und der Sinne.** Routing: unassigned.
-- **2.13-05 — Biochemie und Physiologie der Tiere.** Routing: unassigned.
+- **2.13-05 — Biochemie und Physiologie der Tiere.** Routing: dedicated child-level evidence via [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md). Claims: [C-1488](../claims.md#c-1488), [C-1489](../claims.md#c-1489), [C-1490](../claims.md#c-1490), [C-1491](../claims.md#c-1491), [C-1492](../claims.md#c-1492), [C-1493](../claims.md#c-1493), [C-1494](../claims.md#c-1494), [C-1495](../claims.md#c-1495), [C-1496](../claims.md#c-1496).
 - **2.13-06 — Evolutionäre Zell- und Entwicklungsbiologie der Tiere.** Routing: unassigned.
 
 ### 2.21 Mikrobiologie, Virologie und Immunologie
@@ -1571,12 +1571,12 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### 4.12 Mechanik und Konstruktiver Maschinenbau
 
-**Parent route:** dedicated parent-level audit via [mechanical civil resilience](../audits/2026-08-05-mechanical-civil-resilience.md), [biomechanics motor control](../audits/2026-08-05-biomechanics-motor-control.md).
+**Parent route:** dedicated parent-level audit via [mechanical civil resilience](../audits/2026-08-05-mechanical-civil-resilience.md), [biomechanics motor control](../audits/2026-08-05-biomechanics-motor-control.md), [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md).
 
-**Fine-grained status:** 0 of 4 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 2 of 4 subjects have an explicit child-level routing assignment.
 
-- **4.12-01 — Konstruktion, Maschinenelemente, Produktentwicklung.** Routing: unassigned.
-- **4.12-02 — Mechanik.** Routing: unassigned.
+- **4.12-01 — Konstruktion, Maschinenelemente, Produktentwicklung.** Routing: dedicated child-level evidence via [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md). Claims: [C-1497](../claims.md#c-1497), [C-1498](../claims.md#c-1498), [C-1499](../claims.md#c-1499), [C-1500](../claims.md#c-1500), [C-1501](../claims.md#c-1501), [C-1502](../claims.md#c-1502), [C-1503](../claims.md#c-1503), [C-1504](../claims.md#c-1504), [C-1505](../claims.md#c-1505).
+- **4.12-02 — Mechanik.** Routing: adjacent child-level evidence via [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md). Claims: [C-1497](../claims.md#c-1497), [C-1498](../claims.md#c-1498), [C-1499](../claims.md#c-1499), [C-1500](../claims.md#c-1500), [C-1501](../claims.md#c-1501).
 - **4.12-03 — Leichtbau, Textiltechnik.** Routing: unassigned.
 - **4.12-04 — Akustik.** Routing: unassigned.
 
@@ -1605,13 +1605,13 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### 4.31 Werkstofftechnik
 
-**Parent route:** dedicated parent-level audit via [adaptive materials and self assembly](../audits/2026-08-05-adaptive-materials-and-self-assembly.md), [polymer research adaptive materials](../audits/2026-08-21-polymer-research-adaptive-materials.md), [production maintenance nanomanufacturing communications material qualification](../audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md).
+**Parent route:** dedicated parent-level audit via [adaptive materials and self assembly](../audits/2026-08-05-adaptive-materials-and-self-assembly.md), [polymer research adaptive materials](../audits/2026-08-21-polymer-research-adaptive-materials.md), [production maintenance nanomanufacturing communications material qualification](../audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md), [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md).
 
-**Fine-grained status:** 0 of 6 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 1 of 6 subjects have an explicit child-level routing assignment.
 
 - **4.31-01 — Metallurgische, thermische und thermomechanische Behandlung von Werkstoffen.** Routing: unassigned.
 - **4.31-02 — Materialien und Werkstoffe der Sinterprozesse und der generativen Fertigungsverfahren.** Routing: unassigned.
-- **4.31-03 — Beschichtungs- und Oberflächentechnik.** Routing: unassigned.
+- **4.31-03 — Beschichtungs- und Oberflächentechnik.** Routing: adjacent child-level evidence via [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md). Claims: [C-1497](../claims.md#c-1497), [C-1499](../claims.md#c-1499), [C-1502](../claims.md#c-1502), [C-1503](../claims.md#c-1503), [C-1504](../claims.md#c-1504).
 - **4.31-04 — Mechanische Eigenschaften von metallischen Werkstoffen und ihre mikrostrukturellen Ursachen.** Routing: unassigned.
 - **4.31-05 — Glas und Keramik und darauf basierende Verbundwerkstoffe.** Routing: unassigned.
 - **4.31-06 — Polymere und biogene Werkstoffe und darauf basierende Verbundwerkstoffe.** Routing: unassigned.
@@ -1837,9 +1837,9 @@ route.
 
 ### 31 BIOLOGICAL SCIENCES
 
-**Parent route:** dedicated parent-level audit via [cellular quality control](../audits/2026-08-05-cellular-quality-control.md), [collective ecological resilience](../audits/2026-08-05-collective-ecological-resilience.md), [developmental morphogenesis](../audits/2026-08-05-developmental-morphogenesis.md), [microbial ecology biofilms](../audits/2026-08-05-microbial-ecology-biofilms.md), [plant distributed control](../audits/2026-08-05-plant-distributed-control.md).
+**Parent route:** dedicated parent-level audit via [cellular quality control](../audits/2026-08-05-cellular-quality-control.md), [collective ecological resilience](../audits/2026-08-05-collective-ecological-resilience.md), [developmental morphogenesis](../audits/2026-08-05-developmental-morphogenesis.md), [microbial ecology biofilms](../audits/2026-08-05-microbial-ecology-biofilms.md), [plant distributed control](../audits/2026-08-05-plant-distributed-control.md), [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md).
 
-**Fine-grained status:** 0 of 10 groups and 0 of 98 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 10 groups and 2 of 98 fields have an explicit child-level routing assignment.
 
 #### 3101 Biochemistry and cell biology
 
@@ -1974,9 +1974,9 @@ route.
 - **310907 — Animal physiological ecology.** Routing: unassigned.
 - **310908 — Animal physiology - biophysics.** Routing: unassigned.
 - **310909 — Animal physiology - cell.** Routing: unassigned.
-- **310910 — Animal physiology - systems.** Routing: unassigned.
+- **310910 — Animal physiology - systems.** Routing: adjacent child-level evidence via [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md). Claims: [C-1488](../claims.md#c-1488), [C-1491](../claims.md#c-1491), [C-1492](../claims.md#c-1492), [C-1493](../claims.md#c-1493), [C-1495](../claims.md#c-1495), [C-1496](../claims.md#c-1496).
 - **310911 — Animal structure and function.** Routing: unassigned.
-- **310912 — Comparative physiology.** Routing: unassigned.
+- **310912 — Comparative physiology.** Routing: dedicated child-level evidence via [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md). Claims: [C-1488](../claims.md#c-1488), [C-1489](../claims.md#c-1489), [C-1490](../claims.md#c-1490), [C-1491](../claims.md#c-1491), [C-1492](../claims.md#c-1492), [C-1493](../claims.md#c-1493), [C-1494](../claims.md#c-1494), [C-1495](../claims.md#c-1495), [C-1496](../claims.md#c-1496).
 - **310913 — Invertebrate biology.** Routing: unassigned.
 - **310914 — Vertebrate biology.** Routing: unassigned.
 - **310999 — Zoology not elsewhere classified.** Routing: unassigned.
@@ -1993,7 +1993,7 @@ route.
 
 **Parent route:** dedicated parent-level audit via [pathology rehabilitation](../audits/2026-08-05-pathology-rehabilitation.md), [pharmacology toxicology](../audits/2026-08-05-pharmacology-toxicology.md), [epidemiology and surveillance control](../audits/2026-08-05-epidemiology-and-surveillance-control.md), [nursing care health services](../audits/2026-08-21-nursing-care-health-services.md), [clinical intervention pathways](../audits/2026-08-24-clinical-intervention-pathways.md), [clinical specialties medical agricultural biotechnology](../audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md).
 
-**Fine-grained status:** 0 of 16 groups and 0 of 129 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 16 groups and 1 of 129 fields have an explicit child-level routing assignment.
 
 #### 3201 Cardiovascular medicine and haematology
 
@@ -2112,7 +2112,7 @@ route.
 
 - **320801 — Cell physiology.** Routing: unassigned.
 - **320802 — Human biophysics.** Routing: unassigned.
-- **320803 — Systems physiology.** Routing: unassigned.
+- **320803 — Systems physiology.** Routing: adjacent child-level evidence via [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md). Claims: [C-1488](../claims.md#c-1488), [C-1491](../claims.md#c-1491), [C-1492](../claims.md#c-1492), [C-1493](../claims.md#c-1493), [C-1494](../claims.md#c-1494), [C-1495](../claims.md#c-1495), [C-1496](../claims.md#c-1496).
 - **320899 — Medical physiology not elsewhere classified.** Routing: unassigned.
 
 #### 3209 Neurosciences
@@ -2876,9 +2876,9 @@ route.
 
 ### 40 ENGINEERING
 
-**Parent route:** dedicated parent-level audit via [engineering analogues](../audits/2026-08-05-engineering-analogues.md), [mechanical civil resilience](../audits/2026-08-05-mechanical-civil-resilience.md), [process engineering](../audits/2026-08-05-process-engineering.md), [power grids protection and recovery](../audits/2026-08-05-power-grids-protection-and-recovery.md), [polymer research adaptive materials](../audits/2026-08-21-polymer-research-adaptive-materials.md), [production maintenance nanomanufacturing communications material qualification](../audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md), [computing compilers networking visualization](../audits/2026-08-24-computing-compilers-networking-visualization.md), [medical devices biomedical engineering](../audits/2026-08-24-medical-devices-biomedical-engineering.md), [environmental engineering water waste remediation](../audits/2026-08-24-environmental-engineering-water-waste-remediation.md).
+**Parent route:** dedicated parent-level audit via [engineering analogues](../audits/2026-08-05-engineering-analogues.md), [mechanical civil resilience](../audits/2026-08-05-mechanical-civil-resilience.md), [process engineering](../audits/2026-08-05-process-engineering.md), [power grids protection and recovery](../audits/2026-08-05-power-grids-protection-and-recovery.md), [polymer research adaptive materials](../audits/2026-08-21-polymer-research-adaptive-materials.md), [production maintenance nanomanufacturing communications material qualification](../audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md), [computing compilers networking visualization](../audits/2026-08-24-computing-compilers-networking-visualization.md), [medical devices biomedical engineering](../audits/2026-08-24-medical-devices-biomedical-engineering.md), [environmental engineering water waste remediation](../audits/2026-08-24-environmental-engineering-water-waste-remediation.md), [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md).
 
-**Fine-grained status:** 0 of 20 groups and 0 of 196 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 20 groups and 2 of 196 fields have an explicit child-level routing assignment.
 
 #### 4001 Aerospace engineering
 
@@ -3132,9 +3132,9 @@ route.
 - **401703 — Energy generation, conversion and storage (excl. chemical and electrical).** Routing: unassigned.
 - **401704 — Mechanical engineering asset management.** Routing: unassigned.
 - **401705 — Microelectromechanical systems (MEMS).** Routing: unassigned.
-- **401706 — Numerical modelling and mechanical characterisation.** Routing: unassigned.
+- **401706 — Numerical modelling and mechanical characterisation.** Routing: adjacent child-level evidence via [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md). Claims: [C-1497](../claims.md#c-1497), [C-1498](../claims.md#c-1498), [C-1499](../claims.md#c-1499), [C-1500](../claims.md#c-1500), [C-1501](../claims.md#c-1501), [C-1502](../claims.md#c-1502), [C-1503](../claims.md#c-1503), [C-1504](../claims.md#c-1504), [C-1505](../claims.md#c-1505).
 - **401707 — Solid mechanics.** Routing: unassigned.
-- **401708 — Tribology.** Routing: unassigned.
+- **401708 — Tribology.** Routing: dedicated child-level evidence via [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md). Claims: [C-1497](../claims.md#c-1497), [C-1498](../claims.md#c-1498), [C-1499](../claims.md#c-1499), [C-1500](../claims.md#c-1500), [C-1501](../claims.md#c-1501), [C-1502](../claims.md#c-1502), [C-1503](../claims.md#c-1503), [C-1504](../claims.md#c-1504), [C-1505](../claims.md#c-1505).
 - **401799 — Mechanical engineering not elsewhere classified.** Routing: unassigned.
 
 #### 4018 Nanotechnology

@@ -76,6 +76,10 @@ an infrastructure layer adjust supply. The neurovascular paper's model-derived
 percentage is not an architecture constant, and none of these cellular results
 provides a conversion from ATP to accelerator joules.
 
+Aggregate headroom is likewise not evidence of delivery or useful uptake at
+the support where demand occurs; local deficit, arrival, consumption, and
+export remain distinct records ([C-1488](../research/claims.md#c-1488)).
+
 Taken together, the observations motivate a layered controller: fast local
 prediction and gating, a narrow context path, and a slower resource plane. The
 architecture still has to beat standard estimation, decision, routing, and
@@ -120,7 +124,9 @@ separate fields for:
 
 No implementation may collapse all of these into “confidence” and retain the
 same claim. Residual magnitude, likelihood, expected value, and risk answer
-different questions.
+different questions. Predictive regulation adds the same separation between
+forecast value, feedback correction, integrated action exposure, reserve
+debit, and later outcome ([C-1494](../research/claims.md#c-1494)).
 
 ### Observation is affected by action
 
@@ -209,6 +215,11 @@ The event loop cannot raise its own power or bandwidth allocation. It requests
 capacity through the resource plane. The resource plane cannot change task
 semantics or fabricate confidence; it changes supply and prices. The context
 loop cannot transmit a per-module command table under the name “broadcast.”
+Equal mean state does not collapse delayed local regulation, anticipatory
+action, and slow structural change into one loop
+([C-1492](../research/claims.md#c-1492),
+[C-1494](../research/claims.md#c-1494),
+[C-1496](../research/claims.md#c-1496)).
 
 ### Concrete per-event sequence
 
@@ -293,7 +304,10 @@ global escalation. Local digital relays can act quickly inside a declared zone
 ([C-186](../research/claims.md#c-186)), while wide-area schemes add broader but
 delayed and failure-prone evidence ([C-190](../research/claims.md#c-190)). Fast
 response is still constrained by current, headroom, energy, duration, and
-interacting controls ([C-196](../research/claims.md#c-196)).
+interacting controls ([C-196](../research/claims.md#c-196)). The
+regional/global physiology boundary sharpens the same rule: a useful local
+correction must still expose shared resistance, exported load, trigger
+prevalence, and fallback cost ([C-1493](../research/claims.md#c-1493)).
 
 The held translation assigns controller $i$ an admissible action set
 
@@ -359,6 +373,9 @@ return a small scarcity code downward, and keep the expensive feasibility
 decision at the receiver. It should lose when complete state is fresh,
 capability is uniform, or backpressure already carries the required deficit
 and feasibility information more cheaply.
+[C-1488](../research/claims.md#c-1488) therefore keeps aggregate supply, local
+arrival, usable uptake, and export separate: a global balance cannot certify
+receiver feasibility.
 [Candidate 013](../experiments/candidates/013-deficit-capability-routing.md)
 tests moving demand and resource patches, delay, topology churn, strategic
 over-reporting, reversible allocation, slow growth, and second events.
@@ -551,7 +568,13 @@ The slower resource plane observes queues, deadlines, utilization, energy, and
 temperature, then adjusts capacity or prices. Any learned controller must beat
 a tuned PI or primal/dual implementation on settling time, overshoot,
 constraint violations, tail latency, and joules per control update. “Local
-metabolism” is not a substitute for that comparison.
+metabolism” is not a substitute for that comparison. Interacting loops with
+gain and delay must also be tested for oscillation and stability rather than
+accepted from their mean allocation ([C-1492](../research/claims.md#c-1492)).
+Regime-dependent mediator supply must retain starvation, drag, leakage,
+failure, and pumping terms ([C-1499](../research/claims.md#c-1499)); mean load
+also cannot clear a state-delay instability such as stick--slip
+([C-1501](../research/claims.md#c-1501)).
 
 ## Evidence status
 

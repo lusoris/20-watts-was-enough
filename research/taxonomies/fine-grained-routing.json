@@ -6,5 +6,249 @@
     "dedicated": "A field-centered audit directly addresses the named child classification.",
     "adjacent": "A durable audit touches the child classification but is not centered on it."
   },
-  "assignments": []
+  "assignments": [
+    {
+      "level": "dfg-subject",
+      "code": "2.13-05",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-integrative-comparative-physiology.md"
+      ],
+      "claims": [
+        "C-1488",
+        "C-1489",
+        "C-1490",
+        "C-1491",
+        "C-1492",
+        "C-1493",
+        "C-1494",
+        "C-1495",
+        "C-1496"
+      ],
+      "rationale": "A field-centred comparative-physiology audit directly examines distributed supply, exchange, organ-system feedback, synchrony, and structural adaptation in animal physiology.",
+      "scopeGap": "Animal biochemistry, molecular physiology, most taxa, reproductive physiology, ecological physiology, and in-vivo validation remain outside this audit.",
+      "nextQuestion": "Which mechanisms survive cross-species and in-vivo tests after morphology, environment, developmental state, and whole-organism energy are measured?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310912",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-integrative-comparative-physiology.md"
+      ],
+      "claims": [
+        "C-1488",
+        "C-1489",
+        "C-1490",
+        "C-1491",
+        "C-1492",
+        "C-1493",
+        "C-1494",
+        "C-1495",
+        "C-1496"
+      ],
+      "rationale": "The audit is explicitly comparative and uses bounded cross-system examples to derive falsifiable transport, control, accounting, and adaptation boundaries.",
+      "scopeGap": "The audit is not a census of comparative physiology and does not cover ecological acclimation, reproductive systems, locomotor performance, sensory physiology, or most clades.",
+      "nextQuestion": "Which claimed system boundaries reproduce across phylogenetically distant organisms under matched tasks, measurements, and energetic accounting?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310910",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-integrative-comparative-physiology.md"
+      ],
+      "claims": [
+        "C-1488",
+        "C-1491",
+        "C-1492",
+        "C-1493",
+        "C-1495",
+        "C-1496"
+      ],
+      "rationale": "System-level animal supply, renal, pulmonary, coupled-feedback, and remodelling examples are used, but the audit is centred on comparative transferable boundaries rather than a complete animal-systems programme.",
+      "scopeGap": "Organ-system breadth, endocrine integration, digestion, reproduction, exercise, thermoregulation, and taxon-specific validation remain incomplete.",
+      "nextQuestion": "How do the typed supply, feedback, and adaptation records interact across complete animal organ systems rather than isolated synthetic tracks?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "320803",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-integrative-comparative-physiology.md"
+      ],
+      "claims": [
+        "C-1488",
+        "C-1491",
+        "C-1492",
+        "C-1493",
+        "C-1494",
+        "C-1495",
+        "C-1496"
+      ],
+      "rationale": "The audit uses organ- and whole-system regulation, delayed feedback, prediction, regional matching, synchrony, and adaptation, while excluding clinical human physiology.",
+      "scopeGap": "Human systems validation, disease, clinical endpoints, intervention pathways, and most interacting organ axes remain outside scope.",
+      "nextQuestion": "Which multi-organ control and reserve interactions remain identifiable under causal interventions and complete material and energy ledgers?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "a2f16477-c745-46f0-b832-586b1c0e468b",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-integrative-comparative-physiology.md"
+      ],
+      "claims": [
+        "C-1488",
+        "C-1489",
+        "C-1490",
+        "C-1491",
+        "C-1492",
+        "C-1493",
+        "C-1494",
+        "C-1495",
+        "C-1496"
+      ],
+      "rationale": "The audit directly studies physiological transport, regulation, matching, coordination, and structural adaptation as a field-centred systems account.",
+      "scopeGap": "One comparative systems audit does not exhaust physiology, and it excludes clinical, pathological, ecological, developmental, cellular, and human-subject programmes.",
+      "nextQuestion": "Which additional physiological subsystems contribute transferable mechanisms that do not deduplicate into the existing thirteen principles?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "4.12-01",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-tribology-contact-adaptive-interfaces.md"
+      ],
+      "claims": [
+        "C-1497",
+        "C-1498",
+        "C-1499",
+        "C-1500",
+        "C-1501",
+        "C-1502",
+        "C-1503",
+        "C-1504",
+        "C-1505"
+      ],
+      "rationale": "The audit directly treats bearings, seals, sliding pairs, lubrication choices, texture, coatings, contact-interface design, and mission-level qualification as machine-element and product-design problems.",
+      "scopeGap": "The synthetic contracts do not qualify a physical bearing, seal, coating, lubricant, manufacturing process, product architecture, or service environment.",
+      "nextQuestion": "Which interface-state and lifecycle boundaries remain valid in manufactured machine elements under measured loads, temperatures, contaminants, maintenance schedules, and failure consequences?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "4.12-02",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-tribology-contact-adaptive-interfaces.md"
+      ],
+      "claims": [
+        "C-1497",
+        "C-1498",
+        "C-1499",
+        "C-1500",
+        "C-1501"
+      ],
+      "rationale": "The rough-contact, lubricated-contact, wear-regime, and rate/state protocols use contact, compliance, dynamics, and stability models, but the audit is centred on tribological interfaces rather than mechanics as a field.",
+      "scopeGap": "Continuum contact mechanics, fracture, multibody dynamics, elastohydrodynamic solvers, numerical convergence studies, and physical parameter identification remain outside the bounded CPU protocols.",
+      "nextQuestion": "Do the proposed regime and stability gates survive higher-fidelity contact and dynamical models with independently identified parameters and controlled numerical error?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "4.31-03",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-tribology-contact-adaptive-interfaces.md"
+      ],
+      "claims": [
+        "C-1497",
+        "C-1499",
+        "C-1502",
+        "C-1503",
+        "C-1504"
+      ],
+      "rationale": "Surface texture, third-body circulation, tribofilm formation, adaptive coatings, and transfer perturbations touch coating and surface engineering while remaining parts of a broader tribology audit.",
+      "scopeGap": "Deposition routes, surface chemistry, adhesion, residual stress, metrology uncertainty, manufacturing variability, coating qualification, and physical wear testing are not covered.",
+      "nextQuestion": "Which texture and adaptive-surface effects reproduce after fabrication variability, surface metrology, chemistry, adhesion, and long-duration physical wear are included?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "401708",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-tribology-contact-adaptive-interfaces.md"
+      ],
+      "claims": [
+        "C-1497",
+        "C-1498",
+        "C-1499",
+        "C-1500",
+        "C-1501",
+        "C-1502",
+        "C-1503",
+        "C-1504",
+        "C-1505"
+      ],
+      "rationale": "The field-centred audit directly covers friction, lubrication, wear, stick--slip, third-body behaviour, texture, adaptive/self-lubricating interfaces, and lifecycle-normalized tribological selection.",
+      "scopeGap": "The audit freezes synthetic falsification contracts only; it does not report results or establish physical-material, component, or field performance.",
+      "nextQuestion": "Which claim boundaries survive preregistered physical tribometer and component tests with full force, heat, wear, debris, service, maintenance, and lifecycle ledgers?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "401706",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-tribology-contact-adaptive-interfaces.md"
+      ],
+      "claims": [
+        "C-1497",
+        "C-1498",
+        "C-1499",
+        "C-1500",
+        "C-1501",
+        "C-1502",
+        "C-1503",
+        "C-1504",
+        "C-1505"
+      ],
+      "rationale": "Every protocol uses explicit synthetic mechanical generators, state equations, solver or update rules, and model-qualification comparisons, but numerical modelling is supporting rather than the audit centre.",
+      "scopeGap": "Mesh, discretization, solver-order, stiffness, convergence, identifiability, surrogate-error, and model-form uncertainty studies remain incomplete.",
+      "nextQuestion": "How sensitive are the nine decisions to solver choice, model form, discretization, identified parameters, and propagated numerical uncertainty?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "8de72c5d-c07e-4665-9d31-5aa4e1aa44f8",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-tribology-contact-adaptive-interfaces.md"
+      ],
+      "claims": [
+        "C-1497",
+        "C-1498",
+        "C-1499",
+        "C-1500",
+        "C-1501",
+        "C-1502",
+        "C-1503",
+        "C-1504",
+        "C-1505"
+      ],
+      "rationale": "The audit is explicitly centred on tribology and supplies independent primary sources, claim boundaries, and nine reciprocal CPU-only falsification contracts.",
+      "scopeGap": "One synthetic audit does not exhaust tribology and leaves physical contact, materials, chemistry, manufacturing, instrumentation, scale transfer, and in-service qualification open.",
+      "nextQuestion": "Which additional tribological mechanisms add non-duplicative, testable boundaries beyond the present state, regime, mediator, adaptation, and lifecycle contracts?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "519ffb0d-3c16-4f20-a628-579ed57942d8",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-tribology-contact-adaptive-interfaces.md"
+      ],
+      "claims": [
+        "C-1499"
+      ],
+      "rationale": "C-1499 and TAI-T03 provide a lubrication-specific source and test boundary for operating-regime identification and transition handling rather than inheriting coverage from tribology.",
+      "scopeGap": "Lubricant chemistry, rheology, additives, contamination, starvation, thermal degradation, elastohydrodynamic validation, supply systems, and physical film measurement remain outside scope.",
+      "nextQuestion": "Do regime-aware decisions remain beneficial under measured lubricant properties, thermal and contamination histories, starvation, mixed lubrication, and independently observed film thickness?"
+    }
+  ]
 }

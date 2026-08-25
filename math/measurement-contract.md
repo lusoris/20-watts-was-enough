@@ -50,7 +50,9 @@ $$
 where input quantity $X_i$ has unit $[X_i]$ and $Y$ has unit $[Y]$.
 Every additive term produced by $f$ must have unit $[Y]$. Software,
 coefficients, numerical precision, and preprocessing that implement $f$ are
-part of $\mathcal P$.
+part of $\mathcal P$. A coefficient of friction is therefore not portable
+without its interface pair, load/motion state, environment, procedure,
+support, and history ([C-1497](../research/claims.md#c-1497)).
 
 For estimates $x_i$, first-order covariance propagation gives
 

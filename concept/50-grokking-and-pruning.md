@@ -230,6 +230,10 @@ For every structurally consolidated asset, record:
 8. post-action verification; and
 9. restored next-event reserve rather than merely returned output.
 
+Mechanism-qualified wear is a direct falsifier of endpoint-only health: equal
+cycle count or terminal wear volume can hide different damage histories,
+repair states, and remaining service ([C-1500](../research/claims.md#c-1500)).
+
 ```mermaid
 flowchart LR
     L["Load · demand · environment · use history"] --> S["Damage / dependency state"]

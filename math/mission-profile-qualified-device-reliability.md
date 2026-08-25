@@ -109,6 +109,10 @@ O_n=(o_n,m_n,L_n,U_n,v_n,\Sigma^{\beta}_n,a^{\mathrm{ev}}_n),
 $$
 
 where $a^{\mathrm{ev}}_n=t_n-t_n^{\mathrm{last\,qualified}}$ is evidence age [s].
+Adaptive physical interfaces require the same explicit latent inventory,
+mode, hysteresis, depletion, health, evidence-age, and fallback state; an
+“adaptive” label is not an observation
+([C-1504](../research/claims.md#c-1504)).
 For a right-censored lifetime $t_i^{\mathrm f}>C_i$, unit $i$ contributes
 
 $$
@@ -203,7 +207,9 @@ $$
 
 where $r_k$ is mechanism-$k$ damage rate [damage unit s$^{-1}$] and $D_k$ is
 accumulated damage [damage unit]. This integral is evaluated on actual telemetry,
-not on mean voltage or mean temperature.
+not on mean voltage or mean temperature. Endpoint-matched wear histories can
+therefore carry different mechanism, transition, repair, and remaining-service
+state ([C-1500](../research/claims.md#c-1500)).
 
 The [equal-mean mission-history illustration](visual-models.md#contextual-analytical-figures)
 uses hypothetical Arrhenius parameters to visualize this nonlinearity; it is
@@ -582,7 +588,10 @@ $$
 $$
 
 and is undefined when $S_{\mathrm{acc}}=0$. Energy intensity never replaces the
-firewall, material, work, availability, latency, or tail-risk outcomes.
+firewall, material, work, availability, latency, or tail-risk outcomes. A
+coupon-level friction or wear reduction cannot promote without this
+mission-qualified accepted-service and lifecycle transfer
+([C-1505](../research/claims.md#c-1505)).
 
 ## Matched budget and Pareto comparison
 

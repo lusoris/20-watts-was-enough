@@ -79,7 +79,9 @@ The planes exchange compact declared state. A resource controller can deny an
 expensive route but cannot declare the cheaper result equally correct. A task
 controller can request deeper computation but cannot conceal the resulting
 traffic from the energy ledger. Adaptation can propose; only maintenance can
-promote a change into protected state.
+promote a change into protected state. A local corrective action also cannot
+hide the shared-system cost it exports when the same trigger becomes
+widespread ([C-1493](../research/claims.md#c-1493)).
 
 ### Governance is activated by a real authority problem
 
@@ -332,6 +334,9 @@ or allocation; none of those creates qualified capacity, moves material,
 finishes work, or proves service
 ([C-627](../research/claims.md#c-627),
 [C-659](../research/claims.md#c-659)–[C-678](../research/claims.md#c-678)).
+Filtration, internal recovery, reintroduction, final egress, storage change,
+and transport work instantiate the same typed-state boundary
+([C-1491](../research/claims.md#c-1491)).
 The complete path is:
 
 ```mermaid
@@ -448,7 +453,10 @@ retrieval. Durable changes follow two paths with different authority:
 
 Variation creates candidates; observed outcomes and controlled interventions
 decide which survive. Bounded fragility probes remain on shadows or replicas and
-are charged to the maintenance budget.
+are charged to the maintenance budget. Rapid reversible regulation and slow
+structural adaptation remain different update processes whose cumulative
+cost and reversal recovery must be scored separately
+([C-1496](../research/claims.md#c-1496)).
 
 The system may also create learning events: propose a structured hypothesis or
 latent rollout, choose a bounded intervention, and evaluate the outcome. This

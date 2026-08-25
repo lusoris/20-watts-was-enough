@@ -80,6 +80,9 @@ uncertainty, and provenance obligations remain satisfied. This connects the
 [versioned observation contract](../experiments/candidates/014-versioned-observation-contract.md),
 [semantic compaction](../experiments/candidates/017-contract-preserving-semantic-compaction.md),
 and [value-aware retention](../experiments/candidates/018-value-reconstructability-aware-tiering.md).
+A friction coefficient is one interface-specific instance: its parties,
+motion, load, environment, history, operator, support, and evidence age travel
+with the estimate ([C-1497](../research/claims.md#c-1497)).
 
 ### Separate measured information from prior-supported reconstruction
 

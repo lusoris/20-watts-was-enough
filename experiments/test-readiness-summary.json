@@ -2,14 +2,14 @@
   "schema": 1,
   "generatedFrom": "experiments/test-coverage.json",
   "claims": {
-    "total": 1478,
-    "testRouted": 1386,
-    "protocolCovered": 1386,
+    "total": 1496,
+    "testRouted": 1404,
+    "protocolCovered": 1404,
     "executionReady": 0,
     "tierCounts": {
       "ledger-only": 92,
       "linked-description": 0,
-      "protocol-complete": 1386,
+      "protocol-complete": 1404,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
@@ -28,8 +28,8 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1065,
-        "plausible": 205,
+        "established": 1082,
+        "plausible": 206,
         "speculative": 60,
         "disputed": 47,
         "unknown": 9
@@ -54,9 +54,9 @@
     "proposedArtifactFamilies": 0
   },
   "artifacts": {
-    "total": 39,
-    "protocolComplete": 39,
-    "smokeReady": 3,
+    "total": 41,
+    "protocolComplete": 41,
+    "smokeReady": 4,
     "workstationReady": 0,
     "items": [
       {
@@ -222,7 +222,7 @@
           },
           {
             "id": "energy-provider",
-            "label": "Measured-energy provider",
+            "label": "Measured-energy or explicit non-energy boundary",
             "passed": true,
             "detail": "external-meter provider capability, exclusions, test, and frozen config hash match"
           },
@@ -501,9 +501,9 @@
           },
           {
             "id": "energy-provider",
-            "label": "Measured-energy provider",
+            "label": "Measured-energy or explicit non-energy boundary",
             "passed": false,
-            "detail": "energy provider config/module/test and frozen hash must enforce external measured-energy boundaries"
+            "detail": "energy provider config/module/test and frozen hash must enforce measured energy, or a non-energy claim must explicitly forbid energy conclusions"
           },
           {
             "id": "confirmation-seeds",
@@ -623,9 +623,9 @@
           },
           {
             "id": "energy-provider",
-            "label": "Measured-energy provider",
+            "label": "Measured-energy or explicit non-energy boundary",
             "passed": false,
-            "detail": "energy provider config/module/test and frozen hash must enforce external measured-energy boundaries"
+            "detail": "energy provider config/module/test and frozen hash must enforce measured energy, or a non-energy claim must explicitly forbid energy conclusions"
           },
           {
             "id": "confirmation-seeds",
@@ -730,6 +730,89 @@
         "path": "experiments/fixtures/019-finance-risk-attention-governance.md",
         "title": "Fixture F-019 — Finance-risk, attention, and governance controls",
         "linkedClaims": 14,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "smoke-ready",
+        "executionReady": false,
+        "executionManifest": "experiments/workstation/manifests/fixture-019.json",
+        "executionClaims": [
+          "C-1481"
+        ],
+        "promotionChecks": [
+          {
+            "id": "execution-claim-scope",
+            "label": "Explicit execution-track claim scope",
+            "passed": true,
+            "detail": "execution track is limited to C-1481"
+          },
+          {
+            "id": "full-profile",
+            "label": "Frozen full profile",
+            "passed": true,
+            "detail": "data.full_profile identity and SHA-256 match the frozen repository file"
+          },
+          {
+            "id": "full-tests",
+            "label": "Full experiment-path tests",
+            "passed": true,
+            "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
+          },
+          {
+            "id": "hash-chain",
+            "label": "Corruption-evident output ledger",
+            "passed": true,
+            "detail": "hash-chain output is wired through the tested checkpoint ledger"
+          },
+          {
+            "id": "resume",
+            "label": "Deterministic resume",
+            "passed": true,
+            "detail": "runner imports the declared, tested checkpoint/resume implementation"
+          },
+          {
+            "id": "energy-provider",
+            "label": "Measured-energy or explicit non-energy boundary",
+            "passed": true,
+            "detail": "the scoped claim has no energy endpoint and the manifest forbids energy conclusions"
+          },
+          {
+            "id": "confirmation-seeds",
+            "label": "Frozen confirmation seeds",
+            "passed": false,
+            "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "held_out-seeds",
+            "label": "Frozen held-out seeds",
+            "passed": false,
+            "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "promotion-evidence",
+            "label": "Strict recomputed promotion evidence",
+            "passed": false,
+            "detail": "artifact protocol is structurally blocked: No reviewed successor protocol is registered for confirmation. The frozen aggregate primary endpoint is effectively seed-invariant. Fresh private confirmation and transfer escrow packs are unavailable."
+          }
+        ]
+      },
+      {
+        "id": "fixture-020",
+        "path": "experiments/fixtures/020-integrative-comparative-physiology.md",
+        "title": "Fixture F-020 — Integrative comparative physiology",
+        "linkedClaims": 9,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-021",
+        "path": "experiments/fixtures/021-tribology-contact-adaptive-interfaces.md",
+        "title": "Fixture F-021 — Tribology and adaptive contact interfaces",
+        "linkedClaims": 9,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "absent",

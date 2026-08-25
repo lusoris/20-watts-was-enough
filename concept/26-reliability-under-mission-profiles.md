@@ -278,7 +278,10 @@ selecting the same experts, memory banks, converters, links, or power regions.
 The same logical sparsity may therefore lower total work but raise local duty
 cycle, temperature, current density, droop, and accumulated wear. This
 concentration effect is plausible, not yet an established universal outcome
-([C-1021](../research/claims.md#c-1021)).
+([C-1021](../research/claims.md#c-1021)). Nominal area, aggregate load, or
+global utilization likewise cannot identify the tail of local contact,
+thermal, write, traffic, or damage exposure
+([C-1498](../research/claims.md#c-1498)).
 
 The [sparse and predictive compute chapter](30-sparse-predictive-compute.md)
 therefore gains a physical routing state. Every routing decision observes or

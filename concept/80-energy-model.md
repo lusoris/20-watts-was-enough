@@ -131,6 +131,10 @@ Every reported number carries one provenance label:
 - **cited:** copied with its original system, boundary, and date; or
 - **hypothesized:** a preregistered value or direction awaiting measurement.
 
+Typed material handling must not turn filtration, recovery, excretion,
+storage drift, oxygen delivery, or transport work into one inferred energy
+number ([C-1491](../research/claims.md#c-1491)).
+
 Mixed totals expose the provenance of every component. They are not labeled
 “measured energy” when any material term is modeled or cited.
 
@@ -297,6 +301,10 @@ Every $E$ term is energy in joules at the same boundary $\mathcal{B}$:
 - $E^{\mathrm{idle}}$ covers provisioned but inactive devices, memory,
   communication links, and reserve capacity during $H$.
 
+Fast control and slow structure therefore require separate action, build,
+carry, reversal, stranded-capacity, and recovery rows before any lifecycle
+advantage is claimed ([C-1496](../research/claims.md#c-1496)).
+
 An event is assigned to exactly one term. A migration byte, for example, may
 appear in the movement ledger but its energy is not also charged as ordinary
 serving traffic.
@@ -310,7 +318,11 @@ $$
 
 where $N_{q,C}(H)$ is the candidate’s qualified-event count during $H$ and
 $e_C^{\mathrm{life}}$ is joules/qualified event. The same result is also
-reported per offered event so quality filtering remains visible.
+reported per offered event so quality filtering remains visible. Lower
+friction or wear at one coupon/contact cannot replace accepted system service,
+mission transfer, auxiliaries, maintenance, replacement, manufacture, or
+allocation uncertainty in this boundary
+([C-1505](../research/claims.md#c-1505)).
 
 ### Break-even horizon
 
@@ -328,7 +340,10 @@ time break-even is $T^*=N^*/\lambda_q$ seconds. Maintenance, migration,
 recovery, and idle differences that grow with time must be included in the
 full numerical break-even calculation; the simple quotient is valid only when
 they are already represented in $\delta e$ or are negligible over the stated
-horizon. If $\delta e\le0$, there is no energy break-even.
+horizon. A compiled surface or interface structure must include build,
+manufacture, inflexibility, reversal, and failed-envelope cost in this test
+([C-1503](../research/claims.md#c-1503)). If $\delta e\le0$, there is no energy
+break-even.
 
 ### Data movement ledger
 

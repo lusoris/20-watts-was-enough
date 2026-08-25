@@ -1830,13 +1830,14 @@ claim. The following disposition was made before integration.
 | Real options | P-003/P-004/P-009/P-012; Candidates 001/005/009/010 | Add mature stopping-model null C-1484; optionality is already conditional commitment and staged intervention. |
 | Governance and internal control | C-525/C-1265/C-1269; P-008/P-009/P-013; Candidates 009/014/020 | Add evidence-root/capacity qualification C-1485; no role-separation or “three lines” principle. |
 | Operational resilience | C-175/C-178/C-183/C-184/C-185; P-002/P-003/P-008/P-009/P-012/P-013; Candidates 011/012 | Add scoped governance/evaluation contract C-1486; no new resilience mechanism. |
-| Queues and capacity headroom | C-659/C-660/C-661; mature Little/Kingman nulls | FM-T08 strengthens testing only. Claim number 1488 remains unused; no new principle. |
+| Queues and capacity headroom | C-659/C-660/C-661; mature Little/Kingman nulls | FM-T08 strengthens testing only. Claim number 1488 was intentionally unused by this audit at its freeze; no new principle. |
 | Accounting boundaries and transfer prices | P-001/P-006/P-009/P-013; Candidates 008/013 | Add local-versus-system accounting boundary C-1487; no market or price principle. |
-| Incentives and gaming | C-139/C-1433/C-144; existing multitask-incentive evidence | FM-T10 strengthens the mature null. Claim number 1489 remains unused; no new principle. |
+| Incentives and gaming | C-139/C-1433/C-144; existing multitask-incentive evidence | FM-T10 strengthens the mature null. Claim number 1489 was intentionally unused by this audit at its freeze; no new principle. |
 
 **Registry verdict:** none of the audited residues is irreducible with respect to
 the current principle registry. Propose **no new P-series principle and no new
-candidate**. Claim numbers 1488 and 1489 remain unallocated. The eight C-series proposals
+candidate**. Claim numbers 1488 and 1489 were unallocated by this audit at its
+freeze; later ledger allocation does not alter its verdict. The eight C-series proposals
 add qualifications, scoped evidence, or evaluation boundaries; they do not
 certify a candidate architecture.
 

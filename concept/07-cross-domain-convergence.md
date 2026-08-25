@@ -260,6 +260,8 @@ Connectivity is not throughput ([C-234](../research/claims.md#c-234)); material
 removed by “pruning” must appear as transport, storage, or output elsewhere
 ([C-239](../research/claims.md#c-239)); and a topology change can reassign or
 destroy service rather than improve it ([C-242](../research/claims.md#c-242)).
+A closed-form branching law is therefore a regime-qualified physical null, not
+a portable architecture rule ([C-1489](../research/claims.md#c-1489)).
 
 ### Transported fields are not messages
 
@@ -286,7 +288,10 @@ velocity $\mathbf u$ is m/s, production and uptake rates $p_k,q_k$ are
 mol/(m³ s), and first-order loss $r_k$ is 1/s. Digital fields use an analogous
 typed byte or item ledger; they do not inherit molecular units or diffusion
 laws. Geometry, boundary conditions, sampling support, and receiver state are
-part of the contract.
+part of the contract. Countercurrent orientation is one finite exchanger
+arrangement inside that contract; it does not establish effectiveness or a
+generic bidirectional-computation benefit by itself
+([C-1490](../research/claims.md#c-1490)).
 
 Several fields can be superposed at the same endpoints. If the observed
 outcome is
@@ -424,7 +429,9 @@ does not justify a music-specific principle.
 Its useful residue is a benchmark: agents must preserve literal phrase
 constraints and bounded relative timing while tempo, expressive microtiming,
 delay, roles, motifs, leaders, and partners change, without reading a privileged
-shared clock.
+shared clock. Synchrony still requires common-input controls, edge
+interventions, and a protected functional endpoint before it can count as
+useful coordination ([C-1495](../research/claims.md#c-1495)).
 
 ```mermaid
 flowchart LR

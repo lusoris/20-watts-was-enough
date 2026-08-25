@@ -323,7 +323,10 @@ unit of $i$'s action or state, and $\Gamma_{ij}$ has the product unit of the
 two contributions. A useful response must also reduce error in the protected
 task variable without increasing risk. Teammate turnover, role reassignment,
 message ablation, common-input controls, and never-co-trained cross-play
-separate reciprocal adjustment from synchrony.
+separate reciprocal adjustment from synchrony. The nephron-coupling boundary
+adds the same requirement: coherence alone is not direct coupling,
+information transfer, or functional benefit
+([C-1495](../research/claims.md#c-1495)).
 
 ### Preserve selection and evaluator lineage
 

@@ -125,6 +125,11 @@ $$
 where $\mathbf y_k$ retains sensor units, $R_k$ has squared sensor units, and
 $\mathcal H_{J,k}$ includes averaging kernel, exposure time, transfer function,
 latency, synchronization, missingness, probe intrusion, and calibration state.
+Aggregate supply and recipient-level delivery are different estimands unless a
+registered support map identifies them
+([C-1488](../research/claims.md#c-1488)). Nominal contact area and aggregate
+load likewise do not identify real-contact support or the local-pressure tail
+([C-1498](../research/claims.md#c-1498)).
 The estimator never receives hidden truth through filenames, simulator
 metadata, shared random state, or a truth-identical forward model.
 
@@ -266,7 +271,9 @@ $\mathrm{kg\,m^{-3}\,s^{-1}}$ and scalar dissipation $\chi$ is in
 $\mathrm{kg^2\,m^{-6}\,s^{-1}}$. Mixing outcomes retain scalar variance,
 negative-Sobolev mix norm, $\chi$, reaction completion, residence-time
 distribution, and remnant concentration at operational support. Visual
-filamentation is not a substitute.
+filamentation is not a substitute. A countercurrent label likewise cannot
+replace finite conductance, capacity-rate, residence, leakage, boundary, and
+pump terms ([C-1490](../research/claims.md#c-1490)).
 
 For transition class $c$ with history $r_{0:t}$, define hazard
 
@@ -312,7 +319,12 @@ delay, bandwidth, saturation, noise, forcing, regime, plant drift, failure, and
 fallback. Report constraint violations, gain/phase margins where defined,
 closed-loop poles for linearized controllers, bounded-input response, recovery,
 and runtime-monitor interventions. A task gain with unstable or unsafe strata
-does not enter an aggregate score.
+does not enter an aggregate score. Equal mean flow also cannot establish phase
+margin or absence of coupled-delay oscillation
+([C-1492](../research/claims.md#c-1492)). Rate/state stick--slip supplies the
+same mean-versus-dynamics warning for interface state, compliance, inertia,
+damping, bandwidth, and control delay
+([C-1501](../research/claims.md#c-1501)).
 
 Over service interval $[0,T]$, operational net energy is
 

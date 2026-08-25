@@ -21674,3 +21674,693 @@ describes the exact statement here, not a broader interpretation.
   [material-service state](../math/material-service-state.md).
 - **Disposition:** maps to P-001/P-006/P-009/P-013 and Candidates 008/013; no
   market principle.
+
+### C-1488
+
+- **Statement:** adequate aggregate oxygen or resource supply does not identify
+  spatially local delivery, extraction, utilisation, or deficit; metabolism--
+  perfusion matching must be evaluated on the support where demand occurs.
+- **Status:** established conservation and microcirculatory boundary; AI
+  benefit remains untested.
+- **Biological observation:** microvascular networks distribute flow across
+  heterogeneous tissue, and impaired local flow regulation can compromise
+  metabolism--perfusion matching despite a superficially adequate global
+  supply record.
+- **Evidence note:** the cited syntheses integrate theory, measurement, and
+  modelling. They do not provide a universal deficit threshold or allocation
+  law.
+- **Primary/authoritative sources:** `RoySecomb2021Matching`,
+  `SecombPries2011Mesoscale`.
+- **Proposed AI translation:** log resource production, route, arrival,
+  recipient, useful consumption, unmet demand, and export at compatible spatial
+  and temporal support.
+- **Efficiency mechanism:** route scarce capacity from local deficit evidence
+  while preserving a global budget and neighbour-starvation gate.
+- **Failure modes:** total capacity called service; flow called uptake;
+  asynchronous demand and supply samples; a mean hiding deprived tails;
+  uncharged sensing or rerouting; unstable local competition.
+- **Measurable prediction:** in `ICP-T01`, an aggregate allocator will accept
+  worlds with zero total deficit on paper but positive recipient-level oxygen
+  debt; an explicit spatial optimiser must reduce that debt at the same total
+  inflow without unacceptable pump cost.
+- **Open question:** does local-deficit routing add value beyond robust
+  min-cost flow when observations, delay, and actuation are equal?
+- **Used by:** [ICP-T01 audit](audits/2026-08-25-integrative-comparative-physiology.md#icp-t01--aggregate-supply-versus-local-delivery-and-utilisation),
+  [F-020 ICP-T01](../experiments/fixtures/020-integrative-comparative-physiology.md#icp-t01--aggregate-supply-versus-local-delivery-and-utilisation),
+  [local demand and physical supply](../concept/30-sparse-predictive-compute.md#demand-and-physical-supply-can-be-locally-coupled),
+  [deficit routing with local feasibility](../concept/30-sparse-predictive-compute.md#deficit-travels-feasibility-remains-local),
+  [resource form and deliverability](../math/material-service-state.md#resource-form-and-deliverability),
+  and [operator/support identity](../math/regime-qualified-flow-contract.md#detector-filter-operator-and-support-identities).
+- **Disposition:** add the boundary only; map to C-051, C-1305, P-001, P-009,
+  and P-013; no new principle.
+
+
+
+### C-1489
+
+- **Statement:** Murray's cubic radius relation follows from a scoped minimum-
+  work model and is not a universal branching law across rheology, objectives,
+  constraints, anatomy, scale, or demand regime.
+- **Status:** established as a conditional theoretical result; empirical
+  generality is disputed or heterogeneous by vascular bed and method.
+- **Biological observation:** Murray derived a cubic rule from a particular
+  pumping-versus-volume objective; modern coronary evidence does not support
+  treating the exponent as one anatomy-independent constant.
+- **Evidence note:** the 1926 paper establishes the optimisation result inside
+  its assumptions. The 2024 systematic review and meta-analysis evaluates
+  observed coronary relations and their heterogeneity; it is not a new
+  derivation.
+- **Primary/authoritative sources:** `Murray1926MinimumWork`,
+  `TaylorEtAl2024MurrayMeta`, `SecombPries2011Mesoscale`.
+- **Proposed AI translation:** do not hard-code a branching exponent or module
+  fan-out merely because it optimises one stylised cost; expose the objective,
+  topology, transport law, and constraints.
+- **Efficiency mechanism:** use a cheap closed-form rule only inside its tested
+  regime and escalate to constrained network optimisation outside it.
+- **Failure modes:** exponent fitted after selection; diameter and radius mixed;
+  local relation asserted globally; wall/material cost omitted; constraint
+  violations hidden; a fitted power law called causal optimisation.
+- **Measurable prediction:** in `ICP-T02`, the cube rule will approach the
+  mature optimiser in its generating regime and accumulate regret under
+  non-Newtonian, pulsatile, pressure-constrained, or fixed-wall-cost regimes.
+- **Open question:** can a regime-gated low-cost rule match full optimisation
+  often enough to repay classification and maintenance cost?
+- **Used by:** [ICP-T02 audit](audits/2026-08-25-integrative-comparative-physiology.md#icp-t02--conditional-murray-law-branching),
+  [F-020 ICP-T02](../experiments/fixtures/020-integrative-comparative-physiology.md#icp-t02--conditional-murray-law-branching),
+  [passive self-organization nulls](../concept/07-cross-domain-convergence.md#passive-self-organization-is-a-mandatory-null),
+  [structural null models](../concept/10-neurogenesis-and-routing.md#conventional-null-models),
+  and [state-bearing topology change](../concept/10-neurogenesis-and-routing.md#a-topology-change-carries-state).
+- **Disposition:** conditional-optimisation boundary; deduplicate to P-010 and
+  C-1305; no new principle.
+
+
+
+### C-1490
+
+- **Statement:** in a finite two-stream heat or solute exchanger,
+  countercurrent orientation can preserve a driving gradient, but performance
+  is conditional on conductance, capacity-rate ratio, residence time, geometry,
+  leakage, boundary conditions, and pump cost; the orientation label alone
+  proves none of them. This claim does not generalise to arbitrary transport,
+  memory, attention, or bidirectional computation.
+- **Status:** established heat-exchanger design boundary; the two biological
+  examples are source-qualified illustrations with different transported
+  quantities and are not a generic transport theorem.
+- **Biological observation:** sloth vascular bundles support countercurrent
+  heat exchange, while renal micropuncture supplied evidence for a
+  countercurrent concentrating mechanism; the transported quantity and system
+  boundary differ.
+- **Evidence note:** the biological experiments establish two distinct
+  countercurrent systems. Authoritative transport theory directly supplies the
+  effectiveness--capacity-rate and arrangement conditionality used to bound
+  the translation; none of these sources yields a universal exchanger
+  effectiveness, artificial memory rule, or energy saving.
+- **Primary/authoritative sources:** `ScholanderKrog1957SlothExchange`,
+  `GottschalkMylle1959Countercurrent`, `ShahSekulic2003HeatExchanger`.
+- **Proposed AI translation:** only for an artificial component that actually
+  implements two conserved carrier streams across a finite exchange interface,
+  represent paired directions, capacity rates, coupling, residence, losses,
+  and pump objective explicitly. No inference is licensed for an ordinary
+  bidirectional graph or information path.
+- **Efficiency mechanism:** retain a passive exchanger only when avoided
+  active transport exceeds leakage, pumping, sensing, and structural cost.
+- **Failure modes:** countercurrent called lossless; concentration called total
+  transferred amount; ideal boundary used as observation; co-current omitted;
+  leakage and finite length ignored; biological functions conflated.
+- **Measurable prediction:** `ICP-T03` will show a parameter region where
+  countercurrent flow dominates co-current flow and regions where leakage,
+  unequal capacity rates, or pump constraints erase the advantage.
+- **Open question:** can a low-dimensional regime map select an exchange layout
+  as well as a mechanistic optimiser on held-out boundaries?
+- **Used by:** [ICP-T03 audit](audits/2026-08-25-integrative-comparative-physiology.md#icp-t03--countercurrent-exchange-effectiveness-and-cost),
+  [F-020 ICP-T03](../experiments/fixtures/020-integrative-comparative-physiology.md#icp-t03--countercurrent-exchange-effectiveness-and-cost),
+  [typed transported fields](../concept/07-cross-domain-convergence.md#transported-fields-are-not-messages),
+  and [mixing and transition contracts](../math/regime-qualified-flow-contract.md#mixing-transition-and-extreme-event-contracts).
+- **Disposition:** map to P-008, P-010, P-012, and C-1305; no new principle.
+
+
+
+### C-1491
+
+- **Statement:** filtration, reabsorption, secretion, excretion, whole-system
+  balance, local oxygen delivery, and transport work are distinct quantities;
+  improvement in one does not establish improvement in the others.
+- **Status:** established physiological accounting boundary.
+- **Biological observation:** renal filtration creates an intermediate load;
+  tubular transport then reabsorbs and secretes material, and this transport is
+  coupled to oxygen demand and heterogeneous delivery.
+- **Evidence note:** direct renal transport synthesis distinguishes
+  flow-dependent filtration, absorption/reabsorption, and secretion, while the
+  oxygen review bounds their energetic context. These sources establish renal
+  material-handling relationships, not an artificial-system optimum or
+  synthetic coefficient.
+- **Primary/authoritative sources:** `BriggsSchnermann1987TGF`,
+  `OConnor2006RenalOxygen`, `EdwardsEtAl2025FlowTransport`.
+- **Proposed AI translation:** type ingress, filtering, internal recovery,
+  reintroduction, final egress, storage change, and work rather than reporting a
+  single throughput or removal percentage.
+- **Efficiency mechanism:** localise expensive estimation to the ledger term
+  that prevents closure; do not increase filtering when downstream recovery or
+  disposal is the bottleneck.
+- **Failure modes:** filtered amount called removed; concentration without
+  flow; reabsorption omitted; secretion double-counted; storage drift ignored;
+  oxygen delivery equated with consumption; residual forced to zero.
+- **Measurable prediction:** in `ICP-T04`, filtration-only estimates will fail
+  excretion and storage closure under variable reabsorption and secretion;
+  typed balance estimation must expose the missing term.
+- **Open question:** which minimum observation set identifies the ledger
+  without an oracle or prohibitive sensing?
+- **Used by:** [ICP-T04 audit](audits/2026-08-25-integrative-comparative-physiology.md#icp-t04--filtration-tubular-transport-excretion-and-balance),
+  [F-020 ICP-T04](../experiments/fixtures/020-integrative-comparative-physiology.md#icp-t04--filtration-tubular-transport-excretion-and-balance),
+  [plan/commitment/service separation](../concept/70-system-synthesis.md#a-plan-a-commitment-and-service-are-different-states),
+  [conservation before optimization](../math/material-service-state.md#conservation-before-optimization),
+  [material-service state](../math/material-service-state.md#state-contract),
+  and [gross-energy boundary](../concept/80-energy-model.md#measurement-boundary-and-gross-energy).
+- **Disposition:** map to P-009, P-012, P-013, and the typed-balance boundary in
+  C-1381; no renal principle.
+
+
+
+### C-1492
+
+- **Statement:** tubuloglomerular feedback and myogenic autoregulation are
+  interacting dynamical mechanisms with gain and delay; a stable average flow
+  does not establish local stability, phase margin, or absence of oscillation.
+- **Status:** established for the cited rat preparations and closed-loop
+  analyses; transfer benefit remains a hypothesis.
+- **Biological observation:** primary studies measured feedback dynamics,
+  spontaneous oscillations, and contributions to renal blood-flow
+  autoregulation rather than only steady-state gain.
+- **Evidence note:** the model structure and parameter values are preparation-
+  specific. The audit imports the delay-and-coupling test, not rat constants.
+- **Primary sources:** `HolsteinRathlou1991ClosedLoop`,
+  `HolsteinRathlouEtAl1991Dynamics`.
+- **Proposed AI translation:** declare loop delay, gain, saturation, interaction,
+  observation age, and oscillatory failure before composing local and global
+  resource controllers.
+- **Efficiency mechanism:** a fast local loop rejects ordinary disturbances;
+  a slower estimator or supervisor acts only when local authority or stability
+  margin is insufficient.
+- **Failure modes:** mean output hides cycling; delay fitted after outcome;
+  multiple loops tuned independently; common disturbance called coupling;
+  saturation omitted; actuation chatter uncharged.
+- **Measurable prediction:** `ICP-T05` will separate controllers with equal mean
+  flow but different oscillation, deficit, and integrated action exposure as gain, delay, and
+  disturbance spectrum shift.
+- **Open question:** can a composed local controller beat a delay-aware robust
+  model-predictive controller at equal sensing and action authority?
+- **Used by:** [ICP-T05 audit](audits/2026-08-25-integrative-comparative-physiology.md#icp-t05--coupled-delayed-autoregulation),
+  [F-020 ICP-T05](../experiments/fixtures/020-integrative-comparative-physiology.md#icp-t05--coupled-delayed-autoregulation),
+  [runtime timescale separation](../concept/30-sparse-predictive-compute.md#three-runtime-timescales),
+  [resource feedback](../concept/30-sparse-predictive-compute.md#resource-supply-is-a-feedback-problem),
+  and [delay/stability accounting](../math/regime-qualified-flow-contract.md#control-stability-and-complete-energy).
+- **Disposition:** strengthen P-002, P-006, P-007, P-009, and P-012; no new
+  principle.
+
+
+
+### C-1493
+
+- **Statement:** regional hypoxic pulmonary vasoconstriction can redistribute
+  flow away from poorly ventilated regions, while widespread hypoxia can raise
+  pulmonary vascular resistance and pressure; local utility is not proof of
+  global benefit.
+- **Status:** established physiological direction with context-, species-, and
+  preparation-dependent magnitude.
+- **Biological observation:** the original cat experiments linked alveolar
+  hypoxia to increased pulmonary arterial pressure; later syntheses distinguish
+  regional matching from the haemodynamic consequences of widespread hypoxia.
+- **Evidence note:** this is not a clinical recommendation and supplies no
+  controller gain or safety threshold.
+- **Primary/authoritative sources:** `VonEulerLiljestrand1946Pulmonary`,
+  `AaronsonEtAl2006HPV`, `SylvesterEtAl2012HPV`.
+- **Proposed AI translation:** evaluate a local corrective rule both under
+  sparse faults and when its trigger becomes global; preserve exported load,
+  shared resistance, pressure, and fallback capacity.
+- **Efficiency mechanism:** keep correction local while benefit exceeds the
+  shared-system cost; escalate or change mode when trigger prevalence crosses a
+  measured boundary.
+- **Failure modes:** local and global exposure pooled; total flow preserved
+  while pressure cost rises; regional ratios averaged; benefit inferred from
+  constriction; pathological chronic response called adaptation.
+- **Measurable prediction:** `ICP-T06` will find that local redistribution can
+  reduce regional transfer deficit during sparse ventilation loss but a
+  globally applied rule raises resistance without restoring transfer during
+  widespread loss.
+- **Open question:** does a prevalence-gated local rule add value beyond a
+  constrained regional optimiser?
+- **Used by:** [ICP-T06 audit](audits/2026-08-25-integrative-comparative-physiology.md#icp-t06--regional-benefit-versus-global-pulmonary-cost),
+  [F-020 ICP-T06](../experiments/fixtures/020-integrative-comparative-physiology.md#icp-t06--regional-benefit-versus-global-pulmonary-cost),
+  [capability-qualified authority](../concept/30-sparse-predictive-compute.md#authority-follows-information-and-remaining-capability),
+  [split control-plane authority](../concept/70-system-synthesis.md#authority-is-split-across-control-planes),
+  and [qualified intervention authority](../math/state-qualified-intervention.md#qualified-authority-region).
+- **Disposition:** map to P-002, P-006, P-008, P-013, and the local-to-system
+  externality boundary; no new principle.
+
+
+
+### C-1494
+
+- **Statement:** allostasis is a framework for predictive regulation, whereas
+  allostatic load concerns accumulated mediator or regulatory burden; forecast
+  value, feedback correction, service, integrated action exposure, reserve debit, and chronic
+  outcome must remain separately identified.
+- **Status:** plausible and influential framework; a single universal
+  controller or scalar allostatic-load measure is not established.
+- **Biological observation:** the cited accounts contrast anticipatory
+  regulation with fixed-set-point descriptions and describe costs that accrue
+  when regulatory mediators are repeatedly or inefficiently engaged.
+- **Evidence note:** conceptual synthesis does not identify one causal
+  algorithm, universal mediator weighting, or artificial-system benefit.
+- **Primary/authoritative sources:** `Sterling2012Allostasis`,
+  `McEwenWingfield2003Allostasis`.
+- **Proposed AI translation:** test cue-conditioned feedforward action against
+  feedback and robust predictive control; retain forecast calibration,
+  integrated action exposure, reserve debit, and recovery as separate outputs.
+- **Efficiency mechanism:** spend capacity before predictable demand only when
+  the calibrated value of anticipation exceeds false-alarm, reserve, and
+  maintenance cost.
+- **Failure modes:** a schedule called prediction; hindsight cue selection;
+  forecast shift omitted; integrated action exposure called health; reserve debit hidden;
+  allostatic load reduced to one unvalidated scalar.
+- **Measurable prediction:** `ICP-T07` requires direct-cue action to help in an
+  informative stratum, safe abstention when the cue becomes uninformative, and
+  prospective recalibration to the inverse mapping when the cue becomes
+  reliably inverted.
+- **Open question:** can explicit forecast-value gating improve on robust MPC
+  once calibration and fallback costs are equal?
+- **Used by:** [ICP-T07 audit](audits/2026-08-25-integrative-comparative-physiology.md#icp-t07--predictive-regulation-forecast-value-and-cumulative-cost),
+  [F-020 ICP-T07](../experiments/fixtures/020-integrative-comparative-physiology.md#icp-t07--predictive-regulation-forecast-value-and-cumulative-cost),
+  [runtime quantity separation](../concept/30-sparse-predictive-compute.md#separate-the-quantities-before-making-a-gate),
+  [runtime timescale separation](../concept/30-sparse-predictive-compute.md#three-runtime-timescales),
+  [state-qualified intervention chain](../math/state-qualified-intervention.md#intervention-chain),
+  and [causal cue value](../math/representative-adaptive-performance.md#anticipation-interception-and-cue-use).
+- **Disposition:** refine P-006, P-007, and P-012; no allostasis principle.
+
+
+
+### C-1495
+
+- **Statement:** neighbouring nephrons can exhibit coupled and spatially
+  organised oscillations, but coherence alone does not establish direct
+  coupling, information transfer, improved regulation, or organ-level benefit;
+  common input and task consequences require separate tests.
+- **Status:** established for interaction and mapped synchrony in the cited
+  preparations; functional benefit is unresolved.
+- **Biological observation:** proximal-pressure oscillations, electrotonic
+  vascular signal conduction, and spatial renal-flow dynamics provide evidence
+  for nephron interaction across scales.
+- **Evidence note:** phase coherence is compatible with direct coupling,
+  indirect vascular interaction, and common forcing. Causal and functional
+  claims need interventions and task endpoints.
+- **Primary sources:** `HolsteinRathlou1987NephronSync`,
+  `MarshEtAl2009Electrotonic`, `BrazheEtAl2014RenalWavelet`.
+- **Proposed AI translation:** make coupling edges, common clocks, common input,
+  phase statistics, communication cost, and functional output separately
+  perturbable.
+- **Efficiency mechanism:** permit transient local coupling only when it
+  reduces a declared task error enough to repay messages and correlated-failure
+  risk.
+- **Failure modes:** coherence called communication; preprocessing leakage;
+  common driver omitted; high $R$ rewarded without task gain; global clock
+  hidden; correlated failure unmeasured.
+- **Measurable prediction:** in `ICP-T08`, a synchrony-maximising arm can raise
+  $R$ without reducing flow--demand error, whereas function-conditioned
+  coupling must survive common-drive and edge-intervention controls.
+- **Open question:** is any residual benefit left after distributed MPC and
+  explicit common-input models?
+- **Used by:** [ICP-T08 audit](audits/2026-08-25-integrative-comparative-physiology.md#icp-t08--synchrony-common-drive-coupling-and-function),
+  [F-020 ICP-T08](../experiments/fixtures/020-integrative-comparative-physiology.md#icp-t08--synchrony-common-drive-coupling-and-function),
+  [coordination without a privileged clock](../concept/07-cross-domain-convergence.md#coordination-without-a-privileged-clock),
+  [coordination versus shared input](../concept/22-representative-adaptive-performance.md#distinguish-coordination-from-shared-input),
+  and [causal team-coordination measurement](../math/representative-adaptive-performance.md#team-coordination-and-shared-information).
+- **Disposition:** strengthen the rejection boundary in C-783 and map to P-006,
+  P-011, and P-013; no synchrony principle.
+
+
+
+### C-1496
+
+- **Statement:** rapid vascular regulation and slow structural adaptation are
+  distinct update processes; equal terminal delivery does not identify action
+  dose, cumulative deficit, material cost, stranded structure, stability, or
+  recovery after the demand regime changes.
+- **Status:** established distinction in microvascular theory and simulation;
+  the proposed AI composition is plausible and untested.
+- **Biological observation:** microvascular networks respond through short-
+  horizon regulation and longer-horizon structural adaptation driven by
+  multiple local signals; simulated adaptation rules require stability and
+  boundary qualification.
+- **Evidence note:** the cited models do not prove universal remodelling signals
+  or artificial-system savings.
+- **Primary/authoritative sources:** `PriesEtAl1998StructuralAdaptation`,
+  `SecombPries2011Mesoscale`, `RoySecomb2021Matching`.
+- **Proposed AI translation:** separate reversible allocation from persistent
+  capacity or topology change, record both histories, and test recovery after
+  regime reversal.
+- **Efficiency mechanism:** use fast capacity to absorb short events and admit
+  slow structure only when posterior demand lifetime exceeds build, carry,
+  reversal, and stranded-capacity cost.
+- **Failure modes:** endpoint-only evaluation; fast reserve silently depleted;
+  structural cost amortised away; irreversible changes treated as free;
+  adaptation during one regime scored before reversal; controller and plant
+  timescales conflated.
+- **Measurable prediction:** `ICP-T09` will expose worlds where fast-only control
+  accumulates action debt, slow-only control misses transients, and premature
+  remodelling strands capacity after reversal.
+- **Open question:** can an adaptive lifetime gate outperform stochastic MPC
+  with an explicit two-timescale state and the same forecast?
+- **Used by:** [ICP-T09 audit](audits/2026-08-25-integrative-comparative-physiology.md#icp-t09--fast-regulation-versus-slow-structural-adaptation),
+  [F-020 ICP-T09](../experiments/fixtures/020-integrative-comparative-physiology.md#icp-t09--fast-regulation-versus-slow-structural-adaptation),
+  [state-bearing topology change](../concept/10-neurogenesis-and-routing.md#a-topology-change-carries-state),
+  [runtime timescale separation](../concept/30-sparse-predictive-compute.md#three-runtime-timescales),
+  [adaptation/maintenance authority](../concept/70-system-synthesis.md#after-an-outcome-adaptation-proposes-maintenance-decides),
+  [transition burden](../math/occupied-spatial-transition.md#service-and-transition-burden),
+  [commitment and recovery](../math/occupied-spatial-transition.md#commitment-and-recovery),
+  and [lifecycle energy](../concept/80-energy-model.md#lifecycle-energy).
+- **Disposition:** map to P-005, P-009, P-012, and C-1305; no new principle.
+
+**Shared roadmap:** the [F-020 physiology breadth row](../concept/90-research-roadmap.md#breadth-wave-decisions-and-next-queue)
+tracks C-1488--C-1496 as one no-promotion evaluation bundle.
+
+
+
+### C-1497
+
+- **Statement:** a measured coefficient of friction is a tribosystem- and
+  operator-conditioned response rather than one portable material constant;
+  interface pair, topography, normal load, motion, environment, lubricant,
+  temperature, history, and measurement support qualify it.
+- **Status:** established boundary; value of an analogous typed AI-interface
+  state remains untested.
+- **Scientific observation:** rough-contact and rate/state studies explain why
+  equal material labels or equal mean load can produce different friction
+  traces when real contact and state differ.
+- **Primary sources:** `Archard1953Contact`, `GreenwoodWilliamson1966Contact`,
+  `Dieterich1979RockFriction`, `Ruina1983SlipInstability`.
+- **Proposed AI translation:** bind an interaction-cost estimate to both
+  parties, mode, support, workload, environment, version, evidence age, and
+  recent interface state instead of caching one scalar cost per module class.
+- **Efficiency mechanism:** use a cheap scalar inside a verified stationary
+  envelope and activate state estimation only after support or residual gates
+  fail.
+- **Failure modes:** coefficient treated intrinsic; static and kinetic values
+  pooled; sign/direction lost; normal force inferred from actuator command;
+  temperature or dwell omitted; same samples used to define and confirm the
+  envelope; sensing cost ignored.
+- **Measurable prediction:** in `TAI-T01`, a typed state model must reduce
+  held-out friction-work and route-cost error under state changes while tying a
+  scalar model in a scalar-sufficient family.
+- **Open question:** what smallest reconstructible state is sufficient across
+  task-relevant interface changes without becoming a full-history model?
+- **Used by:** [TAI-T01 audit](audits/2026-08-25-tribology-contact-adaptive-interfaces.md#tai-t01----state-qualified-interface-cost),
+  [F-021 TAI-T01](../experiments/fixtures/021-tribology-contact-adaptive-interfaces.md#tai-t01----state-qualified-interface-cost),
+  [operator-qualified measurement](../concept/24-operator-qualified-sensing.md#preserve-the-evidence-producing-operator),
+  and [measurement-model validity](../math/measurement-contract.md#measurement-model-and-dimensional-validity).
+- **Disposition:** map to P-006, P-007, P-012, P-013 and Candidate 014; no new
+  principle.
+
+### C-1498
+
+- **Statement:** apparent contact area and aggregate normal load do not
+  identify real contact area or the tail of local contact pressure. Any claim
+  about flash temperature, conductance, plasticity, or damage additionally
+  requires its own constitutive model and observation support.
+- **Status:** established contact-mechanics boundary inside stated rough-
+  contact assumptions; transfer value remains speculative.
+- **Scientific observation:** multi-asperity contact models connect load to a
+  distribution of microscopic contacts rather than uniform nominal pressure.
+- **Primary sources:** `Archard1953Contact`,
+  `GreenwoodWilliamson1966Contact`.
+- **Proposed AI translation:** represent where an interaction actually
+  concentrates compute, traffic, heat, writes, contention, or error rather
+  than accepting global utilization as local exposure.
+- **Efficiency mechanism:** inspect or reroute only interfaces whose supported
+  local-tail estimate can change a protected decision.
+- **Failure modes:** nominal mean substituted for local maximum; surface
+  operator or cutoff missing; independence assumed for clustered asperities;
+  topography measured after damage and treated prior; solver non-convergence
+  dropped; oracle local loads exposed to one arm.
+- **Measurable prediction:** `TAI-T02` requires rough-support inference to
+  improve peak-pressure coverage and overload decisions over nominal averages,
+  with no advantage in a uniform-support control.
+- **Open question:** can a compact tail summary preserve protected local
+  queries across changed load and topography support?
+- **Used by:** [TAI-T02 audit](audits/2026-08-25-tribology-contact-adaptive-interfaces.md#tai-t02----nominal-versus-real-contact-support),
+  [F-021 TAI-T02](../experiments/fixtures/021-tribology-contact-adaptive-interfaces.md#tai-t02----nominal-versus-real-contact-support),
+  [physical concentration under sparse execution](../concept/26-reliability-under-mission-profiles.md#couple-sparse-execution-to-temperature-and-wear),
+  and [operator/support identity](../math/regime-qualified-flow-contract.md#detector-filter-operator-and-support-identities).
+- **Disposition:** map to P-001, P-008, P-012, C-1305, and Candidate 014; no
+  new principle.
+
+### C-1499
+
+- **Statement:** fully flooded film formation and rough-surface flow are
+  qualified by geometry, composite roughness, viscosity, speed, load, and the
+  assumptions of the selected model. Starvation, temperature, viscous
+  traction, boundary contact, supply, pumping, and damage are additional terms
+  that must be represented rather than inferred from that correlation alone.
+- **Status:** established for the cited full-film and averaged rough-flow
+  components; the integrated synthetic controller and artificial-system
+  composition are plausible and untested.
+- **Scientific observation:** elastohydrodynamic film correlations and rough-
+  surface average-flow models depend on explicit dimensionless groups,
+  geometry, and boundary assumptions rather than one lubricant label.
+- **Primary sources:** `HamrockDowson1977PointContact`,
+  `PatirCheng1978AverageFlow`.
+- **Proposed AI translation:** treat a mediator such as cache, buffer,
+  precision, redundancy, or communication reserve as a regime-dependent
+  interface resource with supply, drag, leakage, starvation, and failure cost.
+- **Efficiency mechanism:** a low-cost regime gate selects among verified
+  policies and escalates to full optimisation near uncertain boundaries.
+- **Failure modes:** lower friction scored despite boundary damage; viscosity
+  at wrong temperature; fully flooded formula used under starvation;
+  roughness direction dropped; supply/pump work free; film ratio called wear;
+  regime labels fitted on confirmation.
+- **Measurable prediction:** `TAI-T03` requires regime-aware optimisation to
+  reduce mission loss versus one fixed lubricant/mediator rule and requires a
+  cheap gate to remain non-inferior to the mechanistic optimiser.
+- **Open question:** is a regime map still useful after a robust finite-horizon
+  optimiser receives the same state and action set?
+- **Used by:** [TAI-T03 audit](audits/2026-08-25-tribology-contact-adaptive-interfaces.md#tai-t03----lubrication-regime-mission-control),
+  [F-021 TAI-T03](../experiments/fixtures/021-tribology-contact-adaptive-interfaces.md#tai-t03----lubrication-regime-mission-control),
+  [resource-supply feedback](../concept/30-sparse-predictive-compute.md#resource-supply-is-a-feedback-problem),
+  and [resource form and deliverability](../math/material-service-state.md#resource-form-and-deliverability).
+- **Disposition:** map to P-002, P-006, P-008, P-009, P-012 and Candidates
+  001/006/012; no lubrication principle.
+
+### C-1500
+
+- **Statement:** wear is a mechanism- and path-dependent change of material
+  and function; an Archard-type proportional law is conditional and a nominal
+  cycle count or endpoint wear volume is not a universal remaining-life state.
+- **Status:** established boundary; compact AI damage-state benefit remains
+  speculative.
+- **Scientific observation:** the Archard relation describes scoped simple
+  wear behaviour, while wear-mechanism maps expose transitions with load,
+  speed, temperature, and material conditions.
+- **Primary sources:** `Archard1953Contact`, `LimAshby1987WearMaps`.
+- **Proposed AI translation:** retain mechanism-qualified exposure, transition,
+  repair, remap, and acceptance state for repeatedly used routes or memories
+  rather than one operation counter.
+- **Efficiency mechanism:** a tested sufficient damage state can avoid replay
+  of the full event history while preventing premature replacement or late
+  failure.
+- **Failure modes:** fitted $k_w$ transported across regimes; lost volume
+  equated with functional failure; transferred material double-counted as
+  loss; load/order interaction omitted; survivor paths only; reset or repair
+  silently resets history; future threshold used in state compression.
+- **Measurable prediction:** `TAI-T04` requires path-aware inference to improve
+  wear and remaining-service prediction on endpoint-matched histories while
+  tying the Archard sum in a constant-regime control.
+- **Open question:** which damage queries require full history, and which admit
+  an auditable finite-dimensional state?
+- **Used by:** [TAI-T04 audit](audits/2026-08-25-tribology-contact-adaptive-interfaces.md#tai-t04----endpoint-matched-wear-paths),
+  [F-021 TAI-T04](../experiments/fixtures/021-tribology-contact-adaptive-interfaces.md#tai-t04----endpoint-matched-wear-paths),
+  [path-dependent structural health](../concept/50-grokking-and-pruning.md#structural-health-is-a-path-dependent-capacity-contract),
+  and [competing mechanisms and mission damage](../math/mission-profile-qualified-device-reliability.md#competing-mechanisms-and-mission-profile-damage).
+- **Disposition:** map to P-009, P-012, C-500, C-1045--C-1046, and Candidates
+  005/009/014/018; no new principle.
+
+### C-1501
+
+- **Statement:** stick--slip is a state- and dynamics-dependent instability;
+  mean friction does not identify it without rate dependence, interface state,
+  compliance, inertia, damping, drive, observation bandwidth, and control
+  delay.
+- **Status:** established in the cited rate/state and spring-slider scope;
+  general AI scheduling benefit is untested.
+- **Scientific observation:** rate/state laws and spring-slider analyses
+  predict stable or unstable sliding from coupled constitutive and system
+  parameters rather than a coefficient alone.
+- **Primary sources:** `Dieterich1979RockFriction`,
+  `Ruina1983SlipInstability`.
+- **Proposed AI translation:** diagnose burst/idle oscillation, retry storms,
+  queue chatter, or actuator cycling with a joint local-state and system-delay
+  model instead of attributing it to mean load.
+- **Efficiency mechanism:** event-trigger high-rate estimation or damping only
+  near a validated instability boundary; remain cheap in stable motion.
+- **Failure modes:** numerical oscillation called physics; velocity sign and
+  zero regularisation mishandled; future trace leaks into classifier; sample
+  rate below event bandwidth; controller changes plant while baseline is open
+  loop; false alarms uncharged; unstable run truncated and deleted.
+- **Measurable prediction:** `TAI-T05` requires a rate/state null to improve
+  onset and trace prediction over a mean-friction model, and an event-triggered
+  composition to reduce solver evaluations without missed bursts.
+- **Open question:** does any residual remain beyond delay-aware state-space
+  identification and robust/event-triggered control?
+- **Used by:** [TAI-T05 audit](audits/2026-08-25-tribology-contact-adaptive-interfaces.md#tai-t05----ratestate-stick--slip-boundary),
+  [F-021 TAI-T05](../experiments/fixtures/021-tribology-contact-adaptive-interfaces.md#tai-t05----ratestate-stick--slip-boundary),
+  [resource-supply feedback](../concept/30-sparse-predictive-compute.md#resource-supply-is-a-feedback-problem),
+  and [control stability and complete energy](../math/regime-qualified-flow-contract.md#control-stability-and-complete-energy).
+- **Disposition:** map to P-002, P-006, P-007, P-012 and Candidates 003/012/014;
+  no new principle.
+
+### C-1502
+
+- **Statement:** third-body material is a dynamic interfacial inventory with
+  generation, transport, accommodation, reincorporation, and escape; its net
+  effect can be protective, abrasive, load-bearing, lubricating, or obstructive
+  depending on state and boundary.
+- **Status:** established mechanical framework with scoped primary tribofilm
+  evidence; universal sign and transfer benefit are unestablished.
+- **Scientific observation:** the third-body approach enforces continuity and
+  load accommodation, while in-situ single-asperity work demonstrates that an
+  antiwear tribofilm can grow through contact-conditioned processes.
+- **Primary/authoritative sources:** `Godet1984ThirdBody`,
+  `GosvamiEtAl2015Tribofilm`.
+- **Proposed AI translation:** treat caches, residuals, summaries, traces, and
+  shared buffers as mediated interface inventories with origin, circulation,
+  transformation, eviction, and externality rather than intrinsically useful
+  or wasteful objects.
+- **Efficiency mechanism:** retain or remove mediator state according to
+  measured service and damage effect while closing its quantity and cost
+  ledger.
+- **Failure modes:** debris always flushed or always retained; mass creation;
+  protective coverage inferred from inventory alone; chemistry hidden; escaped
+  mass ignored; mediator supplied free; one arm receives hidden role labels;
+  mass-balance residual forced to zero.
+- **Measurable prediction:** `TAI-T06` requires a balance-qualified controller
+  to beat both always-remove and always-retain rules across sign-changing
+  mediator worlds without violating mass closure.
+- **Open question:** can useful mediator state be identified from affordable
+  observables before its sign changes?
+- **Used by:** [TAI-T06 audit](audits/2026-08-25-tribology-contact-adaptive-interfaces.md#tai-t06----third-body-inventory-and-sign-change),
+  [F-021 TAI-T06](../experiments/fixtures/021-tribology-contact-adaptive-interfaces.md#tai-t06----third-body-inventory-and-sign-change),
+  and [conservation before optimization](../math/material-service-state.md#conservation-before-optimization).
+- **Disposition:** map to P-008, P-009, P-012, P-013, C-1381 and Candidates
+  006/014; no new principle.
+
+### C-1503
+
+- **Statement:** engineered surface texture can alter hydrodynamic pressure,
+  lubricant storage, debris trapping, contact stress, leakage, and drag, but
+  benefit is conditional on geometry, scale, direction, operating regime,
+  counterface, manufacture, and metric.
+- **Status:** established for scoped experiments and models; universal texture
+  benefit is disputed/unsupported.
+- **Scientific observation:** laser-textured contacts shifted lubrication
+  transitions in a bounded pin-on-disk study; reviews document multiple
+  mechanisms and application-specific envelopes rather than one optimum.
+- **Primary/authoritative sources:** `KovalchenkoEtAl2005Texturing`,
+  `Etsion2005Texturing`.
+- **Proposed AI translation:** compile recurring interaction patterns into
+  interface structure only when the future workload and failure envelope repay
+  build, inflexibility, and reversal cost.
+- **Efficiency mechanism:** choose smooth, textured, or reconfigurable support
+  from a held-out mission distribution rather than optimizing one coupon
+  point.
+- **Failure modes:** texture always compared with a weak smooth baseline;
+  geometry tuned on confirmation; roughness operator changed; manufacture and
+  edge stress free; one speed/load point called a regime map; failed textures
+  excluded; benefits transported across direction or scale.
+- **Measurable prediction:** `TAI-T07` requires robust texture selection to
+  choose nonzero texture only in beneficial envelopes and smooth support in
+  hostile/tie envelopes, after build and lifecycle cost.
+- **Open question:** can a compact workload-support certificate predict when
+  structural compilation survives mission shift?
+- **Used by:** [TAI-T07 audit](audits/2026-08-25-tribology-contact-adaptive-interfaces.md#tai-t07----surface-texture-operating-envelope),
+  [F-021 TAI-T07](../experiments/fixtures/021-tribology-contact-adaptive-interfaces.md#tai-t07----surface-texture-operating-envelope),
+  [physical compilation](../concept/60-hardening-and-factual-memory.md#compilation-across-physics),
+  and [lifecycle break-even](../concept/80-energy-model.md#break-even-horizon).
+- **Disposition:** map to P-005, P-010, C-1052 and Candidates 001/006/009; no
+  new principle.
+
+### C-1504
+
+- **Statement:** adaptive and self-lubricating interfaces can change surface
+  chemistry or structure across environment/load regimes, but they remain
+  bounded by constituent inventory, activation and recovery time, hysteresis,
+  depletion, adhesion, substrate state, manufacture, and failure.
+- **Status:** established for specified adaptive nanocomposite coatings;
+  cross-substrate and AI-system benefit remains plausible but unvalidated.
+- **Scientific observation:** chameleon-like composite coatings exhibited
+  environment-conditioned surface composition and friction in specified
+  laboratory cycles; no universal self-replenishment or unlimited life was
+  shown.
+- **Primary sources:** `VoevodinZabinski2000Chameleon`,
+  `VoevodinEtAl2002Nanocomposite`.
+- **Proposed AI translation:** place a small set of reversible local interface
+  modes near repeated work, with explicit sensing, activation, inventory,
+  health probes, fallback, and digital shadow.
+- **Efficiency mechanism:** passive or local reconfiguration may avoid remote
+  control traffic and repeated general computation when regimes recur long
+  enough to amortize the interface.
+- **Failure modes:** adaptive called intelligent; constituent supply unlimited;
+  surface change assumed reversible; delamination and substrate damage omitted;
+  activation energy free; cycling only among trained regimes; active null
+  denied equal sensing; lowest friction substituted for accepted service.
+- **Measurable prediction:** `TAI-T08` requires an adaptive composition to
+  remain within service/wear gates across regime cycles and reduce total
+  sensing, actuation, and friction energy versus robust static and active
+  multi-mode nulls.
+- **Open question:** when does locally embodied adaptation beat an ordinary
+  sensor, controller, and replaceable interface at equal lifecycle cost?
+- **Used by:** [TAI-T08 audit](audits/2026-08-25-tribology-contact-adaptive-interfaces.md#tai-t08----adaptiveself-lubricating-interface-mission),
+  [F-021 TAI-T08](../experiments/fixtures/021-tribology-contact-adaptive-interfaces.md#tai-t08----adaptiveself-lubricating-interface-mission),
+  [physical compilation](../concept/60-hardening-and-factual-memory.md#compilation-across-physics),
+  and [latent physical state](../math/mission-profile-qualified-device-reliability.md#latent-physical-state-and-observable-evidence).
+- **Disposition:** map to P-005, P-006, P-009, P-010, P-012 and Candidates
+  006/009/012; no new principle.
+
+### C-1505
+
+- **Statement:** lower friction or wear in one contact/coupon does not by
+  itself establish lower system energy, higher accepted service, longer useful
+  life, or lower lifecycle burden. A system comparison must state its
+  auxiliaries, lost function, maintenance, replacement, manufacture,
+  allocation, and coupon-to-mission transfer assumptions.
+- **Status:** established as a measurement-boundary warning in the cited
+  vehicle/global models; the proposed lifecycle estimator, transfer model,
+  magnitude, and AI benefit are model- and mission-dependent.
+- **Scientific observation:** vehicle and global tribology studies estimate
+  large burdens through explicit system models; their uncertainty and
+  allocation prevent treating any percentage as a universal constant.
+- **Primary/authoritative sources:** `HolmbergEtAl2012PassengerCars`,
+  `HolmbergErdemir2017Global`.
+- **Proposed AI translation:** select an interface, route, hardware primitive,
+  or maintenance policy on accepted task service across a frozen mission and
+  lifecycle boundary, not a microbenchmark operation.
+- **Efficiency mechanism:** eliminate candidates that merely move burden into
+  supply, cooling, maintenance, failure, replacement, or low utilisation
+  before expensive prototyping.
+- **Failure modes:** friction work called total energy; rejected output in the
+  denominator; coupon rank transported to field; manufacture amortized over
+  nominal rather than accepted service; replacement credited without embodied
+  burden; maintenance treated completed when only scheduled; global estimate
+  imported as local fact.
+- **Measurable prediction:** `TAI-T09` requires a hierarchical transfer and
+  lifecycle null to reverse unsupported coupon-only choices and calibrate
+  abstention under out-of-support missions; a project composition must then
+  reduce evidence/compute cost without worsening accepted service.
+- **Open question:** which early evidence has positive decision value once
+  scale, mission, maintenance, and lifecycle uncertainty are explicit?
+- **Used by:** [TAI-T09 audit](audits/2026-08-25-tribology-contact-adaptive-interfaces.md#tai-t09----coupon-to-mission-lifecycle-transfer),
+  [F-021 TAI-T09](../experiments/fixtures/021-tribology-contact-adaptive-interfaces.md#tai-t09----coupon-to-mission-lifecycle-transfer),
+  [lifecycle energy](../concept/80-energy-model.md#lifecycle-energy),
+  and [accepted-service lifecycle ledgers](../math/mission-profile-qualified-device-reliability.md#accepted-service-and-complete-lifecycle-ledgers).
+- **Disposition:** map to P-009, P-010, P-012, P-013, C-1048--C-1052 and
+  Candidates 006/009/014/018; no new principle.
+
+**Shared roadmap:** the [F-021 tribology breadth row](../concept/90-research-roadmap.md#breadth-wave-decisions-and-next-queue)
+tracks C-1497--C-1505 as one no-promotion evaluation bundle.

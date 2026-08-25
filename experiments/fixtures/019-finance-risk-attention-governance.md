@@ -21,8 +21,7 @@
   manifest, generated data, or result exists
 - **Authority:** no empirical, scientific, compliance, operational-resilience,
   financial, or energy result is asserted
-- **Registry disposition:** no new principle or candidate; claim numbers 1488
-  and 1489 remain unused
+- **Registry disposition:** no new principle or candidate
 
 This fixture converts the audit's ten protocol specifications into one durable
 pre-implementation contract. Finance and management vocabulary is admissible

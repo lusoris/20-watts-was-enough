@@ -37,7 +37,9 @@ observation-model version, and every disturbance $w_t^\cdot$ and error
 $\epsilon_t$ has the unit of the equation in which it appears. The command
 $d_t$ and exposure $e_t$ need not share a unit: a token quota, update rate, or
 tool permission is not evidence that the intended computation, parameter
-change, or external effect occurred.
+change, or external effect occurred. Forecast value, feedback correction,
+integrated action exposure, reserve debit, and later outcome remain separate
+coordinates for the same reason ([C-1494](../research/claims.md#c-1494)).
 
 The evaluator reports endpoint vectors rather than a hidden scalar:
 
@@ -69,7 +71,9 @@ where $u_t$ is the complete uncertainty record, $\tau_t$ is observation age in
 seconds, and $p_t$ identifies the supported population/task/context. Calling
 $\mathcal D_t$ a “window” does not make it a fixed scalar interval. It changes
 with endpoint, schedule, context, uncertainty, adaptation, reserve, and the
-cost of delayed harm.
+cost of delayed harm. A local rule must also be requalified when its trigger
+becomes widespread and its shared-system cost changes
+([C-1493](../research/claims.md#c-1493)).
 
 ## Withdrawal is its own transition
 

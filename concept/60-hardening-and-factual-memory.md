@@ -133,7 +133,12 @@ remain locally coupled to the environment, while a versioned digital shadow
 preserves its specification, protected tests, calibration envelope, fallback,
 and output trace. The path is admitted only while health probes remain inside
 that envelope. Drift or damage returns authority to the digital path before a
-new substrate state is programmed and shadow-validated.
+new substrate state is programmed and shadow-validated. Static surface texture
+must therefore survive workload-envelope, manufacture, inflexibility, and
+reversal tests ([C-1503](../research/claims.md#c-1503)); a locally adaptive
+interface additionally carries constituent inventory, activation/recovery,
+hysteresis, depletion, substrate health, and fallback
+([C-1504](../research/claims.md#c-1504)).
 
 This path competes first with tuned passive mechanics, analog control, and
 FPGA/ASIC implementation, not only with an inefficient general model. Its
