@@ -1185,13 +1185,15 @@ test("Windows supervisor terminates the Job Object when a guarded directory iden
   try {
     const configured = await processAdapterConfig(context);
     const receipt = await addWindowsJobSupervisor(context, configured);
-    const guardedCwd = path.join(context.parent, "guarded cwd");
+    const guardedDirectory = path.join(context.parent, "guarded directory");
     const signals = path.join(context.parent, "unguarded signals");
-    const mutation = path.join(guardedCwd, "namespace mutation.txt");
+    const anchor = path.join(guardedDirectory, "locked anchor.bin");
+    const mutation = path.join(guardedDirectory, "namespace mutation.txt");
     const marker = path.join(signals, "directory-break descendant escaped.txt");
     const ready = path.join(signals, "directory-break target ready.txt");
-    await mkdir(guardedCwd);
+    await mkdir(guardedDirectory);
     await mkdir(signals);
+    await writeFile(anchor, Buffer.alloc(0), { flag: "wx" });
     let supervisorSettled = false;
     let supervisorOutcome = null;
     const responsePromise = invokeSupervisor(receipt, {
@@ -1200,13 +1202,20 @@ test("Windows supervisor terminates the Job Object when a guarded directory iden
       executable: process.execPath,
       executable_sha256: await shaFile(process.execPath),
       args: [descendantScript, "--parent-wait", marker, ready, "5000"],
-      cwd: guardedCwd,
+      // Guard the directory through a locked child, while keeping the target's
+      // ordinary working-directory lookup outside it. Otherwise CreateProcess
+      // itself may legitimately break the cwd directory R oplock before the
+      // deliberate namespace mutation is armed.
+      cwd: fixtureDirectory,
       environment: {
         SYSTEMROOT: process.env.SYSTEMROOT,
         TEMP: process.env.TEMP,
         TMP: process.env.TMP,
       },
-      locked_inputs: [{ path: descendantScript, sha256: await shaFile(descendantScript) }],
+      locked_inputs: [
+        { path: descendantScript, sha256: await shaFile(descendantScript) },
+        { path: anchor, sha256: emptySha256 },
+      ],
       timeout_ms: 30_000,
       max_output_bytes: 65_536,
     });
