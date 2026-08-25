@@ -307,6 +307,89 @@ reserve, transition state, flushing, downtime, maintenance, and rollback are
 charged. If those nulls tie it, “adaptive topology” describes an implementation
 choice rather than an efficiency mechanism ([C-516](../research/claims.md#c-516)).
 
+### Positional instruction, repair capacity, and structural fields
+
+The developmental and regeneration residue sharpens the capacity lifecycle by
+separating operations that a generic “grow and repair” controller would hide.
+The claims are source-domain results; their engineering translations remain
+prospective and are tested only by the preimplementation
+[F-022 fixture](../experiments/fixtures/022-regenerative-positional-memory.md).
+
+1. **Keep repair instruction distinct from repair workforce.** In the studied
+   planarian experiments, differentiated muscle carried position-control
+   expression while neoblasts supplied replacement capacity
+   ([C-1507](../research/claims.md#c-1507)).
+   A modular system should therefore test a two-plane design: surviving task
+   modules retain bounded reconstruction constraints, while a replaceable
+   worker pool executes them. A worker reserve is not positional knowledge,
+   and retained instructions are not proof that enough capacity survives.
+   [DEV-T02](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t02-capacityinstruction-separation)
+   compares this separation with complete checkpoint-and-log restoration and
+   requires abstention when surviving instruction support is insufficient.
+2. **Treat positional memory as writable, gated state.** Transient intervention
+   rewrote persistent positional state during the scoped axolotl regeneration
+   window, but not in comparable uninjured cells
+   ([C-1506](../research/claims.md#c-1506)).
+   The translation is neither immutable metadata nor unrestricted self-editing:
+   retain versioned local role state, open writes only inside an authenticated
+   repair episode, validate against independent service evidence, and preserve
+   rollback. [DEV-T01](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t01-hysteretic-positional-memory)
+   makes valid, locally corrupted, and common-mode-corrupted memory separate
+   cases so saved reconstruction work cannot excuse confident wrong-role repair.
+3. **Separate source compensation, scale support, and receiver observability.**
+   Opposed BMP-related sources compensated for scoped perturbations in *Xenopus*
+   ([C-1508](../research/claims.md#c-1508));
+   [DEV-T03](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t03-compensating-pattern-sources)
+   asks whether reciprocal sources beat distributed robust control after delay,
+   stability, and double-source detection are charged. Dpp-gradient scaling in
+   the studied wing disc had an experimentally exposed finite envelope
+   ([C-1509](../research/claims.md#c-1509));
+   [DEV-T04](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t04-finite-scaling-envelope)
+   therefore requires an explicit beyond-support disposition rather than a
+   scale-invariance claim. In the cited micropattern assay, edge access and
+   receptor orientation changed which signal a cell could observe
+   ([C-1510](../research/claims.md#c-1510));
+   [DEV-T05](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t05-boundary-conditioned-observability)
+   compares local boundary-relative inference with exact distributed graph
+   distance. A compensating field can still be unreadable at the receiver, and
+   a readable field can still be outside its calibrated size range.
+4. **Consolidate paths and boundaries only after persistent evidence.** Tension
+   recruited and stabilized Myosin II in the scoped tissue experiments
+   ([C-1511](../research/claims.md#c-1511)),
+   motivating capped, decaying load-path reinforcement rather than permanent
+   reinforcement after a burst; [DEV-T06](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t06-load-dependent-reinforcement)
+   includes load reversal and event-triggered backpressure as controls. An
+   actively maintained Myosin-II barrier limited compartment mixing
+   ([C-1512](../research/claims.md#c-1512)),
+   motivating delayed, reversible interface hardening tested against a mature
+   soft boundary in [DEV-T07](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t07-reversible-boundary-consolidation).
+   Apparent enhancer redundancy improved robustness only across particular
+   perturbations in the studied loci
+   ([C-1513](../research/claims.md#c-1513));
+   [DEV-T08](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t08-conditional-regulatory-redundancy)
+   accordingly tests partially input-diverse small gates against full duplicate
+   controllers and preserves common-mode corruption as a hostile null.
+5. **Compose local patterning with coarse global context without conflating
+   their roles.** The limb-pattern study supports a plausible, non-unique
+   reaction–diffusion interpretation modulated by global gradients
+   ([C-1514](../research/claims.md#c-1514)).
+   [DEV-T09](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t09-localglobal-pattern-composition)
+   therefore requires local-only and global-only ablations and compares the
+   composition with central constrained assignment. Chick perturbations also
+   support local-feedback symmetry breaking, while the proposed molecular
+   model remains non-unique
+   ([C-1515](../research/claims.md#c-1515));
+   [DEV-T10](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t10-local-feedback-symmetry-breaking)
+   tests temporary organizer election against a complete randomized
+   leader-election protocol, including duplicate detection and re-election.
+
+These distinctions add three gates to structural growth: verify that surviving
+instruction is sufficient before allocating repair workers; verify that the
+field is both inside its support envelope and observable by the receiving
+module; and verify that reinforcement or boundary writes amortize their write,
+maintenance, reopening, and fallback costs. Every F-022 track remains
+`NO_RESULT`; a written protocol does not establish an efficiency advantage.
+
 ### Competence-gated structural transition
 
 A signal is not a complete command. Developmental experiments show that

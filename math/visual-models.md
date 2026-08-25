@@ -79,6 +79,46 @@ qualification within its useful service horizon. If $\delta e\leq0$, no
 positive break-even exists. See the
 [lifecycle accounting rule](../concept/80-energy-model.md#break-even-horizon).
 
+## Memory-kernel truncation boundary
+
+![For an exponential memory kernel, the unrepresented tail falls exponentially while every tighter tolerance requires a longer retained history.](../public/plots/memory-kernel-truncation.svg)
+
+For the illustrative normalized kernel
+$K(\tau)=K_0\exp(-\tau/\tau_m)$, the fraction beyond a retained window $H$ is
+
+$$
+R(H)=
+\frac{\int_H^\infty K(\tau)\,d\tau}
+{\int_0^\infty K(\tau)\,d\tau}
+=\exp\!\left(-\frac{H}{\tau_m}\right).
+$$
+
+The curve makes the storage--approximation trade explicit for this one kernel:
+one, two, and three decimal places of remaining tail mass require progressively
+longer histories. It does not supply a cutoff for another kernel, observable,
+horizon, or intervention. Those require an empirical closure test under the
+[multiscale reduction contract](multiscale-reduction-contract.md).
+
+## Slow-manifold fold boundary
+
+![In the fold normal form, the attracting spectral gap falls to zero while the slow-state sensitivity diverges.](../public/plots/slow-manifold-fold-boundary.svg)
+
+For the dimensionless fast equation $f(x,y)=y-x^2$, the attracting critical
+branch for $y>0$ is $x^*(y)=\sqrt y$. Its normal attraction margin and local
+sensitivity are
+
+$$
+\gamma(y)=\left|\partial_xf(x^*(y),y)\right|=2\sqrt y,
+\qquad
+\left|\frac{dx^*}{dy}\right|=\frac{1}{2\sqrt y}.
+$$
+
+As the fold at $y=0$ is approached, ordinary normal hyperbolicity disappears at
+the same time that a small change in $y$ produces an increasingly large change
+in the reduced state. The plot is an exact property of this normal form, not a
+universal abstention threshold. The full validity conditions are kept in the
+[multiscale reduction contract](multiscale-reduction-contract.md).
+
 ## Contextual analytical figures
 
 The next figures are embedded where their equations first matter in the book;

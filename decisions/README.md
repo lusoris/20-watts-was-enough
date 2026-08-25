@@ -19,3 +19,4 @@ than silently changing its outcome.
 | [0011](0011-measure-energy-in-paired-blocks.md) | Measure external energy in counterbalanced paired blocks and infer across seeds | accepted |
 | [0012](0012-executable-slices-must-respect-mature-nulls.md) | Require negative controls and complete mature nulls in every executable slice | accepted |
 | [0013](0013-development-can-block-a-protocol.md) | Let development diagnostics block an ineligible protocol before confirmation | accepted |
+| [0014](0014-coarse-state-needs-a-closure-contract.md) | Require an explicit validity and resource contract for every coarse state | accepted |

@@ -28,7 +28,11 @@ constraints* behind that fact can become engineering requirements:
 
 ## Project status
 
-**Stage:** concept and evidence framework. There is no model implementation yet.
+**Stage:** concept and evidence framework with five development-only smoke
+harnesses. There is no integrated model implementation or claim-eligible
+workstation result yet. The generated
+[test-coverage report](experiments/test-coverage.md) keeps those states
+separate.
 
 The repository is the canonical source. The original Google Doc and Gemini
 discussions are preserved under [`sources/`](sources/README.md) as historical,
@@ -88,6 +92,9 @@ Supporting material:
 - [`research/audits/`](research/audits/README.md) — dated primary-source research passes and engineering null-model audits
 - [`research/audits/2026-08-25-integrative-comparative-physiology.md`](research/audits/2026-08-25-integrative-comparative-physiology.md) — distributed supply, exchange, typed material balance, delayed control, prediction, synchrony, and fast/slow adaptation boundaries
 - [`research/audits/2026-08-25-tribology-contact-adaptive-interfaces.md`](research/audits/2026-08-25-tribology-contact-adaptive-interfaces.md) — contact, lubrication, wear, stick--slip, third-body, texture, adaptive-interface, and lifecycle boundaries
+- [`research/audits/2026-08-25-developmental-regeneration-depth.md`](research/audits/2026-08-25-developmental-regeneration-depth.md) — positional memory, repair instruction, field scaling, receiver geometry, mechanical boundaries, redundancy, and symmetry-breaking boundaries
+- [`research/audits/2026-08-25-plant-plasticity-memory-signalling.md`](research/audits/2026-08-25-plant-plasticity-memory-signalling.md) — plant memory modes, lifecycle reset, systemic routes, sense-by-growth admission, boundary sensing, and integrated context
+- [`research/audits/2026-08-25-applied-multiscale-reduction.md`](research/audits/2026-08-25-applied-multiscale-reduction.md) — projection memory, slow-manifold validity, heterogeneous micro-queries, and equation-free closure
 - [`research/neuroscience-opportunity-map.md`](research/neuroscience-opportunity-map.md) — underused neural mechanisms and falsifiable translations
 - [`research/comparative-biology.md`](research/comparative-biology.md) — candidates from animals, plants, immune systems, and adaptive networks
 - [`research/source-crosswalk.md`](research/source-crosswalk.md) — imported ideas mapped into evidence and principle bundles
@@ -95,12 +102,17 @@ Supporting material:
 - [`math/`](math/README.md) — notation, boundaries, and derivations
 - [`math/visual-models.md`](math/visual-models.md) — interpretable plots of the
   current efficiency equations and break-even boundaries
+- [`math/multiscale-reduction-contract.md`](math/multiscale-reduction-contract.md) — exact memory, slow-manifold, micro-query, lifting, healing, and closure boundaries
 - [`assets/`](assets/README.md) — editable diagram and future figure sources
 - [`decisions/`](decisions/README.md) — durable project decisions
 - [`experiments/candidates/`](experiments/candidates/README.md) — falsifiable, equal-budget experiment contracts
 - [`experiments/fixtures/`](experiments/fixtures/README.md) — reusable cross-candidate stress benchmarks that add no architecture by themselves
 - [`experiments/fixtures/020-integrative-comparative-physiology.md`](experiments/fixtures/020-integrative-comparative-physiology.md) — nine complete CPU-only physiology contracts with no execution results
 - [`experiments/fixtures/021-tribology-contact-adaptive-interfaces.md`](experiments/fixtures/021-tribology-contact-adaptive-interfaces.md) — nine complete CPU-only tribology/interface contracts with no execution results
+- [`experiments/fixtures/022-regenerative-positional-memory.md`](experiments/fixtures/022-regenerative-positional-memory.md) — ten complete CPU-only developmental/regeneration contracts with no execution results
+- [`experiments/fixtures/023-plant-plasticity-memory-signalling.md`](experiments/fixtures/023-plant-plasticity-memory-signalling.md) — ten complete CPU-only plant plasticity and signalling contracts with no execution results
+- [`experiments/fixtures/024-applied-multiscale-reduction.md`](experiments/fixtures/024-applied-multiscale-reduction.md) — four complete CPU-only multiscale-reduction contracts with no execution results
+- [`experiments/workstation/fixture-024/`](experiments/workstation/fixture-024/README.md) — deterministic AMR-T01 development smoke path with no confirmation or energy authority
 - [`experiments/test-coverage.md`](experiments/test-coverage.md) — generated
   claim-to-protocol coverage and workstation execution readiness
 - [`experiments/test-readiness-summary.json`](experiments/test-readiness-summary.json) — compact machine-readable readiness surface used by the site and book

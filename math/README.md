@@ -65,6 +65,11 @@ notation.
   closure-support distance, reduced-state adequacy, adaptive resolution,
   assimilation and observability, transition and tail calibration, net control
   benefit, and complete energy accounting for Fixture F-005.
+- [`multiscale-reduction-contract.md`](multiscale-reduction-contract.md)
+  distinguishes exact projection memory from Markov approximation, bounds
+  slow-manifold reduction by normal hyperbolicity, prices macro-to-micro
+  reconstruction, and treats post-healing lift dependence as a closure test
+  for Fixture F-024.
 - [`representative-adaptive-performance.md`](representative-adaptive-performance.md)
   defines actual observation/action opportunity, acquisition and opponent
   history, resource/damage state, anticipation and interception, retention and

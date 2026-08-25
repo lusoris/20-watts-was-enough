@@ -9,6 +9,7 @@ const ignoredDirectories = new Set([
   "dist",
   "node_modules",
   "sources",
+  "tmp",
 ]);
 
 async function collectMarkdown(directory) {

@@ -6,9 +6,11 @@ tests whether their composition survives strong ordinary baselines, equal
 budgets, withheld regimes, perturbations, and explicit rejection rules.
 
 The executable fixture slices are the
-[F-007 null-space-honesty smoke harness](../workstation/fixture-007/README.md)
-and the [F-012 layout-randomized performance-inference
-harness](../workstation/fixture-012/README.md).
+[F-007 null-space-honesty smoke harness](../workstation/fixture-007/README.md),
+the [F-012 layout-randomized performance-inference
+harness](../workstation/fixture-012/README.md), the
+[F-019 endogenous-feedback smoke harness](../workstation/fixture-019/README.md),
+and the [F-024 projected-memory smoke harness](../workstation/fixture-024/README.md).
 Execution readiness is tracked separately from the completeness of each full
 fixture contract.
 
@@ -35,3 +37,6 @@ fixture contract.
 | F-019 | [Finance-risk, attention, and governance controls](019-finance-risk-attention-governance.md) | mature risk, fixed-point, portfolio, attention, option, control, resilience, queue, accounting, and incentive nulls; cross-cutting tests for C-1480--C-1487 and maturation tracks for C-659--C-661, C-139, C-1433, and C-144 |
 | F-020 | [Integrative comparative physiology](020-integrative-comparative-physiology.md) | mature flow, transport, exchanger, material-balance, robust-control, regional/global, predictive, causal-synchrony, and two-timescale nulls; complete CPU-only contracts for C-1488--C-1496 with no execution results |
 | F-021 | [Tribology and adaptive contact interfaces](021-tribology-contact-adaptive-interfaces.md) | mature contact, lubrication, wear, rate/state, third-body, texture, adaptive-interface, robust-control, and lifecycle nulls; complete CPU-only contracts for C-1497--C-1505 with no execution results |
+| F-022 | [Regenerative positional memory](022-regenerative-positional-memory.md) | mature checkpoint, robust-field, scaling, observability, adaptive-routing, boundary, redundancy, reaction--diffusion, and symmetry-breaking nulls; complete CPU-only contracts for C-1506--C-1515 with no execution results |
+| F-023 | [Plant plasticity, memory, and signalling](023-plant-plasticity-memory-signalling.md) | mature latch, reset, state-space, systemic-routing, active-sensing, structural-admission, resource, wave, and context-integration nulls; complete CPU-only contracts for C-1516--C-1525 with no execution results |
+| F-024 | [Applied multiscale reduction](024-applied-multiscale-reduction.md) | mature autoregressive, delay, balanced-truncation, singular-perturbation, adaptive-integration, surrogate, multigrid/domain-decomposition, and ensemble closure nulls; complete CPU-only contracts for C-1526--C-1529 with no execution results |

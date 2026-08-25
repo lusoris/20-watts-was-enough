@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "artifact": "fixture-024",
+  "profile": "development",
+  "opportunities_per_seed": 8,
+  "time_step_s": 0.05,
+  "prefix_s": 1,
+  "horizon_s": 20,
+  "memory_window_s": 0.8,
+  "state_scale_u": 2,
+  "max_loss": 100
+}

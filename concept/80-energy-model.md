@@ -388,6 +388,41 @@ associated with erasing one bit under its physical assumptions; $k_B$ is the
 Boltzmann constant in joules/kelvin and $T$ is absolute temperature in kelvin.
 It is not an estimator for an inference, multiply, or memory transfer.
 
+### Reduction and closure work stays inside the ledger
+
+A coarse model is not credited with avoiding fine computation when its usable
+state depends on unreported reconstruction, healing, or fallback. For a
+multiscale run, define
+
+$$
+E_{\mathrm{reduce}}
+=E_{\mathrm{lift}}+E_{\mathrm{heal}}+E_{\mathrm{micro}}
++E_{\mathrm{restrict}}+E_{\mathrm{sync}}+E_{\mathrm{fallback}},
+$$
+
+where each term is gross measured electrical energy in joules attributable to
+lifting a coarse state, discarding initialization transients, advancing local
+fine simulations, restricting them back to coarse observables, coordinating
+micro/macro work, and executing a qualified fallback. The matching movement
+ledger separately reports bytes for every term; CPU seconds, solver steps, and
+right-hand-side evaluations remain non-energy diagnostics.
+
+If a projected model truncates memory, the retained history window and omitted
+tail are part of the declared approximation
+([C-1526](../research/claims.md#c-1526)). If a slow reduction approaches a
+fold or loses its spectral gap, detection and fallback remain charged
+([C-1527](../research/claims.md#c-1527)). Heterogeneous micro-queries cannot
+receive free boundary reconstruction or synchronization
+([C-1528](../research/claims.md#c-1528)), and equation-free computation cannot
+hide lift replicas or healing inside preprocessing
+([C-1529](../research/claims.md#c-1529)). The complete dimensional and closure
+rules are in the [multiscale-reduction contract](../math/multiscale-reduction-contract.md).
+
+The baseline receives an equally optimized implementation and the same error,
+risk, latency, and fallback envelope. A reduction wins only if its full
+measured lifecycle energy is lower after every failed query, rejected step,
+reconstruction, and coarse-model invalidation is retained.
+
 ### Equal-budget comparisons
 
 Candidate and baseline receive matched opportunity to succeed. Each experiment

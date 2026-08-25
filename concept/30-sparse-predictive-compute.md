@@ -221,6 +221,113 @@ action, and slow structural change into one loop
 [C-1494](../research/claims.md#c-1494),
 [C-1496](../research/claims.md#c-1496)).
 
+### A timescale label is not a closure certificate
+
+Calling a loop *fast*, *slow*, or *coarse* describes its schedule. It does not
+show that the state exposed to that loop is sufficient to predict its own
+future. Eliminating an unobserved variable can leave history, an unresolved
+initial-condition term, or lift-dependent evolution behind. The runtime may
+use a reduced path only after one of the following four contracts is made
+literal; otherwise it retains or restores the fuller state.
+
+#### Projection can move omitted state into memory
+
+For the dimensioned linear example
+
+$$
+\dot{x}=-\alpha x+\beta y,
+\qquad
+\dot{y}=\gamma x-\lambda y,
+$$
+
+$x$ and $y$ share unit $U$, while
+$\alpha,\beta,\gamma,\lambda$ have unit $\mathrm{s}^{-1}$. Eliminating $y$
+does not generally give a history-free equation:
+
+$$
+\dot{x}(t)=-\alpha x(t)
++\beta e^{-\lambda t}y(0)
++\int_0^t\beta\gamma e^{-\lambda(t-s)}x(s)\,ds.
+$$
+
+The first term is instantaneous, the second retains unresolved initial state,
+and the third is memory. The kernel
+$K(\tau)=\beta\gamma e^{-\lambda\tau}$ has unit
+$\mathrm{s}^{-2}$, so its integral has unit $U\,\mathrm{s}^{-1}$ like
+$\dot x$. The general projection result also contains an orthogonal-dynamics
+term; calling it “noise” does not make it independent, Gaussian, or negligible
+([C-1526](../research/claims.md#c-1526)). A finite history window $H$ seconds
+therefore needs a measured tail-error boundary, not a convenient buffer size.
+
+For the single analytical kernel
+$K(\tau)=K_0e^{-\tau/\tau_m}$, with memory time
+$\tau_m$ seconds, the normalized mass omitted after retaining $H$ seconds is
+$R(H)=e^{-H/\tau_m}$. The figure is an exact illustration of that one kernel;
+it is not evidence that an artificial workload has exponential or finite
+memory.
+
+![Analytical illustration of the exact normalized tail left by truncating one exponential memory kernel; the horizontal coordinate H divided by tau_m and the tail mass are dimensionless, and no workload measurements are shown.](../public/plots/memory-kernel-truncation.svg)
+
+#### A slow manifold has a geometric boundary
+
+A named fast/slow split also does not establish a slow manifold. In the
+dimensionless fold normal form
+
+$$
+\varepsilon x'=y-x^2,
+\qquad
+y'=-1,
+$$
+
+prime denotes differentiation with respect to
+$\theta=t/\tau_0$, where the declared reference time $\tau_0$ is measured in
+seconds, and $\varepsilon$ is the dimensionless fast/slow timescale ratio. On
+the attracting critical branch $x^*(y)=\sqrt y$, the dimensionless normal
+spectral margin is $\gamma_N(y)=2\sqrt y$. It tends to zero as $y\to0^+$,
+while the sensitivity
+$|dx^*/dy|=1/(2\sqrt y)$ diverges. Ordinary normal-hyperbolic persistence is
+therefore qualified only on a declared compact region whose margin stays away
+from zero; it does not continue through the fold by naming the route “slow”
+([C-1527](../research/claims.md#c-1527)).
+
+![Analytical illustration of the dimensionless fold normal form: normal attraction tends to zero and slow-branch sensitivity diverges as the dimensionless distance coordinate y approaches the fold; this is exact geometry for the displayed normal form, not a measured or universal online threshold.](../public/plots/slow-manifold-fold-boundary.svg)
+
+#### Coarse computation must expose how detail returns
+
+Two different execution contracts cover cases in which a coarse state remains
+useful without pretending that fine detail vanished:
+
+1. **Local micro-query contract.** A heterogeneous multiscale method declares
+   a compression $Q_c:u\mapsto U$, a reconstruction
+   $R(U,\xi)\mapsto u$, and the consistency residual
+   $\|Q_cR(U,\xi)-U\|$. Here $u$ and $U$ retain their native fine- and
+   coarse-state units and $\xi$ indexes admissible unresolved detail. When the
+   macro update needs an unavailable datum such as a flux, it runs a bounded
+   local microproblem to estimate that datum. Microcell support, boundary
+   treatment, relaxation, sampling, failed solves, coefficient queries,
+   iterations, bytes, and reconstruction error all remain in the cost and
+   uncertainty ledger ([C-1528](../research/claims.md#c-1528)). “Local” is not
+   synonymous with “cheaper.”
+2. **Lift--heal--evolve--restrict contract.** With fine propagator
+   $\Phi_T^f$ over burst time $T$ seconds, the lift-specific coarse map is
+   $\Phi_T^c(U;\xi)=Q_c\Phi_T^f(R(U,\xi))$. Several admissible lifts with the
+   same $U$ are evolved through a declared healing time $t_h$ seconds before
+   restriction. Post-healing disagreement is measured in the native norm of
+   $U$. If materially different lifts still give different coarse derivatives
+   or rollouts, the proposed coarse variables are not closed at that state and
+   horizon; the route must abstain, add state, or fall back to fine evolution
+   while charging all attempted work ([C-1529](../research/claims.md#c-1529)).
+
+The complete equations, dimensional checks, and non-overlapping compute,
+traffic, and microstep ledgers are in the
+[multiscale reduction contract](../math/multiscale-reduction-contract.md).
+[Fixture F-024](../experiments/fixtures/024-applied-multiscale-reduction.md)
+registers matched-information tests against Markov, full-state, analytic
+homogenization, identified coarse-state, and continuously fine nulls.
+`NO_RESULT`: the fixture is pre-implementation; neither plot contains
+measurements, and this section establishes no accuracy, compute, traffic,
+energy, or readiness result.
+
 ### Concrete per-event sequence
 
 1. **Timestamp and classify the event.** Record source, modality, freshness,

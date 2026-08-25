@@ -1026,6 +1026,141 @@ function memoryActionPriceEnvelope(spec) {
   return analyticalDocument(spec, layout, content);
 }
 
+function memoryKernelTruncation(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 1180,
+    height: 760,
+    kind: "memory-tail-contract",
+    theme: "violet",
+  });
+  const { width, height, theme } = layout;
+  const {
+    normalized_horizon_min: xMin,
+    normalized_horizon_max: xMax,
+    samples,
+    tail_tolerances: tolerances,
+  } = spec.parameters;
+  const yMin = 1e-4;
+  const yMax = 1;
+  const box = { left: 94, right: 830, top: 154, bottom: height - 92 };
+  const panel = { left: 868, right: width - 38, top: 154, bottom: height - 92 };
+  const xMap = (value) => localScale(value, xMin, xMax, box.left, box.right);
+  const yMap = (value) => localLogScale(value, yMin, yMax, box.bottom, box.top);
+  const values = Array.from({ length: samples }, (_, index) => {
+    const horizon = xMin + (index / (samples - 1)) * (xMax - xMin);
+    return { horizon, tail: Math.exp(-horizon) };
+  });
+  const curve = linePath(values.map(({ horizon, tail }) => [xMap(horizon), yMap(tail)]));
+  const area = `${curve} L${box.right},${box.bottom} L${box.left},${box.bottom} Z`;
+  const xTicks = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  const yTicks = [1, 0.1, 0.01, 0.001, 0.0001];
+  const gridMarkup = [
+    ...xTicks.map((tick) => `<line x1="${xMap(tick)}" y1="${box.top}" x2="${xMap(tick)}" y2="${box.bottom}" stroke="${theme.grid}"/><text x="${xMap(tick)}" y="${box.bottom + 23}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${tick}</text>`),
+    ...yTicks.map((tick) => `<line x1="${box.left}" y1="${yMap(tick)}" x2="${box.right}" y2="${yMap(tick)}" stroke="${theme.grid}"/><text x="${box.left - 14}" y="${yMap(tick) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${tick === 1 ? "1" : tick.toExponential(0)}</text>`),
+  ].join("");
+  const toleranceLines = tolerances.map((tolerance, index) => {
+    const horizon = -Math.log(tolerance);
+    const color = [theme.secondary, theme.accent, theme.danger][index % 3];
+    return `<line x1="${box.left}" y1="${yMap(tolerance)}" x2="${xMap(horizon)}" y2="${yMap(tolerance)}" stroke="${color}" stroke-width="2" stroke-dasharray="7 6"/>
+      <line x1="${xMap(horizon)}" y1="${yMap(tolerance)}" x2="${xMap(horizon)}" y2="${box.bottom}" stroke="${color}" stroke-width="2" stroke-dasharray="7 6"/>
+      <circle cx="${xMap(horizon)}" cy="${yMap(tolerance)}" r="7" fill="${color}" stroke="${theme.text}" stroke-width="2"/>`;
+  }).join("");
+  const toleranceRows = tolerances.map((tolerance, index) => {
+    const horizon = -Math.log(tolerance);
+    const color = [theme.secondary, theme.accent, theme.danger][index % 3];
+    const y = panel.top + 88 + index * 78;
+    return `<circle cx="${panel.left + 26}" cy="${y - 5}" r="7" fill="${color}"/>
+      <text x="${panel.left + 44}" y="${y}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800">tail ≤ ${tolerance}</text>
+      <text x="${panel.left + 44}" y="${y + 21}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11">H / tau_m ≥ ${horizon.toFixed(3)}</text>`;
+  }).join("");
+  const content = `${analyticalHeader(spec, layout, { badge: "EXACT EXPONENTIAL TAIL · ANALYTICAL" })}
+  <rect x="${box.left}" y="${box.top}" width="${box.right - box.left}" height="${box.bottom - box.top}" rx="16" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  ${gridMarkup}
+  <defs><linearGradient id="memoryTailFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${theme.primary}" stop-opacity=".58"/><stop offset="1" stop-color="${theme.primary}" stop-opacity=".04"/></linearGradient></defs>
+  <path d="${area}" fill="url(#memoryTailFill)"/>
+  ${toleranceLines}
+  <path d="${curve}" fill="none" stroke="${theme.primary}" stroke-width="6" stroke-linecap="round"/>
+  <text x="${(box.left + box.right) / 2}" y="${height - 38}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle">retained history H / memory time tau_m</text>
+  <text x="28" y="${(box.top + box.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle" transform="rotate(-90 28 ${(box.top + box.bottom) / 2})">unrepresented kernel mass R(H) · logarithmic</text>
+  <rect x="${panel.left}" y="${panel.top}" width="${panel.right - panel.left}" height="${panel.bottom - panel.top}" rx="16" fill="${theme.panelAlt}" stroke="${theme.grid}" stroke-width="2"/>
+  <text x="${panel.left + 22}" y="${panel.top + 32}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" font-weight="800">WINDOW REQUIRED</text>
+  <text x="${panel.left + 22}" y="${panel.top + 53}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10">for this kernel, not universally</text>
+  ${toleranceRows}
+  <rect x="${panel.left + 18}" y="${panel.bottom - 114}" width="${panel.right - panel.left - 36}" height="92" rx="12" fill="${theme.background}" fill-opacity=".54"/>
+  <text x="${panel.left + 32}" y="${panel.bottom - 84}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="11" font-weight="700">No free cutoff</text>
+  <text x="${panel.left + 32}" y="${panel.bottom - 62}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="10">longer history lowers this tail</text>
+  <text x="${panel.left + 32}" y="${panel.bottom - 43}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="10">while increasing state and work</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
+function slowManifoldFoldBoundary(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 1180,
+    height: 760,
+    kind: "normal-hyperbolicity-boundary",
+    theme: "ember",
+  });
+  const { width, height, theme } = layout;
+  const {
+    distance_min: xMin,
+    distance_max: xMax,
+    samples,
+  } = spec.parameters;
+  const yMin = 0.01;
+  const yMax = 100;
+  const box = { left: 94, right: 830, top: 154, bottom: height - 92 };
+  const panel = { left: 868, right: width - 38, top: 154, bottom: height - 92 };
+  const xMap = (value) => localLogScale(value, xMin, xMax, box.left, box.right);
+  const yMap = (value) => localLogScale(value, yMin, yMax, box.bottom, box.top);
+  const values = Array.from({ length: samples }, (_, index) => {
+    const logDistance = Math.log10(xMin) + (index / (samples - 1)) * (Math.log10(xMax) - Math.log10(xMin));
+    const distance = 10 ** logDistance;
+    return {
+      distance,
+      gap: 2 * Math.sqrt(distance),
+      sensitivity: 1 / (2 * Math.sqrt(distance)),
+    };
+  });
+  const gapPath = linePath(values.map(({ distance, gap }) => [xMap(distance), yMap(gap)]));
+  const sensitivityPath = linePath(values.map(({ distance, sensitivity }) => [xMap(distance), yMap(sensitivity)]));
+  const xTicks = [0.0001, 0.001, 0.01, 0.1, 1];
+  const yTicks = [0.01, 0.1, 1, 10, 100];
+  const gridMarkup = [
+    ...xTicks.map((tick) => `<line x1="${xMap(tick)}" y1="${box.top}" x2="${xMap(tick)}" y2="${box.bottom}" stroke="${theme.grid}"/><text x="${xMap(tick)}" y="${box.bottom + 23}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">10^${Math.log10(tick)}</text>`),
+    ...yTicks.map((tick) => `<line x1="${box.left}" y1="${yMap(tick)}" x2="${box.right}" y2="${yMap(tick)}" stroke="${theme.grid}"/><text x="${box.left - 14}" y="${yMap(tick) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">10^${Math.log10(tick)}</text>`),
+  ].join("");
+  const content = `${analyticalHeader(spec, layout, { badge: "FOLD NORMAL FORM · EXACT GEOMETRY" })}
+  <rect x="${box.left}" y="${box.top}" width="${box.right - box.left}" height="${box.bottom - box.top}" rx="16" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  <defs><linearGradient id="foldWarning" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${theme.danger}" stop-opacity=".34"/><stop offset="1" stop-color="${theme.danger}" stop-opacity="0"/></linearGradient></defs>
+  <rect x="${box.left}" y="${box.top}" width="${xMap(0.01) - box.left}" height="${box.bottom - box.top}" fill="url(#foldWarning)"/>
+  ${gridMarkup}
+  <path d="${gapPath}" fill="none" stroke="${theme.secondary}" stroke-width="6" stroke-linecap="round"/>
+  <path d="${sensitivityPath}" fill="none" stroke="${theme.accent}" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="${xMap(xMin)}" cy="${yMap(2 * Math.sqrt(xMin))}" r="7" fill="${theme.secondary}"/>
+  <circle cx="${xMap(xMin)}" cy="${yMap(1 / (2 * Math.sqrt(xMin)))}" r="7" fill="${theme.accent}"/>
+  <text x="${box.left + 22}" y="${box.top + 28}" fill="${theme.danger}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800">approaching fold: gamma → 0</text>
+  <text x="${box.right - 16}" y="${yMap(2) - 12}" fill="${theme.secondary}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" text-anchor="end">normal gap gamma = 2 sqrt(y)</text>
+  <text x="${box.right - 16}" y="${yMap(0.5) + 24}" fill="${theme.accent}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" text-anchor="end">manifold sensitivity = 1 / (2 sqrt(y))</text>
+  <text x="${(box.left + box.right) / 2}" y="${height - 38}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle">distance coordinate y from fold · logarithmic</text>
+  <text x="28" y="${(box.top + box.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle" transform="rotate(-90 28 ${(box.top + box.bottom) / 2})">dimensionless magnitude · logarithmic</text>
+  <rect x="${panel.left}" y="${panel.top}" width="${panel.right - panel.left}" height="${panel.bottom - panel.top}" rx="16" fill="${theme.panelAlt}" stroke="${theme.grid}" stroke-width="2"/>
+  <text x="${panel.left + 22}" y="${panel.top + 33}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" font-weight="800">WHAT FAILS FIRST</text>
+  <line x1="${panel.left + 22}" y1="${panel.top + 76}" x2="${panel.left + 62}" y2="${panel.top + 76}" stroke="${theme.secondary}" stroke-width="6"/>
+  <text x="${panel.left + 74}" y="${panel.top + 81}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700">normal attraction</text>
+  <text x="${panel.left + 22}" y="${panel.top + 107}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="10">vanishes at y = 0</text>
+  <line x1="${panel.left + 22}" y1="${panel.top + 151}" x2="${panel.left + 62}" y2="${panel.top + 151}" stroke="${theme.accent}" stroke-width="6"/>
+  <text x="${panel.left + 74}" y="${panel.top + 156}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700">state sensitivity</text>
+  <text x="${panel.left + 22}" y="${panel.top + 182}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="10">diverges at the same boundary</text>
+  <rect x="${panel.left + 18}" y="${panel.top + 228}" width="${panel.right - panel.left - 36}" height="124" rx="12" fill="${theme.background}" fill-opacity=".54"/>
+  <text x="${panel.left + 32}" y="${panel.top + 258}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="11" font-weight="800">Reduction contract</text>
+  <text x="${panel.left + 32}" y="${panel.top + 282}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="10">state the compact region</text>
+  <text x="${panel.left + 32}" y="${panel.top + 303}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="10">measure a spectral margin</text>
+  <text x="${panel.left + 32}" y="${panel.top + 324}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="10">abstain outside support</text>
+  <text x="${panel.left + 22}" y="${panel.bottom - 52}" fill="${theme.danger}" font-family="Segoe UI, sans-serif" font-size="11" font-weight="800">No universal threshold shown</text>
+  <text x="${panel.left + 22}" y="${panel.bottom - 29}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="9">validity depends on the full system and perturbation</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
 function missionProfileDamage(spec) {
   const layout = analyticalLayout(spec, {
     width: 1180,
@@ -1140,6 +1275,8 @@ const renderers = {
   "active-acquisition-frontier": activeAcquisitionFrontier,
   "recovery-time-fragility": recoveryTimeFragility,
   "memory-action-price-envelope": memoryActionPriceEnvelope,
+  "memory-kernel-truncation": memoryKernelTruncation,
+  "slow-manifold-fold-boundary": slowManifoldFoldBoundary,
   "mission-profile-damage": missionProfileDamage,
 };
 

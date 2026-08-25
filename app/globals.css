@@ -2117,6 +2117,13 @@ button {
   max-width: 78ch;
 }
 
+.book-prose h1,
+.book-prose h2,
+.book-prose h3,
+.book-prose h4 {
+  scroll-margin-top: 96px;
+}
+
 @media (max-width: 760px) {
   .topbar-actions {
     padding-right: 8px;
@@ -2167,6 +2174,13 @@ button {
   .book-document-meta {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .book-prose h1,
+  .book-prose h2,
+  .book-prose h3,
+  .book-prose h4 {
+    scroll-margin-top: 28px;
   }
 }
 

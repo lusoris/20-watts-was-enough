@@ -220,6 +220,44 @@ This creates a many-to-one evidence graph:
 many observations → scoped claims → fewer principles → shared primitives → decisive experiments
 ```
 
+### New mechanisms can sharpen a principle without multiplying it
+
+The developmental, regenerative, plant-plasticity, and multiscale-reduction
+depth passes add new failure boundaries without adding another universal
+principle. That is a useful result, not a failed search.
+
+- Positional memory and repair separate **what state says should exist** from
+  **which workers can currently rebuild it**
+  ([C-1506](../research/claims.md#c-1506),
+  [C-1507](../research/claims.md#c-1507)). They sharpen P-005, P-009, and
+  P-012 by making write authority, reconstruction capacity, and current
+  context separately testable.
+- Compensating sources, finite scaling, receiver geometry, delayed
+  reinforcement, conditional redundancy, and local/global fields
+  ([C-1508](../research/claims.md#c-1508)–[C-1515](../research/claims.md#c-1515))
+  refine locality, maintenance, and structural offloading. They do not imply
+  that every duplicated route, boundary, or organizer is useful.
+- Plant memory divides population-level digital switching, lifecycle reset,
+  writing, trace maintenance, retrieval, systemic route identity,
+  action-conditioned growth, and joint environmental context
+  ([C-1516](../research/claims.md#c-1516)–[C-1525](../research/claims.md#c-1525)).
+  These are discriminating state and protocol dimensions inside P-002,
+  P-005, P-006, P-009, P-012, and P-013—not a plant-themed architecture.
+- Projection memory, normal-hyperbolicity limits, macro-to-micro queries, and
+  lift dependence ([C-1526](../research/claims.md#c-1526)–[C-1529](../research/claims.md#c-1529))
+  supply mathematical rejection tests for coarse state. They constrain when
+  an existing runtime or memory primitive is valid; they are not biological
+  claims at all.
+
+The deduplicated output is therefore richer in contracts while remaining at
+thirteen P-series principles. Fixtures
+[F-022](../experiments/fixtures/022-regenerative-positional-memory.md),
+[F-023](../experiments/fixtures/023-plant-plasticity-memory-signalling.md), and
+[F-024](../experiments/fixtures/024-applied-multiscale-reduction.md) preserve
+the distinctions so later implementations can test whether a proposed
+composition adds value beyond its strongest ordinary null within a declared
+workload and transfer boundary.
+
 ### Composition without double counting
 
 Principles can cooperate while remaining separately testable. For one event:

@@ -95,7 +95,8 @@
       "code": "a2f16477-c745-46f0-b832-586b1c0e468b",
       "state": "dedicated",
       "audits": [
-        "research/audits/2026-08-25-integrative-comparative-physiology.md"
+        "research/audits/2026-08-25-integrative-comparative-physiology.md",
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
       ],
       "claims": [
         "C-1488",
@@ -106,11 +107,19 @@
         "C-1493",
         "C-1494",
         "C-1495",
-        "C-1496"
+        "C-1496",
+        "C-1518",
+        "C-1519",
+        "C-1520",
+        "C-1521",
+        "C-1522",
+        "C-1523",
+        "C-1524",
+        "C-1525"
       ],
-      "rationale": "The audit directly studies physiological transport, regulation, matching, coordination, and structural adaptation as a field-centred systems account.",
-      "scopeGap": "One comparative systems audit does not exhaust physiology, and it excludes clinical, pathological, ecological, developmental, cellular, and human-subject programmes.",
-      "nextQuestion": "Which additional physiological subsystems contribute transferable mechanisms that do not deduplicate into the existing thirteen principles?"
+      "rationale": "The comparative audit covers animal transport and regulation in C-1488--C-1496; the plant audit independently covers acclimation, long-distance signalling, hydraulics, and resource allocation in C-1518--C-1525.",
+      "scopeGap": "These bounded animal and plant slices do not exhaust cellular, microbial, ecological, pathological, reproductive, or human physiology.",
+      "nextQuestion": "Which physiological mechanisms reproduce across kingdoms under matched perturbations, complete resource ledgers, and explicit transfer tests?"
     },
     {
       "level": "dfg-subject",
@@ -249,6 +258,533 @@
       "rationale": "C-1499 and TAI-T03 provide a lubrication-specific source and test boundary for operating-regime identification and transition handling rather than inheriting coverage from tribology.",
       "scopeGap": "Lubricant chemistry, rheology, additives, contamination, starvation, thermal degradation, elastohydrodynamic validation, supply systems, and physical film measurement remain outside scope.",
       "nextQuestion": "Do regime-aware decisions remain beneficial under measured lubricant properties, thermal and contamination histories, starvation, mixed lubrication, and independently observed film thickness?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "2.11-06",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": [
+        "C-1506", "C-1507", "C-1508", "C-1509", "C-1510",
+        "C-1511", "C-1512", "C-1513", "C-1514", "C-1515"
+      ],
+      "rationale": "All ten residues directly examine developmental specification, regeneration, pattern control, morphogenesis, or maturation boundaries.",
+      "scopeGap": "The audit is mechanistic and synthetic; organismal breadth, evolutionary origin, and in-vivo validation remain open.",
+      "nextQuestion": "Which developmental contracts survive lineage-resolved perturbation across organisms and scales?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "2.11-02",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1511", "C-1512", "C-1514"],
+      "rationale": "These claims use force, geometry, transport, and physical constraint as developmental state variables.",
+      "scopeGap": "No general biophysical theory, material calibration, or complete multiscale mechanics survey is supplied.",
+      "nextQuestion": "Do measured forces and transport fields causally improve prediction beyond molecular state alone?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "2.11-03",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1507", "C-1510", "C-1511", "C-1512"],
+      "rationale": "Cell-state transitions, interactions, mechanics, and tissue organisation support these four bounded residues.",
+      "scopeGap": "Cellular metabolism, organelles, trafficking, division control, and broad cell-type coverage are not audited.",
+      "nextQuestion": "Which cell-level variables remain necessary under direct intervention and lineage tracking?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "2.11-05",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1506", "C-1513"],
+      "rationale": "Competence and structural consolidation touch gene-regulatory state without constituting a genetics audit.",
+      "scopeGap": "No genome-wide association, comparative genomics, variant analysis, or functional-genomics programme is covered.",
+      "nextQuestion": "Which regulatory variables are causal rather than correlated markers of competence and consolidation?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "2.11-07",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1508", "C-1509", "C-1510", "C-1514", "C-1515"],
+      "rationale": "The claims formalise positional inference, collective signalling, multiscale morphology, and staged maturation as testable systems models.",
+      "scopeGap": "The audit does not survey theoretical biology, bioinformatics pipelines, omics integration, or inference methodology broadly.",
+      "nextQuestion": "Which model components are identifiable and predictive under held-out geometries and perturbations?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310903",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": [
+        "C-1506", "C-1507", "C-1508", "C-1509", "C-1510",
+        "C-1511", "C-1512", "C-1513", "C-1514", "C-1515"
+      ],
+      "rationale": "The complete audit is centred on animal developmental and regenerative mechanisms with ten reciprocal protocols.",
+      "scopeGap": "Reproduction, whole-life development, most phyla, and organism-level validation remain outside scope.",
+      "nextQuestion": "Which mechanisms generalise across animal lineages without erasing lineage-specific constraints?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310102",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1507"],
+      "rationale": "C-1507 tests controlled state transition and regeneration competence at the cell-population level.",
+      "scopeGap": "Proliferation, apoptosis, senescence, and death programmes are not generally covered.",
+      "nextQuestion": "Does competence predict regeneration after growth and survival effects are independently controlled?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310105",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1510", "C-1511", "C-1512"],
+      "rationale": "Collective coordination, adhesion or matrix context, and mechanical coupling are explicit in these claims.",
+      "scopeGap": "The audit does not cover the full interaction repertoire, matrix biology, or cell-wall biology.",
+      "nextQuestion": "Which interaction channels are necessary when adhesion, matrix, and mechanics are perturbed separately?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310111",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md",
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": [
+        "C-1508", "C-1509", "C-1510",
+        "C-1518", "C-1520", "C-1521", "C-1524", "C-1525"
+      ],
+      "rationale": "Developmental claims C-1508--C-1510 test positional and collective signals; plant claims C-1518, C-1520, C-1521, C-1524, and C-1525 test priming, systemic waves, hydraulic integration, source--sink control, and resource-dependent signalling.",
+      "scopeGap": "Neither audit surveys receptor families, intracellular cascades, signalling chemistry, or all taxa.",
+      "nextQuestion": "Which signal representations retain causal value across developmental and plant stress contexts after channel-specific ablation?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310114",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1508", "C-1509", "C-1514", "C-1515"],
+      "rationale": "These claims require system-level positional inference, error correction, scale coupling, and maturation control.",
+      "scopeGap": "No field-wide systems-biology or multi-omics integration programme is provided.",
+      "nextQuestion": "Can interventions identify a minimal causal systems model that transfers across geometry and developmental stage?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310503",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1506", "C-1513"],
+      "rationale": "Developmental competence and consolidation invoke regulatory inheritance and commitment boundaries.",
+      "scopeGap": "Sex determination, variant effects, genomic mapping, and comparative developmental genetics are unaddressed.",
+      "nextQuestion": "Which genetic perturbations shift competence or consolidation without confounding viability?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "320606",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1506", "C-1507"],
+      "rationale": "Competence and regenerative state transitions have regenerative-medicine relevance, but the audit remains basic mechanism research.",
+      "scopeGap": "No therapy, clinical model, safety case, manufacturing pathway, or patient endpoint is evaluated.",
+      "nextQuestion": "Which bounded mechanisms reproduce in preclinical regeneration models under safety and delivery constraints?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "400307",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1511", "C-1512"],
+      "rationale": "C-1511 and C-1512 explicitly test force-sensitive organisation and morphogenetic mechanics.",
+      "scopeGap": "Material characterisation, constitutive modelling, measurement uncertainty, and physical tissue validation remain incomplete.",
+      "nextQuestion": "Do force interventions alter morphology as predicted after geometry and biochemical state are matched?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "584d9d66-018f-4bb9-812c-7fafd5b1abd4",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md",
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": [
+        "C-1506", "C-1507", "C-1508", "C-1509", "C-1510",
+        "C-1511", "C-1512", "C-1513", "C-1514", "C-1515",
+        "C-1516", "C-1517", "C-1518", "C-1519", "C-1522", "C-1523"
+      ],
+      "rationale": "The developmental audit supports C-1506--C-1515 in animal mechanisms; the plant audit independently supports developmental plasticity, memory, growth, and integration in C-1516--C-1519, C-1522, and C-1523.",
+      "scopeGap": "The two bounded audits do not cover all kingdoms, life stages, evo-devo, reproduction, or field development.",
+      "nextQuestion": "Which control principles transfer across animal and plant development under homologous perturbation and resource accounting?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "a9aa37ce-d8d5-4d68-9123-ffbced0aed12",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1507", "C-1510", "C-1511", "C-1512"],
+      "rationale": "The selected claims depend on cell state, cell interaction, and force-coupled tissue organisation.",
+      "scopeGap": "Most core cell-biology processes and cell types remain unaudited.",
+      "nextQuestion": "Which cell-state measurements add causal explanatory power under matched tissue context?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "9cfaafe4-7fee-41fc-ba8d-cf23a2a176e6",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md",
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": [
+        "C-1511", "C-1512", "C-1514",
+        "C-1521", "C-1522", "C-1524", "C-1525"
+      ],
+      "rationale": "Developmental claims C-1511, C-1512, and C-1514 use mechanics and scale coupling; plant claims C-1521, C-1522, C-1524, and C-1525 use electrical, hydraulic, transport, and allocation constraints.",
+      "scopeGap": "Neither audit supplies general biophysical coverage or complete physical parameter identification.",
+      "nextQuestion": "Which measured physical state variables remain predictive under hostile transfer and matched biochemical information?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "bf927f14-c975-45e6-bedd-a383152aa7d3",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md",
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": [
+        "C-1506", "C-1513",
+        "C-1516", "C-1517", "C-1518", "C-1523"
+      ],
+      "rationale": "Developmental competence and consolidation touch genetic regulation in C-1506 and C-1513; plant plasticity, inherited or somatic memory, priming, and growth integration touch it in C-1516--C-1518 and C-1523.",
+      "scopeGap": "Genome-wide, population, quantitative, comparative, and molecular-genetic depth remain outside both audits.",
+      "nextQuestion": "Which genetic or epigenetic interventions causally separate retained state from current environment and resource reserve?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "ce3293cb-700b-4b49-a91b-56ddfc97181f",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1508", "C-1510", "C-1515"],
+      "rationale": "Positional information, collective pattern correction, and staged maturation intersect embryological mechanisms.",
+      "scopeGap": "Embryogenesis, germ layers, extraembryonic tissues, implantation, and comparative embryos are not systematically covered.",
+      "nextQuestion": "Do the three contracts reproduce in embryo-scale systems across developmental windows?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "32983fb5-b823-4830-a924-773611dc4e25",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+      ],
+      "claims": ["C-1511", "C-1512", "C-1514"],
+      "rationale": "These claims explicitly connect form, mechanical constraint, and multiscale morphological organisation.",
+      "scopeGap": "Descriptive morphology, comparative anatomy, morphometrics, and natural-form diversity remain outside scope.",
+      "nextQuestion": "Which morphology descriptors predict function after scale, material, and developmental history are controlled?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "2.12-04",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": ["C-1518", "C-1519", "C-1520", "C-1521", "C-1522", "C-1523", "C-1524", "C-1525"],
+      "rationale": "These eight residues directly test plant acclimation, systemic signalling, hydraulics, distributed integration, growth control, and allocation.",
+      "scopeGap": "Photosynthesis, respiration, mineral nutrition, reproduction, whole-field ecophysiology, and most taxa remain incomplete.",
+      "nextQuestion": "Which plant physiological contracts survive whole-plant perturbation under measured carbon, water, ion, and energy budgets?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "2.12-06",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": ["C-1516", "C-1517", "C-1518", "C-1519", "C-1522", "C-1523"],
+      "rationale": "The selected residues centre plant developmental plasticity, retained state, priming, growth response, distributed coordination, and architecture.",
+      "scopeGap": "Cell-cycle control, organogenesis breadth, embryogenesis, reproduction, and most developmental stages are not covered.",
+      "nextQuestion": "Which retained and distributed states causally alter plant development under matched current conditions?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "2.12-05",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": ["C-1516", "C-1518", "C-1520", "C-1524", "C-1525"],
+      "rationale": "Memory, priming, electrical or chemical waves, source--sink transport, and resource allocation invoke plant biochemical and biophysical mechanisms.",
+      "scopeGap": "Molecular pathways, metabolomics, membrane biophysics, protein chemistry, and complete energetics are not surveyed.",
+      "nextQuestion": "Which chemical and physical mediators remain necessary after matched state, communication, and resource controls?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "2.12-07",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": ["C-1516", "C-1517", "C-1518", "C-1523"],
+      "rationale": "Plasticity, stress memory, priming, and integrated growth depend partly on genetic or genomic regulatory state.",
+      "scopeGap": "No breeding, population genomics, association mapping, comparative genomics, or genome-wide validation is included.",
+      "nextQuestion": "Which regulatory variants or perturbations separate inherited capacity from acquired state and resource history?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "93205ae1-235c-4259-a94d-ca9453a2ce17",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": ["C-1516", "C-1517", "C-1518", "C-1519", "C-1520", "C-1521", "C-1522", "C-1523", "C-1524", "C-1525"],
+      "rationale": "All ten claims concern plant mechanisms, while the audit is centred on transferable plasticity and signalling rather than botany as a whole.",
+      "scopeGap": "Taxonomy, diversity, anatomy, systematics, palaeobotany, floristics, and most plant lineages remain outside scope.",
+      "nextQuestion": "Which mechanisms are conserved or divergent across phylogenetically distant plant lineages?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "15701609-4c65-462a-b230-d362816906ed",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": ["C-1518", "C-1520", "C-1521", "C-1524", "C-1525"],
+      "rationale": "Priming, propagating systemic signals, hydraulic integration, source--sink communication, and allocation feedback explicitly use intercellular signalling.",
+      "scopeGap": "Receptors, second messengers, pathway crosstalk, subcellular localisation, and broad signalling chemistry remain unexamined.",
+      "nextQuestion": "Which signalling channels add causal information after transmission delay, reserve, and transport capacity are controlled?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "9e3cada3-2cd1-4c90-b8c2-0cb98a892a97",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": ["C-1516", "C-1517", "C-1518"],
+      "rationale": "Plastic developmental memory and stress priming may use chromatin or epigenetic retention, but the claims require direct retained-state tests rather than assuming mechanism.",
+      "scopeGap": "Chromatin marks, causal editing, meiotic transmission, cell-type resolution, and multigenerational stability remain open.",
+      "nextQuestion": "Do causal epigenetic interventions predict memory after current environment and physiological reserve are matched?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310804",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": ["C-1516", "C-1517", "C-1518", "C-1519", "C-1522", "C-1523"],
+      "rationale": "These six residues directly address plant developmental plasticity, retained stress state, priming, growth response, coordination, and architecture.",
+      "scopeGap": "Reproduction and most developmental processes, organs, stages, and taxa remain outside the bounded audit.",
+      "nextQuestion": "Which developmental effects persist across plant stages and lineages under causal state erasure?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310806",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": ["C-1518", "C-1519", "C-1520", "C-1521", "C-1522", "C-1523", "C-1524", "C-1525"],
+      "rationale": "The eight selected claims directly cover plant physiological acclimation, signalling, hydraulics, growth, transport, and allocation.",
+      "scopeGap": "The field route is bounded and excludes large parts of metabolism, nutrition, reproduction, environmental physiology, and taxonomic diversity.",
+      "nextQuestion": "Which results reproduce in intact plants with complete water, carbon, ion, and energy accounting?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310504",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": ["C-1516", "C-1517", "C-1518"],
+      "rationale": "These claims explicitly distinguish retained plastic or primed state from current input, with epigenetics as one bounded candidate substrate.",
+      "scopeGap": "No genome-scale methylation, histone, chromatin, inheritance, or causal-editing programme is supplied.",
+      "nextQuestion": "Which epigenetic marks are causal, stable, and functionally predictive rather than exposure correlates?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310802",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": ["C-1518", "C-1519", "C-1520", "C-1524", "C-1525"],
+      "rationale": "Priming, growth response, systemic chemical signalling, source--sink exchange, and allocation have biochemical mediators and costs.",
+      "scopeGap": "Pathway chemistry, metabolites, enzymes, proteomics, and biochemical flux validation are not covered comprehensively.",
+      "nextQuestion": "Which biochemical fluxes explain gains after communication and construction costs are included?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310803",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-plant-plasticity-memory-signalling.md"
+      ],
+      "claims": ["C-1516", "C-1517", "C-1518", "C-1519", "C-1520", "C-1521", "C-1523", "C-1524", "C-1525"],
+      "rationale": "These nine claims touch cellular state, molecular memory, cell-to-cell propagation, hydraulic coupling, growth control, and transport regulation.",
+      "scopeGap": "The audit is not a comprehensive plant cell or molecular biology survey and lacks most organelles and pathways.",
+      "nextQuestion": "Which cell and molecular measurements add out-of-distribution prediction beyond whole-plant state and resource ledgers?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "3.31-01",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+      ],
+      "claims": ["C-1526", "C-1527", "C-1528", "C-1529"],
+      "rationale": "This terminal DFG subject is the preserved hierarchy's finest available route for the audit's projection, asymptotic, numerical multiscale, and equation-free mathematics.",
+      "scopeGap": "The four residues cover narrow applied constructions, not pure mathematics or mathematics as a whole.",
+      "nextQuestion": "Which error, stability, and cost guarantees survive nonlinear, stochastic, and high-dimensional hostile-transfer cases?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "490101",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+      ],
+      "claims": ["C-1527"],
+      "rationale": "C-1527 directly tests slow--fast asymptotic reduction under normal-hyperbolicity and fold boundaries.",
+      "scopeGap": "Other asymptotic limits, approximation theory, singular perturbations, and rigorous rates are not surveyed.",
+      "nextQuestion": "How sharply do spectral margin and time-scale separation predict reduction error near loss of normal hyperbolicity?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "490105",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+      ],
+      "claims": ["C-1526", "C-1527", "C-1529"],
+      "rationale": "Projected memory, slow-manifold reduction, and lift--evolve--restrict are directly formulated as applied dynamical-system problems.",
+      "scopeGap": "Control, bifurcation breadth, stochastic dynamics, chaos, and application-domain diversity remain incomplete.",
+      "nextQuestion": "Which reduced dynamics remain stable and predictive under memory, folds, lifting bias, and distribution shift?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "490302",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+      ],
+      "claims": ["C-1528", "C-1529"],
+      "rationale": "C-1528 and C-1529 directly compare numerical multiscale and equation-free estimators with explicit error and cost ledgers.",
+      "scopeGap": "Discretisation families, conditioning, floating-point effects, adaptive meshes, and general convergence analysis remain open.",
+      "nextQuestion": "When do complete micro-query and lifting costs outweigh accuracy-preserving numerical reduction?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "490303",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+      ],
+      "claims": ["C-1528"],
+      "rationale": "C-1528 fixes a differential-equation micro-query, compression, reconstruction, error, and work contract for heterogeneous multiscale computation.",
+      "scopeGap": "Only a bounded elliptic-style protocol is specified; other equations, solvers, and boundary conditions are not covered.",
+      "nextQuestion": "Does the local micro-query contract retain savings and accuracy across coefficient contrast, scale separation, and boundaries?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "490409",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+      ],
+      "claims": ["C-1527"],
+      "rationale": "The finite-dimensional geometric singular-perturbation fixture uses ordinary differential equations and dynamical systems but does not survey the field.",
+      "scopeGap": "Difference equations, broad ODE theory, global dynamics, bifurcations, and applications beyond the fixture remain unaddressed.",
+      "nextQuestion": "How does the reduction boundary change for higher-dimensional, non-autonomous, or weakly stochastic ODE systems?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "96c3e7e8-7584-4f61-a90d-39652b83f41e",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+      ],
+      "claims": ["C-1526", "C-1527", "C-1528", "C-1529"],
+      "rationale": "All four claims directly convert projection, asymptotic, multiscale, and coarse-timestepper theory into falsifiable applied-mathematical contracts.",
+      "scopeGap": "The audit covers four reduction families, not applied mathematics broadly or any application field by inheritance.",
+      "nextQuestion": "Which reduction family gives the best validated error--cost tradeoff under matched information and construction budgets?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "a010f01c-4bd9-4bca-b568-0c1357034db9",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+      ],
+      "claims": ["C-1528", "C-1529"],
+      "rationale": "The HMM and equation-free claims directly define numerical estimators, baselines, errors, costs, and invalidity gates.",
+      "scopeGap": "General numerical analysis, solver theory, stability classes, and finite-precision analysis are outside the bounded protocols.",
+      "nextQuestion": "Which estimator remains superior after all microsteps, lifting, restriction, variance, and failure recovery are charged?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "f646b1b6-0774-41fd-afb3-570c9832ed05",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+      ],
+      "claims": ["C-1526", "C-1527", "C-1529"],
+      "rationale": "Three claims directly study reduced evolution with memory, invariant slow structure, or coarse time stepping.",
+      "scopeGap": "Field-wide dynamical-systems coverage, chaos, control, networks, stochasticity, and most bifurcations are absent.",
+      "nextQuestion": "Can closure diagnostics predict when reduced evolution fails before downstream task error becomes unacceptable?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "fad48e49-fad0-43df-8328-87dd8d61618c",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+      ],
+      "claims": ["C-1526", "C-1527", "C-1528", "C-1529"],
+      "rationale": "All four residues use differential-equation systems or operators, but equations are vehicles for reduction rather than the audit's complete subject.",
+      "scopeGap": "Existence, uniqueness, regularity, boundary theory, broad equation classes, and analytical solution methods remain outside scope.",
+      "nextQuestion": "Which equation properties determine memory length, manifold validity, local-query error, and closure failure?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "a5553f24-f643-4dea-99b3-e1a6e8a869ff",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+      ],
+      "claims": ["C-1528"],
+      "rationale": "The elliptic heterogeneous-multiscale protocol in C-1528 is a bounded partial-differential-equation application.",
+      "scopeGap": "Parabolic, hyperbolic, nonlinear, stochastic, moving-boundary, and coupled PDEs are not audited.",
+      "nextQuestion": "Does the HMM contract remain valid beyond the elliptic case under explicit boundary and regularity stress?"
     }
   ]
 }

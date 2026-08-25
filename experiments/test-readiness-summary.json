@@ -2,14 +2,14 @@
   "schema": 1,
   "generatedFrom": "experiments/test-coverage.json",
   "claims": {
-    "total": 1496,
-    "testRouted": 1404,
-    "protocolCovered": 1404,
+    "total": 1520,
+    "testRouted": 1428,
+    "protocolCovered": 1428,
     "executionReady": 0,
     "tierCounts": {
       "ledger-only": 92,
       "linked-description": 0,
-      "protocol-complete": 1404,
+      "protocol-complete": 1428,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
@@ -28,8 +28,8 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1082,
-        "plausible": 206,
+        "established": 1103,
+        "plausible": 209,
         "speculative": 60,
         "disputed": 47,
         "unknown": 9
@@ -54,9 +54,9 @@
     "proposedArtifactFamilies": 0
   },
   "artifacts": {
-    "total": 41,
-    "protocolComplete": 41,
-    "smokeReady": 4,
+    "total": 44,
+    "protocolComplete": 44,
+    "smokeReady": 5,
     "workstationReady": 0,
     "items": [
       {
@@ -820,6 +820,102 @@
         "executionManifest": null,
         "executionClaims": [],
         "promotionChecks": []
+      },
+      {
+        "id": "fixture-022",
+        "path": "experiments/fixtures/022-regenerative-positional-memory.md",
+        "title": "Fixture F-022 — Regenerative positional memory and structural consolidation",
+        "linkedClaims": 10,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-023",
+        "path": "experiments/fixtures/023-plant-plasticity-memory-signalling.md",
+        "title": "Fixture F-023 — Plant plasticity, memory, and signalling",
+        "linkedClaims": 10,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-024",
+        "path": "experiments/fixtures/024-applied-multiscale-reduction.md",
+        "title": "Fixture F-024 — Applied multiscale reduction",
+        "linkedClaims": 4,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "smoke-ready",
+        "executionReady": false,
+        "executionManifest": "experiments/workstation/manifests/fixture-024.json",
+        "executionClaims": [
+          "C-1526"
+        ],
+        "promotionChecks": [
+          {
+            "id": "execution-claim-scope",
+            "label": "Explicit execution-track claim scope",
+            "passed": false,
+            "detail": "implementation.execution_claims must name at least one exact claim ID"
+          },
+          {
+            "id": "full-profile",
+            "label": "Frozen full profile",
+            "passed": true,
+            "detail": "data.full_profile identity and SHA-256 match the frozen repository file"
+          },
+          {
+            "id": "full-tests",
+            "label": "Full experiment-path tests",
+            "passed": true,
+            "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
+          },
+          {
+            "id": "hash-chain",
+            "label": "Corruption-evident output ledger",
+            "passed": true,
+            "detail": "hash-chain output is wired through the tested checkpoint ledger"
+          },
+          {
+            "id": "resume",
+            "label": "Deterministic resume",
+            "passed": true,
+            "detail": "runner imports the declared, tested checkpoint/resume implementation"
+          },
+          {
+            "id": "energy-provider",
+            "label": "Measured-energy or explicit non-energy boundary",
+            "passed": false,
+            "detail": "energy provider config/module/test and frozen hash must enforce measured energy, or a non-energy claim must explicitly forbid energy conclusions"
+          },
+          {
+            "id": "confirmation-seeds",
+            "label": "Frozen confirmation seeds",
+            "passed": false,
+            "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "held_out-seeds",
+            "label": "Frozen held-out seeds",
+            "passed": false,
+            "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "promotion-evidence",
+            "label": "Strict recomputed promotion evidence",
+            "passed": false,
+            "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
+          }
+        ]
       }
     ]
   }

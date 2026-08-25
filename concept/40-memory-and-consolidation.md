@@ -93,6 +93,55 @@ recurrent state, adapter, and model weights may share a device while obeying
 different write policies. One logical store may also span devices when locality
 or retention requires it.
 
+### Memory mode, lifetime, and retrieval are separate axes
+
+Plant systems expose useful counterexamples to treating every durable effect
+as one scalar “memory strength.” In Arabidopsis vernalization, a quantitative
+whole-organism response can arise from the fraction of loci or cells in a
+binary state rather than an analogue value stored in every unit
+([C-1516](../research/claims.md#c-1516)). The same state can persist through
+somatic growth yet be actively reset at a lifecycle boundary
+([C-1517](../research/claims.md#c-1517)). In heat-stress memory, the acute
+writer, persistent trace, and later reinduction are causally separable
+([C-1518](../research/claims.md#c-1518)). Regenerative preparedness can also
+be localized while its required reserve remains an explicit cost
+([C-1519](../research/claims.md#c-1519)).
+
+An artificial memory record therefore declares at least five independent
+fields:
+
+| Field | Question | Required comparison |
+| --- | --- | --- |
+| representation | analogue value, discrete state, population fraction, trace, or external record? | equal-state filter, quantizer, latch population, cache, or database |
+| write event | which observation and authority create or revise it? | always-write, threshold, change-point, and versioned branch |
+| maintenance lifetime | what keeps the state valid, and for how long? | TTL, decay, replay, checkpoint, and explicit refresh |
+| retrieval gate | which recurrence, query, or context lets it influence action? | recurrent state, keyed retrieval, and calibrated classifier |
+| reset boundary | which evidence authorizes weakening, deletion, or reinitialization? | no reset, fixed reset, evidence-gated reset, and ordinary adaptation |
+
+These fields expose three shortcuts to review: encoding duration with
+unjustified precision, calling incidental decay a designed reset, and treating
+trace correlation as the sole memory carrier. They also make reserve bytes,
+random state, calibration, refresh, reset, false retrieval, and recovery
+visible in the lifecycle ledger.
+
+Plant signalling adds a second constraint: remembered state and current
+context may arrive on different routes. A cheap common alarm can require typed
+context before action ([C-1520](../research/claims.md#c-1520)); route identity
+can be conditionally informative but must survive tag, capacity, maintenance,
+and common-mode accounting ([C-1521](../research/claims.md#c-1521)). Active
+growth can create the evidence that gates later structural commitment
+([C-1522](../research/claims.md#c-1522)), while current exportable resource can
+condition future interface density only after its developmental delay and
+confounders are tested ([C-1523](../research/claims.md#c-1523)). Boundary
+sensing plus a routed event wave remains a plausible composition, not an
+automatic advantage ([C-1524](../research/claims.md#c-1524)), and a coupled
+light/temperature/history sensor is useful only inside an identifiable
+calibration envelope ([C-1525](../research/claims.md#c-1525)).
+
+[Fixture F-023](../experiments/fixtures/023-plant-plasticity-memory-signalling.md)
+turns these distinctions into ten preimplementation tests. It currently has
+`NO_RESULT`; no biology-derived efficiency factor is assumed.
+
 ### 2. Capture evidence before abstracting it
 
 Each episode records enough context to explain a later update:

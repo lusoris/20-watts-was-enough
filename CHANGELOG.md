@@ -7,6 +7,37 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Three independently reviewed depth packages add 24 bounded claims
+  (`C-1506`--`C-1529`) and Fixtures F-022--F-024. Developmental and
+  regenerative biology now separates positional instruction, repair workforce,
+  writable state, compensating sources, finite scaling, receiver geometry,
+  load-path reinforcement, boundaries, conditional redundancy, field
+  composition, and organizer selection. Plant plasticity now separates digital
+  population memory, lifecycle reset, writer/trace/retrieval, localized
+  regenerative preparedness, common alarms and typed context, route identity,
+  sense-by-growth admission, future capacity, boundary sensing, and integrated
+  environmental state. Applied mathematics adds exact projection memory,
+  normal-hyperbolicity limits, heterogeneous micro-query reconstruction, and
+  lift--heal--evolve--restrict closure tests. Forty-four new scientific
+  bibliography records were imported after key/DOI/title deduplication; the
+  existing New Phytologist DOI `10.1111/nph.20418` remains a research-agenda
+  Letter rather than evidence for a duplicate claim. Exact child routing now
+  contains 54 explicit assignments across EuroSciVoc, DFG, and ANZSRC without
+  inherited parent coverage or a new P-series principle/candidate.
+
+- Decision 0014, a dedicated multiscale-reduction math contract, and two
+  editable analytical plots make coarse-state validity visible: memory-tail
+  truncation is priced against tolerance, and slow reduction is bounded by its
+  spectral margin and fold sensitivity. The concept chapters now carry these
+  results as architecture constraints alongside substantive developmental and
+  plant-memory text. F-024 also provides a deterministic development-only
+  AMR-T01 smoke harness with Markov-only, finite-memory, and exact augmented
+  paths, immutable-input hashes, append-only hash chaining, checkpoint/resume,
+  and nine focused tests. It explicitly forbids energy and scientific-result
+  conclusions. Generated coverage now records 1,428/1,520 protocol-covered
+  claims, 92 reviewed ledger-only claims, 44/44 complete written artifacts,
+  five smoke-ready harnesses, and zero workstation-executable research claims.
+
 - The independently reviewed tribology and adaptive-contact-interface audit is
   now central as Fixture F-021. Nine bounded claims (`C-1497`--`C-1505`) and
   nine reciprocal CPU-only contracts separate friction coefficient from
@@ -792,6 +823,15 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Full-book heading anchors now clear the sticky action bar at desktop widths;
+  the previous 28-pixel offset could hide the selected heading.
+- Mathematical validation now excludes ephemeral workstation-test directories,
+  so concurrent harness cleanup cannot invalidate a documentation scan.
+- The new evidence wave now freezes all three source-audit hashes, links every
+  C-1506--C-1529 record back to its audit and affected chapter, classifies the
+  two composed mechanisms as plausible, and keeps the multiscale remainder,
+  vector-field units, and development-runner state dimensionally and
+  operationally consistent.
 - Mermaid SVG decoration now parses renderer output as HTML-compatible SVG,
   eliminating the XML `<br>` parser failures that could replace diagrams with
   error boxes in the private site.

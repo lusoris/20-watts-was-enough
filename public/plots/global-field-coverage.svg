@@ -11,8 +11,8 @@
   </g>
   <rect x="36" y="132" width="1128" height="96" rx="16" fill="#122a22" stroke="#35584b"/>
   <text x="62" y="170" fill="#fffaf0" font-family="Georgia, serif" font-size="22" font-weight="700">EU EuroSciVoc 1.6 · 1,064 multilingual concepts</text>
-  <text x="62" y="201" fill="#b9c9c1" font-family="Cascadia Mono, monospace" font-size="13">3 dedicated routes · 0 adjacent routes · 1061 unassigned concepts</text>
-  <rect x="730" y="168" width="1.0855263157894737" height="24" rx="0" fill="#24b47e"><title>3 dedicated</title></rect><rect x="731.0855263157895" y="168" width="0" height="24" rx="0" fill="#ffb547"><title>0 adjacent</title></rect><rect x="731.0855263157895" y="168" width="383.9144736842105" height="24" rx="4" fill="#f45b69"><title>1061 unreviewed</title></rect>
+  <text x="62" y="201" fill="#b9c9c1" font-family="Cascadia Mono, monospace" font-size="13">7 dedicated routes · 10 adjacent routes · 1047 unassigned concepts</text>
+  <rect x="730" y="168" width="2.5328947368421053" height="24" rx="0" fill="#24b47e"><title>7 dedicated</title></rect><rect x="732.5328947368421" y="168" width="3.6184210526315788" height="24" rx="0" fill="#ffb547"><title>10 adjacent</title></rect><rect x="736.1513157894736" y="168" width="378.8486842105263" height="24" rx="4" fill="#f45b69"><title>1047 unreviewed</title></rect>
   <rect x="36" y="248" width="1128" height="378" rx="16" fill="#122a22" stroke="#35584b"/>
   <text x="62" y="294" fill="#fffaf0" font-family="Georgia, serif" font-size="23" font-weight="700">OECD FORD · 42 global second-level fields</text>
   <text x="62" y="323" fill="#b9c9c1" font-family="Cascadia Mono, monospace" font-size="13">39 dedicated · 3 adjacent · 0 unreviewed</text>

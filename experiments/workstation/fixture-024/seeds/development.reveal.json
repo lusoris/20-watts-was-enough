@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "artifact": "fixture-024",
+  "partition": "development",
+  "state": "public-development",
+  "algorithm": "literal-public-seed-list-v1",
+  "seeds": [1536001, 1536002, 1536003, 1536004, 1536005, 1536006, 1536007, 1536008]
+}

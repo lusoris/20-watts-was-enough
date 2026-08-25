@@ -50,14 +50,14 @@
     }
   },
   "counts": {
-    "claims": 1496,
-    "testRouted": 1404,
-    "protocolCovered": 1404,
+    "claims": 1520,
+    "testRouted": 1428,
+    "protocolCovered": 1428,
     "executionReady": 0,
     "tierCounts": {
       "ledger-only": 92,
       "linked-description": 0,
-      "protocol-complete": 1404,
+      "protocol-complete": 1428,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
@@ -76,8 +76,8 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1082,
-        "plausible": 206,
+        "established": 1103,
+        "plausible": 209,
         "speculative": 60,
         "disputed": 47,
         "unknown": 9
@@ -97,13 +97,13 @@
       "new-artifact-needed": 0
     },
     "proposedArtifactFamilies": 0,
-    "artifacts": 41,
-    "protocolCompleteArtifacts": 41,
+    "artifacts": 44,
+    "protocolCompleteArtifacts": 44,
     "executionReadyArtifacts": 0,
-    "smokeReadyArtifacts": 4,
-    "claimSideLinked": 1187,
-    "documentSideLinked": 1104,
-    "reciprocalClaims": 750
+    "smokeReadyArtifacts": 5,
+    "claimSideLinked": 1211,
+    "documentSideLinked": 1128,
+    "reciprocalClaims": 774
   },
   "artifacts": [
     {
@@ -8753,6 +8753,198 @@
         "C-1503",
         "C-1504",
         "C-1505"
+      ]
+    },
+    {
+      "id": "fixture-022",
+      "path": "experiments/fixtures/022-regenerative-positional-memory.md",
+      "title": "Fixture F-022 — Regenerative positional memory and structural consolidation",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "absent",
+      "executionManifest": null,
+      "executionMissing": [
+        "manifest"
+      ],
+      "executionPromotionChecks": [],
+      "executionClaims": [],
+      "claimSideClaims": [
+        "C-1506",
+        "C-1507",
+        "C-1508",
+        "C-1509",
+        "C-1510",
+        "C-1511",
+        "C-1512",
+        "C-1513",
+        "C-1514",
+        "C-1515"
+      ],
+      "documentSideClaims": [
+        "C-1506",
+        "C-1507",
+        "C-1508",
+        "C-1509",
+        "C-1510",
+        "C-1511",
+        "C-1512",
+        "C-1513",
+        "C-1514",
+        "C-1515"
+      ],
+      "linkedClaims": [
+        "C-1506",
+        "C-1507",
+        "C-1508",
+        "C-1509",
+        "C-1510",
+        "C-1511",
+        "C-1512",
+        "C-1513",
+        "C-1514",
+        "C-1515"
+      ]
+    },
+    {
+      "id": "fixture-023",
+      "path": "experiments/fixtures/023-plant-plasticity-memory-signalling.md",
+      "title": "Fixture F-023 — Plant plasticity, memory, and signalling",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "absent",
+      "executionManifest": null,
+      "executionMissing": [
+        "manifest"
+      ],
+      "executionPromotionChecks": [],
+      "executionClaims": [],
+      "claimSideClaims": [
+        "C-1516",
+        "C-1517",
+        "C-1518",
+        "C-1519",
+        "C-1520",
+        "C-1521",
+        "C-1522",
+        "C-1523",
+        "C-1524",
+        "C-1525"
+      ],
+      "documentSideClaims": [
+        "C-1516",
+        "C-1517",
+        "C-1518",
+        "C-1519",
+        "C-1520",
+        "C-1521",
+        "C-1522",
+        "C-1523",
+        "C-1524",
+        "C-1525"
+      ],
+      "linkedClaims": [
+        "C-1516",
+        "C-1517",
+        "C-1518",
+        "C-1519",
+        "C-1520",
+        "C-1521",
+        "C-1522",
+        "C-1523",
+        "C-1524",
+        "C-1525"
+      ]
+    },
+    {
+      "id": "fixture-024",
+      "path": "experiments/fixtures/024-applied-multiscale-reduction.md",
+      "title": "Fixture F-024 — Applied multiscale reduction",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "smoke-ready",
+      "executionManifest": "experiments/workstation/manifests/fixture-024.json",
+      "executionMissing": [
+        "readiness=smoke-ready"
+      ],
+      "executionPromotionChecks": [
+        {
+          "id": "execution-claim-scope",
+          "label": "Explicit execution-track claim scope",
+          "passed": false,
+          "detail": "implementation.execution_claims must name at least one exact claim ID"
+        },
+        {
+          "id": "full-profile",
+          "label": "Frozen full profile",
+          "passed": true,
+          "detail": "data.full_profile identity and SHA-256 match the frozen repository file"
+        },
+        {
+          "id": "full-tests",
+          "label": "Full experiment-path tests",
+          "passed": true,
+          "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
+        },
+        {
+          "id": "hash-chain",
+          "label": "Corruption-evident output ledger",
+          "passed": true,
+          "detail": "hash-chain output is wired through the tested checkpoint ledger"
+        },
+        {
+          "id": "resume",
+          "label": "Deterministic resume",
+          "passed": true,
+          "detail": "runner imports the declared, tested checkpoint/resume implementation"
+        },
+        {
+          "id": "energy-provider",
+          "label": "Measured-energy or explicit non-energy boundary",
+          "passed": false,
+          "detail": "energy provider config/module/test and frozen hash must enforce measured energy, or a non-energy claim must explicitly forbid energy conclusions"
+        },
+        {
+          "id": "confirmation-seeds",
+          "label": "Frozen confirmation seeds",
+          "passed": false,
+          "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+        },
+        {
+          "id": "held_out-seeds",
+          "label": "Frozen held-out seeds",
+          "passed": false,
+          "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+        },
+        {
+          "id": "promotion-evidence",
+          "label": "Strict recomputed promotion evidence",
+          "passed": false,
+          "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
+        }
+      ],
+      "executionClaims": [
+        "C-1526"
+      ],
+      "claimSideClaims": [
+        "C-1526",
+        "C-1527",
+        "C-1528",
+        "C-1529"
+      ],
+      "documentSideClaims": [
+        "C-1526",
+        "C-1527",
+        "C-1528",
+        "C-1529"
+      ],
+      "linkedClaims": [
+        "C-1526",
+        "C-1527",
+        "C-1528",
+        "C-1529"
       ]
     }
   ],
@@ -29034,6 +29226,294 @@
       "executionReady": false,
       "artifacts": [
         "fixture-021"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1506",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-022"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1507",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-022"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1508",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-022"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1509",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-022"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1510",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-022"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1511",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-022"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1512",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-022"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1513",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-022"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1514",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-022"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1515",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-022"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1516",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-023"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1517",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-023"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1518",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-023"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1519",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-023"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1520",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-023"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1521",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-023"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1522",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-023"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1523",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-023"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1524",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-023"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1525",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-023"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1526",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-024"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1527",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-024"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1528",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-024"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1529",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-024"
       ],
       "disposition": null
     }

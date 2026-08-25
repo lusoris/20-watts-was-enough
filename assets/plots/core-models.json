@@ -298,5 +298,42 @@
       "boltzmann_ev_per_k": 0.00008617333262
     },
     "status": "Analytical Arrhenius-rate illustration with two constructed equal-mean temperature histories; parameters are hypothetical and the curves are not calibrated device damage."
+  },
+  {
+    "id": "memory-kernel-truncation",
+    "title": "A finite memory window leaves a measurable tail",
+    "equation": "R(H) = integral_H^inf K(tau) d tau / integral_0^inf K(tau) d tau = exp(-H/tau_m)",
+    "source": "math/multiscale-reduction-contract.md",
+    "layout": {
+      "kind": "memory-tail-contract",
+      "width": 1180,
+      "height": 760,
+      "theme": "violet"
+    },
+    "parameters": {
+      "normalized_horizon_min": 0,
+      "normalized_horizon_max": 8,
+      "samples": 321,
+      "tail_tolerances": [0.1, 0.01, 0.001]
+    },
+    "status": "Exact normalized tail mass for a single exponential kernel. It visualizes a truncation contract, not a claim that real unresolved dynamics have one exponential timescale."
+  },
+  {
+    "id": "slow-manifold-fold-boundary",
+    "title": "The slow-manifold certificate collapses at a fold",
+    "equation": "f(x,y)=y-x^2; x*(y)=sqrt(y); gamma=2 sqrt(y); |d x*/d y|=1/(2 sqrt(y))",
+    "source": "math/multiscale-reduction-contract.md",
+    "layout": {
+      "kind": "normal-hyperbolicity-boundary",
+      "width": 1180,
+      "height": 760,
+      "theme": "ember"
+    },
+    "parameters": {
+      "distance_min": 0.0001,
+      "distance_max": 1,
+      "samples": 321
+    },
+    "status": "Exact geometry of the dimensionless fold normal form on its attracting branch. It illustrates loss of normal hyperbolicity and is not a universal online threshold."
   }
 ]

@@ -1,12 +1,14 @@
 # Workstation execution contract
 
-The repository now contains four executable smoke harnesses alongside research
+The repository now contains five executable smoke harnesses alongside research
 and protocol specifications, but no workstation-ready scientific package:
 [Candidate 010](candidate-010/README.md) exercises staged verification and
 [Fixture F-007](fixture-007/README.md) exercises optical null-space honesty;
 [Fixture F-012](fixture-012/README.md) exercises layout-population performance
 inference; [Fixture F-019](fixture-019/README.md) exercises the FM-T02
-endogenous-feedback forecast boundary.
+endogenous-feedback forecast boundary; and
+[Fixture F-024](fixture-024/README.md) exercises the AMR-T01 projected-memory
+development path.
 A test becomes workstation-ready only when its
 checked manifest exists at `experiments/workstation/manifests/<artifact-id>.json`,
 passes `npm run validate:workstation`, declares `workstation-ready`, names all
@@ -66,6 +68,15 @@ frozen aggregate endpoint is effectively seed-invariant
 under the protocol's symmetric shocks and proportional sales, so confirmation
 is explicitly blocked pending a reviewed protocol revision. No result or
 energy conclusion follows.
+
+[Fixture F-024](fixture-024/README.md) implements a bounded public-development
+smoke path for C-1526 / AMR-T01. It generates stable two-variable linear
+systems, executes Markov-only, finite-memory, and exact augmented-state paths,
+and verifies finite clipped records through a corruption-evident checkpoint
+ledger. The exact augmented arm is an analytical ceiling with evaluator state,
+not a matched-information confirmation comparator. No confirmation or transfer
+seed or commitment has been created; no comparison, performance result, energy
+conclusion, or claim eligibility follows.
 
 The machine-readable contract is
 [`manifest.schema.json`](manifest.schema.json). Referenced lockfiles, seed

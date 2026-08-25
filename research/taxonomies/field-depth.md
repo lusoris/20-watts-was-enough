@@ -16,7 +16,7 @@ EuroSciVoc is the EU-level multilingual science vocabulary. The DFG hierarchy
 adds German review granularity. ANZSRC is an independent omission detector,
 not the normative framework for the project.
 
-**Explicit child routes recorded:** 12. All other children are unassigned.
+**Explicit child routes recorded:** 54. All other children are unassigned.
 
 ## EuroSciVoc 1.6: European science vocabulary
 
@@ -377,7 +377,7 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### medical and health sciences
 
-**Deutsch:** Medizin- und Gesundheitswissenschaften. **Fine-grained status:** 1 of 178 concepts in this branch have an explicit routing assignment.
+**Deutsch:** Medizin- und Gesundheitswissenschaften. **Fine-grained status:** 2 of 178 concepts in this branch have an explicit routing assignment.
 
 - **medical and health sciences.** Routing: unassigned.
   - **basic medicine.** Deutsch: Grundlagenmedizin. Routing: unassigned.
@@ -411,7 +411,7 @@ are retained below; neither a label nor a parent route counts as evidence review
         - **antivirals.** Routing: unassigned.
         - **vaccines.** Deutsch: Impfstoff. Routing: unassigned.
       - **pharmacokinetics.** Deutsch: Pharmakokinetik. Routing: unassigned.
-    - **physiology.** Deutsch: Physiologie. Routing: dedicated child-level evidence via [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md). Claims: [C-1488](../claims.md#c-1488), [C-1489](../claims.md#c-1489), [C-1490](../claims.md#c-1490), [C-1491](../claims.md#c-1491), [C-1492](../claims.md#c-1492), [C-1493](../claims.md#c-1493), [C-1494](../claims.md#c-1494), [C-1495](../claims.md#c-1495), [C-1496](../claims.md#c-1496).
+    - **physiology.** Deutsch: Physiologie. Routing: dedicated child-level evidence via [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1488](../claims.md#c-1488), [C-1489](../claims.md#c-1489), [C-1490](../claims.md#c-1490), [C-1491](../claims.md#c-1491), [C-1492](../claims.md#c-1492), [C-1493](../claims.md#c-1493), [C-1494](../claims.md#c-1494), [C-1495](../claims.md#c-1495), [C-1496](../claims.md#c-1496), [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1522](../claims.md#c-1522), [C-1523](../claims.md#c-1523), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
       - **cytology.** Deutsch: Zytologie. Routing: unassigned.
       - **homeostasis.** Deutsch: Homöostase. Routing: unassigned.
       - **pathophysiology.** Deutsch: Pathophysiologie. Routing: unassigned.
@@ -434,7 +434,7 @@ are retained below; neither a label nor a parent route counts as evidence review
     - **clinical neurology.** Deutsch: klinische Neurologie. Routing: unassigned.
     - **critical care medicine.** Deutsch: Intensivmedizin. Routing: unassigned.
     - **dermatology.** Deutsch: Dermatologie. Routing: unassigned.
-    - **embryology.** Deutsch: Embryologie. Routing: unassigned.
+    - **embryology.** Deutsch: Embryologie. Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1508](../claims.md#c-1508), [C-1510](../claims.md#c-1510), [C-1515](../claims.md#c-1515).
     - **emergency medicine.** Deutsch: Notfallmedizin. Routing: unassigned.
       - **graft versus host disease.** Deutsch: Wirt-gegen-Gast-Reaktion. Routing: unassigned.
     - **endocrinology.** Deutsch: Endokrinologie. Routing: unassigned.
@@ -560,7 +560,7 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### natural sciences
 
-**Deutsch:** Naturwissenschaften. **Fine-grained status:** 0 of 413 concepts in this branch have an explicit routing assignment.
+**Deutsch:** Naturwissenschaften. **Fine-grained status:** 13 of 413 concepts in this branch have an explicit routing assignment.
 
 - **natural sciences.** Routing: unassigned.
   - **biological sciences.** Deutsch: Biowissenschaften. Routing: unassigned.
@@ -579,17 +579,17 @@ are retained below; neither a label nor a parent route counts as evidence review
       - **behavioural ecology.** Deutsch: Verhaltensökologie. Routing: unassigned.
       - **ethology.** Deutsch: Ethologie. Routing: unassigned.
         - **biological interactions.** Deutsch: biologische Wechselwirkung. Routing: unassigned.
-    - **biological morphology.** Deutsch: biologische Morphologie. Routing: unassigned.
+    - **biological morphology.** Deutsch: biologische Morphologie. Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1511](../claims.md#c-1511), [C-1512](../claims.md#c-1512), [C-1514](../claims.md#c-1514).
       - **comparative morphology.** Deutsch: vergleichenden Morphologie. Routing: unassigned.
       - **functional morphology.** Deutsch: funktionelle Morphologie. Routing: unassigned.
-    - **biophysics.** Deutsch: Biophysik. Routing: unassigned.
-    - **botany.** Deutsch: Botanik. Routing: unassigned.
+    - **biophysics.** Deutsch: Biophysik. Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1511](../claims.md#c-1511), [C-1512](../claims.md#c-1512), [C-1514](../claims.md#c-1514), [C-1521](../claims.md#c-1521), [C-1522](../claims.md#c-1522), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
+    - **botany.** Deutsch: Botanik. Routing: adjacent child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1516](../claims.md#c-1516), [C-1517](../claims.md#c-1517), [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1522](../claims.md#c-1522), [C-1523](../claims.md#c-1523), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
       - **dendrology.** Deutsch: Dendrologie. Routing: unassigned.
-    - **cell biology.** Deutsch: Zellbiologie. Routing: unassigned.
+    - **cell biology.** Deutsch: Zellbiologie. Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1507](../claims.md#c-1507), [C-1510](../claims.md#c-1510), [C-1511](../claims.md#c-1511), [C-1512](../claims.md#c-1512).
       - **cell metabolism.** Deutsch: Zellstoffwechsel. Routing: unassigned.
       - **cell polarity.** Deutsch: Zellpolarität. Routing: unassigned.
-      - **cell signaling.** Deutsch: Zellkommunikation. Routing: unassigned.
-    - **developmental biology.** Deutsch: Entwicklungsbiologie. Routing: unassigned.
+      - **cell signaling.** Deutsch: Zellkommunikation. Routing: adjacent child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1518](../claims.md#c-1518), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
+    - **developmental biology.** Deutsch: Entwicklungsbiologie. Routing: dedicated child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1506](../claims.md#c-1506), [C-1507](../claims.md#c-1507), [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1510](../claims.md#c-1510), [C-1511](../claims.md#c-1511), [C-1512](../claims.md#c-1512), [C-1513](../claims.md#c-1513), [C-1514](../claims.md#c-1514), [C-1515](../claims.md#c-1515), [C-1516](../claims.md#c-1516), [C-1517](../claims.md#c-1517), [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1522](../claims.md#c-1522), [C-1523](../claims.md#c-1523).
     - **ecology.** Deutsch: Ökologie. Routing: unassigned.
       - **ecosystems.** Deutsch: Ökosystem. Routing: unassigned.
         - **coastal ecosystems.** Deutsch: Küstenökosysteme. Routing: unassigned.
@@ -599,10 +599,10 @@ are retained below; neither a label nor a parent route counts as evidence review
       - **landscape ecology.** Deutsch: Landschaftsökologie. Routing: unassigned.
     - **evolutionary biology.** Deutsch: Evolutionsbiologie. Routing: unassigned.
     - **freshwater biology.** Deutsch: Süßwasserbiologie. Routing: unassigned.
-    - **genetics.** Deutsch: Genetik. Routing: unassigned.
+    - **genetics.** Deutsch: Genetik. Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1506](../claims.md#c-1506), [C-1513](../claims.md#c-1513), [C-1516](../claims.md#c-1516), [C-1517](../claims.md#c-1517), [C-1518](../claims.md#c-1518), [C-1523](../claims.md#c-1523).
       - **chromosomes.** Deutsch: Chromosom. Routing: unassigned.
       - **DNA.** Deutsch: DNS. Routing: unassigned.
-      - **epigenetics.** Deutsch: Epigenetik. Routing: unassigned.
+      - **epigenetics.** Deutsch: Epigenetik. Routing: adjacent child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1516](../claims.md#c-1516), [C-1517](../claims.md#c-1517), [C-1518](../claims.md#c-1518).
         - **epigenomes.** Deutsch: Epigenome. Routing: unassigned.
       - **genetic selection.** Deutsch: genetische Selektion. Routing: unassigned.
       - **genomes.** Deutsch: Genom. Routing: unassigned.
@@ -830,13 +830,13 @@ are retained below; neither a label nor a parent route counts as evidence review
       - **pedology.** Deutsch: Bodenkunde. Routing: unassigned.
       - **soil management.** Deutsch: Bodenmanagement. Routing: unassigned.
   - **mathematics.** Deutsch: Mathematik. Routing: unassigned.
-    - **applied mathematics.** Deutsch: angewandte Mathematik. Routing: unassigned.
-      - **dynamical systems.** Deutsch: dynamische Systeme. Routing: unassigned.
+    - **applied mathematics.** Deutsch: angewandte Mathematik. Routing: dedicated child-level evidence via [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md). Claims: [C-1526](../claims.md#c-1526), [C-1527](../claims.md#c-1527), [C-1528](../claims.md#c-1528), [C-1529](../claims.md#c-1529).
+      - **dynamical systems.** Deutsch: dynamische Systeme. Routing: dedicated child-level evidence via [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md). Claims: [C-1526](../claims.md#c-1526), [C-1527](../claims.md#c-1527), [C-1529](../claims.md#c-1529).
       - **game theory.** Deutsch: Spieltheorie. Routing: unassigned.
       - **mathematical model.** Deutsch: mathematisches Modell. Routing: unassigned.
       - **mathematical physics.** Deutsch: mathematische Physik. Routing: unassigned.
         - **conformal field theory.** Deutsch: Konforme Feldtheorie. Routing: unassigned.
-      - **numerical analysis.** Deutsch: numerische Analyse. Routing: unassigned.
+      - **numerical analysis.** Deutsch: numerische Analyse. Routing: dedicated child-level evidence via [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md). Claims: [C-1528](../claims.md#c-1528), [C-1529](../claims.md#c-1529).
       - **statistics and probability.** Deutsch: Statistik und Wahrscheinlichkeit. Routing: unassigned.
         - **bayesian statistics.** Deutsch: Bayes-Statistik. Routing: unassigned.
     - **pure mathematics.** Deutsch: reine Mathematik. Routing: unassigned.
@@ -855,8 +855,8 @@ are retained below; neither a label nor a parent route counts as evidence review
       - **geometry.** Deutsch: Geometrie. Routing: unassigned.
       - **mathematical analysis.** Deutsch: mathematische Analyse. Routing: unassigned.
         - **complex analysis.** Deutsch: komplexe Analyse. Routing: unassigned.
-        - **differential equations.** Deutsch: Differentialgleichungen. Routing: unassigned.
-          - **partial differential equations.** Deutsch: partielle Differentialgleichungen. Routing: unassigned.
+        - **differential equations.** Deutsch: Differentialgleichungen. Routing: adjacent child-level evidence via [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md). Claims: [C-1526](../claims.md#c-1526), [C-1527](../claims.md#c-1527), [C-1528](../claims.md#c-1528), [C-1529](../claims.md#c-1529).
+          - **partial differential equations.** Deutsch: partielle Differentialgleichungen. Routing: adjacent child-level evidence via [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md). Claims: [C-1528](../claims.md#c-1528).
         - **fourier analysis.** Deutsch: Fourier-Analyse. Routing: unassigned.
         - **functional analysis.** Deutsch: Funktionalanalysis. Routing: unassigned.
           - **operator algebra.** Deutsch: Operator-Algebra. Routing: unassigned.
@@ -1268,31 +1268,31 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### 2.11 Grundlagen der Biologie und Medizin
 
-**Parent route:** dedicated parent-level audit via [cellular quality control](../audits/2026-08-05-cellular-quality-control.md), [developmental morphogenesis](../audits/2026-08-05-developmental-morphogenesis.md), [clinical specialties medical agricultural biotechnology](../audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md).
+**Parent route:** dedicated parent-level audit via [cellular quality control](../audits/2026-08-05-cellular-quality-control.md), [developmental morphogenesis](../audits/2026-08-05-developmental-morphogenesis.md), [clinical specialties medical agricultural biotechnology](../audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md), [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md).
 
-**Fine-grained status:** 0 of 7 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 5 of 7 subjects have an explicit child-level routing assignment.
 
 - **2.11-01 — Biochemie.** Routing: unassigned.
-- **2.11-02 — Biophysik.** Routing: unassigned.
-- **2.11-03 — Zellbiologie.** Routing: unassigned.
+- **2.11-02 — Biophysik.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1511](../claims.md#c-1511), [C-1512](../claims.md#c-1512), [C-1514](../claims.md#c-1514).
+- **2.11-03 — Zellbiologie.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1507](../claims.md#c-1507), [C-1510](../claims.md#c-1510), [C-1511](../claims.md#c-1511), [C-1512](../claims.md#c-1512).
 - **2.11-04 — Strukturbiologie.** Routing: unassigned.
-- **2.11-05 — Allgemeine Genetik und funktionelle Genomforschung.** Routing: unassigned.
-- **2.11-06 — Entwicklungsbiologie.** Routing: unassigned.
-- **2.11-07 — Bioinformatik und Theoretische Biologie.** Routing: unassigned.
+- **2.11-05 — Allgemeine Genetik und funktionelle Genomforschung.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1506](../claims.md#c-1506), [C-1513](../claims.md#c-1513).
+- **2.11-06 — Entwicklungsbiologie.** Routing: dedicated child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1506](../claims.md#c-1506), [C-1507](../claims.md#c-1507), [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1510](../claims.md#c-1510), [C-1511](../claims.md#c-1511), [C-1512](../claims.md#c-1512), [C-1513](../claims.md#c-1513), [C-1514](../claims.md#c-1514), [C-1515](../claims.md#c-1515).
+- **2.11-07 — Bioinformatik und Theoretische Biologie.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1510](../claims.md#c-1510), [C-1514](../claims.md#c-1514), [C-1515](../claims.md#c-1515).
 
 ### 2.12 Pflanzenwissenschaften
 
-**Parent route:** dedicated parent-level audit via [plant distributed control](../audits/2026-08-05-plant-distributed-control.md), [soil crop multiresource colimitation](../audits/2026-08-21-soil-crop-multiresource-colimitation.md).
+**Parent route:** dedicated parent-level audit via [plant distributed control](../audits/2026-08-05-plant-distributed-control.md), [soil crop multiresource colimitation](../audits/2026-08-21-soil-crop-multiresource-colimitation.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md).
 
-**Fine-grained status:** 0 of 7 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 4 of 7 subjects have an explicit child-level routing assignment.
 
 - **2.12-01 — Evolution und Systematik der Pflanzen und Pilze.** Routing: unassigned.
 - **2.12-02 — Ökologie und Biodiversität der Pflanzen und Ökosysteme.** Routing: unassigned.
 - **2.12-03 — Organismische Interaktionen, chemische Ökologie und Mikrobiome pflanzlicher Systeme.** Routing: unassigned.
-- **2.12-04 — Pflanzenphysiologie.** Routing: unassigned.
-- **2.12-05 — Biochemie und Biophysik der Pflanzen.** Routing: unassigned.
-- **2.12-06 — Zell- und Entwicklungsbiologie der Pflanzen.** Routing: unassigned.
-- **2.12-07 — Genetik und Genomik der Pflanzen.** Routing: unassigned.
+- **2.12-04 — Pflanzenphysiologie.** Routing: dedicated child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1522](../claims.md#c-1522), [C-1523](../claims.md#c-1523), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
+- **2.12-05 — Biochemie und Biophysik der Pflanzen.** Routing: adjacent child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1516](../claims.md#c-1516), [C-1518](../claims.md#c-1518), [C-1520](../claims.md#c-1520), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
+- **2.12-06 — Zell- und Entwicklungsbiologie der Pflanzen.** Routing: dedicated child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1516](../claims.md#c-1516), [C-1517](../claims.md#c-1517), [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1522](../claims.md#c-1522), [C-1523](../claims.md#c-1523).
+- **2.12-07 — Genetik und Genomik der Pflanzen.** Routing: adjacent child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1516](../claims.md#c-1516), [C-1517](../claims.md#c-1517), [C-1518](../claims.md#c-1518), [C-1523](../claims.md#c-1523).
 
 ### 2.13 Zoologie
 
@@ -1498,11 +1498,11 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### 3.31 Mathematik
 
-**Parent route:** dedicated parent-level audit via [mathematical practice proof discovery](../audits/2026-08-05-mathematical-practice-proof-discovery.md).
+**Parent route:** dedicated parent-level audit via [mathematical practice proof discovery](../audits/2026-08-05-mathematical-practice-proof-discovery.md), [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md).
 
-**Fine-grained status:** 0 of 1 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 1 of 1 subjects have an explicit child-level routing assignment.
 
-- **3.31-01 — Mathematik.** Routing: unassigned.
+- **3.31-01 — Mathematik.** Routing: dedicated child-level evidence via [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md). Claims: [C-1526](../claims.md#c-1526), [C-1527](../claims.md#c-1527), [C-1528](../claims.md#c-1528), [C-1529](../claims.md#c-1529).
 
 ### 3.41 Atmosphären-, Meeres- und Klimaforschung
 
@@ -1837,28 +1837,28 @@ route.
 
 ### 31 BIOLOGICAL SCIENCES
 
-**Parent route:** dedicated parent-level audit via [cellular quality control](../audits/2026-08-05-cellular-quality-control.md), [collective ecological resilience](../audits/2026-08-05-collective-ecological-resilience.md), [developmental morphogenesis](../audits/2026-08-05-developmental-morphogenesis.md), [microbial ecology biofilms](../audits/2026-08-05-microbial-ecology-biofilms.md), [plant distributed control](../audits/2026-08-05-plant-distributed-control.md), [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md).
+**Parent route:** dedicated parent-level audit via [cellular quality control](../audits/2026-08-05-cellular-quality-control.md), [collective ecological resilience](../audits/2026-08-05-collective-ecological-resilience.md), [developmental morphogenesis](../audits/2026-08-05-developmental-morphogenesis.md), [microbial ecology biofilms](../audits/2026-08-05-microbial-ecology-biofilms.md), [plant distributed control](../audits/2026-08-05-plant-distributed-control.md), [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md), [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md).
 
-**Fine-grained status:** 0 of 10 groups and 2 of 98 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 10 groups and 13 of 98 fields have an explicit child-level routing assignment.
 
 #### 3101 Biochemistry and cell biology
 
 **Routing: unassigned.** **Named fields:** 15.
 
 - **310101 — Analytical biochemistry.** Routing: unassigned.
-- **310102 — Cell development, proliferation and death.** Routing: unassigned.
+- **310102 — Cell development, proliferation and death.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1507](../claims.md#c-1507).
 - **310103 — Cell metabolism.** Routing: unassigned.
 - **310104 — Cell neurochemistry.** Routing: unassigned.
-- **310105 — Cellular interactions (incl. adhesion, matrix, cell wall).** Routing: unassigned.
+- **310105 — Cellular interactions (incl. adhesion, matrix, cell wall).** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1510](../claims.md#c-1510), [C-1511](../claims.md#c-1511), [C-1512](../claims.md#c-1512).
 - **310106 — Enzymes.** Routing: unassigned.
 - **310107 — Glycobiology.** Routing: unassigned.
 - **310108 — Protein trafficking.** Routing: unassigned.
 - **310109 — Proteomics and intermolecular interactions (excl. medical proteomics).** Routing: unassigned.
 - **310110 — Receptors and membrane biology.** Routing: unassigned.
-- **310111 — Signal transduction.** Routing: unassigned.
+- **310111 — Signal transduction.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1510](../claims.md#c-1510), [C-1518](../claims.md#c-1518), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
 - **310112 — Structural biology (incl. macromolecular modelling).** Routing: unassigned.
 - **310113 — Synthetic biology.** Routing: unassigned.
-- **310114 — Systems biology.** Routing: unassigned.
+- **310114 — Systems biology.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1514](../claims.md#c-1514), [C-1515](../claims.md#c-1515).
 - **310199 — Biochemistry and cell biology not elsewhere classified.** Routing: unassigned.
 
 #### 3102 Bioinformatics and computational biology
@@ -1913,8 +1913,8 @@ route.
 
 - **310501 — Anthropological genetics.** Routing: unassigned.
 - **310502 — Cell and nuclear division.** Routing: unassigned.
-- **310503 — Developmental genetics (incl. sex determination).** Routing: unassigned.
-- **310504 — Epigenetics (incl. genome methylation and epigenomics).** Routing: unassigned.
+- **310503 — Developmental genetics (incl. sex determination).** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1506](../claims.md#c-1506), [C-1513](../claims.md#c-1513).
+- **310504 — Epigenetics (incl. genome methylation and epigenomics).** Routing: adjacent child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1516](../claims.md#c-1516), [C-1517](../claims.md#c-1517), [C-1518](../claims.md#c-1518).
 - **310505 — Gene expression (incl. microarray and other genome-wide approaches).** Routing: unassigned.
 - **310506 — Gene mapping.** Routing: unassigned.
 - **310507 — Genetic immunology.** Routing: unassigned.
@@ -1954,11 +1954,11 @@ route.
 **Routing: unassigned.** **Named fields:** 7.
 
 - **310801 — Phycology (incl. marine grasses).** Routing: unassigned.
-- **310802 — Plant biochemistry.** Routing: unassigned.
-- **310803 — Plant cell and molecular biology.** Routing: unassigned.
-- **310804 — Plant developmental and reproductive biology.** Routing: unassigned.
+- **310802 — Plant biochemistry.** Routing: adjacent child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1520](../claims.md#c-1520), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
+- **310803 — Plant cell and molecular biology.** Routing: adjacent child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1516](../claims.md#c-1516), [C-1517](../claims.md#c-1517), [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1523](../claims.md#c-1523), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
+- **310804 — Plant developmental and reproductive biology.** Routing: dedicated child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1516](../claims.md#c-1516), [C-1517](../claims.md#c-1517), [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1522](../claims.md#c-1522), [C-1523](../claims.md#c-1523).
 - **310805 — Plant pathology.** Routing: unassigned.
-- **310806 — Plant physiology.** Routing: unassigned.
+- **310806 — Plant physiology.** Routing: dedicated child-level evidence via [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md). Claims: [C-1518](../claims.md#c-1518), [C-1519](../claims.md#c-1519), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1522](../claims.md#c-1522), [C-1523](../claims.md#c-1523), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525).
 - **310899 — Plant biology not elsewhere classified.** Routing: unassigned.
 
 #### 3109 Zoology
@@ -1967,7 +1967,7 @@ route.
 
 - **310901 — Animal behaviour.** Routing: unassigned.
 - **310902 — Animal cell and molecular biology.** Routing: unassigned.
-- **310903 — Animal developmental and reproductive biology.** Routing: unassigned.
+- **310903 — Animal developmental and reproductive biology.** Routing: dedicated child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1506](../claims.md#c-1506), [C-1507](../claims.md#c-1507), [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1510](../claims.md#c-1510), [C-1511](../claims.md#c-1511), [C-1512](../claims.md#c-1512), [C-1513](../claims.md#c-1513), [C-1514](../claims.md#c-1514), [C-1515](../claims.md#c-1515).
 - **310904 — Animal diet and nutrition.** Routing: unassigned.
 - **310905 — Animal immunology.** Routing: unassigned.
 - **310906 — Animal neurobiology.** Routing: unassigned.
@@ -1993,7 +1993,7 @@ route.
 
 **Parent route:** dedicated parent-level audit via [pathology rehabilitation](../audits/2026-08-05-pathology-rehabilitation.md), [pharmacology toxicology](../audits/2026-08-05-pharmacology-toxicology.md), [epidemiology and surveillance control](../audits/2026-08-05-epidemiology-and-surveillance-control.md), [nursing care health services](../audits/2026-08-21-nursing-care-health-services.md), [clinical intervention pathways](../audits/2026-08-24-clinical-intervention-pathways.md), [clinical specialties medical agricultural biotechnology](../audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md).
 
-**Fine-grained status:** 0 of 16 groups and 1 of 129 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 16 groups and 2 of 129 fields have an explicit child-level routing assignment.
 
 #### 3201 Cardiovascular medicine and haematology
 
@@ -2092,7 +2092,7 @@ route.
 - **320603 — Medical molecular engineering of nucleic acids and proteins.** Routing: unassigned.
 - **320604 — Nanomedicine.** Routing: unassigned.
 - **320605 — Nanotoxicology, health and safety.** Routing: unassigned.
-- **320606 — Regenerative medicine (incl. stem cells).** Routing: unassigned.
+- **320606 — Regenerative medicine (incl. stem cells).** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1506](../claims.md#c-1506), [C-1507](../claims.md#c-1507).
 - **320699 — Medical biotechnology not elsewhere classified.** Routing: unassigned.
 
 #### 3207 Medical microbiology
@@ -2878,7 +2878,7 @@ route.
 
 **Parent route:** dedicated parent-level audit via [engineering analogues](../audits/2026-08-05-engineering-analogues.md), [mechanical civil resilience](../audits/2026-08-05-mechanical-civil-resilience.md), [process engineering](../audits/2026-08-05-process-engineering.md), [power grids protection and recovery](../audits/2026-08-05-power-grids-protection-and-recovery.md), [polymer research adaptive materials](../audits/2026-08-21-polymer-research-adaptive-materials.md), [production maintenance nanomanufacturing communications material qualification](../audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md), [computing compilers networking visualization](../audits/2026-08-24-computing-compilers-networking-visualization.md), [medical devices biomedical engineering](../audits/2026-08-24-medical-devices-biomedical-engineering.md), [environmental engineering water waste remediation](../audits/2026-08-24-environmental-engineering-water-waste-remediation.md), [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md).
 
-**Fine-grained status:** 0 of 20 groups and 2 of 196 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 20 groups and 3 of 196 fields have an explicit child-level routing assignment.
 
 #### 4001 Aerospace engineering
 
@@ -2914,7 +2914,7 @@ route.
 - **400304 — Biomedical imaging.** Routing: unassigned.
 - **400305 — Biomedical instrumentation.** Routing: unassigned.
 - **400306 — Computational physiology.** Routing: unassigned.
-- **400307 — Mechanobiology.** Routing: unassigned.
+- **400307 — Mechanobiology.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1511](../claims.md#c-1511), [C-1512](../claims.md#c-1512).
 - **400308 — Medical devices.** Routing: unassigned.
 - **400309 — Neural engineering.** Routing: unassigned.
 - **400310 — Rehabilitation engineering.** Routing: unassigned.
@@ -4495,19 +4495,19 @@ route.
 
 ### 49 MATHEMATICAL SCIENCES
 
-**Parent route:** dedicated parent-level audit via [mathematical practice proof discovery](../audits/2026-08-05-mathematical-practice-proof-discovery.md).
+**Parent route:** dedicated parent-level audit via [mathematical practice proof discovery](../audits/2026-08-05-mathematical-practice-proof-discovery.md), [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md).
 
-**Fine-grained status:** 0 of 6 groups and 0 of 48 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 6 groups and 5 of 48 fields have an explicit child-level routing assignment.
 
 #### 4901 Applied mathematics
 
 **Routing: unassigned.** **Named fields:** 10.
 
-- **490101 — Approximation theory and asymptotic methods.** Routing: unassigned.
+- **490101 — Approximation theory and asymptotic methods.** Routing: dedicated child-level evidence via [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md). Claims: [C-1527](../claims.md#c-1527).
 - **490102 — Biological mathematics.** Routing: unassigned.
 - **490103 — Calculus of variations, mathematical aspects of systems theory and control theory.** Routing: unassigned.
 - **490104 — Complex systems.** Routing: unassigned.
-- **490105 — Dynamical systems in applications.** Routing: unassigned.
+- **490105 — Dynamical systems in applications.** Routing: dedicated child-level evidence via [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md). Claims: [C-1526](../claims.md#c-1526), [C-1527](../claims.md#c-1527), [C-1529](../claims.md#c-1529).
 - **490106 — Financial mathematics.** Routing: unassigned.
 - **490107 — Mathematical methods and special functions.** Routing: unassigned.
 - **490108 — Operations research.** Routing: unassigned.
@@ -4531,8 +4531,8 @@ route.
 **Routing: unassigned.** **Named fields:** 5.
 
 - **490301 — Experimental mathematics.** Routing: unassigned.
-- **490302 — Numerical analysis.** Routing: unassigned.
-- **490303 — Numerical solution of differential and integral equations.** Routing: unassigned.
+- **490302 — Numerical analysis.** Routing: dedicated child-level evidence via [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md). Claims: [C-1528](../claims.md#c-1528), [C-1529](../claims.md#c-1529).
+- **490303 — Numerical solution of differential and integral equations.** Routing: dedicated child-level evidence via [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md). Claims: [C-1528](../claims.md#c-1528).
 - **490304 — Optimisation.** Routing: unassigned.
 - **490399 — Numerical and computational mathematics not elsewhere classified.** Routing: unassigned.
 
@@ -4548,7 +4548,7 @@ route.
 - **490406 — Lie groups, harmonic and Fourier analysis.** Routing: unassigned.
 - **490407 — Mathematical logic, set theory, lattices and universal algebra.** Routing: unassigned.
 - **490408 — Operator algebras and functional analysis.** Routing: unassigned.
-- **490409 — Ordinary differential equations, difference equations and dynamical systems.** Routing: unassigned.
+- **490409 — Ordinary differential equations, difference equations and dynamical systems.** Routing: adjacent child-level evidence via [applied multiscale reduction](../audits/2026-08-25-applied-multiscale-reduction.md). Claims: [C-1527](../claims.md#c-1527).
 - **490410 — Partial differential equations.** Routing: unassigned.
 - **490411 — Real and complex functions (incl. several variables).** Routing: unassigned.
 - **490412 — Topology.** Routing: unassigned.

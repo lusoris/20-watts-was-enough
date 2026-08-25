@@ -22364,3 +22364,762 @@ tracks C-1488--C-1496 as one no-promotion evaluation bundle.
 
 **Shared roadmap:** the [F-021 tribology breadth row](../concept/90-research-roadmap.md#breadth-wave-decisions-and-next-queue)
 tracks C-1497--C-1505 as one no-promotion evaluation bundle.
+
+### C-1506
+
+- **Statement:** In the studied axolotl limb interventions, transient Sonic
+  hedgehog exposure during regeneration rewrote anterior blastema cells into a
+  persistent Hand2-positive posterior-memory state observable after complete
+  regeneration and re-amputation; comparable exposure did not rewrite
+  uninjured cells.
+- **Status:** established in the cited axolotl interventions; asymmetric
+  Hand2--Shh positive feedback is a source-supported mechanistic account, not a
+  universal positional-memory law.
+- **Primary source:** [Otsuki et al. 2025](https://doi.org/10.1038/s41586-025-09036-5).
+- **Rationale:** the result adds causal writing, a repair-specific competence
+  window, persistence, and directional hysteresis beyond static lineage or
+  positional labels.
+- **Proposed AI translation:** retain local role metadata through ordinary
+  operation, but permit versioned writes only inside an authenticated repair
+  window with independent validation and rollback.
+- **Efficiency mechanism:** valid retained context may reduce repair search,
+  communication, and parameter updates.
+- **Failure modes:** poisoned memory, false repair-window opening, wrong-pole
+  propagation, one-way lock-in, and hidden access to absolute coordinates or a
+  target snapshot.
+- **Measurable prediction:** under valid surviving memory, gated persistence
+  reduces time, messages, and writes to restore service relative to a
+  context-free local reconstruction null without increasing wrong-role repair;
+  the advantage must disappear or trigger abstention under common-mode memory
+  corruption.
+- **Open question:** can support and corruption be detected cheaply enough to
+  justify retaining writable positional state?
+- **Used by:** [DEV-T01](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t01-hysteretic-positional-memory).
+- **Traceability:** [source audit](audits/2026-08-25-developmental-regeneration-depth.md#c-1506) · [affected chapter](../concept/10-neurogenesis-and-routing.md#positional-instruction-repair-capacity-and-structural-fields).
+- **Disposition:** scoped central claim proposal; no new principle.
+
+### C-1507
+
+- **Statement:** In the studied planarian system, pluripotent neoblasts supply
+  replacement capacity while differentiated body-wall muscle cells express
+  position-control genes and alter that expression after injury even in the
+  absence of neoblasts.
+- **Status:** established for the cited expression, irradiation, and injury
+  experiments.
+- **Primary source:** [Witchley et al. 2013](https://doi.org/10.1016/j.celrep.2013.07.022).
+- **Rationale:** repair capacity and repair instruction are separable roles;
+  neither a stem-cell pool nor a positional map alone is a complete repair
+  system.
+- **Proposed AI translation:** store reconstruction constraints in surviving
+  task modules while a replaceable worker pool performs repair.
+- **Efficiency mechanism:** distributed instruction may reduce central
+  checkpoint state and allow repair-worker replacement.
+- **Failure modes:** coupled deletion of workers and instruction holders,
+  stale constraints, instruction/task interference, and undisclosed global
+  templates.
+- **Measurable prediction:** a two-plane design tolerates worker-pool deletion
+  with fewer replicated bytes than a checkpoint null at matched restoration
+  quality, while explicitly failing or abstaining when too little instruction
+  support survives.
+- **Open question:** what minimum surviving support makes the distributed
+  instruction state identifiable rather than merely suggestive?
+- **Used by:** [DEV-T02](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t02-capacityinstruction-separation).
+- **Traceability:** [source audit](audits/2026-08-25-developmental-regeneration-depth.md#c-1507) · [affected chapter](../concept/10-neurogenesis-and-routing.md#positional-instruction-repair-capacity-and-structural-fields).
+- **Disposition:** scoped central claim proposal; reinforces maintenance-plane
+  separation.
+
+### C-1508
+
+- **Statement:** In Xenopus embryos, low BMP activity increased dorsal `Admp`;
+  combined depletion of ADMP and BMP2/4/7 eliminated dorsoventral
+  self-regulation, while dorsal or ventral wild-type grafts restored scoped
+  long-range differentiation in depleted hosts.
+- **Status:** established for the cited perturbations; transfer to other fields
+  or artificial controllers is unestablished.
+- **Primary source:** [Reversade and De Robertis 2005](https://doi.org/10.1016/j.cell.2005.08.047).
+- **Rationale:** opposed sources under reciprocal regulation can compensate for
+  partial source loss rather than merely broadcast a fixed coordinate.
+- **Proposed AI translation:** use separated controller sources with reciprocal
+  error feedback and explicit double-source failure detection.
+- **Efficiency mechanism:** local compensation may restore a field without a
+  full global recomputation.
+- **Failure modes:** dual-source loss, oscillation, delay, antagonist leakage,
+  and ordinary distributed PI/MPC control matching the result.
+- **Measurable prediction:** after single-source loss, a reciprocal-source arm
+  restores the target field with fewer global messages than a distributed
+  robust-control null at non-inferior error; it must declare unsupported state
+  after double-source loss.
+- **Open question:** does reciprocal source control offer any resource benefit
+  after stability margins and failure detection are charged?
+- **Used by:** [DEV-T03](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t03-compensating-pattern-sources).
+- **Traceability:** [source audit](audits/2026-08-25-developmental-regeneration-depth.md#c-1508) · [affected chapter](../concept/10-neurogenesis-and-routing.md#positional-instruction-repair-capacity-and-structural-fields).
+- **Disposition:** scoped central claim proposal.
+
+### C-1509
+
+- **Statement:** In growing Drosophila wing discs, Dpp-gradient scaling failed
+  after `pentagone` disruption; evidence localized Pent action and supported
+  feedback regulation of receptors/co-receptors, with an experimentally
+  observed size beyond which scaling failed.
+- **Status:** established experimental boundary with a model-qualified
+  receiver-feedback mechanism.
+- **Primary source:** [Zhu et al. 2020](https://doi.org/10.1016/j.devcel.2020.05.029).
+- **Rationale:** scaling is receiver- and support-dependent and has a finite
+  operating envelope; it is not proof of unlimited size invariance.
+- **Proposed AI translation:** growing module populations adjust local receiver
+  sensitivity while recording the calibrated size/support envelope.
+- **Efficiency mechanism:** receiver adaptation may avoid repeated global
+  coordinate redistribution.
+- **Failure modes:** saturation, delayed feedback, abrupt topology change,
+  hidden size broadcasts, and extrapolation presented as scaling.
+- **Measurable prediction:** within the registered size range, receiver
+  feedback holds normalized boundary error while reducing size-broadcast bytes
+  relative to a global-normalization null; beyond-range tests either expose a
+  predeclared breakdown or abstention.
+- **Open question:** can an envelope detector be cheaper than simply supplying
+  current system size?
+- **Used by:** [DEV-T04](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t04-finite-scaling-envelope).
+- **Traceability:** [source audit](audits/2026-08-25-developmental-regeneration-depth.md#c-1509) · [affected chapter](../concept/10-neurogenesis-and-routing.md#positional-instruction-repair-capacity-and-structural-fields).
+- **Disposition:** scoped central claim proposal.
+
+### C-1510
+
+- **Statement:** In the cited micropatterned human embryonic-stem-cell assay,
+  central high-density cells laterally localized TGF-beta receptors and were
+  insulated from apical ligand, edge cells retained apical access, and
+  BMP4-induced Noggin plus edge sensing accounted for scoped radial fate
+  positions.
+- **Status:** established in the in-vitro assay; no claim about an intact human
+  embryo is made.
+- **Primary source:** [Etoc et al. 2016](https://doi.org/10.1016/j.devcel.2016.09.016).
+- **Rationale:** geometry and interface orientation can change the observation
+  operator before any intracellular decoder acts.
+- **Proposed AI translation:** represent boundary access and sensor orientation
+  explicitly rather than treating all nodes as receiving the same field.
+- **Efficiency mechanism:** boundary-relative state may be inferred from local
+  access plus transported inhibition instead of a global coordinate table.
+- **Failure modes:** substrate/density dependence, diffusion cost, irregular
+  geometry, sensor inversion, and coordinate leakage.
+- **Measurable prediction:** an edge-aware local arm transfers across held-out
+  shapes with lower coordinate bytes than an exact graph-distance null at
+  non-inferior role error; receptor-orientation and inhibitor ablations produce
+  distinct failures.
+- **Open question:** when is explicit distributed graph distance already
+  cheaper and more reliable?
+- **Used by:** [DEV-T05](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t05-boundary-conditioned-observability).
+- **Traceability:** [source audit](audits/2026-08-25-developmental-regeneration-depth.md#c-1510) · [affected chapter](../concept/10-neurogenesis-and-routing.md#positional-instruction-repair-capacity-and-structural-fields).
+- **Disposition:** scoped central claim proposal.
+
+### C-1511
+
+- **Statement:** In the studied Drosophila tissue, mechanical tension
+  stabilized and recruited cortical Myosin II, imposed force recruited Myosin
+  II, and tension relief rapidly removed it, supporting a positive-feedback
+  route to multicellular cable formation.
+- **Status:** established for the cited force, ablation, imaging, and recovery
+  experiments.
+- **Primary source:** [Fernandez-Gonzalez et al. 2009](https://doi.org/10.1016/j.devcel.2009.09.003).
+- **Rationale:** generated load can become the signal that reinforces the path
+  carrying that load.
+- **Proposed AI translation:** use local traffic/stress telemetry to reinforce
+  useful paths with caps, decay, and rollback.
+- **Efficiency mechanism:** persistent local structure may replace repeated
+  global routing decisions.
+- **Failure modes:** runaway reinforcement, hotspot capture, misleading
+  transient load, monopoly, and backpressure/adaptive routing dominating.
+- **Measurable prediction:** capped load-sensitive reinforcement reduces
+  routing updates or messages on stable correlated loads without worsening
+  accepted-service tails, but loses its benefit or reopens under a hostile load
+  reversal.
+- **Open question:** is the write/maintenance cost lower than continual routing
+  computation on a real workstation?
+- **Used by:** [DEV-T06](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t06-load-dependent-reinforcement).
+- **Traceability:** [source audit](audits/2026-08-25-developmental-regeneration-depth.md#c-1511) · [affected chapter](../concept/10-neurogenesis-and-routing.md#positional-instruction-repair-capacity-and-structural-fields).
+- **Disposition:** scoped central claim proposal.
+
+### C-1512
+
+- **Statement:** At the studied Drosophila compartment boundary, dividing
+  cells transiently invaded an adjacent compartment and were returned by a
+  Myosin-II cable; local Myosin-II inactivation allowed persistent mixing.
+- **Status:** established in the cited live-imaging and local-inactivation
+  experiments.
+- **Primary source:** [Monier et al. 2010](https://doi.org/10.1038/ncb2005).
+- **Rationale:** a soft identity boundary can be translated into an actively
+  maintained physical barrier after identity is established.
+- **Proposed AI translation:** harden validated module interfaces only after a
+  maturity criterion, with explicit reopening and rollback.
+- **Efficiency mechanism:** a stable boundary may reduce cross-module traffic
+  and repeated conflict resolution.
+- **Failure modes:** premature lock-in, fragmentation, blocked useful exchange,
+  maintenance burden, and static partitions matching the result.
+- **Measurable prediction:** delayed reversible hardening lowers steady
+  cross-boundary leakage or routing work at non-inferior service, while a
+  post-hardening regime shift exposes lower reopen cost than irreversible
+  hardening.
+- **Open question:** which maturity evidence predicts a long enough stable
+  interval to amortize the write?
+- **Used by:** [DEV-T07](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t07-reversible-boundary-consolidation).
+- **Traceability:** [source audit](audits/2026-08-25-developmental-regeneration-depth.md#c-1512) · [affected chapter](../concept/10-neurogenesis-and-routing.md#positional-instruction-repair-capacity-and-structural-fields).
+- **Disposition:** scoped central claim proposal.
+
+### C-1513
+
+- **Statement:** In the cited Drosophila loci, overlapping primary and shadow
+  enhancers that appeared redundant under permissive conditions improved
+  expression or phenotype robustness under elevated temperature, reduced
+  activator input, or genetic perturbation.
+- **Status:** established for the studied loci and perturbations; no universal
+  enhancer or redundancy benefit is claimed.
+- **Primary sources:** [Perry et al. 2010](https://doi.org/10.1016/j.cub.2010.07.043) and [Frankel et al. 2010](https://doi.org/10.1038/nature09158).
+- **Rationale:** apparent redundancy at one operating point can be
+  conditionally non-redundant across a declared perturbation family.
+- **Proposed AI translation:** retain small control paths with partially
+  distinct input dependencies instead of duplicating a whole model.
+- **Efficiency mechanism:** input-diverse redundancy may improve tail
+  reliability with less compute/state than full replication.
+- **Failure modes:** common-mode inputs, correlated implementation, hidden
+  unique functions, chronic redundancy cost, and post-hoc perturbation choice.
+- **Measurable prediction:** two small diverse gates reduce hostile-family
+  failure at lower bytes/operations than full dual replication without a
+  nominal-service gain being required.
+- **Open question:** can diversity support be measured before the rare
+  perturbation arrives?
+- **Used by:** [DEV-T08](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t08-conditional-regulatory-redundancy).
+- **Traceability:** [source audit](audits/2026-08-25-developmental-regeneration-depth.md#c-1513) · [affected chapter](../concept/10-neurogenesis-and-routing.md#positional-instruction-repair-capacity-and-structural-fields).
+- **Disposition:** scoped central claim proposal.
+
+### C-1514
+
+- **Statement:** BMP, Sox9, and Wnt perturbation/expression data in the studied
+  mouse limb were consistent with a reaction--diffusion model that reproduced
+  wild-type and perturbed digit patterns while global morphogen gradients
+  modulated the periodic pattern.
+- **Status:** plausible mechanistic interpretation supported by experiment and
+  model; the exact Turing network is not uniquely identified.
+- **Primary source:** [Raspopovic et al. 2014](https://doi.org/10.1126/science.1252960).
+- **Rationale:** local wavelength generation and global positional context can
+  be composed rather than treated as competing complete explanations.
+- **Proposed AI translation:** local modules form repeated specialists while a
+  coarse context field sets admissible region, wavelength, or orientation.
+- **Efficiency mechanism:** local self-organization may reduce explicit global
+  role assignment.
+- **Failure modes:** non-identifiability, boundary-selected modes, growth
+  confounds, parameter fragility, and spectral/GNN assignment matching it.
+- **Measurable prediction:** the composed arm transfers across local damage and
+  context shifts with fewer assignment bytes than a central spectral null at
+  non-inferior pattern/service error; local-only and global-only ablations fail
+  on different registered axes.
+- **Open question:** does any communication advantage survive convergence and
+  parameter-selection cost?
+- **Used by:** [DEV-T09](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t09-localglobal-pattern-composition).
+- **Traceability:** [source audit](audits/2026-08-25-developmental-regeneration-depth.md#c-1514) · [affected chapter](../concept/10-neurogenesis-and-routing.md#positional-instruction-repair-capacity-and-structural-fields).
+- **Disposition:** plausible scoped central claim proposal.
+
+### C-1515
+
+- **Statement:** BMP4/Vg1 perturbations in the studied chick embryos moved,
+  suppressed, or multiplied primitive-streak sites, and a homogeneous local
+  paracrine model reproduced opposing domains and several perturbations
+  without a supplied coordinate bias.
+- **Status:** plausible as the composed symmetry-breaking account; the cited
+  perturbation effects are established, but the local paracrine model is
+  non-unique and at least one modeled intracellular factor remained
+  unidentified.
+- **Primary source:** [Arias et al. 2017](https://doi.org/10.1038/s41598-017-15883-8).
+- **Rationale:** local feedback may select a global pole without the alternating
+  local-fate pattern already covered by lateral inhibition.
+- **Proposed AI translation:** local mutual feedback and antagonism elect one
+  temporary organizer without a permanent coordinator.
+- **Efficiency mechanism:** local communication may avoid a continuously
+  centralized organizer.
+- **Failure modes:** multiple poles, topology-sensitive convergence, hidden
+  bias, unidentified state, correlated noise, and leader-election nulls
+  dominating.
+- **Measurable prediction:** on anonymous graphs, a local-feedback arm reaches
+  exactly one organizer with non-inferior success and fewer coordinator-state
+  bytes than a mature randomized leader-election null, and re-elects after
+  organizer deletion within the frozen deadline.
+- **Open question:** can it retain a resource advantage once duplicate-pole
+  detection and convergence certification are charged?
+- **Used by:** [DEV-T10](../experiments/fixtures/022-regenerative-positional-memory.md#dev-t10-local-feedback-symmetry-breaking).
+- **Traceability:** [source audit](audits/2026-08-25-developmental-regeneration-depth.md#c-1515) · [affected chapter](../concept/10-neurogenesis-and-routing.md#positional-instruction-repair-capacity-and-structural-fields).
+- **Disposition:** plausible scoped central claim proposal.
+
+### C-1516
+
+- **Statement:** In the cited Arabidopsis vernalization studies, stable FLC
+  silencing behaved as a cell/locus-level all-or-nothing switch, while the
+  quantitative whole-plant response tracked the fraction switched as prior
+  cold exposure increased; interrupted-cold experiments and modelling
+  supported digital rather than purely analogue registration at FLC.
+- **Status:** established for the cited FLC reporters, chromatin measurements,
+  interruption protocol, and compatible model class; the molecular
+  temperature-registering element and universality remain unresolved.
+- **Primary sources:** [Angel et al. 2011](https://doi.org/10.1038/nature10241)
+  and [Angel et al. 2015](https://doi.org/10.1073/pnas.1503100112).
+- **Rationale:** population fraction and individual state are different
+  representations; quantitative duration need not require a continuously
+  varying durable state at every unit.
+- **Proposed AI translation:** encode noisy duration in a population of
+  stochastic binary latches with explicit reset and calibration.
+- **Efficiency mechanism:** a stable binary representation may reduce
+  high-precision durable state and repeated analogue writes.
+- **Failure modes:** small-population variance, correlated latches, premature
+  commitment, irreversible error, calibration drift, costly reset, and an
+  exact Bayesian or quantized accumulator matching the result.
+- **Measurable prediction:** on interrupted/noisy cue schedules, the latch arm
+  improves calibrated duration/commitment loss or reduces state writes at
+  non-inferior loss versus the strongest equal-state filter, without excess
+  premature commitments; the advantage must disappear outside the registered
+  thresholded-retention regime.
+- **Open question:** does any benefit survive RNG state, latch correlation,
+  calibration, and reset accounting?
+- **Used by:** [PLM-T01](../experiments/fixtures/023-plant-plasticity-memory-signalling.md#plm-t01-population-switch-duration-memory).
+- **Traceability:** [source audit](audits/2026-08-25-plant-plasticity-memory-signalling.md#c-1516) · [affected chapter](../concept/40-memory-and-consolidation.md#memory-mode-lifetime-and-retrieval-are-separate-axes).
+- **Disposition:** scoped central claim proposal; no new principle.
+
+### C-1517
+
+- **Statement:** In Arabidopsis, FLC silencing induced by vernalization is
+  retained through later somatic growth but actively reset during reproductive
+  and embryonic development; impaired H3K27 demethylation or embryonic
+  reactivation can permit partial inheritance of the vernalized state.
+- **Status:** established for the cited Arabidopsis genetic, chromatin, and
+  developmental interventions; no universal plant inheritance rule is made.
+- **Primary sources:** [Sheldon et al. 2008](https://doi.org/10.1073/pnas.0711453105),
+  [Crevillen et al. 2014](https://doi.org/10.1038/nature13722), and
+  [Tao et al. 2019](https://doi.org/10.1038/s41477-019-0402-3).
+- **Rationale:** retention and reset have separate timing, mechanism, and
+  failure consequences.
+- **Proposed AI translation:** treat lifecycle transition as an authenticated,
+  evidence-gated reset operation rather than incidental forgetting.
+- **Efficiency mechanism:** reset can prevent obsolete consolidated state from
+  biasing a new independent lifecycle without discarding useful within-life
+  memory early.
+- **Failure modes:** destroying transferable priors, incomplete reset, lineage
+  leakage, false boundary detection, correlated lifecycles, and ordinary
+  Bayesian change-point adaptation matching the result.
+- **Measurable prediction:** forced reset improves early-life calibration only
+  when cross-lifecycle mutual information is low; an evidence-gated reset
+  follows the correlation crossover without hidden oracle access.
+- **Open question:** can reset evidence be obtained more cheaply than directly
+  estimating and adapting the transition model?
+- **Used by:** [PLM-T02](../experiments/fixtures/023-plant-plasticity-memory-signalling.md#plm-t02-lifecycle-retention-and-reset).
+- **Traceability:** [source audit](audits/2026-08-25-plant-plasticity-memory-signalling.md#c-1517) · [affected chapter](../concept/40-memory-and-consolidation.md#memory-mode-lifetime-and-retrieval-are-separate-axes).
+- **Disposition:** scoped central claim proposal; reinforces memory-lifetime
+  accounting.
+
+### C-1518
+
+- **Statement:** In the cited Arabidopsis heat-stress studies, HSFA2 binding
+  was transient while H3K4 hypermethylation and altered transcription at
+  memory-associated loci persisted; HSFA2/HSFA3 complexes contributed to
+  sustained induction and enhanced reinduction in genetically separable ways.
+- **Status:** established for the cited heat protocols, loci, binding,
+  chromatin, expression, and mutant assays; persistent H3K4 methylation is
+  associated with and regulator-dependent but is not declared the sole memory
+  carrier.
+- **Primary sources:** [Lamke et al. 2016](https://doi.org/10.15252/embj.201592593)
+  and [Friedrich et al. 2021](https://doi.org/10.1038/s41467-021-23786-6).
+- **Rationale:** acute response, trace writing, maintenance, and retrieval are
+  distinct causal stages rather than one undifferentiated memory variable.
+- **Proposed AI translation:** a transient writer deposits keyed, decaying
+  traces that outlive the writer and are read only on matching recurrence.
+- **Efficiency mechanism:** sparse event writes may replace permanent
+  fine-tuning or continuously active recurrence.
+- **Failure modes:** negative transfer, unbounded trace accumulation, wrong-key
+  retrieval, stored output rather than memory, a correlational chromatin mark,
+  and cache/TTL or equal-state recurrent nulls matching the result.
+- **Measurable prediction:** writer/trace/retrieval separation reduces
+  second-event latency or writes within a bounded recurrence window, while
+  independent ablations identify acquisition, maintenance, and retrieval
+  failures and hostile label reversal removes or reverses the benefit.
+- **Open question:** which trace lifetime can be estimated without post-hoc
+  tuning to the recurrence distribution?
+- **Used by:** [PLM-T03](../experiments/fixtures/023-plant-plasticity-memory-signalling.md#plm-t03-transient-writer-trace-and-retrieval).
+- **Traceability:** [source audit](audits/2026-08-25-plant-plasticity-memory-signalling.md#c-1518) · [affected chapter](../concept/40-memory-and-consolidation.md#memory-mode-lifetime-and-retrieval-are-separate-axes).
+- **Disposition:** scoped central claim proposal; narrower than C-026.
+
+### C-1519
+
+- **Statement:** In the cited Arabidopsis study, the shoot apical meristem
+  displayed autonomous heat-stress memory that supported regrowth after a
+  later otherwise lethal treatment, while HSFA2-regulated genes and sugar
+  availability participated in the observed preparedness.
+- **Status:** established for the cited tissue, genotype, treatment, gene, and
+  regrowth assays; tissue generality and the relative causal contribution of
+  stored carbohydrate versus transcriptional state remain bounded.
+- **Primary source:** [Olas et al. 2021](https://doi.org/10.1016/j.molp.2021.05.024),
+  read with its [2024 correction](https://doi.org/10.1016/j.molp.2024.03.010).
+- **Rationale:** preserving regenerative capacity is a different objective
+  from uniformly protecting every current worker, and reserve is part of the
+  mechanism rather than free support.
+- **Proposed AI translation:** place preparedness in module-renewal/control
+  state while explicitly reserving the resources required for recovery.
+- **Efficiency mechanism:** localized state may reduce idle replication when
+  workers are replaceable and regeneration is the bottleneck.
+- **Failure modes:** uncharged reserve, targeted control-plane loss, single
+  point of failure, concentrated attack, independent worker failures for which
+  hot standby is better, and checkpointed recovery matching the result.
+- **Measurable prediction:** under worker-heavy loss, localized regenerative
+  state restores service with fewer idle bytes or maintenance operations than
+  uniform protection at matched reserve; targeted regenerative-state loss is
+  detected and cannot be hidden in mean recovery.
+- **Open question:** when is concentrated preparedness cheaper than a mature
+  checkpoint plus hot standby after correlated-failure risk is charged?
+- **Used by:** [PLM-T04](../experiments/fixtures/023-plant-plasticity-memory-signalling.md#plm-t04-regenerative-locus-and-charged-reserve).
+- **Traceability:** [source audit](audits/2026-08-25-plant-plasticity-memory-signalling.md#c-1519) · [affected chapter](../concept/40-memory-and-consolidation.md#memory-mode-lifetime-and-retrieval-are-separate-axes).
+- **Disposition:** scoped central claim proposal.
+
+### C-1520
+
+- **Statement:** In the cited Arabidopsis systemic-acclimation experiments, a
+  rapidly propagating RBOHD-dependent ROS wave supplied a general systemic
+  signal, while an additional stress-specific signal was required for the
+  appropriate acclimation; ABA signalling contributed to heat-specific
+  systemic acclimation and heat/high-light cross-protection was not generic.
+- **Status:** established for the cited Arabidopsis treatments, mutants,
+  grafts, transcript/metabolite observations, and protection outcomes;
+  pharmacological inhibition and system specificity limit generalisation.
+- **Primary source:** [Suzuki et al. 2013](https://doi.org/10.1105/tpc.113.114595).
+- **Rationale:** reach and readiness do not identify response type; a generic
+  alarm and typed context can be jointly necessary.
+- **Proposed AI translation:** require conjunction of a low-bandwidth common
+  readiness signal and a typed posterior before high-cost action.
+- **Efficiency mechanism:** cheap global readiness may reduce repeated full
+  payload broadcasts while typed gating reduces wrong-mode actions.
+- **Failure modes:** added-channel cost, lost or forged typed context,
+  correlated path failure, latency, hazard mixtures, and a Bayesian classifier
+  or tagged event bus matching the result.
+- **Measurable prediction:** common-plus-typed gating reduces wrong-mode action
+  exposure at matched detection latency and information versus common-only and
+  typed-only ablations; typed-channel swaps change selected response and loss
+  of the common channel suppresses unsupported action.
+- **Open question:** does conjunction offer anything beyond a calibrated
+  POMDP using the same observations and action costs?
+- **Used by:** [PLM-T05](../experiments/fixtures/023-plant-plasticity-memory-signalling.md#plm-t05-common-alarm-plus-typed-context).
+- **Traceability:** [source audit](audits/2026-08-25-plant-plasticity-memory-signalling.md#c-1520) · [affected chapter](../concept/40-memory-and-consolidation.md#memory-mode-lifetime-and-retrieval-are-separate-axes).
+- **Disposition:** scoped central claim proposal; does not duplicate C-205.
+
+### C-1521
+
+- **Statement:** In tissue-specific Arabidopsis RBOHD-complementation
+  experiments, high-light systemic ROS propagation required vascular
+  expression, whereas heat and wounding could propagate through vascular or
+  mesophyll routes; mesophyll propagation was consistent with a contribution
+  to high-light/heat combination integration.
+- **Status:** established for the scoped route-specific complementation,
+  systemic transcript, and heat-acclimation observations; route coding and
+  exact coupling among ROS, calcium, hydraulic, and electrical signals remain
+  plausible rather than established.
+- **Primary source:** [Zandalinas and Mittler 2021](https://doi.org/10.1093/plphys/kiab157).
+- **Rationale:** path support and stress identity can covary; route topology is
+  not automatically an interchangeable transport substrate.
+- **Proposed AI translation:** use overlapping communication layers whose
+  route and payload are both observable, with selective redundancy and
+  explicit common-mode failure accounting.
+- **Efficiency mechanism:** persistent route--event structure may reduce tags
+  or improve fault isolation without provisioning one universal fabric.
+- **Failure modes:** promoter leakage, compensation, route identity carrying
+  no useful information, extra maintenance, common nodes, mapping drift, and a
+  tagged single bus matching the result.
+- **Measurable prediction:** a route-aware multilayer arm improves mixed-event
+  attribution or link-failure tolerance only when route--hazard relationships
+  persist; route randomisation or hostile mapping reversal removes the gain.
+- **Open question:** after route capacity, tags, maintenance, and common-mode
+  nodes are matched, is route semantics still useful?
+- **Used by:** [PLM-T06](../experiments/fixtures/023-plant-plasticity-memory-signalling.md#plm-t06-stress-dependent-route-multiplexing).
+- **Traceability:** [source audit](audits/2026-08-25-plant-plasticity-memory-signalling.md#c-1521) · [affected chapter](../concept/40-memory-and-consolidation.md#memory-mode-lifetime-and-retrieval-are-separate-axes).
+- **Disposition:** scoped central claim proposal.
+
+### C-1522
+
+- **Statement:** In the cited root studies, local water availability acted
+  before lateral-root founder-cell specification, root growth was necessary
+  for normal hydropatterning and generated model-predicted water-potential
+  differences associated with later branch position, while transient root-tip
+  exposure to air invoked a distinct ABA-associated xerobranching response
+  that suppressed later branch formation.
+- **Status:** established for hydropatterning, developmental competence,
+  growth perturbations, auxin/ARF7-associated mechanisms, and xerobranching in
+  the cited Arabidopsis and cereal assays; the precise internal water-potential
+  cue remains model-supported and assay generality is bounded.
+- **Primary sources:** [Bao et al. 2014](https://doi.org/10.1073/pnas.1400966111),
+  [Robbins and Dinneny 2018](https://doi.org/10.1073/pnas.1710709115),
+  [Orosa-Puente et al. 2018](https://doi.org/10.1126/science.aau3956), and
+  [Orman-Ligeza et al. 2018](https://doi.org/10.1016/j.cub.2018.07.074).
+- **Rationale:** action can create an informative disequilibrium before a
+  delayed structural admission; opportunity and anti-opportunity gates are
+  distinct.
+- **Proposed AI translation:** allow a bounded active probe to generate the
+  observation used to admit or suppress a costly persistent branch.
+- **Efficiency mechanism:** active sensing may avoid stranded construction
+  when resource patches persist long enough to amortise probe and branch cost.
+- **Failure modes:** agar/air artifact, model misspecification, passive sensors
+  already supplying equal information, irreversible wrong branches, short
+  patches, sensor-action confounding, and POMDP/MPC or topology optimisation
+  matching the result.
+- **Measurable prediction:** active-probe admission reduces stranded branch
+  cost or resource regret versus passive thresholding, but must be non-inferior
+  to a mature active-sensing/topology null with identical probe authority;
+  rapid patch reversal removes the structural advantage.
+- **Open question:** does sense-by-action add a useful rule after the full
+  value-of-information problem is solved by MPC/POMDP?
+- **Used by:** [PLM-T07](../experiments/fixtures/023-plant-plasticity-memory-signalling.md#plm-t07-sense-by-growth-and-structural-admission).
+- **Traceability:** [source audit](audits/2026-08-25-plant-plasticity-memory-signalling.md#c-1522) · [affected chapter](../concept/40-memory-and-consolidation.md#memory-mode-lifetime-and-retrieval-are-separate-axes).
+- **Disposition:** scoped central claim proposal; extends rather than repeats
+  C-208.
+
+### C-1523
+
+- **Statement:** In the cited Arabidopsis studies, environmental or
+  carbohydrate state in mature leaves influenced stomatal development in
+  subsequently developing leaves; the recent source attributes a route through
+  HXK1, EIN3, SUC2-mediated sucrose transport, KIN10, and SPCH.
+- **Status:** established for the cited Arabidopsis treatments, grafting or
+  transgenic manipulations, transport measurements, and stomatal outcomes;
+  the 2023 paper is interpreted only in its corrected online form and broad
+  environmental or species generality is unresolved.
+- **Primary sources:** [Lake et al. 2001](https://doi.org/10.1038/35075660),
+  [Bao et al. 2023](https://doi.org/10.1073/pnas.2302854120), and its mandatory
+  [2024 correction](https://doi.org/10.1073/pnas.2416561121).
+- **Rationale:** current producer state can regulate the density of interfaces
+  that will exist in future modules after a developmental delay.
+- **Proposed AI translation:** condition future sensing/actuation capacity on
+  sustained exportable resource as well as forecast demand.
+- **Efficiency mechanism:** resource-flow gating may reduce future capacity
+  that cannot be supported, while avoiding purely local demand myopia.
+- **Failure modes:** age, carbon dioxide, light, sugar, and demand confounding;
+  developmental lag; irreversible overprovision; transport bottlenecks; and
+  model-predictive autoscaling matching the result.
+- **Measurable prediction:** under persistent regimes, resource-flow-aware
+  capacity reduces unmet demand plus idle capacity at matched construction and
+  reserve versus local scaling; under rapid reversal or resource--demand
+  decoupling, the advantage disappears or becomes harmful.
+- **Open question:** is resource flow a useful predictor after a mature
+  autoscaler receives the same history and forecasts?
+- **Used by:** [PLM-T08](../experiments/fixtures/023-plant-plasticity-memory-signalling.md#plm-t08-resource-conditioned-future-capacity).
+- **Traceability:** [source audit](audits/2026-08-25-plant-plasticity-memory-signalling.md#c-1523) · [affected chapter](../concept/40-memory-and-consolidation.md#memory-mode-lifetime-and-retrieval-are-separate-axes).
+- **Disposition:** scoped central claim proposal with mandatory correction.
+
+### C-1524
+
+- **Statement:** In Arabidopsis, plasma-membrane GIPC sphingolipids and the
+  MOCA1-dependent headgroup were required for normal salt-induced surface
+  depolarisation, calcium influx, calcium-wave, antiporter, and growth
+  responses; separate imaging localized a rapid salt-triggered root-to-shoot
+  calcium wave to cortex/endodermal routes and implicated TPC1 in that assay.
+- **Status:** plausible as the composed boundary-sensor-to-routed-wave
+  interpretation; the component observations are established, but a universal
+  end-to-end salt code, exclusive sensor, or universal TPC1 mechanism is not
+  established.
+- **Primary sources:** [Jiang et al. 2019](https://doi.org/10.1038/s41586-019-1449-z)
+  and [Choi et al. 2014](https://doi.org/10.1073/pnas.1319955111).
+- **Rationale:** the material boundary can participate in detection before a
+  finite-speed routed signal recruits slower control.
+- **Proposed AI translation:** combine an embedded boundary transfer function
+  with event-triggered propagation and explicit drift/selectivity monitoring.
+- **Efficiency mechanism:** passive boundary detection may reduce idle polling
+  while an event wave limits communication to detected perturbations.
+- **Failure modes:** ion cross-sensitivity, boundary ageing, concentration
+  damage, drift, route outage, false waves, disputed channel interpretation,
+  and a calibrated sensor plus event bus matching the result.
+- **Measurable prediction:** the composed arm reduces polling operations or
+  latency at matched selectivity and false-alarm loss versus the conventional
+  sensor/event-bus null; mixture, drift, and route-outage transfer must expose
+  its limits rather than be averaged away.
+- **Open question:** does embedding detection in the boundary save any
+  resource once calibration, replacement, and event-bus costs are included?
+- **Used by:** [PLM-T09](../experiments/fixtures/023-plant-plasticity-memory-signalling.md#plm-t09-boundary-sensing-and-routed-event-wave).
+- **Traceability:** [source audit](audits/2026-08-25-plant-plasticity-memory-signalling.md#c-1524) · [affected chapter](../concept/40-memory-and-consolidation.md#memory-mode-lifetime-and-retrieval-are-separate-axes).
+- **Disposition:** plausible composed central claim proposal.
+
+### C-1525
+
+- **Statement:** In the cited Arabidopsis studies, phytochrome B activity
+  depended on both photoconversion and temperature-dependent thermal reversion;
+  its state integrated light, temperature, and elapsed night history and
+  affected temperature-responsive development.
+- **Status:** established for the cited Arabidopsis photoreceptor,
+  spectroscopy, mutant, promoter, transcript, and growth experiments; context,
+  tissue, and downstream generality remain bounded.
+- **Primary sources:** [Jung et al. 2016](https://doi.org/10.1126/science.aaf6005)
+  and [Legris et al. 2016](https://doi.org/10.1126/science.aaf5656).
+- **Rationale:** one dynamical sensor state can be jointly sensitive to
+  multiple physical variables and their history; instantaneous channels need
+  not be independently identifiable.
+- **Proposed AI translation:** use a compact coupled state-space sensor only
+  when a calibrated observation model preserves task-relevant identifiability.
+- **Efficiency mechanism:** stable physical coupling may reduce sensor count,
+  state, or sampling while retaining adequate joint estimates.
+- **Failure modes:** light--temperature confounding, non-identifiability,
+  thermal drift, context-specific downstream action, calibration burden, and
+  independent calibrated sensors or nonlinear filtering matching the result.
+- **Measurable prediction:** on factorial light--temperature histories, the
+  coupled state matches independent-sensor task loss with fewer sensing/state
+  resources only inside its calibrated envelope; changed reversion dynamics or
+  daytime transfer exposes error or abstention.
+- **Open question:** when does coupling provide compression rather than merely
+  hide two variables in a harder inverse problem?
+- **Used by:** [PLM-T10](../experiments/fixtures/023-plant-plasticity-memory-signalling.md#plm-t10-coupled-light-temperature-history-sensor).
+- **Traceability:** [source audit](audits/2026-08-25-plant-plasticity-memory-signalling.md#c-1525) · [affected chapter](../concept/40-memory-and-consolidation.md#memory-mode-lifetime-and-retrieval-are-separate-axes).
+- **Disposition:** scoped central claim proposal.
+
+### C-1526
+
+- **Claim:** For a declared projection of a sufficiently regular full
+  dynamical system, the exact resolved evolution contains an instantaneous
+  projected term, a history integral, and an orthogonal-dynamics term; the
+  linear time-invariant example makes the history term a convolution. Deleting
+  the latter two terms is a Markov-closure approximation, not an exact
+  consequence of projection.
+- **Status:** established as a projection identity under the source
+  assumptions; `plausible` that a finite-memory approximation can improve a
+  bounded artificial reduced model at matched information; `speculative` as a
+  general AI-efficiency mechanism.
+- **Primary sources:** [Zwanzig 1961](https://doi.org/10.1103/PhysRev.124.983),
+  read with the [1972 corrected nonlinear derivation](https://doi.org/10.1103/PhysRevA.5.2680);
+  [Mori 1965](https://doi.org/10.1143/PTP.33.423); and
+  [Chorin, Hald, and Kupferman 2000](https://doi.org/10.1073/pnas.97.7.2968).
+- **Rationale:** Projection can move unresolved influence into history and an
+  orthogonal component rather than erase it. The exact two-variable linear
+  system provides a dimensioned analytic falsification case.
+- **AI translation:** A reduced recurrent state may need a measured memory
+  window or an explicitly augmented latent state. “Sparse current activation”
+  does not by itself justify history-free dynamics.
+- **Efficiency mechanism:** Pay only for a bounded history or compact
+  augmentation if it is non-inferior to full evolution and materially cheaper
+  under the complete work-and-traffic ledger.
+- **Failure modes:** kernel truncation bias; hidden-initial-state leakage;
+  unstable learned kernels; long-tailed memory; inconsistent projection;
+  treating deterministic orthogonal dynamics as independent noise; and
+  comparing against a weak Markov null instead of the exact augmented-state
+  model.
+- **Measurable prediction:** on held-out coupled linear systems with memory
+  timescale inside the declared window, a frozen finite-memory arm reduces
+  resolved trajectory error relative to a Markov-only arm; any claimed
+  resource advantage must remain non-inferior to the exact two-state null.
+- **Open question:** Can an online diagnostic distinguish safely truncatable
+  memory from an omitted slow variable before long-horizon failure?
+- **Affected boundaries:** predictive processing and adaptive computation;
+  fast/slow memory and replay; dimensional analysis; resource-normalized
+  reduction. These are proposed links, not evidence that those chapters
+  currently implement Mori--Zwanzig dynamics.
+- **Direct test:** [`AMR-T01`](../experiments/fixtures/024-applied-multiscale-reduction.md#amr-t01--c-1526-projected-memory-versus-markov-closure).
+- **Traceability:** [source audit](audits/2026-08-25-applied-multiscale-reduction.md#c-1526) · [affected chapter](../concept/30-sparse-predictive-compute.md#a-timescale-label-is-not-a-closure-certificate).
+
+### C-1527
+
+- **Claim:** A compact normally hyperbolic critical manifold of a sufficiently
+  smooth fast--slow ordinary differential equation persists as a nearby slow
+  manifold for sufficiently small nonzero timescale ratio; this ordinary
+  guarantee does not extend through a loss of normal hyperbolicity such as a
+  fold.
+- **Status:** established theorem under explicit hypotheses; `plausible` that
+  a computable spectral-margin gate can prevent some invalid reductions in a
+  bounded synthetic system; `speculative` as a general artificial-system
+  certification method.
+- **Primary sources:** [Fenichel 1979](https://doi.org/10.1016/0022-0396(79)90152-9)
+  and [Krupa and Szmolyan 2001](https://doi.org/10.1137/S0036141099360919).
+- **Rationale:** A small parameter alone is not a certificate. Persistence also
+  needs a stable geometric object and a nonzero fast spectral margin over the
+  region used.
+- **AI translation:** Fast-path/slow-path computation should carry an
+  abstention boundary based on attraction, healing and spectral margin instead
+  of assuming that named timescales imply a slow manifold.
+- **Efficiency mechanism:** Use a reduced slow evolution only inside the
+  certified support; fall back to the full solver near initial layers, weak
+  attraction, folds or off-manifold states.
+- **Failure modes:** noncompact support; insufficient regularity; complex fast
+  modes crossing the imaginary axis; fold or canard behaviour; delayed loss of
+  stability; off-manifold initialization; and estimating a margin from data
+  already containing the confirmation answer.
+- **Measurable prediction:** a frozen normal-hyperbolicity gate accepts most
+  held-out normally hyperbolic cases while abstaining before the reduced
+  model's error exceeds its declared bound near folds; reduction without the
+  gate fails the protected fold family more often.
+- **Open question:** Which observable diagnostics remain reliable when the fast
+  Jacobian is unavailable and only short trajectories can be queried?
+- **Affected boundaries:** adaptive computation, fast/slow routing, structural
+  consolidation, and asymptotic/dimensional analysis. A biological timescale
+  label is not evidence for these hypotheses.
+- **Direct test:** [`AMR-T02`](../experiments/fixtures/024-applied-multiscale-reduction.md#amr-t02--c-1527-normal-hyperbolicity-and-fold-boundary).
+- **Traceability:** [source audit](audits/2026-08-25-applied-multiscale-reduction.md#c-1527) · [affected chapter](../concept/30-sparse-predictive-compute.md#a-timescale-label-is-not-a-closure-certificate).
+
+### C-1528
+
+- **Claim:** Heterogeneous multiscale methods couple a declared macro solver to
+  constrained local micro-solves that estimate otherwise unavailable macro
+  data through explicit compression and reconstruction operators; accuracy
+  and cost are conditional on macro discretization, micro-domain, boundary,
+  sampling, relaxation and compression errors.
+- **Status:** established as a numerical framework, with scoped convergence
+  analysis for specified homogenization problems; `speculative` that the same
+  contract yields an AI runtime advantage.
+- **Primary sources:** [E and Engquist 2003](https://doi.org/10.4310/CMS.2003.v1.n1.a8),
+  [E, Engquist, and Huang 2003](https://doi.org/10.1103/PhysRevB.67.092101),
+  and [E, Ming, and Zhang 2005](https://doi.org/10.1090/S0894-0347-04-00469-2).
+- **Rationale:** Multiscale savings arise only when the macro method needs
+  limited local information and that information can be estimated on smaller
+  micro supports than a full fine solve.
+- **AI translation:** A coarse controller may query a high-detail module only
+  where a declared missing constitutive quantity is needed, while retaining
+  the query support, reconstruction and uncertainty in the decision record.
+- **Efficiency mechanism:** Replace global fine evolution with bounded local
+  micro queries, but count every microcell, boundary treatment, relaxation
+  step, failed solve and transferred byte.
+- **Failure modes:** resonance between microcell and fine period; biased micro
+  boundary conditions; insufficient relaxation; a macro variable that omits a
+  relevant mode; double-counting analytic information; and a micro budget that
+  secretly exceeds the full fine solve.
+- **Measurable prediction:** in a held-out one-dimensional periodic
+  heat-conduction family, a frozen HMM arm meets field and flux non-inferiority
+  to the full fine solver with fewer fine-grid-equivalent updates; this claim
+  is killed if the analytic homogenized null is equally accurate and cheaper,
+  or if transfer to phase-shifted/noncommensurate microstructure fails.
+- **Open question:** How should query support be selected when microstructure
+  is nonstationary and the relevant error is a downstream decision rather than
+  a field norm?
+- **Affected boundaries:** conditional routing, local specialist queries,
+  adaptive computation, and compute/traffic accounting. This claim does not
+  make homogenization a universal model-compression recipe.
+- **Direct test:** [`AMR-T03`](../experiments/fixtures/024-applied-multiscale-reduction.md#amr-t03--c-1528-local-micro-query-contract).
+- **Traceability:** [source audit](audits/2026-08-25-applied-multiscale-reduction.md#c-1528) · [affected chapter](../concept/30-sparse-predictive-compute.md#a-timescale-label-is-not-a-closure-certificate).
+
+### C-1529
+
+- **Claim:** An equation-free coarse timestepper can be composed as
+  restriction after fine evolution after lifting when coarse observables close
+  after a declared healing interval; persistent dependence on admissible lifts
+  is evidence against closure at that state and horizon.
+- **Status:** established as a computational framework with published model
+  examples; `plausible` as a closure diagnostic in a bounded ensemble
+  simulator; `speculative` as a general AI computation pattern.
+- **Primary sources:** [Kevrekidis et al. 2003](https://doi.org/10.4310/CMS.2003.v1.n4.a5),
+  also available as [arXiv:physics/0209043](https://arxiv.org/abs/physics/0209043),
+  and [Gear and Kevrekidis 2003](https://doi.org/10.1137/S1064827501388157).
+- **Rationale:** A fine timestepper can support coarse projective computation
+  without an explicit closed equation, but only if lifting ambiguity decays
+  before the measurement horizon.
+- **AI translation:** A coarse planner may call a fine simulator for short
+  bursts, estimate a coarse derivative, and project, while a multi-lift
+  disagreement gate detects omitted variables.
+- **Efficiency mechanism:** amortize short fine bursts over longer coarse
+  projective steps only when healing, ensemble variance and rejected
+  projections are included in the ledger.
+- **Failure modes:** nonunique lifting; insufficient healing; slow hidden
+  variables; bistability; rare transitions; projective instability; ensemble
+  under-sampling; adaptive retries hidden from resource totals; and training a
+  coarse null on confirmation trajectories.
+- **Measurable prediction:** in a closed fast--slow ensemble family, a frozen
+  healed multi-lift coarse timestepper attains the declared rollout error with
+  fewer microsteps than continuous fine evolution, while its disagreement gate
+  abstains on a protected omitted-slow-variable family.
+- **Open question:** Can closure be certified locally without making the
+  ensemble and healing cost comparable to direct fine simulation?
+- **Affected boundaries:** world-model simulation, adaptive computation,
+  uncertainty-gated routing, and coarse/fine memory. The framework does not
+  establish that the selected observables are sufficient.
+- **Direct test:** [`AMR-T04`](../experiments/fixtures/024-applied-multiscale-reduction.md#amr-t04--c-1529-liftevolverestrict-and-closure).
+- **Traceability:** [source audit](audits/2026-08-25-applied-multiscale-reduction.md#c-1529) · [affected chapter](../concept/30-sparse-predictive-compute.md#a-timescale-label-is-not-a-closure-certificate).
