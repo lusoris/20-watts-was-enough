@@ -82,6 +82,35 @@ robustness--recoverability trade is tested explicitly in
 and derived in
 [Interface-qualified scale symmetry](../math/interface-qualified-scale-symmetry.md).
 
+### A subscriber can change its producer
+
+State ownership prevents unauthorized writes, but it does not guarantee that a
+read or subscription is dynamically neutral. A consumer can pin a producer's
+slot, hold a reference, block publication, create a gradient path, compete for
+shared resources, or intentionally feed back. Those cases are distinct from an
+immutable read and from unrelated system contention
+([C-1550](../research/claims.md#c-1550),
+[C-1558](../research/claims.md#c-1558)).
+
+Every reusable module therefore carries a connection-sensitivity record:
+
+1. isolated input, state and output trajectory;
+2. attached client identity, topology, coupling and holding time;
+3. producer deviation at the producer-owned interface;
+4. delivered, timely and fresh consumer service;
+5. shared CPU, memory, queue, network and accelerator load;
+6. insulation copies, buffers, admission, monitoring and recovery work; and
+7. the support in which the connection remains qualified.
+
+The system inserts no insulator when the immutable/no-back-action control
+passes. Where material back-action exists, it selects among ordinary buffering,
+snapshots, weak coupling, resource isolation, replication, explicit feedback
+and a bounded adaptive insulator. Suppression is not the only admissible goal:
+registered useful feedback or temporal shaping must remain intact
+([C-1559](../research/claims.md#c-1559)). The complete decision is tested in
+[Fixture F-027](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md),
+not inferred from the biological name.
+
 ### Authority is split across control planes
 
 The system uses four control planes with different authority:
@@ -657,19 +686,22 @@ The full system should be assembled through progressively stronger contracts:
 
 1. Establish dense and conventional modular baselines with one physical
    measurement boundary.
-2. Align observation, action, outcome, location, and time before adding learned
+2. Measure isolated-versus-connected behavior and retain immutable-copy,
+   queueing, resource-isolation and explicit-feedback nulls before composing
+   modules.
+3. Align observation, action, outcome, location, and time before adding learned
    routing.
-3. Introduce conditional execution and measure activation, data movement, and
+4. Introduce conditional execution and measure activation, data movement, and
    dispatch overhead.
-4. Add attributable episodic memory without granting it slow-model write
+5. Add attributable episodic memory without granting it slow-model write
    authority.
-5. Add replay and consolidation under fixed maintenance budgets, then admit
+6. Add replay and consolidation under fixed maintenance budgets, then admit
    provisional modules only for measured capability gaps.
-6. Test reversible protection, reopening, and structured pruning before
+7. Test reversible protection, reopening, and structured pruning before
    promoting repeated behavior into cheaper paths.
-7. Learn logical routing and physical placement together only after their
+8. Learn logical routing and physical placement together only after their
    separate baselines are stable.
-8. Run continual operation with drift, conflict, newcomer admission, recovery,
+9. Run continual operation with drift, conflict, newcomer admission, recovery,
    and complete lifecycle accounting.
 
 Each stage keeps the strongest baseline from the previous one. A later
@@ -721,6 +753,7 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
 | Cumulative inheritance across turnover | C-343–C-367 | bounded constituents established or scoped; population advantage unvalidated |
 | Institutional authority and rule repair | C-368–C-395 | formal constraints and bounded evidence; multi-level composition speculative |
 | Human initiative, authority, and recovery | C-396–C-416 | bounded HCI effects; combined record speculative |
+| Connection-induced back-action and bounded insulation | C-1550–C-1559 | scoped biochemical evidence; digital residual and energy advantage unvalidated |
 | Complete integrated system | none | unvalidated project synthesis |
 
 ## Speculative extensions
@@ -761,6 +794,9 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
   assurance even though state is stale, the mode is misunderstood, authority
   is ineffective, intervention arrives late, or recovery cannot change the
   world state.
+- A module passes alone, then a new consumer changes its state or update path;
+  or an always-on insulator deletes useful service while hiding copy, buffer,
+  admission, replica, monitoring, and maintenance work.
 - The architecture accumulates mechanisms faster than experiments can reject
   them.
 
@@ -778,16 +814,19 @@ The [energy model](80-energy-model.md) defines the full comparison contract.
    fixed regularization, fixed pruning schedules, and naive fine-tuning.
 6. Versioned uptake, repair, and cross-play gates reduce silent semantic failure
    under agent and protocol drift beyond a complete fixed-protocol stack.
-7. Audited turnover retains and recombines more protected capability than a
+7. Connection-qualified modules preserve producer trajectories and accepted
+   consumer service across held-out client topologies; selective insulation
+   activates only where it improves the complete non-dominated frontier.
+8. Audited turnover retains and recombines more protected capability than a
    centralized continual learner at equal cumulative learning, coordination,
    storage, migration, and energy cost—or the population mechanism is retired.
-8. Multi-level authority improves an applicable task-native or protected-harm
+9. Multi-level authority improves an applicable task-native or protected-harm
    frontier beyond the complete ordinary governance stack after gridlock,
    capture, concentration, human attention, and lifecycle cost—or it is merged.
-9. A recoverable initiative record predicts failures beyond polished mode
+10. A recoverable initiative record predicts failures beyond polished mode
    labels, previews, confirmations, undo/history, logs, runtime assurance, and
    user testing on consequential and accessibility-stratified tasks—or only
    its individually supported fields remain.
-10. The integrated system occupies a better quality–risk–latency–energy frontier
+11. The integrated system occupies a better quality–risk–latency–energy frontier
    than every component ablation and the strongest ordinary controller,
    scheduler, cache, and router baselines.

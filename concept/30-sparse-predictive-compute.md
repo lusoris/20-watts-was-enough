@@ -546,6 +546,35 @@ control. Its primary channel is two 8-bit components at different cadences,
 with an average logical rate of $825\ \mathrm{bit\,s^{-1}}$. That number is an
 experiment setting, not a proposed universal bus rate.
 
+### A bounded interface still needs a back-action test
+
+For the same upstream input, initial state and random seed, characterize the
+producer first without a consumer and then after attaching one. Keep producer
+trajectory distortion separate from delivery latency, consumer fidelity,
+shared-resource contention and any intended feedback. A connection is not
+harmful merely because it consumes work, and a producer is not insulated when
+its consumer receives no usable service.
+
+The biological evidence supplies several scoped warning cases: downstream
+binding pools can alter transcriptional transients, signalling targets can
+change the operating regime or bandwidth of an upstream cycle, and fast
+intermediate processes can attenuate some load effects
+([C-1550](../research/claims.md#c-1550)–[C-1555](../research/claims.md#c-1555)).
+The systems translation starts with stronger ordinary controls:
+
+1. an ideal immutable-copy path with no finite-interface backpressure;
+2. a tuned bounded ring buffer and explicit backpressure;
+3. asynchronous snapshots, copy-on-write and expiry;
+4. load-aware admission and resource reservation;
+5. unrelated CPU or memory contention without a producer connection; and
+6. explicit filtering or intended feedback where temporal shaping is useful.
+
+Only connection-specific distortion that survives those controls is called a
+retroactivity analogue. [Fixture F-027](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md)
+and its [mathematical contract](../math/interface-qualified-retroactivity.md)
+freeze that comparison. The first executable slice is a public diagnostic and
+has no performance or energy authority.
+
 ### Deficit travels; feasibility remains local
 
 Plant nitrogen acquisition supplies a precise three-part allocation loop:

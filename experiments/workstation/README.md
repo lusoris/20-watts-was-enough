@@ -1,6 +1,6 @@
 # Workstation execution contract
 
-The repository now contains eight executable smoke harnesses alongside research
+The repository now contains nine executable smoke harnesses alongside research
 and protocol specifications, but no workstation-ready scientific package:
 [Candidate 010](candidate-010/README.md) exercises staged verification and
 [Fixture F-007](fixture-007/README.md) exercises optical null-space honesty;
@@ -12,8 +12,10 @@ corruption and fallback boundary;
 [Fixture F-023](fixture-023/README.md) exercises the PLM-T01 duration-memory and
 PLM-T02 lifecycle-reset boundaries; and
 [Fixture F-024](fixture-024/README.md) exercises the AMR-T01 projected-memory
-development path; and [Fixture F-025](fixture-025/README.md) exercises the
-ECM-T03 record, amplitude, repeat-consistency, and equivalence gate order.
+development path; [Fixture F-025](fixture-025/README.md) exercises the ECM-T03
+record, amplitude, repeat-consistency, and equivalence gate order; and
+[Fixture F-027](fixture-027/README.md) exercises the RIN-T01 interconnection,
+edge-removal, interface-validity, and bounded-insulation diagnostics.
 A test becomes workstation-ready only when its
 checked manifest exists at `experiments/workstation/manifests/<artifact-id>.json`,
 passes `npm run validate:workstation`, declares `workstation-ready`, names all
@@ -110,6 +112,17 @@ to remain non-identifying. Its repeat statistic is a smoke surrogate rather
 than the registered finite-band Kramers--Kronig calibration. The other nine
 tracks, private partitions, physical apparatus, and scientific adjudication
 remain absent; every event is `NO_RESULT`.
+
+[Fixture F-027](fixture-027/README.md) implements a bounded public-development
+smoke slice for C-1550 / RIN-T01. It generates six synthetic source--load
+world classes (six worlds per smoke seed and 30 per development seed), verifies
+mass closure and two independent edge-removal controls,
+rejects malformed interfaces, records finite insulation and saturation, and
+binds exact resume to a corruption-evident event chain. It does not implement
+the registered reduced source model, approximation envelope, or dimensional
+confirmation comparison. RIN-T02--RIN-T10, private partitions, physical
+systems, calibrated energy and
+scientific adjudication remain absent. Every event is `NO_RESULT`.
 
 The machine-readable contract is
 [`manifest.schema.json`](manifest.schema.json). Referenced lockfiles, seed

@@ -202,6 +202,12 @@ duplicating every full-size image here.
    $y=\ln(u/r)$ trajectory in a positive-domain reference model while a
    separate illustrative absolute gate distinguishes them. First used in
    [Interface-qualified scale symmetry](interface-qualified-scale-symmetry.md#worked-reference-model).
+8. **Interface-qualified retroactivity.**
+   A paired isolated/connected mass-action trajectory is plotted above the
+   exact reduced retroactivity factor across load and operating point. The
+   parameters are hypothetical and the figure reports neither delivered
+   service nor energy. First used in
+   [Interface-qualified retroactivity](interface-qualified-retroactivity.md#worked-mass-action-reference).
 
 Every value in these figures is labeled analytical or illustrative. None is a
 workstation result, a promoted claim, or a recommended deployment threshold.

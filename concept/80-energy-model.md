@@ -330,6 +330,23 @@ and failure costs against fixed-barrier, rate-limiter, rollback, and no-barrier
 nulls. Cracking and repair in F-025 are synthetic engineering stressors, not
 effects attributed to the cited interphase sources.
 
+Interface insulation uses the same lifecycle discipline but a different causal
+test. For an insulating path $I$, retain separate energy rows for producing and
+copying snapshots, maintaining buffers or replicas, admission and expiry,
+monitoring connection sensitivity, serving consumers, recovery and idle
+reserve. Its accepted-service denominator must include timely and fresh
+consumer outputs; deleting, dropping or indefinitely delaying load cannot
+manufacture an energy saving. Logical operations and bytes are explanatory
+telemetry until a calibrated physical boundary measures joules
+([C-1555](../research/claims.md#c-1555)–[C-1557](../research/claims.md#c-1557)).
+
+No monotone insulation--energy law is assumed. One scoped biochemical model
+shows a fuel tradeoff, while a countermodel reduces both coupling and fuel by
+accepting worse tracking or leak robustness. The artificial comparison must
+therefore preserve the full distortion--service--latency--memory--work--energy
+frontier and the no-load case. The equations and decision boundary are in the
+[interface-qualified retroactivity contract](../math/interface-qualified-retroactivity.md).
+
 Delayed damage prevents short evaluations from closing that ledger. If
 $d_t$ is accumulated damage in a declared damage unit and $\psi$ is a
 state-, action-, temperature-, and mode-dependent damage rate in damage units
@@ -521,6 +538,7 @@ constrained problem, not only a dense network:
 | Memory tiers | tuned cache/TTL/retrieval policy and, where possible, an oracle-lifetime upper bound |
 | Maintenance plane | periodic/adaptive checkpoint, monitoring, and recovery controller |
 | Structural specialization | profile-guided compilation, layout, quantization, and accelerator-aware kernel |
+| Connection-qualified insulation | immutable message or copy-on-write, bounded queue/backpressure, admission/expiry, resource isolation, explicit filter/controller, replication, and no-insulator control |
 
 The full mapping and formal reference points are in the
 [engineering analogue audit](../research/audits/2026-08-05-engineering-analogues.md).

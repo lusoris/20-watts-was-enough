@@ -275,6 +275,40 @@ Calling the entire chain “sparsity,” “memory,” or “homeostasis” woul
 operation produced a gain. Each experiment therefore removes one principle at
 a time while holding the other interfaces constant.
 
+### Interconnection is an intervention
+
+A small or typed interface does not by itself make two modules dynamically
+modular. In transcriptional regulation, covalent-modification cycles and yeast
+synthetic circuits, attaching a downstream target can alter the upstream state
+or transient response
+([C-1550](../research/claims.md#c-1550)–[C-1555](../research/claims.md#c-1555)).
+Substrate competition in *Drosophila* MAPK signalling supplies a distinct,
+potentially functional case ([C-1559](../research/claims.md#c-1559)).
+The shared mechanism record is **connection-induced back-action**; the
+biochemical literature calls one important family retroactivity.
+
+The domains do not collapse into one mechanism. Direct binding can sequester a
+signal, multiple substrates can compete for an enzyme, and nominally separate
+modules can instead couple through shared transcriptional, translational, CPU,
+memory, or scheduler resources ([C-1558](../research/claims.md#c-1558)). The
+causal intervention therefore crosses connection state and shared-resource
+load independently. It also includes a genuinely nondestructive immutable-read
+control, because silicon can often copy or address state without the molecular
+consumption that motivated the analogy.
+
+Insulation is bounded rather than automatically desirable. It must preserve
+both the producer and useful downstream service while exposing latency,
+staleness, copies, buffers, replicas, operations, maintenance and physical
+energy. Weak coupling may spend less while losing tracking or robustness
+([C-1556](../research/claims.md#c-1556),
+[C-1557](../research/claims.md#c-1557)); substrate competition can also be a
+useful integrator rather than a fault ([C-1559](../research/claims.md#c-1559)).
+[Fixture F-027](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md)
+therefore compares suppressing, preserving and deliberately using back-action.
+If immutable messages, ordinary queues, resource isolation, explicit filters,
+stop-gradient paths or conventional controllers reach the same frontier, the
+translation is retired without adding a principle.
+
 ### Passive self-organization is a mandatory null
 
 Efficient-looking structure does not establish sensing, represented goals, or

@@ -50,14 +50,14 @@
     }
   },
   "counts": {
-    "claims": 1540,
-    "testRouted": 1448,
-    "protocolCovered": 1448,
+    "claims": 1550,
+    "testRouted": 1458,
+    "protocolCovered": 1458,
     "executionReady": 0,
     "tierCounts": {
       "ledger-only": 92,
       "linked-description": 0,
-      "protocol-complete": 1448,
+      "protocol-complete": 1458,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
@@ -76,8 +76,8 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1123,
-        "plausible": 209,
+        "established": 1132,
+        "plausible": 210,
         "speculative": 60,
         "disputed": 47,
         "unknown": 9
@@ -97,11 +97,11 @@
       "new-artifact-needed": 0
     },
     "proposedArtifactFamilies": 0,
-    "artifacts": 46,
-    "protocolCompleteArtifacts": 46,
+    "artifacts": 47,
+    "protocolCompleteArtifacts": 47,
     "executionReadyArtifacts": 0,
-    "smokeReadyArtifacts": 8,
-    "claimSideLinked": 1231,
+    "smokeReadyArtifacts": 9,
+    "claimSideLinked": 1241,
     "documentSideLinked": 1148,
     "reciprocalClaims": 794
   },
@@ -9219,6 +9219,103 @@
         "C-1547",
         "C-1548",
         "C-1549"
+      ]
+    },
+    {
+      "id": "fixture-027",
+      "path": "experiments/fixtures/027-interface-qualified-retroactivity-insulation.md",
+      "title": "Fixture F-027 — Interface-qualified retroactivity and insulation",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "smoke-ready",
+      "executionManifest": "experiments/workstation/manifests/fixture-027.json",
+      "executionMissing": [
+        "readiness=smoke-ready"
+      ],
+      "executionPromotionChecks": [
+        {
+          "id": "execution-claim-scope",
+          "label": "Explicit execution-track claim scope",
+          "passed": true,
+          "detail": "execution track is limited to C-1550"
+        },
+        {
+          "id": "full-profile",
+          "label": "Frozen full profile",
+          "passed": false,
+          "detail": "data.full_profile must be a valid profile with a matching full_profile_sha256"
+        },
+        {
+          "id": "full-tests",
+          "label": "Full experiment-path tests",
+          "passed": true,
+          "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
+        },
+        {
+          "id": "hash-chain",
+          "label": "Corruption-evident output ledger",
+          "passed": true,
+          "detail": "hash-chain output is wired through the tested checkpoint ledger"
+        },
+        {
+          "id": "resume",
+          "label": "Deterministic resume",
+          "passed": true,
+          "detail": "runner imports the declared, tested checkpoint/resume implementation"
+        },
+        {
+          "id": "energy-provider",
+          "label": "Measured-energy or explicit non-energy boundary",
+          "passed": false,
+          "detail": "energy provider config/module/test and frozen hash must enforce measured energy, or a non-energy claim must explicitly forbid energy conclusions"
+        },
+        {
+          "id": "confirmation-seeds",
+          "label": "Frozen confirmation seeds",
+          "passed": false,
+          "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+        },
+        {
+          "id": "held_out-seeds",
+          "label": "Frozen held-out seeds",
+          "passed": false,
+          "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+        },
+        {
+          "id": "promotion-evidence",
+          "label": "Strict recomputed promotion evidence",
+          "passed": false,
+          "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
+        }
+      ],
+      "executionClaims": [
+        "C-1550"
+      ],
+      "claimSideClaims": [
+        "C-1550",
+        "C-1551",
+        "C-1552",
+        "C-1553",
+        "C-1554",
+        "C-1555",
+        "C-1556",
+        "C-1557",
+        "C-1558",
+        "C-1559"
+      ],
+      "documentSideClaims": [],
+      "linkedClaims": [
+        "C-1550",
+        "C-1551",
+        "C-1552",
+        "C-1553",
+        "C-1554",
+        "C-1555",
+        "C-1556",
+        "C-1557",
+        "C-1558",
+        "C-1559"
       ]
     }
   ],
@@ -30028,6 +30125,126 @@
       "executionReady": false,
       "artifacts": [
         "fixture-026"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1550",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-027"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1551",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-027"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1552",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-027"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1553",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-027"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1554",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-027"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1555",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-027"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1556",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-027"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1557",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-027"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1558",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-027"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1559",
+      "status": "plausible",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-027"
       ],
       "disposition": null
     }

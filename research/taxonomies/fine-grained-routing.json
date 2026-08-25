@@ -315,12 +315,16 @@
       "code": "2.11-07",
       "state": "adjacent",
       "audits": [
-        "research/audits/2026-08-25-developmental-regeneration-depth.md"
+        "research/audits/2026-08-25-developmental-regeneration-depth.md",
+        "research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md"
       ],
-      "claims": ["C-1508", "C-1509", "C-1510", "C-1514", "C-1515"],
-      "rationale": "The claims formalise positional inference, collective signalling, multiscale morphology, and staged maturation as testable systems models.",
-      "scopeGap": "The audit does not survey theoretical biology, bioinformatics pipelines, omics integration, or inference methodology broadly.",
-      "nextQuestion": "Which model components are identifiable and predictive under held-out geometries and perturbations?"
+      "claims": [
+        "C-1508", "C-1509", "C-1510", "C-1514", "C-1515",
+        "C-1550", "C-1552", "C-1553", "C-1556", "C-1557", "C-1558", "C-1559"
+      ],
+      "rationale": "The routed claims formalise positional and collective systems models plus connection-induced back-action, load discrimination, observation interfaces and bounded insulation as explicit dynamical tests.",
+      "scopeGap": "The audits do not survey theoretical biology, bioinformatics pipelines, omics integration, network inference, or most organism and pathway models broadly.",
+      "nextQuestion": "Which connection-sensitivity models identify the causal load family and predict held-out composition effects before downstream service fails?"
     },
     {
       "level": "anzsrc-field",
@@ -380,16 +384,18 @@
       "audits": [
         "research/audits/2026-08-25-developmental-regeneration-depth.md",
         "research/audits/2026-08-25-plant-plasticity-memory-signalling.md",
-        "research/audits/2026-08-25-relative-sensing-scale-symmetry.md"
+        "research/audits/2026-08-25-relative-sensing-scale-symmetry.md",
+        "research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md"
       ],
       "claims": [
         "C-1508", "C-1509", "C-1510",
         "C-1518", "C-1520", "C-1521", "C-1524", "C-1525",
-        "C-1541", "C-1542", "C-1543", "C-1544", "C-1545", "C-1546", "C-1547", "C-1548"
+        "C-1541", "C-1542", "C-1543", "C-1544", "C-1545", "C-1546", "C-1547", "C-1548",
+        "C-1550", "C-1552", "C-1554", "C-1555", "C-1556", "C-1557", "C-1559"
       ],
-      "rationale": "The earlier audits cover positional, collective, hydraulic and plant-stress signals; C-1541--C-1548 directly compare relative, absolute and difference statistics across named bacterial, mammalian, amoebal and plant signalling interfaces.",
+      "rationale": "The earlier audits cover positional, collective, hydraulic and plant-stress signals; C-1541--C-1548 compare relative, absolute and difference statistics; C-1550, C-1552, C-1554--C-1557 and C-1559 directly test downstream loading, covalent signalling cycles, response restoration, observation and useful back-action.",
       "scopeGap": "The routed claims sample bounded pathways and do not survey receptor families, second messengers, post-translational networks, tissues, disease states, or all taxa.",
-      "nextQuestion": "Which signal statistic and reference mechanism remain causal when interface, stimulus history, saturation and downstream target are varied independently?"
+      "nextQuestion": "Which signal statistic, reference mechanism and connection load remain causal when interface, history, saturation, downstream target and resource placement vary independently?"
     },
     {
       "level": "anzsrc-field",
@@ -397,15 +403,17 @@
       "state": "dedicated",
       "audits": [
         "research/audits/2026-08-25-developmental-regeneration-depth.md",
-        "research/audits/2026-08-25-relative-sensing-scale-symmetry.md"
+        "research/audits/2026-08-25-relative-sensing-scale-symmetry.md",
+        "research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md"
       ],
       "claims": [
         "C-1508", "C-1509", "C-1514", "C-1515",
-        "C-1540", "C-1541", "C-1542", "C-1543", "C-1544", "C-1545", "C-1546", "C-1547", "C-1548", "C-1549"
+        "C-1540", "C-1541", "C-1542", "C-1543", "C-1544", "C-1545", "C-1546", "C-1547", "C-1548", "C-1549",
+        "C-1550", "C-1551", "C-1552", "C-1553", "C-1554", "C-1555", "C-1556", "C-1557", "C-1558", "C-1559"
       ],
-      "rationale": "The earlier claims require system-level positional inference and maturation control; C-1540--C-1549 directly formulate input--output symmetry, causal circuit alternatives, interface qualification and observation-dependent identifiability.",
-      "scopeGap": "The audits do not provide field-wide systems biology, multi-omics integration, broad network reconstruction, or exhaustive organism and pathway coverage.",
-      "nextQuestion": "Which scale symmetries survive causal interventions and hostile protocols while retaining absolute variables needed for downstream control?"
+      "rationale": "The earlier claims require system-level positional and symmetry inference; C-1550--C-1559 directly test how interconnection changes component dynamics, which causal load family applies, and when bounded insulation preserves both producer and consumer service.",
+      "scopeGap": "The audits do not provide field-wide systems biology, multi-omics integration, broad network reconstruction, or exhaustive organism, pathway, resource and control coverage.",
+      "nextQuestion": "Which symmetry and connection-sensitivity contracts survive causal interventions and hostile composition while retaining every downstream variable needed for control?"
     },
     {
       "level": "anzsrc-field",
@@ -900,6 +908,78 @@
       "rationale": "Battery phase, interphase, deposition, identifiability, hysteresis, and ageing provide direct examples, while the audit's target is transferable mechanism discipline rather than battery engineering.",
       "scopeGap": "Battery chemistries, formats, manufacturing, management systems, safety, performance qualification, reuse, recycling, and grid or mobility integration remain incomplete.",
       "nextQuestion": "Which state and degradation contracts transfer across chemistry and format without hiding pack, thermal, safety, or lifecycle costs?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310113",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md"
+      ],
+      "claims": ["C-1550", "C-1551", "C-1552", "C-1553", "C-1554", "C-1555", "C-1556", "C-1557", "C-1558", "C-1559"],
+      "rationale": "The audit is centred on experimentally and formally studied modularity failures, load drivers, resource coupling and insulators in synthetic biological circuits.",
+      "scopeGap": "The source set samples transcriptional, signalling, oscillator, yeast, fly and mammalian systems; it does not survey synthetic biology, chassis, fabrication, safety, evolution or application domains broadly.",
+      "nextQuestion": "Which connection and insulation conclusions reproduce across chassis, circuit families, laboratories and physical resource regimes?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "4.41-01",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md"
+      ],
+      "claims": ["C-1550", "C-1552", "C-1554", "C-1555", "C-1556", "C-1557", "C-1559"],
+      "rationale": "Connection sensitivity, disturbance attenuation, timescale separation, bandwidth, intended feedback and matched-capacity insulation are explicit automation and control-system questions, while the audited evidence remains biological.",
+      "scopeGap": "The audit does not survey automation, robust or optimal control, hybrid systems, networked control, safety, industrial actuation or hardware qualification broadly.",
+      "nextQuestion": "Which conventional control and automation baselines reproduce the held-out connection-sensitivity frontier at matched information, parallel capacity and lifecycle work?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "400705",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md"
+      ],
+      "claims": ["C-1550", "C-1552", "C-1554", "C-1555", "C-1556", "C-1557", "C-1559"],
+      "rationale": "Retroactivity measures, timescale separation, disturbance attenuation, bandwidth, intended feedback and Pareto design use explicit control-engineering questions, while biology remains the source domain.",
+      "scopeGap": "Robust, nonlinear, optimal, adaptive, distributed, sampled-data, hybrid and safety control are not surveyed as fields, and no physical AI controller result exists.",
+      "nextQuestion": "Does connection-qualified selective insulation improve a held-out service frontier beyond ordinary control, buffering and isolation at matched information and resources?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "a74ddb9f-5ad3-4cf4-942d-9dd83fcc041b",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md"
+      ],
+      "claims": ["C-1550", "C-1551", "C-1552", "C-1553", "C-1554", "C-1555", "C-1556", "C-1557", "C-1558", "C-1559"],
+      "rationale": "The complete claim family audits composition, downstream load, load-driver and resource-insulation mechanisms in engineered biological circuits.",
+      "scopeGap": "Ten claims do not establish complete synthetic-biology coverage or application readiness.",
+      "nextQuestion": "Which causal back-action families and bounded insulators generalise beyond the audited circuit classes?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "0e362272-f233-4787-bfb1-1917f4c7c43a",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md"
+      ],
+      "claims": ["C-1550", "C-1551", "C-1552", "C-1553", "C-1554", "C-1555", "C-1556", "C-1557"],
+      "rationale": "Mass-action interfaces, covalent cycles, molecular loads, phosphotransfer drivers and fuel-qualified insulation are direct biochemical-engineering mechanisms.",
+      "scopeGap": "Scale-up, reactors, separations, bioprocess operation, manufacturing, quality systems and industrial energy measurements remain outside scope.",
+      "nextQuestion": "How do dilution, transport, scale, stochasticity and process operation change the registered connection-sensitivity envelope?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "7b79e4a2-5d2a-453f-b277-dda80eccf0d0",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md"
+      ],
+      "claims": ["C-1550", "C-1552", "C-1554", "C-1555", "C-1556", "C-1557", "C-1559"],
+      "rationale": "The package defines connection sensitivity, dynamic response, bandwidth, disturbance attenuation, service constraints and multi-objective insulation selection as control problems.",
+      "scopeGap": "The audit is not a general control-engineering review and supplies no hardware or industrial controller validation.",
+      "nextQuestion": "Which conventional controller or interface design reaches the same frontier, and where does any mechanism-specific residual remain?"
     }
   ]
 }

@@ -1647,6 +1647,158 @@ function interfaceQualifiedScaleSymmetry(spec) {
   return analyticalDocument(spec, layout, content);
 }
 
+function interfaceQualifiedRetroactivity(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 1180,
+    height: 840,
+    kind: "retroactivity-transient-and-load-envelope",
+    theme: "violet",
+  });
+  const { width, height, theme } = layout;
+  const {
+    time_min_s: timeMin,
+    time_max_s: timeMax,
+    samples,
+    pulse_start_s: pulseStart,
+    pulse_end_s: pulseEnd,
+    production_low_u_per_s: productionLow,
+    production_high_u_per_s: productionHigh,
+    decay_per_s: decay,
+    binding_on_per_u_s: bindingOn,
+    binding_off_per_s: bindingOff,
+    binding_site_total_u: siteTotal,
+    state_ratio_min: ratioMin,
+    state_ratio_max: ratioMax,
+    load_ratios: loadRatios,
+  } = spec.parameters;
+  const scalars = [
+    timeMin, timeMax, pulseStart, pulseEnd, productionLow, productionHigh,
+    decay, bindingOn, bindingOff, siteTotal, ratioMin, ratioMax,
+  ];
+  if (!scalars.every(Number.isFinite)) {
+    throw new Error(`${spec.id} requires finite scalar parameters`);
+  }
+  if (!Number.isInteger(samples) || samples < 101) {
+    throw new Error(`${spec.id} requires at least 101 samples`);
+  }
+  if (!(timeMin < pulseStart && pulseStart < pulseEnd && pulseEnd < timeMax)) {
+    throw new Error(`${spec.id} has invalid pulse timing`);
+  }
+  if (!(productionLow > 0 && productionHigh > productionLow && decay > 0
+    && bindingOn > 0 && bindingOff > 0 && siteTotal > 0
+    && ratioMin > 0 && ratioMax > ratioMin)) {
+    throw new Error(`${spec.id} has invalid positive-domain parameters`);
+  }
+  if (!Array.isArray(loadRatios) || loadRatios.length !== 3
+    || !loadRatios.every((value, index) => Number.isFinite(value) && value > 0
+      && (index === 0 || value > loadRatios[index - 1]))) {
+    throw new Error(`${spec.id} requires three positive sorted load_ratios`);
+  }
+
+  const upper = { left: 92, right: width - 54, top: 150, bottom: 478 };
+  const lower = { left: 92, right: width - 54, top: 565, bottom: 748 };
+  const dt = (timeMax - timeMin) / (samples - 1);
+  const dissociation = bindingOff / bindingOn;
+  const productionAt = (time) => (
+    time >= pulseStart && time < pulseEnd ? productionHigh : productionLow
+  );
+  const derivative = (time, state, connected) => {
+    const [free, bound] = state;
+    const bind = connected ? bindingOn * free * (siteTotal - bound) : 0;
+    const unbind = connected ? bindingOff * bound : 0;
+    return [productionAt(time) - decay * free - bind + unbind, bind - unbind];
+  };
+  const step = (time, state, connected) => {
+    const k1 = derivative(time, state, connected);
+    const s2 = state.map((value, index) => value + 0.5 * dt * k1[index]);
+    const k2 = derivative(time + 0.5 * dt, s2, connected);
+    const s3 = state.map((value, index) => value + 0.5 * dt * k2[index]);
+    const k3 = derivative(time + 0.5 * dt, s3, connected);
+    const s4 = state.map((value, index) => value + dt * k3[index]);
+    const k4 = derivative(time + dt, s4, connected);
+    return state.map((value, index) => Math.max(0, value + (dt / 6)
+      * (k1[index] + 2 * k2[index] + 2 * k3[index] + k4[index])));
+  };
+  const initialFree = productionLow / decay;
+  const initialBound = siteTotal * initialFree / (dissociation + initialFree);
+  const times = Array.from({ length: samples }, (_, index) => timeMin + index * dt);
+  function simulate(connected) {
+    const trajectory = [];
+    let state = [initialFree, connected ? initialBound : 0];
+    times.forEach((time, index) => {
+      trajectory.push([time, state[0], state[1]]);
+      if (index < times.length - 1) state = step(time, state, connected);
+    });
+    return trajectory;
+  }
+  const isolated = simulate(false);
+  const connected = simulate(true);
+  const stateMax = Math.max(
+    productionHigh / decay,
+    ...isolated.map((entry) => entry[1]),
+    ...connected.map((entry) => entry[1]),
+  ) * 1.08;
+  const timeX = (value) => localScale(value, timeMin, timeMax, upper.left, upper.right);
+  const stateY = (value) => localScale(value, 0, stateMax, upper.bottom, upper.top);
+  const isolatedPath = linePath(isolated.map(([time, free]) => [timeX(time), stateY(free)]));
+  const connectedPath = linePath(connected.map(([time, free]) => [timeX(time), stateY(free)]));
+  const pulseX = timeX(pulseStart);
+  const pulseWidth = timeX(pulseEnd) - pulseX;
+  const timeTicks = [0, 4, 8, 12, 16, 20].filter((value) => value >= timeMin && value <= timeMax);
+  const stateTicks = Array.from({ length: 5 }, (_, index) => (index / 4) * stateMax);
+  const upperGrid = [
+    ...timeTicks.map((tick) => `<line x1="${timeX(tick)}" y1="${upper.top}" x2="${timeX(tick)}" y2="${upper.bottom}" stroke="${theme.grid}" opacity=".65"/><text x="${timeX(tick)}" y="${upper.bottom + 22}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${tick}</text>`),
+    ...stateTicks.map((tick) => `<line x1="${upper.left}" y1="${stateY(tick)}" x2="${upper.right}" y2="${stateY(tick)}" stroke="${theme.grid}" opacity=".65"/><text x="${upper.left - 14}" y="${stateY(tick) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${tick.toFixed(1)}</text>`),
+  ].join("");
+
+  const ratioX = (value) => localLogScale(value, ratioMin, ratioMax, lower.left, lower.right);
+  const retroY = (value) => localScale(value, 0, 1, lower.bottom, lower.top);
+  const ratioSamples = Array.from({ length: 401 }, (_, index) => (
+    10 ** (Math.log10(ratioMin) + (index / 400) * (Math.log10(ratioMax) - Math.log10(ratioMin)))
+  ));
+  const palette = [theme.secondary, theme.accent, theme.danger];
+  const retroPaths = loadRatios.map((load, index) => {
+    const points = ratioSamples.map((ratio) => {
+      const value = 1 / (1 + ((1 + ratio) ** 2) / load);
+      return [ratioX(ratio), retroY(value)];
+    });
+    return `<path d="${linePath(points)}" fill="none" stroke="${palette[index]}" stroke-width="5" stroke-linecap="round"/>`;
+  }).join("");
+  const ratioTicks = [0.05, 0.1, 0.5, 1, 5, 10, 20].filter((value) => value >= ratioMin && value <= ratioMax);
+  const retroTicks = [0, 0.25, 0.5, 0.75, 1];
+  const lowerGrid = [
+    ...ratioTicks.map((tick) => `<line x1="${ratioX(tick)}" y1="${lower.top}" x2="${ratioX(tick)}" y2="${lower.bottom}" stroke="${theme.grid}" opacity=".65"/><text x="${ratioX(tick)}" y="${lower.bottom + 22}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${tick}</text>`),
+    ...retroTicks.map((tick) => `<line x1="${lower.left}" y1="${retroY(tick)}" x2="${lower.right}" y2="${retroY(tick)}" stroke="${theme.grid}" opacity=".65"/><text x="${lower.left - 14}" y="${retroY(tick) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${tick.toFixed(2)}</text>`),
+  ].join("");
+  const legend = [
+    [theme.primary, "isolated producer"],
+    [theme.accent, "connected free signal"],
+  ].map(([color, label], index) => `<line x1="${upper.right - 360 + index * 182}" y1="${upper.top + 28}" x2="${upper.right - 326 + index * 182}" y2="${upper.top + 28}" stroke="${color}" stroke-width="6"/><text x="${upper.right - 316 + index * 182}" y="${upper.top + 33}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="12">${label}</text>`).join("");
+  const loadLegend = loadRatios.map((load, index) => `<line x1="${lower.right - 425 + index * 136}" y1="${lower.top + 27}" x2="${lower.right - 393 + index * 136}" y2="${lower.top + 27}" stroke="${palette[index]}" stroke-width="5"/><text x="${lower.right - 383 + index * 136}" y="${lower.top + 32}" fill="${theme.text}" font-family="Cascadia Mono, monospace" font-size="11">p/Kd=${load}</text>`).join("");
+
+  const content = `${analyticalHeader(spec, layout, { badge: "DETERMINISTIC TOY MODEL · CONNECTION TEST" })}
+  <rect x="${upper.left}" y="${upper.top}" width="${upper.right - upper.left}" height="${upper.bottom - upper.top}" rx="16" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  <rect x="${pulseX}" y="${upper.top}" width="${pulseWidth}" height="${upper.bottom - upper.top}" fill="${theme.primary}" fill-opacity=".10"/>
+  ${upperGrid}
+  <path d="${isolatedPath}" fill="none" stroke="${theme.primary}" stroke-width="7" stroke-linecap="round"/>
+  <path d="${connectedPath}" fill="none" stroke="${theme.accent}" stroke-width="5" stroke-linecap="round"/>
+  <line x1="${timeX(pulseStart)}" y1="${upper.top}" x2="${timeX(pulseStart)}" y2="${upper.bottom}" stroke="${theme.primary}" stroke-width="2" stroke-dasharray="8 7"/>
+  <line x1="${timeX(pulseEnd)}" y1="${upper.top}" x2="${timeX(pulseEnd)}" y2="${upper.bottom}" stroke="${theme.primary}" stroke-width="2" stroke-dasharray="8 7"/>
+  <text x="${upper.left + 18}" y="${upper.top + 30}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="800">PAIRED INTERVENTION · SAME INPUT, CLIENT ATTACHED OR ABSENT</text>
+  ${legend}
+  <text x="${(upper.left + upper.right) / 2}" y="${upper.bottom + 47}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">time t · s</text>
+  <text x="28" y="${(upper.top + upper.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle" transform="rotate(-90 28 ${(upper.top + upper.bottom) / 2})">free producer signal X · arbitrary concentration unit</text>
+
+  <rect x="${lower.left}" y="${lower.top}" width="${lower.right - lower.left}" height="${lower.bottom - lower.top}" rx="16" fill="${theme.panelAlt}" stroke="${theme.grid}" stroke-width="2"/>
+  ${lowerGrid}${retroPaths}
+  <text x="${lower.left + 18}" y="${lower.top + 30}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="800">REDUCED FACTOR · LOAD AND OPERATING POINT BOTH MATTER</text>
+  ${loadLegend}
+  <text x="${(lower.left + lower.right) / 2}" y="${lower.bottom + 47}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">normalized producer state X / Kd · logarithmic scale</text>
+  <text x="28" y="${(lower.top + lower.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle" transform="rotate(-90 28 ${(lower.top + lower.bottom) / 2})">retroactivity factor R(X) · dimensionless</text>
+  <text x="${width - 42}" y="${height - 22}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10" text-anchor="end">hypothetical parameters · full ODE above · reduced factor below · no service or energy result</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -1668,6 +1820,7 @@ const renderers = {
   "slow-manifold-fold-boundary": slowManifoldFoldBoundary,
   "mission-profile-damage": missionProfileDamage,
   "interface-qualified-scale-symmetry": interfaceQualifiedScaleSymmetry,
+  "interface-qualified-retroactivity": interfaceQualifiedRetroactivity,
 };
 
 for (const spec of specs) {

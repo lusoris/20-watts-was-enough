@@ -7,6 +7,31 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- An interface-qualified retroactivity package adds ten bounded claims
+  (`C-1550`--`C-1559`) and Fixture F-027. Fourteen primary papers plus a
+  published model-qualification comment-and-reply exchange separate
+  direct downstream sequestration, pathway-specific substrate competition,
+  generic shared-resource contention and intended feedback; operating regime,
+  observation interface, delivered service, weak-coupling limits and complete
+  lifecycle cost remain explicit. A mathematical contract, editable
+  RK4/reduced-model plot, Decision 0015, six new child routes and three extended
+  EuroSciVoc/DFG/ANZSRC routes integrate the result without promoting a new
+  principle or candidate.
+
+- F-027 includes a deterministic public-development RIN-T01 smoke harness.
+  Sixteen focused tests cover the ten-track evidence/claim registry, balanced
+  source--load worlds, mass closure, two edge-removal interventions, malformed
+  interface rejection before simulation, closed JSON Schema coverage,
+  run/profile-bound resume, observed serialized-byte accounting,
+  bounded-insulation saturation, append-only integrity, byte-identical replay
+  and exact resume. The smoke run returned
+  `diagnostic-pass` with `NO_RESULT`; confirmation, transfer, full dimensional
+  comparison, physical systems, calibrated energy and claim authority remain
+  absent. Regenerated coverage records 1,458/1,550 protocol-covered claims, 92
+  reviewed ledger-only claims, 47/47 complete written artifacts, nine
+  smoke-ready harnesses and zero workstation-ready or workstation-executable
+  research claims.
+
 - A relative-sensing and scale-symmetry depth package adds ten bounded claims
   (`C-1540`--`C-1549`) and Fixture F-026. It distinguishes full-trajectory
   fold-change detection from adaptation, equal peaks, static normalization and

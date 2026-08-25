@@ -13,7 +13,8 @@ harness](../workstation/fixture-012/README.md), the
 the [F-022 positional-memory smoke harness](../workstation/fixture-022/README.md),
 the [F-023 plant-memory smoke harness](../workstation/fixture-023/README.md),
 the [F-024 projected-memory smoke harness](../workstation/fixture-024/README.md),
-and the [F-025 impedance-validity smoke harness](../workstation/fixture-025/README.md).
+the [F-025 impedance-validity smoke harness](../workstation/fixture-025/README.md),
+and the [F-027 connection-back-action smoke harness](../workstation/fixture-027/README.md).
 Execution readiness is tracked separately from the completeness of each full
 fixture contract.
 
@@ -45,3 +46,4 @@ fixture contract.
 | F-024 | [Applied multiscale reduction](024-applied-multiscale-reduction.md) | mature autoregressive, delay, balanced-truncation, singular-perturbation, adaptive-integration, surrogate, multigrid/domain-decomposition, and ensemble closure nulls; complete CPU-only contracts for C-1526--C-1529 with no execution results |
 | F-025 | [Electrochemistry: interfaces, memory, and degradation](025-electrochemistry-interface-memory-degradation.md) | mature state-space/MPC, finite-memory, circuit/validity, regularised inverse, hybrid-regime, barrier/rollback, queue/load, identifiability, recurrent-state, and safe-optimisation nulls; complete CPU-only contracts for C-1530--C-1539 with no execution results |
 | F-026 | [Interface-qualified relative sensing and scale symmetry](026-interface-qualified-relative-sensing.md) | mature static/streaming normalization, explicit difference/log-ratio, state-space, recurrent, robust-control, consensus and observation-design nulls; complete CPU-only contracts for C-1540--C-1549 with no execution results |
+| F-027 | [Interface-qualified retroactivity and bounded insulation](027-interface-qualified-retroactivity-insulation.md) | immutable reads/messages, copy-on-write, bounded queues, backpressure, admission/expiry, resource isolation, explicit filtering/control, weak coupling and replication nulls; ten detailed written contracts for C-1550--C-1559, with only a public RIN-T01 `NO_RESULT` smoke slice implemented |

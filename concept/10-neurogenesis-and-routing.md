@@ -133,6 +133,19 @@ model, replace an incumbent, or claim permanent memory during probation.
 Initialization source, training episodes, expected role, resource ceiling, and
 discard path are recorded before it receives traffic.
 
+Composing or admitting that module is itself a perturbation. The newcomer can
+pin shared activations, add router or queue pressure, alter normalization,
+create a gradient path, mutate shared cache state, or intentionally feed back.
+Before probation credit is assigned, compare the incumbent producer under the
+same input and seed with the connection absent and present. Cross connection
+state independently from shared CPU, memory and scheduler load so ordinary
+contention is not mislabeled as connection-induced back-action
+([C-1550](../research/claims.md#c-1550),
+[C-1558](../research/claims.md#c-1558)). Immutable snapshots, bounded queues,
+resource isolation, stop-gradient adapters and explicit feedback remain the
+minimum nulls. The full qualification and retirement rules are in
+[Fixture F-027](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md).
+
 ### 3. Give the candidate probation traffic
 
 The router divides admitted work into three explicit budgets:

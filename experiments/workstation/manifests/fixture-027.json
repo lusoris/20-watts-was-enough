@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "artifact": "fixture-027",
+  "readiness": "smoke-ready",
+  "command": {
+    "prepare": "node experiments/workstation/fixture-027/runner.mjs prepare --profile smoke",
+    "smoke": "node experiments/workstation/fixture-027/runner.mjs smoke --profile smoke --output <run-directory> --resume false",
+    "run": "node experiments/workstation/fixture-027/runner.mjs run --profile development --output <run-directory> --resume false",
+    "analyze": "node experiments/workstation/fixture-027/runner.mjs analyze --output <run-directory>",
+    "validate": "node experiments/workstation/fixture-027/runner.mjs validate --output <run-directory>"
+  },
+  "environment": {
+    "runtime": "Node.js >=22.13.0 on a little-endian CPU; binary64 arithmetic only; no GPU",
+    "lockfiles": ["package-lock.json"]
+  },
+  "hardware": {
+    "smoke": {
+      "cpu": "one ordinary little-endian CPU thread or more; GPU forbidden",
+      "memory_bytes": 134217728,
+      "disk_bytes": 52428800,
+      "energy": "not measured or modeled; energy conclusions forbidden"
+    },
+    "workstation": {
+      "cpu": "ordinary little-endian CPU; no workstation claim is registered",
+      "memory_bytes": 1073741824,
+      "disk_bytes": 1073741824,
+      "energy": "not applicable to this development smoke slice; energy conclusions forbidden"
+    }
+  },
+  "seeds": {
+    "development": "experiments/workstation/fixture-027/seeds/development.reveal.json",
+    "confirmation": "experiments/workstation/fixture-027/seeds/confirmation.unavailable.json",
+    "held_out": "experiments/workstation/fixture-027/seeds/transfer.unavailable.json"
+  },
+  "data": {
+    "generator": "experiments/workstation/fixture-027/generator.mjs",
+    "full_profile": "experiments/workstation/fixture-027/configs/development.json",
+    "full_profile_sha256": "cb2398c64e5445bcd9d03cfc1ab1fe9a6de29f9a8eb0f8e642b8d9cb4c31dfff",
+    "external": []
+  },
+  "outputs": {
+    "directory": "experiments/workstation/runs/fixture-027-*",
+    "schema": "experiments/workstation/fixture-027/output.schema.json",
+    "append_only": true,
+    "hash_chain": true
+  },
+  "implementation": {
+    "entrypoint": "experiments/workstation/fixture-027/runner.mjs",
+    "tests": [
+      "experiments/workstation/fixture-027/contract.test.mjs",
+      "experiments/workstation/fixture-027/runner.test.mjs"
+    ],
+    "full_tests": [
+      "experiments/workstation/fixture-027/contract.test.mjs",
+      "experiments/workstation/fixture-027/runner.test.mjs"
+    ],
+    "execution_claims": ["C-1550"]
+  },
+  "energy": {
+    "mode": "not-measured",
+    "required": false,
+    "applicability": "not-applicable-to-scoped-claim",
+    "energy_conclusion_allowed": false,
+    "scope_binding": "fixture-027.c-1550.development-smoke.non-energy.v1",
+    "not_applicable_reason": "RIN-T01 smoke validation records normalized synthetic trajectories, closure residuals, interface gates, and deterministic work counters only; it has no joule, watt, carbon, physical-cell, comparative, or energy-efficiency endpoint."
+  },
+  "resume": {
+    "supported": true,
+    "module": "experiments/workstation/lib/checkpoint-ledger.mjs",
+    "test": "experiments/workstation/fixture-027/runner.test.mjs"
+  },
+  "promotion_evidence": {
+    "status": "pending",
+    "evidence_path": "experiments/workstation/promotion/fixture-027/evidence.json",
+    "promotion_validation_receipt_path": "experiments/workstation/promotion/fixture-027/promotion-validation.launch-receipt.json",
+    "run_directory": "experiments/workstation/runs/fixture-027-confirmation",
+    "release_root": "experiments/workstation/releases/fixture-027",
+    "release_path": "experiments/workstation/releases/fixture-027/confirmation.release.json",
+    "energy_assignments_path": "experiments/workstation/runs/fixture-027-confirmation/non-energy-boundary.json",
+    "disjoint_seed_pack_paths": [
+      "experiments/workstation/fixture-027/seeds/transfer.unavailable.json"
+    ],
+    "protocol_eligibility": {
+      "status": "blocked",
+      "protocol_version": "F-027/RIN-T01-development-smoke-v1",
+      "claim_scope": ["C-1550"],
+      "blockers": [
+        "Only a public development source/load and bounded-insulation plumbing diagnostic is implemented; nine registered RIN tracks are absent.",
+        "The full RIN-T01 parameter grid, dimensional concentration model, independent numerical reference, solver-convergence analysis, and confirmatory statistics are absent.",
+        "The bounded-insulation arm is a synthetic smoke diagnostic and does not execute or establish the artificial-system translation.",
+        "No confirmation or transfer seed, commitment, calibrated apparatus, release, or promotion evidence exists.",
+        "Every generated event and command result is explicitly labelled NO_RESULT."
+      ]
+    }
+  }
+}

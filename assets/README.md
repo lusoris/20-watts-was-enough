@@ -219,6 +219,11 @@ The five concept-facing analytical additions are:
 - `memory-action-price-envelope` — resource price and action switching; and
 - `mission-profile-damage` — equal-mean histories with unequal modeled damage.
 
+`interface-qualified-retroactivity` adds a paired isolated/connected full-ODE
+response above exact reduced back-action curves. Its load-ratio sweep makes the
+operating-point dependence visible without presenting the illustrative
+parameters as measurements.
+
 `fixture-007-identifiability` is also used directly in the concept book because
 it already provides the needed analytical distinction between prior-supported
 reconstruction and new evidence.

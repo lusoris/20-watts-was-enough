@@ -20,3 +20,4 @@ than silently changing its outcome.
 | [0012](0012-executable-slices-must-respect-mature-nulls.md) | Require negative controls and complete mature nulls in every executable slice | accepted |
 | [0013](0013-development-can-block-a-protocol.md) | Let development diagnostics block an ineligible protocol before confirmation | accepted |
 | [0014](0014-coarse-state-needs-a-closure-contract.md) | Require an explicit validity and resource contract for every coarse state | accepted |
+| [0015](0015-qualify-modules-after-interconnection.md) | Qualify module behavior after clients are connected | accepted |

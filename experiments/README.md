@@ -5,11 +5,16 @@
 - [Proposed experiment families](proposed/README.md)
 - [Workstation execution contract](workstation/README.md)
 
-The executable phase now has three deliberately limited smoke harnesses:
+The executable phase now has nine deliberately limited smoke harnesses:
 [Candidate 010 staged verification](workstation/candidate-010/README.md) and
-[Fixture F-007 optical null-space honesty](workstation/fixture-007/README.md),
-plus [Fixture F-012 layout-randomized performance
-inference](workstation/fixture-012/README.md).
+Fixtures [F-007](workstation/fixture-007/README.md),
+[F-012](workstation/fixture-012/README.md),
+[F-019](workstation/fixture-019/README.md),
+[F-022](workstation/fixture-022/README.md),
+[F-023](workstation/fixture-023/README.md),
+[F-024](workstation/fixture-024/README.md),
+[F-025](workstation/fixture-025/README.md), and
+[F-027](workstation/fixture-027/README.md).
 Candidate and fixture contracts still define the null hypothesis, strongest standard baselines,
 equal-budget boundary, units, ablations, and rejection rule before code can
 make a favored mechanism look inevitable. Smoke-ready plumbing is reported

@@ -74,6 +74,10 @@ notation.
   defines full-trajectory fold-change detection, state equivariance,
   observation-qualified recoverability, absolute counter-tasks, and the
   reference-maintenance boundary for Fixture F-026.
+- [`interface-qualified-retroactivity.md`](interface-qualified-retroactivity.md)
+  defines full and reduced downstream-binding dynamics, paired connection
+  sensitivity, service-qualified attenuation, causal load discrimination,
+  and complete insulation costs for Fixture F-027.
 - [`representative-adaptive-performance.md`](representative-adaptive-performance.md)
   defines actual observation/action opportunity, acquisition and opponent
   history, resource/damage state, anticipation and interception, retention and

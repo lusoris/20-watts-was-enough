@@ -401,5 +401,34 @@
       "ratio_contours": [0.5, 1, 2]
     },
     "status": "Exact trajectories of the displayed positive-domain reference model. Input scales, time constant, pulse, and absolute gate are illustrative; no biological, trained-model, safety, or efficiency result is shown."
+  },
+  {
+    "id": "interface-qualified-retroactivity",
+    "title": "A connected client can reshape the producer transient",
+    "equation": "dX/dt = k(t)-delta X+k_off C-k_on X(p_tot-C);  R(X)=[1+(1+X/K_d)^2/(p_tot/K_d)]^-1",
+    "source": "math/interface-qualified-retroactivity.md#worked-mass-action-reference",
+    "layout": {
+      "kind": "retroactivity-transient-and-load-envelope",
+      "width": 1180,
+      "height": 840,
+      "theme": "violet"
+    },
+    "parameters": {
+      "time_min_s": 0,
+      "time_max_s": 20,
+      "samples": 1001,
+      "pulse_start_s": 2,
+      "pulse_end_s": 12,
+      "production_low_u_per_s": 0.2,
+      "production_high_u_per_s": 1.2,
+      "decay_per_s": 0.25,
+      "binding_on_per_u_s": 5,
+      "binding_off_per_s": 1,
+      "binding_site_total_u": 2,
+      "state_ratio_min": 0.05,
+      "state_ratio_max": 20,
+      "load_ratios": [0.1, 1, 10]
+    },
+    "status": "Deterministic RK4 approximations of the displayed illustrative mass-action ODE and the exact algebraic reduced-model retroactivity factor. Parameters are hypothetical; no biological fit, trained-system result, service benefit, or energy result is shown."
   }
 ]

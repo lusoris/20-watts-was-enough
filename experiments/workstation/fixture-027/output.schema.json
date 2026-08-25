@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-027.rin-t01-event.schema.json",
+  "title": "Fixture 027 RIN-T01 public-development diagnostic event",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "contract.mjs",
+    "export": "assertFixture027Record",
+    "version_export": "FIXTURE_027_EVENT_CONTRACT_VERSION",
+    "contract_version": "fixture-027.rin-t01-event.v3",
+    "test": "contract.test.mjs"
+  },
+  "required": [
+    "schema",
+    "contract_version",
+    "artifact",
+    "track",
+    "run_id",
+    "profile",
+    "pack",
+    "seed",
+    "world_index",
+    "world_id",
+    "arm",
+    "attempt",
+    "units",
+    "input_sha256",
+    "oracle_class",
+    "corruption",
+    "decision",
+    "trace_valid",
+    "ordering_valid",
+    "checksum_valid",
+    "unit_valid",
+    "interface_valid",
+    "parameters",
+    "mass_closure_residual_u",
+    "no_affinity_rmse_u",
+    "back_action_rmse_u",
+    "prediction_rmse_u",
+    "insulation_rmse_u",
+    "restoration_fraction",
+    "driver_saturation_fraction",
+    "insulation_action_u",
+    "work_counter_scope",
+    "accepted_model_steps",
+    "accepted_interface_samples_read",
+    "accepted_interface_bytes_read",
+    "serialized_event_bytes_written",
+    "declared_arm_scalar_operations",
+    "loss",
+    "status",
+    "result_label",
+    "no_result",
+    "measured_energy_present",
+    "energy_conclusion_allowed",
+    "claim_eligible",
+    "comparison_inference_permitted",
+    "scientific_result",
+    "performance_result",
+    "interpretation",
+    "integrity"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-027.rin-t01-event.v3" },
+    "artifact": { "const": "fixture-027" },
+    "track": { "const": "RIN-T01" },
+    "run_id": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "profile": { "enum": ["smoke", "development"] },
+    "pack": { "const": "public-development" },
+    "seed": { "type": "integer", "minimum": 0 },
+    "world_index": { "type": "integer", "minimum": 0 },
+    "world_id": { "type": "string", "pattern": "^[0-9]+:[0-9]+$" },
+    "arm": {
+      "enum": [
+        "isolated-assumption",
+        "load-aware-interface",
+        "bounded-insulation-diagnostic"
+      ]
+    },
+    "attempt": { "const": 0 },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal", "time", "rate", "bytes"],
+      "properties": {
+        "signal": { "const": "U" },
+        "time": { "const": "s" },
+        "rate": { "const": "U s^-1" },
+        "bytes": { "const": "B" }
+      }
+    },
+    "input_sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract", "generator", "runner", "configuration", "schema", "seed_pack"],
+      "properties": {
+        "contract": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "generator": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "runner": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "configuration": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "schema": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "seed_pack": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "oracle_class": {
+      "enum": [
+        "zero-load-control",
+        "weak-load-supported",
+        "strong-load-retroactive",
+        "finite-insulation-effective",
+        "insulation-saturated",
+        "interface-schema-invalid"
+      ]
+    },
+    "corruption": { "type": "string", "minLength": 1 },
+    "decision": {
+      "enum": [
+        "record-invalid",
+        "isolated-assumption",
+        "within-support",
+        "back-action-detected",
+        "insulation-not-required",
+        "bounded-insulation",
+        "support-exceeded"
+      ]
+    },
+    "trace_valid": { "type": "boolean" },
+    "ordering_valid": { "type": "boolean" },
+    "checksum_valid": { "type": "boolean" },
+    "unit_valid": { "type": "boolean" },
+    "interface_valid": { "type": "boolean" },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "production_rate_u_per_s",
+        "decay_per_s",
+        "binding_on_per_u_s",
+        "binding_off_per_s",
+        "load_total_u",
+        "driver_gain_per_s",
+        "driver_capacity_u_per_s"
+      ],
+      "properties": {
+        "production_rate_u_per_s": { "type": "number", "minimum": 0 },
+        "decay_per_s": { "type": "number", "minimum": 0 },
+        "binding_on_per_u_s": { "type": "number", "minimum": 0 },
+        "binding_off_per_s": { "type": "number", "minimum": 0 },
+        "load_total_u": { "type": "number", "minimum": 0 },
+        "driver_gain_per_s": { "type": "number", "minimum": 0 },
+        "driver_capacity_u_per_s": { "type": "number", "minimum": 0 }
+      }
+    },
+    "mass_closure_residual_u": { "type": "number", "minimum": 0 },
+    "no_affinity_rmse_u": { "type": "number", "minimum": 0 },
+    "back_action_rmse_u": { "type": "number", "minimum": 0 },
+    "prediction_rmse_u": { "type": "number", "minimum": 0 },
+    "insulation_rmse_u": { "type": "number", "minimum": 0 },
+    "restoration_fraction": { "type": "number", "minimum": 0, "maximum": 1 },
+    "driver_saturation_fraction": { "type": "number", "minimum": 0, "maximum": 1 },
+    "insulation_action_u": { "type": "number", "minimum": 0 },
+    "work_counter_scope": { "const": "accepted-interface-and-declared-arm-model-only; generator-and-validator-work-excluded" },
+    "accepted_model_steps": { "type": "integer", "minimum": 0 },
+    "accepted_interface_samples_read": { "type": "integer", "minimum": 0 },
+    "accepted_interface_bytes_read": { "type": "integer", "minimum": 0 },
+    "serialized_event_bytes_written": { "type": "integer", "minimum": 1 },
+    "declared_arm_scalar_operations": { "type": "integer", "minimum": 0 },
+    "loss": { "type": "number", "minimum": 0, "maximum": 100 },
+    "status": { "const": "development-smoke-only" },
+    "result_label": { "const": "NO_RESULT" },
+    "no_result": { "const": true },
+    "measured_energy_present": { "const": false },
+    "energy_conclusion_allowed": { "const": false },
+    "claim_eligible": { "const": false },
+    "comparison_inference_permitted": { "const": false },
+    "scientific_result": { "const": false },
+    "performance_result": { "const": false },
+    "interpretation": { "type": "string", "pattern": "^NO_RESULT:" },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "previous_sha256", "record_sha256"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 0 },
+        "previous_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "record_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

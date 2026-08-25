@@ -895,13 +895,23 @@ capabilities, proof-carrying code, owned-state reasoning, static analysis, and
 gradual boundaries ([C-145](claims.md#c-145)–[C-151](claims.md#c-151),
 [C-153](claims.md#c-153)); and built compartments whose modularity does not by
 itself establish reversibility, lifecycle advantage, or independent failure
-([C-716](claims.md#c-716), [C-720](claims.md#c-720)).
+([C-716](claims.md#c-716), [C-720](claims.md#c-720)); and connection-qualified
+biochemical modules whose downstream targets can change upstream dynamics,
+whose candidate insulators must retain delivered service, and whose digital
+translation remains subordinate to immutable-copy, queueing, resource-
+isolation, explicit-control, and intended-feedback nulls
+([C-1550](claims.md#c-1550)–[C-1559](claims.md#c-1559)).
 
 **Candidate AI primitive.** Hierarchical modules with local state, typed
 interfaces, and explicit cross-compartment budgets.
 
 **Do not collapse.** Modularity can protect specialization but can also block
-transfer; the correct boundary is an empirical question.
+transfer; the correct boundary is an empirical question. A small or typed
+interface is not proof that producer behavior survives connection. Direct
+sequestration, substrate competition, shared-resource contention, shared
+mutable state, gradient interference, and intentional feedback require
+different interventions. [Fixture F-027](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md)
+tests that distinction before any new primitive is admitted.
 
 ## P-009 — Maintenance plane
 

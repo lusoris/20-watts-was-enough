@@ -16,7 +16,7 @@ EuroSciVoc is the EU-level multilingual science vocabulary. The DFG hierarchy
 adds German review granularity. ANZSRC is an independent omission detector,
 not the normative framework for the project.
 
-**Explicit child routes recorded:** 63. All other children are unassigned.
+**Explicit child routes recorded:** 69. All other children are unassigned.
 
 ## EuroSciVoc 1.6: European science vocabulary
 
@@ -74,11 +74,11 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### engineering and technology
 
-**Deutsch:** Technik und Technologie. **Fine-grained status:** 2 of 226 concepts in this branch have an explicit routing assignment.
+**Deutsch:** Technik und Technologie. **Fine-grained status:** 4 of 226 concepts in this branch have an explicit routing assignment.
 
 - **engineering and technology.** Routing: unassigned.
   - **chemical engineering.** Deutsch: Chemieingenieurwesen. Routing: unassigned.
-    - **biochemical engineering.** Deutsch: Bioverfahrenstechnik. Routing: unassigned.
+    - **biochemical engineering.** Deutsch: Bioverfahrenstechnik. Routing: adjacent child-level evidence via [interface qualified retroactivity insulation](../audits/2026-08-25-interface-qualified-retroactivity-insulation.md). Claims: [C-1550](../claims.md#c-1550), [C-1551](../claims.md#c-1551), [C-1552](../claims.md#c-1552), [C-1553](../claims.md#c-1553), [C-1554](../claims.md#c-1554), [C-1555](../claims.md#c-1555), [C-1556](../claims.md#c-1556), [C-1557](../claims.md#c-1557).
     - **chemical process engineering.** Deutsch: chemische Verfahrenstechnik. Routing: unassigned.
     - **separation technologies.** Deutsch: Trenntechnik. Routing: unassigned.
       - **desalination.** Deutsch: Entsalzung. Routing: unassigned.
@@ -124,7 +124,7 @@ are retained below; neither a label nor a parent route counts as evidence review
         - **computer processors.** Deutsch: Computerprozessor. Routing: unassigned.
         - **quantum computers.** Deutsch: Quantencomputer. Routing: unassigned.
         - **supercomputers.** Deutsch: Supercomputer. Routing: unassigned.
-      - **control engineering.** Deutsch: Regelungstechnik. Routing: unassigned.
+      - **control engineering.** Deutsch: Regelungstechnik. Routing: adjacent child-level evidence via [interface qualified retroactivity insulation](../audits/2026-08-25-interface-qualified-retroactivity-insulation.md). Claims: [C-1550](../claims.md#c-1550), [C-1552](../claims.md#c-1552), [C-1554](../claims.md#c-1554), [C-1555](../claims.md#c-1555), [C-1556](../claims.md#c-1556), [C-1557](../claims.md#c-1557), [C-1559](../claims.md#c-1559).
       - **control systems.** Deutsch: Steuerungssysteme. Routing: unassigned.
         - **home automation.** Deutsch: Haushaltsautomatisierung. Routing: unassigned.
       - **digital electronics.** Deutsch: digitale Elektronik. Routing: unassigned.
@@ -560,7 +560,7 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### natural sciences
 
-**Deutsch:** Naturwissenschaften. **Fine-grained status:** 15 of 413 concepts in this branch have an explicit routing assignment.
+**Deutsch:** Naturwissenschaften. **Fine-grained status:** 16 of 413 concepts in this branch have an explicit routing assignment.
 
 - **natural sciences.** Routing: unassigned.
   - **biological sciences.** Deutsch: Biowissenschaften. Routing: unassigned.
@@ -639,7 +639,7 @@ are retained below; neither a label nor a parent route counts as evidence review
       - **computational neuroscience.** Deutsch: computergestützte Neurowissenschaft. Routing: unassigned.
     - **other biological topics.** Deutsch: andere biologische Themen. Routing: unassigned.
     - **reproductive biology.** Deutsch: Reproduktionsbiologie. Routing: unassigned.
-    - **synthetic biology.** Deutsch: synthetische Biologie. Routing: unassigned.
+    - **synthetic biology.** Deutsch: synthetische Biologie. Routing: dedicated child-level evidence via [interface qualified retroactivity insulation](../audits/2026-08-25-interface-qualified-retroactivity-insulation.md). Claims: [C-1550](../claims.md#c-1550), [C-1551](../claims.md#c-1551), [C-1552](../claims.md#c-1552), [C-1553](../claims.md#c-1553), [C-1554](../claims.md#c-1554), [C-1555](../claims.md#c-1555), [C-1556](../claims.md#c-1556), [C-1557](../claims.md#c-1557), [C-1558](../claims.md#c-1558), [C-1559](../claims.md#c-1559).
     - **zoology.** Deutsch: Zoologie. Routing: unassigned.
       - **entomology.** Deutsch: Insektenkunde. Routing: unassigned.
         - **apidology.** Deutsch: Apidologie. Routing: unassigned.
@@ -1278,7 +1278,7 @@ are retained below; neither a label nor a parent route counts as evidence review
 - **2.11-04 — Strukturbiologie.** Routing: unassigned.
 - **2.11-05 — Allgemeine Genetik und funktionelle Genomforschung.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1506](../claims.md#c-1506), [C-1513](../claims.md#c-1513).
 - **2.11-06 — Entwicklungsbiologie.** Routing: dedicated child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1506](../claims.md#c-1506), [C-1507](../claims.md#c-1507), [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1510](../claims.md#c-1510), [C-1511](../claims.md#c-1511), [C-1512](../claims.md#c-1512), [C-1513](../claims.md#c-1513), [C-1514](../claims.md#c-1514), [C-1515](../claims.md#c-1515).
-- **2.11-07 — Bioinformatik und Theoretische Biologie.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1510](../claims.md#c-1510), [C-1514](../claims.md#c-1514), [C-1515](../claims.md#c-1515).
+- **2.11-07 — Bioinformatik und Theoretische Biologie.** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [interface qualified retroactivity insulation](../audits/2026-08-25-interface-qualified-retroactivity-insulation.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1510](../claims.md#c-1510), [C-1514](../claims.md#c-1514), [C-1515](../claims.md#c-1515), [C-1550](../claims.md#c-1550), [C-1552](../claims.md#c-1552), [C-1553](../claims.md#c-1553), [C-1556](../claims.md#c-1556), [C-1557](../claims.md#c-1557), [C-1558](../claims.md#c-1558), [C-1559](../claims.md#c-1559).
 
 ### 2.12 Pflanzenwissenschaften
 
@@ -1631,9 +1631,9 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 **Parent route:** dedicated parent-level audit via [engineering analogues](../audits/2026-08-05-engineering-analogues.md), [aerospace maritime autonomy](../audits/2026-08-05-aerospace-maritime-autonomy.md), [medical devices biomedical engineering](../audits/2026-08-24-medical-devices-biomedical-engineering.md).
 
-**Fine-grained status:** 0 of 6 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 1 of 6 subjects have an explicit child-level routing assignment.
 
-- **4.41-01 — Automatisierungstechnik, Mechatronik, Regelungssysteme, Intelligente Technische Systeme, Robotik.** Routing: unassigned.
+- **4.41-01 — Automatisierungstechnik, Mechatronik, Regelungssysteme, Intelligente Technische Systeme, Robotik.** Routing: adjacent child-level evidence via [interface qualified retroactivity insulation](../audits/2026-08-25-interface-qualified-retroactivity-insulation.md). Claims: [C-1550](../claims.md#c-1550), [C-1552](../claims.md#c-1552), [C-1554](../claims.md#c-1554), [C-1555](../claims.md#c-1555), [C-1556](../claims.md#c-1556), [C-1557](../claims.md#c-1557), [C-1559](../claims.md#c-1559).
 - **4.41-02 — Messsysteme.** Routing: unassigned.
 - **4.41-03 — Mikrosysteme.** Routing: unassigned.
 - **4.41-04 — Verkehrs- und Transportsysteme, Intelligenter und automatisierter Verkehr.** Routing: unassigned.
@@ -1839,7 +1839,7 @@ route.
 
 **Parent route:** dedicated parent-level audit via [cellular quality control](../audits/2026-08-05-cellular-quality-control.md), [collective ecological resilience](../audits/2026-08-05-collective-ecological-resilience.md), [developmental morphogenesis](../audits/2026-08-05-developmental-morphogenesis.md), [microbial ecology biofilms](../audits/2026-08-05-microbial-ecology-biofilms.md), [plant distributed control](../audits/2026-08-05-plant-distributed-control.md), [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md), [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md).
 
-**Fine-grained status:** 0 of 10 groups and 16 of 98 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 10 groups and 17 of 98 fields have an explicit child-level routing assignment.
 
 #### 3101 Biochemistry and cell biology
 
@@ -1855,10 +1855,10 @@ route.
 - **310108 — Protein trafficking.** Routing: unassigned.
 - **310109 — Proteomics and intermolecular interactions (excl. medical proteomics).** Routing: unassigned.
 - **310110 — Receptors and membrane biology.** Routing: dedicated child-level evidence via [relative sensing scale symmetry](../audits/2026-08-25-relative-sensing-scale-symmetry.md). Claims: [C-1543](../claims.md#c-1543), [C-1548](../claims.md#c-1548).
-- **310111 — Signal transduction.** Routing: dedicated child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md), [relative sensing scale symmetry](../audits/2026-08-25-relative-sensing-scale-symmetry.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1510](../claims.md#c-1510), [C-1518](../claims.md#c-1518), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525), [C-1541](../claims.md#c-1541), [C-1542](../claims.md#c-1542), [C-1543](../claims.md#c-1543), [C-1544](../claims.md#c-1544), [C-1545](../claims.md#c-1545), [C-1546](../claims.md#c-1546), [C-1547](../claims.md#c-1547), [C-1548](../claims.md#c-1548).
+- **310111 — Signal transduction.** Routing: dedicated child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md), [relative sensing scale symmetry](../audits/2026-08-25-relative-sensing-scale-symmetry.md), [interface qualified retroactivity insulation](../audits/2026-08-25-interface-qualified-retroactivity-insulation.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1510](../claims.md#c-1510), [C-1518](../claims.md#c-1518), [C-1520](../claims.md#c-1520), [C-1521](../claims.md#c-1521), [C-1524](../claims.md#c-1524), [C-1525](../claims.md#c-1525), [C-1541](../claims.md#c-1541), [C-1542](../claims.md#c-1542), [C-1543](../claims.md#c-1543), [C-1544](../claims.md#c-1544), [C-1545](../claims.md#c-1545), [C-1546](../claims.md#c-1546), [C-1547](../claims.md#c-1547), [C-1548](../claims.md#c-1548), [C-1550](../claims.md#c-1550), [C-1552](../claims.md#c-1552), [C-1554](../claims.md#c-1554), [C-1555](../claims.md#c-1555), [C-1556](../claims.md#c-1556), [C-1557](../claims.md#c-1557), [C-1559](../claims.md#c-1559).
 - **310112 — Structural biology (incl. macromolecular modelling).** Routing: unassigned.
-- **310113 — Synthetic biology.** Routing: unassigned.
-- **310114 — Systems biology.** Routing: dedicated child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [relative sensing scale symmetry](../audits/2026-08-25-relative-sensing-scale-symmetry.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1514](../claims.md#c-1514), [C-1515](../claims.md#c-1515), [C-1540](../claims.md#c-1540), [C-1541](../claims.md#c-1541), [C-1542](../claims.md#c-1542), [C-1543](../claims.md#c-1543), [C-1544](../claims.md#c-1544), [C-1545](../claims.md#c-1545), [C-1546](../claims.md#c-1546), [C-1547](../claims.md#c-1547), [C-1548](../claims.md#c-1548), [C-1549](../claims.md#c-1549).
+- **310113 — Synthetic biology.** Routing: dedicated child-level evidence via [interface qualified retroactivity insulation](../audits/2026-08-25-interface-qualified-retroactivity-insulation.md). Claims: [C-1550](../claims.md#c-1550), [C-1551](../claims.md#c-1551), [C-1552](../claims.md#c-1552), [C-1553](../claims.md#c-1553), [C-1554](../claims.md#c-1554), [C-1555](../claims.md#c-1555), [C-1556](../claims.md#c-1556), [C-1557](../claims.md#c-1557), [C-1558](../claims.md#c-1558), [C-1559](../claims.md#c-1559).
+- **310114 — Systems biology.** Routing: dedicated child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [relative sensing scale symmetry](../audits/2026-08-25-relative-sensing-scale-symmetry.md), [interface qualified retroactivity insulation](../audits/2026-08-25-interface-qualified-retroactivity-insulation.md). Claims: [C-1508](../claims.md#c-1508), [C-1509](../claims.md#c-1509), [C-1514](../claims.md#c-1514), [C-1515](../claims.md#c-1515), [C-1540](../claims.md#c-1540), [C-1541](../claims.md#c-1541), [C-1542](../claims.md#c-1542), [C-1543](../claims.md#c-1543), [C-1544](../claims.md#c-1544), [C-1545](../claims.md#c-1545), [C-1546](../claims.md#c-1546), [C-1547](../claims.md#c-1547), [C-1548](../claims.md#c-1548), [C-1549](../claims.md#c-1549), [C-1550](../claims.md#c-1550), [C-1551](../claims.md#c-1551), [C-1552](../claims.md#c-1552), [C-1553](../claims.md#c-1553), [C-1554](../claims.md#c-1554), [C-1555](../claims.md#c-1555), [C-1556](../claims.md#c-1556), [C-1557](../claims.md#c-1557), [C-1558](../claims.md#c-1558), [C-1559](../claims.md#c-1559).
 - **310199 — Biochemistry and cell biology not elsewhere classified.** Routing: unassigned.
 
 #### 3102 Bioinformatics and computational biology
@@ -2878,7 +2878,7 @@ route.
 
 **Parent route:** dedicated parent-level audit via [engineering analogues](../audits/2026-08-05-engineering-analogues.md), [mechanical civil resilience](../audits/2026-08-05-mechanical-civil-resilience.md), [process engineering](../audits/2026-08-05-process-engineering.md), [power grids protection and recovery](../audits/2026-08-05-power-grids-protection-and-recovery.md), [polymer research adaptive materials](../audits/2026-08-21-polymer-research-adaptive-materials.md), [production maintenance nanomanufacturing communications material qualification](../audits/2026-08-24-production-maintenance-nanomanufacturing-communications-material-qualification.md), [computing compilers networking visualization](../audits/2026-08-24-computing-compilers-networking-visualization.md), [medical devices biomedical engineering](../audits/2026-08-24-medical-devices-biomedical-engineering.md), [environmental engineering water waste remediation](../audits/2026-08-24-environmental-engineering-water-waste-remediation.md), [tribology contact adaptive interfaces](../audits/2026-08-25-tribology-contact-adaptive-interfaces.md), [electrochemistry interface memory degradation](../audits/2026-08-25-electrochemistry-interface-memory-degradation.md).
 
-**Fine-grained status:** 0 of 20 groups and 4 of 196 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 20 groups and 5 of 196 fields have an explicit child-level routing assignment.
 
 #### 4001 Aerospace engineering
 
@@ -2979,7 +2979,7 @@ route.
 - **400702 — Automation engineering.** Routing: unassigned.
 - **400703 — Autonomous vehicle systems.** Routing: unassigned.
 - **400704 — Biomechatronics.** Routing: unassigned.
-- **400705 — Control engineering.** Routing: unassigned.
+- **400705 — Control engineering.** Routing: adjacent child-level evidence via [interface qualified retroactivity insulation](../audits/2026-08-25-interface-qualified-retroactivity-insulation.md). Claims: [C-1550](../claims.md#c-1550), [C-1552](../claims.md#c-1552), [C-1554](../claims.md#c-1554), [C-1555](../claims.md#c-1555), [C-1556](../claims.md#c-1556), [C-1557](../claims.md#c-1557), [C-1559](../claims.md#c-1559).
 - **400706 — Field robotics.** Routing: unassigned.
 - **400707 — Manufacturing robotics.** Routing: unassigned.
 - **400708 — Mechatronics hardware design and architecture.** Routing: unassigned.

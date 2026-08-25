@@ -23722,3 +23722,285 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   flexibility without paying for every absolute variable at every step?
 - **Direct test:** [`RSD-T10`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t10--robustness-recoverability-and-compute-frontier).
 - **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1549) · [mathematical contract](../math/interface-qualified-scale-symmetry.md).
+
+### C-1550
+
+- **Claim:** In the cited transcriptional binding model, connecting a finite
+  downstream promoter pool changes the upstream free-factor dynamics through
+  reversible sequestration; under a declared fast-binding approximation the
+  resulting retroactivity factor depends on load abundance, affinity and the
+  upstream operating point.
+- **Status:** established formal result under the cited mass-action and
+  timescale-separation assumptions; not a universal property of modular
+  systems or of nondestructive digital reads.
+- **Primary source:** [Del Vecchio, Ninfa and Sontag 2008](https://doi.org/10.1038/msb4100204).
+- **Rationale:** a component characterized in isolation need not retain the
+  same transient input--output behavior after interconnection.
+- **AI translation:** expose whether consumers pin, block, mutate or
+  backpressure a finite producer interface before calling their effect
+  retroactivity.
+- **Efficiency mechanism:** an interface-qualified insulator may preserve
+  reusable producer dynamics without duplicating or retuning the producer for
+  every consumer, but all copy, buffer, admission and maintenance work counts.
+- **Failure modes:** violated timescale separation, hidden shared-resource
+  contention, ordinary queue delay, destructive-read assumptions applied to
+  immutable data, unmatched clocks, and an ideal-copy control with nonzero
+  producer distortion.
+- **Measurable prediction:** direct finite coupling changes the producer
+  trajectory as load abundance or affinity rises, whereas an unbounded
+  immutable-copy control leaves producer state unchanged apart from numerical
+  tolerance.
+- **Open question:** which real AI interfaces have a connection-specific
+  back-action that survives complete systems controls?
+- **Direct test:** [Fixture F-027](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md),
+  [`RIN-T01`](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md#rin-t01--mass-action-source-mechanism-and-reduced-model-boundary).
+- **Traceability:** [source audit](audits/2026-08-25-interface-qualified-retroactivity-insulation.md#c-1550) · [mathematical contract](../math/interface-qualified-retroactivity.md) · [affected chapter](../concept/07-cross-domain-convergence.md#interconnection-is-an-intervention).
+
+### C-1551
+
+- **Claim:** In the cited *E. coli* transcription module, downstream binding
+  clients delayed induction and advanced de-induction relative to the isolated
+  module, with larger effects under more client sites or stronger binding.
+- **Status:** established scoped in-vivo and theoretical evidence for the
+  studied module; not a generic signature of every loaded pathway.
+- **Primary source:** [Jayanthi, Nilgiriwala and Del Vecchio 2013](https://doi.org/10.1021/sb300098w).
+- **Rationale:** sequestration-like interconnection can alter positive and
+  negative transitions asymmetrically rather than merely add symmetric
+  latency.
+- **AI translation:** test rise and fall transients separately and require a
+  signed effect beyond matched queueing and compute delay.
+- **Efficiency mechanism:** knowing the signed load response may permit a
+  smaller targeted interface correction than global producer overcapacity.
+- **Failure modes:** reporter delay, growth effects, clock misalignment,
+  symmetric service latency, a load-independent producer, and inference from
+  only one transition direction.
+- **Measurable prediction:** a sequestration-like simulator shows a
+  load-dependent signed timing asymmetry; an ordinary symmetric-delay null
+  does not.
+- **Open question:** do any finite AI activation or cache interfaces exhibit a
+  comparable signed state effect rather than only delayed delivery?
+- **Direct test:** [`RIN-T02`](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md#rin-t02--signed-transient-response).
+- **Traceability:** [source audit](audits/2026-08-25-interface-qualified-retroactivity-insulation.md#c-1551) · [affected chapter](../concept/30-sparse-predictive-compute.md#a-bounded-interface-still-needs-a-back-action-test).
+
+### C-1552
+
+- **Claim:** In the cited covalent-modification-cycle study, downstream load
+  changed response time and bandwidth, with the direction of the response-time
+  change depending on operating regime, even when steady-state behavior alone
+  did not reveal the dynamic effect.
+- **Status:** established scoped analytical and purified-system evidence with
+  a published model-interpretation exchange; not a pathway-wide invariant.
+- **Primary sources:** [Ventura et al. 2010](https://doi.org/10.1073/pnas.0913815107)
+  and [Jiang et al. 2011](https://doi.org/10.1126/scisignal.2002152).
+- **Qualification sources:** [Straube 2012](https://doi.org/10.1126/scisignal.2002699)
+  disputes aspects of the bifunctional-cycle interpretation, and
+  [Jiang et al. 2012](https://doi.org/10.1126/scisignal.2002716) replies. The
+  exchange preserves a model-interpretation dispute; neither item is an
+  independent primary result, and the exchange does not settle a pathway-wide
+  invariant.
+- **Rationale:** steady-state equivalence cannot certify dynamic modularity.
+- **AI translation:** qualify an interface with steps, frequency sweeps and
+  regime changes rather than a single equilibrium throughput point.
+- **Efficiency mechanism:** dynamic qualification can avoid permanent
+  overprovisioning when only bounded frequencies or regimes need insulation.
+- **Failure modes:** bifunctional-enzyme model mismatch, steady-state-only
+  evaluation, uncontrolled operating regime, bandwidth estimated outside the
+  excited range, and generic contention matching all effects.
+- **Measurable prediction:** loads with matched steady output can differ in
+  response time or bandwidth; the direction must be reported per registered
+  operating regime.
+- **Open question:** which AI service summaries hide connection-specific
+  dynamic degradation despite equal average throughput?
+- **Direct test:** [`RIN-T03`](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md#rin-t03--operating-regime-and-bandwidth).
+- **Traceability:** [source audit](audits/2026-08-25-interface-qualified-retroactivity-insulation.md#c-1552) · [affected chapter](../concept/30-sparse-predictive-compute.md#a-bounded-interface-still-needs-a-back-action-test).
+
+### C-1553
+
+- **Claim:** In the cited stochastic gene-network analysis, downstream load
+  lengthened output-noise correlation time, while frequency-response
+  conclusions depended on whether the observed output was free factor or
+  total factor.
+- **Status:** established model-based result and proposed measurement method;
+  not a universal empirical estimator for arbitrary biological or digital
+  interfaces.
+- **Primary source:** [Kim and Sauro 2011](https://doi.org/10.1016/j.bpj.2010.12.3737).
+- **Rationale:** apparent back-action depends on the observation interface as
+  well as the underlying coupling.
+- **AI translation:** register producer-owned, consumer-visible and total
+  buffered state separately; never infer interface neutrality from one view.
+- **Efficiency mechanism:** observing the cheapest sufficient state may detect
+  harmful coupling without full internal instrumentation.
+- **Failure modes:** nonstationary noise, autocorrelation bias, free/total
+  state conflation, sampling aliasing, hidden common input, and unrelated
+  contention.
+- **Measurable prediction:** connection changes registered temporal statistics
+  only at the affected interfaces, and switching the observation map changes
+  the inferred frequency response in predictable directions.
+- **Open question:** can low-overhead digital telemetry distinguish held,
+  copied and producer-owned state without perturbing the path it measures?
+- **Direct test:** [`RIN-T04`](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md#rin-t04--observation-interface-and-noise-memory).
+- **Traceability:** [source audit](audits/2026-08-25-interface-qualified-retroactivity-insulation.md#c-1553) · [affected chapter](../concept/30-sparse-predictive-compute.md#a-bounded-interface-still-needs-a-back-action-test).
+
+### C-1554
+
+- **Claim:** In the cited yeast synthetic circuit, a fast phosphotransfer load
+  driver substantially restored the response time and bandwidth lost when a
+  slower transcriptional module directly drove downstream binding load.
+- **Status:** established scoped experimental and model evidence for one
+  engineered load-driver design; not proof that timescale separation is
+  universally optimal or inexpensive.
+- **Primary source:** [Mishra et al. 2014](https://doi.org/10.1038/nbt.3044).
+- **Rationale:** an intermediate process faster than both producer dynamics
+  and downstream holding can attenuate connection-induced back-action.
+- **AI translation:** compare asynchronous snapshots or staging layers with
+  direct pinning under matched accepted service and complete buffer/copy work.
+- **Efficiency mechanism:** a bounded staging layer may preserve a reusable
+  slow producer while serving multiple faster-decoupled consumers.
+- **Failure modes:** hidden overcapacity, uncharged buffer memory, stale
+  snapshots, dropped service, unstable fast layer, and a tuned ordinary ring
+  buffer matching the result.
+- **Measurable prediction:** insulation helps only when its timescale and
+  capacity separate the producer from registered load; at zero load it loses
+  on overhead.
+- **Open question:** where is the latency--staleness--memory--work frontier for
+  real model-serving activation paths?
+- **Direct test:** [`RIN-T05`](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md#rin-t05--timescale-separated-insulation).
+- **Traceability:** [source audit](audits/2026-08-25-interface-qualified-retroactivity-insulation.md#c-1554) · [affected chapter](../concept/70-system-synthesis.md#a-subscriber-can-change-its-producer).
+
+### C-1555
+
+- **Claim:** In the cited in-vitro transcriptional oscillator, direct load
+  processes altered oscillator amplitude or frequency, while a designed
+  insulator reduced the detrimental load effect while still driving the load.
+- **Status:** established scoped experiment and model for the studied
+  oscillator, nanomechanical and RNA-output loads.
+- **Primary source:** [Franco et al. 2011](https://doi.org/10.1073/pnas.1100060108).
+- **Rationale:** preserving the producer while failing to deliver useful load
+  service is not insulation success.
+- **AI translation:** co-report upstream distortion and accepted on-time
+  consumer output; neither axis may substitute for the other.
+- **Efficiency mechanism:** useful insulation trades producer preservation
+  against delivery, latency, memory, copying and control work on a Pareto
+  frontier.
+- **Failure modes:** disconnected-load victory, amplitude-only scoring,
+  frequency-only scoring, uncharged drive, and overprovisioned independent
+  replicas.
+- **Measurable prediction:** an eligible arm reduces producer distortion
+  without exceeding the registered service-loss margin and remains
+  non-dominated after all interface work is charged.
+- **Open question:** when does preserving shared producer dynamics beat
+  replication or recomputation over a complete lifecycle?
+- **Direct test:** [`RIN-T06`](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md#rin-t06--producer-preservation-with-delivered-service).
+- **Traceability:** [source audit](audits/2026-08-25-interface-qualified-retroactivity-insulation.md#c-1555) · [affected chapter](../concept/70-system-synthesis.md#a-subscriber-can-change-its-producer).
+
+### C-1556
+
+- **Claim:** For the cited simplified covalent-cycle model and its selected
+  insulation measures, improved insulation lay on a tradeoff with fuel
+  consumption.
+- **Status:** established model-scoped Pareto result; the stronger claim that
+  effective biochemical insulation necessarily requires high fuel
+  consumption is disputed by C-1557.
+- **Primary source:** [Barton and Sontag 2013](https://doi.org/10.1016/j.bpj.2013.01.056).
+- **Rationale:** back-action suppression cannot be evaluated without the work
+  used to create the isolating dynamics.
+- **AI translation:** report distortion, service, latency, memory, operations,
+  data movement and measured energy as separate axes before choosing an
+  interface.
+- **Efficiency mechanism:** none is assumed; insulation is useful only if its
+  complete frontier dominates direct connection and mature systems nulls.
+- **Failure modes:** one-model necessity claims, logical operations treated as
+  joules, omitted idle work, omitted production/maintenance, and a favorable
+  scalar score hiding a dominated axis.
+- **Measurable prediction:** stronger active insulation can increase work in
+  some regimes, but the direction and crossover remain architecture- and
+  workload-qualified.
+- **Open question:** which physical interface mechanisms occupy the best
+  measured distortion--service--energy frontier on the target workstation?
+- **Direct test:** [`RIN-T07`](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md#rin-t07--insulation-resource-and-energy-frontier).
+- **Traceability:** [source audit](audits/2026-08-25-interface-qualified-retroactivity-insulation.md#c-1556) · [mathematical contract](../math/interface-qualified-retroactivity.md) · [affected chapter](../concept/80-energy-model.md).
+
+### C-1557
+
+- **Claim:** In the cited biochemical models, weak coupling supplies a
+  low-fuel counterexample to a universal high-fuel requirement and exposes
+  leak/crosstalk vulnerability. Reduced response to fast time-varying signals
+  is a model-qualified tradeoff argument, not a universal experimental loss.
+- **Status:** established counterexample within the studied models; not proof
+  that weak coupling is generally superior.
+- **Primary source:** [Deshpande and Ouldridge 2017](https://doi.org/10.1049/enb.2017.0017).
+- **Rationale:** an apparent energy saving can move cost into lost service or
+  robustness rather than eliminate it.
+- **AI translation:** include weak coupling, admission, expiry and sampling as
+  explicit baselines, then score missed, stale and high-frequency outputs.
+- **Efficiency mechanism:** reduced coupling may lower both disturbance and
+  active work only inside a service envelope that tolerates its lost tracking
+  or robustness.
+- **Failure modes:** service deletion, low-frequency-only workloads, omitted
+  leakage/failure tests, and claiming a universal energy requirement from one
+  insulating motif.
+- **Measurable prediction:** weak coupling can be non-dominated for slow,
+  tolerant consumers but loses registered fast-signal or leak-robustness
+  strata.
+- **Open question:** can load-aware admission select that envelope online
+  without costing more than it saves?
+- **Direct test:** [`RIN-T08`](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md#rin-t08--weak-coupling-counterexample-and-service-boundary).
+- **Traceability:** [source audit](audits/2026-08-25-interface-qualified-retroactivity-insulation.md#c-1557) · [affected chapter](../concept/80-energy-model.md).
+
+### C-1558
+
+- **Claim:** The cited synthetic-gene-circuit evidence shows that shared
+  transcriptional or translational resource competition can couple nominally
+  separate modules and reshape a cascade even without a direct downstream
+  binding connection.
+- **Status:** established scoped experimental and model evidence; it is a
+  competing causal family, not evidence for direct retroactivity.
+- **Primary sources:** [Qian et al. 2017](https://doi.org/10.1021/acssynbio.6b00361),
+  [Frei et al. 2020](https://doi.org/10.1038/s41467-020-18392-x), and
+  [Jones et al. 2020](https://doi.org/10.1038/s41467-020-19126-9).
+- **Rationale:** direct connection back-action and shared-capacity contention
+  can produce similar performance loss but require different interventions.
+- **AI translation:** cross the connection graph with separately controlled
+  CPU, memory, accelerator and scheduler contention.
+- **Efficiency mechanism:** correct causal classification avoids paying for an
+  interface insulator when ordinary resource isolation or scheduling is the
+  sufficient remedy.
+- **Failure modes:** connection count confounded with compute demand,
+  unmatched placement, background jobs changing clocks, and calling all
+  downstream slowdown retroactivity.
+- **Measurable prediction:** a connection-specific effect follows attachment
+  at matched shared-resource load, while a contention effect follows resource
+  demand without requiring attachment.
+- **Open question:** what minimum intervention set separates these causal
+  families in a live heterogeneous serving system?
+- **Direct test:** [`RIN-T09`](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md#rin-t09--direct-back-action-versus-shared-resource-contention).
+- **Traceability:** [source audit](audits/2026-08-25-interface-qualified-retroactivity-insulation.md#c-1558) · [affected chapter](../concept/07-cross-domain-convergence.md#interconnection-is-an-intervention).
+
+### C-1559
+
+- **Claim:** Connection-induced back-action can be treated as a deliberate
+  temporal-shaping mechanism rather than only as a nuisance, but only when the
+  connected target, delivered service and operating envelope are registered.
+- **Status:** plausible synthesis supported by the scoped transcriptional and
+  oscillator demonstrations; not an established general AI design advantage.
+- **Primary sources:** [Jayanthi, Nilgiriwala and Del Vecchio 2013](https://doi.org/10.1021/sb300098w),
+  [Franco et al. 2011](https://doi.org/10.1073/pnas.1100060108), and
+  [Kim et al. 2010](https://doi.org/10.1016/j.cub.2010.01.019), with the
+  substrate-dosage follow-up in [Kim et al. 2011](https://doi.org/10.1038/msb.2010.121).
+- **Rationale:** suppress, preserve and intentionally use back-action are
+  different design decisions that should be compared rather than silently
+  conflated.
+- **AI translation:** include an intentionally coupled temporal filter beside
+  isolation and insulation arms, then test held-out signals and client counts.
+- **Efficiency mechanism:** useful passive shaping could remove a separate
+  filter only if it preserves service, transfer and complete lifecycle cost.
+- **Failure modes:** post-hoc workload selection, uncontrolled oscillation,
+  brittle client-count dependence, a standard filter matching the effect, and
+  omitted recovery after detachment.
+- **Measurable prediction:** intentional coupling wins only on registered
+  temporal targets; it must abstain or lose visibly when the desired response,
+  load or operating point changes.
+- **Open question:** does any artificial interface retain a distinct useful
+  residual after tuned explicit filters and queue policies are included?
+- **Direct test:** [`RIN-T10`](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md#rin-t10--suppress-preserve-or-use-back-action).
+- **Traceability:** [source audit](audits/2026-08-25-interface-qualified-retroactivity-insulation.md#c-1559) · [mathematical contract](../math/interface-qualified-retroactivity.md) · [affected chapter](../concept/07-cross-domain-convergence.md#interconnection-is-an-intervention).

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "artifact": "fixture-027",
+  "profile": "smoke",
+  "worlds_per_seed": 6,
+  "time_step_s": 0.01,
+  "horizon_s": 4,
+  "back_action_threshold_u": 0.02,
+  "minimum_restoration_fraction": 0.5,
+  "saturation_fraction_threshold": 0.2,
+  "state_scale_u": 2,
+  "max_loss": 100
+}

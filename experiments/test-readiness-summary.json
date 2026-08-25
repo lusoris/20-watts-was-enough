@@ -2,14 +2,14 @@
   "schema": 1,
   "generatedFrom": "experiments/test-coverage.json",
   "claims": {
-    "total": 1540,
-    "testRouted": 1448,
-    "protocolCovered": 1448,
+    "total": 1550,
+    "testRouted": 1458,
+    "protocolCovered": 1458,
     "executionReady": 0,
     "tierCounts": {
       "ledger-only": 92,
       "linked-description": 0,
-      "protocol-complete": 1448,
+      "protocol-complete": 1458,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
@@ -28,8 +28,8 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1123,
-        "plausible": 209,
+        "established": 1132,
+        "plausible": 210,
         "speculative": 60,
         "disputed": 47,
         "unknown": 9
@@ -54,9 +54,9 @@
     "proposedArtifactFamilies": 0
   },
   "artifacts": {
-    "total": 46,
-    "protocolComplete": 46,
-    "smokeReady": 8,
+    "total": 47,
+    "protocolComplete": 47,
+    "smokeReady": 9,
     "workstationReady": 0,
     "items": [
       {
@@ -1114,6 +1114,76 @@
         "executionManifest": null,
         "executionClaims": [],
         "promotionChecks": []
+      },
+      {
+        "id": "fixture-027",
+        "path": "experiments/fixtures/027-interface-qualified-retroactivity-insulation.md",
+        "title": "Fixture F-027 — Interface-qualified retroactivity and insulation",
+        "linkedClaims": 10,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "smoke-ready",
+        "executionReady": false,
+        "executionManifest": "experiments/workstation/manifests/fixture-027.json",
+        "executionClaims": [
+          "C-1550"
+        ],
+        "promotionChecks": [
+          {
+            "id": "execution-claim-scope",
+            "label": "Explicit execution-track claim scope",
+            "passed": true,
+            "detail": "execution track is limited to C-1550"
+          },
+          {
+            "id": "full-profile",
+            "label": "Frozen full profile",
+            "passed": false,
+            "detail": "data.full_profile must be a valid profile with a matching full_profile_sha256"
+          },
+          {
+            "id": "full-tests",
+            "label": "Full experiment-path tests",
+            "passed": true,
+            "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
+          },
+          {
+            "id": "hash-chain",
+            "label": "Corruption-evident output ledger",
+            "passed": true,
+            "detail": "hash-chain output is wired through the tested checkpoint ledger"
+          },
+          {
+            "id": "resume",
+            "label": "Deterministic resume",
+            "passed": true,
+            "detail": "runner imports the declared, tested checkpoint/resume implementation"
+          },
+          {
+            "id": "energy-provider",
+            "label": "Measured-energy or explicit non-energy boundary",
+            "passed": false,
+            "detail": "energy provider config/module/test and frozen hash must enforce measured energy, or a non-energy claim must explicitly forbid energy conclusions"
+          },
+          {
+            "id": "confirmation-seeds",
+            "label": "Frozen confirmation seeds",
+            "passed": false,
+            "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "held_out-seeds",
+            "label": "Frozen held-out seeds",
+            "passed": false,
+            "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "promotion-evidence",
+            "label": "Strict recomputed promotion evidence",
+            "passed": false,
+            "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
+          }
+        ]
       }
     ]
   }
