@@ -850,9 +850,10 @@ function activeAcquisitionFrontier(spec) {
       : theme.danger;
     const labelOnLeft = cx > box.right - 150;
     const labelX = labelOnLeft ? cx - radius - 7 : cx + radius + 7;
-    return `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="${color}" fill-opacity="${feasibleAction ? ".82" : ".18"}" stroke="${color}" stroke-width="3"/>
-      ${feasibleAction ? "" : `<line x1="${cx - radius}" y1="${cy - radius}" x2="${cx + radius}" y2="${cy + radius}" stroke="${theme.danger}" stroke-width="4"/><line x1="${cx + radius}" y1="${cy - radius}" x2="${cx - radius}" y2="${cy + radius}" stroke="${theme.danger}" stroke-width="4"/>`}
-      <text x="${labelX}" y="${cy + 4}" fill="${color}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700" text-anchor="${labelOnLeft ? "end" : "start"}">${esc(action.label)}</text>`;
+    const failureMark = feasibleAction
+      ? ""
+      : `<line x1="${cx - radius}" y1="${cy - radius}" x2="${cx + radius}" y2="${cy + radius}" stroke="${theme.danger}" stroke-width="4"/><line x1="${cx + radius}" y1="${cy - radius}" x2="${cx - radius}" y2="${cy + radius}" stroke="${theme.danger}" stroke-width="4"/>`;
+    return `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="${color}" fill-opacity="${feasibleAction ? ".82" : ".18"}" stroke="${color}" stroke-width="3"/>${failureMark}<text x="${labelX}" y="${cy + 4}" fill="${color}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700" text-anchor="${labelOnLeft ? "end" : "start"}">${esc(action.label)}</text>`;
   }).join("");
   const priceEndY = yMap(lambdaEnergy * xMax);
   const ledgerRows = actions.filter((action) => action.id !== "wait").map((action, index) => {
