@@ -7,6 +7,30 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- EuroSciVoc 1.6 adds an official EU concept-level discovery lens: 1,064
+  English/German concepts are preserved beside 214 DFG subjects, 213 ANZSRC
+  groups, and 1,967 ANZSRC fields. Generated routing pages and validators keep
+  every child unassigned until an exact field audit is linked; parent coverage
+  never propagates. Cross-platform generation now produces byte-stable LF
+  artifacts with checked source hashes and hierarchy closure.
+
+- Fixture F-019 implements the FM-T02 endogenous-feedback forecast as a fourth
+  deterministic smoke harness. Twenty-three focused tests and 16 adversarial
+  readiness tests bind its independent evaluator, exact sign enumeration,
+  corruption-evident resume, staged funding fallback, uint64 seed contract,
+  and fail-closed promotion validator. Development execution exposed an
+  effectively seed-invariant aggregate endpoint, so Decision 0013 blocks the
+  current protocol before confirmation; it is not a scientific result and
+  remains 0% workstation-ready. The same decision permits a claim-bound
+  non-energy test only when every energy conclusion is explicitly forbidden.
+
+- Five editable mathematical figures now visualize Pareto dominance under
+  uncertainty, active evidence pricing, recovery-time fragility, memory action
+  regions, and mission-profile damage. Semantic continuous figure numbering,
+  contextual Mermaid captions, stronger contrast, and bounded responsive
+  layout make both the private site and full book easier to read without
+  presenting illustrative curves as measurements.
+
 - Independently reviewed environmental-engineering and finance/management
   depth audits add 17 bounded claims (`C-1470`--`C-1476`, `C-1478`--`C-1487`),
   20 CPU-only falsification protocols, and Fixtures F-018 and F-019 as complete

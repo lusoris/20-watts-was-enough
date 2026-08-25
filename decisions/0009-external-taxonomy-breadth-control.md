@@ -25,8 +25,9 @@ Maintain a machine-readable field-coverage census under
    backbone;
 2. use the active DFG classification as the German and European granularity
    probe;
-3. use independent classification disagreements, initially ANZSRC, to reveal
-   fields that OECD or DFG do not separately expose;
+3. use the EU EuroSciVoc vocabulary as a multilingual concept-level discovery
+   lens and independent classification disagreements, including ANZSRC, to
+   reveal fields that OECD or DFG do not separately expose;
 4. distinguish a dedicated field audit, adjacent evidence, and an unreviewed
    field without treating any of those states as scientific completeness; and
 5. schedule breadth work by coverage deficit and methodological distance, not
@@ -49,4 +50,7 @@ standards, or governance authority.
 - Catch-all categories remain open and cannot certify exhaustiveness.
 - A taxonomy disagreement enters the queue with its own source and handling
   rules. It is not forced into the canonical taxonomy or discarded.
+- Coverage at a parent level never propagates to EuroSciVoc concepts, DFG
+  subjects, ANZSRC groups, or ANZSRC fields. Each child requires an exact route
+  to its own field-centered audit and evidence boundary.
 - The generated report and plot must stay reproducible from the JSON record.

@@ -8,7 +8,7 @@ than silently changing its outcome.
 | --- | --- | --- |
 | [0001](0001-git-is-canonical.md) | Git is the canonical source | accepted |
 | [0002](0002-evidence-before-assertion.md) | Evidence precedes major assertions | accepted |
-| [0003](0003-biology-is-a-constraint.md) | Biology supplies constraints, not a literal blueprint | accepted |
+| [0003](0003-biology-is-a-constraint.md) | Translate biological mechanisms by preserved function | accepted |
 | [0004](0004-organize-by-invariant.md) | Organize research by recurring invariant | accepted |
 | [0005](0005-rendered-private-edition.md) | Render one private edition from canonical files | accepted |
 | [0006](0006-open-world-scientific-search.md) | Search all sciences through shared problem classes | accepted |
@@ -18,3 +18,4 @@ than silently changing its outcome.
 | [0010](0010-fresh-bound-confirmation-execution.md) | Execute confirmation under one fresh bound identity | accepted |
 | [0011](0011-measure-energy-in-paired-blocks.md) | Measure external energy in counterbalanced paired blocks and infer across seeds | accepted |
 | [0012](0012-executable-slices-must-respect-mature-nulls.md) | Require negative controls and complete mature nulls in every executable slice | accepted |
+| [0013](0013-development-can-block-a-protocol.md) | Let development diagnostics block an ineligible protocol before confirmation | accepted |

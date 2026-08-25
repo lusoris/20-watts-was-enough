@@ -1,25 +1,27 @@
-# 0003 — Biology supplies constraints, not a literal blueprint
+# 0003 — Translate biological mechanisms by preserved function
 
 - **Status:** accepted
 - **Date:** 2026-08-05
 
 ## Context
 
-Brains and digital accelerators use different substrates, signals, timescales,
-and objectives. Literal emulation may preserve biological complexity without
-preserving the property that made it useful.
+The same functional solution can appear through different substrates, signals,
+timescales, and organizational levels. Copying a visible component without its
+causal role can preserve complexity while losing the property that made the
+mechanism useful.
 
 ## Decision
 
-Use biology to identify constraints—energy budgets, sparse activity, local
-communication, multiple learning timescales, embodiment, consolidation—and
-then evaluate engineered mechanisms against measurable objectives.
+For every borrowed mechanism, identify its causal function, operating
+constraints, boundary conditions, failure modes, and measurable predictions.
+Evaluate engineered translations by whether they preserve that function under
+the target system's actual resource and information limits.
 
 ## Consequences
 
-- Spiking, dendrites, sleep, or neurogenesis are not mandatory merely because
-  they are biological.
-- Conventional methods remain valid candidates when they satisfy the same
-  constraint more effectively.
-- Every biological analogy must name both its useful abstraction and where the
-  analogy breaks.
+- Similar solutions from different sciences are bundled by shared function and
+  boundary, then deduplicated before architecture work.
+- Competing implementations remain comparable when they solve the same causal
+  problem under the same information and resource budget.
+- Every analogy names its transferable abstraction, its substrate-specific
+  details, and the intervention that could falsify the translation.
