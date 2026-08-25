@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "state": "pending-private-escrow",
+  "partition": "held-out",
+  "algorithm": "sha256-json-array-v1",
+  "seed_count": null,
+  "generation_method": null,
+  "commitment": null,
+  "escrow_sha256": null,
+  "subpartitions": null,
+  "note": "Unavailable until fresh system-cryptographic-entropy transfer packs are generated after the FM-T02 protocol revision, encrypted into private escrow, and only their combined commitment and escrow digest are published. Public label-derived seeds are ineligible."
+}

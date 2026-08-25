@@ -13,11 +13,27 @@ import {
 const readinessLevels = new Set(["scaffold", "smoke-ready", "workstation-ready"]);
 const commandActions = ["prepare", "smoke", "run", "analyze", "validate"];
 const claimIdPattern = /^C-\d{3,4}$/;
+const reviewedNonEnergyScopes = new Map([
+  ["fixture-019.c-1481.non-energy.v1", Object.freeze({
+    artifact: "fixture-019",
+    claims: Object.freeze(["C-1481"]),
+  })],
+]);
+const manifestSchemas = new Map();
 
 function executionClaimScope(manifest) {
   return Array.isArray(manifest.implementation?.execution_claims)
     ? manifest.implementation.execution_claims
     : [];
+}
+
+function hasReviewedNonEnergyScope(manifest) {
+  const reviewed = reviewedNonEnergyScopes.get(manifest.energy?.scope_binding);
+  return Boolean(
+    reviewed
+    && reviewed.artifact === manifest.artifact
+    && JSON.stringify([...executionClaimScope(manifest)].sort()) === JSON.stringify([...reviewed.claims].sort()),
+  );
 }
 
 async function exists(absolutePath) {
@@ -39,6 +55,102 @@ function localPath(root, value) {
 
 async function fileSha256(file) {
   return createHash("sha256").update(await readFile(file)).digest("hex");
+}
+
+function resolveLocalSchemaReference(rootSchema, reference) {
+  if (typeof reference !== "string" || !reference.startsWith("#/")) {
+    throw new Error(`unsupported manifest schema reference ${reference}`);
+  }
+  return reference.slice(2).split("/").reduce((node, component) => (
+    node?.[component.replaceAll("~1", "/").replaceAll("~0", "~")]
+  ), rootSchema);
+}
+
+function validateJsonSchemaNode(schema, value, rootSchema, location, errors) {
+  const supportedKeywords = new Set([
+    "$schema", "$id", "$defs", "$ref", "title", "description", "type", "const", "enum",
+    "required", "properties", "additionalProperties", "minLength", "pattern", "minItems",
+    "uniqueItems", "items",
+  ]);
+  for (const keyword of Object.keys(schema)) {
+    if (!supportedKeywords.has(keyword)) {
+      errors.push(`${location || "/"} uses unsupported schema keyword ${keyword}`);
+    }
+  }
+  if (schema.$ref) {
+    const resolved = resolveLocalSchemaReference(rootSchema, schema.$ref);
+    if (!resolved) errors.push(`${location} has an unresolved schema reference ${schema.$ref}`);
+    else validateJsonSchemaNode(resolved, value, rootSchema, location, errors);
+    return;
+  }
+  if (Object.hasOwn(schema, "const") && JSON.stringify(value) !== JSON.stringify(schema.const)) {
+    errors.push(`${location} must equal the declared constant`);
+  }
+  if (Array.isArray(schema.enum) && !schema.enum.some((entry) => JSON.stringify(entry) === JSON.stringify(value))) {
+    errors.push(`${location} must equal one of the declared enum values`);
+  }
+  const actualType = Array.isArray(value) ? "array" : value === null ? "null" : typeof value;
+  if (schema.type && actualType !== schema.type) {
+    errors.push(`${location} must be ${schema.type}`);
+    return;
+  }
+  if (actualType === "string") {
+    if (Number.isInteger(schema.minLength) && value.length < schema.minLength) {
+      errors.push(`${location} must contain at least ${schema.minLength} character(s)`);
+    }
+    if (schema.pattern && !(new RegExp(schema.pattern, "u")).test(value)) {
+      errors.push(`${location} must match ${schema.pattern}`);
+    }
+  }
+  if (actualType === "array") {
+    if (Number.isInteger(schema.minItems) && value.length < schema.minItems) {
+      errors.push(`${location} must contain at least ${schema.minItems} item(s)`);
+    }
+    if (schema.uniqueItems === true) {
+      const identities = value.map((entry) => JSON.stringify(entry));
+      if (new Set(identities).size !== identities.length) errors.push(`${location} must contain unique items`);
+    }
+    if (schema.items) {
+      value.forEach((entry, index) => validateJsonSchemaNode(
+        schema.items,
+        entry,
+        rootSchema,
+        `${location}/${index}`,
+        errors,
+      ));
+    }
+  }
+  if (actualType === "object") {
+    for (const field of schema.required ?? []) {
+      if (!Object.hasOwn(value, field)) errors.push(`${location}/${field} is required`);
+    }
+    const properties = schema.properties ?? {};
+    if (schema.additionalProperties === false) {
+      for (const field of Object.keys(value)) {
+        if (!Object.hasOwn(properties, field)) errors.push(`${location} contains additional properties: ${field}`);
+      }
+    }
+    for (const [field, childSchema] of Object.entries(properties)) {
+      if (Object.hasOwn(value, field)) {
+        validateJsonSchemaNode(childSchema, value[field], rootSchema, `${location}/${field}`, errors);
+      }
+    }
+  }
+}
+
+async function validateAgainstManifestSchema(root, manifest) {
+  const schemaPath = path.join(root, "experiments", "workstation", "manifest.schema.json");
+  const source = await readFile(schemaPath, "utf8");
+  const identity = createHash("sha256").update(source).digest("hex");
+  let schema = manifestSchemas.get(identity);
+  if (!schema) {
+    schema = JSON.parse(source);
+    manifestSchemas.clear();
+    manifestSchemas.set(identity, schema);
+  }
+  const errors = [];
+  validateJsonSchemaNode(schema, manifest, schema, "", errors);
+  return errors.map((error) => `manifest schema ${error}`);
 }
 
 function isInside(root, target) {
@@ -232,15 +344,15 @@ async function validateExecutionClaimScope(root, manifest, executionClaims) {
   ) return false;
   const claims = (await readFile(path.join(root, "research", "claims.md"), "utf8")).replaceAll("\r\n", "\n");
   const artifactNumber = manifest.artifact?.split("-")[1];
-  const artifactLabel = manifest.artifact?.startsWith("candidate-")
-    ? `Candidate ${artifactNumber}`
-    : `Fixture F-${artifactNumber}`;
+  const artifactLabels = manifest.artifact?.startsWith("candidate-")
+    ? [`[Candidate ${artifactNumber}]`]
+    : [`[Fixture F-${artifactNumber}]`, `[F-${artifactNumber} `];
   for (const claim of executionClaims) {
     const start = claims.indexOf(`### ${claim}\n`);
     if (start < 0) return false;
     const next = claims.indexOf("\n### C-", start + 1);
     const block = claims.slice(start, next < 0 ? claims.length : next);
-    if (!block.includes(`[${artifactLabel}]`)) return false;
+    if (!artifactLabels.some((label) => block.includes(label))) return false;
   }
   return true;
 }
@@ -260,6 +372,15 @@ function collectReferencedPaths(manifest) {
       ? manifest.implementation.tests.map((value) => ["implementation.tests", value])
       : []),
   ];
+}
+
+function fixture019PrivateEscrowCheck(field) {
+  return {
+    id: `${field}-seeds`,
+    label: field === "confirmation" ? "Frozen confirmation seeds" : "Frozen held-out seeds",
+    passed: false,
+    detail: `FM-v1/FM-T02 rejects every seeds.${field} reveal or escrow claim until a reviewed successor protocol replaces the structural block`,
+  };
 }
 
 async function committedSeedCheck(root, manifest, field, label) {
@@ -284,13 +405,24 @@ async function committedSeedCheck(root, manifest, field, label) {
         detail: `seeds.${field} does not disclose a frozen non-empty seed list`,
       };
     }
+    const canonicalSeed = (seed) => {
+      if (Number.isInteger(seed) && seed >= 0 && seed <= 0xffff_ffff) return BigInt(seed).toString();
+      if (typeof seed === "string" && /^(?:0|[1-9][0-9]{0,19})$/.test(seed)) {
+        const parsed = BigInt(seed);
+        if (parsed <= 0xffff_ffff_ffff_ffffn) return parsed.toString();
+      }
+      return null;
+    };
+    const canonicalSeeds = Array.isArray(seedDocument.seeds)
+      ? seedDocument.seeds.map(canonicalSeed)
+      : [];
     if (
       seedDocument.schema !== 1
       || seedDocument.state !== "frozen-reveal"
       || seedDocument.partition !== expectedPartition
       || seedDocument.algorithm !== "sha256-json-array-v1"
-      || new Set(seedDocument.seeds).size !== seedDocument.seeds.length
-      || seedDocument.seeds.some((seed) => !Number.isInteger(seed) || seed < 0 || seed > 0xffff_ffff)
+      || canonicalSeeds.some((seed) => seed === null)
+      || new Set(canonicalSeeds).size !== canonicalSeeds.length
     ) {
       return {
         id: `${field}-seeds`,
@@ -336,6 +468,10 @@ async function committedSeedCheck(root, manifest, field, label) {
         detail: `seeds.${field} reveal does not satisfy its sealed commitment`,
       };
     }
+    if (manifest.artifact === "fixture-019") {
+      const privateEscrowFailure = fixture019PrivateEscrowCheck(field);
+      if (privateEscrowFailure) return privateEscrowFailure;
+    }
     return {
       id: `${field}-seeds`,
       label,
@@ -349,6 +485,64 @@ async function committedSeedCheck(root, manifest, field, label) {
       passed: false,
       detail: `seeds.${field} is invalid: ${error.message}`,
     };
+  }
+}
+
+async function artifactProtocolEligibility(root, manifest) {
+  const declaration = manifest.promotion_evidence?.protocol_eligibility;
+  const claims = executionClaimScope(manifest);
+  if (
+    !declaration
+    || typeof declaration.protocol_version !== "string"
+    || declaration.protocol_version.trim() === ""
+    || JSON.stringify([...(declaration.claim_scope ?? [])].sort()) !== JSON.stringify([...claims].sort())
+    || !Array.isArray(declaration.blockers)
+  ) {
+    return {
+      eligible: false,
+      detail: "artifact-declared promotion lacks a claim-bound protocol-eligibility declaration",
+      binding: null,
+    };
+  }
+  if (declaration.status === "blocked") {
+    return {
+      eligible: false,
+      detail: declaration.blockers.length > 0
+        ? `artifact protocol is structurally blocked: ${declaration.blockers.join(" ")}`
+        : "artifact protocol is structurally blocked without a reviewed eligibility release",
+      binding: null,
+    };
+  }
+  if (declaration.status !== "reviewed-eligible" || declaration.blockers.length !== 0) {
+    return {
+      eligible: false,
+      detail: "artifact protocol eligibility status is invalid or retains blockers",
+      binding: null,
+    };
+  }
+  try {
+    const reviewPath = await repositoryRegularFile(
+      root,
+      declaration.review_path,
+      "protocol eligibility review",
+    );
+    const reviewSha256 = await fileSha256(reviewPath);
+    if (reviewSha256 !== declaration.review_sha256) {
+      return { eligible: false, detail: "protocol eligibility review hash does not match", binding: null };
+    }
+    return {
+      eligible: true,
+      detail: "claim-bound protocol eligibility has a content-identified review",
+      binding: {
+        artifact: manifest.artifact,
+        status: "reviewed-eligible",
+        protocol_version: declaration.protocol_version,
+        claim_scope: [...claims],
+        review_sha256: reviewSha256,
+      },
+    };
+  } catch (error) {
+    return { eligible: false, detail: `protocol eligibility review is invalid: ${error.message}`, binding: null };
   }
 }
 
@@ -412,6 +606,14 @@ export async function workstationPromotionChecks(root, manifest) {
       energyProviderValid = false;
     }
   }
+  const explicitNonEnergyScope = manifest.energy?.required === false
+    && manifest.energy?.mode === "not-measured"
+    && manifest.energy?.applicability === "not-applicable-to-scoped-claim"
+    && manifest.energy?.energy_conclusion_allowed === false
+    && typeof manifest.energy?.not_applicable_reason === "string"
+    && manifest.energy.not_applicable_reason.trim().length > 0
+    && hasReviewedNonEnergyScope(manifest);
+  const energyBoundaryValid = energyProviderValid || explicitNonEnergyScope;
   const resumeModule = localPath(root, manifest.resume?.module);
   const resumeTest = localPath(root, manifest.resume?.test);
   let resumeIntegrated = false;
@@ -439,7 +641,14 @@ export async function workstationPromotionChecks(root, manifest) {
       const packs = await Promise.all([developmentPath, confirmationPath, heldOutPath].map(async (file) => (
         JSON.parse(await readFile(file, "utf8")).seeds
       )));
-      const allSeeds = packs.flat();
+      const normalizeSeed = (seed) => {
+        if (Number.isInteger(seed) && seed >= 0) return BigInt(seed).toString();
+        if (typeof seed === "string" && /^(?:0|[1-9][0-9]{0,19})$/.test(seed)) {
+          return BigInt(seed).toString();
+        }
+        return `invalid:${String(seed)}`;
+      };
+      const allSeeds = packs.flat().map(normalizeSeed);
       if (allSeeds.length !== new Set(allSeeds).size) {
         confirmationSeeds.passed = false;
         heldOutSeeds.passed = false;
@@ -466,9 +675,15 @@ export async function workstationPromotionChecks(root, manifest) {
   const promotionDisjointPaths = Array.isArray(promotion?.disjoint_seed_pack_paths)
     ? promotion.disjoint_seed_pack_paths.map((value) => localPath(root, value))
     : [];
+  const declaredArtifactValidator = manifest.artifact !== "candidate-010" && Boolean(promotion?.validator);
+  const protocolEligibility = declaredArtifactValidator
+    ? await artifactProtocolEligibility(root, manifest)
+    : { eligible: true, detail: "candidate-specific promotion contract", binding: null };
   let promotionEvidenceValid = false;
   let promotionEvidenceDetail = "strict promotion evidence is pending and no claim-eligible bundle exists";
-  if (
+  if (declaredArtifactValidator && !protocolEligibility.eligible) {
+    promotionEvidenceDetail = protocolEligibility.detail;
+  } else if (
     manifest.readiness === "workstation-ready"
     && promotion?.status === "present"
     && promotionEvidencePath
@@ -486,7 +701,11 @@ export async function workstationPromotionChecks(root, manifest) {
     && await exists(promotionReleasePath)
     && await exists(promotionEnergyPath)
     && (await Promise.all(promotionDisjointPaths.map((value) => exists(value)))).every(Boolean)
-    && manifest.implementation?.tests?.includes("experiments/workstation/candidate-010/promotion-evidence.test.mjs")
+    && (
+      manifest.artifact === "candidate-010"
+        ? manifest.implementation?.tests?.includes("experiments/workstation/candidate-010/promotion-evidence.test.mjs")
+        : manifest.implementation?.tests?.includes(promotion?.validator?.test)
+    )
   ) {
     try {
       const [evidenceFile, receiptFile] = await Promise.all([
@@ -509,29 +728,77 @@ export async function workstationPromotionChecks(root, manifest) {
         energyAssignmentsPath: promotionEnergyPath,
         disjointSeedPackPaths: promotionDisjointPaths,
       };
-      const persistedValidation = await validateDurablePromotionEvidence(
-        evidence,
-        launchReceipt,
-        promotionPaths,
-      );
-      // The stored v1 receipt is self-digested diagnostic provenance only.
-      // Claim authority comes from this new live capsule recomputation.
-      const fresh = await runCapsulePromotionValidationOperator({
-        evidence,
-        paths: promotionPaths,
-        capsuleParent: os.tmpdir(),
-      });
-      const freshValidation = await validateDurablePromotionEvidence(
-        evidence,
-        fresh.launch_receipt,
-        promotionPaths,
-      );
-      promotionEvidenceValid = persistedValidation.valid === true
-        && freshValidation.valid === true
-        && fresh.capsule_destroyed === true
-        && fresh.action_result?.evidence_sha256 === evidence.evidence_sha256;
-      if (promotionEvidenceValid) {
-        promotionEvidenceDetail = "fresh live capsule recomputation validated every bound input; stored receipt integrity is diagnostic, not authenticity";
+      if (manifest.artifact === "candidate-010") {
+        const persistedValidation = await validateDurablePromotionEvidence(
+          evidence,
+          launchReceipt,
+          promotionPaths,
+        );
+        // The stored v1 receipt is self-digested diagnostic provenance only.
+        // Claim authority comes from this new live capsule recomputation.
+        const fresh = await runCapsulePromotionValidationOperator({
+          evidence,
+          paths: promotionPaths,
+          capsuleParent: os.tmpdir(),
+        });
+        const freshValidation = await validateDurablePromotionEvidence(
+          evidence,
+          fresh.launch_receipt,
+          promotionPaths,
+        );
+        promotionEvidenceValid = persistedValidation.valid === true
+          && freshValidation.valid === true
+          && fresh.capsule_destroyed === true
+          && fresh.action_result?.evidence_sha256 === evidence.evidence_sha256;
+        if (promotionEvidenceValid) {
+          promotionEvidenceDetail = "fresh live capsule recomputation validated every bound input; stored receipt integrity is diagnostic, not authenticity";
+        }
+      } else {
+        const validator = promotion?.validator;
+        if (
+          !validator
+          || typeof validator.export !== "string"
+          || !/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(validator.export)
+        ) throw new Error("artifact-declared promotion validator binding is missing or invalid");
+        const [modulePath, testPath] = await Promise.all([
+          repositoryRegularFile(root, validator.module, "promotion validator module"),
+          repositoryRegularFile(root, validator.test, "promotion validator test"),
+        ]);
+        const registeredTests = manifest.implementation?.tests ?? [];
+        const registeredRealPaths = await Promise.all(registeredTests.map(async (value) => {
+          const candidate = localPath(root, value);
+          return candidate && await exists(candidate) ? realpath(candidate) : null;
+        }));
+        if (!registeredRealPaths.includes(testPath)) {
+          throw new Error("promotion validator test is not registered in implementation.tests");
+        }
+        const moduleUrl = pathToFileURL(modulePath);
+        moduleUrl.searchParams.set("source_sha256", await fileSha256(modulePath));
+        const implementation = await import(moduleUrl.href);
+        if (typeof implementation[validator.export] !== "function") {
+          throw new Error(`promotion validator export ${validator.export} is not a function`);
+        }
+        const result = await implementation[validator.export]({
+          repositoryRoot: path.resolve(root),
+          manifest,
+          evidence,
+          launchReceipt,
+          paths: promotionPaths,
+        });
+        const actualBinding = result?.eligibility_binding;
+        const expectedBinding = protocolEligibility.binding;
+        const eligibilityBindingMatches = actualBinding?.artifact === expectedBinding.artifact
+          && actualBinding.status === expectedBinding.status
+          && actualBinding.protocol_version === expectedBinding.protocol_version
+          && actualBinding.review_sha256 === expectedBinding.review_sha256
+          && JSON.stringify([...(actualBinding.claim_scope ?? [])].sort())
+            === JSON.stringify([...expectedBinding.claim_scope].sort());
+        promotionEvidenceValid = result?.valid === true
+          && result?.fresh_recomputation === true
+          && eligibilityBindingMatches;
+        promotionEvidenceDetail = promotionEvidenceValid
+          ? "artifact-declared validator freshly recomputed every bound input under the reviewed protocol binding"
+          : "artifact-declared promotion validator did not return a fresh valid recomputation bound to the reviewed protocol";
       }
     } catch (error) {
       promotionEvidenceValid = false;
@@ -584,11 +851,13 @@ export async function workstationPromotionChecks(root, manifest) {
     },
     {
       id: "energy-provider",
-      label: "Measured-energy provider",
-      passed: energyProviderValid,
+      label: "Measured-energy or explicit non-energy boundary",
+      passed: energyBoundaryValid,
       detail: energyProviderValid
         ? "external-meter provider capability, exclusions, test, and frozen config hash match"
-        : "energy provider config/module/test and frozen hash must enforce external measured-energy boundaries",
+        : explicitNonEnergyScope
+          ? "the scoped claim has no energy endpoint and the manifest forbids energy conclusions"
+          : "energy provider config/module/test and frozen hash must enforce measured energy, or a non-energy claim must explicitly forbid energy conclusions",
     },
     confirmationSeeds,
     heldOutSeeds,
@@ -622,6 +891,12 @@ export async function validateExecutionManifest(root, manifestPath, expectedArti
     manifest = JSON.parse(await readFile(resolvedManifest, "utf8"));
   } catch (error) {
     return { ready: false, readiness: "invalid", errors: [`invalid JSON: ${error.message}`] };
+  }
+
+  try {
+    errors.push(...await validateAgainstManifestSchema(root, manifest));
+  } catch (error) {
+    errors.push(`manifest schema validation failed: ${error.message}`);
   }
 
   if (manifest.schema !== 1) errors.push("schema must equal 1");
@@ -701,10 +976,21 @@ export async function validateExecutionManifest(root, manifestPath, expectedArti
   if (manifest.readiness === "workstation-ready") {
     if (manifest.outputs?.hash_chain !== true) errors.push("workstation-ready outputs.hash_chain must be true");
     if (manifest.resume?.supported !== true) errors.push("workstation-ready resume.supported must be true");
-    if (manifest.energy?.required !== true) errors.push("workstation-ready energy.required must be true");
+    const explicitNonEnergyScope = manifest.energy?.required === false
+      && manifest.energy?.mode === "not-measured"
+      && manifest.energy?.applicability === "not-applicable-to-scoped-claim"
+      && manifest.energy?.energy_conclusion_allowed === false
+      && typeof manifest.energy?.not_applicable_reason === "string"
+      && manifest.energy.not_applicable_reason.trim().length > 0
+      && hasReviewedNonEnergyScope(manifest);
+    if (manifest.energy?.required !== true && !explicitNonEnergyScope) {
+      errors.push("workstation-ready requires measured energy unless the scoped claim explicitly has no energy endpoint and forbids energy conclusions");
+    }
     const fullReferences = [
       ["data.full_profile", manifest.data?.full_profile],
-      ["energy.provider_config", manifest.energy?.provider_config],
+      ...(manifest.energy?.required === true
+        ? [["energy.provider_config", manifest.energy?.provider_config]]
+        : []),
       ...(Array.isArray(manifest.implementation?.full_tests)
         ? manifest.implementation.full_tests.map((value) => ["implementation.full_tests", value])
         : []),

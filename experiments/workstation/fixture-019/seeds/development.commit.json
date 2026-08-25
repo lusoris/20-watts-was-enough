@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "state": "sealed",
+  "partition": "development",
+  "algorithm": "sha256-json-array-v1",
+  "seed_count": 64,
+  "commitment": "42ec2a20603526a9eda649a1f876ee145c94effb29a09cac753f9496b7d6fc3f"
+}

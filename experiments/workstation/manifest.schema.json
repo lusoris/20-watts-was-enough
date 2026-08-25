@@ -107,7 +107,13 @@
       "properties": {
         "mode": { "type": "string" },
         "required": { "type": "boolean" },
-        "provider_config": { "type": "string" }
+        "provider_config": { "type": "string" },
+        "applicability": {
+          "enum": ["measured-endpoint", "not-applicable-to-scoped-claim"]
+        },
+        "energy_conclusion_allowed": { "type": "boolean" },
+        "not_applicable_reason": { "type": "string", "minLength": 1 },
+        "scope_binding": { "type": "string", "minLength": 1 }
       }
     },
     "resume": {
@@ -143,6 +149,40 @@
           "minItems": 1,
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/repositoryPath" }
+        },
+        "validator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["module", "export", "test"],
+          "properties": {
+            "module": { "$ref": "#/$defs/repositoryPath" },
+            "export": {
+              "type": "string",
+              "pattern": "^[A-Za-z_$][A-Za-z0-9_$]*$"
+            },
+            "test": { "$ref": "#/$defs/repositoryPath" }
+          }
+        },
+        "protocol_eligibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "protocol_version", "claim_scope", "blockers"],
+          "properties": {
+            "status": { "enum": ["blocked", "reviewed-eligible"] },
+            "protocol_version": { "type": "string", "minLength": 1 },
+            "claim_scope": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "type": "string", "pattern": "^C-[0-9]{3,4}$" }
+            },
+            "blockers": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "review_path": { "$ref": "#/$defs/repositoryPath" },
+            "review_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          }
         }
       }
     }

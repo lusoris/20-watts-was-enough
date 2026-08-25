@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "artifact": "fixture-019",
+  "readiness": "smoke-ready",
+  "command": {
+    "prepare": "node experiments/workstation/fixture-019/runner.mjs prepare --profile smoke",
+    "smoke": "node experiments/workstation/fixture-019/runner.mjs smoke --profile smoke --output <run-directory> --resume false",
+    "run": "node experiments/workstation/fixture-019/runner.mjs run --profile development --output <run-directory> --resume false",
+    "analyze": "node experiments/workstation/fixture-019/runner.mjs analyze --output <run-directory>",
+    "validate": "node experiments/workstation/fixture-019/runner.mjs validate --output <run-directory>"
+  },
+  "environment": {
+    "runtime": "Node.js >=22.13.0 plus CPython 3.13.13 and NumPy 2.4.6 on a little-endian CPU",
+    "lockfiles": [
+      "package-lock.json",
+      "experiments/workstation/fixture-019/python-environment.lock.json"
+    ]
+  },
+  "hardware": {
+    "smoke": {
+      "cpu": "one ordinary little-endian CPU thread or more",
+      "memory_bytes": 536870912,
+      "disk_bytes": 268435456,
+      "energy": "not measured; C-1481 has no energy endpoint"
+    },
+    "workstation": {
+      "cpu": "ordinary little-endian CPU, 8 logical threads recommended",
+      "memory_bytes": 2147483648,
+      "disk_bytes": 2147483648,
+      "energy": "not applicable to the scoped C-1481 forecast claim; energy conclusions forbidden"
+    }
+  },
+  "seeds": {
+    "development": "experiments/workstation/fixture-019/seeds/development.reveal.json",
+    "confirmation": "experiments/workstation/fixture-019/seeds/confirmation.commit.json",
+    "held_out": "experiments/workstation/fixture-019/seeds/held-out.commit.json"
+  },
+  "data": {
+    "generator": "experiments/workstation/fixture-019/generator.py",
+    "full_profile": "experiments/workstation/fixture-019/configs/development.json",
+    "full_profile_sha256": "9dfbf43a8c9c8430c8f90b59ae2aea4e67c2f9cb96ab6517b4fbddb122140584",
+    "external": []
+  },
+  "outputs": {
+    "directory": "experiments/workstation/runs/fixture-019-*",
+    "schema": "experiments/workstation/fixture-019/output.schema.json",
+    "append_only": true,
+    "hash_chain": true
+  },
+  "implementation": {
+    "entrypoint": "experiments/workstation/fixture-019/runner.mjs",
+    "tests": [
+      "experiments/workstation/fixture-019/analysis.test.mjs",
+      "experiments/workstation/fixture-019/checkpoint.test.mjs",
+      "experiments/workstation/fixture-019/contract.test.mjs",
+      "experiments/workstation/fixture-019/evaluator-agreement.test.mjs",
+      "experiments/workstation/fixture-019/promotion-evidence.test.mjs",
+      "experiments/workstation/fixture-019/scoring.test.mjs",
+      "experiments/workstation/fixture-019/simulator-boundaries.test.mjs",
+      "experiments/workstation/fixture-019/runner.test.mjs"
+    ],
+    "full_tests": [
+      "experiments/workstation/fixture-019/analysis.test.mjs",
+      "experiments/workstation/fixture-019/checkpoint.test.mjs",
+      "experiments/workstation/fixture-019/contract.test.mjs",
+      "experiments/workstation/fixture-019/evaluator-agreement.test.mjs",
+      "experiments/workstation/fixture-019/promotion-evidence.test.mjs",
+      "experiments/workstation/fixture-019/scoring.test.mjs",
+      "experiments/workstation/fixture-019/simulator-boundaries.test.mjs",
+      "experiments/workstation/fixture-019/runner.test.mjs"
+    ],
+    "execution_claims": ["C-1481"]
+  },
+  "energy": {
+    "mode": "not-measured",
+    "required": false,
+    "applicability": "not-applicable-to-scoped-claim",
+    "energy_conclusion_allowed": false,
+    "scope_binding": "fixture-019.c-1481.non-energy.v1",
+    "not_applicable_reason": "FM-T02 tests fixed-point forecast error and accounting identities; it has no joule, watt, carbon, or energy-efficiency endpoint."
+  },
+  "resume": {
+    "supported": true,
+    "module": "experiments/workstation/lib/checkpoint-ledger.mjs",
+    "test": "experiments/workstation/fixture-019/checkpoint.test.mjs"
+  },
+  "promotion_evidence": {
+    "status": "pending",
+    "evidence_path": "experiments/workstation/promotion/fixture-019/evidence.json",
+    "promotion_validation_receipt_path": "experiments/workstation/promotion/fixture-019/promotion-validation.launch-receipt.json",
+    "run_directory": "experiments/workstation/runs/fixture-019-confirmation",
+    "release_root": "experiments/workstation/releases/fixture-019",
+    "release_path": "experiments/workstation/releases/fixture-019/confirmation.release.json",
+    "energy_assignments_path": "experiments/workstation/runs/fixture-019-confirmation/non-energy-boundary.json",
+    "disjoint_seed_pack_paths": [
+      "experiments/workstation/releases/fixture-019/held-out.reveal.json"
+    ],
+    "validator": {
+      "module": "experiments/workstation/fixture-019/promotion-validator.mjs",
+      "export": "validateFixture019PromotionEvidence",
+      "test": "experiments/workstation/fixture-019/promotion-evidence.test.mjs"
+    },
+    "protocol_eligibility": {
+      "status": "blocked",
+      "protocol_version": "FM-v1/FM-T02",
+      "claim_scope": ["C-1481"],
+      "blockers": [
+        "No reviewed successor protocol is registered for confirmation.",
+        "The frozen aggregate primary endpoint is effectively seed-invariant.",
+        "Fresh private confirmation and transfer escrow packs are unavailable."
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "artifact": "fixture-019",
+  "python_implementation": "CPython",
+  "python_version": "3.13.13",
+  "packages": {
+    "numpy": "2.4.6"
+  },
+  "bit_generator": "PCG64DXSM",
+  "network_install_during_run": false
+}

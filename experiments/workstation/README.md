@@ -1,11 +1,12 @@
 # Workstation execution contract
 
-The repository now contains three executable smoke harnesses alongside research
+The repository now contains four executable smoke harnesses alongside research
 and protocol specifications, but no workstation-ready scientific package:
 [Candidate 010](candidate-010/README.md) exercises staged verification and
 [Fixture F-007](fixture-007/README.md) exercises optical null-space honesty;
 [Fixture F-012](fixture-012/README.md) exercises layout-population performance
-inference.
+inference; [Fixture F-019](fixture-019/README.md) exercises the FM-T02
+endogenous-feedback forecast boundary.
 A test becomes workstation-ready only when its
 checked manifest exists at `experiments/workstation/manifests/<artifact-id>.json`,
 passes `npm run validate:workstation`, declares `workstation-ready`, names all
@@ -53,6 +54,18 @@ measured joules remain separate output fields.
 
 The coverage audit reports zero executable claims until manifests and their
 referenced files actually exist.
+
+[Fixture F-019](fixture-019/README.md) now implements the CPU-only FM-T02
+forecast slice for C-1481 with a NumPy-PCG64DXSM generator, independently coded
+reference solver, one-pass and full-feedback paths, zero-impact/overlap/funding
+interventions, corruption-evident resume, and recomputed development analysis.
+FM-v1/FM-T02 is structurally non-promotable: its validator and the central gate
+reject every evidence bundle and every confirmation/held-out reveal, not only
+the publicly derivable label hashes. The development shakedown found that the
+frozen aggregate endpoint is effectively seed-invariant
+under the protocol's symmetric shocks and proportional sales, so confirmation
+is explicitly blocked pending a reviewed protocol revision. No result or
+energy conclusion follows.
 
 The machine-readable contract is
 [`manifest.schema.json`](manifest.schema.json). Referenced lockfiles, seed

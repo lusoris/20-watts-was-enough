@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-019-output.schema.json",
+  "title": "Fixture F-019 FM-T02 work-unit record",
+  "type": "object",
+  "required": [
+    "schema",
+    "contract_version",
+    "artifact",
+    "protocol",
+    "claim_id",
+    "split",
+    "cell",
+    "replicate",
+    "seed_uint64",
+    "truth",
+    "arms",
+    "checks",
+    "resources",
+    "integrity"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-019.fm-t02-work-unit.v2" },
+    "artifact": { "const": "fixture-019" },
+    "protocol": { "const": "FM-T02-forecast" },
+    "claim_id": { "const": "C-1481" },
+    "seed_uint64": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,19})$" }
+  },
+  "x-runtime-validator": {
+    "module": "contract.mjs",
+    "export": "assertFixture019Record",
+    "version_export": "FIXTURE_019_CONTRACT_VERSION",
+    "contract_version": "fixture-019.fm-t02-work-unit.v2",
+    "test": "contract.test.mjs"
+  }
+}

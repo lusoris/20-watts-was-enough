@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdir, mkdtemp, readFile, rm, symlink, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
@@ -12,6 +13,13 @@ const fixture007Manifest = path.join(
   "workstation",
   "manifests",
   "fixture-007.json",
+);
+const fixture019Manifest = path.join(
+  root,
+  "experiments",
+  "workstation",
+  "manifests",
+  "fixture-019.json",
 );
 
 async function runtimeBindingFixture({
@@ -109,6 +117,184 @@ test("fixture execution scope resolves the canonical F-prefixed ledger label", a
   );
 });
 
+test("Fixture 019 is smoke-ready with an explicit non-energy claim boundary", async () => {
+  const result = await validateExecutionManifest(root, fixture019Manifest, "fixture-019");
+  assert.equal(result.readiness, "smoke-ready");
+  assert.equal(result.ready, false);
+  assert.deepEqual(result.errors, []);
+  assert.deepEqual(result.executionClaims, ["C-1481"]);
+  assert.deepEqual(
+    result.promotionChecks.filter((check) => check.passed).map((check) => check.id),
+    ["execution-claim-scope", "full-profile", "full-tests", "hash-chain", "resume", "energy-provider"],
+  );
+  assert.deepEqual(
+    result.promotionChecks.filter((check) => !check.passed).map((check) => check.id),
+    ["confirmation-seeds", "held_out-seeds", "promotion-evidence"],
+  );
+  assert.match(
+    result.promotionChecks.find((check) => check.id === "energy-provider").detail,
+    /no energy endpoint/,
+  );
+  assert.match(
+    result.promotionChecks.find((check) => check.id === "promotion-evidence").detail,
+    /structurally blocked/,
+  );
+});
+
+test("Fixture 019 cannot escape its protocol block with present self-asserted evidence", async () => {
+  const temporary = await mkdtemp(path.join(root, "tmp-f019-structural-block-"));
+  const manifestPath = path.join(temporary, "fixture-019.json");
+  try {
+    const manifest = JSON.parse(await readFile(fixture019Manifest, "utf8"));
+    manifest.readiness = "workstation-ready";
+    manifest.promotion_evidence.status = "present";
+    await writeFile(manifestPath, JSON.stringify(manifest));
+    const result = await validateExecutionManifest(root, manifestPath, "fixture-019");
+    assert.equal(result.ready, false);
+    const promotion = result.promotionChecks.find((entry) => entry.id === "promotion-evidence");
+    assert.equal(promotion.passed, false);
+    assert.match(promotion.detail, /structurally blocked/);
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test("existing fixtures without the explicit non-energy boundary still fail the energy promotion gate", async () => {
+  const result = await validateExecutionManifest(root, fixture007Manifest, "fixture-007");
+  assert.equal(result.promotionChecks.find((check) => check.id === "energy-provider").passed, false);
+});
+
+test("free-text non-energy self-exemptions fail without the reviewed artifact/claim binding", async () => {
+  const temporary = await mkdtemp(path.join(root, "tmp-f019-energy-scope-"));
+  const manifestPath = path.join(temporary, "fixture-019.json");
+  try {
+    const manifest = JSON.parse(await readFile(fixture019Manifest, "utf8"));
+    manifest.energy.scope_binding = "self-asserted-free-text";
+    await writeFile(manifestPath, JSON.stringify(manifest));
+    const result = await validateExecutionManifest(root, manifestPath, "fixture-019");
+    const check = result.promotionChecks.find((entry) => entry.id === "energy-provider");
+    assert.equal(check.passed, false);
+    assert.match(check.detail, /must enforce measured energy|explicitly forbid/);
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test("canonical decimal uint64 seed reveals pass while noncanonical strings fail closed", async () => {
+  const temporary = await mkdtemp(path.join(root, "tmp-uint64-seeds-"));
+  const relative = path.relative(root, temporary).replaceAll("\\", "/");
+  const manifest = JSON.parse(await readFile(fixture007Manifest, "utf8"));
+  const manifestPath = path.join(temporary, "fixture-007.json");
+  const makePack = (partition, seeds, escrowSha256) => ({
+    schema: 1,
+    state: "frozen-reveal",
+    partition,
+    algorithm: "sha256-json-array-v1",
+    generation_method: "system-cryptographic-entropy-v1",
+    escrow_sha256: escrowSha256,
+    seeds,
+    commitment: createHash("sha256").update(JSON.stringify(seeds)).digest("hex"),
+  });
+  const writePack = async (name, document) => {
+    await writeFile(path.join(temporary, `${name}.reveal.json`), JSON.stringify(document));
+    await writeFile(path.join(temporary, `${name}.commit.json`), JSON.stringify({
+      schema: 1,
+      state: "sealed",
+      partition: document.partition,
+      algorithm: document.algorithm,
+      generation_method: document.generation_method,
+      escrow_sha256: document.escrow_sha256,
+      seed_count: document.seeds.length,
+      commitment: document.commitment,
+    }));
+  };
+  try {
+    const confirmation = makePack("confirmation", [
+      "18446744073709551615",
+      ...Array.from({ length: 255 }, (_, index) => (10_000_000_000_000_000_000n + BigInt(index)).toString()),
+    ], "a".repeat(64));
+    const heldOut = makePack(
+      "held-out",
+      Array.from({ length: 256 }, (_, index) => (11_000_000_000_000_000_000n + BigInt(index)).toString()),
+      "b".repeat(64),
+    );
+    for (const [name, document] of [["confirmation", confirmation], ["held-out", heldOut]]) {
+      await writePack(name, document);
+    }
+    manifest.seeds.confirmation = `${relative}/confirmation.reveal.json`;
+    manifest.seeds.held_out = `${relative}/held-out.reveal.json`;
+    await writeFile(manifestPath, JSON.stringify(manifest));
+    const accepted = await validateExecutionManifest(root, manifestPath, "fixture-007");
+    assert.equal(accepted.promotionChecks.find((check) => check.id === "confirmation-seeds").passed, true);
+    assert.equal(accepted.promotionChecks.find((check) => check.id === "held_out-seeds").passed, true);
+
+    confirmation.seeds[0] = "01";
+    confirmation.commitment = createHash("sha256").update(JSON.stringify(confirmation.seeds)).digest("hex");
+    await writePack("confirmation", confirmation);
+    const rejected = await validateExecutionManifest(root, manifestPath, "fixture-007");
+    assert.equal(rejected.promotionChecks.find((check) => check.id === "confirmation-seeds").passed, false);
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test("public-label-derived Fixture 019 packs fail the confirmation readiness gate", async () => {
+  const temporary = await mkdtemp(path.join(root, "tmp-f019-public-labels-"));
+  const relative = path.relative(root, temporary).replaceAll("\\", "/");
+  const manifest = JSON.parse(await readFile(fixture019Manifest, "utf8"));
+  const manifestPath = path.join(temporary, "fixture-019.json");
+  const derive = (split, regime, count) => Array.from({ length: count }, (_, replicate) => {
+    const digest = createHash("sha256")
+      .update(`FM-v1|FM-T02|${split}|${regime}|${replicate}`)
+      .digest();
+    return digest.readBigUInt64BE(digest.length - 8).toString();
+  });
+  const packs = {
+    confirmation: derive("confirmation", "base", 256),
+    "held-out": [
+      ...derive("transfer-a", "overlap-impact", 128),
+      ...derive("transfer-b", "funding", 128),
+    ],
+  };
+  try {
+    for (const [name, seeds] of Object.entries(packs)) {
+      const commitment = createHash("sha256").update(JSON.stringify(seeds)).digest("hex");
+      const escrowSha256 = name === "confirmation" ? "c".repeat(64) : "d".repeat(64);
+      await writeFile(path.join(temporary, `${name}.reveal.json`), JSON.stringify({
+        schema: 1,
+        state: "frozen-reveal",
+        partition: name,
+        algorithm: "sha256-json-array-v1",
+        generation_method: "system-cryptographic-entropy-v1",
+        escrow_sha256: escrowSha256,
+        seeds,
+        commitment,
+      }));
+      await writeFile(path.join(temporary, `${name}.commit.json`), JSON.stringify({
+        schema: 1,
+        state: "sealed",
+        partition: name,
+        algorithm: "sha256-json-array-v1",
+        generation_method: "system-cryptographic-entropy-v1",
+        escrow_sha256: escrowSha256,
+        seed_count: seeds.length,
+        commitment,
+      }));
+    }
+    manifest.seeds.confirmation = `${relative}/confirmation.reveal.json`;
+    manifest.seeds.held_out = `${relative}/held-out.reveal.json`;
+    await writeFile(manifestPath, JSON.stringify(manifest));
+    const result = await validateExecutionManifest(root, manifestPath, "fixture-019");
+    for (const id of ["confirmation-seeds", "held_out-seeds"]) {
+      const check = result.promotionChecks.find((entry) => entry.id === id);
+      assert.equal(check.passed, false);
+      assert.match(check.detail, /rejects every seeds\./);
+    }
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
 test("six truthy placeholder fields cannot pass the execution gate", async () => {
   const temporary = await mkdtemp(path.join(root, "tmp-20w-manifest-"));
   const manifestPath = path.join(temporary, "candidate-010.json");
@@ -132,6 +318,21 @@ test("six truthy placeholder fields cannot pass the execution gate", async () =>
     assert.ok(result.errors.length >= 10);
   } finally {
     assert.ok(temporary.startsWith(root));
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test("the checked manifest JSON Schema rejects unknown root properties", async () => {
+  const temporary = await mkdtemp(path.join(root, "tmp-f019-schema-"));
+  const manifestPath = path.join(temporary, "fixture-019.json");
+  try {
+    const manifest = JSON.parse(await readFile(fixture019Manifest, "utf8"));
+    manifest.self_asserted_eligibility = true;
+    await writeFile(manifestPath, JSON.stringify(manifest));
+    const result = await validateExecutionManifest(root, manifestPath, "fixture-019");
+    assert.equal(result.ready, false);
+    assert.ok(result.errors.some((error) => /manifest schema.*additional properties/.test(error)));
+  } finally {
     await rm(temporary, { recursive: true, force: true });
   }
 });

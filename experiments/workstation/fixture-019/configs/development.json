@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "artifact": "fixture-019",
+  "protocol": "FM-T02-forecast",
+  "profile": "development",
+  "seed_count": 64,
+  "opportunities_per_seed": 4,
+  "cells": ["base", "eta-zero", "overlap-high", "funding-on"],
+  "analysis_resamples": 10000,
+  "max_rounds": 1000,
+  "convergence_tolerance": 1e-8,
+  "claim_eligible": false
+}
