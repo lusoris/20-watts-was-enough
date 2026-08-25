@@ -28,7 +28,7 @@ declared clock origin. All identifiers are immutable byte strings. Replacement,
 repair, reprogramming, remapping, firmware change, or calibration creates a new
 versioned identity link; it does not overwrite history.
 
-Let $Delta t_n=t_{n+1}-t_n$ [s] be sample interval $n$. The actual mission
+Let $\Delta t_n=t_{n+1}-t_n$ [s] be sample interval $n$. The actual mission
 profile over interval $[0,T_e]$ is
 
 $$
@@ -204,6 +204,10 @@ $$
 where $r_k$ is mechanism-$k$ damage rate [damage unit s$^{-1}$] and $D_k$ is
 accumulated damage [damage unit]. This integral is evaluated on actual telemetry,
 not on mean voltage or mean temperature.
+
+The [equal-mean mission-history illustration](visual-models.md#contextual-analytical-figures)
+uses hypothetical Arrhenius parameters to visualize this nonlinearity; it is
+not calibrated device damage.
 
 An Arrhenius acceleration factor between use temperature $T_u$ [K] and stress
 temperature $T_s$ [K] is

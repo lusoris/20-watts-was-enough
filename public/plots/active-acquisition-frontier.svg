@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="720" viewBox="0 0 1240 720" role="img" aria-labelledby="title desc" data-layout="frontier-ledger" data-theme="ocean">
+  <title id="title">Buy evidence only when it changes the decision</title>
+  <desc id="desc">Illustrative action ledger and price sweep; utilities, costs, probabilities, and the displayed frontier are not measurements or recommended operating values.</desc>
+  <rect width="1240" height="720" fill="#071b2b"/>
+  <rect x="54" y="26" width="214.39999999999998" height="28" rx="14" fill="#12364e" stroke="#38d6ba"/>
+  <text x="70" y="45" fill="#38d6ba" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" letter-spacing="1.1">COSTED ACTION FRONTIER</text>
+  <text x="54" y="78" fill="#f7fbff" font-family="Georgia, serif" font-size="30" font-weight="700">Buy evidence only when it changes the decision</text>
+  <text x="54" y="112" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="13">score(a) = Delta U(a) - lambda_E E(a) - lambda_L L(a) - lambda_B B(a)</text>
+  <text x="1198" y="45" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">frontier-ledger · no measurements</text>
+  <rect x="86" y="150" width="752" height="478" rx="16" fill="#0d2a3e" stroke="#31566d" stroke-width="2"/>
+  <line x1="86" y1="150" x2="86" y2="628" stroke="#31566d"/><text x="86" y="652" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">0.0</text><line x1="230.6153846153846" y1="150" x2="230.6153846153846" y2="628" stroke="#31566d"/><text x="230.6153846153846" y="652" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">0.5</text><line x1="375.2307692307692" y1="150" x2="375.2307692307692" y2="628" stroke="#31566d"/><text x="375.2307692307692" y="652" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">1.0</text><line x1="519.8461538461538" y1="150" x2="519.8461538461538" y2="628" stroke="#31566d"/><text x="519.8461538461538" y="652" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">1.5</text><line x1="664.4615384615385" y1="150" x2="664.4615384615385" y2="628" stroke="#31566d"/><text x="664.4615384615385" y="652" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">2.0</text><line x1="809.076923076923" y1="150" x2="809.076923076923" y2="628" stroke="#31566d"/><text x="809.076923076923" y="652" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">2.5</text><line x1="86" y1="628" x2="838" y2="628" stroke="#31566d"/><text x="73" y="632" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">0.0</text><line x1="86" y1="508.5" x2="838" y2="508.5" stroke="#31566d"/><text x="73" y="512.5" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">0.2</text><line x1="86" y1="389" x2="838" y2="389" stroke="#31566d"/><text x="73" y="393" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">0.4</text><line x1="86" y1="269.50000000000006" x2="838" y2="269.50000000000006" stroke="#31566d"/><text x="73" y="273.50000000000006" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">0.6</text><line x1="86" y1="150" x2="838" y2="150" stroke="#31566d"/><text x="73" y="154" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">0.8</text>
+  <path d="M86.00,628.00 L129.38,592.15 L317.38,496.55 L722.31,317.30" fill="none" stroke="#38d6ba" stroke-width="5" stroke-linejoin="round"/>
+  <line x1="86" y1="628" x2="838" y2="503.72" stroke="#ffc857" stroke-width="3" stroke-dasharray="9 7"/>
+  <text x="826" y="491.72" fill="#ffc857" font-family="Segoe UI, sans-serif" font-size="12" text-anchor="end">energy-only zero-score guide</text>
+  <circle cx="86" cy="628" r="8" fill="#38d6ba" fill-opacity=".82" stroke="#38d6ba" stroke-width="3"/>
+      
+      <text x="101" y="632" fill="#38d6ba" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700" text-anchor="start">wait</text><circle cx="129.3846153846154" cy="592.15" r="9.777777777777779" fill="#38d6ba" fill-opacity=".82" stroke="#38d6ba" stroke-width="3"/>
+      
+      <text x="146.16239316239316" y="596.15" fill="#38d6ba" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700" text-anchor="start">reuse cached state</text><circle cx="317.38461538461536" cy="496.55" r="10.514157444218835" fill="#38d6ba" fill-opacity=".82" stroke="#38d6ba" stroke-width="3"/>
+      
+      <text x="334.8987728288342" y="500.55" fill="#38d6ba" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700" text-anchor="start">local refinement</text><circle cx="722.3076923076923" cy="317.3" r="13.028314888437672" fill="#59b7ff" fill-opacity=".82" stroke="#59b7ff" stroke-width="3"/>
+      
+      <text x="702.2793774192546" y="321.3" fill="#59b7ff" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700" text-anchor="end">invoke expert</text><circle cx="490.9230769230769" cy="341.2" r="11.555555555555555" fill="#ff6f7d" fill-opacity=".18" stroke="#ff6f7d" stroke-width="3"/>
+      <line x1="479.36752136752136" y1="329.64444444444445" x2="502.47863247863245" y2="352.75555555555553" stroke="#ff6f7d" stroke-width="4"/><line x1="502.47863247863245" y1="329.64444444444445" x2="479.36752136752136" y2="352.75555555555553" stroke="#ff6f7d" stroke-width="4"/>
+      <text x="509.47863247863245" y="345.2" fill="#ff6f7d" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700" text-anchor="start">sensor action</text><circle cx="809.076923076923" cy="197.80000000000007" r="15.11111111111111" fill="#ff6f7d" fill-opacity=".18" stroke="#ff6f7d" stroke-width="3"/>
+      <line x1="793.9658119658119" y1="182.68888888888895" x2="824.1880341880341" y2="212.91111111111118" stroke="#ff6f7d" stroke-width="4"/><line x1="824.1880341880341" y1="182.68888888888895" x2="793.9658119658119" y2="212.91111111111118" stroke="#ff6f7d" stroke-width="4"/>
+      <text x="786.9658119658119" y="201.80000000000007" fill="#ff6f7d" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700" text-anchor="end">larger controller</text>
+  <text x="462" y="682" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle">complete action energy E(a) · joules</text>
+  <text x="28" y="389" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle" transform="rotate(-90 28 389)">expected decision-utility improvement Delta U(a)</text>
+  <rect x="882" y="150" width="324" height="478" rx="16" fill="#12364e" stroke="#31566d" stroke-width="2"/>
+  <text x="900" y="180" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="14" font-weight="800">FULL PRICE + GATES</text>
+  <text x="900" y="201" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="10">point size = bytes · color = latency</text>
+  <text x="900" y="228" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700">reuse cached state</text>
+      <text x="900" y="247" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="10">score 0.045 · 0.15 J · 0.005 s</text>
+      <rect x="1104" y="212" width="84" height="24" rx="12" fill="#38d6ba" fill-opacity=".2" stroke="#38d6ba"/>
+      <text x="1146" y="229" fill="#38d6ba" font-family="Segoe UI, sans-serif" font-size="10" font-weight="800" text-anchor="middle">admissible</text><text x="900" y="294" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700">local refinement</text>
+      <text x="900" y="313" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="10">score 0.142 · 0.80 J · 0.025 s</text>
+      <rect x="1104" y="278" width="84" height="24" rx="12" fill="#38d6ba" fill-opacity=".2" stroke="#38d6ba"/>
+      <text x="1146" y="295" fill="#38d6ba" font-family="Segoe UI, sans-serif" font-size="10" font-weight="800" text-anchor="middle">admissible</text><text x="900" y="360" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700">invoke expert</text>
+      <text x="900" y="379" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="10">score 0.294 · 2.20 J · 0.090 s</text>
+      <rect x="1104" y="344" width="84" height="24" rx="12" fill="#38d6ba" fill-opacity=".2" stroke="#38d6ba"/>
+      <text x="1146" y="361" fill="#38d6ba" font-family="Segoe UI, sans-serif" font-size="10" font-weight="800" text-anchor="middle">admissible</text><text x="900" y="426" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700">sensor action</text>
+      <text x="900" y="445" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="10">score 0.285 · 1.40 J · 0.160 s</text>
+      <rect x="1104" y="410" width="84" height="24" rx="12" fill="#ff6f7d" fill-opacity=".2" stroke="#ff6f7d"/>
+      <text x="1146" y="427" fill="#ff6f7d" font-family="Segoe UI, sans-serif" font-size="10" font-weight="800" text-anchor="middle">latency gate</text><text x="900" y="492" fill="#f7fbff" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700">larger controller</text>
+      <text x="900" y="511" fill="#acc7d6" font-family="Cascadia Mono, monospace" font-size="10">score 0.455 · 2.50 J · 0.110 s</text>
+      <rect x="1104" y="476" width="84" height="24" rx="12" fill="#ff6f7d" fill-opacity=".2" stroke="#ff6f7d"/>
+      <text x="1146" y="493" fill="#ff6f7d" font-family="Segoe UI, sans-serif" font-size="10" font-weight="800" text-anchor="middle">risk gate</text>
+  <rect x="898" y="570" width="292" height="38" rx="8" fill="#38d6ba" fill-opacity=".16" stroke="#38d6ba"/>
+  <text x="1044" y="594" fill="#38d6ba" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" text-anchor="middle">illustrative selected action: invoke expert</text>
+</svg>

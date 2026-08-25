@@ -6,7 +6,8 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
 
 - `diagrams/` contains Mermaid sources used by the concept.
 - `plots/core-models.json` contains the editable equations, parameter ranges,
-  evidence status, and source links for the generated mathematical figures.
+  evidence status, source links, and layout contracts for the generated
+  mathematical figures.
 - `../scripts/generate-plots.mjs` deterministically renders those specifications
   to `../public/plots/` for GitHub and the private reader.
 - `diagrams/evidence-to-principles.mmd` shows how domain findings are audited,
@@ -202,6 +203,25 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
   editable sources.
 - Future data-driven figures must store plotting source, parameter status, and
   input-data provenance beside the output.
+
+The analytical plot source currently supports several deliberately different
+forms: uncertainty quadrants with a gate ledger, action frontiers, semilog
+threshold curves, policy envelopes, stacked mission histories, heatmaps, bars,
+and likelihood curves. New specifications declare `layout.kind`, dimensions,
+and a named color theme; they should choose the form that explains the equation
+rather than forcing every visual into the original dark 1100×660 frame.
+
+The five concept-facing analytical additions are:
+
+- `pareto-dominance-uncertainty` — simultaneous regions plus hard gates;
+- `active-acquisition-frontier` — value, physical cost, and admissibility;
+- `recovery-time-fragility` — restoring-time divergence and threshold;
+- `memory-action-price-envelope` — resource price and action switching; and
+- `mission-profile-damage` — equal-mean histories with unequal modeled damage.
+
+`fixture-007-identifiability` is also used directly in the concept book because
+it already provides the needed analytical distinction between prior-supported
+reconstruction and new evidence.
 
 Do not add a screenshot when a Mermaid, SVG, plotting script, or other editable
 source can express the same information.

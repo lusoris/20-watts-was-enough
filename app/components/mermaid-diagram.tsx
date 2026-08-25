@@ -40,6 +40,54 @@ const roleKeywords = {
   action: ["action", "route", "control", "adapt", "learn", "train", "repair", "restore", "recover", "select", "specialize", "update"],
 } as const;
 
+function cleanDiagramLabel(value: string): string {
+  const cleaned = value
+    .replace(/<br\s*\/?>/gi, " · ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/[_-]+/g, " ")
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/["'`*]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (cleaned.length <= 72) return cleaned;
+  return `${cleaned.slice(0, 69).trimEnd()}...`;
+}
+
+function diagramKind(chart: string): string {
+  if (/^\s*stateDiagram/im.test(chart)) return "State-transition diagram";
+  if (/^\s*sequenceDiagram/im.test(chart)) return "Sequence diagram";
+  if (/^\s*(?:classDiagram|erDiagram)/im.test(chart)) return "Relationship diagram";
+  if (/^\s*gantt/im.test(chart)) return "Timeline diagram";
+  return "Process diagram";
+}
+
+function semanticDiagramCaption(chart: string, contextHeading?: string): string {
+  const declaredCaption = chart.match(/^\s*%%\s*caption:\s*(.+)$/im)?.[1]?.trim();
+  if (declaredCaption) return declaredCaption;
+
+  const kind = diagramKind(chart);
+  const quoted = [...chart.matchAll(/["']([^"'\n]{3,160})["']/g)].map((match) => match[1]);
+  const bracketed = [...chart.matchAll(/[[({]([^\])}\n]{3,160})[\])}]/g)].map((match) => match[1]);
+  const edgeLabels = [...chart.matchAll(/\|([^|\n]{3,160})\|/g)].map((match) => match[1]);
+  const identifiers = [...chart.matchAll(/^\s*([A-Za-z][\w-]{2,})\s*(?:-->|---|==>)/gm)]
+    .map((match) => match[1]);
+  const labels = [...quoted, ...bracketed, ...edgeLabels, ...identifiers]
+    .map(cleanDiagramLabel)
+    .filter(
+      (label) =>
+        label.length >= 3 &&
+        !/^(yes|no|pass|fail|true|false|state|graph|flowchart)$/i.test(label) &&
+        !/^(?:classDef|style)\b/i.test(label),
+    );
+  const uniqueLabels = [...new Set(labels)].slice(0, 2);
+  const context = contextHeading ? ` for ${cleanDiagramLabel(contextHeading)}` : "";
+  const flow = uniqueLabels.length > 0 ? ` Key elements: ${uniqueLabels.join("; ")}.` : "";
+  return `${kind}${context}.${flow}`;
+}
+
 function decorateDiagram(renderedSvg: string): string {
   const template = document.createElement("template");
   template.innerHTML = renderedSvg;
@@ -56,10 +104,18 @@ function decorateDiagram(renderedSvg: string): string {
   return svg.outerHTML;
 }
 
-export function MermaidDiagram({ chart }: { chart: string }) {
+export function MermaidDiagram({
+  chart,
+  contextHeading,
+}: {
+  chart: string;
+  contextHeading?: string;
+}) {
   const reactId = useId();
   const [rendered, setRendered] = useState<RenderedDiagram | null>(null);
   const [error, setError] = useState("");
+  const caption = semanticDiagramCaption(chart, contextHeading);
+  const captionId = `caption-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
 
   useEffect(() => {
     let active = true;
@@ -138,19 +194,21 @@ export function MermaidDiagram({ chart }: { chart: string }) {
 
   return (
     <figure
-      className={`diagram diagram-${rendered.shape}`}
-      aria-label="Rendered Mermaid diagram"
+      className={`semantic-figure diagram diagram-${rendered.shape}`}
+      aria-labelledby={captionId}
     >
       {rendered.shape === "wide" ? (
-        <figcaption className="diagram-caption">
+        <p className="diagram-layout-note">
           Wide diagram · fit to page
-        </figcaption>
+        </p>
       ) : null}
       <div
         className="diagram-canvas"
+        aria-hidden="true"
         style={canvasStyle}
         dangerouslySetInnerHTML={{ __html: rendered.svg }}
       />
+      <figcaption id={captionId}>{caption}</figcaption>
     </figure>
   );
 }

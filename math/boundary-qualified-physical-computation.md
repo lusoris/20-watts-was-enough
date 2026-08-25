@@ -622,6 +622,10 @@ denote that decision [dimensionless], and $D_{p,n}=0$ otherwise. A component
 energy win with worse quality, risk, latency, capacity, or another required
 boundary cannot set $D_{p,n}=1$.
 
+The [illustrative simultaneous-decision figure](visual-models.md#contextual-analytical-figures)
+shows the uncertainty regions and hard gates without assigning measured values
+to any system.
+
 ## Equal-budget constraints
 
 For resource $r\in\mathcal R$, require

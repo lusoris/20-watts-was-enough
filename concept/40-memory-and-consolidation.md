@@ -129,6 +129,12 @@ Every method receives the same episode bytes, replay examples, optimizer
 updates, wall time, and energy boundary. This makes scheduling policy—not extra
 maintenance—the independent variable.
 
+The following single-item price envelope uses hypothetical gains and costs to
+make the selection equation visible. It is not a fitted scheduler or an
+empirical ranking of the listed actions.
+
+![For one memory item, each admissible action defines a score line G minus lambda_E E; raising the energy price can switch the selected action, while byte, time, update, provenance, and destructive-loss gates can remove an otherwise high-scoring choice.](../public/plots/memory-action-price-envelope.svg)
+
 ### 4. Branch, test, then promote
 
 Retrieval or replay opens a versioned candidate branch. It never makes the

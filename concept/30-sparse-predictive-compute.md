@@ -191,6 +191,12 @@ use constrained multi-objective selection and report a Pareto surface instead
 of inventing a scalar score. An action with high information gain but no
 expected decision benefit receives no credit.
 
+The next figure uses a hypothetical action ledger to expose that rule. Point
+positions, costs, probabilities, and the highlighted action are analytical
+illustrations only; they are not measured values or a recommended controller.
+
+![Surprise or information gain alone does not buy another computation or measurement: an action first survives hard risk and latency gates, then competes on decision-value gain against its complete energy, delay, and traffic cost.](../public/plots/active-acquisition-frontier.svg)
+
 ### Three runtime timescales
 
 | Loop | Typical cadence | State owned | Permitted actions |

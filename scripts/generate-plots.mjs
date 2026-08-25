@@ -593,6 +593,537 @@ function stressPathMemory(spec) {
   });
 }
 
+const analyticalThemes = {
+  paper: {
+    background: "#f4efe3",
+    panel: "#fffdf7",
+    panelAlt: "#e9eee7",
+    grid: "#cbd3ca",
+    text: "#10281a",
+    muted: "#53655a",
+    primary: "#146c43",
+    secondary: "#1d6f9b",
+    accent: "#c26b08",
+    danger: "#b83245",
+  },
+  ocean: {
+    background: "#071b2b",
+    panel: "#0d2a3e",
+    panelAlt: "#12364e",
+    grid: "#31566d",
+    text: "#f7fbff",
+    muted: "#acc7d6",
+    primary: "#38d6ba",
+    secondary: "#59b7ff",
+    accent: "#ffc857",
+    danger: "#ff6f7d",
+  },
+  ember: {
+    background: "#24120d",
+    panel: "#351c14",
+    panelAlt: "#48261b",
+    grid: "#704633",
+    text: "#fff8ee",
+    muted: "#d6b8a7",
+    primary: "#ffb44c",
+    secondary: "#65d6ce",
+    accent: "#ff7d57",
+    danger: "#ff4d68",
+  },
+  violet: {
+    background: "#171127",
+    panel: "#261b3d",
+    panelAlt: "#33244f",
+    grid: "#594879",
+    text: "#fffaff",
+    muted: "#c9bce0",
+    primary: "#c4a7ff",
+    secondary: "#64d8cb",
+    accent: "#ffc96b",
+    danger: "#ff718d",
+  },
+  daylight: {
+    background: "#eef3ef",
+    panel: "#fffdf7",
+    panelAlt: "#e3ebe5",
+    grid: "#c5d0c8",
+    text: "#14261a",
+    muted: "#55675b",
+    primary: "#176e47",
+    secondary: "#176b91",
+    accent: "#d36c08",
+    danger: "#b93449",
+  },
+};
+
+function analyticalLayout(spec, fallback) {
+  const configured = spec.layout ?? {};
+  const width = Number(configured.width ?? fallback.width);
+  const height = Number(configured.height ?? fallback.height);
+  const themeName = configured.theme ?? fallback.theme;
+  const theme = analyticalThemes[themeName];
+  if (!theme) throw new Error(`Unknown analytical plot theme: ${themeName}`);
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width < 640 || height < 480) {
+    throw new Error(`Invalid analytical layout for ${spec.id}`);
+  }
+  return {
+    width,
+    height,
+    kind: configured.kind ?? fallback.kind,
+    themeName,
+    theme,
+  };
+}
+
+function analyticalDocument(spec, layout, content) {
+  const { width, height, theme, kind, themeName } = layout;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc" data-layout="${esc(kind)}" data-theme="${esc(themeName)}">
+  <title id="title">${esc(spec.title)}</title>
+  <desc id="desc">${esc(spec.status)}</desc>
+  <rect width="${width}" height="${height}" fill="${theme.background}"/>
+  ${content}
+</svg>`;
+}
+
+function localScale(value, min, max, start, end) {
+  return start + ((value - min) / (max - min)) * (end - start);
+}
+
+function localLogScale(value, min, max, start, end) {
+  return localScale(Math.log10(value), Math.log10(min), Math.log10(max), start, end);
+}
+
+function analyticalHeader(spec, layout, {
+  badge = "ANALYTICAL MODEL · ILLUSTRATIVE",
+  x = 54,
+  titleY = 78,
+  equationY = 112,
+} = {}) {
+  const { theme, width } = layout;
+  return `<rect x="${x}" y="26" width="${Math.min(360, badge.length * 8.2 + 34)}" height="28" rx="14" fill="${theme.panelAlt}" stroke="${theme.primary}"/>
+  <text x="${x + 16}" y="45" fill="${theme.primary}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" letter-spacing="1.1">${esc(badge)}</text>
+  <text x="${x}" y="${titleY}" fill="${theme.text}" font-family="Georgia, serif" font-size="30" font-weight="700">${esc(spec.title)}</text>
+  <text x="${x}" y="${equationY}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="13">${esc(spec.equation)}</text>
+  <text x="${width - 42}" y="45" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${esc(layout.kind)} · no measurements</text>`;
+}
+
+function paretoDominanceUncertainty(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 1180,
+    height: 760,
+    kind: "quadrant-gates",
+    theme: "paper",
+  });
+  const { width, height, theme } = layout;
+  const {
+    energy_effect_min: xMin,
+    energy_effect_max: xMax,
+    quality_delta_min: yMin,
+    quality_delta_max: yMax,
+    energy_effect_margin: xMargin,
+    quality_noninferiority_margin: yMargin,
+    cases,
+  } = spec.parameters;
+  const box = { left: 92, right: 842, top: 154, bottom: height - 92 };
+  const gate = { left: 884, right: width - 38, top: 154, bottom: height - 92 };
+  const xMap = (value) => localScale(value, xMin, xMax, box.left, box.right);
+  const yMap = (value) => localScale(value, yMin, yMax, box.bottom, box.top);
+  const marginX = xMap(xMargin);
+  const marginY = yMap(yMargin);
+  const xTicks = [-0.3, -0.2, -0.1, 0, 0.1];
+  const yTicks = [-0.05, 0, 0.05, 0.1];
+  const gridMarkup = [
+    ...xTicks.map((tick) => `<line x1="${xMap(tick)}" y1="${box.top}" x2="${xMap(tick)}" y2="${box.bottom}" stroke="${theme.grid}"/><text x="${xMap(tick)}" y="${box.bottom + 24}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${Math.round(tick * 100)}%</text>`),
+    ...yTicks.map((tick) => `<line x1="${box.left}" y1="${yMap(tick)}" x2="${box.right}" y2="${yMap(tick)}" stroke="${theme.grid}"/><text x="${box.left - 14}" y="${yMap(tick) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${tick.toFixed(2)}</text>`),
+  ].join("");
+  const caseColors = {
+    supported: theme.primary,
+    unresolved: theme.accent,
+    "gate-failure": theme.danger,
+  };
+  const caseMarkup = cases.map((entry) => {
+    const cx = xMap(entry.energy_effect);
+    const cy = yMap(entry.quality_delta);
+    const rx = Math.abs(xMap(entry.energy_effect + entry.energy_radius) - cx);
+    const ry = Math.abs(yMap(entry.quality_delta + entry.quality_radius) - cy);
+    const color = caseColors[entry.id] ?? theme.secondary;
+    const labelBelow = entry.id === "gate-failure";
+    return `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${color}" fill-opacity=".2" stroke="${color}" stroke-width="4"/>
+      <circle cx="${cx}" cy="${cy}" r="6" fill="${color}"/>
+      <text x="${cx + 12}" y="${cy + (labelBelow ? 27 : -12)}" fill="${color}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="750">${esc(entry.label)}</text>`;
+  }).join("");
+  const gateRows = cases.map((entry, index) => {
+    const color = caseColors[entry.id] ?? theme.secondary;
+    const y = gate.top + 84 + index * 118;
+    const gates = [entry.latency_gate, entry.risk_gate, entry.support_gate];
+    return `<circle cx="${gate.left + 18}" cy="${y - 4}" r="6" fill="${color}"/>
+      <text x="${gate.left + 34}" y="${y}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700">${esc(entry.label)}</text>
+      ${gates.map((passed, gateIndex) => {
+        const gx = gate.left + 50 + gateIndex * 72;
+        return `<circle cx="${gx}" cy="${y + 34}" r="13" fill="${passed ? theme.primary : theme.danger}"/><text x="${gx}" y="${y + 39}" fill="#fff" font-family="Segoe UI Symbol, Segoe UI, sans-serif" font-size="14" font-weight="900" text-anchor="middle">${passed ? "✓" : "×"}</text>`;
+      }).join("")}`;
+  }).join("");
+  const content = `${analyticalHeader(spec, layout, { badge: "SIMULTANEOUS DECISION REGION" })}
+  <rect x="${box.left}" y="${box.top}" width="${box.right - box.left}" height="${box.bottom - box.top}" rx="14" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  <rect x="${box.left}" y="${box.top}" width="${marginX - box.left}" height="${marginY - box.top}" fill="${theme.primary}" fill-opacity=".12"/>
+  <rect x="${marginX}" y="${box.top}" width="${box.right - marginX}" height="${box.bottom - box.top}" fill="${theme.danger}" fill-opacity=".055"/>
+  ${gridMarkup}
+  <line x1="${marginX}" y1="${box.top}" x2="${marginX}" y2="${box.bottom}" stroke="${theme.secondary}" stroke-width="3" stroke-dasharray="9 7"/>
+  <line x1="${box.left}" y1="${marginY}" x2="${box.right}" y2="${marginY}" stroke="${theme.secondary}" stroke-width="3" stroke-dasharray="9 7"/>
+  <text x="${marginX - 10}" y="${box.top + 24}" fill="${theme.secondary}" font-family="Segoe UI, sans-serif" font-size="12" text-anchor="end">minimum energy effect</text>
+  <text x="${box.right - 12}" y="${marginY - 10}" fill="${theme.secondary}" font-family="Segoe UI, sans-serif" font-size="12" text-anchor="end">quality non-inferiority</text>
+  <text x="${box.left + 18}" y="${box.top + 28}" fill="${theme.primary}" font-family="Segoe UI, sans-serif" font-size="16" font-weight="800">REGION CAN SUPPORT PROMOTION</text>
+  ${caseMarkup}
+  <text x="${(box.left + box.right) / 2}" y="${height - 38}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle">relative lifecycle-energy effect d · lower is better</text>
+  <text x="28" y="${(box.top + box.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle" transform="rotate(-90 28 ${(box.top + box.bottom) / 2})">quality difference Delta Q · higher is better</text>
+  <rect x="${gate.left}" y="${gate.top}" width="${gate.right - gate.left}" height="${gate.bottom - gate.top}" rx="14" fill="${theme.panelAlt}" stroke="${theme.grid}" stroke-width="2"/>
+  <text x="${gate.left + 18}" y="${gate.top + 30}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="800">HARD GATES</text>
+  <text x="${gate.left + 50}" y="${gate.top + 58}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10" text-anchor="middle">latency</text>
+  <text x="${gate.left + 122}" y="${gate.top + 58}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10" text-anchor="middle">risk</text>
+  <text x="${gate.left + 194}" y="${gate.top + 58}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10" text-anchor="middle">support</text>
+  ${gateRows}
+  <text x="${gate.left + 18}" y="${gate.bottom - 22}" fill="${theme.danger}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700">One failed gate keeps D(p,n) = 0.</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
+function activeAcquisitionFrontier(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 1240,
+    height: 720,
+    kind: "frontier-ledger",
+    theme: "ocean",
+  });
+  const { width, height, theme } = layout;
+  const {
+    energy_max_j: xMax,
+    utility_max: yMax,
+    latency_limit_s: latencyLimit,
+    unsafe_probability_limit: riskLimit,
+    lambda_energy_utility_per_j: lambdaEnergy,
+    lambda_latency_utility_per_s: lambdaLatency,
+    lambda_traffic_utility_per_byte: lambdaTraffic,
+    actions,
+  } = spec.parameters;
+  const box = { left: 86, right: 838, top: 150, bottom: height - 92 };
+  const ledger = { left: 882, right: width - 34, top: 150, bottom: height - 92 };
+  const xMap = (value) => localScale(value, 0, xMax, box.left, box.right);
+  const yMap = (value) => localScale(value, 0, yMax, box.bottom, box.top);
+  const isFeasible = (action) => (
+    action.latency_s <= latencyLimit && action.unsafe_probability <= riskLimit
+  );
+  const fullScore = (action) => (
+    action.delta_utility
+    - lambdaEnergy * action.energy_j
+    - lambdaLatency * action.latency_s
+    - lambdaTraffic * action.traffic_bytes
+  );
+  const feasible = actions.filter(isFeasible).sort((left, right) => left.energy_j - right.energy_j);
+  const frontier = [];
+  let bestUtility = -Infinity;
+  for (const action of feasible) {
+    if (action.delta_utility >= bestUtility) {
+      frontier.push(action);
+      bestUtility = action.delta_utility;
+    }
+  }
+  const selected = feasible.reduce((best, action) => (
+    fullScore(action) > fullScore(best) ? action : best
+  ), feasible[0]);
+  const xTicks = [0, 0.5, 1, 1.5, 2, 2.5];
+  const yTicks = [0, 0.2, 0.4, 0.6, 0.8];
+  const gridMarkup = [
+    ...xTicks.map((tick) => `<line x1="${xMap(tick)}" y1="${box.top}" x2="${xMap(tick)}" y2="${box.bottom}" stroke="${theme.grid}"/><text x="${xMap(tick)}" y="${box.bottom + 24}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${tick.toFixed(1)}</text>`),
+    ...yTicks.map((tick) => `<line x1="${box.left}" y1="${yMap(tick)}" x2="${box.right}" y2="${yMap(tick)}" stroke="${theme.grid}"/><text x="${box.left - 13}" y="${yMap(tick) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${tick.toFixed(1)}</text>`),
+  ].join("");
+  const frontierPath = linePath(frontier.map((action) => [
+    xMap(action.energy_j),
+    yMap(action.delta_utility),
+  ]));
+  const pointMarkup = actions.map((action) => {
+    const feasibleAction = isFeasible(action);
+    const cx = xMap(action.energy_j);
+    const cy = yMap(action.delta_utility);
+    const radius = 8 + Math.sqrt(action.traffic_bytes) / 4.5;
+    const latencyFraction = Math.min(1, action.latency_s / latencyLimit);
+    const color = feasibleAction
+      ? (latencyFraction < 0.45 ? theme.primary : latencyFraction < 0.85 ? theme.secondary : theme.accent)
+      : theme.danger;
+    const labelOnLeft = cx > box.right - 150;
+    const labelX = labelOnLeft ? cx - radius - 7 : cx + radius + 7;
+    return `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="${color}" fill-opacity="${feasibleAction ? ".82" : ".18"}" stroke="${color}" stroke-width="3"/>
+      ${feasibleAction ? "" : `<line x1="${cx - radius}" y1="${cy - radius}" x2="${cx + radius}" y2="${cy + radius}" stroke="${theme.danger}" stroke-width="4"/><line x1="${cx + radius}" y1="${cy - radius}" x2="${cx - radius}" y2="${cy + radius}" stroke="${theme.danger}" stroke-width="4"/>`}
+      <text x="${labelX}" y="${cy + 4}" fill="${color}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700" text-anchor="${labelOnLeft ? "end" : "start"}">${esc(action.label)}</text>`;
+  }).join("");
+  const priceEndY = yMap(lambdaEnergy * xMax);
+  const ledgerRows = actions.filter((action) => action.id !== "wait").map((action, index) => {
+    const y = ledger.top + 78 + index * 66;
+    const feasibleAction = isFeasible(action);
+    const gateText = feasibleAction ? "admissible" : action.latency_s > latencyLimit ? "latency gate" : "risk gate";
+    const gateColor = feasibleAction ? theme.primary : theme.danger;
+    return `<text x="${ledger.left + 18}" y="${y}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700">${esc(action.label)}</text>
+      <text x="${ledger.left + 18}" y="${y + 19}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10">score ${fullScore(action).toFixed(3)} · ${action.energy_j.toFixed(2)} J · ${action.latency_s.toFixed(3)} s</text>
+      <rect x="${ledger.right - 102}" y="${y - 16}" width="84" height="24" rx="12" fill="${gateColor}" fill-opacity=".2" stroke="${gateColor}"/>
+      <text x="${ledger.right - 60}" y="${y + 1}" fill="${gateColor}" font-family="Segoe UI, sans-serif" font-size="10" font-weight="800" text-anchor="middle">${esc(gateText)}</text>`;
+  }).join("");
+  const content = `${analyticalHeader(spec, layout, { badge: "COSTED ACTION FRONTIER" })}
+  <rect x="${box.left}" y="${box.top}" width="${box.right - box.left}" height="${box.bottom - box.top}" rx="16" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  ${gridMarkup}
+  <path d="${frontierPath}" fill="none" stroke="${theme.primary}" stroke-width="5" stroke-linejoin="round"/>
+  <line x1="${xMap(0)}" y1="${yMap(0)}" x2="${xMap(xMax)}" y2="${priceEndY}" stroke="${theme.accent}" stroke-width="3" stroke-dasharray="9 7"/>
+  <text x="${xMap(xMax) - 12}" y="${priceEndY - 12}" fill="${theme.accent}" font-family="Segoe UI, sans-serif" font-size="12" text-anchor="end">energy-only zero-score guide</text>
+  ${pointMarkup}
+  <text x="${(box.left + box.right) / 2}" y="${height - 38}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle">complete action energy E(a) · joules</text>
+  <text x="28" y="${(box.top + box.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle" transform="rotate(-90 28 ${(box.top + box.bottom) / 2})">expected decision-utility improvement Delta U(a)</text>
+  <rect x="${ledger.left}" y="${ledger.top}" width="${ledger.right - ledger.left}" height="${ledger.bottom - ledger.top}" rx="16" fill="${theme.panelAlt}" stroke="${theme.grid}" stroke-width="2"/>
+  <text x="${ledger.left + 18}" y="${ledger.top + 30}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" font-weight="800">FULL PRICE + GATES</text>
+  <text x="${ledger.left + 18}" y="${ledger.top + 51}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10">point size = bytes · color = latency</text>
+  ${ledgerRows}
+  <rect x="${ledger.left + 16}" y="${ledger.bottom - 58}" width="${ledger.right - ledger.left - 32}" height="38" rx="8" fill="${theme.primary}" fill-opacity=".16" stroke="${theme.primary}"/>
+  <text x="${(ledger.left + ledger.right) / 2}" y="${ledger.bottom - 34}" fill="${theme.primary}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" text-anchor="middle">illustrative selected action: ${esc(selected.label)}</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
+function recoveryTimeFragility(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 980,
+    height: 760,
+    kind: "threshold-curve",
+    theme: "ember",
+  });
+  const { width, height, theme } = layout;
+  const {
+    gain_min: gMin,
+    gain_max: gMax,
+    samples,
+    sample_interval_s: sampleInterval,
+    remaining_fraction: remainingFraction,
+    alarm_threshold_s: alarmThreshold,
+    display_max_s: yMax,
+  } = spec.parameters;
+  const yMin = 0.5;
+  const box = { left: 102, right: width - 58, top: 156, bottom: height - 86 };
+  const xMap = (value) => localScale(value, gMin, gMax, box.left, box.right);
+  const yMap = (value) => localLogScale(value, yMin, yMax, box.bottom, box.top);
+  const recovery = (gain) => sampleInterval * Math.log(remainingFraction) / Math.log(gain);
+  const values = Array.from({ length: samples }, (_, index) => {
+    const gain = gMin + (index / (samples - 1)) * (gMax - gMin);
+    return [xMap(gain), yMap(Math.min(yMax, recovery(gain)))];
+  });
+  const thresholdGain = remainingFraction ** (sampleInterval / alarmThreshold);
+  const xTicks = [0.6, 0.7, 0.8, 0.9, 0.95, 0.97, 0.99];
+  const yTicks = [0.5, 1, 2, 5, 10, 30, 100, 300, 1000];
+  const gridMarkup = [
+    ...xTicks.map((tick) => `<line x1="${xMap(tick)}" y1="${box.top}" x2="${xMap(tick)}" y2="${box.bottom}" stroke="${theme.grid}"/><text x="${xMap(tick)}" y="${box.bottom + 24}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${tick.toFixed(2)}</text>`),
+    ...yTicks.map((tick) => `<line x1="${box.left}" y1="${yMap(tick)}" x2="${box.right}" y2="${yMap(tick)}" stroke="${theme.grid}"/><text x="${box.left - 14}" y="${yMap(tick) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${tick}</text>`),
+  ].join("");
+  const content = `${analyticalHeader(spec, layout, { badge: "LOCAL RETURN MODEL · EXACT CURVE" })}
+  <rect x="${box.left}" y="${box.top}" width="${box.right - box.left}" height="${box.bottom - box.top}" rx="18" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  <rect x="${xMap(thresholdGain)}" y="${box.top}" width="${box.right - xMap(thresholdGain)}" height="${box.bottom - box.top}" fill="${theme.danger}" fill-opacity=".13"/>
+  ${gridMarkup}
+  <path d="${linePath(values)}" fill="none" stroke="${theme.primary}" stroke-width="7" stroke-linecap="round"/>
+  <line x1="${box.left}" y1="${yMap(alarmThreshold)}" x2="${box.right}" y2="${yMap(alarmThreshold)}" stroke="${theme.secondary}" stroke-width="3" stroke-dasharray="10 8"/>
+  <line x1="${xMap(thresholdGain)}" y1="${box.top}" x2="${xMap(thresholdGain)}" y2="${box.bottom}" stroke="${theme.secondary}" stroke-width="3" stroke-dasharray="10 8"/>
+  <circle cx="${xMap(thresholdGain)}" cy="${yMap(alarmThreshold)}" r="9" fill="${theme.secondary}" stroke="${theme.text}" stroke-width="2"/>
+  <text x="${xMap(thresholdGain) - 14}" y="${yMap(alarmThreshold) - 15}" fill="${theme.secondary}" font-family="Segoe UI, sans-serif" font-size="14" font-weight="800" text-anchor="end">Stage-1 alarm: 10 s</text>
+  <text x="${xMap(thresholdGain) + 12}" y="${box.bottom - 18}" fill="${theme.danger}" font-family="Cascadia Mono, monospace" font-size="12">g ≈ ${thresholdGain.toFixed(4)}</text>
+  <text x="${box.right - 16}" y="${box.top + 28}" fill="${theme.danger}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="800" text-anchor="end">shrinking restoring margin</text>
+  <text x="${(box.left + box.right) / 2}" y="${height - 34}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle">hidden return gain g · local boundary at g = 1</text>
+  <text x="29" y="${(box.top + box.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle" transform="rotate(-90 29 ${(box.top + box.bottom) / 2})">95% recovery time tau_95 · seconds · logarithmic</text>
+  <rect x="${box.left + 24}" y="${box.top + 26}" width="292" height="68" rx="12" fill="${theme.panelAlt}" stroke="${theme.grid}"/>
+  <text x="${box.left + 42}" y="${box.top + 53}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700">Same apparent operating point</text>
+  <text x="${box.left + 42}" y="${box.top + 77}" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="12">but progressively slower return after displacement</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
+function memoryActionPriceEnvelope(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 1180,
+    height: 760,
+    kind: "policy-envelope",
+    theme: "violet",
+  });
+  const { width, height, theme } = layout;
+  const {
+    lambda_energy_min: xMin,
+    lambda_energy_max: xMax,
+    samples,
+    budgets,
+    actions,
+  } = spec.parameters;
+  const yMin = -0.2;
+  const yMax = 0.32;
+  const box = { left: 94, right: 842, top: 154, bottom: height - 92 };
+  const panel = { left: 884, right: width - 36, top: 154, bottom: height - 92 };
+  const xMap = (value) => localScale(value, xMin, xMax, box.left, box.right);
+  const yMap = (value) => localScale(value, yMin, yMax, box.bottom, box.top);
+  const score = (action, lambda) => action.gain_loss_units - lambda * action.energy_j;
+  const palette = [theme.muted, theme.secondary, theme.accent, theme.primary, "#ff93dc", theme.danger];
+  const values = Array.from({ length: samples }, (_, index) => (
+    xMin + (index / (samples - 1)) * (xMax - xMin)
+  ));
+  const actionLines = actions.map((action, index) => {
+    const points = values.map((lambda) => [
+      xMap(lambda),
+      yMap(Math.max(yMin, Math.min(yMax, score(action, lambda)))),
+    ]);
+    return `<path d="${linePath(points)}" fill="none" stroke="${palette[index % palette.length]}" stroke-width="${action.admissible ? 3 : 2}" stroke-dasharray="${action.admissible ? "" : "7 7"}" opacity="${action.admissible ? ".82" : ".55"}"/>`;
+  }).join("");
+  const admissible = actions.filter((action) => action.admissible);
+  const envelope = values.map((lambda) => {
+    const winner = admissible.reduce((best, action) => (
+      score(action, lambda) > score(best, lambda) ? action : best
+    ), admissible[0]);
+    return { lambda, winner, value: score(winner, lambda) };
+  });
+  const envelopePath = linePath(envelope.map(({ lambda, value }) => [
+    xMap(lambda),
+    yMap(value),
+  ]));
+  const segments = [];
+  for (const point of envelope) {
+    const previous = segments.at(-1);
+    if (!previous || previous.winner.id !== point.winner.id) {
+      segments.push({ winner: point.winner, start: point.lambda, end: point.lambda });
+    } else previous.end = point.lambda;
+  }
+  const segmentLabels = segments.map((segment) => {
+    const midpoint = (segment.start + segment.end) / 2;
+    const y = score(segment.winner, midpoint);
+    return `<rect x="${xMap(midpoint) - 42}" y="${yMap(y) - 28}" width="84" height="22" rx="11" fill="${theme.background}" stroke="${theme.primary}"/>
+      <text x="${xMap(midpoint)}" y="${yMap(y) - 13}" fill="${theme.primary}" font-family="Segoe UI, sans-serif" font-size="10" font-weight="800" text-anchor="middle">${esc(segment.winner.label)}</text>`;
+  }).join("");
+  const xTicks = [0, 0.1, 0.2, 0.3, 0.4];
+  const yTicks = [-0.2, -0.1, 0, 0.1, 0.2, 0.3];
+  const gridMarkup = [
+    ...xTicks.map((tick) => `<line x1="${xMap(tick)}" y1="${box.top}" x2="${xMap(tick)}" y2="${box.bottom}" stroke="${theme.grid}"/><text x="${xMap(tick)}" y="${box.bottom + 24}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${tick.toFixed(1)}</text>`),
+    ...yTicks.map((tick) => `<line x1="${box.left}" y1="${yMap(tick)}" x2="${box.right}" y2="${yMap(tick)}" stroke="${theme.grid}"/><text x="${box.left - 14}" y="${yMap(tick) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${tick.toFixed(1)}</text>`),
+  ].join("");
+  const actionRows = actions.map((action, index) => {
+    const y = panel.top + 68 + index * 58;
+    const color = palette[index % palette.length];
+    return `<line x1="${panel.left + 18}" y1="${y - 4}" x2="${panel.left + 50}" y2="${y - 4}" stroke="${color}" stroke-width="4" stroke-dasharray="${action.admissible ? "" : "6 5"}"/>
+      <text x="${panel.left + 60}" y="${y}" fill="${action.admissible ? theme.text : theme.danger}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700">${esc(action.label)}</text>
+      <text x="${panel.left + 60}" y="${y + 17}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="9">G=${action.gain_loss_units.toFixed(2)} · E=${action.energy_j.toFixed(2)} J</text>`;
+  }).join("");
+  const content = `${analyticalHeader(spec, layout, { badge: "SINGLE-ITEM POLICY GEOMETRY" })}
+  <rect x="${box.left}" y="${box.top}" width="${box.right - box.left}" height="${box.bottom - box.top}" rx="16" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  ${gridMarkup}
+  <line x1="${box.left}" y1="${yMap(0)}" x2="${box.right}" y2="${yMap(0)}" stroke="${theme.text}" stroke-width="2"/>
+  ${actionLines}
+  <path d="${envelopePath}" fill="none" stroke="${theme.text}" stroke-width="8" stroke-linecap="round" opacity=".95"/>
+  <path d="${envelopePath}" fill="none" stroke="${theme.primary}" stroke-width="4" stroke-linecap="round"/>
+  ${segmentLabels}
+  <text x="${(box.left + box.right) / 2}" y="${height - 38}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle">energy price lambda_E · loss units per joule</text>
+  <text x="28" y="${(box.top + box.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle" transform="rotate(-90 28 ${(box.top + box.bottom) / 2})">action score G - lambda_E E · loss units</text>
+  <rect x="${panel.left}" y="${panel.top}" width="${panel.right - panel.left}" height="${panel.bottom - panel.top}" rx="16" fill="${theme.panelAlt}" stroke="${theme.grid}" stroke-width="2"/>
+  <text x="${panel.left + 18}" y="${panel.top + 30}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" font-weight="800">ACTIONS + GATES</text>
+  <text x="${panel.left + 18}" y="${panel.top + 49}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="9">upper envelope = selected admissible action</text>
+  ${actionRows}
+  <rect x="${panel.left + 16}" y="${panel.bottom - 80}" width="${panel.right - panel.left - 32}" height="58" rx="10" fill="${theme.background}" fill-opacity=".55"/>
+  <text x="${panel.left + 28}" y="${panel.bottom - 56}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="10">B ≤ ${(budgets.bytes_max / 1e6).toFixed(1)} MB · T ≤ ${budgets.wall_time_s_max.toFixed(1)} s</text>
+  <text x="${panel.left + 28}" y="${panel.bottom - 36}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="10">W ≤ ${budgets.optimizer_updates_max} updates · provenance remains separate</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
+function missionProfileDamage(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 1180,
+    height: 820,
+    kind: "stacked-history",
+    theme: "daylight",
+  });
+  const { width, height, theme } = layout;
+  const {
+    duration_s: duration,
+    samples,
+    reference_temperature_k: referenceTemperature,
+    constant_temperature_k: constantTemperature,
+    pulsed_low_temperature_k: lowTemperature,
+    pulsed_high_temperature_k: highTemperature,
+    pulse_cycle_s: cycle,
+    pulse_high_fraction: highFraction,
+    activation_energy_ev: activationEnergy,
+    boltzmann_ev_per_k: boltzmann,
+  } = spec.parameters;
+  const upper = { left: 94, right: width - 54, top: 146, bottom: 390 };
+  const lower = { left: 94, right: width - 54, top: 492, bottom: height - 70 };
+  const xMap = (value) => localScale(value, 0, duration, upper.left, upper.right);
+  const tempMap = (value) => localScale(value, 315, 365, upper.bottom, upper.top);
+  const rate = (temperature) => Math.exp(
+    (activationEnergy / boltzmann) * (1 / referenceTemperature - 1 / temperature),
+  );
+  const pulsedTemperature = (time) => (
+    (time % cycle) < cycle * highFraction ? highTemperature : lowTemperature
+  );
+  const times = Array.from({ length: samples }, (_, index) => (
+    (index / (samples - 1)) * duration
+  ));
+  const dt = duration / (samples - 1);
+  let constantDamage = 0;
+  let pulsedDamage = 0;
+  const history = times.map((time, index) => {
+    if (index > 0) {
+      const midpoint = time - dt / 2;
+      constantDamage += rate(constantTemperature) * dt;
+      pulsedDamage += rate(pulsedTemperature(midpoint)) * dt;
+    }
+    return {
+      time,
+      pulsedTemperature: pulsedTemperature(Math.min(time, duration - Number.EPSILON)),
+      constantDamage,
+      pulsedDamage,
+    };
+  });
+  const constantFinal = history.at(-1).constantDamage;
+  const pulsedFinal = history.at(-1).pulsedDamage;
+  const damageMax = Math.ceil((pulsedFinal / constantFinal) * 2) / 2;
+  const damageMap = (value) => localScale(value, 0, damageMax, lower.bottom, lower.top);
+  const constantTemperaturePath = linePath(times.map((time) => [
+    xMap(time),
+    tempMap(constantTemperature),
+  ]));
+  const pulsedTemperaturePath = linePath(history.map(({ time, pulsedTemperature: temperature }) => [
+    xMap(time),
+    tempMap(temperature),
+  ]));
+  const constantDamagePath = linePath(history.map(({ time, constantDamage: damage }) => [
+    xMap(time),
+    damageMap(damage / constantFinal),
+  ]));
+  const pulsedDamagePath = linePath(history.map(({ time, pulsedDamage: damage }) => [
+    xMap(time),
+    damageMap(damage / constantFinal),
+  ]));
+  const timeTicks = [0, 600, 1200, 1800, 2400, 3000, 3600];
+  const upperGrid = [320, 330, 340, 350, 360].map((tick) => `<line x1="${upper.left}" y1="${tempMap(tick)}" x2="${upper.right}" y2="${tempMap(tick)}" stroke="${theme.grid}"/><text x="${upper.left - 14}" y="${tempMap(tick) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${tick}</text>`).join("");
+  const lowerTicks = Array.from({ length: Math.floor(damageMax / 0.5) + 1 }, (_, index) => index * 0.5);
+  const lowerGrid = lowerTicks.map((tick) => `<line x1="${lower.left}" y1="${damageMap(tick)}" x2="${lower.right}" y2="${damageMap(tick)}" stroke="${theme.grid}"/><text x="${lower.left - 14}" y="${damageMap(tick) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${tick.toFixed(1)}</text>`).join("");
+  const xTicks = timeTicks.map((tick) => `<line x1="${xMap(tick)}" y1="${lower.top}" x2="${xMap(tick)}" y2="${lower.bottom}" stroke="${theme.grid}"/><text x="${xMap(tick)}" y="${lower.bottom + 22}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${tick / 60}</text>`).join("");
+  const analyticMean = highFraction * highTemperature + (1 - highFraction) * lowTemperature;
+  const content = `${analyticalHeader(spec, layout, { badge: "PATH-HISTORY MODEL · ANALYTICAL" })}
+  <rect x="${upper.left}" y="${upper.top}" width="${upper.right - upper.left}" height="${upper.bottom - upper.top}" rx="14" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  ${upperGrid}
+  <path d="${constantTemperaturePath}" fill="none" stroke="${theme.secondary}" stroke-width="6"/>
+  <path d="${pulsedTemperaturePath}" fill="none" stroke="${theme.accent}" stroke-width="5"/>
+  <text x="${upper.left + 18}" y="${upper.top + 28}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" font-weight="800">TEMPERATURE HISTORY</text>
+  <rect x="${upper.right - 344}" y="${upper.top + 18}" width="326" height="58" rx="10" fill="${theme.panelAlt}"/>
+  <text x="${upper.right - 326}" y="${upper.top + 42}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="700">Both arithmetic means: ${analyticMean.toFixed(0)} K</text>
+  <text x="${upper.right - 326}" y="${upper.top + 62}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10">constant 330 K · pulsed 360/320 K</text>
+  <rect x="${lower.left}" y="${lower.top}" width="${lower.right - lower.left}" height="${lower.bottom - lower.top}" rx="14" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  ${lowerGrid}${xTicks}
+  <path d="${constantDamagePath}" fill="none" stroke="${theme.secondary}" stroke-width="6"/>
+  <path d="${pulsedDamagePath}" fill="none" stroke="${theme.accent}" stroke-width="6"/>
+  <text x="${lower.left + 18}" y="${lower.top + 28}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" font-weight="800">CUMULATIVE NORMALIZED DAMAGE</text>
+  <circle cx="${lower.right}" cy="${damageMap(pulsedFinal / constantFinal)}" r="8" fill="${theme.accent}"/>
+  <text x="${lower.right - 12}" y="${damageMap(pulsedFinal / constantFinal) - 14}" fill="${theme.accent}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800" text-anchor="end">pulsed: ${(pulsedFinal / constantFinal).toFixed(2)}×</text>
+  <circle cx="${lower.right}" cy="${damageMap(1)}" r="8" fill="${theme.secondary}"/>
+  <text x="${lower.right - 12}" y="${damageMap(1) - 14}" fill="${theme.secondary}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800" text-anchor="end">constant: 1.00×</text>
+  <text x="${(lower.left + lower.right) / 2}" y="${height - 25}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="14" text-anchor="middle">elapsed time · minutes</text>
+  <text x="28" y="${(upper.top + upper.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle" transform="rotate(-90 28 ${(upper.top + upper.bottom) / 2})">temperature · K</text>
+  <text x="28" y="${(lower.top + lower.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle" transform="rotate(-90 28 ${(lower.top + lower.bottom) / 2})">damage / constant-profile final damage</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -604,6 +1135,11 @@ const renderers = {
   "cross-platform-reach-overlap": crossPlatformReach,
   "spatial-support-transfer": spatialSupportTransfer,
   "stress-path-memory": stressPathMemory,
+  "pareto-dominance-uncertainty": paretoDominanceUncertainty,
+  "active-acquisition-frontier": activeAcquisitionFrontier,
+  "recovery-time-fragility": recoveryTimeFragility,
+  "memory-action-price-envelope": memoryActionPriceEnvelope,
+  "mission-profile-damage": missionProfileDamage,
 };
 
 for (const spec of specs) {

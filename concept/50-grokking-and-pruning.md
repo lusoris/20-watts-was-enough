@@ -190,6 +190,12 @@ identification under equal budgets. If ordinary system identification performs
 as well, the system should use it; the design requirement is visibility into
 restoring dynamics, not a special biological estimator.
 
+For the Candidate 003 linear simulator, the recovery-time curve is analytical.
+The ten-second line is its declared Stage-1 engineering threshold, not a
+biological constant, production alarm, or failure-time prediction.
+
+![The operating point can look unchanged while recovery time diverges as the local return gain approaches one; the ten-second line is a Stage-1 engineering threshold rather than a biological constant or predicted failure date.](../public/plots/recovery-time-fragility.svg)
+
 Recovery is only one axis. A maturity record should expose at least:
 
 | Dimension | Question | Example measure |

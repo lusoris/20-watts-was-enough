@@ -487,6 +487,7 @@ button {
 .prose {
   min-width: 0;
   color: #1c251f;
+  counter-reset: figure;
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.72;
@@ -840,7 +841,7 @@ button {
   max-width: 100%;
 }
 
-.diagram-caption {
+.diagram-layout-note {
   position: sticky;
   left: 0;
   width: max-content;
@@ -849,6 +850,43 @@ button {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.03em;
+}
+
+.semantic-figure {
+  counter-increment: figure;
+}
+
+.semantic-figure > figcaption {
+  max-width: 84ch;
+  margin-top: 12px;
+  color: #42544a;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.semantic-figure > figcaption::before {
+  color: var(--green-strong);
+  content: "Figure " counter(figure) " — ";
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.diagram.semantic-figure > figcaption {
+  position: sticky;
+  left: 0;
+  width: fit-content;
+  margin: 20px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid #3c5548;
+  color: #d2ded6;
+}
+
+.diagram.semantic-figure > figcaption::before {
+  color: var(--green-bright);
 }
 
 .diagram-loading {
@@ -913,14 +951,23 @@ button {
   display: block;
   width: 100%;
   height: auto;
-  margin: 32px 0 14px;
+  margin: 0;
   border: 2px solid #284438;
   border-radius: 14px;
   background: #101c18;
   box-shadow: 0 18px 40px rgb(11 29 20 / 20%);
 }
 
+.plot-figure {
+  max-width: none;
+  margin: 32px 0 38px;
+}
+
 .prose > p:has(> img[src*="/plots/"]) {
+  max-width: none;
+}
+
+.prose > .plot-figure {
   max-width: none;
 }
 
@@ -1842,11 +1889,16 @@ button {
 /* Full concept book ------------------------------------------------------ */
 
 .book-shell {
+  counter-reset: figure;
   min-height: 100%;
   padding: 34px clamp(20px, 5vw, 76px) 90px;
   background:
     radial-gradient(circle at 88% 4%, rgb(134 239 172 / 14%), transparent 25rem),
     var(--paper);
+}
+
+.book-shell .prose {
+  counter-reset: none;
 }
 
 .book-actions {
@@ -2342,6 +2394,12 @@ button {
   .book-prose figure,
   .book-prose img {
     break-inside: avoid;
+  }
+
+  .book-prose .semantic-figure > figcaption {
+    margin-top: 2.5mm;
+    font-size: 7.4pt;
+    line-height: 1.35;
   }
 
   .book-readiness-frontmatter .book-document-meta {

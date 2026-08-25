@@ -425,7 +425,7 @@ $$
 
 where $z^{\mathrm{abl}}$ removes only the registered channel, temporal state,
 normalization, sparse route or associative readout, and released resources stay
-unused. The effect $Delta_{z,k}$ retains outcome $k$'s unit. Activation,
+unused. The effect $\Delta_{z,k}$ retains outcome $k$'s unit. Activation,
 sparsity, mutual information, decoding and anatomical analogy do not substitute
 for target detection, concentration, mixture, source, transfer, valence,
 exposure, safety, latency or energy outcomes.

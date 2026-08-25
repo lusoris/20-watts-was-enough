@@ -96,6 +96,10 @@ This is a multiple-choice multidimensional knapsack problem when predictions
 are fixed. The first experiment need not solve it exactly; greedy, learned, and
 standard replay priorities are compared under the same budgets.
 
+The [illustrative single-item price envelope](visual-models.md#contextual-analytical-figures)
+shows how the upper admissible action can change with $\lambda_E$. Its gains,
+costs, and selected actions are hypothetical and are not a fitted policy.
+
 ## Reconsolidation gate
 
 Retrieval produces a candidate branch rather than mutating the stored item in

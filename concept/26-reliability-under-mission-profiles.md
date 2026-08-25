@@ -237,6 +237,12 @@ $D_k(t)$ is accumulated mechanism-specific damage [damage unit]. A scalar
 “hardware age” can summarize this vector for a particular decision, but it
 cannot replace the underlying mechanism and support record.
 
+The analytical illustration below applies one hypothetical Arrhenius-rate
+model to two constructed temperature histories. It demonstrates the accounting
+consequence of nonlinearity; it is not calibrated device damage.
+
+![Two devices can have the same elapsed time and arithmetic-mean temperature yet accumulate different modeled damage because the rate is nonlinear in temperature; a nominal or averaged operating point cannot replace mission history.](../public/plots/mission-profile-damage.svg)
+
 ### Treat accelerated tests as supported models, not timeless constants
 
 Accelerated tests are useful only while stress and use conditions share the

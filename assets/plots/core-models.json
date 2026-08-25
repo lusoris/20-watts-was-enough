@@ -134,5 +134,169 @@
       "low_path_kpa": [0, -1, -2, -3, -4, -5, -4, -3, -2, -1, 0, 1, 2, 3]
     },
     "status": "Analytic output of the audit's bounded-play toy oracle; the paths and coefficients are illustrative and are not a calibrated soil model."
+  },
+  {
+    "id": "pareto-dominance-uncertainty",
+    "title": "A mean improvement is not a promotion decision",
+    "equation": "d = (e_C - e_B) / e_B;  Delta Q = Q_C - Q_B",
+    "source": "math/boundary-qualified-physical-computation.md#uncertainty-support-and-matched-comparison",
+    "layout": {
+      "kind": "quadrant-gates",
+      "width": 1180,
+      "height": 760,
+      "theme": "paper"
+    },
+    "parameters": {
+      "energy_effect_min": -0.35,
+      "energy_effect_max": 0.15,
+      "quality_delta_min": -0.08,
+      "quality_delta_max": 0.12,
+      "energy_effect_margin": -0.05,
+      "quality_noninferiority_margin": -0.01,
+      "cases": [
+        {
+          "id": "supported",
+          "label": "supported region",
+          "energy_effect": -0.22,
+          "quality_delta": 0.055,
+          "energy_radius": 0.045,
+          "quality_radius": 0.022,
+          "latency_gate": true,
+          "risk_gate": true,
+          "support_gate": true
+        },
+        {
+          "id": "unresolved",
+          "label": "interval crosses margin",
+          "energy_effect": -0.105,
+          "quality_delta": 0.006,
+          "energy_radius": 0.07,
+          "quality_radius": 0.027,
+          "latency_gate": true,
+          "risk_gate": true,
+          "support_gate": true
+        },
+        {
+          "id": "gate-failure",
+          "label": "energy win, risk gate fails",
+          "energy_effect": -0.245,
+          "quality_delta": 0.02,
+          "energy_radius": 0.035,
+          "quality_radius": 0.017,
+          "latency_gate": true,
+          "risk_gate": false,
+          "support_gate": true
+        }
+      ]
+    },
+    "status": "Illustrative simultaneous decision regions and hard-gate states; no point or interval is a measured system result."
+  },
+  {
+    "id": "active-acquisition-frontier",
+    "title": "Buy evidence only when it changes the decision",
+    "equation": "score(a) = Delta U(a) - lambda_E E(a) - lambda_L L(a) - lambda_B B(a)",
+    "source": "concept/30-sparse-predictive-compute.md#price-a-menu-of-acquisitions",
+    "layout": {
+      "kind": "frontier-ledger",
+      "width": 1240,
+      "height": 720,
+      "theme": "ocean"
+    },
+    "parameters": {
+      "energy_max_j": 2.6,
+      "utility_max": 0.8,
+      "latency_limit_s": 0.12,
+      "unsafe_probability_limit": 0.001,
+      "lambda_energy_utility_per_j": 0.08,
+      "lambda_latency_utility_per_s": 0.5,
+      "lambda_traffic_utility_per_byte": 0.00001,
+      "actions": [
+        {"id": "wait", "label": "wait", "energy_j": 0, "delta_utility": 0, "latency_s": 0, "traffic_bytes": 0, "unsafe_probability": 0},
+        {"id": "cache", "label": "reuse cached state", "energy_j": 0.15, "delta_utility": 0.06, "latency_s": 0.005, "traffic_bytes": 64, "unsafe_probability": 0.0002},
+        {"id": "local", "label": "local refinement", "energy_j": 0.8, "delta_utility": 0.22, "latency_s": 0.025, "traffic_bytes": 128, "unsafe_probability": 0.0004},
+        {"id": "expert", "label": "invoke expert", "energy_j": 2.2, "delta_utility": 0.52, "latency_s": 0.09, "traffic_bytes": 512, "unsafe_probability": 0.0007},
+        {"id": "sensor", "label": "sensor action", "energy_j": 1.4, "delta_utility": 0.48, "latency_s": 0.16, "traffic_bytes": 256, "unsafe_probability": 0.0005},
+        {"id": "larger", "label": "larger controller", "energy_j": 2.5, "delta_utility": 0.72, "latency_s": 0.11, "traffic_bytes": 1024, "unsafe_probability": 0.0014}
+      ]
+    },
+    "status": "Illustrative action ledger and price sweep; utilities, costs, probabilities, and the displayed frontier are not measurements or recommended operating values."
+  },
+  {
+    "id": "recovery-time-fragility",
+    "title": "Recovery time diverges before the stability boundary",
+    "equation": "tau_95(g) = Delta t ln(0.05) / ln(g)",
+    "source": "experiments/candidates/003-recovery-dynamics-fragility.md#state-dynamics",
+    "layout": {
+      "kind": "threshold-curve",
+      "width": 980,
+      "height": 760,
+      "theme": "ember"
+    },
+    "parameters": {
+      "gain_min": 0.6,
+      "gain_max": 0.999,
+      "samples": 401,
+      "sample_interval_s": 0.1,
+      "remaining_fraction": 0.05,
+      "alarm_threshold_s": 10,
+      "display_max_s": 1000
+    },
+    "status": "Exact curve for the Candidate 003 linear simulator equation; the ten-second alarm line is an illustrative Stage-1 engineering threshold, not a biological constant or production result."
+  },
+  {
+    "id": "memory-action-price-envelope",
+    "title": "An energy price changes the preferred memory action",
+    "equation": "J_a(lambda_E) = G_a - lambda_E E_a",
+    "source": "math/memory-lifecycle.md#resource-model",
+    "layout": {
+      "kind": "policy-envelope",
+      "width": 1180,
+      "height": 760,
+      "theme": "violet"
+    },
+    "parameters": {
+      "lambda_energy_min": 0,
+      "lambda_energy_max": 0.4,
+      "samples": 241,
+      "budgets": {
+        "bytes_max": 2000000,
+        "wall_time_s_max": 3,
+        "optimizer_updates_max": 16
+      },
+      "actions": [
+        {"id": "defer", "label": "defer", "gain_loss_units": 0, "energy_j": 0, "bytes": 0, "wall_time_s": 0, "optimizer_updates": 0, "admissible": true},
+        {"id": "replay", "label": "replay", "gain_loss_units": 0.16, "energy_j": 1.6, "bytes": 800000, "wall_time_s": 0.8, "optimizer_updates": 0, "admissible": true},
+        {"id": "merge", "label": "merge", "gain_loss_units": 0.28, "energy_j": 4, "bytes": 1500000, "wall_time_s": 2, "optimizer_updates": 12, "admissible": true},
+        {"id": "externalize", "label": "externalize", "gain_loss_units": 0.2, "energy_j": 1, "bytes": 1000000, "wall_time_s": 0.5, "optimizer_updates": 0, "admissible": true},
+        {"id": "weaken", "label": "weaken", "gain_loss_units": 0.1, "energy_j": 0.3, "bytes": 200000, "wall_time_s": 0.2, "optimizer_updates": 0, "admissible": true},
+        {"id": "delete", "label": "delete (blocked)", "gain_loss_units": 0.12, "energy_j": 0.15, "bytes": 100000, "wall_time_s": 0.1, "optimizer_updates": 0, "admissible": false, "gate_reason": "provenance/reconstruction gate"}
+      ]
+    },
+    "status": "Illustrative single-item action geometry with hypothetical gains and costs; it is not a fitted scheduler, an optimal policy claim, or an empirical result."
+  },
+  {
+    "id": "mission-profile-damage",
+    "title": "Equal mean temperature does not imply equal modeled damage",
+    "equation": "D(t) = integral r(T(tau)) d tau",
+    "source": "concept/26-reliability-under-mission-profiles.md#drive-degradation-models-from-the-actual-mission-profile",
+    "layout": {
+      "kind": "stacked-history",
+      "width": 1180,
+      "height": 820,
+      "theme": "daylight"
+    },
+    "parameters": {
+      "duration_s": 3600,
+      "samples": 361,
+      "reference_temperature_k": 330,
+      "constant_temperature_k": 330,
+      "pulsed_low_temperature_k": 320,
+      "pulsed_high_temperature_k": 360,
+      "pulse_cycle_s": 600,
+      "pulse_high_fraction": 0.25,
+      "activation_energy_ev": 0.7,
+      "boltzmann_ev_per_k": 0.00008617333262
+    },
+    "status": "Analytical Arrhenius-rate illustration with two constructed equal-mean temperature histories; parameters are hypothetical and the curves are not calibrated device damage."
   }
 ]

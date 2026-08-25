@@ -86,6 +86,12 @@ the declared boundary, and $L$ is latency. The symbol $\succ$ means Pareto
 dominance under pre-registered tolerances; it does not collapse unlike units
 into a decorative score.
 
+The decision geometry below is illustrative. Its points and simultaneous
+regions are not measurements; they show why a favorable mean on one coordinate
+cannot override uncertainty or a failed protected-outcome gate.
+
+![A favorable mean energy difference is insufficient: promotion requires the entire simultaneous uncertainty region to clear the energy and quality margins while every risk, latency, and support gate remains valid.](../public/plots/pareto-dominance-uncertainty.svg)
+
 ## Evidence status
 
 - Neural energy constraints are established only within the scope of

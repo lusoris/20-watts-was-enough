@@ -102,6 +102,12 @@ computational super-resolution, blind calibration, and learned reconstruction
 [C-985](../research/claims.md#c-985)). Pixel count, sharpness, or confidence
 cannot substitute for newly identified physical information.
 
+The existing Fixture F-007 likelihood plot makes that distinction explicit.
+It is an analytical identifiability example, not an empirical superiority
+result.
+
+![Under the base operator, the two latent states have identical likelihoods; the active measurement separates them, and a decoder cannot turn null-space ambiguity into new measurement evidence without changing the operator or supplying a prior.](../public/plots/fixture-007-identifiability.svg)
+
 ### Buy another measurement only when it changes the decision frontier
 
 Let $b_t$ be the current belief, $a$ a safe acquisition action, $d$ a downstream

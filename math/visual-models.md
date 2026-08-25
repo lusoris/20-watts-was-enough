@@ -1,9 +1,10 @@
 # Visual models
 
-These plots turn four recurring equations into inspectable boundaries. They are
-not result figures: no curve contains workstation measurements. The equations
-come from the canonical math and energy notes; normalized sweeps make their
-consequences visible before an implementation exists.
+These plots turn recurring equations into inspectable boundaries. They are not
+result figures: no curve contains workstation measurements. The equations come
+from the canonical math and concept notes; normalized sweeps, analytical fixture
+models, and explicitly hypothetical ledgers make their consequences visible
+before an implementation exists.
 
 ## Finite-error erasure boundary
 
@@ -77,6 +78,42 @@ per event but never repay compilation, search, fabrication, migration, or
 qualification within its useful service horizon. If $\delta e\leq0$, no
 positive break-even exists. See the
 [lifecycle accounting rule](../concept/80-energy-model.md#break-even-horizon).
+
+## Contextual analytical figures
+
+The next figures are embedded where their equations first matter in the book;
+this index keeps their editable model and evidence status discoverable without
+duplicating every full-size image here.
+
+1. **Simultaneous Pareto decision.**
+   Illustrative uncertainty regions in relative lifecycle energy and task-native
+   quality, with latency, risk, and support retained as hard gates. First used in
+   [Biology is a launchpad](../concept/05-biology-is-a-launchpad.md#efficiency-mechanism).
+2. **Costed active-acquisition frontier.**
+   A hypothetical action ledger for
+   $\Delta U-\lambda_EE-\lambda_LL-\lambda_BB$ after risk and latency
+   admissibility. First used in
+   [Sparse prediction and adaptive compute](../concept/30-sparse-predictive-compute.md#price-a-menu-of-acquisitions).
+3. **Recovery-time fragility curve.**
+   Exact evaluation of the Candidate 003 linear-simulator equation
+   $\tau_{95}=\Delta t\ln(0.05)/\ln(g)$ with its declared illustrative Stage-1
+   threshold. First used in
+   [Maturity and structural consolidation](../concept/50-grokking-and-pruning.md#recovery-dynamics-as-a-maturity-signal).
+4. **Memory-action price envelope.**
+   Hypothetical single-item lines $G_a-\lambda_EE_a$ and their admissible upper
+   envelope. First used in
+   [Fast memory, replay, and consolidation](../concept/40-memory-and-consolidation.md#3-allocate-the-maintenance-budget).
+5. **Mission-profile damage history.**
+   Two constructed equal-mean temperature histories passed through one
+   hypothetical Arrhenius-rate model. First used in
+   [Reliability under mission profiles](../concept/26-reliability-under-mission-profiles.md#drive-degradation-models-from-the-actual-mission-profile).
+6. **Fixture F-007 identifiability.**
+   Analytical likelihoods that coincide under a base operator and separate
+   after an added measurement. First used in
+   [Operator-qualified sensing](../concept/24-operator-qualified-sensing.md#separate-measured-information-from-prior-supported-reconstruction).
+
+Every value in these figures is labeled analytical or illustrative. None is a
+workstation result, a promoted claim, or a recommended deployment threshold.
 
 ## Reproduction and editing
 

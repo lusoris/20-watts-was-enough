@@ -112,6 +112,10 @@ $D_{12}$ lies below a preregistered discrimination threshold supported by a
 power calculation. A method must then return calibrated alternatives, a bound,
 or abstention unless it acquires additional evidence.
 
+The [Fixture F-007 analytical likelihood plot](visual-models.md#contextual-analytical-figures)
+visualizes one such indistinguishable base operator and a separating added
+measurement. It is not an empirical performance result.
+
 ## Photons, detector response, and dynamic range
 
 For detector element $i$, use the photon-counting model when its assumptions

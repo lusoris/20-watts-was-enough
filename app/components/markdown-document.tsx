@@ -2,6 +2,7 @@
 
 import {
   Children,
+  cloneElement,
   isValidElement,
   useEffect,
   useRef,
@@ -56,6 +57,23 @@ function resolveImageSource(src: string, currentPath: string): string {
   return resolved.startsWith("public/")
     ? `/${resolved.slice("public/".length)}`
     : src;
+}
+
+function headingBeforeLine(body: string, line?: number): string | undefined {
+  if (!line || line < 1) return undefined;
+  const lines = body.split(/\r?\n/);
+  for (let index = Math.min(line - 2, lines.length - 1); index >= 0; index -= 1) {
+    const match = lines[index].match(/^#{1,6}\s+(.+?)\s*#*\s*$/);
+    if (!match) continue;
+    const heading = match[1]
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/[*_`~]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    return heading || undefined;
+  }
+  return undefined;
 }
 
 function DiagramAwarePre({ children, ...props }: ComponentPropsWithoutRef<"pre">) {
@@ -115,6 +133,21 @@ export function MarkdownDocument({
   internalHref,
   imageLoading = "lazy",
 }: MarkdownDocumentProps) {
+  const ImageComponent = ({
+    src = "",
+    alt = "",
+    ...props
+  }: ComponentPropsWithoutRef<"img">) => (
+    // Plot SVGs are deterministic assets and retain their intrinsic viewBox.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={resolveImageSource(typeof src === "string" ? src : "", currentPath)}
+      alt={alt}
+      loading={imageLoading}
+      {...props}
+    />
+  );
+
   const components: Components = {
     a({ href = "", children, ...props }) {
       const internal = resolveInternalLink(href, currentPath);
@@ -145,23 +178,36 @@ export function MarkdownDocument({
         </a>
       );
     },
-    img({ src = "", alt = "", ...props }) {
-      return (
-        // Plot SVGs are already optimized deterministic assets and keep their
-        // intrinsic viewBox when rendered directly.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={resolveImageSource(src, currentPath)}
-          alt={alt}
-          loading={imageLoading}
-          {...props}
-        />
+    p({ children }) {
+      const visibleChildren = Children.toArray(children).filter(
+        (child) => typeof child !== "string" || child.trim().length > 0,
       );
+      const onlyChild = visibleChildren.length === 1 ? visibleChildren[0] : null;
+      if (
+        isValidElement<ComponentPropsWithoutRef<"img">>(onlyChild) &&
+        onlyChild.type === ImageComponent
+      ) {
+        const caption = onlyChild.props.alt?.trim() ||
+          "Generated figure from the canonical editable source.";
+        return (
+          <figure className="semantic-figure plot-figure">
+            {cloneElement(onlyChild, { alt: "", "aria-hidden": true })}
+            <figcaption>{caption}</figcaption>
+          </figure>
+        );
+      }
+      return <p>{children}</p>;
     },
-    code({ className, children, ...props }) {
+    img: ImageComponent,
+    code({ className, children, node, ...props }) {
       const language = className?.replace("language-", "");
       if (language === "mermaid") {
-        return <MermaidDiagram chart={String(children)} />;
+        return (
+          <MermaidDiagram
+            chart={String(children)}
+            contextHeading={headingBeforeLine(body, node?.position?.start.line)}
+          />
+        );
       }
       return (
         <code className={className} {...props}>
