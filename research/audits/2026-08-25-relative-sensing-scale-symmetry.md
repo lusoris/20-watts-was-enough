@@ -15,7 +15,9 @@
   principle or architecture candidate is proposed
 - **Experiment state:** ten CPU-only falsification protocols are specified in
   [Fixture F-026](../../experiments/fixtures/026-interface-qualified-relative-sensing.md);
-  no runner, generated data, measured energy, or result exists
+  one bounded public-development, generator-only RSD-T01 smoke runner now
+  exists; no scientific comparator, claim-eligible run, measured energy, or
+  result exists
 
 ## Executive finding
 
@@ -45,9 +47,28 @@ The engineering hypothesis is therefore conditional: a causal relative-sensing
 channel may reduce recalibration or improve transfer across multiplicative
 scale changes, but only if a validity gate preserves an absolute channel where
 the task needs it and if reference maintenance costs less than the avoided
-work. Fixture F-026 compares that design with static normalization, log-ratio,
+work. Fixture F-026 proposes comparisons with static normalization, log-ratio,
 streaming statistics, state-space and recurrent nulls under matched information
-and budgets.
+and budgets; those comparisons are not implemented.
+
+## Current implementation boundary
+
+The implemented RSD-T01 runner is a deterministic construction and conformance
+harness over two unequal-information diagnostics. It exposes both complete
+trajectories, so its registered discrepancy and weaker trace predicates are
+directly computable. It cannot establish learned prediction or arm superiority.
+
+Before comparators are implemented, the protocol freezes exactly eight
+actionable roles: `A-RAW`, `B-STATIC-DIV`, `B-STREAM`, `B-LOG-RATIO`,
+`B-DIFFERENCE`, `B-STATE-SPACE`, `B-RECURRENT`, and `C-DUAL`.
+`O-STATISTIC` remains evaluator-only and is excluded from parity, promotion and
+resource rankings. A predictive comparison additionally requires a prospective
+information cut, multiple scale cells per shared initialization, system-level
+worst-cell aggregation, and valid hostile worlds that are not malformed-packet
+sentinels. The scientific-grid foundation records `2×` and `4×` as public
+observed-development roles and `8×` as a public withheld-prospective role. It
+records those prerequisites only; it does not create a result or a private
+confirmation partition.
 
 ## Scientific boundary and terminology
 
@@ -539,10 +560,12 @@ biology.
 
 ## European and German applicability sentinel
 
-F-026 is a documentation-only and CPU-only synthetic protocol. It uses no
-personal data, biological samples, clinical intervention, environmental
-release, laboratory apparatus, automated high-impact decision, or product
-placement. No conformity or legal claim follows from a synthetic pass.
+The registered F-026 comparator experiment remains documentation-defined and
+CPU-only; only its bounded generator-only RSD-T01 smoke harness is executable.
+It uses no personal data, biological samples, clinical intervention,
+environmental release, laboratory apparatus, automated high-impact decision,
+or product placement. No conformity or legal claim follows from a synthetic
+pass.
 
 If later work uses human-derived signalling data, links records to persons,
 deploys automated decisions, controls physical exposure, or becomes a product,
@@ -600,6 +623,7 @@ rules are not substituted for applicable EU/German obligations.
 
 Integrate C-1540--C-1549 into the central ledger, route the six exact ANZSRC
 children, add the scale-symmetry math note and plot, and keep F-026 as a
-protocol-complete but non-executable experiment. Promotion requires held-out
-synthetic evidence against the complete null stack and later calibrated
+protocol-complete comparator experiment that is not yet executable beyond its
+generator-only smoke harness. Promotion requires a separately committed private
+confirmation partition against the complete null stack and later calibrated
 workstation energy. Attractive trajectory collapse is not a result by itself.

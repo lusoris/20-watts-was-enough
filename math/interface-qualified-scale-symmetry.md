@@ -289,8 +289,38 @@ $D_{j,h,p}$, paired trajectory match, finite-horizon endpoint return and peak
 equality are directly computable. Their errors measure numerical conformance
 and the resource cost of producing the values; they are not evidence that a
 representation learned the properties. A predictive interpretation needs a
-separately registered observation cut, such as a withheld suffix or future
-intervention.
+separately registered prospective observation cut, such as a withheld suffix,
+scale cell, or future intervention. That cut must state what the arm observes,
+what remains evaluator-only, and when its response freezes. Merely labelling a
+publicly enumerated scale as “withheld” does not create confirmatory secrecy.
+
+The RSD-T01 development foundation therefore separates three objects:
+
+1. a complete history × scale descriptor grid, including multiple scale cells
+   per shared initialization and a predeclared prospective role;
+2. valid scientific hostile worlds with explicit support membership and
+   expected leakage behavior; and
+3. malformed-record sentinels, which test fail-closed parsing and never enter
+   the scientific denominator.
+
+Its dimensionless scale sets are
+
+$$
+\mathcal P_{\mathrm{development}}=\{2,4\},
+\qquad
+\mathcal P_{\mathrm{prospective}}=\{8\},
+\qquad
+\mathcal P=\mathcal P_{\mathrm{development}}
+\cup\mathcal P_{\mathrm{prospective}}.
+$$
+
+Every $p\in\mathcal P$ multiplies the same $p=1$ reference trajectory and
+shares the registered initialization identity. “Prospective” is a public
+descriptor role here, not a concealed confirmation partition.
+
+This descriptor foundation can test grid construction and aggregation while
+the predictive observation cut remains blocked. It has no comparator-result or
+claim authority.
 
 For the current RSD-T01 contract the evaluator's property target is
 
@@ -301,7 +331,7 @@ S_{\mathrm{system},j},
 \{A_{\mathrm{end},j,h,p}\}_{h,p},
 \{E_{\mathrm{peak},j,h,p}\}_{h,p},
 M_{\mathrm{causal}},
-Q_{\mathrm{membership}}
+\mathbf Q_{\mathrm{membership},j}
 \right),
 $$
 
@@ -314,10 +344,15 @@ $E_{\mathrm{peak},j,h,p}$ is the per-cell tolerance-qualified equality of
 $P_{j,h,p}$ and $P_{j,h,1}$,
 $M_{\mathrm{causal}}$ requires a machine-readable state equation or identifying
 intervention, and
-$Q_{\mathrm{membership}}\in\{\mathrm{inside},\mathrm{outside}\}$ is generator
-truth. An arm's support-detection decision is a separate output because
-detectability depends on its observation interface. The endpoint and peak
-matrices remain primary data. A compact summary may use only the frozen reducer
+$\mathbf Q_{\mathrm{membership},j}$ is generator truth with one
+$\{\mathrm{inside},\mathrm{outside}\}$ coordinate for each registered support
+axis: input domain, transformation family, instrument range, initialization
+contract, causal observation contract, and evaluation window. This vector
+prevents an additive transformation, clipped measurement, hidden reset, or
+future-aware normalizer from being collapsed into one ambiguous bit. An arm's
+support-detection decision is a separate output because detectability depends
+on its observation interface. The endpoint and peak matrices remain primary
+data. A compact summary may use only the frozen reducer
 `all` when every registered cell is true, `none` when every cell is false, and
 `partial` otherwise; it may not silently substitute a mean. These coordinates
 are asserted without using the generator-family name, but they are not
@@ -328,7 +363,8 @@ The public generator-only smoke layer records a narrower per-world vector:
 paired-trajectory match, finite-horizon endpoint return, peak-amplitude
 equality, `causal_memory_status: unassessed`, and
 `support_membership: inside`. It does not promote one paired trace to a system
-symmetry certificate.
+symmetry certificate. That legacy scalar is a narrower v2 smoke field; it does
+not replace the axis-qualified vector in the scientific-grid foundation.
 
 ### Property vector, not family label
 

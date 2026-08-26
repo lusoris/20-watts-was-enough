@@ -320,9 +320,10 @@ they are not statistically or logically independent:
    prestimulus, with an earliest-tie rule;
 4. causal-memory truth only when declared equations, state access, or an
    identifying intervention supports it; and
-5. generator-side support membership. Arm-side support detection and abstention
-   are scored separately because detectability depends on the observation
-   interface.
+5. generator-side support membership by input domain, transformation family,
+   instrument range, initialization contract, causal observation contract, and
+   evaluation window. Arm-side support detection and abstention are scored
+   separately because detectability depends on the observation interface.
 
 Endpoint and peak matrices remain primary. A compact reducer is frozen as
 `all` when every registered cell is true, `none` when every cell is false and
@@ -332,15 +333,25 @@ dropped from $D_{j,\max}$ or averaged away.
 Generator-family identification is retained only as a secondary synthetic
 diagnostic. Each initialized system receives same-ratio/different-background
 steps, pulses, ramps and seed-dependent band-limited stochastic profiles.
-Held-out factors extend beyond development interpolation while staying inside
-the declared positive support.
+The isolated foundation fixes dimensionless scale factors $p\in\{2,4,8\}$
+relative to the $p=1$ reference: $p\in\{2,4\}$ are
+`observed-development`, and $p=8$ is `withheld-prospective`. That public role
+freezes a later information-cut candidate; it is not a confirmation secret and
+is not yet consumed by the runner.
 
-**Arms.** `A-RAW`, `B-STATIC-DIV`, `B-LOG-RATIO`, `B-STATE-SPACE`,
-`B-RECURRENT`, `C-DUAL`, and `O-STATISTIC`. The six actionable arms receive
-one byte-identical raw causal packet. Division, logarithms, references,
-derivatives, support features and summaries are constructed inside the arm and
-charged there. `O-STATISTIC` is evaluator-only and is excluded from information
-parity, tuning, promotion comparisons and resource rankings.
+Before comparator expansion, the scientific grid must freeze multiple scale
+cells for every initialization, their development or prospective roles, and
+valid hostile worlds separately from malformed-record sentinels. This
+foundation does not by itself implement the DGP, a predictive endpoint, or a
+comparison.
+
+**Arms.** The actionable registry is exactly `A-RAW`, `B-STATIC-DIV`,
+`B-STREAM`, `B-LOG-RATIO`, `B-DIFFERENCE`, `B-STATE-SPACE`, `B-RECURRENT`, and
+`C-DUAL`. All eight actionable arms receive one byte-identical raw causal
+packet. Division, logarithms, references, derivatives, support features and
+summaries are constructed inside the arm and charged there. `O-STATISTIC` is
+evaluator-only and is excluded from information parity, tuning, promotion
+comparisons and resource rankings.
 
 **Primary endpoint.** Conformance and cost for the observable trace
 coordinates, with abstentions retained in the primary denominator, subject to
@@ -352,21 +363,29 @@ computable; their errors test implementation conformance and cost, not whether
 a representation learned the property. Causal memory is not scored from a
 finite trace unless an identifying intervention or equation-access contract is
 registered. A predictive claim requires a separate amendment that withholds a
-suffix or intervention.
+suffix, scale cell, or intervention and freezes the corresponding evaluator
+contract before comparator outputs are inspected.
 
-**Hostiles.** Equal peak with shifted latency, slow adaptation tail, additive
-offset, hidden reset, near-zero reference, clipping, and future-normalization
-leakage sentinel.
+**Hostiles.** Valid scientific hostile worlds include equal peak with shifted
+latency, slow adaptation tail, additive offset, hidden reset, near-zero
+reference, clipping, and future-normalization leakage. They retain axis-specific
+inside/outside support across input domain, transformation, instrument,
+initialization, causal observation, and evaluation window, plus their
+denominator. Malformed ordering, checksum, unit, or future-derived packet
+sentinels instead test fail-closed contract rejection and are never substituted
+for those worlds.
 
-**Kill rule.** Kill the relative-symmetry diagnostic if step and peak summaries
-perform equivalently on the protected non-step families, or if `C-DUAL` does
-not beat the state-space/recurrent null after full state cost.
+**Kill rule.** Under a future registered predictive cut, kill the
+relative-symmetry diagnostic if step and peak summaries perform equivalently on
+the protected non-step families, or if `C-DUAL` does not beat the
+state-space/recurrent null after full state cost. The currently exposed
+complete-trajectory endpoint cannot trigger that comparative rule.
 
 **Required artifacts.** Per-trajectory inputs/outputs, initialization identity,
 scale group, interface, generator family, separately evaluated trace facts,
-structural-truth provenance, support membership, arm-side support decision,
-identical actionable-arm packet hash, operation/state ledger and paired
-seed-level analysis.
+structural-truth provenance, axis-qualified support vector, arm-side support
+decision, identical actionable-arm packet hash, operation/state ledger and
+paired seed-level analysis.
 
 ## RSD-T02 — Mechanism discrimination under matched step behavior
 
@@ -683,8 +702,9 @@ now satisfies the six `smoke-ready` plumbing requirements for its much smaller
 generator-only paired-trace slice. It does not yet implement the registered
 initialized state-space DGPs, a system-level history × scale symmetry
 certificate, or structural causal-memory truth. It deliberately has unmatched
-diagnostic arms, omits the full hostile grid and registered primary endpoint,
-and grants no comparison or claim authority.
+diagnostic arms, omits the eight-actionable-arm comparator stack, full valid
+hostile grid, prospective information cut and registered primary endpoint, and
+grants no comparison or claim authority.
 
 `workstation-ready` additionally requires reviewed confirmation/transfer
 commitments, powered seed count, complete confirmatory analysis, calibrated

@@ -138,6 +138,28 @@ The harness contains no meter path, GPU path, physical input, confirmation or
 transfer seed, commitment, private custody, measured energy, or promotion
 authority.
 
+## Scientific-grid foundation
+
+`scientific-grid.mjs` is an isolated prospective contract foundation. It
+freezes ordered history × scale descriptors, multiple scale roles per shared
+initialization, valid scientific hostile descriptors, the eight actionable arm
+IDs, the evaluator-only oracle, and fail-closed system aggregation. It is not
+called by the v2 runner and does not turn either diagnostic into a comparator.
+The dimensionless cells are `2×` and `4×` as observed-development roles and
+`8×` as a withheld-prospective role, each relative to the same `1×` reference.
+All remain in the machine-readable `public-development` partition with
+`information_cut_status: unregistered`; the eight unimplemented arms have no
+current parity or ranking eligibility. Exact and approximate discrepancy
+thresholds are contract constants, and aggregation requires one shared
+initialization ID. Input-domain, transformation, instrument, initialization,
+causal-observation, and evaluation-window support remain separate axes.
+
+The current complete-trajectory packet remains a conformance-and-cost input. A
+predictive arm comparison stays blocked until a separate protocol freezes the
+information cut—such as a withheld suffix, scale cell, or intervention—and the
+evaluator target visible only after response freeze. Public descriptor roles do
+not create a private confirmation partition.
+
 ## Commands
 
 From the repository root:
@@ -153,7 +175,7 @@ node experiments/workstation/fixture-026/runner.mjs validate --output experiment
 Focused tests:
 
 ```powershell
-node --test --test-isolation=none experiments/workstation/fixture-026/contract.test.mjs experiments/workstation/fixture-026/runner.test.mjs
+node --test --test-isolation=none experiments/workstation/fixture-026/contract.test.mjs experiments/workstation/fixture-026/runner.test.mjs experiments/workstation/fixture-026/scientific-grid.test.mjs
 ```
 
 ## Integrity
@@ -199,15 +221,18 @@ byte guarantee is made across hosts or unrecorded differences in `Math.sin`,
 
 This smoke slice deliberately lacks:
 
-1. the full seven-arm RSD-T01 null stack and actual algorithms;
+1. the eight actionable RSD-T01 arms (`A-RAW`, `B-STATIC-DIV`, `B-STREAM`,
+   `B-LOG-RATIO`, `B-DIFFERENCE`, `B-STATE-SPACE`, `B-RECURRENT`, and `C-DUAL`)
+   and their actual algorithms; `O-STATISTIC` remains evaluator-only;
 2. matched information, state, tuning, feature-construction, and runtime budgets;
 3. causal system equations, system-level symmetry across multiple scales, and
    genuinely structural memory truth;
 4. held-out scale extrapolation and all registered near-zero, clipping,
    additive-offset, hidden-reset, slow-tail, and scientific leakage hostiles;
 5. reference lifecycle, fallback, complete resource, and artifact accounting;
-6. powered statistics, paired confirmation analysis, multiplicity control, and
-   the simultaneous primary property-performance/trajectory-conformance endpoint;
+6. a registered prospective information cut, powered statistics, paired
+   confirmation analysis, multiplicity control, and the simultaneous primary
+   property-performance/trajectory-conformance endpoint;
 7. confirmation and transfer seeds, commitments, custody, and releases;
 8. calibrated workstation time, memory, and energy measurement; and
 9. runners for RSD-T02 through RSD-T10.

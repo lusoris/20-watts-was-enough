@@ -7,6 +7,21 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Decision 0018 and an isolated F-026 scientific-grid contract now freeze the
+  prerequisite for any RSD-T01 comparator expansion. The contract enumerates
+  five generator recipes × four histories × three scale roles (`2×` and `4×`
+  observed-development, `8×` withheld-prospective), six valid scientific
+  hostile cases, eight actionable arms, and a separate evaluator-only oracle.
+  Its family-label-independent reducer classifies from the worst complete
+  history × scale cell for one bound initialization, uses frozen discrepancy
+  thresholds, preserves endpoint and peak matrices, and fails closed to
+  abstention on missing, rejected, abstained, duplicate, or mixed-system cells.
+  Scientific support is recorded on six separate axes rather than one ambiguous
+  bit. Forty-seven focused F-026 tests now pass. The module remains outside the
+  v2 runner; the public
+  prospective role is not a private partition, no predictive information cut
+  has been registered, and no comparison or result authority is created.
+
 - The private full-book route now keeps the 49-document corpus outside the
   Cloudflare Worker render path. A lightweight server shell preserves the PDF
   download while the browser loads the complete edition after hydration, with

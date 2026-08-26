@@ -48,11 +48,13 @@
     "entrypoint": "experiments/workstation/fixture-026/runner.mjs",
     "tests": [
       "experiments/workstation/fixture-026/contract.test.mjs",
-      "experiments/workstation/fixture-026/runner.test.mjs"
+      "experiments/workstation/fixture-026/runner.test.mjs",
+      "experiments/workstation/fixture-026/scientific-grid.test.mjs"
     ],
     "full_tests": [
       "experiments/workstation/fixture-026/contract.test.mjs",
-      "experiments/workstation/fixture-026/runner.test.mjs"
+      "experiments/workstation/fixture-026/runner.test.mjs",
+      "experiments/workstation/fixture-026/scientific-grid.test.mjs"
     ],
     "execution_claims": ["C-1540"]
   },
@@ -85,14 +87,14 @@
       "protocol_version": "F-026/RSD-T01-development-smoke-v2",
       "claim_scope": ["C-1540"],
       "blockers": [
-        "Only two unequal-information public diagnostic paths are implemented; the full A-RAW, B-STATIC-DIV, B-LOG-RATIO, B-STATE-SPACE, B-RECURRENT, C-DUAL, and evaluator-only oracle stack is absent.",
+        "Only two unequal-information public diagnostic paths are implemented; the eight actionable arms A-RAW, B-STATIC-DIV, B-STREAM, B-LOG-RATIO, B-DIFFERENCE, B-STATE-SPACE, B-RECURRENT, and C-DUAL are absent, while O-STATISTIC remains evaluator-only and outside rankings.",
         "Information, feature-construction, state, tuning, runtime, and complete resource budgets are not matched, so no arm comparison or complete-work conclusion is permitted.",
-        "The public generator now crosses five constructed generator families by step, pulse, ramp, and seeded band-limited stochastic histories exactly once per seed, but held-out scale extrapolation is absent.",
+        "The public runner crosses five constructed generator families by step, pulse, ramp, and seeded band-limited stochastic histories exactly once per seed; the isolated scientific-grid contract freezes multiple development/prospective scale roles but is not integrated into the generator or runner.",
         "The cross-cutting per-world trace-fact vector is evaluator-recorded only; its logical dependencies are retained, neither probe predicts it, and no property-performance endpoint exists.",
-        "The generator is a direct causal paired-trace fixture: causal system equations, system-level symmetry tests across multiple scales, and genuinely structural memory truth are absent.",
-        "Registered additive-offset, near-zero, clipping, hidden-reset, slow-tail, and scientific future-normalization hostile coverage is incomplete.",
+        "The generator is a direct causal paired-trace fixture: causal system equations, runner-integrated system-level symmetry tests across multiple scales, and genuinely structural memory truth are absent.",
+        "The isolated foundation distinguishes additive-offset, near-zero, clipping, hidden-reset, slow-tail, and future-normalization-leakage scientific hostiles from malformed sentinels, but the valid hostile worlds are not implemented in the generator or runner.",
         "Reference lifecycle, maintenance, fallback, communication, wall time, peak memory, tuning, artifact, and full operation accounting are absent.",
-        "The registered simultaneous property-performance and trajectory-conformance primary endpoint, paired powered statistics, uncertainty intervals, and multiplicity control are absent.",
+        "A prospective observation cut and the registered simultaneous property-performance/trajectory-conformance primary endpoint, paired powered statistics, uncertainty intervals, and multiplicity control are absent.",
         "No confirmation or transfer seed, commitment, private custody record, release, or promotion evidence exists.",
         "No calibrated workstation timing, memory, or energy measurement exists, and energy conclusions are forbidden.",
         "RSD-T02 through RSD-T10 are not implemented.",

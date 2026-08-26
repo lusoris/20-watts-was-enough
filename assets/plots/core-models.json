@@ -405,7 +405,7 @@
   {
     "id": "rsd-t01-family-property-overlap",
     "title": "Generator family is not the property vector",
-    "equation": "D_max = max_(h,p) D_(h,p); target: pi = (S_system, {A_end,h,p}, {E_peak,h,p}, M_causal, Q_membership)",
+    "equation": "D_max = max_(h,p) D_(h,p); target: pi = (S_system, {A_end,h,p}, {E_peak,h,p}, M_causal, Q_membership_vector)",
     "source": "math/interface-qualified-scale-symmetry.md#property-vector-not-family-label",
     "layout": {
       "kind": "family-property-overlap",
@@ -426,7 +426,7 @@
         { "id": "P2", "label": "endpoint return", "values": "per cell; all · partial · none" },
         { "id": "P3", "label": "peak equality", "values": "per cell; all · partial · none" },
         { "id": "P4", "label": "causal memory", "values": "equation / intervention / unassessed" },
-        { "id": "P5", "label": "support membership", "values": "inside · outside" }
+        { "id": "P5", "label": "support vector", "values": "6 axes · inside / outside each" }
       ],
       "overlap_examples": [
         {
@@ -441,7 +441,7 @@
         }
       ]
     },
-    "status": "Conceptual schema for the RSD-T01 target correction. System symmetry is classified from the maximum discrepancy over the complete registered history × scale grid; endpoint and peak predicates remain per-cell matrices with a frozen all/partial/none reducer. Generator-family identity does not supply the separately evaluated cross-cutting targets; logical dependencies between targets remain. The overlap examples are possibilities, not measurements, frequencies, model outputs, or a fixed family-to-property lookup."
+    "status": "Conceptual schema for the RSD-T01 target correction. System symmetry is classified from the maximum discrepancy over the complete registered history × scale grid; endpoint and peak predicates remain per-cell matrices with a frozen all/partial/none reducer. Support membership remains a six-axis vector covering input domain, transformation family, instrument range, initialization, causal observation, and evaluation window. Generator-family identity does not supply the separately evaluated cross-cutting targets; logical dependencies between targets remain. The overlap examples are possibilities, not measurements, frequencies, model outputs, or a fixed family-to-property lookup."
   },
   {
     "id": "interface-qualified-retroactivity",
