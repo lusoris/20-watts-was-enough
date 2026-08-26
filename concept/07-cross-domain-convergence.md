@@ -220,6 +220,26 @@ This creates a many-to-one evidence graph:
 many observations → scoped claims → fewer principles → shared primitives → decisive experiments
 ```
 
+### Recurring outcomes still need a construct firewall
+
+Different fields often expose the same broad problem while assigning different
+causal content to it. Ecological succession describes ordered community
+change; an ecological priority effect requires an arrival-order intervention;
+continual-learning task order concerns sequential parameter updates; curriculum
+learning chooses an order; and a scheduler may merely decide when unchanged
+jobs execute. Calling all five “succession” would erase the experiment.
+
+The [history-conditioned modular-succession audit](../research/audits/2026-08-26-history-conditioned-modular-succession.md)
+therefore reuses C-008, C-056, C-057, C-574, Fixture F-014, and Candidates 004
+and 019 without creating another principle. Its residual test holds the task
+multiset, eligible module identity set, exogenous presentations, update ceilings, capacity,
+optimizer, evaluator and budget fixed, randomizes order, and separately cuts
+age, routed acceptance, capacity pre-emption, shared-state modification,
+facilitation and lock-in. If canonical replay, a
+non-learning scheduler, a mature continual-learning method, or a
+search-budget-charged curriculum explains the outcome, the biological transfer
+adds nothing.
+
 ### New mechanisms can sharpen a principle without multiplying it
 
 The developmental, regenerative, plant-plasticity, and multiscale-reduction

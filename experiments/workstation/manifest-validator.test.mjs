@@ -21,6 +21,13 @@ const fixture019Manifest = path.join(
   "manifests",
   "fixture-019.json",
 );
+const fixture026Manifest = path.join(
+  root,
+  "experiments",
+  "workstation",
+  "manifests",
+  "fixture-026.json",
+);
 
 async function runtimeBindingFixture({
   runtime = {},
@@ -138,6 +145,22 @@ test("Fixture 019 is smoke-ready with an explicit non-energy claim boundary", as
   assert.match(
     result.promotionChecks.find((check) => check.id === "promotion-evidence").detail,
     /structurally blocked/,
+  );
+});
+
+test("Fixture 026 is smoke-ready with an exact C-1540 ledger binding", async () => {
+  const result = await validateExecutionManifest(root, fixture026Manifest, "fixture-026");
+  assert.equal(result.readiness, "smoke-ready");
+  assert.equal(result.ready, false);
+  assert.deepEqual(result.errors, []);
+  assert.deepEqual(result.executionClaims, ["C-1540"]);
+  assert.equal(
+    result.promotionChecks.find((check) => check.id === "execution-claim-scope").passed,
+    true,
+  );
+  assert.equal(
+    result.promotionChecks.find((check) => check.id === "promotion-evidence").passed,
+    false,
   );
 });
 

@@ -85,7 +85,7 @@ appear on the claim side, 1148 on the document side, and
 
 There are 47 experiment artifacts: 47
 pass the written-protocol gate, a validated smoke harness exists for
-9, and 0 pass the full execution gate.
+10, and 0 pass the full execution gate.
 Smoke readiness verifies deterministic plumbing but cannot promote a claim.
 
 | Artifact | Directly related claims | Protocol status | Execution status |
@@ -135,7 +135,7 @@ Smoke readiness verifies deterministic plumbing but cannot promote a claim.
 | [fixture-023](fixtures/023-plant-plasticity-memory-signalling.md) | 10 | complete description | smoke-ready; not executable |
 | [fixture-024](fixtures/024-applied-multiscale-reduction.md) | 4 | complete description | smoke-ready; not executable |
 | [fixture-025](fixtures/025-electrochemistry-interface-memory-degradation.md) | 10 | complete description | smoke-ready; not executable |
-| [fixture-026](fixtures/026-interface-qualified-relative-sensing.md) | 10 | complete description | not executable |
+| [fixture-026](fixtures/026-interface-qualified-relative-sensing.md) | 10 | complete description | smoke-ready; not executable |
 | [fixture-027](fixtures/027-interface-qualified-retroactivity-insulation.md) | 10 | complete description | smoke-ready; not executable |
 
 ## Immediate gaps
@@ -148,7 +148,7 @@ Smoke readiness verifies deterministic plumbing but cannot promote a claim.
   in an existing artifact but lack an exact traceability or test track.
 - 0 claims reach only a partial description.
   The missing facets are concentrated in no artifact.
-- 9 artifact(s) have a validated smoke manifest and
+- 10 artifact(s) have a validated smoke manifest and
   deterministic harness. They remain non-executable for claim coverage until
   confirmation seeds, held-out generators, complete analysis, resume and
   corruption checks, and measured-energy instrumentation satisfy the

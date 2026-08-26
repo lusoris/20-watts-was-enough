@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "artifact": "fixture-026",
+  "profile": "smoke",
+  "worlds_per_seed": 6,
+  "time_step_s": 0.02,
+  "horizon_s": 4,
+  "trajectory_quadrature": "trapezoid",
+  "exact_discrepancy_tolerance": 1e-12,
+  "approximate_discrepancy_floor": 0.01,
+  "approximate_discrepancy_ceiling": 0.06,
+  "endpoint_tolerance": 1e-12,
+  "peak_tolerance": 1e-12,
+  "tail_window_s": 0.5,
+  "input_floor_u": 0.05,
+  "output_scale_y": 1,
+  "max_loss": 100
+}

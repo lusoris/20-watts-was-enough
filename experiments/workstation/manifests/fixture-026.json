@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "artifact": "fixture-026",
+  "readiness": "smoke-ready",
+  "command": {
+    "prepare": "node experiments/workstation/fixture-026/runner.mjs prepare --profile smoke",
+    "smoke": "node experiments/workstation/fixture-026/runner.mjs smoke --profile smoke --output <run-directory> --resume false",
+    "run": "node experiments/workstation/fixture-026/runner.mjs run --profile development --output <run-directory> --resume false",
+    "analyze": "node experiments/workstation/fixture-026/runner.mjs analyze --output <run-directory>",
+    "validate": "node experiments/workstation/fixture-026/runner.mjs validate --output <run-directory>"
+  },
+  "environment": {
+    "runtime": "Node.js >=22.13.0 on a little-endian CPU; binary64 arithmetic only; no GPU; every run binds actual Node, V8, libuv, platform, architecture, endianness, and OS-release fingerprint; same-environment tests observed repeatability, but the fingerprint omits executable hash, CPU model/features, and host math-library identity, so no cross-host or unrecorded-difference byte guarantee is made",
+    "lockfiles": ["package-lock.json"]
+  },
+  "hardware": {
+    "smoke": {
+      "cpu": "one ordinary little-endian CPU thread or more; GPU forbidden",
+      "memory_bytes": 134217728,
+      "disk_bytes": 52428800,
+      "energy": "not measured or modeled; energy conclusions forbidden"
+    },
+    "workstation": {
+      "cpu": "ordinary little-endian CPU; no workstation claim is registered",
+      "memory_bytes": 1073741824,
+      "disk_bytes": 1073741824,
+      "energy": "not applicable to this development smoke slice; energy conclusions forbidden"
+    }
+  },
+  "seeds": {
+    "development": "experiments/workstation/fixture-026/seeds/development.reveal.json",
+    "confirmation": "experiments/workstation/fixture-026/seeds/confirmation.unavailable.json",
+    "held_out": "experiments/workstation/fixture-026/seeds/transfer.unavailable.json"
+  },
+  "data": {
+    "generator": "experiments/workstation/fixture-026/generator.mjs",
+    "full_profile": "experiments/workstation/fixture-026/configs/development.json",
+    "full_profile_sha256": "37063a11d5f15c3e04d515ffebc1785a075ecb52b02915b4b266d6020d930a8c",
+    "external": []
+  },
+  "outputs": {
+    "directory": "experiments/workstation/runs/fixture-026-*",
+    "schema": "experiments/workstation/fixture-026/output.schema.json",
+    "append_only": true,
+    "hash_chain": true
+  },
+  "implementation": {
+    "entrypoint": "experiments/workstation/fixture-026/runner.mjs",
+    "tests": [
+      "experiments/workstation/fixture-026/contract.test.mjs",
+      "experiments/workstation/fixture-026/runner.test.mjs"
+    ],
+    "full_tests": [
+      "experiments/workstation/fixture-026/contract.test.mjs",
+      "experiments/workstation/fixture-026/runner.test.mjs"
+    ],
+    "execution_claims": ["C-1540"]
+  },
+  "energy": {
+    "mode": "not-measured",
+    "required": false,
+    "applicability": "not-applicable-to-scoped-claim",
+    "energy_conclusion_allowed": false,
+    "scope_binding": "fixture-026.c-1540.development-smoke.non-energy.v1",
+    "not_applicable_reason": "RSD-T01 smoke validation records normalized synthetic response traces, dimensionless discrepancy components, and partial deterministic diagnostic counters only; it has no joule, watt, carbon, physical-system, complete-work, comparative, or energy-efficiency endpoint."
+  },
+  "resume": {
+    "supported": true,
+    "module": "experiments/workstation/lib/checkpoint-ledger.mjs",
+    "test": "experiments/workstation/fixture-026/runner.test.mjs"
+  },
+  "promotion_evidence": {
+    "status": "pending",
+    "evidence_path": "experiments/workstation/promotion/fixture-026/evidence.json",
+    "promotion_validation_receipt_path": "experiments/workstation/promotion/fixture-026/promotion-validation.launch-receipt.json",
+    "run_directory": "experiments/workstation/runs/fixture-026-confirmation",
+    "release_root": "experiments/workstation/releases/fixture-026",
+    "release_path": "experiments/workstation/releases/fixture-026/confirmation.release.json",
+    "energy_assignments_path": "experiments/workstation/runs/fixture-026-confirmation/non-energy-boundary.json",
+    "disjoint_seed_pack_paths": [
+      "experiments/workstation/fixture-026/seeds/transfer.unavailable.json"
+    ],
+    "protocol_eligibility": {
+      "status": "blocked",
+      "protocol_version": "F-026/RSD-T01-development-smoke-v1",
+      "claim_scope": ["C-1540"],
+      "blockers": [
+        "Only two unequal-information public diagnostic paths are implemented; the full A-RAW, B-STATIC-DIV, B-LOG-RATIO, B-STATE-SPACE, B-RECURRENT, C-DUAL, and evaluator-only oracle stack is absent.",
+        "Information, feature-construction, state, tuning, runtime, and complete resource budgets are not matched, so no arm comparison or complete-work conclusion is permitted.",
+        "The full five-class by step, pulse, ramp, and stochastic-history crossing and held-out scale extrapolation are absent; the included band-limited profile is a deterministic multisine.",
+        "Registered additive-offset, near-zero, clipping, hidden-reset, slow-tail, and future-normalization hostile coverage is incomplete.",
+        "Reference lifecycle, maintenance, fallback, communication, wall time, peak memory, tuning, artifact, and full operation accounting are absent.",
+        "The registered simultaneous accuracy and trajectory-estimation primary endpoint, paired powered statistics, uncertainty intervals, and multiplicity control are absent.",
+        "No confirmation or transfer seed, commitment, private custody record, release, or promotion evidence exists.",
+        "No calibrated workstation timing, memory, or energy measurement exists, and energy conclusions are forbidden.",
+        "RSD-T02 through RSD-T10 are not implemented.",
+        "Every generated event and command result is explicitly labelled NO_RESULT."
+      ]
+    }
+  }
+}

@@ -159,6 +159,22 @@ reset, and error budgets. The rule also keeps two questions separate. It
 defines how state persists, but it does not decide which authenticated event is
 allowed to reset that state at a lifecycle boundary.
 
+History dependence also enters through acquisition order. Different final
+performance after the same set of tasks can reflect unequal age or exposure,
+ordinary catastrophic interference, curriculum selection, finite-capacity
+pre-emption, shared-state modification, facilitation, or irreversible lock-in.
+These are not interchangeable explanations. The
+[history-conditioned modular-succession audit](../research/audits/2026-08-26-history-conditioned-modular-succession.md)
+requires the same task multiset and eligible module identity set, exogenous
+presentations and task-local update ceilings, plus matched capacity, optimizer,
+evaluator and lifecycle budgets before estimating an order effect. Realized
+module lifecycle state remains an outcome. Endogenous routed
+acceptance is measured and equalized only in the exposure-cut cells. Its
+[mathematical contract](../math/history-conditioned-modular-succession.md)
+then crosses the candidate carriers as randomized interventions and kills the
+translation when canonical replay, scheduling, replay/EWC/OGD, or a
+search-budget-charged curriculum is non-inferior.
+
 Two electrochemical results sharpen the test. First, eliminating a distributed
 diffusion field can yield a memory kernel whose apparent power law changes when
 a finite boundary becomes visible; the memory horizon is therefore a property

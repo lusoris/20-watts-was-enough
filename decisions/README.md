@@ -21,3 +21,4 @@ than silently changing its outcome.
 | [0013](0013-development-can-block-a-protocol.md) | Let development diagnostics block an ineligible protocol before confirmation | accepted |
 | [0014](0014-coarse-state-needs-a-closure-contract.md) | Require an explicit validity and resource contract for every coarse state | accepted |
 | [0015](0015-qualify-modules-after-interconnection.md) | Qualify module behavior after clients are connected | accepted |
+| [0016](0016-treat-order-as-a-causal-factor.md) | Treat order as a causal factor only under fixed-task-and-eligibility parity | accepted |

@@ -1799,6 +1799,134 @@ function interfaceQualifiedRetroactivity(spec) {
   return analyticalDocument(spec, layout, content);
 }
 
+function historyConditionedPositionContrast(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 1180,
+    height: 780,
+    kind: "position-contrast-interaction",
+    theme: "violet",
+  });
+  const { width, height, theme } = layout;
+  const {
+    positions,
+    shared_capacity_contrast_percentage_points: shared,
+    reserved_capacity_contrast_percentage_points: reserved,
+  } = spec.parameters;
+  const arraysAreValid = Array.isArray(positions)
+    && Array.isArray(shared)
+    && Array.isArray(reserved)
+    && positions.length >= 3
+    && positions.length === shared.length
+    && positions.length === reserved.length
+    && positions.every((value, index) => Number.isFinite(value)
+      && (index === 0 || value > positions[index - 1]))
+    && shared.every(Number.isFinite)
+    && reserved.every(Number.isFinite);
+  if (!arraysAreValid) {
+    throw new Error(`${spec.id} requires aligned finite position-contrast arrays`);
+  }
+  const mean = (values) => values.reduce((sum, value) => sum + value, 0) / values.length;
+  if (Math.abs(mean(shared)) > 1e-9 || Math.abs(mean(reserved)) > 1e-9) {
+    throw new Error(`${spec.id} requires each position-contrast series to be centered`);
+  }
+
+  const interaction = reserved.map((value, index) => value - shared[index]);
+  const maxMagnitude = Math.max(
+    ...shared.map(Math.abs),
+    ...reserved.map(Math.abs),
+    ...interaction.map(Math.abs),
+  );
+  const axisLimit = Math.max(2, 2 * Math.ceil((maxMagnitude * 1.25) / 2));
+  const yTicks = [-axisLimit, -axisLimit / 2, 0, axisLimit / 2, axisLimit];
+  const left = { left: 96, right: 742, top: 205, bottom: 548 };
+  const right = { left: 844, right: width - 42, top: 205, bottom: 548 };
+  const xMin = positions[0];
+  const xMax = positions[positions.length - 1];
+  const leftX = (value) => localScale(value, xMin, xMax, left.left + 42, left.right - 42);
+  const rightX = (value) => localScale(value, xMin, xMax, right.left + 36, right.right - 36);
+  const yMap = (value, panel) => localScale(
+    value,
+    -axisLimit,
+    axisLimit,
+    panel.bottom,
+    panel.top,
+  );
+  const signed = (value, digits = 0) => `${value > 0 ? "+" : ""}${value.toFixed(digits)}`;
+
+  const leftGrid = [
+    ...yTicks.map((tick) => `<line x1="${left.left}" y1="${yMap(tick, left)}" x2="${left.right}" y2="${yMap(tick, left)}" stroke="${theme.grid}" opacity=".68"/><text x="${left.left - 13}" y="${yMap(tick, left) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${signed(tick)}</text>`),
+    ...positions.map((position) => `<line x1="${leftX(position)}" y1="${left.top}" x2="${leftX(position)}" y2="${left.bottom}" stroke="${theme.grid}" opacity=".42"/><text x="${leftX(position)}" y="${left.bottom + 23}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="middle">${position}</text>`),
+  ].join("");
+  const rightGrid = [
+    ...yTicks.map((tick) => `<line x1="${right.left}" y1="${yMap(tick, right)}" x2="${right.right}" y2="${yMap(tick, right)}" stroke="${theme.grid}" opacity=".68"/><text x="${right.left - 12}" y="${yMap(tick, right) + 4}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${signed(tick)}</text>`),
+    ...positions.map((position) => `<line x1="${rightX(position)}" y1="${right.top}" x2="${rightX(position)}" y2="${right.bottom}" stroke="${theme.grid}" opacity=".42"/><text x="${rightX(position)}" y="${right.bottom + 23}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="middle">${position}</text>`),
+  ].join("");
+
+  const sharedPoints = positions.map((position, index) => [
+    leftX(position),
+    yMap(shared[index], left),
+  ]);
+  const reservedPoints = positions.map((position, index) => [
+    leftX(position),
+    yMap(reserved[index], left),
+  ]);
+  const sharedMarkers = sharedPoints.map(([x, y]) => (
+    `<circle cx="${x}" cy="${y}" r="7" fill="${theme.background}" stroke="${theme.accent}" stroke-width="4"/>`
+  )).join("");
+  const reservedMarkers = reservedPoints.map(([x, y]) => {
+    const radius = 8;
+    return `<polygon points="${x},${y - radius} ${x + radius},${y} ${x},${y + radius} ${x - radius},${y}" fill="${theme.background}" stroke="${theme.secondary}" stroke-width="4"/>`;
+  }).join("");
+  const zeroLeft = yMap(0, left);
+  const zeroRight = yMap(0, right);
+  const barWidth = Math.min(38, (right.right - right.left) / (positions.length * 2));
+  const bars = positions.map((position, index) => {
+    const value = interaction[index];
+    const x = rightX(position) - barWidth / 2;
+    const valueY = yMap(value, right);
+    const y = Math.min(zeroRight, valueY);
+    const barHeight = Math.max(2, Math.abs(valueY - zeroRight));
+    const labelY = value >= 0 ? valueY - 11 : valueY + 22;
+    return `<rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="5" fill="${theme.primary}" fill-opacity=".82" stroke="${theme.text}" stroke-width="1.5"/><text x="${rightX(position)}" y="${labelY}" fill="${theme.text}" font-family="Cascadia Mono, monospace" font-size="11" font-weight="700" text-anchor="middle">${signed(value, 1)}</text>`;
+  }).join("");
+
+  const content = `${analyticalHeader(spec, layout, {
+    badge: "HYPOTHETICAL FACTORIAL DESIGN",
+  })}
+  <text x="54" y="143" fill="${theme.danger}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="850" letter-spacing=".9">CONSTRUCTED VALUES · NO MODEL TRAINED · NO MEASUREMENTS</text>
+  <text x="${left.left}" y="184" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="800">POSITION CONTRAST BY CAPACITY MECHANISM</text>
+  <text x="${right.left}" y="184" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="800">RESERVED − SHARED</text>
+
+  <rect x="${left.left}" y="${left.top}" width="${left.right - left.left}" height="${left.bottom - left.top}" rx="15" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  ${leftGrid}
+  <line x1="${left.left}" y1="${zeroLeft}" x2="${left.right}" y2="${zeroLeft}" stroke="${theme.text}" stroke-width="2.5" opacity=".85"/>
+  <path d="${linePath(sharedPoints)}" fill="none" stroke="${theme.accent}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="${linePath(reservedPoints)}" fill="none" stroke="${theme.secondary}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="12 9"/>
+  ${sharedMarkers}${reservedMarkers}
+  <rect x="425" y="218" width="300" height="63" rx="11" fill="${theme.background}" fill-opacity=".92" stroke="${theme.grid}"/>
+  <line x1="442" y1="238" x2="482" y2="238" stroke="${theme.accent}" stroke-width="6"/><circle cx="462" cy="238" r="6" fill="${theme.background}" stroke="${theme.accent}" stroke-width="3"/>
+  <text x="494" y="243" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="12">shared first-come capacity</text>
+  <line x1="442" y1="263" x2="482" y2="263" stroke="${theme.secondary}" stroke-width="5" stroke-dasharray="10 7"/><polygon points="462,256 469,263 462,270 455,263" fill="${theme.background}" stroke="${theme.secondary}" stroke-width="3"/>
+  <text x="494" y="268" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="12">position-blind reservation cut</text>
+
+  <rect x="${right.left}" y="${right.top}" width="${right.right - right.left}" height="${right.bottom - right.top}" rx="15" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  ${rightGrid}
+  <line x1="${right.left}" y1="${zeroRight}" x2="${right.right}" y2="${zeroRight}" stroke="${theme.text}" stroke-width="2.5" opacity=".85"/>
+  ${bars}
+
+  <text x="${(left.left + left.right) / 2}" y="${left.bottom + 53}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">admission position j · dimensionless (1 = first)</text>
+  <text x="24" y="${(left.top + left.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle" transform="rotate(-90 24 ${(left.top + left.bottom) / 2})">centered protected-score contrast c_j · percentage points</text>
+  <text x="${(right.left + right.right) / 2}" y="${right.bottom + 53}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle">admission position j · dimensionless</text>
+  <text x="797" y="${(right.top + right.bottom) / 2}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="middle" transform="rotate(-90 797 ${(right.top + right.bottom) / 2})">Γcap(j) · percentage points</text>
+
+  <rect x="74" y="632" width="${width - 148}" height="91" rx="15" fill="${theme.panelAlt}" stroke="${theme.primary}" stroke-width="2"/>
+  <text x="94" y="659" fill="${theme.primary}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="850" letter-spacing=".7">HYPOTHETICAL FACTORIAL-DESIGN ILLUSTRATION · NO MEASUREMENTS</text>
+  <text x="94" y="683" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13">The constructed reservation cut attenuates the early-position advantage and late-position penalty.</text>
+  <text x="94" y="706" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="12">A real run fixes presented tasks, eligible module IDs, exogenous exposure, capacity, optimizer, evaluator and budget.</text>
+  <text x="${width - 42}" y="${height - 19}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10" text-anchor="end">hypothetical percentage-point contrasts · not evidence or an effect-size target</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -1821,6 +1949,7 @@ const renderers = {
   "mission-profile-damage": missionProfileDamage,
   "interface-qualified-scale-symmetry": interfaceQualifiedScaleSymmetry,
   "interface-qualified-retroactivity": interfaceQualifiedRetroactivity,
+  "history-conditioned-position-contrast": historyConditionedPositionContrast,
 };
 
 for (const spec of specs) {

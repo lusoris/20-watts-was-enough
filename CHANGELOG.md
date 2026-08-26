@@ -7,6 +7,38 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- F-026 now has a deterministic CPU-only public-development smoke harness for
+  the `RSD-T01` / `C-1540` trajectory-symmetry slice. Twenty-six focused tests
+  cover the frozen registry, five balanced valid classes plus an independent
+  malformed-interface sentinel, the exact PCG-CM-DXSM 128/64 transition with
+  custom SHA-256 state/increment derivation, a bound Node/V8/platform runtime
+  fingerprint, trapezoidal trajectory discrepancy, an exhaustive policy-view
+  field-and-code-path firewall, frozen diagnostic counter formulas, zero
+  persistent classifier state, exact serialized-view bytes, append-only integrity,
+  exact resume, source/config identity, semantic regeneration of every event,
+  and exact ordered-work-grid membership before analysis. The two diagnostic
+  arms have unmatched information
+  and incomplete resource accounting; private partitions, the full null and
+  hostile stacks, powered statistics, calibrated energy, RSD-T02--RSD-T10 and
+  claim authority remain absent. Every event and every successful command
+  response is `NO_RESULT`. The repository now has ten smoke-ready harnesses and still zero
+  workstation-ready or workstation-executable scientific claims.
+
+- A history-conditioned modular-succession package separates observed
+  microbial succession, randomized ecological priority effects, continual-
+  learning task order, curriculum optimization and ordinary scheduling. It
+  maps the residue onto C-008/C-056/C-057/C-574, F-014 and Candidates 004/019,
+  adds fourteen deduplicated source records, and freezes all 24 task orders
+  plus a fresh-seed four-order × $2^6$ mechanism factorial under
+  fixed-task-multiset and module-eligibility-set,
+  equal-exogenous-presentation/update-ceiling/capacity/optimizer/evaluator/
+  budget parity, with routed acceptance retained as a mediator and separately
+  equalized in exposure-cut cells. Decision 0016 and
+  the mathematical contract require canonical replay, scheduling, mature
+  continual-learning, MoE, curriculum-search, PBT and QD nulls and explicit
+  age, capacity, shared-state, facilitation and lock-in cuts. No claim,
+  principle, candidate, protocol, fixture or result is added.
+
 - An interface-qualified retroactivity package adds ten bounded claims
   (`C-1550`--`C-1559`) and Fixture F-027. Fourteen primary papers plus a
   published model-qualification comment-and-reply exchange separate

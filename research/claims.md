@@ -23447,7 +23447,8 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   noninferior on protected absolute targets.
 - **Open question:** how wide can the admissible scale group be before noise,
   clipping, saturation or reference-maintenance cost removes the advantage?
-- **Direct test:** [`RSD-T01`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t01--full-trajectory-symmetry-versus-weaker-lookalikes).
+- **Direct test:** [Fixture F-026](../experiments/fixtures/026-interface-qualified-relative-sensing.md),
+  [`RSD-T01`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t01--full-trajectory-symmetry-versus-weaker-lookalikes).
 - **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1540) · [mathematical contract](../math/interface-qualified-scale-symmetry.md).
 
 ### C-1541

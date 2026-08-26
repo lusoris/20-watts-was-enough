@@ -146,6 +146,21 @@ resource isolation, stop-gradient adapters and explicit feedback remain the
 minimum nulls. The full qualification and retirement rules are in
 [Fixture F-027](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md).
 
+Birth order is another intervention, not a background detail. A newcomer that
+arrives first can be older, receive more examples, pre-empt finite capacity,
+modify shared state, facilitate a later module, or create a costly lock-in.
+Those mechanisms predict different remedies. The same task multiset and
+eligible module identity set must therefore be replayed across randomized orders with equal exogenous
+presentations, task-local update ceilings, capacity, optimizer, evaluator and
+lifecycle budgets. Realized active, consolidated, merged, or retired state
+remains an outcome. Routed acceptance remains a measured mediator and is
+equalized only in the exposure-cut cells. Canonical
+replay, ordinary scheduling, replay/EWC/OGD, fixed and capacity-matched MoE,
+random curricula, optimized curricula with their search cost, population-based
+training and quality-diversity search are the required null stack. The exact
+factorial and kill rules are in the
+[history-conditioned succession contract](../math/history-conditioned-modular-succession.md).
+
 ### 3. Give the candidate probation traffic
 
 The router divides admitted work into three explicit budgets:

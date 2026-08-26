@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t01-event.schema.json",
+  "title": "Fixture 026 RSD-T01 public-development diagnostic event",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "contract.mjs",
+    "export": "assertFixture026Record",
+    "version_export": "FIXTURE_026_EVENT_CONTRACT_VERSION",
+    "contract_version": "fixture-026.rsd-t01-event.v1",
+    "test": "contract.test.mjs"
+  },
+  "required": [
+    "schema", "contract_version", "artifact", "track", "run_id", "profile", "pack",
+    "seed", "world_index", "world_id", "initialization_id", "scale_group", "interface",
+    "arm", "attempt", "units", "input_sha256",
+    "oracle_class", "history_family", "corruption", "gate_decision", "trace_valid",
+    "ordering_valid", "checksum_valid", "unit_valid", "interface_valid",
+    "causal_reference_valid", "parameters", "prediction", "class_correct",
+    "trajectory_discrepancy", "estimated_trajectory_discrepancy",
+    "trajectory_discrepancy_estimation_error", "peak_discrepancy", "endpoint_discrepancy",
+    "tail_discrepancy", "latency_discrepancy_s", "static_fit_rmse", "policy_input_sha256",
+    "policy_response_sha256", "policy_oracle_access", "evaluator_opened_after_response",
+    "work_counter_scope", "accepted_trajectory_samples_read", "accepted_summary_values_read",
+    "serialized_policy_view_utf8_bytes", "serialized_event_bytes_written",
+    "modeled_diagnostic_scalar_operations", "retained_persistent_state_bytes",
+    "temporary_memory_measured", "peak_memory_measured", "loss", "status",
+    "result_label", "no_result", "measured_energy_present", "energy_conclusion_allowed",
+    "claim_eligible", "comparison_inference_permitted", "scientific_result",
+    "performance_result", "interpretation", "integrity"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-026.rsd-t01-event.v1" },
+    "artifact": { "const": "fixture-026" },
+    "track": { "const": "RSD-T01" },
+    "run_id": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "profile": { "enum": ["smoke", "development"] },
+    "pack": { "const": "public-development" },
+    "seed": { "type": "integer", "minimum": 0 },
+    "world_index": { "type": "integer", "minimum": 0 },
+    "world_id": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "initialization_id": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "scale_group": { "type": "string", "pattern": "^positive-multiplicative:[0-9]+(?:\\.[0-9]+)?$" },
+    "interface": { "const": "paired-normalized-output" },
+    "arm": { "enum": ["full-trajectory-diagnostic", "peak-endpoint-lookalike"] },
+    "attempt": { "const": 0 },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "output", "time", "bytes"],
+      "properties": {
+        "input": { "const": "U" },
+        "output": { "const": "1" },
+        "time": { "const": "s" },
+        "bytes": { "const": "B" }
+      }
+    },
+    "input_sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["audit", "fixture", "math", "contract", "generator", "runner", "analysis", "configuration", "schema", "seed_pack", "runtime"],
+      "properties": {
+        "audit": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "fixture": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "math": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "contract": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "generator": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "runner": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "analysis": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "configuration": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "schema": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "seed_pack": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "runtime": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "oracle_class": {
+      "enum": [
+        "exact-scale-symmetry", "approximate-scale-symmetry", "exact-adaptation-only",
+        "equal-peak-different-shape", "static-ratio", "invalid-record"
+      ]
+    },
+    "history_family": { "enum": ["step", "pulse", "ramp", "band-limited-multisine"] },
+    "corruption": { "type": "string", "minLength": 1 },
+    "gate_decision": { "enum": ["accepted", "record-invalid"] },
+    "trace_valid": { "type": "boolean" },
+    "ordering_valid": { "type": "boolean" },
+    "checksum_valid": { "type": "boolean" },
+    "unit_valid": { "type": "boolean" },
+    "interface_valid": { "type": "boolean" },
+    "causal_reference_valid": { "type": "boolean" },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["background_base_u", "scale_factor", "reference_time_constant_s", "perturbation_amplitude_y", "input_floor_u"],
+      "properties": {
+        "background_base_u": { "type": "number", "exclusiveMinimum": 0 },
+        "scale_factor": { "type": "number", "exclusiveMinimum": 0 },
+        "reference_time_constant_s": { "type": "number", "exclusiveMinimum": 0 },
+        "perturbation_amplitude_y": { "type": "number", "exclusiveMinimum": 0 },
+        "input_floor_u": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "prediction": {
+      "enum": [
+        "exact-scale-symmetry", "approximate-scale-symmetry", "exact-adaptation-only",
+        "equal-peak-different-shape", "static-ratio", "invalid-record"
+      ]
+    },
+    "class_correct": { "type": "boolean" },
+    "trajectory_discrepancy": { "type": "number", "minimum": 0 },
+    "estimated_trajectory_discrepancy": { "type": "number", "minimum": 0 },
+    "trajectory_discrepancy_estimation_error": { "type": "number", "minimum": 0 },
+    "peak_discrepancy": { "type": "number", "minimum": 0 },
+    "endpoint_discrepancy": { "type": "number", "minimum": 0 },
+    "tail_discrepancy": { "type": "number", "minimum": 0 },
+    "latency_discrepancy_s": { "type": "number", "minimum": 0 },
+    "static_fit_rmse": { "type": "number", "minimum": 0 },
+    "policy_input_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "policy_response_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "policy_oracle_access": { "const": false },
+    "evaluator_opened_after_response": { "const": true },
+    "work_counter_scope": { "const": "exact-serialized-policy-view-bytes-and-frozen-modeled-classifier-counter-only; generator-validator-evaluator-hash-runtime-temporary-memory-excluded" },
+    "accepted_trajectory_samples_read": { "type": "integer", "minimum": 0 },
+    "accepted_summary_values_read": { "type": "integer", "minimum": 0 },
+    "serialized_policy_view_utf8_bytes": { "type": "integer", "minimum": 0 },
+    "serialized_event_bytes_written": { "type": "integer", "minimum": 1 },
+    "modeled_diagnostic_scalar_operations": { "type": "integer", "minimum": 0 },
+    "retained_persistent_state_bytes": { "const": 0 },
+    "temporary_memory_measured": { "const": false },
+    "peak_memory_measured": { "const": false },
+    "loss": { "type": "number", "minimum": 0, "maximum": 100 },
+    "status": { "const": "development-smoke-only" },
+    "result_label": { "const": "NO_RESULT" },
+    "no_result": { "const": true },
+    "measured_energy_present": { "const": false },
+    "energy_conclusion_allowed": { "const": false },
+    "claim_eligible": { "const": false },
+    "comparison_inference_permitted": { "const": false },
+    "scientific_result": { "const": false },
+    "performance_result": { "const": false },
+    "interpretation": { "type": "string", "pattern": "^NO_RESULT:" },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "previous_sha256", "record_sha256"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 0 },
+        "previous_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "record_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

@@ -2,15 +2,17 @@
 
 <!-- markdownlint-disable MD013 -->
 
-- **Status:** complete preimplementation CPU-only experiment contract
+- **Status:** complete CPU-only experiment contract with one bounded public-development smoke slice
 - **Direct claims:** [C-1540](../../research/claims.md#c-1540)–[C-1549](../../research/claims.md#c-1549)
 - **Source audit:** [relative sensing and scale symmetry across biological interfaces](../../research/audits/2026-08-25-relative-sensing-scale-symmetry.md)
 - **Mathematical contract:** [interface-qualified scale symmetry](../../math/interface-qualified-scale-symmetry.md)
 - **Fixture ID:** `F-026`
 - **Protocol IDs:** `RSD-T01`--`RSD-T10`
-- **Execution state:** no runner, generator, frozen seed pack, output schema,
-  workstation manifest, generated data, statistical result, or measured energy
-  exists
+- **Execution state:** a deterministic `RSD-T01` / `C-1540` public-development
+  runner, generator, schema, visible seed pack, tests and `smoke-ready` manifest
+  exist; RSD-T02--RSD-T10, private partitions, the registered primary analysis,
+  a complete resource comparison, statistical results and measured energy do
+  not
 - **Authority:** every future smoke or synthetic development run is
   `NO_RESULT` until a separately frozen confirmation contract and calibrated
   workstation boundary exist
@@ -272,8 +274,12 @@ The future implementation must freeze the following before execution:
 5. canonical time grids in seconds, with endpoints included once;
 6. deterministic append-only event order, hash chaining, resume and torn-tail
    rejection;
-7. opaque world identifiers that reveal no DGP class or held-out target; and
-8. closed confirmation/transfer absence records until a reviewed commitment
+7. non-semantic bookkeeping identifiers excluded from every policy feature
+   projection, with no secrecy claim for the enumerable public-development
+   generator; and
+8. a separately committed private confirmation mapping as the future
+   epistemic boundary, with closed confirmation/transfer absence records until
+   a reviewed commitment
    and custody procedure exists.
 
 Generator or evaluator faults invalidate a pack. Arm-local numerical or budget
@@ -630,7 +636,13 @@ An implementation may call itself `smoke-ready` only after it supplies:
 6. tests for leakage, cap enforcement, numerical faults, malformed generators,
    analysis recomputation, replay and manifest readiness.
 
+The bounded [RSD-T01 public-development harness](../workstation/fixture-026/README.md)
+now satisfies the six `smoke-ready` plumbing requirements for its much smaller
+diagnostic slice. It deliberately has unmatched diagnostic arms, omits the full
+hostile grid and registered primary endpoint, and grants no comparison or claim
+authority.
+
 `workstation-ready` additionally requires reviewed confirmation/transfer
 commitments, powered seed count, complete confirmatory analysis, calibrated
 energy measurement, target-hardware execution and a positive bounded result.
-Neither state exists for F-026 today.
+That state does not exist for F-026 today.

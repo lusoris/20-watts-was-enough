@@ -430,5 +430,23 @@
       "load_ratios": [0.1, 1, 10]
     },
     "status": "Deterministic RK4 approximations of the displayed illustrative mass-action ODE and the exact algebraic reduced-model retroactivity factor. Parameters are hypothetical; no biological fit, trained-system result, service benefit, or energy result is shown."
+  },
+  {
+    "id": "history-conditioned-position-contrast",
+    "title": "Hypothetical capacity cut and position contrast",
+    "equation": "c_j = η_(a,k,j,q) − mean over positions j′ of η_(a,k,j′,q);  Γ_cap(j) = c_j^reserved − c_j^shared",
+    "source": "math/history-conditioned-modular-succession.md#position-effect",
+    "layout": {
+      "kind": "position-contrast-interaction",
+      "width": 1180,
+      "height": 780,
+      "theme": "violet"
+    },
+    "parameters": {
+      "positions": [1, 2, 3, 4],
+      "shared_capacity_contrast_percentage_points": [6, 2, -2, -6],
+      "reserved_capacity_contrast_percentage_points": [1.2, 0.4, -0.4, -1.2]
+    },
+    "status": "Constructed factorial-design illustration using hypothetical protected-score contrasts. No model was trained: the values are not measurements, estimates, predictions, recommended effect sizes, or evidence for a position or capacity mechanism."
   }
 ]

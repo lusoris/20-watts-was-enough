@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "artifact": "fixture-026",
+  "partition": "confirmation",
+  "state": "not-created",
+  "contains_seeds": false,
+  "contains_commitment": false,
+  "result_label": "NO_RESULT",
+  "reason": "Development-only RSD-T01 response-shape diagnostic; no confirmation seed or commitment has been created."
+}

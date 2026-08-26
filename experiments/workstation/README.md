@@ -1,6 +1,6 @@
 # Workstation execution contract
 
-The repository now contains nine executable smoke harnesses alongside research
+The repository now contains ten executable smoke harnesses alongside research
 and protocol specifications, but no workstation-ready scientific package:
 [Candidate 010](candidate-010/README.md) exercises staged verification and
 [Fixture F-007](fixture-007/README.md) exercises optical null-space honesty;
@@ -13,7 +13,9 @@ corruption and fallback boundary;
 PLM-T02 lifecycle-reset boundaries; and
 [Fixture F-024](fixture-024/README.md) exercises the AMR-T01 projected-memory
 development path; [Fixture F-025](fixture-025/README.md) exercises the ECM-T03
-record, amplitude, repeat-consistency, and equivalence gate order; and
+record, amplitude, repeat-consistency, and equivalence gate order;
+[Fixture F-026](fixture-026/README.md) exercises the RSD-T01 trajectory-symmetry
+and interface-validity diagnostics; and
 [Fixture F-027](fixture-027/README.md) exercises the RIN-T01 interconnection,
 edge-removal, interface-validity, and bounded-insulation diagnostics.
 A test becomes workstation-ready only when its
@@ -112,6 +114,18 @@ to remain non-identifying. Its repeat statistic is a smoke surrogate rather
 than the registered finite-band Kramers--Kronig calibration. The other nine
 tracks, private partitions, physical apparatus, and scientific adjudication
 remain absent; every event is `NO_RESULT`.
+
+[Fixture F-026](fixture-026/README.md) implements a bounded public-development
+smoke slice for C-1540 / RSD-T01. It generates five balanced valid
+response-shape classes plus a separate malformed-interface sentinel, computes
+the frozen trapezoidal full-trajectory discrepancy, keeps oracle labels and
+evaluator-only validity details outside the policy view while exposing only
+`trace_valid` as its admission flag, and semantically regenerates every event
+before analysis. Its two diagnostic arms do not have matched information or complete
+resource budgets and therefore cannot support a comparison. The full null
+stack, hostile grid, private partitions, powered statistics, reference
+lifecycle, calibrated workstation measurements, and RSD-T02--RSD-T10 remain
+absent. Every event and successful response is `NO_RESULT`.
 
 [Fixture F-027](fixture-027/README.md) implements a bounded public-development
 smoke slice for C-1550 / RIN-T01. It generates six synthetic source--load

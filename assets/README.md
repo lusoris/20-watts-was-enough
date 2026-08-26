@@ -224,6 +224,11 @@ response above exact reduced back-action curves. Its load-ratio sweep makes the
 operating-point dependence visible without presenting the illustrative
 parameters as measurements.
 
+`history-conditioned-position-contrast` plots constructed centered position
+contrasts for shared versus position-blind reserved capacity and their
+interaction. It is a hypothetical factorial-design reading aid with no trained
+model, measurements, estimate, prediction, or target effect size.
+
 `fixture-007-identifiability` is also used directly in the concept book because
 it already provides the needed analytical distinction between prior-supported
 reconstruction and new evidence.

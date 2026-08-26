@@ -28,7 +28,7 @@ constraints* behind that fact can become engineering requirements:
 
 ## Project status
 
-**Stage:** concept and evidence framework with seven development-only smoke
+**Stage:** concept and evidence framework with ten development-only smoke
 harnesses. There is no integrated model implementation or claim-eligible
 workstation result yet. The generated
 [test-coverage report](experiments/test-coverage.md) keeps those states
@@ -98,6 +98,7 @@ Supporting material:
 - [`research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md`](research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md) — interface/transport separation, finite diffusion memory, impedance validity, timescale resolution, passivation, hysteresis, identifiability, and delayed degradation
 - [`research/audits/2026-08-25-relative-sensing-scale-symmetry.md`](research/audits/2026-08-25-relative-sensing-scale-symmetry.md) — full-trajectory scale symmetry, interface-qualified biological evidence, finite support, statistic-selection counterexamples, and observation-dependent recoverability
 - [`research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md`](research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md) — downstream connection back-action, causal load classes, bounded insulation, useful coupling, and digital null controls
+- [`research/audits/2026-08-26-history-conditioned-modular-succession.md`](research/audits/2026-08-26-history-conditioned-modular-succession.md) — ecological priority effects, task order, curriculum selection, scheduling controls, and fixed-task/eligibility causal cuts
 - [`research/neuroscience-opportunity-map.md`](research/neuroscience-opportunity-map.md) — underused neural mechanisms and falsifiable translations
 - [`research/comparative-biology.md`](research/comparative-biology.md) — candidates from animals, plants, immune systems, and adaptive networks
 - [`research/source-crosswalk.md`](research/source-crosswalk.md) — imported ideas mapped into evidence and principle bundles
@@ -108,6 +109,7 @@ Supporting material:
 - [`math/multiscale-reduction-contract.md`](math/multiscale-reduction-contract.md) — exact memory, slow-manifold, micro-query, lifting, healing, and closure boundaries
 - [`math/interface-qualified-scale-symmetry.md`](math/interface-qualified-scale-symmetry.md) — fold-change symmetry, equivariance, absolute counter-tasks, trajectory discrepancy, and reference-maintenance cost
 - [`math/interface-qualified-retroactivity.md`](math/interface-qualified-retroactivity.md) — full/reduced binding dynamics, connection sensitivity, service-qualified attenuation, causal controls, and lifecycle resource boundaries
+- [`math/history-conditioned-modular-succession.md`](math/history-conditioned-modular-succession.md) — order estimands, parity identities, mechanism interventions, lifecycle endpoints, and kill rules
 - [`assets/`](assets/README.md) — editable diagram and future figure sources
 - [`decisions/`](decisions/README.md) — durable project decisions
 - [`experiments/candidates/`](experiments/candidates/README.md) — falsifiable, equal-budget experiment contracts
@@ -124,6 +126,7 @@ Supporting material:
 - [`experiments/workstation/fixture-023/`](experiments/workstation/fixture-023/README.md) — deterministic PLM-T01 duration-memory and PLM-T02 lifecycle-reset development smoke paths
 - [`experiments/workstation/fixture-024/`](experiments/workstation/fixture-024/README.md) — deterministic AMR-T01 development smoke path with no confirmation or energy authority
 - [`experiments/workstation/fixture-025/`](experiments/workstation/fixture-025/README.md) — deterministic ECM-T03 validity-gate development smoke path with no confirmation or energy authority
+- [`experiments/workstation/fixture-026/`](experiments/workstation/fixture-026/README.md) — deterministic RSD-T01 trajectory-symmetry and policy-firewall development smoke path with no comparison, confirmation, or energy authority
 - [`experiments/workstation/fixture-027/`](experiments/workstation/fixture-027/README.md) — deterministic RIN-T01 isolation/connection diagnostic with no confirmation, service-performance, or energy authority
 - [`experiments/test-coverage.md`](experiments/test-coverage.md) — generated
   claim-to-protocol coverage and workstation execution readiness

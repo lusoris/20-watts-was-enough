@@ -11,6 +11,11 @@ notation.
   lifecycle payback horizon from editable normalized specifications.
 - [`memory-lifecycle.md`](memory-lifecycle.md) defines a constrained replay,
   consolidation, and forgetting controller.
+- [`history-conditioned-modular-succession.md`](history-conditioned-modular-succession.md)
+  defines fixed-task-multiset and module-eligibility order estimands, parity identities, causal cuts
+  for age, exposure, capacity, shared state, facilitation, and lock-in,
+  endpoint units, multiplicity, and kill rules for a frontier audit that has no
+  result or numbered fixture.
 - [`population-observation.md`](population-observation.md) separates stocks,
   flows, cohorts, lifecycle stages, selected records, causal identification,
   collapse vectors, and frozen prospective tests.
