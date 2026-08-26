@@ -23453,33 +23453,34 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
 
 ### C-1541
 
-- **Claim:** A properly parameterized type-1 incoherent feed-forward loop can
-  realize fold-change detection, but the motif alone does not establish the
-  function; moreover, fast-output or instantaneous approximations can retain a
-  nonzero scale-invariance error even as nominal timescale separation grows.
-- **Status:** established theoretical sufficiency and formal limitation for
-  the cited models; natural mechanism attribution remains system-specific.
+- **Claim:** Under the cited initialized deterministic equations and parameter
+  conditions, a type-1 incoherent feed-forward loop can realize
+  full-trajectory fold-change detection; motif occurrence or matched step
+  behavior alone does not identify that mechanism.
+- **Status:** established theoretical sufficiency for the cited model;
+  natural-mechanism attribution remains system- and intervention-specific.
 - **Primary sources:** [Goentoro et al. 2009](https://doi.org/10.1016/j.molcel.2009.11.018)
-  and [Skataric, Nikolaev, and Sontag 2015](https://doi.org/10.1049/iet-syb.2014.0006).
-- **Rationale:** similar step responses can be produced by feed-forward,
-  feedback, receptor-memory, static-normalization and explicit-transform
-  mechanisms, so topology and step fit are not identification.
+  and the broader feedback/equivariance boundary in
+  [Shoval et al. 2010](https://doi.org/10.1073/pnas.1002352107).
+- **Rationale:** adaptation, pulse generation and fold-change detection are
+  distinct properties, and more than one causal architecture can realize
+  related observable behavior.
 - **AI translation:** compare causal mechanism families after their step
   behavior is matched, then use pulses, ramps, resets and internal
   interventions to separate them.
 - **Efficiency mechanism:** a minimal causal reference loop could use less
   state than a generic recurrent model if its update, reset and approximation
   errors remain inside the registered envelope.
-- **Failure modes:** topology-as-function inference, singular-limit overclaim,
-  saturated activation, unobserved internal state, step-only validation, and a
-  log-ratio or state-space null matching the result.
-- **Measurable prediction:** non-step interventions identify the generator
-  family more reliably than motif labels or step residuals, and a protected
-  fast/slow family exposes the registered nonzero trajectory-error floor.
+- **Failure modes:** topology-as-function inference, saturated activation,
+  unobserved internal state, step-only validation, coordinate-equivalent
+  descriptions, and a log-ratio or state-space null matching the result.
+- **Measurable prediction:** a predeclared intervention panel separates only
+  those causal properties for which the evaluator has a pairwise separation
+  certificate; unresolved pairs produce a non-singleton set or abstention.
 - **Open question:** which minimal interventions distinguish mechanisms before
   acquisition cost exceeds the value of attribution?
 - **Direct test:** [`RSD-T02`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02--mechanism-discrimination-under-matched-step-behavior).
-- **Traceability:** [source audit](audits/2026-08-25-relative-sensing-scale-symmetry.md#c-1541) · [mathematical contract](../math/interface-qualified-scale-symmetry.md).
+- **Traceability:** [source audit](audits/2026-08-26-rsd-t02-mechanism-equivalence.md) · [mathematical contract](../math/interventional-mechanism-equivalence.md).
 
 ### C-1542
 
@@ -24005,3 +24006,150 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   residual after tuned explicit filters and queue policies are included?
 - **Direct test:** [`RIN-T10`](../experiments/fixtures/027-interface-qualified-retroactivity-insulation.md#rin-t10--suppress-preserve-or-use-back-action).
 - **Traceability:** [source audit](audits/2026-08-25-interface-qualified-retroactivity-insulation.md#c-1559) · [mathematical contract](../math/interface-qualified-retroactivity.md) · [affected chapter](../concept/07-cross-domain-convergence.md#interconnection-is-an-intervention).
+
+### C-1560
+
+- **Claim:** Negative-feedback and incoherent-feed-forward cores can both
+  support adaptation within the cited model classes; adaptation alone implies
+  neither full-trajectory fold-change detection nor one topology.
+- **Status:** established for the cited chemotaxis, osmoregulation and
+  three-node enzyme-network analyses; not an exhaustive theorem over every
+  biological or artificial dynamical system.
+- **Primary sources:** [Yi et al. 2000](https://doi.org/10.1073/pnas.97.9.4649),
+  [Muzzey et al. 2009](https://doi.org/10.1016/j.cell.2009.04.047), and
+  [Ma et al. 2009](https://doi.org/10.1016/j.cell.2009.06.013).
+- **Rationale:** return to a prestimulus steady output is weaker than equality
+  of the full scaled trajectory and is compatible with multiple causal cores.
+- **AI translation:** treat adaptation, trajectory symmetry and structural
+  feedback/feed-forward properties as separate evaluator coordinates.
+- **Efficiency mechanism:** selecting a minimal sufficient adaptive update may
+  reduce state or work only after competing ordinary feedback, feed-forward
+  and explicit-transform implementations receive equal information and
+  complete resource accounting.
+- **Failure modes:** exact adaptation called FCD, one searched network class
+  treated as exhaustive, hidden initial-state support, and topology inferred
+  from one step trace.
+- **Measurable prediction:** matched-step worlds remain indistinguishable on
+  the step panel but separate, remain equivalent or require abstention under
+  the registered richer panel exactly as their pairwise certificates state.
+- **Open question:** which observable property, rather than which graph name,
+  is sufficient for the later task at the lowest complete acquisition cost?
+- **Direct test:** [`RSD-T02`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02--mechanism-discrimination-under-matched-step-behavior).
+- **Traceability:** [source audit](audits/2026-08-26-rsd-t02-mechanism-equivalence.md) · [mathematical contract](../math/interventional-mechanism-equivalence.md).
+
+### C-1561
+
+- **Claim:** Within the adapting-circuit class studied by Rahi et al.,
+  refractory-period stabilization or period skipping under repeated stimuli
+  supports negative feedback over an incoherent feed-forward loop, while
+  absence of those signatures is not generally identifying.
+- **Status:** established theoretical, computational and scoped experimental
+  evidence for the cited class; a one-sided diagnostic rather than a universal
+  topology test.
+- **Primary source:** [Rahi et al. 2017](https://doi.org/10.1038/nmeth.4408).
+- **Rationale:** response sequence across pulse duration and period can expose
+  state dependence that an isolated step, ramp or pulse leaves hidden.
+- **AI translation:** cross pulse width with inter-pulse period and record
+  response count, latency, period skipping and refractory stability before
+  assigning feedback-related properties.
+- **Efficiency mechanism:** a small repeated-stimulus panel may replace broader
+  blind acquisition when it has a certified one-sided separation role.
+- **Failure modes:** single-pulse attribution, absence treated as evidence for
+  the rival, pulse duration confounded with period, and privileged state access
+  hidden from the cost ledger.
+- **Measurable prediction:** protected negative-feedback worlds with the
+  signature separate from certified IFFL rivals; sampled worlds without the
+  signature retain uncertainty instead of being forced into the opposite
+  class.
+- **Open question:** how stable is the one-sided signature under noise,
+  parameter support, partial observation and additional feedback paths?
+- **Planned extension:** a future RSD-T02 pulse-signature world must freeze a
+  Rahi-compatible planted model, response-event rule, latency, refractory and
+  period-skipping truth before this claim has a complete direct test. The
+  current five-recipe construction does not instantiate that signature.
+- **Traceability:** [source audit](audits/2026-08-26-rsd-t02-mechanism-equivalence.md#repeated-stimulation-adds-one-sided-signatures) · [mathematical contract](../math/interventional-mechanism-equivalence.md).
+
+### C-1562
+
+- **Claim:** Initial states, input profiles or structural interventions can be
+  designed to separate specified rival dynamical models, but the separating
+  conclusion is conditional on the candidate pair, parameter support,
+  observation map, intervention constraints and numerical certificate.
+- **Status:** established method and model-scoped demonstrations; no universal
+  intervention list follows.
+- **Primary sources:** [Mélykúti et al. 2010](https://doi.org/10.1186/1752-0509-4-38)
+  and [Hamadeh, Ingalls and Sontag 2013](https://doi.org/10.1098/rsif.2012.0935).
+- **Rationale:** administering a perturbation is not the same as proving that
+  the resulting observations distinguish the declared rivals.
+- **AI translation:** store a machine-readable pairwise
+  intervention-separation matrix with analytic or bounded numerical provenance
+  and an unresolved state.
+- **Efficiency mechanism:** nested panels can stop acquisition once the needed
+  property is certified rather than collecting every privileged intervention.
+- **Failure modes:** generator-label leakage, post-hoc intervention choice,
+  point-parameter certificates applied over a range, noise omitted, and scalar
+  cost hiding privileged access.
+- **Measurable prediction:** expanding a nested panel can refine an equivalence
+  set only where a new certified observation separates at least one retained
+  pair; otherwise the set and abstention remain unchanged.
+- **Open question:** can an active selector approach the smallest sufficient
+  panel without invalidating the prospective information cut?
+- **Direct test:** [`RSD-T02`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02--mechanism-discrimination-under-matched-step-behavior).
+- **Traceability:** [source audit](audits/2026-08-26-rsd-t02-mechanism-equivalence.md#mechanism-discrimination-requires-a-declared-rival-set) · [decision 0019](../decisions/0019-score-interventional-properties-not-generator-names.md).
+
+### C-1563
+
+- **Claim:** Under the cited mass-action representation and constraints,
+  distinct reaction-network graphs can generate identical dynamics; topology
+  can therefore remain nonunique even when all modeled state variables are
+  observed.
+- **Status:** established formal and computational result for the cited
+  chemical-reaction-network class; not a universal equivalence theorem for all
+  dynamical representations.
+- **Primary source:** [Szederkényi, Banga and Alonso 2011](https://doi.org/10.1186/1752-0509-5-177).
+- **Rationale:** more samples cannot distinguish exactly equivalent input--output
+  systems under an unchanged interface.
+- **AI translation:** make equivalence sets and calibrated abstention valid
+  outputs; never reward a guessed hidden graph within a certified equivalence
+  class.
+- **Efficiency mechanism:** an equivalence certificate can prevent futile
+  acquisition and overfitted mechanism selection.
+- **Failure modes:** representation dependence ignored, finite numerical
+  similarity called exact equivalence, graph isomorphism confused with dynamic
+  equivalence, and evaluator equations leaked to an actionable arm.
+- **Measurable prediction:** for a planted equivalent pair, every allowed panel
+  retains both provenance records while the shared certified property vector
+  remains scoreable.
+- **Open question:** which coarsest property partition preserves the later task
+  while avoiding unnecessary structural attribution?
+- **Direct test:** [`RSD-T02`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02--mechanism-discrimination-under-matched-step-behavior).
+- **Traceability:** [source audit](audits/2026-08-26-rsd-t02-mechanism-equivalence.md#mechanism-discrimination-requires-a-declared-rival-set) · [decision 0019](../decisions/0019-score-interventional-properties-not-generator-names.md).
+
+### C-1564
+
+- **Claim:** For the singularly perturbed systems covered by the cited theorem,
+  differing associated fast initial-value problems imply a positive lower
+  bound on the maximum instantaneous scaled-versus-unscaled output error as
+  the fast/slow ratio tends to zero.
+- **Status:** established formal supremum-norm result under the theorem's
+  regularity and initial-value conditions; not a nonzero integrated RMS floor
+  or a statement of biological importance.
+- **Primary source:** [Skataric, Nikolaev and Sontag 2015](https://doi.org/10.1049/iet-syb.2014.0006).
+- **Rationale:** an order-one error confined to an order-$\epsilon$ initial
+  layer can retain its peak while contributing vanishing integrated mass.
+- **AI translation:** score the source-qualified $E_{\infty}$ endpoint on an
+  epsilon-scaled fast-time grid with an analytic critical-time evaluator;
+  retain RMS discrepancy as a separate diagnostic.
+- **Efficiency mechanism:** none is implied; the result prevents an invalid
+  approximation from receiving false accuracy or efficiency credit because a
+  coarse or integrated metric missed a narrow peak.
+- **Failure modes:** fixed-step aliasing, RMS substituted for supremum norm,
+  finite sweep called an asymptotic proof, unmatched initialization, and the
+  associated-fast-IVP condition omitted.
+- **Measurable prediction:** a registered source-inspired family retains its
+  evaluator-certified peak lower bound across the finite protected epsilon
+  sweep even while its RMS error can decline.
+- **Open question:** when is the narrow peak relevant to the downstream task,
+  and what sampling cost is justified to detect it?
+- **Direct test:** [`RSD-T02`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02--mechanism-discrimination-under-matched-step-behavior).
+- **Traceability:** [source audit](audits/2026-08-26-rsd-t02-mechanism-equivalence.md#the-fast-boundary-layer-needs-the-right-norm) · [mathematical contract](../math/interventional-mechanism-equivalence.md).

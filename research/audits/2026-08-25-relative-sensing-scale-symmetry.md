@@ -19,6 +19,14 @@
   exists; no scientific comparator, claim-eligible run, measured energy, or
   result exists
 
+> **Amendment, 2026-08-26.** The later
+> [mechanism-equivalence audit](2026-08-26-rsd-t02-mechanism-equivalence.md)
+> narrows C-1541 to the I1-FFL sufficiency and attribution boundary. The
+> Skataric--Nikolaev--Sontag fast-initial-layer limitation is now registered
+> separately as [C-1564](../claims.md#c-1564), with the supremum norm and
+> epsilon-scaled sampling made explicit. This note supersedes the older
+> combined assignment below without deleting its provenance.
+
 ## Executive finding
 
 Several biological systems respond to a ratio or fold change rather than to an

@@ -378,6 +378,15 @@ unassessed. The editable figure
 specification is the `rsd-t01-family-property-overlap` entry in
 [`core-models.json`](../assets/plots/core-models.json).
 
+RSD-T02 uses the same rule at a deeper causal level. Its dedicated
+[intervention-qualified mechanism-equivalence note](interventional-mechanism-equivalence.md)
+constructs five exact matched-step recipes, scores separately certified
+structural properties and retains observational equivalence or abstention. It
+also keeps the Skataric--Nikolaev--Sontag fast-boundary-layer endpoint separate
+from the RMS score above: the source-qualified floor is a supremum-norm result
+on an $\epsilon$-scaled temporal grid, while an integrated RMS discrepancy can
+vanish as the layer narrows.
+
 ## Validity and failure boundaries
 
 1. **Positive support.** Log ratio is undefined at zero and changes meaning

@@ -2,19 +2,19 @@
   "schema": 1,
   "generatedFrom": "experiments/test-coverage.json",
   "claims": {
-    "total": 1550,
-    "testRouted": 1458,
-    "protocolCovered": 1458,
+    "total": 1555,
+    "testRouted": 1462,
+    "protocolCovered": 1462,
     "executionReady": 0,
     "tierCounts": {
-      "ledger-only": 92,
+      "ledger-only": 93,
       "linked-description": 0,
-      "protocol-complete": 1458,
+      "protocol-complete": 1462,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
       "ledger-only": {
-        "established": 79,
+        "established": 80,
         "plausible": 9,
         "speculative": 0,
         "disputed": 4,
@@ -28,7 +28,7 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1132,
+        "established": 1136,
         "plausible": 210,
         "speculative": 60,
         "disputed": 47,
@@ -44,14 +44,14 @@
     }
   },
   "ledgerOnly": {
-    "total": 92,
+    "total": 93,
     "dispositionCounts": {
       "evidence-input": 81,
       "source-reproduction": 11,
       "existing-artifact-gap": 0,
-      "new-artifact-needed": 0
+      "new-artifact-needed": 1
     },
-    "proposedArtifactFamilies": 0
+    "proposedArtifactFamilies": 1
   },
   "artifacts": {
     "total": 47,
@@ -1106,7 +1106,7 @@
         "id": "fixture-026",
         "path": "experiments/fixtures/026-interface-qualified-relative-sensing.md",
         "title": "Fixture F-026 — Interface-qualified relative sensing and scale symmetry",
-        "linkedClaims": 10,
+        "linkedClaims": 14,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "smoke-ready",

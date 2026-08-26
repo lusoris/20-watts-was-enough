@@ -5,6 +5,9 @@ This directory contains a deterministic CPU-only plumbing harness for the
 generator-family × history grid and evaluator-only trace-fact vector
 construction, then exercises two legacy generator-family diagnostics over
 response shapes that endpoint and peak summaries deliberately conflate.
+An isolated `RSD-T02` contract, initialized model bank, and source-shaped
+boundary-layer floor foundation are also frozen here, but none is connected to
+the runner or granted result authority.
 
 Every event and every successful command response is labelled `NO_RESULT`.
 This is not the registered RSD-T01 primary experiment, a comparison of trained
@@ -160,6 +163,40 @@ information cut—such as a withheld suffix, scale cell, or intervention—and t
 evaluator target visible only after response freeze. Public descriptor roles do
 not create a private confirmation partition.
 
+## RSD-T02 interventional mechanism-equivalence foundation
+
+`rsd-t02-contract.mjs`, `rsd-t02-models.mjs`, and `rsd-t02-floor.mjs` freeze a
+public-development foundation for two distinct strata:
+
+1. `T02-MECH` gives five initialized two-state construction recipes the same
+   canonical fold-step trajectory, then separates generator provenance from a
+   scored four-property vector and exact input-output equivalence classes.
+2. `T02-FLOOR` freezes a source-shaped singular perturbation check over 105
+   model × epsilon × scale cells. Its primary discrepancy is the fast-layer
+   supremum norm; integrated RMS remains diagnostic because it can vanish while
+   the instantaneous discrepancy stays finite.
+
+The mechanism panel contains 26 fixed episodes across canonical steps,
+repeated pulses, ramps, opaque-state resets and freezes, one reported-output
+clamp, interrupted holds, and same- versus cross-channel restimulation. Three
+observation regimes distinguish a mandatory matched-step abstention baseline,
+the fixed full panel, and a six-query active-design ceiling. Nine actionable
+arm IDs remain parity- and ranking-ineligible; `O-GRAPH` is evaluator-only.
+Pair certificates describe one analytic isomorphism and nine numerically
+refined public-development constructions under their frozen schedules, not
+scientific results.
+
+The square-pulse episodes do not instantiate the Rahi-style refractory or
+period-skipping signature: the v1 feedback nonlinearity vanishes at both pulse
+levels. C-1561 therefore remains a separately declared future extension rather
+than one of the 21 construction tests.
+
+This foundation has no complete T02 episode generator/evaluator runner, arm implementations,
+event or output schema, run ledger, analysis artifact, confirmation custody,
+or promotion path. It does not extend `execution_claims` beyond `C-1540`.
+`RSD-T02` therefore remains foundation-only with `NO_RESULT` authority, while
+`RSD-T01` remains the only implemented track.
+
 ## Commands
 
 From the repository root:
@@ -175,7 +212,7 @@ node experiments/workstation/fixture-026/runner.mjs validate --output experiment
 Focused tests:
 
 ```powershell
-node --test --test-isolation=none experiments/workstation/fixture-026/contract.test.mjs experiments/workstation/fixture-026/runner.test.mjs experiments/workstation/fixture-026/scientific-grid.test.mjs
+node --test --test-isolation=none experiments/workstation/fixture-026/contract.test.mjs experiments/workstation/fixture-026/runner.test.mjs experiments/workstation/fixture-026/scientific-grid.test.mjs experiments/workstation/fixture-026/rsd-t02-contract.test.mjs experiments/workstation/fixture-026/rsd-t02-models.test.mjs experiments/workstation/fixture-026/rsd-t02-floor.test.mjs
 ```
 
 ## Integrity
@@ -235,7 +272,9 @@ This smoke slice deliberately lacks:
    property-performance/trajectory-conformance endpoint;
 7. confirmation and transfer seeds, commitments, custody, and releases;
 8. calibrated workstation time, memory, and energy measurement; and
-9. runners for RSD-T02 through RSD-T10.
+9. a generator/evaluator runner, actionable arms, result schema, run ledger,
+   and analysis path for the contract-frozen RSD-T02 foundation; and
+10. machine contracts and runners for RSD-T03 through RSD-T10.
 
 Until those gaps are closed and separately reviewed, this directory remains a
 public development smoke harness with `NO_RESULT` authority.

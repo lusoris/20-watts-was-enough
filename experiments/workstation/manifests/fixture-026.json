@@ -49,13 +49,22 @@
     "tests": [
       "experiments/workstation/fixture-026/contract.test.mjs",
       "experiments/workstation/fixture-026/runner.test.mjs",
-      "experiments/workstation/fixture-026/scientific-grid.test.mjs"
+      "experiments/workstation/fixture-026/scientific-grid.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-contract.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-models.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-floor.test.mjs"
     ],
     "full_tests": [
       "experiments/workstation/fixture-026/contract.test.mjs",
       "experiments/workstation/fixture-026/runner.test.mjs",
-      "experiments/workstation/fixture-026/scientific-grid.test.mjs"
+      "experiments/workstation/fixture-026/scientific-grid.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-contract.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-models.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-floor.test.mjs"
     ],
+    "implemented_tracks": ["RSD-T01"],
+    "contract_frozen_tracks": ["RSD-T01", "RSD-T02"],
+    "foundation_only_tracks": ["RSD-T02"],
     "execution_claims": ["C-1540"]
   },
   "energy": {
@@ -97,7 +106,8 @@
         "A prospective observation cut and the registered simultaneous property-performance/trajectory-conformance primary endpoint, paired powered statistics, uncertainty intervals, and multiplicity control are absent.",
         "No confirmation or transfer seed, commitment, private custody record, release, or promotion evidence exists.",
         "No calibrated workstation timing, memory, or energy measurement exists, and energy conclusions are forbidden.",
-        "RSD-T02 through RSD-T10 are not implemented.",
+        "The RSD-T02 contract, initialized model bank, intervention panel, equivalence certificates, scoring rules, and singular-floor grid are frozen as a public-development foundation, but no complete T02 episode generator/evaluator runner, actionable arm, event/output schema, run ledger, analysis artifact, confirmation custody, or result exists; T02 remains foundation-only with NO_RESULT authority.",
+        "RSD-T03 through RSD-T10 have no machine contract or implementation.",
         "Every generated event and command result is explicitly labelled NO_RESULT."
       ]
     }

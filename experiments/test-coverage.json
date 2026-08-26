@@ -50,19 +50,19 @@
     }
   },
   "counts": {
-    "claims": 1550,
-    "testRouted": 1458,
-    "protocolCovered": 1458,
+    "claims": 1555,
+    "testRouted": 1462,
+    "protocolCovered": 1462,
     "executionReady": 0,
     "tierCounts": {
-      "ledger-only": 92,
+      "ledger-only": 93,
       "linked-description": 0,
-      "protocol-complete": 1458,
+      "protocol-complete": 1462,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
       "ledger-only": {
-        "established": 79,
+        "established": 80,
         "plausible": 9,
         "speculative": 0,
         "disputed": 4,
@@ -76,7 +76,7 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1132,
+        "established": 1136,
         "plausible": 210,
         "speculative": 60,
         "disputed": 47,
@@ -94,16 +94,16 @@
       "evidence-input": 81,
       "source-reproduction": 11,
       "existing-artifact-gap": 0,
-      "new-artifact-needed": 0
+      "new-artifact-needed": 1
     },
-    "proposedArtifactFamilies": 0,
+    "proposedArtifactFamilies": 1,
     "artifacts": 47,
     "protocolCompleteArtifacts": 47,
     "executionReadyArtifacts": 0,
     "smokeReadyArtifacts": 10,
-    "claimSideLinked": 1241,
-    "documentSideLinked": 1148,
-    "reciprocalClaims": 794
+    "claimSideLinked": 1245,
+    "documentSideLinked": 1152,
+    "reciprocalClaims": 798
   },
   "artifacts": [
     {
@@ -9251,7 +9251,11 @@
         "C-1546",
         "C-1547",
         "C-1548",
-        "C-1549"
+        "C-1549",
+        "C-1560",
+        "C-1562",
+        "C-1563",
+        "C-1564"
       ],
       "documentSideClaims": [
         "C-1540",
@@ -9263,7 +9267,11 @@
         "C-1546",
         "C-1547",
         "C-1548",
-        "C-1549"
+        "C-1549",
+        "C-1560",
+        "C-1562",
+        "C-1563",
+        "C-1564"
       ],
       "linkedClaims": [
         "C-1540",
@@ -9275,7 +9283,11 @@
         "C-1546",
         "C-1547",
         "C-1548",
-        "C-1549"
+        "C-1549",
+        "C-1560",
+        "C-1562",
+        "C-1563",
+        "C-1564"
       ]
     },
     {
@@ -30302,6 +30314,72 @@
       "executionReady": false,
       "artifacts": [
         "fixture-027"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1560",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-026"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1561",
+      "status": "established",
+      "tier": "ledger-only",
+      "testRouted": false,
+      "protocolCovered": false,
+      "executionReady": false,
+      "artifacts": [],
+      "disposition": {
+        "id": "C-1561",
+        "disposition": "new-artifact-needed",
+        "rationale": "The one-sided repeated-stimulus signature is bounded evidence, but the current five-world T02 bank does not plant or score refractory stabilization or period skipping.",
+        "targets": [
+          "proposed:rsd-t02-pulse-signature"
+        ],
+        "source": "experiments/claim-dispositions/1204-1600.json"
+      }
+    },
+    {
+      "id": "C-1562",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-026"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1563",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-026"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1564",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-026"
       ],
       "disposition": null
     }

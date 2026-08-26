@@ -33,6 +33,7 @@ import {
   validateObservationTrace,
 } from "./generator.mjs";
 import {
+  FIXTURE_026_CONTRACT_FROZEN_TRACKS,
   FIXTURE_026_IMPLEMENTED_TRACKS,
   FIXTURE_026_TRACK_CLAIMS,
   FIXTURE_026_TRACK_IDS,
@@ -173,10 +174,11 @@ function rehash(record) {
   return record;
 }
 
-test("machine registry freezes ten NO_RESULT tracks and implements only RSD-T01", async () => {
+test("machine registry freezes ten NO_RESULT tracks, two contracts, and only one implementation", async () => {
   const markdown = await readFile("experiments/fixtures/026-interface-qualified-relative-sensing.md", "utf8");
   const registry = assertFixture026Registry(extractFixture026Registry(markdown));
   assert.deepEqual(registry.rows.map((row) => row.track), FIXTURE_026_TRACK_IDS);
+  assert.deepEqual(FIXTURE_026_CONTRACT_FROZEN_TRACKS, ["RSD-T01", "RSD-T02"]);
   assert.deepEqual(FIXTURE_026_IMPLEMENTED_TRACKS, ["RSD-T01"]);
   assert.deepEqual(
     registry.rows.map((row) => row.claim),

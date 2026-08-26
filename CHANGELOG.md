@@ -7,6 +7,22 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Decision 0019 and the F-026 `RSD-T02` foundation now separate four scored
+  interventional properties, exact input-output equivalence and justified
+  abstention from generator-recipe names. Five initialized two-state recipes
+  share one canonical fold-step trajectory before a fixed 26-episode panel;
+  three observation regimes, nine ineligible actionable arms, one
+  evaluator-only graph oracle, all ten recipe-pair certificates and a typed
+  acquisition-cost vector are machine frozen. A separate 105-cell singular
+  perturbation grid makes the source-supported fast-boundary-layer supremum
+  norm primary and keeps RMS diagnostic. The modules remain outside the runner:
+  no T02 arm, result artifact, confirmation custody, comparison authority or
+  execution claim was created, and `NO_RESULT` remains mandatory. Twenty-one
+  focused tests pass, including closed-registry mutation checks and numerical
+  reproduction of every declared separating episode. The Rahi-style pulse
+  signature remains explicitly uninstantiated rather than receiving false test
+  coverage.
+
 - Decision 0018 and an isolated F-026 scientific-grid contract now freeze the
   prerequisite for any RSD-T01 comparator expansion. The contract enumerates
   five generator recipes × four histories × three scale roles (`2×` and `4×`

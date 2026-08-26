@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "range": {
+    "start": "C-1204",
+    "end": "C-1600"
+  },
+  "claims": [
+    {
+      "id": "C-1561",
+      "disposition": "new-artifact-needed",
+      "rationale": "The one-sided repeated-stimulus signature is bounded evidence, but the current five-world T02 bank does not plant or score refractory stabilization or period skipping.",
+      "targets": [
+        "proposed:rsd-t02-pulse-signature"
+      ]
+    }
+  ]
+}

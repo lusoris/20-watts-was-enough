@@ -2016,6 +2016,83 @@ function rsdT01FamilyPropertyOverlap(spec) {
   return analyticalDocument(spec, layout, content);
 }
 
+function fastBoundaryLayerNorms(spec) {
+  const {
+    epsilon_min: min,
+    epsilon_max: max,
+    horizon_s: horizon,
+    slow_time_constant_s: slowTimeConstant,
+    samples,
+  } = spec.parameters;
+  if (
+    !Number.isFinite(min)
+    || !Number.isFinite(max)
+    || !Number.isFinite(horizon)
+    || !Number.isFinite(slowTimeConstant)
+    || !Number.isInteger(samples)
+    || min <= 0
+    || max <= min
+    || max > horizon
+    || horizon <= 0
+    || slowTimeConstant <= 0
+    || samples < 32
+  ) throw new Error(`${spec.id} requires a positive ordered epsilon range and horizon`);
+
+  const epsilonValues = Array.from({ length: samples }, (_, index) => (
+    10 ** (
+      Math.log10(min)
+      + (index / (samples - 1)) * (Math.log10(max) - Math.log10(min))
+    )
+  ));
+  const rms = (epsilon) => Math.sqrt(
+    (
+      epsilon
+      * slowTimeConstant
+      * (1 - Math.exp((-2 * horizon) / (epsilon * slowTimeConstant)))
+    ) / (2 * horizon),
+  );
+  const supPoints = epsilonValues.map((epsilon) => [
+    logScale(epsilon, min, max),
+    sy(1, 0, 1.05),
+  ]);
+  const rmsPoints = epsilonValues.map((epsilon) => [
+    logScale(epsilon, min, max),
+    sy(rms(epsilon), 0, 1.05),
+  ]);
+  const epsilonTicks = [1 / 128, 1 / 64, 1 / 32, 1 / 16, 1 / 8, 1 / 4, 1 / 2]
+    .filter((value) => value >= min && value <= max);
+  const fractionLabel = (value) => {
+    const inverse = Math.round(1 / value);
+    return Math.abs(value - 1 / inverse) < 1e-12 ? `1/${inverse}` : value.toFixed(3);
+  };
+  const legend = `<line x1="690" y1="48" x2="728" y2="48" stroke="${colors.coral}" stroke-width="5"/><text x="739" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">supremum norm</text>
+  <line x1="866" y1="48" x2="904" y2="48" stroke="${colors.cyan}" stroke-width="5"/><text x="915" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">RMS over T=1 s</text>`;
+  const smallestRms = rms(min);
+  const content = `${grid(
+    epsilonTicks,
+    [0, 0.2, 0.4, 0.6, 0.8, 1],
+    (value) => logScale(value, min, max),
+    (value) => sy(value, 0, 1.05),
+    fractionLabel,
+    (value) => value.toFixed(1),
+  )}<path d="${linePath(supPoints)}" fill="none" stroke="${colors.coral}" stroke-width="6" stroke-linecap="round"/>
+  <path d="${linePath(rmsPoints)}" fill="none" stroke="${colors.cyan}" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="${logScale(min, min, max)}" cy="${sy(1, 0, 1.05)}" r="7" fill="${colors.coral}"/>
+  <circle cx="${logScale(min, min, max)}" cy="${sy(smallestRms, 0, 1.05)}" r="7" fill="${colors.cyan}"/>
+  <rect x="640" y="382" width="365" height="127" rx="14" fill="${colors.background}" fill-opacity=".94" stroke="${colors.grid}" stroke-width="2"/>
+  <text x="660" y="410" fill="${colors.amber}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800">SAME ERROR FUNCTION · DIFFERENT QUESTION</text>
+  <text x="660" y="437" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="13">Peak magnitude stays exactly 1.</text>
+  <text x="660" y="461" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="13">Its duration shrinks with epsilon.</text>
+  <text x="660" y="488" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">A fixed-step sampler can miss both facts.</text>`;
+  return frame(spec, content, {
+    xLabel: "fast/slow ratio epsilon · logarithmic",
+    yLabel: "dimensionless discrepancy norm",
+    legend,
+    badge: "EXACT NORM COUNTEREXAMPLE",
+    footer: "Exact toy boundary layer · not a biological fit or experimental result",
+  });
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -2038,6 +2115,7 @@ const renderers = {
   "mission-profile-damage": missionProfileDamage,
   "interface-qualified-scale-symmetry": interfaceQualifiedScaleSymmetry,
   "rsd-t01-family-property-overlap": rsdT01FamilyPropertyOverlap,
+  "fast-boundary-layer-norms": fastBoundaryLayerNorms,
   "interface-qualified-retroactivity": interfaceQualifiedRetroactivity,
   "history-conditioned-position-contrast": historyConditionedPositionContrast,
 };

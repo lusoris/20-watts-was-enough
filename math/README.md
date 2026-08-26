@@ -79,6 +79,10 @@ notation.
   defines full-trajectory fold-change detection, state equivariance,
   observation-qualified recoverability, absolute counter-tasks, and the
   reference-maintenance boundary for Fixture F-026.
+- [`interventional-mechanism-equivalence.md`](interventional-mechanism-equivalence.md)
+  defines matched-step causal recipes, property-vector and equivalence-set
+  inference, intervention-qualified separation, calibrated abstention, and the
+  supremum-norm fast-boundary-layer contract for RSD-T02.
 - [`interface-qualified-retroactivity.md`](interface-qualified-retroactivity.md)
   defines full and reduced downstream-binding dynamics, paired connection
   sensitivity, service-qualified attenuation, causal load discrimination,

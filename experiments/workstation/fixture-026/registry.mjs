@@ -9,6 +9,11 @@ export const FIXTURE_026_TRACK_CLAIMS = Object.freeze(Object.fromEntries(
 
 export const FIXTURE_026_IMPLEMENTED_TRACKS = Object.freeze(["RSD-T01"]);
 
+export const FIXTURE_026_CONTRACT_FROZEN_TRACKS = Object.freeze([
+  "RSD-T01",
+  "RSD-T02",
+]);
+
 export function extractFixture026Registry(markdown) {
   if (typeof markdown !== "string") throw new TypeError("Fixture 026 registry source must be Markdown.");
   const rows = [];

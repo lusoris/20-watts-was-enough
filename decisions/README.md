@@ -24,3 +24,4 @@ than silently changing its outcome.
 | [0016](0016-treat-order-as-a-causal-factor.md) | Treat order as a causal factor only under fixed-task-and-eligibility parity | accepted |
 | [0017](0017-separate-generator-family-from-property-truth.md) | Separate overlapping generator families from separately evaluated property truth | accepted |
 | [0018](0018-freeze-prediction-before-comparator-expansion.md) | Freeze the prospective information cut and scientific grid before expanding RSD-T01 comparators | accepted |
+| [0019](0019-score-interventional-properties-not-generator-names.md) | Score interventional properties and equivalence classes instead of hidden generator names | accepted |

@@ -2,17 +2,27 @@
 
 <!-- markdownlint-disable MD013 -->
 
-- **Status:** complete CPU-only experiment contract with one bounded public-development smoke slice
-- **Direct claims:** [C-1540](../../research/claims.md#c-1540)–[C-1549](../../research/claims.md#c-1549)
-- **Source audit:** [relative sensing and scale symmetry across biological interfaces](../../research/audits/2026-08-25-relative-sensing-scale-symmetry.md)
-- **Mathematical contract:** [interface-qualified scale symmetry](../../math/interface-qualified-scale-symmetry.md)
+- **Status:** complete CPU-only experiment contract with one bounded
+  public-development RSD-T01 smoke slice and an isolated RSD-T02 machine
+  foundation
+- **Claims addressed:** [C-1540](../../research/claims.md#c-1540)–[C-1549](../../research/claims.md#c-1549),
+  [C-1560](../../research/claims.md#c-1560),
+  [C-1562](../../research/claims.md#c-1562),
+  [C-1563](../../research/claims.md#c-1563), and
+  [C-1564](../../research/claims.md#c-1564)
+- **Source audits:** [relative sensing and scale symmetry across biological interfaces](../../research/audits/2026-08-25-relative-sensing-scale-symmetry.md)
+  and [mechanism equivalence and intervention-qualified discrimination](../../research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md)
+- **Mathematical contracts:** [interface-qualified scale symmetry](../../math/interface-qualified-scale-symmetry.md)
+  and [intervention-qualified mechanism equivalence](../../math/interventional-mechanism-equivalence.md)
 - **Fixture ID:** `F-026`
 - **Protocol IDs:** `RSD-T01`--`RSD-T10`
 - **Execution state:** a deterministic `RSD-T01` / `C-1540` public-development
   runner, generator, schema, visible seed pack, tests and `smoke-ready` manifest
-  exist; RSD-T02--RSD-T10, private partitions, the registered primary analysis,
-  a complete resource comparison, statistical results and measured energy do
-  not
+  exist; RSD-T02 has isolated equations, a closed property/equivalence
+  registry, specified episode schedules and construction tests but no complete
+  generator/evaluator runner or actionable arm; RSD-T03--RSD-T10, private
+  partitions, the registered primary analysis, a complete resource comparison,
+  statistical results and measured energy do not exist
 - **Authority:** every future smoke or synthetic development run is
   `NO_RESULT` until a separately frozen confirmation contract and calibrated
   workstation boundary exist
@@ -26,7 +36,7 @@ external input, internal signal, downstream readout and action separate.
 | Protocol | Claim | Short question |
 | --- | --- | --- |
 | RSD-T01 | C-1540 | Is the full trajectory invariant, or only its endpoint or peak? |
-| RSD-T02 | C-1541 | Which causal mechanism survives non-step interventions? |
+| RSD-T02 | C-1541 | Which causal properties survive non-step interventions, and which pairs remain equivalent? |
 | RSD-T03 | C-1542 | Does relative active search transfer only under multiplicative fields? |
 | RSD-T04 | C-1543 | Does internal ratio coding preserve absolute-critical targets? |
 | RSD-T05 | C-1544 | Which causal statistic predicts a heterogeneous downstream count? |
@@ -389,36 +399,178 @@ paired seed-level analysis.
 
 ## RSD-T02 — Mechanism discrimination under matched step behavior
 
-**Claim:** [C-1541](../../research/claims.md#c-1541).
+**Claims:** primary [C-1541](../../research/claims.md#c-1541), with the
+adaptation, intervention, equivalence and floor boundaries in
+[C-1560](../../research/claims.md#c-1560),
+[C-1562](../../research/claims.md#c-1562),
+[C-1563](../../research/claims.md#c-1563), and
+[C-1564](../../research/claims.md#c-1564). C-1561 supplies evidence context
+for a future pulse-signature extension and is not routed as complete here.
 
-**Question.** Can the mechanism be identified after several generators are
-tuned to the same step response, and can an approximate singular-limit error
-floor be detected?
+**Question.** Which causal properties remain identifiable after several
+synthetic systems are forced to produce the exact same canonical step trace,
+and can an estimator recover a separately registered singular-limit
+supremum-error floor without deleting the fast boundary layer?
 
-**DGP.** Construct matched observable step responses from an I1-FFL, nonlinear
-feedback, receptor/reference memory, static normalization and explicit log
-difference. Include a family whose fast/slow ratio tends toward zero while its
-registered maximum FCD error remains bounded away from zero.
+**Two strata.** `T02-MECH` handles intervention-qualified property inference.
+`T02-FLOOR` handles the source-shaped fast/slow norm question. Their outputs and
+statistics remain separate.
 
-**Interventions.** Pulses of varied width, linear and exponential ramps,
-reference-state reset, selective internal-node freeze, input hold, and
-post-adaptation re-stimulation.
+**Matched-step DGP.** The five equation-defined recipes are a reduced I1-FFL,
+nonlinear reported-output feedback, two-channel local reference memory, static
+affine normalization plus an ordinary high-pass state, and explicit log
+difference plus the same readout order. With $F_*=2$,
+$b\in\{0.5,2,8\}\,\mathrm U$ and
+$\tau_*\in\{0.5,1,2\}\,\mathrm s$, every recipe is initialized at normalized
+background and produces
 
-**Arms.** `B-STATE-SPACE`, `B-RECURRENT`, mechanism-specific estimators,
-`C-DUAL`, plus an evaluator-only graph oracle.
+$$
+y_*(t)=e^{-t/\tau_*}
+$$
 
-**Primary endpoint.** Mechanism-family identification or calibrated abstention
-on observationally equivalent worlds. The error-floor endpoint is the paired
-difference between estimated and true maximum trajectory discrepancy across
-the fast/slow sweep.
+for the canonical step. The exact equations and derivations are frozen in the
+[T02 mathematical contract](../../math/interventional-mechanism-equivalence.md#exact-matched-step-construction).
+Initialization residual must be at most $10^{-12}$ and every pairwise
+canonical-step supremum difference at most $10^{-10}$. These are synthetic
+construction tolerances, not biological margins.
 
-**Kill rule.** Kill topology-based attribution if step fit alone is used, if
-the causal interventions do not separate classes, or if the proposed mechanism
-cannot beat a generic state-space identifier with equal intervention access.
+**Primary truth.** `generator_recipe` is evaluator-only provenance. The
+scoreable vector contains drive transform, reported-output feedback,
+channel-local state and causal-memory status. Nonlinear update form remains
+equation provenance because it co-varies with output feedback in this five-world
+bank and cannot be credited as a separately identified coordinate. The reduced
+I1-FFL and affine high-pass recipes intentionally share the same operational
+property vector and full-panel equivalence class. The evaluator retains a
+pairwise state of `separated`, `equivalent`, or `unresolved`; it never copies a
+recipe name into property truth.
 
-**Required artifacts.** Generator equations, matched-step certificate,
-intervention transcript, hidden-class firewall audit, response trajectories,
-posterior/calibration record and error-floor curve.
+**Intervention panel.** The fixed full panel has exactly 26 episodes:
+
+1. three canonical steps;
+2. six pulse-width × period cells with
+   $w\in\{1/8,1/2,2\}\,\mathrm s$,
+   $\Pi\in\{1/2,2,8\}\,\mathrm s$ and $w<\Pi$;
+3. eight linear/exponential, up/down, $0.5/4\,\mathrm s$ ramps;
+4. two opaque-state resets and two opaque-state freezes;
+5. one reported-output clamp;
+6. two interrupted-ramp input holds; and
+7. same-channel and cross-channel restimulation.
+
+All episodes last $24,\mathrm s$. Apart from the three background-specific
+steps, they use $b=2\,\mathrm U$ and $\tau_*=1\,\mathrm s$. Pulses switch
+$v$ from one to two from $j\Pi$ through $j\Pi+w$. Up-ramps move from one to
+two and down-ramps from one to $0.5$, linearly in fold or log fold. Reset occurs
+at $0.75\,\mathrm s$; freeze and output-clamp windows are
+$[0.5,1)\,\mathrm s$; interrupted ramps pause after one second of active
+progress; and restimulation uses channel A on $[0,1)\,\mathrm s$, a one-second
+gap, then A or B on $[2,3)\,\mathrm s$. The closed machine descriptors retain
+the numeric commands rather than only episode names.
+
+Every recipe exposes two opaque state handles; inert padding and a hidden
+seed-derived permutation prevent state count or name from leaking provenance.
+Refractory stability and period skipping are one-sided signatures: presence
+may separate a certified pair, while absence retains uncertainty. The current
+five-world construction does not plant the Rahi-style signature—the registered
+feedback nonlinearity vanishes at the square-pulse levels—so C-1561 is evidence
+input for a future pulse-signature world, not a result or completed construction
+test in this tranche.
+
+**Observation regimes.** `O0-MATCHED-STEP` exposes three episodes and at most
+4,611 rows and requires abstention for every varying structural coordinate.
+`O1-FULL-PANEL` exposes 26 episodes and at most 39,962 rows and is the future
+fixed-panel primary regime. `O2-SELECT6` begins with `O0`, permits six further
+queries with no more than two privileged internal interventions, and is
+secondary. Active selection receives no primary authority until its own
+prospective response-freeze contract exists.
+
+**Pairwise separation.** For recipes $m,n$ and intervention $i$, use
+
+$$
+D_{\infty}^{m,n,i}=\max_k|y_{m,i,k}-y_{n,i,k}|.
+$$
+
+For estimate $\widehat D$ and refinement-error bound $\eta$, a
+public-development numerical separation requires
+$\widehat D-\eta\ge10^{-3}$ and $\eta\le10^{-8}$. Bounded numerical
+equivalence requires $\widehat D+\eta\le10^{-10}$; analytic equivalence must
+not conflict with that check. All other pairs are unresolved. The RMS
+difference is diagnostic only.
+
+The v1 construction certificates use $b=2\,\mathrm U$,
+$\tau_*=1\,\mathrm s$, a $24\,\mathrm s$ horizon and binary64 RK4 with
+$1/1024\,\mathrm s$ versus $1/2048\,\mathrm s$ refinement. Half-open event
+windows use the left command at the final RK4 stage. Conservative lower bounds
+are $0.23$ for clamp and cross-channel separations and $0.07$ for the
+affine-versus-log ramp; observed refinement differences must not exceed
+$10^{-12}$. The I1-FFL/affine-high-pass equivalence is analytic under the
+registered positive affine interface.
+
+**Actionable arms.** The closed registry is `A-RAW`, `B-STATIC-DIV`,
+`B-STREAM`, `B-LOG-RATIO`, `B-DIFFERENCE`, `B-STATE-SPACE`, `B-RECURRENT`,
+`C-MECHANISM-BANK` and `C-DUAL`. `O-GRAPH` is evaluator-only and excluded from
+parity, tuning, promotion and resource ranking. None of the actionable arms is
+implemented or currently eligible.
+
+**Primary mechanism endpoint.** Per-property calibration in nats and
+dimensionless decision loss are reported separately. A correct decision on an
+identifiable singleton has loss zero; abstention on that singleton costs
+$0.25$; abstention on a certified non-singleton set has loss zero; a wrong
+decision or forced declaration inside a non-singleton set costs one. Report
+coverage, selective risk and reliability, never a hidden composite.
+
+**Floor DGP and endpoint.** Cross a source-shaped singular input-degradation
+model and exact-zero/regular-perturbation controls over
+$\epsilon\in\{10^{-1},\ldots,10^{-7}\}$ and
+$p\in\{0.5,2,4,8,20\}$. The 105 cells use both an
+$\epsilon$-scaled fast grid and an eight-second slow grid. The primary endpoint
+is
+
+$$
+D_{\infty,\epsilon,p}
+=
+\sup_{0\le t\le8\,\mathrm s}
+|y_{\epsilon,p}(t)-y_{\epsilon,1}(t)|.
+$$
+
+Integrated RMS remains diagnostic. A finite sweep can validate the registered
+analytic construction and bound; it cannot prove an asymptotic theorem.
+
+**Information firewall.** Before response freeze, actionable arms receive only
+causal inputs, reported outputs, masks, opaque commands, timestamps and units.
+Recipe, equation, semantic state, parameter, property, future sample,
+equivalence certificate and continuous evaluator truth remain hidden. Public
+code creates no confirmation secrecy.
+
+**Resource vector.** Retain episodes, sample rows, serialized bytes, input
+commands, resets, freezes, output clamps, channel switches, state writes,
+scalar operations, transcendental evaluations, retained-state bytes,
+parameter bytes, tuning trials, wall seconds and later measured joules as
+separate dimensions. Privileged access is never free and no scalar cost is
+registered.
+
+**Hostiles.** Additive offset, near-zero input, clipping, hidden reset,
+future-aware normalization, channel-state contamination and boundary-layer
+censoring are valid scientific cases with the existing six-axis support vector.
+Parser, checksum, unit and order failures remain malformed sentinels outside
+the scientific denominator.
+
+**Current authority.** The isolated machine registry is
+`contract-foundation-only`, `public-development`,
+`registered-projection-no-secret-custody`, comparison false and `NO_RESULT`.
+It is not consumed by the v2 T01 runner and adds no execution claim.
+
+**Kill rule.** Kill attribution if step fit or hidden provenance supplies the
+answer, a purported separation lacks a pairwise certificate, an arm is rewarded
+for guessing within an equivalence set, privileged access is unequal or
+unpriced, RMS or fixed slow sampling replaces the floor endpoint, or the
+mechanism bank cannot beat generic state-space/recurrent nulls at equal access.
+
+**Required future artifacts.** T02-specific runner, causal packet schema,
+projection hash and response commit, full episode generator, actionable
+algorithms, complete resource ledger, prospective confirmation mapping and
+custody, paired statistics, promotion evidence and calibrated workstation
+measurement. The current equations, registry and construction tests are not
+those artifacts.
 
 ## RSD-T03 — Multiplicatively rescaled active chemical search
 

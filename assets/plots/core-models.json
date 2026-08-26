@@ -444,6 +444,26 @@
     "status": "Conceptual schema for the RSD-T01 target correction. System symmetry is classified from the maximum discrepancy over the complete registered history × scale grid; endpoint and peak predicates remain per-cell matrices with a frozen all/partial/none reducer. Support membership remains a six-axis vector covering input domain, transformation family, instrument range, initialization, causal observation, and evaluation window. Generator-family identity does not supply the separately evaluated cross-cutting targets; logical dependencies between targets remain. The overlap examples are possibilities, not measurements, frequencies, model outputs, or a fixed family-to-property lookup."
   },
   {
+    "id": "fast-boundary-layer-norms",
+    "title": "A fixed peak can disappear in an RMS score",
+    "equation": "e_epsilon(t)=exp(-t/(epsilon tau_s)); ||e||_infinity=1; RMS=sqrt(epsilon tau_s(1-exp(-2T/(epsilon tau_s)))/(2T)); tau_s=T=1 s",
+    "source": "math/interventional-mechanism-equivalence.md#the-fast-boundary-layer-needs-the-right-norm",
+    "layout": {
+      "kind": "fast-boundary-layer-norms",
+      "width": 1100,
+      "height": 660,
+      "theme": "ember"
+    },
+    "parameters": {
+      "epsilon_min": 0.0078125,
+      "epsilon_max": 0.5,
+      "horizon_s": 1,
+      "slow_time_constant_s": 1,
+      "samples": 321
+    },
+    "status": "Exact norms of the displayed dimensionless boundary-layer function on a one-second window. It demonstrates why a shrinking-duration, order-one peak can retain a supremum-norm floor while its integrated RMS vanishes. It is a metric counterexample, not the biological model or a fit to the Skataric--Nikolaev--Sontag systems."
+  },
+  {
     "id": "interface-qualified-retroactivity",
     "title": "A connected client can reshape the producer transient",
     "equation": "dX/dt = k(t)-delta X+k_off C-k_on X(p_tot-C);  R(X)=[1+(1+X/K_d)^2/(p_tot/K_d)]^-1",

@@ -385,12 +385,13 @@
         "research/audits/2026-08-25-developmental-regeneration-depth.md",
         "research/audits/2026-08-25-plant-plasticity-memory-signalling.md",
         "research/audits/2026-08-25-relative-sensing-scale-symmetry.md",
+        "research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md",
         "research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md"
       ],
       "claims": [
         "C-1508", "C-1509", "C-1510",
         "C-1518", "C-1520", "C-1521", "C-1524", "C-1525",
-        "C-1541", "C-1542", "C-1543", "C-1544", "C-1545", "C-1546", "C-1547", "C-1548",
+        "C-1541", "C-1542", "C-1543", "C-1544", "C-1545", "C-1546", "C-1547", "C-1548", "C-1560", "C-1561",
         "C-1550", "C-1552", "C-1554", "C-1555", "C-1556", "C-1557", "C-1559"
       ],
       "rationale": "The earlier audits cover positional, collective, hydraulic and plant-stress signals; C-1541--C-1548 compare relative, absolute and difference statistics; C-1550, C-1552, C-1554--C-1557 and C-1559 directly test downstream loading, covalent signalling cycles, response restoration, observation and useful back-action.",
@@ -404,11 +405,12 @@
       "audits": [
         "research/audits/2026-08-25-developmental-regeneration-depth.md",
         "research/audits/2026-08-25-relative-sensing-scale-symmetry.md",
+        "research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md",
         "research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md"
       ],
       "claims": [
         "C-1508", "C-1509", "C-1514", "C-1515",
-        "C-1540", "C-1541", "C-1542", "C-1543", "C-1544", "C-1545", "C-1546", "C-1547", "C-1548", "C-1549",
+        "C-1540", "C-1541", "C-1542", "C-1543", "C-1544", "C-1545", "C-1546", "C-1547", "C-1548", "C-1549", "C-1560", "C-1561", "C-1562", "C-1563", "C-1564",
         "C-1550", "C-1551", "C-1552", "C-1553", "C-1554", "C-1555", "C-1556", "C-1557", "C-1558", "C-1559"
       ],
       "rationale": "The earlier claims require system-level positional and symmetry inference; C-1550--C-1559 directly test how interconnection changes component dynamics, which causal load family applies, and when bounded insulation preserves both producer and consumer service.",
@@ -420,10 +422,11 @@
       "code": "310202",
       "state": "dedicated",
       "audits": [
-        "research/audits/2026-08-25-relative-sensing-scale-symmetry.md"
+        "research/audits/2026-08-25-relative-sensing-scale-symmetry.md",
+        "research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md"
       ],
-      "claims": ["C-1540", "C-1541", "C-1549"],
-      "rationale": "These claims directly analyze whole-trajectory input symmetry, alternative network motifs, equivariance and observation-dependent structural identifiability.",
+      "claims": ["C-1540", "C-1541", "C-1549", "C-1560", "C-1562", "C-1563"],
+      "rationale": "These claims directly analyze whole-trajectory input symmetry, alternative network motifs, adaptation nonuniqueness, pair-specific interventions, dynamical equivalence, equivariance and observation-dependent structural identifiability.",
       "scopeGap": "Network inference, topology statistics, multi-omics integration, stochastic network reconstruction and broad dynamical-network analysis remain outside the fixture.",
       "nextQuestion": "Which interventions distinguish network mechanisms that are observationally equivalent under step inputs and one output map?"
     },
@@ -722,10 +725,11 @@
       "code": "490101",
       "state": "dedicated",
       "audits": [
-        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+        "research/audits/2026-08-25-applied-multiscale-reduction.md",
+        "research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md"
       ],
-      "claims": ["C-1527"],
-      "rationale": "C-1527 directly tests slow--fast asymptotic reduction under normal-hyperbolicity and fold boundaries.",
+      "claims": ["C-1527", "C-1564"],
+      "rationale": "C-1527 tests slow--fast reduction under normal-hyperbolicity and fold boundaries; C-1564 preserves a theorem-qualified singular initial-layer supremum floor and the required fast-time sampling.",
       "scopeGap": "Other asymptotic limits, approximation theory, singular perturbations, and rigorous rates are not surveyed.",
       "nextQuestion": "How sharply do spectral margin and time-scale separation predict reduction error near loss of normal hyperbolicity?"
     },
@@ -734,10 +738,11 @@
       "code": "490105",
       "state": "dedicated",
       "audits": [
-        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+        "research/audits/2026-08-25-applied-multiscale-reduction.md",
+        "research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md"
       ],
-      "claims": ["C-1526", "C-1527", "C-1529"],
-      "rationale": "Projected memory, slow-manifold reduction, and lift--evolve--restrict are directly formulated as applied dynamical-system problems.",
+      "claims": ["C-1526", "C-1527", "C-1529", "C-1560", "C-1562", "C-1563", "C-1564"],
+      "rationale": "Projected memory, slow-manifold reduction, lift--evolve--restrict, adaptation nonuniqueness, intervention-qualified model discrimination, dynamical equivalence and singular initial layers are formulated as applied dynamical-system problems.",
       "scopeGap": "Control, bifurcation breadth, stochastic dynamics, chaos, and application-domain diversity remain incomplete.",
       "nextQuestion": "Which reduced dynamics remain stable and predictive under memory, folds, lifting bias, and distribution shift?"
     },
@@ -770,10 +775,11 @@
       "code": "490409",
       "state": "adjacent",
       "audits": [
-        "research/audits/2026-08-25-applied-multiscale-reduction.md"
+        "research/audits/2026-08-25-applied-multiscale-reduction.md",
+        "research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md"
       ],
-      "claims": ["C-1527"],
-      "rationale": "The finite-dimensional geometric singular-perturbation fixture uses ordinary differential equations and dynamical systems but does not survey the field.",
+      "claims": ["C-1527", "C-1564"],
+      "rationale": "The finite-dimensional geometric singular-perturbation fixture and the fast-initial-layer floor both use ordinary differential equations and dynamical systems but do not survey the field.",
       "scopeGap": "Difference equations, broad ODE theory, global dynamics, bifurcations, and applications beyond the fixture remain unaddressed.",
       "nextQuestion": "How does the reduction boundary change for higher-dimensional, non-autonomous, or weakly stochastic ODE systems?"
     },
