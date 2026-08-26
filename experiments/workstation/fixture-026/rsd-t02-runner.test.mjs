@@ -29,6 +29,7 @@ const temporaryRoot = path.join(process.cwd(), "tmp");
 const RAW_FILE = "rsd-t02-raw-events.jsonl";
 const CHECKPOINT_FILE = "rsd-t02-checkpoint.json";
 const RUN_FILE = "rsd-t02-run.json";
+const ARM_COMMITMENT_FILE = "rsd-t02-arm-commitment.json";
 const SUMMARY_FILE = path.join("analysis", "rsd-t02-summary.json");
 
 async function temporaryOutput(prefix) {
@@ -58,6 +59,14 @@ test("preparation freezes the bounded 175-record public-development grid", async
   assert.equal(prepared.o1_records_per_seed, 130);
   assert.equal(prepared.o2_executed, false);
   assert.equal(prepared.floor_executed, false);
+  assert.equal(prepared.arm_packet_records, 5);
+  assert.equal(prepared.arm_responses, 15);
+  assert.deepEqual(prepared.actionable_arms_implemented, [
+    "B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK",
+  ]);
+  assert.deepEqual(prepared.actionable_arms_not_implemented, [
+    "A-RAW", "B-STATIC-DIV", "B-STREAM", "B-LOG-RATIO", "B-DIFFERENCE", "C-DUAL",
+  ]);
   assert.equal(prepared.result_label, "NO_RESULT");
   assert.equal(prepared.claim_eligible, false);
   const development = await prepareFixture026RsdT02("development");
@@ -66,6 +75,65 @@ test("preparation freezes the bounded 175-record public-development grid", async
   assert.equal(development.construction_seed_count, 2);
   assert.equal(development.configured_work_units, 350);
   assert.equal(development.full_public_development_pack_executed, false);
+  assert.equal(development.arm_packet_records, 10);
+  assert.equal(development.arm_responses, 30);
+});
+
+function rehashArmCommitment(commitment) {
+  const body = { ...commitment };
+  delete body.commitment_sha256;
+  commitment.commitment_sha256 = sha256Hex(canonicalize(body));
+  return commitment;
+}
+
+test("whole-system arm responses are committed before any evaluator-bearing raw record", async () => {
+  const fixture = await temporaryOutput("fixture-026-rsd-t02-arm-precommit-");
+  try {
+    const partial = await executeFixture026RsdT02({
+      profile: "smoke",
+      output: fixture.output,
+      maxWorkUnits: 1,
+    });
+    assert.equal(partial.complete, false);
+    const armPath = path.join(fixture.output, ARM_COMMITMENT_FILE);
+    const armText = await readFile(armPath, "utf8");
+    const commitment = JSON.parse(armText);
+    assert.equal(commitment.packet_records.length, 5);
+    assert.ok(commitment.packet_records.every((record) => (
+      record.active_arm_responses.length === 3
+      && record.inactive_arm_responses.length === 6
+    )));
+    assert.equal((await readFile(path.join(fixture.output, RAW_FILE), "utf8")).trimEnd().split("\n").length, 1);
+
+    await rm(armPath);
+    await assert.rejects(
+      () => executeFixture026RsdT02({
+        profile: "smoke", output: fixture.output, resume: true, maxWorkUnits: 1,
+      }),
+      /refuses to create an arm commitment after evaluator-bearing run state exists/u,
+    );
+    await writeFile(armPath, armText);
+
+    const forged = structuredClone(commitment);
+    const forgedConfigSha = "f".repeat(64);
+    forged.policy_config_sha256 = forgedConfigSha;
+    for (const record of forged.packet_records) {
+      for (const response of record.active_arm_responses) {
+        response.policy_config_sha256 = forgedConfigSha;
+        response.resource_ledger.policy_construction.policy_config_sha256 = forgedConfigSha;
+      }
+    }
+    rehashArmCommitment(forged);
+    await writeFile(armPath, `${JSON.stringify(forged, null, 2)}\n`);
+    await assert.rejects(
+      () => executeFixture026RsdT02({
+        profile: "smoke", output: fixture.output, resume: true, maxWorkUnits: 1,
+      }),
+      /stored arm commitment differs from the frozen policies and packet grid/u,
+    );
+  } finally {
+    await cleanup(fixture);
+  }
 });
 
 test("output containment refuses symbolic-link and junction ancestors", async (context) => {
@@ -221,6 +289,9 @@ test("a complete smoke ledger, pair matrices, and analysis remain NO_RESULT", as
     assert.deepEqual(execution.run.execution_claims, []);
     assert.deepEqual(execution.run.excluded_claims, ["C-1561", "C-1564"]);
     assert.equal(execution.run.floor_runtime_state, "foundation-only-not-executed");
+    assert.equal(execution.run.arm_packet_records, 5);
+    assert.equal(execution.run.arm_commitment_sha256.length, 64);
+    assert.equal(execution.run.arm_commitment_file_sha256.length, 64);
 
     const summary = await analyzeFixture026RsdT02(fixture.output);
     assert.equal(summary.observed_records, 175);
@@ -229,6 +300,12 @@ test("a complete smoke ledger, pair matrices, and analysis remain NO_RESULT", as
     assert.equal(summary.system_aggregation.length, 10);
     assert.equal(summary.matched_step_pair_matrix.length, 90);
     assert.equal(summary.pair_matrix.length, 10);
+    assert.equal(summary.arm_bank.packet_records, 5);
+    assert.deepEqual(summary.arm_bank.active_arm_ids, [
+      "B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK",
+    ]);
+    assert.equal(summary.arm_bank.exact_information_parity, true);
+    assert.equal(summary.arm_bank.identical_common_caps_without_padding, true);
     assert.ok(Object.values(summary.checks).every(Boolean));
     assert.equal(summary.decision, "contract-validation-pass");
     assert.equal(summary.result_label, "NO_RESULT");
@@ -307,7 +384,7 @@ test("partial resume equals uninterrupted bytes and complete resume is byte-idem
     assert.equal(finished.complete, true);
     await executeFixture026RsdT02({ profile: "smoke", output: uninterrupted.output });
 
-    for (const name of [RAW_FILE, CHECKPOINT_FILE]) {
+    for (const name of [RAW_FILE, CHECKPOINT_FILE, ARM_COMMITMENT_FILE]) {
       assert.equal(
         await readFile(path.join(resumed.output, name), "utf8"),
         await readFile(path.join(uninterrupted.output, name), "utf8"),
@@ -318,7 +395,7 @@ test("partial resume equals uninterrupted bytes and complete resume is byte-idem
       await analyzeFixture026RsdT02(uninterrupted.output),
     );
 
-    const before = await Promise.all([RAW_FILE, CHECKPOINT_FILE, RUN_FILE, SUMMARY_FILE].map(
+    const before = await Promise.all([RAW_FILE, CHECKPOINT_FILE, RUN_FILE, ARM_COMMITMENT_FILE, SUMMARY_FILE].map(
       (name) => readFile(path.join(resumed.output, name), "utf8"),
     ));
     const again = await executeFixture026RsdT02({
@@ -327,7 +404,7 @@ test("partial resume equals uninterrupted bytes and complete resume is byte-idem
       resume: true,
     });
     assert.equal(again.complete, true);
-    const after = await Promise.all([RAW_FILE, CHECKPOINT_FILE, RUN_FILE, SUMMARY_FILE].map(
+    const after = await Promise.all([RAW_FILE, CHECKPOINT_FILE, RUN_FILE, ARM_COMMITMENT_FILE, SUMMARY_FILE].map(
       (name) => readFile(path.join(resumed.output, name), "utf8"),
     ));
     assert.deepEqual(after, before);
@@ -475,7 +552,7 @@ test("resume rejects CRLF, torn, blank, and mixed-identity ledgers", async () =>
     },
     {
       apply: async () => {},
-      expected: /identity mismatch|run_id|profile|authority contract/i,
+      expected: /stored arm commitment|identity mismatch|run_id|profile|authority contract/i,
       profile: "development",
     },
   ];

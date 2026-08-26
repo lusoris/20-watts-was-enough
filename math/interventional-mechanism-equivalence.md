@@ -355,7 +355,107 @@ The observation regimes are:
    it is a secondary active-design regime.
 
 The current code freezes these regimes and analytic construction certificates.
-It does not implement an actionable estimator or a claim-eligible run.
+An additive whole-system Stage 2 implements three fixed public-development
+policy-conformance references. It does not implement a trained estimator,
+calibrated posterior, mature null, claim-eligible run or comparison.
+
+## Fixed whole-system policy-conformance references
+
+Let the ordered packet be $P=(P_1,\ldots,P_{35})$ with 53,795 sample rows.
+All three active policies receive the same canonical bytes and common cap. Their
+responses are committed before `O-GRAPH` opens any member of $P$. The bands
+below were chosen after inspecting the five enumerated public construction
+worlds. They are therefore **construction-tuned protocol constants**, not
+fitted parameters or confirmation-calibrated decision limits.
+
+The policy code runs in the same Node process as packet construction and uses
+the checked-in public candidate/property prior. The enforced boundary is the
+closed policy projection plus commitment-before-evaluator order; it is not a
+separate worker, secret custody boundary or adversarial sandbox. Commitment
+creation is exclusive and file-synchronized before the raw evaluator ledger
+opens; source hash and byte count share one read, and input JSON is parsed from
+that same fingerprinted buffer. Static ESM modules are loaded before their file
+fingerprints, so concurrent repository mutation during module load remains
+outside this construction authority. A content-addressed worker bundle is
+required before treating the source boundary as adversarial.
+
+For `B-STATE-SPACE`, define the fold $r_k=u_k/u_0$ and two fixed drives
+
+$$
+\phi_{\mathrm{aff}}(r)=r-1,
+\qquad
+\phi_{\log}(r)=\log_2 r.
+$$
+
+For each drive, the reference recursion and one-step reported-output residual
+are
+
+$$
+x_{k+1}=x_k+\Delta t\,[\phi(r_k)-x_k],
+\qquad
+e_k=y_k-[\phi(r_k)-x_k].
+$$
+
+With $S_j=n^{-1}\sum_k e_{j,k}^2$, the margin
+$m=S_{\log}-S_{\mathrm{aff}}$ declares affine for $m\ge10^{-5}$, log for
+$m\le-10^{-5}$, and otherwise abstains. Its memory signature is
+
+$$
+h=\max\{\lVert y_{\mathrm{RESET-H0}}-y_{\mathrm{RESET-H1}}\rVert_\infty,
+\lVert y_{\mathrm{FREEZE-H0}}-y_{\mathrm{FREEZE-H1}}\rVert_\infty\}.
+$$
+
+It declares memory present for $h\ge0.1$, absent for $h\le10^{-8}$, and
+otherwise abstains. Feedback-edge and channel-local coordinates are always
+outside this reference's bounded scope.
+
+For `B-RECURRENT`, the causal state update is
+
+$$
+x_{k+1}=\alpha x_k+(1-\alpha)y_k,
+\qquad
+\alpha=\exp[-\Delta t/(0.25\,\mathrm s)].
+$$
+
+The absolute innovation at reported-output clamp release declares a feedback
+edge for values at least $0.45$, no edge for values at most $0.35$, and
+otherwise abstains. A separate state per observed channel gives the
+cross-channel restimulation innovation; values at least $0.9$ declare local
+state, values at most $0.85$ declare shared state, and intermediate values
+abstain. Drive and causal-memory coordinates remain outside this reference's
+scope.
+
+`C-MECHANISM-BANK` uses four direct, frozen source-shaped signatures: linear
+up-ramp output at $0.25\,\mathrm s$ (log at least $0.48$, affine at most
+$0.46$), absolute clamp-release output (feedback at least $0.5$, absent at
+most $0.45$), maximum absolute cross-restimulation output on $[2,3],\mathrm s$
+(local at least $0.9$, shared at most $0.85$), and $h$ above (memory at least
+$0.1$, absent at most $10^{-8}$). Every indifference band forces abstention.
+The five candidate equation identities and their bytes are charged separately
+from the four distinct joint property-prior vectors and their bytes.
+
+The semantic output is the joint set
+
+$$
+\mathcal V(P)=\{v(M):M\in\mathcal M,\ v_q(M)=\widehat v_q
+\text{ for every declared coordinate }q\},
+$$
+
+with duplicate vectors removed but their compatible hypothesis IDs retained.
+$\mathcal V(P)$ must be nonempty, and every declared marginal must agree with
+every member of $\mathcal V(P)$. This prevents independently plausible
+marginals from forming an impossible property combination.
+
+Resource accounting is three-part: (1) shared acquisition of 35 episodes,
+53,795 rows, 197 input commands, two resets, two freezes, one output clamp, one
+channel switch and two state writes; (2) policy construction/prior artifacts,
+threshold provenance, equations, vectors, labels and tuning; and (3) actual
+per-inference work. Every policy is charged 12 declared traversal operations
+per row, or 645,540 before its specific operations. Common caps are $10^6$
+scalar operations, 2,000 transcendental evaluations, 128 retained-state bytes,
+4,096 influential-parameter bytes, 16 MiB scratch, 256 KiB combined policy and
+configuration artifacts, and zero fallbacks. Actual counts are not padded to
+the caps. Wall time and joules remain null.
 
 The repeated-pulse grid is retained because the Rahi evidence makes
 refractory stabilization and period skipping useful one-sided signatures in a
@@ -644,9 +744,12 @@ The machine registry states:
 The registry is the foundation authority, not the execution result. A separate
 deterministic bounded public-development runtime now consumes the T02-MECH
 registry to generate all O0/O1 construction episodes, enforce the policy
-firewall and response commitment, reconstruct evaluator truth, retain a typed
-cost vector, and validate append-only resume. Every event and analysis remains
-`NO_RESULT`; actionable arms, comparisons, claim eligibility, O2, T02-FLOOR
+firewall and response commitment, reconstruct evaluator truth, retain typed
+acquisition/construction/inference ledgers, and validate append-only resume.
+Its additive Stage 2 commits fixed `B-STATE-SPACE`, `B-RECURRENT`, and
+`C-MECHANISM-BANK` whole-system responses before evaluator access; the other six
+roles visibly abstain. Every event and analysis remains `NO_RESULT`; trained or
+calibrated estimators, mature nulls, comparisons, claim eligibility, O2, T02-FLOOR
 execution, confirmation, workstation measurement and energy conclusions are
 absent.
 

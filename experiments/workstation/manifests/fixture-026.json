@@ -56,6 +56,8 @@
       "experiments/workstation/fixture-026/rsd-t02-generator.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-evaluator.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-event.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-arm-bank.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-pulse.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-runner.test.mjs"
     ],
     "full_tests": [
@@ -68,11 +70,18 @@
       "experiments/workstation/fixture-026/rsd-t02-generator.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-evaluator.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-event.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-arm-bank.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-pulse.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-runner.test.mjs"
     ],
     "t02_entrypoint": "experiments/workstation/fixture-026/rsd-t02-runner.mjs",
     "t02_schema": "experiments/workstation/fixture-026/rsd-t02-output.schema.json",
     "t02_config": "experiments/workstation/fixture-026/configs/rsd-t02-bounded-conformance.json",
+    "t02_arm_bank": "experiments/workstation/fixture-026/rsd-t02-arm-bank.mjs",
+    "t02_arm_schema": "experiments/workstation/fixture-026/rsd-t02-arm-bank.schema.json",
+    "t02_arm_config": "experiments/workstation/fixture-026/configs/rsd-t02-arm-bank.json",
+    "t02_pulse_constructor": "experiments/workstation/fixture-026/rsd-t02-pulse.mjs",
+    "t02_pulse_test": "experiments/workstation/fixture-026/rsd-t02-pulse.test.mjs",
     "implemented_tracks": ["RSD-T01"],
     "contract_frozen_tracks": ["RSD-T01", "RSD-T02"],
     "construction_conformance_runtime_tracks": ["RSD-T02"],
@@ -118,7 +127,8 @@
         "A prospective observation cut and the registered simultaneous property-performance/trajectory-conformance primary endpoint, paired powered statistics, uncertainty intervals, and multiplicity control are absent.",
         "No confirmation or transfer seed, commitment, private custody record, release, or promotion evidence exists.",
         "No calibrated workstation timing, memory, or energy measurement exists, and energy conclusions are forbidden.",
-        "T02-MECH now has a deterministic bounded public-development construction/conformance generator, evaluator-only graph oracle, closed event/output schema, typed cost vector, append-only ledger, resume, pair matrices, and recomputed analysis. Its nine actionable arms remain unimplemented and forced to abstain; the profile executes only a hashed one/two-seed ordered prefix, not the full 64-seed pack; O2, T02-FLOOR execution and asymptotic authority, comparison and claim authority, confirmation custody, workstation measurement, energy evidence, and any result remain absent. Every T02 artifact is NO_RESULT.",
+        "T02-MECH now has a deterministic bounded public-development construction/conformance generator, evaluator-only graph oracle, closed event/output and whole-system arm-commitment schemas, typed cost vectors, append-only ledger, resume, pair matrices, recomputed analysis, and fixed pre-evaluator B-STATE-SPACE, B-RECURRENT, and C-MECHANISM-BANK policy-conformance references under exact information and cap parity. These same-process public-prior construction-tuned references are not isolated workers, trained estimators, calibrated posteriors, mature nulls, or comparison eligible; the other six actionable roles remain unimplemented and forced to abstain. The profile executes only a hashed one/two-seed ordered prefix, not the full 64-seed pack; O2, T02-FLOOR execution and asymptotic authority, comparison and claim authority, confirmation custody, workstation measurement, energy evidence, and any result remain absent. Every T02 artifact is NO_RESULT.",
+        "The isolated C-1561 pulse module constructs six source-shaped and hostile worlds, adaptive exact-edge trajectories, support gates, event words, bounded refractory cells and deterministic OU diagnostics, but it is not runner-integrated and has not executed the full six-duration, 64-seed robustness or mixed-window panels. It exposes evaluator construction truth only: no actionable estimator, comparison, confirmation, workstation or energy authority exists, and every record is NO_RESULT.",
         "RSD-T03 through RSD-T10 have no machine contract or implementation.",
         "Every generated event and command result is explicitly labelled NO_RESULT."
       ]

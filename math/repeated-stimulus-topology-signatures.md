@@ -10,8 +10,9 @@
 - **Evidence audit:** [repeated-stimulus pulse signatures](../research/audits/2026-08-26-rsd-t02-pulse-signatures.md)
 - **Parent contract:** [intervention-qualified mechanism equivalence](interventional-mechanism-equivalence.md)
 - **Experiment contract:** [Fixture F-026, RSD-T02-PULSE](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pulse--one-sided-repeated-stimulus-signatures)
-- **Authority:** public-development written protocol; `NO_RESULT`, no runner,
-  confirmation custody, workstation measurement or energy result
+- **Authority:** checked-in public-development construction module; `NO_RESULT`,
+  no full panel, actionable estimator, runner, confirmation custody,
+  workstation measurement or energy result
 
 ## Inference boundary
 
@@ -317,6 +318,46 @@ If no $q\le5$ converges before the time cap, the state is `unresolved`, not
 $N_{\mathrm{resp}}/J$, latency distribution and recurrence residuals are
 secondary outputs.
 
+## Checked-in construction snapshot
+
+The deterministic constructor in
+[`rsd-t02-pulse.mjs`](../experiments/workstation/fixture-026/rsd-t02-pulse.mjs)
+now implements the six-world registry, exact pulse-edge stops, adaptive
+Dormand--Prince 5(4) integration, the two-resolution gates, recurrence orders
+$q\le5$, event extraction, bounded refractory search, typed costs and
+fail-closed `NO_RESULT` records. Its focused test suite covers the protected
+feedback/feed-forward pair, the signature-negative linear feedback world,
+dead-time and alias hostiles, deterministic OU diagnostics and malformed
+paths.
+
+One executed construction cell at $d=0.20\,\mathrm s$ and
+$T=5.00\,\mathrm s$ gives:
+
+1. `PS-NFL-H4`: a support-qualified order-two recurrence, event word `01`
+   repeated ten times, 10 responses from 20 stimuli, recurrence upper bound
+   $2.94\times10^{-15}$ and first-response latencies near
+   $0.04694\,\mathrm s$;
+2. `PS-IFFL-H4`: order-one recurrence and an absent skipping signature; and
+3. an unresolved topology disposition for both records. Signature presence is
+   evaluator construction truth, not an actionable inference result.
+
+![Normalized pulse-response amplitudes for one executed construction cell](../public/plots/repeated-stimulus-skipping-cell.svg)
+
+The figure is generated from the constructor itself by
+[`generate-plots.mjs`](../scripts/generate-plots.mjs); its editable parameters
+are in [`core-models.json`](../assets/plots/core-models.json). Filled amber
+markers cross the registered response threshold on every second feedback-world
+pulse. The cyan feed-forward trace remains below threshold. This is one public
+development cell, not a biological fit, estimator comparison or confirmation
+result.
+
+A separate bounded diagnostic scan for `PS-NFL-H4` at
+$d=0.30\,\mathrm s$ evaluated 198 coarse and 38 refined cells and retained the
+interior maximizer interval $[16.72,16.72]\,\mathrm s$. That single duration
+cannot establish stabilization: equation (12) needs adjacent duration slopes.
+The six-duration refractory panel, 64-seed noise grid and mixed-window panel
+remain unexecuted.
+
 ## Null and counterworld bank
 
 The versioned bank contains the following independent cases.
@@ -380,8 +421,8 @@ metadata. They do not receive the truth label or future samples.
 
 ## Numerical construction certificate
 
-The future constructor must use binary64 integration with exact stops at pulse
-edges. An adaptive Runge-Kutta reference run uses absolute tolerance
+The checked-in constructor uses binary64 integration with exact stops at pulse
+edges. Its adaptive Runge--Kutta reference run uses absolute tolerance
 $10^{-12}\,\mathrm U$ for state variables and relative tolerance $10^{-10}$;
 the refinement run halves both tolerances. The certificate retains maximum
 state/output disagreement, quadrature disagreement, threshold-crossing time
@@ -442,7 +483,8 @@ Kill a claim-eligible use of this subtrack if any of the following occurs:
 
 ## Disposition
 
-This note completes the written mathematical specification missing from
-C-1561. It does not complete the construction certificate, runner, actionable
-estimator comparison, prospective confirmation partition or execution. The
-only current authority is `public-development` and `NO_RESULT`.
+This note and its checked-in module complete a bounded construction layer for
+C-1561. They do not complete the six-duration and robustness panels, the mixed
+window statistic, runner integration, actionable estimator comparison,
+prospective confirmation partition or workstation execution. The only current
+authority is `public-development`, `construction-only` and `NO_RESULT`.

@@ -24,8 +24,9 @@
   exist; T02-MECH has a closed generator/evaluator for three O0 descriptors
   crossed with three conditioned time scales and an exact 26-episode O1 panel,
   plus an event schema, append-only ledger, deterministic resume and
-  construction analysis, but no
-  actionable arm or comparison authority; T02-FLOOR remains non-executable;
+  construction analysis and an additive pre-evaluator whole-system commitment
+  for three fixed policy-conformance references; six actionable roles remain
+  forced to abstain and no comparison authority exists; T02-FLOOR remains non-executable;
   RSD-T03--RSD-T10, private
   partitions, the registered primary analysis, a complete resource comparison,
   statistical results and measured energy do not exist
@@ -519,8 +520,30 @@ registered positive affine interface.
 **Actionable arms.** The closed registry is `A-RAW`, `B-STATIC-DIV`,
 `B-STREAM`, `B-LOG-RATIO`, `B-DIFFERENCE`, `B-STATE-SPACE`, `B-RECURRENT`,
 `C-MECHANISM-BANK` and `C-DUAL`. `O-GRAPH` is evaluator-only and excluded from
-parity, tuning, promotion and resource ranking. None of the actionable arms is
-implemented or currently eligible.
+parity, tuning, promotion and resource ranking. A bounded additive Stage 2
+implements `B-STATE-SPACE`, `B-RECURRENT` and `C-MECHANISM-BANK` only as fixed
+public-development policy-conformance references. They are not trained
+estimators, calibrated posteriors or mature nulls. `A-RAW`, `B-STATIC-DIV`,
+`B-STREAM`, `B-LOG-RATIO`, `B-DIFFERENCE` and `C-DUAL` remain unimplemented and
+visibly abstain. No actionable arm is currently comparison-, ranking- or
+promotion-eligible.
+
+**Bounded Stage-2 policies.** Every seed × system packet contains all 35 ordered
+O0/O1 projections (53,795 sample rows). The packet is hashed and delivered to
+all three active policies; all three whole-system responses and the six
+inactive abstentions are committed before `O-GRAPH` opens any episode in that
+packet. `B-STATE-SPACE` uses a fixed affine-versus-log first-order ramp residual
+and reset/freeze distances; `B-RECURRENT` uses fixed causal exponential
+clamp-release and channel-restimulation innovations; `C-MECHANISM-BANK` uses
+four frozen source-shaped signatures. Every response returns a nonempty joint
+set of compatible property vectors, not independently inconsistent marginals.
+All numerical bands are explicitly construction-tuned on the five enumerated
+public worlds, with zero training labels and zero tuning trials; their
+definitions and equations are frozen in the linked mathematical contract.
+The references execute in the same Node process as packet construction and use
+the checked-in public property prior. The firewall is an exact policy-input and
+pre-evaluator ordering contract, not a worker-isolation, secrecy or adversarial
+sandbox guarantee.
 
 **Primary mechanism endpoint.** Per-property calibration in nats and
 dimensionless decision loss are reported separately. A correct decision on an
@@ -559,6 +582,17 @@ parameter bytes, tuning trials, wall seconds and later measured joules as
 separate dimensions. Privileged access is never free and no scalar cost is
 registered.
 
+Stage 2 keeps three separate ledgers: shared packet acquisition, policy
+construction/prior, and per-inference actual work. The common per-response cap
+is 1,000,000 declared scalar operations, 2,000 transcendental evaluations,
+128 retained-state bytes, 4,096 influential-parameter bytes, 16 MiB scratch,
+256 KiB combined policy/config artifacts and zero fallbacks. A mandatory
+12-operation convention charges all 53,795 rows before policy-specific work,
+for 645,540 traversal operations. Actual work is reported without padding;
+mechanism equations and the joint property prior have separate byte/count
+charges. These are declared mathematical primitives, not CPU instructions,
+wall time, joules or evidence of efficiency.
+
 **Hostiles.** Additive offset, near-zero input, clipping, hidden reset,
 future-aware normalization, channel-state contamination and boundary-layer
 censoring are valid scientific cases with the existing six-axis support vector.
@@ -569,7 +603,9 @@ the scientific denominator.
 `contract-foundation-only`, while the separate T02-MECH runtime is a
 deterministic bounded `public-development` construction/conformance harness.
 It executes O0 and O1, freezes every actionable response before `O-GRAPH`
-evaluation, retains an exact typed resource vector, and supports append-only
+evaluation, separately commits the three fixed Stage-2 reference responses
+plus six inactive abstentions,
+retains closed acquisition/construction/inference ledgers, and supports append-only
 resume and independent analysis validation. It is
 `registered-projection-no-secret-custody`, comparison false, has no execution
 claim, and reports `NO_RESULT`. O2 and T02-FLOOR remain non-executable.
@@ -580,8 +616,9 @@ for guessing within an equivalence set, privileged access is unequal or
 unpriced, RMS or fixed slow sampling replaces the floor endpoint, or the
 mechanism bank cannot beat generic state-space/recurrent nulls at equal access.
 
-**Required future artifacts.** Actionable algorithms, matched computation and
-intervention budgets, prospective confirmation mapping and custody, paired
+**Required future artifacts.** The six missing actionable algorithms, mature
+nulls, prospectively calibrated or trained estimators, matched confirmation
+computation and intervention budgets, prospective confirmation mapping and custody, paired
 statistics, promotion evidence, calibrated workstation measurement, an O2
 response-freeze contract, and a separately frozen T02-FLOOR runtime with a
 finite-estimator authority boundary. The current construction runtime supplies
@@ -691,6 +728,20 @@ step-only negative control, generic state-space and compact recurrent
 estimators, and an abstaining dual selector. `O-GRAPH` and direct-state
 recurrence are evaluator-only. None is implemented or comparison-eligible.
 
+**Checked-in construction slice.**
+[`rsd-t02-pulse.mjs`](../workstation/fixture-026/rsd-t02-pulse.mjs) now provides
+the six-world deterministic constructor, exact pulse-edge integration,
+two-resolution support gates, event/count/latency extraction, recurrence
+through $q=5$, bounded refractory search, OU diagnostics and typed cost
+records. At $d=0.20\,\mathrm s$, $T=5.00\,\mathrm s$, the protected feedback
+cell has an order-two `01` event word and 10 responses from 20 stimuli; the
+paired feed-forward cell is order one with an absent skipping signature. A
+separate $d=0.30\,\mathrm s$ diagnostic retains
+$T_{\max}=[16.72,16.72]\,\mathrm s$ after 198 coarse and 38 refined cells.
+These are evaluator-side construction checks. Both topology dispositions stay
+unresolved, comparison and claim flags stay false, and every artifact remains
+`NO_RESULT`.
+
 **Primary endpoint.** Report `refractory_signature`, `skipping_signature` and
 `feedback_support` separately. Feedback support requires at least one positive
 support-qualified signature and a certified rival. Both signatures absent
@@ -720,9 +771,10 @@ operations, retained-state and parameter bytes, tuning trials, wall seconds and
 later calibrated joules separately. Privileged direct-state recurrence is
 evaluator cost and is never attributed to an actionable arm.
 
-**Current authority.** The subtrack is `written-protocol-only`,
+**Current authority.** The subtrack is `construction-only`,
 `public-development`, comparison false and `NO_RESULT`. It completes the
-missing C-1561 test description, not its execution.
+missing C-1561 test description and a bounded deterministic construction
+slice, not the registered full-panel execution.
 
 **Kill rule.** Kill claim eligibility if a single pulse or hidden graph supplies
 the answer; absence is treated as feed-forward evidence; short-duration,
@@ -732,11 +784,11 @@ forced into one label; thresholds or panels move after output inspection; or a
 construction/robustness check is presented as biological prevalence,
 workstation performance or energy evidence.
 
-**Required future artifacts.** Checked-in constructor and two-resolution truth
-certificate, machine parameter manifest, pulse generator, event extractor,
-actionable estimators, resource ledger, malformed sentinels, public robustness
-seeds, prospective confirmation mapping and custody, paired statistics and
-calibrated workstation measurement.
+**Required future artifacts.** Full six-duration and counterworld construction
+certificates, resolved mixed-window statistics, runner/schema integration,
+actionable estimators, complete serialized-byte and operation ledgers, the
+64-seed robustness grid, prospective confirmation mapping and custody, paired
+statistics and calibrated workstation measurement.
 
 ## RSD-T03 — Multiplicatively rescaled active chemical search
 

@@ -1,6 +1,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { generateLayoutStudy } from "../experiments/workstation/fixture-012/generator.mjs";
+import { constructFixture026RsdT02SkippingCell } from "../experiments/workstation/fixture-026/rsd-t02-pulse.mjs";
 
 const root = process.cwd();
 const specs = JSON.parse(
@@ -2093,6 +2094,73 @@ function fastBoundaryLayerNorms(spec) {
   });
 }
 
+function repeatedStimulusSkippingCell(spec) {
+  const {
+    duration_s: duration,
+    period_s: period,
+    feedback_world_id: feedbackWorldId,
+    feedforward_world_id: feedforwardWorldId,
+  } = spec.parameters;
+  const feedback = constructFixture026RsdT02SkippingCell(feedbackWorldId, period);
+  const feedforward = constructFixture026RsdT02SkippingCell(feedforwardWorldId, period);
+  if (feedback.duration_s !== duration || feedforward.duration_s !== duration) {
+    throw new Error(`${spec.id} duration differs from the registered skipping constructor`);
+  }
+  const feedbackIntervals = feedback.periodic_cell.events.reference.intervals;
+  const feedforwardIntervals = feedforward.periodic_cell.events.reference.intervals;
+  if (feedbackIntervals.length !== feedforwardIntervals.length || feedbackIntervals.length === 0) {
+    throw new Error(`${spec.id} requires aligned nonempty pulse intervals`);
+  }
+
+  const normalized = (interval, cell) => (
+    interval.response_amplitude_u / cell.isolated_calibration.isolated_amplitude_u
+  );
+  const xMin = 0.5;
+  const xMax = feedbackIntervals.length + 0.5;
+  const yMin = 0;
+  const yMax = 0.65;
+  const feedbackPoints = feedbackIntervals.map((interval, index) => [
+    sx(index + 1, xMin, xMax),
+    sy(normalized(interval, feedback), yMin, yMax),
+  ]);
+  const feedforwardPoints = feedforwardIntervals.map((interval, index) => [
+    sx(index + 1, xMin, xMax),
+    sy(normalized(interval, feedforward), yMin, yMax),
+  ]);
+  const feedbackMarkers = feedbackIntervals.map((interval, index) => {
+    const [x, y] = feedbackPoints[index];
+    const fill = interval.response ? colors.amber : colors.panel;
+    return `<circle cx="${x}" cy="${y}" r="7" fill="${fill}" stroke="${colors.amber}" stroke-width="3"/>`;
+  }).join("");
+  const feedforwardMarkers = feedforwardIntervals.map((interval, index) => {
+    const [x, y] = feedforwardPoints[index];
+    const fill = interval.response ? colors.cyan : colors.panel;
+    return `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" rx="2" fill="${fill}" stroke="${colors.cyan}" stroke-width="3"/>`;
+  }).join("");
+  const thresholdY = sy(0.25, yMin, yMax);
+  const legend = `<line x1="610" y1="48" x2="648" y2="48" stroke="${colors.amber}" stroke-width="5"/><circle cx="629" cy="48" r="6" fill="${colors.amber}"/><text x="660" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">${esc(feedbackWorldId)} · q=${feedback.skipping_signature.recurrence_order}</text>
+  <line x1="842" y1="48" x2="880" y2="48" stroke="${colors.cyan}" stroke-width="5"/><rect x="856" y="43" width="10" height="10" rx="2" fill="${colors.panel}" stroke="${colors.cyan}" stroke-width="2"/><text x="892" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">${esc(feedforwardWorldId)} · q=${feedforward.skipping_signature.recurrence_order}</text>`;
+  const content = `${grid(
+    [1, 5, 10, 15, 20],
+    [0, 0.1, 0.25, 0.4, 0.55],
+    (value) => sx(value, xMin, xMax),
+    (value) => sy(value, yMin, yMax),
+    String,
+    (value) => value.toFixed(2),
+  )}<line x1="${plot.left}" y1="${thresholdY}" x2="${plot.right}" y2="${thresholdY}" stroke="${colors.coral}" stroke-width="3" stroke-dasharray="10 7"/>
+  <text x="${plot.right - 12}" y="${thresholdY - 10}" fill="${colors.coral}" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="end">registered response threshold = 0.25 A_iso</text>
+  <path d="${linePath(feedbackPoints)}" fill="none" stroke="${colors.amber}" stroke-width="4" stroke-linejoin="round"/>
+  <path d="${linePath(feedforwardPoints)}" fill="none" stroke="${colors.cyan}" stroke-width="4" stroke-linejoin="round"/>
+  ${feedbackMarkers}${feedforwardMarkers}`;
+  return frame(spec, content, {
+    xLabel: `pulse index · d=${duration.toFixed(2)} s · T=${period.toFixed(2)} s`,
+    yLabel: "response amplitude / isolated-pulse amplitude",
+    legend,
+    badge: "EXECUTED CONSTRUCTION CELL · NO_RESULT",
+    footer: "Deterministic public-development constructor · no estimator, comparison, confirmation or biological fit",
+  });
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -2116,6 +2184,7 @@ const renderers = {
   "interface-qualified-scale-symmetry": interfaceQualifiedScaleSymmetry,
   "rsd-t01-family-property-overlap": rsdT01FamilyPropertyOverlap,
   "fast-boundary-layer-norms": fastBoundaryLayerNorms,
+  "repeated-stimulus-skipping-cell": repeatedStimulusSkippingCell,
   "interface-qualified-retroactivity": interfaceQualifiedRetroactivity,
   "history-conditioned-position-contrast": historyConditionedPositionContrast,
 };

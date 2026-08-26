@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "artifact": "fixture-026",
+  "track": "RSD-T02",
+  "authority": "bounded-public-development-policy-conformance-only",
+  "active_arm_ids": [
+    "B-STATE-SPACE",
+    "B-RECURRENT",
+    "C-MECHANISM-BANK"
+  ],
+  "inactive_arm_ids": [
+    "A-RAW",
+    "B-STATIC-DIV",
+    "B-STREAM",
+    "B-LOG-RATIO",
+    "B-DIFFERENCE",
+    "C-DUAL"
+  ],
+  "packet": {
+    "observation_regimes": ["O0-MATCHED-STEP", "O1-FULL-PANEL"],
+    "episodes": 35,
+    "o0_episodes": 9,
+    "o1_episodes": 26,
+    "rows_per_episode": 1537,
+    "sample_rows": 53795,
+    "input_commands": 197,
+    "internal_resets": 2,
+    "internal_freezes": 2,
+    "output_clamps": 1,
+    "channel_switches": 1,
+    "state_writes": 2,
+    "order": "frozen-execution-descriptor-order-v1"
+  },
+  "information": {
+    "training_labels": 0,
+    "tuning_trials": 0,
+    "future_samples_outside_packet": false,
+    "evaluator_fields": false,
+    "numeric_model": "IEEE-754-binary64",
+    "thread_cap": 1
+  },
+  "common_caps": {
+    "scalar_operations": 1000000,
+    "transcendental_evaluations": 2000,
+    "retained_state_bytes": 128,
+    "influential_parameter_bytes": 4096,
+    "scratch_peak_bytes": 16777216,
+    "policy_artifact_bytes": 262144,
+    "fallback_invocations": 0
+  },
+  "policies": {
+    "B-STATE-SPACE": {
+      "policy_id": "bounded-arx-signature-reference-v1",
+      "role": "conformance-reference-not-mature-null",
+      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-26",
+      "threshold_rationale": "separate the registered affine and log ramp residual margins while retaining an indifference band; opaque reset/freeze bands bracket exact-zero and planted-memory construction traces",
+      "drive_mse_margin": 0.00001,
+      "memory_true_floor": 0.1,
+      "memory_false_ceiling": 1e-8
+    },
+    "B-RECURRENT": {
+      "policy_id": "bounded-causal-recurrence-reference-v1",
+      "role": "conformance-reference-not-mature-null",
+      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-26",
+      "threshold_rationale": "place nonoverlapping indifference bands between the enumerated clamp-release and cross-channel recurrent innovations; no robustness or confirmation calibration is implied",
+      "state_decay_time_s": 0.25,
+      "feedback_true_floor": 0.45,
+      "feedback_false_ceiling": 0.35,
+      "channel_local_true_floor": 0.9,
+      "channel_local_false_ceiling": 0.85
+    },
+    "C-MECHANISM-BANK": {
+      "policy_id": "bounded-source-shaped-signature-bank-v1",
+      "role": "hypothesis-bank-conformance-reference",
+      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-26",
+      "threshold_rationale": "place nonoverlapping bands between the enumerated ramp, clamp, restimulation and opaque-state signatures; these are public construction thresholds rather than fitted or confirmation-calibrated decision limits",
+      "drive_log_floor": 0.48,
+      "drive_affine_ceiling": 0.46,
+      "feedback_true_floor": 0.5,
+      "feedback_false_ceiling": 0.45,
+      "channel_local_true_floor": 0.9,
+      "channel_local_false_ceiling": 0.85,
+      "memory_true_floor": 0.1,
+      "memory_false_ceiling": 1e-8
+    }
+  },
+  "comparison_inference_permitted": false,
+  "claim_eligible": false,
+  "result_label": "NO_RESULT"
+}

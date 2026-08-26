@@ -19,9 +19,11 @@
 - **Experiment state:** a deterministic bounded public-development T02-MECH
   construction/conformance runtime now covers the closed 26-episode O0/O1
   generator, response firewall, evaluator, event schema, append-only ledger,
-  resume and analysis validation; no actionable estimator, claim-eligible
-  partition, O2 execution, T02-FLOOR runtime, workstation comparison, measured
-  energy, or result exists
+  resume and analysis validation, plus an additive pre-evaluator whole-system
+  commitment for three fixed policy-conformance references; these references
+  are neither trained estimators nor mature nulls, six roles remain inactive,
+  and no comparison, claim-eligible partition, O2 execution, T02-FLOOR runtime,
+  workstation comparison, measured energy, or result exists
 
 ## Executive finding
 
@@ -256,10 +258,27 @@ bounded development-conformance profile. It does not execute the full 64-seed
 pack, and the hashed profile says so explicitly. O0 means three background
 episodes and 4,611 rows per conditioned time-constant instance; crossing the
 three registered time constants yields nine executions and 13,833 rows per
-recipe. O1 remains exactly 26 episodes at $\tau_*=1,\mathrm s$. All nine actionable roles
-abstain on one identical causal projection; `O-GRAPH` opens only after the
-response commitment. Pair matrices and property aggregation validate the
-registered construction, not an estimator or scientific comparison.
+recipe. O1 remains exactly 26 episodes at $\tau_*=1,\mathrm s$. The base episode
+event keeps all nine roles abstaining. Separately, the additive whole-system
+stage delivers the identical 35-projection packet to fixed `B-STATE-SPACE`,
+`B-RECURRENT`, and `C-MECHANISM-BANK` policies, commits their responses plus six
+inactive abstentions, and only then permits `O-GRAPH` to open any episode.
+Their thresholds were construction-tuned on the five enumerated public worlds;
+they used zero labels and zero tuning trials and return a joint compatible
+property-vector set. Shared acquisition, policy construction/prior, and actual
+per-inference work remain separate ledgers under identical caps without work
+padding. Pair matrices and property aggregation validate the registered
+construction and policy conformance, not a mature-null comparison or scientific
+result.
+The policies remain same-process code with a public checked-in prior. Their
+firewall is a closed input-object and pre-evaluator ordering assertion, not
+worker isolation or secret custody. The commitment is exclusively created and
+file-synchronized before the evaluator ledger opens, and source hash plus byte
+count share one read. Input JSON is parsed from those exact fingerprinted
+bytes. Static ESM import still precedes the code-file fingerprint; the run-
+directory lease does not prevent concurrent repository-source mutation. That
+residual load-time boundary remains explicit until a content-addressed isolated
+worker bundle exists.
 
 ## Evidence limitations
 

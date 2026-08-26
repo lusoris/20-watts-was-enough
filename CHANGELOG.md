@@ -16,12 +16,22 @@ the exact diff; this file records why the project changed.
   path-containment checks and an exclusive writer lease fail closed to
   `NO_RESULT`. The exact 64-seed source pack is frozen; the one- and two-seed
   prefixes are plumbing runs, not substitutes for that pack. O2, T02-FLOOR,
-  actionable estimator arms, comparisons, confirmation custody and result or
-  energy authority remain absent. The C-1561 repeated-pulse subtrack now has a
-  source-traceable written protocol with support, refractory, slope, count,
-  latency and period-skipping gates, but no machine constructor or execution
-  claim. Generated coverage records 1,463 of 1,555 claims as protocol-covered
-  and zero as workstation-executable.
+  mature/actionable estimator arms, comparisons, confirmation custody and
+  result or energy authority remain absent. A pre-evaluator whole-system stage
+  now commits three same-process public-prior policy-conformance references and
+  six visible abstentions before any raw evaluator ledger exists; it records
+  exact acquisition, prior and inference costs without treating those fixed
+  references as trained estimators or mature nulls. Commitment creation is
+  exclusive and file-synchronized; parsed JSON, hashes and byte counts share
+  their input buffers. The remaining static-ESM load-time mutation window is
+  explicitly outside this same-process construction authority. The C-1561
+  repeated-pulse subtrack now also has a six-world machine constructor with
+  adaptive exact-edge integration, support, refractory, count, latency and
+  period-skipping gates.
+  Bounded positive and hostile construction cells execute as `NO_RESULT`; the
+  full six-duration, robustness and mixed-window panels, runner integration and
+  actionable comparison remain absent. Generated coverage records 1,463 of
+  1,555 claims as protocol-covered and zero as workstation-executable.
 
 - Decision 0019 and the F-026 `RSD-T02` foundation now separate four scored
   interventional properties, exact input-output equivalence and justified

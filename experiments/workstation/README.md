@@ -118,7 +118,9 @@ remain absent; every event is `NO_RESULT`.
 
 [Fixture F-026](fixture-026/README.md) implements a bounded public-development
 generator-only smoke slice for C-1540 / RSD-T01 and a separate deterministic
-bounded T02-MECH construction/conformance runtime. Every RSD-T01 public seed
+bounded T02-MECH construction/conformance runtime. A third isolated module
+implements the C-1561 repeated-stimulus plant/event constructor without yet
+integrating its full panels into the runner. Every RSD-T01 public seed
 contains the
 exact five-generator-family × four-history Cartesian grid plus four distinct
 malformed-interface sentinels. The harness uses canonical decimal-string
@@ -134,9 +136,17 @@ reference lifecycle and calibrated workstation measurements remain absent.
 T02-MECH now supplies a closed generator/evaluator for three O0 descriptors
 crossed with three conditioned time scales and an exact 26-episode O1 panel,
 plus a policy firewall, typed event schema, append-only resume ledger and
-recomputed construction analysis over a hashed one/two-seed ordered prefix. Its actionable
-arms, comparison and claim authority, O2, T02-FLOOR execution, confirmation,
-workstation and energy results remain absent; RSD-T03--RSD-T10 remain absent.
+recomputed construction analysis over a hashed one/two-seed ordered prefix. An
+additive pre-evaluator stage commits fixed whole-system `B-STATE-SPACE`,
+`B-RECURRENT`, and `C-MECHANISM-BANK` policy-conformance responses under exact
+information and cap parity; they use construction-tuned public thresholds,
+zero labels and zero tuning trials and are not mature nulls or trained
+estimators. Six roles remain unimplemented and abstain. Comparison and claim
+authority remain absent. The pulse module has executed bounded positive,
+feed-forward, linear-feedback, dead-time and alias construction checks, but not
+the six-duration refractory panel, noise grid, mixed-window panel or an
+actionable estimator. O2, T02-FLOOR execution, confirmation, workstation and
+energy results remain absent; RSD-T03--RSD-T10 remain absent.
 Every event and successful response is `NO_RESULT`.
 
 [Fixture F-027](fixture-027/README.md) implements a bounded public-development

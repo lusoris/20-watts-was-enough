@@ -14,7 +14,8 @@
   [C-1561](../claims.md#c-1561) without changing its evidence status
 - **Experiment state:** written public-development protocol complete at
   [RSD-T02-PULSE](../../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pulse--one-sided-repeated-stimulus-signatures);
-  construction and execution remain `NO_RESULT`
+  a bounded deterministic constructor now exists, while full-panel execution,
+  estimator comparison and confirmation remain `NO_RESULT`
 
 ## Executive finding
 
@@ -179,6 +180,30 @@ paper did not establish them. A pulse with multiple response cycles is outside
 the protected single-response region even if an event-word summary could hide
 that fact.
 
+## Construction evidence now available
+
+The checked-in
+[`rsd-t02-pulse.mjs`](../../experiments/workstation/fixture-026/rsd-t02-pulse.mjs)
+implements the six registered worlds, adaptive integration with exact pulse
+edges, step and isolated-pulse gates, event extraction, recurrence through
+$q=5$, bounded refractory search, deterministic OU diagnostics and typed cost
+records. Eleven focused tests exercise the positive cell, pure feed-forward
+rival, signature-negative feedback, dead-time, aliasing and fail-closed paths.
+
+The executed $d=0.20\,\mathrm s$, $T=5.00\,\mathrm s$ construction cell has
+an order-two `01` event word with 10 responses from 20 stimuli in `PS-NFL-H4`.
+The paired `PS-IFFL-H4` cell is order one and has no skipping signature. Both
+records retain `feedback_support=unresolved`, `comparison=false`,
+`claim_eligible=false` and `NO_RESULT`; the constructor exposes evaluator truth
+but supplies no actionable estimator.
+
+One $d=0.30\,\mathrm s$ feedback-world diagnostic evaluated 198 coarse and 38
+refined period cells and retained an interior $T_{\max}$ interval of
+$[16.72,16.72]\,\mathrm s$. It is not a stabilization result because the
+registered decision needs consecutive slopes across the six durations. That
+full panel, the 64-seed noise grid, mixed-window statistic, runner integration
+and confirmation remain unexecuted.
+
 ## Nulls and counterworlds
 
 ### Pure feed-forward rival
@@ -247,8 +272,9 @@ energy benefit, so this subtrack carries no energy conclusion.
 4. Finite noisy observations can confuse small responses, missing responses
    and detector failure; direct plant recurrence is available only in the
    synthetic evaluator.
-5. The protected parameter cell has not yet received a checked-in construction
-   certificate.
+5. Only bounded development cells have checked-in construction records; the
+   full protected refractory, robustness and mixed-window panels remain
+   unexecuted.
 6. Public source and a complete written protocol do not provide confirmation
    custody or a claim-eligible result.
 
@@ -258,8 +284,8 @@ energy benefit, so this subtrack carries no energy conclusion.
 
 ## Disposition
 
-C-1561 moves from an unspecified future extension to a complete written
-direct-test specification. The evidence status stays scoped and one-sided.
-The experiment status remains `public-development`, `NO_RESULT`: no machine
-constructor, runner, actionable estimator, protected confirmation split,
-workstation result or energy measurement exists.
+C-1561 now has both a complete written direct-test specification and a bounded
+machine construction layer. The evidence status stays scoped and one-sided.
+The experiment status remains `public-development`, `construction-only` and
+`NO_RESULT`: no full-panel runner, actionable estimator, protected confirmation
+split, workstation result or energy measurement exists.

@@ -182,7 +182,11 @@ repeated pulses, ramps, opaque-state resets and freezes, one reported-output
 clamp, interrupted holds, and same- versus cross-channel restimulation. Three
 observation regimes distinguish a mandatory matched-step abstention baseline,
 the fixed full panel, and a six-query active-design ceiling. Nine actionable
-arm IDs remain parity- and ranking-ineligible; `O-GRAPH` is evaluator-only.
+arm IDs remain parity- and ranking-ineligible; `O-GRAPH` is evaluator-only. An
+additive whole-system stage activates `B-STATE-SPACE`, `B-RECURRENT`, and
+`C-MECHANISM-BANK` only as fixed public-development policy-conformance
+references. They are not trained estimators, calibrated posteriors or mature
+nulls. The other six roles remain unimplemented and visibly abstain.
 Pair certificates describe one analytic isomorphism and nine numerically
 refined public-development constructions under their frozen schedules, not
 scientific results.
@@ -194,20 +198,36 @@ episodes and 39,962 rows per recipe at $\tau_*=1$ second.
 
 The square-pulse episodes do not instantiate the Rahi-style refractory or
 period-skipping signature: the v1 feedback nonlinearity vanishes at both pulse
-levels. C-1561 therefore remains a separately declared written subtrack rather
-than a result of this construction runtime.
+levels. C-1561 is therefore excluded from the base event runtime. The separate
+`rsd-t02-pulse.mjs` module now implements a bounded six-world construction
+layer with adaptive exact-edge integration, support gates, response/count/
+latency extraction, recurrence through $q=5$, refractory search and typed
+costs. Its checked cell and diagnostics remain evaluator-side
+public-development constructions, not results of the base runner.
 
 T02-MECH now has a deterministic bounded construction/conformance runtime: 175
 events per selected seed, a closed actionable projection and response commit,
 independent `O-GRAPH` evaluation, typed costs, append-only hash-chain resume,
 exact pair matrices and recomputed analysis. The hashed profile deliberately
 uses one public seed for smoke and two of 64 for bounded development
-conformance; it is not the full development pack. Every actionable arm
-abstains, C-1561 and C-1564 are excluded, and every artifact is `NO_RESULT`.
-No actionable implementation, comparison, execution claim, confirmation
-custody, promotion path, O2 runtime, T02-FLOOR runtime, asymptotic result,
-workstation measurement or energy result exists. RSD-T01 remains the only
-claim-scoped implemented track.
+conformance; it is not the full development pack. Before any evaluator-bearing
+event is generated, all 35 projections (53,795 rows) for each seed × system are
+hashed, delivered identically to the three active policies, and committed with
+their whole-system responses and six inactive abstentions. Responses retain a
+joint compatible property-vector set and three separate work ledgers: shared
+acquisition, policy construction/prior, and actual inference. Every numerical
+band is construction-tuned on the five public worlds, with zero labels and zero
+tuning trials. Actual work is not padded to the identical common caps.
+The policies execute in the same Node process with a checked-in public prior;
+the enforced firewall is exact projection shape plus commitment ordering, not
+process isolation, secret custody or an adversarial sandbox.
+C-1561 and C-1564 are excluded from the base event stream, and every artifact
+is `NO_RESULT`. The separate C-1561 constructor is not runner-integrated and
+has not executed its full refractory, robustness or mixed-window panels. No mature
+null, trained or calibrated estimator, comparison, execution claim,
+confirmation custody, promotion path, O2 runtime, T02-FLOOR runtime,
+asymptotic result, workstation measurement or energy result exists. RSD-T01
+remains the only claim-scoped implemented track.
 
 ## Commands
 
@@ -219,6 +239,7 @@ node experiments/workstation/fixture-026/runner.mjs smoke --profile smoke --outp
 node experiments/workstation/fixture-026/runner.mjs run --profile development --output experiments/workstation/runs/fixture-026-development --resume false
 node experiments/workstation/fixture-026/runner.mjs analyze --output experiments/workstation/runs/fixture-026-development
 node experiments/workstation/fixture-026/runner.mjs validate --output experiments/workstation/runs/fixture-026-development
+node --test experiments/workstation/fixture-026/rsd-t02-pulse.test.mjs
 
 node experiments/workstation/fixture-026/runner.mjs t02-prepare --profile smoke
 node experiments/workstation/fixture-026/runner.mjs t02-smoke --profile smoke --output experiments/workstation/runs/fixture-026-t02-smoke --resume false
@@ -230,7 +251,7 @@ node experiments/workstation/fixture-026/runner.mjs t02-validate --output experi
 Focused tests:
 
 ```powershell
-node --test --test-isolation=none experiments/workstation/fixture-026/contract.test.mjs experiments/workstation/fixture-026/runner.test.mjs experiments/workstation/fixture-026/scientific-grid.test.mjs experiments/workstation/fixture-026/rsd-t02-contract.test.mjs experiments/workstation/fixture-026/rsd-t02-models.test.mjs experiments/workstation/fixture-026/rsd-t02-floor.test.mjs experiments/workstation/fixture-026/rsd-t02-generator.test.mjs experiments/workstation/fixture-026/rsd-t02-evaluator.test.mjs experiments/workstation/fixture-026/rsd-t02-event.test.mjs experiments/workstation/fixture-026/rsd-t02-runner.test.mjs
+node --test --test-isolation=none experiments/workstation/fixture-026/contract.test.mjs experiments/workstation/fixture-026/runner.test.mjs experiments/workstation/fixture-026/scientific-grid.test.mjs experiments/workstation/fixture-026/rsd-t02-contract.test.mjs experiments/workstation/fixture-026/rsd-t02-models.test.mjs experiments/workstation/fixture-026/rsd-t02-floor.test.mjs experiments/workstation/fixture-026/rsd-t02-generator.test.mjs experiments/workstation/fixture-026/rsd-t02-evaluator.test.mjs experiments/workstation/fixture-026/rsd-t02-event.test.mjs experiments/workstation/fixture-026/rsd-t02-arm-bank.test.mjs experiments/workstation/fixture-026/rsd-t02-runner.test.mjs
 ```
 
 ## Integrity
@@ -240,6 +261,24 @@ SHA-256 chain. An ownership-checked exclusive output lease rejects concurrent
 writers and is never automatically broken. Symlink, junction, reparse-point
 and resolved-path escapes are rejected before output mutation. CRLF, blank
 lines, and multiple terminal newlines are rejected.
+The separate `rsd-t02-arm-commitment.json` is created from the full ordered
+packet grid before the raw ledger is opened. Once any evaluator-bearing raw,
+checkpoint or run state exists, a missing commitment cannot be reconstructed;
+resume instead fails closed. The run document binds both its semantic
+commitment hash and exact file hash. New commitment creation is exclusive,
+flushes file data and metadata before proceeding, and requests a parent-
+directory sync where the platform exposes one. Policy source hash and byte
+count come from the same immutable in-memory read. Seed and configuration JSON
+are parsed from the exact byte buffers that supply their recorded hashes and
+sizes.
+
+Node loads the statically imported policy/generator/evaluator modules before
+the runner fingerprints their source files. The output lease protects the run
+directory, not the repository source tree. A concurrent source mutation during
+that module-load boundary can therefore separate loaded code from the later
+file fingerprint; this public-development runner is not a content-addressed
+loader or adversarial execution sandbox. Removing that residual boundary
+requires isolated workers loaded from a committed, content-addressed bundle.
 Resume is reconstructed from the raw ledger, binds the profile and every frozen
 source identity, requires the ledger to be an exact ordered prefix of the work
 grid, semantically replays every prior record before deriving remaining work,
@@ -293,7 +332,8 @@ This smoke slice deliberately lacks:
    property-performance/trajectory-conformance endpoint;
 7. confirmation and transfer seeds, commitments, custody, and releases;
 8. calibrated workstation time, memory, and energy measurement; and
-9. actionable algorithms, comparison/claim authority, confirmation custody,
+9. the six inactive actionable algorithms, mature nulls, prospectively trained
+   or calibrated estimators, comparison/claim authority, confirmation custody,
    O2 selection, and T02-FLOOR execution for the bounded T02-MECH construction
    runtime; and
 10. machine contracts and runners for RSD-T03 through RSD-T10.

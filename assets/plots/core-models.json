@@ -464,6 +464,25 @@
     "status": "Exact norms of the displayed dimensionless boundary-layer function on a one-second window. It demonstrates why a shrinking-duration, order-one peak can retain a supremum-norm floor while its integrated RMS vanishes. It is a metric counterexample, not the biological model or a fit to the Skataric--Nikolaev--Sontag systems."
   },
   {
+    "id": "repeated-stimulus-skipping-cell",
+    "title": "One pulse train, two distinct event words",
+    "equation": "a_j=A_j/A_iso; response iff a_j crosses 0.25; d=0.20 s; T=5.00 s",
+    "source": "math/repeated-stimulus-topology-signatures.md#checked-in-construction-snapshot",
+    "layout": {
+      "kind": "repeated-stimulus-skipping-cell",
+      "width": 1100,
+      "height": 660,
+      "theme": "ember"
+    },
+    "parameters": {
+      "duration_s": 0.2,
+      "period_s": 5,
+      "feedback_world_id": "PS-NFL-H4",
+      "feedforward_world_id": "PS-IFFL-H4"
+    },
+    "status": "Direct deterministic output of the checked-in public-development pulse constructor for one protected skipping cell. PS-NFL-H4 has a support-qualified period-two event word 01 repeated ten times; PS-IFFL-H4 is period one and has no skipping signature. Both topology dispositions remain unresolved because no actionable estimator, rival certificate, comparison, confirmation partition, workstation performance measurement, or energy measurement exists."
+  },
+  {
     "id": "interface-qualified-retroactivity",
     "title": "A connected client can reshape the producer transient",
     "equation": "dX/dt = k(t)-delta X+k_off C-k_on X(p_tot-C);  R(X)=[1+(1+X/K_d)^2/(p_tot/K_d)]^-1",

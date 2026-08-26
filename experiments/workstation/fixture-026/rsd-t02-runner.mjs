@@ -3,6 +3,7 @@ import {
   access,
   lstat,
   mkdir,
+  open,
   readFile,
   realpath,
   stat,
@@ -19,8 +20,18 @@ import {
   sha256Hex,
 } from "../lib/checkpoint-ledger.mjs";
 import {
+  FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS,
+  FIXTURE_026_RSD_T02_ARM_BANK_VERSION,
+  FIXTURE_026_RSD_T02_INACTIVE_ARM_IDS,
+  assertFixture026RsdT02ArmCommitment,
+  buildFixture026RsdT02ArmCommitment,
+  buildFixture026RsdT02SystemPacket,
+  validateFixture026RsdT02ArmBankConfig,
+} from "./rsd-t02-arm-bank.mjs";
+import {
   FIXTURE_026_RSD_T02_ACTIONABLE_ARM_IDS,
   FIXTURE_026_RSD_T02_PAIR_CERTIFICATES,
+  FIXTURE_026_RSD_T02_PROPERTY_KEYS,
   FIXTURE_026_RSD_T02_RECIPES,
 } from "./rsd-t02-contract.mjs";
 import {
@@ -45,6 +56,7 @@ import {
   buildFixture026RsdT02EpisodeCommand,
   buildFixture026RsdT02ExecutionDescriptors,
   buildFixture026RsdT02WorkUnits,
+  fixture026RsdT02Projection,
   fixture026RsdT02InputCommandCount,
   fixture026RsdT02ScheduleSha256,
   generateFixture026RsdT02Transcript,
@@ -54,7 +66,7 @@ import {
   fixture026RsdT02RunLockPath,
 } from "./rsd-t02-run-lock.mjs";
 
-export const FIXTURE_026_RSD_T02_RUNNER_VERSION = "fixture-026.rsd-t02-runner.v1";
+export const FIXTURE_026_RSD_T02_RUNNER_VERSION = "fixture-026.rsd-t02-runner.v2";
 export const FIXTURE_026_RSD_T02_RUNTIME_FINGERPRINT = Object.freeze({
   schema: 1,
   node_version: process.versions.node,
@@ -74,24 +86,29 @@ const LEDGER_FORMAT = "fixture-026.rsd-t02-ledger.v1";
 const RAW_FILE = "rsd-t02-raw-events.jsonl";
 const CHECKPOINT_FILE = "rsd-t02-checkpoint.json";
 const RUN_FILE = "rsd-t02-run.json";
+const ARM_COMMITMENT_FILE = "rsd-t02-arm-commitment.json";
 const SUMMARY_FILE = path.join("analysis", "rsd-t02-summary.json");
-const RUN_INTERPRETATION = "NO_RESULT: complete bounded public-development RSD-T02 mechanism-panel construction run; T02-FLOOR and O2 remain non-executable, and no actionable estimator or claim-eligible comparison exists.";
+const RUN_INTERPRETATION = "NO_RESULT: complete bounded public-development RSD-T02 mechanism-panel and pre-evaluator three-arm policy-conformance run; six registry roles remain unimplemented, the two comparator references are not mature nulls, and no comparison, T02-FLOOR, O2, or claim authority exists.";
 const RUN_IDENTITY_KEYS = Object.freeze([
   "schema", "artifact", "track", "execution_claims", "excluded_claims", "runner_version",
-  "generator_version", "evaluator_version", "event_contract_version", "ledger_format",
+  "generator_version", "evaluator_version", "event_contract_version", "arm_bank_version",
+  "ledger_format",
   "runtime_fingerprint", "runtime_fingerprint_sha256", "profile", "seeds", "source_hashes",
   "seed_scope", "source_seed_count", "construction_seed_count",
   "configured_work_units", "full_public_development_pack_executed",
   "partition", "information_cut_status", "execution_mode", "gpu_permitted",
   "observation_regimes_executed", "observation_regimes_not_executed", "floor_runtime_state",
-  "actionable_arms", "actionable_arms_implemented", "evaluator_only_arm",
+  "actionable_arms", "actionable_arms_implemented", "actionable_arms_not_implemented",
+  "arm_policy_authority", "evaluator_only_arm",
   "result_label", "no_result", "claim_eligible", "comparison_inference_permitted",
   "scientific_result", "performance_result", "measured_energy_present",
   "energy_conclusion_allowed", "run_id",
 ]);
 const RUN_KEYS = Object.freeze([
   ...RUN_IDENTITY_KEYS,
-  "expected_work_units", "ledger", "raw_path", "checkpoint_path", "interpretation",
+  "expected_work_units", "ledger", "raw_path", "checkpoint_path", "arm_commitment_path",
+  "arm_commitment_sha256", "arm_commitment_file_sha256", "arm_packet_records",
+  "interpretation",
 ]);
 const LEDGER_KEYS = Object.freeze([
   "records", "scientific_payload_sha256", "hash_chain_sha256", "completed_work_units",
@@ -102,7 +119,7 @@ const ANALYSIS_KEYS = Object.freeze([
   "expected_records", "observed_records", "records_per_seed", "o0_records_per_seed",
   "o1_records_per_seed", "sample_rows_per_record", "system_aggregation",
   "matched_step_pair_matrix", "pair_matrix",
-  "cost_totals", "checks", "decision", "result_label", "no_result", "claim_eligible",
+  "cost_totals", "arm_bank", "checks", "decision", "result_label", "no_result", "claim_eligible",
   "comparison_inference_permitted", "scientific_result", "performance_result",
   "measured_energy_present", "energy_conclusion_allowed", "interpretation",
 ]);
@@ -113,15 +130,18 @@ const sourceFiles = Object.freeze([
   "rsd-t02-generator.mjs",
   "rsd-t02-evaluator.mjs",
   "rsd-t02-event.mjs",
+  "rsd-t02-arm-bank.mjs",
   "rsd-t02-run-lock.mjs",
   "rsd-t02-runner.mjs",
   "runner.mjs",
   "rsd-t02-output.schema.json",
+  "rsd-t02-arm-bank.schema.json",
   "../../fixtures/026-interface-qualified-relative-sensing.md",
   "../../../math/interventional-mechanism-equivalence.md",
   "../../../research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md",
   "seeds/development.reveal.json",
   "configs/rsd-t02-bounded-conformance.json",
+  "configs/rsd-t02-arm-bank.json",
   "seeds/confirmation.unavailable.json",
   "seeds/transfer.unavailable.json",
 ]);
@@ -203,7 +223,7 @@ async function assertSafeRepositoryPath(target, {
 
 async function assertSafeRunArtifacts(directory, { complete = false } = {}) {
   await assertSafeRepositoryPath(directory, { finalType: "directory" });
-  for (const name of [RAW_FILE, CHECKPOINT_FILE, RUN_FILE]) {
+  for (const name of [RAW_FILE, CHECKPOINT_FILE, RUN_FILE, ARM_COMMITMENT_FILE]) {
     await assertSafeRepositoryPath(path.join(directory, name), {
       allowMissing: !complete,
       finalType: "file",
@@ -241,14 +261,59 @@ async function fileSha256(file) {
   return createHash("sha256").update(await readFile(file)).digest("hex");
 }
 
+async function fileFingerprint(file) {
+  const bytes = await readFile(file);
+  return Object.freeze({
+    sha256: createHash("sha256").update(bytes).digest("hex"),
+    bytes: bytes.length,
+  });
+}
+
+async function loadJsonFingerprint(file) {
+  const bytes = await readFile(file);
+  return Object.freeze({
+    document: JSON.parse(bytes.toString("utf8")),
+    fingerprint: Object.freeze({
+      sha256: createHash("sha256").update(bytes).digest("hex"),
+      bytes: bytes.length,
+    }),
+  });
+}
+
 async function loadJson(file) {
   return JSON.parse(await readFile(file, "utf8"));
 }
 
-async function writeJsonStable(file, value) {
+async function syncParentDirectory(file) {
+  let directoryHandle;
+  try {
+    directoryHandle = await open(path.dirname(file), "r");
+    await directoryHandle.sync();
+  } catch (error) {
+    if (
+      process.platform !== "win32"
+      || !new Set(["EACCES", "EBADF", "EISDIR", "EINVAL", "EPERM"]).has(error.code)
+    ) throw error;
+  } finally {
+    await directoryHandle?.close();
+  }
+}
+
+async function writeJsonStable(file, value, { durable = false } = {}) {
   const body = `${JSON.stringify(value, null, 2)}\n`;
   try {
-    await writeFile(file, body, { flag: "wx" });
+    if (durable) {
+      const handle = await open(file, "wx");
+      try {
+        await handle.writeFile(body, "utf8");
+        await handle.sync();
+      } finally {
+        await handle.close();
+      }
+      await syncParentDirectory(file);
+    } else {
+      await writeFile(file, body, { flag: "wx" });
+    }
   } catch (error) {
     if (error.code !== "EEXIST") throw error;
     const current = JSON.parse(await readFile(file, "utf8"));
@@ -332,39 +397,77 @@ async function loadInputs(profile) {
   if (!new Set(["smoke", "development"]).has(profile)) {
     throw new Error("Fixture 026 RSD-T02 profile must be smoke or development.");
   }
-  const seedPath = path.join(fixtureRoot, "seeds", "development.reveal.json");
-  const [seedDocument, confirmationUnavailable, transferUnavailable] = await Promise.all([
-    loadJson(seedPath).then(validateFixture026RsdT02SeedDocument),
-    loadJson(path.join(fixtureRoot, "seeds", "confirmation.unavailable.json")).then(
-      (document) => validateFixture026RsdT02Unavailable(document, "confirmation"),
+  const inputFiles = Object.freeze({
+    "seeds/development.reveal.json": path.join(
+      fixtureRoot, "seeds", "development.reveal.json",
     ),
-    loadJson(path.join(fixtureRoot, "seeds", "transfer.unavailable.json")).then(
-      (document) => validateFixture026RsdT02Unavailable(document, "held-out"),
+    "configs/rsd-t02-bounded-conformance.json": path.join(
+      fixtureRoot, "configs", "rsd-t02-bounded-conformance.json",
     ),
-  ]);
+    "configs/rsd-t02-arm-bank.json": path.join(
+      fixtureRoot, "configs", "rsd-t02-arm-bank.json",
+    ),
+    "seeds/confirmation.unavailable.json": path.join(
+      fixtureRoot, "seeds", "confirmation.unavailable.json",
+    ),
+    "seeds/transfer.unavailable.json": path.join(
+      fixtureRoot, "seeds", "transfer.unavailable.json",
+    ),
+  });
+  const loadedInputs = Object.fromEntries(await Promise.all(Object.entries(inputFiles).map(
+    async ([relative, absolute]) => [relative, await loadJsonFingerprint(absolute)],
+  )));
+  const seedDocument = validateFixture026RsdT02SeedDocument(
+    loadedInputs["seeds/development.reveal.json"].document,
+  );
+  const confirmationUnavailable = validateFixture026RsdT02Unavailable(
+    loadedInputs["seeds/confirmation.unavailable.json"].document,
+    "confirmation",
+  );
+  const transferUnavailable = validateFixture026RsdT02Unavailable(
+    loadedInputs["seeds/transfer.unavailable.json"].document,
+    "held-out",
+  );
   void confirmationUnavailable;
   void transferUnavailable;
-  const boundedConfig = validateFixture026RsdT02BoundedConformanceConfig(await loadJson(path.join(
-    fixtureRoot,
-    "configs",
-    "rsd-t02-bounded-conformance.json",
-  )));
+  const boundedConfig = validateFixture026RsdT02BoundedConformanceConfig(
+    loadedInputs["configs/rsd-t02-bounded-conformance.json"].document,
+  );
+  const armConfig = validateFixture026RsdT02ArmBankConfig(
+    loadedInputs["configs/rsd-t02-arm-bank.json"].document,
+  );
   const constructionSeedCount = boundedConfig.profiles[profile].construction_seed_count;
   const configuredWorkUnits = boundedConfig.profiles[profile].work_units;
   if (seedDocument.seeds.length !== boundedConfig.source_seed_count) {
     throw new Error("Fixture 026 RSD-T02 source seed pack cardinality differs from its hashed bounded configuration.");
   }
   const seeds = seedDocument.seeds.slice(0, constructionSeedCount);
-  const sourceHashes = Object.fromEntries(await Promise.all(sourceFiles.map(async (relative) => [
-    relative.replaceAll("\\", "/"),
-    await fileSha256(path.resolve(fixtureRoot, relative)),
-  ])));
+  const sourceFingerprints = Object.fromEntries(await Promise.all(sourceFiles.map(
+    async (relative) => {
+      const normalized = relative.replaceAll("\\", "/");
+      return [
+        normalized,
+        loadedInputs[normalized]?.fingerprint
+          ?? await fileFingerprint(path.resolve(fixtureRoot, relative)),
+      ];
+    },
+  )));
+  const sourceHashes = Object.fromEntries(Object.entries(sourceFingerprints).map(
+    ([relative, fingerprint]) => [relative, fingerprint.sha256],
+  ));
+  const policyArtifactBytes = sourceFingerprints["rsd-t02-arm-bank.mjs"].bytes;
+  const policyConfigBytes = sourceFingerprints["configs/rsd-t02-arm-bank.json"].bytes;
   return Object.freeze({
     profile,
     seeds: Object.freeze(seeds),
     sourceSeedCount: seedDocument.seeds.length,
     constructionSeedCount,
     configuredWorkUnits,
+    armConfig,
+    policyArtifactSha256: sourceHashes["rsd-t02-arm-bank.mjs"],
+    policyArtifactBytes,
+    policyConfigSha256: sourceHashes["configs/rsd-t02-arm-bank.json"],
+    policyConfigBytes,
     sourceHashes: Object.freeze(sourceHashes),
     runtimeFingerprint: FIXTURE_026_RSD_T02_RUNTIME_FINGERPRINT,
     runtimeFingerprintSha256: sha256Hex(canonicalize(FIXTURE_026_RSD_T02_RUNTIME_FINGERPRINT)),
@@ -382,6 +485,7 @@ function runIdentity(inputs) {
     generator_version: FIXTURE_026_RSD_T02_GENERATOR_VERSION,
     evaluator_version: FIXTURE_026_RSD_T02_EVALUATOR_VERSION,
     event_contract_version: FIXTURE_026_RSD_T02_EVENT_VERSION,
+    arm_bank_version: FIXTURE_026_RSD_T02_ARM_BANK_VERSION,
     ledger_format: LEDGER_FORMAT,
     runtime_fingerprint: inputs.runtimeFingerprint,
     runtime_fingerprint_sha256: inputs.runtimeFingerprintSha256,
@@ -401,7 +505,9 @@ function runIdentity(inputs) {
     observation_regimes_not_executed: ["O2-SELECT6"],
     floor_runtime_state: "foundation-only-not-executed",
     actionable_arms: FIXTURE_026_RSD_T02_ACTIONABLE_ARM_IDS,
-    actionable_arms_implemented: false,
+    actionable_arms_implemented: FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS,
+    actionable_arms_not_implemented: FIXTURE_026_RSD_T02_INACTIVE_ARM_IDS,
+    arm_policy_authority: "bounded-pre-evaluator-conformance-references-not-mature-comparators",
     evaluator_only_arm: "O-GRAPH",
     result_label: "NO_RESULT",
     no_result: true,
@@ -423,6 +529,50 @@ function allWorkUnits(inputs, identity) {
     throw new Error("Fixture 026 RSD-T02 computed grid differs from the hashed bounded conformance configuration.");
   }
   return units;
+}
+
+function armPacketInputs(inputs, units) {
+  return Object.freeze(inputs.seeds.flatMap((seed) => (
+    FIXTURE_026_RSD_T02_RECIPES.map((recipe, systemSlot) => {
+      const projections = units.filter((unit) => (
+        unit.seed === seed && unit.recipe_id === recipe.recipe_id
+      )).map((unit) => {
+        const command = buildFixture026RsdT02EpisodeCommand(unit);
+        const transcript = assertFixture026RsdT02Transcript(
+          generateFixture026RsdT02Transcript(command),
+        );
+        return fixture026RsdT02Projection(transcript);
+      });
+      return Object.freeze({
+        seed,
+        system_slot: systemSlot,
+        packet: buildFixture026RsdT02SystemPacket(projections).packet,
+      });
+    })
+  )));
+}
+
+function expectedArmCommitment(inputs, units) {
+  return assertFixture026RsdT02ArmCommitment(buildFixture026RsdT02ArmCommitment({
+    profile: inputs.profile,
+    packetInputs: armPacketInputs(inputs, units),
+    config: inputs.armConfig,
+    policyArtifactSha256: inputs.policyArtifactSha256,
+    policyArtifactBytes: inputs.policyArtifactBytes,
+    policyConfigSha256: inputs.policyConfigSha256,
+    policyConfigBytes: inputs.policyConfigBytes,
+  }));
+}
+
+function armPacketRecordForUnit(commitment, unit) {
+  const systemSlot = FIXTURE_026_RSD_T02_RECIPES.findIndex(
+    ({ recipe_id: recipeId }) => recipeId === unit.recipe_id,
+  );
+  const record = commitment.packet_records.find((candidate) => (
+    candidate.seed === unit.seed && candidate.system_slot === systemSlot
+  ));
+  if (!record) throw new Error("Fixture 026 RSD-T02 work unit lacks a pre-evaluator arm packet.");
+  return record;
 }
 
 function workUnitKey(unit) {
@@ -591,6 +741,10 @@ function assertRunShape(run) {
     || run.ledger.completed_work_units < 1
     || !/^[0-9a-f]{64}$/u.test(run.ledger.scientific_payload_sha256)
     || !/^[0-9a-f]{64}$/u.test(run.ledger.hash_chain_sha256)
+    || !/^[0-9a-f]{64}$/u.test(run.arm_commitment_sha256)
+    || !/^[0-9a-f]{64}$/u.test(run.arm_commitment_file_sha256)
+    || !Number.isSafeInteger(run.arm_packet_records)
+    || run.arm_packet_records < 1
     || run.ledger.checkpoint_status !== "current"
     || run.interpretation !== RUN_INTERPRETATION
   ) throw new Error("Fixture 026 RSD-T02 run document violates its closed contract.");
@@ -616,7 +770,12 @@ async function reconstructAndBindLedger({ directory, inputs, identity, run }) {
   return reconstructed;
 }
 
-function assertRun(run, { identity, directory, expectedWorkUnits }) {
+function assertRun(run, {
+  identity,
+  directory,
+  expectedWorkUnits,
+  armCommitmentState,
+}) {
   assertRunShape(run);
   if (
     Object.entries(identity).some(([key, value]) => canonicalize(run[key]) !== canonicalize(value))
@@ -625,6 +784,11 @@ function assertRun(run, { identity, directory, expectedWorkUnits }) {
     || run.ledger.completed_work_units !== expectedWorkUnits
     || run.raw_path !== canonicalRepositoryPath(path.join(directory, RAW_FILE))
     || run.checkpoint_path !== canonicalRepositoryPath(path.join(directory, CHECKPOINT_FILE))
+    || run.arm_commitment_path
+      !== canonicalRepositoryPath(path.join(directory, ARM_COMMITMENT_FILE))
+    || run.arm_commitment_sha256 !== armCommitmentState.commitment.commitment_sha256
+    || run.arm_commitment_file_sha256 !== armCommitmentState.file_sha256
+    || run.arm_packet_records !== armCommitmentState.commitment.packet_records.length
   ) throw new Error("Fixture 026 RSD-T02 run identity, counts, or paths differ from current inputs.");
   return run;
 }
@@ -656,6 +820,60 @@ async function readValidatedRecords(directory, identity = null, profile = null) 
     records: Object.freeze(records),
     raw_sha256: createHash("sha256").update(text).digest("hex"),
     terminal_hash: previousHash,
+  });
+}
+
+async function ensurePreEvaluatorArmCommitment({ directory, inputs, units }) {
+  const expected = expectedArmCommitment(inputs, units);
+  const commitmentPath = path.join(directory, ARM_COMMITMENT_FILE);
+  await assertSafeRepositoryPath(commitmentPath, {
+    allowMissing: true,
+    finalType: "file",
+    label: "Fixture 026 RSD-T02 pre-evaluator arm commitment",
+  });
+  if (await exists(commitmentPath)) {
+    const stored = assertFixture026RsdT02ArmCommitment(await loadJson(commitmentPath));
+    if (canonicalize(stored) !== canonicalize(expected)) {
+      throw new Error("Fixture 026 RSD-T02 stored arm commitment differs from the frozen policies and packet grid.");
+    }
+  } else {
+    const rawPath = path.join(directory, RAW_FILE);
+    const rawHasEvaluatorRecords = await exists(rawPath) && (await stat(rawPath)).size > 0;
+    if (
+      rawHasEvaluatorRecords
+      || await exists(path.join(directory, CHECKPOINT_FILE))
+      || await exists(path.join(directory, RUN_FILE))
+    ) {
+      throw new Error("Fixture 026 RSD-T02 refuses to create an arm commitment after evaluator-bearing run state exists.");
+    }
+    await writeJsonStable(commitmentPath, expected, { durable: true });
+  }
+  await assertSafeRepositoryPath(commitmentPath, {
+    finalType: "file",
+    label: "Fixture 026 RSD-T02 pre-evaluator arm commitment",
+  });
+  return Object.freeze({
+    commitment: expected,
+    path: commitmentPath,
+    file_sha256: await fileSha256(commitmentPath),
+  });
+}
+
+async function readBoundArmCommitment({ directory, inputs, units }) {
+  const commitmentPath = path.join(directory, ARM_COMMITMENT_FILE);
+  await assertSafeRepositoryPath(commitmentPath, {
+    finalType: "file",
+    label: "Fixture 026 RSD-T02 pre-evaluator arm commitment",
+  });
+  const expected = expectedArmCommitment(inputs, units);
+  const stored = assertFixture026RsdT02ArmCommitment(await loadJson(commitmentPath));
+  if (canonicalize(stored) !== canonicalize(expected)) {
+    throw new Error("Fixture 026 RSD-T02 arm commitment is not reproducible from frozen pre-evaluator inputs.");
+  }
+  return Object.freeze({
+    commitment: stored,
+    path: commitmentPath,
+    file_sha256: await fileSha256(commitmentPath),
   });
 }
 
@@ -700,8 +918,19 @@ export async function executeFixture026RsdT02({
   const checkpointPath = path.join(directory, CHECKPOINT_FILE);
   const runPath = path.join(directory, RUN_FILE);
   await assertSafeRunArtifacts(directory);
+  const armCommitmentState = await ensurePreEvaluatorArmCommitment({
+    directory,
+    inputs,
+    units,
+  });
+  const armCommitment = armCommitmentState.commitment;
   if (await exists(runPath)) {
-    assertRun(await loadJson(runPath), { identity, directory, expectedWorkUnits: units.length });
+    assertRun(await loadJson(runPath), {
+      identity,
+      directory,
+      expectedWorkUnits: units.length,
+      armCommitmentState,
+    });
   }
   const ledger = await openCheckpointLedger({
     artifact: "fixture-026",
@@ -746,9 +975,18 @@ export async function executeFixture026RsdT02({
     ledger: ledger.summary(),
     raw_path: canonicalRepositoryPath(rawPath),
     checkpoint_path: canonicalRepositoryPath(checkpointPath),
+    arm_commitment_path: canonicalRepositoryPath(armCommitmentState.path),
+    arm_commitment_sha256: armCommitment.commitment_sha256,
+    arm_commitment_file_sha256: armCommitmentState.file_sha256,
+    arm_packet_records: armCommitment.packet_records.length,
     interpretation: RUN_INTERPRETATION,
   };
-  assertRun(run, { identity, directory, expectedWorkUnits: units.length });
+  assertRun(run, {
+    identity,
+    directory,
+    expectedWorkUnits: units.length,
+    armCommitmentState,
+  });
   await writeJsonStable(runPath, run);
   await assertSafeRepositoryPath(runPath, {
     finalType: "file",
@@ -819,6 +1057,88 @@ function sumCost(records, field) {
   return records.reduce((sum, record) => sum + (record.cost_vector[field] ?? 0), 0);
 }
 
+function summarizeArmBank(commitment) {
+  const responses = commitment.packet_records.flatMap((record) => record.active_arm_responses);
+  const byArm = Object.fromEntries(FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS.map((armId) => {
+    const armResponses = responses.filter(({ arm_id: responseArmId }) => responseArmId === armId);
+    return [armId, {
+      packet_responses: armResponses.length,
+      shared_acquisition_per_packet: armResponses[0].resource_ledger.shared_acquisition,
+      policy_construction: armResponses[0].resource_ledger.policy_construction,
+      decisions: Object.fromEntries(FIXTURE_026_RSD_T02_PROPERTY_KEYS.map((key) => [
+        key,
+        {
+          decide: armResponses.filter((response) => response.properties[key].action === "decide").length,
+          abstain: armResponses.filter((response) => response.properties[key].action === "abstain").length,
+        },
+      ])),
+      scalar_operations: armResponses.reduce(
+        (sum, response) => sum + response.resource_ledger.inference.actual.scalar_operations,
+        0,
+      ),
+      packet_traversal_scalar_operations: armResponses.reduce(
+        (sum, response) => sum
+          + response.resource_ledger.inference.actual.packet_traversal_scalar_operations,
+        0,
+      ),
+      policy_sample_rows_read: armResponses.reduce(
+        (sum, response) => sum
+          + response.resource_ledger.inference.actual.policy_sample_rows_read,
+        0,
+      ),
+      transcendental_evaluations: armResponses.reduce(
+        (sum, response) => sum + response.resource_ledger.inference.actual.transcendental_evaluations,
+        0,
+      ),
+      retained_state_bytes_peak: Math.max(...armResponses.map(
+        (response) => response.resource_ledger.inference.actual.retained_state_bytes,
+      )),
+      influential_parameter_bytes_peak: Math.max(...armResponses.map(
+        (response) => response.resource_ledger.inference.actual.influential_parameter_bytes,
+      )),
+      tuning_trials: 0,
+      training_labels_seen: 0,
+      wall_seconds: null,
+      later_joules: null,
+    }];
+  }));
+  return Object.freeze({
+    contract_version: commitment.contract_version,
+    commitment_sha256: commitment.commitment_sha256,
+    packet_records: commitment.packet_records.length,
+    active_arm_ids: commitment.active_arm_ids,
+    inactive_arm_ids: commitment.inactive_arm_ids,
+    response_frozen_before_any_packet_evaluator: true,
+    exact_information_parity: commitment.packet_records.every((record) => (
+      new Set(record.active_arm_responses.map(
+        ({ information_ledger: ledger }) => canonicalize(ledger),
+      )).size === 1
+    )),
+    identical_common_caps_without_padding: commitment.packet_records.every((record) => (
+      new Set(record.active_arm_responses.map(
+        ({ resource_ledger: ledger }) => ledger.common_caps_sha256,
+      )).size === 1
+    )),
+    three_resource_ledgers_closed: responses.every((response) => (
+      response.resource_ledger.shared_acquisition.sample_rows_acquired === 53795
+      && response.resource_ledger.policy_construction.training_labels_seen === 0
+      && response.resource_ledger.policy_construction.tuning_trials === 0
+      && response.resource_ledger.inference.actual.sample_rows_validated === 53795
+      && response.compatible_property_vectors.length > 0
+    )),
+    inactive_roles_force_abstention: commitment.packet_records.every((record) => (
+      record.inactive_arm_responses.every((response) => response.action === "abstain")
+    )),
+    training_labels_seen: 0,
+    tuning_trials: 0,
+    comparator_maturity_claimed: false,
+    by_arm: byArm,
+    comparison_inference_permitted: false,
+    claim_eligible: false,
+    result_label: "NO_RESULT",
+  });
+}
+
 function assertAnalysis(summary) {
   if (
     !exactKeys(summary, ANALYSIS_KEYS)
@@ -846,7 +1166,14 @@ export async function computeFixture026RsdT02Analysis(output) {
   const inputs = await loadInputs(run.profile);
   const identity = runIdentity(inputs);
   const units = allWorkUnits(inputs, identity);
-  assertRun(run, { identity, directory, expectedWorkUnits: units.length });
+  const armCommitmentState = await readBoundArmCommitment({ directory, inputs, units });
+  const armCommitment = armCommitmentState.commitment;
+  assertRun(run, {
+    identity,
+    directory,
+    expectedWorkUnits: units.length,
+    armCommitmentState,
+  });
   const reconstructedLedger = await reconstructAndBindLedger({ directory, inputs, identity, run });
   const raw = await readValidatedRecords(directory, identity, run.profile);
   if (
@@ -892,6 +1219,7 @@ export async function computeFixture026RsdT02Analysis(output) {
   const matchedStepPairMatrix = Object.freeze((await Promise.all(
     inputs.seeds.map((seed) => matchedStepPairMatrixForSeed(seed, run.profile)),
   )).flat());
+  const armBank = summarizeArmBank(armCommitment);
   const bySeed = (seed) => raw.records.filter((record) => record.seed === seed);
   const checks = {
     exact_work_grid_cardinality: raw.records.length === inputs.seeds.length * 175,
@@ -915,6 +1243,17 @@ export async function computeFixture026RsdT02Analysis(output) {
         (hash) => hash === record.projection_sha256,
       )
     )),
+    arm_bank_is_precommitted_and_bound_before_evaluator: units.every((unit) => (
+      armPacketRecordForUnit(armCommitment, unit).system_packet_sha256.length === 64
+    )) && run.arm_commitment_sha256 === armCommitment.commitment_sha256,
+    active_arm_information_and_caps_are_exactly_equal: armBank.exact_information_parity
+      && armBank.identical_common_caps_without_padding,
+    active_arm_acquisition_construction_and_inference_ledgers_are_closed:
+      armBank.three_resource_ledgers_closed,
+    inactive_arm_roles_force_visible_abstention: armBank.inactive_roles_force_abstention,
+    arm_policies_use_no_labels_or_tuning: armBank.training_labels_seen === 0
+      && armBank.tuning_trials === 0,
+    bounded_comparator_references_are_not_called_mature: armBank.comparator_maturity_claimed === false,
     response_precedes_evaluator_and_oracle_is_excluded: raw.records.every((record) => (
       record.response.evaluator_oracle_access === false
       && record.evaluator.evaluator_id === "O-GRAPH"
@@ -985,6 +1324,7 @@ export async function computeFixture026RsdT02Analysis(output) {
       wall_seconds: null,
       later_joules: null,
     },
+    arm_bank: armBank,
     checks,
     decision: passed ? "contract-validation-pass" : "contract-validation-fail",
     result_label: "NO_RESULT",
@@ -1074,7 +1414,13 @@ export async function prepareFixture026RsdT02(profile) {
     o1_records_per_seed: 130,
     o2_executed: false,
     floor_executed: false,
-    actionable_arms_implemented: false,
+    arm_packet_records: inputs.seeds.length * FIXTURE_026_RSD_T02_RECIPES.length,
+    arm_responses: inputs.seeds.length
+      * FIXTURE_026_RSD_T02_RECIPES.length
+      * FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS.length,
+    actionable_arms_implemented: FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS,
+    actionable_arms_not_implemented: FIXTURE_026_RSD_T02_INACTIVE_ARM_IDS,
+    arm_policy_authority: "bounded-pre-evaluator-conformance-references-not-mature-comparators",
     result_label: "NO_RESULT",
     no_result: true,
     claim_eligible: false,
