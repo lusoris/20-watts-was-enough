@@ -186,6 +186,16 @@ const EXPECTED_POLICY_ACTUALS = Object.freeze({
   }),
 });
 
+const POLICY_BASE_RESULT_KEYS = Object.freeze([
+  "schema", "contract_version", "arm_id", "properties", "counter",
+  "retained_scalars", "parameter_scalars",
+]);
+const POLICY_BASE_COUNTER_KEYS = Object.freeze([
+  "scalar_operations", "transcendental_evaluations", "policy_sample_rows_read",
+]);
+export const FIXTURE_026_RSD_T02_POLICY_BASE_VERSION =
+  "fixture-026.rsd-t02-policy-base.v1";
+
 function exactKeys(value, keys) {
   return value
     && typeof value === "object"
@@ -661,6 +671,31 @@ function mechanismPolicy(packet, policy) {
   return { properties, counter, retainedScalars: 4, parameterScalars: 10 };
 }
 
+function policyBaseResult(armId, evaluated) {
+  return Object.freeze({
+    schema: 1,
+    contract_version: FIXTURE_026_RSD_T02_POLICY_BASE_VERSION,
+    arm_id: armId,
+    properties: evaluated.properties,
+    counter: Object.freeze(evaluated.counter),
+    retained_scalars: evaluated.retainedScalars,
+    parameter_scalars: evaluated.parameterScalars,
+  });
+}
+
+export function evaluateFixture026RsdT02ArmBase({ armId, packet, config }) {
+  assertFixture026RsdT02SystemPacket(packet);
+  validateFixture026RsdT02ArmBankConfig(config);
+  if (!FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS.includes(armId)) {
+    throw new RangeError(`Fixture 026 RSD-T02 arm is not active in the bounded bank: ${armId}`);
+  }
+  let evaluated;
+  if (armId === "B-STATE-SPACE") evaluated = stateSpacePolicy(packet, config.policies[armId]);
+  else if (armId === "B-RECURRENT") evaluated = recurrentPolicy(packet, config.policies[armId]);
+  else evaluated = mechanismPolicy(packet, config.policies[armId]);
+  return assertFixture026RsdT02PolicyBaseResult(policyBaseResult(armId, evaluated));
+}
+
 function assertPropertyResult(key, result) {
   if (
     !exactKeys(result, PROPERTY_RESULT_KEYS)
@@ -673,6 +708,46 @@ function assertPropertyResult(key, result) {
     || result.reason_codes.length !== 1
     || typeof result.reason_codes[0] !== "string"
   ) throw new Error(`Fixture 026 RSD-T02 arm property ${key} violates its closed contract.`);
+}
+
+export function assertFixture026RsdT02PolicyBaseResult(result) {
+  if (
+    !exactKeys(result, POLICY_BASE_RESULT_KEYS)
+    || result.schema !== 1
+    || result.contract_version !== FIXTURE_026_RSD_T02_POLICY_BASE_VERSION
+    || !FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS.includes(result.arm_id)
+    || !exactKeys(result.properties, FIXTURE_026_RSD_T02_PROPERTY_KEYS)
+    || !exactKeys(result.counter, POLICY_BASE_COUNTER_KEYS)
+    || !Number.isSafeInteger(result.counter.scalar_operations)
+    || result.counter.scalar_operations < 0
+    || !Number.isSafeInteger(result.counter.transcendental_evaluations)
+    || result.counter.transcendental_evaluations < 0
+    || !Number.isSafeInteger(result.counter.policy_sample_rows_read)
+    || result.counter.policy_sample_rows_read < 0
+    || !Number.isSafeInteger(result.retained_scalars)
+    || result.retained_scalars < 0
+    || !Number.isSafeInteger(result.parameter_scalars)
+    || result.parameter_scalars < 0
+  ) throw new Error("Fixture 026 RSD-T02 policy base result violates its closed contract.");
+  for (const key of FIXTURE_026_RSD_T02_PROPERTY_KEYS) {
+    assertPropertyResult(key, result.properties[key]);
+  }
+  const expected = EXPECTED_POLICY_ACTUALS[result.arm_id];
+  const expectedShape = {
+    "B-STATE-SPACE": { retained_scalars: 6, parameter_scalars: 5 },
+    "B-RECURRENT": { retained_scalars: 4, parameter_scalars: 6 },
+    "C-MECHANISM-BANK": { retained_scalars: 4, parameter_scalars: 10 },
+  }[result.arm_id];
+  const packetTraversal = 53795 * PACKET_TRAVERSAL_SCALAR_OPERATIONS_PER_ROW;
+  if (
+    result.counter.policy_sample_rows_read !== expected.policy_sample_rows_read
+    || result.counter.scalar_operations !== expected.scalar_operations - packetTraversal
+    || result.counter.transcendental_evaluations !== expected.transcendental_evaluations
+    || result.retained_scalars !== expectedShape.retained_scalars
+    || result.parameter_scalars !== expectedShape.parameter_scalars
+    || compatibleHypotheses(result.properties).length < 1
+  ) throw new Error("Fixture 026 RSD-T02 policy base result exceeds or violates its frozen work envelope.");
+  return result;
 }
 
 function assertActualWithinCaps(actual, caps, armId, canonicalPacketBytes) {
@@ -827,7 +902,7 @@ export function assertFixture026RsdT02ArmResponse(response) {
   return response;
 }
 
-export function runFixture026RsdT02Arm({
+export function attachFixture026RsdT02ArmResponse({
   armId,
   packet,
   config,
@@ -835,6 +910,7 @@ export function runFixture026RsdT02Arm({
   policyArtifactBytes,
   policyConfigSha256,
   policyConfigBytes,
+  baseResult,
 }) {
   assertFixture026RsdT02SystemPacket(packet);
   validateFixture026RsdT02ArmBankConfig(config);
@@ -849,13 +925,19 @@ export function runFixture026RsdT02Arm({
     || !Number.isSafeInteger(policyConfigBytes)
     || policyConfigBytes < 1
   ) throw new Error("Fixture 026 RSD-T02 arm policy provenance is invalid.");
+  assertFixture026RsdT02PolicyBaseResult(baseResult);
+  if (baseResult.arm_id !== armId) {
+    throw new Error("Fixture 026 RSD-T02 policy base result is bound to another arm.");
+  }
   const canonicalPacket = canonicalize(packet);
   const packetSha256 = sha256Hex(canonicalPacket);
   const packetBytes = Buffer.byteLength(canonicalPacket, "utf8");
-  let evaluated;
-  if (armId === "B-STATE-SPACE") evaluated = stateSpacePolicy(packet, config.policies[armId]);
-  else if (armId === "B-RECURRENT") evaluated = recurrentPolicy(packet, config.policies[armId]);
-  else evaluated = mechanismPolicy(packet, config.policies[armId]);
+  const evaluated = {
+    properties: baseResult.properties,
+    counter: baseResult.counter,
+    retainedScalars: baseResult.retained_scalars,
+    parameterScalars: baseResult.parameter_scalars,
+  };
   const commonCapsSha256 = sha256Hex(canonicalize(config.common_caps));
   const packetTraversalScalarOperations = config.packet.sample_rows
     * PACKET_TRAVERSAL_SCALAR_OPERATIONS_PER_ROW;
@@ -951,6 +1033,28 @@ export function runFixture026RsdT02Arm({
   return Object.freeze(assertFixture026RsdT02ArmResponse(response));
 }
 
+export function runFixture026RsdT02Arm({
+  armId,
+  packet,
+  config,
+  policyArtifactSha256,
+  policyArtifactBytes,
+  policyConfigSha256,
+  policyConfigBytes,
+}) {
+  const baseResult = evaluateFixture026RsdT02ArmBase({ armId, packet, config });
+  return attachFixture026RsdT02ArmResponse({
+    armId,
+    packet,
+    config,
+    policyArtifactSha256,
+    policyArtifactBytes,
+    policyConfigSha256,
+    policyConfigBytes,
+    baseResult,
+  });
+}
+
 function inactiveResponse(armId, systemPacketSha256) {
   return Object.freeze({
     arm_id: armId,
@@ -968,9 +1072,17 @@ export function buildFixture026RsdT02ArmCommitment({
   policyArtifactBytes,
   policyConfigSha256,
   policyConfigBytes,
+  activeResponsesByPacket = null,
 }) {
   validateFixture026RsdT02ArmBankConfig(config);
-  if (!["smoke", "development"].includes(profile) || !Array.isArray(packetInputs)) {
+  if (
+    !["smoke", "development"].includes(profile)
+    || !Array.isArray(packetInputs)
+    || (activeResponsesByPacket !== null && (
+      !Array.isArray(activeResponsesByPacket)
+      || activeResponsesByPacket.length !== packetInputs.length
+    ))
+  ) {
     throw new Error("Fixture 026 RSD-T02 arm commitment inputs are invalid.");
   }
   const packetRecords = packetInputs.map((input, packetOrdinal) => {
@@ -982,17 +1094,32 @@ export function buildFixture026RsdT02ArmCommitment({
       || input.system_slot >= FIXTURE_026_RSD_T02_RECIPES.length
     ) throw new Error("Fixture 026 RSD-T02 arm packet envelope is invalid.");
     const built = buildFixture026RsdT02SystemPacket(input.packet.projections);
-    const activeResponses = FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS.map((armId) => (
-      runFixture026RsdT02Arm({
-        armId,
-        packet: built.packet,
-        config,
-        policyArtifactSha256,
-        policyArtifactBytes,
-        policyConfigSha256,
-        policyConfigBytes,
-      })
-    ));
+    const activeResponses = activeResponsesByPacket === null
+      ? FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS.map((armId) => (
+        runFixture026RsdT02Arm({
+          armId,
+          packet: built.packet,
+          config,
+          policyArtifactSha256,
+          policyArtifactBytes,
+          policyConfigSha256,
+          policyConfigBytes,
+        })
+      ))
+      : activeResponsesByPacket[packetOrdinal];
+    if (
+      !Array.isArray(activeResponses)
+      || activeResponses.length !== FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS.length
+    ) throw new Error("Fixture 026 RSD-T02 supplied active arm responses are incomplete.");
+    activeResponses.forEach((response, armIndex) => {
+      assertFixture026RsdT02ArmResponse(response);
+      if (
+        response.arm_id !== FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS[armIndex]
+        || response.system_packet_sha256 !== built.system_packet_sha256
+        || response.policy_artifact_sha256 !== policyArtifactSha256
+        || response.policy_config_sha256 !== policyConfigSha256
+      ) throw new Error("Fixture 026 RSD-T02 supplied active arm response is not bound to its packet and policy inputs.");
+    });
     const parityViews = activeResponses.map(({ information_ledger: ledger }) => canonicalize(ledger));
     if (new Set(parityViews).size !== 1) {
       throw new Error("Fixture 026 RSD-T02 active arms did not receive exact information parity.");
@@ -1033,6 +1160,13 @@ export function buildFixture026RsdT02ArmCommitment({
     ...body,
     commitment_sha256: sha256Hex(canonicalize(body)),
   });
+}
+
+export function buildFixture026RsdT02ArmCommitmentFromResponses(options) {
+  if (!Array.isArray(options?.activeResponsesByPacket)) {
+    throw new Error("Fixture 026 RSD-T02 isolated commitment requires supplied arm responses.");
+  }
+  return buildFixture026RsdT02ArmCommitment(options);
 }
 
 export function assertFixture026RsdT02ArmCommitment(commitment) {

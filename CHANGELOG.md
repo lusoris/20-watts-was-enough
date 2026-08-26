@@ -7,6 +7,25 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- The private research reader now preserves links to checked-in source and data
+  artifacts as authenticated inert-text files generated during the site build,
+  instead of silently falling back to the project README. Experiment contracts,
+  JSON Schemas, research data and editable plot sources receive distinct labels;
+  the generated raw-file directory stays out of Git and is rebuilt from the
+  canonical Markdown link graph.
+
+- Decision 0020 and a closed RSD-T02 Stage-3 design now separate procedural
+  information cuts from scientific replication. The ordered 64-seed public
+  pack is assigned once to 32 fit, 16 calibration and 16 evaluation roles with
+  phase-specific allowed actions and hostile leakage checks. Because the
+  current seed changes only an opaque state-handle permutation, the design
+  forbids seed-level inference, declares the split unpowered and retains
+  `NO_RESULT`. It also freezes the two generic-null targets, endpoint families,
+  prospective Holm rule, resource obligations and the independent-system and
+  outer-family holdouts required before comparison. An editable SVG generated
+  from the actual initialization and permutation functions plots all 64 labels,
+  their two handle maps and the three information-cut regions.
+
 - F-026 now executes the bounded `T02-MECH` construction/conformance slice
   through the fixture runner. Each canonical seed produces 175 closed-schema
   records: three O0 episode descriptors crossed with three conditioned time
@@ -18,19 +37,27 @@ the exact diff; this file records why the project changed.
   prefixes are plumbing runs, not substitutes for that pack. O2, T02-FLOOR,
   mature/actionable estimator arms, comparisons, confirmation custody and
   result or energy authority remain absent. A pre-evaluator whole-system stage
-  now commits three same-process public-prior policy-conformance references and
-  six visible abstentions before any raw evaluator ledger exists; it records
-  exact acquisition, prior and inference costs without treating those fixed
-  references as trained estimators or mature nulls. Commitment creation is
-  exclusive and file-synchronized; parsed JSON, hashes and byte counts share
-  their input buffers. The remaining static-ESM load-time mutation window is
-  explicitly outside this same-process construction authority. The C-1561
+  now commits three public-prior policy-conformance references and six visible
+  abstentions before any raw evaluator ledger exists; it records exact
+  acquisition, prior and inference costs without treating those fixed
+  references as trained estimators or mature nulls. Each packet runs in a fresh
+  permission-restricted child, with one hardened VM per active policy and a
+  verified SHA-named bundle; canonical request/response framing, resource caps,
+  replay binding and typed fail-closed abstention replace the former
+  same-process execution path. Boundary failures are atomically retained in a
+  self-hashed, replay-bound abstention artifact that cannot coexist with
+  evaluator-bearing state. Commitment creation is exclusive and
+  file-synchronized; parsed JSON, hashes and byte counts share their input
+  buffers. The remaining parent generator/evaluator static-ESM load-time
+  mutation window is explicitly outside this public-development authority. The C-1561
   repeated-pulse subtrack now also has a six-world machine constructor with
   adaptive exact-edge integration, support, refractory, count, latency and
   period-skipping gates.
   Bounded positive and hostile construction cells execute as `NO_RESULT`; the
-  full six-duration, robustness and mixed-window panels, runner integration and
-  actionable comparison remain absent. Generated coverage records 1,463 of
+  full 229-unit schedule is now frozen in a source/runtime-bound append-only
+  runner with explicit incompleteness, eight-unit invocation limits and a
+  256 MiB whole-run result cap. The six-duration, robustness and mixed-window
+  executions and actionable comparison remain absent. Generated coverage records 1,463 of
   1,555 claims as protocol-covered and zero as workstation-executable.
 
 - Decision 0019 and the F-026 `RSD-T02` foundation now separate four scored

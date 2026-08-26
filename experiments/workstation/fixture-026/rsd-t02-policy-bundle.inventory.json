@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-policy-bundle-inventory.v1",
+  "bundle": {
+    "content_address": "sha256:d7cee7b1db27ceaf00789e95cadf1d6031454d32658560b79b601392dfd501df",
+    "relative_path": "policy-bundles/d7cee7b1db27ceaf00789e95cadf1d6031454d32658560b79b601392dfd501df.js",
+    "sha256": "d7cee7b1db27ceaf00789e95cadf1d6031454d32658560b79b601392dfd501df",
+    "bytes": 15617
+  },
+  "sources": [
+    {
+      "relative_path": "configs/rsd-t02-arm-bank.json",
+      "sha256": "0baf24af897db565e59eadac34f16955f7d078ef5d405c5d5d8c9aca568da176",
+      "bytes": 3337
+    },
+    {
+      "relative_path": "rsd-t02-arm-bank.mjs",
+      "sha256": "5be350e7cfced7669f126f8d12b3406f655d753d3d2987ab8268e0e3622986ba",
+      "bytes": 54274
+    },
+    {
+      "relative_path": "rsd-t02-contract.mjs",
+      "sha256": "ecc00ee7c8a1a83c887aad438208f5c9a2e51907c7080b78fc4b91867615c09e",
+      "bytes": 24570
+    },
+    {
+      "relative_path": "rsd-t02-isolated-policy.mjs",
+      "sha256": "ec9e5f2f005d9c22374690a2a7a6fcd36121b88dcedb5ca905b9e1dffa9f09ef",
+      "bytes": 26440
+    },
+    {
+      "relative_path": "rsd-t02-policy-worker.mjs",
+      "sha256": "a8dd2464541f558c3f0ae03ad2d639a5a7b8915ced5bf9b8775a544436e8599a",
+      "bytes": 10678
+    }
+  ],
+  "source_inventory_sha256": "3f49a261ff7ab4de92836e84e759ad71934e68412191c6ed914494fc57c22d34",
+  "authority": "checked-in-public-development-conformance-policy-base-v1",
+  "inventory_sha256": "c25603a6eb31c00ec1908ed12c7695c258a9b2984e028e6a880640dd41c2de6b"
+}

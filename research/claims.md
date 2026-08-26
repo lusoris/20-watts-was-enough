@@ -24067,10 +24067,13 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
 - **Direct-test specification:** [`RSD-T02-PULSE`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pulse--one-sided-repeated-stimulus-signatures)
   freezes the source-shaped pair, support gates, response events, latency,
   response count, refractory maximizer, subharmonic recurrence, counterworlds
-  and failure disposition. It is a complete written public-development
-  protocol with `NO_RESULT`; no constructor, runner or confirmation result is
-  claimed. The parent five-recipe construction remains separate and does not
-  instantiate this signature.
+  and failure disposition. A bounded six-world constructor and a frozen
+  append-only 229-unit panel runner now implement the public-development
+  construction layer. The complete panel has not been executed; mixed-window
+  coordinates and clean OU sample artifacts remain unresolved, no estimator
+  comparison exists, and no confirmation result is claimed. The parent
+  five-recipe construction remains separate and does not instantiate this
+  signature.
 - **Traceability:** [pulse-signature audit](audits/2026-08-26-rsd-t02-pulse-signatures.md) · [mathematical contract](../math/repeated-stimulus-topology-signatures.md) · [bibliography key `rahi2017oscillatory`](references.bib) · [broader mechanism audit](audits/2026-08-26-rsd-t02-mechanism-equivalence.md#repeated-stimulation-adds-one-sided-signatures).
 
 ### C-1562

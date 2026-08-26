@@ -111,6 +111,7 @@ function kindFrom(path: string): ResearchDocument["kind"] {
 }
 
 function renderableBody(
+  path: string,
   title: string,
   body: string,
   kind: ResearchDocument["kind"],
@@ -122,7 +123,14 @@ function renderableBody(
     return `# Bibliography\n\nThis is the canonical machine-readable reference ledger.\n\n\`\`\`bibtex\n${body.trim()}\n\`\`\``;
   }
   if (kind === "json") {
-    return `# ${title}\n\nThis is the editable machine-readable source for generated graphics.\n\n\`\`\`json\n${body.trim()}\n\`\`\``;
+    const description = path.startsWith("assets/plots/")
+      ? "This is the editable machine-readable source for generated graphics."
+      : path.endsWith(".schema.json")
+        ? "This is a checked-in machine-readable JSON Schema."
+        : path.startsWith("experiments/")
+          ? "This is a checked-in machine-readable experiment contract or artifact."
+          : "This is a checked-in machine-readable research artifact.";
+    return `# ${title}\n\n${description}\n\n\`\`\`json\n${body.trim()}\n\`\`\``;
   }
   return body;
 }
@@ -218,7 +226,7 @@ export const documents: ResearchDocument[] = Object.entries(rawModules)
     const path = modulePath.replace(/^\//, "");
     const kind = kindFrom(path);
     const title = titleFrom(path, rawBody);
-    const body = renderableBody(title, rawBody, kind);
+    const body = renderableBody(path, title, rawBody, kind);
     return {
       path,
       title,

@@ -16,7 +16,7 @@
   "hardware": {
     "smoke": {
       "cpu": "one ordinary little-endian CPU thread or more; GPU forbidden",
-      "memory_bytes": 134217728,
+      "memory_bytes": 536870912,
       "disk_bytes": 52428800,
       "energy": "not measured or modeled; energy conclusions forbidden"
     },
@@ -58,6 +58,9 @@
       "experiments/workstation/fixture-026/rsd-t02-event.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-arm-bank.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-pulse.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-pulse-panel-runner.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-stage3-design.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-isolated-policy.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-runner.test.mjs"
     ],
     "full_tests": [
@@ -72,6 +75,9 @@
       "experiments/workstation/fixture-026/rsd-t02-event.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-arm-bank.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-pulse.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-pulse-panel-runner.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-stage3-design.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-isolated-policy.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-runner.test.mjs"
     ],
     "t02_entrypoint": "experiments/workstation/fixture-026/rsd-t02-runner.mjs",
@@ -80,8 +86,14 @@
     "t02_arm_bank": "experiments/workstation/fixture-026/rsd-t02-arm-bank.mjs",
     "t02_arm_schema": "experiments/workstation/fixture-026/rsd-t02-arm-bank.schema.json",
     "t02_arm_config": "experiments/workstation/fixture-026/configs/rsd-t02-arm-bank.json",
+    "t02_policy_boundary": "experiments/workstation/fixture-026/rsd-t02-isolated-policy.mjs",
+    "t02_policy_bundle_inventory": "experiments/workstation/fixture-026/rsd-t02-policy-bundle.inventory.json",
     "t02_pulse_constructor": "experiments/workstation/fixture-026/rsd-t02-pulse.mjs",
     "t02_pulse_test": "experiments/workstation/fixture-026/rsd-t02-pulse.test.mjs",
+    "t02_pulse_panel_runner": "experiments/workstation/fixture-026/rsd-t02-pulse-panel-runner.mjs",
+    "t02_pulse_panel_schema": "experiments/workstation/fixture-026/rsd-t02-pulse-panel-output.schema.json",
+    "t02_stage3_design": "experiments/workstation/fixture-026/configs/rsd-t02-stage3-design.json",
+    "t02_stage3_schema": "experiments/workstation/fixture-026/rsd-t02-stage3-design.schema.json",
     "implemented_tracks": ["RSD-T01"],
     "contract_frozen_tracks": ["RSD-T01", "RSD-T02"],
     "construction_conformance_runtime_tracks": ["RSD-T02"],
@@ -127,8 +139,8 @@
         "A prospective observation cut and the registered simultaneous property-performance/trajectory-conformance primary endpoint, paired powered statistics, uncertainty intervals, and multiplicity control are absent.",
         "No confirmation or transfer seed, commitment, private custody record, release, or promotion evidence exists.",
         "No calibrated workstation timing, memory, or energy measurement exists, and energy conclusions are forbidden.",
-        "T02-MECH now has a deterministic bounded public-development construction/conformance generator, evaluator-only graph oracle, closed event/output and whole-system arm-commitment schemas, typed cost vectors, append-only ledger, resume, pair matrices, recomputed analysis, and fixed pre-evaluator B-STATE-SPACE, B-RECURRENT, and C-MECHANISM-BANK policy-conformance references under exact information and cap parity. These same-process public-prior construction-tuned references are not isolated workers, trained estimators, calibrated posteriors, mature nulls, or comparison eligible; the other six actionable roles remain unimplemented and forced to abstain. The profile executes only a hashed one/two-seed ordered prefix, not the full 64-seed pack; O2, T02-FLOOR execution and asymptotic authority, comparison and claim authority, confirmation custody, workstation measurement, energy evidence, and any result remain absent. Every T02 artifact is NO_RESULT.",
-        "The isolated C-1561 pulse module constructs six source-shaped and hostile worlds, adaptive exact-edge trajectories, support gates, event words, bounded refractory cells and deterministic OU diagnostics, but it is not runner-integrated and has not executed the full six-duration, 64-seed robustness or mixed-window panels. It exposes evaluator construction truth only: no actionable estimator, comparison, confirmation, workstation or energy authority exists, and every record is NO_RESULT.",
+        "T02-MECH now has a deterministic bounded public-development construction/conformance generator, evaluator-only graph oracle, closed event/output and whole-system arm-commitment schemas, typed cost vectors, append-only ledger, resume, pair matrices, recomputed analysis, and fixed pre-evaluator B-STATE-SPACE, B-RECURRENT, and C-MECHANISM-BANK policy-conformance references under exact information and cap parity. One fresh permission-restricted child per packet evaluates the three construction-tuned references in separate hardened VM contexts from a verified content-addressed bundle; boundary failures are atomically persisted in a self-hashed, replay-bound abstention artifact before the evaluator ledger opens. These public-prior references remain untrained, uncalibrated, immature as nulls, and comparison-ineligible; the other six actionable roles remain unimplemented and forced to abstain. The profile executes only a hashed one/two-seed ordered prefix, not the full 64-seed pack; O2, T02-FLOOR execution and asymptotic authority, comparison and claim authority, confirmation custody, workstation measurement, energy evidence, and any result remain absent. Every T02 artifact is NO_RESULT.",
+        "The C-1561 pulse constructor provides six source-shaped and hostile worlds, adaptive exact-edge trajectories, support gates, event words, bounded refractory cells and deterministic OU diagnostics. A separate 229-unit append-only panel runner now freezes the refractory, skipping, mixed-window and OU schedule, but it has not executed the complete panel: mixed windows lack frozen coordinates and OU work still lacks clean deterministic sample artifacts. It exposes evaluator construction truth only: no actionable estimator, comparison, confirmation, workstation or energy authority exists, and every record is NO_RESULT.",
         "RSD-T03 through RSD-T10 have no machine contract or implementation.",
         "Every generated event and command result is explicitly labelled NO_RESULT."
       ]

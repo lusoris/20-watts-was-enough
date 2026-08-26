@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t02-stage3-design.v1.schema.json",
+  "title": "Fixture 026 RSD-T02 prospective Stage-3 development design",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "rsd-t02-stage3-design.mjs",
+    "export": "assertFixture026RsdT02Stage3Design",
+    "version_export": "FIXTURE_026_RSD_T02_STAGE3_DESIGN_VERSION",
+    "contract_version": "fixture-026.rsd-t02-stage3-design.v1",
+    "test": "rsd-t02-stage3-design.test.mjs"
+  },
+  "required": [
+    "schema", "contract_version", "artifact", "track", "authority",
+    "information_cut", "replication_boundary", "reference_arms",
+    "endpoint_contract", "resource_contract", "promotion_gates",
+    "comparison_inference_permitted", "claim_eligible", "result_label"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-026.rsd-t02-stage3-design.v1" },
+    "artifact": { "const": "fixture-026" },
+    "track": { "const": "RSD-T02" },
+    "authority": { "const": "prospective-public-development-design-only" },
+    "information_cut": { "$ref": "#/$defs/informationCut" },
+    "replication_boundary": { "$ref": "#/$defs/replicationBoundary" },
+    "reference_arms": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/referenceArm" }
+    },
+    "endpoint_contract": { "type": "object" },
+    "resource_contract": { "type": "object" },
+    "promotion_gates": {
+      "type": "array", "minItems": 8, "maxItems": 8,
+      "items": { "type": "string", "minLength": 1 }, "uniqueItems": true
+    },
+    "comparison_inference_permitted": { "const": false },
+    "claim_eligible": { "const": false },
+    "result_label": { "const": "NO_RESULT" }
+  },
+  "$defs": {
+    "informationCut": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_seed_path", "source_seed_sha256", "source_seed_count",
+        "assignment_algorithm", "expected_assignment_sha256", "roles"
+      ],
+      "properties": {
+        "source_seed_path": { "const": "seeds/development.reveal.json" },
+        "source_seed_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "source_seed_count": { "const": 64 },
+        "assignment_algorithm": { "const": "contiguous-ordered-public-seeds-v1" },
+        "expected_assignment_sha256": { "const": "f7756f427c605f789c745ce74716fbef56b76ebef5d1c29ca9a81002a545e1f0" },
+        "roles": {
+          "type": "array", "minItems": 3, "maxItems": 3,
+          "items": { "$ref": "#/$defs/role" }
+        }
+      }
+    },
+    "role": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "offset", "count", "permitted_actions", "forbidden_actions"],
+      "properties": {
+        "role": { "enum": ["fit", "calibration", "evaluation"] },
+        "offset": { "type": "integer", "minimum": 0, "maximum": 48 },
+        "count": { "type": "integer", "minimum": 16, "maximum": 32 },
+        "permitted_actions": { "type": "array", "minItems": 3, "items": { "type": "string" } },
+        "forbidden_actions": { "type": "array", "minItems": 4, "items": { "type": "string" } }
+      }
+    },
+    "replicationBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "current_seed_effect", "current_seeds_are_independent_scientific_units",
+        "seed_level_inferential_replication_permitted", "current_split_use",
+        "future_unit_of_analysis", "outer_system_family_holdout_required"
+      ],
+      "properties": {
+        "current_seed_effect": { "const": "opaque-state-handle-permutation-only" },
+        "current_seeds_are_independent_scientific_units": { "const": false },
+        "seed_level_inferential_replication_permitted": { "const": false },
+        "current_split_use": { "const": "software-and-procedural-development-only" },
+        "future_unit_of_analysis": { "const": "independently-generated-held-out-system-instance" },
+        "outer_system_family_holdout_required": { "const": true }
+      }
+    },
+    "referenceArm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "arm_id", "target_role", "construction_status", "model_family",
+        "information_access", "direct-plant-state-access", "recipe-or-equation-access"
+      ],
+      "properties": {
+        "arm_id": { "enum": ["B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK"] },
+        "target_role": { "enum": ["mature-generic-null", "source-shaped-candidate"] },
+        "construction_status": { "enum": ["not-implemented", "fixed-conformance-reference-only"] },
+        "model_family": { "type": "string", "minLength": 20 },
+        "information_access": { "const": "same-35-projection-causal-packet" },
+        "direct-plant-state-access": { "const": false },
+        "recipe-or-equation-access": { "const": false }
+      }
+    }
+  }
+}

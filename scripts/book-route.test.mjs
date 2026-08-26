@@ -11,6 +11,11 @@ const edition = await readFile(
   new URL("../app/components/book-edition.tsx", import.meta.url),
   "utf8",
 );
+const content = await readFile(new URL("../app/content.ts", import.meta.url), "utf8");
+const markdownDocument = await readFile(
+  new URL("../app/components/markdown-document.tsx", import.meta.url),
+  "utf8",
+);
 
 test("the book route keeps the complete corpus out of the Worker render", () => {
   assert.match(page, /import \{ BookLoader \}/);
@@ -26,4 +31,12 @@ test("the book route keeps the complete corpus out of the Worker render", () => 
   assert.match(edition, /import type \{ ResearchDocument \}/);
   assert.doesNotMatch(edition, /import \{ documents[^}]*\} from "\.\.\/content"/);
   assert.match(edition, /export function BookEdition\(\)/);
+});
+
+test("the private reader distinguishes JSON contracts and exposes linked source artifacts", () => {
+  assert.match(content, /path\.startsWith\("assets\/plots\/"\)/);
+  assert.match(content, /checked-in machine-readable JSON Schema/);
+  assert.match(content, /checked-in machine-readable experiment contract or artifact/);
+  assert.match(markdownDocument, /repositoryArtifactHref\(internal\.path\)/);
+  assert.match(markdownDocument, /data-repository-artifact/);
 });

@@ -118,9 +118,10 @@ remain absent; every event is `NO_RESULT`.
 
 [Fixture F-026](fixture-026/README.md) implements a bounded public-development
 generator-only smoke slice for C-1540 / RSD-T01 and a separate deterministic
-bounded T02-MECH construction/conformance runtime. A third isolated module
-implements the C-1561 repeated-stimulus plant/event constructor without yet
-integrating its full panels into the runner. Every RSD-T01 public seed
+bounded T02-MECH construction/conformance runtime. A separate C-1561 module
+implements the repeated-stimulus plant/event constructor, and a bounded
+append-only panel runner freezes its 229-unit execution schedule without
+executing it. Every RSD-T01 public seed
 contains the
 exact five-generator-family × four-history Cartesian grid plus four distinct
 malformed-interface sentinels. The harness uses canonical decimal-string
@@ -142,10 +143,16 @@ additive pre-evaluator stage commits fixed whole-system `B-STATE-SPACE`,
 information and cap parity; they use construction-tuned public thresholds,
 zero labels and zero tuning trials and are not mature nulls or trained
 estimators. Six roles remain unimplemented and abstain. Comparison and claim
-authority remain absent. The pulse module has executed bounded positive,
-feed-forward, linear-feedback, dead-time and alias construction checks, but not
-the six-duration refractory panel, noise grid, mixed-window panel or an
-actionable estimator. O2, T02-FLOOR execution, confirmation, workstation and
+authority remain absent. A separate closed Stage-3 design assigns the 64
+public seeds to 32 fit, 16 calibration and 16 evaluation roles while denying
+seed-level replication: these seeds alter only an opaque state-handle
+permutation. It freezes the access cut and future null/endpoint gates, not a
+powered comparison. The pulse module has executed bounded positive,
+feed-forward, linear-feedback, dead-time and alias construction checks. Its
+panel runner defaults to zero work, retains explicit incompleteness and binds
+source/runtime identities and byte budgets; the six-duration refractory,
+noise and mixed-window panels and actionable estimators remain unexecuted. O2,
+T02-FLOOR execution, confirmation, workstation and
 energy results remain absent; RSD-T03--RSD-T10 remain absent.
 Every event and successful response is `NO_RESULT`.
 

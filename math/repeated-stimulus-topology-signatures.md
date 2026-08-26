@@ -10,9 +10,9 @@
 - **Evidence audit:** [repeated-stimulus pulse signatures](../research/audits/2026-08-26-rsd-t02-pulse-signatures.md)
 - **Parent contract:** [intervention-qualified mechanism equivalence](interventional-mechanism-equivalence.md)
 - **Experiment contract:** [Fixture F-026, RSD-T02-PULSE](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pulse--one-sided-repeated-stimulus-signatures)
-- **Authority:** checked-in public-development construction module; `NO_RESULT`,
-  no full panel, actionable estimator, runner, confirmation custody,
-  workstation measurement or energy result
+- **Authority:** checked-in public-development constructor plus bounded panel
+  orchestrator; `NO_RESULT`, no full-panel execution, actionable estimator,
+  confirmation custody, workstation measurement or energy result
 
 ## Inference boundary
 
@@ -358,6 +358,28 @@ cannot establish stabilization: equation (12) needs adjacent duration slopes.
 The six-duration refractory panel, 64-seed noise grid and mixed-window panel
 remain unexecuted.
 
+The separate
+[`rsd-t02-pulse-panel-runner.mjs`](../experiments/workstation/fixture-026/rsd-t02-pulse-panel-runner.mjs)
+freezes an ordered 229-unit execution plan:
+
+1. four mixed-window contract records that remain unresolved while window
+   starts or widths are unfrozen;
+2. 18 refractory units from three worlds × six durations;
+3. 15 skipping units from five worlds × three periods; and
+4. 192 robustness units from 64 public seeds × three OU noise levels, each
+   targeting the deterministic panel only after its construction gates pass.
+
+The runner defaults to zero work and permits at most eight units per
+invocation. Its append-only resume identity binds the exact config, schedule,
+runner, constructor and event-schema bytes plus the Node/V8/libuv and host
+runtime fingerprint. A 16 MiB per-unit cap and 256 MiB whole-run cap apply to
+serialized results. The built-in executor can construct refractory and
+skipping units; clean-sample OU production remains external and mixed windows
+remain deliberately unresolved. No 229-unit run was started. Static imports
+are loaded before their source files are fingerprinted, so same-process source
+mutation across that load/read interval remains outside this public
+construction boundary.
+
 ## Null and counterworld bank
 
 The versioned bank contains the following independent cases.
@@ -484,7 +506,8 @@ Kill a claim-eligible use of this subtrack if any of the following occurs:
 ## Disposition
 
 This note and its checked-in module complete a bounded construction layer for
-C-1561. They do not complete the six-duration and robustness panels, the mixed
-window statistic, runner integration, actionable estimator comparison,
-prospective confirmation partition or workstation execution. The only current
-authority is `public-development`, `construction-only` and `NO_RESULT`.
+C-1561. The bounded panel schedule and append-only runner now exist, but they
+do not complete the six-duration and robustness executions, the mixed-window
+statistic, actionable estimator comparison, prospective confirmation partition
+or workstation execution. The only current authority is `public-development`,
+`construction-only` and `NO_RESULT`.

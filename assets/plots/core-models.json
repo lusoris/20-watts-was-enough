@@ -483,6 +483,28 @@
     "status": "Direct deterministic output of the checked-in public-development pulse constructor for one protected skipping cell. PS-NFL-H4 has a support-qualified period-two event word 01 repeated ten times; PS-IFFL-H4 is period one and has no skipping signature. Both topology dispositions remain unresolved because no actionable estimator, rival certificate, comparison, confirmation partition, workstation performance measurement, or energy measurement exists."
   },
   {
+    "id": "rsd-t02-procedural-seed-map",
+    "title": "64 seed labels are only two opaque handle maps",
+    "equation": "seed → SHA-256 initialization ID → π ∈ {(H0→x0,H1→x1),(H0→x1,H1→x0)}",
+    "source": "math/interventional-mechanism-equivalence.md#prospective-fit-calibration-and-evaluation-cut",
+    "layout": {
+      "kind": "procedural-seed-permutation-map",
+      "width": 1100,
+      "height": 660,
+      "theme": "ember"
+    },
+    "parameters": {
+      "seed_start": 1540001,
+      "seed_count": 64,
+      "background_u": 2,
+      "time_constant_s": 1,
+      "fit_count": 32,
+      "calibration_count": 16,
+      "evaluation_count": 16
+    },
+    "status": "Exact mapping produced by the checked-in F-026 initialization-ID and opaque-state-permutation functions at the displayed background and time constant. The three colored regions are procedural information cuts. The seed axis selects one of two handle mappings and does not instantiate independently sampled systems, so the graphic carries no effective-sample-size, comparison, performance, or energy result."
+  },
+  {
     "id": "interface-qualified-retroactivity",
     "title": "A connected client can reshape the producer transient",
     "equation": "dX/dt = k(t)-delta X+k_off C-k_on X(p_tot-C);  R(X)=[1+(1+X/K_d)^2/(p_tot/K_d)]^-1",

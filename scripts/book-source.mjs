@@ -33,6 +33,7 @@ export async function bookSourceFiles(projectRoot) {
     "app/globals.css",
     "app/layout.tsx",
     "app/lib/readiness.ts",
+    "app/lib/repository-artifacts.ts",
     "experiments/test-readiness-summary.json",
     "package.json",
     "research/field-coverage.md",

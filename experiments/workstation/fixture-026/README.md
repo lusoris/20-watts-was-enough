@@ -204,6 +204,9 @@ layer with adaptive exact-edge integration, support gates, response/count/
 latency extraction, recurrence through $q=5$, refractory search and typed
 costs. Its checked cell and diagnostics remain evaluator-side
 public-development constructions, not results of the base runner.
+The companion `rsd-t02-pulse-panel-runner.mjs` freezes a separate 229-unit
+append-only schedule and exposes zero-work preparation plus bounded resume. It
+does not make the pulse subtrack part of the base T02-MECH event stream.
 
 T02-MECH now has a deterministic bounded construction/conformance runtime: 175
 events per selected seed, a closed actionable projection and response commit,
@@ -218,12 +221,19 @@ joint compatible property-vector set and three separate work ledgers: shared
 acquisition, policy construction/prior, and actual inference. Every numerical
 band is construction-tuned on the five public worlds, with zero labels and zero
 tuning trials. Actual work is not padded to the identical common caps.
-The policies execute in the same Node process with a checked-in public prior;
-the enforced firewall is exact projection shape plus commitment ordering, not
-process isolation, secret custody or an adversarial sandbox.
+Each packet executes in a fresh permission-restricted Node child, and each of
+the three active policies executes in a new hardened VM context loaded from a
+verified SHA-named bundle. One canonical LF request crosses the boundary; the
+policy VM receives no process, filesystem, network, environment, clock, random
+or evaluator capability. Bounded failures become ordered pre-evaluator
+abstentions with no retry or same-process fallback. The canonical
+`rsd-t02-arm-abstention.json` is atomically persisted and replay-bound, and it
+cannot coexist with an arm commitment or evaluator ledger. This remains a
+checked-in public-development conformance reference, not secret confirmation
+custody.
 C-1561 and C-1564 are excluded from the base event stream, and every artifact
-is `NO_RESULT`. The separate C-1561 constructor is not runner-integrated and
-has not executed its full refractory, robustness or mixed-window panels. No mature
+is `NO_RESULT`. The separate C-1561 panel runner has not executed its full
+refractory, robustness or mixed-window schedule. No mature
 null, trained or calibrated estimator, comparison, execution claim,
 confirmation custody, promotion path, O2 runtime, T02-FLOOR runtime,
 asymptotic result, workstation measurement or energy result exists. RSD-T01
@@ -240,6 +250,9 @@ node experiments/workstation/fixture-026/runner.mjs run --profile development --
 node experiments/workstation/fixture-026/runner.mjs analyze --output experiments/workstation/runs/fixture-026-development
 node experiments/workstation/fixture-026/runner.mjs validate --output experiments/workstation/runs/fixture-026-development
 node --test experiments/workstation/fixture-026/rsd-t02-pulse.test.mjs
+node --test experiments/workstation/fixture-026/rsd-t02-pulse-panel-runner.test.mjs
+node --test experiments/workstation/fixture-026/rsd-t02-stage3-design.test.mjs
+node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-isolated-policy.test.mjs
 
 node experiments/workstation/fixture-026/runner.mjs t02-prepare --profile smoke
 node experiments/workstation/fixture-026/runner.mjs t02-smoke --profile smoke --output experiments/workstation/runs/fixture-026-t02-smoke --resume false
@@ -271,14 +284,25 @@ directory sync where the platform exposes one. Policy source hash and byte
 count come from the same immutable in-memory read. Seed and configuration JSON
 are parsed from the exact byte buffers that supply their recorded hashes and
 sizes.
+If the isolated policy boundary abstains first, the runner instead publishes a
+closed-schema, self-hashed `rsd-t02-arm-abstention.json` through a pending-file,
+file flush and atomic same-directory link, then requests parent-directory sync
+where the platform permits it. Windows can reject directory-handle `fsync`, so
+that directory sync is best-effort there; artifact-file synchronization and
+atomic publication remain enforced. A repeated invocation revalidates and
+replays the exact artifact; replacement, disappearance, mutation or coexistence
+with evaluator-bearing state fails closed.
 
-Node loads the statically imported policy/generator/evaluator modules before
-the runner fingerprints their source files. The output lease protects the run
-directory, not the repository source tree. A concurrent source mutation during
-that module-load boundary can therefore separate loaded code from the later
-file fingerprint; this public-development runner is not a content-addressed
-loader or adversarial execution sandbox. Removing that residual boundary
-requires isolated workers loaded from a committed, content-addressed bundle.
+The active policy computation no longer relies on the parent process's
+statically imported policy helpers: it loads a checked-in content-addressed
+classic-script bundle in a fresh restricted child and binds the exact bundle,
+worker, source inventory, request, packet, configuration and runtime identities
+to its receipt. The parent still statically loads generator and evaluator
+modules before fingerprinting their source files. Because the output lease
+protects the run directory rather than the repository source tree, concurrent
+repository mutation across that parent-module load boundary can still separate
+loaded generator/evaluator code from later file fingerprints. That residual is
+outside this public-development authority.
 Resume is reconstructed from the raw ledger, binds the profile and every frozen
 source identity, requires the ledger to be an exact ordered prefix of the work
 grid, semantically replays every prior record before deriving remaining work,
@@ -303,6 +327,23 @@ The original v1 smoke contract remains reproducible from Git commit
 the seed grammar, grid, generator, event schema, run identity, and analysis
 identity; current-source validation therefore rejects v1 run directories
 instead of silently reinterpreting them.
+
+## Prospective Stage-3 cut
+
+[`configs/rsd-t02-stage3-design.json`](configs/rsd-t02-stage3-design.json)
+freezes the public 64-seed pack into disjoint 32/16/16 fit, calibration and
+evaluation roles. It also freezes the permitted actions at each boundary, the
+two generic-null targets, primary endpoint families, future Holm procedure,
+resource requirements and promotion gates. The validator rejects overlap,
+seed reordering, calibration refitting, evaluation threshold changes and any
+attempt to promote the design out of `NO_RESULT`.
+
+This is an access-control design, not an effective sample-size claim. Current
+RSD-T02 seeds change only an opaque two-state handle permutation, so no
+seed-level inference is allowed. The design becomes comparison-capable only
+after independent system instances, an outer system-family holdout, trained
+nulls, frozen numeric budgets and prospectively powered private confirmation
+exist.
 
 Run identity also freezes the actual Node version, V8 version, libuv version,
 platform, architecture, endianness, OS release, numeric model, and Math API

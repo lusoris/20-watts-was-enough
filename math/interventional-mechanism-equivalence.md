@@ -11,7 +11,7 @@
   [C-1563](../research/claims.md#c-1563), and
   [C-1564](../research/claims.md#c-1564)
 - **Evidence audit:** [mechanism equivalence and intervention-qualified discrimination](../research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md)
-- **Decision:** [0019 — score interventional properties, not generator names](../decisions/0019-score-interventional-properties-not-generator-names.md)
+- **Decisions:** [0019 — score interventional properties, not generator names](../decisions/0019-score-interventional-properties-not-generator-names.md) · [0020 — separate information cuts from scientific replication](../decisions/0020-separate-information-cuts-from-replication.md)
 - **Experiment contract:** [Fixture F-026, RSD-T02](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02--mechanism-discrimination-under-matched-step-behavior)
 - **Result state:** public-development equation and contract foundation;
   `NO_RESULT`, no implemented estimator comparison, no confirmation custody and
@@ -368,16 +368,24 @@ below were chosen after inspecting the five enumerated public construction
 worlds. They are therefore **construction-tuned protocol constants**, not
 fitted parameters or confirmation-calibrated decision limits.
 
-The policy code runs in the same Node process as packet construction and uses
-the checked-in public candidate/property prior. The enforced boundary is the
-closed policy projection plus commitment-before-evaluator order; it is not a
-separate worker, secret custody boundary or adversarial sandbox. Commitment
-creation is exclusive and file-synchronized before the raw evaluator ledger
-opens; source hash and byte count share one read, and input JSON is parsed from
-that same fingerprinted buffer. Static ESM modules are loaded before their file
-fingerprints, so concurrent repository mutation during module load remains
-outside this construction authority. A content-addressed worker bundle is
-required before treating the source boundary as adversarial.
+Each packet is evaluated in a fresh Node child, with a new hardened VM context
+for each active policy. The child receives one canonical LF JSON request and
+can read only the verified SHA-named policy bundle. The policy VM receives no
+process, filesystem, network, environment, clock, random or evaluator
+capability.
+Request, packet, configuration, bundle and runtime identities are bound into
+the returned receipt. Time, memory, request, stdout and stderr are capped, and
+any timeout, crash, malformed frame, replay or work-envelope violation becomes
+an ordered pre-evaluator abstention with no retry or same-process fallback. The
+runner atomically persists that outcome as a self-hashed
+`rsd-t02-arm-abstention.json`, replay-binds it on later invocations and forbids
+it from coexisting with the commitment or evaluator ledger.
+Commitment creation remains exclusive and file-synchronized before the raw
+evaluator ledger opens. The generator and evaluator are still statically
+loaded before their later file fingerprints, so concurrent repository mutation
+across that parent-module load boundary remains outside this
+public-development authority; the policy computation itself executes from the
+verified content-addressed bundle.
 
 For `B-STATE-SPACE`, define the fold $r_k=u_k/u_0$ and two fixed drives
 
@@ -465,7 +473,66 @@ pulse levels. C-1561 is specified separately in the
 [repeated-stimulus topology-signature contract](repeated-stimulus-topology-signatures.md);
 it is not a claim supported by these five-world construction tests.
 
+## Prospective fit, calibration and evaluation cut
+
+The Stage-3 design partitions the ordered 64-seed public pack once: ordered
+positions 1--32 are `fit`, 33--48 are `calibration`, and 49--64 are
+`evaluation`. The literal seed labels remain the frozen values
+`1540001`--`1540064`; the position numbers are not substitute seeds.
+Parameters and fit-only model selection stop at the first boundary;
+probability calibration plus support and abstention thresholds stop at the
+second; evaluation is one-pass frozen inference and scoring. Every future
+artifact must bind the preceding artifact and the exact partition identity.
+
+That split controls access, not replication. In the present generator, a seed
+selects one of only two hidden permutations of two opaque state handles. The
+permutation can swap which internal coordinate a reset or freeze targets, but
+it does not sample a new equation, parameter set, input history or noisy
+system. The 64 labels therefore cannot be analyzed as 64 independent systems,
+and the public split has no comparison or power authority.
+This is the scoped experimental-unit problem described by
+[Hurlbert (1984)](https://doi.org/10.2307/1942661), bibliography key
+[`hurlbert1984pseudoreplication`](../research/references.bib), not a statement
+that seeds can never be valid units in other generators.
+
+![The 64 procedural seed labels map to only two opaque state-handle permutations.](../public/plots/rsd-t02-procedural-seed-map.svg)
+
+The plotted points are computed from the checked-in initialization-ID and
+opaque-permutation functions. The colored regions show the access cut; they do
+not add independent system variation.
+
+The two generic references become mature nulls only after trainable causal
+state-space and compact recurrent estimators are implemented against the same
+35-projection packet, with no direct plant state, recipe or equation access.
+Their construction, selection, calibration, failures and fallbacks enter the
+resource ledger. A later confirmatory comparison needs independently generated
+held-out system instances and an outer system-family holdout; neither exists in
+the present five-world bank.
+
+For that later design, the fixed primary endpoint families are mean property
+log loss in nats and mean dimensionless decision loss. Coverage, selective
+risk, reliability, compatible-vector coverage and the resource vector are
+reported alongside them. The two candidate-versus-generic-null contrasts use
+the sequentially rejective procedure of
+[Holm (1979)](https://www.jstor.org/stable/4615733), bibliography key
+[`holm1979sequential`](../research/references.bib), within each endpoint family
+at familywise $\alpha=0.05$. Sample size must be powered before private
+confirmation seeds are created; 16 public evaluation labels are not assumed
+sufficient.
+
+The closed machine form is
+[`rsd-t02-stage3-design.json`](../experiments/workstation/fixture-026/configs/rsd-t02-stage3-design.json),
+validated by
+[`rsd-t02-stage3-design.mjs`](../experiments/workstation/fixture-026/rsd-t02-stage3-design.mjs).
+
 ## Calibration and abstention
+
+Probability quality is evaluated with logarithmic loss as a proper scoring
+rule in the sense reviewed by
+[Gneiting and Raftery (2007)](https://doi.org/10.1198/016214506000001437),
+bibliography key [`gneiting2007scoring`](../research/references.bib). The
+separate decision loss below encodes this fixture's abstention costs; it is not
+silently folded into calibration.
 
 For property coordinate $q$, let $\mathcal E_q$ be the set of values compatible
 with the registered observation packet and define
@@ -474,8 +541,11 @@ $$
 I_q=\mathbb 1[|\mathcal E_q|=1].
 $$
 
+When $I_q=1$, let $\pi_q$ denote the unique element of $\mathcal E_q$.
+
 An arm returns a probability $\widehat P(I_q=1)$, a posterior over property
-values, and either `decide` or `abstain`. With probabilities clipped at
+values, including posterior mass $\widehat P(\pi_q)$ on that unique compatible
+value, and either `decide` or `abstain`. With probabilities clipped at
 $10^{-12}$, the calibration loss in nats is
 
 $$

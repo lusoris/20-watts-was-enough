@@ -3,6 +3,7 @@
 import { Fragment } from "react";
 import { bookDocuments as documents } from "../book-content";
 import type { ResearchDocument } from "../content";
+import { isRepositoryArtifact, repositoryArtifactHref } from "../lib/repository-artifacts";
 import { MarkdownDocument } from "./markdown-document";
 import { ReadinessOverview } from "./readiness-overview";
 
@@ -72,6 +73,7 @@ export function BookEdition() {
     if (bookDocumentPaths.has(path)) {
       return path === "README.md" && hash ? `#${hash}` : `#${bookId(path)}`;
     }
+    if (isRepositoryArtifact(path)) return repositoryArtifactHref(path);
     const url = new URL("/", canonicalSite);
     url.searchParams.set("doc", path);
     url.hash = hash;

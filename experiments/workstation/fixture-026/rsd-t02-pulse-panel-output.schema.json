@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t02-pulse-panel-event.v1.schema.json",
+  "title": "Fixture 026 RSD-T02-PULSE bounded panel event",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "rsd-t02-pulse-panel-runner.mjs",
+    "export": "assertFixture026RsdT02PulsePanelEvent",
+    "version_export": "FIXTURE_026_RSD_T02_PULSE_PANEL_EVENT_VERSION",
+    "contract_version": "fixture-026.rsd-t02-pulse-panel-event.v1",
+    "test": "rsd-t02-pulse-panel-runner.test.mjs"
+  },
+  "required": [
+    "schema", "contract_version", "artifact", "track", "claim", "run_id",
+    "config_canonical_sha256", "work_key", "unit", "output", "result_label", "no_result",
+    "claim_eligible", "comparison_inference_permitted", "scientific_result", "performance_result",
+    "measured_energy_present", "energy_conclusion_allowed", "integrity"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-026.rsd-t02-pulse-panel-event.v1" },
+    "artifact": { "const": "fixture-026" },
+    "track": { "const": "RSD-T02-PULSE" },
+    "claim": { "const": "C-1561" },
+    "run_id": { "$ref": "#/$defs/hash" },
+    "config_canonical_sha256": { "$ref": "#/$defs/hash" },
+    "work_key": { "type": "string", "minLength": 1 },
+    "unit": { "$ref": "#/$defs/unit" },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "summary", "cost_vector", "serialized_result_bytes"],
+      "properties": {
+        "state": { "enum": ["resolved", "unresolved", "out_of_support", "malformed"] },
+        "summary": { "type": "object" },
+        "cost_vector": { "$ref": "#/$defs/cost" },
+        "serialized_result_bytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "result_label": { "const": "NO_RESULT" },
+    "no_result": { "const": true },
+    "claim_eligible": { "const": false },
+    "comparison_inference_permitted": { "const": false },
+    "scientific_result": { "const": false },
+    "performance_result": { "const": false },
+    "measured_energy_present": { "const": false },
+    "energy_conclusion_allowed": { "const": false },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "previous_sha256", "record_sha256"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 0 },
+        "previous_sha256": { "$ref": "#/$defs/hash" },
+        "record_sha256": { "$ref": "#/$defs/hash" }
+      }
+    }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["work_key", "kind", "execution_policy"],
+      "properties": {
+        "work_key": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["mixed-window-output", "refractory-duration", "skipping-cell", "ou-noise-grid"] },
+        "world_id": { "enum": ["PS-NFL-H4", "PS-IFFL-H4", "PS-NFL-LTI", "PS-MIXED", "PS-DEADTIME", "PS-ALIAS"] },
+        "window_end_s": { "enum": [50, 150, 250, 350] },
+        "duration_s": { "type": "number", "exclusiveMinimum": 0 },
+        "period_s": { "type": "number", "exclusiveMinimum": 0 },
+        "seed": { "type": "string", "pattern": "^[0-9]+$" },
+        "sigma_ratio": { "enum": [0.01, 0.05, 0.1] },
+        "correlation_time_s": { "const": 0.05 },
+        "target": { "const": "deterministic-panel-after-construction-gates" },
+        "execution_policy": { "type": "string", "minLength": 1 }
+      }
+    },
+    "cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pulse_cells", "stimulus_count", "response_count", "simulated_seconds", "sample_rows",
+        "serialized_bytes", "solver_evaluations", "scalar_operations", "retained_state_bytes",
+        "parameter_bytes", "tuning_trials", "wall_seconds", "later_joules",
+        "evaluator_state_comparisons"
+      ],
+      "properties": {
+        "pulse_cells": { "type": "integer", "minimum": 0 },
+        "stimulus_count": { "type": "integer", "minimum": 0 },
+        "response_count": { "type": "integer", "minimum": 0 },
+        "simulated_seconds": { "type": "number", "minimum": 0 },
+        "sample_rows": { "type": "integer", "minimum": 0 },
+        "serialized_bytes": { "type": "null" },
+        "solver_evaluations": { "type": "integer", "minimum": 0 },
+        "scalar_operations": { "type": "null" },
+        "retained_state_bytes": { "type": "integer", "minimum": 0 },
+        "parameter_bytes": { "type": "integer", "minimum": 0 },
+        "tuning_trials": { "const": 0 },
+        "wall_seconds": { "type": "null" },
+        "later_joules": { "type": "null" },
+        "evaluator_state_comparisons": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

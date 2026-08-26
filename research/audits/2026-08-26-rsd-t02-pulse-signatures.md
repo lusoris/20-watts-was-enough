@@ -201,8 +201,17 @@ One $d=0.30\,\mathrm s$ feedback-world diagnostic evaluated 198 coarse and 38
 refined period cells and retained an interior $T_{\max}$ interval of
 $[16.72,16.72]\,\mathrm s$. It is not a stabilization result because the
 registered decision needs consecutive slopes across the six durations. That
-full panel, the 64-seed noise grid, mixed-window statistic, runner integration
-and confirmation remain unexecuted.
+full panel, the 64-seed noise grid, mixed-window statistic and confirmation
+remain unexecuted.
+
+A bounded append-only panel runner now freezes the complete 229-unit work
+schedule: four unresolved mixed-window contract records, 18 refractory units,
+15 skipping units and 192 seed × OU-noise units. It binds exact source, schema,
+config, schedule and runtime identities; limits each invocation to eight units;
+and enforces 16 MiB per-result and 256 MiB whole-run serialized-output caps.
+The default budget is zero. This supplies orchestration and restart safety, not
+the missing executions: the mixed-window definition and clean-sample OU path
+remain open, and no full-panel run was started.
 
 ## Nulls and counterworlds
 
@@ -287,5 +296,6 @@ energy benefit, so this subtrack carries no energy conclusion.
 C-1561 now has both a complete written direct-test specification and a bounded
 machine construction layer. The evidence status stays scoped and one-sided.
 The experiment status remains `public-development`, `construction-only` and
-`NO_RESULT`: no full-panel runner, actionable estimator, protected confirmation
-split, workstation result or energy measurement exists.
+`NO_RESULT`: the bounded panel runner exists, but no full-panel execution,
+actionable estimator, protected confirmation split, workstation result or
+energy measurement exists.

@@ -1,0 +1,7 @@
+experiments/workstation/fixture-026/configs/rsd-t02-arm-bank.json text eol=lf
+experiments/workstation/fixture-026/rsd-t02-arm-bank.mjs text eol=lf
+experiments/workstation/fixture-026/rsd-t02-contract.mjs text eol=lf
+experiments/workstation/fixture-026/rsd-t02-isolated-policy.mjs text eol=lf
+experiments/workstation/fixture-026/rsd-t02-policy-worker.mjs text eol=lf
+experiments/workstation/fixture-026/rsd-t02-policy-bundle.inventory.json text eol=lf
+experiments/workstation/fixture-026/policy-bundles/*.js text eol=lf

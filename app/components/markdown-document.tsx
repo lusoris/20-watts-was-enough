@@ -15,6 +15,7 @@ import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import { isRepositoryArtifact, repositoryArtifactHref } from "../lib/repository-artifacts";
 import { MermaidDiagram } from "./mermaid-diagram";
 
 type MarkdownDocumentProps = {
@@ -22,6 +23,7 @@ type MarkdownDocumentProps = {
   currentPath: string;
   onNavigate: (path: string, hash?: string) => void;
   internalHref?: (path: string, hash: string) => string;
+  isNavigablePath?: (path: string) => boolean;
   imageLoading?: "eager" | "lazy";
 };
 
@@ -135,6 +137,7 @@ export function MarkdownDocument({
   currentPath,
   onNavigate,
   internalHref,
+  isNavigablePath,
   imageLoading = "lazy",
 }: MarkdownDocumentProps) {
   const ImageComponent = ({
@@ -166,6 +169,20 @@ export function MarkdownDocument({
       if (internalHref) {
         return (
           <a href={internalHref(internal.path, internal.hash)} {...props}>
+            {children}
+          </a>
+        );
+      }
+
+      if (isNavigablePath && !isNavigablePath(internal.path) && isRepositoryArtifact(internal.path)) {
+        return (
+          <a
+            href={repositoryArtifactHref(internal.path)}
+            target="_blank"
+            rel="noreferrer"
+            data-repository-artifact={internal.path}
+            {...props}
+          >
             {children}
           </a>
         );

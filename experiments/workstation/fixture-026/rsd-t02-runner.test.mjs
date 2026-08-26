@@ -30,6 +30,8 @@ const RAW_FILE = "rsd-t02-raw-events.jsonl";
 const CHECKPOINT_FILE = "rsd-t02-checkpoint.json";
 const RUN_FILE = "rsd-t02-run.json";
 const ARM_COMMITMENT_FILE = "rsd-t02-arm-commitment.json";
+const ARM_ABSTENTION_FILE = "rsd-t02-arm-abstention.json";
+const ARM_ABSTENTION_PENDING_FILE = `${ARM_ABSTENTION_FILE}.pending`;
 const SUMMARY_FILE = path.join("analysis", "rsd-t02-summary.json");
 
 async function temporaryOutput(prefix) {
@@ -61,6 +63,13 @@ test("preparation freezes the bounded 175-record public-development grid", async
   assert.equal(prepared.floor_executed, false);
   assert.equal(prepared.arm_packet_records, 5);
   assert.equal(prepared.arm_responses, 15);
+  assert.equal(
+    prepared.arm_policy_execution_boundary,
+    "fixture-026.rsd-t02-isolated-policy.v1",
+  );
+  assert.equal(prepared.isolated_policy_children, 5);
+  assert.match(prepared.policy_bundle_sha256, /^[0-9a-f]{64}$/u);
+  assert.match(prepared.policy_bundle_inventory_sha256, /^[0-9a-f]{64}$/u);
   assert.deepEqual(prepared.actionable_arms_implemented, [
     "B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK",
   ]);
@@ -77,6 +86,130 @@ test("preparation freezes the bounded 175-record public-development grid", async
   assert.equal(development.full_public_development_pack_executed, false);
   assert.equal(development.arm_packet_records, 10);
   assert.equal(development.arm_responses, 30);
+  assert.equal(development.isolated_policy_children, 10);
+});
+
+test("policy-boundary failure is durably abstained before evaluator open and replayed without retry", async () => {
+  const fixture = await temporaryOutput("fixture-026-rsd-t02-boundary-abstention-");
+  const abstentionPath = path.join(fixture.output, ARM_ABSTENTION_FILE);
+  const pendingPath = path.join(fixture.output, ARM_ABSTENTION_PENDING_FILE);
+  const evaluatorArtifacts = [RAW_FILE, CHECKPOINT_FILE, RUN_FILE, ARM_COMMITMENT_FILE, SUMMARY_FILE];
+  const assertEvaluatorStateAbsent = async () => {
+    for (const name of evaluatorArtifacts) {
+      await assert.rejects(
+        () => readFile(path.join(fixture.output, name)),
+        (error) => error.code === "ENOENT",
+      );
+    }
+  };
+  try {
+    const failed = await executeFixture026RsdT02({
+      profile: "smoke",
+      output: fixture.output,
+      policyTimeoutMs: 1,
+    });
+    assert.equal(failed.complete, false);
+    assert.equal(failed.boundary_status, "abstained");
+    assert.equal(failed.replayed_boundary_abstention, false);
+    assert.equal(failed.packet_ordinal, 0);
+    assert.equal(failed.system_slot, 0);
+    assert.match(failed.seed, /^(0|[1-9][0-9]{0,19})$/u);
+    assert.match(failed.system_packet_sha256, /^[0-9a-f]{64}$/u);
+    assert.ok(failed.system_packet_utf8_bytes > 0);
+    assert.match(failed.boundary_receipt_sha256, /^[0-9a-f]{64}$/u);
+    assert.match(failed.boundary_receipts_sha256, /^[0-9a-f]{64}$/u);
+    assert.equal(failed.boundary_invocations, 1);
+    assert.equal(failed.evaluator_ledger_opened, false);
+    assert.equal(failed.raw_ledger_opened, false);
+    assert.equal(failed.claim_eligible, false);
+    assert.equal(failed.comparison_inference_permitted, false);
+    assert.equal(failed.result_label, "NO_RESULT");
+    assert.equal(failed.no_result, true);
+    assert.deepEqual(failed.active_arm_outcomes.map((outcome) => outcome.arm_id), [
+      "B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK",
+    ]);
+    assert.ok(failed.active_arm_outcomes.every((outcome) => (
+      outcome.action === "abstain"
+      && outcome.reason_codes.length === 1
+      && outcome.retry_invocations === 0
+      && outcome.fallback_invocations === 0
+      && outcome.claim_eligible === false
+      && outcome.comparison_inference_permitted === false
+      && outcome.result_label === "NO_RESULT"
+      && outcome.no_result === true
+    )));
+    const original = await readFile(abstentionPath, "utf8");
+    const artifact = JSON.parse(original);
+    assert.equal(original, `${canonicalize(artifact)}\n`);
+    const hashBody = { ...artifact };
+    delete hashBody.abstention_sha256;
+    assert.equal(artifact.abstention_sha256, sha256Hex(canonicalize(hashBody)));
+    assert.equal(artifact.abstention_sha256, failed.boundary_abstention_sha256);
+    assert.equal(sha256Hex(original), failed.boundary_abstention_file_sha256);
+    assert.equal(artifact.boundary_receipt_sha256, failed.boundary_receipt_sha256);
+    assert.equal(artifact.boundary_receipts_sha256, failed.boundary_receipts_sha256);
+    await assertEvaluatorStateAbsent();
+    await assert.rejects(
+      () => readFile(pendingPath),
+      (error) => error.code === "ENOENT",
+    );
+
+    const replayed = await executeFixture026RsdT02({
+      profile: "smoke",
+      output: fixture.output,
+      resume: true,
+      policyTimeoutMs: 15_000,
+    });
+    assert.equal(replayed.boundary_status, "abstained");
+    assert.equal(replayed.replayed_boundary_abstention, true);
+    assert.equal(replayed.boundary_abstention_sha256, failed.boundary_abstention_sha256);
+    assert.equal(await readFile(abstentionPath, "utf8"), original);
+    await assertEvaluatorStateAbsent();
+
+    const extraKey = { ...artifact, unexpected: true };
+    const extraKeyBody = { ...extraKey };
+    delete extraKeyBody.abstention_sha256;
+    extraKey.abstention_sha256 = sha256Hex(canonicalize(extraKeyBody));
+    await writeFile(abstentionPath, `${canonicalize(extraKey)}\n`, "utf8");
+    await assert.rejects(
+      () => executeFixture026RsdT02({
+        profile: "smoke",
+        output: fixture.output,
+        resume: true,
+      }),
+      /boundary abstention violates its closed contract/u,
+    );
+    await writeFile(abstentionPath, original, "utf8");
+
+    await writeFile(path.join(fixture.output, RAW_FILE), "", "utf8");
+    await assert.rejects(
+      () => executeFixture026RsdT02({
+        profile: "smoke",
+        output: fixture.output,
+        resume: true,
+      }),
+      /cannot coexist with evaluator, raw-ledger, or arm-commitment state/u,
+    );
+    await rm(path.join(fixture.output, RAW_FILE));
+
+    await writeFile(pendingPath, original, "utf8");
+    await rm(abstentionPath);
+    const recovered = await executeFixture026RsdT02({
+      profile: "smoke",
+      output: fixture.output,
+      resume: true,
+    });
+    assert.equal(recovered.boundary_status, "abstained");
+    assert.equal(recovered.replayed_boundary_abstention, true);
+    assert.equal(await readFile(abstentionPath, "utf8"), original);
+    await assert.rejects(
+      () => readFile(pendingPath),
+      (error) => error.code === "ENOENT",
+    );
+    await assertEvaluatorStateAbsent();
+  } finally {
+    await cleanup(fixture);
+  }
 });
 
 function rehashArmCommitment(commitment) {
@@ -290,6 +423,13 @@ test("a complete smoke ledger, pair matrices, and analysis remain NO_RESULT", as
     assert.deepEqual(execution.run.excluded_claims, ["C-1561", "C-1564"]);
     assert.equal(execution.run.floor_runtime_state, "foundation-only-not-executed");
     assert.equal(execution.run.arm_packet_records, 5);
+    assert.equal(
+      execution.run.arm_policy_execution_boundary,
+      "fixture-026.rsd-t02-isolated-policy.v1",
+    );
+    assert.equal(execution.run.isolated_policy_children, 5);
+    assert.equal(execution.run.arm_boundary_invocations, 5);
+    assert.equal(execution.run.arm_boundary_receipts_sha256.length, 64);
     assert.equal(execution.run.arm_commitment_sha256.length, 64);
     assert.equal(execution.run.arm_commitment_file_sha256.length, 64);
 

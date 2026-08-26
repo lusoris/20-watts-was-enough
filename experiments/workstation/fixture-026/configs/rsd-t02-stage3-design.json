@@ -1,0 +1,149 @@
+{
+  "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-stage3-design.v1",
+  "artifact": "fixture-026",
+  "track": "RSD-T02",
+  "authority": "prospective-public-development-design-only",
+  "information_cut": {
+    "source_seed_path": "seeds/development.reveal.json",
+    "source_seed_sha256": "faa8b7105daad037fabc786797dd5e5fb156f815d4a0f833e4a80169a713b1ba",
+    "source_seed_count": 64,
+    "assignment_algorithm": "contiguous-ordered-public-seeds-v1",
+    "expected_assignment_sha256": "f7756f427c605f789c745ce74716fbef56b76ebef5d1c29ca9a81002a545e1f0",
+    "roles": [
+      {
+        "role": "fit",
+        "offset": 0,
+        "count": 32,
+        "permitted_actions": [
+          "fit-parameters",
+          "fit-only-model-selection",
+          "fit-only-cross-validation",
+          "write-frozen-model-artifact"
+        ],
+        "forbidden_actions": [
+          "read-calibration-responses",
+          "read-evaluation-responses",
+          "set-final-decision-thresholds",
+          "claim-comparison"
+        ]
+      },
+      {
+        "role": "calibration",
+        "offset": 32,
+        "count": 16,
+        "permitted_actions": [
+          "calibrate-probabilities",
+          "set-frozen-abstention-thresholds",
+          "set-frozen-support-thresholds",
+          "write-frozen-calibration-artifact"
+        ],
+        "forbidden_actions": [
+          "fit-model-parameters",
+          "change-model-family",
+          "read-evaluation-responses",
+          "claim-comparison"
+        ]
+      },
+      {
+        "role": "evaluation",
+        "offset": 48,
+        "count": 16,
+        "permitted_actions": [
+          "frozen-inference",
+          "frozen-scoring",
+          "write-append-only-evaluation-artifact"
+        ],
+        "forbidden_actions": [
+          "fit-model-parameters",
+          "change-model-family",
+          "change-any-threshold",
+          "drop-supported-unit-after-scoring",
+          "claim-comparison"
+        ]
+      }
+    ]
+  },
+  "replication_boundary": {
+    "current_seed_effect": "opaque-state-handle-permutation-only",
+    "current_seeds_are_independent_scientific_units": false,
+    "seed_level_inferential_replication_permitted": false,
+    "current_split_use": "software-and-procedural-development-only",
+    "future_unit_of_analysis": "independently-generated-held-out-system-instance",
+    "outer_system_family_holdout_required": true
+  },
+  "reference_arms": [
+    {
+      "arm_id": "B-STATE-SPACE",
+      "target_role": "mature-generic-null",
+      "construction_status": "not-implemented",
+      "model_family": "causal-nonlinear-state-space-property-estimator",
+      "information_access": "same-35-projection-causal-packet",
+      "direct-plant-state-access": false,
+      "recipe-or-equation-access": false
+    },
+    {
+      "arm_id": "B-RECURRENT",
+      "target_role": "mature-generic-null",
+      "construction_status": "not-implemented",
+      "model_family": "causal-compact-recurrent-property-estimator",
+      "information_access": "same-35-projection-causal-packet",
+      "direct-plant-state-access": false,
+      "recipe-or-equation-access": false
+    },
+    {
+      "arm_id": "C-MECHANISM-BANK",
+      "target_role": "source-shaped-candidate",
+      "construction_status": "fixed-conformance-reference-only",
+      "model_family": "registered-mechanism-signature-bank",
+      "information_access": "same-35-projection-causal-packet",
+      "direct-plant-state-access": false,
+      "recipe-or-equation-access": false
+    }
+  ],
+  "endpoint_contract": {
+    "primary_endpoints": [
+      "mean-property-log-loss-nats",
+      "mean-decision-loss-dimensionless"
+    ],
+    "required_companion_reports": [
+      "coverage",
+      "selective-risk",
+      "reliability-by-property",
+      "joint-compatible-vector-coverage",
+      "resource-vector"
+    ],
+    "primary_contrasts": [
+      "C-MECHANISM-BANK-minus-B-STATE-SPACE",
+      "C-MECHANISM-BANK-minus-B-RECURRENT"
+    ],
+    "familywise_alpha": 0.05,
+    "multiplicity_rule": "holm-over-fixed-primary-contrast-by-endpoint-family",
+    "current_power_status": "not-powered-current-split",
+    "power-analysis_timing": "before-private-confirmation-seed-creation"
+  },
+  "resource_contract": {
+    "same-observation-packet": true,
+    "same-intervention-budget": true,
+    "training-and-selection-costs-charged": true,
+    "calibration-costs-charged": true,
+    "failed-trials-charged": true,
+    "fallbacks-charged": true,
+    "measured-joules-required-for-energy-comparison": true,
+    "numeric-training-caps": "must-be-frozen-after-fit-only-pilot-before-calibration",
+    "evaluation-cap-change-permitted": false
+  },
+  "promotion_gates": [
+    "independent-system-instances-exist",
+    "outer-system-family-holdout-frozen",
+    "two-generic-null-implementations-frozen",
+    "fit-artifacts-frozen-before-calibration",
+    "calibration-artifacts-frozen-before-evaluation",
+    "resource-caps-frozen-before-evaluation",
+    "private-confirmation-power-and-custody-frozen",
+    "all-primary-contrasts-and-loss-directions-preregistered"
+  ],
+  "comparison_inference_permitted": false,
+  "claim_eligible": false,
+  "result_label": "NO_RESULT"
+}

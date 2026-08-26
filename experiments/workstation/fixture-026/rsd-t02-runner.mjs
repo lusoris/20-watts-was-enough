@@ -1,12 +1,14 @@
 import { createHash } from "node:crypto";
 import {
   access,
+  link,
   lstat,
   mkdir,
   open,
   readFile,
   realpath,
   stat,
+  unlink,
   writeFile,
 } from "node:fs/promises";
 import { endianness, release } from "node:os";
@@ -24,10 +26,14 @@ import {
   FIXTURE_026_RSD_T02_ARM_BANK_VERSION,
   FIXTURE_026_RSD_T02_INACTIVE_ARM_IDS,
   assertFixture026RsdT02ArmCommitment,
-  buildFixture026RsdT02ArmCommitment,
   buildFixture026RsdT02SystemPacket,
   validateFixture026RsdT02ArmBankConfig,
 } from "./rsd-t02-arm-bank.mjs";
+import {
+  FIXTURE_026_RSD_T02_ISOLATED_POLICY_VERSION,
+  buildFixture026RsdT02IsolatedArmCommitment,
+  loadFixture026RsdT02PolicyBundleInventory,
+} from "./rsd-t02-isolated-policy.mjs";
 import {
   FIXTURE_026_RSD_T02_ACTIONABLE_ARM_IDS,
   FIXTURE_026_RSD_T02_PAIR_CERTIFICATES,
@@ -66,7 +72,7 @@ import {
   fixture026RsdT02RunLockPath,
 } from "./rsd-t02-run-lock.mjs";
 
-export const FIXTURE_026_RSD_T02_RUNNER_VERSION = "fixture-026.rsd-t02-runner.v2";
+export const FIXTURE_026_RSD_T02_RUNNER_VERSION = "fixture-026.rsd-t02-runner.v3";
 export const FIXTURE_026_RSD_T02_RUNTIME_FINGERPRINT = Object.freeze({
   schema: 1,
   node_version: process.versions.node,
@@ -87,8 +93,15 @@ const RAW_FILE = "rsd-t02-raw-events.jsonl";
 const CHECKPOINT_FILE = "rsd-t02-checkpoint.json";
 const RUN_FILE = "rsd-t02-run.json";
 const ARM_COMMITMENT_FILE = "rsd-t02-arm-commitment.json";
+const ARM_ABSTENTION_FILE = "rsd-t02-arm-abstention.json";
+const ARM_ABSTENTION_PENDING_FILE = `${ARM_ABSTENTION_FILE}.pending`;
 const SUMMARY_FILE = path.join("analysis", "rsd-t02-summary.json");
-const RUN_INTERPRETATION = "NO_RESULT: complete bounded public-development RSD-T02 mechanism-panel and pre-evaluator three-arm policy-conformance run; six registry roles remain unimplemented, the two comparator references are not mature nulls, and no comparison, T02-FLOOR, O2, or claim authority exists.";
+const DEFAULT_POLICY_TIMEOUT_MS = 15_000;
+export const FIXTURE_026_RSD_T02_BOUNDARY_ABSTENTION_VERSION =
+  "fixture-026.rsd-t02-policy-boundary-abstention.v1";
+const BOUNDARY_ABSTENTION_AUTHORITY =
+  "bounded-pre-evaluator-isolated-policy-abstention-only";
+const RUN_INTERPRETATION = "NO_RESULT: complete bounded public-development RSD-T02 mechanism-panel and pre-evaluator fresh-child isolated three-arm policy-conformance run; six registry roles remain unimplemented, the two comparator references are not mature nulls, and no comparison, T02-FLOOR, O2, or claim authority exists.";
 const RUN_IDENTITY_KEYS = Object.freeze([
   "schema", "artifact", "track", "execution_claims", "excluded_claims", "runner_version",
   "generator_version", "evaluator_version", "event_contract_version", "arm_bank_version",
@@ -100,6 +113,9 @@ const RUN_IDENTITY_KEYS = Object.freeze([
   "observation_regimes_executed", "observation_regimes_not_executed", "floor_runtime_state",
   "actionable_arms", "actionable_arms_implemented", "actionable_arms_not_implemented",
   "arm_policy_authority", "evaluator_only_arm",
+  "arm_policy_execution_boundary", "isolated_policy_children", "policy_bundle_sha256",
+  "policy_bundle_inventory_sha256",
+  "policy_source_inventory_sha256", "policy_worker_sha256",
   "result_label", "no_result", "claim_eligible", "comparison_inference_permitted",
   "scientific_result", "performance_result", "measured_energy_present",
   "energy_conclusion_allowed", "run_id",
@@ -108,6 +124,7 @@ const RUN_KEYS = Object.freeze([
   ...RUN_IDENTITY_KEYS,
   "expected_work_units", "ledger", "raw_path", "checkpoint_path", "arm_commitment_path",
   "arm_commitment_sha256", "arm_commitment_file_sha256", "arm_packet_records",
+  "arm_boundary_receipts_sha256", "arm_boundary_invocations",
   "interpretation",
 ]);
 const LEDGER_KEYS = Object.freeze([
@@ -123,6 +140,35 @@ const ANALYSIS_KEYS = Object.freeze([
   "comparison_inference_permitted", "scientific_result", "performance_result",
   "measured_energy_present", "energy_conclusion_allowed", "interpretation",
 ]);
+const BOUNDARY_ABSTENTION_KEYS = Object.freeze([
+  "schema", "contract_version", "artifact", "track", "run_id", "profile", "partition",
+  "boundary_version", "packet_ordinal", "seed", "system_slot", "system_packet_sha256",
+  "system_packet_utf8_bytes", "failed_arm_id", "active_arm_outcomes",
+  "boundary_receipt_sha256", "boundary_receipts_sha256", "boundary_invocations",
+  "policy_bundle_sha256",
+  "policy_bundle_inventory_sha256", "policy_source_inventory_sha256", "policy_worker_sha256",
+  "policy_config_sha256", "policy_config_utf8_bytes", "evaluator_ledger_opened",
+  "raw_ledger_opened", "authority", "comparison_inference_permitted", "claim_eligible",
+  "result_label", "no_result", "abstention_sha256",
+]);
+const BOUNDARY_ARM_OUTCOME_KEYS = Object.freeze([
+  "arm_id", "action", "reason_codes", "retry_invocations", "fallback_invocations",
+  "authority", "comparison_inference_permitted", "claim_eligible", "result_label",
+  "no_result",
+]);
+const BOUNDARY_ABSTENTION_REASON_CODES = Object.freeze(new Set([
+  "isolated-policy-timeout",
+  "isolated-policy-protocol-over-budget",
+  "isolated-policy-child-crash",
+  "isolated-policy-malformed-response",
+  "isolated-policy-work-over-budget",
+  "isolated-policy-request-over-budget",
+  "isolated-worker-request-rejected",
+  "isolated-worker-bundle-rejected",
+  "isolated-worker-bootstrap-rejected",
+  "isolated-policy-runtime-rejected",
+  "isolated-policy-bank-incomplete",
+]));
 const sourceFiles = Object.freeze([
   "../lib/checkpoint-ledger.mjs",
   "rsd-t02-contract.mjs",
@@ -131,6 +177,10 @@ const sourceFiles = Object.freeze([
   "rsd-t02-evaluator.mjs",
   "rsd-t02-event.mjs",
   "rsd-t02-arm-bank.mjs",
+  "rsd-t02-isolated-policy.mjs",
+  "rsd-t02-policy-worker.mjs",
+  "rsd-t02-policy-bundle.inventory.json",
+  "policy-bundles/d7cee7b1db27ceaf00789e95cadf1d6031454d32658560b79b601392dfd501df.js",
   "rsd-t02-run-lock.mjs",
   "rsd-t02-runner.mjs",
   "runner.mjs",
@@ -142,6 +192,7 @@ const sourceFiles = Object.freeze([
   "seeds/development.reveal.json",
   "configs/rsd-t02-bounded-conformance.json",
   "configs/rsd-t02-arm-bank.json",
+  "../../../.gitattributes",
   "seeds/confirmation.unavailable.json",
   "seeds/transfer.unavailable.json",
 ]);
@@ -230,6 +281,17 @@ async function assertSafeRunArtifacts(directory, { complete = false } = {}) {
       label: `Fixture 026 RSD-T02 ${name}`,
     });
   }
+  for (const name of [ARM_ABSTENTION_FILE, ARM_ABSTENTION_PENDING_FILE]) {
+    const target = path.join(directory, name);
+    await assertSafeRepositoryPath(target, {
+      allowMissing: true,
+      finalType: "file",
+      label: `Fixture 026 RSD-T02 ${name}`,
+    });
+    if (complete && await exists(target)) {
+      throw new Error("Fixture 026 RSD-T02 completed evaluator state cannot coexist with a boundary abstention artifact.");
+    }
+  }
 }
 
 function canonicalRepositoryPath(file) {
@@ -271,8 +333,10 @@ async function fileFingerprint(file) {
 
 async function loadJsonFingerprint(file) {
   const bytes = await readFile(file);
+  const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
   return Object.freeze({
-    document: JSON.parse(bytes.toString("utf8")),
+    document: JSON.parse(text),
+    utf8: text,
     fingerprint: Object.freeze({
       sha256: createHash("sha256").update(bytes).digest("hex"),
       bytes: bytes.length,
@@ -321,6 +385,84 @@ async function writeJsonStable(file, value, { durable = false } = {}) {
       throw new Error(`Refusing to replace non-identical ${path.basename(file)}.`);
     }
   }
+}
+
+async function readCanonicalJsonArtifact(file, label) {
+  const bytes = await readFile(file);
+  let text;
+  try {
+    text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch {
+    throw new Error(`${label} is not valid UTF-8.`);
+  }
+  let document;
+  try {
+    document = JSON.parse(text);
+  } catch {
+    throw new Error(`${label} is not valid JSON.`);
+  }
+  if (text !== `${canonicalize(document)}\n`) {
+    throw new Error(`${label} is not canonical LF JSON.`);
+  }
+  return Object.freeze({
+    document,
+    bytes,
+    file_sha256: createHash("sha256").update(bytes).digest("hex"),
+  });
+}
+
+async function publishCanonicalJsonAtomic(file, value, label) {
+  const pendingPath = `${file}.pending`;
+  await assertSafeRepositoryPath(file, {
+    allowMissing: true,
+    finalType: "file",
+    label,
+  });
+  await assertSafeRepositoryPath(pendingPath, {
+    allowMissing: true,
+    finalType: "file",
+    label: `${label} pending publication`,
+  });
+  const body = `${canonicalize(value)}\n`;
+  let handle;
+  try {
+    handle = await open(pendingPath, "wx");
+    await handle.writeFile(body, "utf8");
+    await handle.sync();
+  } catch (error) {
+    if (error.code !== "EEXIST") throw error;
+    await assertSafeRepositoryPath(pendingPath, {
+      finalType: "file",
+      label: `${label} pending publication`,
+    });
+    if (await readFile(pendingPath, "utf8") !== body) {
+      throw new Error(`Refusing to replace non-identical ${path.basename(pendingPath)}.`);
+    }
+  } finally {
+    await handle?.close();
+  }
+  try {
+    await link(pendingPath, file);
+  } catch (error) {
+    if (error.code !== "EEXIST") throw error;
+    await assertSafeRepositoryPath(file, { finalType: "file", label });
+    if (await readFile(file, "utf8") !== body) {
+      throw new Error(`Refusing to replace non-identical ${path.basename(file)}.`);
+    }
+  }
+  await syncParentDirectory(file);
+  await assertSafeRepositoryPath(file, { finalType: "file", label });
+  try {
+    await unlink(pendingPath);
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+  await syncParentDirectory(file);
+  const published = await readCanonicalJsonArtifact(file, label);
+  if (published.bytes.toString("utf8") !== body) {
+    throw new Error(`${label} changed during atomic publication.`);
+  }
+  return published;
 }
 
 export function validateFixture026RsdT02SeedDocument(document) {
@@ -417,6 +559,7 @@ async function loadInputs(profile) {
   const loadedInputs = Object.fromEntries(await Promise.all(Object.entries(inputFiles).map(
     async ([relative, absolute]) => [relative, await loadJsonFingerprint(absolute)],
   )));
+  const policyInventory = await loadFixture026RsdT02PolicyBundleInventory();
   const seedDocument = validateFixture026RsdT02SeedDocument(
     loadedInputs["seeds/development.reveal.json"].document,
   );
@@ -455,7 +598,6 @@ async function loadInputs(profile) {
   const sourceHashes = Object.fromEntries(Object.entries(sourceFingerprints).map(
     ([relative, fingerprint]) => [relative, fingerprint.sha256],
   ));
-  const policyArtifactBytes = sourceFingerprints["rsd-t02-arm-bank.mjs"].bytes;
   const policyConfigBytes = sourceFingerprints["configs/rsd-t02-arm-bank.json"].bytes;
   return Object.freeze({
     profile,
@@ -464,10 +606,14 @@ async function loadInputs(profile) {
     constructionSeedCount,
     configuredWorkUnits,
     armConfig,
-    policyArtifactSha256: sourceHashes["rsd-t02-arm-bank.mjs"],
-    policyArtifactBytes,
+    armConfigUtf8: loadedInputs["configs/rsd-t02-arm-bank.json"].utf8,
+    policyArtifactSha256: policyInventory.bundle_sha256,
+    policyArtifactBytes: policyInventory.bundle_bytes,
     policyConfigSha256: sourceHashes["configs/rsd-t02-arm-bank.json"],
     policyConfigBytes,
+    policyBundleInventorySha256: policyInventory.inventory_sha256,
+    policySourceInventorySha256: policyInventory.source_inventory_sha256,
+    policyWorkerSha256: policyInventory.worker_sha256,
     sourceHashes: Object.freeze(sourceHashes),
     runtimeFingerprint: FIXTURE_026_RSD_T02_RUNTIME_FINGERPRINT,
     runtimeFingerprintSha256: sha256Hex(canonicalize(FIXTURE_026_RSD_T02_RUNTIME_FINGERPRINT)),
@@ -499,7 +645,7 @@ function runIdentity(inputs) {
     full_public_development_pack_executed: false,
     partition: "public-development-only",
     information_cut_status: "registered-projection-no-secret-custody",
-    execution_mode: "deterministic-cpu-only",
+    execution_mode: "deterministic-cpu-only-with-fresh-isolated-policy-child",
     gpu_permitted: false,
     observation_regimes_executed: ["O0-MATCHED-STEP", "O1-FULL-PANEL"],
     observation_regimes_not_executed: ["O2-SELECT6"],
@@ -508,7 +654,13 @@ function runIdentity(inputs) {
     actionable_arms_implemented: FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS,
     actionable_arms_not_implemented: FIXTURE_026_RSD_T02_INACTIVE_ARM_IDS,
     arm_policy_authority: "bounded-pre-evaluator-conformance-references-not-mature-comparators",
+    arm_policy_execution_boundary: FIXTURE_026_RSD_T02_ISOLATED_POLICY_VERSION,
+    isolated_policy_children: inputs.seeds.length * FIXTURE_026_RSD_T02_RECIPES.length,
+    policy_bundle_sha256: inputs.policyArtifactSha256,
+    policy_bundle_inventory_sha256: inputs.policyBundleInventorySha256,
+    policy_source_inventory_sha256: inputs.policySourceInventorySha256,
     evaluator_only_arm: "O-GRAPH",
+    policy_worker_sha256: inputs.policyWorkerSha256,
     result_label: "NO_RESULT",
     no_result: true,
     claim_eligible: false,
@@ -552,16 +704,293 @@ function armPacketInputs(inputs, units) {
   )));
 }
 
-function expectedArmCommitment(inputs, units) {
-  return assertFixture026RsdT02ArmCommitment(buildFixture026RsdT02ArmCommitment({
+function armPacketInputAt(inputs, units, packetOrdinal) {
+  const systemSlot = packetOrdinal % FIXTURE_026_RSD_T02_RECIPES.length;
+  const seed = inputs.seeds[Math.floor(packetOrdinal / FIXTURE_026_RSD_T02_RECIPES.length)];
+  const recipe = FIXTURE_026_RSD_T02_RECIPES[systemSlot];
+  const projections = units.filter((unit) => (
+    unit.seed === seed && unit.recipe_id === recipe.recipe_id
+  )).map((unit) => {
+    const command = buildFixture026RsdT02EpisodeCommand(unit);
+    const transcript = assertFixture026RsdT02Transcript(
+      generateFixture026RsdT02Transcript(command),
+    );
+    return fixture026RsdT02Projection(transcript);
+  });
+  return Object.freeze({
+    seed,
+    system_slot: systemSlot,
+    packet: buildFixture026RsdT02SystemPacket(projections).packet,
+  });
+}
+
+function expectedFailedArmId(activeArmOutcomes) {
+  const directFailures = activeArmOutcomes.filter(
+    (outcome) => outcome.reason_codes[0] !== "isolated-policy-bank-incomplete",
+  );
+  return directFailures.length === 1 ? directFailures[0].arm_id : null;
+}
+
+export function validateFixture026RsdT02BoundaryAbstention(document, {
+  identity,
+  inputs,
+  units,
+}) {
+  const packetCount = inputs.seeds.length * FIXTURE_026_RSD_T02_RECIPES.length;
+  if (
+    !exactKeys(document, BOUNDARY_ABSTENTION_KEYS)
+    || document.schema !== 1
+    || document.contract_version !== FIXTURE_026_RSD_T02_BOUNDARY_ABSTENTION_VERSION
+    || document.artifact !== "fixture-026"
+    || document.track !== "RSD-T02"
+    || document.run_id !== identity.run_id
+    || document.profile !== inputs.profile
+    || document.partition !== identity.partition
+    || document.boundary_version !== FIXTURE_026_RSD_T02_ISOLATED_POLICY_VERSION
+    || !Number.isSafeInteger(document.packet_ordinal)
+    || document.packet_ordinal < 0
+    || document.packet_ordinal >= packetCount
+    || typeof document.seed !== "string"
+    || !Number.isSafeInteger(document.system_slot)
+    || !/^[0-9a-f]{64}$/u.test(document.system_packet_sha256)
+    || !Number.isSafeInteger(document.system_packet_utf8_bytes)
+    || document.system_packet_utf8_bytes < 1
+    || !Array.isArray(document.active_arm_outcomes)
+    || document.active_arm_outcomes.length !== FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS.length
+    || !/^[0-9a-f]{64}$/u.test(document.boundary_receipt_sha256)
+    || !/^[0-9a-f]{64}$/u.test(document.boundary_receipts_sha256)
+    || !Number.isSafeInteger(document.boundary_invocations)
+    || document.boundary_invocations !== document.packet_ordinal + 1
+    || document.policy_bundle_sha256 !== identity.policy_bundle_sha256
+    || document.policy_bundle_inventory_sha256 !== identity.policy_bundle_inventory_sha256
+    || document.policy_source_inventory_sha256 !== identity.policy_source_inventory_sha256
+    || document.policy_worker_sha256 !== identity.policy_worker_sha256
+    || document.policy_config_sha256 !== inputs.policyConfigSha256
+    || document.policy_config_utf8_bytes !== inputs.policyConfigBytes
+    || document.evaluator_ledger_opened !== false
+    || document.raw_ledger_opened !== false
+    || document.authority !== BOUNDARY_ABSTENTION_AUTHORITY
+    || document.comparison_inference_permitted !== false
+    || document.claim_eligible !== false
+    || document.result_label !== "NO_RESULT"
+    || document.no_result !== true
+    || !/^[0-9a-f]{64}$/u.test(document.abstention_sha256)
+  ) throw new Error("Fixture 026 RSD-T02 boundary abstention violates its closed contract.");
+  for (const [index, outcome] of document.active_arm_outcomes.entries()) {
+    if (
+      !exactKeys(outcome, BOUNDARY_ARM_OUTCOME_KEYS)
+      || outcome.arm_id !== FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS[index]
+      || outcome.action !== "abstain"
+      || !Array.isArray(outcome.reason_codes)
+      || outcome.reason_codes.length !== 1
+      || !BOUNDARY_ABSTENTION_REASON_CODES.has(outcome.reason_codes[0])
+      || outcome.retry_invocations !== 0
+      || outcome.fallback_invocations !== 0
+      || outcome.authority !== "public-development-policy-conformance-only"
+      || outcome.comparison_inference_permitted !== false
+      || outcome.claim_eligible !== false
+      || outcome.result_label !== "NO_RESULT"
+      || outcome.no_result !== true
+    ) throw new Error("Fixture 026 RSD-T02 boundary abstention arm outcome violates its closed contract.");
+  }
+  if (
+    document.failed_arm_id !== expectedFailedArmId(document.active_arm_outcomes)
+  ) throw new Error("Fixture 026 RSD-T02 boundary abstention failed-arm binding is false.");
+  const packetInput = armPacketInputAt(inputs, units, document.packet_ordinal);
+  const builtPacket = buildFixture026RsdT02SystemPacket(packetInput.packet.projections);
+  if (
+    document.seed !== packetInput.seed
+    || document.system_slot !== packetInput.system_slot
+    || document.system_packet_sha256 !== builtPacket.system_packet_sha256
+    || document.system_packet_utf8_bytes !== builtPacket.system_packet_utf8_bytes
+  ) throw new Error("Fixture 026 RSD-T02 boundary abstention packet binding is false.");
+  const hashBody = { ...document };
+  delete hashBody.abstention_sha256;
+  if (document.abstention_sha256 !== sha256Hex(canonicalize(hashBody))) {
+    throw new Error("Fixture 026 RSD-T02 boundary abstention hash is false.");
+  }
+  return document;
+}
+
+function buildBoundaryAbstentionArtifact({ outcome, identity, inputs, units }) {
+  const body = {
+    schema: 1,
+    contract_version: FIXTURE_026_RSD_T02_BOUNDARY_ABSTENTION_VERSION,
+    artifact: "fixture-026",
+    track: "RSD-T02",
+    run_id: identity.run_id,
+    profile: inputs.profile,
+    partition: identity.partition,
+    boundary_version: FIXTURE_026_RSD_T02_ISOLATED_POLICY_VERSION,
+    packet_ordinal: outcome.packet_ordinal,
+    seed: outcome.seed,
+    system_slot: outcome.system_slot,
+    system_packet_sha256: outcome.system_packet_sha256,
+    system_packet_utf8_bytes: outcome.system_packet_utf8_bytes,
+    failed_arm_id: outcome.failed_arm_id,
+    active_arm_outcomes: outcome.active_arm_outcomes,
+    boundary_receipt_sha256: outcome.receipt_sha256,
+    boundary_receipts_sha256: outcome.receipts_sha256,
+    boundary_invocations: outcome.receipts.length,
+    policy_bundle_sha256: outcome.policy_bundle_sha256,
+    policy_bundle_inventory_sha256: outcome.policy_bundle_inventory_sha256,
+    policy_source_inventory_sha256: outcome.policy_source_inventory_sha256,
+    policy_worker_sha256: inputs.policyWorkerSha256,
+    policy_config_sha256: inputs.policyConfigSha256,
+    policy_config_utf8_bytes: inputs.policyConfigBytes,
+    evaluator_ledger_opened: false,
+    raw_ledger_opened: false,
+    authority: BOUNDARY_ABSTENTION_AUTHORITY,
+    comparison_inference_permitted: false,
+    claim_eligible: false,
+    result_label: "NO_RESULT",
+    no_result: true,
+  };
+  const artifact = Object.freeze({
+    ...body,
+    abstention_sha256: sha256Hex(canonicalize(body)),
+  });
+  return validateFixture026RsdT02BoundaryAbstention(artifact, { identity, inputs, units });
+}
+
+async function assertNoEvaluatorStateForBoundaryAbstention(directory) {
+  for (const name of [RAW_FILE, CHECKPOINT_FILE, RUN_FILE, ARM_COMMITMENT_FILE, SUMMARY_FILE]) {
+    const target = path.join(directory, name);
+    await assertSafeRepositoryPath(target, {
+      allowMissing: true,
+      finalType: "file",
+      label: `Fixture 026 RSD-T02 pre-evaluator boundary conflict ${name}`,
+    });
+    if (await exists(target)) {
+      throw new Error("Fixture 026 RSD-T02 boundary abstention cannot coexist with evaluator, raw-ledger, or arm-commitment state.");
+    }
+  }
+}
+
+async function readBoundaryAbstentionState({ directory, identity, inputs, units }) {
+  const abstentionPath = path.join(directory, ARM_ABSTENTION_FILE);
+  const pendingPath = path.join(directory, ARM_ABSTENTION_PENDING_FILE);
+  await assertSafeRepositoryPath(abstentionPath, {
+    allowMissing: true,
+    finalType: "file",
+    label: "Fixture 026 RSD-T02 boundary abstention",
+  });
+  await assertSafeRepositoryPath(pendingPath, {
+    allowMissing: true,
+    finalType: "file",
+    label: "Fixture 026 RSD-T02 boundary abstention pending publication",
+  });
+  const hasAbstention = await exists(abstentionPath);
+  const hasPending = await exists(pendingPath);
+  if (!hasAbstention && !hasPending) return null;
+  let pending = null;
+  if (hasPending) {
+    pending = await readCanonicalJsonArtifact(
+      pendingPath,
+      "Fixture 026 RSD-T02 pending boundary abstention",
+    );
+    validateFixture026RsdT02BoundaryAbstention(pending.document, { identity, inputs, units });
+  }
+  if (hasAbstention) {
+    const existing = await readCanonicalJsonArtifact(
+      abstentionPath,
+      "Fixture 026 RSD-T02 boundary abstention",
+    );
+    validateFixture026RsdT02BoundaryAbstention(existing.document, { identity, inputs, units });
+    if (pending && canonicalize(pending.document) !== canonicalize(existing.document)) {
+      throw new Error("Fixture 026 RSD-T02 pending boundary abstention differs from the durable artifact.");
+    }
+  }
+  if (pending) {
+    await publishCanonicalJsonAtomic(
+      abstentionPath,
+      pending.document,
+      "Fixture 026 RSD-T02 boundary abstention",
+    );
+  }
+  await assertSafeRepositoryPath(abstentionPath, {
+    finalType: "file",
+    label: "Fixture 026 RSD-T02 boundary abstention",
+  });
+  const stored = await readCanonicalJsonArtifact(
+    abstentionPath,
+    "Fixture 026 RSD-T02 boundary abstention",
+  );
+  validateFixture026RsdT02BoundaryAbstention(stored.document, { identity, inputs, units });
+  await assertNoEvaluatorStateForBoundaryAbstention(directory);
+  return Object.freeze({
+    artifact: stored.document,
+    path: abstentionPath,
+    file_sha256: stored.file_sha256,
+  });
+}
+
+async function persistBoundaryAbstention({ directory, outcome, identity, inputs, units }) {
+  await assertNoEvaluatorStateForBoundaryAbstention(directory);
+  const artifact = buildBoundaryAbstentionArtifact({ outcome, identity, inputs, units });
+  await publishCanonicalJsonAtomic(
+    path.join(directory, ARM_ABSTENTION_FILE),
+    artifact,
+    "Fixture 026 RSD-T02 boundary abstention",
+  );
+  const stored = await readBoundaryAbstentionState({ directory, identity, inputs, units });
+  await assertNoEvaluatorStateForBoundaryAbstention(directory);
+  return stored;
+}
+
+function boundaryAbstentionExecution(directory, state, replayed) {
+  const artifact = state.artifact;
+  return Object.freeze({
+    directory,
+    complete: false,
+    boundary_status: "abstained",
+    run_id: artifact.run_id,
+    packet_ordinal: artifact.packet_ordinal,
+    seed: artifact.seed,
+    system_slot: artifact.system_slot,
+    system_packet_sha256: artifact.system_packet_sha256,
+    system_packet_utf8_bytes: artifact.system_packet_utf8_bytes,
+    failed_arm_id: artifact.failed_arm_id,
+    active_arm_outcomes: artifact.active_arm_outcomes,
+    boundary_receipt_sha256: artifact.boundary_receipt_sha256,
+    boundary_receipts_sha256: artifact.boundary_receipts_sha256,
+    boundary_invocations: artifact.boundary_invocations,
+    boundary_abstention_path: canonicalRepositoryPath(state.path),
+    boundary_abstention_sha256: artifact.abstention_sha256,
+    boundary_abstention_file_sha256: state.file_sha256,
+    replayed_boundary_abstention: replayed,
+    evaluator_ledger_opened: false,
+    raw_ledger_opened: false,
+    authority: artifact.authority,
+    claim_eligible: false,
+    comparison_inference_permitted: false,
+    result_label: "NO_RESULT",
+    no_result: true,
+  });
+}
+
+export class Fixture026RsdT02PolicyBoundaryAbstentionError extends Error {
+  constructor(outcome) {
+    super("Fixture 026 RSD-T02 isolated policy bank abstained before evaluator execution.");
+    this.name = "Fixture026RsdT02PolicyBoundaryAbstentionError";
+    this.code = "FIXTURE_026_RSD_T02_POLICY_BOUNDARY_ABSTENTION";
+    this.outcome = outcome;
+  }
+}
+
+async function expectedArmCommitment(inputs, units, timeoutMs = DEFAULT_POLICY_TIMEOUT_MS) {
+  const outcome = await buildFixture026RsdT02IsolatedArmCommitment({
     profile: inputs.profile,
     packetInputs: armPacketInputs(inputs, units),
     config: inputs.armConfig,
-    policyArtifactSha256: inputs.policyArtifactSha256,
-    policyArtifactBytes: inputs.policyArtifactBytes,
-    policyConfigSha256: inputs.policyConfigSha256,
-    policyConfigBytes: inputs.policyConfigBytes,
-  }));
+    policyConfigUtf8: inputs.armConfigUtf8,
+    timeoutMs,
+  });
+  if (outcome.status !== "completed") {
+    throw new Fixture026RsdT02PolicyBoundaryAbstentionError(outcome);
+  }
+  assertFixture026RsdT02ArmCommitment(outcome.commitment);
+  return outcome;
 }
 
 function armPacketRecordForUnit(commitment, unit) {
@@ -745,6 +1174,9 @@ function assertRunShape(run) {
     || !/^[0-9a-f]{64}$/u.test(run.arm_commitment_file_sha256)
     || !Number.isSafeInteger(run.arm_packet_records)
     || run.arm_packet_records < 1
+    || !/^[0-9a-f]{64}$/u.test(run.arm_boundary_receipts_sha256)
+    || !Number.isSafeInteger(run.arm_boundary_invocations)
+    || run.arm_boundary_invocations < 1
     || run.ledger.checkpoint_status !== "current"
     || run.interpretation !== RUN_INTERPRETATION
   ) throw new Error("Fixture 026 RSD-T02 run document violates its closed contract.");
@@ -789,6 +1221,9 @@ function assertRun(run, {
     || run.arm_commitment_sha256 !== armCommitmentState.commitment.commitment_sha256
     || run.arm_commitment_file_sha256 !== armCommitmentState.file_sha256
     || run.arm_packet_records !== armCommitmentState.commitment.packet_records.length
+    || run.arm_boundary_receipts_sha256
+      !== armCommitmentState.boundary_receipts_sha256
+    || run.arm_boundary_invocations !== armCommitmentState.boundary_invocations
   ) throw new Error("Fixture 026 RSD-T02 run identity, counts, or paths differ from current inputs.");
   return run;
 }
@@ -823,8 +1258,9 @@ async function readValidatedRecords(directory, identity = null, profile = null) 
   });
 }
 
-async function ensurePreEvaluatorArmCommitment({ directory, inputs, units }) {
-  const expected = expectedArmCommitment(inputs, units);
+async function ensurePreEvaluatorArmCommitment({ directory, inputs, units, policyTimeoutMs }) {
+  const isolated = await expectedArmCommitment(inputs, units, policyTimeoutMs);
+  const expected = isolated.commitment;
   const commitmentPath = path.join(directory, ARM_COMMITMENT_FILE);
   await assertSafeRepositoryPath(commitmentPath, {
     allowMissing: true,
@@ -856,6 +1292,8 @@ async function ensurePreEvaluatorArmCommitment({ directory, inputs, units }) {
     commitment: expected,
     path: commitmentPath,
     file_sha256: await fileSha256(commitmentPath),
+    boundary_receipts_sha256: isolated.receipts_sha256,
+    boundary_invocations: isolated.receipts.length,
   });
 }
 
@@ -865,7 +1303,8 @@ async function readBoundArmCommitment({ directory, inputs, units }) {
     finalType: "file",
     label: "Fixture 026 RSD-T02 pre-evaluator arm commitment",
   });
-  const expected = expectedArmCommitment(inputs, units);
+  const isolated = await expectedArmCommitment(inputs, units);
+  const expected = isolated.commitment;
   const stored = assertFixture026RsdT02ArmCommitment(await loadJson(commitmentPath));
   if (canonicalize(stored) !== canonicalize(expected)) {
     throw new Error("Fixture 026 RSD-T02 arm commitment is not reproducible from frozen pre-evaluator inputs.");
@@ -874,6 +1313,8 @@ async function readBoundArmCommitment({ directory, inputs, units }) {
     commitment: stored,
     path: commitmentPath,
     file_sha256: await fileSha256(commitmentPath),
+    boundary_receipts_sha256: isolated.receipts_sha256,
+    boundary_invocations: isolated.receipts.length,
   });
 }
 
@@ -882,9 +1323,13 @@ export async function executeFixture026RsdT02({
   output,
   resume = false,
   maxWorkUnits = Infinity,
+  policyTimeoutMs = DEFAULT_POLICY_TIMEOUT_MS,
 }) {
   if (maxWorkUnits !== Infinity && (!Number.isSafeInteger(maxWorkUnits) || maxWorkUnits < 1)) {
     throw new Error("Fixture 026 RSD-T02 maxWorkUnits must be a positive integer or Infinity.");
+  }
+  if (!Number.isSafeInteger(policyTimeoutMs) || policyTimeoutMs < 1) {
+    throw new Error("Fixture 026 RSD-T02 policyTimeoutMs must be a positive integer.");
   }
   const inputs = await loadInputs(profile);
   const identity = runIdentity(inputs);
@@ -918,11 +1363,34 @@ export async function executeFixture026RsdT02({
   const checkpointPath = path.join(directory, CHECKPOINT_FILE);
   const runPath = path.join(directory, RUN_FILE);
   await assertSafeRunArtifacts(directory);
-  const armCommitmentState = await ensurePreEvaluatorArmCommitment({
+  const priorBoundaryAbstention = await readBoundaryAbstentionState({
     directory,
+    identity,
     inputs,
     units,
   });
+  if (priorBoundaryAbstention) {
+    return boundaryAbstentionExecution(directory, priorBoundaryAbstention, true);
+  }
+  let armCommitmentState;
+  try {
+    armCommitmentState = await ensurePreEvaluatorArmCommitment({
+      directory,
+      inputs,
+      units,
+      policyTimeoutMs,
+    });
+  } catch (error) {
+    if (!(error instanceof Fixture026RsdT02PolicyBoundaryAbstentionError)) throw error;
+    const boundaryAbstention = await persistBoundaryAbstention({
+      directory,
+      outcome: error.outcome,
+      identity,
+      inputs,
+      units,
+    });
+    return boundaryAbstentionExecution(directory, boundaryAbstention, false);
+  }
   const armCommitment = armCommitmentState.commitment;
   if (await exists(runPath)) {
     assertRun(await loadJson(runPath), {
@@ -979,6 +1447,8 @@ export async function executeFixture026RsdT02({
     arm_commitment_sha256: armCommitment.commitment_sha256,
     arm_commitment_file_sha256: armCommitmentState.file_sha256,
     arm_packet_records: armCommitment.packet_records.length,
+    arm_boundary_receipts_sha256: armCommitmentState.boundary_receipts_sha256,
+    arm_boundary_invocations: armCommitmentState.boundary_invocations,
     interpretation: RUN_INTERPRETATION,
   };
   assertRun(run, {
@@ -1421,6 +1891,11 @@ export async function prepareFixture026RsdT02(profile) {
     actionable_arms_implemented: FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS,
     actionable_arms_not_implemented: FIXTURE_026_RSD_T02_INACTIVE_ARM_IDS,
     arm_policy_authority: "bounded-pre-evaluator-conformance-references-not-mature-comparators",
+    arm_policy_execution_boundary: FIXTURE_026_RSD_T02_ISOLATED_POLICY_VERSION,
+    isolated_policy_children: inputs.seeds.length * FIXTURE_026_RSD_T02_RECIPES.length,
+    policy_bundle_sha256: inputs.policyArtifactSha256,
+    policy_bundle_inventory_sha256: inputs.policyBundleInventorySha256,
+    policy_source_inventory_sha256: inputs.policySourceInventorySha256,
     result_label: "NO_RESULT",
     no_result: true,
     claim_eligible: false,

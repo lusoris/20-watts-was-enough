@@ -1,6 +1,8 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { generateLayoutStudy } from "../experiments/workstation/fixture-012/generator.mjs";
+import { fixture026RsdT02InitializationId } from "../experiments/workstation/fixture-026/rsd-t02-generator.mjs";
+import { fixture026RsdT02OpaqueStatePermutation } from "../experiments/workstation/fixture-026/rsd-t02-models.mjs";
 import { constructFixture026RsdT02SkippingCell } from "../experiments/workstation/fixture-026/rsd-t02-pulse.mjs";
 
 const root = process.cwd();
@@ -2161,6 +2163,107 @@ function repeatedStimulusSkippingCell(spec) {
   });
 }
 
+function rsdT02ProceduralSeedMap(spec) {
+  const {
+    seed_start: seedStart,
+    seed_count: seedCount,
+    background_u: backgroundU,
+    time_constant_s: timeConstantS,
+    fit_count: fitCount,
+    calibration_count: calibrationCount,
+    evaluation_count: evaluationCount,
+  } = spec.parameters;
+  if (
+    !Number.isSafeInteger(seedStart)
+    || !Number.isSafeInteger(seedCount)
+    || !Number.isFinite(backgroundU)
+    || !Number.isFinite(timeConstantS)
+    || !Number.isSafeInteger(fitCount)
+    || !Number.isSafeInteger(calibrationCount)
+    || !Number.isSafeInteger(evaluationCount)
+    || seedStart < 0
+    || seedCount < 2
+    || backgroundU <= 0
+    || timeConstantS <= 0
+    || fitCount + calibrationCount + evaluationCount !== seedCount
+  ) throw new Error(`${spec.id} has an invalid seed or partition contract`);
+
+  const mappings = Array.from({ length: seedCount }, (_, index) => {
+    const seed = String(seedStart + index);
+    const initializationId = fixture026RsdT02InitializationId(seed, backgroundU, timeConstantS);
+    const permutation = fixture026RsdT02OpaqueStatePermutation(initializationId);
+    return { index: index + 1, seed, h0Target: permutation[0], permutation };
+  });
+  const distinctMappings = new Set(mappings.map(({ permutation }) => permutation.join("→")));
+  if (distinctMappings.size !== 2) {
+    throw new Error(`${spec.id} expected exactly two opaque state permutations`);
+  }
+  const mappingCounts = [0, 1].map((target) => (
+    mappings.filter(({ h0Target }) => h0Target === target).length
+  ));
+
+  const xMin = 0.5;
+  const xMax = seedCount + 0.5;
+  const yMap = (value) => sy(value, -0.35, 1.35);
+  const roles = [
+    { label: `FIT · ${fitCount}`, start: 1, count: fitCount, color: colors.green },
+    {
+      label: `CALIBRATION · ${calibrationCount}`,
+      start: fitCount + 1,
+      count: calibrationCount,
+      color: colors.amber,
+    },
+    {
+      label: `EVALUATION · ${evaluationCount}`,
+      start: fitCount + calibrationCount + 1,
+      count: evaluationCount,
+      color: colors.violet,
+    },
+  ];
+  const bands = roles.map(({ label, start, count, color }) => {
+    const left = sx(start - 0.5, xMin, xMax);
+    const right = sx(start + count - 0.5, xMin, xMax);
+    return `<rect x="${left}" y="${plot.top}" width="${right - left}" height="${plot.bottom - plot.top}" fill="${color}" opacity=".09"/>
+    <line x1="${left}" y1="${plot.top}" x2="${left}" y2="${plot.bottom}" stroke="${color}" stroke-width="2" opacity=".8"/>
+    <text x="${(left + right) / 2}" y="${plot.top + 25}" fill="${color}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800" text-anchor="middle">${esc(label)}</text>`;
+  }).join("");
+  const points = mappings.map(({ index, h0Target }) => {
+    const x = sx(index, xMin, xMax);
+    const y = yMap(h0Target);
+    const color = h0Target === 0 ? colors.cyan : colors.coral;
+    const shape = h0Target === 0
+      ? `<circle cx="${x}" cy="${y}" r="5.5" fill="${color}"/>`
+      : `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" rx="2" fill="${color}"/>`;
+    return `<line x1="${x}" y1="${yMap(0)}" x2="${x}" y2="${yMap(1)}" stroke="${colors.grid}" stroke-width="1" opacity=".35"/>${shape}`;
+  }).join("");
+  const boundaries = [fitCount + 0.5, fitCount + calibrationCount + 0.5]
+    .map((value) => `<line x1="${sx(value, xMin, xMax)}" y1="${plot.top}" x2="${sx(value, xMin, xMax)}" y2="${plot.bottom}" stroke="${colors.text}" stroke-width="3" stroke-dasharray="8 7" opacity=".8"/>`)
+    .join("");
+  const ticks = [1, 8, 16, 24, 32, 40, 48, 56, 64].filter((value) => value <= seedCount);
+  const annotationX = plot.left + 235;
+  const annotationY = yMap(0.5) - 31;
+  const legend = `<circle cx="668" cy="48" r="6" fill="${colors.cyan}"/><text x="680" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">H0→state 0 · n=${mappingCounts[0]}</text>
+  <rect x="835" y="42" width="12" height="12" rx="2" fill="${colors.coral}"/><text x="856" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">H0→state 1 · n=${mappingCounts[1]}</text>`;
+  const content = `${bands}${grid(
+    ticks,
+    [0, 1],
+    (value) => sx(value, xMin, xMax),
+    yMap,
+    String,
+    (value) => `state ${value}`,
+  )}${boundaries}${points}
+  <rect x="${annotationX}" y="${annotationY}" width="500" height="62" rx="12" fill="${colors.background}" fill-opacity=".96" stroke="${colors.grid}" stroke-width="2"/>
+  <text x="${annotationX + 20}" y="${annotationY + 27}" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="14" font-weight="800">64 procedural labels → 2 opaque handle maps</text>
+  <text x="${annotationX + 20}" y="${annotationY + 50}" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">independently sampled system instances in this seed axis: 0</text>`;
+  return frame(spec, content, {
+    xLabel: `ordered public seed label · ${seedStart}…${seedStart + seedCount - 1}`,
+    yLabel: "internal coordinate targeted by opaque handle H0",
+    legend,
+    badge: "EXACT CONSTRUCTOR MAP · INFORMATION CUT",
+    footer: "Computed from F-026 initialization IDs · procedural partitions are not replication",
+  });
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -2185,6 +2288,7 @@ const renderers = {
   "rsd-t01-family-property-overlap": rsdT01FamilyPropertyOverlap,
   "fast-boundary-layer-norms": fastBoundaryLayerNorms,
   "repeated-stimulus-skipping-cell": repeatedStimulusSkippingCell,
+  "rsd-t02-procedural-seed-map": rsdT02ProceduralSeedMap,
   "interface-qualified-retroactivity": interfaceQualifiedRetroactivity,
   "history-conditioned-position-contrast": historyConditionedPositionContrast,
 };

@@ -540,10 +540,16 @@ set of compatible property vectors, not independently inconsistent marginals.
 All numerical bands are explicitly construction-tuned on the five enumerated
 public worlds, with zero training labels and zero tuning trials; their
 definitions and equations are frozen in the linked mathematical contract.
-The references execute in the same Node process as packet construction and use
-the checked-in public property prior. The firewall is an exact policy-input and
-pre-evaluator ordering contract, not a worker-isolation, secrecy or adversarial
-sandbox guarantee.
+The references use the checked-in public property prior, but each packet now
+executes in a fresh permission-restricted Node child and each active arm in a
+new hardened VM context. Only a verified SHA-named policy bundle and one
+canonical request cross the boundary. The policy VM has no process, filesystem,
+network, environment, clock, random or evaluator capability; bounded failures
+become ordered pre-evaluator abstentions with no retry or same-process fallback.
+The runner atomically persists and replay-binds the exact abstention artifact;
+it cannot coexist with the commitment or evaluator ledger. This is a
+content-addressed public-development execution boundary, not secret
+confirmation custody.
 
 **Primary mechanism endpoint.** Per-property calibration in nats and
 dimensionless decision loss are reported separately. A correct decision on an
@@ -609,6 +615,19 @@ retains closed acquisition/construction/inference ledgers, and supports append-o
 resume and independent analysis validation. It is
 `registered-projection-no-secret-custody`, comparison false, has no execution
 claim, and reports `NO_RESULT`. O2 and T02-FLOOR remain non-executable.
+
+**Prospective Stage-3 information cut.** The public 64-seed list is now frozen
+as 32 fit, 16 calibration and 16 evaluation roles. Fit may choose parameters
+and models only from its own data; calibration may set probability, support and
+abstention mappings without refitting; evaluation is one-pass frozen scoring.
+The current seed changes only the hidden opaque-state permutation, so these
+roles are a leakage barrier rather than 64 independent scientific units. The
+split is neither powered nor comparison-eligible. A later comparison requires
+independently generated held-out system instances, an outer system-family
+holdout and implemented trainable state-space and recurrent nulls. The exact
+rules and hostile mutations are machine-checked by the
+[`Stage-3 design contract`](../workstation/fixture-026/configs/rsd-t02-stage3-design.json)
+and [Decision 0020](../../decisions/0020-separate-information-cuts-from-replication.md).
 
 **Kill rule.** Kill attribution if step fit or hidden provenance supplies the
 answer, a purported separation lacks a pairwise certificate, an arm is rewarded
@@ -742,6 +761,15 @@ These are evaluator-side construction checks. Both topology dispositions stay
 unresolved, comparison and claim flags stay false, and every artifact remains
 `NO_RESULT`.
 
+[`rsd-t02-pulse-panel-runner.mjs`](../workstation/fixture-026/rsd-t02-pulse-panel-runner.mjs)
+now freezes 229 ordered units: four unresolved mixed-window contracts, 18
+world × refractory-duration cells, 15 world × skipping-period cells and 192
+seed × OU-noise units. It is append-only and resumable, binds exact source,
+schema, config, schedule and runtime identities, defaults to zero work and caps
+one invocation at eight units and total serialized results at 256 MiB. The
+runner has not executed the complete schedule; mixed windows lack a frozen
+start or width and OU cells still require clean deterministic sample artifacts.
+
 **Primary endpoint.** Report `refractory_signature`, `skipping_signature` and
 `feedback_support` separately. Feedback support requires at least one positive
 support-qualified signature and a certified rival. Both signatures absent
@@ -784,11 +812,11 @@ forced into one label; thresholds or panels move after output inspection; or a
 construction/robustness check is presented as biological prevalence,
 workstation performance or energy evidence.
 
-**Required future artifacts.** Full six-duration and counterworld construction
-certificates, resolved mixed-window statistics, runner/schema integration,
-actionable estimators, complete serialized-byte and operation ledgers, the
-64-seed robustness grid, prospective confirmation mapping and custody, paired
-statistics and calibrated workstation measurement.
+**Required future artifacts.** Executed full six-duration and counterworld
+construction certificates, resolved mixed-window statistics, actionable
+estimators, complete operation ledgers, the executed 64-seed robustness grid,
+prospective confirmation mapping and custody, paired statistics and calibrated
+workstation measurement.
 
 ## RSD-T03 — Multiplicatively rescaled active chemical search
 

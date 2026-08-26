@@ -107,14 +107,19 @@ function initialCollapsedSubgroups(
 function sourceLabel(document: ResearchDocument): string {
   if (document.path.startsWith("sources/")) return "Historical source capture";
   if (document.path === "experiments/test-coverage.md") return "Generated readiness report";
+  if (document.kind === "json" && document.path.startsWith("assets/plots/"))
+    return "Editable plot source";
+  if (document.kind === "json" && document.path.endsWith(".schema.json"))
+    return "Machine-readable JSON Schema";
+  if (document.kind === "json" && document.path.startsWith("experiments/"))
+    return "Machine-readable experiment artifact";
+  if (document.kind === "json") return "Machine-readable research artifact";
   if (document.path.startsWith("experiments/workstation/")) return "Executable harness documentation";
   if (
     document.path.startsWith("experiments/candidates/") ||
     document.path.startsWith("experiments/fixtures/")
   )
     return "Pre-implementation experiment contract";
-  if (document.path.startsWith("experiments/") && document.kind === "json")
-    return "Machine-readable experiment data";
   if (document.path.startsWith("experiments/")) return "Experiment programme documentation";
   if (document.kind === "mermaid") return "Editable diagram source";
   if (document.kind === "bibtex") return "Machine-readable bibliography";
@@ -200,6 +205,10 @@ export function ResearchReader({
     url.hash = anchor;
     window.location.assign(url.toString());
   }, [currentDocument.path, currentPart.index, documentsByPath]);
+  const isNavigablePath = useCallback(
+    (path: string) => documentsByPath.has(path),
+    [documentsByPath],
+  );
 
   const navigateToPart = useCallback((partIndex: number) => {
     if (partIndex < 0 || partIndex >= currentPart.total) return;
@@ -468,6 +477,7 @@ export function ResearchReader({
               body={currentDocument.body}
               currentPath={currentDocument.path}
               onNavigate={navigate}
+              isNavigablePath={isNavigablePath}
             />
           </article>
           <nav className="document-pager" aria-label="Adjacent documents">
