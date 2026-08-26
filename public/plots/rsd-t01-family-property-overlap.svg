@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="840" viewBox="0 0 1180 840" role="img" aria-labelledby="title desc" data-layout="family-property-overlap" data-theme="violet">
+  <title id="title">Generator family is not the property vector</title>
+  <desc id="desc">Conceptual schema for the RSD-T01 target correction. System symmetry is classified from the maximum discrepancy over the complete registered history × scale grid; endpoint and peak predicates remain per-cell matrices with a frozen all/partial/none reducer. Generator-family identity does not supply the separately evaluated cross-cutting targets; logical dependencies between targets remain. The overlap examples are possibilities, not measurements, frequencies, model outputs, or a fixed family-to-property lookup.</desc>
+  <rect width="1180" height="840" fill="#171127"/>
+  <rect x="54" y="26" width="329.2" height="28" rx="14" fill="#33244f" stroke="#c4a7ff"/>
+  <text x="70" y="45" fill="#c4a7ff" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" letter-spacing="1.1">RSD-T01 TARGET CONTRACT · NO RESULTS</text>
+  <text x="54" y="78" fill="#fffaff" font-family="Georgia, serif" font-size="30" font-weight="700">Generator family is not the property vector</text>
+  <text x="54" y="112" fill="#c9bce0" font-family="Cascadia Mono, monospace" font-size="13">D_max = max_(h,p) D_(h,p); target: pi = (S_system, {A_end,h,p}, {E_peak,h,p}, M_causal, Q_membership)</text>
+  <text x="1138" y="45" fill="#c9bce0" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">family-property-overlap · no measurements</text>
+  <defs><marker id="rsdArrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L9,4.5 L0,9 Z" fill="#c9bce0"/></marker></defs>
+  <rect x="54" y="160" width="352" height="410" rx="18" fill="#261b3d" stroke="#594879" stroke-width="2"/>
+  <rect x="445" y="160" width="271" height="410" rx="18" fill="#33244f" stroke="#594879" stroke-width="2"/>
+  <rect x="756" y="160" width="380" height="410" rx="18" fill="#261b3d" stroke="#594879" stroke-width="2"/>
+  <text x="74" y="188" fill="#ff718d" font-family="Segoe UI, sans-serif" font-size="12" font-weight="850" letter-spacing=".8">SECONDARY · ONE GENERATOR-FAMILY ID</text>
+  <text x="776" y="188" fill="#c4a7ff" font-family="Segoe UI, sans-serif" font-size="12" font-weight="850" letter-spacing=".8">TARGET · FIVE CROSS-CUTTING COORDINATES</text>
+  <rect x="74" y="197" width="312" height="48" rx="12" fill="#171127" stroke="#ff718d" stroke-width="2.5"/>
+    <circle cx="99" cy="221" r="15" fill="#ff718d"/><text x="99" y="226" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">F1</text>
+    <text x="124" y="226" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700">exact scale-equivariant</text>
+    <path d="M386 221 C424 221, 430 315, 472 329" fill="none" stroke="#ff718d" stroke-width="3" stroke-opacity=".74" marker-end="url(#rsdArrow)"/><rect x="74" y="263" width="312" height="48" rx="12" fill="#171127" stroke="#ffc96b" stroke-width="2.5"/>
+    <circle cx="99" cy="287" r="15" fill="#ffc96b"/><text x="99" y="292" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">F2</text>
+    <text x="124" y="292" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700">approximate symmetry</text>
+    <path d="M386 287 C424 287, 430 315, 472 329" fill="none" stroke="#ffc96b" stroke-width="3" stroke-opacity=".74" marker-end="url(#rsdArrow)"/><rect x="74" y="329" width="312" height="48" rx="12" fill="#171127" stroke="#64d8cb" stroke-width="2.5"/>
+    <circle cx="99" cy="353" r="15" fill="#64d8cb"/><text x="99" y="358" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">F3</text>
+    <text x="124" y="358" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700">finite-endpoint lookalike</text>
+    <path d="M386 353 C424 353, 430 315, 472 329" fill="none" stroke="#64d8cb" stroke-width="3" stroke-opacity=".74" marker-end="url(#rsdArrow)"/><rect x="74" y="395" width="312" height="48" rx="12" fill="#171127" stroke="#7bb7ff" stroke-width="2.5"/>
+    <circle cx="99" cy="419" r="15" fill="#7bb7ff"/><text x="99" y="424" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">F4</text>
+    <text x="124" y="424" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700">equal-peak / shifted-latency</text>
+    <path d="M386 419 C424 419, 430 315, 472 329" fill="none" stroke="#7bb7ff" stroke-width="3" stroke-opacity=".74" marker-end="url(#rsdArrow)"/><rect x="74" y="461" width="312" height="48" rx="12" fill="#171127" stroke="#c4a7ff" stroke-width="2.5"/>
+    <circle cx="99" cy="485" r="15" fill="#c4a7ff"/><text x="99" y="490" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">F5</text>
+    <text x="124" y="490" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700">static ratio map</text>
+    <path d="M386 485 C424 485, 430 315, 472 329" fill="none" stroke="#c4a7ff" stroke-width="3" stroke-opacity=".74" marker-end="url(#rsdArrow)"/>
+  <rect x="480" y="300" width="200" height="66" rx="15" fill="#171127" stroke="#ffc96b" stroke-width="3"/>
+  <path d="M505 339 C535 309, 561 369, 592 332 S645 319, 657 339" fill="none" stroke="#ffc96b" stroke-width="4"/>
+  <text x="580" y="286" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800" text-anchor="middle">PAIRED TRAJECTORIES</text>
+  <line x1="580" y1="366" x2="580" y2="389" stroke="#c9bce0" stroke-width="4" marker-end="url(#rsdArrow)"/>
+  <rect x="474" y="397" width="212" height="88" rx="17" fill="#171127" stroke="#c4a7ff" stroke-width="3"/>
+  <text x="580" y="427" fill="#c4a7ff" font-family="Segoe UI, sans-serif" font-size="15" font-weight="900" text-anchor="middle">SEPARATE EVALUATOR</text>
+  <text x="580" y="451" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="12" text-anchor="middle">grid tests + equations / interventions</text>
+  <text x="580" y="471" fill="#c9bce0" font-family="Cascadia Mono, monospace" font-size="10.5" text-anchor="middle">family name is not an input</text>
+  <path d="M686 397 C727 397, 721 215, 756 215" fill="none" stroke="#7bb7ff" stroke-width="3.5" stroke-opacity=".88" marker-end="url(#rsdArrow)"/>
+    <rect x="776" y="188" width="338" height="54" rx="12" fill="#171127" stroke="#7bb7ff" stroke-width="2.5"/>
+    <rect x="788" y="199" width="34" height="32" rx="8" fill="#7bb7ff"/><text x="805" y="219" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">P1</text>
+    <text x="836" y="212" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800">system trajectory symmetry</text>
+    <text x="836" y="231" fill="#c9bce0" font-family="Cascadia Mono, monospace" font-size="10.5">max D: exact · approximate · absent</text><path d="M686 397 C727 397, 721 284, 756 284" fill="none" stroke="#64d8cb" stroke-width="3.5" stroke-opacity=".88" marker-end="url(#rsdArrow)"/>
+    <rect x="776" y="257" width="338" height="54" rx="12" fill="#171127" stroke="#64d8cb" stroke-width="2.5"/>
+    <rect x="788" y="268" width="34" height="32" rx="8" fill="#64d8cb"/><text x="805" y="288" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">P2</text>
+    <text x="836" y="281" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800">endpoint return</text>
+    <text x="836" y="300" fill="#c9bce0" font-family="Cascadia Mono, monospace" font-size="10.5">per cell; all · partial · none</text><path d="M686 397 C727 397, 721 353, 756 353" fill="none" stroke="#ffc96b" stroke-width="3.5" stroke-opacity=".88" marker-end="url(#rsdArrow)"/>
+    <rect x="776" y="326" width="338" height="54" rx="12" fill="#171127" stroke="#ffc96b" stroke-width="2.5"/>
+    <rect x="788" y="337" width="34" height="32" rx="8" fill="#ffc96b"/><text x="805" y="357" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">P3</text>
+    <text x="836" y="350" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800">peak equality</text>
+    <text x="836" y="369" fill="#c9bce0" font-family="Cascadia Mono, monospace" font-size="10.5">per cell; all · partial · none</text><path d="M686 397 C727 397, 721 422, 756 422" fill="none" stroke="#c4a7ff" stroke-width="3.5" stroke-opacity=".88" marker-end="url(#rsdArrow)"/>
+    <rect x="776" y="395" width="338" height="54" rx="12" fill="#171127" stroke="#c4a7ff" stroke-width="2.5"/>
+    <rect x="788" y="406" width="34" height="32" rx="8" fill="#c4a7ff"/><text x="805" y="426" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">P4</text>
+    <text x="836" y="419" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800">causal memory</text>
+    <text x="836" y="438" fill="#c9bce0" font-family="Cascadia Mono, monospace" font-size="10.5">equation / intervention / unassessed</text><path d="M686 397 C727 397, 721 491, 756 491" fill="none" stroke="#ff718d" stroke-width="3.5" stroke-opacity=".88" marker-end="url(#rsdArrow)"/>
+    <rect x="776" y="464" width="338" height="54" rx="12" fill="#171127" stroke="#ff718d" stroke-width="2.5"/>
+    <rect x="788" y="475" width="34" height="32" rx="8" fill="#ff718d"/><text x="805" y="495" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">P5</text>
+    <text x="836" y="488" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800">support membership</text>
+    <text x="836" y="507" fill="#c9bce0" font-family="Cascadia Mono, monospace" font-size="9">inside · outside</text>
+  <rect x="470" y="515" width="220" height="38" rx="19" fill="#ff718d" fill-opacity=".16" stroke="#ff718d" stroke-width="2"/>
+  <text x="580" y="539" fill="#ff718d" font-family="Segoe UI, sans-serif" font-size="12" font-weight="850" text-anchor="middle">NO FAMILY → PROPERTY LOOKUP</text>
+  <text x="54" y="615" fill="#c4a7ff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="850" letter-spacing=".8">OVERLAP EXAMPLES · LOGICAL, NOT OBSERVED FREQUENCIES</text>
+  <rect x="54" y="654" width="520" height="110" rx="15" fill="#33244f" stroke="#594879" stroke-width="2"/>
+    <text x="74" y="682" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="850">shared symmetry, different memory</text>
+    <rect x="74" y="706" width="52" height="28" rx="14" fill="#ff718d"/><text x="100" y="725" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">F1</text><rect x="140" y="706" width="52" height="28" rx="14" fill="#c4a7ff"/><text x="166" y="725" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">F5</text><path d="M209 720 L424 720" stroke="#c9bce0" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#rsdArrow)"/><rect x="438" y="706" width="44" height="28" rx="7" fill="none" stroke="#7bb7ff" stroke-width="2.5"/><text x="460" y="725" fill="#7bb7ff" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">P1</text><rect x="494" y="706" width="44" height="28" rx="7" fill="none" stroke="#c4a7ff" stroke-width="2.5"/><text x="516" y="725" fill="#c4a7ff" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">P4</text>
+    <text x="74" y="751" fill="#c9bce0" font-family="Segoe UI, sans-serif" font-size="11">possible overlap · evaluated separately, never copied from family</text>
+  <rect x="594" y="654" width="542" height="110" rx="15" fill="#33244f" stroke="#594879" stroke-width="2"/>
+    <text x="614" y="682" fill="#fffaff" font-family="Segoe UI, sans-serif" font-size="13" font-weight="850">lookalike summaries, different trajectory</text>
+    <rect x="614" y="706" width="52" height="28" rx="14" fill="#64d8cb"/><text x="640" y="725" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">F3</text><rect x="680" y="706" width="52" height="28" rx="14" fill="#7bb7ff"/><text x="706" y="725" fill="#171127" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">F4</text><path d="M749 720 L930 720" stroke="#c9bce0" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#rsdArrow)"/><rect x="944" y="706" width="44" height="28" rx="7" fill="none" stroke="#64d8cb" stroke-width="2.5"/><text x="966" y="725" fill="#64d8cb" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">P2</text><rect x="1000" y="706" width="44" height="28" rx="7" fill="none" stroke="#ffc96b" stroke-width="2.5"/><text x="1022" y="725" fill="#ffc96b" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">P3</text><rect x="1056" y="706" width="44" height="28" rx="7" fill="none" stroke="#7bb7ff" stroke-width="2.5"/><text x="1078" y="725" fill="#7bb7ff" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">P1</text>
+    <text x="614" y="751" fill="#c9bce0" font-family="Segoe UI, sans-serif" font-size="11">possible overlap · evaluated separately, never copied from family</text>
+  <text x="1136" y="816" fill="#c9bce0" font-family="Cascadia Mono, monospace" font-size="10" text-anchor="end">conceptual target schema · no measurements · no trained model · no fixed mapping</text>
+</svg>

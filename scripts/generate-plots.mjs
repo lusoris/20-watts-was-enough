@@ -1927,6 +1927,95 @@ function historyConditionedPositionContrast(spec) {
   return analyticalDocument(spec, layout, content);
 }
 
+function rsdT01FamilyPropertyOverlap(spec) {
+  const layout = analyticalLayout(spec, {
+    width: 1180,
+    height: 840,
+    kind: "family-property-overlap",
+    theme: "violet",
+  });
+  const { width, height, theme } = layout;
+  const { families, properties, overlap_examples: overlapExamples } = spec.parameters;
+  const validRows = (rows, prefix) => Array.isArray(rows)
+    && rows.length === 5
+    && rows.every((row, index) => row?.id === `${prefix}${index + 1}`
+      && typeof row.label === "string"
+      && row.label.length > 0);
+  if (
+    !validRows(families, "F")
+    || !validRows(properties, "P")
+    || properties.some((row) => typeof row.values !== "string" || row.values.length === 0)
+    || !Array.isArray(overlapExamples)
+    || overlapExamples.length !== 2
+    || overlapExamples.some((row) => (
+      typeof row.label !== "string"
+      || !Array.isArray(row.families)
+      || !Array.isArray(row.properties)
+      || row.families.some((id) => !families.some((family) => family.id === id))
+      || row.properties.some((id) => !properties.some((property) => property.id === id))
+    ))
+  ) throw new Error(`${spec.id} requires five families, five properties, and two valid overlap examples`);
+
+  const familyPalette = ["#ff718d", "#ffc96b", "#64d8cb", "#7bb7ff", "#c4a7ff"];
+  const propertyPalette = ["#7bb7ff", "#64d8cb", "#ffc96b", "#c4a7ff", "#ff718d"];
+  const familyY = (index) => 222 + index * 66;
+  const propertyY = (index) => 215 + index * 69;
+
+  const familyCards = families.map((family, index) => {
+    const y = familyY(index);
+    const color = familyPalette[index];
+    return `<rect x="74" y="${y - 25}" width="312" height="48" rx="12" fill="${theme.background}" stroke="${color}" stroke-width="2.5"/>
+    <circle cx="99" cy="${y - 1}" r="15" fill="${color}"/><text x="99" y="${y + 4}" fill="${theme.background}" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">${family.id}</text>
+    <text x="124" y="${y + 4}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700">${esc(family.label)}</text>
+    <path d="M386 ${y - 1} C424 ${y - 1}, 430 315, 472 329" fill="none" stroke="${color}" stroke-width="3" stroke-opacity=".74" marker-end="url(#rsdArrow)"/>`;
+  }).join("");
+
+  const propertyCards = properties.map((property, index) => {
+    const y = propertyY(index);
+    const color = propertyPalette[index];
+    return `<path d="M686 397 C727 397, 721 ${y}, 756 ${y}" fill="none" stroke="${color}" stroke-width="3.5" stroke-opacity=".88" marker-end="url(#rsdArrow)"/>
+    <rect x="776" y="${y - 27}" width="338" height="54" rx="12" fill="${theme.background}" stroke="${color}" stroke-width="2.5"/>
+    <rect x="788" y="${y - 16}" width="34" height="32" rx="8" fill="${color}"/><text x="805" y="${y + 4}" fill="${theme.background}" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">${property.id}</text>
+    <text x="836" y="${y - 3}" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800">${esc(property.label)}</text>
+    <text x="836" y="${y + 16}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="${index === 4 ? 9 : 10.5}">${esc(property.values)}</text>`;
+  }).join("");
+
+  const overlapCard = (example, x, cardWidth, familyColors, propertyColors) => {
+    const familyChips = example.families.map((id, index) => `<rect x="${x + 20 + index * 66}" y="706" width="52" height="28" rx="14" fill="${familyColors[index]}"/><text x="${x + 46 + index * 66}" y="725" fill="${theme.background}" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">${id}</text>`).join("");
+    const propertyStart = x + cardWidth - 24 - example.properties.length * 56;
+    const propertyChips = example.properties.map((id, index) => `<rect x="${propertyStart + index * 56}" y="706" width="44" height="28" rx="7" fill="none" stroke="${propertyColors[index]}" stroke-width="2.5"/><text x="${propertyStart + 22 + index * 56}" y="725" fill="${propertyColors[index]}" font-family="Cascadia Mono, monospace" font-size="11" font-weight="900" text-anchor="middle">${id}</text>`).join("");
+    return `<rect x="${x}" y="654" width="${cardWidth}" height="110" rx="15" fill="${theme.panelAlt}" stroke="${theme.grid}" stroke-width="2"/>
+    <text x="${x + 20}" y="682" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="850">${esc(example.label)}</text>
+    ${familyChips}<path d="M${x + 155} 720 L${propertyStart - 14} 720" stroke="${theme.muted}" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#rsdArrow)"/>${propertyChips}
+    <text x="${x + 20}" y="751" fill="${theme.muted}" font-family="Segoe UI, sans-serif" font-size="11">possible overlap · evaluated separately, never copied from family</text>`;
+  };
+
+  const content = `${analyticalHeader(spec, layout, { badge: "RSD-T01 TARGET CONTRACT · NO RESULTS" })}
+  <defs><marker id="rsdArrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L9,4.5 L0,9 Z" fill="${theme.muted}"/></marker></defs>
+  <rect x="54" y="160" width="352" height="410" rx="18" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  <rect x="445" y="160" width="271" height="410" rx="18" fill="${theme.panelAlt}" stroke="${theme.grid}" stroke-width="2"/>
+  <rect x="756" y="160" width="380" height="410" rx="18" fill="${theme.panel}" stroke="${theme.grid}" stroke-width="2"/>
+  <text x="74" y="188" fill="${theme.danger}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="850" letter-spacing=".8">SECONDARY · ONE GENERATOR-FAMILY ID</text>
+  <text x="776" y="188" fill="${theme.primary}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="850" letter-spacing=".8">TARGET · FIVE CROSS-CUTTING COORDINATES</text>
+  ${familyCards}
+  <rect x="480" y="300" width="200" height="66" rx="15" fill="${theme.background}" stroke="${theme.accent}" stroke-width="3"/>
+  <path d="M505 339 C535 309, 561 369, 592 332 S645 319, 657 339" fill="none" stroke="${theme.accent}" stroke-width="4"/>
+  <text x="580" y="286" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800" text-anchor="middle">PAIRED TRAJECTORIES</text>
+  <line x1="580" y1="366" x2="580" y2="389" stroke="${theme.muted}" stroke-width="4" marker-end="url(#rsdArrow)"/>
+  <rect x="474" y="397" width="212" height="88" rx="17" fill="${theme.background}" stroke="${theme.primary}" stroke-width="3"/>
+  <text x="580" y="427" fill="${theme.primary}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="900" text-anchor="middle">SEPARATE EVALUATOR</text>
+  <text x="580" y="451" fill="${theme.text}" font-family="Segoe UI, sans-serif" font-size="12" text-anchor="middle">grid tests + equations / interventions</text>
+  <text x="580" y="471" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10.5" text-anchor="middle">family name is not an input</text>
+  ${propertyCards}
+  <rect x="470" y="515" width="220" height="38" rx="19" fill="${theme.danger}" fill-opacity=".16" stroke="${theme.danger}" stroke-width="2"/>
+  <text x="580" y="539" fill="${theme.danger}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="850" text-anchor="middle">NO FAMILY → PROPERTY LOOKUP</text>
+  <text x="54" y="615" fill="${theme.primary}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="850" letter-spacing=".8">OVERLAP EXAMPLES · LOGICAL, NOT OBSERVED FREQUENCIES</text>
+  ${overlapCard(overlapExamples[0], 54, 520, [familyPalette[0], familyPalette[4]], [propertyPalette[0], propertyPalette[3]])}
+  ${overlapCard(overlapExamples[1], 594, 542, [familyPalette[2], familyPalette[3]], [propertyPalette[1], propertyPalette[2], propertyPalette[0]])}
+  <text x="${width - 44}" y="${height - 24}" fill="${theme.muted}" font-family="Cascadia Mono, monospace" font-size="10" text-anchor="end">conceptual target schema · no measurements · no trained model · no fixed mapping</text>`;
+  return analyticalDocument(spec, layout, content);
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -1948,6 +2037,7 @@ const renderers = {
   "slow-manifold-fold-boundary": slowManifoldFoldBoundary,
   "mission-profile-damage": missionProfileDamage,
   "interface-qualified-scale-symmetry": interfaceQualifiedScaleSymmetry,
+  "rsd-t01-family-property-overlap": rsdT01FamilyPropertyOverlap,
   "interface-qualified-retroactivity": interfaceQualifiedRetroactivity,
   "history-conditioned-position-contrast": historyConditionedPositionContrast,
 };

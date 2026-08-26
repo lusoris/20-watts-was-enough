@@ -77,3 +77,42 @@ test("torn tails and altered chained records fail closed", async () => {
     await rm(altered, { recursive: true, force: true });
   }
 });
+
+test("checkpoint documents reject unknown fields and type drift after digest recomputation", async () => {
+  const temporary = await mkdtemp(path.join(root, "tmp-f019-checkpoint-closure-"));
+  try {
+    const ledger = await openLedger(temporary);
+    await ledger.append({ id: "a", value: 1 });
+    await ledger.saveCheckpoint();
+    const checkpointPath = path.join(temporary, "checkpoint.json");
+    const original = JSON.parse(await readFile(checkpointPath, "utf8"));
+    for (const mutate of [
+      (checkpoint) => { checkpoint.claim_eligible = true; },
+      (checkpoint) => { checkpoint.records = String(checkpoint.records); },
+    ]) {
+      const checkpoint = structuredClone(original);
+      mutate(checkpoint);
+      const body = { ...checkpoint };
+      delete body.checkpoint_sha256;
+      checkpoint.checkpoint_sha256 = sha256Hex(canonicalize(body));
+      await writeFile(checkpointPath, `${JSON.stringify(checkpoint, null, 2)}\n`);
+      await assert.rejects(() => openLedger(temporary), /missing or unknown fields|identity mismatch/);
+    }
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test("raw ledgers reject CRLF instead of silently changing byte semantics", async () => {
+  const temporary = await mkdtemp(path.join(root, "tmp-f019-checkpoint-crlf-"));
+  try {
+    const ledger = await openLedger(temporary);
+    await ledger.append({ id: "a", value: 1 });
+    const rawPath = path.join(temporary, "raw.jsonl");
+    const raw = await readFile(rawPath, "utf8");
+    await writeFile(rawPath, raw.replaceAll("\n", "\r\n"));
+    await assert.rejects(() => openLedger(temporary), /canonical LF JSONL|CRLF/);
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});

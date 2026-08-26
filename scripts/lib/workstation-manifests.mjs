@@ -13,6 +13,17 @@ import {
 const readinessLevels = new Set(["scaffold", "smoke-ready", "workstation-ready"]);
 const commandActions = ["prepare", "smoke", "run", "analyze", "validate"];
 const claimIdPattern = /^C-\d{3,4}$/;
+const fullProfileContracts = new Map([
+  ["candidate-010", Object.freeze({ schema: 1, profile: "development", cardinalityFields: Object.freeze(["opportunities_per_seed"]) })],
+  ["fixture-007", Object.freeze({ schema: 1, profile: "development", cardinalityFields: Object.freeze(["opportunities_per_seed"]) })],
+  ["fixture-012", Object.freeze({ schema: 1, profile: "development", cardinalityFields: Object.freeze(["opportunities_per_seed", "studies_per_seed"]) })],
+  ["fixture-019", Object.freeze({ schema: 1, profile: "development", cardinalityFields: Object.freeze(["opportunities_per_seed"]) })],
+  ["fixture-023", Object.freeze({ schema: 1, profile: "development", cardinalityFields: Object.freeze(["t01_episodes_per_seed", "t02_lifecycles_per_seed"]) })],
+  ["fixture-024", Object.freeze({ schema: 1, profile: "development", cardinalityFields: Object.freeze(["opportunities_per_seed"]) })],
+  ["fixture-025", Object.freeze({ schema: 1, profile: "development", cardinalityFields: Object.freeze(["worlds_per_seed"]) })],
+  ["fixture-026", Object.freeze({ schema: 2, profile: "development", cardinalityFields: Object.freeze(["worlds_per_seed"]) })],
+  ["fixture-027", Object.freeze({ schema: 1, profile: "development", cardinalityFields: Object.freeze(["worlds_per_seed"]) })],
+]);
 const reviewedNonEnergyScopes = new Map([
   ["fixture-019.c-1481.non-energy.v1", Object.freeze({
     artifact: "fixture-019",
@@ -550,13 +561,24 @@ export async function workstationPromotionChecks(root, manifest) {
   const fullProfile = localPath(root, manifest.data?.full_profile);
   const fullProfileExists = Boolean(fullProfile && (await exists(fullProfile)));
   let fullProfileFrozen = false;
+  let fullProfileSchemaVersion = null;
+  let fullProfileCardinalityFields = [];
   if (fullProfileExists && /^[0-9a-f]{64}$/.test(manifest.data?.full_profile_sha256 ?? "")) {
     try {
       const profile = JSON.parse(await readFile(fullProfile, "utf8"));
-      fullProfileFrozen = profile.schema === 1
+      const profileContract = fullProfileContracts.get(manifest.artifact);
+      const declaredPerSeedFields = Object.keys(profile)
+        .filter((field) => /^[a-z][a-z0-9_]*_per_seed$/.test(field))
+        .sort();
+      const expectedPerSeedFields = [...(profileContract?.cardinalityFields ?? [])].sort();
+      fullProfileSchemaVersion = profile.schema;
+      fullProfileCardinalityFields = expectedPerSeedFields;
+      fullProfileFrozen = Boolean(profileContract)
+        && profile.schema === profileContract.schema
         && profile.artifact === manifest.artifact
-        && Number.isInteger(profile.opportunities_per_seed)
-        && profile.opportunities_per_seed > 0
+        && profile.profile === profileContract.profile
+        && JSON.stringify(declaredPerSeedFields) === JSON.stringify(expectedPerSeedFields)
+        && expectedPerSeedFields.every((field) => Number.isSafeInteger(profile[field]) && profile[field] > 0)
         && await fileSha256(fullProfile) === manifest.data.full_profile_sha256;
     } catch {
       fullProfileFrozen = false;
@@ -822,8 +844,8 @@ export async function workstationPromotionChecks(root, manifest) {
       label: "Frozen full profile",
       passed: fullProfileFrozen,
       detail: fullProfileFrozen
-        ? "data.full_profile identity and SHA-256 match the frozen repository file"
-        : "data.full_profile must be a valid profile with a matching full_profile_sha256",
+        ? `data.full_profile schema ${fullProfileSchemaVersion}, development identity, ${fullProfileCardinalityFields.join(", ")} workload cardinality, and SHA-256 match the frozen repository file`
+        : "data.full_profile must match its registered artifact, development profile, schema version, exact positive safe-integer workload cardinality fields, and full_profile_sha256",
     },
     {
       id: "full-tests",

@@ -166,9 +166,33 @@ biological or safety threshold.
 
 ## Weaker lookalikes
 
-### Exact adaptation
+The constructions below are properties, not disjoint mechanism classes. A
+static ratio map with its reference supplied at the interface can satisfy exact
+trajectory symmetry, and endpoint return can coexist with equal peak. F-026
+therefore keeps generator family as secondary provenance and evaluates
+cross-cutting properties separately while retaining their logical dependencies.
 
-Exact adaptation constrains only the final output:
+### Finite-horizon endpoint return
+
+A finite recorded trajectory can test return relative to each trajectory's own
+prestimulus output. On a frozen discrete horizon with endpoint tolerance
+$\varepsilon_{\mathrm{end}}$, define
+
+$$
+A_{\mathrm{end},j,h,p}
+=
+\mathbb{1}\!\left[
+|y_{j,h,1,N}-y_{j,h,1,0}|\le\varepsilon_{\mathrm{end}}
+\;\land\;
+|y_{j,h,p,N}-y_{j,h,p,0}|\le\varepsilon_{\mathrm{end}}
+\right].
+$$
+
+This finite-sample predicate is not general exact adaptation. A pulse can
+return because the input itself returned, and one forced final sample says
+nothing about causality or settling. Exact adaptation instead requires a
+declared sustained-input equilibrium or registered settling-tail condition;
+in the ideal infinite-horizon form,
 
 $$
 \lim_{t\rightarrow\infty}y(t)=y_0.
@@ -178,13 +202,18 @@ Two systems can share $y_0$ while their peak, latency, width and tail differ.
 
 ### Weber-like peak equality
 
-Peak equality constrains a functional such as
+Peak equality is measured as maximum absolute departure from each trajectory's
+own prestimulus value,
 
 $$
-\max_t y_{pb}(t)=\max_t y_b(t),
+P_{j,h,p}=\max_k |y_{j,h,p,k}-y_{j,h,p,0}|,
+\qquad
+P_{j,h,1}=\max_k |y_{j,h,1,k}-y_{j,h,1,0}|.
 $$
 
-but does not constrain when the maximum occurs or the rest of the trajectory.
+The first maximizing sample is the frozen latency tie-break. Equality of
+$P_{j,h,p}$ and $P_{j,h,1}$ does not constrain latency or the rest of the
+trajectory.
 
 ### Static normalization
 
@@ -209,17 +238,18 @@ these statistics.
 
 ## Approximate trajectory score
 
-For output component $j$, held-out factor $p$, duration $T$ seconds and frozen
-nonzero scale $s_{y,j}$, use
+For output component $j$, registered input history $h\in\mathcal H$, held-out
+factor $p\in\mathcal P$, duration $T$ seconds and frozen nonzero scale
+$s_{y,j}$, use
 
 $$
-D_{j,p}
+D_{j,h,p}
 =
 \sqrt{
 \frac{1}{T}
 \int_0^T
 \left\|
-\frac{y_{j,p}(t)-y_{j,1}(t)}{s_{y,j}}
+\frac{y_{j,h,p}(t)-y_{j,h,1}(t)}{s_{y,j}}
 \right\|^2dt
 }.
 $$
@@ -228,6 +258,89 @@ The score is dimensionless. The scale $s_{y,j}$, integration grid, time
 window, scale factors and uncertainty procedure must be frozen before
 confirmation. Report peak, latency, duration and tail discrepancies separately
 so a low integral error cannot hide one dangerous phase.
+
+System-level classification uses the worst registered cell, not an unstated
+average:
+
+$$
+D_{j,\max}=\max_{h\in\mathcal H,\,p\in\mathcal P}D_{j,h,p}.
+$$
+
+With frozen tolerances
+$0\le\varepsilon_{\mathrm{exact}}<\varepsilon_{\mathrm{approx}}$, define the
+tolerance-qualified class
+
+$$
+S_{\mathrm{system},j}=
+\begin{cases}
+\mathrm{exact}, & D_{j,\max}\le\varepsilon_{\mathrm{exact}},\\
+\mathrm{approximate}, & \varepsilon_{\mathrm{exact}}<D_{j,\max}
+\le\varepsilon_{\mathrm{approx}},\\
+\mathrm{absent}, & D_{j,\max}>\varepsilon_{\mathrm{approx}}.
+\end{cases}
+$$
+
+Missing or rejected cells do not disappear from the maximum; they make the
+system classification unavailable and retain an abstention in its registered
+denominator.
+
+If an actionable arm receives both complete output trajectories on this grid,
+$D_{j,h,p}$, paired trajectory match, finite-horizon endpoint return and peak
+equality are directly computable. Their errors measure numerical conformance
+and the resource cost of producing the values; they are not evidence that a
+representation learned the properties. A predictive interpretation needs a
+separately registered observation cut, such as a withheld suffix or future
+intervention.
+
+For the current RSD-T01 contract the evaluator's property target is
+
+$$
+\boldsymbol\pi_j=
+\left(
+S_{\mathrm{system},j},
+\{A_{\mathrm{end},j,h,p}\}_{h,p},
+\{E_{\mathrm{peak},j,h,p}\}_{h,p},
+M_{\mathrm{causal}},
+Q_{\mathrm{membership}}
+\right),
+$$
+
+where
+$S_{\mathrm{system},j}\in\{\mathrm{exact},\mathrm{approximate},\mathrm{absent}\}$
+is evaluated by $D_{j,\max}$ across the complete frozen history × scale grid
+rather than inferred from one pair,
+$A_{\mathrm{end},j,h,p}$ is the per-cell finite-horizon endpoint predicate,
+$E_{\mathrm{peak},j,h,p}$ is the per-cell tolerance-qualified equality of
+$P_{j,h,p}$ and $P_{j,h,1}$,
+$M_{\mathrm{causal}}$ requires a machine-readable state equation or identifying
+intervention, and
+$Q_{\mathrm{membership}}\in\{\mathrm{inside},\mathrm{outside}\}$ is generator
+truth. An arm's support-detection decision is a separate output because
+detectability depends on its observation interface. The endpoint and peak
+matrices remain primary data. A compact summary may use only the frozen reducer
+`all` when every registered cell is true, `none` when every cell is false, and
+`partial` otherwise; it may not silently substitute a mean. These coordinates
+are asserted without using the generator-family name, but they are not
+logically independent: exact trajectory equality, for example, implies equal
+peak under the same peak definition.
+
+The public generator-only smoke layer records a narrower per-world vector:
+paired-trajectory match, finite-horizon endpoint return, peak-amplitude
+equality, `causal_memory_status: unassessed`, and
+`support_membership: inside`. It does not promote one paired trace to a system
+symmetry certificate.
+
+### Property vector, not family label
+
+![Five generator-family labels converge through paired trajectories into a separate evaluator, which produces five cross-cutting property coordinates while retaining logical dependencies; two examples show that different families can share properties while differing on others.](../public/plots/rsd-t01-family-property-overlap.svg)
+
+The family ID remains a secondary synthetic diagnostic. The primary vector is
+evaluated from the registered trajectory grid, structural equations and
+interventions; it is never copied from a family-to-property lookup. The current
+smoke records only its directly observable subset and marks causal memory
+unassessed. The editable figure
+specification is the `rsd-t01-family-property-overlap` entry in
+[`core-models.json`](../assets/plots/core-models.json).
 
 ## Validity and failure boundaries
 

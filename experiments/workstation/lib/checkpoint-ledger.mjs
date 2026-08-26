@@ -4,6 +4,25 @@ import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 
 const ZERO_HASH = "0".repeat(64);
+const CHECKPOINT_KEYS = Object.freeze([
+  "schema",
+  "artifact",
+  "ledger_format",
+  "records",
+  "scientific_payload_sha256",
+  "hash_chain_sha256",
+  "completed_work_units_sha256",
+  "run_identity",
+  "checkpoint_sha256",
+]);
+
+function exactKeys(value, keys) {
+  return value
+    && typeof value === "object"
+    && !Array.isArray(value)
+    && Object.keys(value).length === keys.length
+    && keys.every((key) => Object.hasOwn(value, key));
+}
 
 export function canonicalize(value) {
   if (value === null || typeof value === "boolean" || typeof value === "string") {
@@ -38,8 +57,27 @@ async function readOptional(file) {
   }
 }
 
+function strictJsonlLines(raw) {
+  if (raw === null || raw.length === 0) return [];
+  if (raw.includes("\r")) {
+    throw new Error("Raw ledger must use canonical LF JSONL; CRLF is forbidden.");
+  }
+  if (!raw.endsWith("\n")) {
+    throw new Error("Raw ledger has a torn trailing record; refusing silent repair.");
+  }
+  const body = raw.slice(0, -1);
+  if (body.length === 0) throw new Error("Raw ledger contains a blank JSONL line.");
+  const lines = body.split("\n");
+  if (lines.some((line) => line.length === 0)) {
+    throw new Error("Raw ledger contains a blank JSONL line.");
+  }
+  return lines;
+}
+
 async function appendDurable(file, line) {
-  if (!line.endsWith("\n")) throw new TypeError("Ledger writes must be newline terminated.");
+  if (!line.endsWith("\n") || line.includes("\r")) {
+    throw new TypeError("Ledger writes must use canonical LF termination.");
+  }
   const handle = await open(file, "a", 0o600);
   try {
     await handle.writeFile(line, "utf8");
@@ -101,11 +139,22 @@ function checkpointDocument({ artifact, ledgerFormat, state, runIdentity }) {
   return { ...body, checkpoint_sha256: sha256Hex(canonicalize(body)) };
 }
 
-function verifyCheckpoint(document, { artifact, ledgerFormat }) {
+function verifyCheckpoint(document, { artifact, ledgerFormat, runIdentity }) {
+  if (!exactKeys(document, CHECKPOINT_KEYS)) {
+    throw new Error("Checkpoint has missing or unknown fields.");
+  }
   if (
-    document?.schema !== 1
+    document.schema !== 1
     || document.artifact !== artifact
     || document.ledger_format !== ledgerFormat
+    || !Number.isSafeInteger(document.records)
+    || document.records < 0
+    || !/^[0-9a-f]{64}$/u.test(document.scientific_payload_sha256)
+    || !/^[0-9a-f]{64}$/u.test(document.hash_chain_sha256)
+    || !/^[0-9a-f]{64}$/u.test(document.completed_work_units_sha256)
+    || !exactKeys(document.run_identity, Object.keys(runIdentity))
+    || canonicalize(document.run_identity) !== canonicalize(runIdentity)
+    || !/^[0-9a-f]{64}$/u.test(document.checkpoint_sha256)
   ) throw new Error("Checkpoint identity mismatch.");
   const { checkpoint_sha256: digest, ...body } = document;
   if (digest !== sha256Hex(canonicalize(body))) throw new Error("Checkpoint digest mismatch.");
@@ -139,15 +188,15 @@ export async function openCheckpointLedger({
   if (typeof scientificPayload !== "function" || typeof workKey !== "function") {
     throw new TypeError("scientificPayload and workKey are required.");
   }
+  if (!runIdentity || typeof runIdentity !== "object" || Array.isArray(runIdentity)) {
+    throw new TypeError("runIdentity must be a closed object.");
+  }
   canonicalize(runIdentity);
   await mkdir(path.dirname(rawPath), { recursive: true });
   await mkdir(path.dirname(checkpointPath), { recursive: true });
 
   const raw = await readOptional(rawPath);
-  if (raw !== null && raw.length > 0 && !raw.endsWith("\n")) {
-    throw new Error("Raw ledger has a torn trailing record; refusing silent repair.");
-  }
-  const lines = raw?.split(/\r?\n/u).filter(Boolean) ?? [];
+  const lines = strictJsonlLines(raw);
   const state = {
     records: 0,
     digest: createHash("sha256"),
@@ -182,10 +231,7 @@ export async function openCheckpointLedger({
   let checkpointStatus = "missing";
   if (checkpointRaw !== null) {
     const checkpoint = JSON.parse(checkpointRaw);
-    verifyCheckpoint(checkpoint, { artifact, ledgerFormat });
-    if (canonicalize(checkpoint.run_identity) !== canonicalize(runIdentity)) {
-      throw new Error("Checkpoint run identity differs from requested inputs.");
-    }
+    verifyCheckpoint(checkpoint, { artifact, ledgerFormat, runIdentity });
     if (checkpoint.records > state.records) throw new Error("Checkpoint is ahead of raw ledger.");
     checkpointStatus = checkpoint.records === state.records ? "current" : "stale";
     if (checkpointStatus === "current") {

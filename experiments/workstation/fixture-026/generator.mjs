@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-export const FIXTURE_026_GENERATOR_VERSION = "fixture-026.rsd-t01-generator.v1";
+export const FIXTURE_026_GENERATOR_VERSION = "fixture-026.rsd-t01-generator.v2";
 export const FIXTURE_026_RNG_CONTRACT = Object.freeze({
   family: "PCG-CM-DXSM 128/64",
   state_bits: 128,
@@ -8,28 +8,40 @@ export const FIXTURE_026_RNG_CONTRACT = Object.freeze({
   transition_multiplier_hex: "0xda942042e4dd58b5",
   output_permutation: "DXSM applied to the pre-transition 128-bit state",
   seeding: "custom SHA-256-derived 128-bit state and odd 128-bit increment",
+  public_seed_grammar: "canonical decimal-string uint64 encoded as eight little-endian bytes",
   numpy_seedsequence_compatible: false,
 });
-export const FIXTURE_026_VALID_CLASSES = Object.freeze([
+export const FIXTURE_026_VALID_FAMILIES = Object.freeze([
   "exact-scale-symmetry",
   "approximate-scale-symmetry",
-  "exact-adaptation-only",
-  "equal-peak-different-shape",
+  "endpoint-return-lookalike",
+  "equal-peak-delayed-trajectory",
   "static-ratio",
 ]);
-export const FIXTURE_026_CLASSES = Object.freeze([
-  ...FIXTURE_026_VALID_CLASSES,
-  "invalid-record",
+export const FIXTURE_026_GENERATOR_FAMILIES = Object.freeze([
+  ...FIXTURE_026_VALID_FAMILIES,
+  "malformed-sentinel",
 ]);
 export const FIXTURE_026_HISTORY_FAMILIES = Object.freeze([
   "step",
   "pulse",
   "ramp",
-  "band-limited-multisine",
+  "band-limited-stochastic",
 ]);
+export const FIXTURE_026_MALFORMED_SENTINELS = Object.freeze([
+  "time-order",
+  "checksum",
+  "unit-token",
+  "future-normalization",
+]);
+export const FIXTURE_026_VALID_CELLS_PER_SEED = FIXTURE_026_VALID_FAMILIES.length
+  * FIXTURE_026_HISTORY_FAMILIES.length;
+export const FIXTURE_026_WORLDS_PER_SEED = FIXTURE_026_VALID_CELLS_PER_SEED
+  + FIXTURE_026_MALFORMED_SENTINELS.length;
 
 const MASK_64 = (1n << 64n) - 1n;
 const MASK_128 = (1n << 128n) - 1n;
+const UINT64_MAX = MASK_64;
 const PCG_CM_DXSM_MULTIPLIER = 0xda942042e4dd58b5n;
 const TWO_POW_53 = 9007199254740992;
 
@@ -75,12 +87,21 @@ export class PcgCmDxsm12864 {
   }
 }
 
-export function publicSeedBytes(seed) {
-  if (!Number.isSafeInteger(seed) || seed < 0 || seed > 0xffff_ffff) {
-    throw new Error("Fixture 026 public seed must be an unsigned integer.");
+export function parseFixture026PublicSeed(seed) {
+  if (typeof seed !== "string" || !/^(0|[1-9][0-9]{0,19})$/u.test(seed)) {
+    throw new Error("Fixture 026 public seed must be a canonical decimal-string uint64.");
   }
+  const value = BigInt(seed);
+  if (value > UINT64_MAX) {
+    throw new Error("Fixture 026 public seed exceeds uint64.");
+  }
+  return value;
+}
+
+export function publicSeedBytes(seed) {
+  const value = parseFixture026PublicSeed(seed);
   const bytes = Buffer.alloc(8);
-  bytes.writeBigUInt64LE(BigInt(seed));
+  bytes.writeBigUInt64LE(value);
   return bytes;
 }
 
@@ -99,7 +120,7 @@ export function fixture026StreamPreimage({ phase, protocol, seed, scope, canonic
   if (!/^(0|[1-9][0-9]*)$/.test(String(canonicalId))) {
     throw new Error("Fixture 026 stream canonical ID must be unpadded ASCII decimal.");
   }
-  return `F026-v1|${phase}|${protocol}|${publicSeedHex(seed)}|${scope}|${canonicalId}`;
+  return `F026-v2|${phase}|${protocol}|${publicSeedHex(seed)}|${scope}|${canonicalId}`;
 }
 
 function exactKeys(value, keys) {
@@ -118,13 +139,11 @@ export function validateFixture026Config(config) {
   ];
   if (
     !exactKeys(config, keys)
-    || config.schema !== 1
+    || config.schema !== 2
     || config.artifact !== "fixture-026"
     || !new Set(["smoke", "development"]).has(config.profile)
     || !Number.isSafeInteger(config.worlds_per_seed)
-    || config.worlds_per_seed < FIXTURE_026_CLASSES.length
-    || config.worlds_per_seed > 120
-    || config.worlds_per_seed % FIXTURE_026_CLASSES.length !== 0
+    || config.worlds_per_seed !== FIXTURE_026_WORLDS_PER_SEED
     || config.time_step_s !== 0.02
     || config.horizon_s !== 4
     || config.trajectory_quadrature !== "trapezoid"
@@ -141,7 +160,7 @@ export function validateFixture026Config(config) {
   return config;
 }
 
-function historyRatio(family, timeS, horizonS) {
+function deterministicHistoryRatio(family, timeS) {
   if (family === "step") return timeS < 0.5 ? 1 : 2;
   if (family === "pulse") return timeS >= 0.5 && timeS < 2.4 ? 2 : 1;
   if (family === "ramp") {
@@ -149,12 +168,29 @@ function historyRatio(family, timeS, horizonS) {
     if (timeS < 2.5) return 1 + (timeS - 0.5) / 2;
     return 2;
   }
-  const envelope = Math.sin(Math.PI * timeS / horizonS) ** 2;
-  return 1 + envelope * (
-    0.34 * Math.sin(2 * Math.PI * timeS / horizonS)
-    + 0.18 * Math.sin(6 * Math.PI * timeS / horizonS + 0.35)
-    + 0.42
-  );
+  throw new Error(`Fixture 026 deterministic history family ${family} is invalid.`);
+}
+
+function historyRatios(family, times, horizonS, random) {
+  if (family !== "band-limited-stochastic") {
+    return times.map((timeS) => deterministicHistoryRatio(family, timeS));
+  }
+  const harmonics = [1, 2, 3, 4].map((frequency) => Object.freeze({
+    frequency,
+    amplitude: random.range(0.035, 0.095),
+    phase: random.range(0, 2 * Math.PI),
+  }));
+  return times.map((timeS) => {
+    const activeEndS = horizonS - 1.4;
+    if (timeS >= activeEndS) return 1;
+    const envelope = Math.sin(Math.PI * timeS / activeEndS) ** 2;
+    const bandLimitedDraw = harmonics.reduce((sum, term) => (
+      sum + term.amplitude * Math.sin(
+        2 * Math.PI * term.frequency * timeS / activeEndS + term.phase
+      )
+    ), 0);
+    return 1 + envelope * (0.42 + bandLimitedDraw);
+  });
 }
 
 function normalizedDynamicTrace(ratios, dt, tauS) {
@@ -165,24 +201,76 @@ function normalizedDynamicTrace(ratios, dt, tauS) {
   });
 }
 
-function normalizePeak(shape) {
-  const peak = Math.max(...shape);
-  return shape.map((value) => value / peak);
+function finiteMemoryHighPass(ratios, lagSamples) {
+  if (!Number.isSafeInteger(lagSamples) || lagSamples < 1) {
+    throw new Error("Fixture 026 finite-memory lag must be a positive sample count.");
+  }
+  return ratios.map((ratio, index) => {
+    const past = ratios[Math.max(0, index - lagSamples)];
+    return Math.log(ratio / past);
+  });
 }
 
-function equalPeakShapes(times, horizonS, amplitude) {
-  const left = normalizePeak(times.map((timeS) => {
-    const x = timeS / horizonS;
-    return x <= 0 || x >= 1 ? 0 : x ** 2 * (1 - x) ** 5;
-  }));
-  const right = normalizePeak(times.map((timeS) => {
-    const x = timeS / horizonS;
-    return x <= 0 || x >= 1 ? 0 : x ** 5 * (1 - x) ** 2;
-  }));
-  return {
-    base: left.map((value) => amplitude * value),
-    scaled: right.map((value) => amplitude * value),
-  };
+function causalDelay(values, delaySamples) {
+  if (!Number.isSafeInteger(delaySamples) || delaySamples < 1) {
+    throw new Error("Fixture 026 causal delay must be a positive sample count.");
+  }
+  const prestimulus = values[0];
+  return values.map((_, index) => (
+    index < delaySamples ? prestimulus : values[index - delaySamples]
+  ));
+}
+
+export function generateFixture026CausalLookalikePair({
+  generatorFamily,
+  ratios,
+  timeStepS,
+  endpointGainIncrement = null,
+  endpointBaseLagS = null,
+  endpointScaledLagS = null,
+  equalPeakCommonGain = null,
+  equalPeakMemoryLagS = null,
+  equalPeakDelayS = null,
+}) {
+  if (
+    !new Set(["endpoint-return-lookalike", "equal-peak-delayed-trajectory"])
+      .has(generatorFamily)
+    || !Array.isArray(ratios)
+    || ratios.length < 2
+    || ratios.some((ratio) => !Number.isFinite(ratio) || ratio <= 0)
+    || timeStepS !== 0.02
+  ) throw new Error("Fixture 026 causal lookalike request is invalid.");
+  if (generatorFamily === "endpoint-return-lookalike") {
+    if (
+      !Number.isFinite(endpointGainIncrement)
+      || endpointGainIncrement <= 0
+      || endpointBaseLagS !== 0.4
+      || endpointScaledLagS !== 0.8
+      || equalPeakCommonGain !== null
+      || equalPeakMemoryLagS !== null
+      || equalPeakDelayS !== null
+    ) throw new Error("Fixture 026 endpoint-return parameters are invalid.");
+    return Object.freeze({
+      base: Object.freeze(finiteMemoryHighPass(ratios, Math.round(endpointBaseLagS / timeStepS))),
+      scaled: Object.freeze(finiteMemoryHighPass(ratios, Math.round(endpointScaledLagS / timeStepS))
+        .map((value) => value * (1 + endpointGainIncrement))),
+    });
+  }
+  if (
+    endpointGainIncrement !== null
+    || endpointBaseLagS !== null
+    || endpointScaledLagS !== null
+    || !Number.isFinite(equalPeakCommonGain)
+    || equalPeakCommonGain <= 0
+    || equalPeakMemoryLagS !== 0.6
+    || equalPeakDelayS !== 0.3
+  ) throw new Error("Fixture 026 equal-peak parameters are invalid.");
+  const base = finiteMemoryHighPass(ratios, Math.round(equalPeakMemoryLagS / timeStepS))
+    .map((value) => value * equalPeakCommonGain);
+  return Object.freeze({
+    base: Object.freeze(base),
+    scaled: Object.freeze(causalDelay(base, Math.round(equalPeakDelayS / timeStepS))),
+  });
 }
 
 function rmse(left, right, scale = 1) {
@@ -205,12 +293,14 @@ function trapezoidRmse(left, right, scale, dt) {
   return Math.sqrt(integral / duration);
 }
 
-function maximumWithIndex(values) {
+function maximumAbsoluteDepartureWithIndex(values) {
+  const baseline = values[0];
   let value = -Infinity;
   let index = -1;
   for (const [candidateIndex, candidate] of values.entries()) {
-    if (candidate > value) {
-      value = candidate;
+    const departure = Math.abs(candidate - baseline);
+    if (departure > value) {
+      value = departure;
       index = candidateIndex;
     }
   }
@@ -231,8 +321,8 @@ export function computeTrajectoryDiagnostics(trace, config) {
       ? sample.input_ratio
       : sample.input_scaled_u / sample.background_scaled_u
   ));
-  const basePeak = maximumWithIndex(base);
-  const scaledPeak = maximumWithIndex(scaled);
+  const basePeak = maximumAbsoluteDepartureWithIndex(base);
+  const scaledPeak = maximumAbsoluteDepartureWithIndex(scaled);
   const tailCount = Math.round(config.tail_window_s / config.time_step_s) + 1;
   const baseTail = base.slice(-tailCount);
   const scaledTail = scaled.slice(-tailCount);
@@ -246,6 +336,33 @@ export function computeTrajectoryDiagnostics(trace, config) {
       trapezoidRmse(base, staticBase, config.output_scale_y, config.time_step_s)
       + trapezoidRmse(scaled, staticScaled, config.output_scale_y, config.time_step_s)
     ),
+  });
+}
+
+export function computeFixture026SemanticProperties(trace, config) {
+  const diagnostics = computeTrajectoryDiagnostics(trace, config);
+  const base = trace.map((sample) => sample.output_base_y);
+  const scaled = trace.map((sample) => sample.output_scaled_y);
+  const pairedTrajectoryMatch = diagnostics.trajectory_discrepancy
+    <= config.exact_discrepancy_tolerance
+    ? "exact"
+    : diagnostics.trajectory_discrepancy <= config.approximate_discrepancy_ceiling
+      ? "approximate"
+      : "absent";
+  const supportInside = trace.every((sample) => (
+    sample.input_base_u >= config.input_floor_u
+    && sample.input_scaled_u >= config.input_floor_u
+    && sample.background_base_u >= config.input_floor_u
+    && sample.background_scaled_u >= config.input_floor_u
+  ));
+  if (!supportInside) throw new Error("Fixture 026 semantic vector requires an inside-support trace.");
+  return Object.freeze({
+    paired_trajectory_match: pairedTrajectoryMatch,
+    finite_horizon_endpoint_return: Math.abs(base.at(-1) - base[0]) <= config.endpoint_tolerance
+      && Math.abs(scaled.at(-1) - scaled[0]) <= config.endpoint_tolerance,
+    peak_amplitude_equal: diagnostics.peak_discrepancy <= config.peak_tolerance,
+    causal_memory_status: "unassessed",
+    support_membership: "inside",
   });
 }
 
@@ -270,28 +387,58 @@ export function observationChecksum(sample) {
   return createHash("sha256").update(samplePayload(sample)).digest("hex");
 }
 
-function validTrace({ config, background, scaleFactor, tauS, worldClass, amplitude, historyFamily }) {
+function validTrace({
+  config,
+  background,
+  scaleFactor,
+  generatorFamily,
+  parameters,
+  historyFamily,
+  historyRandom,
+}) {
   const count = Math.round(config.horizon_s / config.time_step_s);
   const times = Array.from({ length: count + 1 }, (_, ordinal) => ordinal * config.time_step_s);
-  const ratios = times.map((timeS) => historyRatio(historyFamily, timeS, config.horizon_s));
-  const dynamic = normalizedDynamicTrace(ratios, config.time_step_s, tauS);
-  let base = dynamic;
-  let scaled = dynamic;
-  if (worldClass === "static-ratio") {
+  const ratios = historyRatios(historyFamily, times, config.horizon_s, historyRandom);
+  let base;
+  let scaled;
+  if (generatorFamily === "static-ratio") {
     base = ratios.map((ratio) => Math.log(ratio));
     scaled = [...base];
-  } else if (worldClass === "approximate-scale-symmetry") {
-    scaled = dynamic.map((value, index) => (
-      value + amplitude * Math.sin(Math.PI * times[index] / config.horizon_s) ** 2
-    ));
-  } else if (worldClass === "exact-adaptation-only") {
-    scaled = dynamic.map((value, index) => (
-      value + amplitude * Math.sin(Math.PI * times[index] / config.horizon_s) ** 2
-    ));
-  } else if (worldClass === "equal-peak-different-shape") {
-    const shapes = equalPeakShapes(times, config.horizon_s, amplitude);
-    base = shapes.base;
-    scaled = shapes.scaled;
+  } else if (new Set(["exact-scale-symmetry", "approximate-scale-symmetry"])
+    .has(generatorFamily)) {
+    const dynamic = normalizedDynamicTrace(
+      ratios,
+      config.time_step_s,
+      parameters.causal_reference_tau_s,
+    );
+    base = dynamic;
+    scaled = dynamic;
+    if (generatorFamily === "approximate-scale-symmetry") {
+      scaled = dynamic.map((value, index) => (
+        value + parameters.approximate_additive_amplitude_y
+          * Math.sin(Math.PI * times[index] / config.horizon_s) ** 2
+      ));
+    }
+  } else if (generatorFamily === "endpoint-return-lookalike") {
+    ({ base, scaled } = generateFixture026CausalLookalikePair({
+      generatorFamily,
+      ratios,
+      timeStepS: config.time_step_s,
+      endpointGainIncrement: parameters.endpoint_gain_increment,
+      endpointBaseLagS: parameters.endpoint_base_lag_s,
+      endpointScaledLagS: parameters.endpoint_scaled_lag_s,
+    }));
+  } else if (generatorFamily === "equal-peak-delayed-trajectory") {
+    ({ base, scaled } = generateFixture026CausalLookalikePair({
+      generatorFamily,
+      ratios,
+      timeStepS: config.time_step_s,
+      equalPeakCommonGain: parameters.equal_peak_common_gain,
+      equalPeakMemoryLagS: parameters.equal_peak_memory_lag_s,
+      equalPeakDelayS: parameters.equal_peak_delay_s,
+    }));
+  } else {
+    throw new Error(`Fixture 026 generator family ${generatorFamily} is invalid.`);
   }
   return times.map((timeS, ordinal) => {
     const ratio = ratios[ordinal];
@@ -306,10 +453,13 @@ function validTrace({ config, background, scaleFactor, tauS, worldClass, amplitu
       output_scaled_y: scaled[ordinal],
       input_unit_token: "U",
       output_unit_token: "1",
-      interface_version: "rsd-interface-v1",
-      reference_origin: worldClass === "static-ratio"
+      interface_version: "rsd-interface-v2",
+      reference_origin: generatorFamily === "static-ratio"
         ? "frozen-initial-background"
-        : "initialized-causal",
+        : generatorFamily === "equal-peak-delayed-trajectory"
+          || generatorFamily === "endpoint-return-lookalike"
+          ? "causal-finite-memory"
+          : "initialized-causal",
     };
     return { ...sample, checksum: observationChecksum(sample) };
   });
@@ -365,12 +515,14 @@ export function validateObservationTrace(trace, config) {
   const unitValid = shapeValid && trace.every((sample) => (
     sample.input_unit_token === "U" && sample.output_unit_token === "1"
   ));
-  const interfaceValid = shapeValid && trace.every((sample) => sample.interface_version === "rsd-interface-v1");
+  const interfaceValid = shapeValid && trace.every((sample) => sample.interface_version === "rsd-interface-v2");
   const referenceOrigins = shapeValid ? new Set(trace.map((sample) => sample.reference_origin)) : new Set();
   const causalReferenceValid = shapeValid
     && referenceOrigins.size === 1
     && [...referenceOrigins].every((origin) => (
-      origin === "initialized-causal" || origin === "frozen-initial-background"
+      origin === "initialized-causal"
+      || origin === "frozen-initial-background"
+      || origin === "causal-finite-memory"
     ));
   return Object.freeze({
     trace_valid: orderingValid && checksumValid && unitValid && interfaceValid && causalReferenceValid,
@@ -382,60 +534,104 @@ export function validateObservationTrace(trace, config) {
   });
 }
 
-function classFor(seed, worldIndex) {
-  const offset = seed % FIXTURE_026_CLASSES.length;
-  return FIXTURE_026_CLASSES[(worldIndex + offset) % FIXTURE_026_CLASSES.length];
+function gridCellFor(worldIndex) {
+  if (worldIndex < FIXTURE_026_VALID_CELLS_PER_SEED) {
+    const familyIndex = Math.floor(worldIndex / FIXTURE_026_HISTORY_FAMILIES.length);
+    const historyIndex = worldIndex % FIXTURE_026_HISTORY_FAMILIES.length;
+    return Object.freeze({
+      generatorFamily: FIXTURE_026_VALID_FAMILIES[familyIndex],
+      familyIndex,
+      historyFamily: FIXTURE_026_HISTORY_FAMILIES[historyIndex],
+      corruption: "none",
+      sentinelIndex: null,
+    });
+  }
+  const sentinelIndex = worldIndex - FIXTURE_026_VALID_CELLS_PER_SEED;
+  return Object.freeze({
+    generatorFamily: "malformed-sentinel",
+    familyIndex: 0,
+    historyFamily: FIXTURE_026_HISTORY_FAMILIES[sentinelIndex],
+    corruption: FIXTURE_026_MALFORMED_SENTINELS[sentinelIndex],
+    sentinelIndex,
+  });
 }
 
 export function generateFixture026World({ seed, config, worldIndex }) {
   validateFixture026Config(config);
-  if (!Number.isSafeInteger(seed) || seed < 0 || seed > 0xffff_ffff) {
-    throw new Error("Fixture 026 seed must be an unsigned 32-bit integer.");
-  }
+  parseFixture026PublicSeed(seed);
   if (!Number.isSafeInteger(worldIndex) || worldIndex < 0 || worldIndex >= config.worlds_per_seed) {
     throw new Error("Fixture 026 world index is outside the configured grid.");
   }
-  const worldClass = classFor(seed, worldIndex);
-  const random = new PcgCmDxsm12864(fixture026StreamPreimage({
+  const cell = gridCellFor(worldIndex);
+  const systemCanonicalId = cell.generatorFamily === "malformed-sentinel"
+    ? FIXTURE_026_VALID_FAMILIES.length + cell.sentinelIndex
+    : cell.familyIndex;
+  const systemRandom = new PcgCmDxsm12864(fixture026StreamPreimage({
     phase: "development",
     protocol: "RSD-T01",
     seed,
     scope: "dgp",
+    canonicalId: systemCanonicalId,
+  }));
+  const historyRandom = new PcgCmDxsm12864(fixture026StreamPreimage({
+    phase: "development",
+    protocol: "RSD-T01",
+    seed,
+    scope: "observation",
     canonicalId: worldIndex,
   }));
-  const background = random.range(0.8, 3.2);
-  const scaleFactor = random.range(2.2, 5.8);
-  const tauS = random.range(0.45, 1.05);
-  const historyFamily = FIXTURE_026_HISTORY_FAMILIES[(seed + worldIndex) % FIXTURE_026_HISTORY_FAMILIES.length];
-  const amplitude = worldClass === "approximate-scale-symmetry"
-    ? random.range(0.035, 0.055)
-    : worldClass === "exact-adaptation-only"
-      ? random.range(0.32, 0.52)
-      : random.range(0.7, 1.1);
-  const traceClass = worldClass === "invalid-record" ? "exact-scale-symmetry" : worldClass;
+  const background = systemRandom.range(0.8, 3.2);
+  const scaleFactor = systemRandom.range(2.2, 5.8);
+  const usesCausalReferenceTau = new Set([
+    "exact-scale-symmetry", "approximate-scale-symmetry", "malformed-sentinel",
+  ]).has(cell.generatorFamily);
+  const parameters = Object.freeze({
+    background_base_u: background,
+    scale_factor: scaleFactor,
+    input_floor_u: config.input_floor_u,
+    causal_reference_tau_s: usesCausalReferenceTau
+      ? systemRandom.range(0.45, 1.05)
+      : null,
+    approximate_additive_amplitude_y: cell.generatorFamily === "approximate-scale-symmetry"
+      ? systemRandom.range(0.035, 0.055)
+      : null,
+    endpoint_gain_increment: cell.generatorFamily === "endpoint-return-lookalike"
+      ? systemRandom.range(0.32, 0.52)
+      : null,
+    endpoint_base_lag_s: cell.generatorFamily === "endpoint-return-lookalike" ? 0.4 : null,
+    endpoint_scaled_lag_s: cell.generatorFamily === "endpoint-return-lookalike" ? 0.8 : null,
+    equal_peak_common_gain: cell.generatorFamily === "equal-peak-delayed-trajectory"
+      ? systemRandom.range(1.15, 1.55)
+      : null,
+    equal_peak_memory_lag_s: cell.generatorFamily === "equal-peak-delayed-trajectory" ? 0.6 : null,
+    equal_peak_delay_s: cell.generatorFamily === "equal-peak-delayed-trajectory" ? 0.3 : null,
+  });
+  const traceFamily = cell.generatorFamily === "malformed-sentinel"
+    ? "exact-scale-symmetry"
+    : cell.generatorFamily;
   let trace = validTrace({
     config,
     background,
     scaleFactor,
-    tauS,
-    worldClass: traceClass,
-    amplitude,
-    historyFamily,
+    generatorFamily: traceFamily,
+    parameters,
+    historyFamily: cell.historyFamily,
+    historyRandom,
   });
-  let corruption = "none";
-  if (worldClass === "invalid-record") {
-    const variants = ["time-order", "checksum", "unit-token", "future-normalization"];
-    corruption = variants[Number(random.nextUint64() % BigInt(variants.length))];
-    trace = corruptTrace(trace, corruption);
+  if (cell.generatorFamily === "malformed-sentinel") {
+    trace = corruptTrace(trace, cell.corruption);
   } else {
     trace = Object.freeze(trace.map((sample) => Object.freeze(sample)));
   }
   const validation = validateObservationTrace(trace, config);
+  const semanticProperties = validation.trace_valid
+    ? computeFixture026SemanticProperties(trace, config)
+    : null;
   const worldId = createHash("sha256")
-    .update(`F026-world-v1|${publicSeedHex(seed)}|${worldIndex}`)
+    .update(`F026-world-v2|${publicSeedHex(seed)}|${cell.generatorFamily}|${cell.historyFamily}|${worldIndex}`)
     .digest("hex");
   const initializationId = createHash("sha256")
-    .update(`F026-init-v1|${publicSeedHex(seed)}|${worldIndex}`)
+    .update(`F026-init-v2|${publicSeedHex(seed)}|${systemCanonicalId}`)
     .digest("hex");
   return Object.freeze({
     seed,
@@ -444,18 +640,13 @@ export function generateFixture026World({ seed, config, worldIndex }) {
     initialization_id: initializationId,
     scale_group: `positive-multiplicative:${scaleFactor}`,
     interface: "paired-normalized-output",
-    oracle_class: worldClass,
-    history_family: historyFamily,
-    corruption,
-    parameters: Object.freeze({
-      background_base_u: background,
-      scale_factor: scaleFactor,
-      reference_time_constant_s: tauS,
-      perturbation_amplitude_y: amplitude,
-      input_floor_u: config.input_floor_u,
-    }),
+    generator_family: cell.generatorFamily,
+    history_family: cell.historyFamily,
+    corruption: cell.corruption,
+    parameters,
     trace,
     validation,
+    semantic_properties: semanticProperties,
   });
 }
 
@@ -483,10 +674,12 @@ export function buildPolicyView(world, arm) {
   }
   const base = world.trace.map((sample) => sample.output_base_y);
   const scaled = world.trace.map((sample) => sample.output_scaled_y);
+  const basePeak = maximumAbsoluteDepartureWithIndex(base);
+  const scaledPeak = maximumAbsoluteDepartureWithIndex(scaled);
   return Object.freeze({
     ...common,
     observation: Object.freeze({
-      peak_discrepancy: Math.abs(Math.max(...base) - Math.max(...scaled)),
+      peak_discrepancy: Math.abs(basePeak.value - scaledPeak.value),
       endpoint_discrepancy: Math.abs(base.at(-1) - scaled.at(-1)),
     }),
   });
@@ -494,7 +687,8 @@ export function buildPolicyView(world, arm) {
 
 export function assertPolicyViewFirewall(view) {
   const forbidden = new Set([
-    "oracle_class", "history_family", "corruption", "parameters", "trajectory_discrepancy",
+    "generator_family", "history_family", "corruption", "parameters", "semantic_properties",
+    "trajectory_discrepancy",
     "static_fit_rmse", "expected_label", "evaluator",
     "reference_origin", "checksum", "world_id", "initialization_id", "scale_group",
     "seed", "world_index", "canonical_id", "background_base_u", "background_scaled_u",

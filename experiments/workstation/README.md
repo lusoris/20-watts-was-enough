@@ -14,8 +14,9 @@ PLM-T02 lifecycle-reset boundaries; and
 [Fixture F-024](fixture-024/README.md) exercises the AMR-T01 projected-memory
 development path; [Fixture F-025](fixture-025/README.md) exercises the ECM-T03
 record, amplitude, repeat-consistency, and equivalence gate order;
-[Fixture F-026](fixture-026/README.md) exercises the RSD-T01 trajectory-symmetry
-and interface-validity diagnostics; and
+[Fixture F-026](fixture-026/README.md) exercises the RSD-T01 exact family ×
+history grid, separately evaluated trace-fact vector, trajectory-score, and
+interface-validity diagnostics; and
 [Fixture F-027](fixture-027/README.md) exercises the RIN-T01 interconnection,
 edge-removal, interface-validity, and bounded-insulation diagnostics.
 A test becomes workstation-ready only when its
@@ -116,16 +117,19 @@ tracks, private partitions, physical apparatus, and scientific adjudication
 remain absent; every event is `NO_RESULT`.
 
 [Fixture F-026](fixture-026/README.md) implements a bounded public-development
-smoke slice for C-1540 / RSD-T01. It generates five balanced valid
-response-shape classes plus a separate malformed-interface sentinel, computes
-the frozen trapezoidal full-trajectory discrepancy, keeps oracle labels and
-evaluator-only validity details outside the policy view while exposing only
-`trace_valid` as its admission flag, and semantically regenerates every event
-before analysis. Its two diagnostic arms do not have matched information or complete
-resource budgets and therefore cannot support a comparison. The full null
-stack, hostile grid, private partitions, powered statistics, reference
-lifecycle, calibrated workstation measurements, and RSD-T02--RSD-T10 remain
-absent. Every event and successful response is `NO_RESULT`.
+generator-only smoke slice for C-1540 / RSD-T01. Every public seed contains the
+exact five-generator-family × four-history Cartesian grid plus four distinct
+malformed-interface sentinels. The harness uses canonical decimal-string
+uint64 seeds, seed-dependent band-limited stochastic histories, shared
+initialization identities across histories, and separately evaluated
+evaluator-only per-world trace facts; structural causal memory remains
+unassessed. Generator family remains a secondary synthetic diagnostic because
+its properties overlap. The two legacy probes have unequal
+information and incomplete resource budgets, so they cannot support a
+property-performance, arm-comparison, or efficiency conclusion. The full null
+stack, scientific hostile grid, private partitions, powered statistics,
+reference lifecycle, calibrated workstation measurements, and RSD-T02--RSD-T10
+remain absent. Every event and successful response is `NO_RESULT`.
 
 [Fixture F-027](fixture-027/README.md) implements a bounded public-development
 smoke slice for C-1550 / RIN-T01. It generates six synthetic source--load

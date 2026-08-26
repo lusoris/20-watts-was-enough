@@ -1,26 +1,33 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import Ajv from "ajv";
 
 import {
   FIXTURE_026_EVENT_CONTRACT_VERSION,
+  FIXTURE_026_EVENT_INTERPRETATION,
+  FIXTURE_026_PARAMETER_KEYS,
   assertFixture026Record,
   canonical,
   fixture026ScientificPayload,
   sha256,
 } from "./contract.mjs";
 import {
-  FIXTURE_026_CLASSES,
   FIXTURE_026_HISTORY_FAMILIES,
+  FIXTURE_026_MALFORMED_SENTINELS,
   FIXTURE_026_RNG_CONTRACT,
-  FIXTURE_026_VALID_CLASSES,
+  FIXTURE_026_VALID_FAMILIES,
+  FIXTURE_026_VALID_CELLS_PER_SEED,
   PcgCmDxsm12864,
   assertPolicyViewFirewall,
   buildPolicyView,
   computeTrajectoryDiagnostics,
+  computeFixture026SemanticProperties,
   fixture026StreamPreimage,
+  generateFixture026CausalLookalikePair,
   generateFixture026Worlds,
   observationChecksum,
+  parseFixture026PublicSeed,
   publicSeedHex,
   validateFixture026Config,
   validateObservationTrace,
@@ -34,10 +41,10 @@ import {
 } from "./registry.mjs";
 
 const smokeConfig = Object.freeze({
-  schema: 1,
+  schema: 2,
   artifact: "fixture-026",
   profile: "smoke",
-  worlds_per_seed: 6,
+  worlds_per_seed: 24,
   time_step_s: 0.02,
   horizon_s: 4,
   trajectory_quadrature: "trapezoid",
@@ -54,14 +61,14 @@ const smokeConfig = Object.freeze({
 
 function fixture(previous = "0".repeat(64), sequence = 0) {
   const payload = {
-    schema: 1,
+    schema: 2,
     contract_version: FIXTURE_026_EVENT_CONTRACT_VERSION,
     artifact: "fixture-026",
     track: "RSD-T01",
     run_id: "a".repeat(64),
     profile: "smoke",
     pack: "public-development",
-    seed: 1540001,
+    seed: "1540001",
     world_index: 0,
     world_id: "b".repeat(64),
     initialization_id: "c".repeat(64),
@@ -83,7 +90,7 @@ function fixture(previous = "0".repeat(64), sequence = 0) {
       seed_pack: "8".repeat(64),
       runtime: "d".repeat(64),
     },
-    oracle_class: "exact-scale-symmetry",
+    generator_family: "exact-scale-symmetry",
     history_family: "step",
     corruption: "none",
     gate_decision: "accepted",
@@ -96,12 +103,26 @@ function fixture(previous = "0".repeat(64), sequence = 0) {
     parameters: {
       background_base_u: 1,
       scale_factor: 4,
-      reference_time_constant_s: 0.8,
-      perturbation_amplitude_y: 0.9,
       input_floor_u: 0.05,
+      causal_reference_tau_s: 0.8,
+      approximate_additive_amplitude_y: null,
+      endpoint_gain_increment: null,
+      endpoint_base_lag_s: null,
+      endpoint_scaled_lag_s: null,
+      equal_peak_common_gain: null,
+      equal_peak_memory_lag_s: null,
+      equal_peak_delay_s: null,
     },
-    prediction: "exact-scale-symmetry",
-    class_correct: true,
+    predicted_generator_family: "exact-scale-symmetry",
+    generator_family_correct: true,
+    semantic_properties_evaluated: true,
+    semantic_properties: {
+      paired_trajectory_match: "exact",
+      finite_horizon_endpoint_return: false,
+      peak_amplitude_equal: true,
+      causal_memory_status: "unassessed",
+      support_membership: "inside",
+    },
     trajectory_discrepancy: 0,
     estimated_trajectory_discrepancy: 0,
     trajectory_discrepancy_estimation_error: 0,
@@ -119,7 +140,7 @@ function fixture(previous = "0".repeat(64), sequence = 0) {
     accepted_summary_values_read: 0,
     serialized_policy_view_utf8_bytes: 12000,
     serialized_event_bytes_written: 1800,
-    modeled_diagnostic_scalar_operations: 2936,
+    modeled_diagnostic_scalar_operations: 3740,
     retained_persistent_state_bytes: 0,
     temporary_memory_measured: false,
     peak_memory_measured: false,
@@ -133,7 +154,7 @@ function fixture(previous = "0".repeat(64), sequence = 0) {
     comparison_inference_permitted: false,
     scientific_result: false,
     performance_result: false,
-    interpretation: "NO_RESULT: contract fixture.",
+    interpretation: FIXTURE_026_EVENT_INTERPRETATION,
   };
   return {
     ...payload,
@@ -172,48 +193,172 @@ test("PCG-CM-DXSM 128/64 with custom SHA-256 seeding and little-endian stream gr
     transition_multiplier_hex: "0xda942042e4dd58b5",
     output_permutation: "DXSM applied to the pre-transition 128-bit state",
     seeding: "custom SHA-256-derived 128-bit state and odd 128-bit increment",
+    public_seed_grammar: "canonical decimal-string uint64 encoded as eight little-endian bytes",
     numpy_seedsequence_compatible: false,
   });
-  const random = new PcgCmDxsm12864(1540001);
+  const random = new PcgCmDxsm12864("1540001");
   assert.equal(random.nextUint64().toString(16), "30e586cd03dd9f0e");
   assert.equal(random.nextUint64().toString(16), "8c3513142e3612b2");
   assert.equal(random.nextUint64().toString(16), "2aadf2f542b4707b");
   assert.equal(random.nextUint64().toString(16), "f34841f1315e00ce");
-  assert.equal(publicSeedHex(1540001), "A17F170000000000");
+  assert.equal(publicSeedHex("1540001"), "A17F170000000000");
+  assert.equal(publicSeedHex("0"), "0000000000000000");
+  assert.equal(publicSeedHex("18446744073709551615"), "FFFFFFFFFFFFFFFF");
+  assert.equal(parseFixture026PublicSeed("18446744073709551615"), 0xffff_ffff_ffff_ffffn);
+  for (const invalid of [
+    1540001, "01", "-1", "1.0", "18446744073709551616", "9".repeat(10_000), "",
+  ]) {
+    assert.throws(() => parseFixture026PublicSeed(invalid), /canonical|exceeds/);
+  }
   assert.equal(fixture026StreamPreimage({
     phase: "development",
     protocol: "RSD-T01",
-    seed: 1540001,
+    seed: "1540001",
     scope: "dgp",
     canonicalId: 0,
-  }), "F026-v1|development|RSD-T01|A17F170000000000|dgp|0");
+  }), "F026-v2|development|RSD-T01|A17F170000000000|dgp|0");
 });
 
 test("configuration is exact-keyed and freezes numerical support and quadrature", () => {
   assert.equal(validateFixture026Config(smokeConfig), smokeConfig);
   assert.throws(() => validateFixture026Config({ ...smokeConfig, hidden_epsilon: 1e-9 }), /invalid/);
   assert.throws(() => validateFixture026Config({ ...smokeConfig, input_floor_u: 0 }), /invalid/);
+  assert.throws(() => validateFixture026Config({ ...smokeConfig, worlds_per_seed: 23 }), /invalid/);
   assert.throws(() => validateFixture026Config({ ...smokeConfig, trajectory_quadrature: "rectangle" }), /invalid/);
 });
 
-test("generator is deterministic, uses hashed bookkeeping IDs, and separates valid classes from the sentinel", () => {
-  const left = generateFixture026Worlds({ seed: 1540001, config: smokeConfig });
-  const right = generateFixture026Worlds({ seed: 1540001, config: smokeConfig });
+test("generator is deterministic and emits the exact 5-family by 4-history grid plus four sentinels", () => {
+  const left = generateFixture026Worlds({ seed: "1540001", config: smokeConfig });
+  const right = generateFixture026Worlds({ seed: "1540001", config: smokeConfig });
   assert.deepEqual(left, right);
-  assert.equal(left.length, 6);
-  assert.deepEqual(new Set(left.map((world) => world.oracle_class)), new Set(FIXTURE_026_CLASSES));
+  assert.equal(left.length, 24);
+  const valid = left.filter((world) => world.validation.trace_valid);
+  const sentinels = left.filter((world) => world.generator_family === "malformed-sentinel");
+  assert.equal(valid.length, FIXTURE_026_VALID_CELLS_PER_SEED);
+  assert.equal(sentinels.length, FIXTURE_026_MALFORMED_SENTINELS.length);
+  assert.deepEqual(new Set(sentinels.map((world) => world.corruption)), new Set(FIXTURE_026_MALFORMED_SENTINELS));
   assert.deepEqual(
-    new Set(left.filter((world) => world.validation.trace_valid).map((world) => world.oracle_class)),
-    new Set(FIXTURE_026_VALID_CLASSES),
+    new Set(valid.map((world) => `${world.generator_family}|${world.history_family}`)),
+    new Set(FIXTURE_026_VALID_FAMILIES.flatMap((family) => (
+      FIXTURE_026_HISTORY_FAMILIES.map((history) => `${family}|${history}`)
+    ))),
   );
+  for (const family of FIXTURE_026_VALID_FAMILIES) {
+    const familyWorlds = valid.filter((world) => world.generator_family === family);
+    assert.equal(new Set(familyWorlds.map((world) => world.initialization_id)).size, 1);
+    assert.equal(new Set(familyWorlds.map((world) => world.world_id)).size, 4);
+    assert.equal(new Set(familyWorlds.map((world) => JSON.stringify(world.parameters))).size, 1);
+  }
   assert.ok(left.every((world) => /^[0-9a-f]{64}$/.test(world.world_id)));
   assert.ok(left.every((world) => !world.world_id.includes(String(world.seed))));
 });
 
-test("all public seeds satisfy the frozen response-shape semantic invariants", () => {
+test("generator parameters are closed and family-qualified with explicit nulls", () => {
+  const worlds = generateFixture026Worlds({ seed: "1540001", config: smokeConfig });
+  const familyFields = FIXTURE_026_PARAMETER_KEYS.slice(3);
+  for (const world of worlds) {
+    const parameters = world.parameters;
+    assert.deepEqual(Object.keys(parameters).sort(), [...FIXTURE_026_PARAMETER_KEYS].sort());
+    assert.ok(parameters.background_base_u >= parameters.input_floor_u);
+    assert.ok(parameters.scale_factor > 0);
+    assert.equal(parameters.input_floor_u, 0.05);
+    if (new Set(["exact-scale-symmetry", "malformed-sentinel"]).has(world.generator_family)) {
+      assert.ok(parameters.causal_reference_tau_s > 0);
+      assert.ok(familyFields.slice(1).every((field) => parameters[field] === null));
+    } else if (world.generator_family === "approximate-scale-symmetry") {
+      assert.ok(parameters.causal_reference_tau_s > 0);
+      assert.ok(parameters.approximate_additive_amplitude_y > 0);
+      assert.ok(familyFields.slice(2).every((field) => parameters[field] === null));
+    } else if (world.generator_family === "endpoint-return-lookalike") {
+      assert.ok(parameters.endpoint_gain_increment > 0);
+      assert.equal(parameters.endpoint_base_lag_s, 0.4);
+      assert.equal(parameters.endpoint_scaled_lag_s, 0.8);
+      assert.equal(parameters.causal_reference_tau_s, null);
+      assert.equal(parameters.approximate_additive_amplitude_y, null);
+      assert.ok([
+        parameters.equal_peak_common_gain,
+        parameters.equal_peak_memory_lag_s,
+        parameters.equal_peak_delay_s,
+      ].every((value) => value === null));
+    } else if (world.generator_family === "equal-peak-delayed-trajectory") {
+      assert.ok(parameters.equal_peak_common_gain > 0);
+      assert.equal(parameters.equal_peak_memory_lag_s, 0.6);
+      assert.equal(parameters.equal_peak_delay_s, 0.3);
+      assert.ok(familyFields.slice(0, 5).every((field) => parameters[field] === null));
+    } else {
+      assert.equal(world.generator_family, "static-ratio");
+      assert.ok(familyFields.every((field) => parameters[field] === null));
+    }
+  }
+});
+
+test("seeded band-limited stochastic histories are deterministic within seed and sensitive across seeds", () => {
+  const left = generateFixture026Worlds({ seed: "1540001", config: smokeConfig })
+    .find((world) => world.generator_family === "exact-scale-symmetry"
+      && world.history_family === "band-limited-stochastic");
+  const repeat = generateFixture026Worlds({ seed: "1540001", config: smokeConfig })
+    .find((world) => world.generator_family === "exact-scale-symmetry"
+      && world.history_family === "band-limited-stochastic");
+  const different = generateFixture026Worlds({ seed: "1540002", config: smokeConfig })
+    .find((world) => world.generator_family === "exact-scale-symmetry"
+      && world.history_family === "band-limited-stochastic");
+  const ratios = (world) => world.trace.map((sample) => sample.input_base_u / sample.background_base_u);
+  assert.deepEqual(ratios(left), ratios(repeat));
+  assert.notDeepEqual(ratios(left), ratios(different));
+  assert.ok(ratios(left).every((ratio) => ratio > 0));
+  assert.ok(ratios(left).slice(-71).every((ratio) => ratio === 1));
+});
+
+test("lookalike responses are causal, finite-memory, and history-responsive", () => {
+  const commonPrefix = Array.from({ length: 100 }, (_, index) => (
+    index < 25 ? 1 : 1 + 0.5 * Math.sin(index / 11) ** 2
+  ));
+  const leftRatios = [...commonPrefix, ...Array.from({ length: 101 }, () => 2)];
+  const rightRatios = [...commonPrefix, ...Array.from({ length: 101 }, () => 0.75)];
+  for (const generatorFamily of ["endpoint-return-lookalike", "equal-peak-delayed-trajectory"]) {
+    const left = generateFixture026CausalLookalikePair({
+      generatorFamily,
+      ratios: leftRatios,
+      timeStepS: 0.02,
+      endpointGainIncrement: generatorFamily === "endpoint-return-lookalike" ? 0.4 : null,
+      endpointBaseLagS: generatorFamily === "endpoint-return-lookalike" ? 0.4 : null,
+      endpointScaledLagS: generatorFamily === "endpoint-return-lookalike" ? 0.8 : null,
+      equalPeakCommonGain: generatorFamily === "equal-peak-delayed-trajectory" ? 1.3 : null,
+      equalPeakMemoryLagS: generatorFamily === "equal-peak-delayed-trajectory" ? 0.6 : null,
+      equalPeakDelayS: generatorFamily === "equal-peak-delayed-trajectory" ? 0.3 : null,
+    });
+    const right = generateFixture026CausalLookalikePair({
+      generatorFamily,
+      ratios: rightRatios,
+      timeStepS: 0.02,
+      endpointGainIncrement: generatorFamily === "endpoint-return-lookalike" ? 0.4 : null,
+      endpointBaseLagS: generatorFamily === "endpoint-return-lookalike" ? 0.4 : null,
+      endpointScaledLagS: generatorFamily === "endpoint-return-lookalike" ? 0.8 : null,
+      equalPeakCommonGain: generatorFamily === "equal-peak-delayed-trajectory" ? 1.3 : null,
+      equalPeakMemoryLagS: generatorFamily === "equal-peak-delayed-trajectory" ? 0.6 : null,
+      equalPeakDelayS: generatorFamily === "equal-peak-delayed-trajectory" ? 0.3 : null,
+    });
+    assert.deepEqual(left.base.slice(0, commonPrefix.length), right.base.slice(0, commonPrefix.length));
+    assert.deepEqual(left.scaled.slice(0, commonPrefix.length), right.scaled.slice(0, commonPrefix.length));
+  }
+
+  const equalPeakWorlds = generateFixture026Worlds({ seed: "1540001", config: smokeConfig })
+    .filter((world) => world.generator_family === "equal-peak-delayed-trajectory");
+  assert.equal(equalPeakWorlds.length, FIXTURE_026_HISTORY_FAMILIES.length);
+  assert.ok(new Set(equalPeakWorlds.map((world) => (
+    JSON.stringify(world.trace.map((sample) => sample.output_base_y))
+  ))).size > 1);
+});
+
+test("all public seeds satisfy the frozen response-shape and multilabel semantic invariants", () => {
   const worlds = [];
   for (let seed = 1540001; seed <= 1540064; seed += 1) {
-    worlds.push(...generateFixture026Worlds({ seed, config: smokeConfig }));
+    const generated = generateFixture026Worlds({ seed: String(seed), config: smokeConfig });
+    const cells = generated.filter((world) => world.validation.trace_valid)
+      .map((world) => `${world.generator_family}|${world.history_family}`);
+    assert.equal(cells.length, FIXTURE_026_VALID_CELLS_PER_SEED);
+    assert.equal(new Set(cells).size, FIXTURE_026_VALID_CELLS_PER_SEED);
+    worlds.push(...generated);
   }
   assert.deepEqual(new Set(worlds.map((world) => world.history_family)), new Set(FIXTURE_026_HISTORY_FAMILIES));
   const valid = worlds.filter((world) => world.validation.trace_valid);
@@ -221,52 +366,61 @@ test("all public seeds satisfy the frozen response-shape semantic invariants", (
     sample.input_base_u >= smokeConfig.input_floor_u
     && sample.input_scaled_u >= smokeConfig.input_floor_u
   ))));
-  const byClass = Object.fromEntries(FIXTURE_026_VALID_CLASSES.map((label) => [
+  const byFamily = Object.fromEntries(FIXTURE_026_VALID_FAMILIES.map((label) => [
     label,
-    valid.filter((world) => world.oracle_class === label),
+    valid.filter((world) => world.generator_family === label),
   ]));
-  assert.ok(byClass["exact-scale-symmetry"].every((world) => (
+  assert.ok(byFamily["exact-scale-symmetry"].every((world) => (
     computeTrajectoryDiagnostics(world.trace, smokeConfig).trajectory_discrepancy
       <= smokeConfig.exact_discrepancy_tolerance
   )));
-  assert.ok(byClass["approximate-scale-symmetry"].every((world) => {
+  assert.ok(byFamily["approximate-scale-symmetry"].every((world) => {
     const score = computeTrajectoryDiagnostics(world.trace, smokeConfig).trajectory_discrepancy;
     return score >= smokeConfig.approximate_discrepancy_floor
       && score <= smokeConfig.approximate_discrepancy_ceiling;
   }));
-  assert.ok(byClass["exact-adaptation-only"].every((world) => {
+  assert.ok(byFamily["endpoint-return-lookalike"].every((world) => {
     const score = computeTrajectoryDiagnostics(world.trace, smokeConfig);
-    return score.endpoint_discrepancy <= smokeConfig.endpoint_tolerance
+    const properties = computeFixture026SemanticProperties(world.trace, smokeConfig);
+    return properties.finite_horizon_endpoint_return === true
       && score.trajectory_discrepancy > smokeConfig.approximate_discrepancy_ceiling;
   }));
-  assert.ok(byClass["equal-peak-different-shape"].every((world) => {
+  assert.ok(byFamily["equal-peak-delayed-trajectory"].every((world) => {
     const score = computeTrajectoryDiagnostics(world.trace, smokeConfig);
     return score.peak_discrepancy <= smokeConfig.peak_tolerance
-      && score.endpoint_discrepancy <= smokeConfig.endpoint_tolerance
       && score.latency_discrepancy_s > 0
       && score.trajectory_discrepancy > smokeConfig.approximate_discrepancy_ceiling;
   }));
-  assert.ok(byClass["static-ratio"].every((world) => {
+  assert.ok(byFamily["static-ratio"].every((world) => {
     const score = computeTrajectoryDiagnostics(world.trace, smokeConfig);
     return score.static_fit_rmse <= smokeConfig.exact_discrepancy_tolerance
       && world.trace.every((sample) => sample.reference_origin === "frozen-initial-background");
   }));
-  assert.ok(valid.filter((world) => world.oracle_class !== "static-ratio")
-    .every((world) => world.trace.every((sample) => sample.reference_origin === "initialized-causal")));
+  assert.ok(valid.every((world) => world.semantic_properties !== null));
+  assert.ok(byFamily["static-ratio"].every((world) => (
+    world.semantic_properties.paired_trajectory_match === "exact"
+    && world.semantic_properties.causal_memory_status === "unassessed"
+  )));
+  assert.ok(byFamily["equal-peak-delayed-trajectory"].every((world) => (
+    world.semantic_properties.peak_amplitude_equal === true
+    && world.semantic_properties.finite_horizon_endpoint_return === true
+    && world.semantic_properties.causal_memory_status === "unassessed"
+    && computeTrajectoryDiagnostics(world.trace, smokeConfig).latency_discrepancy_s > 0
+  )));
 });
 
 test("all corruption sentinels fail the interface before diagnostic classification including future normalization", () => {
   const invalid = [];
   for (let seed = 1540001; seed <= 1540064; seed += 1) {
-    invalid.push(...generateFixture026Worlds({ seed, config: smokeConfig })
-      .filter((world) => world.oracle_class === "invalid-record"));
+    invalid.push(...generateFixture026Worlds({ seed: String(seed), config: smokeConfig })
+      .filter((world) => world.generator_family === "malformed-sentinel"));
   }
   assert.deepEqual(new Set(invalid.map((world) => world.corruption)), new Set([
     "time-order", "checksum", "unit-token", "future-normalization",
   ]));
   assert.ok(invalid.every((world) => !world.validation.trace_valid));
 
-  const valid = generateFixture026Worlds({ seed: 1540001, config: smokeConfig })
+  const valid = generateFixture026Worlds({ seed: "1540001", config: smokeConfig })
     .find((world) => world.validation.trace_valid);
   const altered = valid.trace.map((sample) => ({ ...sample }));
   altered[10].reference_origin = "full-trajectory-mean";
@@ -277,9 +431,9 @@ test("all corruption sentinels fail the interface before diagnostic classificati
   assert.equal(checked.trace_valid, false);
 });
 
-test("policy projections expose no oracle fields and keep full trajectories separate from summaries", () => {
-  const world = generateFixture026Worlds({ seed: 1540001, config: smokeConfig })
-    .find((candidate) => candidate.oracle_class === "equal-peak-different-shape");
+test("policy projections expose no evaluator fields and keep full trajectories separate from summaries", () => {
+  const world = generateFixture026Worlds({ seed: "1540001", config: smokeConfig })
+    .find((candidate) => candidate.generator_family === "equal-peak-delayed-trajectory");
   const full = assertPolicyViewFirewall(buildPolicyView(world, "full-trajectory-diagnostic"));
   const summary = assertPolicyViewFirewall(buildPolicyView(world, "peak-endpoint-lookalike"));
   assert.ok(Array.isArray(full.observation));
@@ -290,18 +444,21 @@ test("policy projections expose no oracle fields and keep full trajectories sepa
   assert.deepEqual(Object.keys(full.observation[0]).sort(), [
     "input_ratio", "ordinal", "output_base_y", "output_scaled_y", "time_s",
   ]);
-  assert.equal(JSON.stringify(full).includes("equal-peak-different-shape"), false);
-  assert.equal(JSON.stringify(summary).includes("equal-peak-different-shape"), false);
+  assert.equal(JSON.stringify(full).includes("equal-peak-delayed-trajectory"), false);
+  assert.equal(JSON.stringify(summary).includes("equal-peak-delayed-trajectory"), false);
   assert.equal(Object.hasOwn(full.observation[0], "reference_origin"), false);
   assert.equal(Object.hasOwn(full.observation[0], "checksum"), false);
-  assert.throws(() => assertPolicyViewFirewall({ ...summary, oracle_class: world.oracle_class }), /leaked evaluator/);
+  assert.throws(() => assertPolicyViewFirewall({
+    ...summary,
+    generator_family: world.generator_family,
+  }), /leaked evaluator/);
   assert.throws(() => assertPolicyViewFirewall({ ...summary, reference_origin: "frozen-initial-background" }), /leaked evaluator/);
 });
 
 test("policy field projection exposes no public identity-dictionary key or value", () => {
   const worlds = [];
   for (let seed = 1540001; seed <= 1540064; seed += 1) {
-    worlds.push(...generateFixture026Worlds({ seed, config: smokeConfig }));
+    worlds.push(...generateFixture026Worlds({ seed: String(seed), config: smokeConfig }));
   }
   const dictionaryValues = new Set(worlds.flatMap((world) => [
     world.world_id,
@@ -328,6 +485,81 @@ test("declared JSON Schema covers every closed runtime field", async () => {
     "analysis", "audit", "configuration", "contract", "fixture", "generator",
     "math", "runner", "runtime", "schema", "seed_pack",
   ]);
+  assert.deepEqual(
+    Object.keys(schema.properties.parameters.properties).sort(),
+    [...FIXTURE_026_PARAMETER_KEYS].sort(),
+  );
+});
+
+test("standard JSON Schema and runtime agree on uint64 seeds and the 24-world grid", async () => {
+  const declared = JSON.parse(await readFile(
+    "experiments/workstation/fixture-026/output.schema.json",
+    "utf8",
+  ));
+  const schema = { ...declared };
+  delete schema.$schema;
+  const validateSchema = new Ajv({ allErrors: true, jsonPointers: true }).compile(schema);
+
+  const accepted = fixture();
+  accepted.seed = "18446744073709551615";
+  accepted.world_index = 23;
+  rehash(accepted);
+  assert.equal(validateSchema(accepted), true, JSON.stringify(validateSchema.errors));
+  assert.equal(assertFixture026Record(accepted), accepted);
+
+  const familyParameters = {
+    "exact-scale-symmetry": {
+      causal_reference_tau_s: 0.8,
+    },
+    "approximate-scale-symmetry": {
+      causal_reference_tau_s: 0.8,
+      approximate_additive_amplitude_y: 0.04,
+    },
+    "endpoint-return-lookalike": {
+      endpoint_gain_increment: 0.4,
+      endpoint_base_lag_s: 0.4,
+      endpoint_scaled_lag_s: 0.8,
+    },
+    "equal-peak-delayed-trajectory": {
+      equal_peak_common_gain: 1.3,
+      equal_peak_memory_lag_s: 0.6,
+      equal_peak_delay_s: 0.3,
+    },
+    "static-ratio": {},
+  };
+  for (const [generatorFamily, nonNullParameters] of Object.entries(familyParameters)) {
+    const record = fixture();
+    record.generator_family = generatorFamily;
+    record.predicted_generator_family = generatorFamily;
+    for (const field of FIXTURE_026_PARAMETER_KEYS.slice(3)) record.parameters[field] = null;
+    Object.assign(record.parameters, nonNullParameters);
+    rehash(record);
+    assert.equal(validateSchema(record), true, JSON.stringify(validateSchema.errors));
+    assert.equal(assertFixture026Record(record), record);
+  }
+
+  for (const mutation of [
+    { seed: "18446744073709551616" },
+    { seed: "01" },
+    { world_index: 24 },
+  ]) {
+    const rejected = { ...fixture(), ...mutation };
+    rehash(rejected);
+    assert.equal(validateSchema(rejected), false, JSON.stringify(mutation));
+    assert.throws(() => assertFixture026Record(rejected), /runtime contract/);
+  }
+
+  for (const mutate of [
+    (record) => { record.parameters.causal_reference_tau_s = null; },
+    (record) => { record.parameters.approximate_additive_amplitude_y = 0.04; },
+    (record) => { record.parameters.endpoint_base_lag_s = 0.4; },
+  ]) {
+    const rejected = fixture();
+    mutate(rejected);
+    rehash(rejected);
+    assert.equal(validateSchema(rejected), false, JSON.stringify(rejected.parameters));
+    assert.throws(() => assertFixture026Record(rejected), /runtime contract/);
+  }
 });
 
 test("raw event contract binds scores, NO_RESULT authority, and hash chain", () => {
@@ -345,14 +577,29 @@ test("raw event contract binds scores, NO_RESULT authority, and hash chain", () 
   assert.throws(() => assertFixture026Record(authorityClaim), /runtime contract/);
 });
 
+test("raw event contract accepts uint64 maximum and rejects noncanonical or overflowing seeds", () => {
+  const maximum = fixture();
+  maximum.seed = "18446744073709551615";
+  rehash(maximum);
+  assert.equal(assertFixture026Record(maximum), maximum);
+  for (const seed of ["01", "18446744073709551616", "9".repeat(10_000)]) {
+    const invalid = fixture();
+    invalid.seed = seed;
+    rehash(invalid);
+    assert.throws(() => assertFixture026Record(invalid), /runtime contract/);
+  }
+});
+
 test("invalid observations cannot charge accepted classification, diagnostic scoring, state, or serialized policy-view bytes", () => {
   const invalid = fixture();
-  invalid.oracle_class = "invalid-record";
+  invalid.generator_family = "malformed-sentinel";
   invalid.corruption = "future-normalization";
   invalid.gate_decision = "record-invalid";
   invalid.trace_valid = false;
   invalid.causal_reference_valid = false;
-  invalid.prediction = "invalid-record";
+  invalid.predicted_generator_family = "malformed-sentinel";
+  invalid.semantic_properties_evaluated = false;
+  invalid.semantic_properties = null;
   invalid.static_fit_rmse = 0;
   invalid.accepted_trajectory_samples_read = 0;
   invalid.serialized_policy_view_utf8_bytes = 0;

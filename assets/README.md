@@ -229,6 +229,12 @@ contrasts for shared versus position-blind reserved capacity and their
 interaction. It is a hypothetical factorial-design reading aid with no trained
 model, measurements, estimate, prediction, or target effect size.
 
+`rsd-t01-family-property-overlap` visualizes the F-026 target correction: one
+secondary generator-family label does not determine the separately evaluated,
+cross-cutting trajectory, endpoint, peak, memory, and support targets. Logical
+dependencies between those targets remain. Its two overlap examples are
+possibilities, not measured frequencies or a family-to-property lookup.
+
 `fixture-007-identifiability` is also used directly in the concept book because
 it already provides the needed analytical distinction between prior-supported
 reconstruction and new evidence.

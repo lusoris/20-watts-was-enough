@@ -291,28 +291,68 @@ and resource charge.
 **Claim:** [C-1540](../../research/claims.md#c-1540).
 
 **Question.** Can an arm distinguish exact/approximate full-trajectory scale
-symmetry from exact adaptation, Weber-like peak equality and static
-normalization?
+symmetry from finite-horizon endpoint return, Weber-like peak equality and
+static normalization?
 
 **DGP.** Generate positive initialized nonlinear state-space systems in five
-balanced classes:
+balanced generator families chosen to expose different response properties:
 
 1. exact scale-equivariant systems;
 2. approximate systems with a frozen nonzero trajectory error;
-3. exact-adaptation-only systems;
-4. equal-peak/different-shape systems; and
+3. finite-horizon endpoint-return systems without full-trajectory symmetry;
+4. equal-peak/shifted-latency systems; and
 5. static ratio maps with no causal adaptation.
 
-Each system receives same-ratio/different-background steps, pulses, ramps and
-band-limited stochastic profiles. Held-out factors extend beyond development
-interpolation while staying inside the declared positive support.
+These families are not mutually exclusive scientific properties. A static
+ratio map is itself exactly scale-symmetric, endpoint return and equal peak can
+coexist, and exact trajectory symmetry does not identify a dynamic mechanism.
+The evaluator therefore assigns separately evaluated cross-cutting targets;
+they are not statistically or logically independent:
+
+1. system-level trajectory symmetry across the complete frozen history × scale
+   grid: `exact`, `approximate`, or `absent`, classified from the maximum
+   registered cell discrepancy $D_{j,\max}=\max_{h,p}D_{j,h,p}$ and frozen exact
+   and approximate tolerances;
+2. per-cell finite-horizon endpoint return $A_{\mathrm{end},j,h,p}$ relative to
+   each trajectory's own prestimulus value, kept distinct from asymptotic exact
+   adaptation;
+3. per-cell equality $E_{\mathrm{peak},j,h,p}$ of peak absolute departure from
+   prestimulus, with an earliest-tie rule;
+4. causal-memory truth only when declared equations, state access, or an
+   identifying intervention supports it; and
+5. generator-side support membership. Arm-side support detection and abstention
+   are scored separately because detectability depends on the observation
+   interface.
+
+Endpoint and peak matrices remain primary. A compact reducer is frozen as
+`all` when every registered cell is true, `none` when every cell is false and
+`partial` otherwise. Missing or rejected cells retain abstentions; they are not
+dropped from $D_{j,\max}$ or averaged away.
+
+Generator-family identification is retained only as a secondary synthetic
+diagnostic. Each initialized system receives same-ratio/different-background
+steps, pulses, ramps and seed-dependent band-limited stochastic profiles.
+Held-out factors extend beyond development interpolation while staying inside
+the declared positive support.
 
 **Arms.** `A-RAW`, `B-STATIC-DIV`, `B-LOG-RATIO`, `B-STATE-SPACE`,
-`B-RECURRENT`, `C-DUAL`, and `O-STATISTIC`.
+`B-RECURRENT`, `C-DUAL`, and `O-STATISTIC`. The six actionable arms receive
+one byte-identical raw causal packet. Division, logarithms, references,
+derivatives, support features and summaries are constructed inside the arm and
+charged there. `O-STATISTIC` is evaluator-only and is excluded from information
+parity, tuning, promotion comparisons and resource rankings.
 
-**Primary endpoint.** Class-balanced accuracy of the five-way property label
-subject to a simultaneous upper bound on complete-trajectory discrepancy
-estimation error.
+**Primary endpoint.** Conformance and cost for the observable trace
+coordinates, with abstentions retained in the primary denominator, subject to
+a simultaneous upper bound on complete-trajectory discrepancy estimation
+error. Five-way generator-family macro recall is secondary. Because the
+registered raw packet exposes both complete output trajectories, paired
+trajectory match, endpoint return, peak equality and discrepancy are directly
+computable; their errors test implementation conformance and cost, not whether
+a representation learned the property. Causal memory is not scored from a
+finite trace unless an identifying intervention or equation-access contract is
+registered. A predictive claim requires a separate amendment that withholds a
+suffix or intervention.
 
 **Hostiles.** Equal peak with shifted latency, slow adaptation tail, additive
 offset, hidden reset, near-zero reference, clipping, and future-normalization
@@ -323,8 +363,10 @@ perform equivalently on the protected non-step families, or if `C-DUAL` does
 not beat the state-space/recurrent null after full state cost.
 
 **Required artifacts.** Per-trajectory inputs/outputs, initialization identity,
-scale group, interface, all component scores, classification, support decision,
-operation/state ledger and paired analysis.
+scale group, interface, generator family, separately evaluated trace facts,
+structural-truth provenance, support membership, arm-side support decision,
+identical actionable-arm packet hash, operation/state ledger and paired
+seed-level analysis.
 
 ## RSD-T02 — Mechanism discrimination under matched step behavior
 
@@ -638,9 +680,11 @@ An implementation may call itself `smoke-ready` only after it supplies:
 
 The bounded [RSD-T01 public-development harness](../workstation/fixture-026/README.md)
 now satisfies the six `smoke-ready` plumbing requirements for its much smaller
-diagnostic slice. It deliberately has unmatched diagnostic arms, omits the full
-hostile grid and registered primary endpoint, and grants no comparison or claim
-authority.
+generator-only paired-trace slice. It does not yet implement the registered
+initialized state-space DGPs, a system-level history × scale symmetry
+certificate, or structural causal-memory truth. It deliberately has unmatched
+diagnostic arms, omits the full hostile grid and registered primary endpoint,
+and grants no comparison or claim authority.
 
 `workstation-ready` additionally requires reviewed confirmation/transfer
 commitments, powered seed count, complete confirmatory analysis, calibrated

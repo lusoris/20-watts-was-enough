@@ -1,8 +1,8 @@
 {
-  "schema": 1,
+  "schema": 2,
   "artifact": "fixture-026",
   "profile": "development",
-  "worlds_per_seed": 30,
+  "worlds_per_seed": 24,
   "time_step_s": 0.02,
   "horizon_s": 4,
   "trajectory_quadrature": "trapezoid",

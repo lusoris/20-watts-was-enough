@@ -1,9 +1,10 @@
 # Fixture 026 public-development CPU smoke harness
 
 This directory contains a deterministic CPU-only plumbing harness for the
-`RSD-T01` / `C-1540` slice of Fixture F-026. It checks whether a frozen
-trapezoidal complete-trajectory discrepancy can separate five constructed
-response-shape classes that endpoint and peak summaries deliberately conflate.
+`RSD-T01` / `C-1540` slice of Fixture F-026. It validates the exact
+generator-family × history grid and evaluator-only trace-fact vector
+construction, then exercises two legacy generator-family diagnostics over
+response shapes that endpoint and peak summaries deliberately conflate.
 
 Every event and every successful command response is labelled `NO_RESULT`.
 This is not the registered RSD-T01 primary experiment, a comparison of trained
@@ -12,20 +13,34 @@ claim.
 
 ## Synthetic scope
 
-Each six-world balance block contains five valid synthetic property classes:
+Each public seed contains an exact Cartesian grid of five constructed generator
+families by four history families, for 20 valid cells:
 
-1. exact full-trajectory scale symmetry;
-2. approximate scale symmetry with a frozen nonzero discrepancy;
-3. endpoint adaptation without trajectory symmetry;
-4. equal peak and endpoint with different shape and latency; and
-5. a memoryless static-ratio map with a frozen initial background.
+1. an exact paired-trajectory match;
+2. an approximate paired-trajectory match with frozen nonzero discrepancy;
+3. an endpoint-return lookalike with two causal finite-memory windows;
+4. a history-responsive causal trace and its fixed past-only delay, preserving
+   peak amplitude while shifting latency and the time-indexed trajectory, not
+   the intrinsic waveform; and
+5. a static-ratio map with a frozen initial background.
 
-The sixth world is a malformed-record sentinel. It is outside the five-class
-accuracy denominator and must stop before accepted policy work. Across the
-public seeds, the sentinels cover ordering, checksum, unit, and future-derived
-reference failures.
+This is a direct causal paired-trace fixture, not a collection of initialized
+state-space systems and not a test of system-level symmetry across scales. The
+generator-family labels name construction recipes, not mutually exclusive
+scientific properties. After each probe response is frozen, the evaluator
+records only trace-qualified facts: `paired_trajectory_match`,
+`finite_horizon_endpoint_return`, `peak_amplitude_equal`,
+`causal_memory_status: unassessed`, and `support_membership: inside`. The probes
+do not predict that vector, so no property-performance score exists and the
+fixture makes no structural memory claim.
 
-The two arms are deliberately named diagnostics:
+Four additional malformed-record sentinels per seed are outside the
+generator-family denominator and stop before accepted policy work. They cover
+ordering, checksum, unit, and future-derived reference failures exactly once per
+seed.
+
+The two unequal-information probes retain their legacy `arm` event field but
+are deliberately named diagnostics:
 
 1. `full-trajectory-diagnostic` receives only `trace_valid` plus samples with
    `ordinal`, `time_s`, normalized `input_ratio`, `output_base_y`, and
@@ -34,9 +49,9 @@ The two arms are deliberately named diagnostics:
    `peak_discrepancy`, and `endpoint_discrepancy`.
 
 Their information and feature-construction work are not matched. Their
-accuracy or counters therefore cannot support a comparative or resource
-conclusion. The second arm exists only to make registered lookalike collisions
-visible in the plumbing.
+generator-family accuracy or counters therefore cannot support a comparative,
+property-performance, or resource conclusion. The second probe exists only to
+make registered lookalike collisions visible in the plumbing.
 
 ## Frozen score and firewall
 
@@ -50,9 +65,14 @@ e_k=\frac{y_{p,k}-y_{1,k}}{s_y},
 $$
 
 with trapezoidal quadrature, `Δt = 0.02 s`, `T = 4 s`, and dimensionless
-`s_y = 1`. Peak, endpoint, final-0.5-second tail, and latency discrepancies
-remain separate fields. The policy response freezes a property label and an
-estimate of `D` before the evaluator opens the oracle label and oracle `D`.
+`s_y = 1`. Peak amplitude is the maximum absolute departure from each
+trajectory's own prestimulus value, using the earliest sample on ties. Peak,
+paired-final endpoint, final-0.5-second tail, and latency discrepancies remain
+separate fields. The policy response freezes a generator-family label and an
+estimate of `D` before the evaluator opens the family, semantic vector, and
+evaluator `D`. Because the full probe receives both trajectories, its `D` is
+directly computable; zero estimation error is conformance plumbing, not learned
+symmetry.
 Policy projections contain no seed, index, world ID, initialization ID, scale
 factor, absolute background, checksum, provenance, parameter, unit, or
 interface metadata.
@@ -66,8 +86,23 @@ are bookkeeping identifiers, not secrets, and never enter either policy view.
 
 Inputs use normalized unit `U`; outputs are dimensionless log-ratio-like
 signals with unit `1`. The declared positive floor is `0.05 U`. No hidden
-epsilon is added. `band-limited-multisine` is a deterministic multisine, not a
-stochastic-profile claim.
+epsilon is added. `band-limited-stochastic` is a seed-dependent random Fourier
+realization with frozen harmonics 1--4, bounded random amplitudes and phases,
+and an endpoint envelope. Its final 1.4 seconds are exactly flat, longer than
+the largest 0.8-second finite-memory window. The same realized history drives
+both scale members of a paired world. Endpoint-return traces compare the current
+ratio only with samples 0.4 or 0.8 seconds in the past and apply the recorded
+scaled-branch gain increment. Equal-peak delayed trajectories apply one recorded
+common gain to a 0.6-second past window and then a fixed 0.3-second causal delay.
+No earlier output uses a future sample or a full-horizon statistic.
+
+The event parameter object is closed and family-qualified. Every record carries
+the common background, scale factor, and input floor. The causal-reference
+`tau` is non-null only for the exact, approximate, and malformed-sentinel
+underlying traces. Approximate additive amplitude, endpoint gain increment and
+two endpoint lags, and equal-peak common gain, memory lag, and delay have
+distinct fields; every field not used by that generator family is explicitly
+`null`.
 
 ## Accounting and non-energy boundary
 
@@ -78,8 +113,9 @@ The peak/endpoint arm reads exactly two exposed summary values.
 
 `modeled_diagnostic_scalar_operations` is a frozen model, not an observed CPU
 counter. For the full arm with $N$ samples and $M$ tail samples it is
-$14N+4M+18$: $4N$ for the paired trajectory squared-error accumulation,
-$8N$ for two static-fit squared-error accumulations, $2N$ for two peak scans,
+$18N+4M+18$: $4N$ for the paired trajectory squared-error accumulation,
+$8N$ for two static-fit squared-error accumulations, $6N$ for two absolute-
+departure peak scans (subtraction, absolute value, and earliest-tie comparison),
 $4M$ for the tail squared-error accumulation, and 18 fixed normalization,
 endpoint, peak, latency, square-root, and decision operations. Here
 $N=201$ and $M=26$. The summary arm uses a fixed worst-case model of three
@@ -89,7 +125,7 @@ property-access, and control-flow operations are explicitly outside this
 scalar model. These counts exclude transcendental-library implementation work
 and are not timing, energy, or complete-work measurements.
 
-Both classifiers retain zero persistent state across events.
+Both probe classifiers retain zero persistent state across events.
 `temporary_memory_measured` and `peak_memory_measured` are false; temporary
 objects, live memory, allocator/runtime overhead, generator, validator,
 evaluator, view hashing, precomputed-summary construction, wall time,
@@ -122,18 +158,32 @@ node --test --test-isolation=none experiments/workstation/fixture-026/contract.t
 
 ## Integrity
 
-Raw events are newline-delimited JSON in an append-only SHA-256 chain. Resume
-is reconstructed from the raw ledger, binds the profile and every frozen source
-identity, and rejects torn tails and mutations. World and initialization IDs
+Raw events are canonical LF-only newline-delimited JSON in an append-only
+SHA-256 chain. CRLF, blank lines, and multiple terminal newlines are rejected.
+Resume is reconstructed from the raw ledger, binds the profile and every frozen
+source identity, requires the ledger to be an exact ordered prefix of the work
+grid, semantically replays every prior record before deriving remaining work,
+repairs a missing or stale derivable checkpoint before declaring a complete
+run, and rejects torn tails, substitutions, and mutations. Checkpoint,
+`run.json`, and nested run-ledger documents are exact-keyed and typed; the raw
+and checkpoint paths and `NO_RESULT` interpretation are frozen. World and initialization IDs
 are deterministic SHA-256 bookkeeping identifiers with no secrecy claim and
-are excluded from policy inputs. Public seeds are encoded as
-unsigned little-endian 64-bit values and domain-separated before custom
-generator seeding. The exact generator is PCG-CM-DXSM 128/64: its 128-bit
+are excluded from policy inputs. Public seeds are canonical decimal strings in
+the full unsigned 64-bit range, then encoded as exactly eight little-endian
+bytes and domain-separated before custom generator seeding. Noncanonical forms
+such as leading-zero strings are rejected. The exact generator is PCG-CM-DXSM
+128/64: its 128-bit
 state transition uses multiplier `0xda942042e4dd58b5`, and DXSM maps the
 pre-transition state to 64 output bits. Initial state and odd increment are
 derived directly from SHA-256. This custom seeding is not NumPy `SeedSequence`
-compatible, so equal integer labels do not promise NumPy-compatible streams.
+compatible, so equal decimal labels do not promise NumPy-compatible streams.
 Confirmation and transfer files are literal `not-created` records.
+
+The original v1 smoke contract remains reproducible from Git commit
+`3daf857df3452f54e3caacacabd1782fdd460a99`. Version 2 intentionally changes
+the seed grammar, grid, generator, event schema, run identity, and analysis
+identity; current-source validation therefore rejects v1 run directories
+instead of silently reinterpreting them.
 
 Run identity also freezes the actual Node version, V8 version, libuv version,
 platform, architecture, endianness, OS release, numeric model, and Math API
@@ -151,13 +201,13 @@ This smoke slice deliberately lacks:
 
 1. the full seven-arm RSD-T01 null stack and actual algorithms;
 2. matched information, state, tuning, feature-construction, and runtime budgets;
-3. the full five-class × step/pulse/ramp/stochastic-history crossing;
-4. stochastic histories, held-out scale extrapolation, and all registered
-   near-zero, clipping, additive-offset, hidden-reset, slow-tail, and leakage
-   hostiles;
+3. causal system equations, system-level symmetry across multiple scales, and
+   genuinely structural memory truth;
+4. held-out scale extrapolation and all registered near-zero, clipping,
+   additive-offset, hidden-reset, slow-tail, and scientific leakage hostiles;
 5. reference lifecycle, fallback, complete resource, and artifact accounting;
 6. powered statistics, paired confirmation analysis, multiplicity control, and
-   the simultaneous primary accuracy/trajectory-estimation endpoint;
+   the simultaneous primary property-performance/trajectory-conformance endpoint;
 7. confirmation and transfer seeds, commitments, custody, and releases;
 8. calibrated workstation time, memory, and energy measurement; and
 9. runners for RSD-T02 through RSD-T10.

@@ -3,7 +3,10 @@ import { createHash } from "node:crypto";
 import { mkdir, mkdtemp, readFile, rm, symlink, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
-import { validateExecutionManifest } from "../../scripts/lib/workstation-manifests.mjs";
+import {
+  validateExecutionManifest,
+  workstationPromotionChecks,
+} from "../../scripts/lib/workstation-manifests.mjs";
 
 const root = process.cwd();
 const realManifest = path.join(root, "experiments", "workstation", "manifests", "candidate-010.json");
@@ -154,14 +157,64 @@ test("Fixture 026 is smoke-ready with an exact C-1540 ledger binding", async () 
   assert.equal(result.ready, false);
   assert.deepEqual(result.errors, []);
   assert.deepEqual(result.executionClaims, ["C-1540"]);
-  assert.equal(
-    result.promotionChecks.find((check) => check.id === "execution-claim-scope").passed,
-    true,
-  );
-  assert.equal(
-    result.promotionChecks.find((check) => check.id === "promotion-evidence").passed,
-    false,
-  );
+  const promotionCheck = (id) => result.promotionChecks.find((check) => check.id === id);
+  assert.equal(promotionCheck("execution-claim-scope").passed, true);
+  assert.equal(promotionCheck("full-profile").passed, true);
+  assert.match(promotionCheck("full-profile").detail, /schema 2/);
+  assert.match(promotionCheck("full-profile").detail, /worlds_per_seed/);
+  for (const id of ["confirmation-seeds", "held_out-seeds", "promotion-evidence"]) {
+    assert.equal(promotionCheck(id).passed, false, id);
+  }
+});
+
+test("registered full-profile contracts preserve every canonical passing artifact", async () => {
+  for (const artifact of [
+    "candidate-010", "fixture-007", "fixture-012", "fixture-019", "fixture-023",
+    "fixture-024", "fixture-025", "fixture-026", "fixture-027",
+  ]) {
+    const manifest = JSON.parse(await readFile(
+      path.join(root, "experiments", "workstation", "manifests", `${artifact}.json`),
+      "utf8",
+    ));
+    const checks = await workstationPromotionChecks(root, manifest);
+    assert.equal(checks.find((check) => check.id === "full-profile").passed, true, artifact);
+  }
+});
+
+test("the full-profile gate rejects unregistered schema, artifact, and cardinality substitutions", async () => {
+  const temporary = await mkdtemp(path.join(root, "tmp-full-profile-cardinality-"));
+  const profilePath = path.join(temporary, "development.json");
+  try {
+    for (const { artifact = "fixture-026", ...profileShape } of [
+      { schema: 1, worlds_per_seed: 0, opportunities_per_seed: 1 },
+      { schema: 1, worlds_per_seed: 1, opportunities_per_seed: 0 },
+      { schema: 0, worlds_per_seed: 1 },
+      { schema: "2", worlds_per_seed: 1 },
+      { schema: 999, worlds_per_seed: 1 },
+      { schema: 2, opportunities_per_seed: 1 },
+      { schema: 2, batch_size: 1 },
+      { schema: 2, worlds_per_seed: 1, foo_per_seed: 1 },
+      { artifact: "fixture-999", schema: 2, worlds_per_seed: 1 },
+    ]) {
+      const profile = {
+        artifact,
+        profile: "development",
+        ...profileShape,
+      };
+      const profileBytes = `${JSON.stringify(profile, null, 2)}\n`;
+      await writeFile(profilePath, profileBytes);
+      const manifest = JSON.parse(await readFile(fixture026Manifest, "utf8"));
+      manifest.artifact = artifact;
+      manifest.data.full_profile = path.relative(root, profilePath).replaceAll("\\", "/");
+      manifest.data.full_profile_sha256 = createHash("sha256").update(profileBytes).digest("hex");
+      const checks = await workstationPromotionChecks(root, manifest);
+      const fullProfile = checks.find((check) => check.id === "full-profile");
+      assert.equal(fullProfile.passed, false);
+      assert.match(fullProfile.detail, /registered artifact.*schema version.*workload cardinality/);
+    }
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
 });
 
 test("Fixture 019 cannot escape its protocol block with present self-asserted evidence", async () => {

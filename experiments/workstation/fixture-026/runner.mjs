@@ -19,6 +19,7 @@ import {
 import {
   FIXTURE_026_ARMS,
   FIXTURE_026_EVENT_CONTRACT_VERSION,
+  FIXTURE_026_EVENT_INTERPRETATION,
   assertFixture026Record,
   canonical,
   fixture026ScientificPayload,
@@ -28,11 +29,15 @@ import {
 import {
   FIXTURE_026_GENERATOR_VERSION,
   FIXTURE_026_RNG_CONTRACT,
-  FIXTURE_026_VALID_CLASSES,
+  FIXTURE_026_HISTORY_FAMILIES,
+  FIXTURE_026_MALFORMED_SENTINELS,
+  FIXTURE_026_VALID_FAMILIES,
+  FIXTURE_026_VALID_CELLS_PER_SEED,
   assertPolicyViewFirewall,
   buildPolicyView,
   computeTrajectoryDiagnostics,
   generateFixture026World,
+  parseFixture026PublicSeed,
   validateFixture026Config,
 } from "./generator.mjs";
 import {
@@ -42,9 +47,9 @@ import {
   extractFixture026Registry,
 } from "./registry.mjs";
 
-export const FIXTURE_026_RUNNER_VERSION = "fixture-026.rsd-t01-runner.v1";
+export const FIXTURE_026_RUNNER_VERSION = "fixture-026.rsd-t01-runner.v2";
 export const FIXTURE_026_RUNTIME_FINGERPRINT = Object.freeze({
-  schema: 1,
+  schema: 2,
   node_version: process.versions.node,
   v8_version: process.versions.v8,
   uv_version: process.versions.uv,
@@ -58,7 +63,30 @@ export const FIXTURE_026_RUNTIME_FINGERPRINT = Object.freeze({
 
 const fixtureRoot = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(fixtureRoot, "../../..");
-const ledgerFormat = "fixture-026.rsd-t01-ledger.v1";
+const ledgerFormat = "fixture-026.rsd-t01-ledger.v2";
+const RAW_FILE = "raw-events.jsonl";
+const CHECKPOINT_FILE = "checkpoint.json";
+const RUN_FILE = "run.json";
+const FIXTURE_026_RUN_INTERPRETATION = "NO_RESULT: public-development RSD-T01 runner integrity and generator-family diagnostic plumbing only.";
+const FIXTURE_026_RUN_IDENTITY_KEYS = Object.freeze([
+  "schema", "artifact", "track", "claim_scope", "runner_version", "generator_version",
+  "rng_contract", "runtime_fingerprint", "runtime_fingerprint_sha256",
+  "event_contract_version", "ledger_format", "profile", "config", "config_sha256",
+  "seeds", "development_seed_document_sha256", "confirmation_absence_sha256",
+  "transfer_absence_sha256", "arms", "source_hashes", "input_sha256", "partition",
+  "execution_mode", "gpu_permitted", "confirmation_seed_state", "transfer_seed_state",
+  "result_label", "no_result", "claim_eligible", "comparison_inference_permitted",
+  "scientific_result", "performance_result", "measured_energy_present",
+  "energy_conclusion_allowed", "run_id",
+]);
+const FIXTURE_026_RUN_LEDGER_KEYS = Object.freeze([
+  "records", "scientific_payload_sha256", "hash_chain_sha256",
+  "completed_work_units", "checkpoint_status",
+]);
+const FIXTURE_026_RUN_KEYS = Object.freeze([
+  ...FIXTURE_026_RUN_IDENTITY_KEYS,
+  "expected_work_units", "ledger", "raw_path", "checkpoint_path", "interpretation",
+]);
 const sourceFiles = Object.freeze([
   "../lib/checkpoint-ledger.mjs",
   "contract.mjs",
@@ -76,6 +104,22 @@ const sourceFiles = Object.freeze([
 function isInside(root, target) {
   const relative = path.relative(root, target);
   return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
+}
+
+function exactKeys(value, keys) {
+  return value
+    && typeof value === "object"
+    && !Array.isArray(value)
+    && Object.keys(value).length === keys.length
+    && keys.every((key) => Object.hasOwn(value, key));
+}
+
+function canonicalRepositoryPath(file) {
+  const relative = path.relative(repositoryRoot, file);
+  if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) {
+    throw new Error("Fixture 026 artifact path must stay inside the repository.");
+  }
+  return relative.replaceAll("\\", "/");
 }
 
 function parseOptions(argv) {
@@ -156,15 +200,22 @@ function outputDirectory(value) {
 
 function validateDevelopmentSeeds(document) {
   if (
-    document?.schema !== 1
+    document?.schema !== 2
     || document.artifact !== "fixture-026"
     || document.partition !== "development"
     || document.state !== "public-development"
-    || document.algorithm !== "literal-public-seed-list-v1"
+    || document.algorithm !== "literal-public-seed-list-v2"
     || document.encoding !== "unsigned-little-endian-uint64"
     || !Array.isArray(document.seeds)
     || document.seeds.length < 2
-    || document.seeds.some((seed) => !Number.isSafeInteger(seed) || seed < 0 || seed > 0xffff_ffff)
+    || document.seeds.some((seed) => {
+      try {
+        parseFixture026PublicSeed(seed);
+        return false;
+      } catch {
+        return true;
+      }
+    })
     || new Set(document.seeds).size !== document.seeds.length
   ) throw new Error("Fixture 026 development seed document is invalid.");
   return document;
@@ -246,7 +297,7 @@ async function loadInputs(profile) {
 
 function runIdentity(inputs) {
   const body = {
-    schema: 1,
+    schema: 2,
     artifact: "fixture-026",
     track: "RSD-T01",
     claim_scope: ["C-1540"],
@@ -284,6 +335,46 @@ function runIdentity(inputs) {
   return Object.freeze({ ...body, run_id: sha256Hex(canonicalize(body)) });
 }
 
+function assertRunDocumentShape(run) {
+  if (!exactKeys(run, FIXTURE_026_RUN_KEYS)) {
+    throw new Error("Fixture 026 run document has missing or unknown fields.");
+  }
+  if (!exactKeys(run.ledger, FIXTURE_026_RUN_LEDGER_KEYS)) {
+    throw new Error("Fixture 026 run ledger has missing or unknown fields.");
+  }
+  if (
+    !new Set(["smoke", "development"]).has(run.profile)
+    || !Number.isSafeInteger(run.expected_work_units)
+    || run.expected_work_units < 1
+    || !Number.isSafeInteger(run.ledger.records)
+    || run.ledger.records < 0
+    || !Number.isSafeInteger(run.ledger.completed_work_units)
+    || run.ledger.completed_work_units < 0
+    || !/^[0-9a-f]{64}$/u.test(run.ledger.scientific_payload_sha256)
+    || !/^[0-9a-f]{64}$/u.test(run.ledger.hash_chain_sha256)
+    || run.ledger.checkpoint_status !== "current"
+    || typeof run.raw_path !== "string"
+    || typeof run.checkpoint_path !== "string"
+    || run.interpretation !== FIXTURE_026_RUN_INTERPRETATION
+  ) throw new Error("Fixture 026 run document violates its closed type or authority contract.");
+  return run;
+}
+
+function assertRunDocument(run, { identity, directory, expectedWorkUnits }) {
+  assertRunDocumentShape(run);
+  if (Object.entries(identity).some(([key, value]) => canonical(run[key]) !== canonical(value))) {
+    throw new Error("Fixture 026 run identity differs from current frozen inputs, sources, or runtime fingerprint.");
+  }
+  if (
+    run.expected_work_units !== expectedWorkUnits
+    || run.ledger.records !== expectedWorkUnits
+    || run.ledger.completed_work_units !== expectedWorkUnits
+    || run.raw_path !== canonicalRepositoryPath(path.join(directory, RAW_FILE))
+    || run.checkpoint_path !== canonicalRepositoryPath(path.join(directory, CHECKPOINT_FILE))
+  ) throw new Error("Fixture 026 run counts or canonical artifact paths are invalid.");
+  return run;
+}
+
 function allWorkUnits(inputs, identity) {
   const units = [];
   for (const seed of inputs.seeds) {
@@ -311,6 +402,17 @@ function assertOrderedWorkKeys(records, inputs, identity) {
     expected.length !== observed.length
     || expected.some((key, index) => key !== observed[index])
   ) throw new Error("Fixture 026 ordered work-key sequence differs from the frozen public grid.");
+  return records;
+}
+
+function assertOrderedWorkPrefix(records, inputs, identity) {
+  const expected = allWorkUnits(inputs, identity).slice(0, records.length).map(workUnitKey);
+  const observed = records.map(fixture026WorkKey);
+  if (
+    records.length > allWorkUnits(inputs, identity).length
+    || expected.length !== observed.length
+    || expected.some((key, index) => key !== observed[index])
+  ) throw new Error("Fixture 026 existing ledger is not an exact prefix of the frozen work grid.");
   return records;
 }
 
@@ -344,42 +446,42 @@ function chargeSerializedRecordBytes(event, { sequence, previousHash }) {
 
 function classifyFullTrajectory(view, config) {
   const diagnostics = computeTrajectoryDiagnostics(view.observation, config);
-  let prediction;
+  let predictedGeneratorFamily;
   if (diagnostics.static_fit_rmse <= config.exact_discrepancy_tolerance) {
-    prediction = "static-ratio";
+    predictedGeneratorFamily = "static-ratio";
   } else if (diagnostics.trajectory_discrepancy <= config.exact_discrepancy_tolerance) {
-    prediction = "exact-scale-symmetry";
+    predictedGeneratorFamily = "exact-scale-symmetry";
   } else if (
     diagnostics.trajectory_discrepancy >= config.approximate_discrepancy_floor
     && diagnostics.trajectory_discrepancy <= config.approximate_discrepancy_ceiling
   ) {
-    prediction = "approximate-scale-symmetry";
+    predictedGeneratorFamily = "approximate-scale-symmetry";
   } else if (
     diagnostics.peak_discrepancy <= config.peak_tolerance
     && diagnostics.endpoint_discrepancy <= config.endpoint_tolerance
   ) {
-    prediction = "equal-peak-different-shape";
+    predictedGeneratorFamily = "equal-peak-delayed-trajectory";
   } else {
-    prediction = "exact-adaptation-only";
+    predictedGeneratorFamily = "endpoint-return-lookalike";
   }
   return Object.freeze({
-    prediction,
+    predicted_generator_family: predictedGeneratorFamily,
     estimated_trajectory_discrepancy: diagnostics.trajectory_discrepancy,
   });
 }
 
 function classifyPeakEndpoint(view, config) {
   const observation = view.observation;
-  let prediction = "exact-scale-symmetry";
+  let predictedGeneratorFamily = "exact-scale-symmetry";
   const peakBeyondApproximate = observation.peak_discrepancy > config.approximate_discrepancy_ceiling;
   const endpointOutsideTolerance = observation.endpoint_discrepancy > config.endpoint_tolerance;
   if (peakBeyondApproximate || endpointOutsideTolerance) {
-    prediction = "exact-adaptation-only";
+    predictedGeneratorFamily = "endpoint-return-lookalike";
   } else if (observation.peak_discrepancy > config.peak_tolerance) {
-    prediction = "approximate-scale-symmetry";
+    predictedGeneratorFamily = "approximate-scale-symmetry";
   }
   return Object.freeze({
-    prediction,
+    predicted_generator_family: predictedGeneratorFamily,
     estimated_trajectory_discrepancy: observation.peak_discrepancy,
   });
 }
@@ -391,7 +493,7 @@ function freezePolicyResponse(world, arm, config) {
   if (!view.trace_valid) {
     response = Object.freeze({
       arm,
-      prediction: "invalid-record",
+      predicted_generator_family: "malformed-sentinel",
       estimated_trajectory_discrepancy: 0,
       policy_input_sha256: policyInputSha256,
     });
@@ -401,7 +503,7 @@ function freezePolicyResponse(world, arm, config) {
       : classifyPeakEndpoint(view, config);
     response = Object.freeze({
       arm,
-      prediction: classified.prediction,
+      predicted_generator_family: classified.predicted_generator_family,
       estimated_trajectory_discrepancy: classified.estimated_trajectory_discrepancy,
       policy_input_sha256: policyInputSha256,
     });
@@ -423,17 +525,19 @@ function evaluateFrozenResponse(world, frozen, arm, config) {
     latency_discrepancy_s: 0,
     static_fit_rmse: 0,
   };
-  const classCorrect = frozen.response.prediction === world.oracle_class;
+  const generatorFamilyCorrect = frozen.response.predicted_generator_family === world.generator_family;
   return Object.freeze({
-    oracle_class: world.oracle_class,
-    prediction: frozen.response.prediction,
+    generator_family: world.generator_family,
+    predicted_generator_family: frozen.response.predicted_generator_family,
     estimated_trajectory_discrepancy: frozen.response.estimated_trajectory_discrepancy,
     trajectory_discrepancy_estimation_error: valid
       ? Math.abs(frozen.response.estimated_trajectory_discrepancy - diagnostics.trajectory_discrepancy)
       : 0,
-    class_correct: classCorrect,
+    generator_family_correct: generatorFamilyCorrect,
+    semantic_properties_evaluated: valid,
+    semantic_properties: valid ? world.semantic_properties : null,
     diagnostics,
-    loss: valid && !classCorrect ? config.max_loss : 0,
+    loss: valid && !generatorFamilyCorrect ? config.max_loss : 0,
     gate_decision: valid ? "accepted" : "record-invalid",
     arm,
   });
@@ -454,11 +558,11 @@ function simulateWorkUnit(unit, inputs, identity, ledgerState) {
   const tailSamples = Math.round(inputs.config.tail_window_s / inputs.config.time_step_s) + 1;
   const operations = valid
     ? unit.arm === "full-trajectory-diagnostic"
-      ? world.trace.length * 14 + tailSamples * 4 + 18
+      ? world.trace.length * 18 + tailSamples * 4 + 18
       : 3
     : 0;
   const event = {
-    schema: 1,
+    schema: 2,
     contract_version: FIXTURE_026_EVENT_CONTRACT_VERSION,
     artifact: "fixture-026",
     track: "RSD-T01",
@@ -475,14 +579,16 @@ function simulateWorkUnit(unit, inputs, identity, ledgerState) {
     attempt: 0,
     units: { input: "U", output: "1", time: "s", bytes: "B" },
     input_sha256: identity.input_sha256,
-    oracle_class: evaluation.oracle_class,
+    generator_family: evaluation.generator_family,
     history_family: world.history_family,
     corruption: world.corruption,
     gate_decision: evaluation.gate_decision,
     ...world.validation,
     parameters: world.parameters,
-    prediction: evaluation.prediction,
-    class_correct: evaluation.class_correct,
+    predicted_generator_family: evaluation.predicted_generator_family,
+    generator_family_correct: evaluation.generator_family_correct,
+    semantic_properties_evaluated: evaluation.semantic_properties_evaluated,
+    semantic_properties: evaluation.semantic_properties,
     trajectory_discrepancy: evaluation.diagnostics.trajectory_discrepancy,
     estimated_trajectory_discrepancy: evaluation.estimated_trajectory_discrepancy,
     trajectory_discrepancy_estimation_error: evaluation.trajectory_discrepancy_estimation_error,
@@ -514,7 +620,7 @@ function simulateWorkUnit(unit, inputs, identity, ledgerState) {
     comparison_inference_permitted: false,
     scientific_result: false,
     performance_result: false,
-    interpretation: "NO_RESULT: deterministic synthetic RSD-T01 response-shape diagnostic only.",
+    interpretation: FIXTURE_026_EVENT_INTERPRETATION,
   };
   return chargeSerializedRecordBytes(event, ledgerState);
 }
@@ -550,9 +656,14 @@ export async function materializeFixture026DevelopmentRecords(profile, units) {
   for (const [sequence, unit] of units.entries()) {
     if (
       !unit
-      || !Number.isSafeInteger(unit.seed)
-      || unit.seed < 0
-      || unit.seed > 0xffff_ffff
+      || (() => {
+        try {
+          parseFixture026PublicSeed(unit.seed);
+          return false;
+        } catch {
+          return true;
+        }
+      })()
       || !Number.isSafeInteger(unit.world_index)
       || unit.world_index < 0
       || unit.world_index >= inputs.config.worlds_per_seed
@@ -595,8 +706,17 @@ export async function executeFixture026({ profile, output, resume = false, maxWo
   } else if (!(await stat(directory)).isDirectory()) {
     throw new Error("Fixture 026 output is not a directory.");
   }
-  const rawPath = path.join(directory, "raw-events.jsonl");
-  const checkpointPath = path.join(directory, "checkpoint.json");
+  const rawPath = path.join(directory, RAW_FILE);
+  const checkpointPath = path.join(directory, CHECKPOINT_FILE);
+  const runPath = path.join(directory, RUN_FILE);
+  const units = allWorkUnits(inputs, identity);
+  if (await exists(runPath)) {
+    assertRunDocument(await loadJson(runPath), {
+      identity,
+      directory,
+      expectedWorkUnits: units.length,
+    });
+  }
   const ledger = await openCheckpointLedger({
     artifact: "fixture-026",
     ledgerFormat,
@@ -607,7 +727,11 @@ export async function executeFixture026({ profile, output, resume = false, maxWo
     workKey: fixture026WorkKey,
     assertRecord: runBoundRecordValidator(identity, inputs),
   });
-  const units = allWorkUnits(inputs, identity);
+  if (ledger.summary().records > 0) {
+    const existing = await readValidatedRecords(directory);
+    assertOrderedWorkPrefix(existing.records, inputs, identity);
+    for (const record of existing.records) assertSemanticReplay(record, inputs, identity);
+  }
   const remaining = remainingWorkUnits(units, ledger.completedWorkKeys(), workUnitKey);
   for (const unit of remaining.slice(0, maxWorkUnits)) {
     const state = ledger.summary();
@@ -631,23 +755,38 @@ export async function executeFixture026({ profile, output, resume = false, maxWo
       no_result: true,
     });
   }
+  if (ledger.summary().checkpoint_status !== "current") await ledger.saveCheckpoint();
   const run = {
     ...identity,
     expected_work_units: units.length,
     ledger: ledger.summary(),
-    raw_path: path.relative(repositoryRoot, rawPath).replaceAll("\\", "/"),
-    checkpoint_path: path.relative(repositoryRoot, checkpointPath).replaceAll("\\", "/"),
-    interpretation: "NO_RESULT: public-development RSD-T01 runner integrity and response-shape plumbing only.",
+    raw_path: canonicalRepositoryPath(rawPath),
+    checkpoint_path: canonicalRepositoryPath(checkpointPath),
+    interpretation: FIXTURE_026_RUN_INTERPRETATION,
   };
-  await writeJsonStable(path.join(directory, "run.json"), run);
+  assertRunDocument(run, { identity, directory, expectedWorkUnits: units.length });
+  await writeJsonStable(runPath, run);
   return Object.freeze({ directory, complete: true, run, result_label: "NO_RESULT", no_result: true });
 }
 
 async function readValidatedRecords(directory) {
-  const rawPath = path.join(directory, "raw-events.jsonl");
+  const rawPath = path.join(directory, RAW_FILE);
   const text = await readFile(rawPath, "utf8");
-  if (text.length > 0 && !text.endsWith("\n")) throw new Error("Fixture 026 raw ledger has a torn trailing record.");
-  const lines = text.split(/\r?\n/u).filter(Boolean);
+  if (text.includes("\r")) {
+    throw new Error("Fixture 026 raw ledger must use canonical LF JSONL; CRLF is forbidden.");
+  }
+  if (text.length > 0 && !text.endsWith("\n")) {
+    throw new Error("Fixture 026 raw ledger has a torn trailing record.");
+  }
+  let lines = [];
+  if (text.length > 0) {
+    const body = text.slice(0, -1);
+    if (body.length === 0) throw new Error("Fixture 026 raw ledger contains a blank JSONL line.");
+    lines = body.split("\n");
+    if (lines.some((line) => line.length === 0)) {
+      throw new Error("Fixture 026 raw ledger contains a blank JSONL line.");
+    }
+  }
   const records = [];
   const seen = new Set();
   let previousHash = "0".repeat(64);
@@ -714,9 +853,10 @@ function armMetrics(records, arm) {
   const validRows = rows.filter((record) => record.trace_valid);
   return {
     records: rows.length,
-    valid_five_class_records: validRows.length,
+    valid_generator_family_records: validRows.length,
     invalid_gate_records: rows.length - validRows.length,
-    class_balanced_accuracy: validRows.filter((record) => record.class_correct).length / validRows.length,
+    generator_family_balanced_accuracy:
+      validRows.filter((record) => record.generator_family_correct).length / validRows.length,
     mean_trajectory_discrepancy: mean(validRows, "trajectory_discrepancy"),
     mean_trajectory_discrepancy_estimation_error: mean(validRows, "trajectory_discrepancy_estimation_error"),
     mean_peak_discrepancy: mean(validRows, "peak_discrepancy"),
@@ -737,19 +877,18 @@ function armMetrics(records, arm) {
 
 export async function computeFixture026Analysis(output) {
   const directory = outputDirectory(output);
-  const run = await loadJson(path.join(directory, "run.json"));
+  const run = assertRunDocumentShape(await loadJson(path.join(directory, RUN_FILE)));
   const inputs = await loadInputs(run.profile);
   const identity = runIdentity(inputs);
-  if (Object.entries(identity).some(([key, value]) => canonical(run[key]) !== canonical(value))) {
-    throw new Error("Fixture 026 run identity differs from current frozen inputs, sources, or runtime fingerprint.");
-  }
+  const units = allWorkUnits(inputs, identity);
+  assertRunDocument(run, { identity, directory, expectedWorkUnits: units.length });
   const [raw, ledger] = await Promise.all([
     readValidatedRecords(directory),
     openCheckpointLedger({
       artifact: "fixture-026",
       ledgerFormat,
-      rawPath: path.join(directory, "raw-events.jsonl"),
-      checkpointPath: path.join(directory, "checkpoint.json"),
+      rawPath: path.join(directory, RAW_FILE),
+      checkpointPath: path.join(directory, CHECKPOINT_FILE),
       runIdentity: identity,
       scientificPayload: fixture026ScientificPayload,
       workKey: fixture026WorkKey,
@@ -772,21 +911,33 @@ export async function computeFixture026Analysis(output) {
   const metrics = Object.fromEntries(FIXTURE_026_ARMS.map((arm) => [arm, armMetrics(raw.records, arm)]));
   const full = raw.records.filter((record) => record.arm === "full-trajectory-diagnostic");
   const peak = raw.records.filter((record) => record.arm === "peak-endpoint-lookalike");
-  const invalid = raw.records.filter((record) => record.oracle_class === "invalid-record");
+  const invalid = raw.records.filter((record) => record.generator_family === "malformed-sentinel");
   const validFull = full.filter((record) => record.trace_valid);
-  const lookalikeClasses = new Set(["exact-scale-symmetry", "equal-peak-different-shape", "static-ratio"]);
+  const lookalikeClasses = new Set(["exact-scale-symmetry", "equal-peak-delayed-trajectory", "static-ratio"]);
   const checks = {
     expected_development_records_present: raw.records.length === run.expected_work_units,
-    every_seed_has_balanced_five_class_set_plus_separate_invalid_gate: inputs.seeds.every((seed) => {
+    every_seed_has_exact_five_family_by_four_history_grid_plus_four_sentinels:
+      inputs.seeds.every((seed) => {
       const rows = full.filter((record) => record.seed === seed);
-      return FIXTURE_026_VALID_CLASSES.every((label) => rows.filter((row) => row.oracle_class === label).length > 0)
-        && new Set(FIXTURE_026_VALID_CLASSES.map((label) => rows.filter((row) => row.oracle_class === label).length)).size === 1
-        && rows.filter((row) => row.oracle_class === "invalid-record").length
-          === rows.filter((row) => row.oracle_class === FIXTURE_026_VALID_CLASSES[0]).length;
-    }),
+      const validRows = rows.filter((row) => row.trace_valid);
+      const cells = validRows.map((row) => `${row.generator_family}|${row.history_family}`);
+      return validRows.length === FIXTURE_026_VALID_CELLS_PER_SEED
+        && new Set(cells).size === FIXTURE_026_VALID_CELLS_PER_SEED
+        && FIXTURE_026_VALID_FAMILIES.every((family) => (
+          FIXTURE_026_HISTORY_FAMILIES.every((history) => (
+            cells.includes(`${family}|${history}`)
+          ))
+        ))
+        && rows.filter((row) => row.generator_family === "malformed-sentinel").length
+          === FIXTURE_026_MALFORMED_SENTINELS.length
+        && new Set(rows.filter((row) => row.generator_family === "malformed-sentinel")
+          .map((row) => row.corruption)).size === FIXTURE_026_MALFORMED_SENTINELS.length;
+      }),
     invalid_sentinel_is_outside_accuracy_and_has_zero_accepted_classifier_charges: invalid.length > 0 && invalid.every((record) => (
       record.gate_decision === "record-invalid"
-      && record.prediction === "invalid-record"
+      && record.predicted_generator_family === "malformed-sentinel"
+      && record.semantic_properties_evaluated === false
+      && record.semantic_properties === null
       && record.accepted_trajectory_samples_read === 0
       && record.accepted_summary_values_read === 0
       && record.serialized_policy_view_utf8_bytes === 0
@@ -794,38 +945,60 @@ export async function computeFixture026Analysis(output) {
       && record.retained_persistent_state_bytes === 0
       && record.loss === 0
     )),
+    histories_share_initialization_within_seed_and_generator_family: inputs.seeds.every((seed) => (
+      FIXTURE_026_VALID_FAMILIES.every((family) => {
+        const rows = validFull.filter((record) => (
+          record.seed === seed && record.generator_family === family
+        ));
+        return rows.length === FIXTURE_026_HISTORY_FAMILIES.length
+          && new Set(rows.map((record) => record.initialization_id)).size === 1
+          && new Set(rows.map((record) => record.world_id)).size === rows.length;
+      })
+    )),
+    semantic_trace_facts_are_evaluator_only_and_memory_is_unassessed: validFull.every((record) => (
+      record.semantic_properties_evaluated === true
+      && record.semantic_properties !== null
+      && record.semantic_properties.causal_memory_status === "unassessed"
+      && record.semantic_properties.support_membership === "inside"
+    )) && validFull.some((record) => (
+      record.generator_family === "static-ratio"
+      && record.semantic_properties.paired_trajectory_match === "exact"
+      && record.semantic_properties.peak_amplitude_equal === true
+    )),
     policy_evaluator_firewall_is_uniform: raw.records.every((record) => (
       record.policy_oracle_access === false
       && record.evaluator_opened_after_response === true
       && /^[0-9a-f]{64}$/.test(record.policy_input_sha256)
       && /^[0-9a-f]{64}$/.test(record.policy_response_sha256)
     )),
-    full_trajectory_diagnostic_recovers_five_synthetic_labels: validFull.length > 0
-      && validFull.every((record) => record.class_correct),
-    approximate_class_has_frozen_nonzero_error: validFull
-      .filter((record) => record.oracle_class === "approximate-scale-symmetry")
+    full_trajectory_probe_separates_five_constructed_generator_families: validFull.length > 0
+      && validFull.every((record) => record.generator_family_correct),
+    approximate_generator_family_has_frozen_nonzero_error: validFull
+      .filter((record) => record.generator_family === "approximate-scale-symmetry")
       .every((record) => (
         record.trajectory_discrepancy >= inputs.config.approximate_discrepancy_floor
         && record.trajectory_discrepancy <= inputs.config.approximate_discrepancy_ceiling
       )),
     exact_symmetry_is_complete_trajectory_not_endpoint_label: validFull
-      .filter((record) => record.oracle_class === "exact-scale-symmetry")
+      .filter((record) => record.generator_family === "exact-scale-symmetry")
       .every((record) => record.trajectory_discrepancy <= inputs.config.exact_discrepancy_tolerance),
-    adaptation_and_equal_peak_keep_endpoint_while_trajectories_differ: validFull
-      .filter((record) => new Set(["exact-adaptation-only", "equal-peak-different-shape"]).has(record.oracle_class))
+    endpoint_and_equal_peak_lookalikes_return_to_own_baselines_while_trajectories_differ: validFull
+      .filter((record) => new Set(["endpoint-return-lookalike", "equal-peak-delayed-trajectory"])
+        .has(record.generator_family))
       .every((record) => (
-        record.endpoint_discrepancy <= inputs.config.endpoint_tolerance
+        record.semantic_properties.finite_horizon_endpoint_return === true
+        && record.endpoint_discrepancy <= inputs.config.endpoint_tolerance
         && record.trajectory_discrepancy > inputs.config.approximate_discrepancy_ceiling
       )),
-    equal_peak_class_preserves_peak_but_changes_latency_and_shape: validFull
-      .filter((record) => record.oracle_class === "equal-peak-different-shape")
+    equal_peak_generator_family_preserves_peak_but_delays_the_time_indexed_trajectory: validFull
+      .filter((record) => record.generator_family === "equal-peak-delayed-trajectory")
       .every((record) => (
         record.peak_discrepancy <= inputs.config.peak_tolerance
         && record.latency_discrepancy_s > 0
       )),
     peak_endpoint_summary_exposes_registered_lookalike_collision: peak
-      .filter((record) => record.trace_valid && lookalikeClasses.has(record.oracle_class))
-      .some((record) => !record.class_correct),
+      .filter((record) => record.trace_valid && lookalikeClasses.has(record.generator_family))
+      .some((record) => !record.generator_family_correct),
     arm_views_and_work_counters_remain_disjoint: raw.records.every((record) => (
       !record.trace_valid
       || (record.arm === "full-trajectory-diagnostic"
@@ -842,19 +1015,19 @@ export async function computeFixture026Analysis(output) {
       && record.comparison_inference_permitted === false
       && record.scientific_result === false
       && record.performance_result === false
-      && record.interpretation.startsWith("NO_RESULT:")
+      && record.interpretation === FIXTURE_026_EVENT_INTERPRETATION
     )),
   };
   const passed = Object.values(checks).every(Boolean);
   return {
-    schema: 1,
+    schema: 2,
     artifact: "fixture-026",
     track: "RSD-T01",
     claim_scope: ["C-1540"],
-    contract_version: "fixture-026.rsd-t01-analysis.v1",
+    contract_version: "fixture-026.rsd-t01-analysis.v2",
     run_id: run.run_id,
     profile: run.profile,
-    accuracy_denominator: "five valid synthetic property classes only; invalid-record sentinels excluded",
+    accuracy_denominator: "five constructed generator families only; malformed sentinels excluded; the cross-cutting trace-fact vector retains its logical dependencies, is evaluator-recorded only, and has no probe prediction or property-performance score",
     trajectory_score: {
       name: "D",
       scale_y: inputs.config.output_scale_y,
@@ -869,7 +1042,7 @@ export async function computeFixture026Analysis(output) {
     run_sha256: sha256(canonical(run)),
     metrics,
     checks,
-    decision: passed ? "diagnostic-pass" : "diagnostic-fail",
+    decision: passed ? "contract-validation-pass" : "contract-validation-fail",
     result_label: "NO_RESULT",
     no_result: true,
     measured_energy_present: false,
@@ -887,7 +1060,9 @@ export async function analyzeFixture026(output) {
   const summary = await computeFixture026Analysis(output);
   await mkdir(path.join(directory, "analysis"), { recursive: true });
   await writeJsonStable(path.join(directory, "analysis", "summary.json"), summary);
-  if (summary.decision !== "diagnostic-pass") throw new Error("Fixture 026 development smoke diagnostics failed.");
+  if (summary.decision !== "contract-validation-pass") {
+    throw new Error("Fixture 026 development contract validation failed.");
+  }
   return summary;
 }
 
@@ -932,8 +1107,10 @@ export async function prepareFixture026(profile) {
     runtime_fingerprint_sha256: inputs.runtimeFingerprintSha256,
     seeds: inputs.seeds.length,
     worlds_per_seed: inputs.config.worlds_per_seed,
-    valid_classes_per_balance_block: FIXTURE_026_VALID_CLASSES.length,
-    invalid_gate_sentinels_per_balance_block: 1,
+    valid_generator_families: FIXTURE_026_VALID_FAMILIES.length,
+    histories_per_generator_family: FIXTURE_026_HISTORY_FAMILIES.length,
+    valid_cartesian_cells_per_seed: FIXTURE_026_VALID_CELLS_PER_SEED,
+    malformed_sentinels_per_seed: FIXTURE_026_MALFORMED_SENTINELS.length,
     work_units: inputs.seeds.length * inputs.config.worlds_per_seed * FIXTURE_026_ARMS.length,
     implemented_tracks: FIXTURE_026_IMPLEMENTED_TRACKS.length,
     registered_tracks: FIXTURE_026_TRACK_IDS.length,

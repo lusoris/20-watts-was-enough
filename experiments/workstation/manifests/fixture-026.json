@@ -35,7 +35,7 @@
   "data": {
     "generator": "experiments/workstation/fixture-026/generator.mjs",
     "full_profile": "experiments/workstation/fixture-026/configs/development.json",
-    "full_profile_sha256": "37063a11d5f15c3e04d515ffebc1785a075ecb52b02915b4b266d6020d930a8c",
+    "full_profile_sha256": "5491afa6bffc9a8d2136cae8fff009eb170211a18f93525718bfea6dfb0486af",
     "external": []
   },
   "outputs": {
@@ -61,7 +61,7 @@
     "required": false,
     "applicability": "not-applicable-to-scoped-claim",
     "energy_conclusion_allowed": false,
-    "scope_binding": "fixture-026.c-1540.development-smoke.non-energy.v1",
+    "scope_binding": "fixture-026.c-1540.development-smoke.non-energy.v2",
     "not_applicable_reason": "RSD-T01 smoke validation records normalized synthetic response traces, dimensionless discrepancy components, and partial deterministic diagnostic counters only; it has no joule, watt, carbon, physical-system, complete-work, comparative, or energy-efficiency endpoint."
   },
   "resume": {
@@ -82,15 +82,17 @@
     ],
     "protocol_eligibility": {
       "status": "blocked",
-      "protocol_version": "F-026/RSD-T01-development-smoke-v1",
+      "protocol_version": "F-026/RSD-T01-development-smoke-v2",
       "claim_scope": ["C-1540"],
       "blockers": [
         "Only two unequal-information public diagnostic paths are implemented; the full A-RAW, B-STATIC-DIV, B-LOG-RATIO, B-STATE-SPACE, B-RECURRENT, C-DUAL, and evaluator-only oracle stack is absent.",
         "Information, feature-construction, state, tuning, runtime, and complete resource budgets are not matched, so no arm comparison or complete-work conclusion is permitted.",
-        "The full five-class by step, pulse, ramp, and stochastic-history crossing and held-out scale extrapolation are absent; the included band-limited profile is a deterministic multisine.",
-        "Registered additive-offset, near-zero, clipping, hidden-reset, slow-tail, and future-normalization hostile coverage is incomplete.",
+        "The public generator now crosses five constructed generator families by step, pulse, ramp, and seeded band-limited stochastic histories exactly once per seed, but held-out scale extrapolation is absent.",
+        "The cross-cutting per-world trace-fact vector is evaluator-recorded only; its logical dependencies are retained, neither probe predicts it, and no property-performance endpoint exists.",
+        "The generator is a direct causal paired-trace fixture: causal system equations, system-level symmetry tests across multiple scales, and genuinely structural memory truth are absent.",
+        "Registered additive-offset, near-zero, clipping, hidden-reset, slow-tail, and scientific future-normalization hostile coverage is incomplete.",
         "Reference lifecycle, maintenance, fallback, communication, wall time, peak memory, tuning, artifact, and full operation accounting are absent.",
-        "The registered simultaneous accuracy and trajectory-estimation primary endpoint, paired powered statistics, uncertainty intervals, and multiplicity control are absent.",
+        "The registered simultaneous property-performance and trajectory-conformance primary endpoint, paired powered statistics, uncertainty intervals, and multiplicity control are absent.",
         "No confirmation or transfer seed, commitment, private custody record, release, or promotion evidence exists.",
         "No calibrated workstation timing, memory, or energy measurement exists, and energy conclusions are forbidden.",
         "RSD-T02 through RSD-T10 are not implemented.",

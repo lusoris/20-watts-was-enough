@@ -403,6 +403,47 @@
     "status": "Exact trajectories of the displayed positive-domain reference model. Input scales, time constant, pulse, and absolute gate are illustrative; no biological, trained-model, safety, or efficiency result is shown."
   },
   {
+    "id": "rsd-t01-family-property-overlap",
+    "title": "Generator family is not the property vector",
+    "equation": "D_max = max_(h,p) D_(h,p); target: pi = (S_system, {A_end,h,p}, {E_peak,h,p}, M_causal, Q_membership)",
+    "source": "math/interface-qualified-scale-symmetry.md#property-vector-not-family-label",
+    "layout": {
+      "kind": "family-property-overlap",
+      "width": 1180,
+      "height": 840,
+      "theme": "violet"
+    },
+    "parameters": {
+      "families": [
+        { "id": "F1", "label": "exact scale-equivariant" },
+        { "id": "F2", "label": "approximate symmetry" },
+        { "id": "F3", "label": "finite-endpoint lookalike" },
+        { "id": "F4", "label": "equal-peak / shifted-latency" },
+        { "id": "F5", "label": "static ratio map" }
+      ],
+      "properties": [
+        { "id": "P1", "label": "system trajectory symmetry", "values": "max D: exact · approximate · absent" },
+        { "id": "P2", "label": "endpoint return", "values": "per cell; all · partial · none" },
+        { "id": "P3", "label": "peak equality", "values": "per cell; all · partial · none" },
+        { "id": "P4", "label": "causal memory", "values": "equation / intervention / unassessed" },
+        { "id": "P5", "label": "support membership", "values": "inside · outside" }
+      ],
+      "overlap_examples": [
+        {
+          "label": "shared symmetry, different memory",
+          "families": ["F1", "F5"],
+          "properties": ["P1", "P4"]
+        },
+        {
+          "label": "lookalike summaries, different trajectory",
+          "families": ["F3", "F4"],
+          "properties": ["P2", "P3", "P1"]
+        }
+      ]
+    },
+    "status": "Conceptual schema for the RSD-T01 target correction. System symmetry is classified from the maximum discrepancy over the complete registered history × scale grid; endpoint and peak predicates remain per-cell matrices with a frozen all/partial/none reducer. Generator-family identity does not supply the separately evaluated cross-cutting targets; logical dependencies between targets remain. The overlap examples are possibilities, not measurements, frequencies, model outputs, or a fixed family-to-property lookup."
+  },
+  {
     "id": "interface-qualified-retroactivity",
     "title": "A connected client can reshape the producer transient",
     "equation": "dX/dt = k(t)-delta X+k_off C-k_on X(p_tot-C);  R(X)=[1+(1+X/K_d)^2/(p_tot/K_d)]^-1",

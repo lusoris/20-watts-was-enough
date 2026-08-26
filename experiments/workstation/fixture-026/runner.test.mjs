@@ -69,10 +69,12 @@ test("smoke preparation exposes bounded deterministic CPU-only public work", asy
     runtime_fingerprint: FIXTURE_026_RUNTIME_FINGERPRINT,
     runtime_fingerprint_sha256: executionRuntimeDigest(),
     seeds: 2,
-    worlds_per_seed: 6,
-    valid_classes_per_balance_block: 5,
-    invalid_gate_sentinels_per_balance_block: 1,
-    work_units: 24,
+    worlds_per_seed: 24,
+    valid_generator_families: 5,
+    histories_per_generator_family: 4,
+    valid_cartesian_cells_per_seed: 20,
+    malformed_sentinels_per_seed: 4,
+    work_units: 96,
     implemented_tracks: 1,
     registered_tracks: 10,
     confirmation_seeds_created: false,
@@ -93,7 +95,8 @@ test("smoke run exercises full-trajectory scoring and lookalikes without result 
   try {
     const execution = await executeFixture026({ profile: "smoke", output: fixture.output, resume: false });
     assert.equal(execution.complete, true);
-    assert.equal(execution.run.expected_work_units, 24);
+    assert.equal(execution.run.expected_work_units, 96);
+    assert.deepEqual(execution.run.seeds, ["1540001", "1540002"]);
     assertNoResult(execution);
     assertNoResult(execution.run);
     assert.deepEqual(execution.run.runtime_fingerprint, FIXTURE_026_RUNTIME_FINGERPRINT);
@@ -101,18 +104,18 @@ test("smoke run exercises full-trajectory scoring and lookalikes without result 
     assert.equal(execution.run.input_sha256.runtime, executionRuntimeDigest());
     const summary = await analyzeFixture026(fixture.output);
     const validation = await validateFixture026Output(fixture.output);
-    assert.equal(summary.decision, "diagnostic-pass");
+    assert.equal(summary.decision, "contract-validation-pass");
     assert.ok(Object.values(summary.checks).every(Boolean));
-    assert.equal(summary.metrics["full-trajectory-diagnostic"].class_balanced_accuracy, 1);
-    assert.ok(summary.metrics["peak-endpoint-lookalike"].class_balanced_accuracy < 1);
+    assert.equal(summary.metrics["full-trajectory-diagnostic"].generator_family_balanced_accuracy, 1);
+    assert.ok(summary.metrics["peak-endpoint-lookalike"].generator_family_balanced_accuracy < 1);
     assert.equal(summary.metrics["full-trajectory-diagnostic"].mean_trajectory_discrepancy_estimation_error, 0);
     assert.ok(summary.metrics["peak-endpoint-lookalike"].mean_trajectory_discrepancy_estimation_error > 0);
     for (const metrics of Object.values(summary.metrics)) {
-      assert.equal(metrics.valid_five_class_records + metrics.invalid_gate_records, metrics.records);
-      assert.ok(metrics.valid_five_class_records > 0);
+      assert.equal(metrics.valid_generator_family_records + metrics.invalid_gate_records, metrics.records);
+      assert.ok(metrics.valid_generator_family_records > 0);
       assert.ok(metrics.invalid_gate_records > 0);
     }
-    assert.equal(summary.accuracy_denominator, "five valid synthetic property classes only; invalid-record sentinels excluded");
+    assert.equal(summary.accuracy_denominator, "five constructed generator families only; malformed sentinels excluded; the cross-cutting trace-fact vector retains its logical dependencies, is evaluator-recorded only, and has no probe prediction or property-performance score");
     assert.deepEqual(summary.trajectory_score, {
       name: "D",
       scale_y: 1,
@@ -131,7 +134,7 @@ test("smoke run exercises full-trajectory scoring and lookalikes without result 
     assert.deepEqual(validation, {
       valid: true,
       run_id: summary.run_id,
-      decision: "diagnostic-pass",
+      decision: "contract-validation-pass",
       result_label: "NO_RESULT",
       no_result: true,
     });
@@ -179,6 +182,91 @@ test("checkpoint resume reproduces uninterrupted output exactly", async () => {
   }
 });
 
+test("complete resume repairs stale or missing checkpoints before returning", async () => {
+  const fixture = await temporaryOutput("fixture-026-checkpoint-reconcile-");
+  try {
+    const partial = await executeFixture026({
+      profile: "smoke",
+      output: fixture.output,
+      maxWorkUnits: 1,
+    });
+    assert.equal(partial.complete, false);
+    const checkpointPath = path.join(fixture.output, "checkpoint.json");
+    const staleCheckpoint = await readFile(checkpointPath, "utf8");
+    await executeFixture026({ profile: "smoke", output: fixture.output, resume: true });
+    const currentCheckpoint = await readFile(checkpointPath, "utf8");
+
+    await writeFile(checkpointPath, staleCheckpoint);
+    const staleRepair = await executeFixture026({
+      profile: "smoke",
+      output: fixture.output,
+      resume: true,
+    });
+    assert.equal(staleRepair.complete, true);
+    assert.equal(staleRepair.run.ledger.checkpoint_status, "current");
+    assert.equal(await readFile(checkpointPath, "utf8"), currentCheckpoint);
+
+    await rm(checkpointPath);
+    const missingRepair = await executeFixture026({
+      profile: "smoke",
+      output: fixture.output,
+      resume: true,
+    });
+    assert.equal(missingRepair.complete, true);
+    assert.equal(missingRepair.run.ledger.checkpoint_status, "current");
+    assert.equal(await readFile(checkpointPath, "utf8"), currentCheckpoint);
+  } finally {
+    await cleanup(fixture);
+  }
+});
+
+test("run and checkpoint authority documents reject unknown fields and type drift", async () => {
+  const fixture = await temporaryOutput("fixture-026-authority-closure-");
+  try {
+    await executeFixture026({ profile: "smoke", output: fixture.output });
+    const runPath = path.join(fixture.output, "run.json");
+    const checkpointPath = path.join(fixture.output, "checkpoint.json");
+    const originalRun = JSON.parse(await readFile(runPath, "utf8"));
+    const runMutations = [
+      (run) => { run.claim_authority = true; },
+      (run) => { run.ledger.claim_eligible = true; },
+      (run) => { run.ledger.records = String(run.ledger.records); },
+      (run) => { run.raw_path = run.checkpoint_path; },
+      (run) => { run.checkpoint_path = run.raw_path; },
+      (run) => { run.interpretation = "NO_RESULT: altered authority prose."; },
+    ];
+    for (const mutate of runMutations) {
+      const run = structuredClone(originalRun);
+      mutate(run);
+      await writeFile(runPath, `${JSON.stringify(run, null, 2)}\n`);
+      await assert.rejects(
+        () => analyzeFixture026(fixture.output),
+        /missing or unknown|closed type|canonical artifact paths|authority contract/i,
+      );
+    }
+    await writeFile(runPath, `${JSON.stringify(originalRun, null, 2)}\n`);
+
+    const originalCheckpoint = JSON.parse(await readFile(checkpointPath, "utf8"));
+    for (const mutate of [
+      (checkpoint) => { checkpoint.claim_eligible = true; },
+      (checkpoint) => { checkpoint.records = String(checkpoint.records); },
+    ]) {
+      const checkpoint = structuredClone(originalCheckpoint);
+      mutate(checkpoint);
+      const body = { ...checkpoint };
+      delete body.checkpoint_sha256;
+      checkpoint.checkpoint_sha256 = sha256(canonical(body));
+      await writeFile(checkpointPath, `${JSON.stringify(checkpoint, null, 2)}\n`);
+      await assert.rejects(
+        () => executeFixture026({ profile: "smoke", output: fixture.output, resume: true }),
+        /missing or unknown fields|identity mismatch/i,
+      );
+    }
+  } finally {
+    await cleanup(fixture);
+  }
+});
+
 test("resume rejects a different profile even without a checkpoint", async () => {
   const fixture = await temporaryOutput("fixture-026-cross-profile-");
   try {
@@ -198,7 +286,10 @@ test("each event byte charge equals its persisted UTF-8 JSONL line", async () =>
   const fixture = await temporaryOutput("fixture-026-byte-charge-");
   try {
     await executeFixture026({ profile: "smoke", output: fixture.output });
-    const lines = (await readFile(path.join(fixture.output, "raw-events.jsonl"), "utf8"))
+    const raw = await readFile(path.join(fixture.output, "raw-events.jsonl"), "utf8");
+    assert.equal(raw.includes("\r"), false);
+    assert.equal(raw.endsWith("\n"), true);
+    const lines = raw
       .split("\n")
       .filter(Boolean);
     const config = JSON.parse(await readFile(
@@ -260,6 +351,57 @@ test("semantic replay rejects a validly rehashed but generator-impossible event"
   }
 });
 
+test("resume rejects a validly rehashed generator-impossible prefix before deriving remaining work", async () => {
+  const fixture = await temporaryOutput("fixture-026-resume-semantic-prefix-");
+  try {
+    const partial = await executeFixture026({
+      profile: "smoke",
+      output: fixture.output,
+      maxWorkUnits: 1,
+    });
+    assert.equal(partial.complete, false);
+    const rawPath = path.join(fixture.output, "raw-events.jsonl");
+    const record = JSON.parse((await readFile(rawPath, "utf8")).trimEnd());
+    record.history_family = record.history_family === "step" ? "ramp" : "step";
+    const payload = { ...record };
+    delete payload.integrity;
+    record.integrity.record_sha256 = sha256(
+      `${record.integrity.previous_sha256}\n${canonical(payload)}`,
+    );
+    await writeFile(rawPath, `${JSON.stringify(record)}\n`);
+    await rm(path.join(fixture.output, "checkpoint.json"));
+    await assert.rejects(
+      () => executeFixture026({ profile: "smoke", output: fixture.output, resume: true }),
+      /semantic replay mismatch/,
+    );
+  } finally {
+    await cleanup(fixture);
+  }
+});
+
+test("resume rejects a semantically valid record that is not the exact frozen work-grid prefix", async () => {
+  const fixture = await temporaryOutput("fixture-026-resume-work-prefix-");
+  try {
+    await executeFixture026({ profile: "smoke", output: fixture.output, maxWorkUnits: 1 });
+    const [replacement] = await materializeFixture026DevelopmentRecords("smoke", [{
+      seed: "1540999",
+      world_index: 0,
+      arm: "full-trajectory-diagnostic",
+    }]);
+    await writeFile(
+      path.join(fixture.output, "raw-events.jsonl"),
+      `${JSON.stringify(replacement)}\n`,
+    );
+    await rm(path.join(fixture.output, "checkpoint.json"));
+    await assert.rejects(
+      () => executeFixture026({ profile: "smoke", output: fixture.output, resume: true }),
+      /exact prefix/,
+    );
+  } finally {
+    await cleanup(fixture);
+  }
+});
+
 test("runtime fingerprint is event-bound and reanalysis rejects a changed runtime identity", async () => {
   const fixture = await temporaryOutput("fixture-026-runtime-fingerprint-");
   try {
@@ -306,10 +448,10 @@ test("ordered work-key gate rejects a valid replacement that omits one registere
       world_index: record.world_index,
       arm: record.arm,
     }));
-    units[0] = { ...units[0], seed: 1540999 };
+    units[0] = { ...units[0], seed: "1540999" };
     const regenerated = await materializeFixture026DevelopmentRecords("smoke", units);
     assert.equal(regenerated.length, records.length);
-    assert.equal(regenerated[0].seed, 1540999);
+    assert.equal(regenerated[0].seed, "1540999");
     await assert.rejects(
       () => assertFixture026OrderedWorkKeys(regenerated, "smoke"),
       /ordered work-key sequence differs/,
@@ -354,6 +496,52 @@ test("analysis and resume reject a torn raw-ledger tail", async () => {
     await assert.rejects(
       () => executeFixture026({ profile: "smoke", output: fixture.output, resume: true }),
       /torn|newline|JSON|raw/i,
+    );
+  } finally {
+    await cleanup(fixture);
+  }
+});
+
+test("analysis and resume reject internal or extra-terminal blank JSONL lines", async () => {
+  const fixture = await temporaryOutput("fixture-026-blank-jsonl-");
+  try {
+    await executeFixture026({ profile: "smoke", output: fixture.output });
+    const rawPath = path.join(fixture.output, "raw-events.jsonl");
+    const raw = await readFile(rawPath, "utf8");
+    const variants = [
+      `${raw}\n`,
+      raw.replace("\n", "\n\n"),
+    ];
+    for (const corrupted of variants) {
+      await writeFile(rawPath, corrupted);
+      await assert.rejects(
+        () => executeFixture026({ profile: "smoke", output: fixture.output, resume: true }),
+        /blank JSONL line/,
+      );
+      await assert.rejects(
+        () => analyzeFixture026(fixture.output),
+        /blank JSONL line/,
+      );
+    }
+  } finally {
+    await cleanup(fixture);
+  }
+});
+
+test("analysis and resume reject noncanonical CRLF JSONL", async () => {
+  const fixture = await temporaryOutput("fixture-026-crlf-jsonl-");
+  try {
+    await executeFixture026({ profile: "smoke", output: fixture.output });
+    const rawPath = path.join(fixture.output, "raw-events.jsonl");
+    const raw = await readFile(rawPath, "utf8");
+    await writeFile(rawPath, raw.replaceAll("\n", "\r\n"));
+    await assert.rejects(
+      () => executeFixture026({ profile: "smoke", output: fixture.output, resume: true }),
+      /canonical LF JSONL|CRLF/,
+    );
+    await assert.rejects(
+      () => analyzeFixture026(fixture.output),
+      /canonical LF JSONL|CRLF/,
     );
   } finally {
     await cleanup(fixture);

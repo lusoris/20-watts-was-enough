@@ -120,13 +120,13 @@ Supporting material:
 - [`experiments/fixtures/023-plant-plasticity-memory-signalling.md`](experiments/fixtures/023-plant-plasticity-memory-signalling.md) — ten complete CPU-only plant plasticity and signalling contracts with no execution results
 - [`experiments/fixtures/024-applied-multiscale-reduction.md`](experiments/fixtures/024-applied-multiscale-reduction.md) — four complete CPU-only multiscale-reduction contracts with no execution results
 - [`experiments/fixtures/025-electrochemistry-interface-memory-degradation.md`](experiments/fixtures/025-electrochemistry-interface-memory-degradation.md) — ten complete CPU-only electrochemistry contracts with no execution results
-- [`experiments/fixtures/026-interface-qualified-relative-sensing.md`](experiments/fixtures/026-interface-qualified-relative-sensing.md) — ten complete CPU-only relative-sensing and scale-symmetry contracts with no execution results
+- [`experiments/fixtures/026-interface-qualified-relative-sensing.md`](experiments/fixtures/026-interface-qualified-relative-sensing.md) — ten complete CPU-only relative-sensing and scale-symmetry contracts, one public generator-only smoke implementation, and no confirmation results
 - [`experiments/fixtures/027-interface-qualified-retroactivity-insulation.md`](experiments/fixtures/027-interface-qualified-retroactivity-insulation.md) — ten detailed CPU-only back-action and bounded-insulation protocol contracts, one public smoke implementation, and no confirmation results
 - [`experiments/workstation/fixture-022/`](experiments/workstation/fixture-022/README.md) — deterministic DEV-T01 corruption, abstention, and charged-fallback development smoke path
 - [`experiments/workstation/fixture-023/`](experiments/workstation/fixture-023/README.md) — deterministic PLM-T01 duration-memory and PLM-T02 lifecycle-reset development smoke paths
 - [`experiments/workstation/fixture-024/`](experiments/workstation/fixture-024/README.md) — deterministic AMR-T01 development smoke path with no confirmation or energy authority
 - [`experiments/workstation/fixture-025/`](experiments/workstation/fixture-025/README.md) — deterministic ECM-T03 validity-gate development smoke path with no confirmation or energy authority
-- [`experiments/workstation/fixture-026/`](experiments/workstation/fixture-026/README.md) — deterministic RSD-T01 trajectory-symmetry and policy-firewall development smoke path with no comparison, confirmation, or energy authority
+- [`experiments/workstation/fixture-026/`](experiments/workstation/fixture-026/README.md) — deterministic RSD-T01 5-family × 4-history generator grid, separately evaluated trace-fact vector, and policy-firewall smoke path with no comparison, confirmation, or energy authority
 - [`experiments/workstation/fixture-027/`](experiments/workstation/fixture-027/README.md) — deterministic RIN-T01 isolation/connection diagnostic with no confirmation, service-performance, or energy authority
 - [`experiments/test-coverage.md`](experiments/test-coverage.md) — generated
   claim-to-protocol coverage and workstation execution readiness

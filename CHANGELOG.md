@@ -7,22 +7,31 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
-- F-026 now has a deterministic CPU-only public-development smoke harness for
-  the `RSD-T01` / `C-1540` trajectory-symmetry slice. Twenty-six focused tests
-  cover the frozen registry, five balanced valid classes plus an independent
-  malformed-interface sentinel, the exact PCG-CM-DXSM 128/64 transition with
-  custom SHA-256 state/increment derivation, a bound Node/V8/platform runtime
-  fingerprint, trapezoidal trajectory discrepancy, an exhaustive policy-view
-  field-and-code-path firewall, frozen diagnostic counter formulas, zero
-  persistent classifier state, exact serialized-view bytes, append-only integrity,
-  exact resume, source/config identity, semantic regeneration of every event,
-  and exact ordered-work-grid membership before analysis. The two diagnostic
-  arms have unmatched information
-  and incomplete resource accounting; private partitions, the full null and
-  hostile stacks, powered statistics, calibrated energy, RSD-T02--RSD-T10 and
-  claim authority remain absent. Every event and every successful command
-  response is `NO_RESULT`. The repository now has ten smoke-ready harnesses and still zero
-  workstation-ready or workstation-executable scientific claims.
+- F-026 now has a versioned generator-only public-development contract for the
+  `RSD-T01` / `C-1540` slice. Thirty-seven focused tests cover canonical
+  decimal-string uint64 seeds over the full unsigned range and exact
+  little-endian encoding; an exact five-generator-family × four-history grid
+  plus four distinct malformed sentinels per seed; shared initialization and
+  distinct world identities; and replayable seed-dependent band-limited
+  stochastic histories. Endpoint-return and equal-peak delayed-trajectory
+  lookalikes are causal and history-responsive. Family-qualified parameters
+  make unused values explicitly `null`, while the evaluator separately records
+  cross-cutting per-world trace facts and leaves structural causal memory
+  unassessed. System symmetry is now reduced from the maximum discrepancy over
+  the complete history × scale grid; endpoint and peak matrices retain a frozen
+  `all`/`partial`/`none` reducer. Directly exposed trace properties remain
+  conformance-and-cost endpoints, not learned-symmetry evidence. Decision 0017
+  and a new editable high-contrast property-overlap graphic preserve these
+  boundaries. Resume now verifies an exact ordered prefix and semantic replay,
+  repairs stale or missing final checkpoints, accepts canonical LF JSONL only,
+  and closes event, run, ledger and checkpoint metadata against unknown result
+  authority. The generic full-profile gate binds each artifact to its exact
+  schema and per-seed cardinality contract. The full comparator and hostile
+  stacks, private partitions, powered statistics, calibrated energy,
+  RSD-T02--RSD-T10, and claim authority remain absent. Every event and
+  successful command response is `NO_RESULT`; the repository still has ten
+  smoke-ready harnesses and zero workstation-ready or workstation-executable
+  scientific claims.
 
 - A history-conditioned modular-succession package separates observed
   microbial succession, randomized ecological priority effects, continual-
