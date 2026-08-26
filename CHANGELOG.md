@@ -7,6 +7,16 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- The private full-book route now keeps the 49-document corpus outside the
+  Cloudflare Worker render path. A lightweight server shell preserves the PDF
+  download while the browser loads the complete edition after hydration, with
+  an error/retry boundary. A dedicated book-only corpus reduces the lazy
+  browser chunk from 14.19 MB to 1.21 MB. Source and compiled-artifact gates
+  enforce a sub-100 KB server entry and loader, a dynamic-only book edition,
+  and a sub-3 MB book corpus. Local production QA confirms 50 rendered book
+  sections, 48 diagrams, no unresolved contents links, no wide tables and no
+  horizontal overflow.
+
 - F-026 now has a versioned generator-only public-development contract for the
   `RSD-T01` / `C-1540` slice. Thirty-seven focused tests cover canonical
   decimal-string uint64 seeds over the full unsigned range and exact

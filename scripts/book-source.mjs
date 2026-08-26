@@ -23,6 +23,8 @@ export async function bookSourceFiles(projectRoot) {
   const supportFiles = [
     "README.md",
     "app/book/page.tsx",
+    "app/book-content.ts",
+    "app/components/book-loader.tsx",
     "app/components/book-edition.tsx",
     "app/components/markdown-document.tsx",
     "app/components/mermaid-diagram.tsx",

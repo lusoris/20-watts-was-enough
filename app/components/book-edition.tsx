@@ -1,6 +1,7 @@
 "use client";
 
-import { Fragment, useCallback, useMemo } from "react";
+import { Fragment } from "react";
+import { bookDocuments as documents } from "../book-content";
 import type { ResearchDocument } from "../content";
 import { MarkdownDocument } from "./markdown-document";
 import { ReadinessOverview } from "./readiness-overview";
@@ -32,54 +33,42 @@ function documentLabel(path: string) {
   return "Chapter";
 }
 
-export function BookEdition({ documents }: { documents: ResearchDocument[] }) {
-  const conceptDocuments = useMemo(
-    () =>
-      documents.filter(
-        (document) =>
-          document.kind === "markdown" &&
-          (document.path === "README.md" ||
-            (document.path.startsWith("concept/") &&
-              document.path !== "concept/README.md")),
-      ),
-    [documents],
+export function BookEdition() {
+  const conceptDocuments = documents.filter(
+    (document) =>
+      document.kind === "markdown" &&
+      (document.path === "README.md" ||
+        (document.path.startsWith("concept/") &&
+          document.path !== "concept/README.md")),
   );
-  const appendixDocuments = useMemo(
-    () =>
-      appendixPaths
-        .map((path) => documents.find((document) => document.path === path))
-        .filter((document): document is ResearchDocument => document !== undefined),
-    [documents],
+  const appendixDocuments = appendixPaths
+    .map((path) => documents.find((document) => document.path === path))
+    .filter((document): document is ResearchDocument => document !== undefined);
+  const mathDocuments = documents.filter(
+    (document) =>
+      document.kind === "markdown" &&
+      document.path.startsWith("math/") &&
+      document.path !== "math/README.md",
   );
-  const mathDocuments = useMemo(
-    () =>
-      documents.filter(
-        (document) =>
-          document.kind === "markdown" &&
-          document.path.startsWith("math/") &&
-          document.path !== "math/README.md",
-      ),
-    [documents],
-  );
-  const bookDocuments = useMemo(
-    () => [...conceptDocuments, ...mathDocuments, ...appendixDocuments],
-    [appendixDocuments, conceptDocuments, mathDocuments],
-  );
-  const bookDocumentPaths = useMemo(
-    () => new Set(bookDocuments.map((document) => document.path)),
-    [bookDocuments],
+  const bookDocuments = [
+    ...conceptDocuments,
+    ...mathDocuments,
+    ...appendixDocuments,
+  ];
+  const bookDocumentPaths = new Set(
+    bookDocuments.map((document) => document.path),
   );
   const totalWords = bookDocuments.reduce(
     (sum, document) => sum + document.words,
     0,
   );
-  const navigate = useCallback((path: string, hash = "") => {
+  const navigate = (path: string, hash = "") => {
     const url = new URL("/", window.location.origin);
     url.searchParams.set("doc", path);
     url.hash = hash;
     window.location.assign(url);
-  }, []);
-  const bookHref = useCallback((path: string, hash: string) => {
+  };
+  const bookHref = (path: string, hash: string) => {
     if (bookDocumentPaths.has(path)) {
       return path === "README.md" && hash ? `#${hash}` : `#${bookId(path)}`;
     }
@@ -87,7 +76,7 @@ export function BookEdition({ documents }: { documents: ResearchDocument[] }) {
     url.searchParams.set("doc", path);
     url.hash = hash;
     return url.toString();
-  }, [bookDocumentPaths]);
+  };
 
   return (
     <main className="book-shell">
