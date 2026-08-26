@@ -3,24 +3,30 @@
 <!-- markdownlint-disable MD013 -->
 
 - **Status:** complete CPU-only experiment contract with one bounded
-  public-development RSD-T01 smoke slice and an isolated RSD-T02 machine
-  foundation
+  public-development RSD-T01 smoke slice, a deterministic bounded T02-MECH
+  construction/conformance runtime, and an isolated T02-FLOOR foundation
 - **Claims addressed:** [C-1540](../../research/claims.md#c-1540)–[C-1549](../../research/claims.md#c-1549),
   [C-1560](../../research/claims.md#c-1560),
+  [C-1561](../../research/claims.md#c-1561),
   [C-1562](../../research/claims.md#c-1562),
   [C-1563](../../research/claims.md#c-1563), and
   [C-1564](../../research/claims.md#c-1564)
-- **Source audits:** [relative sensing and scale symmetry across biological interfaces](../../research/audits/2026-08-25-relative-sensing-scale-symmetry.md)
-  and [mechanism equivalence and intervention-qualified discrimination](../../research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md)
-- **Mathematical contracts:** [interface-qualified scale symmetry](../../math/interface-qualified-scale-symmetry.md)
-  and [intervention-qualified mechanism equivalence](../../math/interventional-mechanism-equivalence.md)
+- **Source audits:** [relative sensing and scale symmetry across biological interfaces](../../research/audits/2026-08-25-relative-sensing-scale-symmetry.md),
+  [mechanism equivalence and intervention-qualified discrimination](../../research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md),
+  and [repeated-stimulus signatures for an adapting-circuit subtrack](../../research/audits/2026-08-26-rsd-t02-pulse-signatures.md)
+- **Mathematical contracts:** [interface-qualified scale symmetry](../../math/interface-qualified-scale-symmetry.md),
+  [intervention-qualified mechanism equivalence](../../math/interventional-mechanism-equivalence.md),
+  and [one-sided topology signatures under repeated stimulation](../../math/repeated-stimulus-topology-signatures.md)
 - **Fixture ID:** `F-026`
 - **Protocol IDs:** `RSD-T01`--`RSD-T10`
 - **Execution state:** a deterministic `RSD-T01` / `C-1540` public-development
   runner, generator, schema, visible seed pack, tests and `smoke-ready` manifest
-  exist; RSD-T02 has isolated equations, a closed property/equivalence
-  registry, specified episode schedules and construction tests but no complete
-  generator/evaluator runner or actionable arm; RSD-T03--RSD-T10, private
+  exist; T02-MECH has a closed generator/evaluator for three O0 descriptors
+  crossed with three conditioned time scales and an exact 26-episode O1 panel,
+  plus an event schema, append-only ledger, deterministic resume and
+  construction analysis, but no
+  actionable arm or comparison authority; T02-FLOOR remains non-executable;
+  RSD-T03--RSD-T10, private
   partitions, the registered primary analysis, a complete resource comparison,
   statistical results and measured energy do not exist
 - **Authority:** every future smoke or synthetic development run is
@@ -404,8 +410,9 @@ adaptation, intervention, equivalence and floor boundaries in
 [C-1560](../../research/claims.md#c-1560),
 [C-1562](../../research/claims.md#c-1562),
 [C-1563](../../research/claims.md#c-1563), and
-[C-1564](../../research/claims.md#c-1564). C-1561 supplies evidence context
-for a future pulse-signature extension and is not routed as complete here.
+[C-1564](../../research/claims.md#c-1564). [C-1561](../../research/claims.md#c-1561)
+is routed separately to the nested `RSD-T02-PULSE` written protocol below; it
+is not a result of this five-recipe stratum.
 
 **Question.** Which causal properties remain identifiable after several
 synthetic systems are forced to produce the exact same canonical step trace,
@@ -471,14 +478,18 @@ seed-derived permutation prevent state count or name from leaking provenance.
 Refractory stability and period skipping are one-sided signatures: presence
 may separate a certified pair, while absence retains uncertainty. The current
 five-world construction does not plant the Rahi-style signature—the registered
-feedback nonlinearity vanishes at the square-pulse levels—so C-1561 is evidence
-input for a future pulse-signature world, not a result or completed construction
-test in this tranche.
+feedback nonlinearity vanishes at the square-pulse levels—so no pulse episode
+in this stratum supports C-1561. The separate `RSD-T02-PULSE` subtrack freezes a
+source-shaped written test without changing this construction or adding a
+result.
 
-**Observation regimes.** `O0-MATCHED-STEP` exposes three episodes and at most
-4,611 rows and requires abstention for every varying structural coordinate.
-`O1-FULL-PANEL` exposes 26 episodes and at most 39,962 rows and is the future
-fixed-panel primary regime. `O2-SELECT6` begins with `O0`, permits six further
+**Observation regimes.** `O0-MATCHED-STEP` exposes three background episodes
+and at most 4,611 rows per conditioned $\tau_*$ model instance. The runtime
+crosses $\tau_*=0.5,1,2,\mathrm s$, hence nine executions and 13,833 rows per
+recipe, and requires abstention for every varying structural coordinate.
+`O1-FULL-PANEL` exposes exactly 26 episodes and at most 39,962 rows at
+$\tau_*=1,\mathrm s$ and is the fixed-panel primary construction regime.
+`O2-SELECT6` begins with `O0`, permits six further
 queries with no more than two privileged internal interventions, and is
 secondary. Active selection receives no primary authority until its own
 prospective response-freeze contract exists.
@@ -554,10 +565,14 @@ censoring are valid scientific cases with the existing six-axis support vector.
 Parser, checksum, unit and order failures remain malformed sentinels outside
 the scientific denominator.
 
-**Current authority.** The isolated machine registry is
-`contract-foundation-only`, `public-development`,
-`registered-projection-no-secret-custody`, comparison false and `NO_RESULT`.
-It is not consumed by the v2 T01 runner and adds no execution claim.
+**Current authority.** The machine registry remains
+`contract-foundation-only`, while the separate T02-MECH runtime is a
+deterministic bounded `public-development` construction/conformance harness.
+It executes O0 and O1, freezes every actionable response before `O-GRAPH`
+evaluation, retains an exact typed resource vector, and supports append-only
+resume and independent analysis validation. It is
+`registered-projection-no-secret-custody`, comparison false, has no execution
+claim, and reports `NO_RESULT`. O2 and T02-FLOOR remain non-executable.
 
 **Kill rule.** Kill attribution if step fit or hidden provenance supplies the
 answer, a purported separation lacks a pairwise certificate, an arm is rewarded
@@ -565,12 +580,163 @@ for guessing within an equivalence set, privileged access is unequal or
 unpriced, RMS or fixed slow sampling replaces the floor endpoint, or the
 mechanism bank cannot beat generic state-space/recurrent nulls at equal access.
 
-**Required future artifacts.** T02-specific runner, causal packet schema,
-projection hash and response commit, full episode generator, actionable
-algorithms, complete resource ledger, prospective confirmation mapping and
-custody, paired statistics, promotion evidence and calibrated workstation
-measurement. The current equations, registry and construction tests are not
-those artifacts.
+**Required future artifacts.** Actionable algorithms, matched computation and
+intervention budgets, prospective confirmation mapping and custody, paired
+statistics, promotion evidence, calibrated workstation measurement, an O2
+response-freeze contract, and a separately frozen T02-FLOOR runtime with a
+finite-estimator authority boundary. The current construction runtime supplies
+none of those comparison, claim, asymptotic, workstation or energy authorities.
+
+### RSD-T02-PULSE — One-sided repeated-stimulus signatures
+
+**Claim:** [C-1561](../../research/claims.md#c-1561).
+
+**Source and contracts:** [Rahi et al. 2017](https://doi.org/10.1038/nmeth.4408),
+bibliography key [`rahi2017oscillatory`](../../research/references.bib) ·
+[pulse-signature evidence audit](../../research/audits/2026-08-26-rsd-t02-pulse-signatures.md) ·
+[equations and decision rules](../../math/repeated-stimulus-topology-signatures.md).
+
+**Question.** Under the adapting-circuit and observation assumptions frozen
+from Rahi et al., does refractory-period stabilization or a subharmonic
+response support response-dependent inhibition against a certified pure
+feed-forward rival without turning an absent, censored, aliased or mixed
+signature into a topology label?
+
+**Scope.** This is a nested companion stratum, not a sixth recipe in
+`T02-MECH`. It does not inherit the five-recipe exact matched-step identity and
+does not change any existing T02 machine schema or runner.
+
+**Protected source-shaped DGP.** Both planted worlds have $R,I$ in
+$\mathrm U$, $\tau_R=1\,\mathrm s$, $n=4$,
+$I_0=0.01\,\mathrm U$, $\lambda=0.3$, start from $(R,I)=(0,0)$ and report
+$O=(R/(1\,\mathrm U))^3$. The feedback world uses
+
+$$
+\tau_R\dot R
+=
+\frac{S}{1+(I/I_0)^n}-R,
+\qquad
+\tau_R\dot I=R-\lambda I,
+$$
+
+while the pure feed-forward rival replaces the second equation with
+$\tau_R\dot I=S-\lambda I$. $S$ is a zero/one square pulse with independent
+duration $d$ and period $T$. The equation family and individual parameter
+values occur in the primary source's explored forms; this exact protected
+cross-product is a project construction hypothesis and needs its own numerical
+certificate.
+
+**Truth ontology.** The scored plant property is
+`response_drives_inhibitor` in
+`{present, absent, mixed, unresolved}`. Refractory and skipping signatures are
+separate evaluator facts. Generator ID, graph, equations, parameters, direct
+plant state and construction certificates are evaluator-only. This subtrack-
+local property is not merged into `T02-MECH`'s
+`reported_output_feedback_edge` without a separate representation map and
+intervention certificate.
+
+**Adaptation and support.** A 200-second step calibration must show more than
+80% decline in $O$ after its first peak. Its time-to-peak $\tau_a$ is retained
+in seconds. Refractory cells require $d\ge1.5\tau_a$. Each isolated pulse must
+produce exactly one response crossing and recover during a 100-second washout.
+Insufficient inhibitor accumulation, multiple responses to one pulse,
+saturation, clipping, observation dead time, unresolved convergence or
+insufficient cadence are support failures.
+
+**Refractory panel.** Cross
+$d\in\{0.30,0.50,1.00,1.50,2.00,3.00\}\,\mathrm s$ with a registered
+coarse-to-refined search over $T>d$ through $40\,\mathrm s$. For each duration,
+
+$$
+T_{\max}(d)
+\in
+\operatorname*{arg\,max}_{T>d}
+\frac{1}{KT}\int_{t_b}^{t_b+KT}O(t;d,T)\,dt,
+\qquad K=20.
+$$
+
+All numerically tied maxima remain an interval. Stabilization requires the
+upper bound on at least two consecutive secant slopes to be below $1/2$ after
+the duration and single-response gates pass. The slope is dimensionless;
+$T_{\max}$ and $d$ remain in seconds.
+
+**Event panel.** An isolated pulse defines $A_{\mathrm{iso}}(d)$ and the frozen
+response threshold $0.25A_{\mathrm{iso}}(d)$. For every pulse interval, retain
+upward-crossing count, response indicator, first-crossing latency in seconds,
+amplitude and missing-event status. Do not encode a missing response as zero
+latency.
+
+The protected skipping cells use $d=0.20\,\mathrm s$ and
+$T\in\{5.00,5.20,5.40\}\,\mathrm s$. A skipping signature requires the
+smallest recurrent plant-state order $q\in\{2,3,4,5\}$, failure of $T$-periodic
+recurrence beyond the numerical bound, a repeated length-$q$ event word
+containing both a response and a skip, four repeated $q$-cycles, and no pulse
+with more than one response.
+
+**Counterworlds.** The fixed bank also contains:
+
+1. `PS-NFL-LTI`, a stable response-dependent linear integral-feedback world
+   that adapts but entrains to the input period, so absent signatures must yield
+   `unresolved`;
+2. `PS-MIXED`, the primary source's explicit slow-IFFL/fast-NFL parallel model,
+   evaluated at four windows so the answer must remain `mixed/window-qualified`;
+3. `PS-DEADTIME`, the IFFL plant followed by a detector that suppresses events
+   for $1.5T$ after detection, so an apparent alternating word is an
+   observation artifact; and
+4. `PS-ALIAS`, the IFFL plant observed only once per period at fixed phase, so
+   event count and latency are not recoverable.
+
+**Actionable arms.** Freeze `A-REFRACTORY`, `A-SUBHARMONIC`, `A-JOINT`, a
+step-only negative control, generic state-space and compact recurrent
+estimators, and an abstaining dual selector. `O-GRAPH` and direct-state
+recurrence are evaluator-only. None is implemented or comparison-eligible.
+
+**Primary endpoint.** Report `refractory_signature`, `skipping_signature` and
+`feedback_support` separately. Feedback support requires at least one positive
+support-qualified signature and a certified rival. Both signatures absent
+means `unresolved`. Co-primary falsification counts are false feedback
+attribution on the IFFL, dead-time and alias worlds, forced feed-forward
+attribution on `PS-NFL-LTI`, and loss of the window qualifier on `PS-MIXED`.
+
+**Development robustness.** Only after deterministic construction passes, add
+an evaluator-labelled secondary observation layer with Ornstein-Uhlenbeck
+noise correlation time $0.05\,\mathrm s$ and stationary standard deviation
+$\sigma/A_{\mathrm{iso}}\in\{0.01,0.05,0.10\}$, crossed with 64 fixed public
+seeds. This checks numerical and event-rule fragility; it is not confirmation
+evidence and does not change deterministic truth. Threshold sensitivities at
+$0.15$ and $0.35$ of isolated amplitude are diagnostics only.
+
+**Numerical contract.** Use binary64 adaptive integration with exact pulse-edge
+stops, absolute state tolerance $10^{-12}\,\mathrm U$, relative tolerance
+$10^{-10}$ and a second run with both tolerances halved. Test recurrence before
+pulse onset, retain all refinement disagreements and cap simulated time at
+$20{,}000\,\mathrm s$ per cell. Nonconvergence is `unresolved`; nonfinite or
+schema-invalid output is malformed and remains outside the scientific
+denominator.
+
+**Resource vector.** Retain pulse cells, stimulus and response counts,
+simulated seconds, sample rows, serialized bytes, solver evaluations, scalar
+operations, retained-state and parameter bytes, tuning trials, wall seconds and
+later calibrated joules separately. Privileged direct-state recurrence is
+evaluator cost and is never attributed to an actionable arm.
+
+**Current authority.** The subtrack is `written-protocol-only`,
+`public-development`, comparison false and `NO_RESULT`. It completes the
+missing C-1561 test description, not its execution.
+
+**Kill rule.** Kill claim eligibility if a single pulse or hidden graph supplies
+the answer; absence is treated as feed-forward evidence; short-duration,
+multiple-response, boundary-maximum or nonconverged cells enter the positive
+denominator; dead time or aliasing is called plant feedback; a mixed motif is
+forced into one label; thresholds or panels move after output inspection; or a
+construction/robustness check is presented as biological prevalence,
+workstation performance or energy evidence.
+
+**Required future artifacts.** Checked-in constructor and two-resolution truth
+certificate, machine parameter manifest, pulse generator, event extractor,
+actionable estimators, resource ledger, malformed sentinels, public robustness
+seeds, prospective confirmation mapping and custody, paired statistics and
+calibrated workstation measurement.
 
 ## RSD-T03 — Multiplicatively rescaled active chemical search
 

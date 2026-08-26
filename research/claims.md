@@ -24056,18 +24056,22 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   blind acquisition when it has a certified one-sided separation role.
 - **Failure modes:** single-pulse attribution, absence treated as evidence for
   the rival, pulse duration confounded with period, and privileged state access
-  hidden from the cost ledger.
+  hidden from the cost ledger; detector dead time, temporal aliasing, or a
+  mixed-timescale motif mistaken for plant-level exclusive topology.
 - **Measurable prediction:** protected negative-feedback worlds with the
   signature separate from certified IFFL rivals; sampled worlds without the
   signature retain uncertainty instead of being forced into the opposite
   class.
 - **Open question:** how stable is the one-sided signature under noise,
   parameter support, partial observation and additional feedback paths?
-- **Planned extension:** a future RSD-T02 pulse-signature world must freeze a
-  Rahi-compatible planted model, response-event rule, latency, refractory and
-  period-skipping truth before this claim has a complete direct test. The
-  current five-recipe construction does not instantiate that signature.
-- **Traceability:** [source audit](audits/2026-08-26-rsd-t02-mechanism-equivalence.md#repeated-stimulation-adds-one-sided-signatures) · [mathematical contract](../math/interventional-mechanism-equivalence.md).
+- **Direct-test specification:** [`RSD-T02-PULSE`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pulse--one-sided-repeated-stimulus-signatures)
+  freezes the source-shaped pair, support gates, response events, latency,
+  response count, refractory maximizer, subharmonic recurrence, counterworlds
+  and failure disposition. It is a complete written public-development
+  protocol with `NO_RESULT`; no constructor, runner or confirmation result is
+  claimed. The parent five-recipe construction remains separate and does not
+  instantiate this signature.
+- **Traceability:** [pulse-signature audit](audits/2026-08-26-rsd-t02-pulse-signatures.md) · [mathematical contract](../math/repeated-stimulus-topology-signatures.md) · [bibliography key `rahi2017oscillatory`](references.bib) · [broader mechanism audit](audits/2026-08-26-rsd-t02-mechanism-equivalence.md#repeated-stimulation-adds-one-sided-signatures).
 
 ### C-1562
 

@@ -81,6 +81,17 @@ test("arm registry contains nine ineligible actionable arms and one excluded ora
     "C-MECHANISM-BANK",
     "C-DUAL",
   ]);
+  assert.deepEqual(FIXTURE_026_RSD_T02_OBSERVATION_REGIMES.map((regime) => [
+    regime.observation_regime_id,
+    regime.episode_count_semantics,
+    regime.runtime_time_constants_s,
+    regime.runtime_executions_per_recipe,
+    regime.runtime_sample_rows_per_recipe,
+  ]), [
+    ["O0-MATCHED-STEP", "per-time-constant-conditioned-model-instance", [0.5, 1, 2], 9, 13833],
+    ["O1-FULL-PANEL", "single-tau1-model-instance", [1], 26, 39962],
+    ["O2-SELECT6", "non-executable-selection-ceiling", null, null, null],
+  ]);
   assert.equal(FIXTURE_026_RSD_T02_EVALUATOR_ONLY_ARM_ID, "O-GRAPH");
   assert.equal(FIXTURE_026_RSD_T02_ARMS.length, 10);
   assert.ok(FIXTURE_026_RSD_T02_ARMS.every((arm) => (

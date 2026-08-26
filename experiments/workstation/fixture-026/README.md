@@ -5,9 +5,9 @@ This directory contains a deterministic CPU-only plumbing harness for the
 generator-family × history grid and evaluator-only trace-fact vector
 construction, then exercises two legacy generator-family diagnostics over
 response shapes that endpoint and peak summaries deliberately conflate.
-An isolated `RSD-T02` contract, initialized model bank, and source-shaped
-boundary-layer floor foundation are also frozen here, but none is connected to
-the runner or granted result authority.
+The bounded `RSD-T02` mechanism-conformance slice is connected to the runner.
+Its source-shaped boundary-layer floor foundation remains isolated and
+non-executable. Neither stratum has result authority.
 
 Every event and every successful command response is labelled `NO_RESULT`.
 This is not the registered RSD-T01 primary experiment, a comparison of trained
@@ -163,10 +163,11 @@ information cut—such as a withheld suffix, scale cell, or intervention—and t
 evaluator target visible only after response freeze. Public descriptor roles do
 not create a private confirmation partition.
 
-## RSD-T02 interventional mechanism-equivalence foundation
+## RSD-T02 interventional mechanism-equivalence construction runtime
 
 `rsd-t02-contract.mjs`, `rsd-t02-models.mjs`, and `rsd-t02-floor.mjs` freeze a
-public-development foundation for two distinct strata:
+public-development foundation for two distinct strata. The checked-in
+T02-MECH generator, evaluator, event contract and runner execute only the first:
 
 1. `T02-MECH` gives five initialized two-state construction recipes the same
    canonical fold-step trajectory, then separates generator provenance from a
@@ -186,16 +187,27 @@ Pair certificates describe one analytic isomorphism and nine numerically
 refined public-development constructions under their frozen schedules, not
 scientific results.
 
+The O0 registry count is per conditioned model instance: three background
+steps and 4,611 rows for each $\tau_*$, crossed over $0.5$, $1$, and $2$ seconds
+by the runtime for nine executions and 13,833 rows per recipe. O1 is exactly 26
+episodes and 39,962 rows per recipe at $\tau_*=1$ second.
+
 The square-pulse episodes do not instantiate the Rahi-style refractory or
 period-skipping signature: the v1 feedback nonlinearity vanishes at both pulse
-levels. C-1561 therefore remains a separately declared future extension rather
-than one of the 21 construction tests.
+levels. C-1561 therefore remains a separately declared written subtrack rather
+than a result of this construction runtime.
 
-This foundation has no complete T02 episode generator/evaluator runner, arm implementations,
-event or output schema, run ledger, analysis artifact, confirmation custody,
-or promotion path. It does not extend `execution_claims` beyond `C-1540`.
-`RSD-T02` therefore remains foundation-only with `NO_RESULT` authority, while
-`RSD-T01` remains the only implemented track.
+T02-MECH now has a deterministic bounded construction/conformance runtime: 175
+events per selected seed, a closed actionable projection and response commit,
+independent `O-GRAPH` evaluation, typed costs, append-only hash-chain resume,
+exact pair matrices and recomputed analysis. The hashed profile deliberately
+uses one public seed for smoke and two of 64 for bounded development
+conformance; it is not the full development pack. Every actionable arm
+abstains, C-1561 and C-1564 are excluded, and every artifact is `NO_RESULT`.
+No actionable implementation, comparison, execution claim, confirmation
+custody, promotion path, O2 runtime, T02-FLOOR runtime, asymptotic result,
+workstation measurement or energy result exists. RSD-T01 remains the only
+claim-scoped implemented track.
 
 ## Commands
 
@@ -207,18 +219,27 @@ node experiments/workstation/fixture-026/runner.mjs smoke --profile smoke --outp
 node experiments/workstation/fixture-026/runner.mjs run --profile development --output experiments/workstation/runs/fixture-026-development --resume false
 node experiments/workstation/fixture-026/runner.mjs analyze --output experiments/workstation/runs/fixture-026-development
 node experiments/workstation/fixture-026/runner.mjs validate --output experiments/workstation/runs/fixture-026-development
+
+node experiments/workstation/fixture-026/runner.mjs t02-prepare --profile smoke
+node experiments/workstation/fixture-026/runner.mjs t02-smoke --profile smoke --output experiments/workstation/runs/fixture-026-t02-smoke --resume false
+node experiments/workstation/fixture-026/runner.mjs t02-run --profile development --output experiments/workstation/runs/fixture-026-t02-development --resume false
+node experiments/workstation/fixture-026/runner.mjs t02-analyze --output experiments/workstation/runs/fixture-026-t02-development
+node experiments/workstation/fixture-026/runner.mjs t02-validate --output experiments/workstation/runs/fixture-026-t02-development
 ```
 
 Focused tests:
 
 ```powershell
-node --test --test-isolation=none experiments/workstation/fixture-026/contract.test.mjs experiments/workstation/fixture-026/runner.test.mjs experiments/workstation/fixture-026/scientific-grid.test.mjs experiments/workstation/fixture-026/rsd-t02-contract.test.mjs experiments/workstation/fixture-026/rsd-t02-models.test.mjs experiments/workstation/fixture-026/rsd-t02-floor.test.mjs
+node --test --test-isolation=none experiments/workstation/fixture-026/contract.test.mjs experiments/workstation/fixture-026/runner.test.mjs experiments/workstation/fixture-026/scientific-grid.test.mjs experiments/workstation/fixture-026/rsd-t02-contract.test.mjs experiments/workstation/fixture-026/rsd-t02-models.test.mjs experiments/workstation/fixture-026/rsd-t02-floor.test.mjs experiments/workstation/fixture-026/rsd-t02-generator.test.mjs experiments/workstation/fixture-026/rsd-t02-evaluator.test.mjs experiments/workstation/fixture-026/rsd-t02-event.test.mjs experiments/workstation/fixture-026/rsd-t02-runner.test.mjs
 ```
 
 ## Integrity
 
 Raw events are canonical LF-only newline-delimited JSON in an append-only
-SHA-256 chain. CRLF, blank lines, and multiple terminal newlines are rejected.
+SHA-256 chain. An ownership-checked exclusive output lease rejects concurrent
+writers and is never automatically broken. Symlink, junction, reparse-point
+and resolved-path escapes are rejected before output mutation. CRLF, blank
+lines, and multiple terminal newlines are rejected.
 Resume is reconstructed from the raw ledger, binds the profile and every frozen
 source identity, requires the ledger to be an exact ordered prefix of the work
 grid, semantically replays every prior record before deriving remaining work,
@@ -272,8 +293,9 @@ This smoke slice deliberately lacks:
    property-performance/trajectory-conformance endpoint;
 7. confirmation and transfer seeds, commitments, custody, and releases;
 8. calibrated workstation time, memory, and energy measurement; and
-9. a generator/evaluator runner, actionable arms, result schema, run ledger,
-   and analysis path for the contract-frozen RSD-T02 foundation; and
+9. actionable algorithms, comparison/claim authority, confirmation custody,
+   O2 selection, and T02-FLOOR execution for the bounded T02-MECH construction
+   runtime; and
 10. machine contracts and runners for RSD-T03 through RSD-T10.
 
 Until those gaps are closed and separately reviewed, this directory remains a

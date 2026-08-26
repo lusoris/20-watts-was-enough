@@ -16,11 +16,12 @@
   [C-1562](../claims.md#c-1562), [C-1563](../claims.md#c-1563), and
   [C-1564](../claims.md#c-1564), and adds no P-series principle or architecture
   candidate
-- **Experiment state:** freezes the scientific requirements for an isolated
-  public-development RSD-T02 contract; initialized model equations and
-  construction tests exist, but no complete 26-episode generator/evaluator
-  runner, actionable estimator, claim-eligible partition, workstation
-  comparison, measured energy, or result exists
+- **Experiment state:** a deterministic bounded public-development T02-MECH
+  construction/conformance runtime now covers the closed 26-episode O0/O1
+  generator, response firewall, evaluator, event schema, append-only ledger,
+  resume and analysis validation; no actionable estimator, claim-eligible
+  partition, O2 execution, T02-FLOOR runtime, workstation comparison, measured
+  energy, or result exists
 
 ## Executive finding
 
@@ -133,9 +134,9 @@ loop. A single pulse is insufficient, and not every sampled adapting feedback
 model exhibits the signatures. Presence can therefore separate some pairs;
 absence cannot force the opposite label.
 
-The T02 intervention registry consequently needs pulse duration $d$ and period
-$T_p$ as independent factors. A future Rahi-compatible world must report at
-least:
+The dedicated [RSD-T02-PULSE audit](2026-08-26-rsd-t02-pulse-signatures.md)
+therefore treats pulse duration $d$ and period $T_p$ as independent factors.
+Its source-shaped written protocol reports at least:
 
 1. response count per stimulus count;
 2. first-spike and later-spike latencies;
@@ -145,9 +146,11 @@ least:
 
 The v1 five-world construction does not instantiate this signature. Its
 feedback nonlinearity vanishes at the two square-pulse levels, and no current
-pair certificate uses a pulse episode. C-1561 is therefore retained as bounded
-evidence input and an explicit extension requirement, not as a result or a
-completed construction test.
+pair certificate uses a pulse episode. C-1561 is now routed to a separate
+[mathematical contract](../../math/repeated-stimulus-topology-signatures.md)
+and [fixture subtrack](../../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pulse--one-sided-repeated-stimulus-signatures).
+That subtrack completes the written test specification, not a construction
+certificate, runner, confirmation or result.
 
 ## The fast boundary layer needs the right norm
 
@@ -246,6 +249,17 @@ wall time and later measured energy as separate dimensions. The graph oracle
 is evaluator-only. All actionable arms receive the same transcript and no
 hidden family, equation, state, property or future sample before response
 freeze.
+
+The checked-in runtime exercises that construction boundary over a hashed
+ordered prefix of the public seed pack: one seed for smoke and two for the
+bounded development-conformance profile. It does not execute the full 64-seed
+pack, and the hashed profile says so explicitly. O0 means three background
+episodes and 4,611 rows per conditioned time-constant instance; crossing the
+three registered time constants yields nine executions and 13,833 rows per
+recipe. O1 remains exactly 26 episodes at $\tau_*=1,\mathrm s$. All nine actionable roles
+abstain on one identical causal projection; `O-GRAPH` opens only after the
+response commitment. Pair matrices and property aggregation validate the
+registered construction, not an estimator or scientific comparison.
 
 ## Evidence limitations
 

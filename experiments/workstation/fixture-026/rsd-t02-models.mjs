@@ -44,7 +44,7 @@ export function deriveFixture026RsdT02PropertiesFromEquation(equationId) {
   return Object.freeze(properties);
 }
 
-function evaluate(recipeId, state, {
+export function evaluateFixture026RsdT02State(recipeId, state, {
   v_by_channel: vByChannel,
   active_channel: activeChannel,
   time_constant_s: timeConstantS,
@@ -128,17 +128,31 @@ function addScaled(state, derivative, scale) {
   return state.map((value, index) => value + derivative[index] * scale);
 }
 
-function rk4Step(recipeId, state, timeS, stepS, contextAt) {
+function derivativeWithFrozenState(recipeId, state, context) {
+  const observation = evaluateFixture026RsdT02State(recipeId, state, context);
+  const derivative = [...observation.derivative];
+  if (context.frozen_state_index !== null && context.frozen_state_index !== undefined) {
+    if (
+      !Number.isSafeInteger(context.frozen_state_index)
+      || context.frozen_state_index < 0
+      || context.frozen_state_index >= derivative.length
+    ) throw new TypeError("Fixture 026 RSD-T02 frozen state index is invalid.");
+    derivative[context.frozen_state_index] = 0;
+  }
+  return derivative;
+}
+
+export function rk4Fixture026RsdT02Step(recipeId, state, timeS, stepS, contextAt) {
   const c1 = contextAt(timeS);
-  const k1 = evaluate(recipeId, state, c1).derivative;
+  const k1 = derivativeWithFrozenState(recipeId, state, c1);
   const c2 = contextAt(timeS + stepS / 2);
-  const k2 = evaluate(recipeId, addScaled(state, k1, stepS / 2), c2).derivative;
-  const k3 = evaluate(recipeId, addScaled(state, k2, stepS / 2), c2).derivative;
+  const k2 = derivativeWithFrozenState(recipeId, addScaled(state, k1, stepS / 2), c2);
+  const k3 = derivativeWithFrozenState(recipeId, addScaled(state, k2, stepS / 2), c2);
   const endTimeS = timeS + stepS;
   const leftLimitEndTimeS = endTimeS
     - 4 * Number.EPSILON * Math.max(1, Math.abs(endTimeS));
   const c4 = contextAt(leftLimitEndTimeS);
-  const k4 = evaluate(recipeId, addScaled(state, k3, stepS), c4).derivative;
+  const k4 = derivativeWithFrozenState(recipeId, addScaled(state, k3, stepS), c4);
   return state.map((value, index) => value + (stepS / 6) * (
     k1[index] + 2 * k2[index] + 2 * k3[index] + k4[index]
   ));
@@ -153,6 +167,9 @@ export function simulateFixture026RsdT02Episode({
   input_at: inputAt,
   active_channel_at: activeChannelAt = () => "A",
   output_clamped_at: outputClampedAt = () => false,
+  initialization_id: initializationId = null,
+  state_reset: stateReset = null,
+  state_freeze: stateFreeze = null,
 }) {
   recipeFor(recipeId);
   assertFinitePositive(horizonS, "Fixture 026 RSD-T02 horizon");
@@ -164,6 +181,35 @@ export function simulateFixture026RsdT02Episode({
     || typeof activeChannelAt !== "function"
     || typeof outputClampedAt !== "function"
   ) throw new TypeError("Fixture 026 RSD-T02 episode functions are required.");
+  if (initializationId !== null) fixture026RsdT02OpaqueStatePermutation(initializationId);
+  const resetSpecified = stateReset !== null;
+  const freezeSpecified = stateFreeze !== null;
+  if ((resetSpecified || freezeSpecified) && initializationId === null) {
+    throw new TypeError("Fixture 026 RSD-T02 opaque-state interventions require an initialization ID.");
+  }
+  for (const [label, intervention, keys] of [
+    ["reset", stateReset, ["time_s", "state_handle"]],
+    ["freeze", stateFreeze, ["start_time_s", "end_time_s", "state_handle"]],
+  ]) {
+    if (intervention === null) continue;
+    if (
+      !intervention
+      || typeof intervention !== "object"
+      || Array.isArray(intervention)
+      || Object.keys(intervention).length !== keys.length
+      || !keys.every((key) => Object.hasOwn(intervention, key))
+      || !["H0", "H1"].includes(intervention.state_handle)
+    ) throw new TypeError(`Fixture 026 RSD-T02 ${label} intervention is invalid.`);
+  }
+  if (resetSpecified && (!Number.isFinite(stateReset.time_s) || stateReset.time_s < 0)) {
+    throw new TypeError("Fixture 026 RSD-T02 reset time is invalid.");
+  }
+  if (freezeSpecified && (
+    !Number.isFinite(stateFreeze.start_time_s)
+    || !Number.isFinite(stateFreeze.end_time_s)
+    || stateFreeze.start_time_s < 0
+    || stateFreeze.end_time_s <= stateFreeze.start_time_s
+  )) throw new TypeError("Fixture 026 RSD-T02 freeze interval is invalid.");
   const internalSteps = horizonS / internalStepS;
   const internalStepsPerSample = 1 / (internalStepS * outputRateHz);
   if (
@@ -172,6 +218,10 @@ export function simulateFixture026RsdT02Episode({
     || internalStepsPerSample < 1
   ) throw new RangeError("Fixture 026 RSD-T02 horizon and rates must align exactly.");
 
+  const permutation = initializationId === null
+    ? null
+    : fixture026RsdT02OpaqueStatePermutation(initializationId);
+  const stateIndex = (stateHandle) => permutation[stateHandle === "H0" ? 0 : 1];
   const contextAt = (timeS) => {
     const input = inputAt(timeS);
     const vByChannel = typeof input === "number" ? { A: input, B: input } : input;
@@ -180,14 +230,26 @@ export function simulateFixture026RsdT02Episode({
       active_channel: activeChannelAt(timeS),
       time_constant_s: timeConstantS,
       reported_output_clamped: outputClampedAt(timeS),
+      frozen_state_index: freezeSpecified
+        && timeS >= stateFreeze.start_time_s
+        && timeS < stateFreeze.end_time_s
+        ? stateIndex(stateFreeze.state_handle)
+        : null,
     };
   };
-  let state = [...initialFixture026RsdT02State(recipeId)];
+  const initialState = [...initialFixture026RsdT02State(recipeId)];
+  let state = [...initialState];
   const samples = [];
+  let resetApplied = false;
   for (let internalIndex = 0; internalIndex <= internalSteps; internalIndex += 1) {
     const timeS = internalIndex * internalStepS;
+    if (resetSpecified && !resetApplied && timeS === stateReset.time_s) {
+      const index = stateIndex(stateReset.state_handle);
+      state[index] = initialState[index];
+      resetApplied = true;
+    }
     if (internalIndex % internalStepsPerSample === 0) {
-      const observation = evaluate(recipeId, state, contextAt(timeS));
+      const observation = evaluateFixture026RsdT02State(recipeId, state, contextAt(timeS));
       samples.push(Object.freeze({
         time_s: timeS,
         output: observation.reported_output,
@@ -195,7 +257,7 @@ export function simulateFixture026RsdT02Episode({
       }));
     }
     if (internalIndex < internalSteps) {
-      state = rk4Step(recipeId, state, timeS, internalStepS, contextAt);
+      state = rk4Fixture026RsdT02Step(recipeId, state, timeS, internalStepS, contextAt);
     }
   }
   return Object.freeze({

@@ -11,14 +11,14 @@ The four rows below are mutually exclusive highest-reached tiers.
 
 | Highest coverage tier | Claims | Share of 1555 | Meaning |
 | --- | ---: | ---: | --- |
-| ledger-only | 93 | 6.0% | no exact direct relation to a numbered experiment artifact |
+| ledger-only | 92 | 5.9% | no exact direct relation to a numbered experiment artifact |
 | linked test description | 0 | 0.0% | related experiment prose exists, but at least one required protocol facet is absent |
-| protocol-complete test contract | 1462 | 94.0% | at least one linked artifact contains all eight required facets |
+| protocol-complete test contract | 1463 | 94.1% | at least one linked artifact contains all eight required facets |
 | workstation-executable | 0 | 0.0% | checked execution manifest and runnable scientific harness exist |
 
-The short answer is therefore **1462 claims have a complete
+The short answer is therefore **1463 claims have a complete
 test description, but 0 are executable on the workstation**.
-Across both description tiers, 1462 claims have an exact direct
+Across both description tiers, 1463 claims have an exact direct
 relation to at least one experiment artifact. These are aggregate candidate
 tests: they evaluate engineering translations supported by several claims; they
 do not independently reproduce every source paper.
@@ -27,9 +27,9 @@ do not independently reproduce every source paper.
 
 | Highest tier | Established | Plausible | Speculative | Disputed | Unknown |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| ledger-only | 80 | 9 | 0 | 4 | 0 |
+| ledger-only | 79 | 9 | 0 | 4 | 0 |
 | linked-description | 0 | 0 | 0 | 0 | 0 |
-| protocol-complete | 1136 | 210 | 60 | 47 | 9 |
+| protocol-complete | 1137 | 210 | 60 | 47 | 9 |
 | workstation-executable | 0 | 0 | 0 | 0 | 0 |
 
 ## Why ledger-only claims remain unlinked
@@ -42,13 +42,12 @@ classification itself as a test.
 | evidence-input | 81 | scientific or engineering evidence that constrains a translation but is not itself a standalone AI-system hypothesis |
 | source-reproduction | 11 | a source-domain result whose direct test would reproduce the cited study rather than evaluate this project's AI system |
 | existing-artifact-gap | 0 | an engineering consequence belongs in an existing artifact, but its exact traceability or track is still missing |
-| new-artifact-needed | 1 | a project engineering hypothesis needs a new experiment contract |
+| new-artifact-needed | 0 | a project engineering hypothesis needs a new experiment contract |
 
-The 1 unresolved engineering claims
-collapse into 1 proposed experiment families.
-Their minimum promotion contracts are kept in the
-[proposed-artifact backlog](proposed/README.md). The source fragments and schema
-are in [claim dispositions](claim-dispositions/README.md).
+No unresolved `new-artifact-needed` disposition remains. Promoted family
+records are retained as design provenance in the
+[experiment-family provenance](proposed/README.md). The source fragments and
+schema are in [claim dispositions](claim-dispositions/README.md).
 
 ## What “complete test description” means
 
@@ -78,9 +77,9 @@ A relation exists when either side states it exactly:
 
 Inclusive ranges are expanded only when both endpoints have exact matching
 links. Prose numbers and indirect adoption-matrix associations do not count.
-The union yields 1462 linked claims: 1245
-appear on the claim side, 1152 on the document side, and
-798 have at least one reciprocal same-artifact relation.
+The union yields 1463 linked claims: 1246
+appear on the claim side, 1153 on the document side, and
+799 have at least one reciprocal same-artifact relation.
 
 ## Artifact coverage
 
@@ -136,14 +135,14 @@ Smoke readiness verifies deterministic plumbing but cannot promote a claim.
 | [fixture-023](fixtures/023-plant-plasticity-memory-signalling.md) | 10 | complete description | smoke-ready; not executable |
 | [fixture-024](fixtures/024-applied-multiscale-reduction.md) | 4 | complete description | smoke-ready; not executable |
 | [fixture-025](fixtures/025-electrochemistry-interface-memory-degradation.md) | 10 | complete description | smoke-ready; not executable |
-| [fixture-026](fixtures/026-interface-qualified-relative-sensing.md) | 14 | complete description | smoke-ready; not executable |
+| [fixture-026](fixtures/026-interface-qualified-relative-sensing.md) | 15 | complete description | smoke-ready; not executable |
 | [fixture-027](fixtures/027-interface-qualified-retroactivity-insulation.md) | 10 | complete description | smoke-ready; not executable |
 
 ## Immediate gaps
 
-- 93 claims remain ledger-only: 81
+- 92 claims remain ledger-only: 81
   evidence inputs, 11 source-domain
-  reproductions, and 1 claims needing
+  reproductions, and 0 claims needing
   a new project experiment artifact.
 - 0 ledger-only claims still belong
   in an existing artifact but lack an exact traceability or test track.

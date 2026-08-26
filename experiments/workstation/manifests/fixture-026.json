@@ -52,7 +52,11 @@
       "experiments/workstation/fixture-026/scientific-grid.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-contract.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-models.test.mjs",
-      "experiments/workstation/fixture-026/rsd-t02-floor.test.mjs"
+      "experiments/workstation/fixture-026/rsd-t02-floor.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-generator.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-evaluator.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-event.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-runner.test.mjs"
     ],
     "full_tests": [
       "experiments/workstation/fixture-026/contract.test.mjs",
@@ -60,11 +64,19 @@
       "experiments/workstation/fixture-026/scientific-grid.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-contract.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-models.test.mjs",
-      "experiments/workstation/fixture-026/rsd-t02-floor.test.mjs"
+      "experiments/workstation/fixture-026/rsd-t02-floor.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-generator.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-evaluator.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-event.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-runner.test.mjs"
     ],
+    "t02_entrypoint": "experiments/workstation/fixture-026/rsd-t02-runner.mjs",
+    "t02_schema": "experiments/workstation/fixture-026/rsd-t02-output.schema.json",
+    "t02_config": "experiments/workstation/fixture-026/configs/rsd-t02-bounded-conformance.json",
     "implemented_tracks": ["RSD-T01"],
     "contract_frozen_tracks": ["RSD-T01", "RSD-T02"],
-    "foundation_only_tracks": ["RSD-T02"],
+    "construction_conformance_runtime_tracks": ["RSD-T02"],
+    "foundation_only_strata": ["RSD-T02-FLOOR"],
     "execution_claims": ["C-1540"]
   },
   "energy": {
@@ -106,7 +118,7 @@
         "A prospective observation cut and the registered simultaneous property-performance/trajectory-conformance primary endpoint, paired powered statistics, uncertainty intervals, and multiplicity control are absent.",
         "No confirmation or transfer seed, commitment, private custody record, release, or promotion evidence exists.",
         "No calibrated workstation timing, memory, or energy measurement exists, and energy conclusions are forbidden.",
-        "The RSD-T02 contract, initialized model bank, intervention panel, equivalence certificates, scoring rules, and singular-floor grid are frozen as a public-development foundation, but no complete T02 episode generator/evaluator runner, actionable arm, event/output schema, run ledger, analysis artifact, confirmation custody, or result exists; T02 remains foundation-only with NO_RESULT authority.",
+        "T02-MECH now has a deterministic bounded public-development construction/conformance generator, evaluator-only graph oracle, closed event/output schema, typed cost vector, append-only ledger, resume, pair matrices, and recomputed analysis. Its nine actionable arms remain unimplemented and forced to abstain; the profile executes only a hashed one/two-seed ordered prefix, not the full 64-seed pack; O2, T02-FLOOR execution and asymptotic authority, comparison and claim authority, confirmation custody, workstation measurement, energy evidence, and any result remain absent. Every T02 artifact is NO_RESULT.",
         "RSD-T03 through RSD-T10 have no machine contract or implementation.",
         "Every generated event and command result is explicitly labelled NO_RESULT."
       ]

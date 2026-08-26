@@ -1,0 +1,292 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t02-event.v1.schema.json",
+  "title": "Fixture 026 RSD-T02 public-development construction event",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "rsd-t02-event.mjs",
+    "export": "assertFixture026RsdT02Event",
+    "version_export": "FIXTURE_026_RSD_T02_EVENT_VERSION",
+    "contract_version": "fixture-026.rsd-t02-event.v1",
+    "test": "rsd-t02-event.test.mjs"
+  },
+  "required": [
+    "schema", "contract_version", "artifact", "track", "run_id", "profile", "partition",
+    "seed", "execution_id", "work_key", "command_id", "recipe_id", "equation_id",
+    "initialization_id", "episode_id", "intervention_family", "regime_membership",
+    "background_u", "time_constant_s", "schedule_sha256", "transcript_sha256",
+    "reported_output_sha256", "internal_output_sha256", "projection_sha256",
+    "projection_hashes_by_actionable_arm", "projection_utf8_bytes", "response",
+    "response_sha256", "evaluator", "gate_decision", "cost_vector",
+    "serialized_event_bytes_written", "execution_claims", "excluded_claims", "status",
+    "result_label", "no_result", "claim_eligible", "comparison_inference_permitted",
+    "scientific_result", "performance_result", "measured_energy_present",
+    "energy_conclusion_allowed", "interpretation", "integrity"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-026.rsd-t02-event.v1" },
+    "artifact": { "const": "fixture-026" },
+    "track": { "const": "RSD-T02" },
+    "run_id": { "$ref": "#/$defs/hash" },
+    "profile": { "enum": ["smoke", "development"] },
+    "partition": { "const": "public-development" },
+    "seed": {
+      "type": "string",
+      "pattern": "^(?:0|[1-9][0-9]{0,18}|1[0-7][0-9]{18}|18[0-3][0-9]{17}|184[0-3][0-9]{16}|1844[0-5][0-9]{15}|18446[0-6][0-9]{14}|184467[0-3][0-9]{13}|1844674[0-3][0-9]{12}|184467440[0-6][0-9]{10}|1844674407[0-2][0-9]{9}|18446744073[0-6][0-9]{8}|1844674407370[0-8][0-9]{6}|18446744073709[0-4][0-9]{5}|184467440737095[0-4][0-9]{4}|18446744073709550[0-9]{3}|18446744073709551[0-5][0-9]{2}|1844674407370955160[0-9]|1844674407370955161[0-4]|18446744073709551615)$"
+    },
+    "execution_id": { "type": "string", "minLength": 1 },
+    "work_key": { "type": "string", "minLength": 1 },
+    "command_id": { "$ref": "#/$defs/hash" },
+    "recipe_id": {
+      "enum": ["M-I1-FFL", "M-NONLINEAR-FEEDBACK", "M-RECEPTOR-MEMORY", "M-STATIC-HIGHPASS", "M-LOG-HIGHPASS"]
+    },
+    "equation_id": {
+      "enum": ["t02-iffl-affine-reference", "t02-nonlinear-output-feedback", "t02-channel-local-reference", "t02-static-affine-highpass", "t02-log-difference-highpass"]
+    },
+    "initialization_id": { "$ref": "#/$defs/hash" },
+    "episode_id": { "type": "string", "minLength": 1 },
+    "intervention_family": { "type": "string", "minLength": 1 },
+    "regime_membership": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "enum": ["O0-MATCHED-STEP", "O1-FULL-PANEL"] }
+    },
+    "background_u": { "type": "number", "exclusiveMinimum": 0 },
+    "time_constant_s": { "enum": [0.5, 1, 2] },
+    "schedule_sha256": { "$ref": "#/$defs/hash" },
+    "transcript_sha256": { "$ref": "#/$defs/hash" },
+    "reported_output_sha256": { "$ref": "#/$defs/hash" },
+    "internal_output_sha256": { "$ref": "#/$defs/hash" },
+    "projection_sha256": { "$ref": "#/$defs/hash" },
+    "projection_hashes_by_actionable_arm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["A-RAW", "B-STATIC-DIV", "B-STREAM", "B-LOG-RATIO", "B-DIFFERENCE", "B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK", "C-DUAL"],
+      "properties": {
+        "A-RAW": { "$ref": "#/$defs/hash" },
+        "B-STATIC-DIV": { "$ref": "#/$defs/hash" },
+        "B-STREAM": { "$ref": "#/$defs/hash" },
+        "B-LOG-RATIO": { "$ref": "#/$defs/hash" },
+        "B-DIFFERENCE": { "$ref": "#/$defs/hash" },
+        "B-STATE-SPACE": { "$ref": "#/$defs/hash" },
+        "B-RECURRENT": { "$ref": "#/$defs/hash" },
+        "C-MECHANISM-BANK": { "$ref": "#/$defs/hash" },
+        "C-DUAL": { "$ref": "#/$defs/hash" }
+      }
+    },
+    "projection_utf8_bytes": { "type": "integer", "minimum": 1 },
+    "response": { "$ref": "#/$defs/response" },
+    "response_sha256": { "$ref": "#/$defs/hash" },
+    "evaluator": { "$ref": "#/$defs/evaluator" },
+    "gate_decision": { "const": "accepted" },
+    "cost_vector": { "$ref": "#/$defs/cost" },
+    "serialized_event_bytes_written": { "type": "integer", "minimum": 1 },
+    "execution_claims": { "const": [] },
+    "excluded_claims": { "const": ["C-1561", "C-1564"] },
+    "status": { "const": "public-development-conformance-only" },
+    "result_label": { "const": "NO_RESULT" },
+    "no_result": { "const": true },
+    "claim_eligible": { "const": false },
+    "comparison_inference_permitted": { "const": false },
+    "scientific_result": { "const": false },
+    "performance_result": { "const": false },
+    "measured_energy_present": { "const": false },
+    "energy_conclusion_allowed": { "const": false },
+    "interpretation": { "const": "NO_RESULT: deterministic public-development RSD-T02 mechanism-construction, firewall, schedule, equivalence, and resume conformance only; no actionable estimator, comparison, scientific result, performance result, or energy result." },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "previous_sha256", "record_sha256"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 0 },
+        "previous_sha256": { "$ref": "#/$defs/hash" },
+        "record_sha256": { "$ref": "#/$defs/hash" }
+      }
+    }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "armResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arm_id", "projection_sha256", "action", "reason"],
+      "properties": {
+        "arm_id": { "type": "string", "minLength": 1 },
+        "projection_sha256": { "$ref": "#/$defs/hash" },
+        "action": { "const": "abstain" },
+        "reason": { "const": "actionable-arm-not-implemented-or-eligible" }
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "artifact", "track", "execution_id", "actionable_arm_responses", "evaluator_oracle_access", "response_role", "result_label", "no_result"],
+      "properties": {
+        "schema": { "const": 1 },
+        "artifact": { "const": "fixture-026" },
+        "track": { "const": "RSD-T02" },
+        "execution_id": { "type": "string", "minLength": 1 },
+        "actionable_arm_responses": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "items": { "$ref": "#/$defs/armResponse" }
+        },
+        "evaluator_oracle_access": { "const": false },
+        "response_role": { "const": "system-abstention-before-evaluator-open" },
+        "result_label": { "const": "NO_RESULT" },
+        "no_result": { "const": true }
+      }
+    },
+    "propertyVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["drive_transform", "reported_output_feedback_edge", "channel_local_state", "causal_memory"],
+      "properties": {
+        "drive_transform": { "enum": ["affine-fold", "log-fold"] },
+        "reported_output_feedback_edge": { "type": "boolean" },
+        "channel_local_state": { "type": "boolean" },
+        "causal_memory": { "const": true }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_domain", "transformation", "instrument", "initialization", "causal_observation", "evaluation_window"],
+      "properties": {
+        "input_domain": { "const": "inside" },
+        "transformation": { "const": "inside" },
+        "instrument": { "const": "inside" },
+        "initialization": { "const": "inside" },
+        "causal_observation": { "const": "inside" },
+        "evaluation_window": { "const": "inside" }
+      }
+    },
+    "evaluator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "contract_version", "artifact", "track", "evaluator_id", "evaluator_role", "transcript_sha256", "response_commitment_sha256", "evaluator_opened_after_response", "recipe_id", "equation_id", "property_vector", "full_panel_equivalence_class", "sample_count", "schedule_semantics_valid", "maximum_input_schedule_residual_u", "initialization_residual", "canonical_step_residual", "reported_output_min", "reported_output_max", "support_membership", "authority", "result_label", "no_result"],
+      "allOf": [{
+        "oneOf": [
+          {
+            "properties": {
+              "recipe_id": { "const": "M-I1-FFL" },
+              "equation_id": { "const": "t02-iffl-affine-reference" },
+              "property_vector": { "properties": {
+                "drive_transform": { "const": "affine-fold" },
+                "reported_output_feedback_edge": { "const": false },
+                "channel_local_state": { "const": false },
+                "causal_memory": { "const": true }
+              } },
+              "full_panel_equivalence_class": { "const": "E-AFFINE-INPUT-MEMORY" }
+            }
+          },
+          {
+            "properties": {
+              "recipe_id": { "const": "M-NONLINEAR-FEEDBACK" },
+              "equation_id": { "const": "t02-nonlinear-output-feedback" },
+              "property_vector": { "properties": {
+                "drive_transform": { "const": "affine-fold" },
+                "reported_output_feedback_edge": { "const": true },
+                "channel_local_state": { "const": false },
+                "causal_memory": { "const": true }
+              } },
+              "full_panel_equivalence_class": { "const": "E-OUTPUT-FEEDBACK" }
+            }
+          },
+          {
+            "properties": {
+              "recipe_id": { "const": "M-RECEPTOR-MEMORY" },
+              "equation_id": { "const": "t02-channel-local-reference" },
+              "property_vector": { "properties": {
+                "drive_transform": { "const": "affine-fold" },
+                "reported_output_feedback_edge": { "const": false },
+                "channel_local_state": { "const": true },
+                "causal_memory": { "const": true }
+              } },
+              "full_panel_equivalence_class": { "const": "E-CHANNEL-LOCAL-MEMORY" }
+            }
+          },
+          {
+            "properties": {
+              "recipe_id": { "const": "M-STATIC-HIGHPASS" },
+              "equation_id": { "const": "t02-static-affine-highpass" },
+              "property_vector": { "properties": {
+                "drive_transform": { "const": "affine-fold" },
+                "reported_output_feedback_edge": { "const": false },
+                "channel_local_state": { "const": false },
+                "causal_memory": { "const": true }
+              } },
+              "full_panel_equivalence_class": { "const": "E-AFFINE-INPUT-MEMORY" }
+            }
+          },
+          {
+            "properties": {
+              "recipe_id": { "const": "M-LOG-HIGHPASS" },
+              "equation_id": { "const": "t02-log-difference-highpass" },
+              "property_vector": { "properties": {
+                "drive_transform": { "const": "log-fold" },
+                "reported_output_feedback_edge": { "const": false },
+                "channel_local_state": { "const": false },
+                "causal_memory": { "const": true }
+              } },
+              "full_panel_equivalence_class": { "const": "E-LOG-INPUT-MEMORY" }
+            }
+          }
+        ]
+      }],
+      "properties": {
+        "schema": { "const": 1 },
+        "contract_version": { "const": "fixture-026.rsd-t02-evaluator.v1" },
+        "artifact": { "const": "fixture-026" },
+        "track": { "const": "RSD-T02" },
+        "evaluator_id": { "const": "O-GRAPH" },
+        "evaluator_role": { "const": "evaluator-only" },
+        "transcript_sha256": { "$ref": "#/$defs/hash" },
+        "response_commitment_sha256": { "$ref": "#/$defs/hash" },
+        "evaluator_opened_after_response": { "const": true },
+        "recipe_id": { "enum": ["M-I1-FFL", "M-NONLINEAR-FEEDBACK", "M-RECEPTOR-MEMORY", "M-STATIC-HIGHPASS", "M-LOG-HIGHPASS"] },
+        "equation_id": { "enum": ["t02-iffl-affine-reference", "t02-nonlinear-output-feedback", "t02-channel-local-reference", "t02-static-affine-highpass", "t02-log-difference-highpass"] },
+        "property_vector": { "$ref": "#/$defs/propertyVector" },
+        "full_panel_equivalence_class": { "enum": ["E-AFFINE-INPUT-MEMORY", "E-OUTPUT-FEEDBACK", "E-CHANNEL-LOCAL-MEMORY", "E-LOG-INPUT-MEMORY"] },
+        "sample_count": { "const": 1537 },
+        "schedule_semantics_valid": { "const": true },
+        "maximum_input_schedule_residual_u": { "type": "number", "minimum": 0, "maximum": 1e-14 },
+        "initialization_residual": { "type": "number", "minimum": 0, "maximum": 1e-12 },
+        "canonical_step_residual": { "type": ["number", "null"], "minimum": 0, "maximum": 1e-10 },
+        "reported_output_min": { "type": "number" },
+        "reported_output_max": { "type": "number" },
+        "support_membership": { "$ref": "#/$defs/support" },
+        "authority": { "const": "construction-validation-only" },
+        "result_label": { "const": "NO_RESULT" },
+        "no_result": { "const": true }
+      }
+    },
+    "cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["episodes", "sample_rows", "serialized_observation_bytes", "input_commands", "internal_resets", "internal_freezes", "output_clamps", "channel_switches", "state_writes", "scalar_operations", "transcendental_evaluations", "retained_state_bytes", "parameter_bytes", "tuning_trials", "wall_seconds", "later_joules"],
+      "properties": {
+        "episodes": { "const": 1 },
+        "sample_rows": { "const": 1537 },
+        "serialized_observation_bytes": { "type": "integer", "minimum": 1 },
+        "input_commands": { "type": "integer", "minimum": 1 },
+        "internal_resets": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "internal_freezes": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "output_clamps": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "channel_switches": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "state_writes": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "scalar_operations": { "type": "null" },
+        "transcendental_evaluations": { "type": "null" },
+        "retained_state_bytes": { "const": 16 },
+        "parameter_bytes": { "type": "null" },
+        "tuning_trials": { "const": 0 },
+        "wall_seconds": { "type": "null" },
+        "later_joules": { "type": "null" }
+      }
+    }
+  }
+}

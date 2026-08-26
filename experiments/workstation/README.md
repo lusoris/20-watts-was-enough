@@ -117,7 +117,9 @@ tracks, private partitions, physical apparatus, and scientific adjudication
 remain absent; every event is `NO_RESULT`.
 
 [Fixture F-026](fixture-026/README.md) implements a bounded public-development
-generator-only smoke slice for C-1540 / RSD-T01. Every public seed contains the
+generator-only smoke slice for C-1540 / RSD-T01 and a separate deterministic
+bounded T02-MECH construction/conformance runtime. Every RSD-T01 public seed
+contains the
 exact five-generator-family × four-history Cartesian grid plus four distinct
 malformed-interface sentinels. The harness uses canonical decimal-string
 uint64 seeds, seed-dependent band-limited stochastic histories, shared
@@ -128,8 +130,14 @@ its properties overlap. The two legacy probes have unequal
 information and incomplete resource budgets, so they cannot support a
 property-performance, arm-comparison, or efficiency conclusion. The full null
 stack, scientific hostile grid, private partitions, powered statistics,
-reference lifecycle, calibrated workstation measurements, and RSD-T02--RSD-T10
-remain absent. Every event and successful response is `NO_RESULT`.
+reference lifecycle and calibrated workstation measurements remain absent.
+T02-MECH now supplies a closed generator/evaluator for three O0 descriptors
+crossed with three conditioned time scales and an exact 26-episode O1 panel,
+plus a policy firewall, typed event schema, append-only resume ledger and
+recomputed construction analysis over a hashed one/two-seed ordered prefix. Its actionable
+arms, comparison and claim authority, O2, T02-FLOOR execution, confirmation,
+workstation and energy results remain absent; RSD-T03--RSD-T10 remain absent.
+Every event and successful response is `NO_RESULT`.
 
 [Fixture F-027](fixture-027/README.md) implements a bounded public-development
 smoke slice for C-1550 / RIN-T01. It generates six synthetic source--load

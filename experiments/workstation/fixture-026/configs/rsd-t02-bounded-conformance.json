@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "artifact": "fixture-026",
+  "track": "RSD-T02",
+  "partition": "public-development",
+  "authority": "bounded-construction-conformance-only",
+  "seed_selection": "ordered-prefix-of-public-development-reveal",
+  "source_seed_count": 64,
+  "profiles": {
+    "smoke": {
+      "construction_seed_count": 1,
+      "work_units": 175
+    },
+    "development": {
+      "construction_seed_count": 2,
+      "work_units": 350
+    }
+  },
+  "full_public_development_pack_executed": false,
+  "result_label": "NO_RESULT",
+  "claim_eligible": false
+}

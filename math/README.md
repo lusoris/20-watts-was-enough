@@ -83,6 +83,11 @@ notation.
   defines matched-step causal recipes, property-vector and equivalence-set
   inference, intervention-qualified separation, calibrated abstention, and the
   supremum-norm fast-boundary-layer contract for RSD-T02.
+- [`repeated-stimulus-topology-signatures.md`](repeated-stimulus-topology-signatures.md)
+  defines the source-shaped response-driven/input-driven inhibitor pair,
+  adaptation and single-response support, refractory maximizer uncertainty,
+  response count and latency, subharmonic recurrence, counterworlds and
+  one-sided disposition for RSD-T02-PULSE.
 - [`interface-qualified-retroactivity.md`](interface-qualified-retroactivity.md)
   defines full and reduced downstream-binding dynamics, paired connection
   sensitivity, service-qualified attenuation, causal load discrimination,

@@ -344,10 +344,12 @@ recipe.
 
 The observation regimes are:
 
-1. `O0-MATCHED-STEP`: three episodes and at most 4,611 sample rows; every
-   varying structural coordinate requires abstention.
-2. `O1-FULL-PANEL`: all 26 episodes and at most 39,962 sample rows; this is the
-   future fixed-panel primary regime.
+1. `O0-MATCHED-STEP`: three background episodes and at most 4,611 sample rows
+   per conditioned $\tau_*$ model instance. The construction runtime crosses
+   $\tau_*=0.5,1,2,\mathrm s$, so each recipe has nine executions and 13,833
+   rows; every varying structural coordinate requires abstention.
+2. `O1-FULL-PANEL`: all 26 episodes and at most 39,962 sample rows at the fixed
+   $\tau_*=1,\mathrm s$ construction scope; this is the full-panel regime.
 3. `O2-SELECT6`: the three step episodes plus at most six selected queries, no
    more than two privileged internal queries, and at most 13,833 sample rows;
    it is a secondary active-design regime.
@@ -359,8 +361,9 @@ The repeated-pulse grid is retained because the Rahi evidence makes
 refractory stabilization and period skipping useful one-sided signatures in a
 different bounded model class. The current five-world bank does not instantiate
 that signature: its registered feedback nonlinearity is zero at both square-
-pulse levels. C-1561 therefore remains a future pulse-signature extension, not
-a claim supported by these construction tests.
+pulse levels. C-1561 is specified separately in the
+[repeated-stimulus topology-signature contract](repeated-stimulus-topology-signatures.md);
+it is not a claim supported by these five-world construction tests.
 
 ## Calibration and abstention
 
@@ -600,7 +603,8 @@ retains at least:
 
 The foundation suggests future caps of one CPU thread, binary64 arithmetic,
 16 retained scalars, 512 trainable scalars and 32 tuning trials. They are not
-active parity claims because the algorithms and complete ledger are absent.
+active parity claims because actionable algorithms and a complete arm-level
+parity/resource ledger are absent.
 
 ## Support and fail-closed cases
 
@@ -637,6 +641,15 @@ The machine registry states:
 }
 ```
 
+The registry is the foundation authority, not the execution result. A separate
+deterministic bounded public-development runtime now consumes the T02-MECH
+registry to generate all O0/O1 construction episodes, enforce the policy
+firewall and response commitment, reconstruct evaluator truth, retain a typed
+cost vector, and validate append-only resume. Every event and analysis remains
+`NO_RESULT`; actionable arms, comparisons, claim eligibility, O2, T02-FLOOR
+execution, confirmation, workstation measurement and energy conclusions are
+absent.
+
 The future T02 comparison is killed if any of the following occurs:
 
 1. step fit, recipe name or graph access supplies the primary answer;
@@ -648,7 +661,8 @@ The future T02 comparison is killed if any of the following occurs:
 7. a mechanism-specific bank cannot beat the generic state-space/recurrent
    null under the same projection and budget.
 
-The current foundation can test equations, exact step matching, operational
-equivalence, registry closure, abstention scoring and temporal-grid coverage.
-It cannot support architecture superiority, natural-mechanism attribution,
+The current foundation and construction runtime can test equations, exact step
+matching, operational equivalence, registry closure, schedule semantics,
+abstention aggregation, replay integrity and temporal-grid coverage. They
+cannot support architecture superiority, natural-mechanism attribution,
 workstation readiness or energy efficiency.

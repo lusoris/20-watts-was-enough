@@ -7,21 +7,36 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- F-026 now executes the bounded `T02-MECH` construction/conformance slice
+  through the fixture runner. Each canonical seed produces 175 closed-schema
+  records: three O0 episode descriptors crossed with three conditioned time
+  scales for five recipes, plus an exact 26-episode O1 panel for the same
+  recipes. An independent evaluator, policy firewall, canonical uint64 seed
+  encoding, append-only LF JSONL ledger, semantic replay, checkpoint/resume,
+  path-containment checks and an exclusive writer lease fail closed to
+  `NO_RESULT`. The exact 64-seed source pack is frozen; the one- and two-seed
+  prefixes are plumbing runs, not substitutes for that pack. O2, T02-FLOOR,
+  actionable estimator arms, comparisons, confirmation custody and result or
+  energy authority remain absent. The C-1561 repeated-pulse subtrack now has a
+  source-traceable written protocol with support, refractory, slope, count,
+  latency and period-skipping gates, but no machine constructor or execution
+  claim. Generated coverage records 1,463 of 1,555 claims as protocol-covered
+  and zero as workstation-executable.
+
 - Decision 0019 and the F-026 `RSD-T02` foundation now separate four scored
   interventional properties, exact input-output equivalence and justified
   abstention from generator-recipe names. Five initialized two-state recipes
   share one canonical fold-step trajectory before a fixed 26-episode panel;
   three observation regimes, nine ineligible actionable arms, one
   evaluator-only graph oracle, all ten recipe-pair certificates and a typed
-  acquisition-cost vector are machine frozen. A separate 105-cell singular
+  acquisition-cost vector were machine frozen at the foundation checkpoint. A
+  separate 105-cell singular
   perturbation grid makes the source-supported fast-boundary-layer supremum
-  norm primary and keeps RMS diagnostic. The modules remain outside the runner:
-  no T02 arm, result artifact, confirmation custody, comparison authority or
-  execution claim was created, and `NO_RESULT` remains mandatory. Twenty-one
-  focused tests pass, including closed-registry mutation checks and numerical
-  reproduction of every declared separating episode. The Rahi-style pulse
-  signature remains explicitly uninstantiated rather than receiving false test
-  coverage.
+  norm primary and keeps RMS diagnostic. That checkpoint created no T02 arm,
+  result artifact, confirmation custody, comparison authority or execution
+  claim, and `NO_RESULT` remains mandatory. Its focused tests include
+  closed-registry mutation checks and numerical reproduction of every declared
+  separating episode.
 
 - Decision 0018 and an isolated F-026 scientific-grid contract now freeze the
   prerequisite for any RSD-T01 comparator expansion. The contract enumerates

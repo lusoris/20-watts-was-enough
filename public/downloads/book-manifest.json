@@ -2,7 +2,7 @@
   "schema_version": 1,
   "title": "20 Watts Was Enough — Full Concept Book",
   "pdf": "public/downloads/20-watts-was-enough-full-concept-book.pdf",
-  "source_digest": "b4db369d5005032660b97e04462610d715a8474eb361b5bbe05da8443daec467",
+  "source_digest": "5fd6a5f9476d95c9b0a470bceb42ef8e76dbb1b0b9115c6ac5c55d3d019a697a",
   "source_files": [
     "app/book-content.ts",
     "app/book/page.tsx",
@@ -59,6 +59,7 @@
     "math/proof-discovery-verification-contract.md",
     "math/query-registered-preservation.md",
     "math/regime-qualified-flow-contract.md",
+    "math/repeated-stimulus-topology-signatures.md",
     "math/representative-adaptive-performance.md",
     "math/state-qualified-intervention.md",
     "math/typed-tolerance-lifecycle.md",
@@ -96,9 +97,9 @@
     "scripts/generate-book-pdf.mjs",
     "vite.config.ts"
   ],
-  "book_documents": 50,
+  "book_documents": 51,
   "generated_front_matter_sections": 1,
   "rendered_diagrams": 48,
-  "generated_at": "2026-08-26T12:27:26.329Z",
-  "size_bytes": 12085325
+  "generated_at": "2026-08-26T13:46:44.233Z",
+  "size_bytes": 12234696
 }

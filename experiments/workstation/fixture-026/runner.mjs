@@ -46,6 +46,7 @@ import {
   assertFixture026Registry,
   extractFixture026Registry,
 } from "./registry.mjs";
+import { mainFixture026RsdT02 } from "./rsd-t02-runner.mjs";
 
 export const FIXTURE_026_RUNNER_VERSION = "fixture-026.rsd-t01-runner.v2";
 export const FIXTURE_026_RUNTIME_FINGERPRINT = Object.freeze({
@@ -1128,6 +1129,7 @@ export async function prepareFixture026(profile) {
 }
 
 export async function main(argv = process.argv) {
+  if (argv[2]?.startsWith("t02-")) return mainFixture026RsdT02(argv);
   const { action, options } = parseOptions(argv);
   if (action === "prepare") return prepareFixture026(options.profile);
   if (action === "smoke") {
