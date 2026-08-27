@@ -30,7 +30,7 @@ test("the book route keeps the complete corpus out of the Worker render", () => 
   assert.match(edition, /import \{ bookDocuments as documents \}/);
   assert.match(edition, /import type \{ ResearchDocument \}/);
   assert.doesNotMatch(edition, /import \{ documents[^}]*\} from "\.\.\/content"/);
-  assert.match(edition, /export function BookEdition\(\)/);
+  assert.match(edition, /export function BookEdition\(/);
 });
 
 test("the private reader distinguishes JSON contracts and exposes linked source artifacts", () => {

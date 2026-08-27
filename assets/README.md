@@ -2,6 +2,22 @@
 
 Editable sources are canonical. Rendered files are optional derived artifacts.
 
+## Site-brand provenance
+
+- `../public/favicon.svg` is a project-authored four-cell vector mark introduced
+  by repository owner `lusoris` in commit `380a225`. SHA-256:
+  `e6d2e59b7b5bbb0342e0fb496dfc262decbfe4426bbb7b047aec8d467d1dc6f7`.
+- `../public/og-v2.jpg` is the project-generated abstract botanical/network
+  social-preview artwork contributed by repository owner `lusoris` and
+  losslessly recompressed in commit `4545389`; the original generation tool was
+  not recorded. SHA-256:
+  `f164b18eb8bc7f2c3a09997ac767437cae9d1fbbc55abaa68fc48cc6e59667bc`.
+
+Both are original project-presentation assets licensed under CC BY-SA 4.0 by
+the contributor. They contain no imported scientific figure or third-party
+brand mark. This provenance statement concerns copyright and traceability, not
+scientific evidence.
+
 ## Layout
 
 - `diagrams/` contains Mermaid sources used by the concept.
@@ -203,6 +219,16 @@ Editable sources are canonical. Rendered files are optional derived artifacts.
   editable sources.
 - Future data-driven figures must store plotting source, parameter status, and
   input-data provenance beside the output.
+
+The RSD-T02 planning diagnostics now include two explicitly different views:
+
+- `rsd-t02-power-effect-curve` exposes the variance-only prospective count
+  assumption before exact-analyzer calibration; and
+- `rsd-t02-bootstrap-calibration` runs the checked-in public synthetic
+  transcript scenarios through that analyzer and juxtaposes rejection
+  frequencies with bootstrap-resolution failures. Its editable input is the
+  calibration JSON referenced by `plots/core-models.json`; it remains
+  `NO_RESULT` and is not a scientific power plot.
 
 The analytical plot source currently supports several deliberately different
 forms: uncertainty quadrants with a gate ledger, action frontiers, semilog

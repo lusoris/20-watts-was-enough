@@ -9,6 +9,27 @@ import { ReadinessOverview } from "./readiness-overview";
 
 const appendixPaths = ["research/field-coverage.md"];
 const canonicalSite = "https://twenty-watts-was-enough.lusoris.chatgpt.site";
+const canonicalRepository = "https://github.com/lusoris/20-watts-was-enough";
+
+type BookEditionProps = {
+  surface?: "owner-only-site" | "github-pages";
+  assetBasePath?: string;
+};
+
+function joinBasePath(basePath: string, path: string) {
+  const base = basePath.endsWith("/") ? basePath : `${basePath}/`;
+  return `${base}${path.replace(/^\/+/, "")}`;
+}
+
+function repositoryDocumentHref(path: string, hash = "") {
+  const encodedPath = path
+    .replaceAll("\\", "/")
+    .split("/")
+    .filter(Boolean)
+    .map(encodeURIComponent)
+    .join("/");
+  return `${canonicalRepository}/blob/main/${encodedPath}${hash ? `#${encodeURIComponent(hash)}` : ""}`;
+}
 
 function bookId(path: string) {
   return `book-${path.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
@@ -34,7 +55,11 @@ function documentLabel(path: string) {
   return "Chapter";
 }
 
-export function BookEdition() {
+export function BookEdition({
+  surface = "owner-only-site",
+  assetBasePath = "/",
+}: BookEditionProps = {}) {
+  const isGitHubPages = surface === "github-pages";
   const conceptDocuments = documents.filter(
     (document) =>
       document.kind === "markdown" &&
@@ -64,6 +89,10 @@ export function BookEdition() {
     0,
   );
   const navigate = (path: string, hash = "") => {
+    if (isGitHubPages) {
+      window.location.assign(repositoryDocumentHref(path, hash));
+      return;
+    }
     const url = new URL("/", window.location.origin);
     url.searchParams.set("doc", path);
     url.hash = hash;
@@ -73,7 +102,10 @@ export function BookEdition() {
     if (bookDocumentPaths.has(path)) {
       return path === "README.md" && hash ? `#${hash}` : `#${bookId(path)}`;
     }
-    if (isRepositoryArtifact(path)) return repositoryArtifactHref(path);
+    if (isRepositoryArtifact(path)) {
+      return joinBasePath(assetBasePath, repositoryArtifactHref(path));
+    }
+    if (isGitHubPages) return repositoryDocumentHref(path, hash);
     const url = new URL("/", canonicalSite);
     url.searchParams.set("doc", path);
     url.hash = hash;
@@ -83,13 +115,15 @@ export function BookEdition() {
   return (
     <main className="book-shell">
       <nav className="book-actions" aria-label="Book actions">
-        {/* The plain anchor keeps the standalone print route independent of
-            the app router during deterministic headless rendering. */}
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <a href="/">← Private research site</a>
+        <a href={isGitHubPages ? canonicalRepository : "/"}>
+          {isGitHubPages ? "View source on GitHub" : "← Owner-only research site"}
+        </a>
         <a
           className="book-download-primary"
-          href="/downloads/20-watts-was-enough-full-concept-book.pdf"
+          href={joinBasePath(
+            assetBasePath,
+            "downloads/20-watts-was-enough-full-concept-book.pdf",
+          )}
           download
         >
           Download PDF
@@ -124,7 +158,7 @@ export function BookEdition() {
           </div>
           <div>
             <dt>Source</dt>
-            <dd>Generated from the private Git repository</dd>
+            <dd>Generated from the public Git repository</dd>
           </div>
         </dl>
       </header>
@@ -177,7 +211,10 @@ export function BookEdition() {
           <code>experiments/test-readiness-summary.json</code>
           <span>Current Git edition</span>
         </div>
-        <ReadinessOverview mode="book" />
+        <ReadinessOverview
+          mode="book"
+          documentHref={isGitHubPages ? repositoryDocumentHref : undefined}
+        />
       </section>
 
       {bookDocuments.map((document) => (
@@ -206,10 +243,32 @@ export function BookEdition() {
               onNavigate={navigate}
               internalHref={bookHref}
               imageLoading="eager"
+              assetBasePath={assetBasePath}
             />
           </article>
         </section>
       ))}
+      <footer className="book-legal" aria-label="Legal information">
+        <strong>Licences and notices</strong>
+        <span>Source: github.com/lusoris/20-watts-was-enough</span>
+        {[
+          ["EUPL 1.2", "LICENSE"],
+          ["CC BY-SA 4.0", "LICENSES/CC-BY-SA-4.0.txt"],
+          ["Licensing scope", "LICENSING.md"],
+          ["Third-party notices", "THIRD_PARTY_NOTICES.txt"],
+        ].map(([label, legalPath]) => (
+          <a
+            href={
+              isGitHubPages
+                ? joinBasePath(assetBasePath, legalPath)
+                : `${canonicalRepository}/blob/main/${legalPath}`
+            }
+            key={legalPath}
+          >
+            {label}
+          </a>
+        ))}
+      </footer>
     </main>
   );
 }

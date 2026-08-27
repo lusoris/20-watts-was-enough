@@ -9,7 +9,7 @@ import {
 export const metadata: Metadata = {
   title: "20 Watts Was Enough — Research Edition",
   description:
-    "A privately rendered research blueprint for sparse, grounded, continual, energy-efficient AI.",
+    "An owner-only research reader for a public blueprint on sparse, grounded, continual, energy-efficient AI.",
 };
 
 type HomeProps = {

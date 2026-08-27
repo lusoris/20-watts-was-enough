@@ -7,14 +7,51 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Decision 0024 makes the GitHub repository public, retains the interactive
+  reader as owner-only, and adds a static full-book GitHub Pages release built
+  from the same committed source. Split open licensing uses EUPL
+  v1.2-or-later for project-authored software and technical execution material,
+  and CC BY-SA 4.0 for original research
+  prose, mathematical exposition, diagrams, plots, and generated presentation.
+  The scope document expressly excludes imported `sources/`, official taxonomy
+  snapshots, citations, and all other third-party material from accidental
+  relicensing, while the package remains marked private against accidental npm
+  publication independently of the public GitHub repository.
+
+- RSD-T02 now has four adversarially hardened public-development execution
+  layers. A compact population runner traverses all 20 canonical parameter
+  instances and receipts 520 episodes, 799,240 transcript rows and 180 arm
+  invocations without inflating the independent-system denominator. A separate
+  content-addressed policy overlay uses a fresh restricted child and an owner-
+  bound, synchronized, hostile-restart fixed-instance ledger. The integrated
+  layer binds all 20 identity-keyed directories to one bounded durable outer
+  ledger and recovers the instance-complete/outer-append crash window exactly
+  once. A synthetic
+  transcript calibrator invokes the exact existing bootstrap/Holm analyzer:
+  the null interval spans its reference, the alternative interval misses the
+  illustrative target, and both small-sample hostiles fail bootstrap resolution,
+  so the current planning assumptions are rejected rather than frozen. Receipt
+  forgery, workload
+  contradictions, hash-chain overclaiming, role relabeling, interval
+  miscoverage, identity collisions, all-refused completion, concurrent I/O,
+  path aliases, mutable evidence, oversized recovery input, raw-leaf and live
+  instances-directory replacement, and lock-retirement races are now explicit
+  hostile tests. Verified retired
+  lock artifacts are retained under randomized names instead of being
+  pathname-deleted. An exact 20-member local runtime closure promotes only the
+  parameterized-runner infrastructure gate. The layers remain `NO_RESULT` and
+  do not create mature-model, comparison, confirmation, workstation-measurement
+  or energy authority.
+
 - The RSD-T02 fixed-instance execution foundation now materializes one exact
   26-schedule, 39,962-row causal transcript and nine append-only terminal
   response/resource records from a generated system instance. Its validator
   closes the policy view, binds full transcript receipts, charges explicit
   failures, and reproduces object-level resume. The successful executor remains
-  an in-process digest abstention: a content-addressed 26-projection policy
-  bundle, fresh child isolation, semantic replay of real policies, and durable
-  disk checkpoints are still open gates. A post-validation adapter can feed the
+  an in-process digest abstention; the separately exact-bound overlay and
+  integrated population release now supply a content-addressed 26-projection
+  bundle, fresh child isolation, semantic replay, and durable disk checkpoints
+  without changing the base artifact. A post-validation adapter can feed the
   transcript into deterministic learned state-space and GRU-style level-two
   prototypes without exposing schedule, identity, truth, or provenance fields.
   Every artifact remains `NO_RESULT`.
@@ -49,10 +86,12 @@ the exact diff; this file records why the project changed.
   probabilistic output interface, fit/calibration separation, abstention,
   resource ledgers and freeze order are machine-checked. Two deterministic
   trainable public prototypes now satisfy the level-two state-space and
-  recurrent gates, while calibration, selected-model, runner-integration,
-  resource-audit, development-evaluation and confirmation gates remain open.
-  Across the 20 applicable non-energy gates, four are satisfied and 16 remain
-  open; affected fitting remains blocked by four explicit prerequisites.
+  recurrent gates, and the exact-bound isolated durable population release now
+  satisfies the parameterized-runner infrastructure gate. Calibration,
+  selected-model, resource-audit, development-evaluation and confirmation gates
+  remain open. Across the 20 applicable non-energy gates, five are satisfied
+  and 15 remain open; affected fitting remains blocked by three explicit
+  prerequisites.
 
 - A primary-literature audit of experimental units, identifiability,
   structured holdouts, dynamical parameter shift, calibration and selective

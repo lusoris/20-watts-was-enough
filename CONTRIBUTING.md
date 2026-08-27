@@ -50,6 +50,23 @@ Foreign law, standards, and regulator guidance remain valid comparative or
 technical research inputs. They are not German or EU compliance requirements
 without an explicit applicability hook.
 
+## Licensing and provenance
+
+Read [`LICENSING.md`](LICENSING.md) before contributing. Project-authored
+technical material is accepted under EUPL v1.2 or later; original project
+prose, mathematical exposition, diagrams, plots, and generated presentation
+material are accepted under CC BY-SA 4.0. A contribution can contain both
+scopes, and each part follows the nature-of-material boundary defined there.
+
+Contribute only material that you have the right to license. Identify copied,
+quoted, adapted, generated, or otherwise third-party material in the file and
+preserve its author, source, date, licence, notices, and applicable use basis.
+Do not place imported material under the project licences by implication.
+Academic publication, public web access, citation, and bibliography inclusion
+do not by themselves grant reuse rights. Imported captures belong under
+[`sources/`](sources/README.md) and remain outside the repository-wide grants
+unless a file carries an explicit project licence notice.
+
 ## Live research edition
 
 Run `npm ci` once, then `npm run dev`. The browser reader watches the canonical
@@ -57,10 +74,12 @@ files in `concept/`, `research/`, `math/`, `decisions/`, `sources/`, and
 `assets/`; it does not maintain copied prose. A normal save triggers local hot
 reload.
 
-Run `npm run build` before publishing. The private online edition must be built
-from the same committed state that is pushed to the canonical Git repository.
-Do not edit generated files under `dist/`, and do not publish the site with
-public access.
+Run `npm run build` before publishing the owner-only interactive edition. It
+must be built from the same committed state that is pushed to the canonical Git
+repository and must retain owner-only access. Run `npm run test:github-pages`
+for the separate public static full-book edition; the GitHub Pages workflow
+publishes it from `main`. Do not edit generated files under `dist/` or
+`dist-github-pages/`.
 
 ## Evidence statuses
 

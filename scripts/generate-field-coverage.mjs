@@ -213,6 +213,16 @@ markdown.push(
   "- The ERC whole-science panel structure is a routing sanity check only. The ERC explicitly says its panels are not a complete scientific classification and do not express research priorities.",
   "- Catch-all categories remain open. Their presence cannot prove that unnamed or emerging disciplines have been sampled.",
   "",
+  "## Taxonomy rights and attribution",
+  "",
+  "The taxonomy labels are third-party material and are not absorbed into the project's CC BY-SA grant:",
+  "",
+  "- **DFG:** source: Deutsche Forschungsgemeinschaft, *Fachsystematik 2024–2028*. The [DFG copyright notice](https://www.dfg.de/de/service/kontakt/impressum) permits redistribution for scientific purposes with source attribution; commercial use and logos require separate permission. The book uses only the classification labels, not the branded PDF or member-directory page.",
+  "- **ANZSRC:** based on Australian Bureau of Statistics and Stats NZ data, each made available for reuse under CC BY 4.0. The classification has been included without implying endorsement; logos and excluded third-party material are not reproduced.",
+  "- **EuroSciVoc:** source: European Union, EuroSciVoc 1.6.0, reused under CC BY 4.0. The project generated the routing extract and identifies changes through its versioned query and provenance record.",
+  "",
+  "The detailed files, versions, hashes, and source links are recorded in the [taxonomy provenance index](../sources/taxonomies/2026-08-25/README.md).",
+  "",
   "## OECD FORD field-by-field record",
   "",
 );
@@ -437,6 +447,7 @@ const leadDivergence = data.taxonomyDivergences[0];
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1160" viewBox="0 0 1200 1160" role="img" aria-labelledby="title description">
   <title id="title">Repository field coverage against EuroSciVoc, OECD, DFG and ANZSRC classifications</title>
   <desc id="description">Stacked bars distinguish explicit child routing, dedicated audits, adjacent evidence, and unreviewed fields as of ${esc(data.asOf)}.</desc>
+  <metadata>Taxonomy attribution: DFG Fachsystematik 2024–2028 labels are redistributed for scientific use with source attribution under https://www.dfg.de/de/service/kontakt/impressum and are not granted for commercial reuse. ANZSRC data are from the Australian Bureau of Statistics and Stats NZ under CC BY 4.0. EuroSciVoc 1.6.0 is European Union material reused under CC BY 4.0. Project visualization: CC BY-SA 4.0.</metadata>
   <rect width="1200" height="1160" rx="24" fill="${colors.background}"/>
   <text x="56" y="72" fill="${colors.text}" font-family="Georgia, serif" font-size="34" font-weight="700">How global is the research search?</text>
   <text x="56" y="104" fill="${colors.muted}" font-family="Segoe UI, sans-serif" font-size="16">Audit presence, not scientific completeness · ${esc(data.asOf)}</text>

@@ -19,7 +19,7 @@ function BookLoading({ failed = false }: { failed?: boolean }) {
     <main className="book-shell" aria-busy="true" aria-live="polite">
       <nav className="book-actions" aria-label="Book actions">
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <a href="/">← Private research site</a>
+        <a href="/">← Owner-only research site</a>
         <a
           className="book-download-primary"
           href="/downloads/20-watts-was-enough-full-concept-book.pdf"

@@ -29,3 +29,4 @@ than silently changing its outcome.
 | [0021](0021-bind-population-inference-to-system-lineages-and-instances.md) | Bind population inference to system lineages and fixed-parameter instances | accepted |
 | [0022](0022-separate-fixed-instance-construction-from-conformance-runtime.md) | Separate fixed-instance construction from the mixed-time-constant conformance runtime | accepted |
 | [0023](0023-bind-power-to-the-executable-analysis-law.md) | Bind power and attainable resolution to the executable analysis law | accepted |
+| [0024](0024-publish-through-split-licensed-git-and-two-reading-surfaces.md) | Publish through split-licensed Git and two reading surfaces | accepted |

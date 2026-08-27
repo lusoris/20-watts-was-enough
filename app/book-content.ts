@@ -2,12 +2,12 @@ import type { ResearchDocument } from "./content";
 
 const rawBookModules = import.meta.glob(
   [
-    "/README.md",
-    "/concept/**/*.md",
-    "!/concept/README.md",
-    "/math/**/*.md",
-    "!/math/README.md",
-    "/research/field-coverage.md",
+    "../README.md",
+    "../concept/**/*.md",
+    "!../concept/README.md",
+    "../math/**/*.md",
+    "!../math/README.md",
+    "../research/field-coverage.md",
   ],
   {
     eager: true,
@@ -45,7 +45,7 @@ function sectionRank(path: string): number {
 
 export const bookDocuments: ResearchDocument[] = Object.entries(rawBookModules)
   .map(([modulePath, body]) => {
-    const path = modulePath.replace(/^\//, "");
+    const path = modulePath.replace(/^\.\.\//, "");
     return {
       path,
       title: titleFrom(path, body),

@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1160" viewBox="0 0 1200 1160" role="img" aria-labelledby="title description">
   <title id="title">Repository field coverage against EuroSciVoc, OECD, DFG and ANZSRC classifications</title>
   <desc id="description">Stacked bars distinguish explicit child routing, dedicated audits, adjacent evidence, and unreviewed fields as of 2026-08-25.</desc>
+  <metadata>Taxonomy attribution: DFG Fachsystematik 2024–2028 labels are redistributed for scientific use with source attribution under https://www.dfg.de/de/service/kontakt/impressum and are not granted for commercial reuse. ANZSRC data are from the Australian Bureau of Statistics and Stats NZ under CC BY 4.0. EuroSciVoc 1.6.0 is European Union material reused under CC BY 4.0. Project visualization: CC BY-SA 4.0.</metadata>
   <rect width="1200" height="1160" rx="24" fill="#0b1d18"/>
   <text x="56" y="72" fill="#fffaf0" font-family="Georgia, serif" font-size="34" font-weight="700">How global is the research search?</text>
   <text x="56" y="104" fill="#b9c9c1" font-family="Segoe UI, sans-serif" font-size="16">Audit presence, not scientific completeness · 2026-08-25</text>

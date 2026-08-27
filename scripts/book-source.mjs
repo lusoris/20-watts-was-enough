@@ -21,7 +21,13 @@ export async function bookSourceFiles(projectRoot) {
   const mathFiles = (await markdownFiles(path.join(projectRoot, "math")))
     .filter((file) => path.basename(file) !== "README.md");
   const supportFiles = [
+    "LICENSE",
+    "LICENSING.md",
+    "LICENSES/CC-BY-SA-4.0.txt",
+    "LICENSES/OFL-1.1.txt",
+    "LICENSES/remark-math-MIT.txt",
     "README.md",
+    "THIRD_PARTY_NOTICES.txt",
     "app/book/page.tsx",
     "app/book-content.ts",
     "app/components/book-loader.tsx",
@@ -39,7 +45,10 @@ export async function bookSourceFiles(projectRoot) {
     "research/field-coverage.md",
     "scripts/book-source.mjs",
     "scripts/generate-book-pdf.mjs",
+    "scripts/lib/third-party-notices.mjs",
+    "sources/taxonomies/2026-08-25/README.md",
     "vite.config.ts",
+    "vite.pages.config.ts",
   ].map((file) => path.join(projectRoot, file));
   const plotFiles = await readdir(path.join(projectRoot, "public", "plots"), {
     withFileTypes: true,

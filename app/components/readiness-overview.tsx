@@ -9,11 +9,17 @@ import {
 
 type ReadinessOverviewProps = {
   mode?: "page" | "book";
+  documentHref?: (path: string) => string;
 };
 
 const canonicalSite = "https://twenty-watts-was-enough.lusoris.chatgpt.site";
 
-function readinessDocumentHref(path: string, mode: "page" | "book") {
+function readinessDocumentHref(
+  path: string,
+  mode: "page" | "book",
+  documentHref?: (path: string) => string,
+) {
+  if (documentHref) return documentHref(path);
   const href = researchDocumentHref(path);
   return mode === "book" ? new URL(href, canonicalSite).toString() : href;
 }
@@ -71,7 +77,10 @@ function coverageBar({
 
 // Overflow regions need keyboard focus so arrow-key users can inspect wide tables.
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
-export function ReadinessOverview({ mode = "page" }: ReadinessOverviewProps) {
+export function ReadinessOverview({
+  mode = "page",
+  documentHref,
+}: ReadinessOverviewProps) {
   const { claims, artifacts, ledgerOnly } = readinessSummary;
   const smokeArtifact = artifacts.items.find(
     (artifact) => artifact.executionReadiness === "smoke-ready",
@@ -207,7 +216,7 @@ export function ReadinessOverview({ mode = "page" }: ReadinessOverviewProps) {
             experiment families. Evidence inputs and source reproductions are not falsely counted
             as project tests.
           </p>
-          <a href={readinessDocumentHref("experiments/proposed/README.md", mode)}>Open the proposed backlog</a>
+          <a href={readinessDocumentHref("experiments/proposed/README.md", mode, documentHref)}>Open the proposed backlog</a>
         </section>
 
         {smokeArtifact ? (
@@ -231,8 +240,8 @@ export function ReadinessOverview({ mode = "page" }: ReadinessOverviewProps) {
               ))}
             </ul>
             <div className="readiness-card-links">
-              <a href={readinessDocumentHref(smokeArtifact.path, mode)}>Open the experiment contract</a>
-              <a href={readinessDocumentHref("experiments/workstation/candidate-010/README.md", mode)}>Open the harness notes</a>
+              <a href={readinessDocumentHref(smokeArtifact.path, mode, documentHref)}>Open the experiment contract</a>
+              <a href={readinessDocumentHref("experiments/workstation/candidate-010/README.md", mode, documentHref)}>Open the harness notes</a>
             </div>
           </section>
         ) : null}
@@ -283,7 +292,7 @@ export function ReadinessOverview({ mode = "page" }: ReadinessOverviewProps) {
         </section>
       ) : (
         <p className="readiness-book-link">
-          The private site contains the complete artifact table and live generated coverage report.
+          The owner-only research site contains the complete artifact table and live generated coverage report.
         </p>
       )}
     </div>

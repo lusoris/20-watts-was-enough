@@ -25,6 +25,7 @@ type MarkdownDocumentProps = {
   internalHref?: (path: string, hash: string) => string;
   isNavigablePath?: (path: string) => boolean;
   imageLoading?: "eager" | "lazy";
+  assetBasePath?: string;
 };
 
 function normalizePath(path: string): string {
@@ -50,14 +51,24 @@ function resolveInternalLink(href: string, currentPath: string) {
   return { path: normalizePath(`${base}${relativePath}`), hash };
 }
 
-function resolveImageSource(src: string, currentPath: string): string {
-  if (/^(https?:|data:|\/)/i.test(src)) return src;
+function joinAssetBase(assetBasePath: string, src: string): string {
+  const base = assetBasePath.endsWith("/") ? assetBasePath : `${assetBasePath}/`;
+  return `${base}${src.replace(/^\/+/, "")}`;
+}
+
+function resolveImageSource(
+  src: string,
+  currentPath: string,
+  assetBasePath: string,
+): string {
+  if (/^(https?:|data:)/i.test(src)) return src;
+  if (src.startsWith("/")) return joinAssetBase(assetBasePath, src);
   const base = currentPath.includes("/")
     ? currentPath.slice(0, currentPath.lastIndexOf("/") + 1)
     : "";
   const resolved = normalizePath(`${base}${src}`);
   return resolved.startsWith("public/")
-    ? `/${resolved.slice("public/".length)}`
+    ? joinAssetBase(assetBasePath, resolved.slice("public/".length))
     : src;
 }
 
@@ -139,6 +150,7 @@ export function MarkdownDocument({
   internalHref,
   isNavigablePath,
   imageLoading = "lazy",
+  assetBasePath = "/",
 }: MarkdownDocumentProps) {
   const ImageComponent = ({
     src = "",
@@ -148,7 +160,11 @@ export function MarkdownDocument({
     // Plot SVGs are deterministic assets and retain their intrinsic viewBox.
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={resolveImageSource(typeof src === "string" ? src : "", currentPath)}
+      src={resolveImageSource(
+        typeof src === "string" ? src : "",
+        currentPath,
+        assetBasePath,
+      )}
       alt={alt}
       loading={imageLoading}
       {...props}

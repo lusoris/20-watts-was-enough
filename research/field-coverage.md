@@ -37,6 +37,16 @@ A dedicated audit is an entry ticket, not completion. Audit depth, evidence qual
 - The ERC whole-science panel structure is a routing sanity check only. The ERC explicitly says its panels are not a complete scientific classification and do not express research priorities.
 - Catch-all categories remain open. Their presence cannot prove that unnamed or emerging disciplines have been sampled.
 
+## Taxonomy rights and attribution
+
+The taxonomy labels are third-party material and are not absorbed into the project's CC BY-SA grant:
+
+- **DFG:** source: Deutsche Forschungsgemeinschaft, *Fachsystematik 2024–2028*. The [DFG copyright notice](https://www.dfg.de/de/service/kontakt/impressum) permits redistribution for scientific purposes with source attribution; commercial use and logos require separate permission. The book uses only the classification labels, not the branded PDF or member-directory page.
+- **ANZSRC:** based on Australian Bureau of Statistics and Stats NZ data, each made available for reuse under CC BY 4.0. The classification has been included without implying endorsement; logos and excluded third-party material are not reproduced.
+- **EuroSciVoc:** source: European Union, EuroSciVoc 1.6.0, reused under CC BY 4.0. The project generated the routing extract and identifies changes through its versioned query and provenance record.
+
+The detailed files, versions, hashes, and source links are recorded in the [taxonomy provenance index](../sources/taxonomies/2026-08-25/README.md).
+
 ## OECD FORD field-by-field record
 
 ### 1. Natural sciences

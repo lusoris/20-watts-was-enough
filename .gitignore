@@ -15,6 +15,7 @@ assets/rendered/*.tmp
 # Private documentation site build and local runtime
 node_modules/
 dist/
+dist-github-pages/
 public/repository-files/
 .next/
 .vinext/

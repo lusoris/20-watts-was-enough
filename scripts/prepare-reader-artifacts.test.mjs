@@ -11,6 +11,7 @@ test("linked source artifacts are copied as inert text without external or image
   try {
     await mkdir(path.join(root, "docs"), { recursive: true });
     await mkdir(path.join(root, "code"), { recursive: true });
+    await mkdir(path.join(root, "github-pages"), { recursive: true });
     await writeFile(path.join(root, "code", "runner.mjs"), "export const value = 1;\n");
     await writeFile(path.join(root, "docs", "contract.json"), "{\"schema\":1}\n");
     await writeFile(
@@ -22,6 +23,10 @@ test("linked source artifacts are copied as inert text without external or image
         "![image](figure.json)",
         "",
       ].join("\n"),
+    );
+    await writeFile(
+      path.join(root, "github-pages", "public-artifacts.json"),
+      `${JSON.stringify({ schema: 1, artifacts: ["code/runner.mjs", "docs/contract.json"] }, null, 2)}\n`,
     );
     const outputRoot = path.join(root, "public", "repository-files");
     const prepared = await prepareReaderArtifacts({ repositoryRoot: root, outputRoot });
@@ -36,6 +41,29 @@ test("linked source artifacts are copied as inert text without external or image
     );
     const manifest = JSON.parse(await readFile(path.join(outputRoot, "manifest.json"), "utf8"));
     assert.deepEqual(manifest, { schema: 1, artifacts: prepared.artifacts });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("linked source artifacts outside the explicit public allowlist fail closed", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "reader-artifacts-unlisted-"));
+  try {
+    await mkdir(path.join(root, "docs"), { recursive: true });
+    await mkdir(path.join(root, "github-pages"), { recursive: true });
+    await writeFile(path.join(root, "docs", "contract.json"), "{\"schema\":1}\n");
+    await writeFile(path.join(root, "docs", "README.md"), "[contract](contract.json)\n");
+    await writeFile(
+      path.join(root, "github-pages", "public-artifacts.json"),
+      `${JSON.stringify({ schema: 1, artifacts: [] }, null, 2)}\n`,
+    );
+    await assert.rejects(
+      prepareReaderArtifacts({
+        repositoryRoot: root,
+        outputRoot: path.join(root, "public", "repository-files"),
+      }),
+      /not in the public allowlist/u,
+    );
   } finally {
     await rm(root, { recursive: true, force: true });
   }

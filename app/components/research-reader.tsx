@@ -298,7 +298,7 @@ export function ResearchReader({
       <aside className={`sidebar ${menuOpen ? "sidebar-open" : ""}`}>
         <div className="sidebar-intro">
           <span>Canonical library</span>
-          <p>{documents.length} versioned documents rendered from the private Git source.</p>
+          <p>{documents.length} versioned documents rendered from the public Git source.</p>
           <div className="library-actions" aria-label="Document-section display">
             <button
               type="button"

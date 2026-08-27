@@ -3,17 +3,13 @@
   "asOf": "2026-08-25",
   "scope": "Exact taxonomy inventory only. Fine-grained evidence coverage is not inherited from parent classifications and is assessed separately.",
   "sources": {
-    "dfgPdf": {
-      "path": "sources/taxonomies/2026-08-25/dfg-fachsystematik-2024-2028-de.pdf",
-      "sha256": "848d239a9d9670f562437a51a8c5cbd594ea2c042be41b798b87e2161e4d28fa"
+    "dfgExtract": {
+      "path": "sources/taxonomies/2026-08-25/dfg-fachsystematik-2024-2028.csv",
+      "sha256": "8fb17138df31c8032433ffe4530c92b4bfaafa64fb9e3b9fe0f64b3aa6951c6b"
     },
-    "dfgHtml": {
-      "path": "sources/taxonomies/2026-08-25/dfg-fachsystematik-web.html",
-      "sha256": "b152c7eef223230eb121f85a16000bbe84b539f7de7a62286ece6d5472d7c317"
-    },
-    "anzsrcWorkbook": {
-      "path": "sources/taxonomies/2026-08-25/anzsrc2020_for.xlsx",
-      "sha256": "92b94664eb1e43db1cbcaeb54e60575e3f8573cd10e5e4bb3a9c806cbe462e35"
+    "anzsrcExtract": {
+      "path": "sources/taxonomies/2026-08-25/anzsrc2020_for.csv",
+      "sha256": "fdd2e5fe4249dfce9de9c451febbdd55a6d2641ea9aae7994f0517e361465af0"
     },
     "euroscivocRdf": {
       "path": "sources/taxonomies/2026-08-25/euroscivoc-v1.6.rdf",
@@ -25,7 +21,7 @@
     },
     "euroscivocQuery": {
       "path": "sources/taxonomies/2026-08-25/euroscivoc-concepts.rq",
-      "sha256": "8c921d5663f6dbe3faaaea23a6f98096c9ecf77cce7f3db5b007ac5cdc8ce2cf"
+      "sha256": "3a65ac19720c48e1b95b4310ead15caf078b33bb746a025041de12d6def09fc3"
     }
   },
   "dfg": {

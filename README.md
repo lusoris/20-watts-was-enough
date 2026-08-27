@@ -44,15 +44,24 @@ and date-qualified under the
 [`normative baseline`](research/normative-baseline.md); foreign material is
 preserved as comparative unless a concrete project hook makes it applicable.
 
-The same files are also rendered as a private research site. The site is a
-generated reading surface—not a second document store. Saving a Markdown,
-equation, bibliography, or Mermaid file updates the local preview through hot
-reload; publishing creates an owner-only online edition from a committed Git
-state. The site also provides a downloadable A4 book containing this README,
-all canonical concept chapters, the mathematical notes, and a generated field-
+**Why GitHub reports C#:** the repository contains one Windows-only
+[Job Object supervisor](experiments/workstation/fixture-012/windows-job-supervisor.cs)
+for fail-closed process containment, descendant cleanup, timeout enforcement,
+output limits, path-identity monitoring, and high-resolution workstation
+timing. It is experiment infrastructure, not an AI model implementation.
+
+The same files are rendered as two generated reading surfaces—not as additional
+document stores. The interactive research reader remains an owner-only online
+edition. A public, static full-book release is published through
+[GitHub Pages](https://lusoris.github.io/20-watts-was-enough/) from the public
+repository. Saving a Markdown, equation, bibliography, or Mermaid file updates
+the local preview through hot reload; both publishing paths build from a
+committed Git state. The downloadable A4 book contains this README, all
+canonical concept chapters, the mathematical notes, and a generated field-
 coverage appendix. It is generated from the same files and checked for
 staleness during the build. See
-[decision 0005](decisions/0005-rendered-private-edition.md).
+[decision 0005](decisions/0005-rendered-private-edition.md) and
+[decision 0024](decisions/0024-publish-through-split-licensed-git-and-two-reading-surfaces.md).
 
 ## Concept map
 
@@ -126,7 +135,7 @@ Supporting material:
 - [`experiments/workstation/fixture-023/`](experiments/workstation/fixture-023/README.md) — deterministic PLM-T01 duration-memory and PLM-T02 lifecycle-reset development smoke paths
 - [`experiments/workstation/fixture-024/`](experiments/workstation/fixture-024/README.md) — deterministic AMR-T01 development smoke path with no confirmation or energy authority
 - [`experiments/workstation/fixture-025/`](experiments/workstation/fixture-025/README.md) — deterministic ECM-T03 validity-gate development smoke path with no confirmation or energy authority
-- [`experiments/workstation/fixture-026/`](experiments/workstation/fixture-026/README.md) — deterministic RSD-T01 grid plus an RSD-T02 nine-policy construction bank, exact five-family/20-artifact generator, one-instance 26-schedule transcript runner, two trainable level-two null prototypes, and blocked Holm/power method checks; no comparison, confirmation, or energy authority
+- [`experiments/workstation/fixture-026/`](experiments/workstation/fixture-026/README.md) — deterministic RSD-T01 grid plus an RSD-T02 nine-policy construction bank, exact five-family/20-instance generator, a fresh restricted content-addressed policy boundary, durable per-instance and population-level recovery across the complete panel, two trainable level-two null prototypes, and exact-analyzer synthetic calibration that rejects the current planning assumptions; no comparison, confirmation, or energy authority
 - [`experiments/workstation/fixture-027/`](experiments/workstation/fixture-027/README.md) — deterministic RIN-T01 isolation/connection diagnostic with no confirmation, service-performance, or energy authority
 - [`experiments/test-coverage.md`](experiments/test-coverage.md) — generated
   claim-to-protocol coverage and workstation execution readiness
@@ -165,15 +174,30 @@ npm run validate:book-pdf
 ```
 
 The tracked artifact is
-`public/downloads/20-watts-was-enough-full-concept-book.pdf`; the private site
-offers it directly for download, while `/book` remains a printable HTML
-edition. Raw source captures, audit ledgers, and experiment fixtures remain in
-the searchable private site rather than being duplicated into the reading
-edition.
+`public/downloads/20-watts-was-enough-full-concept-book.pdf`; both online
+editions offer it directly for download, while `/book` remains the printable
+HTML edition in the interactive reader. The public static edition includes the
+book plus linked, inert repository artifacts needed to inspect its claims; it
+does not duplicate the searchable full-corpus reader. Raw source captures and
+the complete audit and fixture corpus remain browsable through Git itself and
+the owner-only interactive reader.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow.
 
 ## License
 
-No license has been selected. This private repository is not permission to
-redistribute the material.
+Copyright © 2026 lusoris contributors
+
+This public repository uses a split open licence:
+
+- project-authored software, scripts, tests, configurations, schemas, and
+  workflows are licensed under the EUPL v1.2 or later; and
+- original project prose, mathematical exposition, diagrams, plots, and the
+  generated book/site presentation are licensed under CC BY-SA 4.0.
+
+The root [`LICENSE`](LICENSE) contains the verbatim EUPL v1.2 English text.
+Read [`LICENSING.md`](LICENSING.md) for the controlling scope, attribution,
+third-party boundaries, and the CC BY-SA legal-code link. In particular,
+[`sources/`](sources/README.md), official taxonomy snapshots, cited papers, and
+other third-party material are not relicensed merely because they appear in
+this repository.

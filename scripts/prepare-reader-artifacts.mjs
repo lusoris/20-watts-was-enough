@@ -12,6 +12,9 @@ const EXCLUDED_DIRECTORIES = new Set([
   ".git", ".next", ".vinext", ".vite", ".wrangler", "dist", "node_modules", "tmp",
 ]);
 const LINK_PATTERN = /(?<!!)\[[^\]]+\]\((?<target>[^)]+)\)/gu;
+const FORBIDDEN_PUBLIC_PREFIXES = Object.freeze([
+  ".git/", ".openai/", "node_modules/", "public/", "sources/",
+]);
 
 function isInside(root, candidate) {
   const relative = path.relative(root, candidate);
@@ -59,6 +62,7 @@ function linkPath(target) {
 export async function prepareReaderArtifacts({
   repositoryRoot = defaultRepositoryRoot,
   outputRoot = path.join(repositoryRoot, "public", "repository-files"),
+  allowlistPath = path.join(repositoryRoot, "github-pages", "public-artifacts.json"),
 } = {}) {
   const root = await realpath(repositoryRoot);
   const resolvedOutput = path.resolve(outputRoot);
@@ -69,6 +73,43 @@ export async function prepareReaderArtifacts({
   if (path.resolve(outputRoot) === path.resolve(defaultRepositoryRoot, "public", "repository-files")
       && resolvedOutput !== expectedDefault) {
     throw new Error("Reader-artifact default output does not match the resolved repository root.");
+  }
+
+  const resolvedAllowlist = path.resolve(allowlistPath);
+  if (!isInside(root, resolvedAllowlist)) {
+    throw new Error("Reader-artifact allowlist must stay inside the repository.");
+  }
+  const allowlistInformation = await lstat(resolvedAllowlist);
+  if (!allowlistInformation.isFile() || allowlistInformation.isSymbolicLink()) {
+    throw new Error("Reader-artifact allowlist must be a regular file.");
+  }
+  const realAllowlist = await realpath(resolvedAllowlist);
+  if (!isInside(root, realAllowlist)) {
+    throw new Error("Reader-artifact allowlist resolves outside the repository.");
+  }
+  const allowlist = JSON.parse(await readFile(realAllowlist, "utf8"));
+  if (allowlist?.schema !== 1 || !Array.isArray(allowlist.artifacts)) {
+    throw new Error("Reader-artifact allowlist has an unsupported schema.");
+  }
+  const allowedArtifacts = new Set();
+  for (const artifact of allowlist.artifacts) {
+    if (typeof artifact !== "string"
+        || artifact.length === 0
+        || artifact.includes("\\")
+        || path.posix.isAbsolute(artifact)
+        || artifact.split("/").includes("..")
+        || !sourceExtension(artifact)
+        || FORBIDDEN_PUBLIC_PREFIXES.some((prefix) => artifact.startsWith(prefix))) {
+      throw new Error(`Reader-artifact allowlist contains an unsafe path: ${artifact}`);
+    }
+    if (allowedArtifacts.has(artifact)) {
+      throw new Error(`Reader-artifact allowlist contains a duplicate: ${artifact}`);
+    }
+    allowedArtifacts.add(artifact);
+  }
+  const sortedAllowedArtifacts = [...allowedArtifacts].sort();
+  if (JSON.stringify(allowlist.artifacts) !== JSON.stringify(sortedAllowedArtifacts)) {
+    throw new Error("Reader-artifact allowlist must be sorted.");
   }
 
   const targets = new Set();
@@ -92,7 +133,17 @@ export async function prepareReaderArtifacts({
       if (!isInside(root, realCandidate)) {
         throw new Error(`Reader artifact resolves outside the repository: ${linked}`);
       }
-      targets.add(path.relative(root, realCandidate).replaceAll("\\", "/"));
+      const relative = path.relative(root, realCandidate).replaceAll("\\", "/");
+      if (!allowedArtifacts.has(relative)) {
+        throw new Error(`Linked reader artifact is not in the public allowlist: ${relative}`);
+      }
+      targets.add(relative);
+    }
+  }
+
+  for (const artifact of allowedArtifacts) {
+    if (!targets.has(artifact)) {
+      throw new Error(`Public reader-artifact allowlist entry is not linked: ${artifact}`);
     }
   }
 

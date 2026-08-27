@@ -2,12 +2,18 @@
   "name": "20-watts-was-enough",
   "version": "0.1.0",
   "private": true,
+  "license": "SEE LICENSE IN LICENSING.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lusoris/20-watts-was-enough.git"
+  },
   "engines": {
     "node": ">=22.13.0"
   },
   "scripts": {
     "dev": "npm run prepare:reader-artifacts && vinext dev",
     "build": "npm run prepare:reader-artifacts && npm run validate:book-pdf && vinext build",
+    "build:github-pages": "npm run prepare:reader-artifacts && vite build --config vite.pages.config.ts",
     "start": "vinext start",
     "test": "npm run lint && npm run test:site && npm run validate:docs && npm run validate:coverage && npm run validate:taxonomies && npm run validate:math && npm run validate:workstation && npm run test:workstation && npm run check:test-coverage && npm run test:readiness && npm run build && npm run validate:site-build",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern tmp",
@@ -17,8 +23,10 @@
     "validate:workstation": "node scripts/validate-workstation.mjs",
     "test:workstation": "node --test --test-isolation=none --test-concurrency=1 experiments/workstation/**/*.test.mjs",
     "test:readiness": "node --test --test-isolation=none scripts/readiness-summary.test.mjs",
-    "test:site": "node --test --test-isolation=none scripts/book-route.test.mjs scripts/prepare-reader-artifacts.test.mjs",
+    "test:site": "node --test --test-isolation=none scripts/book-route.test.mjs scripts/github-pages.test.mjs scripts/prepare-reader-artifacts.test.mjs",
     "validate:site-build": "node scripts/validate-book-route-build.mjs",
+    "validate:github-pages": "node scripts/validate-github-pages-build.mjs",
+    "test:github-pages": "node --test --test-isolation=none scripts/github-pages.test.mjs && npm run build:github-pages && npm run validate:github-pages",
     "workstation:candidate-010": "node experiments/workstation/candidate-010/runner.mjs",
     "workstation:fixture-007": "node experiments/workstation/fixture-007/runner.mjs",
     "workstation:fixture-012": "node experiments/workstation/fixture-012/runner.mjs",
@@ -35,6 +43,7 @@
     "test:workstation:fixture-025": "node --test --test-isolation=none experiments/workstation/fixture-025/*.test.mjs",
     "test:workstation:fixture-026": "node --test --test-isolation=none --test-concurrency=1 experiments/workstation/fixture-026/*.test.mjs",
     "test:workstation:fixture-026:foundations": "node --test --test-isolation=none --test-concurrency=1 experiments/workstation/fixture-026/rsd-t02-fixed-instance-runner.test.mjs experiments/workstation/fixture-026/rsd-t02-null-maturation-contract.test.mjs experiments/workstation/fixture-026/rsd-t02-null-prototypes.test.mjs experiments/workstation/fixture-026/rsd-t02-null-prototype-adapter.test.mjs experiments/workstation/fixture-026/rsd-t02-holm4.test.mjs experiments/workstation/fixture-026/rsd-t02-power-plan.test.mjs",
+    "test:workstation:fixture-026:execution-v52": "node --test --test-isolation=none --test-concurrency=1 experiments/workstation/fixture-026/rsd-t02-run-lock.test.mjs experiments/workstation/fixture-026/rsd-t02-fixed-instance-durable-store.test.mjs experiments/workstation/fixture-026/rsd-t02-fixed-instance-isolated-durable-runner.test.mjs experiments/workstation/fixture-026/rsd-t02-public-development-population-runner.test.mjs experiments/workstation/fixture-026/rsd-t02-public-development-isolated-durable-population-runner.test.mjs experiments/workstation/fixture-026/rsd-t02-pilot-transcript-calibration.test.mjs",
     "test:workstation:fixture-027": "node --test --test-isolation=none experiments/workstation/fixture-027/*.test.mjs",
     "workstation:fixture-012:physical": "node experiments/workstation/fixture-012/workstation-cli.mjs",
     "generate:plots": "node scripts/generate-plots.mjs && node scripts/generate-field-coverage.mjs",
@@ -42,6 +51,7 @@
     "generate:coverage": "node scripts/generate-field-coverage.mjs",
     "validate:coverage": "node scripts/generate-field-coverage.mjs --check",
     "generate:taxonomies": "python scripts/import-science-taxonomies.py && node scripts/generate-taxonomy-depth.mjs",
+    "generate:third-party-notices": "node scripts/generate-third-party-notices.mjs",
     "validate:taxonomies": "node scripts/validate-science-taxonomies.mjs && node scripts/generate-taxonomy-depth.mjs --check",
     "generate:book-pdf": "node scripts/generate-book-pdf.mjs",
     "validate:book-pdf": "node scripts/validate-book-pdf.mjs",
