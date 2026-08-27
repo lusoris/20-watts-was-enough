@@ -24451,3 +24451,197 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   useful protection without fitting a brittle ecological model?
 - **Direct test:** [`F-028 / PAR-X04`](../experiments/fixtures/028-parasitology-adversarial-lifecycles.md#par-x04-system--intervention-induced-competitive-release).
 - **Traceability:** [parasitology audit](audits/2026-08-27-parasitology-adversarial-lifecycles.md#4-competitive-release-intervention-changes-the-population) · bibliography keys [`deroode2004competitive`, `wargo2007competitive`](references.bib).
+
+### C-1573
+
+- **Claim:** In the cited experimental systems, heterobifunctional degraders
+  and molecular glues induced target degradation by recruiting a target to
+  cellular ubiquitin-ligase machinery. Productive action depended on the
+  target--mediator--effector relation and downstream processing rather than
+  target occupancy alone.
+- **Status:** established in the cited biochemical, cellular and animal-model
+  systems; universal catalyticity, selectivity, safety and clinical benefit are
+  not established by these sources.
+- **Primary sources:** [Sakamoto et al. 2001](https://doi.org/10.1073/pnas.141230798),
+  [Bondeson et al. 2015](https://doi.org/10.1038/nchembio.1858),
+  [Winter et al. 2015](https://doi.org/10.1126/science.aab1433), and
+  [Krönke et al. 2014](https://doi.org/10.1126/science.1244851).
+- **Rationale:** the source operation is a bounded example of recruiting
+  existing machinery; it is evidence input for the adjacent transfer claim,
+  not evidence that a digital mediator is efficient.
+- **Evidence role:** the synthetic F-029 track does not retest this biological
+  claim and cannot raise its evidence status.
+- **Open question:** which geometric, concentration, compartment and effector
+  constraints delimit productive recruitment rather than nonproductive
+  binding or collateral degradation?
+- **Traceability:** [clinical-biotechnology audit](audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md#1-induced-proximity-relation-triggered-action).
+
+### C-1574
+
+- **Claim:** A compact reusable mediator that recruits an already provisioned
+  maintenance actor may remove transient harmful components more efficiently
+  than continuous suppression or an explicit deletion queue.
+- **Status:** speculative AI translation; `NO_RESULT`.
+- **Source-domain input:** [C-1573](#c-1573). The biological evidence does not
+  establish this systems claim.
+- **Rationale:** the mediator may encode a relation and reuse an existing
+  effector instead of carrying the action implementation or remaining active
+  for the target's entire lifetime.
+- **Efficiency mechanism:** any reduction in target persistence or persistent
+  control state must repay search, mediator placement, effector queueing,
+  verification, collateral action, replacement and service loss.
+- **Failure modes:** nonproductive recruitment, effector scarcity, saturation,
+  off-target action, target resynthesis, cross-compartment leakage and deletion
+  of useful components.
+- **Measurable prediction:** in a sealed arrival process with matched target
+  evidence and maintenance capacity, the mediator arm improves the joint
+  target-time--service--energy frontier over occupancy control, tagged queues,
+  periodic garbage collection and direct deletion in at least one preregistered
+  regime, while losing outside its support region.
+- **Open question:** is any residual gain left after an optimized tagged queue
+  receives the same evidence and effector access?
+- **Direct test:** [`F-029 / CMB-X01`](../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md#cmb-x01--recruited-maintenance-versus-occupancy-and-explicit-queueing).
+- **Traceability:** [clinical-biotechnology audit](audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md#1-induced-proximity-relation-triggered-action).
+
+### C-1575
+
+- **Claim:** In the cited lysosomal-disease systems, a functional factor
+  released by producer cells could be taken up and used by other cells. Producer
+  fraction, receiver exposure, uptake, biochemical correction and clinical
+  outcome are therefore distinct quantities.
+- **Status:** established for the scoped cell experiments and a specific
+  non-randomised clinical/product record; no universal producer threshold,
+  transport range or therapeutic scaling law is claimed.
+- **Primary and authoritative sources:**
+  [Fratantoni, Hall and Neufeld 1968](https://doi.org/10.1126/science.162.3853.570),
+  [Biffi et al. 2013](https://doi.org/10.1126/science.1233158),
+  [Sessa et al. 2016](https://doi.org/10.1016/S0140-6736%2816%2930374-9),
+  [Fumagalli et al. 2022](https://doi.org/10.1016/S0140-6736%2821%2902017-1),
+  and [EMA Libmeldy product information](https://www.ema.europa.eu/en/documents/product-information/libmeldy-epar-product-information_en.pdf).
+- **Rationale:** the observation separates production, transport, uptake and
+  correction; it does not imply that sparse distribution is always sufficient
+  or efficient.
+- **Evidence role:** the synthetic F-029 track uses those distinctions as
+  constraints but does not test a patient, product or biological mechanism.
+- **Open question:** how do accessibility, competing sinks, irreversible damage
+  and producer failure bound receiver-level correction?
+- **Traceability:** [clinical-biotechnology audit](audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md#2-sparse-producers-and-lysosomal-cross-correction).
+
+### C-1576
+
+- **Claim:** A sparse producer population exporting versioned, typed correction
+  artifacts may repair a larger compatible module population more efficiently
+  than independent per-module repair.
+- **Status:** speculative AI translation; `NO_RESULT`.
+- **Source-domain input:** [C-1575](#c-1575). The clinical and cellular records
+  do not establish an artificial-system advantage.
+- **Rationale:** one validated correction could be reused by multiple receivers
+  when compatibility and transport permit it.
+- **Efficiency mechanism:** generated bytes, reconstruction work and energy may
+  fall, but producer maintenance, placement, transport, uptake, validation,
+  latency and correlated-failure costs remain charged.
+- **Failure modes:** inaccessible receivers, version mismatch, competing sinks,
+  transport delay, overload, wrong correction, producer loss, correlated trust
+  failure and correction arriving after an irreversible deadline.
+- **Measurable prediction:** on sealed spatial graphs with repeated compatible
+  deficits, a sparse-producer arm reaches matched receiver-level service with a
+  better complete cost frontier than per-node reconstruction, central multicast,
+  content-addressed distribution and gossip only in a bounded transport and
+  reuse regime.
+- **Open question:** can ordinary content-addressed distribution absorb the
+  entire proposed advantage once it receives identical compatibility metadata?
+- **Direct test:** [`F-029 / CMB-X02`](../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md#cmb-x02--sparse-producer-cross-correction-versus-distribution-nulls).
+- **Traceability:** [clinical-biotechnology audit](audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md#2-sparse-producers-and-lysosomal-cross-correction).
+
+### C-1577
+
+- **Claim:** In the cited SMN2 systems, sequence-specific antisense mediators
+  redirected processing toward exon-7-containing full-length product without
+  editing the genome; the cited randomised trial and EU product record support
+  a qualified clinical mechanism and effect, not unrestricted restoration.
+- **Status:** established molecular mechanism with randomised clinical evidence
+  in the declared population; delivery, repeated treatment, disease stage,
+  adverse outcomes and comparison with other treatments remain separate.
+- **Primary and authoritative sources:**
+  [Hua et al. 2008](https://doi.org/10.1016/j.ajhg.2008.01.014),
+  [Passini et al. 2011](https://doi.org/10.1126/scitranslmed.3001777),
+  [Finkel et al. 2017](https://doi.org/10.1056/NEJMoa1702752), and
+  [EMA Spinraza product information](https://www.ema.europa.eu/en/documents/product-information/spinraza-epar-product-information_en.pdf).
+- **Rationale:** the mechanism changes selection among already encoded
+  processing outcomes; it does not create a missing functional path.
+- **Evidence role:** F-029 plants an artificial latent path and cannot retest or
+  generalise the biological and clinical findings.
+- **Open question:** which contexts retain a functional latent path and permit
+  sufficiently specific, reversible redirection?
+- **Traceability:** [clinical-biotechnology audit](audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md#3-splice-redirection-exposing-a-latent-functional-path).
+
+### C-1578
+
+- **Claim:** A small reversible processing mask may expose an existing
+  functional execution path more efficiently than a durable model update.
+- **Status:** speculative AI translation; `NO_RESULT`.
+- **Source-domain input:** [C-1577](#c-1577). The biological mechanism and
+  clinical result do not establish this software claim.
+- **Rationale:** changing dispatch-time path selection may preserve base
+  parameters and reduce persistent state when the required path already exists.
+- **Efficiency mechanism:** mask bytes, delivery, expiry and compatibility must
+  be cheaper than a router edit, prompt, adapter or parameter update across the
+  full persistence horizon.
+- **Failure modes:** absent or invalid latent path, version drift, off-target
+  routing, context-dependent failure, repeated-delivery cost and a durable
+  routing table dominating the transient mediator.
+- **Measurable prediction:** with a planted, independently verified latent path,
+  the mask arm improves useful output per added byte and joule without changing
+  base parameters, and survives comparison with explicit routers, prompts,
+  adapters and low-rank updates under matched persistence.
+- **Open question:** after full versioning and delivery cost, is the mechanism
+  distinguishable from an ordinary reversible routing-table update?
+- **Direct test:** [`F-029 / CMB-X03`](../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md#cmb-x03--transient-path-mask-versus-explicit-routing-and-updates).
+- **Traceability:** [clinical-biotechnology audit](audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md#3-splice-redirection-exposing-a-latent-functional-path).
+
+### C-1579
+
+- **Claim:** In the cited Fabry systems and for compatible variants, reversible
+  ligand binding stabilised mutant alpha-galactosidase A during trafficking and
+  permitted lysosomal activity after release. Compatibility, transit and release
+  are parts of the mechanism rather than implementation details.
+- **Status:** established for scoped experimental systems and an EU-authorised
+  amenable-variant product; clinical effects remain endpoint-, population- and
+  variant-qualified, including the nonsignificant all-randomised primary
+  responder analysis in the cited trial.
+- **Primary and authoritative sources:** [Fan et al. 1999](https://doi.org/10.1038/4801),
+  [Germain et al. 2016](https://doi.org/10.1056/NEJMoa1510198), and
+  [EMA Galafold product information](https://www.ema.europa.eu/en/documents/product-information/galafold-epar-product-information_en.pdf).
+- **Rationale:** preserving an unstable useful state during one phase is
+  different from permanent activation, replacement or unconditional rescue.
+- **Evidence role:** the synthetic F-029 transit task does not test Fabry
+  disease, a medicinal product or clinical efficacy.
+- **Open question:** where is the compatibility and concentration region in
+  which increased transit survival is not cancelled by failed release or
+  inhibited service?
+- **Traceability:** [clinical-biotechnology audit](audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md#4-phase-selective-pharmacological-chaperoning).
+
+### C-1580
+
+- **Claim:** A compatibility-qualified wrapper that stabilises a fragile useful
+  artifact during transfer and releases it before service may cost less than
+  replacing or reconstructing the artifact.
+- **Status:** speculative AI translation; `NO_RESULT`.
+- **Source-domain input:** [C-1579](#c-1579). The medicinal mechanism does not
+  establish an artificial preservation advantage.
+- **Rationale:** phase-selective binding may preserve an existing capability
+  through a hostile transition without duplicating the whole artifact.
+- **Efficiency mechanism:** avoided replacement, reload or recompilation must
+  repay wrapper construction, compatibility testing, transfer overhead,
+  release failure, validation and recurring maintenance.
+- **Failure modes:** incompatible artifact, binding too weak to protect, binding
+  too strong to release, wrong phase cue, throughput suppression, off-target
+  stabilisation and wrapper cost exceeding replacement.
+- **Measurable prediction:** under sealed planted transit fragility, a bounded
+  wrapper strength and release region improves activated service and complete
+  cost over no wrapper and permanent binding, and also beats packaging plus
+  validation, retry, replication, checkpoint reload and recompilation.
+- **Open question:** does an ordinary package-and-validation state machine
+  capture the complete residual once both arms receive the same phase signal?
+- **Direct test:** [`F-029 / CMB-X04`](../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md#cmb-x04--phase-selective-stabilization-and-release).
+- **Traceability:** [clinical-biotechnology audit](audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md#4-phase-selective-pharmacological-chaperoning).

@@ -4,5 +4,30 @@
     "start": "C-1204",
     "end": "C-1600"
   },
-  "claims": []
+  "claims": [
+    {
+      "id": "C-1573",
+      "disposition": "evidence-input",
+      "rationale": "This is a scoped source-domain observation about induced proximity; F-029 tests only the separately stated artificial-system transfer C-1574.",
+      "targets": []
+    },
+    {
+      "id": "C-1575",
+      "disposition": "evidence-input",
+      "rationale": "This is a scoped biological and clinical cross-correction record; F-029 tests only the synthetic distribution hypothesis C-1576.",
+      "targets": []
+    },
+    {
+      "id": "C-1577",
+      "disposition": "evidence-input",
+      "rationale": "This is a molecular and clinical splice-redirection record; F-029 tests only the planted artificial latent-path hypothesis C-1578.",
+      "targets": []
+    },
+    {
+      "id": "C-1579",
+      "disposition": "evidence-input",
+      "rationale": "This is a variant-qualified biological, clinical and EU product record; F-029 tests only the synthetic phase-selective preservation hypothesis C-1580.",
+      "targets": []
+    }
+  ]
 }

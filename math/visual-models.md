@@ -165,6 +165,41 @@ in the reduced state. The plot is an exact property of this normal form, not a
 universal abstention threshold. The full validity conditions are kept in the
 [multiscale reduction contract](multiscale-reduction-contract.md).
 
+## Phase-selective preservation and release
+
+![An illustrative protection factor rises with wrapper strength while release falls, so their product has an interior maximum rather than improving monotonically.](../public/plots/phase-selective-preservation.svg)
+
+Fixture F-029 separates survival during a hostile transition from release for
+later service. The plotted reading aid uses the explicitly constructed logistic
+factors
+
+$$
+S(c)=s_0+\frac{s_1-s_0}{1+\exp[-a(c-c_S)]},
+$$
+
+$$
+R(c)=r_0+\frac{r_1-r_0}{1+\exp[b(c-c_R)]},
+\qquad
+A(c)=N\,S(c)R(c).
+$$
+
+$c$ is a dimensionless illustrative wrapper-strength control; $S(c)$ is transit
+survival probability; and
+$R(c)=P(\text{released and active}\mid\text{survived transit},c)$ is the
+conditional destination release-and-activation probability. Both are
+dimensionless. $s_0,s_1,r_0,r_1$ are dimensionless bounds; $a$ and $b$ are
+inverse-strength slopes; $c_S$ and $c_R$ are dimensionless midpoints; $N$ is
+attempted artifacts per second; and $A(c)$ is useful released artifacts per
+second. The figure displays $A(c)/N$.
+
+Increasing $c$ can improve survival while simultaneously making release less
+likely. A one-axis "stability" score would therefore hide the actual service
+failure. The chosen logistic forms and every parameter are hypothetical: they
+are not a fit to a protein, medicinal product, model, compiler or workstation.
+The useful question is whether a measured artificial implementation exhibits a
+support region that survives package/validation, retry, replication, reload and
+recompilation nulls under the complete [F-029 contract](../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md#cmb-x04--phase-selective-stabilization-and-release).
+
 ## Contextual analytical figures
 
 The next figures are embedded where their equations first matter in the book;
@@ -208,6 +243,10 @@ duplicating every full-size image here.
    parameters are hypothetical and the figure reports neither delivered
    service nor energy. First used in
    [Interface-qualified retroactivity](interface-qualified-retroactivity.md#worked-mass-action-reference).
+9. **Phase-selective preservation and release.**
+   Constructed opposing survival and release factors whose product has an
+   interior maximum. The figure introduces no measurement or optimum and is
+   defined above for [Fixture F-029](../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md#cmb-x04--phase-selective-stabilization-and-release).
 
 Every value in these figures is labeled analytical or illustrative. None is a
 workstation result, a promoted claim, or a recommended deployment threshold.

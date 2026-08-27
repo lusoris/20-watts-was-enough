@@ -9,16 +9,16 @@ experiment contracts, or disposition fragments.
 
 The four rows below are mutually exclusive highest-reached tiers.
 
-| Highest coverage tier | Claims | Share of 1563 | Meaning |
+| Highest coverage tier | Claims | Share of 1571 | Meaning |
 | --- | ---: | ---: | --- |
-| ledger-only | 92 | 5.9% | no exact direct relation to a numbered experiment artifact |
+| ledger-only | 96 | 6.1% | no exact direct relation to a numbered experiment artifact |
 | linked test description | 0 | 0.0% | related experiment prose exists, but at least one required protocol facet is absent |
-| protocol-complete test contract | 1471 | 94.1% | at least one linked artifact contains all eight required facets |
+| protocol-complete test contract | 1475 | 93.9% | at least one linked artifact contains all eight required facets |
 | workstation-executable | 0 | 0.0% | checked execution manifest and runnable scientific harness exist |
 
-The short answer is therefore **1471 claims have a complete
+The short answer is therefore **1475 claims have a complete
 test description, but 0 are executable on the workstation**.
-Across both description tiers, 1471 claims have an exact direct
+Across both description tiers, 1475 claims have an exact direct
 relation to at least one experiment artifact. These are aggregate candidate
 tests: they evaluate engineering translations supported by several claims; they
 do not independently reproduce every source paper.
@@ -27,9 +27,9 @@ do not independently reproduce every source paper.
 
 | Highest tier | Established | Plausible | Speculative | Disputed | Unknown |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| ledger-only | 79 | 9 | 0 | 4 | 0 |
+| ledger-only | 83 | 9 | 0 | 4 | 0 |
 | linked-description | 0 | 0 | 0 | 0 | 0 |
-| protocol-complete | 1145 | 210 | 60 | 47 | 9 |
+| protocol-complete | 1145 | 210 | 64 | 47 | 9 |
 | workstation-executable | 0 | 0 | 0 | 0 | 0 |
 
 ## Why ledger-only claims remain unlinked
@@ -39,7 +39,7 @@ classification itself as a test.
 
 | Disposition | Claims | Meaning |
 | --- | ---: | --- |
-| evidence-input | 81 | scientific or engineering evidence that constrains a translation but is not itself a standalone AI-system hypothesis |
+| evidence-input | 85 | scientific or engineering evidence that constrains a translation but is not itself a standalone AI-system hypothesis |
 | source-reproduction | 11 | a source-domain result whose direct test would reproduce the cited study rather than evaluate this project's AI system |
 | existing-artifact-gap | 0 | an engineering consequence belongs in an existing artifact, but its exact traceability or track is still missing |
 | new-artifact-needed | 0 | a project engineering hypothesis needs a new experiment contract |
@@ -77,13 +77,13 @@ A relation exists when either side states it exactly:
 
 Inclusive ranges are expanded only when both endpoints have exact matching
 links. Prose numbers and indirect adoption-matrix associations do not count.
-The union yields 1471 linked claims: 1254
-appear on the claim side, 1161 on the document side, and
-807 have at least one reciprocal same-artifact relation.
+The union yields 1475 linked claims: 1258
+appear on the claim side, 1165 on the document side, and
+811 have at least one reciprocal same-artifact relation.
 
 ## Artifact coverage
 
-There are 48 experiment artifacts: 48
+There are 49 experiment artifacts: 49
 pass the written-protocol gate, a validated smoke harness exists for
 10, and 0 pass the full execution gate.
 Smoke readiness verifies deterministic plumbing but cannot promote a claim.
@@ -138,10 +138,11 @@ Smoke readiness verifies deterministic plumbing but cannot promote a claim.
 | [fixture-026](fixtures/026-interface-qualified-relative-sensing.md) | 19 | complete description | smoke-ready; not executable |
 | [fixture-027](fixtures/027-interface-qualified-retroactivity-insulation.md) | 10 | complete description | smoke-ready; not executable |
 | [fixture-028](fixtures/028-parasitology-adversarial-lifecycles.md) | 4 | complete description | not executable |
+| [fixture-029](fixtures/029-clinical-biotechnology-endogenous-machinery.md) | 4 | complete description | not executable |
 
 ## Immediate gaps
 
-- 92 claims remain ledger-only: 81
+- 96 claims remain ledger-only: 85
   evidence inputs, 11 source-domain
   reproductions, and 0 claims needing
   a new project experiment artifact.

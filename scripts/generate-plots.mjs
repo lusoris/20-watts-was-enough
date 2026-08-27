@@ -69,11 +69,12 @@ function frame(spec, content, {
   badge = "MATHEMATICAL MODEL · ILLUSTRATIVE",
   footer = "No measurements · assumptions in assets/plots/core-models.json",
 }) {
+  const badgeWidth = Math.min(W - 72, Math.max(272, Math.ceil(32 + badge.length * 9.4)));
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="title desc">
   <title id="title">${esc(spec.title)}</title>
   <desc id="desc">${esc(spec.status)}</desc>
   <rect width="${W}" height="${H}" rx="24" fill="${colors.background}"/>
-  <rect x="36" y="30" width="272" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
+  <rect x="36" y="30" width="${badgeWidth}" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
   <text x="52" y="50" fill="${colors.green}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">${esc(badge)}</text>
   <text x="54" y="94" fill="${colors.text}" font-family="Georgia, serif" font-size="32" font-weight="700">${esc(spec.title)}</text>
   <text x="54" y="123" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="14">${esc(spec.equation)}</text>
@@ -243,6 +244,72 @@ function lifecycle(spec) {
   return frame(spec, content, {
     xLabel: "one-time candidate burden Delta E_0 / reference energy (log)",
     yLabel: "per-event saving delta e / reference energy (log)",
+  });
+}
+
+function phaseSelectivePreservation(spec) {
+  const {
+    strength_min: xMin,
+    strength_max: xMax,
+    samples,
+    survival_floor: survivalFloor,
+    survival_ceiling: survivalCeiling,
+    survival_midpoint: survivalMidpoint,
+    survival_slope: survivalSlope,
+    release_floor: releaseFloor,
+    release_ceiling: releaseCeiling,
+    release_midpoint: releaseMidpoint,
+    release_slope: releaseSlope,
+  } = spec.parameters;
+  const survival = (strength) => survivalFloor
+    + (survivalCeiling - survivalFloor)
+      / (1 + Math.exp(-survivalSlope * (strength - survivalMidpoint)));
+  const release = (strength) => releaseFloor
+    + (releaseCeiling - releaseFloor)
+      / (1 + Math.exp(releaseSlope * (strength - releaseMidpoint)));
+  const values = Array.from({ length: samples }, (_, index) => {
+    const strength = xMin + (index / (samples - 1)) * (xMax - xMin);
+    const survived = survival(strength);
+    const released = release(strength);
+    return { strength, survived, released, useful: survived * released };
+  });
+  const pathFor = (key) => linePath(values.map((row) => [
+    sx(row.strength, xMin, xMax),
+    sy(row[key], 0, 1),
+  ]));
+  const optimum = values.reduce((best, row) => (
+    row.useful > best.useful ? row : best
+  ));
+  const optimumX = sx(optimum.strength, xMin, xMax);
+  const optimumY = sy(optimum.useful, 0, 1);
+  const noWrapper = values[0].useful;
+  const noWrapperY = sy(noWrapper, 0, 1);
+  const legend = `<line x1="650" y1="48" x2="676" y2="48" stroke="${colors.green}" stroke-width="4"/><text x="684" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">survive S(c)</text>
+  <line x1="780" y1="48" x2="806" y2="48" stroke="${colors.cyan}" stroke-width="4" stroke-dasharray="11 6"/><text x="814" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">conditional R(c)</text>
+  <line x1="910" y1="48" x2="936" y2="48" stroke="${colors.amber}" stroke-width="5"/><text x="944" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">useful A/N</text>`;
+  const content = `${grid(
+    [0, 2, 4, 6, 8, 10],
+    [0, 0.2, 0.4, 0.6, 0.8, 1],
+    (value) => sx(value, xMin, xMax),
+    (value) => sy(value, 0, 1),
+    (value) => value.toFixed(0),
+    (value) => value.toFixed(1),
+  )}<line x1="${plot.left}" y1="${noWrapperY}" x2="${plot.right}" y2="${noWrapperY}" stroke="${colors.violet}" stroke-width="2" stroke-dasharray="9 7" opacity=".85"/>
+  <text x="${plot.right - 12}" y="${noWrapperY - 10}" fill="${colors.violet}" font-family="Segoe UI, sans-serif" font-size="12" text-anchor="end">illustrative no-wrapper product</text>
+  <path d="${pathFor("survived")}" fill="none" stroke="${colors.green}" stroke-width="4"/>
+  <path d="${pathFor("released")}" fill="none" stroke="${colors.cyan}" stroke-width="4" stroke-dasharray="11 6"/>
+  <path d="${pathFor("useful")}" fill="none" stroke="${colors.amber}" stroke-width="6"/>
+  <line x1="${optimumX}" y1="${optimumY}" x2="${optimumX}" y2="${plot.bottom}" stroke="${colors.text}" stroke-width="2" stroke-dasharray="6 6"/>
+  <circle cx="${optimumX}" cy="${optimumY}" r="8" fill="${colors.amber}" stroke="${colors.text}" stroke-width="3"/>
+  <rect x="${Math.min(optimumX + 18, plot.right - 300)}" y="${Math.max(plot.top + 20, optimumY - 62)}" width="282" height="52" rx="9" fill="${colors.background}" fill-opacity=".96" stroke="${colors.grid}"/>
+  <text x="${Math.min(optimumX + 32, plot.right - 286)}" y="${Math.max(plot.top + 44, optimumY - 38)}" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800">illustrative product maximum</text>
+  <text x="${Math.min(optimumX + 32, plot.right - 286)}" y="${Math.max(plot.top + 63, optimumY - 19)}" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">c=${optimum.strength.toFixed(2)} · A/N=${optimum.useful.toFixed(3)}</text>`;
+  return frame(spec, content, {
+    xLabel: "wrapper strength c (dimensionless illustrative control)",
+    yLabel: "probability or useful fraction",
+    legend,
+    badge: "HYPOTHETICAL RESPONSE MODEL · NO_RESULT",
+    footer: "Constructed logistic factors · no biological fit, software run, or energy measurement",
   });
 }
 
@@ -2687,9 +2754,47 @@ const renderers = {
   "rsd-t02-bootstrap-calibration": rsdT02BootstrapCalibration,
   "interface-qualified-retroactivity": interfaceQualifiedRetroactivity,
   "history-conditioned-position-contrast": historyConditionedPositionContrast,
+  "phase-selective-preservation": phaseSelectivePreservation,
 };
 
+function githubHeadingSlug(heading) {
+  return heading
+    .replace(/<[^>]*>/gu, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/gu, "$1")
+    .replace(/[`*_~]/gu, "")
+    .trim()
+    .toLocaleLowerCase("en")
+    .replace(/[^\p{L}\p{N}\s-]/gu, "")
+    .replace(/\s+/gu, "-");
+}
+
+async function validatePlotSource(spec) {
+  if (typeof spec.source !== "string" || spec.source.length === 0) {
+    throw new Error(`${spec.id} is missing a source path`);
+  }
+  const [relativePath, requestedAnchor] = spec.source.split("#", 2);
+  const absolutePath = path.resolve(root, relativePath);
+  if (path.relative(root, absolutePath).startsWith("..")) {
+    throw new Error(`${spec.id} source escapes the repository: ${spec.source}`);
+  }
+  const source = await readFile(absolutePath, "utf8");
+  if (!requestedAnchor) return;
+
+  const counts = new Map();
+  const anchors = new Set();
+  for (const match of source.matchAll(/^#{1,6}\s+(.+?)\s*#*$/gmu)) {
+    const base = githubHeadingSlug(match[1]);
+    const duplicateIndex = counts.get(base) ?? 0;
+    counts.set(base, duplicateIndex + 1);
+    anchors.add(duplicateIndex === 0 ? base : `${base}-${duplicateIndex}`);
+  }
+  if (!anchors.has(requestedAnchor)) {
+    throw new Error(`${spec.id} source anchor does not resolve: ${spec.source}`);
+  }
+}
+
 for (const spec of specs) {
+  await validatePlotSource(spec);
   const renderer = renderers[spec.id];
   if (!renderer) throw new Error(`No plot renderer for ${spec.id}`);
   const svg = await renderer(spec);

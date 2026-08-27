@@ -2,7 +2,7 @@
   <title id="title">Areal support is a spatial filter</title>
   <desc id="desc">Analytic centered box-average response for a one-dimensional sinusoidal field; it illustrates support sensitivity and is not an empirical geographic result.</desc>
   <rect width="1100" height="660" rx="24" fill="#101c18"/>
-  <rect x="36" y="30" width="272" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
+  <rect x="36" y="30" width="314" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
   <text x="52" y="50" fill="#36d399" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">CHANGE OF SUPPORT · ANALYTICAL</text>
   <text x="54" y="94" fill="#fffaf0" font-family="Georgia, serif" font-size="32" font-weight="700">Areal support is a spatial filter</text>
   <text x="54" y="123" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="14">H(r/lambda) = sin(pi r/lambda) / (pi r/lambda)</text>

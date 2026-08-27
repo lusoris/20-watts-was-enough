@@ -2,7 +2,7 @@
   <title id="title">Nine policies, one visible work baseline</title>
   <desc id="desc">Exact declared operation accounting for the nine fixed public-development conformance policies on one 53,795-row packet. Bars show policy-specific scalar work above the common 645,540-operation traversal charge; labels show total scalar operations and transcendental evaluations. These counts are protocol accounting, not elapsed-time, energy, accuracy, comparison, or confirmation results.</desc>
   <rect width="1100" height="660" rx="24" fill="#101c18"/>
-  <rect x="36" y="30" width="272" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
+  <rect x="36" y="30" width="380" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
   <text x="52" y="50" fill="#36d399" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">EXACT CONTRACT ACCOUNTING · NO_RESULT</text>
   <text x="54" y="94" fill="#fffaf0" font-family="Georgia, serif" font-size="32" font-weight="700">Nine policies, one visible work baseline</text>
   <text x="54" y="123" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="14">charged work = 53,795 rows × 12 traversal ops + policy-specific ops</text>

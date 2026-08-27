@@ -2,7 +2,7 @@
   <title id="title">Parameter draws cannot repair missing lineages</title>
   <desc id="desc">Exact coverage audit of the five-family public-development RSD-T02 registry. Full-panel-equivalent I1-FFL and affine high-pass recipes count as one structural lineage. The chart reports a design prerequisite only: it is not sample size, power, estimator performance, biological prevalence, or a comparison result.</desc>
   <rect width="1100" height="660" rx="24" fill="#101c18"/>
-  <rect x="36" y="30" width="272" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
+  <rect x="36" y="30" width="361" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
   <text x="52" y="50" fill="#36d399" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">EXACT REGISTRY COVERAGE · NO_RESULT</text>
   <text x="54" y="94" fill="#fffaf0" font-family="Georgia, serif" font-size="32" font-weight="700">Parameter draws cannot repair missing lineages</text>
   <text x="54" y="123" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="14">coverage(q=v) = number of distinct structural lineages after full-panel equivalence collapse; required floor = 2</text>

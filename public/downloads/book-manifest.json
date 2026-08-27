@@ -2,7 +2,7 @@
   "schema_version": 2,
   "title": "20 Watts Was Enough — Full Concept Book",
   "pdf": "public/downloads/20-watts-was-enough-full-concept-book.pdf",
-  "source_digest": "944c5e8fabfc0141001648ee915e78cbe9ee1e650057e786b26e7a3a5c20fd88",
+  "source_digest": "89dde33c315fce8253eed3e50229fb5b4def9a351f1f7cd3735323ca996942ad",
   "source_files": [
     "app/book-content.ts",
     "app/book/page.tsx",
@@ -92,6 +92,7 @@
     "public/plots/memory-kernel-truncation.svg",
     "public/plots/mission-profile-damage.svg",
     "public/plots/pareto-dominance-uncertainty.svg",
+    "public/plots/phase-selective-preservation.svg",
     "public/plots/recovery-time-fragility.svg",
     "public/plots/repeated-stimulus-skipping-cell.svg",
     "public/plots/rsd-t01-family-property-overlap.svg",
@@ -118,7 +119,7 @@
   "book_documents": 51,
   "generated_front_matter_sections": 1,
   "rendered_diagrams": 48,
-  "generated_at": "2026-08-27T19:31:49.157Z",
-  "size_bytes": 13083630,
-  "pdf_sha256": "ac6bd38eeed91ccac60e04a9897edda34095176f66ecc6a15654681d65146831"
+  "generated_at": "2026-08-27T21:09:27.847Z",
+  "size_bytes": 13167248,
+  "pdf_sha256": "77fbbdd453380f4dc70d8be7efde44aad2fb85548274a47e1d5aeb47817ae086"
 }

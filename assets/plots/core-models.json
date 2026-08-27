@@ -640,5 +640,31 @@
       "reserved_capacity_contrast_percentage_points": [1.2, 0.4, -0.4, -1.2]
     },
     "status": "Constructed factorial-design illustration using hypothetical protected-score contrasts. No model was trained: the values are not measurements, estimates, predictions, recommended effect sizes, or evidence for a position or capacity mechanism."
+  },
+  {
+    "id": "phase-selective-preservation",
+    "title": "Protection and release can oppose each other",
+    "equation": "A(c)/N = S(c) R(c); R is conditional on transit survival",
+    "source": "research/audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md#4-phase-selective-pharmacological-chaperoning",
+    "layout": {
+      "kind": "phase-selective-preservation",
+      "width": 1100,
+      "height": 660,
+      "theme": "ember"
+    },
+    "parameters": {
+      "strength_min": 0,
+      "strength_max": 10,
+      "samples": 301,
+      "survival_floor": 0.2,
+      "survival_ceiling": 0.98,
+      "survival_midpoint": 3,
+      "survival_slope": 1.1,
+      "release_floor": 0.1,
+      "release_ceiling": 0.99,
+      "release_midpoint": 6.2,
+      "release_slope": 1.1
+    },
+    "status": "Constructed reading aid for the phase-selective preservation hypothesis. The logistic factors and all parameter values are illustrative. The curve is not fitted to a biological system, medicinal product, software implementation, benchmark, workstation run, or energy measurement; every F-029 comparison remains NO_RESULT."
   }
 ]

@@ -2,19 +2,19 @@
   "schema": 1,
   "generatedFrom": "experiments/test-coverage.json",
   "claims": {
-    "total": 1563,
-    "testRouted": 1471,
-    "protocolCovered": 1471,
+    "total": 1571,
+    "testRouted": 1475,
+    "protocolCovered": 1475,
     "executionReady": 0,
     "tierCounts": {
-      "ledger-only": 92,
+      "ledger-only": 96,
       "linked-description": 0,
-      "protocol-complete": 1471,
+      "protocol-complete": 1475,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
       "ledger-only": {
-        "established": 79,
+        "established": 83,
         "plausible": 9,
         "speculative": 0,
         "disputed": 4,
@@ -30,7 +30,7 @@
       "protocol-complete": {
         "established": 1145,
         "plausible": 210,
-        "speculative": 60,
+        "speculative": 64,
         "disputed": 47,
         "unknown": 9
       },
@@ -44,9 +44,9 @@
     }
   },
   "ledgerOnly": {
-    "total": 92,
+    "total": 96,
     "dispositionCounts": {
-      "evidence-input": 81,
+      "evidence-input": 85,
       "source-reproduction": 11,
       "existing-artifact-gap": 0,
       "new-artifact-needed": 0
@@ -54,8 +54,8 @@
     "proposedArtifactFamilies": 0
   },
   "artifacts": {
-    "total": 48,
-    "protocolComplete": 48,
+    "total": 49,
+    "protocolComplete": 49,
     "smokeReady": 10,
     "workstationReady": 0,
     "items": [
@@ -1246,6 +1246,19 @@
         "id": "fixture-028",
         "path": "experiments/fixtures/028-parasitology-adversarial-lifecycles.md",
         "title": "Fixture F-028 — Parasitology-derived adversarial lifecycle boundaries",
+        "linkedClaims": 4,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
+      },
+      {
+        "id": "fixture-029",
+        "path": "experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md",
+        "title": "Fixture F-029 — Clinical-biotechnology endogenous-machinery transfers",
         "linkedClaims": 4,
         "protocolComplete": true,
         "missingFacets": [],

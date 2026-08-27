@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "asOf": "2026-08-25",
+  "asOf": "2026-08-27",
   "scope": "Explicit child-level audit routes only. Missing records are unassigned; parent coverage is never inherited.",
   "states": {
     "dedicated": "A field-centered audit directly addresses the named child classification.",
@@ -1046,6 +1046,318 @@
       "rationale": "The audit includes trypanosome, malaria and toxoplasmosis source systems but uses them to define adversarial evaluation boundaries, not clinical conclusions.",
       "scopeGap": "Human disease burden, diagnosis, treatment, prevention, trials, health systems and clinical parasite breadth remain unsampled.",
       "nextQuestion": "Which source-qualified mechanisms remain relevant after human clinical, transmission, intervention and safety boundaries are measured directly?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "2.22-08",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md"
+      ],
+      "claims": ["C-1573", "C-1574", "C-1575", "C-1576", "C-1577", "C-1578", "C-1579", "C-1580"],
+      "rationale": "The audit follows four therapeutic modalities through molecular mechanism, clinical evidence and European product records, but it is not a field-wide pharmacy review.",
+      "scopeGap": "Formulation, manufacture, quality control, dispensing, pharmacokinetics, toxicology, population breadth and most pharmaceutical modalities remain outside scope.",
+      "nextQuestion": "Which mechanism-qualified transfers remain distinguishable from ordinary pharmaceutical delivery, formulation and lifecycle controls under equal safety and total-cost constraints?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "2.22-09",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md"
+      ],
+      "claims": ["C-1573", "C-1574", "C-1575", "C-1576", "C-1577", "C-1578", "C-1579", "C-1580"],
+      "rationale": "Induced proximity, splice redirection and pharmacological chaperoning are mechanism-of-action observations with clinical boundaries; lysosomal cross-correction supplies an adjacent therapeutic comparator.",
+      "scopeGap": "Dose--response, exposure, interactions, organ toxicology, disease breadth, comparative effectiveness and pharmacovigilance are not comprehensively reviewed.",
+      "nextQuestion": "Which relation-, sequence-, compatibility- and phase-qualified effects survive exposure, off-target, tissue, time and adverse-outcome perturbations?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "320601",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md"
+      ],
+      "claims": ["C-1575", "C-1576", "C-1577", "C-1578"],
+      "rationale": "The cross-correction track includes an ex-vivo gene-therapy example and the splice-redirection track includes a molecular therapy, but neither constitutes a field-wide gene-and-molecular-therapy review.",
+      "scopeGap": "Vector and cargo breadth, editing, expression control, delivery, durability, immune effects, manufacturing, long-term safety and most diseases remain outside scope.",
+      "nextQuestion": "Which producer, delivery, uptake, sequence-redirection and durability boundaries remain identifiable across gene and molecular therapy platforms?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "320603",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md"
+      ],
+      "claims": ["C-1573", "C-1574", "C-1577", "C-1578", "C-1579", "C-1580"],
+      "rationale": "The audit samples molecular engineering of proteins or nucleic acids through induced proximity, splice redirection and pharmacological chaperoning, while separating source evidence from speculative AI transfer; it is not a field-wide review.",
+      "scopeGap": "Diagnostics, vaccines, tissue engineering, most delivery systems, molecular platform breadth, biobanking, manufacturing scale and disease breadth remain incomplete.",
+      "nextQuestion": "Which additional medical molecular-engineering operations remain source-distinct after compatibility, delivery, lifecycle, safety and mature-engineering nulls are enforced?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "321402",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md"
+      ],
+      "claims": ["C-1573", "C-1574", "C-1575", "C-1576", "C-1577", "C-1578", "C-1579", "C-1580"],
+      "rationale": "Primary clinical trials and European product records bound three marketed therapeutic examples, while the audit remains a mechanism-transfer study rather than a clinical-pharmacology survey.",
+      "scopeGap": "Comparative dosing, exposure--response, interactions, population pharmacology, treatment sequencing, adverse outcomes and routine-care effectiveness remain mostly unreviewed.",
+      "nextQuestion": "Do the registered mechanisms retain their claimed operating boundaries across dose, exposure, recipient, disease stage, co-treatment and follow-up shifts?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "495b214f-06c8-45b9-a5d2-64e2df5dc2e3",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md"
+      ],
+      "claims": ["C-1573", "C-1574", "C-1575", "C-1576", "C-1577", "C-1578", "C-1579", "C-1580"],
+      "rationale": "The audit is explicitly centred on clinical-biotechnology mechanisms and records four established source observations plus four separately speculative engineering hypotheses.",
+      "scopeGap": "A four-mechanism audit does not establish complete medical-biotechnology coverage, clinical utility across products or any artificial-system benefit.",
+      "nextQuestion": "Which further clinically demonstrated operations yield non-duplicate, falsifiable transfers after ordinary molecular, systems and software baselines are included?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "60f1cfbf-a341-4f77-b74d-8742f867c0ae",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md"
+      ],
+      "claims": ["C-1575", "C-1576"],
+      "rationale": "The lysosomal cross-correction track includes bounded ex-vivo gene-therapy evidence, but the audit does not survey vector classes, editing, expression control or gene-therapy manufacture.",
+      "scopeGap": "Vector and cargo breadth, insertion and off-target risks, durability, immune response, conditioning, manufacturing, long-term safety and most diseases remain outside scope.",
+      "nextQuestion": "When do producer fraction, expression, release, transport, uptake, correction and clinical outcome remain separately identifiable across gene-therapy platforms?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "e2a7fab2-7027-40e8-b189-f401a23818c8",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md"
+      ],
+      "claims": ["C-1573", "C-1574", "C-1577", "C-1578", "C-1579", "C-1580"],
+      "rationale": "Targeted degradation, antisense splice redirection and pharmacological chaperoning are drug-mediated mechanisms, but the audit samples only one bounded operation from each family.",
+      "scopeGap": "Drug discovery, formulation, delivery, pharmacokinetics, toxicology, interactions, clinical pharmacy and therapeutic-area breadth remain incomplete.",
+      "nextQuestion": "Which mediator-specific effects retain a useful window after exposure, selectivity, delivery, reversibility, safety and strongest ordinary-control nulls are measured?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "1.22-04",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-institutional-information-allocation-frontier.md"
+      ],
+      "claims": [],
+      "rationale": "Hidden-profile, transactive-memory, responsibility and tournament experiments provide bounded organizational-psychology evidence for four audit-local leads.",
+      "scopeGap": "The audit is not a general social, work or organizational psychology review and adds no central claim or experimental result.",
+      "nextQuestion": "Which effects reproduce under preregistered group composition, expertise visibility, responsibility, reward and peer-action manipulations?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "1.23-03",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-institutional-information-allocation-frontier.md"
+      ],
+      "claims": [],
+      "rationale": "The unique-evidence lead uses bounded group-communication experiments to separate shared-information repetition from preservation of dispersed evidence.",
+      "scopeGap": "Media, journalism, interpersonal, intercultural, health and most organizational communication remain unreviewed by this audit.",
+      "nextQuestion": "When do source coverage and expertise-location records improve decisions beyond unconstrained discussion and full central retrieval?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "1.23-04",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-institutional-information-allocation-frontier.md"
+      ],
+      "claims": [],
+      "rationale": "A public-enforcement field experiment sharpens the separation between measurement audits and behavioral response, while broader political mechanisms deduplicate into existing work.",
+      "scopeGap": "Comparative institutions, parties, executives, legislatures, courts, public policy, international relations and conflict remain outside this bounded pass.",
+      "nextQuestion": "Which governance designs preserve a registered estimand while separately measuring disclosure, deterrence, correction and implementation effects?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "1.24-04",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-institutional-information-allocation-frontier.md"
+      ],
+      "claims": [],
+      "rationale": "Transactive memory, escalation of commitment and tournament sabotage are management evidence inputs, but the audit retains only scoped ablations and no new management architecture.",
+      "scopeGap": "Marketing, strategy, entrepreneurship, leadership, human resources, innovation, operations and organizational breadth remain incomplete.",
+      "nextQuestion": "Which information-location, decision-lineage and peer-effect interventions survive mature planning, allocation and governance baselines at equal total cost?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "350102",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-institutional-information-allocation-frontier.md"
+      ],
+      "claims": [],
+      "rationale": "The measurement-versus-response distinction refines audit records and inclusion probabilities but does not constitute an accounting or assurance framework.",
+      "scopeGap": "Financial, operational, sustainability, public-sector, IT and assurance standards and practice remain outside scope.",
+      "nextQuestion": "How should an audit record separate sampling estimands, inclusion probability, disclosure, remediation and later behavioral exposure?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "350302",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-institutional-information-allocation-frontier.md"
+      ],
+      "claims": [],
+      "rationale": "The knowledge-location lead proposes a versioned expertise directory and unique-evidence coverage as test variables, not as a validated information-management system.",
+      "scopeGap": "Records, intelligence, enterprise systems, governance, privacy, security, lifecycle and deployment breadth remain unreviewed.",
+      "nextQuestion": "When does a stale-aware expertise directory improve unique-evidence use without replacing provenance or complete retrieval?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "350710",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-27-institutional-information-allocation-frontier.md"
+      ],
+      "claims": [],
+      "rationale": "Three of the four retained leads directly audit organizational behavior: distributed expertise, responsibility-conditioned continuation and productive-versus-destructive tournament action.",
+      "scopeGap": "Four narrowly deduplicated mechanisms do not complete organizational-behavior coverage and produce no central claim, fixture or result.",
+      "nextQuestion": "Which effects remain after source coverage, current-state value, action isolation, group composition and reward structure are jointly controlled?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "440708",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-institutional-information-allocation-frontier.md"
+      ],
+      "claims": [],
+      "rationale": "The audit uses a randomized tax-enforcement experiment to distinguish state measurement from behavioral response and deduplicates broader public-administration mechanisms.",
+      "scopeGap": "Administrative organizations, implementation, street-level practice, budgeting, procurement, service delivery, comparative systems and policy breadth remain incomplete.",
+      "nextQuestion": "Which sampling, disclosure and response designs estimate administrative state without conflating deterrence, correction, selection and implementation?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310703",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md"
+      ],
+      "claims": [],
+      "rationale": "Cable-bacteria experiments supply one source-qualified microbial-ecology mechanism for spatially separated redox work; the audit is not a microbial-ecology survey.",
+      "scopeGap": "Community assembly, population dynamics, interactions, habitats, biogeography, methods and most microbial taxa remain unsampled.",
+      "nextQuestion": "Across which taxa and sediments does continuous long-range conduction remain necessary after diffusion, shuttles and ordinary transport nulls are tested?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "410501",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md"
+      ],
+      "claims": [],
+      "rationale": "The cable-bacteria track couples oxygen reduction and sulphide oxidation across sediment redox zones, yielding one bounded environmental-biogeochemistry case.",
+      "scopeGap": "Element cycles, terrestrial and aquatic systems, temporal scales, anthropogenic forcing, modelling and field breadth remain incomplete.",
+      "nextQuestion": "When does a dedicated carrier outperform diffusion or co-location after complete mass, charge, geometry and energy balances are closed?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "98f5f863-7cbf-46a0-84e0-cb319895e0ae",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md"
+      ],
+      "claims": [],
+      "rationale": "A single marine redox-coupling system supplies adjacent biogeochemical evidence without establishing a general biogeochemical principle.",
+      "scopeGap": "Most elements, environments, organisms, spatial scales, flux measurements and coupled cycles remain outside scope.",
+      "nextQuestion": "Which conserved-carrier mechanisms remain distinct after full chemical inventories and conventional transport explanations are included?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310403",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md"
+      ],
+      "claims": [],
+      "rationale": "Selected tardigrade CAHS proteins supply one stress-qualified adaptation case with reversible assembly and live mechanistic dispute.",
+      "scopeGap": "Taxonomic breadth, ecological fitness, development, acclimation, evolution, interacting stressors and in-vivo mechanism remain incomplete.",
+      "nextQuestion": "Which protection mechanisms reproduce across proteins, cargos, taxa, stress histories and rehydration paths without assuming vitrification alone?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310908",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md"
+      ],
+      "claims": [],
+      "rationale": "Stress- and concentration-dependent CAHS material states provide a bounded animal-biophysics observation, not a general account of tardigrade physiology.",
+      "scopeGap": "Whole-animal mechanics, transport, metabolism, organ systems, comparative taxa and direct energetic cost remain unreviewed.",
+      "nextQuestion": "Which material-state variables causally predict protection, recovery time and cost across matched cargos and stress paths?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310301",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md"
+      ],
+      "claims": [],
+      "rationale": "Maize--herbivore--parasitoid experiments provide one typed, third-party recruitment mechanism within behavioural ecology.",
+      "scopeGap": "Receiver learning, signal evolution, deception, community context, fitness, taxa and environmental variation remain mostly unsampled.",
+      "nextQuestion": "Which cue components preserve receiver selectivity and net benefit across attacker, plant, environment and responder shifts?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "410302",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md"
+      ],
+      "claims": [],
+      "rationale": "Herbivore-qualified volatile recruitment is relevant to biological control but the audit neither measures control efficacy nor surveys control systems.",
+      "scopeGap": "Field efficacy, non-target effects, resistance, deployment, crop breadth, integrated pest management and lifecycle outcomes remain outside scope.",
+      "nextQuestion": "When does third-party recruitment reduce damage at field scale after cue cost, false recruitment, non-target effects and ordinary monitoring are counted?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "370702",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md"
+      ],
+      "claims": [],
+      "rationale": "Tracer and sap-flow studies supply one bidirectional root-mediated hydraulic-redistribution mechanism under changing water-potential gradients.",
+      "scopeGap": "Catchment scales, climate regimes, groundwater, competition, soil heterogeneity, model closure and ecosystem outcomes remain incomplete.",
+      "nextQuestion": "Where does root-mediated redistribution improve later service after leakage, transpiration, neighbor uptake, gradient reversal and complete water balance are measured?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "e35d2e39-9fef-4747-84a2-c493c4bf722f",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md"
+      ],
+      "claims": [],
+      "rationale": "One plant--soil hydraulic mechanism supplies adjacent ecohydrology evidence without establishing general watershed or ecosystem control.",
+      "scopeGap": "Surface and groundwater coupling, catchments, climate, vegetation breadth, human use, models and management remain outside scope.",
+      "nextQuestion": "Which hydraulic-network effects remain after full potential gradients, conductance, storage, losses and neighboring demand are observed?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "370501",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md"
+      ],
+      "claims": [],
+      "rationale": "Sea-urchin spine and spicule studies provide one bounded amorphous-precursor-to-crystal pathway in biomineralisation.",
+      "scopeGap": "Organism, mineral, tissue, precursor, nucleation, transformation, mechanics and developmental breadth remain incomplete.",
+      "nextQuestion": "When does a transient amorphous precursor causally improve morphology or service after conversion loss, ordinary templating and direct crystallization nulls are measured?"
     }
   ]
 }

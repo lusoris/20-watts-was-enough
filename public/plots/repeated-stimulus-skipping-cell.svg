@@ -2,7 +2,7 @@
   <title id="title">One pulse train, two distinct event words</title>
   <desc id="desc">Direct deterministic output of the checked-in public-development pulse constructor for one protected skipping cell. PS-NFL-H4 has a support-qualified period-two event word 01 repeated ten times; PS-IFFL-H4 is period one and has no skipping signature. Both topology dispositions remain unresolved because no actionable estimator, rival certificate, comparison, confirmation partition, workstation performance measurement, or energy measurement exists.</desc>
   <rect width="1100" height="660" rx="24" fill="#101c18"/>
-  <rect x="36" y="30" width="272" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
+  <rect x="36" y="30" width="390" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
   <text x="52" y="50" fill="#36d399" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">EXECUTED CONSTRUCTION CELL · NO_RESULT</text>
   <text x="54" y="94" fill="#fffaf0" font-family="Georgia, serif" font-size="32" font-weight="700">One pulse train, two distinct event words</text>
   <text x="54" y="123" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="14">a_j=A_j/A_iso; response iff a_j crosses 0.25; d=0.20 s; T=5.00 s</text>

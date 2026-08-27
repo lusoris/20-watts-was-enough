@@ -2,7 +2,7 @@
   <title id="title">Metering artifact scale</title>
   <desc id="desc">Calculated from the current nominal Candidate 010 matrix; this is an artifact-count comparison, not an energy or runtime measurement.</desc>
   <rect width="1100" height="660" rx="24" fill="#101c18"/>
-  <rect x="36" y="30" width="272" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
+  <rect x="36" y="30" width="305" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
   <text x="52" y="50" fill="#36d399" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">EXPERIMENT SCALE · CALCULATED</text>
   <text x="54" y="94" fill="#fffaf0" font-family="Georgia, serif" font-size="32" font-weight="700">Metering artifact scale</text>
   <text x="54" y="123" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="14">A_event = 2 F A S Q;  A_block = 2 F S K (A + 2)</text>

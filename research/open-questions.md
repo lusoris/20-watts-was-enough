@@ -420,3 +420,14 @@ project choice.
   ([C-1152](claims.md#c-1152)–[C-1203](claims.md#c-1203)). See
   [Fixture F-011](../experiments/fixtures/011-operator-qualified-active-chemical-sensing.md)
   and the [olfaction audit](audits/2026-08-05-olfaction-chemical-sensing-plume-tracking.md#audit-verdict).
+
+- **OQ-067:** In which preregistered support regions do relation-triggered
+  maintenance, sparse typed correction, reversible latent-path selection, or
+  phase-qualified preservation and release improve accepted service, protected
+  failure, latency, bytes, operations, memory, CPU time and measured energy
+  beyond their complete ordinary systems nulls? Each track must be independently
+  killable; biological, clinical and EU product evidence constrains the source
+  observation but cannot answer the synthetic AI comparison. See
+  [C-1574](claims.md#c-1574), [C-1576](claims.md#c-1576),
+  [C-1578](claims.md#c-1578), [C-1580](claims.md#c-1580), and
+  [Fixture F-029](../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md).

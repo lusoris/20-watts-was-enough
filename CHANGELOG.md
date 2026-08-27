@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- The evidence ledger now contains 1,571 claims: 1,475 have reciprocal,
+  protocol-complete routes and 96 remain explicitly classified evidence inputs
+  or source reproductions. All 49 written experiment artifacts pass the
+  protocol gate; ten are development-smoke-ready, while no claim is presented
+  as workstation-executable or as a result.
+
 - The full-book screen layout now constrains readiness grids to the available
   inline size, so the 390-pixel reader no longer expands to the intrinsic width
   of its 760-pixel evidence matrix. Wide Mermaid diagrams retain a readable
@@ -54,6 +60,21 @@ the exact diff; this file records why the project changed.
   notices have been regenerated from the updated build.
 
 ### Added
+
+- A three-frontier research cycle audits clinical biotechnology, hybrid natural
+  mechanisms, and institutional information allocation against primary papers
+  and European authoritative sources. Forty-one bibliography records, eight
+  central claims, Decision 0026, and specification-only Fixture F-029 preserve
+  the source-domain evidence while routing four new endogenous-machinery
+  transfers through strong queueing, distribution, routing, and reconstruction
+  nulls. Cross-field mechanisms already represented by existing principle
+  families remain deduplicated instead of becoming aliases.
+
+- The phase-selective preservation model now exposes the product of survival
+  and release probabilities as an editable equation and generated SVG plot.
+  Every curve is explicitly hypothetical and dimensioned; it is an
+  interpretation aid for F-029, not a biological fit, benchmark, energy result,
+  or claimed advantage.
 
 - A fail-closed source-publication boundary now admits exactly 17 byte-pinned
   files: the source index, ten provenance records and six reviewed taxonomy

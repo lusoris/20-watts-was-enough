@@ -2,7 +2,7 @@
   <title id="title">Layout selection can manufacture a speedup</title>
   <desc id="desc">Noise-free synthetic expectations generated from the Fixture 012 smoke configuration; this is a design diagnostic, not an empirical performance result.</desc>
   <rect width="1100" height="660" rx="24" fill="#101c18"/>
-  <rect x="36" y="30" width="272" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
+  <rect x="36" y="30" width="314" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
   <text x="52" y="50" fill="#36d399" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">SYNTHETIC FIXTURE · ANALYTICAL</text>
   <text x="54" y="94" fill="#fffaf0" font-family="Georgia, serif" font-size="32" font-weight="700">Layout selection can manufacture a speedup</text>
   <text x="54" y="123" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="14">s = (mean Y_baseline - mean Y_candidate) / mean Y_baseline</text>

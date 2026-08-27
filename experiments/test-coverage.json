@@ -50,19 +50,19 @@
     }
   },
   "counts": {
-    "claims": 1563,
-    "testRouted": 1471,
-    "protocolCovered": 1471,
+    "claims": 1571,
+    "testRouted": 1475,
+    "protocolCovered": 1475,
     "executionReady": 0,
     "tierCounts": {
-      "ledger-only": 92,
+      "ledger-only": 96,
       "linked-description": 0,
-      "protocol-complete": 1471,
+      "protocol-complete": 1475,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
       "ledger-only": {
-        "established": 79,
+        "established": 83,
         "plausible": 9,
         "speculative": 0,
         "disputed": 4,
@@ -78,7 +78,7 @@
       "protocol-complete": {
         "established": 1145,
         "plausible": 210,
-        "speculative": 60,
+        "speculative": 64,
         "disputed": 47,
         "unknown": 9
       },
@@ -91,19 +91,19 @@
       }
     },
     "dispositionCounts": {
-      "evidence-input": 81,
+      "evidence-input": 85,
       "source-reproduction": 11,
       "existing-artifact-gap": 0,
       "new-artifact-needed": 0
     },
     "proposedArtifactFamilies": 0,
-    "artifacts": 48,
-    "protocolCompleteArtifacts": 48,
+    "artifacts": 49,
+    "protocolCompleteArtifacts": 49,
     "executionReadyArtifacts": 0,
     "smokeReadyArtifacts": 10,
-    "claimSideLinked": 1254,
-    "documentSideLinked": 1161,
-    "reciprocalClaims": 807
+    "claimSideLinked": 1258,
+    "documentSideLinked": 1165,
+    "reciprocalClaims": 811
   },
   "artifacts": [
     {
@@ -9433,6 +9433,39 @@
         "C-1570",
         "C-1571",
         "C-1572"
+      ]
+    },
+    {
+      "id": "fixture-029",
+      "path": "experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md",
+      "title": "Fixture F-029 — Clinical-biotechnology endogenous-machinery transfers",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "absent",
+      "executionManifest": null,
+      "executionMissing": [
+        "manifest"
+      ],
+      "executionPromotionChecks": [],
+      "executionClaims": [],
+      "claimSideClaims": [
+        "C-1574",
+        "C-1576",
+        "C-1578",
+        "C-1580"
+      ],
+      "documentSideClaims": [
+        "C-1574",
+        "C-1576",
+        "C-1578",
+        "C-1580"
+      ],
+      "linkedClaims": [
+        "C-1574",
+        "C-1576",
+        "C-1578",
+        "C-1580"
       ]
     }
   ],
@@ -30518,6 +30551,118 @@
       "executionReady": false,
       "artifacts": [
         "fixture-028"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1573",
+      "status": "established",
+      "tier": "ledger-only",
+      "testRouted": false,
+      "protocolCovered": false,
+      "executionReady": false,
+      "artifacts": [],
+      "disposition": {
+        "id": "C-1573",
+        "disposition": "evidence-input",
+        "rationale": "This is a scoped source-domain observation about induced proximity; F-029 tests only the separately stated artificial-system transfer C-1574.",
+        "targets": [],
+        "source": "experiments/claim-dispositions/1204-1600.json"
+      }
+    },
+    {
+      "id": "C-1574",
+      "status": "speculative",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-029"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1575",
+      "status": "established",
+      "tier": "ledger-only",
+      "testRouted": false,
+      "protocolCovered": false,
+      "executionReady": false,
+      "artifacts": [],
+      "disposition": {
+        "id": "C-1575",
+        "disposition": "evidence-input",
+        "rationale": "This is a scoped biological and clinical cross-correction record; F-029 tests only the synthetic distribution hypothesis C-1576.",
+        "targets": [],
+        "source": "experiments/claim-dispositions/1204-1600.json"
+      }
+    },
+    {
+      "id": "C-1576",
+      "status": "speculative",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-029"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1577",
+      "status": "established",
+      "tier": "ledger-only",
+      "testRouted": false,
+      "protocolCovered": false,
+      "executionReady": false,
+      "artifacts": [],
+      "disposition": {
+        "id": "C-1577",
+        "disposition": "evidence-input",
+        "rationale": "This is a molecular and clinical splice-redirection record; F-029 tests only the planted artificial latent-path hypothesis C-1578.",
+        "targets": [],
+        "source": "experiments/claim-dispositions/1204-1600.json"
+      }
+    },
+    {
+      "id": "C-1578",
+      "status": "speculative",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-029"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1579",
+      "status": "established",
+      "tier": "ledger-only",
+      "testRouted": false,
+      "protocolCovered": false,
+      "executionReady": false,
+      "artifacts": [],
+      "disposition": {
+        "id": "C-1579",
+        "disposition": "evidence-input",
+        "rationale": "This is a variant-qualified biological, clinical and EU product record; F-029 tests only the synthetic phase-selective preservation hypothesis C-1580.",
+        "targets": [],
+        "source": "experiments/claim-dispositions/1204-1600.json"
+      }
+    },
+    {
+      "id": "C-1580",
+      "status": "speculative",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-029"
       ],
       "disposition": null
     }

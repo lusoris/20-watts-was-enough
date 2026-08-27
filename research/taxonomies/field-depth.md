@@ -16,7 +16,7 @@ EuroSciVoc is the EU-level multilingual science vocabulary. The DFG hierarchy
 adds German review granularity. ANZSRC is an independent omission detector,
 not the normative framework for the project.
 
-**Explicit child routes recorded:** 74. All other children are unassigned.
+**Explicit child routes recorded:** 100. All other children are unassigned.
 
 ## EuroSciVoc 1.6: European science vocabulary
 
@@ -377,7 +377,7 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### medical and health sciences
 
-**Deutsch:** Medizin- und Gesundheitswissenschaften. **Fine-grained status:** 3 of 178 concepts in this branch have an explicit routing assignment.
+**Deutsch:** Medizin- und Gesundheitswissenschaften. **Fine-grained status:** 6 of 178 concepts in this branch have an explicit routing assignment.
 
 - **medical and health sciences.** Routing: unassigned.
   - **basic medicine.** Deutsch: Grundlagenmedizin. Routing: unassigned.
@@ -399,7 +399,7 @@ are retained below; neither a label nor a parent route counts as evidence review
       - **parkinson.** Routing: unassigned.
       - **stroke.** Deutsch: Schlaganfall. Routing: unassigned.
     - **pathology.** Deutsch: Pathologie. Routing: unassigned.
-    - **pharmacology and pharmacy.** Deutsch: Pharmakologie und Pharmazie. Routing: unassigned.
+    - **pharmacology and pharmacy.** Deutsch: Pharmakologie und Pharmazie. Routing: adjacent child-level evidence via [clinical biotechnology endogenous machinery](../audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md). Claims: [C-1573](../claims.md#c-1573), [C-1574](../claims.md#c-1574), [C-1577](../claims.md#c-1577), [C-1578](../claims.md#c-1578), [C-1579](../claims.md#c-1579), [C-1580](../claims.md#c-1580).
       - **adverse drug reactions.** Deutsch: Nebenwirkungen. Routing: unassigned.
       - **drug discovery.** Deutsch: Arzneimittelforschung. Routing: unassigned.
       - **drug resistance.** Deutsch: Arzneimittelresistenz. Routing: unassigned.
@@ -541,11 +541,11 @@ are retained below; neither a label nor a parent route counts as evidence review
     - **sport and fitness sciences.** Deutsch: Sport- und Fitnesswissenschaften. Routing: unassigned.
     - **substance abuse.** Deutsch: Drogenmissbrauch. Routing: unassigned.
     - **tropical medicine.** Deutsch: Tropenmedizin. Routing: unassigned.
-  - **medical biotechnology.** Deutsch: Medizinische Biotechnologie. Routing: unassigned.
+  - **medical biotechnology.** Deutsch: Medizinische Biotechnologie. Routing: dedicated child-level evidence via [clinical biotechnology endogenous machinery](../audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md). Claims: [C-1573](../claims.md#c-1573), [C-1574](../claims.md#c-1574), [C-1575](../claims.md#c-1575), [C-1576](../claims.md#c-1576), [C-1577](../claims.md#c-1577), [C-1578](../claims.md#c-1578), [C-1579](../claims.md#c-1579), [C-1580](../claims.md#c-1580).
     - **cells technologies.** Deutsch: Zelltechnik. Routing: unassigned.
       - **stem cells.** Deutsch: Stammzelle. Routing: unassigned.
     - **genetic engineering.** Deutsch: Gentechnologie. Routing: unassigned.
-      - **gene therapy.** Deutsch: Gentherapie. Routing: unassigned.
+      - **gene therapy.** Deutsch: Gentherapie. Routing: adjacent child-level evidence via [clinical biotechnology endogenous machinery](../audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md). Claims: [C-1575](../claims.md#c-1575), [C-1576](../claims.md#c-1576).
     - **implants.** Deutsch: Implantate. Routing: unassigned.
       - **artificial bone.** Deutsch: Kunstknochen. Routing: unassigned.
       - **breast implants.** Deutsch: Brustimplantate. Routing: unassigned.
@@ -560,7 +560,7 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### natural sciences
 
-**Deutsch:** Naturwissenschaften. **Fine-grained status:** 16 of 413 concepts in this branch have an explicit routing assignment.
+**Deutsch:** Naturwissenschaften. **Fine-grained status:** 18 of 413 concepts in this branch have an explicit routing assignment.
 
 - **natural sciences.** Routing: unassigned.
   - **biological sciences.** Deutsch: Biowissenschaften. Routing: unassigned.
@@ -779,7 +779,7 @@ are retained below; neither a label nor a parent route counts as evidence review
       - **pollution.** Deutsch: Umweltbelastung. Routing: unassigned.
       - **sustainability sciences.** Deutsch: Nachhaltigkeitswissenschaft. Routing: unassigned.
     - **geochemistry.** Deutsch: Geochemie. Routing: unassigned.
-      - **biogeochemistry.** Deutsch: Biogeochemie. Routing: unassigned.
+      - **biogeochemistry.** Deutsch: Biogeochemie. Routing: adjacent child-level evidence via [other natural sciences hybrid mechanisms](../audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md).
       - **cosmochemistry.** Deutsch: Kosmochemie. Routing: unassigned.
       - **isotope geochemistry.** Deutsch: Isotopengeochemie. Routing: unassigned.
       - **organic geochemistry.** Deutsch: organische Geochemie. Routing: unassigned.
@@ -803,7 +803,7 @@ are retained below; neither a label nor a parent route counts as evidence review
     - **geophysics.** Deutsch: Geophysik. Routing: unassigned.
     - **hydrology.** Deutsch: Hydrologie. Routing: unassigned.
       - **drainage basins.** Deutsch: Einzugsgebiet. Routing: unassigned.
-      - **ecohydrology.** Deutsch: Ökohydrologie. Routing: unassigned.
+      - **ecohydrology.** Deutsch: Ökohydrologie. Routing: adjacent child-level evidence via [other natural sciences hybrid mechanisms](../audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md).
       - **hydrogeology.** Deutsch: Hydrogeologie. Routing: unassigned.
       - **hydroinformatics.** Deutsch: Hydroinformatik. Routing: unassigned.
       - **hydrometeorology.** Deutsch: Hydrometeorologie. Routing: unassigned.
@@ -1221,35 +1221,35 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 **Parent route:** dedicated parent-level audit via [comparative cognition tool use](../audits/2026-08-05-comparative-cognition-tool-use.md), [endogenous generation creativity](../audits/2026-08-05-endogenous-generation-creativity.md), [learning science skill acquisition](../audits/2026-08-05-learning-science-skill-acquisition.md).
 
-**Fine-grained status:** 0 of 5 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 1 of 5 subjects have an explicit child-level routing assignment.
 
 - **1.22-01 — Allgemeine, Kognitive und Mathematische Psychologie.** Routing: unassigned.
 - **1.22-02 — Biologische Psychologie und Kognitive Neurowissenschaften.** Routing: unassigned.
 - **1.22-03 — Entwicklungspsychologie und Pädagogische Psychologie.** Routing: unassigned.
-- **1.22-04 — Sozialpsychologie und Arbeits- und Organisationspsychologie.** Routing: unassigned.
+- **1.22-04 — Sozialpsychologie und Arbeits- und Organisationspsychologie.** Routing: adjacent child-level evidence via [institutional information allocation frontier](../audits/2026-08-27-institutional-information-allocation-frontier.md).
 - **1.22-05 — Persönlichkeitspsychologie, Klinische und Medizinische Psychologie, Methoden.** Routing: unassigned.
 
 ### 1.23 Sozialwissenschaften
 
 **Parent route:** dedicated parent-level audit via [direct social research ethnography media](../audits/2026-08-21-direct-social-research-ethnography-media.md), [social choice institutions](../audits/2026-08-05-social-choice-institutions.md), [social science depth institutions inequality digital media](../audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md), [economy education institutions](../audits/2026-08-24-economy-education-institutions.md), [political administrative stratification media depth](../audits/2026-08-24-political-administrative-stratification-media-depth.md).
 
-**Fine-grained status:** 0 of 4 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 2 of 4 subjects have an explicit child-level routing assignment.
 
 - **1.23-01 — Soziologische Theorie.** Routing: unassigned.
 - **1.23-02 — Empirische Sozialforschung.** Routing: unassigned.
-- **1.23-03 — Publizistik und Kommunikationswissenschaft.** Routing: unassigned.
-- **1.23-04 — Politikwissenschaft.** Routing: unassigned.
+- **1.23-03 — Publizistik und Kommunikationswissenschaft.** Routing: adjacent child-level evidence via [institutional information allocation frontier](../audits/2026-08-27-institutional-information-allocation-frontier.md).
+- **1.23-04 — Politikwissenschaft.** Routing: adjacent child-level evidence via [institutional information allocation frontier](../audits/2026-08-27-institutional-information-allocation-frontier.md).
 
 ### 1.24 Wirtschaftswissenschaften
 
 **Parent route:** dedicated parent-level audit via [economics market design incentives](../audits/2026-08-05-economics-market-design-incentives.md), [supply chain operations research](../audits/2026-08-05-supply-chain-operations-research.md), [accounting audit actuarial insurance](../audits/2026-08-21-accounting-audit-actuarial-insurance.md), [economy education institutions](../audits/2026-08-24-economy-education-institutions.md), [finance management risk attention governance](../audits/2026-08-24-finance-management-risk-attention-governance.md).
 
-**Fine-grained status:** 0 of 7 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 1 of 7 subjects have an explicit child-level routing assignment.
 
 - **1.24-01 — Wirtschaftstheorie.** Routing: unassigned.
 - **1.24-02 — Wirtschaftspolitik, Angewandte Volkswirtschaftslehre.** Routing: unassigned.
 - **1.24-03 — Accounting und Finance.** Routing: unassigned.
-- **1.24-04 — Management und Marketing.** Routing: unassigned.
+- **1.24-04 — Management und Marketing.** Routing: adjacent child-level evidence via [institutional information allocation frontier](../audits/2026-08-27-institutional-information-allocation-frontier.md).
 - **1.24-05 — Operations Management und BWL-spezifische Wirtschaftsinformatik.** Routing: unassigned.
 - **1.24-06 — Statistik und Ökonometrie.** Routing: unassigned.
 - **1.24-07 — Wirtschafts- und Sozialgeschichte.** Routing: unassigned.
@@ -1324,7 +1324,7 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 **Parent route:** dedicated parent-level audit via [pathology rehabilitation](../audits/2026-08-05-pathology-rehabilitation.md), [pharmacology toxicology](../audits/2026-08-05-pharmacology-toxicology.md), [epidemiology and surveillance control](../audits/2026-08-05-epidemiology-and-surveillance-control.md), [nursing care health services](../audits/2026-08-21-nursing-care-health-services.md), [clinical intervention pathways](../audits/2026-08-24-clinical-intervention-pathways.md), [clinical specialties medical agricultural biotechnology](../audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md), [medical devices biomedical engineering](../audits/2026-08-24-medical-devices-biomedical-engineering.md).
 
-**Fine-grained status:** 0 of 33 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 2 of 33 subjects have an explicit child-level routing assignment.
 
 - **2.22-01 — Epidemiologie und Medizinische Biometrie/Statistik.** Routing: unassigned.
 - **2.22-02 — Public Health, Gesundheitsbezogene Versorgungsforschung, Sozial- und Arbeitsmedizin.** Routing: unassigned.
@@ -1333,8 +1333,8 @@ are retained below; neither a label nor a parent route counts as evidence review
 - **2.22-05 — Ernährungswissenschaften.** Routing: unassigned.
 - **2.22-06 — Pathologie.** Routing: unassigned.
 - **2.22-07 — Medizininformatik und medizinische Bioinformatik.** Routing: unassigned.
-- **2.22-08 — Pharmazie.** Routing: unassigned.
-- **2.22-09 — Pharmakologie.** Routing: unassigned.
+- **2.22-08 — Pharmazie.** Routing: adjacent child-level evidence via [clinical biotechnology endogenous machinery](../audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md). Claims: [C-1573](../claims.md#c-1573), [C-1574](../claims.md#c-1574), [C-1575](../claims.md#c-1575), [C-1576](../claims.md#c-1576), [C-1577](../claims.md#c-1577), [C-1578](../claims.md#c-1578), [C-1579](../claims.md#c-1579), [C-1580](../claims.md#c-1580).
+- **2.22-09 — Pharmakologie.** Routing: adjacent child-level evidence via [clinical biotechnology endogenous machinery](../audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md). Claims: [C-1573](../claims.md#c-1573), [C-1574](../claims.md#c-1574), [C-1575](../claims.md#c-1575), [C-1576](../claims.md#c-1576), [C-1577](../claims.md#c-1577), [C-1578](../claims.md#c-1578), [C-1579](../claims.md#c-1579), [C-1580](../claims.md#c-1580).
 - **2.22-10 — Toxikologie, Laboratoriumsmedizin.** Routing: unassigned.
 - **2.22-11 — Anästhesiologie.** Routing: unassigned.
 - **2.22-12 — Kardiologie, Angiologie.** Routing: unassigned.
@@ -1839,7 +1839,7 @@ route.
 
 **Parent route:** dedicated parent-level audit via [cellular quality control](../audits/2026-08-05-cellular-quality-control.md), [collective ecological resilience](../audits/2026-08-05-collective-ecological-resilience.md), [developmental morphogenesis](../audits/2026-08-05-developmental-morphogenesis.md), [microbial ecology biofilms](../audits/2026-08-05-microbial-ecology-biofilms.md), [plant distributed control](../audits/2026-08-05-plant-distributed-control.md), [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md), [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md), [parasitology adversarial lifecycles](../audits/2026-08-27-parasitology-adversarial-lifecycles.md).
 
-**Fine-grained status:** 0 of 10 groups and 18 of 98 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 10 groups and 22 of 98 fields have an explicit child-level routing assignment.
 
 #### 3101 Biochemistry and cell biology
 
@@ -1879,7 +1879,7 @@ route.
 
 **Routing: unassigned.** **Named fields:** 9.
 
-- **310301 — Behavioural ecology.** Routing: unassigned.
+- **310301 — Behavioural ecology.** Routing: adjacent child-level evidence via [other natural sciences hybrid mechanisms](../audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md).
 - **310302 — Community ecology (excl. invasive species ecology).** Routing: unassigned.
 - **310303 — Ecological physiology.** Routing: unassigned.
 - **310304 — Freshwater ecology.** Routing: unassigned.
@@ -1895,7 +1895,7 @@ route.
 
 - **310401 — Animal systematics and taxonomy.** Routing: unassigned.
 - **310402 — Biogeography and phylogeography.** Routing: unassigned.
-- **310403 — Biological adaptation.** Routing: unassigned.
+- **310403 — Biological adaptation.** Routing: adjacent child-level evidence via [other natural sciences hybrid mechanisms](../audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md).
 - **310404 — Evolution of developmental systems.** Routing: unassigned.
 - **310405 — Evolutionary ecology.** Routing: unassigned.
 - **310406 — Evolutionary impacts of climate change.** Routing: unassigned.
@@ -1943,7 +1943,7 @@ route.
 
 - **310701 — Bacteriology.** Routing: adjacent child-level evidence via [relative sensing scale symmetry](../audits/2026-08-25-relative-sensing-scale-symmetry.md). Claims: [C-1542](../claims.md#c-1542).
 - **310702 — Infectious agents.** Routing: unassigned.
-- **310703 — Microbial ecology.** Routing: unassigned.
+- **310703 — Microbial ecology.** Routing: adjacent child-level evidence via [other natural sciences hybrid mechanisms](../audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md).
 - **310704 — Microbial genetics.** Routing: unassigned.
 - **310705 — Mycology.** Routing: unassigned.
 - **310706 — Virology.** Routing: unassigned.
@@ -1972,7 +1972,7 @@ route.
 - **310905 — Animal immunology.** Routing: unassigned.
 - **310906 — Animal neurobiology.** Routing: unassigned.
 - **310907 — Animal physiological ecology.** Routing: unassigned.
-- **310908 — Animal physiology - biophysics.** Routing: unassigned.
+- **310908 — Animal physiology - biophysics.** Routing: adjacent child-level evidence via [other natural sciences hybrid mechanisms](../audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md).
 - **310909 — Animal physiology - cell.** Routing: unassigned.
 - **310910 — Animal physiology - systems.** Routing: adjacent child-level evidence via [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md). Claims: [C-1488](../claims.md#c-1488), [C-1491](../claims.md#c-1491), [C-1492](../claims.md#c-1492), [C-1493](../claims.md#c-1493), [C-1495](../claims.md#c-1495), [C-1496](../claims.md#c-1496).
 - **310911 — Animal structure and function.** Routing: unassigned.
@@ -1993,7 +1993,7 @@ route.
 
 **Parent route:** dedicated parent-level audit via [pathology rehabilitation](../audits/2026-08-05-pathology-rehabilitation.md), [pharmacology toxicology](../audits/2026-08-05-pharmacology-toxicology.md), [epidemiology and surveillance control](../audits/2026-08-05-epidemiology-and-surveillance-control.md), [nursing care health services](../audits/2026-08-21-nursing-care-health-services.md), [clinical intervention pathways](../audits/2026-08-24-clinical-intervention-pathways.md), [clinical specialties medical agricultural biotechnology](../audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md), [parasitology adversarial lifecycles](../audits/2026-08-27-parasitology-adversarial-lifecycles.md).
 
-**Fine-grained status:** 0 of 16 groups and 3 of 129 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 16 groups and 6 of 129 fields have an explicit child-level routing assignment.
 
 #### 3201 Cardiovascular medicine and haematology
 
@@ -2087,9 +2087,9 @@ route.
 
 **Routing: unassigned.** **Named fields:** 7.
 
-- **320601 — Gene and molecular therapy.** Routing: unassigned.
+- **320601 — Gene and molecular therapy.** Routing: adjacent child-level evidence via [clinical biotechnology endogenous machinery](../audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md). Claims: [C-1575](../claims.md#c-1575), [C-1576](../claims.md#c-1576), [C-1577](../claims.md#c-1577), [C-1578](../claims.md#c-1578).
 - **320602 — Medical biotechnology diagnostics (incl. biosensors).** Routing: unassigned.
-- **320603 — Medical molecular engineering of nucleic acids and proteins.** Routing: unassigned.
+- **320603 — Medical molecular engineering of nucleic acids and proteins.** Routing: adjacent child-level evidence via [clinical biotechnology endogenous machinery](../audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md). Claims: [C-1573](../claims.md#c-1573), [C-1574](../claims.md#c-1574), [C-1577](../claims.md#c-1577), [C-1578](../claims.md#c-1578), [C-1579](../claims.md#c-1579), [C-1580](../claims.md#c-1580).
 - **320604 — Nanomedicine.** Routing: unassigned.
 - **320605 — Nanotoxicology, health and safety.** Routing: unassigned.
 - **320606 — Regenerative medicine (incl. stem cells).** Routing: adjacent child-level evidence via [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md). Claims: [C-1506](../claims.md#c-1506), [C-1507](../claims.md#c-1507).
@@ -2181,7 +2181,7 @@ route.
 **Routing: unassigned.** **Named fields:** 8.
 
 - **321401 — Basic pharmacology.** Routing: unassigned.
-- **321402 — Clinical pharmacology and therapeutics.** Routing: unassigned.
+- **321402 — Clinical pharmacology and therapeutics.** Routing: adjacent child-level evidence via [clinical biotechnology endogenous machinery](../audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md). Claims: [C-1573](../claims.md#c-1573), [C-1574](../claims.md#c-1574), [C-1575](../claims.md#c-1575), [C-1576](../claims.md#c-1576), [C-1577](../claims.md#c-1577), [C-1578](../claims.md#c-1578), [C-1579](../claims.md#c-1579), [C-1580](../claims.md#c-1580).
 - **321403 — Clinical pharmacy and pharmacy practice.** Routing: unassigned.
 - **321404 — Pharmaceutical delivery technologies.** Routing: unassigned.
 - **321405 — Pharmaceutical sciences.** Routing: unassigned.
@@ -2399,14 +2399,14 @@ route.
 
 **Parent route:** dedicated parent-level audit via [supply chain operations research](../audits/2026-08-05-supply-chain-operations-research.md), [accounting audit actuarial insurance](../audits/2026-08-21-accounting-audit-actuarial-insurance.md), [economy education institutions](../audits/2026-08-24-economy-education-institutions.md), [finance management risk attention governance](../audits/2026-08-24-finance-management-risk-attention-governance.md).
 
-**Fine-grained status:** 0 of 10 groups and 0 of 91 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 10 groups and 3 of 91 fields have an explicit child-level routing assignment.
 
 #### 3501 Accounting, auditing and accountability
 
 **Routing: unassigned.** **Named fields:** 9.
 
 - **350101 — Accounting theory and standards.** Routing: unassigned.
-- **350102 — Auditing and accountability.** Routing: unassigned.
+- **350102 — Auditing and accountability.** Routing: adjacent child-level evidence via [institutional information allocation frontier](../audits/2026-08-27-institutional-information-allocation-frontier.md).
 - **350103 — Financial accounting.** Routing: unassigned.
 - **350104 — International accounting.** Routing: unassigned.
 - **350105 — Management accounting.** Routing: unassigned.
@@ -2435,7 +2435,7 @@ route.
 **Routing: unassigned.** **Named fields:** 8.
 
 - **350301 — Business analytics.** Routing: unassigned.
-- **350302 — Business information management (incl. records, knowledge and intelligence).** Routing: unassigned.
+- **350302 — Business information management (incl. records, knowledge and intelligence).** Routing: adjacent child-level evidence via [institutional information allocation frontier](../audits/2026-08-27-institutional-information-allocation-frontier.md).
 - **350303 — Business information systems.** Routing: unassigned.
 - **350304 — Business systems in context.** Routing: unassigned.
 - **350305 — Forensic intelligence.** Routing: unassigned.
@@ -2498,7 +2498,7 @@ route.
 - **350707 — Leadership.** Routing: unassigned.
 - **350708 — Not-for-profit business and management.** Routing: unassigned.
 - **350709 — Organisation and management theory.** Routing: unassigned.
-- **350710 — Organisational behaviour.** Routing: unassigned.
+- **350710 — Organisational behaviour.** Routing: dedicated child-level evidence via [institutional information allocation frontier](../audits/2026-08-27-institutional-information-allocation-frontier.md).
 - **350711 — Organisational planning and management.** Routing: unassigned.
 - **350712 — Production and operations management.** Routing: unassigned.
 - **350713 — Project management.** Routing: unassigned.
@@ -2622,7 +2622,7 @@ route.
 
 **Parent route:** dedicated parent-level audit via [earth system transition signals](../audits/2026-08-05-earth-system-transition-signals.md), [geology geomorphology](../audits/2026-08-05-geology-geomorphology.md), [astronomy remote inference](../audits/2026-08-05-astronomy-remote-inference.md), [mineralogy petrology geochemistry](../audits/2026-08-21-mineralogy-petrology-geochemistry.md), [measurement heavy analytical water earth observation](../audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md).
 
-**Fine-grained status:** 0 of 10 groups and 0 of 65 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 10 groups and 2 of 65 fields have an explicit child-level routing assignment.
 
 #### 3701 Atmospheric sciences
 
@@ -2671,7 +2671,7 @@ route.
 
 **Routing: unassigned.** **Named fields:** 13.
 
-- **370501 — Biomineralisation.** Routing: unassigned.
+- **370501 — Biomineralisation.** Routing: adjacent child-level evidence via [other natural sciences hybrid mechanisms](../audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md).
 - **370502 — Geochronology.** Routing: unassigned.
 - **370503 — Igneous and metamorphic petrology.** Routing: unassigned.
 - **370504 — Marine geoscience.** Routing: unassigned.
@@ -2705,7 +2705,7 @@ route.
 **Routing: unassigned.** **Named fields:** 6.
 
 - **370701 — Contaminant hydrology.** Routing: unassigned.
-- **370702 — Ecohydrology.** Routing: unassigned.
+- **370702 — Ecohydrology.** Routing: adjacent child-level evidence via [other natural sciences hybrid mechanisms](../audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md).
 - **370703 — Groundwater hydrology.** Routing: unassigned.
 - **370704 — Surface water hydrology.** Routing: unassigned.
 - **370705 — Urban hydrology.** Routing: unassigned.
@@ -3180,7 +3180,7 @@ route.
 
 **Parent route:** dedicated parent-level audit via [earth system transition signals](../audits/2026-08-05-earth-system-transition-signals.md), [collective ecological resilience](../audits/2026-08-05-collective-ecological-resilience.md), [biotechnology chemistry process systems](../audits/2026-08-21-biotechnology-chemistry-process-systems.md), [measurement heavy analytical water earth observation](../audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md), [environmental engineering water waste remediation](../audits/2026-08-24-environmental-engineering-water-waste-remediation.md).
 
-**Fine-grained status:** 0 of 7 groups and 0 of 38 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 7 groups and 2 of 38 fields have an explicit child-level routing assignment.
 
 #### 4101 Climate change impacts and adaptation
 
@@ -3208,7 +3208,7 @@ route.
 **Routing: unassigned.** **Named fields:** 7.
 
 - **410301 — Biodiscovery.** Routing: unassigned.
-- **410302 — Biological control.** Routing: unassigned.
+- **410302 — Biological control.** Routing: adjacent child-level evidence via [other natural sciences hybrid mechanisms](../audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md).
 - **410303 — Bioremediation.** Routing: unassigned.
 - **410304 — Environmental biotechnology diagnostics (incl. biosensors).** Routing: unassigned.
 - **410305 — Environmental marine biotechnology.** Routing: unassigned.
@@ -3232,7 +3232,7 @@ route.
 
 **Routing: unassigned.** **Named fields:** 5.
 
-- **410501 — Environmental biogeochemistry.** Routing: unassigned.
+- **410501 — Environmental biogeochemistry.** Routing: adjacent child-level evidence via [other natural sciences hybrid mechanisms](../audits/2026-08-27-other-natural-sciences-hybrid-mechanisms.md).
 - **410502 — Noise and wave pollution processes and measurement.** Routing: unassigned.
 - **410503 — Groundwater quality processes and contaminated land assessment.** Routing: unassigned.
 - **410504 — Surface water quality processes and contaminated sediment assessment.** Routing: unassigned.
@@ -3451,7 +3451,7 @@ route.
 
 **Parent route:** dedicated parent-level audit via [direct social research ethnography media](../audits/2026-08-21-direct-social-research-ethnography-media.md), [social choice institutions](../audits/2026-08-05-social-choice-institutions.md), [indigenous data knowledge governance](../audits/2026-08-21-indigenous-data-knowledge-governance.md), [theology religious practice ritual](../audits/2026-08-21-theology-religious-practice-ritual.md), [social science depth institutions inequality digital media](../audits/2026-08-24-social-science-depth-institutions-inequality-digital-media.md), [economy education institutions](../audits/2026-08-24-economy-education-institutions.md), [political administrative stratification media depth](../audits/2026-08-24-political-administrative-stratification-media-depth.md), [spatial geography support scale mobility place](../audits/2026-08-24-spatial-geography-support-scale-mobility-place.md).
 
-**Fine-grained status:** 0 of 11 groups and 0 of 116 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 11 groups and 1 of 116 fields have an explicit child-level routing assignment.
 
 #### 4401 Anthropology
 
@@ -3560,7 +3560,7 @@ route.
 - **440705 — Gender, policy and administration.** Routing: unassigned.
 - **440706 — Health policy.** Routing: unassigned.
 - **440707 — Housing policy.** Routing: unassigned.
-- **440708 — Public administration.** Routing: unassigned.
+- **440708 — Public administration.** Routing: adjacent child-level evidence via [institutional information allocation frontier](../audits/2026-08-27-institutional-information-allocation-frontier.md).
 - **440709 — Public policy.** Routing: unassigned.
 - **440710 — Research, science and technology policy.** Routing: unassigned.
 - **440711 — Risk policy.** Routing: unassigned.
