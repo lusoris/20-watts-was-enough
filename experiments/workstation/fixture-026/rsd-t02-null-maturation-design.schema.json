@@ -9,7 +9,7 @@
     "export": "assertFixture026RsdT02NullMaturationDesign",
     "version_export": "FIXTURE_026_RSD_T02_NULL_MATURATION_DESIGN_VERSION",
     "contract_version": "fixture-026.rsd-t02-null-maturation-design.v1",
-    "canonical_design_sha256": "b052d9ea6b6321b3dd7a9a1a3cc2bac91b0cae9585bdd767d778cb38a8d8ab5c",
+    "canonical_design_sha256": "655e44d181de039569fd9c0714c61208e0d20d0a5a0104e3218ab5355737c3bd",
     "test": "rsd-t02-null-maturation-contract.test.mjs"
   },
   "required": [
@@ -28,8 +28,8 @@
     "authority": { "const": "prospective-null-maturation-design-only" },
     "parent_artifacts": {
       "type": "array",
-      "minItems": 10,
-      "maxItems": 10,
+      "minItems": 11,
+      "maxItems": 11,
       "items": {
         "type": "object",
         "additionalProperties": false,
@@ -279,13 +279,13 @@
       ],
       "properties": {
         "arm_id": { "enum": ["B-STATE-SPACE", "B-RECURRENT"] },
-        "current_level": { "const": 1 },
-        "current_status": { "const": "fixed-conformance-reference" },
+        "current_level": { "const": 2 },
+        "current_status": { "const": "trainable-public-prototype" },
         "current_core": { "type": "string", "minLength": 3 },
-        "trainable_state_space_estimator_exists": { "const": false },
-        "trainable_gru_style_estimator_exists": { "const": false },
+        "trainable_state_space_estimator_exists": { "const": true },
+        "trainable_gru_style_estimator_exists": { "const": true },
         "calibrated_probability_output_exists": { "const": false },
-        "current_property_coverage": { "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": { "type": "string" } },
+        "current_property_coverage": { "const": ["drive_transform", "reported_output_feedback_edge", "channel_local_state"] },
         "satisfies_mature_null_gate": { "const": false }
       },
       "oneOf": [

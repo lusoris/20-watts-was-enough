@@ -233,17 +233,19 @@ checked-in public-development conformance reference, not secret confirmation
 custody.
 C-1561 and C-1564 are excluded from the base event stream, and every artifact
 is `NO_RESULT`. The separate C-1561 panel runner has not executed its full
-refractory, robustness or mixed-window schedule. No mature
-null, trained or calibrated estimator, comparison, execution claim,
-confirmation custody, promotion path, O2 runtime, T02-FLOOR runtime,
-asymptotic result, workstation measurement or energy result exists. RSD-T01
-remains the only claim-scoped implemented track.
+refractory, robustness or mixed-window schedule. No mature null or
+runner-integrated trained or calibrated estimator, comparison, execution
+claim, confirmation custody, promotion path, O2 runtime, T02-FLOOR runtime,
+asymptotic result, workstation measurement or energy result exists. The
+additive level-two prototypes documented below do not change that boundary.
+RSD-T01 remains the only claim-scoped implemented track.
 
 ## Commands
 
 From the repository root:
 
 ```powershell
+npm run test:workstation:fixture-026:foundations
 node experiments/workstation/fixture-026/build-rsd-t02-policy-bundle.mjs --check
 node experiments/workstation/fixture-026/runner.mjs prepare --profile smoke
 node experiments/workstation/fixture-026/runner.mjs smoke --profile smoke --output experiments/workstation/runs/fixture-026-smoke --resume false
@@ -259,6 +261,11 @@ node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-tr
 node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-population-contract.test.mjs
 node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-system-family-generator.test.mjs
 node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-null-maturation-contract.test.mjs
+node experiments/workstation/fixture-026/rsd-t02-fixed-instance-runner.test.mjs
+node experiments/workstation/fixture-026/rsd-t02-null-prototypes.test.mjs
+node experiments/workstation/fixture-026/rsd-t02-null-prototype-adapter.test.mjs
+node experiments/workstation/fixture-026/rsd-t02-holm4.test.mjs
+node experiments/workstation/fixture-026/rsd-t02-power-plan.test.mjs
 
 node experiments/workstation/fixture-026/runner.mjs t02-prepare --profile smoke
 node experiments/workstation/fixture-026/runner.mjs t02-smoke --profile smoke --output experiments/workstation/runs/fixture-026-t02-smoke --resume false
@@ -407,23 +414,201 @@ Machine-readable files:
 - [`rsd-t02-system-family-generator.mjs`](rsd-t02-system-family-generator.mjs)
 - [`rsd-t02-system-family-generator.test.mjs`](rsd-t02-system-family-generator.test.mjs)
 
-The generic-null contract makes executable status explicit. The current
-`B-STATE-SPACE` and `B-RECURRENT` policies are both level-one fixed conformance
-references: they are neither trained estimators nor calibrated probability
-models. Only level five, `confirmation-frozen-mature-null`, satisfies the
-population gate. All ten intrinsic null-maturity gates remain open. Two of ten
-separate comparison-release gates are satisfied: the versioned public registry
-and fixed-instance generator. The measured-energy meter gate is conditional on
-a measured-energy claim. The executable authority derivation excludes that
-conditional gate from non-energy comparisons and requires all four fitting
-blockers to close before maturity. Affected fitting is blocked by
-incomplete primary lineage coverage, absent sealed outer-family templates, the
-absent parameterized runner and the absent instance-role assignment.
+### Fixed-instance transcript and resource conformance
+
+The additive fixed-instance runner validates one generated public-development
+system instance, executes all 26 schedules at that instance's one exact
+parameter vector, and emits 39,962 ordered transcript rows. The full transcript
+receipts bind scientific identity, parameters, nuisance, property certificates,
+episode protocol, schedule, realization and model-source provenance. A
+separate causal policy view recursively excludes evaluator truth, family,
+equation, lineage, instance, packet and provenance identifiers.
+
+All nine registered arm slots receive the identical packet and causal-view
+digest. Their response/resource records form an append-only SHA-256 chain,
+charge shared acquisition once, preserve per-arm algorithmic counts, and turn
+runtime or malformed responses into terminal charged abstentions without
+retry. Partial object artifacts resume deterministically and retain the exact
+prefix.
+
+This is transcript and resource conformance, not actual policy execution. The
+only successful executor is an in-process built-in digest abstention. There is
+no content-addressed 26-projection policy bundle, fresh child process, semantic
+replay of a real policy, or durable on-disk checkpoint. The runner does not
+write, flush, atomically publish, reopen, or lock run artifacts. Its machine
+contract therefore keeps `design_gate_satisfied=false`, comparison inference
+false, claim eligibility false, and `NO_RESULT`.
+
+- [`configs/rsd-t02-fixed-instance-runner.json`](configs/rsd-t02-fixed-instance-runner.json)
+- [`rsd-t02-fixed-instance-runner.schema.json`](rsd-t02-fixed-instance-runner.schema.json)
+- [`rsd-t02-fixed-instance-runner.mjs`](rsd-t02-fixed-instance-runner.mjs)
+- [`rsd-t02-fixed-instance-runner.test.mjs`](rsd-t02-fixed-instance-runner.test.mjs)
+
+The ten focused tests establish the closed config and schema, single-parameter
+26-schedule execution, 39,962-row causal view, recursive leakage exclusions,
+same-packet arm parity, response/resource chaining, object-level resume,
+tamper and reorder rejection, terminal failure accounting, malformed-input
+closure and a bounded single-thread CPU path. They do not establish real policy
+semantics, process isolation, durable recovery, measured resources,
+comparison validity or scientific correctness of the registered families.
+
+### Level-two null prototypes and post-validation adapter
+
+Two separate modules now implement bounded deterministic learned prototypes:
+
+- `B-STATE-SPACE` uses a three-state learned causal latent state-space core;
+- `B-RECURRENT` uses a three-state compact GRU-style causal recurrence.
+
+Both fit and emit the same drive-transform, reported-output-feedback and
+channel-local-state property domains. Frozen seeds, parameter order, 48
+finite-difference epochs, normalization, support envelopes, tie rules, model
+hashes, and algorithmic work ledgers make same-environment replay explicit.
+Outputs include normalized joint and marginal property probabilities,
+identifiability probabilities, support status, and deterministic abstention.
+They are level-two `trainable-public-prototype` artifacts, explicitly
+uncalibrated and without comparison or claim authority. Wall time, peak memory
+and energy are not measured.
+
+The post-validation adapter first revalidates a fixed-instance source artifact,
+copies every causal sample field into the prototype transcript schema, drops
+schedule and identity/provenance material, binds the source run, causal view,
+model and converted transcript by digest, and then runs one prototype over all
+39,962 rows. It operates after source-run validation and is not installed in
+the runner's executor. It therefore provides no fresh-process isolation and
+does not replace the runner's built-in abstention ledger.
+
+The eight prototype tests check deterministic fitting and replay, objective
+decrease, normalized posterior coherence, the recursive causal allowlist,
+bounded work, model integrity, support abstention and exact-threshold ties. The
+tiny fit fixture contains eight constructed property combinations and six rows
+per transcript; its at-least-two-thirds training-label check is not a held-out
+generalization or calibration result. The six adapter tests check exact
+39,962-row conversion, removal of schedule and identity material, source/model
+bindings, deterministic replay, tamper refusal and honest limitation labels.
+They do not establish mature-null status, isolated execution, calibration,
+comparative performance or scientific identification.
+
+- [`rsd-t02-null-prototypes.mjs`](rsd-t02-null-prototypes.mjs)
+- [`rsd-t02-null-prototypes.test.mjs`](rsd-t02-null-prototypes.test.mjs)
+- [`rsd-t02-null-prototype-adapter.mjs`](rsd-t02-null-prototype-adapter.mjs)
+- [`rsd-t02-null-prototype-adapter.test.mjs`](rsd-t02-null-prototype-adapter.test.mjs)
+
+The original `B-STATE-SPACE` and `B-RECURRENT` policies in the isolated
+35-projection construction bundle remain level-one fixed conformance
+references. The additive learned modules are separate level-two prototypes.
+Only level five, `confirmation-frozen-mature-null`, satisfies the population
+gate. Incomplete primary lineage coverage, absent sealed outer-family
+templates, absent instance-role assignment, uncalibrated models and the open
+isolated 26-projection policy-execution gate still block affected fitting and
+comparison.
 
 - [`configs/rsd-t02-null-maturation-design.json`](configs/rsd-t02-null-maturation-design.json)
 - [`rsd-t02-null-maturation-design.schema.json`](rsd-t02-null-maturation-design.schema.json)
 - [`rsd-t02-null-maturation-contract.mjs`](rsd-t02-null-maturation-contract.mjs)
 - [`rsd-t02-null-maturation-contract.test.mjs`](rsd-t02-null-maturation-contract.test.mjs)
+
+### Four-hypothesis Holm/bootstrap method check
+
+The public analyzer registers exactly four candidate comparisons: property log
+loss and dimensionless decision loss for `C-MECHANISM-BANK` against each of
+`B-STATE-SPACE` and `B-RECURRENT`. It requires complete paired arm records for
+each scientific system-instance identity, at least two effective instances per
+registered fixed family, equal family weights, and registered in-denominator
+penalties for runtime failures. Hash-identical replays collapse; conflicting
+duplicates, missing arms, family drift and non-finite endpoints fail closed.
+
+Each one-sided candidate-minus-comparator contrast uses a deterministic
+SHA-256-indexed centered stratified bootstrap-$t$, followed by one
+experiment-wide sequentially rejective Holm step-down family. For each
+hypothesis, the analyzer exposes the attainable data-dependent floor
+
+$$
+p_{\min,h}=\frac{I_h+1}{B+1},
+$$
+
+where $I_h$ is the number of zero- or non-finite-standard-error resamples among
+$B$ bootstrap draws. The resolution gate requires
+$p_{\min,h}\le\alpha/4$ for all four hypotheses. The nine tests exercise Holm
+ordering and ties, incomplete and malformed families, paired equal-family
+calculations, duplicate handling, deterministic resampling and runtime-failure
+penalties on synthetic records. A two-family-by-two-instance hostile panel
+produces enough zero-standard-error resamples to fail that gate and block all
+mathematical rejections.
+
+This remains an unfrozen public method check. Family IDs, alpha, resample
+count, resampling key and failure penalties are caller supplied; no endpoint
+artifact, analysis release or information cut is frozen. The tests do not
+establish independence, estimator validity, family-superpopulation inference,
+powered error control for future data or confirmation evidence. Every report
+remains `NO_RESULT`.
+
+- [`rsd-t02-holm4.mjs`](rsd-t02-holm4.mjs)
+- [`rsd-t02-holm4.test.mjs`](rsd-t02-holm4.test.mjs)
+
+### Prospective power and retention planner
+
+The prospective planner uses the conservative first Holm threshold
+$\alpha/4$, an exposed normal approximation for the equal-weighted fixed-family
+contrast, and the exact binomial lower tail to choose the smallest planned
+count meeting an experiment-level retention assurance under registered
+pre-response attrition. Runtime failures stay in the denominator at registered
+penalties. Support coverage is a separate mandatory gate, not an unregistered
+sample-size multiplier.
+
+For $F$ fixed families, family variances $s_f^2$, and minimum relevant
+improvement $\delta$, its variance-only retained-count diagnostic is
+
+$$
+n_{\mathrm{eff}}
+=
+\max\!\left\{
+2,
+\left\lceil
+\frac{\sum_{f=1}^{F}s_f^2}{F^2}
+\left(
+\frac{z_{1-\alpha/4}+z_{1-\beta}}{\delta}
+\right)^2
+\right\rceil
+\right\}.
+$$
+
+![Prospective independent-system count versus minimum relevant improvement under three illustrative variance profiles. The dashed cyan curve is the baseline-variance diagnostic without attrition.](../../../public/plots/rsd-t02-power-effect-curve.svg)
+
+The seven tests check deterministic counts and units, approximate inverse-
+square effect scaling, attrition inflation, separate coverage handling,
+registered-maximum refusal, pseudo-replication and private-adaptation refusal,
+normal-quantile accuracy, and exact stochastic retention assurance. They do
+not validate pilot variances, freeze effect margins or a population count,
+calibrate bootstrap power, prove the normal diagnostic adequate for the exact
+analyzer, or establish achieved power.
+
+The plot's three variance profiles, 90% target power, 10% pre-response
+attrition and 95% retention assurance are illustrative sensitivity inputs.
+They are not pilot estimates or frozen design choices. Its dashed cyan series
+is the baseline-variance diagnostic without pre-response attrition. Per-
+hypothesis values are explicitly named
+`normal_approximation_power_diagnostic`, while
+`bootstrap_power_calibrated=false`.
+
+The planner can refuse a nominal Monte Carlo plus-one floor $1/(B+1)$ that is
+already above $\alpha/4$; variance-only input cannot reveal the higher data-
+dependent floor caused by zero-standard-error bootstrap resamples. It does not
+claim to reject that future condition. Instead it keeps
+`prospective_power_plan_passes=false` and `plan_freeze_permitted=false` pending
+pilot-transcript simulation through the exact analyzer. Four authority
+blockers remain: reviewed pilot-variance bytes and role, a release-bound
+analysis hash, a joint freeze of effects/power/resampling/failure penalties,
+and calibration against data-dependent bootstrap degeneracy.
+
+- [`rsd-t02-power-plan.mjs`](rsd-t02-power-plan.mjs)
+- [`rsd-t02-power-plan.test.mjs`](rsd-t02-power-plan.test.mjs)
+- [`core-models.json`](../../../assets/plots/core-models.json)
+- [`generate-plots.mjs`](../../../scripts/generate-plots.mjs)
+- [`rsd-t02-power-effect-curve.svg`](../../../public/plots/rsd-t02-power-effect-curve.svg)
+
+The dated implementation audit records the composition, test boundaries and
+remaining gates in one place:
+[RSD-T02 workstation execution foundations](../../../research/audits/2026-08-27-rsd-t02-workstation-execution-foundations.md).
 
 Run identity also freezes the actual Node version, V8 version, libuv version,
 platform, architecture, endianness, OS release, numeric model, and Math API
@@ -453,11 +638,12 @@ This smoke slice deliberately lacks:
    property-performance/trajectory-conformance endpoint;
 7. confirmation and transfer seeds, commitments, custody, and releases;
 8. calibrated workstation time, memory, and energy measurement; and
-9. a coverage-complete lineage bank, parameterized fixed-instance transcript
-   and policy runner, mature nulls, prospectively trained or calibrated
-   estimators, a frozen power plan, sealed lineage-disjoint outer families,
-   comparison/claim authority, confirmation custody, O2 selection, and
-   T02-FLOOR execution for the bounded T02-MECH construction runtime; and
+9. a coverage-complete lineage bank, an isolated content-addressed
+   26-projection policy runner with semantic replay and durable checkpoints,
+   mature calibrated nulls, a frozen analysis release and power plan, sealed
+   lineage-disjoint outer families, comparison/claim authority, confirmation
+   custody, O2 selection, and T02-FLOOR execution for the bounded T02-MECH
+   construction runtime; and
 10. machine contracts and runners for RSD-T03 through RSD-T10.
 
 Until those gaps are closed and separately reviewed, this directory remains a

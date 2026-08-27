@@ -549,6 +549,34 @@
     "status": "Exact declared operation accounting for the nine fixed public-development conformance policies on one 53,795-row packet. Bars show policy-specific scalar work above the common 645,540-operation traversal charge; labels show total scalar operations and transcendental evaluations. These counts are protocol accounting, not elapsed-time, energy, accuracy, comparison, or confirmation results."
   },
   {
+    "id": "rsd-t02-power-effect-curve",
+    "title": "Normal-planning count rises as target effect shrinks",
+    "equation": "n_eff proportional to sigma^2/delta^2; choose n_plan by a binomial retention bound",
+    "source": "math/interventional-mechanism-equivalence.md#prospective-system-population-and-outer-family-boundary",
+    "layout": {
+      "kind": "prospective-power-effect-curve",
+      "width": 1100,
+      "height": 660,
+      "theme": "ember"
+    },
+    "parameters": {
+      "family_count": 3,
+      "familywise_alpha": 0.05,
+      "target_power": 0.9,
+      "pre_response_attrition_rate": 0.1,
+      "retention_assurance": 0.95,
+      "effect_min": 0.025,
+      "effect_max": 0.2,
+      "samples": 241,
+      "variance_profiles": [
+        { "id": "low", "per_family_variance": 0.02 },
+        { "id": "base", "per_family_variance": 0.04 },
+        { "id": "high", "per_family_variance": 0.08 }
+      ]
+    },
+    "status": "Variance-only normal-approximation reading aid for an equal-weighted three-family panel. Curves first derive a diagnostic retained count using the conservative first Holm threshold alpha/4 and 90% target, then choose the smallest planned count whose exact binomial lower tail gives 95% experiment-level retention assurance under 10% pre-response attrition. The dashed cyan curve is the baseline-variance calculation without attrition. Variances and effect sizes are illustrative dimensionless inputs, not pilot estimates, biological constants, observed model performance, calibrated bootstrap power, a frozen sample size, or comparison evidence. The final analyzer can have a higher data-dependent p-value floor when bootstrap resamples have zero standard error, so pilot-transcript simulation remains mandatory. Runtime failures remain in the denominator; support coverage is a separate gate."
+  },
+  {
     "id": "interface-qualified-retroactivity",
     "title": "A connected client can reshape the producer transient",
     "equation": "dX/dt = k(t)-delta X+k_off C-k_on X(p_tot-C);  R(X)=[1+(1+X/K_d)^2/(p_tot/K_d)]^-1",

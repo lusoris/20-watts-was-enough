@@ -3,6 +3,10 @@ import path from "node:path";
 import { generateLayoutStudy } from "../experiments/workstation/fixture-012/generator.mjs";
 import { fixture026RsdT02InitializationId } from "../experiments/workstation/fixture-026/rsd-t02-generator.mjs";
 import { fixture026RsdT02OpaqueStatePermutation } from "../experiments/workstation/fixture-026/rsd-t02-models.mjs";
+import {
+  fixture026RsdT02InverseNormal,
+  fixture026RsdT02PlannedCountForRetention,
+} from "../experiments/workstation/fixture-026/rsd-t02-power-plan.mjs";
 import { constructFixture026RsdT02SkippingCell } from "../experiments/workstation/fixture-026/rsd-t02-pulse.mjs";
 import { summarizeFixture026RsdT02FamilyCoverage } from "../experiments/workstation/fixture-026/rsd-t02-system-family-generator.mjs";
 
@@ -2421,6 +2425,114 @@ function rsdT02PolicyWorkEnvelope(spec) {
   });
 }
 
+function rsdT02PowerEffectCurve(spec) {
+  const {
+    family_count: familyCount,
+    familywise_alpha: familywiseAlpha,
+    target_power: targetPower,
+    pre_response_attrition_rate: attritionRate,
+    retention_assurance: retentionAssurance,
+    effect_min: effectMin,
+    effect_max: effectMax,
+    samples,
+    variance_profiles: varianceProfiles,
+  } = spec.parameters;
+  if (
+    !Number.isSafeInteger(familyCount)
+    || familyCount < 2
+    || !Number.isFinite(familywiseAlpha)
+    || familywiseAlpha <= 0
+    || familywiseAlpha >= 1
+    || !Number.isFinite(targetPower)
+    || targetPower <= 0.5
+    || targetPower >= 1
+    || !Number.isFinite(attritionRate)
+    || attritionRate < 0
+    || attritionRate >= 0.5
+    || !Number.isFinite(retentionAssurance)
+    || retentionAssurance <= 0.5
+    || retentionAssurance >= 1
+    || !Number.isFinite(effectMin)
+    || !Number.isFinite(effectMax)
+    || effectMin <= 0
+    || effectMax <= effectMin
+    || !Number.isSafeInteger(samples)
+    || samples < 20
+    || !Array.isArray(varianceProfiles)
+    || varianceProfiles.length !== 3
+    || varianceProfiles.some((profile) => (
+      typeof profile.id !== "string"
+      || !Number.isFinite(profile.per_family_variance)
+      || profile.per_family_variance <= 0
+    ))
+  ) throw new Error(`${spec.id} has an invalid prospective power-curve contract`);
+
+  const zAlpha = fixture026RsdT02InverseNormal(1 - familywiseAlpha / 4);
+  const zPower = fixture026RsdT02InverseNormal(targetPower);
+  const effects = Array.from({ length: samples }, (_, index) => (
+    effectMin + (effectMax - effectMin) * index / (samples - 1)
+  ));
+  const count = (effect, variance, attrition = attritionRate) => {
+    const coefficient = variance / familyCount;
+    const effective = Math.max(2, Math.ceil(coefficient * ((zAlpha + zPower) / effect) ** 2));
+    return fixture026RsdT02PlannedCountForRetention({
+      effectiveCount: effective,
+      attritionRate: attrition,
+      perFamilyFailureProbability: (1 - retentionAssurance) / familyCount,
+    });
+  };
+  const series = varianceProfiles.map((profile) => ({
+    ...profile,
+    points: effects.map((effect) => [effect, count(effect, profile.per_family_variance)]),
+  }));
+  const minimumY = 2;
+  const maximumY = 1000;
+  const y = (value) => sy(Math.log10(value), Math.log10(minimumY), Math.log10(maximumY));
+  const x = (value) => sx(value, effectMin, effectMax);
+  const xTicks = [0.025, 0.05, 0.075, 0.1, 0.15, 0.2]
+    .filter((value) => value >= effectMin && value <= effectMax);
+  const yTicks = [2, 5, 10, 20, 50, 100, 200, 500, 1000];
+  const gridLines = `${xTicks.map((tick) => `<line x1="${x(tick)}" y1="${plot.top}" x2="${x(tick)}" y2="${plot.bottom}" stroke="${colors.grid}" stroke-width="1"/>
+  <text x="${x(tick)}" y="579" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${tick.toFixed(3).replace(/0+$/u, "").replace(/\.$/u, "")}</text>`).join("")}
+  ${yTicks.map((tick) => `<line x1="${plot.left}" y1="${y(tick)}" x2="${plot.right}" y2="${y(tick)}" stroke="${colors.grid}" stroke-width="1"/>
+  <text x="${plot.left - 12}" y="${y(tick) + 4}" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${tick}</text>`).join("")}`;
+  const palette = [colors.green, colors.amber, colors.coral];
+  const low = series[0].points.map(([effect, n]) => [x(effect), y(n)]);
+  const high = [...series[2].points].reverse().map(([effect, n]) => [x(effect), y(n)]);
+  const bandPath = `${linePath(low)} ${high.map(([px, py]) => `L${px.toFixed(2)},${py.toFixed(2)}`).join(" ")} Z`;
+  const curves = series.map((profile, index) => `<path d="${linePath(profile.points.map(([effect, n]) => [x(effect), y(n)]))}" fill="none" stroke="${palette[index]}" stroke-width="${index === 1 ? 5 : 3}" stroke-linecap="round"/>`).join("");
+  const base = series[1];
+  const noAttrition = effects.map((effect) => [
+    x(effect),
+    y(count(effect, base.per_family_variance, 0)),
+  ]);
+  const referenceEffect = 0.1;
+  const referenceCount = count(referenceEffect, base.per_family_variance);
+  const referenceX = x(referenceEffect);
+  const referenceY = y(referenceCount);
+  const content = `${gridLines}
+  <path d="${bandPath}" fill="${colors.violet}" opacity=".10"/>
+  ${curves}
+  <path d="${linePath(noAttrition)}" fill="none" stroke="${colors.cyan}" stroke-width="2" stroke-dasharray="9 7"/>
+  <line x1="${referenceX}" y1="${referenceY}" x2="${referenceX}" y2="${plot.bottom}" stroke="${colors.text}" stroke-width="2" stroke-dasharray="5 6" opacity=".8"/>
+  <circle cx="${referenceX}" cy="${referenceY}" r="7" fill="${colors.text}" stroke="${colors.background}" stroke-width="3"/>
+  <rect x="${referenceX + 16}" y="${referenceY - 45}" width="270" height="62" rx="10" fill="${colors.background}" fill-opacity=".96" stroke="${colors.grid}"/>
+  <text x="${referenceX + 30}" y="${referenceY - 20}" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="13" font-weight="800">δ = 0.10 · baseline n = ${referenceCount}/family</text>
+  <text x="${referenceX + 30}" y="${referenceY + 2}" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="10">support floor is a gate, not an n multiplier</text>`;
+  const profileLegend = varianceProfiles.map((profile, index) => {
+    const legendX = 570 + index * 150;
+    return `<line x1="${legendX}" y1="48" x2="${legendX + 24}" y2="48" stroke="${palette[index]}" stroke-width="${index === 1 ? 5 : 3}"/><text x="${legendX + 32}" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="10">${esc(profile.id)} σ²=${profile.per_family_variance}</text>`;
+  }).join("");
+  const legend = `<line x1="430" y1="48" x2="454" y2="48" stroke="${colors.cyan}" stroke-width="2" stroke-dasharray="9 7"/><text x="462" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="10">base · no attrition</text>${profileLegend}`;
+  return frame(spec, content, {
+    xLabel: "minimum relevant candidate improvement δ (lower loss is better)",
+    yLabel: "planned independent system instances per family · log scale",
+    legend,
+    badge: "NORMAL COUNT · NO_RESULT",
+    footer: `Variance-only normal diagnostic · Holm α/4=${(familywiseAlpha / 4).toFixed(4)} · target=${targetPower.toFixed(2)} · bootstrap calibration open`,
+  });
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -2448,6 +2560,7 @@ const renderers = {
   "rsd-t02-lineage-coverage": rsdT02LineageCoverage,
   "rsd-t02-procedural-seed-map": rsdT02ProceduralSeedMap,
   "rsd-t02-policy-work-envelope": rsdT02PolicyWorkEnvelope,
+  "rsd-t02-power-effect-curve": rsdT02PowerEffectCurve,
   "interface-qualified-retroactivity": interfaceQualifiedRetroactivity,
   "history-conditioned-position-contrast": historyConditionedPositionContrast,
 };

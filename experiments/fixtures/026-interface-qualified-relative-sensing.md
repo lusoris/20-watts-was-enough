@@ -631,10 +631,12 @@ and models only from its own data; calibration may set probability, support and
 abstention mappings without refitting; evaluation is one-pass frozen scoring.
 The current seed changes only the hidden opaque-state permutation, so these
 roles are a leakage barrier rather than 64 independent scientific units. The
-split is neither powered nor comparison-eligible. A later comparison requires
-independently generated held-out system instances, an outer system-family
-holdout and implemented trainable state-space and recurrent nulls. The exact
-rules and hostile mutations are machine-checked by the
+split is neither powered nor comparison-eligible. Two trainable public state-
+space and recurrent prototypes now exist, but a later comparison still
+requires independently generated held-out system instances, an outer system-
+family holdout, prospective instance roles, calibration, resource auditing and
+level-five mature-null freezes. The exact rules and hostile mutations are
+machine-checked by the
 [`Stage-3 design contract`](../workstation/fixture-026/configs/rsd-t02-stage3-design.json)
 and [Decision 0020](../../decisions/0020-separate-information-cuts-from-replication.md).
 
@@ -669,15 +671,41 @@ registry metadata do not enter scientific identity. Full registry, population-
 design and model-source bytes remain explicit provenance. The
 coverage audit remains failed: log-fold, feedback-present and
 channel-local-present have one lineage each, while memory-negative has none.
-These packets have no transcript or policy runner and do not replace the
-35-projection conformance packet. The generic-null maturation contract records
-both current nulls at level one of six. All ten intrinsic maturity gates are
-open; two of ten separate comparison-release gates are satisfied, and one
-measured-energy meter gate is conditional on a measured-energy claim. Four
-shared blockers must close before affected fitting or mature-null status.
+The packets do not replace the 35-projection conformance packet. A separate
+fixed-instance conformance runner now materializes all 26 schedules and 39,962
+causal sample rows for one generated instance, constructs an allowlisted policy
+view, and records nine chained terminal response/resource slots. Its only
+successful executor is an in-process digest abstention. It has no content-
+addressed 26-projection policy bundle, fresh child isolation, semantic replay
+of real policy outputs, or durable disk checkpoint, so the registered runner
+gate remains open.
+
+Two deterministic learned generic-null prototypes now occupy level two of six:
+one causal latent state-space model and one compact GRU-style recurrence. A
+post-validation adapter can feed either prototype the fixed-instance causal
+view without schedule, identity, truth or provenance fields. Neither model is
+calibrated, selected, frozen for comparison, or integrated into the isolated
+runner. The null-maturation contract therefore closes only those two prototype
+gates. Together with the registry and generator prerequisites, four of 20
+applicable non-energy gates are satisfied; eight null-maturity and eight
+comparison-release gates remain open. The measured-energy meter gate remains
+conditional on a measured-energy claim, and four shared blockers still prevent
+affected fitting.
+
+An additive method-check analyzer implements the four registered paired
+endpoint contrasts using equal fixed-family weights, a deterministic centered
+stratified bootstrap-$t$, and one Holm step-down family. For each hypothesis it
+records the data-dependent p-value floor created by zero-standard-error
+resamples and whether the first Holm threshold is attainable. A companion
+variance-only normal/binomial calculator exposes effect, variance, unit,
+attrition and retention assumptions, but does not claim calibrated bootstrap
+power or freeze a sample size. Pilot transcripts must be simulated through the
+exact released analyzer before its power gate can close, as required by
+[Decision 0023](../../decisions/0023-bind-power-to-the-executable-analysis-law.md).
 See the [family registry](../workstation/fixture-026/configs/rsd-t02-system-family-registry.json),
 [generator](../workstation/fixture-026/rsd-t02-system-family-generator.mjs),
 [null-maturation design](../workstation/fixture-026/configs/rsd-t02-null-maturation-design.json),
+[execution-foundations audit](../../research/audits/2026-08-27-rsd-t02-workstation-execution-foundations.md),
 and [Decision 0022](../../decisions/0022-separate-fixed-instance-construction-from-conformance-runtime.md).
 
 **Kill rule.** Kill attribution if step fit or hidden provenance supplies the
@@ -686,14 +714,17 @@ for guessing within an equivalence set, privileged access is unequal or
 unpriced, RMS or fixed slow sampling replaces the floor endpoint, or the
 mechanism bank cannot beat generic state-space/recurrent nulls at equal access.
 
-**Required future artifacts.** A coverage-complete lineage bank, parameterized
-fixed-instance transcript and policy runner, mature nulls, prospectively
-calibrated or trained estimators, sealed lineage-disjoint outer families, a frozen power plan, matched confirmation
-computation and intervention budgets, prospective confirmation mapping and custody, paired
-statistics, promotion evidence, calibrated workstation measurement, an O2
-response-freeze contract, and a separately frozen T02-FLOOR runtime with a
-finite-estimator authority boundary. None of those comparison, claim,
-asymptotic, workstation or energy authorities exists.
+**Required future artifacts.** A coverage-complete lineage bank; a content-
+addressed fixed-instance policy bundle with fresh child isolation, semantic
+replay and durable checkpoints; prospectively assigned fit/calibration/public-
+evaluation instances; level-five mature nulls; sealed lineage-disjoint outer
+families; a frozen analyzer and pilot-transcript-calibrated power plan; matched
+confirmation computation and intervention budgets; prospective confirmation
+mapping and custody; evaluator endpoint integration; promotion evidence;
+calibrated workstation measurement; an O2 response-freeze contract; and a
+separately frozen T02-FLOOR runtime with a finite-estimator authority boundary.
+None of those comparison, claim, asymptotic, workstation or energy authorities
+exists.
 
 ### RSD-T02-PULSE — One-sided repeated-stimulus signatures
 

@@ -143,13 +143,25 @@ recomputed construction analysis over a hashed one/two-seed ordered prefix. An
   construction-tuned public thresholds, zero labels and zero tuning trials and
   are not mature nulls or trained estimators. The ordered bank has zero inactive
   roles. Comparison and claim authority remain absent. A separate closed
-  Stage-3 design assigns the 64
-public seeds to 32 fit, 16 calibration and 16 evaluation roles while denying
-seed-level replication: these seeds alter only an opaque state-handle
-permutation. It freezes the access cut and future null/endpoint gates, not a
-  powered comparison. A sibling fixed-finite-family-panel contract now requires
-  fixed-parameter instances and lineage-disjoint outer families, but no family
-  registry, generator, power plan, custody payload or population run exists.
+Stage-3 design assigns the 64 public seeds to 32 fit, 16 calibration and 16
+evaluation roles while denying seed-level replication: these seeds alter only
+an opaque state-handle permutation. It freezes the access cut and future
+null/endpoint gates, not a powered comparison. A sibling fixed-finite-family-
+panel contract, five-family public registry, and exact generator now construct
+20 metadata-bound development instances with one parameter vector and one time
+constant across 26 schedules. A separate conformance runner materializes all
+39,962 causal rows for one such instance, closes the policy view, and records
+nine hash-chained response/resource slots. Its only successful executor is an
+in-process digest abstention: the content-addressed 26-projection bundle, fresh
+child, semantic replay of real policies, and durable disk checkpoint remain
+open. Two deterministic trainable level-two null prototypes can consume the
+validated transcript through a post-run adapter, but are uncalibrated and not
+runner-integrated. A four-hypothesis bootstrap-$t$/Holm analyzer and a
+variance-only normal/binomial planning calculator now execute as unfrozen
+method checks. The analyzer exposes its data-dependent bootstrap p-value floor;
+the planner explicitly cannot claim calibrated bootstrap power until pilot
+transcripts are simulated through that exact analyzer. No final power plan,
+custody payload, population run, or comparison authority exists.
   The pulse module has executed bounded positive,
 feed-forward, linear-feedback, dead-time and alias construction checks. Its
 panel runner defaults to zero work, retains explicit incompleteness and binds

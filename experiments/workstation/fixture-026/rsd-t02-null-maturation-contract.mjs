@@ -3,7 +3,9 @@ import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
 export const FIXTURE_026_RSD_T02_NULL_MATURATION_DESIGN_VERSION =
   "fixture-026.rsd-t02-null-maturation-design.v1";
 export const FIXTURE_026_RSD_T02_NULL_MATURATION_DESIGN_SHA256 =
-  "b052d9ea6b6321b3dd7a9a1a3cc2bac91b0cae9585bdd767d778cb38a8d8ab5c";
+  "655e44d181de039569fd9c0714c61208e0d20d0a5a0104e3218ab5355737c3bd";
+export const FIXTURE_026_RSD_T02_NULL_PROTOTYPE_IMPLEMENTATION_SHA256 =
+  "2a0440334adfc51b50ff22848ac0f675d1efa600b384462ad39dfa6068a0b405";
 
 const REQUIRED_NULLS = Object.freeze(["B-STATE-SPACE", "B-RECURRENT"]);
 const REQUIRED_PRIMARY_PROPERTIES = Object.freeze([
@@ -112,6 +114,9 @@ export function assertFixture026RsdT02NullMaturationDesign(design) {
   const ladderStatuses = design?.maturity_ladder?.map(({ status }) => status);
   const currentArms = design?.current_implementations?.map(({ arm_id: armId }) => armId);
   const targetArms = design?.target_null_contract?.required_arm_ids;
+  const prototypeParent = design?.parent_artifacts?.find(({ path }) => (
+    path === "rsd-t02-null-prototypes.mjs"
+  ));
   const currentAuthority = deriveFixture026RsdT02NullAuthority({
     promotion_gates: design?.promotion_gates,
     active_fitting_blockers: design?.fit_contract?.affected_fitting_blockers,
@@ -125,8 +130,11 @@ export function assertFixture026RsdT02NullMaturationDesign(design) {
     || design.track !== "RSD-T02"
     || design.authority !== "prospective-null-maturation-design-only"
     || !Array.isArray(design.parent_artifacts)
-    || design.parent_artifacts.length !== 10
-    || new Set(design.parent_artifacts.map(({ path }) => path)).size !== 10
+    || design.parent_artifacts.length !== 11
+    || new Set(design.parent_artifacts.map(({ path }) => path)).size !== 11
+    || prototypeParent?.role !== "level-two-null-prototype-implementation"
+    || prototypeParent.sha256_exact_bytes
+      !== FIXTURE_026_RSD_T02_NULL_PROTOTYPE_IMPLEMENTATION_SHA256
     || !Array.isArray(ladderStatuses)
     || ladderStatuses.join("|") !== [
       "fixed-conformance-reference",
@@ -139,8 +147,13 @@ export function assertFixture026RsdT02NullMaturationDesign(design) {
     || currentArms?.join("|") !== REQUIRED_NULLS.join("|")
     || targetArms?.join("|") !== REQUIRED_NULLS.join("|")
     || design.current_implementations.some((arm) => (
-      arm.current_level !== 1
-      || arm.current_status !== "fixed-conformance-reference"
+      arm.current_level !== 2
+      || arm.current_status !== "trainable-public-prototype"
+      || arm.current_property_coverage.join("|") !== REQUIRED_PRIMARY_PROPERTIES.join("|")
+      || (arm.arm_id === "B-STATE-SPACE"
+        && arm.trainable_state_space_estimator_exists !== true)
+      || (arm.arm_id === "B-RECURRENT"
+        && arm.trainable_gru_style_estimator_exists !== true)
       || arm.calibrated_probability_output_exists !== false
       || arm.satisfies_mature_null_gate !== false
     ))
@@ -205,8 +218,19 @@ export function assertFixture026RsdT02NullMaturationDesign(design) {
     || design.promotion_gates?.comparison_release?.length !== 10
     || design.promotion_gates?.energy_comparison_conditional?.length !== 1
     || Object.values(design.promotion_gates).flat()
-      .filter(({ satisfied }) => satisfied).length !== 2
-    || design.promotion_gates.null_maturity.some(({ satisfied }) => satisfied)
+      .filter(({ satisfied }) => satisfied).length !== 4
+    || design.promotion_gates.null_maturity.some(({ gate, satisfied }) => (
+      satisfied && ![
+        "trainable-state-space-prototype-passes",
+        "trainable-recurrent-prototype-passes",
+      ].includes(gate)
+    ))
+    || [
+      "trainable-state-space-prototype-passes",
+      "trainable-recurrent-prototype-passes",
+    ].some((requiredGate) => !design.promotion_gates.null_maturity.some(({ gate, satisfied }) => (
+      gate === requiredGate && satisfied
+    )))
     || design.promotion_gates.energy_comparison_conditional.some(({ satisfied }) => satisfied)
     || design.promotion_gates.comparison_release.some(({ gate, satisfied }) => (
       satisfied && ![
@@ -225,6 +249,8 @@ export function assertFixture026RsdT02NullMaturationDesign(design) {
     || currentAuthority.active_fitting_blocker_count !== 4
     || currentAuthority.applicable_gate_count !== 20
     || currentAuthority.registered_gate_count !== 21
+    || currentAuthority.satisfied_gate_count !== 4
+    || currentAuthority.unsatisfied_gate_count !== 16
     || design.mature_null_gate_satisfied !== currentAuthority.mature_null_gate_satisfied
     || design.affected_fitting_permitted !== currentAuthority.affected_fitting_permitted
     || design.comparison_inference_permitted !== false
@@ -272,8 +298,8 @@ export function summarizeFixture026RsdT02NullMaturity(
       calibrated_probability_output_exists: arm.calibrated_probability_output_exists,
       satisfies_mature_null_gate: arm.satisfies_mature_null_gate,
     }))),
-    highest_common_level: 1,
-    highest_common_status: "fixed-conformance-reference",
+    highest_common_level: 2,
+    highest_common_status: "trainable-public-prototype",
     registered_gate_count: authority.registered_gate_count,
     total_gate_count: authority.applicable_gate_count,
     satisfied_gate_count: authority.satisfied_gate_count,

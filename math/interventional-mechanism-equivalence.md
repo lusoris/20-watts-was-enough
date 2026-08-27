@@ -673,6 +673,75 @@ rule applies Holm's procedure across all four fixed endpoint-by-comparator
 hypotheses at $\alpha=0.05$; controlling two contrasts separately inside each
 endpoint would not close the cross-endpoint multiplicity boundary.
 
+For equal retained counts in each of $F$ fixed families, first derive the
+minimum effective count for one lower-tail contrast:
+
+$$
+n_{\mathrm{eff}}
+=
+\max\left\{
+2,
+\left\lceil
+\frac{\sum_f \sigma_f^2}{F^2}
+\left(
+\frac{z_{1-\alpha/4}+z_{1-\beta}}{\delta}
+\right)^2
+\right\rceil
+\right\}.
+$$
+
+Here $\sigma_f^2$ is the development-evaluation variance of the paired
+system-instance contrast in family $f$, $\delta>0$ is the minimum relevant
+improvement magnitude in the endpoint unit, and $1-\beta$ is target power.
+The $\alpha/4$ term protects the most conservative first Holm step.
+
+If $r$ is the prospective probability of pre-response invalid generation and
+$\gamma$ is the registered experiment-level retention assurance, the plotted
+planned count is instead
+
+$$
+n_{\mathrm{plan}}
+=
+\min\left\{
+m\in\mathbb N:
+\Pr\!\left[
+\operatorname{Binomial}(m,1-r)<n_{\mathrm{eff}}
+\right]
+\le \frac{1-\gamma}{F}
+\right\}.
+$$
+
+The Bonferroni allocation on the right guarantees at least $\gamma$ retention
+assurance across the $F$ family strata without assuming their attrition events
+are independent. Runtime failures retain their registered in-denominator
+penalty. The support-coverage floor remains a separate gate and is not silently
+converted into another sample-size multiplier.
+
+![Illustrative prospective independent-system count versus minimum relevant effect under three variance profiles.](../public/plots/rsd-t02-power-effect-curve.svg)
+
+The figure is a sensitivity map, not a power result. Its variance profiles are
+illustrative, so it cannot freeze a sample size. The checked-in calculator
+requires a development-evaluation variance-artifact hash and exposes every
+unit, approximation, attrition rule and blocker. A syntactically valid hash
+does not verify the artifact bytes, role or review, so the calculator always
+keeps the power-plan release gate open until those bindings are independently
+validated. The normal calculation also does not establish power for the final
+bootstrap-$t$ analyzer: zero-standard-error bootstrap resamples create a
+data-dependent lower bound
+
+$$
+p_{\min,\mathrm{data}}
+=
+\frac{B_0+1}{B+1},
+$$
+
+where $B$ is the registered resample count and $B_0$ is the number of
+zero-standard-error resamples conservatively counted as extreme. The analyzer
+records this bound for every hypothesis and closes its resolution gate only
+when it can reach the first Holm threshold. A future frozen power artifact must
+therefore simulate the pilot transcripts through the exact analyzer; variance
+alone is insufficient.
+
 The causal-memory coordinate is not primary-scorable in this first population
 design because the current family bank contains no valid memory-negative
 lineage. It can become primary only after both values have prospective,
@@ -741,9 +810,13 @@ recorded in the receipt but not in that identity. Every generated packet lists
 the same parameter digest and $\tau_s$ on all 26 unique episodes. A distinct
 episode-protocol digest binds every schedule, the horizon, integration step,
 output rate, input bounds, units and interpreter semantics into the packet ID
-without contaminating the system ID. The packet contains no trajectories or
-policy response and cannot be fed to the older 35-projection arm bank without
-a new parameterized transcript contract.
+without contaminating the system ID. The generator packet itself contains no
+trajectories or policy response. A separate fixed-instance conformance runner
+now materializes its 26 trajectories and a causal view, but deliberately uses
+only an in-process digest-abstention success path. It cannot be fed to the older
+35-projection arm bank or promoted to real policy execution until a content-
+addressed 26-projection bundle, fresh-child isolation, semantic replay and
+durable checkpoint contract are validated.
 
 The coverage function counts distinct structural lineages per property value,
 collapsing the full-panel-equivalent I1-FFL and affine high-pass siblings into
@@ -760,9 +833,12 @@ those structural gaps. The closed machine artifacts are the
 
 ## Generic-null maturity is a state machine
 
-The executable `B-STATE-SPACE` and `B-RECURRENT` policies remain fixed
-construction references. Their target names do not make the former a learned
-state-space estimator or the latter a trained GRU. The maturation sequence is:
+The executable `B-STATE-SPACE` and `B-RECURRENT` policies in the older
+35-projection construction bank remain fixed level-one references. Separate
+deterministic trainable implementations now provide a causal latent state-space
+prototype and a compact GRU-style prototype. They consume the fixed-instance
+causal view only through a post-validation adapter and occupy level two; they
+do not replace the older policy responses. The maturation sequence is:
 
 1. fixed conformance reference;
 2. trainable public prototype;
@@ -771,11 +847,17 @@ state-space estimator or the latter a trained GRU. The maturation sequence is:
 5. confirmation-frozen mature null; and
 6. confirmation-evaluated run state.
 
-Only level 5 satisfies the population gate. Both current references are at
-level 1. A target generic null must emit normalized value posteriors for all
-three primary coordinates, identifiability probabilities, one coherent joint
-posterior, support status, a deterministic decide-or-abstain action, reason
-codes and a complete work ledger.
+Only level 5 satisfies the population gate. Both current trainable prototypes
+are at level 2. They emit normalized value posteriors for all three primary
+coordinates, identifiability probabilities, one coherent joint posterior,
+support status, a deterministic decide-or-abstain action, reason codes and a
+typed work ledger, but their probabilities are uncalibrated and their models,
+resource caps and source/runtime identity are not comparison-frozen. The
+machine implementations are the
+[`prototype module`](../experiments/workstation/fixture-026/rsd-t02-null-prototypes.mjs),
+[`post-validation adapter`](../experiments/workstation/fixture-026/rsd-t02-null-prototype-adapter.mjs),
+and
+[`maturation design`](../experiments/workstation/fixture-026/configs/rsd-t02-null-maturation-design.json).
 
 For instance $i$ and property $q$, a prospective common objective family is
 
@@ -824,13 +906,15 @@ requires a new contract version, head and calibration.
 The exact six-level status, freeze order, common resource requirements and
 three separate gate scopes are frozen in the
 [`null-maturation design`](../experiments/workstation/fixture-026/configs/rsd-t02-null-maturation-design.json).
-All ten intrinsic null-maturity gates are open. Two of ten comparison-release
-gates—the registry and generator—are satisfied; the measured-energy meter gate
-is conditionally applicable only when an energy claim is requested. It is not
-counted among the 20 mandatory gates for a non-energy comparison. Affected
-fitting remains
-blocked by incomplete lineage coverage, absent sealed outer-family templates,
-the absent parameterized runner and the absent instance-role assignment.
+The two trainable-prototype gates are satisfied and eight intrinsic null-
+maturity gates remain open. Two of ten comparison-release gates—the registry
+and generator—are also satisfied; the measured-energy meter gate is
+conditionally applicable only when an energy claim is requested. It is not
+counted among the 20 mandatory gates for a non-energy comparison. The current
+non-energy total is therefore four satisfied and 16 open. Affected fitting
+remains blocked by incomplete lineage coverage, absent sealed outer-family
+templates, the still-unvalidated isolated parameterized policy/resource runner,
+and the absent instance-level fit/calibration/development-evaluation assignment.
 
 ## Calibration and abstention
 

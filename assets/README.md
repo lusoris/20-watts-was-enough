@@ -235,6 +235,15 @@ cross-cutting trajectory, endpoint, peak, memory, and support targets. Logical
 dependencies between those targets remain. Its two overlap examples are
 possibilities, not measured frequencies or a family-to-property lookup.
 
+`rsd-t02-power-effect-curve` plots the prospective independent-system count
+against the minimum relevant loss improvement under three illustrative
+variance profiles. It makes the inverse-square effect-size cost, conservative
+first Holm threshold, and pre-response attrition visible while keeping support
+coverage separate from sample-size inflation. It is a planning sensitivity
+map, not a pilot estimate, calibrated bootstrap-power curve, or frozen sample
+size. Its dashed cyan series is the baseline-variance calculation without
+pre-response attrition.
+
 `fixture-007-identifiability` is also used directly in the concept book because
 it already provides the needed analytical distinction between prior-supported
 reconstruction and new evidence.

@@ -18,6 +18,12 @@
   fixed-parameter metadata generator, coverage audit, and six-level null
   maturation contract; no affected fitting or comparison
 
+> **Later same-day implementation note:** the
+> [workstation execution-foundations audit](2026-08-27-rsd-t02-workstation-execution-foundations.md)
+> records a separate fixed-instance conformance runner, two trainable level-two
+> null prototypes, and blocked Holm/power method checks. The population,
+> calibration, maturity, custody, and comparison conclusions below are unchanged.
+
 ## Executive finding
 
 The current 64 RSD-T02 seed labels do not create 64 systems. They select only

@@ -126,7 +126,7 @@ Supporting material:
 - [`experiments/workstation/fixture-023/`](experiments/workstation/fixture-023/README.md) — deterministic PLM-T01 duration-memory and PLM-T02 lifecycle-reset development smoke paths
 - [`experiments/workstation/fixture-024/`](experiments/workstation/fixture-024/README.md) — deterministic AMR-T01 development smoke path with no confirmation or energy authority
 - [`experiments/workstation/fixture-025/`](experiments/workstation/fixture-025/README.md) — deterministic ECM-T03 validity-gate development smoke path with no confirmation or energy authority
-- [`experiments/workstation/fixture-026/`](experiments/workstation/fixture-026/README.md) — deterministic RSD-T01 grid plus an RSD-T02 nine-policy construction bank, exact five-family/20-artifact fixed-instance generator, lineage-coverage audit, and six-level generic-null maturation contract; no comparison, confirmation, or energy authority
+- [`experiments/workstation/fixture-026/`](experiments/workstation/fixture-026/README.md) — deterministic RSD-T01 grid plus an RSD-T02 nine-policy construction bank, exact five-family/20-artifact generator, one-instance 26-schedule transcript runner, two trainable level-two null prototypes, and blocked Holm/power method checks; no comparison, confirmation, or energy authority
 - [`experiments/workstation/fixture-027/`](experiments/workstation/fixture-027/README.md) — deterministic RIN-T01 isolation/connection diagnostic with no confirmation, service-performance, or energy authority
 - [`experiments/test-coverage.md`](experiments/test-coverage.md) — generated
   claim-to-protocol coverage and workstation execution readiness

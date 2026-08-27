@@ -54,6 +54,11 @@
       "role": "current-conformance-reference-bank",
       "path": "rsd-t02-arm-bank.mjs",
       "sha256_exact_bytes": "a3b2d356692b347e3078d56d0e4fff0e59858bc21ba595bab4abc10780ce4e19"
+    },
+    {
+      "role": "level-two-null-prototype-implementation",
+      "path": "rsd-t02-null-prototypes.mjs",
+      "sha256_exact_bytes": "2a0440334adfc51b50ff22848ac0f675d1efa600b384462ad39dfa6068a0b405"
     }
   ],
   "maturity_ladder": [
@@ -91,25 +96,27 @@
   "current_implementations": [
     {
       "arm_id": "B-STATE-SPACE",
-      "current_level": 1,
-      "current_status": "fixed-conformance-reference",
-      "current_core": "two-hard-coded-first-order-affine-or-log-traces-plus-reset-freeze-distances",
-      "trainable_state_space_estimator_exists": false,
+      "current_level": 2,
+      "current_status": "trainable-public-prototype",
+      "current_core": "learned-causal-latent-state-space-with-property-and-identifiability-heads",
+      "trainable_state_space_estimator_exists": true,
       "calibrated_probability_output_exists": false,
       "current_property_coverage": [
         "drive_transform",
-        "causal_memory"
+        "reported_output_feedback_edge",
+        "channel_local_state"
       ],
       "satisfies_mature_null_gate": false
     },
     {
       "arm_id": "B-RECURRENT",
-      "current_level": 1,
-      "current_status": "fixed-conformance-reference",
-      "current_core": "fixed-exponential-running-state-over-clamp-and-restimulation-traces",
-      "trainable_gru_style_estimator_exists": false,
+      "current_level": 2,
+      "current_status": "trainable-public-prototype",
+      "current_core": "learned-compact-GRU-style-causal-recurrence-with-property-and-identifiability-heads",
+      "trainable_gru_style_estimator_exists": true,
       "calibrated_probability_output_exists": false,
       "current_property_coverage": [
+        "drive_transform",
         "reported_output_feedback_edge",
         "channel_local_state"
       ],
@@ -326,8 +333,8 @@
     "null_maturity": [
       { "gate": "validated-parameterized-transcript-policy-resource-runner", "satisfied": false },
       { "gate": "instance-level-fit-calibration-development-evaluation-split", "satisfied": false },
-      { "gate": "trainable-state-space-prototype-passes", "satisfied": false },
-      { "gate": "trainable-recurrent-prototype-passes", "satisfied": false },
+      { "gate": "trainable-state-space-prototype-passes", "satisfied": true },
+      { "gate": "trainable-recurrent-prototype-passes", "satisfied": true },
       { "gate": "both-selected-model-artifacts-frozen", "satisfied": false },
       { "gate": "final-common-resource-caps-frozen", "satisfied": false },
       { "gate": "both-calibrators-support-and-abstention-artifacts-frozen", "satisfied": false },

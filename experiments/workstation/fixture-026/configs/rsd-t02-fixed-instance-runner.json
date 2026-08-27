@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-fixed-instance-runner-config.v1",
+  "artifact": "fixture-026",
+  "track": "RSD-T02",
+  "authority": "public-development-transcript-resource-conformance-only",
+  "partition": "development",
+  "family_registry_contract_version": "fixture-026.rsd-t02-system-family-registry.v1",
+  "population_contract_version": "fixture-026.rsd-t02-population-design.v1",
+  "fixed_packet_version": "fixture-026.rsd-t02-fixed-instance-packet.v1",
+  "episode_protocol_version": "fixture-026.rsd-t02-fixed-instance-episode-protocol.v1",
+  "episode_protocol_sha256": "25ce50ae6a6890e7591a499e46731e318fd0e7cb9bc591096c8fc7cdfff813d3",
+  "arm_ids": [
+    "A-RAW",
+    "B-STATIC-DIV",
+    "B-STREAM",
+    "B-LOG-RATIO",
+    "B-DIFFERENCE",
+    "B-STATE-SPACE",
+    "B-RECURRENT",
+    "C-MECHANISM-BANK",
+    "C-DUAL"
+  ],
+  "transcript_contract": {
+    "episode_count": 26,
+    "samples_per_episode": 1537,
+    "sample_rows_per_packet": 39962,
+    "episode_order": "fixed-instance-packet-order-v1",
+    "numeric_model": "IEEE-754-binary64",
+    "trajectories_generated": true,
+    "internal_output_visible_to_policy": false
+  },
+  "policy_view_contract": {
+    "root_fields": [
+      "schema",
+      "contract_version",
+      "units",
+      "order",
+      "projections"
+    ],
+    "projection_fields": [
+      "ordinal",
+      "schedule",
+      "samples"
+    ],
+    "sample_fields": [
+      "ordinal",
+      "time_s",
+      "input_a_u",
+      "input_b_u",
+      "active_channel",
+      "reported_output",
+      "output_clamped",
+      "state_reset_applied",
+      "state_freeze_active"
+    ],
+    "forbidden_recursive_fields": [
+      "seed",
+      "profile",
+      "run_id",
+      "packet_id",
+      "instance_id",
+      "family_id",
+      "family_version",
+      "recipe_id",
+      "equation_id",
+      "structural_lineage_id",
+      "full_panel_equivalence_group",
+      "parameter_vector",
+      "parameter_vector_sha256",
+      "property_certificate",
+      "property_certificate_set",
+      "property_vector",
+      "evaluator_truth",
+      "provenance",
+      "registry_sha256",
+      "internal_output",
+      "final_state"
+    ],
+    "future_samples_outside_packet_visible": false,
+    "evaluator_truth_visible": false,
+    "provenance_visible": false
+  },
+  "policy_execution_contract": {
+    "execution_mode": "in-process-built-in-view-digest-abstention-conformance",
+    "content_addressed_policy_bundle": false,
+    "fresh_isolated_child_per_packet": false,
+    "custom_success_executor_permitted": false,
+    "comparison_policy_execution": false,
+    "design_gate": "validated-parameterized-transcript-policy-resource-runner",
+    "design_gate_satisfied": false,
+    "remaining_blocker": "content-addressed-26-projection-policy-bundle-fresh-isolated-child-and-semantic-replay"
+  },
+  "resource_caps": {
+    "thread_cap": 1,
+    "arm_invocations_per_packet": 9,
+    "episodes_per_packet": 26,
+    "sample_rows_per_arm": 39962,
+    "policy_view_utf8_bytes": 16777216,
+    "scalar_operations_per_arm": 120000,
+    "retained_state_bytes_per_arm": 64,
+    "runtime_failures_per_arm": 1,
+    "malformed_responses_per_arm": 1,
+    "fallback_invocations_per_arm": 0,
+    "wall_seconds": null,
+    "later_joules": null
+  },
+  "resume_contract": {
+    "ledger_order": "registered-arm-order-v1",
+    "record_chain": "sha256-canonical-json-previous-record-v1",
+    "existing_records_mutable": false,
+    "retry_failed_arm_permitted": false,
+    "foreign_packet_resume_permitted": false
+  },
+  "policy_mode": "deterministic-causal-view-digest-abstention-conformance-v1",
+  "comparison_inference_permitted": false,
+  "claim_eligible": false,
+  "result_label": "NO_RESULT"
+}

@@ -9,6 +9,7 @@ import Ajv from "ajv";
 import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
 import {
   FIXTURE_026_RSD_T02_NULL_MATURATION_DESIGN_SHA256,
+  FIXTURE_026_RSD_T02_NULL_PROTOTYPE_IMPLEMENTATION_SHA256,
   assertFixture026RsdT02MatureNullAuthority,
   assertFixture026RsdT02NullMaturationDesign,
   assertFixture026RsdT02NullMaturationParents,
@@ -47,7 +48,7 @@ test("null maturation design is schema-valid, hash-bound, prospective and NO_RES
   assert.equal(design.result_label, "NO_RESULT");
 });
 
-test("all ten exact parent artifacts are verified byte-for-byte", async () => {
+test("all eleven exact parent artifacts, including the level-two implementation, are verified", async () => {
   const { design } = await loadDesign();
   const entries = await Promise.all(design.parent_artifacts.map(async ({ path: relativePath }) => (
     [relativePath, await readFile(path.join(fixtureRoot, relativePath))]
@@ -56,6 +57,14 @@ test("all ten exact parent artifacts are verified byte-for-byte", async () => {
     design,
     sourceBytesByPath: new Map(entries),
   }), true);
+  const prototypeParent = design.parent_artifacts.find(({ path: relativePath }) => (
+    relativePath === "rsd-t02-null-prototypes.mjs"
+  ));
+  assert.deepEqual(prototypeParent, {
+    role: "level-two-null-prototype-implementation",
+    path: "rsd-t02-null-prototypes.mjs",
+    sha256_exact_bytes: FIXTURE_026_RSD_T02_NULL_PROTOTYPE_IMPLEMENTATION_SHA256,
+  });
 
   const drifted = new Map(entries);
   drifted.set(design.parent_artifacts[0].path, Buffer.from("drift"));
@@ -71,15 +80,15 @@ test("all ten exact parent artifacts are verified byte-for-byte", async () => {
 test("current state separates null maturity from comparison and conditional-energy gates", async () => {
   const { design } = await loadDesign();
   const summary = summarizeFixture026RsdT02NullMaturity(design);
-  assert.equal(summary.highest_common_level, 1);
-  assert.equal(summary.highest_common_status, "fixed-conformance-reference");
-  assert.equal(summary.satisfied_gate_count, 2);
+  assert.equal(summary.highest_common_level, 2);
+  assert.equal(summary.highest_common_status, "trainable-public-prototype");
+  assert.equal(summary.satisfied_gate_count, 4);
   assert.equal(summary.registered_gate_count, 21);
   assert.equal(summary.total_gate_count, 20);
-  assert.equal(summary.unsatisfied_gate_count, 18);
-  assert.equal(summary.unsatisfied_gates.length, 18);
+  assert.equal(summary.unsatisfied_gate_count, 16);
+  assert.equal(summary.unsatisfied_gates.length, 16);
   assert.equal(summary.null_maturity_gate_count, 10);
-  assert.equal(summary.unsatisfied_null_maturity_gate_count, 10);
+  assert.equal(summary.unsatisfied_null_maturity_gate_count, 8);
   assert.equal(summary.active_fitting_blocker_count, 4);
   assert.equal(summary.energy_comparison_gate_applicable, false);
   assert.equal(summary.energy_comparison_gate_satisfied, null);
@@ -90,18 +99,31 @@ test("current state separates null maturity from comparison and conditional-ener
   assert.equal(summary.arms.every(({ calibrated_probability_output_exists: value }) => (
     value === false
   )), true);
+  assert.equal(design.current_implementations.every((arm) => (
+    arm.current_level === 2
+      && arm.current_status === "trainable-public-prototype"
+      && arm.current_property_coverage.join("|")
+        === "drive_transform|reported_output_feedback_edge|channel_local_state"
+  )), true);
+  assert.equal(design.current_implementations[0].trainable_state_space_estimator_exists, true);
+  assert.equal(design.current_implementations[1].trainable_gru_style_estimator_exists, true);
+  assert.deepEqual(
+    design.promotion_gates.null_maturity.filter(({ satisfied }) => satisfied).map(({ gate }) => gate),
+    ["trainable-state-space-prototype-passes", "trainable-recurrent-prototype-passes"],
+  );
   assert.equal(summary.affected_fitting_permitted, false);
   assert.equal(summary.claim_eligible, false);
 });
 
-test("authority cannot be promoted by flipping a flag or relabelling a fixed reference", async () => {
+test("prototype status cannot be inflated, rolled back, or used to open later gates", async () => {
   const { design } = await loadDesign();
   for (const mutate of [
     (value) => { value.mature_null_gate_satisfied = true; },
     (value) => { value.affected_fitting_permitted = true; },
     (value) => { value.comparison_inference_permitted = true; },
     (value) => { value.current_implementations[0].current_level = 5; },
-    (value) => { value.promotion_gates.null_maturity[2].satisfied = true; },
+    (value) => { value.promotion_gates.null_maturity[0].satisfied = true; },
+    (value) => { value.promotion_gates.null_maturity[2].satisfied = false; },
     (value) => { value.fit_contract.objective_coefficient_domains.lambda_E.lower_bound_inclusive = true; },
     (value) => { value.target_null_contract.primary_property_keys.pop(); },
   ]) {
@@ -114,7 +136,7 @@ test("authority cannot be promoted by flipping a flag or relabelling a fixed ref
   }
   assert.throws(
     () => assertFixture026RsdT02MatureNullAuthority(design),
-    /10 null-maturity gates and 4 fitting blockers remain/u,
+    /8 null-maturity gates and 4 fitting blockers remain/u,
   );
 });
 

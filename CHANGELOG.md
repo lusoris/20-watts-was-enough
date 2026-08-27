@@ -7,6 +7,29 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- The RSD-T02 fixed-instance execution foundation now materializes one exact
+  26-schedule, 39,962-row causal transcript and nine append-only terminal
+  response/resource records from a generated system instance. Its validator
+  closes the policy view, binds full transcript receipts, charges explicit
+  failures, and reproduces object-level resume. The successful executor remains
+  an in-process digest abstention: a content-addressed 26-projection policy
+  bundle, fresh child isolation, semantic replay of real policies, and durable
+  disk checkpoints are still open gates. A post-validation adapter can feed the
+  transcript into deterministic learned state-space and GRU-style level-two
+  prototypes without exposing schedule, identity, truth, or provenance fields.
+  Every artifact remains `NO_RESULT`.
+
+- Decision 0023 binds future power claims to the exact executable analysis law.
+  A public method check now collapses hash-identical systems, preserves equal
+  fixed-family weighting, retains failures at explicit penalties, performs a
+  deterministic centered stratified bootstrap-$t$, and applies one Holm
+  step-down family over the four registered hypotheses. It exposes the
+  data-dependent $p$-value floor caused by zero-standard-error resamples. The
+  companion normal/binomial calculator and editable sensitivity plot expose
+  units, assumptions, inverse-square scaling and exact attrition assurance, but
+  explicitly do not estimate bootstrap power or freeze a sample size until
+  pilot transcripts are simulated through the released analyzer.
+
 - Decision 0022 separates RSD-T02 fixed-instance construction from the old
   mixed-time-constant conformance runner. A versioned five-family registry and
   domain-separated HMAC-SHA-256 generator now produce four exact integer
@@ -21,15 +44,15 @@ the exact diff; this file records why the project changed.
   separation, deterministic replay, coverage failure and hostile mutation.
 
 - The RSD-T02 null-maturation design replaces ambiguous estimator names with a
-  six-level state machine. Both current generic nulls are explicitly level-one
-  fixed conformance references; only a level-five confirmation-frozen model
+  six-level state machine; only a level-five confirmation-frozen model
   qualifies as mature. Exact parent hashes, a common three-property
   probabilistic output interface, fit/calibration separation, abstention,
-  resource ledgers and freeze order are machine-checked by seven additional
-  tests. Ten intrinsic null-maturity gates, ten comparison-release gates and
-  one conditional measured-energy gate are tracked separately. Only the
-  registry and generator release gates are satisfied, so affected fitting
-  remains blocked by four explicit prerequisites.
+  resource ledgers and freeze order are machine-checked. Two deterministic
+  trainable public prototypes now satisfy the level-two state-space and
+  recurrent gates, while calibration, selected-model, runner-integration,
+  resource-audit, development-evaluation and confirmation gates remain open.
+  Across the 20 applicable non-energy gates, four are satisfied and 16 remain
+  open; affected fitting remains blocked by four explicit prerequisites.
 
 - A primary-literature audit of experimental units, identifiability,
   structured holdouts, dynamical parameter shift, calibration and selective
