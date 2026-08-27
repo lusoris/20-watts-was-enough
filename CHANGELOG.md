@@ -7,10 +7,18 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- Fixture F-029 now has a bounded public-development CMB-X04 construction
+  harness covering all eight registered preservation/release arms, separate
+  actionable observations and evaluator truth, append-only integrity records,
+  resume, recomputed analysis, and fail-closed authority checks. It is the
+  eleventh `smoke-ready` harness and remains `NO_RESULT`: no strongest-null
+  selection, scientific comparison, performance conclusion, confirmation,
+  measured energy, or workstation-executable claim exists.
+
 - The evidence ledger now contains 1,571 claims: 1,475 have reciprocal,
   protocol-complete routes and 96 remain explicitly classified evidence inputs
   or source reproductions. All 49 written experiment artifacts pass the
-  protocol gate; ten are development-smoke-ready, while no claim is presented
+  protocol gate; eleven are development-smoke-ready, while no claim is presented
   as workstation-executable or as a result.
 
 - The full-book screen layout now constrains readiness grids to the available

@@ -28,7 +28,7 @@ constraints* behind that fact can become engineering requirements:
 
 ## Project status
 
-**Stage:** concept and evidence framework with ten development-only smoke
+**Stage:** concept and evidence framework with eleven development-only smoke
 harnesses. There is no integrated model implementation or claim-eligible
 workstation result yet. The generated
 [test-coverage report](experiments/test-coverage.md) keeps those states
@@ -138,6 +138,7 @@ Supporting material:
 - [`experiments/workstation/fixture-025/`](experiments/workstation/fixture-025/README.md) — deterministic ECM-T03 validity-gate development smoke path with no confirmation or energy authority
 - [`experiments/workstation/fixture-026/`](experiments/workstation/fixture-026/README.md) — deterministic RSD-T01 grid plus an RSD-T02 nine-policy construction bank, exact five-family/20-instance generator, a fresh restricted content-addressed policy boundary, durable per-instance and population-level recovery across the complete panel, two trainable level-two null prototypes, and exact-analyzer synthetic calibration that rejects the current planning assumptions; no comparison, confirmation, or energy authority
 - [`experiments/workstation/fixture-027/`](experiments/workstation/fixture-027/README.md) — deterministic RIN-T01 isolation/connection diagnostic with no confirmation, service-performance, or energy authority
+- [`experiments/workstation/fixture-029/`](experiments/workstation/fixture-029/README.md) — deterministic CMB-X04 phase-qualified preservation/release construction diagnostic with eight arms and no comparison, confirmation, performance, or energy authority
 - [`experiments/test-coverage.md`](experiments/test-coverage.md) — generated
   claim-to-protocol coverage and workstation execution readiness
 - [`experiments/test-readiness-summary.json`](experiments/test-readiness-summary.json) — compact machine-readable readiness surface used by the site and book

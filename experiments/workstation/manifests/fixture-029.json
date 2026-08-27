@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "artifact": "fixture-029",
+  "readiness": "smoke-ready",
+  "command": {
+    "prepare": "node experiments/workstation/fixture-029/runner.mjs prepare --profile smoke",
+    "smoke": "node experiments/workstation/fixture-029/runner.mjs smoke --profile smoke --output <run-directory> --resume false",
+    "run": "node experiments/workstation/fixture-029/runner.mjs run --profile development --output <run-directory> --resume false",
+    "analyze": "node experiments/workstation/fixture-029/runner.mjs analyze --output <run-directory>",
+    "validate": "node experiments/workstation/fixture-029/runner.mjs validate --output <run-directory>"
+  },
+  "environment": {
+    "runtime": "Node.js >=22.13.0 on a little-endian CPU; binary64 arithmetic only; no GPU",
+    "lockfiles": ["package-lock.json"]
+  },
+  "hardware": {
+    "smoke": {
+      "cpu": "one ordinary little-endian CPU thread; GPU forbidden",
+      "memory_bytes": 134217728,
+      "disk_bytes": 52428800,
+      "energy": "not measured or modeled; energy conclusions forbidden"
+    },
+    "workstation": {
+      "cpu": "ordinary little-endian CPU; no workstation-ready claim is registered",
+      "memory_bytes": 1073741824,
+      "disk_bytes": 1073741824,
+      "energy": "not applicable to this public-development construction slice; energy conclusions forbidden"
+    }
+  },
+  "seeds": {
+    "development": "experiments/workstation/fixture-029/seeds/development.reveal.json",
+    "confirmation": "experiments/workstation/fixture-029/seeds/confirmation.unavailable.json",
+    "held_out": "experiments/workstation/fixture-029/seeds/transfer.unavailable.json"
+  },
+  "data": {
+    "generator": "experiments/workstation/fixture-029/generator.mjs",
+    "full_profile": "experiments/workstation/fixture-029/configs/development.json",
+    "full_profile_sha256": "b44741b24ae3ba92c92770f01e56f7a67a2edc43adfdaf611052c4a970668f0f",
+    "external": []
+  },
+  "outputs": {
+    "directory": "experiments/workstation/runs/fixture-029-*",
+    "schema": "experiments/workstation/fixture-029/output.schema.json",
+    "append_only": true,
+    "hash_chain": true
+  },
+  "implementation": {
+    "entrypoint": "experiments/workstation/fixture-029/runner.mjs",
+    "tests": [
+      "experiments/workstation/fixture-029/contract.test.mjs",
+      "experiments/workstation/fixture-029/runner.test.mjs"
+    ],
+    "full_tests": [
+      "experiments/workstation/fixture-029/contract.test.mjs",
+      "experiments/workstation/fixture-029/runner.test.mjs"
+    ],
+    "execution_claims": ["C-1580"]
+  },
+  "energy": {
+    "mode": "not-measured",
+    "required": false,
+    "applicability": "not-applicable-to-scoped-claim",
+    "energy_conclusion_allowed": false,
+    "scope_binding": "fixture-029.c-1580.development-smoke.non-energy.v1",
+    "not_applicable_reason": "CMB-X04 smoke construction records contain deterministic synthetic artifact, copy, byte, byte-step, and logical-operation counters only; they contain no joule, watt, carbon, calibrated apparatus, comparative energy, or energy-efficiency endpoint."
+  },
+  "resume": {
+    "supported": true,
+    "module": "experiments/workstation/lib/checkpoint-ledger.mjs",
+    "test": "experiments/workstation/fixture-029/runner.test.mjs"
+  },
+  "promotion_evidence": {
+    "status": "pending",
+    "evidence_path": "experiments/workstation/promotion/fixture-029/evidence.json",
+    "promotion_validation_receipt_path": "experiments/workstation/promotion/fixture-029/promotion-validation.launch-receipt.json",
+    "run_directory": "experiments/workstation/runs/fixture-029-confirmation",
+    "release_root": "experiments/workstation/releases/fixture-029",
+    "release_path": "experiments/workstation/releases/fixture-029/confirmation.release.json",
+    "energy_assignments_path": "experiments/workstation/runs/fixture-029-confirmation/non-energy-boundary.json",
+    "disjoint_seed_pack_paths": [
+      "experiments/workstation/fixture-029/seeds/transfer.unavailable.json"
+    ],
+    "protocol_eligibility": {
+      "status": "blocked",
+      "protocol_version": "F-029/CMB-X04-public-development-construction-v1",
+      "claim_scope": ["C-1580"],
+      "blockers": [
+        "Only aggregate public-development CMB-X04 construction records exist; complete protocol-native action events and CMB-X01 through CMB-X03 are absent.",
+        "The full registered X04 generator grid, independent implementation, pilot-based margins, frozen strongest-null selection, confirmatory statistics, and hostile transfer are absent.",
+        "Declared synthetic resource counters do not establish complete lifecycle or comparative accounting.",
+        "No confirmation or held-out seed, commitment, release, promotion evidence, calibrated physical resource boundary, or energy measurement exists.",
+        "Every event and command response is explicitly labelled NO_RESULT."
+      ]
+    }
+  }
+}

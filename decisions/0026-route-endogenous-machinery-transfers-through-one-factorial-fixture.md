@@ -56,3 +56,12 @@ authorities, if deduplication collapses one transfer completely into an existing
 fixture, or if a supported residual mechanism merits a candidate-level design.
 Adding sources or implementing a smoke slice without changing those boundaries
 does not require a new decision.
+
+## Implementation note — 2026-08-28
+
+A bounded public-development CMB-X04 harness now exercises all eight registered
+preservation/release paths plus deterministic aggregate-record, resume,
+analysis, and validation plumbing. The manifest scope ceiling is C-1580, but the harness is
+`smoke-ready`, `NO_RESULT`, and non-promotable: it performs no strongest-null
+selection, confirmatory comparison, performance conclusion, or energy
+measurement. CMB-X01--CMB-X03 remain unimplemented.

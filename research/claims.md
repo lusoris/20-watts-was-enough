@@ -24643,5 +24643,9 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   validation, retry, replication, checkpoint reload and recompilation.
 - **Open question:** does an ordinary package-and-validation state machine
   capture the complete residual once both arms receive the same phase signal?
-- **Direct test:** [`F-029 / CMB-X04`](../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md#cmb-x04--phase-selective-stabilization-and-release).
+- **Direct test:** [F-029 / CMB-X04](../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md#cmb-x04--phase-selective-stabilization-and-release).
+- **Implementation state:** the [public-development CMB-X04 harness](../experiments/workstation/fixture-029/README.md)
+  exercises deterministic construction and accounting only; it does not run
+  the registered comparison and leaves this claim protocol-complete,
+  `NO_RESULT`, and not workstation-executable.
 - **Traceability:** [clinical-biotechnology audit](audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md#4-phase-selective-pharmacological-chaperoning).

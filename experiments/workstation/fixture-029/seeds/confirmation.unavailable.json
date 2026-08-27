@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "artifact": "fixture-029",
+  "partition": "confirmation",
+  "state": "not-created",
+  "reason": "CMB-X04 is a public-development smoke diagnostic; no confirmation seed or commitment exists."
+}

@@ -1,0 +1,7 @@
+{
+  "schema": 1,
+  "artifact": "fixture-029",
+  "partition": "held-out",
+  "state": "not-created",
+  "reason": "CMB-X04 is a public-development smoke diagnostic; no held-out seed or commitment exists."
+}

@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "artifact": "fixture-029",
+  "profile": "smoke",
+  "worlds_per_seed": 8,
+  "artifacts_per_world": 24,
+  "maximum_retries": 2,
+  "maximum_simultaneous_copies": 2,
+  "maximum_lifetime_copies": 3,
+  "minimum_accepted_service_fraction": 0.25,
+  "maximum_integrity_failures": 0,
+  "maximum_false_releases": 0,
+  "maximum_activation_tail_steps": 9
+}

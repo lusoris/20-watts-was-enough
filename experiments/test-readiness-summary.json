@@ -56,7 +56,7 @@
   "artifacts": {
     "total": 49,
     "protocolComplete": 49,
-    "smokeReady": 10,
+    "smokeReady": 11,
     "workstationReady": 0,
     "items": [
       {
@@ -1262,11 +1262,68 @@
         "linkedClaims": 4,
         "protocolComplete": true,
         "missingFacets": [],
-        "executionReadiness": "absent",
+        "executionReadiness": "smoke-ready",
         "executionReady": false,
-        "executionManifest": null,
-        "executionClaims": [],
-        "promotionChecks": []
+        "executionManifest": "experiments/workstation/manifests/fixture-029.json",
+        "executionClaims": [
+          "C-1580"
+        ],
+        "promotionChecks": [
+          {
+            "id": "execution-claim-scope",
+            "label": "Explicit execution-track claim scope",
+            "passed": true,
+            "detail": "execution track is limited to C-1580"
+          },
+          {
+            "id": "full-profile",
+            "label": "Frozen full profile",
+            "passed": true,
+            "detail": "data.full_profile schema 1, development identity, worlds_per_seed workload cardinality, and SHA-256 match the frozen repository file"
+          },
+          {
+            "id": "full-tests",
+            "label": "Full experiment-path tests",
+            "passed": true,
+            "detail": "implementation.full_tests is part of the workstation suite executed by npm test"
+          },
+          {
+            "id": "hash-chain",
+            "label": "Corruption-evident output ledger",
+            "passed": true,
+            "detail": "hash-chain output is wired through the tested checkpoint ledger"
+          },
+          {
+            "id": "resume",
+            "label": "Deterministic resume",
+            "passed": true,
+            "detail": "runner imports the declared, tested checkpoint/resume implementation"
+          },
+          {
+            "id": "energy-provider",
+            "label": "Measured-energy or explicit non-energy boundary",
+            "passed": false,
+            "detail": "energy provider config/module/test and frozen hash must enforce measured energy, or a non-energy claim must explicitly forbid energy conclusions"
+          },
+          {
+            "id": "confirmation-seeds",
+            "label": "Frozen confirmation seeds",
+            "passed": false,
+            "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "held_out-seeds",
+            "label": "Frozen held-out seeds",
+            "passed": false,
+            "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+          },
+          {
+            "id": "promotion-evidence",
+            "label": "Strict recomputed promotion evidence",
+            "passed": false,
+            "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
+          }
+        ]
       }
     ]
   }

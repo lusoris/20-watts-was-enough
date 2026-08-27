@@ -1,6 +1,6 @@
 # Workstation execution contract
 
-The repository now contains ten executable smoke harnesses alongside research
+The repository now contains eleven executable smoke harnesses alongside research
 and protocol specifications, but no workstation-ready scientific package:
 [Candidate 010](candidate-010/README.md) exercises staged verification and
 [Fixture F-007](fixture-007/README.md) exercises optical null-space honesty;
@@ -18,7 +18,9 @@ record, amplitude, repeat-consistency, and equivalence gate order;
 history grid, separately evaluated trace-fact vector, trajectory-score, and
 interface-validity diagnostics; and
 [Fixture F-027](fixture-027/README.md) exercises the RIN-T01 interconnection,
-edge-removal, interface-validity, and bounded-insulation diagnostics.
+edge-removal, interface-validity, and bounded-insulation diagnostics; and
+[Fixture F-029](fixture-029/README.md) exercises the CMB-X04 phase-qualified
+preservation/release construction boundary across all eight registered arms.
 A test becomes workstation-ready only when its
 checked manifest exists at `experiments/workstation/manifests/<artifact-id>.json`,
 passes `npm run validate:workstation`, declares `workstation-ready`, names all
@@ -38,14 +40,14 @@ development `run`, confirmation, held-out, release, or promotion action.
 ```powershell
 node experiments/workstation/smoke-suite.mjs --list
 node experiments/workstation/smoke-suite.mjs --all --dry-run
-node experiments/workstation/smoke-suite.mjs --artifact fixture-027 --output-root tmp/smoke-fixture-027
+node experiments/workstation/smoke-suite.mjs --artifact fixture-029 --output-root tmp/smoke-fixture-029
 node experiments/workstation/smoke-suite.mjs --all --output-root tmp/smoke-all-001
 ```
 
 Every real invocation writes `smoke-suite.receipt.json` under the chosen output
 root, continues across artifacts by default, and returns nonzero if any action
 fails. `--fail-fast` stops after the first failed artifact. The receipt is
-explicitly `NO_RESULT`: passing all ten smoke harnesses verifies bounded
+explicitly `NO_RESULT`: passing all eleven smoke harnesses verifies bounded
 development plumbing only; it supplies no confirmation, scientific result,
 energy comparison, or claim-promotion evidence.
 
@@ -218,6 +220,17 @@ the registered reduced source model, approximation envelope, or dimensional
 confirmation comparison. RIN-T02--RIN-T10, private partitions, physical
 systems, calibrated energy and
 scientific adjudication remain absent. Every event is `NO_RESULT`.
+
+[Fixture F-029](fixture-029/README.md) implements a bounded public-development
+construction slice for C-1580 / CMB-X04. It exercises the diagnostic floor,
+retry, replication, reload, rebuild, permanent-wrapper, phase-qualified, and
+oracle paths over shared arm-independent synthetic worlds. Actionable phase and
+validation observations remain separate from evaluator truth; append-only
+records expose copy conservation, artifact-level outcomes, accepted service,
+wrapper lifecycle work, and scoped synthetic counters. The smoke analyzer does
+not rank arms or select a strongest null. CMB-X01--CMB-X03, private partitions,
+confirmatory inference, calibrated physical resources, performance conclusions,
+and energy measurement remain absent. Every output is `NO_RESULT`.
 
 The machine-readable contract is
 [`manifest.schema.json`](manifest.schema.json). Referenced lockfiles, seed

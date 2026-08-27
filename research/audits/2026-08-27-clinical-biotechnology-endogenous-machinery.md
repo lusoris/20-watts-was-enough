@@ -14,7 +14,7 @@
   patient, genomic, trial, or product-development data
 - **Promotion state:** four biological observations and four speculative
   transfers are now recorded as [C-1573--C-1580](../claims.md#c-1573); only the
-  transfer claims route to specification-only [Fixture F-029](../../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md),
+  transfer claims route to [Fixture F-029](../../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md), whose CMB-X04 public-development harness remains construction-only and `NO_RESULT`,
   and no project principle or architecture candidate is added
 
 ## Executive finding
@@ -453,8 +453,9 @@ speculative transfers routed to F-029.
 
 ## F-CMB-01 — Endogenous-machinery transfer fixture
 
-**Fixture state:** protocol proposal only; `NO_RESULT`; no runner, manifest, or
-workstation-readiness claim.
+**Fixture state:** protocol-complete and `NO_RESULT`; a bounded public-development
+CMB-X04 construction runner and smoke manifest exist, but no comparison,
+workstation-readiness, confirmation, performance, or energy authority follows.
 
 The protocol-complete standalone specification is
 [Fixture F-029](../../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md).
@@ -813,3 +814,8 @@ contract. The biological observations remain evidence inputs outside synthetic
 test authority. F-029 is split only if later executable runners require
 materially different environments or statistical designs; every transfer
 statement remains `NO_RESULT`.
+
+As of 2026-08-28, the public-development CMB-X04 construction harness exercises
+all eight registered paths and the observation, accounting, integrity, resume,
+analysis, and authority boundaries. It neither selects a strongest null nor
+tests the registered superiority hypothesis; CMB-X01--CMB-X03 remain prose-only.

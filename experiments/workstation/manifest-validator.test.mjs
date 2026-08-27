@@ -31,6 +31,13 @@ const fixture026Manifest = path.join(
   "manifests",
   "fixture-026.json",
 );
+const fixture029Manifest = path.join(
+  root,
+  "experiments",
+  "workstation",
+  "manifests",
+  "fixture-029.json",
+);
 
 async function runtimeBindingFixture({
   runtime = {},
@@ -167,10 +174,24 @@ test("Fixture 026 is smoke-ready with an exact C-1540 ledger binding", async () 
   }
 });
 
+test("Fixture 029 is smoke-ready with an exact C-1580 scope ceiling", async () => {
+  const result = await validateExecutionManifest(root, fixture029Manifest, "fixture-029");
+  assert.equal(result.readiness, "smoke-ready");
+  assert.equal(result.ready, false);
+  assert.deepEqual(result.errors, []);
+  assert.deepEqual(result.executionClaims, ["C-1580"]);
+  const promotionCheck = (id) => result.promotionChecks.find((check) => check.id === id);
+  assert.equal(promotionCheck("execution-claim-scope").passed, true);
+  assert.equal(promotionCheck("full-profile").passed, true);
+  for (const id of ["confirmation-seeds", "held_out-seeds", "promotion-evidence"]) {
+    assert.equal(promotionCheck(id).passed, false, id);
+  }
+});
+
 test("registered full-profile contracts preserve every canonical passing artifact", async () => {
   for (const artifact of [
     "candidate-010", "fixture-007", "fixture-012", "fixture-019", "fixture-023",
-    "fixture-024", "fixture-025", "fixture-026", "fixture-027",
+    "fixture-024", "fixture-025", "fixture-026", "fixture-027", "fixture-029",
   ]) {
     const manifest = JSON.parse(await readFile(
       path.join(root, "experiments", "workstation", "manifests", `${artifact}.json`),

@@ -29,6 +29,7 @@ const fullProfileContracts = new Map([
   ["fixture-025", Object.freeze({ schema: 1, profile: "development", cardinalityFields: Object.freeze(["worlds_per_seed"]) })],
   ["fixture-026", Object.freeze({ schema: 2, profile: "development", cardinalityFields: Object.freeze(["worlds_per_seed"]) })],
   ["fixture-027", Object.freeze({ schema: 1, profile: "development", cardinalityFields: Object.freeze(["worlds_per_seed"]) })],
+  ["fixture-029", Object.freeze({ schema: 1, profile: "development", cardinalityFields: Object.freeze(["worlds_per_seed"]) })],
 ]);
 const reviewedNonEnergyScopes = new Map([
   ["fixture-019.c-1481.non-energy.v1", Object.freeze({

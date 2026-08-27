@@ -28,7 +28,7 @@ test("argument parser requires an explicit bounded selection and output for real
 test("all validated smoke manifests produce shell-free bounded plans", async () => {
   const outputRoot = path.join(os.tmpdir(), "smoke-suite-plan-test");
   const plans = await loadSmokeSuitePlans({ repositoryRoot, all: true, outputRoot });
-  assert.equal(plans.length, 10);
+  assert.equal(plans.length, 11);
   assert.deepEqual(plans.map((plan) => plan.artifact), [
     "candidate-010",
     "fixture-007",
@@ -40,6 +40,7 @@ test("all validated smoke manifests produce shell-free bounded plans", async () 
     "fixture-025",
     "fixture-026",
     "fixture-027",
+    "fixture-029",
   ]);
   for (const plan of plans) {
     assert.equal(plan.readiness, "smoke-ready");
@@ -53,7 +54,7 @@ test("all validated smoke manifests produce shell-free bounded plans", async () 
   assert.deepEqual(plans.at(-1).actions.map((action) => action.action), [
     "prepare", "smoke", "analyze", "validate",
   ]);
-  assert.equal(plans.at(-1).outputDirectory, path.join(outputRoot, "fixture-027"));
+  assert.equal(plans.at(-1).outputDirectory, path.join(outputRoot, "fixture-029"));
 });
 
 test("unknown and non-smoke-ready artifacts fail closed", async () => {
