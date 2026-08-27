@@ -24265,9 +24265,11 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   support.
 - **Open question:** which parameter ranges are scientifically meaningful and
   numerically valid without being chosen after seeing arm responses?
-- **Direct test:** fixed-parameter instance generator followed by future
-  parameterized transcript and outer-lineage runners.
-- **Traceability:** [population and calibration audit](audits/2026-08-27-rsd-t02-population-identifiability-calibration.md) · [family registry](../experiments/workstation/fixture-026/configs/rsd-t02-system-family-registry.json).
+- **Direct test:** the public-development
+  [population runner](../experiments/workstation/fixture-026/rsd-t02-public-development-population-runner.test.mjs)
+  now traverses all 20 unique parameter instances while retaining the nested
+  episode/row boundary; shifted outer-lineage execution remains future work.
+- **Traceability:** [population and calibration audit](audits/2026-08-27-rsd-t02-population-identifiability-calibration.md) · [population execution diagnostic](audits/2026-08-27-rsd-t02-population-execution-isolation-calibration.md) · [family registry](../experiments/workstation/fixture-026/configs/rsd-t02-system-family-registry.json).
 
 ### C-1568
 
@@ -24301,4 +24303,4 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   coverage without turning abstention into an unpriced escape route?
 - **Direct test:** future calibrated `B-STATE-SPACE`, `B-RECURRENT` and
   `C-MECHANISM-BANK` artifacts under the null-maturation contract.
-- **Traceability:** [population and calibration audit](audits/2026-08-27-rsd-t02-population-identifiability-calibration.md) · [null-maturation design](../experiments/workstation/fixture-026/configs/rsd-t02-null-maturation-design.json).
+- **Traceability:** [population and calibration audit](audits/2026-08-27-rsd-t02-population-identifiability-calibration.md) · [synthetic analyzer-calibration diagnostic](audits/2026-08-27-rsd-t02-population-execution-isolation-calibration.md) · [null-maturation design](../experiments/workstation/fixture-026/configs/rsd-t02-null-maturation-design.json).

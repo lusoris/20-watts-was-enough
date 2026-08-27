@@ -742,6 +742,49 @@ when it can reach the first Holm threshold. A future frozen power artifact must
 therefore simulate the pilot transcripts through the exact analyzer; variance
 alone is insufficient.
 
+### Synthetic transcript calibration of the exact analyzer
+
+The public diagnostic now performs that simulation step for four declared
+synthetic scenarios without treating the resulting frequencies as scientific
+power. For $k$ events in $R$ Monte Carlo replicates it reports the smoothed
+point diagnostic
+
+$$
+\widetilde p_{\mathrm{MC}}=\frac{k+1}{R+1},
+\qquad
+\Delta p_{\mathrm{MC}}=\frac{1}{R+1}.
+$$
+
+The point smoothing and interval have different jobs. The Wilson score
+interval is computed for the observed binomial count $k/R$; applying Wilson to
+the artificial pair $(k+1,R+1)$ would give the wrong coverage target and can
+exclude zero even when a deterministic hostile produces no events.
+
+The generated unit identity uses a DGP-only fingerprint. It binds scenario
+baselines, attrition, failure probabilities, contrast means and covariances,
+the simulation key and registered family order. Confidence level, total
+replicate ceiling, bootstrap count, alpha and endpoint penalties remain in the
+full configuration/report identity but do not reorder a common generated
+prefix or change its finite-bootstrap point decision.
+
+The canonical configuration uses $R=99$ and $B=1000$. Its declared synthetic
+null yields 6 any-rejection events, while the declared minimum-relevant-effect
+scenario yields 55. The null Wilson Monte Carlo interval, $0.028$--$0.126$,
+spans the $0.05$ reference; the alternative interval, $0.457$--$0.650$, is far
+below the illustrative $0.90$ target. The two two-instance hostiles each fail
+the analyzer's bootstrap-resolution gate in all 99 replicates. This rejects
+plan acceptance; it does not estimate future model power.
+
+![Observed any-rejection frequencies with Wilson Monte Carlo intervals for the declared synthetic null and alternative, beside bootstrap-resolution failure frequencies for two two-instance hostiles.](../public/plots/rsd-t02-bootstrap-calibration.svg)
+
+The executable contract is
+[`rsd-t02-pilot-transcript-calibration.json`](../experiments/workstation/fixture-026/configs/rsd-t02-pilot-transcript-calibration.json),
+implemented by
+[`rsd-t02-pilot-transcript-calibration.mjs`](../experiments/workstation/fixture-026/rsd-t02-pilot-transcript-calibration.mjs).
+Closure is narrow: reviewed real pilot bytes and role, an analyzer release hash,
+jointly frozen effects, target, resampling key and failure penalties, and an
+accepted planned-count calibration remain open.
+
 The causal-memory coordinate is not primary-scorable in this first population
 design because the current family bank contains no valid memory-negative
 lineage. It can become primary only after both values have prospective,
@@ -812,11 +855,18 @@ episode-protocol digest binds every schedule, the horizon, integration step,
 output rate, input bounds, units and interpreter semantics into the packet ID
 without contaminating the system ID. The generator packet itself contains no
 trajectories or policy response. A separate fixed-instance conformance runner
-now materializes its 26 trajectories and a causal view, but deliberately uses
-only an in-process digest-abstention success path. It cannot be fed to the older
-35-projection arm bank or promoted to real policy execution until a content-
-addressed 26-projection bundle, fresh-child isolation, semantic replay and
-durable checkpoint contract are validated.
+now materializes its 26 trajectories and causal view. An additive overlay binds
+a content-addressed 26-projection abstention bundle, executes it in a fresh
+restricted child, semantically replays the nine responses, and durably resumes
+an owner-bound fixed-instance ledger. A compact population runner traverses all
+20 unique public instances and receipts 520 episodes, 799,240 transcript rows
+and 180 arm invocations. The integrated execution release composes both layers:
+one identity-keyed durable instance directory per system and one bounded outer
+record only after its nine-arm summary is complete and current. Restart tests
+cover the post-instance/pre-outer crash window and full-panel reopen without
+duplicating a scientific unit. The outer records contain no endpoints or causal
+payloads, and the release still does not execute the trained candidate or null
+policies.
 
 The coverage function counts distinct structural lineages per property value,
 collapsing the full-panel-equivalent I1-FFL and affine high-pass siblings into
@@ -906,15 +956,18 @@ requires a new contract version, head and calibration.
 The exact six-level status, freeze order, common resource requirements and
 three separate gate scopes are frozen in the
 [`null-maturation design`](../experiments/workstation/fixture-026/configs/rsd-t02-null-maturation-design.json).
-The two trainable-prototype gates are satisfied and eight intrinsic null-
-maturity gates remain open. Two of ten comparison-release gates—the registry
-and generator—are also satisfied; the measured-energy meter gate is
+The two trainable-prototype gates and the parameterized isolated durable runner
+gate are satisfied; seven intrinsic null-maturity gates remain open. Two of ten
+comparison-release gates—the registry and generator—are also satisfied; the
+measured-energy meter gate is
 conditionally applicable only when an energy claim is requested. It is not
 counted among the 20 mandatory gates for a non-energy comparison. The current
-non-energy total is therefore four satisfied and 16 open. Affected fitting
+non-energy total is therefore five satisfied and 15 open. Affected fitting
 remains blocked by incomplete lineage coverage, absent sealed outer-family
-templates, the still-unvalidated isolated parameterized policy/resource runner,
-and the absent instance-level fit/calibration/development-evaluation assignment.
+templates, and the absent instance-level fit/calibration/development-evaluation
+assignment. The exact local runtime closure for the promoted infrastructure
+gate is recorded in the
+[`parameterized runner release`](../experiments/workstation/fixture-026/configs/rsd-t02-parameterized-runner-release.json).
 
 ## Calibration and abstention
 

@@ -7,6 +7,9 @@ import {
   fixture026RsdT02InverseNormal,
   fixture026RsdT02PlannedCountForRetention,
 } from "../experiments/workstation/fixture-026/rsd-t02-power-plan.mjs";
+import {
+  calibrateFixture026RsdT02PilotTranscripts,
+} from "../experiments/workstation/fixture-026/rsd-t02-pilot-transcript-calibration.mjs";
 import { constructFixture026RsdT02SkippingCell } from "../experiments/workstation/fixture-026/rsd-t02-pulse.mjs";
 import { summarizeFixture026RsdT02FamilyCoverage } from "../experiments/workstation/fixture-026/rsd-t02-system-family-generator.mjs";
 
@@ -2533,6 +2536,126 @@ function rsdT02PowerEffectCurve(spec) {
   });
 }
 
+async function rsdT02BootstrapCalibration(spec) {
+  const {
+    config_path: configPath,
+    null_reference: nullReference,
+    illustrative_alternative_reference: alternativeReference,
+  } = spec.parameters;
+  if (
+    typeof configPath !== "string"
+    || !configPath.startsWith("experiments/workstation/fixture-026/configs/")
+    || configPath.includes("..")
+    || !Number.isFinite(nullReference)
+    || nullReference <= 0
+    || nullReference >= 1
+    || !Number.isFinite(alternativeReference)
+    || alternativeReference <= nullReference
+    || alternativeReference >= 1
+  ) throw new Error(`${spec.id} has an invalid calibration-plot contract`);
+  const configuration = JSON.parse(await readFile(path.join(root, configPath), "utf8"));
+  if (configuration.familywise_alpha !== nullReference) {
+    throw new Error(`${spec.id} null reference differs from the analyzer familywise alpha`);
+  }
+  const report = calibrateFixture026RsdT02PilotTranscripts(configuration);
+  if (!report.method_calibration_completed || report.result_label !== "NO_RESULT") {
+    throw new Error(`${spec.id} requires a completed public NO_RESULT method calibration`);
+  }
+  const byId = new Map(report.scenario_reports.map((row) => [row.scenario_id, row]));
+  const decisionRows = [
+    {
+      id: "public-synthetic-null",
+      label: "SYNTHETIC NULL",
+      target: nullReference,
+      color: colors.coral,
+    },
+    {
+      id: "public-synthetic-minimum-relevant-effects",
+      label: "MINIMUM EFFECTS",
+      target: alternativeReference,
+      color: colors.amber,
+    },
+  ].map((row) => {
+    const scenario = byId.get(row.id);
+    if (!scenario) throw new Error(`${spec.id} is missing ${row.id}`);
+    return {
+      ...row,
+      summary: scenario.family_wise_any_rejection_probability,
+    };
+  });
+  const hostileRows = [
+    {
+      id: "hostile-two-instance-bootstrap-zero-se-resamples",
+      label: "SMALL-N BOOTSTRAP",
+      color: colors.violet,
+    },
+    {
+      id: "hostile-two-instance-zero-variance",
+      label: "ZERO VARIANCE",
+      color: colors.coral,
+    },
+  ].map((row) => {
+    const scenario = byId.get(row.id);
+    if (!scenario) throw new Error(`${spec.id} is missing ${row.id}`);
+    return { ...row, scenario };
+  });
+
+  const chartTop = 205;
+  const chartBottom = 500;
+  const y = (value) => chartBottom - value * (chartBottom - chartTop);
+  const leftStart = 140;
+  const leftEnd = 590;
+  const rightStart = 665;
+  const rightEnd = 1012;
+  const gridTicks = [0, 0.25, 0.5, 0.75, 1];
+  const grids = gridTicks.map((tick) => {
+    const py = y(tick);
+    return `<line x1="${leftStart}" y1="${py}" x2="${leftEnd}" y2="${py}" stroke="${colors.grid}" stroke-width="1"/>
+    <line x1="${rightStart}" y1="${py}" x2="${rightEnd}" y2="${py}" stroke="${colors.grid}" stroke-width="1"/>
+    <text x="${leftStart - 12}" y="${py + 4}" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="end">${tick.toFixed(2)}</text>`;
+  }).join("");
+  const leftCenters = [260, 465];
+  const decisionBars = decisionRows.map((row, index) => {
+    const cx = leftCenters[index];
+    const frequency = row.summary.observed_event_frequency;
+    const [low, high] = row.summary.monte_carlo_wilson_interval;
+    const barTop = y(frequency);
+    const targetY = y(row.target);
+    return `<rect x="${cx - 48}" y="${barTop}" width="96" height="${chartBottom - barTop}" rx="9" fill="${row.color}" opacity=".92"/>
+    <line x1="${cx}" y1="${y(low)}" x2="${cx}" y2="${y(high)}" stroke="${colors.text}" stroke-width="4"/>
+    <line x1="${cx - 15}" y1="${y(low)}" x2="${cx + 15}" y2="${y(low)}" stroke="${colors.text}" stroke-width="4"/>
+    <line x1="${cx - 15}" y1="${y(high)}" x2="${cx + 15}" y2="${y(high)}" stroke="${colors.text}" stroke-width="4"/>
+    <line x1="${cx - 60}" y1="${targetY}" x2="${cx + 60}" y2="${targetY}" stroke="${colors.cyan}" stroke-width="4" stroke-dasharray="8 6"/>
+    <text x="${cx}" y="${Math.max(chartTop + 18, barTop - 15)}" fill="${colors.text}" font-family="Cascadia Mono, monospace" font-size="15" font-weight="800" text-anchor="middle">${row.summary.event_count}/${row.summary.monte_carlo_replicate_count} · ${frequency.toFixed(3)}</text>
+    <text x="${cx}" y="529" fill="${row.color}" font-family="Segoe UI, sans-serif" font-size="12" font-weight="800" text-anchor="middle">${row.label}</text>
+    <text x="${cx}" y="547" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="10" text-anchor="middle">reference ${row.target.toFixed(2)}</text>`;
+  }).join("");
+  const rightCenters = [755, 930];
+  const hostileBars = hostileRows.map((row, index) => {
+    const cx = rightCenters[index];
+    const count = row.scenario.bootstrap_resolution_failure_replicate_count;
+    const denominator = report.simulation_replicates_per_scenario;
+    const fraction = count / denominator;
+    const barTop = y(fraction);
+    return `<rect x="${cx - 42}" y="${barTop}" width="84" height="${chartBottom - barTop}" rx="9" fill="${row.color}" opacity=".92"/>
+    <rect x="${cx - 46}" y="${chartTop + 17}" width="92" height="31" rx="8" fill="${colors.background}" fill-opacity=".92"/>
+    <text x="${cx}" y="${chartTop + 39}" fill="${colors.text}" font-family="Cascadia Mono, monospace" font-size="14" font-weight="800" text-anchor="middle">${count}/${denominator}</text>
+    <text x="${cx}" y="529" fill="${row.color}" font-family="Segoe UI, sans-serif" font-size="11" font-weight="800" text-anchor="middle">${row.label}</text>
+    <text x="${cx}" y="547" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="10" text-anchor="middle">resolution failure</text>`;
+  }).join("");
+  const content = `${grids}
+  <line x1="625" y1="176" x2="625" y2="548" stroke="${colors.grid}" stroke-width="2"/>
+  <text x="${(leftStart + leftEnd) / 2}" y="183" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="800" text-anchor="middle">ANY HYPOTHESIS REJECTED</text>
+  <text x="${(rightStart + rightEnd) / 2}" y="183" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="15" font-weight="800" text-anchor="middle">BOOTSTRAP RESOLUTION FAILED</text>
+  ${decisionBars}${hostileBars}`;
+  return frame(spec, content, {
+    xLabel: `${report.simulation_replicates_per_scenario} deterministic public synthetic replicates per scenario`,
+    yLabel: "replicate frequency",
+    badge: "SYNTHETIC DIAGNOSTIC · NO_RESULT",
+    footer: `Exact Holm/bootstrap method check · config ${report.configuration_sha256.slice(0, 12)}… · not scientific power`,
+  });
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -2561,6 +2684,7 @@ const renderers = {
   "rsd-t02-procedural-seed-map": rsdT02ProceduralSeedMap,
   "rsd-t02-policy-work-envelope": rsdT02PolicyWorkEnvelope,
   "rsd-t02-power-effect-curve": rsdT02PowerEffectCurve,
+  "rsd-t02-bootstrap-calibration": rsdT02BootstrapCalibration,
   "interface-qualified-retroactivity": interfaceQualifiedRetroactivity,
   "history-conditioned-position-contrast": historyConditionedPositionContrast,
 };

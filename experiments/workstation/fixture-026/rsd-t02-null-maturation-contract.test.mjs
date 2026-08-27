@@ -10,9 +10,12 @@ import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
 import {
   FIXTURE_026_RSD_T02_NULL_MATURATION_DESIGN_SHA256,
   FIXTURE_026_RSD_T02_NULL_PROTOTYPE_IMPLEMENTATION_SHA256,
+  FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_EXACT_BYTES_SHA256,
+  FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_SHA256,
   assertFixture026RsdT02MatureNullAuthority,
   assertFixture026RsdT02NullMaturationDesign,
   assertFixture026RsdT02NullMaturationParents,
+  assertFixture026RsdT02ParameterizedRunnerRelease,
   deriveFixture026RsdT02NullAuthority,
   summarizeFixture026RsdT02NullMaturity,
 } from "./rsd-t02-null-maturation-contract.mjs";
@@ -48,14 +51,35 @@ test("null maturation design is schema-valid, hash-bound, prospective and NO_RES
   assert.equal(design.result_label, "NO_RESULT");
 });
 
-test("all eleven exact parent artifacts, including the level-two implementation, are verified", async () => {
+test("all twelve parents and the twenty-member runner release closure are exact-byte verified", async () => {
   const { design } = await loadDesign();
-  const entries = await Promise.all(design.parent_artifacts.map(async ({ path: relativePath }) => (
+  const parentEntries = await Promise.all(design.parent_artifacts.map(async ({ path: relativePath }) => (
     [relativePath, await readFile(path.join(fixtureRoot, relativePath))]
   )));
+  const parentMap = new Map(parentEntries);
+  const releaseParent = design.parent_artifacts.find(({ role }) => (
+    role === "parameterized-runner-release-closure"
+  ));
+  const release = JSON.parse(parentMap.get(releaseParent.path).toString("utf8"));
+  const releaseSchema = JSON.parse(await readFile(
+    path.join(fixtureRoot, "rsd-t02-parameterized-runner-release.schema.json"),
+    "utf8",
+  ));
+  const validateRelease = new Ajv({ allErrors: true, jsonPointers: true }).compile(releaseSchema);
+  assert.equal(validateRelease(release), true, JSON.stringify(validateRelease.errors));
+  assert.equal(assertFixture026RsdT02ParameterizedRunnerRelease(release), release);
+  assert.equal(sha256Hex(canonicalize(release)), FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_SHA256);
+  assert.equal(
+    releaseParent.sha256_exact_bytes,
+    FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_EXACT_BYTES_SHA256,
+  );
+  const releaseEntries = await Promise.all(release.release_artifacts.map(async ({ path: relativePath }) => (
+    [relativePath, await readFile(path.join(fixtureRoot, relativePath))]
+  )));
+  const entries = new Map([...parentEntries, ...releaseEntries]);
   assert.equal(assertFixture026RsdT02NullMaturationParents({
     design,
-    sourceBytesByPath: new Map(entries),
+    sourceBytesByPath: entries,
   }), true);
   const prototypeParent = design.parent_artifacts.find(({ path: relativePath }) => (
     relativePath === "rsd-t02-null-prototypes.mjs"
@@ -75,6 +99,15 @@ test("all eleven exact parent artifacts, including the level-two implementation,
     }),
     /parent bytes drifted/u,
   );
+  const driftedReleaseMember = new Map(entries);
+  driftedReleaseMember.set(release.release_artifacts[0].path, Buffer.from("drift"));
+  assert.throws(
+    () => assertFixture026RsdT02NullMaturationParents({
+      design,
+      sourceBytesByPath: driftedReleaseMember,
+    }),
+    /runner-release bytes drifted/u,
+  );
 });
 
 test("current state separates null maturity from comparison and conditional-energy gates", async () => {
@@ -82,14 +115,14 @@ test("current state separates null maturity from comparison and conditional-ener
   const summary = summarizeFixture026RsdT02NullMaturity(design);
   assert.equal(summary.highest_common_level, 2);
   assert.equal(summary.highest_common_status, "trainable-public-prototype");
-  assert.equal(summary.satisfied_gate_count, 4);
+  assert.equal(summary.satisfied_gate_count, 5);
   assert.equal(summary.registered_gate_count, 21);
   assert.equal(summary.total_gate_count, 20);
-  assert.equal(summary.unsatisfied_gate_count, 16);
-  assert.equal(summary.unsatisfied_gates.length, 16);
+  assert.equal(summary.unsatisfied_gate_count, 15);
+  assert.equal(summary.unsatisfied_gates.length, 15);
   assert.equal(summary.null_maturity_gate_count, 10);
-  assert.equal(summary.unsatisfied_null_maturity_gate_count, 8);
-  assert.equal(summary.active_fitting_blocker_count, 4);
+  assert.equal(summary.unsatisfied_null_maturity_gate_count, 7);
+  assert.equal(summary.active_fitting_blocker_count, 3);
   assert.equal(summary.energy_comparison_gate_applicable, false);
   assert.equal(summary.energy_comparison_gate_satisfied, null);
   assert.deepEqual(summary.arms.map(({ arm_id: armId }) => armId), [
@@ -109,7 +142,11 @@ test("current state separates null maturity from comparison and conditional-ener
   assert.equal(design.current_implementations[1].trainable_gru_style_estimator_exists, true);
   assert.deepEqual(
     design.promotion_gates.null_maturity.filter(({ satisfied }) => satisfied).map(({ gate }) => gate),
-    ["trainable-state-space-prototype-passes", "trainable-recurrent-prototype-passes"],
+    [
+      "validated-parameterized-transcript-policy-resource-runner",
+      "trainable-state-space-prototype-passes",
+      "trainable-recurrent-prototype-passes",
+    ],
   );
   assert.equal(summary.affected_fitting_permitted, false);
   assert.equal(summary.claim_eligible, false);
@@ -122,7 +159,7 @@ test("prototype status cannot be inflated, rolled back, or used to open later ga
     (value) => { value.affected_fitting_permitted = true; },
     (value) => { value.comparison_inference_permitted = true; },
     (value) => { value.current_implementations[0].current_level = 5; },
-    (value) => { value.promotion_gates.null_maturity[0].satisfied = true; },
+    (value) => { value.promotion_gates.null_maturity[0].satisfied = false; },
     (value) => { value.promotion_gates.null_maturity[2].satisfied = false; },
     (value) => { value.fit_contract.objective_coefficient_domains.lambda_E.lower_bound_inclusive = true; },
     (value) => { value.target_null_contract.primary_property_keys.pop(); },
@@ -136,7 +173,7 @@ test("prototype status cannot be inflated, rolled back, or used to open later ga
   }
   assert.throws(
     () => assertFixture026RsdT02MatureNullAuthority(design),
-    /8 null-maturity gates and 4 fitting blockers remain/u,
+    /7 null-maturity gates and 3 fitting blockers remain/u,
   );
 });
 

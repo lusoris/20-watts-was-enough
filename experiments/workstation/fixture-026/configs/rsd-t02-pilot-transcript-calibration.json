@@ -1,0 +1,213 @@
+{
+  "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-pilot-transcript-calibration.v1",
+  "artifact": "fixture-026",
+  "track": "RSD-T02",
+  "authority": "public-synthetic-pilot-transcript-method-calibration-only",
+  "pilot_input_role": "development-evaluation-synthetic-method-check-only",
+  "private_response_adaptation_permitted": false,
+  "analysis_contract_version": "fixture-026.rsd-t02-holm4.v1",
+  "independent_unit": "system-instance",
+  "family_mode": "fixed-family-stratified-equal-family-weight",
+  "multiplicity_rule": "one-four-hypothesis-holm-family",
+  "runtime_failure_disposition": "in-denominator-registered-penalty",
+  "familywise_alpha": 0.05,
+  "bootstrap_resamples": 1000,
+  "simulation_replicates": 99,
+  "monte_carlo_confidence_level": 0.95,
+  "simulation_key": "fixture-026-rsd-t02-public-pilot-transcript-calibration-v1",
+  "contrast_order": [
+    "H-LOGLOSS-C-vs-STATE-SPACE",
+    "H-LOGLOSS-C-vs-RECURRENT",
+    "H-DECISION-C-vs-STATE-SPACE",
+    "H-DECISION-C-vs-RECURRENT"
+  ],
+  "registered_family_ids": [
+    "pilot-family-alpha",
+    "pilot-family-beta",
+    "pilot-family-gamma"
+  ],
+  "runtime_failure_penalties": {
+    "mean_property_log_loss_nats": 4,
+    "mean_decision_loss_dimensionless": 2
+  },
+  "scenarios": [
+    {
+      "scenario_id": "public-synthetic-null",
+      "role": "synthetic-null-familywise-error-method-check",
+      "candidate_baselines": {
+        "mean_property_log_loss_nats": 2,
+        "mean_decision_loss_dimensionless": 1
+      },
+      "runtime_failure_probability_by_arm": {
+        "C-MECHANISM-BANK": 0.02,
+        "B-STATE-SPACE": 0.02,
+        "B-RECURRENT": 0.02
+      },
+      "families": [
+        {
+          "family_id": "pilot-family-alpha",
+          "planned_instances": 12,
+          "pre_response_attrition_probability": 0.05,
+          "contrast_mean": [0, 0, 0, 0],
+          "contrast_covariance": [
+            [0.04, 0.01, 0.006, 0.002],
+            [0.01, 0.0466, 0.0036, 0.0089],
+            [0.006, 0.0036, 0.0091, 0.0025],
+            [0.002, 0.0089, 0.0025, 0.0102]
+          ]
+        },
+        {
+          "family_id": "pilot-family-beta",
+          "planned_instances": 12,
+          "pre_response_attrition_probability": 0.05,
+          "contrast_mean": [0, 0, 0, 0],
+          "contrast_covariance": [
+            [0.048, 0.012, 0.0072, 0.0024],
+            [0.012, 0.05592, 0.00432, 0.01068],
+            [0.0072, 0.00432, 0.01092, 0.003],
+            [0.0024, 0.01068, 0.003, 0.01224]
+          ]
+        },
+        {
+          "family_id": "pilot-family-gamma",
+          "planned_instances": 12,
+          "pre_response_attrition_probability": 0.05,
+          "contrast_mean": [0, 0, 0, 0],
+          "contrast_covariance": [
+            [0.032, 0.008, 0.0048, 0.0016],
+            [0.008, 0.03728, 0.00288, 0.00712],
+            [0.0048, 0.00288, 0.00728, 0.002],
+            [0.0016, 0.00712, 0.002, 0.00816]
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "public-synthetic-minimum-relevant-effects",
+      "role": "synthetic-alternative-rejection-method-check",
+      "candidate_baselines": {
+        "mean_property_log_loss_nats": 2,
+        "mean_decision_loss_dimensionless": 1
+      },
+      "runtime_failure_probability_by_arm": {
+        "C-MECHANISM-BANK": 0.02,
+        "B-STATE-SPACE": 0.02,
+        "B-RECURRENT": 0.02
+      },
+      "families": [
+        {
+          "family_id": "pilot-family-alpha",
+          "planned_instances": 12,
+          "pre_response_attrition_probability": 0.05,
+          "contrast_mean": [-0.18, -0.12, -0.08, -0.06],
+          "contrast_covariance": [
+            [0.04, 0.01, 0.006, 0.002],
+            [0.01, 0.0466, 0.0036, 0.0089],
+            [0.006, 0.0036, 0.0091, 0.0025],
+            [0.002, 0.0089, 0.0025, 0.0102]
+          ]
+        },
+        {
+          "family_id": "pilot-family-beta",
+          "planned_instances": 12,
+          "pre_response_attrition_probability": 0.05,
+          "contrast_mean": [-0.18, -0.12, -0.08, -0.06],
+          "contrast_covariance": [
+            [0.048, 0.012, 0.0072, 0.0024],
+            [0.012, 0.05592, 0.00432, 0.01068],
+            [0.0072, 0.00432, 0.01092, 0.003],
+            [0.0024, 0.01068, 0.003, 0.01224]
+          ]
+        },
+        {
+          "family_id": "pilot-family-gamma",
+          "planned_instances": 12,
+          "pre_response_attrition_probability": 0.05,
+          "contrast_mean": [-0.18, -0.12, -0.08, -0.06],
+          "contrast_covariance": [
+            [0.032, 0.008, 0.0048, 0.0016],
+            [0.008, 0.03728, 0.00288, 0.00712],
+            [0.0048, 0.00288, 0.00728, 0.002],
+            [0.0016, 0.00712, 0.002, 0.00816]
+          ]
+        }
+      ]
+    },
+    {
+      "scenario_id": "hostile-two-instance-bootstrap-zero-se-resamples",
+      "role": "hostile-bootstrap-degeneracy-method-check",
+      "candidate_baselines": {
+        "mean_property_log_loss_nats": 2,
+        "mean_decision_loss_dimensionless": 1
+      },
+      "runtime_failure_probability_by_arm": {
+        "C-MECHANISM-BANK": 0,
+        "B-STATE-SPACE": 0,
+        "B-RECURRENT": 0
+      },
+      "families": [
+        {
+          "family_id": "pilot-family-alpha",
+          "planned_instances": 2,
+          "pre_response_attrition_probability": 0,
+          "contrast_mean": [-0.5, -0.5, -0.25, -0.25],
+          "contrast_covariance": [[0.04, 0, 0, 0], [0, 0.04, 0, 0], [0, 0, 0.01, 0], [0, 0, 0, 0.01]]
+        },
+        {
+          "family_id": "pilot-family-beta",
+          "planned_instances": 2,
+          "pre_response_attrition_probability": 0,
+          "contrast_mean": [-0.5, -0.5, -0.25, -0.25],
+          "contrast_covariance": [[0.04, 0, 0, 0], [0, 0.04, 0, 0], [0, 0, 0.01, 0], [0, 0, 0, 0.01]]
+        },
+        {
+          "family_id": "pilot-family-gamma",
+          "planned_instances": 2,
+          "pre_response_attrition_probability": 0,
+          "contrast_mean": [-0.5, -0.5, -0.25, -0.25],
+          "contrast_covariance": [[0.04, 0, 0, 0], [0, 0.04, 0, 0], [0, 0, 0.01, 0], [0, 0, 0, 0.01]]
+        }
+      ]
+    },
+    {
+      "scenario_id": "hostile-two-instance-zero-variance",
+      "role": "hostile-bootstrap-degeneracy-method-check",
+      "candidate_baselines": {
+        "mean_property_log_loss_nats": 2,
+        "mean_decision_loss_dimensionless": 1
+      },
+      "runtime_failure_probability_by_arm": {
+        "C-MECHANISM-BANK": 0,
+        "B-STATE-SPACE": 0,
+        "B-RECURRENT": 0
+      },
+      "families": [
+        {
+          "family_id": "pilot-family-alpha",
+          "planned_instances": 2,
+          "pre_response_attrition_probability": 0,
+          "contrast_mean": [-0.5, -0.5, -0.25, -0.25],
+          "contrast_covariance": [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+        },
+        {
+          "family_id": "pilot-family-beta",
+          "planned_instances": 2,
+          "pre_response_attrition_probability": 0,
+          "contrast_mean": [-0.5, -0.5, -0.25, -0.25],
+          "contrast_covariance": [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+        },
+        {
+          "family_id": "pilot-family-gamma",
+          "planned_instances": 2,
+          "pre_response_attrition_probability": 0,
+          "contrast_mean": [-0.5, -0.5, -0.25, -0.25],
+          "contrast_covariance": [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+        }
+      ]
+    }
+  ],
+  "comparison_inference_permitted": false,
+  "claim_eligible": false,
+  "result_label": "NO_RESULT"
+}

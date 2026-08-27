@@ -24,6 +24,14 @@
 > null prototypes, and blocked Holm/power method checks. The population,
 > calibration, maturity, custody, and comparison conclusions below are unchanged.
 
+> **Later same-day integration:** the
+> [population execution, isolation, and calibration diagnostic](2026-08-27-rsd-t02-population-execution-isolation-calibration.md)
+> composes all 20 public-development instances with the exact-bound isolated
+> durable execution release. It promotes only the parameterized-runner
+> infrastructure gate: five of 20 applicable non-energy gates are now satisfied,
+> while affected fitting, mature-null, comparison, claim and energy authority
+> remain closed. Statements below describe the earlier design checkpoint.
+
 ## Executive finding
 
 The current 64 RSD-T02 seed labels do not create 64 systems. They select only

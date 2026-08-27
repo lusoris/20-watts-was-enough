@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-public-development-population-runner-config.v1",
+  "artifact": "fixture-026",
+  "track": "RSD-T02",
+  "authority": "public-development-population-execution-foundation-only",
+  "partition": "development",
+  "population_design_binding": {
+    "contract_version": "fixture-026.rsd-t02-population-design.v1",
+    "canonical_sha256": "28530f3c35e5e12dfa0601ffe2ca674a54ff5d448d966764a1c7103a0204e7ee"
+  },
+  "family_registry_binding": {
+    "contract_version": "fixture-026.rsd-t02-system-family-registry.v1",
+    "canonical_sha256": "a6b573bc5a27943b77c4969b823b4ad852b9ee6a3ec5a314862419d6219c04c0"
+  },
+  "development_plan_binding": {
+    "contract_version": "fixture-026.rsd-t02-development-instance-plan.v1",
+    "canonical_sha256": "ab4a85f382940f268bc7fc6f19c2bddbda151a67051c44e9e9e93c0e2e70c6c8"
+  },
+  "fixed_instance_runner_binding": {
+    "config_contract_version": "fixture-026.rsd-t02-fixed-instance-runner-config.v1",
+    "runner_contract_version": "fixture-026.rsd-t02-fixed-instance-runner.v1",
+    "canonical_config_sha256": "493b188025fa77e1c178f7c869d961f09a268f26cdcefdc1dba0bf6758263db2"
+  },
+  "execution_contract": {
+    "panel_selection": "all-unique-canonical-public-development-instances",
+    "processing_order": "conformance-draw-index-major-then-registry-family-order",
+    "duplicate_rule": "same-canonical-instance-id-executes-once",
+    "per_instance_execution": "existing-26-episode-fixed-instance-runner-v1",
+    "one_family_parameter_vector_and_time_constant_per_packet": true,
+    "causal_view_contract": "existing-fixed-instance-policy-view-allowlist-v1",
+    "causal_view_retention": "sha256-and-utf8-byte-count-receipt-only",
+    "full_fixed_instance_run_retained_in_population_artifact": false,
+    "maximum_new_instance_records_per_invocation": 20
+  },
+  "aggregation_contract": {
+    "scope": "the-five-named-public-development-equation-families-only",
+    "family_weighting": "equal-family-weight",
+    "within_family_weighting": "equal-unique-instance-weight",
+    "weights_are_design_metadata_only": true,
+    "outcome_aggregation_executed": false,
+    "family_superpopulation_inference_permitted": false
+  },
+  "resume_contract": {
+    "record_order": "frozen-population-processing-order-v1",
+    "record_chain": "sha256-canonical-json-previous-record-integrity-v1",
+    "integrity_scope": "internal-order-and-content-integrity-only-no-append-only-or-rollback-proof",
+    "prior_receipts_revalidated_from_immutable_inputs": true,
+    "external_or_durable_head_bound": false,
+    "rollback_detection_without_external_head": false,
+    "foreign_panel_resume_permitted": false,
+    "completed_instance_retry_permitted": false
+  },
+  "outer_partition_contract": {
+    "outer_family_generation_permitted": false,
+    "outer_instance_generation_permitted": false,
+    "private_or_sealed_payload_access_permitted": false
+  },
+  "runtime_measurement_status": "not-captured-in-deterministic-artifact",
+  "comparison_inference_permitted": false,
+  "claim_eligible": false,
+  "result_label": "NO_RESULT"
+}

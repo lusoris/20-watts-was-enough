@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-parameterized-runner-release.v1",
+  "artifact": "fixture-026",
+  "track": "RSD-T02",
+  "gate": "validated-parameterized-transcript-policy-resource-runner",
+  "authority": "public-development-infrastructure-release-binding-only",
+  "closure_rule": "all-listed-local-runtime-artifacts-required-at-exact-bytes",
+  "release_artifacts": [
+    {
+      "role": "integrated-population-config",
+      "path": "configs/rsd-t02-public-development-isolated-durable-population.json",
+      "sha256_exact_bytes": "954ba6ee39ffab15464fd83d84c130ddf20b40de8946aa78b843e9fbda7eba36"
+    },
+    {
+      "role": "integrated-population-runner",
+      "path": "rsd-t02-public-development-isolated-durable-population-runner.mjs",
+      "sha256_exact_bytes": "d2013543b1d127ebd186b534da65f9c3bedcb3f98a5dd6ccad04120b7d4e4b06"
+    },
+    {
+      "role": "population-runner-config",
+      "path": "configs/rsd-t02-public-development-population-runner.json",
+      "sha256_exact_bytes": "d2146285676a1978277bfeb8a04706201633f5eb4e2dbec6ded5295e61590ed0"
+    },
+    {
+      "role": "population-runner",
+      "path": "rsd-t02-public-development-population-runner.mjs",
+      "sha256_exact_bytes": "e82a5ba8cd3b6bb89a3d0063554b714ba47da8b63b07414b7449127e87b7ff7a"
+    },
+    {
+      "role": "fixed-instance-runner-config",
+      "path": "configs/rsd-t02-fixed-instance-runner.json",
+      "sha256_exact_bytes": "b8b3236297ff5475b32ae05fcef501eaac9a556c39e2fa174280bb892ecded89"
+    },
+    {
+      "role": "fixed-instance-runner",
+      "path": "rsd-t02-fixed-instance-runner.mjs",
+      "sha256_exact_bytes": "732b09a53cc39410e06cfcbc33d6f0cdc28e4c9c9b30bf11c6091aff25ad743e"
+    },
+    {
+      "role": "isolated-durable-config",
+      "path": "configs/rsd-t02-fixed-instance-isolated-durable.json",
+      "sha256_exact_bytes": "757ee6845eaa0301cbe177c9cea582b2843f732a02bf17c0a391b2127c8251a1"
+    },
+    {
+      "role": "isolated-durable-runner",
+      "path": "rsd-t02-fixed-instance-isolated-durable-runner.mjs",
+      "sha256_exact_bytes": "6428ee9f53db922d273e16788527594ffca71d2419cc63f71cea5f6657d42bce"
+    },
+    {
+      "role": "bounded-durable-store",
+      "path": "rsd-t02-fixed-instance-durable-store.mjs",
+      "sha256_exact_bytes": "1324d42d9fec867d51ae8794fdf69930cacfdd5d4335e2b40a0b6d3e318c324b"
+    },
+    {
+      "role": "exclusive-run-lock",
+      "path": "rsd-t02-run-lock.mjs",
+      "sha256_exact_bytes": "c5e5d0f15bdb46732246da51a40c4bc599d78ef305a265a09107aadae910a536"
+    },
+    {
+      "role": "restricted-policy-worker",
+      "path": "rsd-t02-fixed-instance-conformance-policy-worker.mjs",
+      "sha256_exact_bytes": "22824cceffaa727dfdee8faf86d4c938f681fc325265f6062697dcb76fb77163"
+    },
+    {
+      "role": "content-addressed-policy-bundle",
+      "path": "policy-bundles/bf7b99d5ea169e33fdf3c4ba825ebe4085fceac97e973514e223881e765222e7.js",
+      "sha256_exact_bytes": "bf7b99d5ea169e33fdf3c4ba825ebe4085fceac97e973514e223881e765222e7"
+    },
+    {
+      "role": "checkpoint-ledger-library",
+      "path": "../lib/checkpoint-ledger.mjs",
+      "sha256_exact_bytes": "3d94ba7135a692136cf279936b87834a598695b7bf6a9004920b6a3d1c8d2eb5"
+    },
+    {
+      "role": "population-contract",
+      "path": "rsd-t02-population-contract.mjs",
+      "sha256_exact_bytes": "50dc8010a1a70a02ec7fbeb84bdd3126aa98f6a20a8969b3783747724028f30e"
+    },
+    {
+      "role": "equation-contract",
+      "path": "rsd-t02-contract.mjs",
+      "sha256_exact_bytes": "d9819a4eb30ef83b9007fb701513fefd349c72a726ebba236caa81d314101c6c"
+    },
+    {
+      "role": "equation-models",
+      "path": "rsd-t02-models.mjs",
+      "sha256_exact_bytes": "011adacd5f53628d14d35549b57c67eb219184c82f93e8c81410cb0b9ffdd4c2"
+    },
+    {
+      "role": "system-family-generator",
+      "path": "rsd-t02-system-family-generator.mjs",
+      "sha256_exact_bytes": "b8b684cd71f4039d477a19b85acde2ad7ae87af001855d7af9f773ca36d2a231"
+    },
+    {
+      "role": "population-design",
+      "path": "configs/rsd-t02-population-design.json",
+      "sha256_exact_bytes": "1e65c501eb9efe2cd6cef6b79f250378b05b845efc6d519b3451d454e7f80fc9"
+    },
+    {
+      "role": "family-registry",
+      "path": "configs/rsd-t02-system-family-registry.json",
+      "sha256_exact_bytes": "9868cc5a6b2af627875505c1c49c3be1cea69f10538e91aa66085c8cfe589618"
+    },
+    {
+      "role": "development-instance-plan",
+      "path": "configs/rsd-t02-development-instance-plan.json",
+      "sha256_exact_bytes": "06cfb0316f57a5135b665ff31605f7d4b4ac147621b3801f5906cc0e254955fb"
+    }
+  ],
+  "foundation_gates": {
+    "complete_twenty_instance_traversal": true,
+    "content_addressed_twenty_six_projection_policy": true,
+    "fresh_restricted_child_per_fixed_packet": true,
+    "semantic_response_replay": true,
+    "durable_fixed_instance_and_outer_resume": true,
+    "live_directory_identity_revalidation": true
+  },
+  "limitations": [
+    "no-authenticated-owner-custody",
+    "no-automatic-abandoned-lock-recovery",
+    "no-external-rollback-head",
+    "no-power-loss-guarantee-beyond-requested-file-sync",
+    "no-trained-estimator-execution",
+    "no-endpoint-aggregation",
+    "no-model-comparison"
+  ],
+  "comparison_inference_permitted": false,
+  "claim_eligible": false,
+  "result_label": "NO_RESULT"
+}

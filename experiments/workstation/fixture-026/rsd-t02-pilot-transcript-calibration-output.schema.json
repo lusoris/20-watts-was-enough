@@ -1,0 +1,267 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t02-pilot-transcript-calibration-output.v1.schema.json",
+  "title": "Fixture 026 RSD-T02 pilot-transcript method calibration output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "contract_version", "artifact", "track", "authority",
+    "configuration_sha256", "synthetic_transcript_generator_version",
+    "analyzer_contract_version", "analyzer_invocation",
+    "estimand_preservation", "simulation_replicates_per_scenario",
+    "bootstrap_resamples_per_hypothesis_per_replicate",
+    "monte_carlo_confidence_level", "scenario_reports", "canonical_role_coverage",
+    "method_calibration_incomplete_reasons",
+    "power_plan_blocker_assessment", "method_calibration_completed",
+    "scientific_power_calibrated", "plan_freeze_permitted",
+    "design_gate_satisfied", "comparison_inference_permitted",
+    "claim_eligible", "result_label"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-026.rsd-t02-pilot-transcript-calibration.v1" },
+    "artifact": { "const": "fixture-026" },
+    "track": { "const": "RSD-T02" },
+    "authority": { "const": "deterministic-public-synthetic-method-calibration-only" },
+    "configuration_sha256": { "$ref": "#/definitions/sha256" },
+    "synthetic_transcript_generator_version": { "const": "fixture-026.rsd-t02-synthetic-pilot-transcript-generator.v1" },
+    "analyzer_contract_version": { "const": "fixture-026.rsd-t02-holm4.v1" },
+    "analyzer_invocation": { "const": "exact-imported-analyzeFixture026RsdT02PairedPanel-per-synthetic-transcript" },
+    "estimand_preservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "independent_unit", "fixed_family_panel", "primary_family_weighting",
+        "multiplicity", "runtime_failure_disposition",
+        "bootstrap_zero_standard_error_handling"
+      ],
+      "properties": {
+        "independent_unit": { "const": "system-instance" },
+        "fixed_family_panel": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string" }
+        },
+        "primary_family_weighting": { "const": "equal-family-weight-via-executable-analyzer" },
+        "multiplicity": { "const": "one-four-hypothesis-Holm-family-via-executable-analyzer" },
+        "runtime_failure_disposition": { "const": "in-denominator-at-registered-endpoint-penalties" },
+        "bootstrap_zero_standard_error_handling": { "type": "string", "minLength": 1 }
+      }
+    },
+    "simulation_replicates_per_scenario": { "type": "integer", "minimum": 2 },
+    "bootstrap_resamples_per_hypothesis_per_replicate": { "type": "integer", "minimum": 1000 },
+    "monte_carlo_confidence_level": { "type": "number", "minimum": 0.8, "maximum": 0.999 },
+    "scenario_reports": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/scenarioReport" }
+    },
+    "canonical_role_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_roles", "observed_roles", "missing_roles",
+        "analyzer_accepted_replicate_count_by_required_role",
+        "roles_without_analyzer_acceptance",
+        "required_scenarios_without_analyzer_acceptance", "complete"
+      ],
+      "properties": {
+        "required_roles": {
+          "const": [
+            "synthetic-null-familywise-error-method-check",
+            "synthetic-alternative-rejection-method-check",
+            "hostile-bootstrap-degeneracy-method-check"
+          ]
+        },
+        "observed_roles": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "missing_roles": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "analyzer_accepted_replicate_count_by_required_role": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "synthetic-null-familywise-error-method-check",
+            "synthetic-alternative-rejection-method-check",
+            "hostile-bootstrap-degeneracy-method-check"
+          ],
+          "properties": {
+            "synthetic-null-familywise-error-method-check": { "type": "integer", "minimum": 0 },
+            "synthetic-alternative-rejection-method-check": { "type": "integer", "minimum": 0 },
+            "hostile-bootstrap-degeneracy-method-check": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "roles_without_analyzer_acceptance": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "required_scenarios_without_analyzer_acceptance": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "complete": { "type": "boolean" }
+      }
+    },
+    "method_calibration_incomplete_reasons": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "power_plan_blocker_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["closed_for_public_method_calibration", "closure_scope", "still_open_for_plan_freeze"],
+      "properties": {
+        "closed_for_public_method_calibration": {
+          "type": "array",
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": { "const": "variance-only-normal-approximation-not-calibrated-to-data-dependent-bootstrap-degeneracy" }
+        },
+        "closure_scope": { "type": "string", "minLength": 1 },
+        "still_open_for_plan_freeze": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "method_calibration_completed": { "type": "boolean" },
+    "scientific_power_calibrated": { "const": false },
+    "plan_freeze_permitted": { "const": false },
+    "design_gate_satisfied": { "const": false },
+    "comparison_inference_permitted": { "const": false },
+    "claim_eligible": { "const": false },
+    "result_label": { "const": "NO_RESULT" }
+  },
+  "definitions": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "probabilitySummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_count", "monte_carlo_replicate_count", "observed_event_frequency",
+        "plus_one_event_probability",
+        "plus_one_resolution", "confidence_level", "interval_method",
+        "monte_carlo_wilson_interval", "interval_is_monte_carlo_uncertainty_only",
+        "scientific_effect_uncertainty_interval"
+      ],
+      "properties": {
+        "event_count": { "type": "integer", "minimum": 0 },
+        "monte_carlo_replicate_count": { "type": "integer", "minimum": 1 },
+        "observed_event_frequency": { "type": "number", "minimum": 0, "maximum": 1 },
+        "plus_one_event_probability": { "type": "number", "minimum": 0, "maximum": 1 },
+        "plus_one_resolution": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "confidence_level": { "type": "number", "minimum": 0.8, "maximum": 0.999 },
+        "interval_method": { "const": "wilson-score-on-observed-event-count/replicate-count" },
+        "monte_carlo_wilson_interval": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "interval_is_monte_carlo_uncertainty_only": { "const": true },
+        "scientific_effect_uncertainty_interval": { "const": false }
+      }
+    },
+    "hypothesisProbability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hypothesis_id", "event_count", "monte_carlo_replicate_count",
+        "observed_event_frequency", "plus_one_event_probability",
+        "plus_one_resolution", "confidence_level", "interval_method",
+        "monte_carlo_wilson_interval", "interval_is_monte_carlo_uncertainty_only",
+        "scientific_effect_uncertainty_interval"
+      ],
+      "properties": {
+        "hypothesis_id": { "type": "string", "minLength": 1 },
+        "event_count": { "type": "integer", "minimum": 0 },
+        "monte_carlo_replicate_count": { "type": "integer", "minimum": 1 },
+        "observed_event_frequency": { "type": "number", "minimum": 0, "maximum": 1 },
+        "plus_one_event_probability": { "type": "number", "minimum": 0, "maximum": 1 },
+        "plus_one_resolution": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "confidence_level": { "type": "number", "minimum": 0.8, "maximum": 0.999 },
+        "interval_method": { "const": "wilson-score-on-observed-event-count/replicate-count" },
+        "monte_carlo_wilson_interval": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "interval_is_monte_carlo_uncertainty_only": { "const": true },
+        "scientific_effect_uncertainty_interval": { "const": false }
+      }
+    },
+    "replicateAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "replicate_index", "transcript_sha256", "record_count",
+        "retained_instance_counts_by_family", "runtime_failure_counts_by_arm",
+        "analyzer_point_report_sha256", "analyzer_refused", "analyzer_validation_errors",
+        "bootstrap_resolution_gate_satisfied",
+        "any_registered_hypothesis_rejected", "rejected_hypothesis_ids",
+        "result_label"
+      ],
+      "properties": {
+        "replicate_index": { "type": "integer", "minimum": 0 },
+        "transcript_sha256": { "$ref": "#/definitions/sha256" },
+        "record_count": { "type": "integer", "minimum": 0 },
+        "retained_instance_counts_by_family": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+        "runtime_failure_counts_by_arm": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } },
+        "analyzer_point_report_sha256": { "$ref": "#/definitions/sha256" },
+        "analyzer_refused": { "type": "boolean" },
+        "analyzer_validation_errors": { "type": "array", "items": { "type": "string" } },
+        "bootstrap_resolution_gate_satisfied": { "type": "boolean" },
+        "any_registered_hypothesis_rejected": { "type": "boolean" },
+        "rejected_hypothesis_ids": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "result_label": { "const": "NO_RESULT" }
+      }
+    },
+    "scenarioReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenario_id", "scenario_definition_sha256", "dgp_fingerprint_sha256",
+        "role", "method_quantity_label",
+        "family_wise_any_rejection_probability",
+        "family_wise_all_four_rejection_probability",
+        "hypothesis_rejection_probabilities", "analyzer_accepted_replicate_count",
+        "analyzer_refusal_replicate_count",
+        "analyzer_refusals_count_as_nonrejections",
+        "bootstrap_resolution_failure_replicate_count",
+        "zero_standard_error_or_invalid_bootstrap_replicate_count",
+        "mean_invalid_bootstrap_resample_fraction_by_hypothesis",
+        "maximum_data_dependent_bootstrap_p_floor_by_hypothesis",
+        "replicate_audit", "synthetic_method_calibration_executed",
+        "analyzer_accepted_for_method_calibration",
+        "scientific_power_estimate_permitted", "comparison_inference_permitted",
+        "claim_eligible", "result_label"
+      ],
+      "properties": {
+        "scenario_id": { "type": "string", "minLength": 1 },
+        "scenario_definition_sha256": { "$ref": "#/definitions/sha256" },
+        "dgp_fingerprint_sha256": { "$ref": "#/definitions/sha256" },
+        "role": { "type": "string", "minLength": 1 },
+        "method_quantity_label": { "type": "string", "minLength": 1 },
+        "family_wise_any_rejection_probability": { "$ref": "#/definitions/probabilitySummary" },
+        "family_wise_all_four_rejection_probability": { "$ref": "#/definitions/probabilitySummary" },
+        "hypothesis_rejection_probabilities": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": { "$ref": "#/definitions/hypothesisProbability" }
+        },
+        "analyzer_accepted_replicate_count": { "type": "integer", "minimum": 0 },
+        "analyzer_refusal_replicate_count": { "type": "integer", "minimum": 0 },
+        "analyzer_refusals_count_as_nonrejections": { "const": true },
+        "bootstrap_resolution_failure_replicate_count": { "type": "integer", "minimum": 0 },
+        "zero_standard_error_or_invalid_bootstrap_replicate_count": { "type": "integer", "minimum": 0 },
+        "mean_invalid_bootstrap_resample_fraction_by_hypothesis": { "type": "object" },
+        "maximum_data_dependent_bootstrap_p_floor_by_hypothesis": { "type": "object" },
+        "replicate_audit": { "type": "array", "items": { "$ref": "#/definitions/replicateAudit" } },
+        "synthetic_method_calibration_executed": { "const": true },
+        "analyzer_accepted_for_method_calibration": { "type": "boolean" },
+        "scientific_power_estimate_permitted": { "const": false },
+        "comparison_inference_permitted": { "const": false },
+        "claim_eligible": { "const": false },
+        "result_label": { "const": "NO_RESULT" }
+      }
+    }
+  }
+}

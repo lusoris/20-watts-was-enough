@@ -30425,7 +30425,7 @@
       "disposition": {
         "id": "C-1567",
         "disposition": "new-artifact-needed",
-        "rationale": "The fixed-instance generator currently emits metadata only; parameter-shift performance needs a parameterized transcript and population runner.",
+        "rationale": "The exact-bound integrated release now executes a complete 20-instance receipt-only traversal and satisfies the parameterized-runner infrastructure gate, but it emits no estimator endpoints and has no shifted outer-lineage evaluation; parameter-shift performance still needs role-disjoint fitting and calibration plus a powered endpoint comparison.",
         "targets": [
           "proposed:rsd-t02-parameterized-population-runner"
         ],

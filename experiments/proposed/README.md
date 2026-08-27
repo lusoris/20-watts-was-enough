@@ -1,14 +1,91 @@
-# Experiment-family provenance
+# Proposed experiment families and provenance
 
-These entries preserve the design provenance of experiment families that began
-as unresolved engineering hypotheses. Every family on this page has now been
-promoted to a numbered fixture and no longer counts as a disposition backlog
-item. Promotion records a complete written falsification contract, not an
-empirical result or execution-ready implementation. Generator, hardware,
-release, metering, and independent-reproduction gates remain those stated by
-each fixture.
+This page is the canonical backlog for unresolved engineering claims and also
+preserves the design provenance of families that were later promoted to a
+numbered fixture. A backlog entry is not a complete written protocol, an
+executable test, or an empirical result. Promotion records a complete written
+falsification contract only; generator, hardware, release, metering, and
+independent-reproduction gates remain those stated by the numbered artifact.
 
-## `proposed:sensorimotor-grounding-transfer`
+## Current backlog
+
+### `proposed:rsd-t02-outer-lineage-split`
+
+- **Promotion state:** unresolved; no numbered experiment artifact.
+- **Claim:** [C-1566](../../research/claims.md#c-1566).
+- **Unresolved question:** Which equation-, implementation-, and
+  construction-ancestry relations must be blocked together so that an outer
+  RSD-T02 family is genuinely unseen rather than a near-duplicate of a
+  development family?
+- **Why current artifacts are insufficient:** the population contract can
+  label lineage and equivalence components, but the registry is public,
+  coverage is structurally thin for four property values, and no sealed
+  confirmation or transfer family templates, commitments, custody records, or
+  releases exist.
+- **Minimum promotion contract:** freeze a leakage graph before affected
+  fitting; assign every connected component to exactly one of development,
+  outer confirmation, or outer transfer; include deliberate code-sibling and
+  equation-equivalent hostiles; and prove that role metadata, family payloads,
+  and response-bearing artifacts cannot cross the information cut.
+- **Promotion condition:** a numbered artifact must define at least two
+  materially distinct held-out lineages, an auditable component assignment,
+  one-pass custody and release, and a falsification showing how a row-level or
+  sibling-level split can overstate transfer without treating that direction
+  as guaranteed in every finite sample.
+
+### `proposed:rsd-t02-parameterized-population-runner`
+
+- **Promotion state:** partially implemented; an exact-bound integrated release
+  composes the complete 20-instance receipt traversal with isolated durable
+  fixed-instance execution and satisfies the parameterized-runner
+  infrastructure gate, but it is not a powered population comparison.
+- **Claim:** [C-1567](../../research/claims.md#c-1567).
+- **Unresolved question:** How does an estimator behave across independently
+  drawn parameter instances and shifted equation lineages when additional
+  episodes from one system are forbidden from inflating the effective sample
+  size?
+- **Why current artifacts are insufficient:** the integrated release traverses
+  all 20 fixed instances, validates their workload receipts, and provides
+  ownership-safe durable recovery at both fixed-instance and outer-ledger
+  boundaries. It remains receipt-only: it executes no trained candidate or
+  null, retains no instance-level endpoints, and still lacks role-disjoint
+  fitting, calibrated models, a frozen power plan, and an outer-family path.
+- **Minimum promotion contract:** bind one family, canonical parameter vector,
+  time constant, 26-episode protocol, policy-bundle identity, and terminal
+  outcome to each independent instance; resume without duplicating units;
+  aggregate with equal family weights; and keep episode, row, realization, and
+  procedural-seed counts out of the scientific denominator.
+- **Promotion condition:** a numbered artifact must execute a prospectively
+  assigned public-development population end to end, expose typed failures and
+  resource charges, and demonstrate that within-instance interpolation cannot
+  be relabelled as parameter-instance or lineage transfer.
+
+### `proposed:rsd-t02-calibrated-selective-comparison`
+
+- **Promotion state:** unresolved; two level-two trainable prototypes and a
+  method-check analyzer exist, but no mature calibrated comparator.
+- **Claim:** [C-1568](../../research/claims.md#c-1568).
+- **Unresolved question:** Can frozen RSD-T02 candidate and null models provide
+  useful, priced risk--coverage trade-offs on instance-disjoint data, and how
+  badly do those guarantees degrade under an unseen lineage shift?
+- **Why current artifacts are insufficient:** current prototype scores are not
+  calibrated probabilities; support and abstention thresholds are unfrozen;
+  no fit/calibration/development-evaluation instance split has executed; and no
+  final loss, fallback charge, or comparison release exists.
+- **Minimum promotion contract:** freeze model weights before calibration;
+  calibrate value, property, support, and abstention outputs on a dedicated
+  instance partition; evaluate the full registered risk--coverage curve with
+  fallback and acquisition costs in denominator; and separately test outer
+  lineage shift without transporting the in-distribution guarantee.
+- **Promotion condition:** a numbered artifact must satisfy the level-five null
+  maturity gates for both generic nulls, freeze the loss and decision rule
+  before evaluation, and beat forced-decision and uncalibrated controls on a
+  preregistered risk--coverage--resource criterion without hiding zero
+  coverage.
+
+## Promoted families retained as provenance
+
+### `proposed:sensorimotor-grounding-transfer`
 
 - **Promotion state:** promoted on 2026-08-24 to
   [Fixture F-015](../fixtures/015-sensorimotor-grounding-transfer.md). This entry
@@ -37,7 +114,7 @@ each fixture.
   preregistered transfer--risk--cost frontier over the strongest passive arm,
   and the targeted shuffles must remove the claimed gain.
 
-## `proposed:continual-memory-lifecycle`
+### `proposed:continual-memory-lifecycle`
 
 - **Promotion state:** promoted on 2026-08-24 to
   [Fixture F-014](../fixtures/014-continual-memory-lifecycle.md). This entry
@@ -70,7 +147,7 @@ each fixture.
   regularization, retrieval, and replay nulls; fast/slow separation and replay
   selection must each earn causal credit in ablations.
 
-## `proposed:low-bit-model-hardware-crossover`
+### `proposed:low-bit-model-hardware-crossover`
 
 - **Promotion state:** promoted on 2026-08-24 to
   [Fixture F-017](../fixtures/017-low-bit-model-hardware-crossover.md). This
@@ -101,7 +178,7 @@ each fixture.
   the strongest supported low-bit baseline after training and engineering
   costs; emulation-only savings cannot promote it.
 
-## `proposed:immune-state-lifecycle-evaluation`
+### `proposed:immune-state-lifecycle-evaluation`
 
 - **Promotion state:** promoted on 2026-08-24 to
   [Fixture F-013](../fixtures/013-immune-state-lifecycle-evaluation.md). This
@@ -137,7 +214,7 @@ each fixture.
   selectively recreate its preregistered failure without relying on
   immune-derived names.
 
-## `proposed:versioned-evidence-retrieval-feedback`
+### `proposed:versioned-evidence-retrieval-feedback`
 
 - **Promotion state:** promoted on 2026-08-24 to
   [Fixture F-016](../fixtures/016-versioned-evidence-retrieval-feedback.md).

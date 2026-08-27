@@ -3,9 +3,15 @@ import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
 export const FIXTURE_026_RSD_T02_NULL_MATURATION_DESIGN_VERSION =
   "fixture-026.rsd-t02-null-maturation-design.v1";
 export const FIXTURE_026_RSD_T02_NULL_MATURATION_DESIGN_SHA256 =
-  "655e44d181de039569fd9c0714c61208e0d20d0a5a0104e3218ab5355737c3bd";
+  "54e1f6f9efd91fcd1311b46b43727225f257e2704cfe9fa3c291ea303065642b";
 export const FIXTURE_026_RSD_T02_NULL_PROTOTYPE_IMPLEMENTATION_SHA256 =
   "2a0440334adfc51b50ff22848ac0f675d1efa600b384462ad39dfa6068a0b405";
+export const FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_VERSION =
+  "fixture-026.rsd-t02-parameterized-runner-release.v1";
+export const FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_SHA256 =
+  "46e41c1da834a5dafd9fe972b35fc03805c9640ad90e61587623baa81c3929f9";
+export const FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_EXACT_BYTES_SHA256 =
+  "1df93cfd7873d3e208e938392576f8e5965e92c4ab019805d9b21a24a593ec3d";
 
 const REQUIRED_NULLS = Object.freeze(["B-STATE-SPACE", "B-RECURRENT"]);
 const REQUIRED_PRIMARY_PROPERTIES = Object.freeze([
@@ -32,6 +38,64 @@ function exactKeys(value, keys) {
     && !Array.isArray(value)
     && Object.keys(value).length === keys.length
     && keys.every((key) => Object.hasOwn(value, key));
+}
+
+export function assertFixture026RsdT02ParameterizedRunnerRelease(release) {
+  const requiredFoundationGates = [
+    "complete_twenty_instance_traversal",
+    "content_addressed_twenty_six_projection_policy",
+    "fresh_restricted_child_per_fixed_packet",
+    "semantic_response_replay",
+    "durable_fixed_instance_and_outer_resume",
+    "live_directory_identity_revalidation",
+  ];
+  const requiredLimitations = [
+    "no-authenticated-owner-custody",
+    "no-automatic-abandoned-lock-recovery",
+    "no-external-rollback-head",
+    "no-power-loss-guarantee-beyond-requested-file-sync",
+    "no-trained-estimator-execution",
+    "no-endpoint-aggregation",
+    "no-model-comparison",
+  ];
+  const artifacts = release?.release_artifacts;
+  if (
+    digest(release) !== FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_SHA256
+    || !exactKeys(release, [
+      "schema", "contract_version", "artifact", "track", "gate", "authority",
+      "closure_rule", "release_artifacts", "foundation_gates", "limitations",
+      "comparison_inference_permitted", "claim_eligible", "result_label",
+    ])
+    || release.schema !== 1
+    || release.contract_version !== FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_VERSION
+    || release.artifact !== "fixture-026"
+    || release.track !== "RSD-T02"
+    || release.gate !== "validated-parameterized-transcript-policy-resource-runner"
+    || release.authority !== "public-development-infrastructure-release-binding-only"
+    || release.closure_rule !== "all-listed-local-runtime-artifacts-required-at-exact-bytes"
+    || !Array.isArray(artifacts)
+    || artifacts.length !== 20
+    || new Set(artifacts.map(({ role }) => role)).size !== 20
+    || new Set(artifacts.map(({ path }) => path)).size !== 20
+    || artifacts.some((entry) => (
+      !exactKeys(entry, ["role", "path", "sha256_exact_bytes"])
+      || typeof entry.role !== "string"
+      || !/^[a-z0-9-]+$/u.test(entry.role)
+      || typeof entry.path !== "string"
+      || entry.path.length < 3
+      || (/^\.\./u.test(entry.path) && entry.path !== "../lib/checkpoint-ledger.mjs")
+      || /^(?:[a-z]:|[/\\])/iu.test(entry.path)
+      || typeof entry.sha256_exact_bytes !== "string"
+      || !/^[0-9a-f]{64}$/u.test(entry.sha256_exact_bytes)
+    ))
+    || !exactKeys(release.foundation_gates, requiredFoundationGates)
+    || requiredFoundationGates.some((gate) => release.foundation_gates[gate] !== true)
+    || release.limitations?.join("|") !== requiredLimitations.join("|")
+    || release.comparison_inference_permitted !== false
+    || release.claim_eligible !== false
+    || release.result_label !== "NO_RESULT"
+  ) refuse("parameterized runner release differs from its exact NO_RESULT closure");
+  return release;
 }
 
 export function deriveFixture026RsdT02NullAuthority({
@@ -117,6 +181,9 @@ export function assertFixture026RsdT02NullMaturationDesign(design) {
   const prototypeParent = design?.parent_artifacts?.find(({ path }) => (
     path === "rsd-t02-null-prototypes.mjs"
   ));
+  const runnerReleaseParent = design?.parent_artifacts?.find(({ path }) => (
+    path === "configs/rsd-t02-parameterized-runner-release.json"
+  ));
   const currentAuthority = deriveFixture026RsdT02NullAuthority({
     promotion_gates: design?.promotion_gates,
     active_fitting_blockers: design?.fit_contract?.affected_fitting_blockers,
@@ -130,11 +197,14 @@ export function assertFixture026RsdT02NullMaturationDesign(design) {
     || design.track !== "RSD-T02"
     || design.authority !== "prospective-null-maturation-design-only"
     || !Array.isArray(design.parent_artifacts)
-    || design.parent_artifacts.length !== 11
-    || new Set(design.parent_artifacts.map(({ path }) => path)).size !== 11
+    || design.parent_artifacts.length !== 12
+    || new Set(design.parent_artifacts.map(({ path }) => path)).size !== 12
     || prototypeParent?.role !== "level-two-null-prototype-implementation"
     || prototypeParent.sha256_exact_bytes
       !== FIXTURE_026_RSD_T02_NULL_PROTOTYPE_IMPLEMENTATION_SHA256
+    || runnerReleaseParent?.role !== "parameterized-runner-release-closure"
+    || runnerReleaseParent.sha256_exact_bytes
+      !== FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_EXACT_BYTES_SHA256
     || !Array.isArray(ladderStatuses)
     || ladderStatuses.join("|") !== [
       "fixed-conformance-reference",
@@ -196,7 +266,7 @@ export function assertFixture026RsdT02NullMaturationDesign(design) {
       design.fit_contract.hyperparameters_selected_inside_fit_only.includes(coefficient)
     ))
     || design.fit_contract.deterministic_tie_break_frozen_before_trial_outcomes !== true
-    || design.fit_contract.affected_fitting_blockers?.length !== 4
+    || design.fit_contract.affected_fitting_blockers?.length !== 3
     || design.calibration_and_abstention_contract.calibration_may_change_model_weights
       !== false
     || design.calibration_and_abstention_contract.final_numeric_common_resource_caps_frozen_before_calibration
@@ -218,14 +288,16 @@ export function assertFixture026RsdT02NullMaturationDesign(design) {
     || design.promotion_gates?.comparison_release?.length !== 10
     || design.promotion_gates?.energy_comparison_conditional?.length !== 1
     || Object.values(design.promotion_gates).flat()
-      .filter(({ satisfied }) => satisfied).length !== 4
+      .filter(({ satisfied }) => satisfied).length !== 5
     || design.promotion_gates.null_maturity.some(({ gate, satisfied }) => (
       satisfied && ![
+        "validated-parameterized-transcript-policy-resource-runner",
         "trainable-state-space-prototype-passes",
         "trainable-recurrent-prototype-passes",
       ].includes(gate)
     ))
     || [
+      "validated-parameterized-transcript-policy-resource-runner",
       "trainable-state-space-prototype-passes",
       "trainable-recurrent-prototype-passes",
     ].some((requiredGate) => !design.promotion_gates.null_maturity.some(({ gate, satisfied }) => (
@@ -246,11 +318,11 @@ export function assertFixture026RsdT02NullMaturationDesign(design) {
     ))
     || design.promotion_gates.energy_comparison_conditional[0].gate
       !== "measured-energy-meter-protocol-frozen"
-    || currentAuthority.active_fitting_blocker_count !== 4
+    || currentAuthority.active_fitting_blocker_count !== 3
     || currentAuthority.applicable_gate_count !== 20
     || currentAuthority.registered_gate_count !== 21
-    || currentAuthority.satisfied_gate_count !== 4
-    || currentAuthority.unsatisfied_gate_count !== 16
+    || currentAuthority.satisfied_gate_count !== 5
+    || currentAuthority.unsatisfied_gate_count !== 15
     || design.mature_null_gate_satisfied !== currentAuthority.mature_null_gate_satisfied
     || design.affected_fitting_permitted !== currentAuthority.affected_fitting_permitted
     || design.comparison_inference_permitted !== false
@@ -270,7 +342,30 @@ export function assertFixture026RsdT02NullMaturationParents({ design, sourceByte
       refuse(`parent bytes drifted for ${parent.path}`);
     }
   }
-  if (sourceBytesByPath.size !== design.parent_artifacts.length) {
+  const releaseParent = design.parent_artifacts.find(({ role }) => (
+    role === "parameterized-runner-release-closure"
+  ));
+  let release;
+  try {
+    release = JSON.parse(Buffer.from(sourceBytesByPath.get(releaseParent.path)).toString("utf8"));
+  } catch {
+    refuse("parameterized runner release is not valid UTF-8 JSON");
+  }
+  assertFixture026RsdT02ParameterizedRunnerRelease(release);
+  for (const artifact of release.release_artifacts) {
+    const bytes = sourceBytesByPath.get(artifact.path);
+    if (!(bytes instanceof Uint8Array)) {
+      refuse(`missing exact runner-release bytes for ${artifact.path}`);
+    }
+    if (sha256Hex(bytes) !== artifact.sha256_exact_bytes) {
+      refuse(`runner-release bytes drifted for ${artifact.path}`);
+    }
+  }
+  const registeredPaths = new Set([
+    ...design.parent_artifacts.map(({ path }) => path),
+    ...release.release_artifacts.map(({ path }) => path),
+  ]);
+  if (sourceBytesByPath.size !== registeredPaths.size) {
     refuse("parent source map contains unregistered files");
   }
   return true;

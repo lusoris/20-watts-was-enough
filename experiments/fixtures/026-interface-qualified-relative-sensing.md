@@ -671,26 +671,29 @@ registry metadata do not enter scientific identity. Full registry, population-
 design and model-source bytes remain explicit provenance. The
 coverage audit remains failed: log-fold, feedback-present and
 channel-local-present have one lineage each, while memory-negative has none.
-The packets do not replace the 35-projection conformance packet. A separate
-fixed-instance conformance runner now materializes all 26 schedules and 39,962
-causal sample rows for one generated instance, constructs an allowlisted policy
-view, and records nine chained terminal response/resource slots. Its only
-successful executor is an in-process digest abstention. It has no content-
-addressed 26-projection policy bundle, fresh child isolation, semantic replay
-of real policy outputs, or durable disk checkpoint, so the registered runner
-gate remains open.
+The packets do not replace the 35-projection conformance packet. A fixed-
+instance conformance runner materializes all 26 schedules and 39,962 causal
+sample rows for one generated instance, constructs an allowlisted policy view,
+and records nine chained terminal response/resource slots. The exact-bound
+integrated release adds a content-addressed 26-projection abstention policy, a
+fresh restricted child, semantic replay, an ownership-bound durable instance
+ledger, and a bounded outer ledger. It traverses all 20 public instances and
+receipts 520 episodes, 799,240 transcript rows and 180 terminal arm records
+without retaining outer causal payloads or endpoints. This composition
+satisfies only the registered parameterized-runner infrastructure gate; it does
+not execute a trained candidate or generic null and remains `NO_RESULT`.
 
 Two deterministic learned generic-null prototypes now occupy level two of six:
 one causal latent state-space model and one compact GRU-style recurrence. A
 post-validation adapter can feed either prototype the fixed-instance causal
 view without schedule, identity, truth or provenance fields. Neither model is
 calibrated, selected, frozen for comparison, or integrated into the isolated
-runner. The null-maturation contract therefore closes only those two prototype
-gates. Together with the registry and generator prerequisites, four of 20
-applicable non-energy gates are satisfied; eight null-maturity and eight
-comparison-release gates remain open. The measured-energy meter gate remains
-conditional on a measured-energy claim, and four shared blockers still prevent
-affected fitting.
+runner. The null-maturation contract closes those two prototype gates and the
+parameterized-runner infrastructure gate. Together with the registry and
+generator prerequisites, five of 20 applicable non-energy gates are satisfied
+and 15 remain open: seven intrinsic null-maturity and eight comparison-release
+gates. The measured-energy meter gate remains conditional on a measured-energy
+claim, and three shared blockers still prevent affected fitting.
 
 An additive method-check analyzer implements the four registered paired
 endpoint contrasts using equal fixed-family weights, a deterministic centered
@@ -705,7 +708,9 @@ exact released analyzer before its power gate can close, as required by
 See the [family registry](../workstation/fixture-026/configs/rsd-t02-system-family-registry.json),
 [generator](../workstation/fixture-026/rsd-t02-system-family-generator.mjs),
 [null-maturation design](../workstation/fixture-026/configs/rsd-t02-null-maturation-design.json),
+[parameterized-runner release](../workstation/fixture-026/configs/rsd-t02-parameterized-runner-release.json),
 [execution-foundations audit](../../research/audits/2026-08-27-rsd-t02-workstation-execution-foundations.md),
+[population execution diagnostic](../../research/audits/2026-08-27-rsd-t02-population-execution-isolation-calibration.md),
 and [Decision 0022](../../decisions/0022-separate-fixed-instance-construction-from-conformance-runtime.md).
 
 **Kill rule.** Kill attribution if step fit or hidden provenance supplies the

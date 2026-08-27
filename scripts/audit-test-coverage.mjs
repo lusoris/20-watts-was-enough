@@ -332,6 +332,31 @@ for (const claim of claims.filter((claim) => claim.tier === "ledger-only")) {
   if (!dispositionByClaim.has(claim.id)) dispositionErrors.push(`Missing ledger-only disposition for ${claim.id}`);
 }
 
+const proposedBacklogPath = path.join(root, "experiments", "proposed", "README.md");
+let proposedBacklogBody = "";
+try {
+  proposedBacklogBody = await readFile(proposedBacklogPath, "utf8");
+} catch (error) {
+  dispositionErrors.push(`experiments/proposed/README.md: cannot read proposed-artifact backlog (${error.message})`);
+}
+const proposedBacklogTargets = [
+  ...proposedBacklogBody.matchAll(/^#{2,3}\s+`(proposed:[a-z0-9-]+)`\s*$/gm),
+].map((match) => match[1]);
+const proposedBacklogTargetSet = new Set(proposedBacklogTargets);
+for (const target of proposedBacklogTargets) {
+  if (proposedBacklogTargets.indexOf(target) !== proposedBacklogTargets.lastIndexOf(target)) {
+    dispositionErrors.push(`experiments/proposed/README.md: duplicate backlog heading ${target}`);
+  }
+}
+for (const [id, disposition] of dispositionByClaim) {
+  if (disposition.disposition !== "new-artifact-needed") continue;
+  for (const target of disposition.targets ?? []) {
+    if (!proposedBacklogTargetSet.has(target)) {
+      dispositionErrors.push(`${disposition.source}: ${id} names undocumented backlog target ${target}`);
+    }
+  }
+}
+
 if (dispositionErrors.length) {
   throw new Error(`Claim-disposition validation failed:\n- ${dispositionErrors.join("\n- ")}`);
 }

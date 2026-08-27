@@ -246,7 +246,9 @@ From the repository root:
 
 ```powershell
 npm run test:workstation:fixture-026:foundations
+npm run test:workstation:fixture-026:execution-v52
 node experiments/workstation/fixture-026/build-rsd-t02-policy-bundle.mjs --check
+node experiments/workstation/fixture-026/build-rsd-t02-fixed-instance-conformance-policy.mjs --check
 node experiments/workstation/fixture-026/runner.mjs prepare --profile smoke
 node experiments/workstation/fixture-026/runner.mjs smoke --profile smoke --output experiments/workstation/runs/fixture-026-smoke --resume false
 node experiments/workstation/fixture-026/runner.mjs run --profile development --output experiments/workstation/runs/fixture-026-development --resume false
@@ -431,13 +433,11 @@ runtime or malformed responses into terminal charged abstentions without
 retry. Partial object artifacts resume deterministically and retain the exact
 prefix.
 
-This is transcript and resource conformance, not actual policy execution. The
-only successful executor is an in-process built-in digest abstention. There is
-no content-addressed 26-projection policy bundle, fresh child process, semantic
-replay of a real policy, or durable on-disk checkpoint. The runner does not
-write, flush, atomically publish, reopen, or lock run artifacts. Its machine
-contract therefore keeps `design_gate_satisfied=false`, comparison inference
-false, claim eligibility false, and `NO_RESULT`.
+This base module is transcript and resource conformance, not actual policy
+execution. Its only successful executor is an in-process built-in digest
+abstention, and object resume is not durable. The separate overlay described
+below adds a content-addressed restricted child and on-disk recovery without
+changing the base artifact or granting comparison authority.
 
 - [`configs/rsd-t02-fixed-instance-runner.json`](configs/rsd-t02-fixed-instance-runner.json)
 - [`rsd-t02-fixed-instance-runner.schema.json`](rsd-t02-fixed-instance-runner.schema.json)
@@ -451,6 +451,86 @@ tamper and reorder rejection, terminal failure accounting, malformed-input
 closure and a bounded single-thread CPU path. They do not establish real policy
 semantics, process isolation, durable recovery, measured resources,
 comparison validity or scientific correctness of the registered families.
+
+### Isolated policy replay and durable fixed-instance recovery
+
+The additive isolated overlay binds the fixed packet to a content-addressed
+26-projection policy bundle and starts one fresh restricted Node child. The
+policy receives only the recursively allowlisted causal view. Filesystem write,
+network, environment, clock, randomness, evaluator truth and dynamic code are
+not exposed to policy code. The current policy returns deterministic
+abstentions for all nine arm slots; it is a semantic boundary check, not an
+implementation of the candidate or null estimators.
+
+Each terminal arm record is synchronized into an exclusive owner-bound raw
+JSONL ledger. Raw-ledger replay is authoritative over a missing or stale
+checkpoint; torn, altered, foreign-owner, aliased-path, redirected-leaf and
+oversized recovery inputs fail closed. Session operations are serialized so
+append, checkpoint and close cannot race the lease. The exact raw leaf handle,
+filesystem identity and expected byte length remain bound throughout the open
+session. Lock release atomically retires the verified lock under a randomized
+name and deliberately retains that retired artifact instead of risking a final
+pathname-delete race; acquisition never auto-cleans retired locks. The contract
+claims only the requested file-sync operations, not survival of arbitrary
+storage or power-loss behavior.
+
+- [`configs/rsd-t02-fixed-instance-isolated-durable.json`](configs/rsd-t02-fixed-instance-isolated-durable.json)
+- [`rsd-t02-fixed-instance-conformance-policy.source.js`](rsd-t02-fixed-instance-conformance-policy.source.js)
+- [`build-rsd-t02-fixed-instance-conformance-policy.mjs`](build-rsd-t02-fixed-instance-conformance-policy.mjs)
+- [`rsd-t02-fixed-instance-conformance-policy-worker.mjs`](rsd-t02-fixed-instance-conformance-policy-worker.mjs)
+- [`rsd-t02-fixed-instance-durable-store.mjs`](rsd-t02-fixed-instance-durable-store.mjs)
+- [`rsd-t02-fixed-instance-durable-store.test.mjs`](rsd-t02-fixed-instance-durable-store.test.mjs)
+- [`rsd-t02-run-lock.mjs`](rsd-t02-run-lock.mjs)
+- [`rsd-t02-run-lock.test.mjs`](rsd-t02-run-lock.test.mjs)
+- [`rsd-t02-fixed-instance-isolated-durable-runner.mjs`](rsd-t02-fixed-instance-isolated-durable-runner.mjs)
+- [`rsd-t02-fixed-instance-isolated-durable-runner.schema.json`](rsd-t02-fixed-instance-isolated-durable-runner.schema.json)
+- [`rsd-t02-fixed-instance-isolated-durable-runner.test.mjs`](rsd-t02-fixed-instance-isolated-durable-runner.test.mjs)
+
+### Complete public-development population receipts
+
+The population runner crosses all five registered development families with
+all four conformance draw indices, deduplicates by canonical system-instance
+identity, and processes the resulting 20 independent instances in frozen
+draw-major/family-order sequence. The complete deterministic workload contains
+520 episodes, 799,240 transcript rows and 180 arm invocations. Family weights
+are exactly 1/5 and within-family instance weights are exactly 1/4, but those
+weights remain design metadata because no endpoint aggregation executes.
+
+The compact artifact retains hashes and workload receipts rather than full
+causal views or fixed-run payloads. Every imported prefix is replay-verified
+against the frozen design, registry, plan and fixed-runner inputs. Its hash
+chain provides internal content/order integrity only; without an externally
+retained head it cannot prove that a valid prefix was not rolled back.
+
+- [`configs/rsd-t02-public-development-population-runner.json`](configs/rsd-t02-public-development-population-runner.json)
+- [`rsd-t02-public-development-population-runner.schema.json`](rsd-t02-public-development-population-runner.schema.json)
+- [`rsd-t02-public-development-population-runner.mjs`](rsd-t02-public-development-population-runner.mjs)
+- [`rsd-t02-public-development-population-runner.test.mjs`](rsd-t02-public-development-population-runner.test.mjs)
+
+### Integrated isolated durable population execution
+
+The integrated runner composes the complete 20-instance traversal with the
+restricted child and durable fixed-instance layer. Each canonical instance has
+one identity-keyed directory and must reach a complete, current nine-arm
+summary before one compact outer record can append. If a process stops after
+finishing an instance but before that outer append, reopening validates the
+completed directory and appends it exactly once. Reopening a completed panel
+revalidates all 20 summaries and performs zero new scientific-unit work.
+
+The outer raw ledger and checkpoint have bounded recovery, owner and filesystem
+identity checks, one exclusive writer, and the same retained-lock retirement
+rule as the fixed-instance layer. Tests cover a partial restart, the
+post-instance/pre-outer crash window, a zero-remaining restart, foreign-owner
+contention, replaced raw leaves, aliases, torn or altered records, oversized
+inputs, and a checkpoint ahead of the raw ledger. The completed construction
+contains 20 outer records, 20 instance directories, and 180 terminal arm
+records. It contains no endpoints, causal payloads, trained policy results,
+model comparison, or claim authority; every record remains `NO_RESULT`.
+
+- [`configs/rsd-t02-public-development-isolated-durable-population.json`](configs/rsd-t02-public-development-isolated-durable-population.json)
+- [`rsd-t02-public-development-isolated-durable-population-runner.mjs`](rsd-t02-public-development-isolated-durable-population-runner.mjs)
+- [`rsd-t02-public-development-isolated-durable-population-runner.schema.json`](rsd-t02-public-development-isolated-durable-population-runner.schema.json)
+- [`rsd-t02-public-development-isolated-durable-population-runner.test.mjs`](rsd-t02-public-development-isolated-durable-population-runner.test.mjs)
 
 ### Level-two null prototypes and post-validation adapter
 
@@ -497,11 +577,18 @@ The original `B-STATE-SPACE` and `B-RECURRENT` policies in the isolated
 35-projection construction bundle remain level-one fixed conformance
 references. The additive learned modules are separate level-two prototypes.
 Only level five, `confirmation-frozen-mature-null`, satisfies the population
-gate. Incomplete primary lineage coverage, absent sealed outer-family
-templates, absent instance-role assignment, uncalibrated models and the open
-isolated 26-projection policy-execution gate still block affected fitting and
-comparison.
+gate. The isolated parameterized runner gate is now satisfied by the
+exact-bound 20-instance execution release. Incomplete primary lineage coverage,
+absent sealed outer-family templates, absent instance-role assignment,
+uncalibrated models and all later model-freeze, calibration, resource-audit and
+comparison gates still block affected fitting and comparison.
 
+The non-energy ledger therefore has five satisfied applicable gates and 15
+open gates. Seven intrinsic null-maturity gates and three affected-fitting
+blockers remain; mature-null, comparison and claim authority are false.
+
+- [`configs/rsd-t02-parameterized-runner-release.json`](configs/rsd-t02-parameterized-runner-release.json)
+- [`rsd-t02-parameterized-runner-release.schema.json`](rsd-t02-parameterized-runner-release.schema.json)
 - [`configs/rsd-t02-null-maturation-design.json`](configs/rsd-t02-null-maturation-design.json)
 - [`rsd-t02-null-maturation-design.schema.json`](rsd-t02-null-maturation-design.schema.json)
 - [`rsd-t02-null-maturation-contract.mjs`](rsd-t02-null-maturation-contract.mjs)
@@ -606,9 +693,63 @@ and calibration against data-dependent bootstrap degeneracy.
 - [`generate-plots.mjs`](../../../scripts/generate-plots.mjs)
 - [`rsd-t02-power-effect-curve.svg`](../../../public/plots/rsd-t02-power-effect-curve.svg)
 
+### Synthetic exact-analyzer calibration diagnostic
+
+The additive pilot-transcript module samples declared four-dimensional paired
+contrast distributions, applies pre-response attrition and registered runtime-
+failure penalties, and invokes the exact existing bootstrap/Holm analyzer for
+every synthetic transcript. Scenario roles are executable contracts: the null
+requires zero contrasts and arm-symmetric failure probabilities; the
+alternative requires a registered candidate improvement; and the degeneracy
+hostiles bind their small-sample or zero-variance construction.
+
+Scientific system IDs and transcript generation bind a DGP-only fingerprint of
+the scenario, simulation key, registered family order, baselines, attrition,
+failure probabilities, contrast means and covariances. Reporting confidence,
+the total replicate ceiling, bootstrap count, alpha and endpoint penalties do
+not rotate that scientific identity. The full configuration hash remains in
+the transcript/report audit root, so report-control changes are visible without
+changing a common generated replicate prefix or its analyzer point decision.
+
+For $k$ events among $R$ simulation replicates, the reported plus-one point
+diagnostic is
+
+$$
+\widetilde p_{\mathrm{MC}}=\frac{k+1}{R+1},
+$$
+
+while the Wilson interval is computed from the observed binomial count $k/R$.
+The canonical public configuration uses 99 replicates per scenario and 1,000
+bootstrap draws per hypothesis. It records 6/99 any-rejection events under the
+declared synthetic null and 55/99 under the declared minimum-relevant-effects
+scenario. The null Wilson interval, 0.028--0.126, spans the 0.05 reference; the
+alternative interval, 0.457--0.650, is far below the illustrative 0.90 target.
+Both two-instance hostiles fail bootstrap resolution in all 99 replicates, so
+this diagnostic rejects acceptance of the current planning assumptions.
+
+Those counts are deterministic synthetic method behavior, not achieved power,
+model performance, pilot evidence or a frozen sample-size plan. The narrow
+normal-versus-bootstrap implementation blocker closes only when the required
+scenario coverage and accepted analyzer executions are present. Reviewed real
+pilot bytes, a frozen analyzer release, joint margins/target/key/penalties and
+an accepted final count remain open.
+
+![Observed any-rejection frequencies and Wilson Monte Carlo intervals for the declared synthetic null and alternative, beside bootstrap-resolution failure frequencies for both small-sample hostiles.](../../../public/plots/rsd-t02-bootstrap-calibration.svg)
+
+- [`configs/rsd-t02-pilot-transcript-calibration.json`](configs/rsd-t02-pilot-transcript-calibration.json)
+- [`rsd-t02-pilot-transcript-calibration.schema.json`](rsd-t02-pilot-transcript-calibration.schema.json)
+- [`rsd-t02-pilot-transcript-calibration-output.schema.json`](rsd-t02-pilot-transcript-calibration-output.schema.json)
+- [`rsd-t02-pilot-transcript-calibration.mjs`](rsd-t02-pilot-transcript-calibration.mjs)
+- [`rsd-t02-pilot-transcript-calibration.test.mjs`](rsd-t02-pilot-transcript-calibration.test.mjs)
+- [`rsd-t02-bootstrap-calibration.svg`](../../../public/plots/rsd-t02-bootstrap-calibration.svg)
+
 The dated implementation audit records the composition, test boundaries and
 remaining gates in one place:
 [RSD-T02 workstation execution foundations](../../../research/audits/2026-08-27-rsd-t02-workstation-execution-foundations.md).
+The later same-day
+[population execution, isolation, and calibration diagnostic](../../../research/audits/2026-08-27-rsd-t02-population-execution-isolation-calibration.md)
+records the complete-panel, restricted-child, durable-recovery, synthetic-
+calibration and adversarial-review layers.
 
 Run identity also freezes the actual Node version, V8 version, libuv version,
 platform, architecture, endianness, OS release, numeric model, and Math API

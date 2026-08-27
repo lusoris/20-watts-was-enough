@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-public-development-isolated-durable-population-config.v1",
+  "artifact": "fixture-026",
+  "track": "RSD-T02",
+  "partition": "development",
+  "authority": "public-development-isolated-durable-population-conformance-only",
+  "population_runner_binding": {
+    "contract_version": "fixture-026.rsd-t02-public-development-population-runner.v1",
+    "config_sha256": "7c9948cbabb58f2da76712e6c3040b81e1efa02b83a271742efbeeb2ea7d8419"
+  },
+  "fixed_instance_isolated_durable_binding": {
+    "contract_version": "fixture-026.rsd-t02-fixed-instance-isolated-durable-config.v1",
+    "config_sha256": "00fe1eab4c228ab1aca1d7d0760363f17bc9dbb2ff93942c06a9b8e36d42b198"
+  },
+  "population_contract": {
+    "canonical_instance_count": 20,
+    "registered_arms_per_instance": 9,
+    "processing_order": "conformance-draw-index-major-then-registry-family-order",
+    "instance_directory_format": "sequence-three-decimal-digits--canonical-instance-id",
+    "fixed_instance_output_leaf": "durable",
+    "outer_append_requires_instance_summary": "complete-current-nine-of-nine",
+    "compact_population_receipt": "deterministic-replay-bound-fields-and-source-record-sha256-v1",
+    "isolated_durable_summary_retention": "complete-public-summary-and-canonical-sha256",
+    "full_causal_payload_retained_in_outer_ledger": false,
+    "endpoint_aggregation_executed": false,
+    "model_comparison_executed": false
+  },
+  "durability": {
+    "ledger_format": "fixture-026.rsd-t02-public-development-isolated-durable-population-ledger.v1",
+    "raw_path": "population-run.jsonl",
+    "checkpoint_path": "population-checkpoint.json",
+    "instances_directory": "instances",
+    "writer_lock_anchor": "population-writer",
+    "exclusive_population_writer_lock": true,
+    "owner_identity_bound_to_records": true,
+    "foreign_lock_auto_break": false,
+    "owner_authentication": "not-provided-caller-custodies-owner-id",
+    "abandoned_lock_recovery": "manual-only-no-auto-break",
+    "lock_retirement": "retain-randomized-retired-lock-artifact-manual-cleanup-only",
+    "raw_ledger_is_resume_authority": true,
+    "append_sync": "complete-lf-json-record-then-filehandle-sync",
+    "checkpoint_sync": "temporary-sync-rename-destination-sync",
+    "power_loss_guarantee": "not-claimed-beyond-requested-file-sync",
+    "checkpoint_consistency": "current-or-stale-but-never-ahead-of-raw",
+    "torn_tail_policy": "refuse-without-repair",
+    "prefix_revalidation": "reopen-every-completed-instance-and-compare-complete-current-summary",
+    "uncommitted_next_directory_revalidation": "reopen-and-validate-if-present",
+    "integrity_scope": "bounded-raw-and-checkpoint-consistency-no-external-rollback-head",
+    "max_records": 20,
+    "max_raw_bytes": 1048576,
+    "max_checkpoint_bytes": 65536,
+    "max_instance_directories": 20
+  },
+  "execution": {
+    "maximum_new_instances_per_invocation": 20,
+    "checkpoint_each_instance_default": true,
+    "crash_after_instance_before_outer_append_is_resumable": true,
+    "duplicate_instance_outer_append_permitted": false
+  },
+  "comparison_inference_permitted": false,
+  "claim_eligible": false,
+  "result_label": "NO_RESULT"
+}

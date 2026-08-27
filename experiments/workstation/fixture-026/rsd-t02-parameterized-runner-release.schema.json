@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t02-parameterized-runner-release.v1.schema.json",
+  "title": "Fixture 026 RSD-T02 parameterized runner release closure",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "contract_version",
+    "artifact",
+    "track",
+    "gate",
+    "authority",
+    "closure_rule",
+    "release_artifacts",
+    "foundation_gates",
+    "limitations",
+    "comparison_inference_permitted",
+    "claim_eligible",
+    "result_label"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": {
+      "const": "fixture-026.rsd-t02-parameterized-runner-release.v1"
+    },
+    "artifact": { "const": "fixture-026" },
+    "track": { "const": "RSD-T02" },
+    "gate": {
+      "const": "validated-parameterized-transcript-policy-resource-runner"
+    },
+    "authority": {
+      "const": "public-development-infrastructure-release-binding-only"
+    },
+    "closure_rule": {
+      "const": "all-listed-local-runtime-artifacts-required-at-exact-bytes"
+    },
+    "release_artifacts": {
+      "type": "array",
+      "minItems": 20,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "path", "sha256_exact_bytes"],
+        "properties": {
+          "role": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "path": { "type": "string", "minLength": 3 },
+          "sha256_exact_bytes": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "foundation_gates": {
+      "const": {
+        "complete_twenty_instance_traversal": true,
+        "content_addressed_twenty_six_projection_policy": true,
+        "fresh_restricted_child_per_fixed_packet": true,
+        "semantic_response_replay": true,
+        "durable_fixed_instance_and_outer_resume": true,
+        "live_directory_identity_revalidation": true
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 3 }
+    },
+    "comparison_inference_permitted": { "const": false },
+    "claim_eligible": { "const": false },
+    "result_label": { "const": "NO_RESULT" }
+  },
+  "x-runtime-validator": {
+    "module": "rsd-t02-null-maturation-contract.mjs",
+    "export": "assertFixture026RsdT02ParameterizedRunnerRelease",
+    "test": "rsd-t02-null-maturation-contract.test.mjs"
+  }
+}

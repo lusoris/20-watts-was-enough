@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-fixed-instance-isolated-durable-config.v1",
+  "artifact": "fixture-026",
+  "track": "RSD-T02",
+  "partition": "development",
+  "authority": "public-development-fixed-instance-isolated-durable-conformance-only",
+  "fixed_instance_runner_config_sha256": "493b188025fa77e1c178f7c869d961f09a268f26cdcefdc1dba0bf6758263db2",
+  "policy_bundle": {
+    "relative_path": "policy-bundles/bf7b99d5ea169e33fdf3c4ba825ebe4085fceac97e973514e223881e765222e7.js",
+    "sha256": "bf7b99d5ea169e33fdf3c4ba825ebe4085fceac97e973514e223881e765222e7",
+    "utf8_bytes": 6519,
+    "content_address": "sha256:bf7b99d5ea169e33fdf3c4ba825ebe4085fceac97e973514e223881e765222e7"
+  },
+  "worker": {
+    "relative_path": "rsd-t02-fixed-instance-conformance-policy-worker.mjs",
+    "sha256": "22824cceffaa727dfdee8faf86d4c938f681fc325265f6062697dcb76fb77163",
+    "utf8_bytes": 11222
+  },
+  "isolation": {
+    "execution_mode": "fresh-node-child-hardened-vm-per-fixed-packet",
+    "fresh_process": true,
+    "filesystem_read_allowlist": "exact-content-addressed-policy-bundle-only",
+    "filesystem_write_exposed_to_policy": false,
+    "network_exposed_to_policy": false,
+    "environment_exposed_to_policy": false,
+    "clock_exposed_to_policy": false,
+    "random_exposed_to_policy": false,
+    "evaluator_exposed_to_policy": false,
+    "dynamic_code_generation_exposed_to_policy": false,
+    "timeout_ms": 15000,
+    "max_request_bytes": 25165824,
+    "max_response_bytes": 262144
+  },
+  "durability": {
+    "ledger_format": "fixture-026.rsd-t02-fixed-instance-disk-ledger.v1",
+    "raw_path": "fixed-instance-run.jsonl",
+    "checkpoint_path": "fixed-instance-checkpoint.json",
+    "exclusive_writer_lock": true,
+    "foreign_lock_auto_break": false,
+    "owner_identity_bound_to_records": true,
+    "append_sync": "complete-lf-json-record-then-filehandle-sync",
+    "checkpoint_sync": "temporary-sync-rename-destination-sync",
+    "resume_authority": "raw-ledger-reconstruction",
+    "torn_tail_policy": "refuse-without-repair",
+    "power_loss_guarantee": "not-claimed-beyond-requested-file-sync",
+    "owner_authentication": "not-provided-caller-custodies-owner-id",
+    "abandoned_lock_recovery": "manual-only-no-auto-break",
+    "max_records": 9,
+    "max_raw_bytes": 8388608,
+    "max_checkpoint_bytes": 65536
+  },
+  "foundation_gates": {
+    "content_addressed_26_projection_policy_bundle": true,
+    "fresh_restricted_child_per_fixed_packet": true,
+    "deterministic_full_view_semantic_replay_equivalence": true,
+    "ownership_safe_append_only_disk_resume": true,
+    "comparison_policy_execution": false,
+    "claim_eligible_execution": false
+  },
+  "comparison_inference_permitted": false,
+  "claim_eligible": false,
+  "result_label": "NO_RESULT"
+}

@@ -16,6 +16,14 @@
 - **Result authority:** `NO_RESULT`; comparison inference and claim eligibility
   remain false throughout
 
+> **Later same-day execution layer:** the
+> [population execution, isolation, and calibration diagnostic](2026-08-27-rsd-t02-population-execution-isolation-calibration.md)
+> adds the complete receipt-only public panel, a content-addressed restricted
+> child with durable fixed-instance recovery, and exact-analyzer synthetic
+> calibration. This document remains the traceable snapshot of the preceding
+> one-instance/object-resume foundation; its open-boundary statements should
+> be read at that checkpoint.
+
 ## Executive finding
 
 Four public-development foundations now execute, but they deliberately stop at

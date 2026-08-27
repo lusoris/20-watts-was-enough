@@ -1,0 +1,152 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.invalid/schemas/fixture-026-rsd-t02-fixed-instance-isolated-durable-v1.json",
+  "title": "Fixture 026 RSD-T02 fixed-instance isolated durable conformance",
+  "oneOf": [
+    { "$ref": "#/definitions/config" },
+    { "$ref": "#/definitions/summary" }
+  ],
+  "x-runtime-validator": {
+    "canonical_config_sha256": "00fe1eab4c228ab1aca1d7d0760363f17bc9dbb2ff93942c06a9b8e36d42b198",
+    "note": "Runtime validation additionally binds exact policy/worker bytes, child protocol, runner replay, disk record chain, writer ownership, and checkpoint identity."
+  },
+  "definitions": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "foundationGates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "content_addressed_26_projection_policy_bundle",
+        "fresh_restricted_child_per_fixed_packet",
+        "deterministic_full_view_semantic_replay_equivalence",
+        "ownership_safe_append_only_disk_resume",
+        "comparison_policy_execution",
+        "claim_eligible_execution"
+      ],
+      "properties": {
+        "content_addressed_26_projection_policy_bundle": { "const": true },
+        "fresh_restricted_child_per_fixed_packet": { "const": true },
+        "deterministic_full_view_semantic_replay_equivalence": { "const": true },
+        "ownership_safe_append_only_disk_resume": { "const": true },
+        "comparison_policy_execution": { "const": false },
+        "claim_eligible_execution": { "const": false }
+      }
+    },
+    "config": {
+      "const": {
+        "schema": 1,
+        "contract_version": "fixture-026.rsd-t02-fixed-instance-isolated-durable-config.v1",
+        "artifact": "fixture-026",
+        "track": "RSD-T02",
+        "partition": "development",
+        "authority": "public-development-fixed-instance-isolated-durable-conformance-only",
+        "fixed_instance_runner_config_sha256": "493b188025fa77e1c178f7c869d961f09a268f26cdcefdc1dba0bf6758263db2",
+        "policy_bundle": {
+          "relative_path": "policy-bundles/bf7b99d5ea169e33fdf3c4ba825ebe4085fceac97e973514e223881e765222e7.js",
+          "sha256": "bf7b99d5ea169e33fdf3c4ba825ebe4085fceac97e973514e223881e765222e7",
+          "utf8_bytes": 6519,
+          "content_address": "sha256:bf7b99d5ea169e33fdf3c4ba825ebe4085fceac97e973514e223881e765222e7"
+        },
+        "worker": {
+          "relative_path": "rsd-t02-fixed-instance-conformance-policy-worker.mjs",
+          "sha256": "22824cceffaa727dfdee8faf86d4c938f681fc325265f6062697dcb76fb77163",
+          "utf8_bytes": 11222
+        },
+        "isolation": {
+          "execution_mode": "fresh-node-child-hardened-vm-per-fixed-packet",
+          "fresh_process": true,
+          "filesystem_read_allowlist": "exact-content-addressed-policy-bundle-only",
+          "filesystem_write_exposed_to_policy": false,
+          "network_exposed_to_policy": false,
+          "environment_exposed_to_policy": false,
+          "clock_exposed_to_policy": false,
+          "random_exposed_to_policy": false,
+          "evaluator_exposed_to_policy": false,
+          "dynamic_code_generation_exposed_to_policy": false,
+          "timeout_ms": 15000,
+          "max_request_bytes": 25165824,
+          "max_response_bytes": 262144
+        },
+        "durability": {
+          "ledger_format": "fixture-026.rsd-t02-fixed-instance-disk-ledger.v1",
+          "raw_path": "fixed-instance-run.jsonl",
+          "checkpoint_path": "fixed-instance-checkpoint.json",
+          "exclusive_writer_lock": true,
+          "foreign_lock_auto_break": false,
+          "owner_identity_bound_to_records": true,
+          "append_sync": "complete-lf-json-record-then-filehandle-sync",
+          "checkpoint_sync": "temporary-sync-rename-destination-sync",
+          "resume_authority": "raw-ledger-reconstruction",
+          "torn_tail_policy": "refuse-without-repair",
+          "power_loss_guarantee": "not-claimed-beyond-requested-file-sync",
+          "owner_authentication": "not-provided-caller-custodies-owner-id",
+          "abandoned_lock_recovery": "manual-only-no-auto-break",
+          "max_records": 9,
+          "max_raw_bytes": 8388608,
+          "max_checkpoint_bytes": 65536
+        },
+        "foundation_gates": {
+          "content_addressed_26_projection_policy_bundle": true,
+          "fresh_restricted_child_per_fixed_packet": true,
+          "deterministic_full_view_semantic_replay_equivalence": true,
+          "ownership_safe_append_only_disk_resume": true,
+          "comparison_policy_execution": false,
+          "claim_eligible_execution": false
+        },
+        "comparison_inference_permitted": false,
+        "claim_eligible": false,
+        "result_label": "NO_RESULT"
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "contract_version", "status", "run_id", "owner_identity_sha256",
+        "fixed_instance_runner_config_sha256", "isolated_durable_config_sha256",
+        "policy_bundle_sha256", "worker_sha256", "policy_view_sha256",
+        "isolated_execution_receipt_sha256", "records", "registered_arms",
+        "next_arm_index", "scientific_payload_sha256", "hash_chain_sha256",
+        "checkpoint_status", "foundation_gates", "authority",
+        "comparison_inference_permitted", "claim_eligible", "result_label", "no_result"
+      ],
+      "properties": {
+        "schema": { "const": 1 },
+        "contract_version": {
+          "const": "fixture-026.rsd-t02-fixed-instance-durable-summary.v1"
+        },
+        "status": { "enum": ["partial", "complete"] },
+        "run_id": { "$ref": "#/definitions/sha256" },
+        "owner_identity_sha256": { "$ref": "#/definitions/sha256" },
+        "fixed_instance_runner_config_sha256": {
+          "const": "493b188025fa77e1c178f7c869d961f09a268f26cdcefdc1dba0bf6758263db2"
+        },
+        "isolated_durable_config_sha256": {
+          "const": "00fe1eab4c228ab1aca1d7d0760363f17bc9dbb2ff93942c06a9b8e36d42b198"
+        },
+        "policy_bundle_sha256": {
+          "const": "bf7b99d5ea169e33fdf3c4ba825ebe4085fceac97e973514e223881e765222e7"
+        },
+        "worker_sha256": {
+          "const": "22824cceffaa727dfdee8faf86d4c938f681fc325265f6062697dcb76fb77163"
+        },
+        "policy_view_sha256": { "$ref": "#/definitions/sha256" },
+        "isolated_execution_receipt_sha256": { "$ref": "#/definitions/sha256" },
+        "records": { "type": "integer", "minimum": 0, "maximum": 9 },
+        "registered_arms": { "const": 9 },
+        "next_arm_index": { "type": "integer", "minimum": 0, "maximum": 9 },
+        "scientific_payload_sha256": { "$ref": "#/definitions/sha256" },
+        "hash_chain_sha256": { "$ref": "#/definitions/sha256" },
+        "checkpoint_status": { "enum": ["missing", "stale", "current"] },
+        "foundation_gates": { "$ref": "#/definitions/foundationGates" },
+        "authority": {
+          "const": "public-development-fixed-instance-isolated-durable-conformance-only"
+        },
+        "comparison_inference_permitted": { "const": false },
+        "claim_eligible": { "const": false },
+        "result_label": { "const": "NO_RESULT" },
+        "no_result": { "const": true }
+      }
+    }
+  }
+}

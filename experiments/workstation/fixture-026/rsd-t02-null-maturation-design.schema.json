@@ -9,7 +9,7 @@
     "export": "assertFixture026RsdT02NullMaturationDesign",
     "version_export": "FIXTURE_026_RSD_T02_NULL_MATURATION_DESIGN_VERSION",
     "contract_version": "fixture-026.rsd-t02-null-maturation-design.v1",
-    "canonical_design_sha256": "655e44d181de039569fd9c0714c61208e0d20d0a5a0104e3218ab5355737c3bd",
+    "canonical_design_sha256": "54e1f6f9efd91fcd1311b46b43727225f257e2704cfe9fa3c291ea303065642b",
     "test": "rsd-t02-null-maturation-contract.test.mjs"
   },
   "required": [
@@ -28,8 +28,8 @@
     "authority": { "const": "prospective-null-maturation-design-only" },
     "parent_artifacts": {
       "type": "array",
-      "minItems": 11,
-      "maxItems": 11,
+      "minItems": 12,
+      "maxItems": 12,
       "items": {
         "type": "object",
         "additionalProperties": false,
@@ -152,7 +152,7 @@
         "failed_timeout_oom_and_abandoned_trials_charged": { "const": true },
         "restart_is_independent_system_unit": { "const": false },
         "affected_fitting_permitted_now": { "const": false },
-        "affected_fitting_blockers": { "type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": { "type": "string", "minLength": 3 } }
+        "affected_fitting_blockers": { "type": "array", "minItems": 3, "maxItems": 3, "uniqueItems": true, "items": { "type": "string", "minLength": 3 } }
       }
     },
     "calibration_and_abstention_contract": {

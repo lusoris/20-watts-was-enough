@@ -1,0 +1,320 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t02-public-development-isolated-durable-population.v1.schema.json",
+  "title": "Fixture 026 RSD-T02 isolated durable public-development population runner",
+  "oneOf": [
+    { "$ref": "#/definitions/config" },
+    { "$ref": "#/definitions/outerRecord" },
+    { "$ref": "#/definitions/summary" }
+  ],
+  "x-runtime-validator": {
+    "module": "rsd-t02-public-development-isolated-durable-population-runner.mjs",
+    "config_export": "assertFixture026RsdT02PublicDevelopmentIsolatedDurablePopulationConfig",
+    "runner_export": "openFixture026RsdT02PublicDevelopmentIsolatedDurablePopulationRun",
+    "config_version": "fixture-026.rsd-t02-public-development-isolated-durable-population-config.v1",
+    "ledger_version": "fixture-026.rsd-t02-public-development-isolated-durable-population-ledger.v1",
+    "summary_version": "fixture-026.rsd-t02-public-development-isolated-durable-population-summary.v1",
+    "canonical_config_sha256": "d123f5fea68b2a38839b0eca9b1aa8ea82a6abeab568f1aa6354240f57341f66",
+    "test": "rsd-t02-public-development-isolated-durable-population-runner.test.mjs"
+  },
+  "definitions": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "config": {
+      "const": {
+        "schema": 1,
+        "contract_version": "fixture-026.rsd-t02-public-development-isolated-durable-population-config.v1",
+        "artifact": "fixture-026",
+        "track": "RSD-T02",
+        "partition": "development",
+        "authority": "public-development-isolated-durable-population-conformance-only",
+        "population_runner_binding": {
+          "contract_version": "fixture-026.rsd-t02-public-development-population-runner.v1",
+          "config_sha256": "7c9948cbabb58f2da76712e6c3040b81e1efa02b83a271742efbeeb2ea7d8419"
+        },
+        "fixed_instance_isolated_durable_binding": {
+          "contract_version": "fixture-026.rsd-t02-fixed-instance-isolated-durable-config.v1",
+          "config_sha256": "00fe1eab4c228ab1aca1d7d0760363f17bc9dbb2ff93942c06a9b8e36d42b198"
+        },
+        "population_contract": {
+          "canonical_instance_count": 20,
+          "registered_arms_per_instance": 9,
+          "processing_order": "conformance-draw-index-major-then-registry-family-order",
+          "instance_directory_format": "sequence-three-decimal-digits--canonical-instance-id",
+          "fixed_instance_output_leaf": "durable",
+          "outer_append_requires_instance_summary": "complete-current-nine-of-nine",
+          "compact_population_receipt": "deterministic-replay-bound-fields-and-source-record-sha256-v1",
+          "isolated_durable_summary_retention": "complete-public-summary-and-canonical-sha256",
+          "full_causal_payload_retained_in_outer_ledger": false,
+          "endpoint_aggregation_executed": false,
+          "model_comparison_executed": false
+        },
+        "durability": {
+          "ledger_format": "fixture-026.rsd-t02-public-development-isolated-durable-population-ledger.v1",
+          "raw_path": "population-run.jsonl",
+          "checkpoint_path": "population-checkpoint.json",
+          "instances_directory": "instances",
+          "writer_lock_anchor": "population-writer",
+          "exclusive_population_writer_lock": true,
+          "owner_identity_bound_to_records": true,
+          "foreign_lock_auto_break": false,
+          "owner_authentication": "not-provided-caller-custodies-owner-id",
+          "abandoned_lock_recovery": "manual-only-no-auto-break",
+          "lock_retirement": "retain-randomized-retired-lock-artifact-manual-cleanup-only",
+          "raw_ledger_is_resume_authority": true,
+          "append_sync": "complete-lf-json-record-then-filehandle-sync",
+          "checkpoint_sync": "temporary-sync-rename-destination-sync",
+          "power_loss_guarantee": "not-claimed-beyond-requested-file-sync",
+          "checkpoint_consistency": "current-or-stale-but-never-ahead-of-raw",
+          "torn_tail_policy": "refuse-without-repair",
+          "prefix_revalidation": "reopen-every-completed-instance-and-compare-complete-current-summary",
+          "uncommitted_next_directory_revalidation": "reopen-and-validate-if-present",
+          "integrity_scope": "bounded-raw-and-checkpoint-consistency-no-external-rollback-head",
+          "max_records": 20,
+          "max_raw_bytes": 1048576,
+          "max_checkpoint_bytes": 65536,
+          "max_instance_directories": 20
+        },
+        "execution": {
+          "maximum_new_instances_per_invocation": 20,
+          "checkpoint_each_instance_default": true,
+          "crash_after_instance_before_outer_append_is_resumable": true,
+          "duplicate_instance_outer_append_permitted": false
+        },
+        "comparison_inference_permitted": false,
+        "claim_eligible": false,
+        "result_label": "NO_RESULT"
+      }
+    },
+    "fixedTime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["numerator", "denominator", "unit"],
+      "properties": {
+        "numerator": { "type": "integer", "minimum": 1 },
+        "denominator": { "type": "integer", "minimum": 1 },
+        "unit": { "const": "s" }
+      }
+    },
+    "compactReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version", "population_run_id", "sequence",
+        "source_population_record_sha256", "family_id", "instance_id",
+        "parameter_vector_sha256", "fixed_time_constant", "fixed_packet_id",
+        "transcript_set_sha256", "causal_policy_view_sha256",
+        "causal_policy_view_utf8_bytes", "fixed_instance_run_id",
+        "fixed_instance_run_sha256", "workload_sha256", "result_label"
+      ],
+      "properties": {
+        "contract_version": {
+          "const": "fixture-026.rsd-t02-public-development-population-record.v1"
+        },
+        "population_run_id": { "$ref": "#/definitions/sha256" },
+        "sequence": { "type": "integer", "minimum": 0, "maximum": 19 },
+        "source_population_record_sha256": { "$ref": "#/definitions/sha256" },
+        "family_id": { "type": "string", "pattern": "^F-DEV-" },
+        "instance_id": { "$ref": "#/definitions/sha256" },
+        "parameter_vector_sha256": { "$ref": "#/definitions/sha256" },
+        "fixed_time_constant": { "$ref": "#/definitions/fixedTime" },
+        "fixed_packet_id": { "$ref": "#/definitions/sha256" },
+        "transcript_set_sha256": { "$ref": "#/definitions/sha256" },
+        "causal_policy_view_sha256": { "$ref": "#/definitions/sha256" },
+        "causal_policy_view_utf8_bytes": { "type": "integer", "minimum": 1 },
+        "fixed_instance_run_id": { "$ref": "#/definitions/sha256" },
+        "fixed_instance_run_sha256": { "$ref": "#/definitions/sha256" },
+        "workload_sha256": { "$ref": "#/definitions/sha256" },
+        "result_label": { "const": "NO_RESULT" }
+      }
+    },
+    "foundationGates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "content_addressed_26_projection_policy_bundle",
+        "fresh_restricted_child_per_fixed_packet",
+        "deterministic_full_view_semantic_replay_equivalence",
+        "ownership_safe_append_only_disk_resume",
+        "comparison_policy_execution", "claim_eligible_execution"
+      ],
+      "properties": {
+        "content_addressed_26_projection_policy_bundle": { "const": true },
+        "fresh_restricted_child_per_fixed_packet": { "const": true },
+        "deterministic_full_view_semantic_replay_equivalence": { "const": true },
+        "ownership_safe_append_only_disk_resume": { "const": true },
+        "comparison_policy_execution": { "const": false },
+        "claim_eligible_execution": { "const": false }
+      }
+    },
+    "durableSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "contract_version", "status", "run_id", "owner_identity_sha256",
+        "fixed_instance_runner_config_sha256", "isolated_durable_config_sha256",
+        "policy_bundle_sha256", "worker_sha256", "policy_view_sha256",
+        "isolated_execution_receipt_sha256", "records", "registered_arms",
+        "next_arm_index", "scientific_payload_sha256", "hash_chain_sha256",
+        "checkpoint_status", "foundation_gates", "authority",
+        "comparison_inference_permitted", "claim_eligible", "result_label", "no_result"
+      ],
+      "properties": {
+        "schema": { "const": 1 },
+        "contract_version": {
+          "const": "fixture-026.rsd-t02-fixed-instance-durable-summary.v1"
+        },
+        "status": { "const": "complete" },
+        "run_id": { "$ref": "#/definitions/sha256" },
+        "owner_identity_sha256": { "$ref": "#/definitions/sha256" },
+        "fixed_instance_runner_config_sha256": {
+          "const": "493b188025fa77e1c178f7c869d961f09a268f26cdcefdc1dba0bf6758263db2"
+        },
+        "isolated_durable_config_sha256": {
+          "const": "00fe1eab4c228ab1aca1d7d0760363f17bc9dbb2ff93942c06a9b8e36d42b198"
+        },
+        "policy_bundle_sha256": { "$ref": "#/definitions/sha256" },
+        "worker_sha256": { "$ref": "#/definitions/sha256" },
+        "policy_view_sha256": { "$ref": "#/definitions/sha256" },
+        "isolated_execution_receipt_sha256": { "$ref": "#/definitions/sha256" },
+        "records": { "const": 9 },
+        "registered_arms": { "const": 9 },
+        "next_arm_index": { "const": 9 },
+        "scientific_payload_sha256": { "$ref": "#/definitions/sha256" },
+        "hash_chain_sha256": { "$ref": "#/definitions/sha256" },
+        "checkpoint_status": { "const": "current" },
+        "foundation_gates": { "$ref": "#/definitions/foundationGates" },
+        "authority": {
+          "const": "public-development-fixed-instance-isolated-durable-conformance-only"
+        },
+        "comparison_inference_permitted": { "const": false },
+        "claim_eligible": { "const": false },
+        "result_label": { "const": "NO_RESULT" },
+        "no_result": { "const": true }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "previous_sha256", "record_sha256"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 0, "maximum": 19 },
+        "previous_sha256": { "$ref": "#/definitions/sha256" },
+        "record_sha256": { "$ref": "#/definitions/sha256" }
+      }
+    },
+    "outerRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "contract_version", "population_run_id", "owner_identity_sha256",
+        "sequence", "instance_directory", "instance_id", "compact_population_receipt",
+        "isolated_durable_summary", "isolated_durable_summary_sha256",
+        "full_causal_payload_retained", "endpoint_aggregation_executed",
+        "model_comparison_executed", "authority", "comparison_inference_permitted",
+        "claim_eligible", "result_label", "no_result", "integrity"
+      ],
+      "properties": {
+        "schema": { "const": 1 },
+        "contract_version": {
+          "const": "fixture-026.rsd-t02-public-development-isolated-durable-population-ledger.v1"
+        },
+        "population_run_id": { "$ref": "#/definitions/sha256" },
+        "owner_identity_sha256": { "$ref": "#/definitions/sha256" },
+        "sequence": { "type": "integer", "minimum": 0, "maximum": 19 },
+        "instance_directory": {
+          "type": "string",
+          "pattern": "^[0-9]{3}--[0-9a-f]{64}$"
+        },
+        "instance_id": { "$ref": "#/definitions/sha256" },
+        "compact_population_receipt": { "$ref": "#/definitions/compactReceipt" },
+        "isolated_durable_summary": { "$ref": "#/definitions/durableSummary" },
+        "isolated_durable_summary_sha256": { "$ref": "#/definitions/sha256" },
+        "full_causal_payload_retained": { "const": false },
+        "endpoint_aggregation_executed": { "const": false },
+        "model_comparison_executed": { "const": false },
+        "authority": {
+          "const": "public-development-isolated-durable-population-receipt-only"
+        },
+        "comparison_inference_permitted": { "const": false },
+        "claim_eligible": { "const": false },
+        "result_label": { "const": "NO_RESULT" },
+        "no_result": { "const": true },
+        "integrity": { "$ref": "#/definitions/integrity" }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "contract_version", "status", "population_run_id",
+        "owner_identity_sha256", "output_root_identity_sha256", "integrated_config_sha256",
+        "population_runner_config_sha256",
+        "fixed_instance_isolated_durable_config_sha256", "population_artifact_sha256",
+        "records", "registered_instances", "next_instance_index",
+        "scientific_payload_sha256", "hash_chain_sha256", "checkpoint_status",
+        "full_causal_payload_retained_in_outer_ledger", "endpoint_aggregation_executed",
+        "model_comparison_executed", "authority", "comparison_inference_permitted",
+        "claim_eligible", "result_label", "no_result"
+      ],
+      "properties": {
+        "schema": { "const": 1 },
+        "contract_version": {
+          "const": "fixture-026.rsd-t02-public-development-isolated-durable-population-summary.v1"
+        },
+        "status": { "enum": ["partial", "complete"] },
+        "population_run_id": { "$ref": "#/definitions/sha256" },
+        "owner_identity_sha256": { "$ref": "#/definitions/sha256" },
+        "output_root_identity_sha256": { "$ref": "#/definitions/sha256" },
+        "integrated_config_sha256": {
+          "const": "d123f5fea68b2a38839b0eca9b1aa8ea82a6abeab568f1aa6354240f57341f66"
+        },
+        "population_runner_config_sha256": {
+          "const": "7c9948cbabb58f2da76712e6c3040b81e1efa02b83a271742efbeeb2ea7d8419"
+        },
+        "fixed_instance_isolated_durable_config_sha256": {
+          "const": "00fe1eab4c228ab1aca1d7d0760363f17bc9dbb2ff93942c06a9b8e36d42b198"
+        },
+        "population_artifact_sha256": { "$ref": "#/definitions/sha256" },
+        "records": { "type": "integer", "minimum": 0, "maximum": 20 },
+        "registered_instances": { "const": 20 },
+        "next_instance_index": { "type": "integer", "minimum": 0, "maximum": 20 },
+        "scientific_payload_sha256": { "$ref": "#/definitions/sha256" },
+        "hash_chain_sha256": { "$ref": "#/definitions/sha256" },
+        "checkpoint_status": { "enum": ["missing", "stale", "current"] },
+        "full_causal_payload_retained_in_outer_ledger": { "const": false },
+        "endpoint_aggregation_executed": { "const": false },
+        "model_comparison_executed": { "const": false },
+        "authority": {
+          "const": "public-development-isolated-durable-population-conformance-only"
+        },
+        "comparison_inference_permitted": { "const": false },
+        "claim_eligible": { "const": false },
+        "result_label": { "const": "NO_RESULT" },
+        "no_result": { "const": true }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "status": { "const": "complete" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "records": { "const": 20 },
+              "next_instance_index": { "const": 20 }
+            }
+          },
+          "else": {
+            "properties": {
+              "records": { "maximum": 19 },
+              "next_instance_index": { "maximum": 19 }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

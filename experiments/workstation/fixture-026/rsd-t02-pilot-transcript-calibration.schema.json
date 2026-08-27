@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t02-pilot-transcript-calibration.v1.schema.json",
+  "title": "Fixture 026 RSD-T02 public synthetic pilot-transcript method calibration",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "rsd-t02-pilot-transcript-calibration.mjs",
+    "export": "assertFixture026RsdT02PilotTranscriptCalibrationConfiguration",
+    "version_export": "FIXTURE_026_RSD_T02_PILOT_TRANSCRIPT_CALIBRATION_VERSION",
+    "contract_version": "fixture-026.rsd-t02-pilot-transcript-calibration.v1",
+    "canonical_configuration_sha256": "f38f73347e7fbe98a26508211b1547bb06e5f9adb93958c0559909cd53e1413e",
+    "test": "rsd-t02-pilot-transcript-calibration.test.mjs"
+  },
+  "required": [
+    "schema", "contract_version", "artifact", "track", "authority",
+    "pilot_input_role", "private_response_adaptation_permitted",
+    "analysis_contract_version", "independent_unit", "family_mode",
+    "multiplicity_rule", "runtime_failure_disposition", "familywise_alpha",
+    "bootstrap_resamples", "simulation_replicates",
+    "monte_carlo_confidence_level", "simulation_key", "contrast_order",
+    "registered_family_ids", "runtime_failure_penalties", "scenarios",
+    "comparison_inference_permitted", "claim_eligible", "result_label"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-026.rsd-t02-pilot-transcript-calibration.v1" },
+    "artifact": { "const": "fixture-026" },
+    "track": { "const": "RSD-T02" },
+    "authority": { "const": "public-synthetic-pilot-transcript-method-calibration-only" },
+    "pilot_input_role": { "const": "development-evaluation-synthetic-method-check-only" },
+    "private_response_adaptation_permitted": { "const": false },
+    "analysis_contract_version": { "const": "fixture-026.rsd-t02-holm4.v1" },
+    "independent_unit": { "const": "system-instance" },
+    "family_mode": { "const": "fixed-family-stratified-equal-family-weight" },
+    "multiplicity_rule": { "const": "one-four-hypothesis-holm-family" },
+    "runtime_failure_disposition": { "const": "in-denominator-registered-penalty" },
+    "familywise_alpha": { "const": 0.05 },
+    "bootstrap_resamples": { "type": "integer", "minimum": 1000, "maximum": 1000000 },
+    "simulation_replicates": { "type": "integer", "minimum": 2, "maximum": 100000 },
+    "monte_carlo_confidence_level": { "type": "number", "minimum": 0.8, "maximum": 0.999 },
+    "simulation_key": { "type": "string", "minLength": 16 },
+    "contrast_order": {
+      "const": [
+        "H-LOGLOSS-C-vs-STATE-SPACE",
+        "H-LOGLOSS-C-vs-RECURRENT",
+        "H-DECISION-C-vs-STATE-SPACE",
+        "H-DECISION-C-vs-RECURRENT"
+      ]
+    },
+    "registered_family_ids": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": { "$ref": "#/definitions/identifier" }
+    },
+    "runtime_failure_penalties": { "$ref": "#/definitions/endpointPair" },
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/scenario" }
+    },
+    "comparison_inference_permitted": { "const": false },
+    "claim_eligible": { "const": false },
+    "result_label": { "const": "NO_RESULT" }
+  },
+  "definitions": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$"
+    },
+    "nonnegativeFiniteNumber": {
+      "type": "number",
+      "minimum": 0
+    },
+    "probability": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "endpointPair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mean_property_log_loss_nats", "mean_decision_loss_dimensionless"],
+      "properties": {
+        "mean_property_log_loss_nats": { "$ref": "#/definitions/nonnegativeFiniteNumber" },
+        "mean_decision_loss_dimensionless": { "$ref": "#/definitions/nonnegativeFiniteNumber" }
+      }
+    },
+    "armProbabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["C-MECHANISM-BANK", "B-STATE-SPACE", "B-RECURRENT"],
+      "properties": {
+        "C-MECHANISM-BANK": { "$ref": "#/definitions/probability" },
+        "B-STATE-SPACE": { "$ref": "#/definitions/probability" },
+        "B-RECURRENT": { "$ref": "#/definitions/probability" }
+      }
+    },
+    "contrastVector": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": { "type": "number" }
+    },
+    "covarianceRow": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": { "type": "number" }
+    },
+    "covarianceMatrix": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": { "$ref": "#/definitions/covarianceRow" }
+    },
+    "family": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_id", "planned_instances", "pre_response_attrition_probability",
+        "contrast_mean", "contrast_covariance"
+      ],
+      "properties": {
+        "family_id": { "$ref": "#/definitions/identifier" },
+        "planned_instances": { "type": "integer", "minimum": 2, "maximum": 100000 },
+        "pre_response_attrition_probability": { "$ref": "#/definitions/probability" },
+        "contrast_mean": { "$ref": "#/definitions/contrastVector" },
+        "contrast_covariance": { "$ref": "#/definitions/covarianceMatrix" }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenario_id", "role", "candidate_baselines",
+        "runtime_failure_probability_by_arm", "families"
+      ],
+      "properties": {
+        "scenario_id": { "$ref": "#/definitions/identifier" },
+        "role": {
+          "description": "Runtime validation binds each label to its DGP: null means are exactly zero with equal arm-failure probabilities; alternatives have no positive declared or failure-adjusted contrast and at least one negative contrast; bootstrap hostiles use exactly two retained instances per family with either zero covariance or positive variance for every registered contrast; retention hostiles use total pre-response attrition.",
+          "enum": [
+            "synthetic-null-familywise-error-method-check",
+            "synthetic-alternative-rejection-method-check",
+            "hostile-bootstrap-degeneracy-method-check",
+            "hostile-retention-refusal-method-check"
+          ]
+        },
+        "candidate_baselines": { "$ref": "#/definitions/endpointPair" },
+        "runtime_failure_probability_by_arm": { "$ref": "#/definitions/armProbabilities" },
+        "families": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/definitions/family" }
+        }
+      }
+    }
+  }
+}

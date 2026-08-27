@@ -149,19 +149,33 @@ an opaque state-handle permutation. It freezes the access cut and future
 null/endpoint gates, not a powered comparison. A sibling fixed-finite-family-
 panel contract, five-family public registry, and exact generator now construct
 20 metadata-bound development instances with one parameter vector and one time
-constant across 26 schedules. A separate conformance runner materializes all
+constant across 26 schedules. The base conformance runner materializes all
 39,962 causal rows for one such instance, closes the policy view, and records
-nine hash-chained response/resource slots. Its only successful executor is an
-in-process digest abstention: the content-addressed 26-projection bundle, fresh
-child, semantic replay of real policies, and durable disk checkpoint remain
-open. Two deterministic trainable level-two null prototypes can consume the
+nine hash-chained response/resource slots. An additive overlay now binds a
+content-addressed 26-projection abstention policy, executes it in a fresh
+restricted child, semantically replays its complete response bank, and supports
+ownership-bound on-disk resume with hostile concurrency, path, mutation,
+oversize, and lock-replacement checks. A separate compact population runner
+traverses all 20 unique instances and receipts the resulting 520 episodes,
+799,240 transcript rows, and 180 arm invocations with exact family/instance
+weights and deterministic prefix replay. An integrated runner now composes
+that traversal with the restricted child and durable fixed-instance overlay:
+20 identity-keyed instance directories, 180 terminal arm records and a bounded
+outer ledger resume without duplicate independent units. The population
+artifact does not retain causal payloads and has no external rollback-proof
+head. Two deterministic trainable
+level-two null prototypes can consume the
 validated transcript through a post-run adapter, but are uncalibrated and not
 runner-integrated. A four-hypothesis bootstrap-$t$/Holm analyzer and a
 variance-only normal/binomial planning calculator now execute as unfrozen
 method checks. The analyzer exposes its data-dependent bootstrap p-value floor;
-the planner explicitly cannot claim calibrated bootstrap power until pilot
-transcripts are simulated through that exact analyzer. No final power plan,
-custody payload, population run, or comparison authority exists.
+the planner is now exercised by four exact-analyzer synthetic transcript
+scenarios. The null Monte Carlo interval spans the 0.05 reference, the
+alternative rejection interval falls far below the illustrative target, and
+both small-sample hostiles fail bootstrap resolution throughout, so the current
+planning assumptions are rejected rather than frozen. No reviewed real pilot,
+final power plan, custody payload, endpoint-bearing policy run, or comparison
+authority exists.
   The pulse module has executed bounded positive,
 feed-forward, linear-feedback, dead-time and alias construction checks. Its
 panel runner defaults to zero work, retains explicit incompleteness and binds

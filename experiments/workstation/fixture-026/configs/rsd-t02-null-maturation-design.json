@@ -59,6 +59,11 @@
       "role": "level-two-null-prototype-implementation",
       "path": "rsd-t02-null-prototypes.mjs",
       "sha256_exact_bytes": "2a0440334adfc51b50ff22848ac0f675d1efa600b384462ad39dfa6068a0b405"
+    },
+    {
+      "role": "parameterized-runner-release-closure",
+      "path": "configs/rsd-t02-parameterized-runner-release.json",
+      "sha256_exact_bytes": "1df93cfd7873d3e208e938392576f8e5965e92c4ab019805d9b21a24a593ec3d"
     }
   ],
   "maturity_ladder": [
@@ -246,7 +251,6 @@
     "affected_fitting_blockers": [
       "primary-property-lineage-coverage-incomplete",
       "outer-family-templates-not-assigned-and-sealed",
-      "validated-parameterized-transcript-policy-resource-runner-absent",
       "instance-level-fit-calibration-development-evaluation-assignment-absent"
     ]
   },
@@ -331,7 +335,7 @@
   ],
   "promotion_gates": {
     "null_maturity": [
-      { "gate": "validated-parameterized-transcript-policy-resource-runner", "satisfied": false },
+      { "gate": "validated-parameterized-transcript-policy-resource-runner", "satisfied": true },
       { "gate": "instance-level-fit-calibration-development-evaluation-split", "satisfied": false },
       { "gate": "trainable-state-space-prototype-passes", "satisfied": true },
       { "gate": "trainable-recurrent-prototype-passes", "satisfied": true },
