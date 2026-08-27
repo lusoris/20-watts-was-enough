@@ -30,7 +30,10 @@ jobs:
       - name: Verify the closed source-publication allowlist
         run: npm run validate:sources
       - name: Test source-publication tamper resistance
-        run: npm run test:sources
+        # Node 22 still exposes the no-isolation switch under its former
+        # experimental name. This suite is a single file, so the default
+        # process-isolated runner has identical test semantics in CI.
+        run: node --test scripts/source-boundary.test.mjs
       - name: Prepare linked repository files
         run: npm run prepare:reader-artifacts
       - name: Verify the downloadable book is current

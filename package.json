@@ -19,7 +19,7 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern tmp",
     "validate:docs": "pwsh -File scripts/validate-docs.ps1",
     "validate:sources": "node scripts/validate-source-boundary.mjs",
-    "test:sources": "node --test scripts/source-boundary.test.mjs",
+    "test:sources": "node --test --test-isolation=none scripts/source-boundary.test.mjs",
     "validate:math": "node scripts/validate-math.mjs",
     "format:math": "node scripts/normalize-math-delimiters.mjs --write",
     "validate:workstation": "node scripts/validate-workstation.mjs",

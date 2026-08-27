@@ -42,7 +42,7 @@ test("the workflow uses GitHub's Pages artifact and deployment actions", async (
     "actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5",
     "npm ci",
     "npm run validate:sources",
-    "npm run test:sources",
+    "node --test scripts/source-boundary.test.mjs",
     "npm run prepare:reader-artifacts",
     "npm run validate:book-pdf",
     "npm run build:github-pages",
