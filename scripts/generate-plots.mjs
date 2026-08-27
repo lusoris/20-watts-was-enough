@@ -2264,6 +2264,77 @@ function rsdT02ProceduralSeedMap(spec) {
   });
 }
 
+function rsdT02PolicyWorkEnvelope(spec) {
+  const {
+    common_traversal_scalar_operations: common,
+    scalar_operation_cap: cap,
+    arms,
+  } = spec.parameters;
+  if (
+    !Number.isSafeInteger(common)
+    || !Number.isSafeInteger(cap)
+    || common < 1
+    || cap <= common
+    || !Array.isArray(arms)
+    || arms.length !== 9
+    || arms.some((arm) => (
+      typeof arm.id !== "string"
+      || !Number.isSafeInteger(arm.total_scalar_operations)
+      || arm.total_scalar_operations < common
+      || arm.total_scalar_operations > cap
+      || !Number.isSafeInteger(arm.transcendental_evaluations)
+      || arm.transcendental_evaluations < 0
+      || !["raw", "transform", "model", "candidate"].includes(arm.group)
+    ))
+  ) throw new Error(`${spec.id} has an invalid work-accounting contract`);
+
+  const left = 260;
+  const right = 1015;
+  const top = 168;
+  const bottom = 536;
+  const maximumSpecific = Math.ceil(Math.max(...arms.map(
+    (arm) => arm.total_scalar_operations - common,
+  )) / 5000) * 5000;
+  const x = (value) => left + (value / maximumSpecific) * (right - left);
+  const rowHeight = (bottom - top) / arms.length;
+  const palette = {
+    raw: colors.coral,
+    transform: colors.cyan,
+    model: colors.violet,
+    candidate: colors.amber,
+  };
+  const ticks = Array.from({ length: 6 }, (_, index) => (
+    Math.round((maximumSpecific * index) / 5 / 1000) * 1000
+  ));
+  const gridLines = ticks.map((tick) => {
+    const position = x(tick);
+    return `<line x1="${position}" y1="${top - 8}" x2="${position}" y2="${bottom + 4}" stroke="${colors.grid}" stroke-width="1"/>
+    <text x="${position}" y="572" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11" text-anchor="middle">${(tick / 1000).toFixed(0)}k</text>`;
+  }).join("");
+  const bars = arms.map((arm, index) => {
+    const specific = arm.total_scalar_operations - common;
+    const y = top + index * rowHeight + 5;
+    const barWidth = Math.max(2, x(specific) - left);
+    const label = `${arm.total_scalar_operations.toLocaleString("en-US")} total · ${arm.transcendental_evaluations.toLocaleString("en-US")} trans`;
+    return `<text x="${left - 14}" y="${y + 18}" fill="${colors.text}" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="end">${esc(arm.id)}</text>
+    <rect x="${left}" y="${y}" width="${barWidth}" height="22" rx="5" fill="${palette[arm.group]}" opacity=".9"/>
+    <text x="${Math.min(x(specific) + 9, right - 183)}" y="${y + 17}" fill="${colors.text}" font-family="Cascadia Mono, monospace" font-size="10">${esc(label)}</text>`;
+  }).join("");
+  const legend = `<circle cx="604" cy="48" r="6" fill="${colors.coral}"/><text x="616" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">raw</text>
+  <circle cx="674" cy="48" r="6" fill="${colors.cyan}"/><text x="686" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">transform</text>
+  <circle cx="780" cy="48" r="6" fill="${colors.violet}"/><text x="792" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">model</text>
+  <circle cx="858" cy="48" r="6" fill="${colors.amber}"/><text x="870" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">candidate</text>`;
+  const content = `${gridLines}${bars}
+  <text x="${left}" y="${top - 17}" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">common traversal = ${common.toLocaleString("en-US")} scalar ops · cap = ${cap.toLocaleString("en-US")}</text>`;
+  return frame(spec, content, {
+    xLabel: "policy-specific scalar operations above the common packet traversal",
+    yLabel: "fixed Stage-2b policy",
+    legend,
+    badge: "EXACT CONTRACT ACCOUNTING · NO_RESULT",
+    footer: "Declared operation counts · not latency, energy, accuracy or confirmation evidence",
+  });
+}
+
 const renderers = {
   "finite-error-erasure": finiteError,
   "adiabatic-crossover": adiabatic,
@@ -2289,6 +2360,7 @@ const renderers = {
   "fast-boundary-layer-norms": fastBoundaryLayerNorms,
   "repeated-stimulus-skipping-cell": repeatedStimulusSkippingCell,
   "rsd-t02-procedural-seed-map": rsdT02ProceduralSeedMap,
+  "rsd-t02-policy-work-envelope": rsdT02PolicyWorkEnvelope,
   "interface-qualified-retroactivity": interfaceQualifiedRetroactivity,
   "history-conditioned-position-contrast": historyConditionedPositionContrast,
 };

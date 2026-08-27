@@ -7,6 +7,25 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Decision 0021 closes the RSD-T02 population unit: structural lineage →
+  family → independently drawn fixed-parameter instance → packet → episode →
+  realization. Procedural seeds remain replay keys, the old mixed-time-constant
+  35-projection packet is rejected as a population instance, and the first
+  prospective scope is an equal-family-weighted finite panel with lineage-
+  disjoint development, sealed confirmation and sealed transfer partitions.
+  A hashed machine contract enforces the fixed time constant, invariant-memory
+  exclusion, four-hypothesis experiment-level Holm rule, effective-$n$
+  accounting by recomputing each instance ID from its family/version,
+  structural lineage, parameter vector, fixed time constant, nuisance vector
+  and property-certificate set; aliases and unknown instance IDs fail closed.
+  Power, custody and energy authority remain blocked. The six previously
+  inactive RSD-T02 policy roles now have fixed Stage-2b conformance
+  implementations, bringing the ordered bank to nine active policies and zero
+  inactive placeholders. A deterministic builder reproduces the 34,244-byte
+  content-addressed isolated bundle, and a generated SVG plots each arm's exact
+  policy-specific scalar work above the common traversal charge. These are
+  public construction artifacts and remain `NO_RESULT`.
+
 - The private research reader now preserves links to checked-in source and data
   artifacts as authenticated inert-text files generated during the site build,
   instead of silently falling back to the project README. Experiment contracts,
@@ -37,12 +56,12 @@ the exact diff; this file records why the project changed.
   prefixes are plumbing runs, not substitutes for that pack. O2, T02-FLOOR,
   mature/actionable estimator arms, comparisons, confirmation custody and
   result or energy authority remain absent. A pre-evaluator whole-system stage
-  now commits three public-prior policy-conformance references and six visible
-  abstentions before any raw evaluator ledger exists; it records exact
+  now commits all nine public-prior policy-conformance references before any
+  raw evaluator ledger exists; it records exact
   acquisition, prior and inference costs without treating those fixed
   references as trained estimators or mature nulls. Each packet runs in a fresh
-  permission-restricted child, with one hardened VM per active policy and a
-  verified SHA-named bundle; canonical request/response framing, resource caps,
+  permission-restricted child, with one hardened VM for the ordered policy bank
+  and a reproducibly built verified SHA-named bundle; canonical request/response framing, resource caps,
   replay binding and typed fail-closed abstention replace the former
   same-process execution path. Boundary failures are atomically retained in a
   self-hashed, replay-bound abstention artifact that cannot coexist with

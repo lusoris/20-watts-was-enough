@@ -23480,6 +23480,12 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
 - **Open question:** which minimal interventions distinguish mechanisms before
   acquisition cost exceeds the value of attribution?
 - **Direct test:** [`RSD-T02`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02--mechanism-discrimination-under-matched-step-behavior).
+- **Execution boundary:** all nine registered feature-family policies now have
+  fixed public-development conformance implementations and an isolated,
+  content-addressed policy-bank boundary. The five public recipes and mixed-
+  time-constant packet remain construction worlds, not independent population
+  instances. No trained null, calibrated probability, lineage-disjoint outer
+  family result or claim-eligible comparison exists.
 - **Traceability:** [source audit](audits/2026-08-26-rsd-t02-mechanism-equivalence.md) · [mathematical contract](../math/interventional-mechanism-equivalence.md).
 
 ### C-1542

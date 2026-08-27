@@ -9,13 +9,16 @@ import {
   FIXTURE_026_RSD_T02_RECIPES,
 } from "./rsd-t02-contract.mjs";
 import { buildFixture026RsdT02ExecutionDescriptors } from "./rsd-t02-generator.mjs";
+import {
+  FIXTURE_026_RSD_T02_TRANSFORM_ARM_IDS,
+  FIXTURE_026_RSD_T02_TRANSFORM_POLICY_SPECS,
+  evaluateFixture026RsdT02TransformPolicy,
+} from "./rsd-t02-transform-policies.mjs";
 
-export const FIXTURE_026_RSD_T02_ARM_BANK_VERSION = "fixture-026.rsd-t02-arm-bank.v1";
+export const FIXTURE_026_RSD_T02_ARM_BANK_VERSION = "fixture-026.rsd-t02-arm-bank.v2";
 
 export const FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS = Object.freeze([
-  "B-STATE-SPACE",
-  "B-RECURRENT",
-  "C-MECHANISM-BANK",
+  ...FIXTURE_026_RSD_T02_ACTIONABLE_ARM_IDS,
 ]);
 
 export const FIXTURE_026_RSD_T02_INACTIVE_ARM_IDS = Object.freeze(
@@ -114,6 +117,9 @@ const EXPECTED_COMMON_CAPS = Object.freeze({
 });
 
 const EXPECTED_POLICY_IDENTITIES = Object.freeze({
+  ...Object.fromEntries(Object.entries(FIXTURE_026_RSD_T02_TRANSFORM_POLICY_SPECS).map(
+    ([armId, spec]) => [armId, Object.freeze({ policy_id: spec.policy_id, role: spec.role })],
+  )),
   "B-STATE-SPACE": Object.freeze({
     policy_id: "bounded-arx-signature-reference-v1",
     role: "conformance-reference-not-mature-null",
@@ -163,6 +169,41 @@ const CANDIDATE_EQUATION_BYTES = Buffer.byteLength(
   "utf8",
 );
 const EXPECTED_POLICY_ACTUALS = Object.freeze({
+  "A-RAW": Object.freeze({
+    policy_sample_rows_read: 6214,
+    scalar_operations: 654960,
+    transcendental_evaluations: 0,
+    retained_state_bytes: 32,
+    influential_parameter_bytes: 993,
+  }),
+  "B-STATIC-DIV": Object.freeze({
+    policy_sample_rows_read: 2,
+    scalar_operations: 645544,
+    transcendental_evaluations: 0,
+    retained_state_bytes: 8,
+    influential_parameter_bytes: 961,
+  }),
+  "B-STREAM": Object.freeze({
+    policy_sample_rows_read: 3074,
+    scalar_operations: 670140,
+    transcendental_evaluations: 3,
+    retained_state_bytes: 48,
+    influential_parameter_bytes: 993,
+  }),
+  "B-LOG-RATIO": Object.freeze({
+    policy_sample_rows_read: 2,
+    scalar_operations: 645544,
+    transcendental_evaluations: 1,
+    retained_state_bytes: 8,
+    influential_parameter_bytes: 961,
+  }),
+  "B-DIFFERENCE": Object.freeze({
+    policy_sample_rows_read: 128,
+    scalar_operations: 646117,
+    transcendental_evaluations: 0,
+    retained_state_bytes: 32,
+    influential_parameter_bytes: 969,
+  }),
   "B-STATE-SPACE": Object.freeze({
     policy_sample_rows_read: 7685,
     scalar_operations: 688576,
@@ -184,6 +225,13 @@ const EXPECTED_POLICY_ACTUALS = Object.freeze({
     retained_state_bytes: 32,
     influential_parameter_bytes: 1625,
   }),
+  "C-DUAL": Object.freeze({
+    policy_sample_rows_read: 6346,
+    scalar_operations: 655550,
+    transcendental_evaluations: 1,
+    retained_state_bytes: 96,
+    influential_parameter_bytes: 1057,
+  }),
 });
 
 const POLICY_BASE_RESULT_KEYS = Object.freeze([
@@ -194,7 +242,7 @@ const POLICY_BASE_COUNTER_KEYS = Object.freeze([
   "scalar_operations", "transcendental_evaluations", "policy_sample_rows_read",
 ]);
 export const FIXTURE_026_RSD_T02_POLICY_BASE_VERSION =
-  "fixture-026.rsd-t02-policy-base.v1";
+  "fixture-026.rsd-t02-policy-base.v2";
 
 function exactKeys(value, keys) {
   return value
@@ -314,7 +362,8 @@ export function buildFixture026RsdT02SystemPacket(projections) {
 
 function assertArmBankConfigShape(config) {
   const rootKeys = [
-    "schema", "artifact", "track", "authority", "active_arm_ids", "inactive_arm_ids",
+    "schema", "contract_version", "artifact", "track", "authority",
+    "active_arm_ids", "inactive_arm_ids",
     "packet", "information", "common_caps", "policies", "comparison_inference_permitted",
     "claim_eligible", "result_label",
   ];
@@ -339,6 +388,7 @@ function assertArmBankConfigShape(config) {
     || !exactKeys(config.common_caps, capKeys)
     || !exactKeys(config.policies, FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS)
     || config.schema !== 1
+    || config.contract_version !== FIXTURE_026_RSD_T02_ARM_BANK_VERSION
     || config.artifact !== "fixture-026"
     || config.track !== "RSD-T02"
     || config.authority !== "bounded-public-development-policy-conformance-only"
@@ -376,6 +426,12 @@ function assertArmBankConfigShape(config) {
 export function validateFixture026RsdT02ArmBankConfig(config) {
   assertArmBankConfigShape(config);
   const policyKeys = {
+    ...Object.fromEntries(Object.entries(FIXTURE_026_RSD_T02_TRANSFORM_POLICY_SPECS).map(
+      ([armId, spec]) => [armId, [
+        "policy_id", "role", "threshold_provenance", "threshold_rationale",
+        ...spec.config_keys,
+      ]],
+    )),
     "B-STATE-SPACE": [
       "policy_id", "role", "threshold_provenance", "threshold_rationale",
       "drive_mse_margin", "memory_true_floor", "memory_false_ceiling",
@@ -399,7 +455,7 @@ export function validateFixture026RsdT02ArmBankConfig(config) {
       || typeof policy.policy_id !== "string"
       || typeof policy.role !== "string"
       || policy.threshold_provenance
-        !== "construction-tuned-on-five-enumerated-public-worlds-2026-08-26"
+        !== "construction-tuned-on-five-enumerated-public-worlds-2026-08-27"
       || typeof policy.threshold_rationale !== "string"
       || policy.threshold_rationale.length < 40
       || Object.entries(policy).some(([key, value]) => (
@@ -690,7 +746,13 @@ export function evaluateFixture026RsdT02ArmBase({ armId, packet, config }) {
     throw new RangeError(`Fixture 026 RSD-T02 arm is not active in the bounded bank: ${armId}`);
   }
   let evaluated;
-  if (armId === "B-STATE-SPACE") evaluated = stateSpacePolicy(packet, config.policies[armId]);
+  if (FIXTURE_026_RSD_T02_TRANSFORM_ARM_IDS.includes(armId)) {
+    evaluated = evaluateFixture026RsdT02TransformPolicy({
+      armId,
+      packet,
+      policy: config.policies[armId],
+    });
+  } else if (armId === "B-STATE-SPACE") evaluated = stateSpacePolicy(packet, config.policies[armId]);
   else if (armId === "B-RECURRENT") evaluated = recurrentPolicy(packet, config.policies[armId]);
   else evaluated = mechanismPolicy(packet, config.policies[armId]);
   return assertFixture026RsdT02PolicyBaseResult(policyBaseResult(armId, evaluated));
@@ -734,6 +796,12 @@ export function assertFixture026RsdT02PolicyBaseResult(result) {
   }
   const expected = EXPECTED_POLICY_ACTUALS[result.arm_id];
   const expectedShape = {
+    ...Object.fromEntries(Object.entries(FIXTURE_026_RSD_T02_TRANSFORM_POLICY_SPECS).map(
+      ([armId, spec]) => [armId, {
+        retained_scalars: spec.retained_scalars,
+        parameter_scalars: spec.parameter_scalars,
+      }],
+    )),
     "B-STATE-SPACE": { retained_scalars: 6, parameter_scalars: 5 },
     "B-RECURRENT": { retained_scalars: 4, parameter_scalars: 6 },
     "C-MECHANISM-BANK": { retained_scalars: 4, parameter_scalars: 10 },
@@ -816,7 +884,7 @@ function assertPolicyConstruction(response, ledger, caps) {
       !== ledger.policy_artifact_bytes + ledger.policy_config_bytes
     || ledger.total_policy_artifact_bytes > caps.policy_artifact_bytes
     || ledger.threshold_provenance
-      !== "construction-tuned-on-five-enumerated-public-worlds-2026-08-26"
+      !== "construction-tuned-on-five-enumerated-public-worlds-2026-08-27"
     || typeof ledger.threshold_rationale !== "string"
     || ledger.threshold_rationale.length < 40
     || ledger.training_labels_seen !== 0

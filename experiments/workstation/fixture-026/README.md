@@ -183,10 +183,11 @@ clamp, interrupted holds, and same- versus cross-channel restimulation. Three
 observation regimes distinguish a mandatory matched-step abstention baseline,
 the fixed full panel, and a six-query active-design ceiling. Nine actionable
 arm IDs remain parity- and ranking-ineligible; `O-GRAPH` is evaluator-only. An
-additive whole-system stage activates `B-STATE-SPACE`, `B-RECURRENT`, and
-`C-MECHANISM-BANK` only as fixed public-development policy-conformance
-references. They are not trained estimators, calibrated posteriors or mature
-nulls. The other six roles remain unimplemented and visibly abstain.
+additive whole-system stage now activates all nine only as fixed
+public-development policy-conformance references. The Stage-2b raw,
+normalization, log-ratio, difference, streaming and dual-consensus policies use
+frozen public-construction bands; they are not trained estimators, calibrated
+posteriors or mature nulls.
 Pair certificates describe one analytic isomorphism and nine numerically
 refined public-development constructions under their frozen schedules, not
 scientific results.
@@ -215,15 +216,14 @@ exact pair matrices and recomputed analysis. The hashed profile deliberately
 uses one public seed for smoke and two of 64 for bounded development
 conformance; it is not the full development pack. Before any evaluator-bearing
 event is generated, all 35 projections (53,795 rows) for each seed × system are
-hashed, delivered identically to the three active policies, and committed with
-their whole-system responses and six inactive abstentions. Responses retain a
+hashed, delivered identically to all nine active policies, and committed with
+their ordered whole-system responses. Responses retain a
 joint compatible property-vector set and three separate work ledgers: shared
 acquisition, policy construction/prior, and actual inference. Every numerical
 band is construction-tuned on the five public worlds, with zero labels and zero
 tuning trials. Actual work is not padded to the identical common caps.
-Each packet executes in a fresh permission-restricted Node child, and each of
-the three active policies executes in a new hardened VM context loaded from a
-verified SHA-named bundle. One canonical LF request crosses the boundary; the
+Each packet executes in a fresh permission-restricted Node child and one new
+hardened VM context loaded from a verified SHA-named nine-policy bundle. One canonical LF request crosses the boundary; the
 policy VM receives no process, filesystem, network, environment, clock, random
 or evaluator capability. Bounded failures become ordered pre-evaluator
 abstentions with no retry or same-process fallback. The canonical
@@ -244,6 +244,7 @@ remains the only claim-scoped implemented track.
 From the repository root:
 
 ```powershell
+node experiments/workstation/fixture-026/build-rsd-t02-policy-bundle.mjs --check
 node experiments/workstation/fixture-026/runner.mjs prepare --profile smoke
 node experiments/workstation/fixture-026/runner.mjs smoke --profile smoke --output experiments/workstation/runs/fixture-026-smoke --resume false
 node experiments/workstation/fixture-026/runner.mjs run --profile development --output experiments/workstation/runs/fixture-026-development --resume false
@@ -253,6 +254,9 @@ node --test experiments/workstation/fixture-026/rsd-t02-pulse.test.mjs
 node --test experiments/workstation/fixture-026/rsd-t02-pulse-panel-runner.test.mjs
 node --test experiments/workstation/fixture-026/rsd-t02-stage3-design.test.mjs
 node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-isolated-policy.test.mjs
+node --test --test-isolation=none experiments/workstation/fixture-026/build-rsd-t02-policy-bundle.test.mjs
+node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-transform-policies.test.mjs
+node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-population-contract.test.mjs
 
 node experiments/workstation/fixture-026/runner.mjs t02-prepare --profile smoke
 node experiments/workstation/fixture-026/runner.mjs t02-smoke --profile smoke --output experiments/workstation/runs/fixture-026-t02-smoke --resume false
@@ -303,6 +307,12 @@ protects the run directory rather than the repository source tree, concurrent
 repository mutation across that parent-module load boundary can still separate
 loaded generator/evaluator code from later file fingerprints. That residual is
 outside this public-development authority.
+
+The isolated bank is authored in
+[`rsd-t02-policy-bundle.source.js`](rsd-t02-policy-bundle.source.js) and
+reproduced by
+[`build-rsd-t02-policy-bundle.mjs`](build-rsd-t02-policy-bundle.mjs). The
+checked-in inventory binds the exact SHA-named output and every source file.
 Resume is reconstructed from the raw ledger, binds the profile and every frozen
 source identity, requires the ledger to be an exact ordered prefix of the work
 grid, semantically replays every prior record before deriving remaining work,
@@ -345,6 +355,24 @@ after independent system instances, an outer system-family holdout, trained
 nulls, frozen numeric budgets and prospectively powered private confirmation
 exist.
 
+The sibling prospective population contract closes the next design boundary.
+It treats structural lineage, system family and independently drawn fixed-
+parameter instance as separate levels; a seed remains only a replay key. One
+instance packet must keep its complete parameter vector—including the time
+constant—fixed across all episodes. The existing 35-projection packet mixes
+three O0 time constants with one O1 time constant and is therefore retained
+only for construction conformance. Development, outer-confirmation and
+outer-transfer families are lineage-disjoint, causal memory is non-primary
+until a valid negative-memory lineage exists, and the four endpoint-by-
+comparator hypotheses share one experiment-level Holm correction.
+
+Machine-readable files:
+
+- [`configs/rsd-t02-population-design.json`](configs/rsd-t02-population-design.json)
+- [`rsd-t02-population-design.schema.json`](rsd-t02-population-design.schema.json)
+- [`rsd-t02-population-contract.mjs`](rsd-t02-population-contract.mjs)
+- [`rsd-t02-population-contract.test.mjs`](rsd-t02-population-contract.test.mjs)
+
 Run identity also freezes the actual Node version, V8 version, libuv version,
 platform, architecture, endianness, OS release, numeric model, and Math API
 boundary. Checkpoints, events, replay, and analyses bind that fingerprint.
@@ -373,10 +401,11 @@ This smoke slice deliberately lacks:
    property-performance/trajectory-conformance endpoint;
 7. confirmation and transfer seeds, commitments, custody, and releases;
 8. calibrated workstation time, memory, and energy measurement; and
-9. the six inactive actionable algorithms, mature nulls, prospectively trained
-   or calibrated estimators, comparison/claim authority, confirmation custody,
-   O2 selection, and T02-FLOOR execution for the bounded T02-MECH construction
-   runtime; and
+9. mature nulls, prospectively trained or calibrated estimators, fixed-
+   parameter system-family generators, a frozen power plan, sealed
+   lineage-disjoint outer families, comparison/claim authority, confirmation
+   custody, O2 selection, and T02-FLOOR execution for the bounded T02-MECH
+   construction runtime; and
 10. machine contracts and runners for RSD-T03 through RSD-T10.
 
 Until those gaps are closed and separately reviewed, this directory remains a

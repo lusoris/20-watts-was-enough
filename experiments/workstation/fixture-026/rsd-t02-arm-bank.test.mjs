@@ -88,7 +88,7 @@ test("one whole-system packet is an exact 35-episode causal firewall", () => {
   );
 });
 
-test("three bounded policies decide only their frozen scopes without labels or tuning", async () => {
+test("nine bounded policies decide only their frozen scopes without labels or tuning", async () => {
   const provenance = await inputs();
   for (const recipe of FIXTURE_026_RSD_T02_RECIPES) {
     const built = packetFor(recipe.recipe_id);
@@ -125,7 +125,8 @@ test("three bounded policies decide only their frozen scopes without labels or t
       assert.equal(response.result_label, "NO_RESULT");
       assert.equal(response.comparison_inference_permitted, false);
     }
-    const stateSpace = responses[0];
+    const byArm = Object.fromEntries(responses.map((response) => [response.arm_id, response]));
+    const stateSpace = byArm["B-STATE-SPACE"];
     assert.equal(
       stateSpace.properties.drive_transform.decision,
       recipe.property_vector.drive_transform,
@@ -134,7 +135,7 @@ test("three bounded policies decide only their frozen scopes without labels or t
     assert.equal(stateSpace.properties.reported_output_feedback_edge.action, "abstain");
     assert.equal(stateSpace.properties.channel_local_state.action, "abstain");
 
-    const recurrent = responses[1];
+    const recurrent = byArm["B-RECURRENT"];
     assert.equal(
       recurrent.properties.reported_output_feedback_edge.decision,
       recipe.property_vector.reported_output_feedback_edge,
@@ -146,7 +147,7 @@ test("three bounded policies decide only their frozen scopes without labels or t
     assert.equal(recurrent.properties.drive_transform.action, "abstain");
     assert.equal(recurrent.properties.causal_memory.action, "abstain");
 
-    const mechanism = responses[2];
+    const mechanism = byArm["C-MECHANISM-BANK"];
     for (const key of Object.keys(recipe.property_vector)) {
       assert.equal(mechanism.properties[key].decision, recipe.property_vector[key]);
     }
@@ -156,6 +157,26 @@ test("three bounded policies decide only their frozen scopes without labels or t
         ["M-I1-FFL", "M-STATIC-HIGHPASS"],
       );
     } else assert.deepEqual(mechanism.compatible_hypothesis_ids, [recipe.recipe_id]);
+
+    assert.equal(byArm["A-RAW"].properties.drive_transform.action, "abstain");
+    assert.equal(
+      byArm["A-RAW"].properties.reported_output_feedback_edge.decision,
+      recipe.property_vector.reported_output_feedback_edge,
+    );
+    for (const armId of ["B-STATIC-DIV", "B-LOG-RATIO", "B-DIFFERENCE"]) {
+      assert.equal(
+        byArm[armId].properties.drive_transform.decision,
+        recipe.property_vector.drive_transform,
+      );
+    }
+    assert.equal(
+      byArm["B-STREAM"].properties.channel_local_state.decision,
+      recipe.property_vector.channel_local_state,
+    );
+    for (const key of Object.keys(recipe.property_vector)) {
+      assert.equal(byArm["C-DUAL"].properties[key].decision, recipe.property_vector[key]);
+    }
+    assert.equal(byArm["C-DUAL"].resource_ledger.inference.actual.fallback_invocations, 0);
   }
 });
 
@@ -219,7 +240,9 @@ test("the arm-bank JSON schema and runtime validator accept the same materialize
     /joint property-vector set|marginals contradict/u,
   );
 
-  const response = commitment.packet_records[0].active_arm_responses[2];
+  const response = commitment.packet_records[0].active_arm_responses.find(
+    ({ arm_id: armId }) => armId === "C-MECHANISM-BANK",
+  );
   for (const mutate of [
     (value) => { value.resource_ledger.shared_acquisition.input_commands = 198; },
     (value) => { value.resource_ledger.policy_construction.embedded_candidate_equations = 4; },
@@ -244,7 +267,7 @@ test("policy thresholds and common caps are closed construction-tuned inputs", a
     (value) => { value.information.training_labels = 1; },
     (value) => { value.information.tuning_trials = 1; },
     (value) => { value.packet.input_commands = 196; },
-    (value) => { value.active_arm_ids = [...value.active_arm_ids, "C-DUAL"]; },
+    (value) => { value.active_arm_ids = value.active_arm_ids.slice(0, -1); },
   ]) {
     const mutant = structuredClone(config);
     mutate(mutant);

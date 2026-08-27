@@ -138,16 +138,19 @@ T02-MECH now supplies a closed generator/evaluator for three O0 descriptors
 crossed with three conditioned time scales and an exact 26-episode O1 panel,
 plus a policy firewall, typed event schema, append-only resume ledger and
 recomputed construction analysis over a hashed one/two-seed ordered prefix. An
-additive pre-evaluator stage commits fixed whole-system `B-STATE-SPACE`,
-`B-RECURRENT`, and `C-MECHANISM-BANK` policy-conformance responses under exact
-information and cap parity; they use construction-tuned public thresholds,
-zero labels and zero tuning trials and are not mature nulls or trained
-estimators. Six roles remain unimplemented and abstain. Comparison and claim
-authority remain absent. A separate closed Stage-3 design assigns the 64
+  additive pre-evaluator stage commits all nine fixed whole-system
+  policy-conformance responses under exact information and cap parity; they use
+  construction-tuned public thresholds, zero labels and zero tuning trials and
+  are not mature nulls or trained estimators. The ordered bank has zero inactive
+  roles. Comparison and claim authority remain absent. A separate closed
+  Stage-3 design assigns the 64
 public seeds to 32 fit, 16 calibration and 16 evaluation roles while denying
 seed-level replication: these seeds alter only an opaque state-handle
 permutation. It freezes the access cut and future null/endpoint gates, not a
-powered comparison. The pulse module has executed bounded positive,
+  powered comparison. A sibling fixed-finite-family-panel contract now requires
+  fixed-parameter instances and lineage-disjoint outer families, but no family
+  registry, generator, power plan, custody payload or population run exists.
+  The pulse module has executed bounded positive,
 feed-forward, linear-feedback, dead-time and alias construction checks. Its
 panel runner defaults to zero work, retains explicit incompleteness and binds
 source/runtime identities and byte budgets; the six-duration refractory,

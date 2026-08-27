@@ -1,0 +1,207 @@
+{
+  "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-population-design.v1",
+  "artifact": "fixture-026",
+  "track": "RSD-T02",
+  "authority": "prospective-fixed-finite-family-panel-design-only",
+  "parent_stage3": {
+    "path": "configs/rsd-t02-stage3-design.json",
+    "sha256": "f5f89984939dcce331616631522978764027ff8fdc8381a84d6876c79b4f8b8a",
+    "contract_version": "fixture-026.rsd-t02-stage3-design.v1",
+    "procedural_split": {
+      "fit": 32,
+      "calibration": 16,
+      "evaluation": 16
+    },
+    "procedural_seed_role": "software-and-algorithmic-replay-key-only",
+    "procedural_seeds_are_independent_systems": false,
+    "procedural_seed_inference_permitted": false
+  },
+  "population_scope": {
+    "mode": "fixed-finite-family-panel",
+    "estimand": "equal-weighted-mean-arm-contrast-over-the-frozen-finite-family-panel",
+    "primary_family_weighting": "equal-family-weight",
+    "out_of_panel_family_generalization_permitted": false,
+    "family_superpopulation_inference_permitted": false,
+    "family_panel_must_be_named_in_result_scope": true
+  },
+  "experimental_unit_contract": {
+    "hierarchy": [
+      "structural-lineage",
+      "system-family",
+      "system-instance",
+      "fixed-parameter-packet",
+      "episode",
+      "realization",
+      "row"
+    ],
+    "primary_independent_unit": "system-instance",
+    "outer_holdout_split_unit": "structural-lineage",
+    "paired_arm_comparison_unit": "system-instance",
+    "nested_nonindependent_units": [
+      "procedural-seed",
+      "fixed-parameter-packet",
+      "episode",
+      "realization",
+      "row",
+      "property-coordinate",
+      "solver-refinement",
+      "training-restart"
+    ],
+    "effective_n_rule": "count-each-unique-pre-response-valid-instance-id-once",
+    "hash_identical_systems_count_once": true,
+    "all_arms_receive_same_instance_packet": true,
+    "repeated_measurements_increase_effective_n": false
+  },
+  "family_split_contract": {
+    "assignment_algorithm": "pre-response-lineage-grouped-keyed-permutation-v1",
+    "partitions": [
+      {
+        "partition": "development",
+        "payload_state": "public-development",
+        "instance_roles": ["fit", "calibration", "development-evaluation"]
+      },
+      {
+        "partition": "outer-confirmation",
+        "payload_state": "sealed-evaluator-custody",
+        "instance_roles": ["evaluation-only"]
+      },
+      {
+        "partition": "outer-transfer",
+        "payload_state": "sealed-evaluator-custody",
+        "instance_roles": ["evaluation-only"]
+      }
+    ],
+    "all_partitions_must_be_nonempty": true,
+    "structural_lineages_disjoint_across_partitions": true,
+    "full_panel_equivalence_groups_disjoint_across_partitions": true,
+    "family_ids_unique_across_partitions": true,
+    "assignment_before_affected_arm_responses": true,
+    "outcome_dependent_reassignment_permitted": false,
+    "current_public_recipes_eligible_for_outer_holdout": false
+  },
+  "packet_contract": {
+    "packet_version": "fixture-026.rsd-t02-fixed-instance-packet.v1",
+    "one_parameter_vector_per_packet": true,
+    "parameter_changes_within_packet_permitted": false,
+    "time_constant_changes_within_packet_permitted": false,
+    "one_instance_id_per_packet": true,
+    "current_35_projection_packet_eligible": false,
+    "current_35_projection_packet_rejection_reason": "mixes-time-constant-conditioned-systems"
+  },
+  "property_contract": {
+    "registered_property_keys": [
+      "drive_transform",
+      "reported_output_feedback_edge",
+      "channel_local_state",
+      "causal_memory"
+    ],
+    "primary_scored_property_keys": [
+      "drive_transform",
+      "reported_output_feedback_edge",
+      "channel_local_state"
+    ],
+    "invariant_primary_exclusions": ["causal_memory"],
+    "invariant_exclusion_reason": "current-public-bank-has-no-memory-negative-system",
+    "minimum_distinct_lineages_per_value_per_scored_partition": 2,
+    "coverage_gate_is_not_power": true,
+    "property_truth_source": "equation-certificate-not-family-label",
+    "novel_property_vectors_role": "secondary-out-of-distribution-support-only"
+  },
+  "endpoint_contract": {
+    "primary_endpoints": [
+      "mean-property-log-loss-nats",
+      "mean-decision-loss-dimensionless"
+    ],
+    "primary_contrasts": [
+      "C-MECHANISM-BANK-minus-B-STATE-SPACE",
+      "C-MECHANISM-BANK-minus-B-RECURRENT"
+    ],
+    "primary_hypotheses": [
+      "H-LOGLOSS-C-vs-STATE-SPACE",
+      "H-LOGLOSS-C-vs-RECURRENT",
+      "H-DECISION-C-vs-STATE-SPACE",
+      "H-DECISION-C-vs-RECURRENT"
+    ],
+    "candidate_minus_null_negative_is_improvement": true,
+    "familywise_alpha": 0.05,
+    "multiplicity_family_size": 4,
+    "multiplicity_rule": "holm-over-all-four-fixed-primary-hypotheses",
+    "current_power_status": "not-powered-no-private-instance-pack"
+  },
+  "power_contract": {
+    "status": "blocked-until-prospective-power-plan",
+    "independent_unit": "system-instance-within-fixed-family-stratum",
+    "family_mode": "fixed-stratified-families-not-random-family-superpopulation",
+    "pilot_input_role": "development-evaluation-only",
+    "required_inputs": [
+      "minimum-relevant-effect-or-noninferiority-margin",
+      "power-target",
+      "pilot-variance-artifact-sha256",
+      "variance-unit",
+      "planned-instance-count-by-family",
+      "family-heterogeneity-model",
+      "missingness-and-runtime-failure-rule",
+      "coverage-floor",
+      "multiplicity-rule",
+      "analysis-implementation-sha256"
+    ],
+    "forbidden_sample_size_units": [
+      "procedural-seed",
+      "episode",
+      "realization",
+      "row",
+      "property-coordinate",
+      "solver-refinement"
+    ],
+    "planned_instance_counts": null,
+    "private_response_power_recalculation_permitted": false,
+    "promotion_blocked": true
+  },
+  "custody_contract": {
+    "outer_family_payload_state": "not-created",
+    "outer_instance_pack_state": "not-created",
+    "outer_family_payload_seal_timing": "before-any-affected-fit-response",
+    "outer_instance_pack_creation_timing": "after-power-plan-before-release",
+    "encrypted_authenticated_escrow_required": true,
+    "bare_unsalted_hash_is_sufficient_secrecy": false,
+    "release_requires_frozen": [
+      "population-design",
+      "family-registry",
+      "generator-and-validity-gates",
+      "model-artifact",
+      "calibration-and-threshold-artifact",
+      "resource-caps",
+      "power-plan",
+      "analysis-implementation",
+      "source-and-runtime-identity"
+    ],
+    "release_or_confirmation_authority_exists": false
+  },
+  "resource_contract": {
+    "same-instance-packet-across-arms": true,
+    "same-intervention-budget-across-arms": true,
+    "training-selection-and-calibration-costs-charged": true,
+    "rejected-generation-draws-charged": true,
+    "runtime-failures-and-fallbacks-charged": true,
+    "measured-joules-required-for-energy-comparison": true,
+    "energy_comparison_permitted_now": false
+  },
+  "promotion_gates": [
+    "versioned-family-registry-exists",
+    "lineage-disjoint-family-assignments-frozen",
+    "fixed-parameter-instance-generator-validated",
+    "memory-negative-lineages-exist-or-causal-memory-remains-excluded",
+    "two-generic-null-implementations-frozen",
+    "fit-artifacts-frozen-before-calibration",
+    "calibration-and-resource-artifacts-frozen-before-outer-release",
+    "four-hypothesis-holm-analysis-frozen",
+    "prospective-power-plan-passes",
+    "outer-family-and-instance-custody-passes",
+    "private-confirmation-executes-without-drift",
+    "all-effective-units-and-resource-costs-audited"
+  ],
+  "comparison_inference_permitted": false,
+  "claim_eligible": false,
+  "result_label": "NO_RESULT"
+}

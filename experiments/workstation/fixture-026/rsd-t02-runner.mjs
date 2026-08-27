@@ -101,7 +101,7 @@ export const FIXTURE_026_RSD_T02_BOUNDARY_ABSTENTION_VERSION =
   "fixture-026.rsd-t02-policy-boundary-abstention.v1";
 const BOUNDARY_ABSTENTION_AUTHORITY =
   "bounded-pre-evaluator-isolated-policy-abstention-only";
-const RUN_INTERPRETATION = "NO_RESULT: complete bounded public-development RSD-T02 mechanism-panel and pre-evaluator fresh-child isolated three-arm policy-conformance run; six registry roles remain unimplemented, the two comparator references are not mature nulls, and no comparison, T02-FLOOR, O2, or claim authority exists.";
+const RUN_INTERPRETATION = "NO_RESULT: complete bounded public-development RSD-T02 mechanism-panel and pre-evaluator fresh-child isolated nine-arm policy-conformance run; every registry role has a fixed construction policy, but the two comparator references are not mature nulls and no calibrated comparison, fixed-instance population run, T02-FLOOR, O2, or claim authority exists.";
 const RUN_IDENTITY_KEYS = Object.freeze([
   "schema", "artifact", "track", "execution_claims", "excluded_claims", "runner_version",
   "generator_version", "evaluator_version", "event_contract_version", "arm_bank_version",
@@ -177,10 +177,16 @@ const sourceFiles = Object.freeze([
   "rsd-t02-evaluator.mjs",
   "rsd-t02-event.mjs",
   "rsd-t02-arm-bank.mjs",
+  "rsd-t02-transform-policies.mjs",
   "rsd-t02-isolated-policy.mjs",
   "rsd-t02-policy-worker.mjs",
+  "rsd-t02-policy-bundle.source.js",
+  "build-rsd-t02-policy-bundle.mjs",
   "rsd-t02-policy-bundle.inventory.json",
-  "policy-bundles/d7cee7b1db27ceaf00789e95cadf1d6031454d32658560b79b601392dfd501df.js",
+  "policy-bundles/ee05826b7e83c08c9c8e08209b8895e3f1c6d7fd6a3229548944a95f08bada21.js",
+  "rsd-t02-population-contract.mjs",
+  "rsd-t02-population-design.schema.json",
+  "configs/rsd-t02-population-design.json",
   "rsd-t02-run-lock.mjs",
   "rsd-t02-runner.mjs",
   "runner.mjs",

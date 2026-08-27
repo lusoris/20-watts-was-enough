@@ -25,8 +25,8 @@
   crossed with three conditioned time scales and an exact 26-episode O1 panel,
   plus an event schema, append-only ledger, deterministic resume and
   construction analysis and an additive pre-evaluator whole-system commitment
-  for three fixed policy-conformance references; six actionable roles remain
-  forced to abstain and no comparison authority exists; T02-FLOOR remains non-executable;
+  for all nine fixed policy-conformance references; no comparison authority
+  exists and T02-FLOOR remains non-executable;
   RSD-T03--RSD-T10, private
   partitions, the registered primary analysis, a complete resource comparison,
   statistical results and measured energy do not exist
@@ -521,28 +521,32 @@ registered positive affine interface.
 `B-STREAM`, `B-LOG-RATIO`, `B-DIFFERENCE`, `B-STATE-SPACE`, `B-RECURRENT`,
 `C-MECHANISM-BANK` and `C-DUAL`. `O-GRAPH` is evaluator-only and excluded from
 parity, tuning, promotion and resource ranking. A bounded additive Stage 2
-implements `B-STATE-SPACE`, `B-RECURRENT` and `C-MECHANISM-BANK` only as fixed
-public-development policy-conformance references. They are not trained
-estimators, calibrated posteriors or mature nulls. `A-RAW`, `B-STATIC-DIV`,
-`B-STREAM`, `B-LOG-RATIO`, `B-DIFFERENCE` and `C-DUAL` remain unimplemented and
-visibly abstain. No actionable arm is currently comparison-, ranking- or
-promotion-eligible.
+now implements all nine only as fixed public-development policy-conformance
+references. The six Stage-2b additions use frozen public-construction bands and
+close the executable feature-family matrix; they are not trained estimators,
+calibrated posteriors or mature nulls. No actionable arm is currently
+comparison-, ranking- or promotion-eligible.
 
 **Bounded Stage-2 policies.** Every seed × system packet contains all 35 ordered
 O0/O1 projections (53,795 sample rows). The packet is hashed and delivered to
-all three active policies; all three whole-system responses and the six
-inactive abstentions are committed before `O-GRAPH` opens any episode in that
-packet. `B-STATE-SPACE` uses a fixed affine-versus-log first-order ramp residual
-and reset/freeze distances; `B-RECURRENT` uses fixed causal exponential
+all nine active policies; all nine whole-system responses are committed before
+`O-GRAPH` opens any episode in that packet. `A-RAW` uses direct intervention
+contrasts; `B-STATIC-DIV`, `B-LOG-RATIO` and `B-DIFFERENCE` use explicit causal
+ramp coordinates; `B-STREAM` uses chronological exponential innovations;
+`B-STATE-SPACE` uses a fixed affine-versus-log first-order ramp residual and
+reset/freeze distances; `B-RECURRENT` uses fixed causal exponential
 clamp-release and channel-restimulation innovations; `C-MECHANISM-BANK` uses
-four frozen source-shaped signatures. Every response returns a nonempty joint
-set of compatible property vectors, not independently inconsistent marginals.
+four frozen source-shaped signatures; and `C-DUAL` requires unanimous drive
+votes before combining supported raw intervention contrasts. It abstains on
+discordance and never invokes a fallback. Every response returns a nonempty
+joint set of compatible property vectors, not independently inconsistent
+marginals.
 All numerical bands are explicitly construction-tuned on the five enumerated
 public worlds, with zero training labels and zero tuning trials; their
 definitions and equations are frozen in the linked mathematical contract.
 The references use the checked-in public property prior, but each packet now
-executes in a fresh permission-restricted Node child and each active arm in a
-new hardened VM context. Only a verified SHA-named policy bundle and one
+executes in a fresh permission-restricted Node child and one new hardened VM
+context for the ordered policy bank. Only a verified SHA-named policy bundle and one
 canonical request cross the boundary. The policy VM has no process, filesystem,
 network, environment, clock, random or evaluator capability; bounded failures
 become ordered pre-evaluator abstentions with no retry or same-process fallback.
@@ -599,6 +603,12 @@ mechanism equations and the joint property prior have separate byte/count
 charges. These are declared mathematical primitives, not CPU instructions,
 wall time, joules or evidence of efficiency.
 
+![Exact policy-specific scalar work above the shared packet-traversal baseline.](../../public/plots/rsd-t02-policy-work-envelope.svg)
+
+The plot is generated from the frozen per-arm accounting constants. It is an
+operation-ledger visualization, not a latency, accuracy, energy or comparison
+result.
+
 **Hostiles.** Additive offset, near-zero input, clipping, hidden reset,
 future-aware normalization, channel-state contamination and boundary-layer
 censoring are valid scientific cases with the existing six-axis support vector.
@@ -609,8 +619,7 @@ the scientific denominator.
 `contract-foundation-only`, while the separate T02-MECH runtime is a
 deterministic bounded `public-development` construction/conformance harness.
 It executes O0 and O1, freezes every actionable response before `O-GRAPH`
-evaluation, separately commits the three fixed Stage-2 reference responses
-plus six inactive abstentions,
+evaluation, separately commits all nine fixed Stage-2 reference responses,
 retains closed acquisition/construction/inference ledgers, and supports append-only
 resume and independent analysis validation. It is
 `registered-projection-no-secret-custody`, comparison false, has no execution
@@ -629,14 +638,33 @@ rules and hostile mutations are machine-checked by the
 [`Stage-3 design contract`](../workstation/fixture-026/configs/rsd-t02-stage3-design.json)
 and [Decision 0020](../../decisions/0020-separate-information-cuts-from-replication.md).
 
+**Prospective population boundary.** The current 35-projection packet is also
+not one population instance: O0 crosses time constants $0.5$, $1$ and
+$2\,\mathrm s$, while O1 fixes $1\,\mathrm s$. A future instance packet must
+bind one accepted parameter vector, including one time constant, across every
+episode. The experimental hierarchy is structural lineage → family →
+independently drawn instance → packet → episode → optional realization.
+Lineages, not recipe names, are split between visible development, sealed outer
+confirmation and separately sealed outer transfer. Rows, episodes, properties,
+realizations and procedural seeds never increase the effective system-instance
+sample size. The first registered claim mode is a prospectively frozen,
+equal-family-weighted finite panel; it does not license inference to arbitrary
+future families. Causal memory remains non-primary until valid negative-memory
+lineages exist. Four endpoint-by-comparator hypotheses use one experiment-level
+Holm procedure at $\alpha=0.05$. The fail-closed machine form is the
+[`population design`](../workstation/fixture-026/configs/rsd-t02-population-design.json)
+and its
+[`runtime validator`](../workstation/fixture-026/rsd-t02-population-contract.mjs).
+
 **Kill rule.** Kill attribution if step fit or hidden provenance supplies the
 answer, a purported separation lacks a pairwise certificate, an arm is rewarded
 for guessing within an equivalence set, privileged access is unequal or
 unpriced, RMS or fixed slow sampling replaces the floor endpoint, or the
 mechanism bank cannot beat generic state-space/recurrent nulls at equal access.
 
-**Required future artifacts.** The six missing actionable algorithms, mature
-nulls, prospectively calibrated or trained estimators, matched confirmation
+**Required future artifacts.** Mature
+nulls, prospectively calibrated or trained estimators, fixed-parameter family
+generators, sealed lineage-disjoint outer families, a frozen power plan, matched confirmation
 computation and intervention budgets, prospective confirmation mapping and custody, paired
 statistics, promotion evidence, calibrated workstation measurement, an O2
 response-freeze contract, and a separately frozen T02-FLOOR runtime with a

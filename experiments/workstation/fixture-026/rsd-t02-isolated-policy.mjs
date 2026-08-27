@@ -15,13 +15,13 @@ import {
 } from "./rsd-t02-arm-bank.mjs";
 
 export const FIXTURE_026_RSD_T02_ISOLATED_POLICY_VERSION =
-  "fixture-026.rsd-t02-isolated-policy.v1";
+  "fixture-026.rsd-t02-isolated-policy.v2";
 export const FIXTURE_026_RSD_T02_ISOLATED_REQUEST_VERSION =
-  "fixture-026.rsd-t02-isolated-request.v1";
+  "fixture-026.rsd-t02-isolated-request.v2";
 export const FIXTURE_026_RSD_T02_ISOLATED_RESPONSE_VERSION =
-  "fixture-026.rsd-t02-isolated-response.v1";
+  "fixture-026.rsd-t02-isolated-response.v2";
 export const FIXTURE_026_RSD_T02_POLICY_INVENTORY_VERSION =
-  "fixture-026.rsd-t02-policy-bundle-inventory.v1";
+  "fixture-026.rsd-t02-policy-bundle-inventory.v2";
 
 const fixtureRoot = path.dirname(fileURLToPath(import.meta.url));
 const INVENTORY_PATH = path.join(fixtureRoot, "rsd-t02-policy-bundle.inventory.json");
@@ -40,11 +40,14 @@ const BUNDLE_KEYS = Object.freeze([
 ]);
 const SOURCE_KEYS = Object.freeze(["relative_path", "sha256", "bytes"]);
 const EXPECTED_SOURCE_PATHS = Object.freeze([
+  "build-rsd-t02-policy-bundle.mjs",
   "configs/rsd-t02-arm-bank.json",
   "rsd-t02-arm-bank.mjs",
   "rsd-t02-contract.mjs",
   "rsd-t02-isolated-policy.mjs",
+  "rsd-t02-policy-bundle.source.js",
   "rsd-t02-policy-worker.mjs",
+  "rsd-t02-transform-policies.mjs",
 ]);
 const CHILD_RESPONSE_KEYS = Object.freeze([
   "schema", "contract_version", "status", "arm_outcomes", "reason_codes",
@@ -145,7 +148,7 @@ export async function loadFixture026RsdT02PolicyBundleInventory() {
       !== inventory.sources.length
     || inventory.source_inventory_sha256 !== sha256Hex(canonicalize(inventory.sources))
     || inventory.authority
-      !== "checked-in-public-development-conformance-policy-base-v1"
+      !== "checked-in-public-development-conformance-policy-base-v2"
     || !HASH_PATTERN.test(inventory.inventory_sha256)
   ) throw new Error("Fixture 026 RSD-T02 policy bundle inventory is invalid.");
   const body = { ...inventory };
@@ -314,7 +317,7 @@ function parseChildResponse(childResult, expected = null) {
     || response.runtime.platform !== process.platform
     || response.runtime.architecture !== process.arch
     || response.runtime.numeric_model !== "IEEE-754-binary64"
-    || response.authority !== "public-development-policy-base-v1-only"
+    || response.authority !== "public-development-policy-base-v2-only"
     || response.comparison_inference_permitted !== false
     || response.claim_eligible !== false
     || response.result_label !== "NO_RESULT"

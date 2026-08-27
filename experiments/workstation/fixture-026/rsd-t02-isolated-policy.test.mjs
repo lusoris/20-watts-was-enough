@@ -111,7 +111,7 @@ function successfulChildResponse(baseResults, overrides = {}) {
       architecture: process.arch,
       numeric_model: "IEEE-754-binary64",
     },
-    authority: "public-development-policy-base-v1-only",
+    authority: "public-development-policy-base-v2-only",
     comparison_inference_permitted: false,
     claim_eligible: false,
     result_label: "NO_RESULT",
@@ -150,7 +150,7 @@ test("the checked-in policy bundle and source inventory are closed and content a
   assert.doesNotMatch(bundleText, /\bimport\s|\brequire\s*\(|node:/u);
 });
 
-test("all five packets preserve base-v1 results across the fresh isolated child", {
+test("all five packets preserve nine-arm base-v2 results across the fresh isolated child", {
   timeout: 120_000,
 }, async (context) => {
   if (!(await canCreateChildProcess())) {
@@ -194,7 +194,7 @@ test("all five packets preserve base-v1 results across the fresh isolated child"
   }
 });
 
-test("base-v1 policy output contains no hashes for the parent to trust prematurely", async () => {
+test("base-v2 policy output contains no hashes for the parent to trust prematurely", async () => {
   const { config } = await policyInputs();
   const base = evaluateFixture026RsdT02ArmBase({
     armId: "B-STATE-SPACE",

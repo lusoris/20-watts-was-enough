@@ -3,16 +3,22 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
 
-const REQUEST_VERSION = "fixture-026.rsd-t02-isolated-request.v1";
-const CALL_VERSION = "fixture-026.rsd-t02-policy-call.v1";
-const RESPONSE_VERSION = "fixture-026.rsd-t02-isolated-response.v1";
+const REQUEST_VERSION = "fixture-026.rsd-t02-isolated-request.v2";
+const CALL_VERSION = "fixture-026.rsd-t02-policy-call.v2";
+const RESPONSE_VERSION = "fixture-026.rsd-t02-isolated-response.v2";
 const MAX_STDIN_BYTES = 24 * 1024 * 1024;
 const MAX_POLICY_RESPONSE_BYTES = 256 * 1024;
 const VM_TIMEOUT_MS = 5_000;
 const ACTIVE_ARM_IDS = Object.freeze([
+  "A-RAW",
+  "B-STATIC-DIV",
+  "B-STREAM",
+  "B-LOG-RATIO",
+  "B-DIFFERENCE",
   "B-STATE-SPACE",
   "B-RECURRENT",
   "C-MECHANISM-BANK",
+  "C-DUAL",
 ]);
 const REQUEST_KEYS = Object.freeze([
   "schema", "contract_version", "active_arm_ids", "packet_encoding", "packet_utf8_bytes",
@@ -215,7 +221,7 @@ function abstention(reasonCode, binding = null) {
     config_utf8_bytes: binding?.config_utf8_bytes ?? null,
     bundle_sha256: binding?.bundle_sha256 ?? null,
     runtime: binding?.runtime ?? runtimeBinding(),
-    authority: "public-development-policy-base-v1-only",
+    authority: "public-development-policy-base-v2-only",
     comparison_inference_permitted: false,
     claim_eligible: false,
     result_label: "NO_RESULT",
@@ -283,7 +289,7 @@ async function main() {
       arm_outcomes: armOutcomes,
       reason_codes: completed ? [] : ["isolated-policy-bank-incomplete"],
       ...binding,
-      authority: "public-development-policy-base-v1-only",
+      authority: "public-development-policy-base-v2-only",
       comparison_inference_permitted: false,
       claim_eligible: false,
       result_label: "NO_RESULT",

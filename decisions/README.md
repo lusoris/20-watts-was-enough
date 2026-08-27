@@ -26,3 +26,4 @@ than silently changing its outcome.
 | [0018](0018-freeze-prediction-before-comparator-expansion.md) | Freeze the prospective information cut and scientific grid before expanding RSD-T01 comparators | accepted |
 | [0019](0019-score-interventional-properties-not-generator-names.md) | Score interventional properties and equivalence classes instead of hidden generator names | accepted |
 | [0020](0020-separate-information-cuts-from-replication.md) | Separate procedural information cuts from scientific replication | accepted |
+| [0021](0021-bind-population-inference-to-system-lineages-and-instances.md) | Bind population inference to system lineages and fixed-parameter instances | accepted |

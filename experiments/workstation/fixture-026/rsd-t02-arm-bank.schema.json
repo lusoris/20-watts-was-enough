@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t02-arm-bank.v1.schema.json",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t02-arm-bank.v2.schema.json",
   "title": "Fixture 026 RSD-T02 pre-evaluator whole-system arm commitment",
   "type": "object",
   "additionalProperties": false,
@@ -8,7 +8,7 @@
     "module": "rsd-t02-arm-bank.mjs",
     "export": "assertFixture026RsdT02ArmCommitment",
     "version_export": "FIXTURE_026_RSD_T02_ARM_BANK_VERSION",
-    "contract_version": "fixture-026.rsd-t02-arm-bank.v1",
+    "contract_version": "fixture-026.rsd-t02-arm-bank.v2",
     "test": "rsd-t02-arm-bank.test.mjs"
   },
   "required": [
@@ -20,16 +20,19 @@
   ],
   "properties": {
     "schema": { "const": 1 },
-    "contract_version": { "const": "fixture-026.rsd-t02-arm-bank.v1" },
+    "contract_version": { "const": "fixture-026.rsd-t02-arm-bank.v2" },
     "artifact": { "const": "fixture-026" },
     "track": { "const": "RSD-T02" },
     "profile": { "enum": ["smoke", "development"] },
     "partition": { "const": "public-development" },
     "active_arm_ids": {
-      "const": ["B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK"]
+      "const": [
+        "A-RAW", "B-STATIC-DIV", "B-STREAM", "B-LOG-RATIO", "B-DIFFERENCE",
+        "B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK", "C-DUAL"
+      ]
     },
     "inactive_arm_ids": {
-      "const": ["A-RAW", "B-STATIC-DIV", "B-STREAM", "B-LOG-RATIO", "B-DIFFERENCE", "C-DUAL"]
+      "const": []
     },
     "policy_artifact_sha256": { "$ref": "#/$defs/hash" },
     "policy_config_sha256": { "$ref": "#/$defs/hash" },
@@ -168,7 +171,7 @@
         "policy_config_sha256": { "$ref": "#/$defs/hash" },
         "policy_config_bytes": { "type": "integer", "minimum": 1 },
         "total_policy_artifact_bytes": { "type": "integer", "minimum": 2, "maximum": 262144 },
-        "threshold_provenance": { "const": "construction-tuned-on-five-enumerated-public-worlds-2026-08-26" },
+        "threshold_provenance": { "const": "construction-tuned-on-five-enumerated-public-worlds-2026-08-27" },
         "threshold_rationale": { "type": "string", "minLength": 40 },
         "training_labels_seen": { "const": 0 },
         "tuning_trials": { "const": 0 },
@@ -219,12 +222,35 @@
       "required": ["schema", "contract_version", "artifact", "track", "arm_id", "policy_id", "policy_role", "policy_artifact_sha256", "policy_config_sha256", "system_packet_sha256", "support", "properties", "compatible_hypothesis_ids", "compatible_property_vectors", "information_ledger", "resource_ledger", "authority", "comparison_inference_permitted", "claim_eligible", "result_label", "no_result"],
       "properties": {
         "schema": { "const": 1 },
-        "contract_version": { "const": "fixture-026.rsd-t02-arm-bank.v1" },
+        "contract_version": { "const": "fixture-026.rsd-t02-arm-bank.v2" },
         "artifact": { "const": "fixture-026" },
         "track": { "const": "RSD-T02" },
-        "arm_id": { "enum": ["B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK"] },
-        "policy_id": { "enum": ["bounded-arx-signature-reference-v1", "bounded-causal-recurrence-reference-v1", "bounded-source-shaped-signature-bank-v1"] },
-        "policy_role": { "enum": ["conformance-reference-not-mature-null", "hypothesis-bank-conformance-reference"] },
+        "arm_id": {
+          "enum": [
+            "A-RAW", "B-STATIC-DIV", "B-STREAM", "B-LOG-RATIO", "B-DIFFERENCE",
+            "B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK", "C-DUAL"
+          ]
+        },
+        "policy_id": {
+          "enum": [
+            "bounded-raw-trajectory-reference-v1",
+            "bounded-static-divisive-reference-v1",
+            "bounded-causal-streaming-reference-v1",
+            "bounded-log-ratio-reference-v1",
+            "bounded-difference-reference-v1",
+            "bounded-arx-signature-reference-v1",
+            "bounded-causal-recurrence-reference-v1",
+            "bounded-source-shaped-signature-bank-v1",
+            "bounded-dual-feature-consensus-v1"
+          ]
+        },
+        "policy_role": {
+          "enum": [
+            "conformance-reference-not-mature-null",
+            "hypothesis-bank-conformance-reference",
+            "candidate-conformance-reference"
+          ]
+        },
         "policy_artifact_sha256": { "$ref": "#/$defs/hash" },
         "policy_config_sha256": { "$ref": "#/$defs/hash" },
         "system_packet_sha256": { "$ref": "#/$defs/hash" },
@@ -273,12 +299,67 @@
         "system_packet_sha256": { "$ref": "#/$defs/hash" },
         "system_packet_utf8_bytes": { "type": "integer", "minimum": 1 },
         "active_arm_responses": {
-          "type": "array", "minItems": 3, "maxItems": 3,
-          "items": { "$ref": "#/$defs/armResponse" }
+          "type": "array", "minItems": 9, "maxItems": 9,
+          "items": [
+            {
+              "allOf": [
+                { "$ref": "#/$defs/armResponse" },
+                { "properties": { "arm_id": { "const": "A-RAW" }, "policy_id": { "const": "bounded-raw-trajectory-reference-v1" }, "policy_role": { "const": "conformance-reference-not-mature-null" } } }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/armResponse" },
+                { "properties": { "arm_id": { "const": "B-STATIC-DIV" }, "policy_id": { "const": "bounded-static-divisive-reference-v1" }, "policy_role": { "const": "conformance-reference-not-mature-null" } } }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/armResponse" },
+                { "properties": { "arm_id": { "const": "B-STREAM" }, "policy_id": { "const": "bounded-causal-streaming-reference-v1" }, "policy_role": { "const": "conformance-reference-not-mature-null" } } }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/armResponse" },
+                { "properties": { "arm_id": { "const": "B-LOG-RATIO" }, "policy_id": { "const": "bounded-log-ratio-reference-v1" }, "policy_role": { "const": "conformance-reference-not-mature-null" } } }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/armResponse" },
+                { "properties": { "arm_id": { "const": "B-DIFFERENCE" }, "policy_id": { "const": "bounded-difference-reference-v1" }, "policy_role": { "const": "conformance-reference-not-mature-null" } } }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/armResponse" },
+                { "properties": { "arm_id": { "const": "B-STATE-SPACE" }, "policy_id": { "const": "bounded-arx-signature-reference-v1" }, "policy_role": { "const": "conformance-reference-not-mature-null" } } }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/armResponse" },
+                { "properties": { "arm_id": { "const": "B-RECURRENT" }, "policy_id": { "const": "bounded-causal-recurrence-reference-v1" }, "policy_role": { "const": "conformance-reference-not-mature-null" } } }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/armResponse" },
+                { "properties": { "arm_id": { "const": "C-MECHANISM-BANK" }, "policy_id": { "const": "bounded-source-shaped-signature-bank-v1" }, "policy_role": { "const": "hypothesis-bank-conformance-reference" } } }
+              ]
+            },
+            {
+              "allOf": [
+                { "$ref": "#/$defs/armResponse" },
+                { "properties": { "arm_id": { "const": "C-DUAL" }, "policy_id": { "const": "bounded-dual-feature-consensus-v1" }, "policy_role": { "const": "candidate-conformance-reference" } } }
+              ]
+            }
+          ],
+          "additionalItems": false
         },
         "inactive_arm_responses": {
-          "type": "array", "minItems": 6, "maxItems": 6,
-          "items": { "$ref": "#/$defs/inactiveResponse" }
+          "const": []
         }
       }
     }

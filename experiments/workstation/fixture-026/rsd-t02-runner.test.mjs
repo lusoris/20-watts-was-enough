@@ -28,6 +28,17 @@ import {
 const temporaryRoot = path.join(process.cwd(), "tmp");
 const RAW_FILE = "rsd-t02-raw-events.jsonl";
 const CHECKPOINT_FILE = "rsd-t02-checkpoint.json";
+const ACTIVE_ARM_IDS = Object.freeze([
+  "A-RAW",
+  "B-STATIC-DIV",
+  "B-STREAM",
+  "B-LOG-RATIO",
+  "B-DIFFERENCE",
+  "B-STATE-SPACE",
+  "B-RECURRENT",
+  "C-MECHANISM-BANK",
+  "C-DUAL",
+]);
 const RUN_FILE = "rsd-t02-run.json";
 const ARM_COMMITMENT_FILE = "rsd-t02-arm-commitment.json";
 const ARM_ABSTENTION_FILE = "rsd-t02-arm-abstention.json";
@@ -62,20 +73,16 @@ test("preparation freezes the bounded 175-record public-development grid", async
   assert.equal(prepared.o2_executed, false);
   assert.equal(prepared.floor_executed, false);
   assert.equal(prepared.arm_packet_records, 5);
-  assert.equal(prepared.arm_responses, 15);
+  assert.equal(prepared.arm_responses, 45);
   assert.equal(
     prepared.arm_policy_execution_boundary,
-    "fixture-026.rsd-t02-isolated-policy.v1",
+    "fixture-026.rsd-t02-isolated-policy.v2",
   );
   assert.equal(prepared.isolated_policy_children, 5);
   assert.match(prepared.policy_bundle_sha256, /^[0-9a-f]{64}$/u);
   assert.match(prepared.policy_bundle_inventory_sha256, /^[0-9a-f]{64}$/u);
-  assert.deepEqual(prepared.actionable_arms_implemented, [
-    "B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK",
-  ]);
-  assert.deepEqual(prepared.actionable_arms_not_implemented, [
-    "A-RAW", "B-STATIC-DIV", "B-STREAM", "B-LOG-RATIO", "B-DIFFERENCE", "C-DUAL",
-  ]);
+  assert.deepEqual(prepared.actionable_arms_implemented, ACTIVE_ARM_IDS);
+  assert.deepEqual(prepared.actionable_arms_not_implemented, []);
   assert.equal(prepared.result_label, "NO_RESULT");
   assert.equal(prepared.claim_eligible, false);
   const development = await prepareFixture026RsdT02("development");
@@ -85,7 +92,7 @@ test("preparation freezes the bounded 175-record public-development grid", async
   assert.equal(development.configured_work_units, 350);
   assert.equal(development.full_public_development_pack_executed, false);
   assert.equal(development.arm_packet_records, 10);
-  assert.equal(development.arm_responses, 30);
+  assert.equal(development.arm_responses, 90);
   assert.equal(development.isolated_policy_children, 10);
 });
 
@@ -125,9 +132,10 @@ test("policy-boundary failure is durably abstained before evaluator open and rep
     assert.equal(failed.comparison_inference_permitted, false);
     assert.equal(failed.result_label, "NO_RESULT");
     assert.equal(failed.no_result, true);
-    assert.deepEqual(failed.active_arm_outcomes.map((outcome) => outcome.arm_id), [
-      "B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK",
-    ]);
+    assert.deepEqual(
+      failed.active_arm_outcomes.map((outcome) => outcome.arm_id),
+      ACTIVE_ARM_IDS,
+    );
     assert.ok(failed.active_arm_outcomes.every((outcome) => (
       outcome.action === "abstain"
       && outcome.reason_codes.length === 1
@@ -233,9 +241,16 @@ test("whole-system arm responses are committed before any evaluator-bearing raw 
     const commitment = JSON.parse(armText);
     assert.equal(commitment.packet_records.length, 5);
     assert.ok(commitment.packet_records.every((record) => (
-      record.active_arm_responses.length === 3
-      && record.inactive_arm_responses.length === 6
+      record.active_arm_responses.length === 9
+      && record.inactive_arm_responses.length === 0
     )));
+    assert.equal(
+      commitment.packet_records.reduce(
+        (total, record) => total + record.active_arm_responses.length,
+        0,
+      ),
+      45,
+    );
     assert.equal((await readFile(path.join(fixture.output, RAW_FILE), "utf8")).trimEnd().split("\n").length, 1);
 
     await rm(armPath);
@@ -425,7 +440,7 @@ test("a complete smoke ledger, pair matrices, and analysis remain NO_RESULT", as
     assert.equal(execution.run.arm_packet_records, 5);
     assert.equal(
       execution.run.arm_policy_execution_boundary,
-      "fixture-026.rsd-t02-isolated-policy.v1",
+      "fixture-026.rsd-t02-isolated-policy.v2",
     );
     assert.equal(execution.run.isolated_policy_children, 5);
     assert.equal(execution.run.arm_boundary_invocations, 5);
@@ -441,9 +456,8 @@ test("a complete smoke ledger, pair matrices, and analysis remain NO_RESULT", as
     assert.equal(summary.matched_step_pair_matrix.length, 90);
     assert.equal(summary.pair_matrix.length, 10);
     assert.equal(summary.arm_bank.packet_records, 5);
-    assert.deepEqual(summary.arm_bank.active_arm_ids, [
-      "B-STATE-SPACE", "B-RECURRENT", "C-MECHANISM-BANK",
-    ]);
+    assert.deepEqual(summary.arm_bank.active_arm_ids, ACTIVE_ARM_IDS);
+    assert.deepEqual(summary.arm_bank.inactive_arm_ids, []);
     assert.equal(summary.arm_bank.exact_information_parity, true);
     assert.equal(summary.arm_bank.identical_common_caps_without_padding, true);
     assert.ok(Object.values(summary.checks).every(Boolean));

@@ -505,6 +505,34 @@
     "status": "Exact mapping produced by the checked-in F-026 initialization-ID and opaque-state-permutation functions at the displayed background and time constant. The three colored regions are procedural information cuts. The seed axis selects one of two handle mappings and does not instantiate independently sampled systems, so the graphic carries no effective-sample-size, comparison, performance, or energy result."
   },
   {
+    "id": "rsd-t02-policy-work-envelope",
+    "title": "Nine policies, one visible work baseline",
+    "equation": "charged work = 53,795 rows × 12 traversal ops + policy-specific ops",
+    "source": "math/interventional-mechanism-equivalence.md#fixed-whole-system-policy-conformance-references",
+    "layout": {
+      "kind": "horizontal-work-envelope",
+      "width": 1100,
+      "height": 660,
+      "theme": "ember"
+    },
+    "parameters": {
+      "common_traversal_scalar_operations": 645540,
+      "scalar_operation_cap": 1000000,
+      "arms": [
+        { "id": "A-RAW", "total_scalar_operations": 654960, "transcendental_evaluations": 0, "group": "raw" },
+        { "id": "B-STATIC-DIV", "total_scalar_operations": 645544, "transcendental_evaluations": 0, "group": "transform" },
+        { "id": "B-STREAM", "total_scalar_operations": 670140, "transcendental_evaluations": 3, "group": "transform" },
+        { "id": "B-LOG-RATIO", "total_scalar_operations": 645544, "transcendental_evaluations": 1, "group": "transform" },
+        { "id": "B-DIFFERENCE", "total_scalar_operations": 646117, "transcendental_evaluations": 0, "group": "transform" },
+        { "id": "B-STATE-SPACE", "total_scalar_operations": 688576, "transcendental_evaluations": 1537, "group": "model" },
+        { "id": "B-RECURRENT", "total_scalar_operations": 667058, "transcendental_evaluations": 1, "group": "model" },
+        { "id": "C-MECHANISM-BANK", "total_scalar_operations": 654960, "transcendental_evaluations": 0, "group": "candidate" },
+        { "id": "C-DUAL", "total_scalar_operations": 655550, "transcendental_evaluations": 1, "group": "candidate" }
+      ]
+    },
+    "status": "Exact declared operation accounting for the nine fixed public-development conformance policies on one 53,795-row packet. Bars show policy-specific scalar work above the common 645,540-operation traversal charge; labels show total scalar operations and transcendental evaluations. These counts are protocol accounting, not elapsed-time, energy, accuracy, comparison, or confirmation results."
+  },
+  {
     "id": "interface-qualified-retroactivity",
     "title": "A connected client can reshape the producer transient",
     "equation": "dX/dt = k(t)-delta X+k_off C-k_on X(p_tot-C);  R(X)=[1+(1+X/K_d)^2/(p_tot/K_d)]^-1",

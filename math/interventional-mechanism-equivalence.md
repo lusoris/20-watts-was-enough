@@ -355,22 +355,25 @@ The observation regimes are:
    it is a secondary active-design regime.
 
 The current code freezes these regimes and analytic construction certificates.
-An additive whole-system Stage 2 implements three fixed public-development
-policy-conformance references. It does not implement a trained estimator,
-calibrated posterior, mature null, claim-eligible run or comparison.
+An additive whole-system Stage 2 now implements all nine registered
+public-development policy-conformance references. These fixed policies close
+the executable feature-family matrix; they do not constitute trained
+estimators, calibrated posteriors, mature nulls, a claim-eligible run or a
+comparison.
 
 ## Fixed whole-system policy-conformance references
 
 Let the ordered packet be $P=(P_1,\ldots,P_{35})$ with 53,795 sample rows.
-All three active policies receive the same canonical bytes and common cap. Their
+All nine active policies receive the same canonical bytes and common cap. Their
 responses are committed before `O-GRAPH` opens any member of $P$. The bands
 below were chosen after inspecting the five enumerated public construction
 worlds. They are therefore **construction-tuned protocol constants**, not
 fitted parameters or confirmation-calibrated decision limits.
 
-Each packet is evaluated in a fresh Node child, with a new hardened VM context
-for each active policy. The child receives one canonical LF JSON request and
-can read only the verified SHA-named policy bundle. The policy VM receives no
+Each packet is evaluated in a fresh Node child and one new hardened VM context.
+The self-contained bank evaluates the nine ordered policies in that context.
+The child receives one canonical LF JSON request and can read only the verified
+SHA-named policy bundle. The policy VM receives no
 process, filesystem, network, environment, clock, random or evaluator
 capability.
 Request, packet, configuration, bundle and runtime identities are bound into
@@ -386,6 +389,74 @@ loaded before their later file fingerprints, so concurrent repository mutation
 across that parent-module load boundary remains outside this
 public-development authority; the policy computation itself executes from the
 verified content-addressed bundle.
+
+The six transform-policy references added in Stage 2b are deliberately small
+and causal. Let $y_k$ be the reported output, $u_k$ the active-channel input,
+$u_0$ the same-episode initial background, $r_k=u_k/u_0$, and
+$\Delta t=1/64\,\mathrm s$.
+
+`A-RAW` uses no engineered drive coordinate. It reads the intervention traces
+directly:
+
+$$
+z_f=|y_{\mathrm{CLAMP}}(1\,\mathrm s)|,
+\qquad
+z_c=\max_{2\le t\le3}|y_{\mathrm{RESTIM}}(t)|,
+$$
+
+and uses the reset/freeze distance $h$ defined below. It declares a feedback
+edge for $z_f\ge0.5$, no edge for $z_f\le0.45$, local channel state for
+$z_c\ge0.9$, shared state for $z_c\le0.85$, memory for $h\ge0.1$, and no
+memory for $h\le10^{-8}$. It always abstains on the drive transform.
+
+`B-STATIC-DIV` evaluates the ramp at $t=0.25\,\mathrm s$ using
+
+$$
+z_s=\frac{y(t)}{r(t)-1}.
+$$
+
+It declares log-fold for $z_s\ge0.98$, affine-fold for $z_s\le0.92$, and
+otherwise abstains. `B-LOG-RATIO` instead uses the positive-domain coordinate
+
+$$
+z_\ell=\frac{y(t)}{\log_2 r(t)},
+$$
+
+declaring log-fold for $z_\ell\ge0.85$, affine-fold for $z_\ell\le0.8$, and
+abstaining when the logarithm is undefined or the evidence lies in the gap.
+
+`B-DIFFERENCE` uses only the first 64 ramp increments. With
+$\dot y_k=(y_k-y_{k-1})/\Delta t$ and
+$\dot r_k=(r_k-r_{k-1})/\Delta t$, its projection coefficient is
+
+$$
+z_d=
+\frac{\sum_{k=1}^{64}\dot y_k\dot r_k}
+     {\sum_{k=1}^{64}\dot r_k^2}.
+$$
+
+It declares affine-fold for $z_d\ge0.78$, log-fold for $z_d\le0.77$, and
+otherwise abstains.
+
+`B-STREAM` processes each selected trace in chronological order. For
+$\alpha=\exp[-\Delta t/(0.25\,\mathrm s)]$, it updates
+
+$$
+\delta_k=y_k-m_{k-1},\qquad
+m_k=\alpha m_{k-1}+(1-\alpha)y_k,
+\qquad
+v_k=\alpha v_{k-1}+(1-\alpha)\delta_k^2,
+$$
+
+and scores the causal standardized innovation
+$z_k=|\delta_k|/(\sqrt{v_k}+1)$. Clamp-release evidence at one second uses
+true/false thresholds $0.38/0.30$; cross-channel restimulation at two seconds
+uses $0.94/0.85$. Intermediate evidence abstains.
+
+`C-DUAL` requires all three drive votes from $z_s$, $z_\ell$, and $z_d$ to be
+present and identical. It then carries the supported raw intervention
+decisions for the other three coordinates. Missing or discordant drive votes
+produce an abstention; the frozen fallback count is zero.
 
 For `B-STATE-SPACE`, define the fold $r_k=u_k/u_0$ and two fixed drives
 
@@ -463,7 +534,15 @@ per row, or 645,540 before its specific operations. Common caps are $10^6$
 scalar operations, 2,000 transcendental evaluations, 128 retained-state bytes,
 4,096 influential-parameter bytes, 16 MiB scratch, 256 KiB combined policy and
 configuration artifacts, and zero fallbacks. Actual counts are not padded to
-the caps. Wall time and joules remain null.
+the caps. Across the nine references, charged scalar work ranges from 645,544
+(`B-STATIC-DIV` and `B-LOG-RATIO`) to 688,576 (`B-STATE-SPACE`), including the
+common packet traversal. Wall time and joules remain null.
+
+![Exact policy-specific scalar work above the shared packet-traversal baseline.](../public/plots/rsd-t02-policy-work-envelope.svg)
+
+The plot exposes the common charge and the remaining policy-specific work
+without turning the declared scalar-operation model into a wall-time, energy
+or architecture-ranking claim.
 
 The repeated-pulse grid is retained because the Rahi evidence makes
 refractory stabilization and period skipping useful one-sided signatures in a
@@ -524,6 +603,83 @@ The closed machine form is
 [`rsd-t02-stage3-design.json`](../experiments/workstation/fixture-026/configs/rsd-t02-stage3-design.json),
 validated by
 [`rsd-t02-stage3-design.mjs`](../experiments/workstation/fixture-026/rsd-t02-stage3-design.mjs).
+
+## Prospective system population and outer-family boundary
+
+The information cut above remains valid, but it is not a population design.
+The next contract uses the following nesting, from inferentially broad to
+repeated measurement:
+
+$$
+\text{design}\supset\text{structural lineage}\supset\text{family}
+\supset\text{independent instance}\supset\text{packet}
+\supset\text{episode}\supset\text{realization}.
+$$
+
+A procedural seed is only a replay key. A family is one frozen equation
+template plus a declared parameter distribution. An instance is one accepted
+parameter vector drawn independently from that family; it is the unit for a
+fixed-family estimand. Episodes, rows, property coordinates, solver refinements
+and noise realizations remain nested measurements and never increase the
+reported independent $n$.
+
+This distinction also invalidates a tempting reuse of the current packet. Its
+nine O0 executions cross $\tau_*=0.5,1,2\,\mathrm s$, while its 26 O1
+executions hold $\tau_*=1\,\mathrm s$. One population instance must bind one
+parameter vector—including one time constant—across every episode. The old
+mixed-$\tau$ packet remains a construction-conformance artifact; a population
+packet must be regenerated per fixed parameter vector.
+
+The first defensible claim mode is a **fixed finite family panel**. Visible
+development families and separately sealed outer-confirmation and
+outer-transfer families are split by structural lineage, not by recipe label or
+instance. Related equations, derivations, code siblings and full-panel-
+equivalent recipes share a leakage group and cannot cross partitions. An outer
+result therefore generalizes only to the prospectively frozen weighted panel,
+not to arbitrary future mechanisms. A family-superpopulation claim requires a
+separate frozen probabilistic family grammar and powers on independently drawn
+families or lineages.
+
+For coordinate $q$, instance $i$, family $f$ and arm $a$, first aggregate the
+coordinate loss inside the instance,
+
+$$
+\ell_{afi}=\sum_q w_q L_{afiq},
+\qquad
+d_{fi}^{a,b}=\ell_{afi}-\ell_{bfi}.
+$$
+
+Then form the equal-family weighted contrast
+
+$$
+\widehat\Delta^{a,b}=\sum_f w_f\bar d_f^{a,b},
+\qquad
+\bar d_f^{a,b}=\frac{1}{n_f}\sum_i d_{fi}^{a,b},
+\qquad
+w_f=\frac1F.
+$$
+
+Resampling occurs over instances within the fixed families; rows are never
+resampled as independent systems. The prospective power artifact must freeze
+the smallest effect of interest, alpha, power, family heterogeneity, family and
+instance counts, abstention coverage, failure disposition and the calculation
+implementation hash before private responses. The experiment-level success
+rule applies Holm's procedure across all four fixed endpoint-by-comparator
+hypotheses at $\alpha=0.05$; controlling two contrasts separately inside each
+endpoint would not close the cross-endpoint multiplicity boundary.
+
+The causal-memory coordinate is not primary-scorable in this first population
+design because the current family bank contains no valid memory-negative
+lineage. It can become primary only after both values have prospective,
+lineage-diverse coverage. Outer family templates and truth remain encrypted or
+evaluator-custodied until the model, calibration, thresholds, analyzer,
+resource caps and power plan are frozen. A bare public hash is a commitment,
+not secrecy for a small family search space.
+
+The closed prospective machine form is
+[`rsd-t02-population-design.json`](../experiments/workstation/fixture-026/configs/rsd-t02-population-design.json),
+validated by
+[`rsd-t02-population-contract.mjs`](../experiments/workstation/fixture-026/rsd-t02-population-contract.mjs).
 
 ## Calibration and abstention
 
@@ -816,9 +972,9 @@ deterministic bounded public-development runtime now consumes the T02-MECH
 registry to generate all O0/O1 construction episodes, enforce the policy
 firewall and response commitment, reconstruct evaluator truth, retain typed
 acquisition/construction/inference ledgers, and validate append-only resume.
-Its additive Stage 2 commits fixed `B-STATE-SPACE`, `B-RECURRENT`, and
-`C-MECHANISM-BANK` whole-system responses before evaluator access; the other six
-roles visibly abstain. Every event and analysis remains `NO_RESULT`; trained or
+Its additive Stage 2 commits all nine fixed whole-system policy-conformance
+responses before evaluator access, with zero inactive placeholders. Every event
+and analysis remains `NO_RESULT`; trained or
 calibrated estimators, mature nulls, comparisons, claim eligibility, O2, T02-FLOOR
 execution, confirmation, workstation measurement and energy conclusions are
 absent.

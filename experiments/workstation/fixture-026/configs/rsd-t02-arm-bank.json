@@ -1,21 +1,21 @@
 {
   "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-arm-bank.v2",
   "artifact": "fixture-026",
   "track": "RSD-T02",
   "authority": "bounded-public-development-policy-conformance-only",
   "active_arm_ids": [
-    "B-STATE-SPACE",
-    "B-RECURRENT",
-    "C-MECHANISM-BANK"
-  ],
-  "inactive_arm_ids": [
     "A-RAW",
     "B-STATIC-DIV",
     "B-STREAM",
     "B-LOG-RATIO",
     "B-DIFFERENCE",
+    "B-STATE-SPACE",
+    "B-RECURRENT",
+    "C-MECHANISM-BANK",
     "C-DUAL"
   ],
+  "inactive_arm_ids": [],
   "packet": {
     "observation_regimes": ["O0-MATCHED-STEP", "O1-FULL-PANEL"],
     "episodes": 35,
@@ -49,10 +49,59 @@
     "fallback_invocations": 0
   },
   "policies": {
+    "A-RAW": {
+      "policy_id": "bounded-raw-trajectory-reference-v1",
+      "role": "conformance-reference-not-mature-null",
+      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-27",
+      "threshold_rationale": "read only registered raw output contrasts and retain explicit gaps between the five public construction traces; no normalization, fitting or confirmation calibration is implied",
+      "feedback_true_floor": 0.5,
+      "feedback_false_ceiling": 0.45,
+      "channel_local_true_floor": 0.9,
+      "channel_local_false_ceiling": 0.85,
+      "memory_true_floor": 0.1,
+      "memory_false_ceiling": 1e-8
+    },
+    "B-STATIC-DIV": {
+      "policy_id": "bounded-static-divisive-reference-v1",
+      "role": "conformance-reference-not-mature-null",
+      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-27",
+      "threshold_rationale": "divide the active ramp input by its same-episode initial background and keep an indifference band between the four affine and one log public construction ratios",
+      "drive_log_floor": 0.98,
+      "drive_affine_ceiling": 0.92
+    },
+    "B-STREAM": {
+      "policy_id": "bounded-causal-streaming-reference-v1",
+      "role": "conformance-reference-not-mature-null",
+      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-27",
+      "threshold_rationale": "use chronological exponential mean and variance updates with a frozen scale floor and nonoverlapping public clamp and channel innovation bands",
+      "state_decay_time_s": 0.25,
+      "innovation_scale_floor": 1,
+      "feedback_true_floor": 0.38,
+      "feedback_false_ceiling": 0.3,
+      "channel_local_true_floor": 0.94,
+      "channel_local_false_ceiling": 0.85
+    },
+    "B-LOG-RATIO": {
+      "policy_id": "bounded-log-ratio-reference-v1",
+      "role": "conformance-reference-not-mature-null",
+      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-27",
+      "threshold_rationale": "construct a positive-domain log fold from the same-episode background and retain a gap between affine and log response-to-log-drive public ratios",
+      "drive_log_floor": 0.85,
+      "drive_affine_ceiling": 0.8
+    },
+    "B-DIFFERENCE": {
+      "policy_id": "bounded-difference-reference-v1",
+      "role": "conformance-reference-not-mature-null",
+      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-27",
+      "threshold_rationale": "compare causal first differences over the first registered ramp second and preserve an indifference band between affine and log derivative projection ratios",
+      "derivative_window_samples": 64,
+      "drive_affine_floor": 0.78,
+      "drive_log_ceiling": 0.77
+    },
     "B-STATE-SPACE": {
       "policy_id": "bounded-arx-signature-reference-v1",
       "role": "conformance-reference-not-mature-null",
-      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-26",
+      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-27",
       "threshold_rationale": "separate the registered affine and log ramp residual margins while retaining an indifference band; opaque reset/freeze bands bracket exact-zero and planted-memory construction traces",
       "drive_mse_margin": 0.00001,
       "memory_true_floor": 0.1,
@@ -61,7 +110,7 @@
     "B-RECURRENT": {
       "policy_id": "bounded-causal-recurrence-reference-v1",
       "role": "conformance-reference-not-mature-null",
-      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-26",
+      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-27",
       "threshold_rationale": "place nonoverlapping indifference bands between the enumerated clamp-release and cross-channel recurrent innovations; no robustness or confirmation calibration is implied",
       "state_decay_time_s": 0.25,
       "feedback_true_floor": 0.45,
@@ -72,10 +121,30 @@
     "C-MECHANISM-BANK": {
       "policy_id": "bounded-source-shaped-signature-bank-v1",
       "role": "hypothesis-bank-conformance-reference",
-      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-26",
+      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-27",
       "threshold_rationale": "place nonoverlapping bands between the enumerated ramp, clamp, restimulation and opaque-state signatures; these are public construction thresholds rather than fitted or confirmation-calibrated decision limits",
       "drive_log_floor": 0.48,
       "drive_affine_ceiling": 0.46,
+      "feedback_true_floor": 0.5,
+      "feedback_false_ceiling": 0.45,
+      "channel_local_true_floor": 0.9,
+      "channel_local_false_ceiling": 0.85,
+      "memory_true_floor": 0.1,
+      "memory_false_ceiling": 1e-8
+    },
+    "C-DUAL": {
+      "policy_id": "bounded-dual-feature-consensus-v1",
+      "role": "candidate-conformance-reference",
+      "threshold_provenance": "construction-tuned-on-five-enumerated-public-worlds-2026-08-27",
+      "threshold_rationale": "require unanimous static-divisive, log-ratio and difference drive votes, then combine only supported raw intervention contrasts without invoking a fallback",
+      "static_drive_log_floor": 0.98,
+      "static_drive_affine_ceiling": 0.92,
+      "log_drive_log_floor": 0.85,
+      "log_drive_affine_ceiling": 0.8,
+      "difference_window_samples": 64,
+      "difference_drive_affine_floor": 0.78,
+      "difference_drive_log_ceiling": 0.77,
+      "required_drive_votes": 3,
       "feedback_true_floor": 0.5,
       "feedback_false_ceiling": 0.45,
       "channel_local_true_floor": 0.9,
