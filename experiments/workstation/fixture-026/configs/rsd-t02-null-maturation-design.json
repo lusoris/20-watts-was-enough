@@ -1,0 +1,365 @@
+{
+  "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-null-maturation-design.v1",
+  "artifact": "fixture-026",
+  "track": "RSD-T02",
+  "authority": "prospective-null-maturation-design-only",
+  "parent_artifacts": [
+    {
+      "role": "arm-bank-configuration",
+      "path": "configs/rsd-t02-arm-bank.json",
+      "sha256_exact_bytes": "4bb4f13389edbc7b3749e12b3ab7c38c1e1756675cf699c136d677bb2e110e44"
+    },
+    {
+      "role": "procedural-information-cut",
+      "path": "configs/rsd-t02-stage3-design.json",
+      "sha256_exact_bytes": "f5f89984939dcce331616631522978764027ff8fdc8381a84d6876c79b4f8b8a"
+    },
+    {
+      "role": "population-design",
+      "path": "configs/rsd-t02-population-design.json",
+      "sha256_exact_bytes": "1e65c501eb9efe2cd6cef6b79f250378b05b845efc6d519b3451d454e7f80fc9"
+    },
+    {
+      "role": "public-family-registry",
+      "path": "configs/rsd-t02-system-family-registry.json",
+      "sha256_exact_bytes": "9868cc5a6b2af627875505c1c49c3be1cea69f10538e91aa66085c8cfe589618"
+    },
+    {
+      "role": "public-instance-plan",
+      "path": "configs/rsd-t02-development-instance-plan.json",
+      "sha256_exact_bytes": "06cfb0316f57a5135b665ff31605f7d4b4ac147621b3801f5906cc0e254955fb"
+    },
+    {
+      "role": "equation-score-and-template-contract",
+      "path": "rsd-t02-contract.mjs",
+      "sha256_exact_bytes": "d9819a4eb30ef83b9007fb701513fefd349c72a726ebba236caa81d314101c6c"
+    },
+    {
+      "role": "equation-model-implementation",
+      "path": "rsd-t02-models.mjs",
+      "sha256_exact_bytes": "011adacd5f53628d14d35549b57c67eb219184c82f93e8c81410cb0b9ffdd4c2"
+    },
+    {
+      "role": "evaluator",
+      "path": "rsd-t02-evaluator.mjs",
+      "sha256_exact_bytes": "2bcf1c1dff42c337c2d544d99ad799b57fd58310979473ec8a96499d307f02e4"
+    },
+    {
+      "role": "fixed-instance-generator",
+      "path": "rsd-t02-system-family-generator.mjs",
+      "sha256_exact_bytes": "b8b684cd71f4039d477a19b85acde2ad7ae87af001855d7af9f773ca36d2a231"
+    },
+    {
+      "role": "current-conformance-reference-bank",
+      "path": "rsd-t02-arm-bank.mjs",
+      "sha256_exact_bytes": "a3b2d356692b347e3078d56d0e4fff0e59858bc21ba595bab4abc10780ce4e19"
+    }
+  ],
+  "maturity_ladder": [
+    {
+      "level": 1,
+      "status": "fixed-conformance-reference",
+      "meaning": "deterministic construction-checking policy without learned weights or calibrated probabilities"
+    },
+    {
+      "level": 2,
+      "status": "trainable-public-prototype",
+      "meaning": "causal trainable core and output interface pass software and leakage tests"
+    },
+    {
+      "level": 3,
+      "status": "fit-frozen-development-estimator",
+      "meaning": "selection and fitting are complete on fit-role independent public instances"
+    },
+    {
+      "level": 4,
+      "status": "calibrated-development-comparator",
+      "meaning": "frozen core has calibrated probabilities support detection and abstention thresholds"
+    },
+    {
+      "level": 5,
+      "status": "confirmation-frozen-mature-null",
+      "meaning": "model calibration caps and source-runtime identity are frozen before comparison release"
+    },
+    {
+      "level": 6,
+      "status": "confirmation-evaluated",
+      "meaning": "run state after one-pass evaluator-custodied confirmation rather than a model property"
+    }
+  ],
+  "current_implementations": [
+    {
+      "arm_id": "B-STATE-SPACE",
+      "current_level": 1,
+      "current_status": "fixed-conformance-reference",
+      "current_core": "two-hard-coded-first-order-affine-or-log-traces-plus-reset-freeze-distances",
+      "trainable_state_space_estimator_exists": false,
+      "calibrated_probability_output_exists": false,
+      "current_property_coverage": [
+        "drive_transform",
+        "causal_memory"
+      ],
+      "satisfies_mature_null_gate": false
+    },
+    {
+      "arm_id": "B-RECURRENT",
+      "current_level": 1,
+      "current_status": "fixed-conformance-reference",
+      "current_core": "fixed-exponential-running-state-over-clamp-and-restimulation-traces",
+      "trainable_gru_style_estimator_exists": false,
+      "calibrated_probability_output_exists": false,
+      "current_property_coverage": [
+        "reported_output_feedback_edge",
+        "channel_local_state"
+      ],
+      "satisfies_mature_null_gate": false
+    }
+  ],
+  "target_null_contract": {
+    "required_arm_ids": [
+      "B-STATE-SPACE",
+      "B-RECURRENT"
+    ],
+    "state_space_core": "learned-causal-latent-transition-and-observation-maps",
+    "recurrent_core": "compact-learned-GRU-style-causal-state",
+    "same_architecture_neutral_property_head": true,
+    "same_fixed_parameter_packet_schema": true,
+    "same_allowlisted_causal_fields": true,
+    "primary_property_keys": [
+      "drive_transform",
+      "reported_output_feedback_edge",
+      "channel_local_state"
+    ],
+    "secondary_property_keys": [
+      "causal_memory"
+    ],
+    "joint_property_vector_domain_before_causal_memory_activation": [
+      "drive_transform",
+      "reported_output_feedback_edge",
+      "channel_local_state"
+    ],
+    "joint_property_vector_domain_after_causal_memory_activation": [
+      "drive_transform",
+      "reported_output_feedback_edge",
+      "channel_local_state",
+      "causal_memory"
+    ],
+    "causal_memory_activation_condition": "two-truth-values-with-at-least-two-structural-lineages-per-value",
+    "causal_memory_domain_migration_rule": "new-contract-version-new-head-and-recalibration-before-any-four-coordinate-score",
+    "required_outputs": [
+      "normalized-per-property-value-posteriors",
+      "per-property-identifiability-posterior",
+      "normalized-joint-property-vector-posterior-over-active-domain",
+      "joint-marginals-equal-coordinate-posteriors",
+      "support-status",
+      "deterministic-decide-or-abstain-action",
+      "complete-reason-codes",
+      "complete-work-ledger"
+    ],
+    "forbidden_pre_evaluator_fields": [
+      "recipe_id",
+      "equation_id",
+      "family_id",
+      "structural_lineage_id",
+      "property_certificate",
+      "evaluator_truth"
+    ]
+  },
+  "development_role_contract": {
+    "assignment_unit": "canonical-system-instance-id",
+    "roles": [
+      "fit",
+      "calibration",
+      "development-evaluation"
+    ],
+    "stratification": [
+      "system-family",
+      "primary-property-vector-coverage"
+    ],
+    "nested_objects_inherit_instance_role": [
+      "packet",
+      "episode",
+      "realization",
+      "row",
+      "procedural-replay-key",
+      "training-restart"
+    ],
+    "inner_selection_folds": "grouped-by-system-instance-within-fit-only",
+    "calibration_receives_one_selected_frozen_model": true,
+    "development_evaluation_mode": "one-pass-per-protocol-generation",
+    "outer_instances_visible_to_fit_tuning_calibration_or-pilot-variance": false,
+    "current_public_plan_role_assignment_state": "not-created"
+  },
+  "fit_contract": {
+    "objective": "sum_iq a_q[BCE(I_iq,s_iq)+I_iq*CE(pi_iq,p_iq)]+lambda_E[-log(sum_v_in_Ei q_i(v))]+lambda_P*L_causal_predictive+lambda_R*R(theta)",
+    "objective_unit": "dimensionless",
+    "training_objective_weight_symbol": "a_q",
+    "training_objective_weight_constraints": "nonnegative-and-sum-over-active-properties-equals-one",
+    "endpoint_aggregation_weight_symbol": "w_q",
+    "endpoint_aggregation_weight_constraints": "nonnegative-and-sum-over-active-properties-equals-one",
+    "endpoint_aggregation_weights_used_for_training": false,
+    "common_endpoint_aggregation_weights_frozen_before_development_evaluation": true,
+    "objective_coefficient_domains": {
+      "lambda_E": {
+        "lower_bound": 0,
+        "lower_bound_inclusive": false,
+        "unit": "1",
+        "selection_role": "fit-only"
+      },
+      "lambda_P": {
+        "lower_bound": 0,
+        "lower_bound_inclusive": true,
+        "unit": "1",
+        "selection_role": "fit-only"
+      },
+      "lambda_R": {
+        "lower_bound": 0,
+        "lower_bound_inclusive": true,
+        "unit": "1",
+        "selection_role": "fit-only"
+      }
+    },
+    "selection_data_role": "fit-only",
+    "hyperparameters_selected_inside_fit_only": [
+      "arm-specific-training-objective-weights-a_q",
+      "equivalence-mass-coefficient-lambda_E",
+      "predictive-loss-coefficient-lambda_P",
+      "regularizer-coefficient-lambda_R",
+      "auxiliary-prediction-horizon",
+      "optimizer",
+      "early-stopping",
+      "architecture"
+    ],
+    "deterministic_tie_break_frozen_before_trial_outcomes": true,
+    "trial_registration_timing": "append-before-launch",
+    "failed_timeout_oom_and_abandoned_trials_charged": true,
+    "restart_is_independent_system_unit": false,
+    "affected_fitting_permitted_now": false,
+    "affected_fitting_blockers": [
+      "primary-property-lineage-coverage-incomplete",
+      "outer-family-templates-not-assigned-and-sealed",
+      "validated-parameterized-transcript-policy-resource-runner-absent",
+      "instance-level-fit-calibration-development-evaluation-assignment-absent"
+    ]
+  },
+  "calibration_and_abstention_contract": {
+    "core_preprocessing_and_heads_frozen_before_calibration": true,
+    "final_numeric_common_resource_caps_frozen_before_calibration": true,
+    "calibration_method_family_selected_inside_fit": true,
+    "calibration_may_change_model_weights": false,
+    "calibrated_quantities": [
+      "property-value-posteriors",
+      "identifiability-posteriors",
+      "joint-property-vector-posterior-over-active-domain"
+    ],
+    "precalibration_support_coverage_floor_status": "not-yet-frozen",
+    "precalibration_support_coverage_floor_freeze_source": "fit-only-without-calibration-or-development-evaluation-outcomes",
+    "support_threshold_tie_rule": "equal-to-threshold-abstains",
+    "expected_loss_threshold_tie_rule": "equal-to-abstention-loss-abstains",
+    "non_abstention_action_tie_rule": "equal-minimum-expected-loss-across-actions-abstains",
+    "decision_rule": "minimum-registered-expected-loss-subject-to-support",
+    "decide_condition": "calibrated-expected-decision-loss-strictly-below-abstention-loss-and-support-strictly-passes",
+    "scientific_out_of_support_disposition": "in-denominator-abstention",
+    "malformed_packet_disposition": "reject-outside-scientific-denominator",
+    "runtime_failure_disposition": "frozen-visible-and-charged-no-silent-deletion",
+    "fallback_default": "prohibited"
+  },
+  "resource_contract": {
+    "equalized_maxima_not_padded_actual_work": true,
+    "common_caps_required": [
+      "retained-state",
+      "influential-parameters",
+      "scratch-memory-bytes",
+      "threads",
+      "wall-time",
+      "inference-work",
+      "tuning-trials",
+      "training-restarts"
+    ],
+    "charged_components": [
+      "successful-preprocessing-fit-and-data-reads",
+      "successful-training-and-optimizer-updates",
+      "property-and-identifiability-heads",
+      "calibrator",
+      "support-detector",
+      "failed-trials",
+      "selection",
+      "fallback",
+      "inference"
+    ],
+    "separate_ledgers": [
+      "training",
+      "failed-trials",
+      "selection",
+      "calibration",
+      "fallback",
+      "inference"
+    ],
+    "provisional_pilot_envelope": {
+      "retained_state_scalars": 16,
+      "trainable_scalars": 512,
+      "tuning_trials": 32,
+      "active_cap": false
+    },
+    "current_conformance_operation_counts_are_training_or_measured_work": false,
+    "measured_joules_required_for_energy_comparison": true,
+    "energy_gate_application_rule": "required-only-if-the-comparison-claims-a-measured-energy-endpoint"
+  },
+  "freeze_order": [
+    "population-family-grammar-lineages-generator-endpoints-hypotheses-failure-rules",
+    "seal-outer-family-payload-before-affected-fit-response",
+    "public-instance-manifests-and-instance-role-assignment",
+    "validate-parameterized-transcript-policy-resource-runner",
+    "training-recipe-search-restarts-objective-code-runtime-tie-break-provisional-caps",
+    "fit-ledger-and-selected-model",
+    "final-numeric-common-resource-caps-after-fit-only-pilot",
+    "precalibration-support-coverage-floor-frozen-from-fit-only-data",
+    "calibrator-support-and-abstention",
+    "one-pass-development-evaluation-and-pilot-variance",
+    "null-work-ledger-and-resource-accounting-audited",
+    "effect-margin-power-holm4-custody-and-workstation-measurement-plan",
+    "seal-outer-instance-packs-after-power-plan",
+    "isolated-one-pass-confirmation-and-transfer"
+  ],
+  "promotion_gates": {
+    "null_maturity": [
+      { "gate": "validated-parameterized-transcript-policy-resource-runner", "satisfied": false },
+      { "gate": "instance-level-fit-calibration-development-evaluation-split", "satisfied": false },
+      { "gate": "trainable-state-space-prototype-passes", "satisfied": false },
+      { "gate": "trainable-recurrent-prototype-passes", "satisfied": false },
+      { "gate": "both-selected-model-artifacts-frozen", "satisfied": false },
+      { "gate": "final-common-resource-caps-frozen", "satisfied": false },
+      { "gate": "both-calibrators-support-and-abstention-artifacts-frozen", "satisfied": false },
+      { "gate": "one-pass-development-evaluation-and-pilot-variance-complete", "satisfied": false },
+      { "gate": "null-source-runtime-identity-frozen", "satisfied": false },
+      { "gate": "null-work-ledger-and-resource-accounting-audited", "satisfied": false }
+    ],
+    "comparison_release": [
+      { "gate": "versioned-public-family-registry", "satisfied": true },
+      { "gate": "validated-fixed-parameter-instance-generator", "satisfied": true },
+      { "gate": "primary-property-lineage-coverage", "satisfied": false },
+      { "gate": "outer-family-templates-assigned-and-sealed", "satisfied": false },
+      { "gate": "candidate-probability-emitting-artifact-frozen", "satisfied": false },
+      { "gate": "single-four-hypothesis-holm-analyzer-frozen", "satisfied": false },
+      { "gate": "prospective-power-plan-passes", "satisfied": false },
+      { "gate": "outer-custody-and-release-chain-passes", "satisfied": false },
+      { "gate": "outer-instance-packs-sealed", "satisfied": false },
+      { "gate": "experiment-wide-paired-resource-accounting-audited", "satisfied": false }
+    ],
+    "energy_comparison_conditional": [
+      { "gate": "measured-energy-meter-protocol-frozen", "satisfied": false }
+    ]
+  },
+  "promotion_gate_rules": {
+    "affected_fitting_gate": "no-active-fitting-blockers",
+    "mature_null_gate": "affected-fitting-gate-and-all-null_maturity-gates-satisfied",
+    "comparison_release_gate": "mature-null-gate-and-all-comparison_release-gates-satisfied",
+    "energy_comparison_gate": "conditional-gate-required-only-for-measured-energy-claim"
+  },
+  "mature_null_gate_satisfied": false,
+  "affected_fitting_permitted": false,
+  "comparison_inference_permitted": false,
+  "claim_eligible": false,
+  "result_label": "NO_RESULT"
+}

@@ -25,8 +25,8 @@
     },
     {
       "relative_path": "rsd-t02-contract.mjs",
-      "sha256": "ecc00ee7c8a1a83c887aad438208f5c9a2e51907c7080b78fc4b91867615c09e",
-      "bytes": 24570
+      "sha256": "d9819a4eb30ef83b9007fb701513fefd349c72a726ebba236caa81d314101c6c",
+      "bytes": 28289
     },
     {
       "relative_path": "rsd-t02-isolated-policy.mjs",
@@ -49,7 +49,7 @@
       "bytes": 15696
     }
   ],
-  "source_inventory_sha256": "b61b7084b7c8cbbc2a31f6bc090a0c1985981e104f42220f6cb1ae5893005021",
+  "source_inventory_sha256": "366640ba74078ad0936b0b9527d09dab097c3ac40e5ed9bca94bafea2a1883d0",
   "authority": "checked-in-public-development-conformance-policy-base-v2",
-  "inventory_sha256": "12d9bf3cea23d4209cd10df1fc8ad9587d5376a199cb633949ff5539d328ade6"
+  "inventory_sha256": "d7ad203061183543f11998727b4fec2f057406bcd42e594eae4d08ce93c990f3"
 }

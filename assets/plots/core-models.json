@@ -483,6 +483,22 @@
     "status": "Direct deterministic output of the checked-in public-development pulse constructor for one protected skipping cell. PS-NFL-H4 has a support-qualified period-two event word 01 repeated ten times; PS-IFFL-H4 is period one and has no skipping signature. Both topology dispositions remain unresolved because no actionable estimator, rival certificate, comparison, confirmation partition, workstation performance measurement, or energy measurement exists."
   },
   {
+    "id": "rsd-t02-lineage-coverage",
+    "title": "Parameter draws cannot repair missing lineages",
+    "equation": "coverage(q=v) = number of distinct structural lineages after full-panel equivalence collapse; required floor = 2",
+    "source": "math/interventional-mechanism-equivalence.md#exact-public-fixed-instance-construction",
+    "layout": {
+      "kind": "horizontal-lineage-coverage",
+      "width": 1100,
+      "height": 660,
+      "theme": "ember"
+    },
+    "parameters": {
+      "minimum_lineages": 2
+    },
+    "status": "Exact coverage audit of the five-family public-development RSD-T02 registry. Full-panel-equivalent I1-FFL and affine high-pass recipes count as one structural lineage. The chart reports a design prerequisite only: it is not sample size, power, estimator performance, biological prevalence, or a comparison result."
+  },
+  {
     "id": "rsd-t02-procedural-seed-map",
     "title": "64 seed labels are only two opaque handle maps",
     "equation": "seed → SHA-256 initialization ID → π ∈ {(H0→x0,H1→x1),(H0→x1,H1→x0)}",

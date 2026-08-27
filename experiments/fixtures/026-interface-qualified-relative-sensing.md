@@ -656,20 +656,44 @@ Holm procedure at $\alpha=0.05$. The fail-closed machine form is the
 and its
 [`runtime validator`](../workstation/fixture-026/rsd-t02-population-contract.mjs).
 
+**Public fixed-instance construction.** A separate registry now binds exactly
+the five public equation families, their equation certificates, hashed equation
+templates, structural lineages and full-panel equivalence groups. An exact HMAC-SHA-256 integer
+generator crosses four conformance draw indices with those families and emits
+20 metadata-only system instances. Each complete rational parameter vector
+contains one time constant in $[0.5,2]\,\mathrm s$, and every corresponding
+packet repeats that vector across the 26 unique full-panel episodes. The packet
+ID separately binds the complete episode protocol; schedule changes therefore
+do not masquerade under an old packet ID. Draw indices and non-scientific
+registry metadata do not enter scientific identity. Full registry, population-
+design and model-source bytes remain explicit provenance. The
+coverage audit remains failed: log-fold, feedback-present and
+channel-local-present have one lineage each, while memory-negative has none.
+These packets have no transcript or policy runner and do not replace the
+35-projection conformance packet. The generic-null maturation contract records
+both current nulls at level one of six. All ten intrinsic maturity gates are
+open; two of ten separate comparison-release gates are satisfied, and one
+measured-energy meter gate is conditional on a measured-energy claim. Four
+shared blockers must close before affected fitting or mature-null status.
+See the [family registry](../workstation/fixture-026/configs/rsd-t02-system-family-registry.json),
+[generator](../workstation/fixture-026/rsd-t02-system-family-generator.mjs),
+[null-maturation design](../workstation/fixture-026/configs/rsd-t02-null-maturation-design.json),
+and [Decision 0022](../../decisions/0022-separate-fixed-instance-construction-from-conformance-runtime.md).
+
 **Kill rule.** Kill attribution if step fit or hidden provenance supplies the
 answer, a purported separation lacks a pairwise certificate, an arm is rewarded
 for guessing within an equivalence set, privileged access is unequal or
 unpriced, RMS or fixed slow sampling replaces the floor endpoint, or the
 mechanism bank cannot beat generic state-space/recurrent nulls at equal access.
 
-**Required future artifacts.** Mature
-nulls, prospectively calibrated or trained estimators, fixed-parameter family
-generators, sealed lineage-disjoint outer families, a frozen power plan, matched confirmation
+**Required future artifacts.** A coverage-complete lineage bank, parameterized
+fixed-instance transcript and policy runner, mature nulls, prospectively
+calibrated or trained estimators, sealed lineage-disjoint outer families, a frozen power plan, matched confirmation
 computation and intervention budgets, prospective confirmation mapping and custody, paired
 statistics, promotion evidence, calibrated workstation measurement, an O2
 response-freeze contract, and a separately frozen T02-FLOOR runtime with a
-finite-estimator authority boundary. The current construction runtime supplies
-none of those comparison, claim, asymptotic, workstation or energy authorities.
+finite-estimator authority boundary. None of those comparison, claim,
+asymptotic, workstation or energy authorities exists.
 
 ### RSD-T02-PULSE — One-sided repeated-stimulus signatures
 

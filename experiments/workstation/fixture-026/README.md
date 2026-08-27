@@ -257,6 +257,8 @@ node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-is
 node --test --test-isolation=none experiments/workstation/fixture-026/build-rsd-t02-policy-bundle.test.mjs
 node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-transform-policies.test.mjs
 node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-population-contract.test.mjs
+node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-system-family-generator.test.mjs
+node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-null-maturation-contract.test.mjs
 
 node experiments/workstation/fixture-026/runner.mjs t02-prepare --profile smoke
 node experiments/workstation/fixture-026/runner.mjs t02-smoke --profile smoke --output experiments/workstation/runs/fixture-026-t02-smoke --resume false
@@ -373,6 +375,56 @@ Machine-readable files:
 - [`rsd-t02-population-contract.mjs`](rsd-t02-population-contract.mjs)
 - [`rsd-t02-population-contract.test.mjs`](rsd-t02-population-contract.test.mjs)
 
+## Public fixed-instance construction
+
+The additive family-construction layer is deliberately separate from the
+35-projection conformance runtime. It registers the five public equation
+families and generates four deterministic conformance coordinates per family.
+The HMAC-SHA-256 generator draws one exact integer time constant in
+`[500000, 2000000] us` with rejection-before-modulo, binds the complete
+  rational parameter vector, nuisance interface, property-certificate set and
+  declared equation-template digest to the canonical system identity. The
+  scientific registry projection excludes coverage, custody, packet and
+  authority metadata; the full registry, population design and model source are
+  separate provenance bindings. One metadata packet contains the 26 unique
+  full-panel episodes at that same time constant, and its episode-protocol
+  digest covers every schedule plus horizon, step, rate, bounds, units and
+  interpreter semantics.
+
+The resulting 20 artifacts test replay, identity and packet invariants. They
+contain no trajectories or policy responses and are not a powered population
+sample. The coverage audit counts structural lineages rather than draws or
+recipe names. It currently fails four values: log-fold, feedback-present,
+channel-local-present and memory-negative.
+
+Machine-readable files:
+
+- [`configs/rsd-t02-system-family-registry.json`](configs/rsd-t02-system-family-registry.json)
+- [`rsd-t02-system-family-registry.schema.json`](rsd-t02-system-family-registry.schema.json)
+- [`configs/rsd-t02-development-instance-plan.json`](configs/rsd-t02-development-instance-plan.json)
+- [`rsd-t02-development-instance-plan.schema.json`](rsd-t02-development-instance-plan.schema.json)
+- [`rsd-t02-generated-artifacts.schema.json`](rsd-t02-generated-artifacts.schema.json)
+- [`rsd-t02-system-family-generator.mjs`](rsd-t02-system-family-generator.mjs)
+- [`rsd-t02-system-family-generator.test.mjs`](rsd-t02-system-family-generator.test.mjs)
+
+The generic-null contract makes executable status explicit. The current
+`B-STATE-SPACE` and `B-RECURRENT` policies are both level-one fixed conformance
+references: they are neither trained estimators nor calibrated probability
+models. Only level five, `confirmation-frozen-mature-null`, satisfies the
+population gate. All ten intrinsic null-maturity gates remain open. Two of ten
+separate comparison-release gates are satisfied: the versioned public registry
+and fixed-instance generator. The measured-energy meter gate is conditional on
+a measured-energy claim. The executable authority derivation excludes that
+conditional gate from non-energy comparisons and requires all four fitting
+blockers to close before maturity. Affected fitting is blocked by
+incomplete primary lineage coverage, absent sealed outer-family templates, the
+absent parameterized runner and the absent instance-role assignment.
+
+- [`configs/rsd-t02-null-maturation-design.json`](configs/rsd-t02-null-maturation-design.json)
+- [`rsd-t02-null-maturation-design.schema.json`](rsd-t02-null-maturation-design.schema.json)
+- [`rsd-t02-null-maturation-contract.mjs`](rsd-t02-null-maturation-contract.mjs)
+- [`rsd-t02-null-maturation-contract.test.mjs`](rsd-t02-null-maturation-contract.test.mjs)
+
 Run identity also freezes the actual Node version, V8 version, libuv version,
 platform, architecture, endianness, OS release, numeric model, and Math API
 boundary. Checkpoints, events, replay, and analyses bind that fingerprint.
@@ -401,11 +453,11 @@ This smoke slice deliberately lacks:
    property-performance/trajectory-conformance endpoint;
 7. confirmation and transfer seeds, commitments, custody, and releases;
 8. calibrated workstation time, memory, and energy measurement; and
-9. mature nulls, prospectively trained or calibrated estimators, fixed-
-   parameter system-family generators, a frozen power plan, sealed
-   lineage-disjoint outer families, comparison/claim authority, confirmation
-   custody, O2 selection, and T02-FLOOR execution for the bounded T02-MECH
-   construction runtime; and
+9. a coverage-complete lineage bank, parameterized fixed-instance transcript
+   and policy runner, mature nulls, prospectively trained or calibrated
+   estimators, a frozen power plan, sealed lineage-disjoint outer families,
+   comparison/claim authority, confirmation custody, O2 selection, and
+   T02-FLOOR execution for the bounded T02-MECH construction runtime; and
 10. machine contracts and runners for RSD-T03 through RSD-T10.
 
 Until those gaps are closed and separately reviewed, this directory remains a

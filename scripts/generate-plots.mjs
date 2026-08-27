@@ -4,6 +4,7 @@ import { generateLayoutStudy } from "../experiments/workstation/fixture-012/gene
 import { fixture026RsdT02InitializationId } from "../experiments/workstation/fixture-026/rsd-t02-generator.mjs";
 import { fixture026RsdT02OpaqueStatePermutation } from "../experiments/workstation/fixture-026/rsd-t02-models.mjs";
 import { constructFixture026RsdT02SkippingCell } from "../experiments/workstation/fixture-026/rsd-t02-pulse.mjs";
+import { summarizeFixture026RsdT02FamilyCoverage } from "../experiments/workstation/fixture-026/rsd-t02-system-family-generator.mjs";
 
 const root = process.cwd();
 const specs = JSON.parse(
@@ -2163,6 +2164,91 @@ function repeatedStimulusSkippingCell(spec) {
   });
 }
 
+async function rsdT02LineageCoverage(spec) {
+  const registry = JSON.parse(await readFile(path.join(
+    root,
+    "experiments",
+    "workstation",
+    "fixture-026",
+    "configs",
+    "rsd-t02-system-family-registry.json",
+  ), "utf8"));
+  const summary = summarizeFixture026RsdT02FamilyCoverage(registry);
+  if (
+    spec.parameters.minimum_lineages !== summary.minimum_distinct_structural_lineages_per_value
+    || summary.properties.length !== 4
+  ) throw new Error(`${spec.id} parameters drifted from the family registry`);
+
+  const desiredRows = [
+    ["drive_transform", "affine-fold", "drive · affine"],
+    ["drive_transform", "log-fold", "drive · log"],
+    ["reported_output_feedback_edge", "false", "feedback · absent"],
+    ["reported_output_feedback_edge", "true", "feedback · present"],
+    ["channel_local_state", "false", "channel state · shared"],
+    ["channel_local_state", "true", "channel state · local"],
+    ["causal_memory", "false", "causal memory · absent"],
+    ["causal_memory", "true", "causal memory · present"],
+  ];
+  const rows = desiredRows.map(([propertyKey, value, label]) => {
+    const property = summary.properties.find(({ property_key: key }) => key === propertyKey);
+    const observed = property.values.find(({ value: registeredValue }) => registeredValue === value);
+    return {
+      label,
+      count: observed?.distinct_structural_lineage_count ?? 0,
+      familyCount: observed?.family_count ?? 0,
+      covered: observed?.meets_minimum ?? false,
+    };
+  });
+  const left = 415;
+  const right = 1010;
+  const top = 166;
+  const bottom = 540;
+  const maximum = Math.max(
+    summary.minimum_distinct_structural_lineages_per_value,
+    ...rows.map(({ count }) => count),
+  );
+  const x = (value) => left + (value / maximum) * (right - left);
+  const rowHeight = (bottom - top) / rows.length;
+  const ticks = Array.from({ length: maximum + 1 }, (_, index) => index);
+  const gridLines = ticks.map((tick) => {
+    const position = x(tick);
+    return `<line x1="${position}" y1="${top - 10}" x2="${position}" y2="${bottom + 2}" stroke="${colors.grid}" stroke-width="1"/>
+    <text x="${position}" y="574" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="middle">${tick}</text>`;
+  }).join("");
+  const thresholdX = x(summary.minimum_distinct_structural_lineages_per_value);
+  const bars = rows.map((row, index) => {
+    const y = top + index * rowHeight + 6;
+    const barWidth = Math.max(2, x(row.count) - left);
+    const fill = row.covered ? colors.green : colors.coral;
+    const valueLabel = `${row.count} lineage${row.count === 1 ? "" : "s"} · ${row.familyCount} famil${row.familyCount === 1 ? "y" : "ies"}`;
+    const placeLabelInside = row.count === maximum;
+    const valueLabelX = placeLabelInside ? right - 10 : Math.max(left + 10, x(row.count) + 10);
+    const valueLabelWidth = valueLabel.length * 7.25 + 10;
+    const valueLabelBackingX = placeLabelInside
+      ? valueLabelX - valueLabelWidth + 5
+      : valueLabelX - 5;
+    const separator = index > 0 && index % 2 === 0
+      ? `<line x1="72" y1="${y - 8}" x2="${right}" y2="${y - 8}" stroke="${colors.grid}" stroke-width="1" opacity=".8"/>`
+      : "";
+    return `${separator}<text x="${left - 18}" y="${y + 19}" fill="${colors.text}" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="end">${esc(row.label)}</text>
+    <rect x="${left}" y="${y}" width="${barWidth}" height="25" rx="6" fill="${fill}" opacity=".92"/>
+    <rect x="${valueLabelBackingX}" y="${y + 2}" width="${valueLabelWidth}" height="21" rx="4" fill="${colors.panel}" opacity=".94"/>
+    <text x="${valueLabelX}" y="${y + 18}" fill="${colors.text}" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="${placeLabelInside ? "end" : "start"}">${valueLabel}</text>`;
+  }).join("");
+  const content = `${gridLines}
+  <line x1="${thresholdX}" y1="${top - 16}" x2="${thresholdX}" y2="${bottom + 4}" stroke="${colors.amber}" stroke-width="4" stroke-dasharray="9 7"/>
+  <text x="${thresholdX + 10}" y="${top - 22}" fill="${colors.amber}" font-family="Cascadia Mono, monospace" font-size="12">frozen floor = ${summary.minimum_distinct_structural_lineages_per_value}</text>${bars}`;
+  const legend = `<circle cx="728" cy="48" r="6" fill="${colors.green}"/><text x="740" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">meets floor</text>
+  <circle cx="836" cy="48" r="6" fill="${colors.coral}"/><text x="848" y="52" fill="${colors.muted}" font-family="Cascadia Mono, monospace" font-size="11">thin / absent</text>`;
+  return frame(spec, content, {
+    xLabel: "distinct structural lineages after equivalence collapse",
+    yLabel: "registered property value",
+    legend,
+    badge: "EXACT REGISTRY COVERAGE · NO_RESULT",
+    footer: `${registry.families.length} public families · coverage prerequisite, not power or performance`,
+  });
+}
+
 function rsdT02ProceduralSeedMap(spec) {
   const {
     seed_start: seedStart,
@@ -2359,6 +2445,7 @@ const renderers = {
   "rsd-t01-family-property-overlap": rsdT01FamilyPropertyOverlap,
   "fast-boundary-layer-norms": fastBoundaryLayerNorms,
   "repeated-stimulus-skipping-cell": repeatedStimulusSkippingCell,
+  "rsd-t02-lineage-coverage": rsdT02LineageCoverage,
   "rsd-t02-procedural-seed-map": rsdT02ProceduralSeedMap,
   "rsd-t02-policy-work-envelope": rsdT02PolicyWorkEnvelope,
   "interface-qualified-retroactivity": interfaceQualifiedRetroactivity,

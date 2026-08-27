@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="660" viewBox="0 0 1100 660" role="img" aria-labelledby="title desc">
+  <title id="title">Parameter draws cannot repair missing lineages</title>
+  <desc id="desc">Exact coverage audit of the five-family public-development RSD-T02 registry. Full-panel-equivalent I1-FFL and affine high-pass recipes count as one structural lineage. The chart reports a design prerequisite only: it is not sample size, power, estimator performance, biological prevalence, or a comparison result.</desc>
+  <rect width="1100" height="660" rx="24" fill="#101c18"/>
+  <rect x="36" y="30" width="272" height="30" rx="15" fill="#203b31" stroke="#3f6b5b"/>
+  <text x="52" y="50" fill="#36d399" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">EXACT REGISTRY COVERAGE · NO_RESULT</text>
+  <text x="54" y="94" fill="#fffaf0" font-family="Georgia, serif" font-size="32" font-weight="700">Parameter draws cannot repair missing lineages</text>
+  <text x="54" y="123" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="14">coverage(q=v) = number of distinct structural lineages after full-panel equivalence collapse; required floor = 2</text>
+  <rect x="112" y="150" width="928" height="406" rx="8" fill="#14251f" stroke="#315047"/>
+  <line x1="415" y1="156" x2="415" y2="542" stroke="#315047" stroke-width="1"/>
+    <text x="415" y="574" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="middle">0</text><line x1="563.75" y1="156" x2="563.75" y2="542" stroke="#315047" stroke-width="1"/>
+    <text x="563.75" y="574" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="middle">1</text><line x1="712.5" y1="156" x2="712.5" y2="542" stroke="#315047" stroke-width="1"/>
+    <text x="712.5" y="574" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="middle">2</text><line x1="861.25" y1="156" x2="861.25" y2="542" stroke="#315047" stroke-width="1"/>
+    <text x="861.25" y="574" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="middle">3</text><line x1="1010" y1="156" x2="1010" y2="542" stroke="#315047" stroke-width="1"/>
+    <text x="1010" y="574" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="middle">4</text>
+  <line x1="712.5" y1="150" x2="712.5" y2="544" stroke="#ffb04a" stroke-width="4" stroke-dasharray="9 7"/>
+  <text x="722.5" y="144" fill="#ffb04a" font-family="Cascadia Mono, monospace" font-size="12">frozen floor = 2</text><text x="397" y="191" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="end">drive · affine</text>
+    <rect x="415" y="172" width="446.25" height="25" rx="6" fill="#36d399" opacity=".92"/>
+    <rect x="866.25" y="174" width="176.75" height="21" rx="4" fill="#14251f" opacity=".94"/>
+    <text x="871.25" y="190" fill="#fffaf0" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="start">3 lineages · 4 families</text><text x="397" y="237.75" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="end">drive · log</text>
+    <rect x="415" y="218.75" width="148.75" height="25" rx="6" fill="#ff6b6b" opacity=".92"/>
+    <rect x="568.75" y="220.75" width="155" height="21" rx="4" fill="#14251f" opacity=".94"/>
+    <text x="573.75" y="236.75" fill="#fffaf0" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="start">1 lineage · 1 family</text><line x1="72" y1="257.5" x2="1010" y2="257.5" stroke="#315047" stroke-width="1" opacity=".8"/><text x="397" y="284.5" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="end">feedback · absent</text>
+    <rect x="415" y="265.5" width="446.25" height="25" rx="6" fill="#36d399" opacity=".92"/>
+    <rect x="866.25" y="267.5" width="176.75" height="21" rx="4" fill="#14251f" opacity=".94"/>
+    <text x="871.25" y="283.5" fill="#fffaf0" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="start">3 lineages · 4 families</text><text x="397" y="331.25" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="end">feedback · present</text>
+    <rect x="415" y="312.25" width="148.75" height="25" rx="6" fill="#ff6b6b" opacity=".92"/>
+    <rect x="568.75" y="314.25" width="155" height="21" rx="4" fill="#14251f" opacity=".94"/>
+    <text x="573.75" y="330.25" fill="#fffaf0" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="start">1 lineage · 1 family</text><line x1="72" y1="351" x2="1010" y2="351" stroke="#315047" stroke-width="1" opacity=".8"/><text x="397" y="378" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="end">channel state · shared</text>
+    <rect x="415" y="359" width="446.25" height="25" rx="6" fill="#36d399" opacity=".92"/>
+    <rect x="866.25" y="361" width="176.75" height="21" rx="4" fill="#14251f" opacity=".94"/>
+    <text x="871.25" y="377" fill="#fffaf0" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="start">3 lineages · 4 families</text><text x="397" y="424.75" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="end">channel state · local</text>
+    <rect x="415" y="405.75" width="148.75" height="25" rx="6" fill="#ff6b6b" opacity=".92"/>
+    <rect x="568.75" y="407.75" width="155" height="21" rx="4" fill="#14251f" opacity=".94"/>
+    <text x="573.75" y="423.75" fill="#fffaf0" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="start">1 lineage · 1 family</text><line x1="72" y1="444.5" x2="1010" y2="444.5" stroke="#315047" stroke-width="1" opacity=".8"/><text x="397" y="471.5" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="end">causal memory · absent</text>
+    <rect x="415" y="452.5" width="2" height="25" rx="6" fill="#ff6b6b" opacity=".92"/>
+    <rect x="420" y="454.5" width="176.75" height="21" rx="4" fill="#14251f" opacity=".94"/>
+    <text x="425" y="470.5" fill="#fffaf0" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="start">0 lineages · 0 families</text><text x="397" y="518.25" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="13" text-anchor="end">causal memory · present</text>
+    <rect x="415" y="499.25" width="595" height="25" rx="6" fill="#36d399" opacity=".92"/>
+    <rect x="828.25" y="501.25" width="176.75" height="21" rx="4" fill="#14251f" opacity=".94"/>
+    <text x="1000" y="517.25" fill="#fffaf0" font-family="Cascadia Mono, monospace" font-size="12" text-anchor="end">4 lineages · 5 families</text>
+  <text x="576" y="617" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="15" text-anchor="middle">distinct structural lineages after equivalence collapse</text>
+  <text x="28" y="353" fill="#fffaf0" font-family="Segoe UI, sans-serif" font-size="15" text-anchor="middle" transform="rotate(-90 28 353)">registered property value</text>
+  <circle cx="728" cy="48" r="6" fill="#36d399"/><text x="740" y="52" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="11">meets floor</text>
+  <circle cx="836" cy="48" r="6" fill="#ff6b6b"/><text x="848" y="52" fill="#aabbb4" font-family="Cascadia Mono, monospace" font-size="11">thin / absent</text>
+  <text x="1040" y="638" fill="#aabbb4" font-family="Segoe UI, sans-serif" font-size="11" text-anchor="end">5 public families · coverage prerequisite, not power or performance</text>
+</svg>

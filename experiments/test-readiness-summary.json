@@ -2,19 +2,19 @@
   "schema": 1,
   "generatedFrom": "experiments/test-coverage.json",
   "claims": {
-    "total": 1555,
+    "total": 1559,
     "testRouted": 1463,
     "protocolCovered": 1463,
     "executionReady": 0,
     "tierCounts": {
-      "ledger-only": 92,
+      "ledger-only": 96,
       "linked-description": 0,
       "protocol-complete": 1463,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
       "ledger-only": {
-        "established": 79,
+        "established": 83,
         "plausible": 9,
         "speculative": 0,
         "disputed": 4,
@@ -44,14 +44,14 @@
     }
   },
   "ledgerOnly": {
-    "total": 92,
+    "total": 96,
     "dispositionCounts": {
-      "evidence-input": 81,
+      "evidence-input": 82,
       "source-reproduction": 11,
       "existing-artifact-gap": 0,
-      "new-artifact-needed": 0
+      "new-artifact-needed": 3
     },
-    "proposedArtifactFamilies": 0
+    "proposedArtifactFamilies": 3
   },
   "artifacts": {
     "total": 47,

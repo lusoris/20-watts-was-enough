@@ -27,3 +27,4 @@ than silently changing its outcome.
 | [0019](0019-score-interventional-properties-not-generator-names.md) | Score interventional properties and equivalence classes instead of hidden generator names | accepted |
 | [0020](0020-separate-information-cuts-from-replication.md) | Separate procedural information cuts from scientific replication | accepted |
 | [0021](0021-bind-population-inference-to-system-lineages-and-instances.md) | Bind population inference to system lineages and fixed-parameter instances | accepted |
+| [0022](0022-separate-fixed-instance-construction-from-conformance-runtime.md) | Separate fixed-instance construction from the mixed-time-constant conformance runtime | accepted |

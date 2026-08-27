@@ -23459,9 +23459,13 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   behavior alone does not identify that mechanism.
 - **Status:** established theoretical sufficiency for the cited model;
   natural-mechanism attribution remains system- and intervention-specific.
-- **Primary sources:** [Goentoro et al. 2009](https://doi.org/10.1016/j.molcel.2009.11.018)
-  and the broader feedback/equivariance boundary in
-  [Shoval et al. 2010](https://doi.org/10.1073/pnas.1002352107).
+- **Primary sources:** [Goentoro et al. 2009](https://doi.org/10.1016/j.molcel.2009.11.018),
+  the broader feedback/equivariance boundary in
+  [Shoval et al. 2010](https://doi.org/10.1073/pnas.1002352107), and the
+  experiment-qualified identifiability boundary in
+  [Bellman and Åström 1970](https://doi.org/10.1016/0025-5564(70)90132-X),
+  [Apgar et al. 2008](https://doi.org/10.1371/journal.pcbi.0040030), and
+  [Villaverde, Barreiro and Papachristodoulou 2016](https://doi.org/10.1371/journal.pcbi.1005153).
 - **Rationale:** adaptation, pulse generation and fold-change detection are
   distinct properties, and more than one causal architecture can realize
   related observable behavior.
@@ -23473,19 +23477,23 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   errors remain inside the registered envelope.
 - **Failure modes:** topology-as-function inference, saturated activation,
   unobserved internal state, step-only validation, coordinate-equivalent
-  descriptions, and a log-ratio or state-space null matching the result.
+  descriptions, a candidate set that excludes the operative system, practical
+  non-identifiability despite structural identifiability, and a log-ratio or
+  state-space null matching the result.
 - **Measurable prediction:** a predeclared intervention panel separates only
   those causal properties for which the evaluator has a pairwise separation
   certificate; unresolved pairs produce a non-singleton set or abstention.
 - **Open question:** which minimal interventions distinguish mechanisms before
   acquisition cost exceeds the value of attribution?
 - **Direct test:** [`RSD-T02`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02--mechanism-discrimination-under-matched-step-behavior).
-- **Execution boundary:** all nine registered feature-family policies now have
-  fixed public-development conformance implementations and an isolated,
-  content-addressed policy-bank boundary. The five public recipes and mixed-
-  time-constant packet remain construction worlds, not independent population
-  instances. No trained null, calibrated probability, lineage-disjoint outer
-  family result or claim-eligible comparison exists.
+- **Execution boundary:** all nine registered feature-family policies have
+  fixed public-development conformance implementations. A separate exact
+  generator now constructs 20 reproducible fixed-parameter metadata packets
+  from the five named public families, but it does not execute trajectories or
+  policies. Its lineage coverage fails four required values, and both generic
+  nulls remain level-one fixed references rather than trained or calibrated
+  estimators. No lineage-disjoint outer-family result or claim-eligible
+  comparison exists.
 - **Traceability:** [source audit](audits/2026-08-26-rsd-t02-mechanism-equivalence.md) · [mathematical contract](../math/interventional-mechanism-equivalence.md).
 
 ### C-1542
@@ -24090,8 +24098,9 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   observation map, intervention constraints and numerical certificate.
 - **Status:** established method and model-scoped demonstrations; no universal
   intervention list follows.
-- **Primary sources:** [Mélykúti et al. 2010](https://doi.org/10.1186/1752-0509-4-38)
-  and [Hamadeh, Ingalls and Sontag 2013](https://doi.org/10.1098/rsif.2012.0935).
+- **Primary sources:** [Apgar et al. 2008](https://doi.org/10.1371/journal.pcbi.0040030),
+  [Mélykúti et al. 2010](https://doi.org/10.1186/1752-0509-4-38), and
+  [Hamadeh, Ingalls and Sontag 2013](https://doi.org/10.1098/rsif.2012.0935).
 - **Rationale:** administering a perturbation is not the same as proving that
   the resulting observations distinguish the declared rivals.
 - **AI translation:** store a machine-readable pairwise
@@ -24166,3 +24175,130 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   and what sampling cost is justified to detect it?
 - **Direct test:** [`RSD-T02`](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02--mechanism-discrimination-under-matched-step-behavior).
 - **Traceability:** [source audit](audits/2026-08-26-rsd-t02-mechanism-equivalence.md#the-fast-boundary-layer-needs-the-right-norm) · [mathematical contract](../math/interventional-mechanism-equivalence.md).
+
+### C-1565
+
+- **Claim:** Rows, episodes, repeated realizations, solver refinements and
+  procedural replay coordinates nested within one fixed system instance are
+  observational units; they cannot increase the independent $N$ for a
+  system-instance estimand.
+- **Status:** established experimental-design principle; the project's
+  canonical instance hash is an enforcement protocol rather than a scientific
+  result.
+- **Primary sources:** [Hurlbert 1984](https://doi.org/10.2307/1942661) and
+  [Lazic, Clarke-Williams and Munafò 2018](https://doi.org/10.1371/journal.pbio.2005282).
+- **Rationale:** repeated observations can improve estimation within one unit,
+  but treatment or system replication requires independently instantiated
+  units at the level targeted by the estimand.
+- **AI translation:** derive effective sample size from unique validated
+  fixed-parameter system-instance identities, then nest packets, episodes,
+  realizations, rows, restarts and seeds below them.
+- **Efficiency mechanism:** none is implied; the boundary prevents cheap
+  repeated measurements from receiving false evidence credit.
+- **Failure modes:** seed-as-system, row-wise confidence intervals,
+  pseudoreplication across episodes, alias IDs for one parameter vector, and
+  training restarts counted as new scientific systems.
+- **Measurable prediction:** multiplying episodes or replay coordinates while
+  holding canonical system-instance identities fixed leaves the independent
+  instance count unchanged.
+- **Open question:** how many truly independent instances per named family are
+  required after family heterogeneity, failures and multiplicity are modeled?
+- **Direct test:** [`RSD-T02` population contract](../experiments/workstation/fixture-026/rsd-t02-population-contract.test.mjs).
+- **Traceability:** [population and calibration audit](audits/2026-08-27-rsd-t02-population-identifiability-calibration.md) · [decision 0021](../decisions/0021-bind-population-inference-to-system-lineages-and-instances.md).
+
+### C-1566
+
+- **Claim:** When the target is prediction for a new dependent group or
+  structural lineage, evaluation must block the relevant dependence unit;
+  random row-level splitting can materially underestimate error.
+- **Status:** established for structured-data validation generally; the exact
+  equation/code-ancestry leakage graph for RSD-T02 remains a prospective
+  design choice until outer lineages exist.
+- **Primary sources:** [Roberts et al. 2017](https://doi.org/10.1111/ecog.02881)
+  and [Koh et al. 2021](https://proceedings.mlr.press/v139/koh21a.html).
+- **Rationale:** observations linked through space, time, hierarchy, ancestry
+  or shared construction code can place near-neighbours on both sides of a
+  nominal split.
+- **AI translation:** assign connected lineage and equivalence components to
+  exactly one of development, outer confirmation or outer transfer before
+  affected fitting.
+- **Efficiency mechanism:** none is implied; a stricter split exposes whether
+  apparent reuse reflects transferable structure or leakage.
+- **Failure modes:** row split across one system, code siblings across outer
+  partitions, equivalent equations counted as unseen families, and a blocked
+  extrapolation result presented as universal generalization.
+- **Measurable prediction:** when exploitable dependence crosses a random row
+  split, its expected score can be optimistically biased relative to a split
+  blocked at the target dependence unit. Because block composition,
+  extrapolation and finite sampling can reverse the realized ordering, report
+  both designs and measure the direction and magnitude rather than assuming it.
+- **Open question:** which declared ancestry relations form the smallest
+  leakage graph that blocks dependence without collapsing genuinely distinct
+  families?
+- **Direct test:** future `RSD-T02` outer-lineage split and leakage hostiles.
+- **Traceability:** [population and calibration audit](audits/2026-08-27-rsd-t02-population-identifiability-calibration.md) · [decision 0021](../decisions/0021-bind-population-inference-to-system-lineages-and-instances.md).
+
+### C-1567
+
+- **Claim:** Interpolation across episodes from known parameterized systems
+  does not establish performance under a shifted system-parameter
+  distribution or an unseen dynamical family.
+- **Status:** established for the cited dynamical-system benchmarks and the
+  general distinction between within-support and shifted evaluation; not a
+  theorem that every model must fail under every shift.
+- **Primary sources:** [Gilpin 2021](https://arxiv.org/abs/2110.05266) and
+  [Wang et al. 2021](https://proceedings.mlr.press/v144/wang21a.html).
+- **Rationale:** new histories from one fixed system probe response diversity,
+  while new parameter vectors and new equation lineages probe different axes
+  of generalization.
+- **AI translation:** report episode, parameter-instance and lineage transfer
+  separately; never let additional episodes substitute for independently
+  generated parameter vectors.
+- **Efficiency mechanism:** a model that retains accuracy across registered
+  parameter shifts may need less retuning, but that lifecycle advantage must
+  be measured rather than inferred from in-family interpolation.
+- **Failure modes:** episode holdout called system holdout, narrow public
+  parameter support, outer family seen during tuning, and family-transfer
+  language applied to another draw from the same equation.
+- **Measurable prediction:** at equal episode access, error can increase when
+  the evaluation parameter support or equation lineage moves outside the fit
+  support.
+- **Open question:** which parameter ranges are scientifically meaningful and
+  numerically valid without being chosen after seeing arm responses?
+- **Direct test:** fixed-parameter instance generator followed by future
+  parameterized transcript and outer-lineage runners.
+- **Traceability:** [population and calibration audit](audits/2026-08-27-rsd-t02-population-identifiability-calibration.md) · [family registry](../experiments/workstation/fixture-026/configs/rsd-t02-system-family-registry.json).
+
+### C-1568
+
+- **Claim:** Under an independent calibration sample from the target
+  distribution, selective prediction can trade coverage for controlled risk;
+  the guarantee does not automatically survive a mechanism-family shift.
+- **Status:** established decision-theoretic and finite-sample results under
+  their stated posterior, calibration and independence assumptions; RSD-T02
+  has not trained or calibrated such a predictor.
+- **Primary sources:** [Chow 1970](https://doi.org/10.1109/TIT.1970.1054406),
+  [Guo et al. 2017](https://proceedings.mlr.press/v70/guo17a.html), and
+  [Geifman and El-Yaniv 2017](https://papers.nips.cc/paper_files/paper/2017/hash/4a8423d5e91fda00bb7e46540e2b0cf1-Abstract.html).
+- **Rationale:** abstention becomes a meaningful action only after scores are
+  calibrated against a declared loss and the deployment support matches the
+  assumptions behind the calibration guarantee.
+- **AI translation:** freeze model weights before calibration, calibrate value
+  and identifiability posteriors on instance-disjoint data, and report both
+  risk and coverage with lineage-shift limitations.
+- **Efficiency mechanism:** abstention can avoid expensive or harmful forced
+  decisions, but acquisition, fallback and uncovered cases remain in the
+  resource and service denominator.
+- **Failure modes:** raw score called probability, calibration labels changing
+  model weights, threshold tuning on evaluation, zero coverage hidden, and
+  in-distribution risk bounds transported to unseen families.
+- **Measurable prediction:** across the registered threshold grid, coverage is
+  nondecreasing as acceptance is relaxed, with equality allowed under ties or
+  score plateaus; empirical risk is measured as a risk--coverage curve rather
+  than assumed monotone. Under a lineage shift, the public calibration
+  guarantee may fail and must be re-evaluated rather than assumed.
+- **Open question:** which frozen loss and support detector produce useful
+  coverage without turning abstention into an unpriced escape route?
+- **Direct test:** future calibrated `B-STATE-SPACE`, `B-RECURRENT` and
+  `C-MECHANISM-BANK` artifacts under the null-maturation contract.
+- **Traceability:** [population and calibration audit](audits/2026-08-27-rsd-t02-population-identifiability-calibration.md) · [null-maturation design](../experiments/workstation/fixture-026/configs/rsd-t02-null-maturation-design.json).

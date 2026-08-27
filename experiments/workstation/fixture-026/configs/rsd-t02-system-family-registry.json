@@ -1,0 +1,287 @@
+{
+  "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-system-family-registry.v1",
+  "artifact": "fixture-026",
+  "track": "RSD-T02",
+  "registry_id": "RSD-T02-PUBLIC-DEVELOPMENT-FAMILIES-V1",
+  "authority": "public-development-fixed-parameter-generation-only",
+  "partition": "development",
+  "payload_state": "public-development",
+  "target_population": "the-five-named-public-development-equation-families-only",
+  "population_design_binding": {
+    "contract_version": "fixture-026.rsd-t02-population-design.v1",
+    "canonical_sha256": "28530f3c35e5e12dfa0601ffe2ca674a54ff5d448d966764a1c7103a0204e7ee",
+    "exact_bytes_sha256": "1e65c501eb9efe2cd6cef6b79f250378b05b845efc6d519b3451d454e7f80fc9"
+  },
+  "implementation_provenance": {
+    "equation_template_contract_version": "fixture-026.rsd-t02-equation-template.v1",
+    "model_source_path": "rsd-t02-models.mjs",
+    "model_source_sha256_exact_bytes": "011adacd5f53628d14d35549b57c67eb219184c82f93e8c81410cb0b9ffdd4c2",
+    "model_source_role": "provenance-only-no-trajectory-execution"
+  },
+  "family_registry_identity_sha256": "7509b020f9ef9130bcf01f82b5452984e8b623dfe1f0f9fd996c1a046595433c",
+  "family_superpopulation_inference_permitted": false,
+  "generator_contract": {
+    "algorithm": "domain-separated-HMAC-SHA256-discrete-uniform-v1",
+    "domain": "fixture-026.rsd-t02-system-family-generator.v1",
+    "public_root_key_hex": "ac0b22dec2d1875d606033f4aa0c2da70f9ee9a5be3b956b7a2951465d0c7bab",
+    "draw_index_encoding": "canonical-json-unsigned-32-bit-integer-in-preimage",
+    "draw_index_role": "public-generator-conformance-coordinate-only",
+    "draw_index_is_scientific_unit": false,
+    "draw_order": [
+      "time_constant_us"
+    ],
+    "accepted_word_encoding": "unsigned-big-endian-uint64",
+    "modulo_bias_rule": "reject-above-largest-unbiased-multiple-before-modulo",
+    "duplicate_instance_rule": "same-canonical-instance-id-counts-once",
+    "invalid_draw_rule": "reject-before-response-log-and-charge",
+    "maximum_draws_per_requested_instance": 16
+  },
+  "packet_contract": {
+    "packet_version": "fixture-026.rsd-t02-fixed-instance-packet.v1",
+    "episode_registry": "FIXTURE_026_RSD_T02_EPISODES",
+    "episode_protocol_version": "fixture-026.rsd-t02-fixed-instance-episode-protocol.v1",
+    "episode_protocol_sha256": "25ce50ae6a6890e7591a499e46731e318fd0e7cb9bc591096c8fc7cdfff813d3",
+    "episode_count": 26,
+    "realizations_per_episode": 1,
+    "one_parameter_vector_per_packet": true,
+    "one_time_constant_per_packet": true,
+    "trajectories_generated_by_this_stage": false
+  },
+  "coverage_contract": {
+    "property_keys": [
+      "drive_transform",
+      "reported_output_feedback_edge",
+      "channel_local_state",
+      "causal_memory"
+    ],
+    "primary_scored_property_keys": [
+      "drive_transform",
+      "reported_output_feedback_edge",
+      "channel_local_state"
+    ],
+    "minimum_distinct_structural_lineages_per_value": 2,
+    "equivalent_families_in_one_lineage_count_once": true,
+    "coverage_is_not_power": true,
+    "causal_memory_primary_status": "excluded-no-memory-negative-lineage"
+  },
+  "families": [
+    {
+      "family_id": "F-DEV-IFFL-AFFINE",
+      "family_version": 1,
+      "recipe_id": "M-I1-FFL",
+      "equation_id": "t02-iffl-affine-reference",
+      "equation_template_version": "fixture-026.rsd-t02-equation-template.v1",
+      "equation_template_sha256": "f9699a45aa717aa699b2f48c9f1241a171d1166d795671f50d29966a8fb24c1b",
+      "structural_lineage_id": "L-AFFINE-INPUT-MEMORY",
+      "full_panel_equivalence_group": "E-AFFINE-INPUT-MEMORY",
+      "property_certificate": {
+        "equation_id": "t02-iffl-affine-reference",
+        "certificate_id": "CERT-t02-iffl-affine-reference",
+        "certificate_basis": "declared-equation-dependency-contract",
+        "property_vector": {
+          "drive_transform": "affine-fold",
+          "reported_output_feedback_edge": false,
+          "channel_local_state": false,
+          "causal_memory": true
+        }
+      },
+      "fixed_parameters": {
+        "canonical_fold": {
+          "numerator": 2,
+          "denominator": 1,
+          "unit": "1"
+        }
+      },
+      "parameter_distribution": {
+        "time_constant_us": {
+          "distribution": "discrete-uniform-integer-closed",
+          "minimum": 500000,
+          "maximum": 2000000,
+          "unit": "us"
+        }
+      },
+      "validity_gates": [
+        "finite-positive-time-constant",
+        "time-constant-within-registered-support",
+        "all-26-episode-descriptors-share-instance-parameters"
+      ]
+    },
+    {
+      "family_id": "F-DEV-OUTPUT-FEEDBACK",
+      "family_version": 1,
+      "recipe_id": "M-NONLINEAR-FEEDBACK",
+      "equation_id": "t02-nonlinear-output-feedback",
+      "equation_template_version": "fixture-026.rsd-t02-equation-template.v1",
+      "equation_template_sha256": "fb4455eac6ed73f72e59c0d377a9f6ae5a27c83d65f142401992394a7ed443c3",
+      "structural_lineage_id": "L-OUTPUT-FEEDBACK",
+      "full_panel_equivalence_group": "E-OUTPUT-FEEDBACK",
+      "property_certificate": {
+        "equation_id": "t02-nonlinear-output-feedback",
+        "certificate_id": "CERT-t02-nonlinear-output-feedback",
+        "certificate_basis": "declared-equation-dependency-contract",
+        "property_vector": {
+          "drive_transform": "affine-fold",
+          "reported_output_feedback_edge": true,
+          "channel_local_state": false,
+          "causal_memory": true
+        }
+      },
+      "fixed_parameters": {
+        "canonical_fold": {
+          "numerator": 2,
+          "denominator": 1,
+          "unit": "1"
+        },
+        "feedback_nonlinearity": {
+          "numerator": 1,
+          "denominator": 4,
+          "unit": "1"
+        }
+      },
+      "parameter_distribution": {
+        "time_constant_us": {
+          "distribution": "discrete-uniform-integer-closed",
+          "minimum": 500000,
+          "maximum": 2000000,
+          "unit": "us"
+        }
+      },
+      "validity_gates": [
+        "finite-positive-time-constant",
+        "time-constant-within-registered-support",
+        "all-26-episode-descriptors-share-instance-parameters"
+      ]
+    },
+    {
+      "family_id": "F-DEV-CHANNEL-LOCAL",
+      "family_version": 1,
+      "recipe_id": "M-RECEPTOR-MEMORY",
+      "equation_id": "t02-channel-local-reference",
+      "equation_template_version": "fixture-026.rsd-t02-equation-template.v1",
+      "equation_template_sha256": "de19a97cbe08dddf62a0b034ce04f4ee05b8ced7937f12343bb26076012a48e6",
+      "structural_lineage_id": "L-CHANNEL-LOCAL-MEMORY",
+      "full_panel_equivalence_group": "E-CHANNEL-LOCAL-MEMORY",
+      "property_certificate": {
+        "equation_id": "t02-channel-local-reference",
+        "certificate_id": "CERT-t02-channel-local-reference",
+        "certificate_basis": "declared-equation-dependency-contract",
+        "property_vector": {
+          "drive_transform": "affine-fold",
+          "reported_output_feedback_edge": false,
+          "channel_local_state": true,
+          "causal_memory": true
+        }
+      },
+      "fixed_parameters": {
+        "canonical_fold": {
+          "numerator": 2,
+          "denominator": 1,
+          "unit": "1"
+        }
+      },
+      "parameter_distribution": {
+        "time_constant_us": {
+          "distribution": "discrete-uniform-integer-closed",
+          "minimum": 500000,
+          "maximum": 2000000,
+          "unit": "us"
+        }
+      },
+      "validity_gates": [
+        "finite-positive-time-constant",
+        "time-constant-within-registered-support",
+        "all-26-episode-descriptors-share-instance-parameters"
+      ]
+    },
+    {
+      "family_id": "F-DEV-AFFINE-HIGHPASS",
+      "family_version": 1,
+      "recipe_id": "M-STATIC-HIGHPASS",
+      "equation_id": "t02-static-affine-highpass",
+      "equation_template_version": "fixture-026.rsd-t02-equation-template.v1",
+      "equation_template_sha256": "8f2b83fb8da457a4ce6699be1c0c6b722ad8fa3e9a904a3c281ee0fa1aba9914",
+      "structural_lineage_id": "L-AFFINE-INPUT-MEMORY",
+      "full_panel_equivalence_group": "E-AFFINE-INPUT-MEMORY",
+      "property_certificate": {
+        "equation_id": "t02-static-affine-highpass",
+        "certificate_id": "CERT-t02-static-affine-highpass",
+        "certificate_basis": "declared-equation-dependency-contract",
+        "property_vector": {
+          "drive_transform": "affine-fold",
+          "reported_output_feedback_edge": false,
+          "channel_local_state": false,
+          "causal_memory": true
+        }
+      },
+      "fixed_parameters": {
+        "canonical_fold": {
+          "numerator": 2,
+          "denominator": 1,
+          "unit": "1"
+        }
+      },
+      "parameter_distribution": {
+        "time_constant_us": {
+          "distribution": "discrete-uniform-integer-closed",
+          "minimum": 500000,
+          "maximum": 2000000,
+          "unit": "us"
+        }
+      },
+      "validity_gates": [
+        "finite-positive-time-constant",
+        "time-constant-within-registered-support",
+        "all-26-episode-descriptors-share-instance-parameters"
+      ]
+    },
+    {
+      "family_id": "F-DEV-LOG-HIGHPASS",
+      "family_version": 1,
+      "recipe_id": "M-LOG-HIGHPASS",
+      "equation_id": "t02-log-difference-highpass",
+      "equation_template_version": "fixture-026.rsd-t02-equation-template.v1",
+      "equation_template_sha256": "a18e540e7c25cfebbb6433be7043ec0da848784e72ecae3a0bada93d3a62fab7",
+      "structural_lineage_id": "L-LOG-INPUT-MEMORY",
+      "full_panel_equivalence_group": "E-LOG-INPUT-MEMORY",
+      "property_certificate": {
+        "equation_id": "t02-log-difference-highpass",
+        "certificate_id": "CERT-t02-log-difference-highpass",
+        "certificate_basis": "declared-equation-dependency-contract",
+        "property_vector": {
+          "drive_transform": "log-fold",
+          "reported_output_feedback_edge": false,
+          "channel_local_state": false,
+          "causal_memory": true
+        }
+      },
+      "fixed_parameters": {
+        "canonical_fold": {
+          "numerator": 2,
+          "denominator": 1,
+          "unit": "1"
+        }
+      },
+      "parameter_distribution": {
+        "time_constant_us": {
+          "distribution": "discrete-uniform-integer-closed",
+          "minimum": 500000,
+          "maximum": 2000000,
+          "unit": "us"
+        }
+      },
+      "validity_gates": [
+        "finite-positive-time-constant",
+        "time-constant-within-registered-support",
+        "all-26-episode-descriptors-share-instance-parameters"
+      ]
+    }
+  ],
+  "outer_partitions": {
+    "outer_confirmation": "not-created",
+    "outer_transfer": "not-created"
+  },
+  "comparison_inference_permitted": false,
+  "claim_eligible": false,
+  "result_label": "NO_RESULT"
+}

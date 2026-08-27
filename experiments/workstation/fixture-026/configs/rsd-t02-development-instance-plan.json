@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "contract_version": "fixture-026.rsd-t02-development-instance-plan.v1",
+  "registry_contract_version": "fixture-026.rsd-t02-system-family-registry.v1",
+  "family_registry_identity_sha256": "7509b020f9ef9130bcf01f82b5452984e8b623dfe1f0f9fd996c1a046595433c",
+  "partition": "development",
+  "panel_mode": "cross-every-conformance-draw-index-with-every-registered-development-family",
+  "conformance_draw_indices": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "conformance_draws_per_family": 4,
+  "family_count": 5,
+  "constructed_artifact_count": 20,
+  "conformance_draw_indices_are_independent_systems": false,
+  "duplicate_canonical_instance_ids_count_once": true,
+  "execute_model_trajectories": false,
+  "comparison_inference_permitted": false,
+  "claim_eligible": false,
+  "result_label": "NO_RESULT"
+}

@@ -9,6 +9,60 @@ export const FIXTURE_026_RSD_T02_PROPERTY_KEYS = Object.freeze([
   "causal_memory",
 ]);
 
+export const FIXTURE_026_RSD_T02_EQUATION_TEMPLATE_VERSION =
+  "fixture-026.rsd-t02-equation-template.v1";
+
+export const FIXTURE_026_RSD_T02_EQUATION_TEMPLATES = deepFreeze([
+  equationTemplate("t02-iffl-affine-reference", {
+    initial_state_rule: "H0=1,H1=0-at-registered-steady-background",
+    active_input_rule: "v=v_by_channel[active_channel]",
+    internal_output_expression: "(v-H0)/(canonical_fold-1)",
+    derivative_expression: "dH0=(v-H0)/time_constant_s;dH1=0",
+    parameter_keys: ["canonical_fold", "time_constant_s"],
+  }),
+  equationTemplate("t02-nonlinear-output-feedback", {
+    initial_state_rule: "H0=1,H1=0-at-registered-steady-background",
+    active_input_rule: "v=v_by_channel[active_channel]",
+    internal_output_expression: "(v-H0)/(canonical_fold-1)",
+    derivative_expression: "reported=clamped?0:internal;dH0=((canonical_fold-1)*reported+feedback_nonlinearity*(v-1)*(v-canonical_fold)*reported^2)/time_constant_s;dH1=0",
+    parameter_keys: ["canonical_fold", "feedback_nonlinearity", "time_constant_s"],
+  }),
+  equationTemplate("t02-channel-local-reference", {
+    initial_state_rule: "H0=1,H1=1-at-registered-steady-background",
+    active_input_rule: "v=v_by_channel[active_channel];reference=active_channel=A?H0:H1",
+    internal_output_expression: "(v-reference)/(canonical_fold-1)",
+    derivative_expression: "dH_active=(v-reference)/time_constant_s;dH_inactive=0",
+    parameter_keys: ["canonical_fold", "time_constant_s"],
+  }),
+  equationTemplate("t02-static-affine-highpass", {
+    initial_state_rule: "H0=0,H1=0-at-registered-steady-background",
+    active_input_rule: "v=v_by_channel[active_channel];transformed=(v-1)/(canonical_fold-1)",
+    internal_output_expression: "transformed-H0",
+    derivative_expression: "dH0=(transformed-H0)/time_constant_s;dH1=0",
+    parameter_keys: ["canonical_fold", "time_constant_s"],
+  }),
+  equationTemplate("t02-log-difference-highpass", {
+    initial_state_rule: "H0=0,H1=0-at-registered-steady-background",
+    active_input_rule: "v=v_by_channel[active_channel];transformed=ln(v)/ln(canonical_fold)",
+    internal_output_expression: "transformed-H0",
+    derivative_expression: "dH0=(transformed-H0)/time_constant_s;dH1=0",
+    parameter_keys: ["canonical_fold", "time_constant_s"],
+  }),
+]);
+
+function equationTemplate(equationId, equation) {
+  return {
+    contract_version: FIXTURE_026_RSD_T02_EQUATION_TEMPLATE_VERSION,
+    equation_id: equationId,
+    state_dimension: 2,
+    opaque_state_coordinates: ["H0", "H1"],
+    ...equation,
+    reported_output_rule: "reported_output=clamped?0:internal_output",
+    reset_semantics: "selected-opaque-coordinate-restored-to-registered-initial-value-at-declared-time",
+    freeze_semantics: "selected-opaque-coordinate-derivative-zero-on-half-open-declared-interval",
+  };
+}
+
 export const FIXTURE_026_RSD_T02_EQUATION_CERTIFICATES = deepFreeze([
   equationCertificate("t02-iffl-affine-reference", {
     drive_transform: "affine-fold",
@@ -391,6 +445,30 @@ export const FIXTURE_026_RSD_T02_EPISODES = deepFreeze([
     },
   }),
 ]);
+
+export const FIXTURE_026_RSD_T02_EPISODE_PROTOCOL_VERSION =
+  "fixture-026.rsd-t02-fixed-instance-episode-protocol.v1";
+
+export const FIXTURE_026_RSD_T02_EPISODE_PROTOCOL = deepFreeze({
+  contract_version: FIXTURE_026_RSD_T02_EPISODE_PROTOCOL_VERSION,
+  schedule_interpreter_semantics_version:
+    "fixture-026.rsd-t02-certificate-schedule-interpreter.v1",
+  episode_horizon_s: FIXTURE_026_RSD_T02_MODEL_CONSTANTS.episode_horizon_s,
+  internal_step_s: FIXTURE_026_RSD_T02_MODEL_CONSTANTS.internal_step_s,
+  output_rate_hz: FIXTURE_026_RSD_T02_MODEL_CONSTANTS.output_rate_hz,
+  input_floor_u: FIXTURE_026_RSD_T02_MODEL_CONSTANTS.input_floor_u,
+  input_ceiling_u: FIXTURE_026_RSD_T02_MODEL_CONSTANTS.input_ceiling_u,
+  units: {
+    time: "s",
+    input: "1",
+    output: "1",
+    rate: "Hz",
+  },
+  episodes: FIXTURE_026_RSD_T02_EPISODES.map((row) => ({
+    ...row,
+    schedule: { ...row.schedule },
+  })),
+});
 
 export const FIXTURE_026_RSD_T02_OBSERVATION_REGIMES = deepFreeze([
   {

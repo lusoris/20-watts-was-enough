@@ -4,5 +4,30 @@
     "start": "C-1204",
     "end": "C-1600"
   },
-  "claims": []
+  "claims": [
+    {
+      "id": "C-1565",
+      "disposition": "evidence-input",
+      "rationale": "The claim is a general experimental-unit constraint that the population contract enforces; the scientific statement itself is not a standalone AI-system performance hypothesis.",
+      "targets": []
+    },
+    {
+      "id": "C-1566",
+      "disposition": "new-artifact-needed",
+      "rationale": "The project-specific structural-lineage leakage graph needs a sealed outer-family split and one-pass transfer protocol before its consequence can be tested.",
+      "targets": ["proposed:rsd-t02-outer-lineage-split"]
+    },
+    {
+      "id": "C-1567",
+      "disposition": "new-artifact-needed",
+      "rationale": "The fixed-instance generator currently emits metadata only; parameter-shift performance needs a parameterized transcript and population runner.",
+      "targets": ["proposed:rsd-t02-parameterized-population-runner"]
+    },
+    {
+      "id": "C-1568",
+      "disposition": "new-artifact-needed",
+      "rationale": "Risk-coverage behavior needs trained probability-emitting candidate and null artifacts plus an instance-disjoint calibration protocol.",
+      "targets": ["proposed:rsd-t02-calibrated-selective-comparison"]
+    }
+  ]
 }

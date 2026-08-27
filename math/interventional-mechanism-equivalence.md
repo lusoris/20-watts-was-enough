@@ -8,10 +8,14 @@
   [C-1560](../research/claims.md#c-1560),
   [C-1561](../research/claims.md#c-1561),
   [C-1562](../research/claims.md#c-1562),
-  [C-1563](../research/claims.md#c-1563), and
-  [C-1564](../research/claims.md#c-1564)
-- **Evidence audit:** [mechanism equivalence and intervention-qualified discrimination](../research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md)
-- **Decisions:** [0019 — score interventional properties, not generator names](../decisions/0019-score-interventional-properties-not-generator-names.md) · [0020 — separate information cuts from scientific replication](../decisions/0020-separate-information-cuts-from-replication.md)
+  [C-1563](../research/claims.md#c-1563),
+  [C-1564](../research/claims.md#c-1564),
+  [C-1565](../research/claims.md#c-1565),
+  [C-1566](../research/claims.md#c-1566),
+  [C-1567](../research/claims.md#c-1567), and
+  [C-1568](../research/claims.md#c-1568)
+- **Evidence audits:** [mechanism equivalence and intervention-qualified discrimination](../research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md) · [population, identifiability, calibration, and null maturity](../research/audits/2026-08-27-rsd-t02-population-identifiability-calibration.md)
+- **Decisions:** [0019 — score interventional properties, not generator names](../decisions/0019-score-interventional-properties-not-generator-names.md) · [0020 — separate information cuts from scientific replication](../decisions/0020-separate-information-cuts-from-replication.md) · [0021 — bind population inference to system lineages and instances](../decisions/0021-bind-population-inference-to-system-lineages-and-instances.md)
 - **Experiment contract:** [Fixture F-026, RSD-T02](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02--mechanism-discrimination-under-matched-step-behavior)
 - **Result state:** public-development equation and contract foundation;
   `NO_RESULT`, no implemented estimator comparison, no confirmation custody and
@@ -582,7 +586,7 @@ not add independent system variation.
 
 The two generic references become mature nulls only after trainable causal
 state-space and compact recurrent estimators are implemented against the same
-35-projection packet, with no direct plant state, recipe or equation access.
+fixed-parameter packet schema, with no direct plant state, recipe or equation access.
 Their construction, selection, calibration, failures and fallbacks enter the
 resource ledger. A later confirmatory comparison needs independently generated
 held-out system instances and an outer system-family holdout; neither exists in
@@ -591,11 +595,12 @@ the present five-world bank.
 For that later design, the fixed primary endpoint families are mean property
 log loss in nats and mean dimensionless decision loss. Coverage, selective
 risk, reliability, compatible-vector coverage and the resource vector are
-reported alongside them. The two candidate-versus-generic-null contrasts use
-the sequentially rejective procedure of
+reported alongside them. The earlier Stage-3 wording grouped the two
+candidate-versus-generic-null contrasts within each endpoint. The later
+population contract supersedes that weaker boundary and uses the sequentially rejective procedure of
 [Holm (1979)](https://www.jstor.org/stable/4615733), bibliography key
-[`holm1979sequential`](../research/references.bib), within each endpoint family
-at familywise $\alpha=0.05$. Sample size must be powered before private
+[`holm1979sequential`](../research/references.bib), once across all four fixed
+endpoint-by-comparator hypotheses at familywise $\alpha=0.05$. Sample size must be powered before private
 confirmation seeds are created; 16 public evaluation labels are not assumed
 sufficient.
 
@@ -681,6 +686,152 @@ The closed prospective machine form is
 validated by
 [`rsd-t02-population-contract.mjs`](../experiments/workstation/fixture-026/rsd-t02-population-contract.mjs).
 
+## Exact public fixed-instance construction
+
+The public family registry currently contains the five named equation
+families only. Four generator-conformance coordinates are crossed with every
+family, producing 20 metadata artifacts. This count tests deterministic
+construction; it is not a powered sample size.
+
+For family $f$, draw index $j$, parameter key $k$, and HMAC attempt $a$, let
+
+$$
+w_{f,j,k,a}
+=
+\operatorname{U64BE}
+\left[
+\operatorname{HMAC}_{K_{\mathrm{public}}}
+\left(
+\operatorname{canon}(d,H_{\mathcal F},H_f,f,v_f,j,k,a)
+\right)_{0:8}
+\right].
+$$
+
+$H_{\mathcal F}$ hashes the ordered scientific family definitions only;
+coverage policy, custody state, packet metadata and generator authority are
+excluded. $H_f$ binds the selected family, including its declared equation-
+template digest. $K_{\mathrm{public}}$ is committed replay material rather
+than a secret. The sole sampled parameter is an integer time constant
+
+$$
+\tau_{\mu s}\sim
+\operatorname{DiscreteUniform}\{500000,\ldots,2000000\}.
+$$
+
+With $K=1{,}500{,}001$ possible integers and
+
+$$
+L=2^{64}-(2^{64}\bmod K),
+$$
+
+the generator rejects $w\ge L$ before applying modulo reduction, then uses
+
+$$
+\tau_{\mu s}=500000+(w\bmod K),
+\qquad
+\tau_s=\frac{\tau_{\mu s}}{10^6}\ \mathrm{s}.
+$$
+
+The complete parameter document stores exact numerator, denominator and unit
+objects. Its digest, the fixed nuisance-interface digest and complete
+certificate-set digest, including the equation-template digest, enter the
+canonical system identity. The full registry, population-design bytes and
+model-source bytes remain separate provenance bindings. The draw index is
+recorded in the receipt but not in that identity. Every generated packet lists
+the same parameter digest and $\tau_s$ on all 26 unique episodes. A distinct
+episode-protocol digest binds every schedule, the horizon, integration step,
+output rate, input bounds, units and interpreter semantics into the packet ID
+without contaminating the system ID. The packet contains no trajectories or
+policy response and cannot be fed to the older 35-projection arm bank without
+a new parameterized transcript contract.
+
+The coverage function counts distinct structural lineages per property value,
+collapsing the full-panel-equivalent I1-FFL and affine high-pass siblings into
+one lineage. The frozen minimum is two:
+
+![The current public family registry has four property values below the two-lineage floor.](../public/plots/rsd-t02-lineage-coverage.svg)
+
+`log-fold`, feedback-present and channel-local-present each have one lineage;
+memory-negative has zero. More draws from the current equations cannot close
+those structural gaps. The closed machine artifacts are the
+[`family registry`](../experiments/workstation/fixture-026/configs/rsd-t02-system-family-registry.json),
+[`instance plan`](../experiments/workstation/fixture-026/configs/rsd-t02-development-instance-plan.json), and
+[`generator`](../experiments/workstation/fixture-026/rsd-t02-system-family-generator.mjs).
+
+## Generic-null maturity is a state machine
+
+The executable `B-STATE-SPACE` and `B-RECURRENT` policies remain fixed
+construction references. Their target names do not make the former a learned
+state-space estimator or the latter a trained GRU. The maturation sequence is:
+
+1. fixed conformance reference;
+2. trainable public prototype;
+3. fit-frozen development estimator;
+4. calibrated development comparator;
+5. confirmation-frozen mature null; and
+6. confirmation-evaluated run state.
+
+Only level 5 satisfies the population gate. Both current references are at
+level 1. A target generic null must emit normalized value posteriors for all
+three primary coordinates, identifiability probabilities, one coherent joint
+posterior, support status, a deterministic decide-or-abstain action, reason
+codes and a complete work ledger.
+
+For instance $i$ and property $q$, a prospective common objective family is
+
+$$
+J(\theta)
+=
+\sum_{i,q}a_q
+\left[
+\operatorname{BCE}(I_{iq},s_{iq})
++I_{iq}\operatorname{CE}(\pi_{iq},p_{iq})
+\right]
+-\lambda_E\sum_i\log\!\left(\sum_{v\in\mathcal E_i}q_i(v)\right)
++\lambda_P L_{\mathrm{pred}}(\theta)
++\lambda_R R(\theta).
+$$
+
+$\theta$ is the trainable parameter vector, $i$ indexes system instances, and
+$q$ indexes active property coordinates. Let $\mathcal V$ be the finite active
+joint property-vector domain. For each $i$, the joint posterior
+$q_i:\mathcal V\to[0,1]$ is normalized by
+$\sum_{v\in\mathcal V}q_i(v)=1$, while the evaluator supplies a nonempty set
+$\varnothing\ne\mathcal E_i\subseteq\mathcal V$ of compatible vectors. Zero
+posterior mass on all of $\mathcal E_i$ gives an infinite negative log-mass
+penalty.
+
+$I_{iq}\in\{0,1\}$ is certified identifiability and $s_{iq}\in[0,1]$ its
+predicted probability. If $I_{iq}=1$, $\pi_{iq}$ is the unique property truth
+and $p_{iq}$ a normalized posterior over the registered values of coordinate
+$q$. If $I_{iq}=0$, $\pi_{iq}$ is not required and the masked expression is
+defined as $I_{iq}\operatorname{CE}(\pi_{iq},p_{iq})=0$.
+$L_{\mathrm{pred}}(\theta)$ and $R(\theta)$ are respectively the auxiliary
+causal-prediction loss and frozen regularizer. They, BCE, CE, and the log-mass
+term are normalized to dimensionless quantities.
+
+The fit-only training weights satisfy $a_q\ge0$ and $\sum_q a_q=1$; they are
+not the common endpoint-aggregation weights $w_q\ge0$,
+$\sum_qw_q=1$, which freeze before development evaluation. The coefficients
+$\lambda_E>0$ and $\lambda_P,\lambda_R\ge0$ are dimensionless and selected
+inside fit.
+Predictive horizon, optimizer and stopping rule remain fit-only choices, while
+the deterministic trial tie-break freezes before any trial outcome exists.
+Until the causal-memory activation condition passes, $\mathcal E_i$ and $q_i$
+span the three primary coordinates only; activating the fourth coordinate
+requires a new contract version, head and calibration.
+
+The exact six-level status, freeze order, common resource requirements and
+three separate gate scopes are frozen in the
+[`null-maturation design`](../experiments/workstation/fixture-026/configs/rsd-t02-null-maturation-design.json).
+All ten intrinsic null-maturity gates are open. Two of ten comparison-release
+gates—the registry and generator—are satisfied; the measured-energy meter gate
+is conditionally applicable only when an energy claim is requested. It is not
+counted among the 20 mandatory gates for a non-energy comparison. Affected
+fitting remains
+blocked by incomplete lineage coverage, absent sealed outer-family templates,
+the absent parameterized runner and the absent instance-role assignment.
+
 ## Calibration and abstention
 
 Probability quality is evaluated with logarithmic loss as a proper scoring
@@ -711,6 +862,9 @@ L_{\mathrm{cal},q}
 -(1-I_q)\ln[1-\widehat P(I_q=1)]
 -I_q\ln\widehat P(\pi_q).
 $$
+
+When $I_q=0$, the final masked term is defined to be exactly zero;
+$\pi_q$ and $\widehat P(\pi_q)$ are not evaluated.
 
 The decision loss is dimensionless:
 

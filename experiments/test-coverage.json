@@ -50,19 +50,19 @@
     }
   },
   "counts": {
-    "claims": 1555,
+    "claims": 1559,
     "testRouted": 1463,
     "protocolCovered": 1463,
     "executionReady": 0,
     "tierCounts": {
-      "ledger-only": 92,
+      "ledger-only": 96,
       "linked-description": 0,
       "protocol-complete": 1463,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
       "ledger-only": {
-        "established": 79,
+        "established": 83,
         "plausible": 9,
         "speculative": 0,
         "disputed": 4,
@@ -91,12 +91,12 @@
       }
     },
     "dispositionCounts": {
-      "evidence-input": 81,
+      "evidence-input": 82,
       "source-reproduction": 11,
       "existing-artifact-gap": 0,
-      "new-artifact-needed": 0
+      "new-artifact-needed": 3
     },
-    "proposedArtifactFamilies": 0,
+    "proposedArtifactFamilies": 3,
     "artifacts": 47,
     "protocolCompleteArtifacts": 47,
     "executionReadyArtifacts": 0,
@@ -30379,6 +30379,76 @@
         "fixture-026"
       ],
       "disposition": null
+    },
+    {
+      "id": "C-1565",
+      "status": "established",
+      "tier": "ledger-only",
+      "testRouted": false,
+      "protocolCovered": false,
+      "executionReady": false,
+      "artifacts": [],
+      "disposition": {
+        "id": "C-1565",
+        "disposition": "evidence-input",
+        "rationale": "The claim is a general experimental-unit constraint that the population contract enforces; the scientific statement itself is not a standalone AI-system performance hypothesis.",
+        "targets": [],
+        "source": "experiments/claim-dispositions/1204-1600.json"
+      }
+    },
+    {
+      "id": "C-1566",
+      "status": "established",
+      "tier": "ledger-only",
+      "testRouted": false,
+      "protocolCovered": false,
+      "executionReady": false,
+      "artifacts": [],
+      "disposition": {
+        "id": "C-1566",
+        "disposition": "new-artifact-needed",
+        "rationale": "The project-specific structural-lineage leakage graph needs a sealed outer-family split and one-pass transfer protocol before its consequence can be tested.",
+        "targets": [
+          "proposed:rsd-t02-outer-lineage-split"
+        ],
+        "source": "experiments/claim-dispositions/1204-1600.json"
+      }
+    },
+    {
+      "id": "C-1567",
+      "status": "established",
+      "tier": "ledger-only",
+      "testRouted": false,
+      "protocolCovered": false,
+      "executionReady": false,
+      "artifacts": [],
+      "disposition": {
+        "id": "C-1567",
+        "disposition": "new-artifact-needed",
+        "rationale": "The fixed-instance generator currently emits metadata only; parameter-shift performance needs a parameterized transcript and population runner.",
+        "targets": [
+          "proposed:rsd-t02-parameterized-population-runner"
+        ],
+        "source": "experiments/claim-dispositions/1204-1600.json"
+      }
+    },
+    {
+      "id": "C-1568",
+      "status": "established",
+      "tier": "ledger-only",
+      "testRouted": false,
+      "protocolCovered": false,
+      "executionReady": false,
+      "artifacts": [],
+      "disposition": {
+        "id": "C-1568",
+        "disposition": "new-artifact-needed",
+        "rationale": "Risk-coverage behavior needs trained probability-emitting candidate and null artifacts plus an instance-disjoint calibration protocol.",
+        "targets": [
+          "proposed:rsd-t02-calibrated-selective-comparison"
+        ],
+        "source": "experiments/claim-dispositions/1204-1600.json"
+      }
     }
   ]
 }

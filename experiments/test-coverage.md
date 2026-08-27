@@ -9,11 +9,11 @@ experiment contracts, or disposition fragments.
 
 The four rows below are mutually exclusive highest-reached tiers.
 
-| Highest coverage tier | Claims | Share of 1555 | Meaning |
+| Highest coverage tier | Claims | Share of 1559 | Meaning |
 | --- | ---: | ---: | --- |
-| ledger-only | 92 | 5.9% | no exact direct relation to a numbered experiment artifact |
+| ledger-only | 96 | 6.2% | no exact direct relation to a numbered experiment artifact |
 | linked test description | 0 | 0.0% | related experiment prose exists, but at least one required protocol facet is absent |
-| protocol-complete test contract | 1463 | 94.1% | at least one linked artifact contains all eight required facets |
+| protocol-complete test contract | 1463 | 93.8% | at least one linked artifact contains all eight required facets |
 | workstation-executable | 0 | 0.0% | checked execution manifest and runnable scientific harness exist |
 
 The short answer is therefore **1463 claims have a complete
@@ -27,7 +27,7 @@ do not independently reproduce every source paper.
 
 | Highest tier | Established | Plausible | Speculative | Disputed | Unknown |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| ledger-only | 79 | 9 | 0 | 4 | 0 |
+| ledger-only | 83 | 9 | 0 | 4 | 0 |
 | linked-description | 0 | 0 | 0 | 0 | 0 |
 | protocol-complete | 1137 | 210 | 60 | 47 | 9 |
 | workstation-executable | 0 | 0 | 0 | 0 | 0 |
@@ -39,15 +39,16 @@ classification itself as a test.
 
 | Disposition | Claims | Meaning |
 | --- | ---: | --- |
-| evidence-input | 81 | scientific or engineering evidence that constrains a translation but is not itself a standalone AI-system hypothesis |
+| evidence-input | 82 | scientific or engineering evidence that constrains a translation but is not itself a standalone AI-system hypothesis |
 | source-reproduction | 11 | a source-domain result whose direct test would reproduce the cited study rather than evaluate this project's AI system |
 | existing-artifact-gap | 0 | an engineering consequence belongs in an existing artifact, but its exact traceability or track is still missing |
-| new-artifact-needed | 0 | a project engineering hypothesis needs a new experiment contract |
+| new-artifact-needed | 3 | a project engineering hypothesis needs a new experiment contract |
 
-No unresolved `new-artifact-needed` disposition remains. Promoted family
-records are retained as design provenance in the
-[experiment-family provenance](proposed/README.md). The source fragments and
-schema are in [claim dispositions](claim-dispositions/README.md).
+The 3 unresolved engineering claims
+collapse into 3 proposed experiment families.
+Their minimum promotion contracts are kept in the
+[proposed-artifact backlog](proposed/README.md). The source fragments and schema
+are in [claim dispositions](claim-dispositions/README.md).
 
 ## What “complete test description” means
 
@@ -140,9 +141,9 @@ Smoke readiness verifies deterministic plumbing but cannot promote a claim.
 
 ## Immediate gaps
 
-- 92 claims remain ledger-only: 81
+- 96 claims remain ledger-only: 82
   evidence inputs, 11 source-domain
-  reproductions, and 0 claims needing
+  reproductions, and 3 claims needing
   a new project experiment artifact.
 - 0 ledger-only claims still belong
   in an existing artifact but lack an exact traceability or test track.

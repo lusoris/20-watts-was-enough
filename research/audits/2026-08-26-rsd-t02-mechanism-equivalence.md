@@ -17,7 +17,8 @@
   [C-1564](../claims.md#c-1564), and adds no P-series principle or architecture
   candidate
 - **Experiment state:** a deterministic bounded public-development T02-MECH
-  construction/conformance runtime now covers the closed 26-episode O0/O1
+  construction/conformance runtime now covers the closed 35-projection O0/O1
+  layout (nine O0 projections plus 26 O1 episodes),
   generator, response firewall, evaluator, event schema, append-only ledger,
   resume and analysis validation, plus an additive pre-evaluator whole-system
   commitment for all nine fixed policy-conformance references; these references

@@ -1,0 +1,210 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t02-system-family-registry.v1.schema.json",
+  "title": "Fixture 026 RSD-T02 public-development system-family registry",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "rsd-t02-system-family-generator.mjs",
+    "export": "assertFixture026RsdT02SystemFamilyRegistry",
+    "version_export": "FIXTURE_026_RSD_T02_FAMILY_REGISTRY_VERSION",
+    "contract_version": "fixture-026.rsd-t02-system-family-registry.v1",
+    "canonical_registry_sha256": "a6b573bc5a27943b77c4969b823b4ad852b9ee6a3ec5a314862419d6219c04c0",
+    "test": "rsd-t02-system-family-generator.test.mjs"
+  },
+  "required": [
+    "schema", "contract_version", "artifact", "track", "registry_id",
+    "authority", "partition", "payload_state", "target_population",
+    "population_design_binding", "implementation_provenance",
+    "family_registry_identity_sha256",
+    "family_superpopulation_inference_permitted", "generator_contract",
+    "packet_contract", "coverage_contract", "families", "outer_partitions",
+    "comparison_inference_permitted", "claim_eligible", "result_label"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-026.rsd-t02-system-family-registry.v1" },
+    "artifact": { "const": "fixture-026" },
+    "track": { "const": "RSD-T02" },
+    "registry_id": { "const": "RSD-T02-PUBLIC-DEVELOPMENT-FAMILIES-V1" },
+    "authority": { "const": "public-development-fixed-parameter-generation-only" },
+    "partition": { "const": "development" },
+    "payload_state": { "const": "public-development" },
+    "target_population": { "const": "the-five-named-public-development-equation-families-only" },
+    "population_design_binding": {
+      "const": {
+        "contract_version": "fixture-026.rsd-t02-population-design.v1",
+        "canonical_sha256": "28530f3c35e5e12dfa0601ffe2ca674a54ff5d448d966764a1c7103a0204e7ee",
+        "exact_bytes_sha256": "1e65c501eb9efe2cd6cef6b79f250378b05b845efc6d519b3451d454e7f80fc9"
+      }
+    },
+    "implementation_provenance": {
+      "const": {
+        "equation_template_contract_version": "fixture-026.rsd-t02-equation-template.v1",
+        "model_source_path": "rsd-t02-models.mjs",
+        "model_source_sha256_exact_bytes": "011adacd5f53628d14d35549b57c67eb219184c82f93e8c81410cb0b9ffdd4c2",
+        "model_source_role": "provenance-only-no-trajectory-execution"
+      }
+    },
+    "family_registry_identity_sha256": {
+      "const": "7509b020f9ef9130bcf01f82b5452984e8b623dfe1f0f9fd996c1a046595433c"
+    },
+    "family_superpopulation_inference_permitted": { "const": false },
+    "generator_contract": {
+      "const": {
+        "algorithm": "domain-separated-HMAC-SHA256-discrete-uniform-v1",
+        "domain": "fixture-026.rsd-t02-system-family-generator.v1",
+        "public_root_key_hex": "ac0b22dec2d1875d606033f4aa0c2da70f9ee9a5be3b956b7a2951465d0c7bab",
+        "draw_index_encoding": "canonical-json-unsigned-32-bit-integer-in-preimage",
+        "draw_index_role": "public-generator-conformance-coordinate-only",
+        "draw_index_is_scientific_unit": false,
+        "draw_order": ["time_constant_us"],
+        "accepted_word_encoding": "unsigned-big-endian-uint64",
+        "modulo_bias_rule": "reject-above-largest-unbiased-multiple-before-modulo",
+        "duplicate_instance_rule": "same-canonical-instance-id-counts-once",
+        "invalid_draw_rule": "reject-before-response-log-and-charge",
+        "maximum_draws_per_requested_instance": 16
+      }
+    },
+    "packet_contract": {
+      "const": {
+        "packet_version": "fixture-026.rsd-t02-fixed-instance-packet.v1",
+        "episode_registry": "FIXTURE_026_RSD_T02_EPISODES",
+        "episode_protocol_version": "fixture-026.rsd-t02-fixed-instance-episode-protocol.v1",
+        "episode_protocol_sha256": "25ce50ae6a6890e7591a499e46731e318fd0e7cb9bc591096c8fc7cdfff813d3",
+        "episode_count": 26,
+        "realizations_per_episode": 1,
+        "one_parameter_vector_per_packet": true,
+        "one_time_constant_per_packet": true,
+        "trajectories_generated_by_this_stage": false
+      }
+    },
+    "coverage_contract": {
+      "const": {
+        "property_keys": [
+          "drive_transform", "reported_output_feedback_edge",
+          "channel_local_state", "causal_memory"
+        ],
+        "primary_scored_property_keys": [
+          "drive_transform", "reported_output_feedback_edge", "channel_local_state"
+        ],
+        "minimum_distinct_structural_lineages_per_value": 2,
+        "equivalent_families_in_one_lineage_count_once": true,
+        "coverage_is_not_power": true,
+        "causal_memory_primary_status": "excluded-no-memory-negative-lineage"
+      }
+    },
+    "families": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": { "$ref": "#/definitions/family" }
+    },
+    "outer_partitions": {
+      "const": {
+        "outer_confirmation": "not-created",
+        "outer_transfer": "not-created"
+      }
+    },
+    "comparison_inference_permitted": { "const": false },
+    "claim_eligible": { "const": false },
+    "result_label": { "const": "NO_RESULT" }
+  },
+  "definitions": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$"
+    },
+    "propertyVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "drive_transform", "reported_output_feedback_edge",
+        "channel_local_state", "causal_memory"
+      ],
+      "properties": {
+        "drive_transform": { "enum": ["affine-fold", "log-fold"] },
+        "reported_output_feedback_edge": { "type": "boolean" },
+        "channel_local_state": { "type": "boolean" },
+        "causal_memory": { "const": true }
+      }
+    },
+    "family": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_id", "family_version", "recipe_id", "equation_id",
+        "equation_template_version", "equation_template_sha256",
+        "structural_lineage_id", "full_panel_equivalence_group",
+        "property_certificate", "fixed_parameters", "parameter_distribution",
+        "validity_gates"
+      ],
+      "properties": {
+        "family_id": { "$ref": "#/definitions/identifier" },
+        "family_version": { "type": "integer", "minimum": 1 },
+        "recipe_id": { "$ref": "#/definitions/identifier" },
+        "equation_id": { "$ref": "#/definitions/identifier" },
+        "equation_template_version": {
+          "const": "fixture-026.rsd-t02-equation-template.v1"
+        },
+        "equation_template_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "structural_lineage_id": { "$ref": "#/definitions/identifier" },
+        "full_panel_equivalence_group": { "$ref": "#/definitions/identifier" },
+        "property_certificate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "equation_id", "certificate_id", "certificate_basis", "property_vector"
+          ],
+          "properties": {
+            "equation_id": { "$ref": "#/definitions/identifier" },
+            "certificate_id": { "$ref": "#/definitions/identifier" },
+            "certificate_basis": { "const": "declared-equation-dependency-contract" },
+            "property_vector": { "$ref": "#/definitions/propertyVector" }
+          }
+        },
+        "fixed_parameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["canonical_fold"],
+          "properties": {
+            "canonical_fold": {
+              "const": { "numerator": 2, "denominator": 1, "unit": "1" }
+            },
+            "feedback_nonlinearity": {
+              "const": { "numerator": 1, "denominator": 4, "unit": "1" }
+            }
+          }
+        },
+        "parameter_distribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["time_constant_us"],
+          "properties": {
+            "time_constant_us": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["distribution", "minimum", "maximum", "unit"],
+              "properties": {
+                "distribution": { "const": "discrete-uniform-integer-closed" },
+                "minimum": { "const": 500000 },
+                "maximum": { "const": 2000000 },
+                "unit": { "const": "us" }
+              }
+            }
+          }
+        },
+        "validity_gates": {
+          "const": [
+            "finite-positive-time-constant",
+            "time-constant-within-registered-support",
+            "all-26-episode-descriptors-share-instance-parameters"
+          ]
+        }
+      }
+    }
+  }
+}

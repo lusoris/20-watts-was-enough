@@ -7,6 +7,38 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Decision 0022 separates RSD-T02 fixed-instance construction from the old
+  mixed-time-constant conformance runner. A versioned five-family registry and
+  domain-separated HMAC-SHA-256 generator now produce four exact integer
+  conformance draws per family, 20 canonical metadata artifacts, and one
+  fixed-parameter 26-episode packet per artifact. Complete rational parameter,
+  nuisance-interface, equation-certificate and declared equation-template
+  documents enter scientific identity; draw coordinates and non-scientific
+  registry metadata do not. A complete episode-protocol digest binds schedules
+  and execution constants to packet identity, while population design and model
+  source stay byte-exact provenance. Twelve focused generator tests now cover
+  exact goldens, output schemas, rejection sampling, deduplication, identity
+  separation, deterministic replay, coverage failure and hostile mutation.
+
+- The RSD-T02 null-maturation design replaces ambiguous estimator names with a
+  six-level state machine. Both current generic nulls are explicitly level-one
+  fixed conformance references; only a level-five confirmation-frozen model
+  qualifies as mature. Exact parent hashes, a common three-property
+  probabilistic output interface, fit/calibration separation, abstention,
+  resource ledgers and freeze order are machine-checked by seven additional
+  tests. Ten intrinsic null-maturity gates, ten comparison-release gates and
+  one conditional measured-energy gate are tracked separately. Only the
+  registry and generator release gates are satisfied, so affected fitting
+  remains blocked by four explicit prerequisites.
+
+- A primary-literature audit of experimental units, identifiability,
+  structured holdouts, dynamical parameter shift, calibration and selective
+  risk adds C-1565--C-1568, extends C-1541/C-1562, corrects the Hamadeh journal
+  issue, and adds nine bibliography records. A generated lineage-coverage SVG
+  shows that log-fold, feedback-present, channel-local-present and memory-
+  negative remain below the two-lineage floor; parameter draws cannot repair
+  those gaps.
+
 - Decision 0021 closes the RSD-T02 population unit: structural lineage →
   family → independently drawn fixed-parameter instance → packet → episode →
   realization. Procedural seeds remain replay keys, the old mixed-time-constant

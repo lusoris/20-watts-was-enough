@@ -1,0 +1,306 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t02-null-maturation-design.v1.schema.json",
+  "title": "Fixture 026 RSD-T02 prospective generic-null maturation design",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "rsd-t02-null-maturation-contract.mjs",
+    "export": "assertFixture026RsdT02NullMaturationDesign",
+    "version_export": "FIXTURE_026_RSD_T02_NULL_MATURATION_DESIGN_VERSION",
+    "contract_version": "fixture-026.rsd-t02-null-maturation-design.v1",
+    "canonical_design_sha256": "b052d9ea6b6321b3dd7a9a1a3cc2bac91b0cae9585bdd767d778cb38a8d8ab5c",
+    "test": "rsd-t02-null-maturation-contract.test.mjs"
+  },
+  "required": [
+    "schema", "contract_version", "artifact", "track", "authority",
+    "parent_artifacts", "maturity_ladder", "current_implementations",
+    "target_null_contract", "development_role_contract", "fit_contract",
+    "calibration_and_abstention_contract", "resource_contract", "freeze_order",
+    "promotion_gates", "promotion_gate_rules", "mature_null_gate_satisfied", "affected_fitting_permitted",
+    "comparison_inference_permitted", "claim_eligible", "result_label"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-026.rsd-t02-null-maturation-design.v1" },
+    "artifact": { "const": "fixture-026" },
+    "track": { "const": "RSD-T02" },
+    "authority": { "const": "prospective-null-maturation-design-only" },
+    "parent_artifacts": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "path", "sha256_exact_bytes"],
+        "properties": {
+          "role": { "type": "string", "minLength": 3 },
+          "path": { "type": "string", "minLength": 3 },
+          "sha256_exact_bytes": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    },
+    "maturity_ladder": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["level", "status", "meaning"],
+        "properties": {
+          "level": { "type": "integer", "minimum": 1, "maximum": 6 },
+          "status": { "type": "string", "minLength": 3 },
+          "meaning": { "type": "string", "minLength": 3 }
+        }
+      }
+    },
+    "current_implementations": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/definitions/currentImplementation" }
+    },
+    "target_null_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_arm_ids", "state_space_core", "recurrent_core",
+        "same_architecture_neutral_property_head", "same_fixed_parameter_packet_schema",
+        "same_allowlisted_causal_fields", "primary_property_keys", "secondary_property_keys",
+        "joint_property_vector_domain_before_causal_memory_activation",
+        "joint_property_vector_domain_after_causal_memory_activation",
+        "causal_memory_activation_condition", "causal_memory_domain_migration_rule",
+        "required_outputs", "forbidden_pre_evaluator_fields"
+      ],
+      "properties": {
+        "required_arm_ids": { "const": ["B-STATE-SPACE", "B-RECURRENT"] },
+        "state_space_core": { "type": "string", "minLength": 3 },
+        "recurrent_core": { "type": "string", "minLength": 3 },
+        "same_architecture_neutral_property_head": { "const": true },
+        "same_fixed_parameter_packet_schema": { "const": true },
+        "same_allowlisted_causal_fields": { "const": true },
+        "primary_property_keys": { "const": ["drive_transform", "reported_output_feedback_edge", "channel_local_state"] },
+        "secondary_property_keys": { "const": ["causal_memory"] },
+        "joint_property_vector_domain_before_causal_memory_activation": { "const": ["drive_transform", "reported_output_feedback_edge", "channel_local_state"] },
+        "joint_property_vector_domain_after_causal_memory_activation": { "const": ["drive_transform", "reported_output_feedback_edge", "channel_local_state", "causal_memory"] },
+        "causal_memory_activation_condition": { "type": "string", "minLength": 3 },
+        "causal_memory_domain_migration_rule": { "type": "string", "minLength": 3 },
+        "required_outputs": { "type": "array", "minItems": 8, "maxItems": 8, "uniqueItems": true, "items": { "type": "string", "minLength": 3 } },
+        "forbidden_pre_evaluator_fields": { "type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": { "type": "string", "minLength": 3 } }
+      }
+    },
+    "development_role_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assignment_unit", "roles", "stratification", "nested_objects_inherit_instance_role",
+        "inner_selection_folds", "calibration_receives_one_selected_frozen_model",
+        "development_evaluation_mode", "outer_instances_visible_to_fit_tuning_calibration_or-pilot-variance",
+        "current_public_plan_role_assignment_state"
+      ],
+      "properties": {
+        "assignment_unit": { "const": "canonical-system-instance-id" },
+        "roles": { "const": ["fit", "calibration", "development-evaluation"] },
+        "stratification": { "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": { "type": "string" } },
+        "nested_objects_inherit_instance_role": { "type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": { "type": "string" } },
+        "inner_selection_folds": { "type": "string", "minLength": 3 },
+        "calibration_receives_one_selected_frozen_model": { "const": true },
+        "development_evaluation_mode": { "type": "string", "minLength": 3 },
+        "outer_instances_visible_to_fit_tuning_calibration_or-pilot-variance": { "const": false },
+        "current_public_plan_role_assignment_state": { "const": "not-created" }
+      }
+    },
+    "fit_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "objective", "objective_unit", "training_objective_weight_symbol",
+        "training_objective_weight_constraints", "endpoint_aggregation_weight_symbol",
+        "endpoint_aggregation_weight_constraints", "endpoint_aggregation_weights_used_for_training",
+        "common_endpoint_aggregation_weights_frozen_before_development_evaluation",
+        "objective_coefficient_domains",
+        "selection_data_role", "hyperparameters_selected_inside_fit_only",
+        "deterministic_tie_break_frozen_before_trial_outcomes", "trial_registration_timing",
+        "failed_timeout_oom_and_abandoned_trials_charged", "restart_is_independent_system_unit",
+        "affected_fitting_permitted_now", "affected_fitting_blockers"
+      ],
+      "properties": {
+        "objective": { "type": "string", "minLength": 20 },
+        "objective_unit": { "const": "dimensionless" },
+        "training_objective_weight_symbol": { "const": "a_q" },
+        "training_objective_weight_constraints": { "const": "nonnegative-and-sum-over-active-properties-equals-one" },
+        "endpoint_aggregation_weight_symbol": { "const": "w_q" },
+        "endpoint_aggregation_weight_constraints": { "const": "nonnegative-and-sum-over-active-properties-equals-one" },
+        "endpoint_aggregation_weights_used_for_training": { "const": false },
+        "common_endpoint_aggregation_weights_frozen_before_development_evaluation": { "const": true },
+        "objective_coefficient_domains": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["lambda_E", "lambda_P", "lambda_R"],
+          "properties": {
+            "lambda_E": { "$ref": "#/definitions/strictlyPositiveFitOnlyCoefficient" },
+            "lambda_P": { "$ref": "#/definitions/nonnegativeFitOnlyCoefficient" },
+            "lambda_R": { "$ref": "#/definitions/nonnegativeFitOnlyCoefficient" }
+          }
+        },
+        "selection_data_role": { "const": "fit-only" },
+        "hyperparameters_selected_inside_fit_only": { "type": "array", "minItems": 8, "maxItems": 8, "uniqueItems": true, "items": { "type": "string" } },
+        "deterministic_tie_break_frozen_before_trial_outcomes": { "const": true },
+        "trial_registration_timing": { "const": "append-before-launch" },
+        "failed_timeout_oom_and_abandoned_trials_charged": { "const": true },
+        "restart_is_independent_system_unit": { "const": false },
+        "affected_fitting_permitted_now": { "const": false },
+        "affected_fitting_blockers": { "type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": { "type": "string", "minLength": 3 } }
+      }
+    },
+    "calibration_and_abstention_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "core_preprocessing_and_heads_frozen_before_calibration",
+        "final_numeric_common_resource_caps_frozen_before_calibration",
+        "calibration_method_family_selected_inside_fit", "calibration_may_change_model_weights",
+        "calibrated_quantities", "precalibration_support_coverage_floor_status",
+        "precalibration_support_coverage_floor_freeze_source", "support_threshold_tie_rule",
+        "expected_loss_threshold_tie_rule", "non_abstention_action_tie_rule",
+        "decision_rule", "decide_condition",
+        "scientific_out_of_support_disposition", "malformed_packet_disposition",
+        "runtime_failure_disposition", "fallback_default"
+      ],
+      "properties": {
+        "core_preprocessing_and_heads_frozen_before_calibration": { "const": true },
+        "final_numeric_common_resource_caps_frozen_before_calibration": { "const": true },
+        "calibration_method_family_selected_inside_fit": { "const": true },
+        "calibration_may_change_model_weights": { "const": false },
+        "calibrated_quantities": { "type": "array", "minItems": 3, "maxItems": 3, "uniqueItems": true, "items": { "type": "string" } },
+        "precalibration_support_coverage_floor_status": { "const": "not-yet-frozen" },
+        "precalibration_support_coverage_floor_freeze_source": { "type": "string", "minLength": 3 },
+        "support_threshold_tie_rule": { "const": "equal-to-threshold-abstains" },
+        "expected_loss_threshold_tie_rule": { "const": "equal-to-abstention-loss-abstains" },
+        "non_abstention_action_tie_rule": { "const": "equal-minimum-expected-loss-across-actions-abstains" },
+        "decision_rule": { "type": "string", "minLength": 3 },
+        "decide_condition": { "type": "string", "minLength": 3 },
+        "scientific_out_of_support_disposition": { "type": "string", "minLength": 3 },
+        "malformed_packet_disposition": { "type": "string", "minLength": 3 },
+        "runtime_failure_disposition": { "type": "string", "minLength": 3 },
+        "fallback_default": { "const": "prohibited" }
+      }
+    },
+    "resource_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "equalized_maxima_not_padded_actual_work", "common_caps_required", "charged_components",
+        "separate_ledgers", "provisional_pilot_envelope",
+        "current_conformance_operation_counts_are_training_or_measured_work",
+        "measured_joules_required_for_energy_comparison", "energy_gate_application_rule"
+      ],
+      "properties": {
+        "equalized_maxima_not_padded_actual_work": { "const": true },
+        "common_caps_required": { "type": "array", "minItems": 8, "maxItems": 8, "uniqueItems": true, "items": { "type": "string" } },
+        "charged_components": { "type": "array", "minItems": 9, "maxItems": 9, "uniqueItems": true, "items": { "type": "string" } },
+        "separate_ledgers": { "type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": { "type": "string" } },
+        "provisional_pilot_envelope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["retained_state_scalars", "trainable_scalars", "tuning_trials", "active_cap"],
+          "properties": {
+            "retained_state_scalars": { "type": "integer", "minimum": 1 },
+            "trainable_scalars": { "type": "integer", "minimum": 1 },
+            "tuning_trials": { "type": "integer", "minimum": 1 },
+            "active_cap": { "const": false }
+          }
+        },
+        "current_conformance_operation_counts_are_training_or_measured_work": { "const": false },
+        "measured_joules_required_for_energy_comparison": { "const": true },
+        "energy_gate_application_rule": { "type": "string", "minLength": 3 }
+      }
+    },
+    "freeze_order": { "type": "array", "minItems": 14, "maxItems": 14, "uniqueItems": true, "items": { "type": "string", "minLength": 3 } },
+    "promotion_gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["null_maturity", "comparison_release", "energy_comparison_conditional"],
+      "properties": {
+        "null_maturity": { "type": "array", "minItems": 10, "maxItems": 10, "items": { "$ref": "#/definitions/gate" } },
+        "comparison_release": { "type": "array", "minItems": 10, "maxItems": 10, "items": { "$ref": "#/definitions/gate" } },
+        "energy_comparison_conditional": { "type": "array", "minItems": 1, "maxItems": 1, "items": { "$ref": "#/definitions/gate" } }
+      }
+    },
+    "promotion_gate_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["affected_fitting_gate", "mature_null_gate", "comparison_release_gate", "energy_comparison_gate"],
+      "properties": {
+        "affected_fitting_gate": { "const": "no-active-fitting-blockers" },
+        "mature_null_gate": { "const": "affected-fitting-gate-and-all-null_maturity-gates-satisfied" },
+        "comparison_release_gate": { "const": "mature-null-gate-and-all-comparison_release-gates-satisfied" },
+        "energy_comparison_gate": { "const": "conditional-gate-required-only-for-measured-energy-claim" }
+      }
+    },
+    "mature_null_gate_satisfied": { "const": false },
+    "affected_fitting_permitted": { "const": false },
+    "comparison_inference_permitted": { "const": false },
+    "claim_eligible": { "const": false },
+    "result_label": { "const": "NO_RESULT" }
+  },
+  "definitions": {
+    "strictlyPositiveFitOnlyCoefficient": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lower_bound", "lower_bound_inclusive", "unit", "selection_role"],
+      "properties": {
+        "lower_bound": { "const": 0 },
+        "lower_bound_inclusive": { "const": false },
+        "unit": { "const": "1" },
+        "selection_role": { "const": "fit-only" }
+      }
+    },
+    "nonnegativeFitOnlyCoefficient": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lower_bound", "lower_bound_inclusive", "unit", "selection_role"],
+      "properties": {
+        "lower_bound": { "const": 0 },
+        "lower_bound_inclusive": { "const": true },
+        "unit": { "const": "1" },
+        "selection_role": { "const": "fit-only" }
+      }
+    },
+    "currentImplementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "arm_id", "current_level", "current_status", "current_core",
+        "calibrated_probability_output_exists", "current_property_coverage",
+        "satisfies_mature_null_gate"
+      ],
+      "properties": {
+        "arm_id": { "enum": ["B-STATE-SPACE", "B-RECURRENT"] },
+        "current_level": { "const": 1 },
+        "current_status": { "const": "fixed-conformance-reference" },
+        "current_core": { "type": "string", "minLength": 3 },
+        "trainable_state_space_estimator_exists": { "const": false },
+        "trainable_gru_style_estimator_exists": { "const": false },
+        "calibrated_probability_output_exists": { "const": false },
+        "current_property_coverage": { "type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": { "type": "string" } },
+        "satisfies_mature_null_gate": { "const": false }
+      },
+      "oneOf": [
+        { "required": ["trainable_state_space_estimator_exists"], "not": { "required": ["trainable_gru_style_estimator_exists"] } },
+        { "required": ["trainable_gru_style_estimator_exists"], "not": { "required": ["trainable_state_space_estimator_exists"] } }
+      ]
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate", "satisfied"],
+      "properties": {
+        "gate": { "type": "string", "minLength": 3 },
+        "satisfied": { "type": "boolean" }
+      }
+    }
+  }
+}

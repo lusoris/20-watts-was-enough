@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-026.rsd-t02-development-instance-plan.v1.schema.json",
+  "title": "Fixture 026 RSD-T02 public-development fixed-instance plan",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "rsd-t02-system-family-generator.mjs",
+    "export": "assertFixture026RsdT02DevelopmentInstancePlan",
+    "version_export": "FIXTURE_026_RSD_T02_DEVELOPMENT_PLAN_VERSION",
+    "contract_version": "fixture-026.rsd-t02-development-instance-plan.v1",
+    "canonical_plan_sha256": "ab4a85f382940f268bc7fc6f19c2bddbda151a67051c44e9e9e93c0e2e70c6c8",
+    "test": "rsd-t02-system-family-generator.test.mjs"
+  },
+  "required": [
+    "schema", "contract_version", "registry_contract_version", "partition",
+    "family_registry_identity_sha256",
+    "panel_mode", "conformance_draw_indices", "conformance_draws_per_family",
+    "family_count", "constructed_artifact_count",
+    "conformance_draw_indices_are_independent_systems",
+    "duplicate_canonical_instance_ids_count_once", "execute_model_trajectories",
+    "comparison_inference_permitted", "claim_eligible", "result_label"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-026.rsd-t02-development-instance-plan.v1" },
+    "registry_contract_version": { "const": "fixture-026.rsd-t02-system-family-registry.v1" },
+    "family_registry_identity_sha256": {
+      "const": "7509b020f9ef9130bcf01f82b5452984e8b623dfe1f0f9fd996c1a046595433c"
+    },
+    "partition": { "const": "development" },
+    "panel_mode": { "const": "cross-every-conformance-draw-index-with-every-registered-development-family" },
+    "conformance_draw_indices": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 4294967295
+      }
+    },
+    "conformance_draws_per_family": { "type": "integer", "minimum": 1 },
+    "family_count": { "const": 5 },
+    "constructed_artifact_count": { "type": "integer", "minimum": 5 },
+    "conformance_draw_indices_are_independent_systems": { "const": false },
+    "duplicate_canonical_instance_ids_count_once": { "const": true },
+    "execute_model_trajectories": { "const": false },
+    "comparison_inference_permitted": { "const": false },
+    "claim_eligible": { "const": false },
+    "result_label": { "const": "NO_RESULT" }
+  }
+}
