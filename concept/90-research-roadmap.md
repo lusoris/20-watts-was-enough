@@ -91,7 +91,8 @@ Stage 0 is complete for a mechanism only when:
 - every equation defines symbols and units;
 - a conventional null, ablation, measurement envelope, and rejection condition
   exist; and
-- imported discussions remain provenance rather than evidence.
+- link-only discussion provenance records remain source leads rather than
+  evidence.
 
 The repository structure satisfies this workflow. Individual mechanisms remain
 at different positions inside it; the

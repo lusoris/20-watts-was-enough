@@ -5,6 +5,16 @@ the exact diff; this file records why the project changed.
 
 ## [Unreleased]
 
+### Changed
+
+- Current-release documentation now describes the Google Doc and Gemini inputs
+  consistently as link-only provenance records. Their origin bodies are not
+  published in the current tree and cannot support or relicense a claim.
+
+- Full-book manifest schema v2 binds the exact PDF bytes by SHA-256 and includes
+  the locked renderer dependency graph in source identity. Repository and
+  GitHub Pages validation now reject a stale or same-size substituted PDF.
+
 ### Added
 
 - Decision 0024 makes the GitHub repository public, retains the interactive

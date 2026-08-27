@@ -1400,5 +1400,5 @@ remain audit-local until a claim is adopted into the central ledger.
 - [x] Every quantitative comparison is an experimental requirement, not an
       unsupported performance claim.
 - [x] All bracketed citation keys resolve to the audit-local BibTeX block.
-- [x] No Google/Gemini import is treated as evidence.
+- [x] No Google/Gemini provenance record is treated as evidence.
 - [x] No central principle, candidate, claim, or bibliography file is modified.

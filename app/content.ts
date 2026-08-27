@@ -53,7 +53,7 @@ const GROUP_ORDER = [
   "Mathematics",
   "Decisions",
   "Graphics",
-  "Source archive",
+  "Sources & provenance",
 ];
 
 const PATH_PRIORITY: Record<string, number> = {
@@ -99,7 +99,7 @@ function groupFrom(path: string): string {
   if (path.startsWith("math/")) return "Mathematics";
   if (path.startsWith("decisions/")) return "Decisions";
   if (path.startsWith("assets/")) return "Graphics";
-  if (path.startsWith("sources/")) return "Source archive";
+  if (path.startsWith("sources/")) return "Sources & provenance";
   return "Project";
 }
 

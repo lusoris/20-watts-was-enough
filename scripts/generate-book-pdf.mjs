@@ -1,9 +1,10 @@
 import { spawn } from "node:child_process";
-import { access, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { bookPdfName, bookSourceDigest } from "./book-source.mjs";
+import { inspectBookPdf } from "./lib/book-pdf-integrity.mjs";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDirectory = path.join(projectRoot, "public", "downloads");
@@ -283,13 +284,10 @@ if (finalSourceSnapshot.digest !== sourceSnapshot.digest) {
   );
 }
 
-const pdfStats = await stat(outputPdf);
-if (pdfStats.size < 100_000) {
-  throw new Error(`Generated PDF is unexpectedly small: ${pdfStats.size} bytes.`);
-}
+const pdfIntegrity = await inspectBookPdf(outputPdf);
 
 const manifest = {
-  schema_version: 1,
+  schema_version: 2,
   title: "20 Watts Was Enough — Full Concept Book",
   pdf: `public/downloads/${bookPdfName}`,
   source_digest: sourceSnapshot.digest,
@@ -298,15 +296,11 @@ const manifest = {
   generated_front_matter_sections: 1,
   rendered_diagrams: expectedDiagrams,
   generated_at: new Date().toISOString(),
-  size_bytes: pdfStats.size,
+  size_bytes: pdfIntegrity.size_bytes,
+  pdf_sha256: pdfIntegrity.pdf_sha256,
 };
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 
-const header = await readFile(outputPdf);
-if (header.subarray(0, 5).toString("ascii") !== "%PDF-") {
-  throw new Error("Generated book does not have a PDF header.");
-}
-
 console.log(
-  `Generated ${path.relative(projectRoot, outputPdf)} (${pdfStats.size} bytes, ${bookMarkdown.length} documents, ${expectedDiagrams} diagrams).`,
+  `Generated ${path.relative(projectRoot, outputPdf)} (${pdfIntegrity.size_bytes} bytes, ${bookMarkdown.length} documents, ${expectedDiagrams} diagrams, sha256:${pdfIntegrity.pdf_sha256}).`,
 );

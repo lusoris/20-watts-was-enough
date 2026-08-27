@@ -34,9 +34,10 @@ workstation result yet. The generated
 [test-coverage report](experiments/test-coverage.md) keeps those states
 separate.
 
-The repository is the canonical source. The original Google Doc and Gemini
-discussions are preserved under [`sources/`](sources/README.md) as historical,
-non-authoritative inputs.
+The repository is the canonical source. Origin links for the Google Doc and
+Gemini discussions are retained under [`sources/`](sources/README.md) as
+link-only, non-authoritative provenance records; their bodies are not published
+in the current tree.
 
 The default normative context is the European Union and Germany. Legal,
 standards, and conformity claims remain applicability-, jurisdiction-, version-,
@@ -110,7 +111,7 @@ Supporting material:
 - [`research/audits/2026-08-26-history-conditioned-modular-succession.md`](research/audits/2026-08-26-history-conditioned-modular-succession.md) — ecological priority effects, task order, curriculum selection, scheduling controls, and fixed-task/eligibility causal cuts
 - [`research/neuroscience-opportunity-map.md`](research/neuroscience-opportunity-map.md) — underused neural mechanisms and falsifiable translations
 - [`research/comparative-biology.md`](research/comparative-biology.md) — candidates from animals, plants, immune systems, and adaptive networks
-- [`research/source-crosswalk.md`](research/source-crosswalk.md) — imported ideas mapped into evidence and principle bundles
+- [`research/source-crosswalk.md`](research/source-crosswalk.md) — recorded source leads mapped into evidence and principle bundles
 - [`research/open-questions.md`](research/open-questions.md) — unresolved decisions
 - [`math/`](math/README.md) — notation, boundaries, and derivations
 - [`math/visual-models.md`](math/visual-models.md) — interpretable plots of the
@@ -178,9 +179,9 @@ The tracked artifact is
 editions offer it directly for download, while `/book` remains the printable
 HTML edition in the interactive reader. The public static edition includes the
 book plus linked, inert repository artifacts needed to inspect its claims; it
-does not duplicate the searchable full-corpus reader. Raw source captures and
-the complete audit and fixture corpus remain browsable through Git itself and
-the owner-only interactive reader.
+does not duplicate the searchable full-corpus reader. Link-only source
+provenance records and the complete audit and fixture corpus remain browsable
+through Git itself and the owner-only interactive reader.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow.
 

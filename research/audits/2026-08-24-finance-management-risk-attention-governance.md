@@ -15,7 +15,7 @@ variables actually exist: constrained resources, action-dependent shared state,
 irreversible commitment, separately rooted control evidence, limited review
 capacity, or persistent actors with private information and consequences.
 
-No file imported from Google Docs or Gemini is treated as evidence here. All
+No Google Docs/Gemini provenance record is treated as evidence here. All
 scientific claims below are anchored in primary theoretical or empirical work;
 all legal and supervisory material is kept in a separate normative layer.
 

@@ -63,9 +63,9 @@ The licences above apply only to rights that the project contributors are
 entitled to license. In particular:
 
 - [`sources/`](sources/README.md) is excluded wholesale unless an individual
-  file contains an explicit project licence notice. Imported discussions,
-  captures, documents, quotations, and source leads retain their original
-  terms.
+  file contains an explicit project licence notice. Link-only provenance
+  records, licensed snapshots, source leads, quotations, and any separately
+  rights-cleared imports retain their own recorded terms.
 - Official taxonomy snapshots and other official or third-party datasets
   retain their original copyright, database rights, licences, notices, and
   statutory conditions. Project processing does not replace those terms.

@@ -3,9 +3,9 @@
 <!-- markdownlint-disable MD013 -->
 
 - **Audit date:** 2026-08-06
-- **Trigger:** supplied Google Doc on replacing current-theory constraints with empirical data or formal logic
-- **Scope:** the document's dusty-plasma and FunSearch examples; empirical equation or force-law inference; executable mathematical construction search; boundaries between fit, identification, prediction, intervention, checking, and proof
-- **Evidence rule:** the supplied document is a source lead only; statuses below come from the named primary papers, released artifacts, and the repository's existing measurement and proof audits
+- **Trigger:** owner-supplied Google Doc provenance record (body not reproduced) concerning replacement of current-theory constraints with empirical data or formal logic
+- **Scope:** independently audited dusty-plasma and FunSearch topics historically recorded from that lead; empirical equation or force-law inference; executable mathematical construction search; boundaries between fit, identification, prediction, intervention, checking, and proof
+- **Evidence rule:** the link-only record is provenance only; statuses below come from the named primary papers, released artifacts, and the repository's existing measurement and proof audits
 - **Promotion state:** no central claim, principle, candidate, or fixture added
 
 ## Executive finding

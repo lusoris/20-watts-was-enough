@@ -14,7 +14,7 @@ const GROUP_ORDER = [
   "Mathematics",
   "Decisions",
   "Graphics",
-  "Source archive",
+  "Sources & provenance",
 ];
 
 function groupDocuments(documents: ResearchDocumentSummary[]) {
@@ -105,7 +105,8 @@ function initialCollapsedSubgroups(
 }
 
 function sourceLabel(document: ResearchDocument): string {
-  if (document.path.startsWith("sources/")) return "Historical source capture";
+  if (document.path.startsWith("sources/"))
+    return "Source provenance / third-party record";
   if (document.path === "experiments/test-coverage.md") return "Generated readiness report";
   if (document.kind === "json" && document.path.startsWith("assets/plots/"))
     return "Editable plot source";
@@ -465,10 +466,11 @@ export function ResearchReader({
           {currentDocument.path.startsWith("sources/") &&
           currentDocument.path !== "sources/README.md" ? (
             <aside className="source-warning">
-              <strong>Source material, not evidence.</strong>
+              <strong>Provenance material, not claim evidence.</strong>
               <span>
-                This dated import is preserved verbatim for provenance. Validated claims live
-                in the evidence ledger.
+                This entry is a link record, provenance index, or separately licensed
+                snapshot. Read its own rights notice; validated scientific claims live in the
+                evidence ledger.
               </span>
             </aside>
           ) : null}

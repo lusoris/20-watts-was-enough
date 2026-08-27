@@ -63,9 +63,11 @@ quoted, adapted, generated, or otherwise third-party material in the file and
 preserve its author, source, date, licence, notices, and applicable use basis.
 Do not place imported material under the project licences by implication.
 Academic publication, public web access, citation, and bibliography inclusion
-do not by themselves grant reuse rights. Imported captures belong under
-[`sources/`](sources/README.md) and remain outside the repository-wide grants
-unless a file carries an explicit project licence notice.
+do not by themselves grant reuse rights. When provenance is needed, prefer a
+link-only record under [`sources/`](sources/README.md). Retain a third-party
+body only when a specific, recorded use basis permits redistribution; it
+remains outside the repository-wide grants unless an explicit file notice says
+otherwise.
 
 ## Live research edition
 

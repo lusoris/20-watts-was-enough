@@ -2,6 +2,8 @@ import { lstat, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { assertBookPdfIntegrity } from "./lib/book-pdf-integrity.mjs";
+
 const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",
@@ -57,9 +59,16 @@ invariant(assetEntries.some((entry) => entry.isFile() && entry.name.endsWith(".c
 const pdfPath = "downloads/20-watts-was-enough-full-concept-book.pdf";
 const pdfInformation = await regularFile(pdfPath);
 invariant(pdfInformation.size >= 100_000, "book PDF is unexpectedly small");
-const pdfHeader = await readFile(path.join(outputRoot, ...pdfPath.split("/")));
+const builtPdfPath = path.join(outputRoot, ...pdfPath.split("/"));
+const pdfHeader = await readFile(builtPdfPath);
 invariant(pdfHeader.subarray(0, 5).toString("ascii") === "%PDF-", "book download is not a PDF");
-await regularFile("downloads/book-manifest.json");
+const bookManifestPath = "downloads/book-manifest.json";
+await regularFile(bookManifestPath);
+const bookManifest = JSON.parse(
+  await readFile(path.join(outputRoot, ...bookManifestPath.split("/")), "utf8"),
+);
+invariant(bookManifest.schema_version === 2, "book manifest schema is invalid");
+await assertBookPdfIntegrity(builtPdfPath, bookManifest);
 for (const legalFile of [
   "LICENSE",
   "LICENSING.md",

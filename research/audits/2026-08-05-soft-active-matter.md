@@ -76,8 +76,8 @@ Every proposed transfer must answer:
    strongest null?
 7. What observation would falsify the transfer?
 
-The imported Google and Gemini material is not evidence for this audit. The
-closest prior project nulls are:
+The link-only Google/Gemini provenance records are not evidence for this audit.
+The closest prior project nulls are:
 
 - [adaptive materials and self-assembly](2026-08-05-adaptive-materials-and-self-assembly.md),
   for physical computation, reversible assembly, lifecycle energy, reset, and
