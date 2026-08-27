@@ -15,6 +15,12 @@ the exact diff; this file records why the project changed.
   the locked renderer dependency graph in source identity. Repository and
   GitHub Pages validation now reject a stale or same-size substituted PDF.
 
+- The web and build dependency set has been refreshed to patched compatible
+  releases, including React/RSC 19.2.8, Vite 8.0.16, Vinext 1.0.0-beta.8, the
+  Cloudflare Vite plugin 1.54.1, and Wrangler 4.127.0. A clean locked install
+  reports no registry-audit vulnerabilities, and browser-bundle third-party
+  notices have been regenerated from the updated build.
+
 ### Added
 
 - Decision 0024 makes the GitHub repository public, retains the interactive

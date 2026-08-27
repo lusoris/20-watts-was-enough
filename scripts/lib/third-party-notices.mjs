@@ -19,6 +19,26 @@ const LICENSE_OVERRIDES = Object.freeze({
   },
 });
 
+const VIRTUAL_MODULE_PACKAGES = Object.freeze({
+  "\0rolldown/runtime.js": {
+    expectedIdentity: "rolldown@1.0.3",
+    packagePath: "node_modules/rolldown",
+  },
+  "\0vite/modulepreload-polyfill.js": {
+    expectedIdentity: "vite@8.0.16",
+    packagePath: "node_modules/vite",
+  },
+  "\0vite/preload-helper.js": {
+    expectedIdentity: "vite@8.0.16",
+    packagePath: "node_modules/vite",
+  },
+});
+
+function normalizedVirtualModuleId(moduleId) {
+  const normalized = moduleId.split("?", 1)[0].replaceAll("\\", "/");
+  return normalized.charCodeAt(0) === 0 ? normalized : null;
+}
+
 function normalizedModuleId(moduleId) {
   return moduleId.replace(/^\0/u, "").split("?", 1)[0].replaceAll("\\", "/");
 }
@@ -58,6 +78,26 @@ export function renderThirdPartyNotices({ moduleIds, repositoryRoot }) {
   const roots = new Set(
     [...moduleIds].map(packageRoot).filter((value) => value !== null),
   );
+  for (const moduleId of moduleIds) {
+    const virtualModuleId = normalizedVirtualModuleId(moduleId);
+    if (virtualModuleId === null) continue;
+    const mapping = VIRTUAL_MODULE_PACKAGES[virtualModuleId];
+    if (!mapping) {
+      throw new Error(`Unmapped virtual bundle module: ${JSON.stringify(virtualModuleId)}`);
+    }
+    const root = realpathSync(
+      path.join(repositoryRoot, ...mapping.packagePath.split("/")),
+    );
+    const metadata = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
+    const packageIdentity = `${metadata.name}@${metadata.version}`;
+    if (packageIdentity !== mapping.expectedIdentity) {
+      throw new Error(
+        `Virtual bundle module ${JSON.stringify(virtualModuleId)} expected `
+          + `${mapping.expectedIdentity}, found ${packageIdentity}`,
+      );
+    }
+    roots.add(root);
+  }
   const packages = [];
   const texts = new Map();
 

@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { renderThirdPartyNotices } from "./lib/third-party-notices.mjs";
 
 const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -73,4 +74,30 @@ test("the public-source wording does not weaken the primary site's access badge"
   assert.match(reader, /public Git source/);
   assert.doesNotMatch(reader, /private Git source/);
   assert.match(book, /Generated from the public Git repository/);
+});
+
+test("third-party notices include every current virtual bundler runtime", () => {
+  const notices = renderThirdPartyNotices({
+    moduleIds: new Set([
+      "\0rolldown/runtime.js",
+      "\0vite/modulepreload-polyfill.js",
+      "\0vite/preload-helper.js",
+    ]),
+    repositoryRoot,
+  });
+
+  assert.match(notices, /- rolldown@1\.0\.3 — MIT/);
+  assert.match(notices, /- vite@8\.0\.16 — MIT/);
+  assert.match(notices, /Copyright \(c\) 2024-present VoidZero Inc\. & Contributors/);
+  assert.match(notices, /Copyright \(c\) 2019-present, VoidZero Inc\. and Vite contributors/);
+});
+
+test("third-party notices fail closed on an unknown virtual bundle module", () => {
+  assert.throws(
+    () => renderThirdPartyNotices({
+      moduleIds: new Set(["\0vite/future-runtime.js"]),
+      repositoryRoot,
+    }),
+    /Unmapped virtual bundle module:.*vite\/future-runtime\.js/,
+  );
 });
