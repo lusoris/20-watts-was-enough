@@ -26,6 +26,29 @@ six fields below, and binds a hashed multi-domain hardware-confirmation evidence
 bundle. A `smoke-ready` manifest proves only that the deterministic plumbing
 runs; it does not upgrade any claim to workstation-executable.
 
+## Run the development smoke suite
+
+The suite orchestrator discovers only manifests that pass the repository
+validator and declare `smoke-ready`. It executes each manifest's checked
+`prepare` and `smoke` commands without a shell. Where the smoke command owns an
+explicit run directory, it also executes the registered `analyze` and
+`validate` commands against that same directory. It never executes a
+development `run`, confirmation, held-out, release, or promotion action.
+
+```powershell
+node experiments/workstation/smoke-suite.mjs --list
+node experiments/workstation/smoke-suite.mjs --all --dry-run
+node experiments/workstation/smoke-suite.mjs --artifact fixture-027 --output-root tmp/smoke-fixture-027
+node experiments/workstation/smoke-suite.mjs --all --output-root tmp/smoke-all-001
+```
+
+Every real invocation writes `smoke-suite.receipt.json` under the chosen output
+root, continues across artifacts by default, and returns nonzero if any action
+fails. `--fail-fast` stops after the first failed artifact. The receipt is
+explicitly `NO_RESULT`: passing all ten smoke harnesses verifies bounded
+development plumbing only; it supplies no confirmation, scientific result,
+energy comparison, or claim-promotion evidence.
+
 1. **Command:** one non-interactive entry point with `prepare`, `smoke`, `run`,
    and `analyze` actions that returns a nonzero exit code when preparation,
    execution, analysis, or registered acceptance checks fail.
