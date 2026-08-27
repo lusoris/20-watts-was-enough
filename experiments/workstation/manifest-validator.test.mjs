@@ -314,6 +314,66 @@ test("canonical decimal uint64 seed reveals pass while noncanonical strings fail
   }
 });
 
+test("Candidate 010 rejects standalone rehashed seed pairs without the joint operator plan and attestation", async () => {
+  const temporary = await mkdtemp(path.join(root, "tmp-c010-seed-integrity-"));
+  const revealed = path.join(temporary, "revealed");
+  const relative = path.relative(root, revealed).replaceAll("\\", "/");
+  const manifest = JSON.parse(await readFile(realManifest, "utf8"));
+  const writePair = async (partition, seeds) => {
+    const commitment = createHash("sha256").update(JSON.stringify(seeds)).digest("hex");
+    await writeFile(path.join(revealed, `${partition}.commit.json`), JSON.stringify({
+      schema: 1,
+      partition,
+      state: "sealed",
+      algorithm: "sha256-json-array-v1",
+      seed_count: seeds.length,
+      commitment,
+    }));
+    await writeFile(path.join(revealed, `${partition}.reveal.json`), JSON.stringify({
+      schema: 1,
+      partition,
+      state: "frozen-reveal",
+      algorithm: "sha256-json-array-v1",
+      commitment,
+      seeds,
+    }));
+  };
+  try {
+    await mkdir(revealed);
+    await writePair("confirmation", [1, 2]);
+    await writePair("held-out", [3, 4]);
+    manifest.seeds.confirmation = `${relative}/confirmation.reveal.json`;
+    manifest.seeds.held_out = `${relative}/held-out.reveal.json`;
+    const checks = await workstationPromotionChecks(root, manifest);
+    for (const id of ["confirmation-seeds", "held_out-seeds"]) {
+      const check = checks.find((entry) => entry.id === id);
+      assert.equal(check.passed, false);
+      assert.match(check.detail, /Candidate 010 seed-release integrity failed/);
+      assert.match(check.detail, /seed-release-plan|does not resolve to an existing file/);
+    }
+
+    manifest.seed_integrity.artifact_schema_sha256 = "0".repeat(64);
+    const schemaChecks = await workstationPromotionChecks(root, manifest);
+    assert.match(
+      schemaChecks.find((entry) => entry.id === "confirmation-seeds").detail,
+      /schema SHA-256 does not match/,
+    );
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
+test("Candidate 010 validates its frozen seed schema identity while seed creation is still pending", async () => {
+  const manifest = JSON.parse(await readFile(realManifest, "utf8"));
+  manifest.seed_integrity.artifact_schema_sha256 = "0".repeat(64);
+  const checks = await workstationPromotionChecks(root, manifest);
+  for (const id of ["confirmation-seeds", "held_out-seeds"]) {
+    const check = checks.find((entry) => entry.id === id);
+    assert.equal(check.passed, false);
+    assert.match(check.detail, /schema SHA-256 does not match/);
+  }
+});
+
 test("public-label-derived Fixture 019 packs fail the confirmation readiness gate", async () => {
   const temporary = await mkdtemp(path.join(root, "tmp-f019-public-labels-"));
   const relative = path.relative(root, temporary).replaceAll("\\", "/");

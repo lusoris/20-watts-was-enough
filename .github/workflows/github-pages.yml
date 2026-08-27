@@ -27,6 +27,10 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
+      - name: Verify the closed source-publication allowlist
+        run: npm run validate:sources
+      - name: Test source-publication tamper resistance
+        run: npm run test:sources
       - name: Prepare linked repository files
         run: npm run prepare:reader-artifacts
       - name: Verify the downloadable book is current

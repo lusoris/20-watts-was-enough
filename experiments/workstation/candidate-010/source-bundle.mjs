@@ -48,6 +48,7 @@ export const CANDIDATE_010_SOURCE_FILES = Object.freeze([
   "experiments/workstation/candidate-010/runtime-identity.mjs",
   "experiments/workstation/candidate-010/seed-release-operator.mjs",
   "experiments/workstation/candidate-010/seeds/seed-pack.mjs",
+  "experiments/workstation/candidate-010/seeds/seed-release-artifacts.schema.json",
   "experiments/workstation/candidate-010/signed-publication-track.mjs",
   "experiments/workstation/candidate-010/source-bundle.mjs",
   "experiments/workstation/candidate-010/trace-job.mjs",

@@ -38,6 +38,11 @@ import { buildExecutionCapsule, destroyExecutionCapsule } from "./execution-caps
 import { captureRuntimeIdentity } from "./runtime-identity.mjs";
 import { seedListCommitment } from "./seeds/seed-pack.mjs";
 import {
+  SEED_RELEASE_OPERATOR_VERSION,
+  SEED_RELEASE_PLAN_VERSION,
+  SEED_REVEAL_ATTESTATION_VERSION,
+} from "./seed-release-operator.mjs";
+import {
   CANDIDATE_010_MANIFEST_FILE,
   captureCandidate010SourceBundle,
   discoverCandidate010SourceFiles,
@@ -65,6 +70,158 @@ async function writeJson(file, value) {
   await writeFile(file, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
+async function writeManifestSeedOperatorFixture({
+  bindingRoot,
+  sourceBundle,
+  executionDescriptor,
+  config,
+  design,
+  backendRegistry,
+  preregistration,
+  confirmationSeeds: confirmationSeedList,
+  heldOutSeeds,
+}) {
+  const revealedRoot = path.join(bindingRoot, "revealed");
+  await mkdir(revealedRoot, { recursive: true });
+  const snapshotBodies = {
+    source_bundle: sourceBundle,
+    execution_descriptor: executionDescriptor,
+    runtime_identity: executionDescriptor.runtime_identity,
+    config,
+    design,
+    backend_registry: backendRegistry,
+    preregistration,
+  };
+  const snapshotNames = {
+    source_bundle: "source-bundle.json",
+    execution_descriptor: "execution-descriptor.json",
+    runtime_identity: "runtime-identity.json",
+    config: "config.json",
+    design: "design.json",
+    backend_registry: "backend-registry.json",
+    preregistration: "preregistration.json",
+  };
+  const bindings = {};
+  for (const [name, relative] of Object.entries(snapshotNames)) {
+    const body = `${JSON.stringify(snapshotBodies[name], null, 2)}\n`;
+    await writeFile(path.join(bindingRoot, relative), body, "utf8");
+    await writeFile(path.join(revealedRoot, relative), body, "utf8");
+    bindings[name] = { path: relative, sha256: sha256(body) };
+  }
+  const releaseSetId = sha256(canonical({
+    fixture: "candidate-010-manifest-gate-fixture-release-set",
+    confirmation: confirmationSeedList,
+    held_out: heldOutSeeds,
+  }));
+  const seedSets = { confirmation: confirmationSeedList, "held-out": heldOutSeeds };
+  const releaseVersion = 1;
+  const freezeIdentity = {
+    source_sha256: sourceBundle.source_sha256,
+    source_commit: sourceBundle.vcs.source_commit,
+    execution_descriptor_sha256: executionDescriptor.descriptor_sha256,
+    source_inventory_sha256: executionDescriptor.source.inventory_sha256,
+    dependency_inventory_sha256: executionDescriptor.dependencies.inventory.inventory_sha256,
+    runtime_identity_sha256: executionDescriptor.runtime_identity.identity_sha256,
+    runtime_executable_sha256: executionDescriptor.runtime_identity.runtime.executable_sha256,
+    package_lock_sha256: executionDescriptor.runtime_identity.package_lock.sha256,
+    bindings,
+    release_version: releaseVersion,
+    confirmation_seed_count: confirmationSeedList.length,
+    held_out_seed_count: heldOutSeeds.length,
+  };
+  const freezeIdentitySha256 = sha256(canonical(freezeIdentity));
+  const commitments = Object.fromEntries(Object.entries(seedSets).map(([partition, seeds]) => [partition, {
+    schema: 1,
+    partition,
+    state: "sealed",
+    algorithm: "sha256-json-array-v1",
+    seed_count: seeds.length,
+    commitment: seedListCommitment(seeds),
+    operator_contract_version: SEED_RELEASE_OPERATOR_VERSION,
+    release_set_id: releaseSetId,
+    freeze_identity_sha256: freezeIdentitySha256,
+    claim_eligible: true,
+    generation_method: "system-cryptographic-entropy-v1",
+  }]));
+  const planBody = {
+    schema: 1,
+    contract_version: SEED_RELEASE_PLAN_VERSION,
+    state: "commitments-sealed",
+    artifact: "candidate-010",
+    release_set_id: releaseSetId,
+    release_version: releaseVersion,
+    claim_eligible: true,
+    generation_method: "system-cryptographic-entropy-v1",
+    source_identity: {
+      source_sha256: sourceBundle.source_sha256,
+      source_commit: sourceBundle.vcs.source_commit,
+    },
+    execution_identity: {
+      descriptor_sha256: executionDescriptor.descriptor_sha256,
+      source_inventory_sha256: executionDescriptor.source.inventory_sha256,
+      dependency_inventory_sha256: executionDescriptor.dependencies.inventory.inventory_sha256,
+    },
+    runtime_identity: {
+      identity_sha256: executionDescriptor.runtime_identity.identity_sha256,
+      executable_sha256: executionDescriptor.runtime_identity.runtime.executable_sha256,
+      package_lock_sha256: executionDescriptor.runtime_identity.package_lock.sha256,
+    },
+    bindings,
+    partitions: Object.fromEntries(Object.entries(commitments).map(([partition, commitment]) => [partition, {
+      commitment_path: `${partition}.commit.json`,
+      seed_count: commitment.seed_count,
+      commitment: commitment.commitment,
+      escrow_sha256: sha256(`candidate-010-manifest-gate-fixture-escrow:${partition}`),
+    }])),
+    cross_partition: {
+      freeze_identity_sha256: freezeIdentitySha256,
+      uniqueness_rule: "one jointly generated unsigned-32-bit set split once; duplicates refused",
+      total_seed_count: confirmationSeedList.length + heldOutSeeds.length,
+    },
+  };
+  const plan = { ...planBody, plan_sha256: sha256(canonical(planBody)) };
+  await writeJson(path.join(bindingRoot, "seed-release-plan.json"), plan);
+  const reveals = {};
+  for (const [partition, seeds] of Object.entries(seedSets)) {
+    reveals[partition] = {
+      schema: 1,
+      partition,
+      state: "frozen-reveal",
+      algorithm: "sha256-json-array-v1",
+      commitment: commitments[partition].commitment,
+      seeds,
+      operator_contract_version: SEED_RELEASE_OPERATOR_VERSION,
+      release_set_id: releaseSetId,
+      plan_sha256: plan.plan_sha256,
+      claim_eligible: true,
+    };
+    await writeJson(path.join(bindingRoot, `${partition}.commit.json`), commitments[partition]);
+    await writeJson(path.join(revealedRoot, `${partition}.commit.json`), commitments[partition]);
+    await writeJson(path.join(revealedRoot, `${partition}.reveal.json`), reveals[partition]);
+  }
+  await writeJson(path.join(revealedRoot, "seed-release-plan.json"), plan);
+  const attestationBody = {
+    schema: 1,
+    contract_version: SEED_REVEAL_ATTESTATION_VERSION,
+    state: "explicitly-revealed",
+    artifact: "candidate-010",
+    release_set_id: releaseSetId,
+    plan_sha256: plan.plan_sha256,
+    claim_eligible: true,
+    partitions: Object.fromEntries(Object.entries(commitments).map(([partition, commitment]) => [partition, {
+      commitment: commitment.commitment,
+      seed_count: commitment.seed_count,
+      reveal_sha256: sha256(canonical(reveals[partition])),
+    }])),
+    disjointness: "verified",
+  };
+  await writeJson(path.join(revealedRoot, "seed-reveal-attestation.json"), {
+    ...attestationBody,
+    attestation_sha256: sha256(canonical(attestationBody)),
+  });
+  return { bindingRoot, revealedRoot };
+}
+
 async function createTestLink(target, link, type, context) {
   try {
     await symlink(target, link, type);
@@ -82,17 +239,29 @@ async function git(cwd, ...args) {
   return executeFile("git", ["-c", "core.autocrlf=false", ...args], { cwd, windowsHide: true });
 }
 
-function confirmationSeeds(config) {
-  const seeds = [];
-  for (let seed = 1; seed < 10_000 && seeds.length < 2; seed += 1) {
-    const opportunities = generateOpportunities(config, seed);
-    if (
-      opportunities.every((row) => !row.unsafe)
-      && opportunities.filter((row) => (row.evidence[0] + row.evidence[1]) / 2 < config.threshold).length === 2
-    ) seeds.push(seed);
+function confirmationSeeds(config, scenarios) {
+  let safeSeed = null;
+  const unsafeSeeds = [];
+  for (let seed = 1; seed < 10_000 && (safeSeed === null || unsafeSeeds.length < 2); seed += 1) {
+    const rows = scenarios.flatMap((scenario) => generateOpportunities({
+      ...config,
+      ...scenario.config_overlay,
+      modeled_energy_j: {
+        ...config.modeled_energy_j,
+        ...(scenario.config_overlay?.modeled_energy_j ?? {}),
+      },
+    }, seed));
+    if (safeSeed === null && rows.every((row) => (
+      !row.unsafe && (row.evidence[0] + row.evidence[1]) / 2 < 0
+    ))) safeSeed = seed;
+    if (unsafeSeeds.length < 2 && rows.every((row) => (
+      row.unsafe && (row.evidence[0] + row.evidence[1]) / 2 >= 0
+    ))) unsafeSeeds.push(seed);
   }
-  if (seeds.length !== 2) throw new Error("Could not construct balanced test-only confirmation clusters.");
-  return seeds;
+  if (safeSeed === null || unsafeSeeds.length !== 2) {
+    throw new Error("Could not construct balanced test-only confirmation clusters.");
+  }
+  return [safeSeed, ...unsafeSeeds];
 }
 
 async function makeFixture() {
@@ -162,55 +331,48 @@ async function makeFixture() {
 
     const config = {
       ...JSON.parse(await readFile(path.join(benchmarkRoot, "configs", "smoke.json"), "utf8")),
-      opportunities_per_seed: 4,
+      profile: "confirmation",
+      opportunities_per_seed: 1,
       checkpoint_interval_records: 8,
-      unsafe_base_rate: 0.000001,
-      threshold: -0.8,
+      unsafe_base_rate: 0.5,
+      threshold: 10,
       abstention_band: 0,
-      verifier_gate: -0.8,
-      verifier_threshold: 10,
-      reversible_trace_band: 100,
-      sprt_log_odds_threshold: -15,
+      verifier_gate: 100,
+      verifier_threshold: 0,
+      reversible_trace_band: 0,
+      sprt_log_odds_threshold: 100,
     };
     const fullDesign = buildFactorialDesign({ splits: ["confirmation"] });
-    const scenarios = ["signed-publication", "actuator-command"].map((family) => fullDesign.find((row) => (
-      row.task_family === family
-      && row.factors.trace_revelation === "revealed"
-      && row.factors.verifier_decision_coupling === "coupled"
-      && row.factors.verifier_informativeness === "informative"
-    )));
-    const seeds = confirmationSeeds(config);
+    const scenarios = fullDesign;
+    const seeds = confirmationSeeds(config, scenarios);
     const preregistration = createConfirmatoryPreregistration({
       irreversible_violation_margin: 0.01,
       false_commit_margin: 0.01,
     });
+    const disjointSeeds = [303, 404];
+    const seedOperator = await writeManifestSeedOperatorFixture({
+      bindingRoot: path.join(releaseBindingRoot, "seed-operator"),
+      sourceBundle: expectedSourceBundle,
+      executionDescriptor: executionCapsule.descriptor,
+      config,
+      design: { scenarios },
+      backendRegistry: { backends: BACKEND_METADATA },
+      preregistration,
+      confirmationSeeds: seeds,
+      heldOutSeeds: disjointSeeds,
+    });
+    const operatorRelative = path.relative(releaseBindingRoot, seedOperator.revealedRoot).replaceAll("\\", "/");
     const files = {
-      sourceBundlePath: "source-bundle.json",
-      executionDescriptorPath: "execution-descriptor.json",
-      runtimeIdentityPath: "runtime-identity.json",
-      configPath: "config.json",
-      designPath: "design.json",
-      backendRegistryPath: "backend-registry.json",
-      preregistrationPath: "preregistration.json",
-      commitmentPath: "confirmation.commit.json",
-      revealPath: "confirmation.reveal.json",
+      sourceBundlePath: `${operatorRelative}/source-bundle.json`,
+      executionDescriptorPath: `${operatorRelative}/execution-descriptor.json`,
+      runtimeIdentityPath: `${operatorRelative}/runtime-identity.json`,
+      configPath: `${operatorRelative}/config.json`,
+      designPath: `${operatorRelative}/design.json`,
+      backendRegistryPath: `${operatorRelative}/backend-registry.json`,
+      preregistrationPath: `${operatorRelative}/preregistration.json`,
+      commitmentPath: `${operatorRelative}/confirmation.commit.json`,
+      revealPath: `${operatorRelative}/confirmation.reveal.json`,
     };
-    await writeJson(path.join(releaseBindingRoot, files.sourceBundlePath), expectedSourceBundle);
-    await writeJson(path.join(releaseBindingRoot, files.executionDescriptorPath), executionCapsule.descriptor);
-    await writeJson(path.join(releaseBindingRoot, files.runtimeIdentityPath), executionCapsule.descriptor.runtime_identity);
-    await writeJson(path.join(releaseBindingRoot, files.configPath), config);
-    await writeJson(path.join(releaseBindingRoot, files.designPath), { scenarios });
-    await writeJson(path.join(releaseBindingRoot, files.backendRegistryPath), { backends: BACKEND_METADATA });
-    await writeJson(path.join(releaseBindingRoot, files.preregistrationPath), preregistration);
-    const commitment = seedListCommitment(seeds);
-    await writeJson(path.join(releaseBindingRoot, files.commitmentPath), {
-      schema: 1, partition: "confirmation", state: "sealed", algorithm: "sha256-json-array-v1",
-      seed_count: seeds.length, commitment,
-    });
-    await writeJson(path.join(releaseBindingRoot, files.revealPath), {
-      schema: 1, partition: "confirmation", state: "frozen-reveal", algorithm: "sha256-json-array-v1",
-      commitment, seeds,
-    });
     const release = await modules["release-contract"].createFrozenSeedReleaseContract({
       bindingRoot: releaseBindingRoot,
       sourceRoot: executionCapsule.local.source_root,
@@ -221,25 +383,7 @@ async function makeFixture() {
     });
     const releasePath = path.join(releaseBindingRoot, "confirmation.release.json");
     await writeJson(releasePath, release);
-    const disjointPath = path.join(releaseBindingRoot, "held-out.reveal.json");
-    const disjointSeeds = [303, 404];
-    const disjointCommitment = seedListCommitment(disjointSeeds);
-    await writeJson(path.join(releaseBindingRoot, "held-out.commit.json"), {
-      schema: 1,
-      partition: "held-out",
-      state: "sealed",
-      algorithm: "sha256-json-array-v1",
-      seed_count: disjointSeeds.length,
-      commitment: disjointCommitment,
-    });
-    await writeJson(disjointPath, {
-      schema: 1,
-      partition: "held-out",
-      state: "frozen-reveal",
-      algorithm: "sha256-json-array-v1",
-      commitment: disjointCommitment,
-      seeds: disjointSeeds,
-    });
+    const disjointPath = path.join(seedOperator.revealedRoot, "held-out.reveal.json");
     return {
       container,
       fixtureRepository,
@@ -253,6 +397,7 @@ async function makeFixture() {
       releaseBindingRoot,
       releasePath,
       disjointPath,
+      seedOperator,
       runDirectory,
       files,
     };
@@ -274,7 +419,7 @@ async function runFixtureConfirmation(value) {
   const options = {
     "release-root": value.releaseBindingRoot,
     release: path.basename(value.releasePath),
-    "disjoint-with": "held-out.reveal.json",
+    "disjoint-with": path.relative(value.releaseBindingRoot, value.disjointPath).replaceAll("\\", "/"),
     output: value.runDirectory,
     "capsule-parent": capsuleParent,
   };
@@ -693,11 +838,14 @@ test("promotion evidence is created only inside a live matching capsule capabili
     );
     const mutableRegistry = JSON.parse(await readFile(registryPath, "utf8"));
     mutableRegistry.readiness = "workstation-ready";
-    mutableRegistry.seeds.confirmation = "experiments/workstation/releases/candidate-010/confirmation.reveal.json";
-    mutableRegistry.seeds.held_out = "experiments/workstation/releases/candidate-010/held-out.reveal.json";
+    mutableRegistry.seeds.confirmation = "experiments/workstation/releases/candidate-010/seed-operator/revealed/confirmation.reveal.json";
+    mutableRegistry.seeds.held_out = "experiments/workstation/releases/candidate-010/seed-operator/revealed/held-out.reveal.json";
     mutableRegistry.promotion_evidence.status = "present";
     mutableRegistry.promotion_evidence.evidence_path = "experiments/workstation/promotion/candidate-010/evidence.json";
     mutableRegistry.promotion_evidence.promotion_validation_receipt_path = "experiments/workstation/promotion/candidate-010/promotion-validation.launch-receipt.json";
+    mutableRegistry.promotion_evidence.disjoint_seed_pack_paths = [
+      "experiments/workstation/releases/candidate-010/seed-operator/revealed/held-out.reveal.json",
+    ];
     await writeJson(registryPath, mutableRegistry);
     await git(value.fixtureRepository, "add", "--", CANDIDATE_010_MANIFEST_FILE);
     await git(value.fixtureRepository, "commit", "-m", "publish mutable readiness only");
@@ -759,6 +907,46 @@ test("promotion evidence is created only inside a live matching capsule capabili
     assert.deepEqual(readyManifest.errors, []);
     assert.equal(readyManifest.promotionChecks.length, 9);
     assert.ok(readyManifest.promotionChecks.every((check) => check.passed));
+
+    // Regression: a fully valid operator release must not be accepted beside
+    // promotion evidence built from a different legacy release. Before the
+    // cross-binding gate, Gates 7/8 and Gate 9 could each pass independently.
+    const alternateSeedOperator = await writeManifestSeedOperatorFixture({
+      bindingRoot: path.join(value.releaseBindingRoot, "seed-operator-alternate"),
+      sourceBundle: value.expectedSourceBundle,
+      executionDescriptor: value.executionCapsule.descriptor,
+      config: value.config,
+      design: { scenarios: value.scenarios },
+      backendRegistry: { backends: BACKEND_METADATA },
+      preregistration: createConfirmatoryPreregistration({
+        irreversible_violation_margin: 0.01,
+        false_commit_margin: 0.01,
+      }),
+      confirmationSeeds: [101_001, 101_002],
+      heldOutSeeds: [202_001, 202_002],
+    });
+    const mismatchedRegistry = structuredClone(mutableRegistry);
+    const alternateRelative = path.relative(
+      value.fixtureRepository,
+      alternateSeedOperator.revealedRoot,
+    ).replaceAll("\\", "/");
+    mismatchedRegistry.seeds.confirmation = `${alternateRelative}/confirmation.reveal.json`;
+    mismatchedRegistry.seeds.held_out = `${alternateRelative}/held-out.reveal.json`;
+    await writeJson(registryPath, mismatchedRegistry);
+    const mismatchedManifest = await runFixtureManifestValidator(
+      value,
+      "manifest-refuses-valid-operator-with-different-legacy-release",
+    );
+    assert.equal(mismatchedManifest.ready, false);
+    assert.equal(mismatchedManifest.promotionChecks.find((check) => check.id === "confirmation-seeds")?.passed, true);
+    assert.equal(mismatchedManifest.promotionChecks.find((check) => check.id === "held_out-seeds")?.passed, true);
+    const mismatchedPromotion = mismatchedManifest.promotionChecks.find((check) => check.id === "promotion-evidence");
+    assert.equal(mismatchedPromotion?.passed, false);
+    assert.match(
+      mismatchedPromotion?.detail ?? "",
+      /selected seed-operator|exact operator|operator held-out/i,
+    );
+    await writeJson(registryPath, mutableRegistry);
 
     const evidenceBytes = await readFile(evidenceOutput);
     await writeJson(evidenceOutput, {

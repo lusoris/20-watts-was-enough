@@ -5,6 +5,7 @@
     "experiments/test-coverage.json",
     "experiments/test-readiness-summary.json",
     "experiments/workstation/candidate-010/energy-reading.template.json",
+    "experiments/workstation/candidate-010/seeds/seed-release-artifacts.schema.json",
     "experiments/workstation/fixture-026/build-rsd-t02-fixed-instance-conformance-policy.mjs",
     "experiments/workstation/fixture-026/build-rsd-t02-policy-bundle.mjs",
     "experiments/workstation/fixture-026/configs/rsd-t02-development-instance-plan.json",

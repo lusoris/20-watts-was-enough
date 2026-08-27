@@ -50,19 +50,19 @@
     }
   },
   "counts": {
-    "claims": 1559,
-    "testRouted": 1463,
-    "protocolCovered": 1463,
+    "claims": 1563,
+    "testRouted": 1471,
+    "protocolCovered": 1471,
     "executionReady": 0,
     "tierCounts": {
-      "ledger-only": 96,
+      "ledger-only": 92,
       "linked-description": 0,
-      "protocol-complete": 1463,
+      "protocol-complete": 1471,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
       "ledger-only": {
-        "established": 83,
+        "established": 79,
         "plausible": 9,
         "speculative": 0,
         "disputed": 4,
@@ -76,7 +76,7 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1137,
+        "established": 1145,
         "plausible": 210,
         "speculative": 60,
         "disputed": 47,
@@ -91,19 +91,19 @@
       }
     },
     "dispositionCounts": {
-      "evidence-input": 82,
+      "evidence-input": 81,
       "source-reproduction": 11,
       "existing-artifact-gap": 0,
-      "new-artifact-needed": 3
+      "new-artifact-needed": 0
     },
-    "proposedArtifactFamilies": 3,
-    "artifacts": 47,
-    "protocolCompleteArtifacts": 47,
+    "proposedArtifactFamilies": 0,
+    "artifacts": 48,
+    "protocolCompleteArtifacts": 48,
     "executionReadyArtifacts": 0,
     "smokeReadyArtifacts": 10,
-    "claimSideLinked": 1246,
-    "documentSideLinked": 1153,
-    "reciprocalClaims": 799
+    "claimSideLinked": 1254,
+    "documentSideLinked": 1161,
+    "reciprocalClaims": 807
   },
   "artifacts": [
     {
@@ -2635,13 +2635,13 @@
           "id": "confirmation-seeds",
           "label": "Frozen confirmation seeds",
           "passed": false,
-          "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+          "detail": "seeds.confirmation is explicitly pending the implementation/pilot freeze and has no sealed reveal"
         },
         {
           "id": "held_out-seeds",
           "label": "Frozen held-out seeds",
           "passed": false,
-          "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+          "detail": "seeds.held_out is explicitly pending the implementation/pilot freeze and has no sealed reveal"
         },
         {
           "id": "promotion-evidence",
@@ -7398,13 +7398,13 @@
           "id": "confirmation-seeds",
           "label": "Frozen confirmation seeds",
           "passed": false,
-          "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+          "detail": "seeds.confirmation is explicitly pending the implementation/pilot freeze and has no sealed reveal"
         },
         {
           "id": "held_out-seeds",
           "label": "Frozen held-out seeds",
           "passed": false,
-          "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+          "detail": "seeds.held_out is explicitly pending the implementation/pilot freeze and has no sealed reveal"
         },
         {
           "id": "promotion-evidence",
@@ -8280,13 +8280,13 @@
           "id": "confirmation-seeds",
           "label": "Frozen confirmation seeds",
           "passed": false,
-          "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+          "detail": "seeds.confirmation is explicitly pending the implementation/pilot freeze and has no sealed reveal"
         },
         {
           "id": "held_out-seeds",
           "label": "Frozen held-out seeds",
           "passed": false,
-          "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+          "detail": "seeds.held_out is explicitly pending the implementation/pilot freeze and has no sealed reveal"
         },
         {
           "id": "promotion-evidence",
@@ -9256,7 +9256,11 @@
         "C-1561",
         "C-1562",
         "C-1563",
-        "C-1564"
+        "C-1564",
+        "C-1565",
+        "C-1566",
+        "C-1567",
+        "C-1568"
       ],
       "documentSideClaims": [
         "C-1540",
@@ -9273,7 +9277,11 @@
         "C-1561",
         "C-1562",
         "C-1563",
-        "C-1564"
+        "C-1564",
+        "C-1565",
+        "C-1566",
+        "C-1567",
+        "C-1568"
       ],
       "linkedClaims": [
         "C-1540",
@@ -9290,7 +9298,11 @@
         "C-1561",
         "C-1562",
         "C-1563",
-        "C-1564"
+        "C-1564",
+        "C-1565",
+        "C-1566",
+        "C-1567",
+        "C-1568"
       ]
     },
     {
@@ -9388,6 +9400,39 @@
         "C-1557",
         "C-1558",
         "C-1559"
+      ]
+    },
+    {
+      "id": "fixture-028",
+      "path": "experiments/fixtures/028-parasitology-adversarial-lifecycles.md",
+      "title": "Fixture F-028 — Parasitology-derived adversarial lifecycle boundaries",
+      "protocolComplete": true,
+      "missingFacets": [],
+      "executionReady": false,
+      "executionReadiness": "absent",
+      "executionManifest": null,
+      "executionMissing": [
+        "manifest"
+      ],
+      "executionPromotionChecks": [],
+      "executionClaims": [],
+      "claimSideClaims": [
+        "C-1569",
+        "C-1570",
+        "C-1571",
+        "C-1572"
+      ],
+      "documentSideClaims": [
+        "C-1569",
+        "C-1570",
+        "C-1571",
+        "C-1572"
+      ],
+      "linkedClaims": [
+        "C-1569",
+        "C-1570",
+        "C-1571",
+        "C-1572"
       ]
     }
   ],
@@ -30383,72 +30428,98 @@
     {
       "id": "C-1565",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-1565",
-        "disposition": "evidence-input",
-        "rationale": "The claim is a general experimental-unit constraint that the population contract enforces; the scientific statement itself is not a standalone AI-system performance hypothesis.",
-        "targets": [],
-        "source": "experiments/claim-dispositions/1204-1600.json"
-      }
+      "artifacts": [
+        "fixture-026"
+      ],
+      "disposition": null
     },
     {
       "id": "C-1566",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-1566",
-        "disposition": "new-artifact-needed",
-        "rationale": "The project-specific structural-lineage leakage graph needs a sealed outer-family split and one-pass transfer protocol before its consequence can be tested.",
-        "targets": [
-          "proposed:rsd-t02-outer-lineage-split"
-        ],
-        "source": "experiments/claim-dispositions/1204-1600.json"
-      }
+      "artifacts": [
+        "fixture-026"
+      ],
+      "disposition": null
     },
     {
       "id": "C-1567",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-1567",
-        "disposition": "new-artifact-needed",
-        "rationale": "The exact-bound integrated release now executes a complete 20-instance receipt-only traversal and satisfies the parameterized-runner infrastructure gate, but it emits no estimator endpoints and has no shifted outer-lineage evaluation; parameter-shift performance still needs role-disjoint fitting and calibration plus a powered endpoint comparison.",
-        "targets": [
-          "proposed:rsd-t02-parameterized-population-runner"
-        ],
-        "source": "experiments/claim-dispositions/1204-1600.json"
-      }
+      "artifacts": [
+        "fixture-026"
+      ],
+      "disposition": null
     },
     {
       "id": "C-1568",
       "status": "established",
-      "tier": "ledger-only",
-      "testRouted": false,
-      "protocolCovered": false,
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
       "executionReady": false,
-      "artifacts": [],
-      "disposition": {
-        "id": "C-1568",
-        "disposition": "new-artifact-needed",
-        "rationale": "Risk-coverage behavior needs trained probability-emitting candidate and null artifacts plus an instance-disjoint calibration protocol.",
-        "targets": [
-          "proposed:rsd-t02-calibrated-selective-comparison"
-        ],
-        "source": "experiments/claim-dispositions/1204-1600.json"
-      }
+      "artifacts": [
+        "fixture-026"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1569",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-028"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1570",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-028"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1571",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-028"
+      ],
+      "disposition": null
+    },
+    {
+      "id": "C-1572",
+      "status": "established",
+      "tier": "protocol-complete",
+      "testRouted": true,
+      "protocolCovered": true,
+      "executionReady": false,
+      "artifacts": [
+        "fixture-028"
+      ],
+      "disposition": null
     }
   ]
 }

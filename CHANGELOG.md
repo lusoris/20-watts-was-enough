@@ -7,6 +7,38 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- The full-book screen layout now constrains readiness grids to the available
+  inline size, so the 390-pixel reader no longer expands to the intrinsic width
+  of its 760-pixel evidence matrix. Wide Mermaid diagrams retain a readable
+  760-pixel inspection canvas inside a local horizontal scroller on narrow
+  screens instead of shrinking labels to near-zero height; tables, formulas and
+  diagrams remain contained without page-level horizontal overflow.
+
+- Candidate 010's seed-release boundary now binds release plans, frozen
+  snapshots, runtime/configuration/design/preregistration identities,
+  commitments, reveals and attestations under one schema-validated operator
+  release. Confirmation and held-out partitions must be disjoint members of
+  that release, and promotion evidence must consume the exact same snapshots,
+  commitment, reveals, configuration and design. Symlink/reparse paths,
+  independently rehashed seed pairs, and a valid operator release paired with
+  evidence from a different release are rejected. The candidate remains
+  honestly `smoke-ready` at 6/9 structural gates because no claim-eligible
+  workstation seed release or measurement evidence exists.
+
+- The generated shareable PDF now uses a dedicated public-link surface: links
+  to claims, audits, fixtures, decisions and repository artifacts resolve to
+  the public Git repository rather than the owner-only reader. Generated
+  readiness copy also handles the zero proposed-family state without presenting
+  an empty backlog as active work.
+
+- Fixture F-026 now gives C-1565--C-1568 an exact, reciprocal
+  `RSD-T02-POP` test route covering experimental-unit invariance, blocked
+  lineage leakage, episode/parameter/lineage shift, and calibrated selective
+  risk. This promotes four ledger-only records to protocol-complete and closes
+  the unnumbered engineering-protocol backlog without claiming execution or a
+  result; the remaining ledger-only records are evidence inputs or
+  source-domain reproductions.
+
 - Current-release documentation now describes the Google Doc and Gemini inputs
   consistently as link-only provenance records. Their origin bodies are not
   published in the current tree and cannot support or relicense a claim.
@@ -22,6 +54,24 @@ the exact diff; this file records why the project changed.
   notices have been regenerated from the updated build.
 
 ### Added
+
+- A fail-closed source-publication boundary now admits exactly 17 byte-pinned
+  files: the source index, ten provenance records and six reviewed taxonomy
+  files. Size and SHA-256 checks reject additions, removals, path replacement,
+  taxonomy substitution and appended Google/Gemini body content; focused tests
+  and the GitHub Pages workflow enforce the boundary before publication.
+
+- The parasitology frontier audit contributes eleven primary DOI records and
+  four bounded claims: observable-surface versus latent identity, costed
+  lifecycle commitment, host/control-plane capture and intervention-induced
+  competitive release. Decision 0025 and Fixture F-028 keep those mechanisms
+  separate, deduplicate them against existing principles, and expose complete
+  specification-only `PAR-X01`--`PAR-X04` tests without adding a principle,
+  architecture candidate, execution result or energy claim. Source findings
+  and project syntheses are explicitly separated; non-identifiable identity is
+  bounded by prior-only Bayes risk and charged selective abstention, while
+  witness-root compromise is an uncovered fail-closed stratum rather than an
+  assurance-advantage condition.
 
 - Decision 0024 makes the GitHub repository public, retains the interactive
   reader as owner-only, and adds a static full-book GitHub Pages release built

@@ -199,7 +199,7 @@ export function MermaidDiagram({
     >
       {rendered.shape === "wide" ? (
         <p className="diagram-layout-note">
-          Wide diagram · fit to page
+          Wide diagram · scroll horizontally on narrow screens
         </p>
       ) : null}
       <div

@@ -24203,7 +24203,9 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   instance count unchanged.
 - **Open question:** how many truly independent instances per named family are
   required after family heterogeneity, failures and multiplicity are modeled?
-- **Direct test:** [`RSD-T02` population contract](../experiments/workstation/fixture-026/rsd-t02-population-contract.test.mjs).
+- **Direct test:** [`RSD-T02-POP` experimental-unit track](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pop--population-shift-and-selective-risk-confirmation),
+  with machine enforcement in the
+  [`RSD-T02` population contract](../experiments/workstation/fixture-026/rsd-t02-population-contract.test.mjs).
 - **Traceability:** [population and calibration audit](audits/2026-08-27-rsd-t02-population-identifiability-calibration.md) · [decision 0021](../decisions/0021-bind-population-inference-to-system-lineages-and-instances.md).
 
 ### C-1566
@@ -24235,7 +24237,7 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
 - **Open question:** which declared ancestry relations form the smallest
   leakage graph that blocks dependence without collapsing genuinely distinct
   families?
-- **Direct test:** future `RSD-T02` outer-lineage split and leakage hostiles.
+- **Direct test:** [`RSD-T02-POP` blocked-lineage and leakage-hostile track](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pop--population-shift-and-selective-risk-confirmation).
 - **Traceability:** [population and calibration audit](audits/2026-08-27-rsd-t02-population-identifiability-calibration.md) · [decision 0021](../decisions/0021-bind-population-inference-to-system-lineages-and-instances.md).
 
 ### C-1567
@@ -24265,10 +24267,12 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   support.
 - **Open question:** which parameter ranges are scientifically meaningful and
   numerically valid without being chosen after seeing arm responses?
-- **Direct test:** the public-development
+- **Direct test:** [`RSD-T02-POP` episode/parameter/lineage-shift track](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pop--population-shift-and-selective-risk-confirmation).
+  The public-development
   [population runner](../experiments/workstation/fixture-026/rsd-t02-public-development-population-runner.test.mjs)
-  now traverses all 20 unique parameter instances while retaining the nested
-  episode/row boundary; shifted outer-lineage execution remains future work.
+  currently verifies only the 20-instance traversal and nested episode/row
+  boundary; it is infrastructure for, not execution of, the written shift
+  comparison.
 - **Traceability:** [population and calibration audit](audits/2026-08-27-rsd-t02-population-identifiability-calibration.md) · [population execution diagnostic](audits/2026-08-27-rsd-t02-population-execution-isolation-calibration.md) · [family registry](../experiments/workstation/fixture-026/configs/rsd-t02-system-family-registry.json).
 
 ### C-1568
@@ -24301,6 +24305,149 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   guarantee may fail and must be re-evaluated rather than assumed.
 - **Open question:** which frozen loss and support detector produce useful
   coverage without turning abstention into an unpriced escape route?
-- **Direct test:** future calibrated `B-STATE-SPACE`, `B-RECURRENT` and
-  `C-MECHANISM-BANK` artifacts under the null-maturation contract.
+- **Direct test:** [`RSD-T02-POP` calibration and selective-risk track](../experiments/fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pop--population-shift-and-selective-risk-confirmation),
+  requiring future level-five `B-STATE-SPACE`, `B-RECURRENT` and
+  `C-MECHANISM-BANK` releases under the null-maturation contract before it can
+  execute.
 - **Traceability:** [population and calibration audit](audits/2026-08-27-rsd-t02-population-identifiability-calibration.md) · [synthetic analyzer-calibration diagnostic](audits/2026-08-27-rsd-t02-population-execution-isolation-calibration.md) · [null-maturation design](../experiments/workstation/fixture-026/configs/rsd-t02-null-maturation-design.json).
+
+### C-1569
+
+- **Claim:** In the cited *Trypanosoma brucei* infection system, expressed
+  antigenic surfaces form a diverse, changing population and can include
+  mosaic variants. The unchanged latent lineage/function used in the linked
+  artificial test is a project synthesis, not a result established by this
+  source.
+- **Status:** established scoped in-vivo observation in four experimentally
+  infected mice under the cited assay; the artificial identity translation
+  remains plausible rather than biologically inherited.
+- **Primary source:** [Mugnier, Cross and Papavasiliou 2015](https://doi.org/10.1126/science.aaa4502).
+- **Rationale:** as a project-authored stress construction, a detector can
+  appear accurate by learning the current rendering epoch while failing when
+  surfaces rotate or compose around a fixed artificial behavior kernel.
+- **AI translation:** the project, not the biological source, proposes
+  versioning visible signatures separately from artificial lineage and
+  behavior, retaining provenance, and allowing active behavioral challenges
+  or abstention when permitted observations are non-identifying.
+- **Efficiency mechanism:** a qualified provenance or challenge path may avoid
+  repeated whole-model retraining for every superficial variant, but its
+  storage, query, latency, maintenance and energy costs remain charged.
+- **Failure modes:** surface diversity called new competence, a larger
+  signature bank overfit to known transforms, challenge leakage, false splits
+  replacing false merges, and confident identity in an exactly
+  non-identifiable world.
+- **Measurable prediction:** on sealed unseen surface compositions, a
+  provenance- or challenge-qualified system lowers worst-epoch false merges
+  only where artificial behavior remains distinguishable; where it does not,
+  no system beats the prior-only Bayes risk, and lower selective risk requires
+  charged abstention and reduced coverage rather than invented identity.
+- **Open question:** which minimum-cost challenge separates the task-relevant
+  equivalence classes without exposing evaluator or lineage labels?
+- **Direct test:** [`F-028 / PAR-X01`](../experiments/fixtures/028-parasitology-adversarial-lifecycles.md#par-x01-system--surface-rotation-without-latent-change).
+- **Traceability:** [parasitology audit](audits/2026-08-27-parasitology-adversarial-lifecycles.md#1-antigenic-surfaces-identity-is-not-appearance) · [bibliography key `mugnier2015vsg`](references.bib).
+
+### C-1570
+
+- **Claim:** In the cited *Plasmodium* systems, AP2-G is an essential causal
+  regulator of commitment from continued asexual replication toward a
+  functionally different sexual lineage. The future-constraining software
+  transition is the linked project translation, not a claim that AP2-G alone
+  is sufficient across contexts.
+- **Status:** established causal molecular evidence in the cited parasite
+  systems with later temporal and single-cell refinement; the proposed AI
+  allocation policy remains a testable hypothesis.
+- **Primary sources:** [Kafsack et al. 2014](https://doi.org/10.1038/nature12920),
+  [Sinha et al. 2014](https://doi.org/10.1038/nature12970),
+  [Poran et al. 2017](https://doi.org/10.1038/nature24280), and
+  [Bancells et al. 2019](https://doi.org/10.1038/s41564-018-0291-7).
+- **Rationale:** future-facing capacity has an immediate opportunity cost and
+  may become unavailable to present service for a minimum duration; removing
+  those constraints turns the mechanism into ordinary conditional routing.
+- **AI translation:** let a bounded reserve enter a slow verifier, protected
+  retraining, recovery or transfer-ready mode only through an explicit state
+  transition with preparation delay, minimum duration and lost current
+  capacity.
+- **Efficiency mechanism:** advance commitment could reduce recovery latency
+  after rare changes, but only if the avoided outage repays false commitments,
+  stranded reserve, switching and idle maintenance.
+- **Failure modes:** biological commitment rates copied as software priors,
+  costless reversibility, future labels leaked to the policy, unused reserve
+  omitted from the denominator, and average reward hiding failed service or
+  recovery strata.
+- **Measurable prediction:** commitment can improve the
+  service--recovery--resource frontier only in an intermediate region of
+  change hazard, signal information and preparation delay; ordinary options,
+  fixed reserves or checkpoint restore dominate outside that region.
+- **Open question:** can a prospective support gate locate that region without
+  post-hoc tuning on the sealed change process?
+- **Direct test:** [`F-028 / PAR-X02`](../experiments/fixtures/028-parasitology-adversarial-lifecycles.md#par-x02-system--costed-lifecycle-commitment).
+- **Traceability:** [parasitology audit](audits/2026-08-27-parasitology-adversarial-lifecycles.md#2-stage-commitment-preserve-the-cost-of-becoming-something-else) · bibliography keys [`kafsack2014ap2g`, `sinha2014ap2g`, `poran2017commitment`, `bancells2019routes`](references.bib).
+
+### C-1571
+
+- **Claim:** In the cited baculovirus system, deleting viral `egt` prevented
+  the elevated climbing phenotype; the cited *Toxoplasma* studies disagree on
+  felid specificity and support different mechanistic interpretations. The
+  unchanged-focal-model control-plane attack is a project synthesis, not a
+  result reported by those biological sources.
+- **Status:** established causal gene-to-behavior evidence for the cited
+  baculovirus system and disputed cross-system adaptive specificity for the
+  cited *Toxoplasma* results; the AI control-plane translation is plausible.
+- **Primary sources:** [Hoover et al. 2011](https://doi.org/10.1126/science.1209199),
+  [House, Vyas and Sapolsky 2011](https://doi.org/10.1371/journal.pone.0023277),
+  and [Boillat et al. 2020](https://doi.org/10.1016/j.celrep.2019.12.019).
+- **Rationale:** the project uses those source-qualified boundary effects to
+  motivate a separate artificial hypothesis: unchanged model weights do not
+  imply unchanged evidence or authority when sampling, retrieval, evaluation,
+  routing, tools, telemetry or stopping rules can be perturbed.
+- **AI translation:** as a project-authored test, hold the focal model
+  byte-identical while independently attacking each observation and
+  control-plane boundary; require a separately rooted witness or effect
+  receipt wherever the trust model permits one.
+- **Efficiency mechanism:** early boundary-capture detection can avoid wasted
+  downstream inference, rollback and harm, but witness hardware,
+  communication, keys, review and false alarms remain lifecycle costs.
+- **Failure modes:** correlated behavior called adaptive manipulation,
+  duplicated monitors called independent despite shared roots, logs trusted
+  after coordinated capture, and attacks above the witness root omitted.
+- **Measurable prediction:** shared-path output and telemetry monitors miss
+  more coordinated boundary-capture cells than an independently rooted stack
+  inside its declared trust boundary. Root compromise is not an advantage
+  stratum: the stack must label it uncovered and abstain, quarantine, or
+  escalate before the protected harm allowance, with fallback cost charged.
+- **Open question:** which smallest dependency cut supplies useful independent
+  evidence without duplicating the entire system?
+- **Direct test:** [`F-028 / PAR-X03`](../experiments/fixtures/028-parasitology-adversarial-lifecycles.md#par-x03-system--hostcontrol-plane-capture).
+- **Traceability:** [parasitology audit](audits/2026-08-27-parasitology-adversarial-lifecycles.md#3-host-manipulation-the-observation-and-action-boundary-is-attackable) · bibliography keys [`hoover2011extendedphenotype`, `house2011toxoplasma`, `boillat2020toxoplasma`](references.bib).
+
+### C-1572
+
+- **Claim:** In the cited mixed *Plasmodium chabaudi* infections, suppressing
+  drug-sensitive competitors can release resistant parasites and increase
+  their density or transmission-stage output; reducing the targeted threat is
+  therefore not sufficient evidence of lower total system harm.
+- **Status:** established intervention result in rodent-malaria systems; effect
+  sizes and mechanisms are not generalized to human malaria or artificial
+  populations.
+- **Primary sources:** [de Roode et al. 2004](https://doi.org/10.1186/1475-2875-3-33)
+  and [Wargo et al. 2007](https://doi.org/10.1073/pnas.0707766104).
+- **Rationale:** an intervention changes the competitive environment as well
+  as its direct target, so a favorable target metric can coexist with
+  non-target rebound, substitution or worse tail harm.
+- **AI translation:** evaluate filters, routers, moderation rules, firewalls,
+  expert ablations and retraining interventions over all registered failure
+  families, unknown mass, shared capacity and total protected harm.
+- **Efficiency mechanism:** a population-aware policy may reduce repeated
+  suppress--rebound cycles and unnecessary intervention, but estimating and
+  maintaining the interaction model has sensing, compute and energy cost.
+- **Failure modes:** target-only success, label substitution mistaken for
+  latent release, the true interaction matrix leaked to a controller, unknown
+  mass discarded, and aggregate harm hiding a protected family.
+- **Measurable prediction:** target-only optimization produces lower family-1
+  burden but higher total harm in some sealed competitive regimes; a
+  population-aware controller helps only when interactions are identifiable
+  and stable enough to repay its added cost.
+- **Open question:** which robust target-plus-unknown baseline captures the
+  useful protection without fitting a brittle ecological model?
+- **Direct test:** [`F-028 / PAR-X04`](../experiments/fixtures/028-parasitology-adversarial-lifecycles.md#par-x04-system--intervention-induced-competitive-release).
+- **Traceability:** [parasitology audit](audits/2026-08-27-parasitology-adversarial-lifecycles.md#4-competitive-release-intervention-changes-the-population) · bibliography keys [`deroode2004competitive`, `wargo2007competitive`](references.bib).

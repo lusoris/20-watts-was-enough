@@ -182,12 +182,20 @@ and the existing promotion authority chain.
 
 ## Current structural gate state: 6/9
 
-The structural gates currently pass exact claim scope, frozen-profile hash,
-the complete factorial implementation test, corruption-evident ledger
-integration with declared-boundary resume tests, and external-meter provider
-capability.
-They still fail confirmation seeds, held-out seeds, and the final readiness
-declaration with validated hardware evidence.
+The passing gates are:
+
+1. exact execution-claim scope;
+2. frozen full-profile identity;
+3. registered full-path tests;
+4. corruption-evident output ledger;
+5. deterministic declared-boundary resume; and
+6. external-meter provider capability.
+
+The failing gates are:
+
+1. frozen confirmation seeds;
+2. frozen held-out seeds; and
+3. strictly recomputed promotion evidence from a validated hardware run.
 
 This is deliberate. Seed packs will be freshly generated and sealed only after
 the runner, task backends, block analysis, powered seed plan, resource
@@ -196,6 +204,21 @@ Seeds that were visible during implementation are ineligible for confirmation.
 The release validator and encrypted seed escrow operator are executable, but
 the repository deliberately contains no real confirmation commitment, escrow,
 release document, or revealed seed pack.
+
+The seed gates now enforce more than a reveal plus a matching digest. Candidate
+010 must provide both partitions from one claim-eligible operator release set.
+The validator checks the content-identified
+[`seed-release-artifacts.schema.json`](seeds/seed-release-artifacts.schema.json),
+the exact operator/plan/attestation contract versions, all frozen source,
+execution, runtime, configuration, design, backend, and preregistration
+snapshots, both sealed commitments, both reveals, the reveal attestation, and
+development/confirmation/held-out disjointness. A standalone or consistently
+rehashed seed pair without that joint authority chain fails both gates.
+
+The repository-visible schema and executable validation establish artifact
+shape and deterministic integrity. They do not prove that system entropy was
+honest or that a reveal ceremony occurred; those remain operational controls
+requiring a selected key custodian and recorded procedure.
 
 ## Exact implementation limits
 

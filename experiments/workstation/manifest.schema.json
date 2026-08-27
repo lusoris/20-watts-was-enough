@@ -66,6 +66,30 @@
         "held_out": { "type": "string", "minLength": 1 }
       }
     },
+    "seed_integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_schema",
+        "artifact_schema_sha256",
+        "operator_contract_version",
+        "release_plan_contract_version",
+        "reveal_attestation_contract_version",
+        "required_generation_method",
+        "require_claim_eligible",
+        "require_joint_release_set"
+      ],
+      "properties": {
+        "artifact_schema": { "$ref": "#/$defs/repositoryPath" },
+        "artifact_schema_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "operator_contract_version": { "type": "string", "minLength": 1 },
+        "release_plan_contract_version": { "type": "string", "minLength": 1 },
+        "reveal_attestation_contract_version": { "type": "string", "minLength": 1 },
+        "required_generation_method": { "const": "system-cryptographic-entropy-v1" },
+        "require_claim_eligible": { "const": true },
+        "require_joint_release_set": { "const": true }
+      }
+    },
     "data": {
       "type": "object",
       "required": ["generator"],

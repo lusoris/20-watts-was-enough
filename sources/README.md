@@ -32,6 +32,17 @@ Rules:
 - Preserve copyright, licence, attribution, provenance, and use-basis notices;
   do not infer an open licence from academic publication or public access.
 
+### Automated publication boundary
+
+`npm run validate:sources` treats this public source tree as a byte-exact,
+closed allowlist. It verifies the recorded byte size and SHA-256 digest of this
+index, all ten provenance records, and the exact six files in the dated
+taxonomy snapshot. Adding a file, replacing an allowed path, appending a
+Google/Gemini body, or changing even one byte therefore fails closed until the
+change receives an explicit review and the integrity manifest is deliberately
+updated. This prevents a familiar link-only record or taxonomy filename from
+becoming a publication path for unreviewed content.
+
 ## Initial source records
 
 These Google Doc and Gemini links were supplied by the project owner for

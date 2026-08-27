@@ -986,6 +986,66 @@
       "rationale": "The package defines connection sensitivity, dynamic response, bandwidth, disturbance attenuation, service constraints and multi-objective insulation selection as control problems.",
       "scopeGap": "The audit is not a general control-engineering review and supplies no hardware or industrial controller validation.",
       "nextQuestion": "Which conventional controller or interface design reaches the same frontier, and where does any mechanism-specific residual remain?"
+    },
+    {
+      "level": "euroscivoc-concept",
+      "code": "4825264c-ff40-46ee-b7a9-dc5093003929",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-27-parasitology-adversarial-lifecycles.md"
+      ],
+      "claims": ["C-1569", "C-1570", "C-1571", "C-1572"],
+      "rationale": "The audit is field-centred on parasite surface variation, lifecycle commitment, host-mediated effects, intervention-driven competitive release and time-shift antagonism, then deduplicates them against existing principles.",
+      "scopeGap": "Helminths, vectors, multi-host lifecycles, immunomodulation, parasitoids, marine, plant and social parasitism, genomics, diagnostics, treatment and most taxonomic breadth remain outside this first pass.",
+      "nextQuestion": "Which lineage, lifecycle, authority and opponent-population boundaries survive sealed transfer beyond the four registered synthetic tests?"
+    },
+    {
+      "level": "dfg-subject",
+      "code": "2.21-06",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-27-parasitology-adversarial-lifecycles.md"
+      ],
+      "claims": ["C-1569", "C-1570", "C-1571", "C-1572"],
+      "rationale": "The four central claims arise from bounded parasitology experiments and feed a parasite-derived adversarial-lifecycle fixture rather than inheriting coverage from microbiology or immunology.",
+      "scopeGap": "Tropical pathogen breadth, clinical and field epidemiology, vectors, drug development, host immunity, diagnostics and direct human evidence remain incomplete.",
+      "nextQuestion": "Do the four engineering residues reproduce across unrelated parasite taxa, hosts, stages and intervention regimes without collapsing source and AI authority?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "300909",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-parasitology-adversarial-lifecycles.md"
+      ],
+      "claims": ["C-1572"],
+      "rationale": "Competitive release is supported by a bounded rodent-malaria intervention, while the audit is not a veterinary-parasitology survey.",
+      "scopeGap": "Livestock, companion-animal, wildlife, production-system, diagnostic, treatment and control breadth remain unsampled.",
+      "nextQuestion": "Which intervention-induced population effects reproduce in veterinary hosts under field-qualified exposure, transmission and welfare endpoints?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "310407",
+      "state": "dedicated",
+      "audits": [
+        "research/audits/2026-08-27-parasitology-adversarial-lifecycles.md"
+      ],
+      "claims": ["C-1569", "C-1570", "C-1571", "C-1572"],
+      "rationale": "Surface switching, stage commitment, host-mediated behavior and competitive release all require an explicit host--parasite interaction boundary.",
+      "scopeGap": "Immune, metabolic, ecological, vector, tissue, co-infection and multi-host interaction breadth remains incomplete.",
+      "nextQuestion": "Which causal interaction variables are necessary to distinguish parasite adaptation, host pathology, shared response and adaptive manipulation?"
+    },
+    {
+      "level": "anzsrc-field",
+      "code": "320704",
+      "state": "adjacent",
+      "audits": [
+        "research/audits/2026-08-27-parasitology-adversarial-lifecycles.md"
+      ],
+      "claims": ["C-1569", "C-1570", "C-1571", "C-1572"],
+      "rationale": "The audit includes trypanosome, malaria and toxoplasmosis source systems but uses them to define adversarial evaluation boundaries, not clinical conclusions.",
+      "scopeGap": "Human disease burden, diagnosis, treatment, prevention, trials, health systems and clinical parasite breadth remain unsampled.",
+      "nextQuestion": "Which source-qualified mechanisms remain relevant after human clinical, transmission, intervention and safety boundaries are measured directly?"
     }
   ]
 }

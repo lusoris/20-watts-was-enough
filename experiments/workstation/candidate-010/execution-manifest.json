@@ -33,6 +33,16 @@
     "seeds": {
       "development": "experiments/workstation/candidate-010/seeds/development.json"
     },
+    "seed_integrity": {
+      "artifact_schema": "experiments/workstation/candidate-010/seeds/seed-release-artifacts.schema.json",
+      "artifact_schema_sha256": "904d1401f7af0737b3018df96e00a89ea6f79dafaaaf12bc2d188d71f9864613",
+      "operator_contract_version": "candidate-010.seed-release-operator.v1",
+      "release_plan_contract_version": "candidate-010.seed-release-plan.v1",
+      "reveal_attestation_contract_version": "candidate-010.seed-reveal-attestation.v1",
+      "required_generation_method": "system-cryptographic-entropy-v1",
+      "require_claim_eligible": true,
+      "require_joint_release_set": true
+    },
     "data": {
       "generator": "experiments/workstation/candidate-010/generator.mjs",
       "full_profile": "experiments/workstation/candidate-010/configs/development.json",

@@ -310,6 +310,47 @@ function escrowDocument({ partition, seeds, commitment, releaseSetId, freezeIden
 }
 
 function validatePlan(plan) {
+  const exactDigestRecord = (value, keys) => exactKeys(value, keys)
+    && keys.every((key) => /^[0-9a-f]{64}$/.test(value[key] ?? ""));
+  const validBindings = exactKeys(plan?.bindings, Object.keys(snapshotNames))
+    && Object.entries(snapshotNames).every(([name, expectedPath]) => (
+      exactKeys(plan.bindings[name], ["path", "sha256"])
+      && plan.bindings[name].path === expectedPath
+      && /^[0-9a-f]{64}$/.test(plan.bindings[name].sha256 ?? "")
+    ));
+  const validPartitions = exactKeys(plan?.partitions, partitionNames)
+    && partitionNames.every((partition) => (
+      exactKeys(plan.partitions[partition], ["commitment_path", "seed_count", "commitment", "escrow_sha256"])
+      && plan.partitions[partition].commitment_path === `${partition}.commit.json`
+      && Number.isSafeInteger(plan.partitions[partition].seed_count)
+      && plan.partitions[partition].seed_count > 0
+      && /^[0-9a-f]{64}$/.test(plan.partitions[partition].commitment ?? "")
+      && /^[0-9a-f]{64}$/.test(plan.partitions[partition].escrow_sha256 ?? "")
+    ));
+  const validCrossPartition = exactKeys(
+    plan?.cross_partition,
+    ["freeze_identity_sha256", "uniqueness_rule", "total_seed_count"],
+  )
+    && /^[0-9a-f]{64}$/.test(plan.cross_partition.freeze_identity_sha256 ?? "")
+    && plan.cross_partition.uniqueness_rule
+      === "one jointly generated unsigned-32-bit set split once; duplicates refused"
+    && Number.isSafeInteger(plan.cross_partition.total_seed_count)
+    && plan.cross_partition.total_seed_count
+      === partitionNames.reduce((sum, partition) => sum + (plan.partitions?.[partition]?.seed_count ?? 0), 0);
+  const reconstructedFreezeIdentity = {
+    source_sha256: plan?.source_identity?.source_sha256,
+    source_commit: plan?.source_identity?.source_commit,
+    execution_descriptor_sha256: plan?.execution_identity?.descriptor_sha256,
+    source_inventory_sha256: plan?.execution_identity?.source_inventory_sha256,
+    dependency_inventory_sha256: plan?.execution_identity?.dependency_inventory_sha256,
+    runtime_identity_sha256: plan?.runtime_identity?.identity_sha256,
+    runtime_executable_sha256: plan?.runtime_identity?.executable_sha256,
+    package_lock_sha256: plan?.runtime_identity?.package_lock_sha256,
+    bindings: plan?.bindings,
+    release_version: plan?.release_version,
+    confirmation_seed_count: plan?.partitions?.confirmation?.seed_count,
+    held_out_seed_count: plan?.partitions?.["held-out"]?.seed_count,
+  };
   if (
     !exactKeys(plan, [
       "schema", "contract_version", "state", "artifact", "release_set_id", "release_version",
@@ -326,6 +367,19 @@ function validatePlan(plan) {
     || typeof plan.claim_eligible !== "boolean"
     || !["system-cryptographic-entropy-v1", "injected-fixture-entropy-v1"].includes(plan.generation_method)
     || plan.claim_eligible !== (plan.generation_method === "system-cryptographic-entropy-v1")
+    || !exactKeys(plan.source_identity, ["source_sha256", "source_commit"])
+    || !/^[0-9a-f]{64}$/.test(plan.source_identity.source_sha256 ?? "")
+    || !/^[0-9a-f]{40,64}$/.test(plan.source_identity.source_commit ?? "")
+    || !exactDigestRecord(plan.execution_identity, [
+      "descriptor_sha256", "source_inventory_sha256", "dependency_inventory_sha256",
+    ])
+    || !exactDigestRecord(plan.runtime_identity, [
+      "identity_sha256", "executable_sha256", "package_lock_sha256",
+    ])
+    || !validBindings
+    || !validPartitions
+    || !validCrossPartition
+    || plan.cross_partition.freeze_identity_sha256 !== sha256(canonical(reconstructedFreezeIdentity))
     || plan.plan_sha256 !== digestDocument(plan, "plan_sha256")
   ) throw new Error("Invalid or corrupted Candidate 010 seed-release plan.");
   return plan;
@@ -357,6 +411,60 @@ function validateCommitment(document, plan, partition) {
       escrow_sha256: plan.partitions[partition].escrow_sha256,
     })
   ) throw new Error(`Invalid or relabelled ${partition} operator commitment.`);
+  return document;
+}
+
+function validateReveal(document, plan, commitment, partition) {
+  if (
+    !exactKeys(document, [
+      "schema", "partition", "state", "algorithm", "commitment", "seeds",
+      "operator_contract_version", "release_set_id", "plan_sha256", "claim_eligible",
+    ])
+    || document.schema !== 1
+    || document.partition !== partition
+    || document.state !== "frozen-reveal"
+    || document.algorithm !== "sha256-json-array-v1"
+    || document.operator_contract_version !== SEED_RELEASE_OPERATOR_VERSION
+    || document.release_set_id !== plan.release_set_id
+    || document.plan_sha256 !== plan.plan_sha256
+    || document.claim_eligible !== plan.claim_eligible
+    || document.commitment !== commitment.commitment
+  ) throw new Error(`Invalid or relabelled ${partition} operator reveal.`);
+  const seeds = validateSeedList(document.seeds, `${partition} operator reveal`);
+  if (
+    seeds.length !== commitment.seed_count
+    || seedListCommitment(seeds) !== commitment.commitment
+  ) throw new Error(`${partition} operator reveal does not satisfy its sealed commitment.`);
+  return Object.freeze({ ...document, seeds: Object.freeze(seeds) });
+}
+
+function validateRevealAttestation(document, plan, commitments, reveals) {
+  if (
+    !exactKeys(document, [
+      "schema", "contract_version", "state", "artifact", "release_set_id", "plan_sha256",
+      "claim_eligible", "partitions", "disjointness", "attestation_sha256",
+    ])
+    || document.schema !== 1
+    || document.contract_version !== SEED_REVEAL_ATTESTATION_VERSION
+    || document.state !== "explicitly-revealed"
+    || document.artifact !== "candidate-010"
+    || document.release_set_id !== plan.release_set_id
+    || document.plan_sha256 !== plan.plan_sha256
+    || document.claim_eligible !== plan.claim_eligible
+    || !exactKeys(document.partitions, partitionNames)
+    || document.disjointness !== "verified"
+    || document.attestation_sha256 !== digestDocument(document, "attestation_sha256")
+  ) throw new Error("Invalid or relabelled seed reveal attestation.");
+  for (const partition of partitionNames) {
+    const row = document.partitions[partition];
+    if (
+      !exactKeys(row, ["commitment", "seed_count", "reveal_sha256"])
+      || row.commitment !== commitments[partition].commitment
+      || row.seed_count !== commitments[partition].seed_count
+      || row.reveal_sha256 !== sha256(canonical(reveals[partition]))
+    ) throw new Error(`Seed reveal attestation does not bind the exact ${partition} reveal.`);
+  }
+  assertDisjointSeedPacks(partitionNames.map((partition) => reveals[partition]));
   return document;
 }
 
@@ -413,18 +521,50 @@ function decryptEscrow({ escrow, ciphertext, key }) {
 
 async function loadPlanAndBindings(bindingDirectory) {
   const root = await strictDirectory(bindingDirectory, "seed bindingDirectory");
-  const plan = validatePlan(parseJson(await readFile(path.join(root, "seed-release-plan.json")), "seed-release plan"));
+  const planPath = await containedFile(
+    root,
+    path.join(root, "seed-release-plan.json"),
+    "seed-release plan",
+  );
+  const plan = validatePlan(parseJson(await readFile(planPath), "seed-release plan"));
   const bodies = {};
   for (const [name, relative] of Object.entries(snapshotNames)) {
-    const body = await readFile(path.join(root, relative));
+    const snapshotPath = await containedFile(root, path.join(root, relative), `seed-release ${name}`);
+    const body = await readFile(snapshotPath);
     if (sha256(body) !== plan.bindings[name]?.sha256 || plan.bindings[name]?.path !== relative) {
       throw new Error(`Seed-release plan binding mismatch for ${name}.`);
     }
     bodies[name] = body;
   }
+  const sourceBundle = parseJson(bodies.source_bundle, "bound source bundle");
+  const descriptor = parseJson(bodies.execution_descriptor, "bound execution descriptor");
+  const runtimeIdentity = parseJson(bodies.runtime_identity, "bound runtime identity");
+  if (
+    sourceBundle?.source_sha256 !== plan.source_identity.source_sha256
+    || sourceBundle?.vcs?.source_commit !== plan.source_identity.source_commit
+    || descriptor?.descriptor_sha256 !== plan.execution_identity.descriptor_sha256
+    || descriptor?.source?.inventory_sha256 !== plan.execution_identity.source_inventory_sha256
+    || descriptor?.dependencies?.inventory?.inventory_sha256
+      !== plan.execution_identity.dependency_inventory_sha256
+    || runtimeIdentity?.identity_sha256 !== plan.runtime_identity.identity_sha256
+    || runtimeIdentity?.runtime?.executable_sha256 !== plan.runtime_identity.executable_sha256
+    || runtimeIdentity?.package_lock?.sha256 !== plan.runtime_identity.package_lock_sha256
+    || canonical(descriptor.runtime_identity) !== canonical(runtimeIdentity)
+  ) throw new Error("Seed-release source, execution, or runtime snapshot differs from its plan identity.");
+  assertFrozenInputs({
+    config: parseJson(bodies.config, "bound confirmation config"),
+    design: parseJson(bodies.design, "bound confirmation design"),
+    backendRegistry: parseJson(bodies.backend_registry, "bound backend registry"),
+    preregistration: parseJson(bodies.preregistration, "bound confirmatory preregistration"),
+  });
   const commitments = {};
   for (const partition of partitionNames) {
-    const body = await readFile(path.join(root, `${partition}.commit.json`));
+    const commitmentPath = await containedFile(
+      root,
+      path.join(root, `${partition}.commit.json`),
+      `${partition} seed commitment`,
+    );
+    const body = await readFile(commitmentPath);
     commitments[partition] = validateCommitment(parseJson(body, `${partition} commitment`), plan, partition);
   }
   return { root, plan, bodies, commitments };
@@ -713,7 +853,11 @@ export async function revealSeedReleaseSet(options) {
   const revealed = {};
   for (const partition of partitionNames) {
     const escrowBody = parseJson(
-      await readFile(path.join(escrowRoot, `${partition}.seed-escrow.json`)),
+      await readFile(await containedFile(
+        escrowRoot,
+        path.join(escrowRoot, `${partition}.seed-escrow.json`),
+        `${partition} encrypted seed escrow`,
+      )),
       `${partition} seed escrow`,
     );
     const validated = validateEscrow(escrowBody, binding.plan, binding.commitments[partition], partition);
@@ -822,27 +966,69 @@ export async function validateSeedReleaseOperatorArtifacts(options) {
     throw new Error("requireClaimEligible must be boolean.");
   }
   const binding = await loadPlanAndBindings(bindingDirectory);
-  let attestation = null;
+  let revealedRoot = null;
   try {
-    attestation = parseJson(
-      await readFile(path.join(binding.root, "revealed", "seed-reveal-attestation.json")),
-      "seed reveal attestation",
-    );
+    revealedRoot = await strictDirectory(path.join(binding.root, "revealed"), "seed reveal directory");
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
   }
   if (requireClaimEligible && !binding.plan.claim_eligible) {
     throw new Error("Injected-entropy fixture seed releases are permanently claim-ineligible and cannot be relabelled.");
   }
-  if (attestation !== null) {
-    if (
-      attestation.contract_version !== SEED_REVEAL_ATTESTATION_VERSION
-      || attestation.release_set_id !== binding.plan.release_set_id
-      || attestation.plan_sha256 !== binding.plan.plan_sha256
-      || attestation.claim_eligible !== binding.plan.claim_eligible
-      || attestation.attestation_sha256 !== digestDocument(attestation, "attestation_sha256")
-      || attestation.disjointness !== "verified"
-    ) throw new Error("Invalid or relabelled seed reveal attestation.");
+  let attestation = null;
+  if (revealedRoot !== null) {
+    for (const [name, relative] of Object.entries(snapshotNames)) {
+      const body = await readFile(await containedFile(
+        revealedRoot,
+        path.join(revealedRoot, relative),
+        `revealed seed-release ${name}`,
+      ));
+      if (
+        sha256(body) !== binding.plan.bindings[name].sha256
+        || canonical(parseJson(body, `revealed ${name}`)) !== canonical(parseJson(binding.bodies[name], `bound ${name}`))
+      ) throw new Error(`Revealed seed-release snapshot mismatch for ${name}.`);
+    }
+    const reveals = {};
+    for (const partition of partitionNames) {
+      const copiedCommitment = parseJson(
+        await readFile(await containedFile(
+          revealedRoot,
+          path.join(revealedRoot, `${partition}.commit.json`),
+          `revealed ${partition} commitment`,
+        )),
+        `revealed ${partition} commitment`,
+      );
+      validateCommitment(copiedCommitment, binding.plan, partition);
+      if (canonical(copiedCommitment) !== canonical(binding.commitments[partition])) {
+        throw new Error(`Revealed ${partition} commitment differs from the sealed binding.`);
+      }
+      reveals[partition] = validateReveal(
+        parseJson(
+          await readFile(await containedFile(
+            revealedRoot,
+            path.join(revealedRoot, `${partition}.reveal.json`),
+            `${partition} revealed seed pack`,
+          )),
+          `${partition} reveal`,
+        ),
+        binding.plan,
+        binding.commitments[partition],
+        partition,
+      );
+    }
+    attestation = validateRevealAttestation(
+      parseJson(
+        await readFile(await containedFile(
+          revealedRoot,
+          path.join(revealedRoot, "seed-reveal-attestation.json"),
+          "seed reveal attestation",
+        )),
+        "seed reveal attestation",
+      ),
+      binding.plan,
+      binding.commitments,
+      reveals,
+    );
   }
   return Object.freeze({
     valid: true,

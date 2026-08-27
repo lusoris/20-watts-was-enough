@@ -32,6 +32,16 @@
     "confirmation": "experiments/workstation/candidate-010/seeds/confirmation.commit.json",
     "held_out": "experiments/workstation/candidate-010/seeds/held-out.commit.json"
   },
+  "seed_integrity": {
+    "artifact_schema": "experiments/workstation/candidate-010/seeds/seed-release-artifacts.schema.json",
+    "artifact_schema_sha256": "904d1401f7af0737b3018df96e00a89ea6f79dafaaaf12bc2d188d71f9864613",
+    "operator_contract_version": "candidate-010.seed-release-operator.v1",
+    "release_plan_contract_version": "candidate-010.seed-release-plan.v1",
+    "reveal_attestation_contract_version": "candidate-010.seed-reveal-attestation.v1",
+    "required_generation_method": "system-cryptographic-entropy-v1",
+    "require_claim_eligible": true,
+    "require_joint_release_set": true
+  },
   "data": {
     "generator": "experiments/workstation/candidate-010/generator.mjs",
     "full_profile": "experiments/workstation/candidate-010/configs/development.json",
@@ -111,7 +121,7 @@
     "release_path": "experiments/workstation/releases/candidate-010/confirmation.release.json",
     "energy_assignments_path": "experiments/workstation/runs/candidate-010-confirmation/energy-assignments.json",
     "disjoint_seed_pack_paths": [
-      "experiments/workstation/releases/candidate-010/held-out.reveal.json"
+      "experiments/workstation/releases/candidate-010/seed-operator/revealed/held-out.reveal.json"
     ]
   }
 }

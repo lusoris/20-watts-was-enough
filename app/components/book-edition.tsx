@@ -10,9 +10,10 @@ import { ReadinessOverview } from "./readiness-overview";
 const appendixPaths = ["research/field-coverage.md"];
 const canonicalSite = "https://twenty-watts-was-enough.lusoris.chatgpt.site";
 const canonicalRepository = "https://github.com/lusoris/20-watts-was-enough";
+const canonicalPublicBook = "https://lusoris.github.io/20-watts-was-enough/";
 
 type BookEditionProps = {
-  surface?: "owner-only-site" | "github-pages";
+  surface?: "owner-only-site" | "github-pages" | "public-pdf";
   assetBasePath?: string;
 };
 
@@ -60,6 +61,8 @@ export function BookEdition({
   assetBasePath = "/",
 }: BookEditionProps = {}) {
   const isGitHubPages = surface === "github-pages";
+  const isPublicPdf = surface === "public-pdf";
+  const usesPublicLinks = isGitHubPages || isPublicPdf;
   const conceptDocuments = documents.filter(
     (document) =>
       document.kind === "markdown" &&
@@ -89,7 +92,7 @@ export function BookEdition({
     0,
   );
   const navigate = (path: string, hash = "") => {
-    if (isGitHubPages) {
+    if (usesPublicLinks) {
       window.location.assign(repositoryDocumentHref(path, hash));
       return;
     }
@@ -103,9 +106,10 @@ export function BookEdition({
       return path === "README.md" && hash ? `#${hash}` : `#${bookId(path)}`;
     }
     if (isRepositoryArtifact(path)) {
+      if (isPublicPdf) return repositoryDocumentHref(path, hash);
       return joinBasePath(assetBasePath, repositoryArtifactHref(path));
     }
-    if (isGitHubPages) return repositoryDocumentHref(path, hash);
+    if (usesPublicLinks) return repositoryDocumentHref(path, hash);
     const url = new URL("/", canonicalSite);
     url.searchParams.set("doc", path);
     url.hash = hash;
@@ -115,13 +119,13 @@ export function BookEdition({
   return (
     <main className="book-shell">
       <nav className="book-actions" aria-label="Book actions">
-        <a href={isGitHubPages ? canonicalRepository : "/"}>
-          {isGitHubPages ? "View source on GitHub" : "← Owner-only research site"}
+        <a href={usesPublicLinks ? canonicalRepository : "/"}>
+          {usesPublicLinks ? "View source on GitHub" : "← Owner-only research site"}
         </a>
         <a
           className="book-download-primary"
           href={joinBasePath(
-            assetBasePath,
+            isPublicPdf ? canonicalPublicBook : assetBasePath,
             "downloads/20-watts-was-enough-full-concept-book.pdf",
           )}
           download
@@ -213,7 +217,8 @@ export function BookEdition({
         </div>
         <ReadinessOverview
           mode="book"
-          documentHref={isGitHubPages ? repositoryDocumentHref : undefined}
+          documentHref={usesPublicLinks ? repositoryDocumentHref : undefined}
+          publicSurface={usesPublicLinks}
         />
       </section>
 

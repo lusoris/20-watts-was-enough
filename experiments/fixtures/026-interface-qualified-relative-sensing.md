@@ -9,11 +9,16 @@
   [C-1560](../../research/claims.md#c-1560),
   [C-1561](../../research/claims.md#c-1561),
   [C-1562](../../research/claims.md#c-1562),
-  [C-1563](../../research/claims.md#c-1563), and
-  [C-1564](../../research/claims.md#c-1564)
+  [C-1563](../../research/claims.md#c-1563),
+  [C-1564](../../research/claims.md#c-1564),
+  [C-1565](../../research/claims.md#c-1565),
+  [C-1566](../../research/claims.md#c-1566),
+  [C-1567](../../research/claims.md#c-1567), and
+  [C-1568](../../research/claims.md#c-1568)
 - **Source audits:** [relative sensing and scale symmetry across biological interfaces](../../research/audits/2026-08-25-relative-sensing-scale-symmetry.md),
   [mechanism equivalence and intervention-qualified discrimination](../../research/audits/2026-08-26-rsd-t02-mechanism-equivalence.md),
-  and [repeated-stimulus signatures for an adapting-circuit subtrack](../../research/audits/2026-08-26-rsd-t02-pulse-signatures.md)
+  [repeated-stimulus signatures for an adapting-circuit subtrack](../../research/audits/2026-08-26-rsd-t02-pulse-signatures.md),
+  and [population, identifiability, calibration, and null maturity](../../research/audits/2026-08-27-rsd-t02-population-identifiability-calibration.md)
 - **Mathematical contracts:** [interface-qualified scale symmetry](../../math/interface-qualified-scale-symmetry.md),
   [intervention-qualified mechanism equivalence](../../math/interventional-mechanism-equivalence.md),
   and [one-sided topology signatures under repeated stimulation](../../math/repeated-stimulus-topology-signatures.md)
@@ -44,6 +49,10 @@ external input, internal signal, downstream readout and action separate.
 | --- | --- | --- |
 | RSD-T01 | C-1540 | Is the full trajectory invariant, or only its endpoint or peak? |
 | RSD-T02 | C-1541 | Which causal properties survive non-step interventions, and which pairs remain equivalent? |
+| RSD-T02-UNIT | C-1565 | Does nested repetition leave the independent system-instance count unchanged? |
+| RSD-T02-LINEAGE | C-1566 | How much optimism does a dependence-leaking row split create? |
+| RSD-T02-SHIFT | C-1567 | How do episode, parameter-instance and unseen-lineage transfer differ? |
+| RSD-T02-SELECT | C-1568 | Does calibrated abstention retain its risk--coverage behavior under lineage shift? |
 | RSD-T03 | C-1542 | Does relative active search transfer only under multiplicative fields? |
 | RSD-T04 | C-1543 | Does internal ratio coding preserve absolute-critical targets? |
 | RSD-T05 | C-1544 | Which causal statistic predicts a heterogeneous downstream count? |
@@ -730,6 +739,166 @@ calibrated workstation measurement; an O2 response-freeze contract; and a
 separately frozen T02-FLOOR runtime with a finite-estimator authority boundary.
 None of those comparison, claim, asymptotic, workstation or energy authorities
 exists.
+
+### RSD-T02-POP — Population, shift, and selective-risk confirmation
+
+**Claims and direct-test scope.** This written protocol directly tests the
+project-scoped measurable predictions in
+[C-1565](../../research/claims.md#c-1565),
+[C-1566](../../research/claims.md#c-1566),
+[C-1567](../../research/claims.md#c-1567), and
+[C-1568](../../research/claims.md#c-1568). It does not reproduce the cited
+ecology, dynamical-systems, calibration, or selective-classification papers
+and cannot expand their external validity. The current machine contracts and
+method checks validate pieces of the design only. This track is a complete
+written falsification contract, not an executed experiment or a result.
+
+**Questions and hypotheses.** The four questions are deliberately separate:
+
+1. `POP-UNIT`: does multiplying nested rows, episodes, solver refinements, or
+   replay coordinates leave the count of independently instantiated systems
+   unchanged?
+2. `POP-LINEAGE`: on an explicitly planted dependence hostile, does random
+   row splitting yield optimistic error relative to a split that blocks the
+   registered ancestry component, and what signed difference appears on the
+   unmodified bank?
+3. `POP-SHIFT`: at equal episode access, how do held-out episodes from known
+   instances, new parameter instances from known lineages, and instances from
+   sealed unseen lineages differ in loss?
+4. `POP-SELECT`: after weights are frozen and calibration is instance-disjoint,
+   what risk--coverage curve results in distribution, and how does the same
+   frozen decision rule behave under unseen-lineage shift?
+
+The planted hostiles have directional pass conditions. For the shortcut
+hostile, the preregistered construction margin is
+$\Delta_{\mathrm{leak}}=L_{\mathrm{blocked}}-L_{\mathrm{row}}\ge0.10$ in
+dimensionless mean decision loss. The unmodified-bank
+comparisons estimate signed, scope-qualified effects; a reversal in one finite
+sample is reported rather than relabelled as impossible.
+
+**Systems, partitions, and experimental units.** A future coverage-complete
+registry must contain at least two structurally independent lineages for every
+active property value. Connected equation, implementation, generator, and
+equivalence components are assigned before affected fitting to exactly one of
+public development, sealed outer confirmation, or separately sealed outer
+transfer. One experimental unit is one canonical fixed-parameter system
+instance. Its 26-episode packet, rows, optional realizations, solver checks,
+restarts, and replay coordinates remain nested observations. The public pilot
+may estimate variance through the exact released analyzer; the final number of
+independent instances, attrition reserve, and family weights must then be
+frozen before any protected instance is generated. The existing 20-instance
+receipt traversal is a construction check and supplies neither that power
+decision nor protected units.
+
+**Arms, split controls, and strongest nulls.** `C-MECHANISM-BANK` is compared
+with level-five, confirmation-frozen `B-STATE-SPACE` and `B-RECURRENT` models
+through the shared probabilistic interface. The evaluation controls are:
+
+1. a deliberately invalid random-row split;
+2. an instance-blocked split within known structural lineages;
+3. a component-blocked unseen-lineage split;
+4. calibrated and score-preserving uncalibrated versions of each model;
+5. forced decision, registered abstention, and zero-coverage sentinels; and
+6. an evaluator-only oracle that checks construction and is excluded from
+   rankings.
+
+The random-row arm is a leakage diagnostic, never a deployable comparator. A
+code-sibling hostile must share a planted shortcut across the row split while
+remaining wholly inside one blocked ancestry component. An equation-equivalent
+hostile tests whether a renamed recipe is incorrectly counted as unseen.
+
+**Equalization and resource boundary.** Candidate and generic nulls receive
+the same causal packet fields, fit instances, calibration instances, labels,
+episode authority, precision, hardware class, thread cap, parameter cap,
+retained-state cap, scratch cap, tuning-trial cap, restart cap, and wall-time
+cap. Calibration may change only its declared map, support rule, and thresholds;
+it cannot change model weights. Actual preprocessing, failed trials, fitting,
+selection, calibration, fallback, abstention, and inference work are recorded
+without padding as operations, transcendentals, influential bytes, retained
+bytes, packet bytes, wall seconds, and—only when a calibrated meter exists—
+joules. Duplicating nested observations increases acquisition and processing
+cost while contributing zero additional independent systems.
+
+**Interventions and ablations.** The frozen analysis crosses the following
+changes without reusing protected labels:
+
+1. nested-observation multipliers of 1, 2, and 8 for rows, whole episodes, and
+   replay coordinates while canonical instance hashes remain fixed;
+2. random-row, instance-blocked, and ancestry-component-blocked partitions of
+   the same eligible corpus;
+3. held-out episodes, independently drawn in-family parameter instances, and
+   sealed unseen-lineage instances;
+4. shortcut-present and shortcut-removed code-sibling hostiles;
+5. raw scores, fit-frozen instance-disjoint calibration, label-permuted
+   calibration, and a deliberately reused in-distribution calibrator on the
+   outer-transfer partition; and
+6. registered abstention versus forced decision with all fallback cases and
+   uncovered scientific units retained in the service denominator.
+
+Any preprocessing state learned across a blocked boundary invalidates the
+affected cell. Malformed packets are rejected outside the scientific
+denominator; valid out-of-support packets remain inside it.
+
+**Measurements and units.** `POP-UNIT` reports the exact independent-instance
+count and nested counts as integer units. The model endpoints are mean property
+log loss in nats and registered decision loss as a dimensionless value in
+$[0,1]$. Split and shift effects are signed paired differences in those units,
+aggregated with equal frozen family weights. Calibration reports joint
+negative log likelihood in nats, Brier score as a dimensionless mean squared
+probability error, coverage as a fraction in $[0,1]$, selective decision risk
+as a dimensionless conditional mean, and the count of accepted, abstained,
+failed, and malformed units separately. No row-wise confidence interval or
+seed count may substitute for the independent-instance denominator.
+
+For `POP-SELECT`, use abstention-loss values
+$\lambda_{\bot}\in\{0,0.05,0.10,0.15,0.20,0.25\}$ and the strict decision rule
+defined in the population audit. Acceptance must be nondecreasing as
+$\lambda_{\bot}$ increases, with equality allowed for ties or score plateaus.
+Risk is measured at every nonzero-coverage point; zero coverage is displayed
+and cannot win a comparison.
+
+**Statistical analysis.** `POP-UNIT` is a deterministic conformance test: all
+three nested-observation multipliers must return the same recomputed set of
+canonical instance identities and the same independent $N$. For `POP-LINEAGE`
+and `POP-SHIFT`, compute equal-family-weighted paired effects over independent
+instances with the released centered stratified bootstrap-$t$ law; report the
+point estimate, 95% interval, invalid-resample count, and attainable
+$p$-value floor. The planted shortcut must make the random-row estimate
+optimistic by the preregistered nonzero construction margin; the unmodified
+bank has no assumed sign. The four existing candidate-versus-null log-loss and
+decision-loss hypotheses remain one Holm family at $\alpha=0.05$ and are never
+expanded after seeing results.
+
+For each `POP-SELECT` threshold, report coverage and selective risk with an
+familywise-95% exact binomial upper confidence bound for the accepted error
+count, using a Bonferroni allocation of $0.05/6$ over the six frozen thresholds. In-distribution and
+outer-transfer curves are separate estimands; calibration success on the first
+cannot be copied to the second. All intervals use independent instances as
+their resampling or counting unit. A public pilot can size a future run only
+after its transcript passes the exact analyzer; it cannot enter confirmation
+statistics.
+
+**Rejection and kill rules.** Reject the protocol instance if any canonical
+identity changes under nested repetition, a dependent component crosses its
+blocked partition, a protected family or label reaches fitting or calibration,
+model weights change after fit freeze, an outer result is reported with an
+in-distribution guarantee, zero coverage is hidden, failed units disappear,
+or actual work is replaced by padded budget maxima. Kill the planted leakage
+diagnostic if the shortcut is not available to the random-row arm or survives
+the component block. Kill parameter- or lineage-transfer language if the test
+adds only episodes from a known fixed instance. None of these rules can turn a
+public method check into performance, confirmation, energy, or execution
+authority.
+
+**Required execution artifacts.** Execution remains blocked until the
+coverage-complete lineage bank, sealed outer-family payload, protected
+fixed-instance packs, fit/calibration/development-evaluation assignments,
+level-five candidate and null releases, frozen loss and support rules, exact
+pilot-derived power receipt, four-hypothesis analyzer receipt, common resource
+ledger, one-pass custody release, and typed failure outputs exist. Promotion in
+the coverage ledger therefore means only that F-026 now contains the complete
+written test route for these four claims; all four remain non-executable and
+`NO_RESULT`.
 
 ### RSD-T02-PULSE — One-sided repeated-stimulus signatures
 

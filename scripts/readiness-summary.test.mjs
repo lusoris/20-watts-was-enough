@@ -27,6 +27,23 @@ test("compact readiness summary reconciles with the complete report", () => {
   assert.equal(summary.artifacts.workstationReady, report.counts.executionReadyArtifacts);
 });
 
+test("RSD-T02 population claims have reciprocal written-only coverage", () => {
+  const fixture = report.artifacts.find((artifact) => artifact.id === "fixture-026");
+  assert.ok(fixture, "fixture-026 is missing from the coverage report");
+  assert.equal(report.counts.dispositionCounts["existing-artifact-gap"], 0);
+  assert.equal(report.counts.dispositionCounts["new-artifact-needed"], 0);
+
+  for (const id of ["C-1565", "C-1566", "C-1567", "C-1568"]) {
+    const claim = report.claims.find((record) => record.id === id);
+    assert.ok(claim, `${id} is missing from the coverage report`);
+    assert.equal(claim.tier, "protocol-complete", `${id} lost its written protocol`);
+    assert.deepEqual(claim.artifacts, ["fixture-026"], `${id} has an unexpected artifact route`);
+    assert.equal(claim.executionReady, false, `${id} must not inherit execution authority`);
+    assert.ok(fixture.claimSideClaims.includes(id), `${id} is missing its claim-side F-026 link`);
+    assert.ok(fixture.documentSideClaims.includes(id), `${id} is missing its F-026-side link`);
+  }
+});
+
 test("claim tiers and evidence cells have exact denominators", () => {
   assert.equal(
     tiers.reduce((total, tier) => total + summary.claims.tierCounts[tier], 0),

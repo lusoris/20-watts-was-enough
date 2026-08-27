@@ -16,7 +16,7 @@ EuroSciVoc is the EU-level multilingual science vocabulary. The DFG hierarchy
 adds German review granularity. ANZSRC is an independent omission detector,
 not the normative framework for the project.
 
-**Explicit child routes recorded:** 69. All other children are unassigned.
+**Explicit child routes recorded:** 74. All other children are unassigned.
 
 ## EuroSciVoc 1.6: European science vocabulary
 
@@ -377,7 +377,7 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### medical and health sciences
 
-**Deutsch:** Medizin- und Gesundheitswissenschaften. **Fine-grained status:** 2 of 178 concepts in this branch have an explicit routing assignment.
+**Deutsch:** Medizin- und Gesundheitswissenschaften. **Fine-grained status:** 3 of 178 concepts in this branch have an explicit routing assignment.
 
 - **medical and health sciences.** Routing: unassigned.
   - **basic medicine.** Deutsch: Grundlagenmedizin. Routing: unassigned.
@@ -524,7 +524,7 @@ are retained below; neither a label nor a parent route counts as evidence review
     - **nursing.** Deutsch: Stillen. Routing: unassigned.
     - **nutrition.** Deutsch: Ernährung. Routing: unassigned.
       - **obesity.** Deutsch: Fettleibigkeit. Routing: unassigned.
-    - **parasitology.** Deutsch: Parasitologie. Routing: unassigned.
+    - **parasitology.** Deutsch: Parasitologie. Routing: dedicated child-level evidence via [parasitology adversarial lifecycles](../audits/2026-08-27-parasitology-adversarial-lifecycles.md). Claims: [C-1569](../claims.md#c-1569), [C-1570](../claims.md#c-1570), [C-1571](../claims.md#c-1571), [C-1572](../claims.md#c-1572).
     - **personalized medicine.** Deutsch: personalisierte Medizin. Routing: unassigned.
     - **public health.** Deutsch: öffentliche Gesundheit. Routing: unassigned.
       - **epidemiology.** Deutsch: Epidemiologie. Routing: unassigned.
@@ -1309,16 +1309,16 @@ are retained below; neither a label nor a parent route counts as evidence review
 
 ### 2.21 Mikrobiologie, Virologie und Immunologie
 
-**Parent route:** dedicated parent-level audit via [microbial ecology biofilms](../audits/2026-08-05-microbial-ecology-biofilms.md), [immune tolerance trained immunity](../audits/2026-08-05-immune-tolerance-trained-immunity.md).
+**Parent route:** dedicated parent-level audit via [microbial ecology biofilms](../audits/2026-08-05-microbial-ecology-biofilms.md), [immune tolerance trained immunity](../audits/2026-08-05-immune-tolerance-trained-immunity.md), [parasitology adversarial lifecycles](../audits/2026-08-27-parasitology-adversarial-lifecycles.md).
 
-**Fine-grained status:** 0 of 6 subjects have an explicit child-level routing assignment.
+**Fine-grained status:** 1 of 6 subjects have an explicit child-level routing assignment.
 
 - **2.21-01 — Stoffwechselphysiologie, Biochemie und Genetik der Mikroorganismen.** Routing: unassigned.
 - **2.21-02 — Mikrobielle Ökologie und Angewandte Mikrobiologie.** Routing: unassigned.
 - **2.21-03 — Medizinische Mikrobiologie und Mykologie, Hygiene, Molekulare Infektionsbiologie.** Routing: unassigned.
 - **2.21-04 — Virologie.** Routing: unassigned.
 - **2.21-05 — Immunologie.** Routing: unassigned.
-- **2.21-06 — Parasitologie und Biologie der Erreger tropischer Infektionskrankheiten.** Routing: unassigned.
+- **2.21-06 — Parasitologie und Biologie der Erreger tropischer Infektionskrankheiten.** Routing: dedicated child-level evidence via [parasitology adversarial lifecycles](../audits/2026-08-27-parasitology-adversarial-lifecycles.md). Claims: [C-1569](../claims.md#c-1569), [C-1570](../claims.md#c-1570), [C-1571](../claims.md#c-1571), [C-1572](../claims.md#c-1572).
 
 ### 2.22 Medizin
 
@@ -1686,9 +1686,9 @@ route.
 
 ### 30 AGRICULTURAL, VETERINARY AND FOOD SCIENCES
 
-**Parent route:** dedicated parent-level audit via [soil crop multiresource colimitation](../audits/2026-08-21-soil-crop-multiresource-colimitation.md), [animal veterinary population health](../audits/2026-08-21-animal-veterinary-population-health.md), [forestry fisheries aquatic food systems](../audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md), [measurement heavy analytical water earth observation](../audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md), [clinical specialties medical agricultural biotechnology](../audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md).
+**Parent route:** dedicated parent-level audit via [soil crop multiresource colimitation](../audits/2026-08-21-soil-crop-multiresource-colimitation.md), [animal veterinary population health](../audits/2026-08-21-animal-veterinary-population-health.md), [forestry fisheries aquatic food systems](../audits/2026-08-21-forestry-fisheries-aquatic-food-systems.md), [measurement heavy analytical water earth observation](../audits/2026-08-24-measurement-heavy-analytical-water-earth-observation.md), [clinical specialties medical agricultural biotechnology](../audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md), [parasitology adversarial lifecycles](../audits/2026-08-27-parasitology-adversarial-lifecycles.md).
 
-**Fine-grained status:** 0 of 10 groups and 0 of 95 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 10 groups and 1 of 95 fields have an explicit child-level routing assignment.
 
 #### 3001 Agricultural biotechnology
 
@@ -1821,7 +1821,7 @@ route.
 - **300906 — Veterinary immunology.** Routing: unassigned.
 - **300907 — Veterinary medicine (excl. urology).** Routing: unassigned.
 - **300908 — Veterinary mycology.** Routing: unassigned.
-- **300909 — Veterinary parasitology.** Routing: unassigned.
+- **300909 — Veterinary parasitology.** Routing: adjacent child-level evidence via [parasitology adversarial lifecycles](../audits/2026-08-27-parasitology-adversarial-lifecycles.md). Claims: [C-1572](../claims.md#c-1572).
 - **300910 — Veterinary pathology.** Routing: unassigned.
 - **300911 — Veterinary pharmacology.** Routing: unassigned.
 - **300912 — Veterinary surgery.** Routing: unassigned.
@@ -1837,9 +1837,9 @@ route.
 
 ### 31 BIOLOGICAL SCIENCES
 
-**Parent route:** dedicated parent-level audit via [cellular quality control](../audits/2026-08-05-cellular-quality-control.md), [collective ecological resilience](../audits/2026-08-05-collective-ecological-resilience.md), [developmental morphogenesis](../audits/2026-08-05-developmental-morphogenesis.md), [microbial ecology biofilms](../audits/2026-08-05-microbial-ecology-biofilms.md), [plant distributed control](../audits/2026-08-05-plant-distributed-control.md), [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md), [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md).
+**Parent route:** dedicated parent-level audit via [cellular quality control](../audits/2026-08-05-cellular-quality-control.md), [collective ecological resilience](../audits/2026-08-05-collective-ecological-resilience.md), [developmental morphogenesis](../audits/2026-08-05-developmental-morphogenesis.md), [microbial ecology biofilms](../audits/2026-08-05-microbial-ecology-biofilms.md), [plant distributed control](../audits/2026-08-05-plant-distributed-control.md), [integrative comparative physiology](../audits/2026-08-25-integrative-comparative-physiology.md), [developmental regeneration depth](../audits/2026-08-25-developmental-regeneration-depth.md), [plant plasticity memory signalling](../audits/2026-08-25-plant-plasticity-memory-signalling.md), [parasitology adversarial lifecycles](../audits/2026-08-27-parasitology-adversarial-lifecycles.md).
 
-**Fine-grained status:** 0 of 10 groups and 17 of 98 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 10 groups and 18 of 98 fields have an explicit child-level routing assignment.
 
 #### 3101 Biochemistry and cell biology
 
@@ -1899,7 +1899,7 @@ route.
 - **310404 — Evolution of developmental systems.** Routing: unassigned.
 - **310405 — Evolutionary ecology.** Routing: unassigned.
 - **310406 — Evolutionary impacts of climate change.** Routing: unassigned.
-- **310407 — Host-parasite interactions.** Routing: unassigned.
+- **310407 — Host-parasite interactions.** Routing: dedicated child-level evidence via [parasitology adversarial lifecycles](../audits/2026-08-27-parasitology-adversarial-lifecycles.md). Claims: [C-1569](../claims.md#c-1569), [C-1570](../claims.md#c-1570), [C-1571](../claims.md#c-1571), [C-1572](../claims.md#c-1572).
 - **310408 — Life histories.** Routing: unassigned.
 - **310409 — Microbial taxonomy.** Routing: unassigned.
 - **310410 — Phylogeny and comparative analysis.** Routing: unassigned.
@@ -1991,9 +1991,9 @@ route.
 
 ### 32 BIOMEDICAL AND CLINICAL SCIENCES
 
-**Parent route:** dedicated parent-level audit via [pathology rehabilitation](../audits/2026-08-05-pathology-rehabilitation.md), [pharmacology toxicology](../audits/2026-08-05-pharmacology-toxicology.md), [epidemiology and surveillance control](../audits/2026-08-05-epidemiology-and-surveillance-control.md), [nursing care health services](../audits/2026-08-21-nursing-care-health-services.md), [clinical intervention pathways](../audits/2026-08-24-clinical-intervention-pathways.md), [clinical specialties medical agricultural biotechnology](../audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md).
+**Parent route:** dedicated parent-level audit via [pathology rehabilitation](../audits/2026-08-05-pathology-rehabilitation.md), [pharmacology toxicology](../audits/2026-08-05-pharmacology-toxicology.md), [epidemiology and surveillance control](../audits/2026-08-05-epidemiology-and-surveillance-control.md), [nursing care health services](../audits/2026-08-21-nursing-care-health-services.md), [clinical intervention pathways](../audits/2026-08-24-clinical-intervention-pathways.md), [clinical specialties medical agricultural biotechnology](../audits/2026-08-24-clinical-specialties-medical-agricultural-biotechnology.md), [parasitology adversarial lifecycles](../audits/2026-08-27-parasitology-adversarial-lifecycles.md).
 
-**Fine-grained status:** 0 of 16 groups and 2 of 129 fields have an explicit child-level routing assignment.
+**Fine-grained status:** 0 of 16 groups and 3 of 129 fields have an explicit child-level routing assignment.
 
 #### 3201 Cardiovascular medicine and haematology
 
@@ -2102,7 +2102,7 @@ route.
 - **320701 — Medical bacteriology.** Routing: unassigned.
 - **320702 — Medical infection agents (incl. prions).** Routing: unassigned.
 - **320703 — Medical mycology.** Routing: unassigned.
-- **320704 — Medical parasitology.** Routing: unassigned.
+- **320704 — Medical parasitology.** Routing: adjacent child-level evidence via [parasitology adversarial lifecycles](../audits/2026-08-27-parasitology-adversarial-lifecycles.md). Claims: [C-1569](../claims.md#c-1569), [C-1570](../claims.md#c-1570), [C-1571](../claims.md#c-1571), [C-1572](../claims.md#c-1572).
 - **320705 — Medical virology.** Routing: unassigned.
 - **320799 — Medical microbiology not elsewhere classified.** Routing: unassigned.
 

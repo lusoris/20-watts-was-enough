@@ -8,6 +8,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
+import Ajv from "ajv";
 import { BACKEND_METADATA } from "./backend-registry.mjs";
 import { createConfirmatoryPreregistration } from "./confirmatory-analysis.mjs";
 import { buildFactorialDesign } from "./factorial-design.mjs";
@@ -30,6 +31,25 @@ import {
 } from "./seed-release-operator.mjs";
 
 const executeFile = promisify(executeFileCallback);
+
+async function seedArtifactValidator() {
+  const schema = JSON.parse(await readFile(
+    path.join(
+      process.cwd(),
+      "experiments",
+      "workstation",
+      "candidate-010",
+      "seeds",
+      "seed-release-artifacts.schema.json",
+    ),
+    "utf8",
+  ));
+  return new Ajv({ allErrors: true, jsonPointers: true }).compile(schema);
+}
+
+function assertSeedArtifactSchema(validate, document, label) {
+  assert.equal(validate(document), true, `${label}: ${JSON.stringify(validate.errors)}`);
+}
 
 function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
@@ -533,6 +553,18 @@ async function filesBelow(root) {
 test("seed-release operator seals unseen disjoint packs and fixture provenance cannot be relabelled", async () => {
   const value = await makeSeedOperatorFixture();
   try {
+    const validateSeedArtifact = await seedArtifactValidator();
+    for (const partition of ["confirmation", "held-out"]) {
+      const pending = JSON.parse(await readFile(path.join(
+        process.cwd(),
+        "experiments",
+        "workstation",
+        "candidate-010",
+        "seeds",
+        `${partition}.commit.json`,
+      ), "utf8"));
+      assertSeedArtifactSchema(validateSeedArtifact, pending, `${partition} pending commitment`);
+    }
     const sealOptions = {
       repositoryRoot: value.repository,
       bindingDirectory: value.bindingDirectory,
@@ -569,7 +601,13 @@ test("seed-release operator seals unseen disjoint packs and fixture provenance c
       ));
       assert.equal(Object.hasOwn(commitment, "seeds"), false);
       assert.equal(Object.hasOwn(escrow, "seeds"), false);
+      assertSeedArtifactSchema(validateSeedArtifact, commitment, `${partition} sealed commitment`);
     }
+    assertSeedArtifactSchema(
+      validateSeedArtifact,
+      JSON.parse(await readFile(path.join(value.bindingDirectory, "seed-release-plan.json"), "utf8")),
+      "sealed release plan",
+    );
     assert.equal(JSON.stringify(sealed).includes("encryptionKey"), false);
     assert.equal(JSON.stringify(sealed).includes(value.encryptionKey.toString("hex")), false);
     assert.deepEqual(await validateSeedReleaseOperatorArtifacts({
@@ -645,11 +683,40 @@ test("seed-release operator seals unseen disjoint packs and fixture provenance c
     assert.equal(seedListCommitment(confirmationReveal.seeds), confirmationReveal.commitment);
     assert.equal(seedListCommitment(heldOutReveal.seeds), heldOutReveal.commitment);
     assert.equal(confirmationReveal.seeds.some((seed) => heldOutReveal.seeds.includes(seed)), false);
+    assertSeedArtifactSchema(validateSeedArtifact, confirmationReveal, "confirmation reveal");
+    assertSeedArtifactSchema(validateSeedArtifact, heldOutReveal, "held-out reveal");
+    const revealAttestationPath = path.join(revealed.reveal_directory, "seed-reveal-attestation.json");
+    const revealAttestationBody = await readFile(revealAttestationPath);
+    assertSeedArtifactSchema(
+      validateSeedArtifact,
+      JSON.parse(revealAttestationBody),
+      "seed reveal attestation",
+    );
     const validated = await validateSeedReleaseOperatorArtifacts({
       bindingDirectory: value.bindingDirectory,
     });
     assert.equal(validated.state, "explicitly-revealed");
     assert.equal(validated.claim_eligible, false);
+
+    const confirmationRevealPath = path.join(revealed.reveal_directory, "confirmation.reveal.json");
+    const confirmationRevealBody = await readFile(confirmationRevealPath);
+    const mutatedReveal = JSON.parse(confirmationRevealBody);
+    mutatedReveal.seeds[0] += 1;
+    await writeJson(confirmationRevealPath, mutatedReveal);
+    await assert.rejects(validateSeedReleaseOperatorArtifacts({
+      bindingDirectory: value.bindingDirectory,
+    }), /does not satisfy its sealed commitment/);
+    await writeFile(confirmationRevealPath, confirmationRevealBody);
+
+    const mutatedAttestation = JSON.parse(revealAttestationBody);
+    mutatedAttestation.unregistered_authority = true;
+    delete mutatedAttestation.attestation_sha256;
+    mutatedAttestation.attestation_sha256 = sha256(canonical(mutatedAttestation));
+    await writeJson(revealAttestationPath, mutatedAttestation);
+    await assert.rejects(validateSeedReleaseOperatorArtifacts({
+      bindingDirectory: value.bindingDirectory,
+    }), /Invalid or relabelled seed reveal attestation/);
+    await writeFile(revealAttestationPath, revealAttestationBody);
 
     const planPath = path.join(value.bindingDirectory, "seed-release-plan.json");
     const plan = JSON.parse(await readFile(planPath, "utf8"));

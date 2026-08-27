@@ -30,3 +30,4 @@ than silently changing its outcome.
 | [0022](0022-separate-fixed-instance-construction-from-conformance-runtime.md) | Separate fixed-instance construction from the mixed-time-constant conformance runtime | accepted |
 | [0023](0023-bind-power-to-the-executable-analysis-law.md) | Bind power and attainable resolution to the executable analysis law | accepted |
 | [0024](0024-publish-through-split-licensed-git-and-two-reading-surfaces.md) | Publish through split-licensed Git and two reading surfaces | accepted |
+| [0025](0025-route-parasitology-through-adversarial-lifecycle-tests.md) | Route parasitology through adversarial lifecycle tests | accepted |

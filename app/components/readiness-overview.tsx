@@ -10,6 +10,7 @@ import {
 type ReadinessOverviewProps = {
   mode?: "page" | "book";
   documentHref?: (path: string) => string;
+  publicSurface?: boolean;
 };
 
 const canonicalSite = "https://twenty-watts-was-enough.lusoris.chatgpt.site";
@@ -80,6 +81,7 @@ function coverageBar({
 export function ReadinessOverview({
   mode = "page",
   documentHref,
+  publicSurface = false,
 }: ReadinessOverviewProps) {
   const { claims, artifacts, ledgerOnly } = readinessSummary;
   const smokeArtifact = artifacts.items.find(
@@ -211,12 +213,25 @@ export function ReadinessOverview({
               <dd>{ledgerOnly.dispositionCounts["new-artifact-needed"]}</dd>
             </div>
           </dl>
-          <p>
-            The engineering gaps collapse into {ledgerOnly.proposedArtifactFamilies} proposed
-            experiment families. Evidence inputs and source reproductions are not falsely counted
-            as project tests.
-          </p>
-          <a href={readinessDocumentHref("experiments/proposed/README.md", mode, documentHref)}>Open the proposed backlog</a>
+          {ledgerOnly.proposedArtifactFamilies === 0 ? (
+            <>
+              <p>
+                No ledger-only record currently requires a new experiment family. The remaining
+                records are evidence inputs or source-domain reproductions and are not falsely
+                counted as project tests.
+              </p>
+              <a href={readinessDocumentHref("experiments/proposed/README.md", mode, documentHref)}>Inspect the disposition record</a>
+            </>
+          ) : (
+            <>
+              <p>
+                The engineering gaps collapse into {ledgerOnly.proposedArtifactFamilies} proposed
+                experiment families. Evidence inputs and source reproductions are not falsely
+                counted as project tests.
+              </p>
+              <a href={readinessDocumentHref("experiments/proposed/README.md", mode, documentHref)}>Open the proposed backlog</a>
+            </>
+          )}
         </section>
 
         {smokeArtifact ? (
@@ -292,7 +307,9 @@ export function ReadinessOverview({
         </section>
       ) : (
         <p className="readiness-book-link">
-          The owner-only research site contains the complete artifact table and live generated coverage report.
+          {publicSurface
+            ? "The public Git repository contains the complete artifact table and generated coverage report."
+            : "The owner-only research site contains the complete artifact table and live generated coverage report."}
         </p>
       )}
     </div>

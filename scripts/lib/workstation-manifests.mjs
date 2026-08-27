@@ -9,6 +9,12 @@ import {
   CANDIDATE_010_EXECUTION_MANIFEST_FILE,
   assertCandidate010ExecutionManifestProjection,
 } from "../../experiments/workstation/candidate-010/source-bundle.mjs";
+import {
+  SEED_RELEASE_OPERATOR_VERSION,
+  SEED_RELEASE_PLAN_VERSION,
+  SEED_REVEAL_ATTESTATION_VERSION,
+  validateSeedReleaseOperatorArtifacts,
+} from "../../experiments/workstation/candidate-010/seed-release-operator.mjs";
 
 const readinessLevels = new Set(["scaffold", "smoke-ready", "workstation-ready"]);
 const commandActions = ["prepare", "smoke", "run", "analyze", "validate"];
@@ -379,6 +385,9 @@ function collectReferencedPaths(manifest) {
     ["data.generator", manifest.data?.generator],
     ["outputs.schema", manifest.outputs?.schema],
     ["implementation.entrypoint", manifest.implementation?.entrypoint],
+    ...(manifest.artifact === "candidate-010"
+      ? [["seed_integrity.artifact_schema", manifest.seed_integrity?.artifact_schema]]
+      : []),
     ...(Array.isArray(manifest.implementation?.tests)
       ? manifest.implementation.tests.map((value) => ["implementation.tests", value])
       : []),
@@ -413,7 +422,9 @@ async function committedSeedCheck(root, manifest, field, label) {
         id: `${field}-seeds`,
         label,
         passed: false,
-        detail: `seeds.${field} does not disclose a frozen non-empty seed list`,
+        detail: seedDocument.state === "pending-implementation-freeze"
+          ? `seeds.${field} is explicitly pending the implementation/pilot freeze and has no sealed reveal`
+          : `seeds.${field} does not disclose a frozen non-empty seed list`,
       };
     }
     const canonicalSeed = (seed) => {
@@ -497,6 +508,223 @@ async function committedSeedCheck(root, manifest, field, label) {
       detail: `seeds.${field} is invalid: ${error.message}`,
     };
   }
+}
+
+async function candidate010SeedReleaseIntegrityCheck(root, manifest, confirmationSeeds, heldOutSeeds) {
+  if (manifest.artifact !== "candidate-010") return null;
+  const fail = (message) => {
+    confirmationSeeds.passed = false;
+    heldOutSeeds.passed = false;
+    confirmationSeeds.detail = `Candidate 010 seed-release integrity failed: ${message}`;
+    heldOutSeeds.detail = confirmationSeeds.detail;
+  };
+  try {
+    const integrity = manifest.seed_integrity;
+    if (
+      !integrity
+      || integrity.operator_contract_version !== SEED_RELEASE_OPERATOR_VERSION
+      || integrity.release_plan_contract_version !== SEED_RELEASE_PLAN_VERSION
+      || integrity.reveal_attestation_contract_version !== SEED_REVEAL_ATTESTATION_VERSION
+      || integrity.required_generation_method !== "system-cryptographic-entropy-v1"
+      || integrity.require_claim_eligible !== true
+      || integrity.require_joint_release_set !== true
+      || !/^[0-9a-f]{64}$/.test(integrity.artifact_schema_sha256 ?? "")
+    ) throw new Error("manifest.seed_integrity does not freeze the production operator, plan, attestation, and joint-release requirements");
+    const artifactSchema = await repositoryRegularFile(
+      root,
+      integrity.artifact_schema,
+      "Candidate 010 seed artifact schema",
+    );
+    if (await fileSha256(artifactSchema) !== integrity.artifact_schema_sha256) {
+      throw new Error("seed artifact schema SHA-256 does not match the frozen manifest identity");
+    }
+    const schema = JSON.parse(await readFile(artifactSchema, "utf8"));
+    if (
+      schema?.$id !== "https://20-watts-was-enough.local/schemas/candidate-010-seed-release-artifacts-v1.json"
+      || schema?.definitions?.sealedCommitment?.properties?.operator_contract_version?.const
+        !== SEED_RELEASE_OPERATOR_VERSION
+      || schema?.definitions?.releasePlan?.properties?.contract_version?.const
+        !== SEED_RELEASE_PLAN_VERSION
+      || schema?.definitions?.revealAttestation?.properties?.contract_version?.const
+        !== SEED_REVEAL_ATTESTATION_VERSION
+    ) throw new Error("seed artifact schema does not declare the registered executable contract versions");
+    if (!confirmationSeeds.passed || !heldOutSeeds.passed) return null;
+
+    const confirmationPath = await repositoryRegularFile(
+      root,
+      manifest.seeds.confirmation,
+      "Candidate 010 confirmation reveal",
+    );
+    const heldOutPath = await repositoryRegularFile(
+      root,
+      manifest.seeds.held_out,
+      "Candidate 010 held-out reveal",
+    );
+    const revealRoot = path.dirname(confirmationPath);
+    if (
+      path.basename(revealRoot) !== "revealed"
+      || path.dirname(heldOutPath) !== revealRoot
+      || path.basename(confirmationPath) !== "confirmation.reveal.json"
+      || path.basename(heldOutPath) !== "held-out.reveal.json"
+    ) throw new Error("both manifest seed roles must name the exact jointly revealed operator directory");
+    const validated = await validateSeedReleaseOperatorArtifacts({
+      bindingDirectory: path.dirname(revealRoot),
+      requireClaimEligible: true,
+    });
+    if (
+      validated.state !== "explicitly-revealed"
+      || validated.claim_eligible !== true
+      || !/^[0-9a-f]{64}$/.test(validated.plan_sha256 ?? "")
+      || !/^[0-9a-f]{64}$/.test(validated.attestation_sha256 ?? "")
+    ) throw new Error("the joint operator release is not an explicit claim-eligible reveal");
+    const bindingRoot = await realpath(path.dirname(revealRoot));
+    const [plan, attestation, confirmationReveal, heldOutReveal] = await Promise.all([
+      readFile(path.join(bindingRoot, "seed-release-plan.json"), "utf8").then(JSON.parse),
+      readFile(path.join(revealRoot, "seed-reveal-attestation.json"), "utf8").then(JSON.parse),
+      readFile(confirmationPath, "utf8").then(JSON.parse),
+      readFile(heldOutPath, "utf8").then(JSON.parse),
+    ]);
+    confirmationSeeds.detail = "seeds.confirmation is an exact claim-eligible joint operator reveal with validated plan, snapshots, commitment, attestation, and disjointness";
+    heldOutSeeds.detail = "seeds.held_out is an exact claim-eligible joint operator reveal with validated plan, snapshots, commitment, attestation, and disjointness";
+    return Object.freeze({
+      bindingRoot,
+      revealRoot,
+      plan,
+      attestation,
+      confirmation: Object.freeze({ path: confirmationPath, document: confirmationReveal }),
+      heldOut: Object.freeze({ path: heldOutPath, document: heldOutReveal }),
+    });
+  } catch (error) {
+    fail(error.message);
+    return null;
+  }
+}
+
+function sameRealPath(left, right) {
+  return path.relative(left, right) === "" && path.relative(right, left) === "";
+}
+
+async function candidate010PromotionSeedCrossBinding({
+  root,
+  manifest,
+  seedRelease,
+  promotionReleaseRoot,
+  promotionReleasePath,
+  promotionDisjointPaths,
+  evidence,
+}) {
+  if (manifest.artifact !== "candidate-010") return;
+  if (!seedRelease) {
+    throw new Error("Candidate 010 promotion requires one validated joint seed-operator release");
+  }
+  const releaseRoot = await realpath(promotionReleaseRoot);
+  if (!isInside(releaseRoot, seedRelease.bindingRoot) || sameRealPath(releaseRoot, seedRelease.bindingRoot)) {
+    throw new Error("Candidate 010 seed-operator binding root must be contained by the promotion release root");
+  }
+  const releaseFile = await repositoryRegularFile(
+    root,
+    promotionReleasePath,
+    "Candidate 010 promotion release",
+    { absoluteInput: true },
+  );
+  const release = JSON.parse(await readFile(releaseFile, "utf8"));
+  const snapshotNames = [
+    "source_bundle",
+    "execution_descriptor",
+    "runtime_identity",
+    "config",
+    "design",
+    "backend_registry",
+    "preregistration",
+  ];
+  const evidenceRows = Array.isArray(evidence?.input_files) ? evidence.input_files : [];
+  const requireEvidenceIdentity = async (file, scope, label) => {
+    const relative = path.relative(releaseRoot, file).replaceAll("\\", "/");
+    const digest = await fileSha256(file);
+    if (!evidenceRows.some((row) => (
+      row.scope === scope
+      && row.path === relative
+      && row.sha256 === digest
+    ))) throw new Error(`Candidate 010 promotion evidence omits the exact ${label}`);
+  };
+  for (const name of snapshotNames) {
+    const operatorBinding = seedRelease.plan.bindings?.[name];
+    const releaseBinding = release.bindings?.[name];
+    if (
+      !operatorBinding
+      || !releaseBinding
+      || releaseBinding.sha256 !== operatorBinding.sha256
+    ) throw new Error(`Candidate 010 promotion release ${name} digest differs from the selected seed-operator plan`);
+    const operatorFile = await repositoryRegularFile(
+      root,
+      path.join(seedRelease.revealRoot, operatorBinding.path),
+      `Candidate 010 seed-operator ${name}`,
+      { absoluteInput: true },
+    );
+    const releaseBindingFile = await repositoryRegularFile(
+      root,
+      path.resolve(releaseRoot, releaseBinding.path),
+      `Candidate 010 promotion release ${name}`,
+      { absoluteInput: true },
+    );
+    if (!sameRealPath(operatorFile, releaseBindingFile)) {
+      throw new Error(`Candidate 010 promotion release does not consume the selected seed-operator ${name} snapshot`);
+    }
+    await requireEvidenceIdentity(releaseBindingFile, "release-binding", `${name} snapshot`);
+  }
+
+  const exactOperatorFiles = {
+    commitment: await repositoryRegularFile(
+      root,
+      path.join(seedRelease.revealRoot, "confirmation.commit.json"),
+      "Candidate 010 operator confirmation commitment",
+      { absoluteInput: true },
+    ),
+    reveal: seedRelease.confirmation.path,
+  };
+  for (const [name, operatorFile] of Object.entries(exactOperatorFiles)) {
+    const releaseBinding = release.bindings?.[name];
+    if (!releaseBinding) throw new Error(`Candidate 010 promotion release omits ${name}`);
+    const releaseBindingFile = await repositoryRegularFile(
+      root,
+      path.resolve(releaseRoot, releaseBinding.path),
+      `Candidate 010 promotion release ${name}`,
+      { absoluteInput: true },
+    );
+    if (!sameRealPath(operatorFile, releaseBindingFile)) {
+      throw new Error(`Candidate 010 promotion release does not consume the exact operator confirmation ${name}`);
+    }
+    await requireEvidenceIdentity(releaseBindingFile, "release-binding", `operator confirmation ${name}`);
+  }
+  if (
+    release.release_version !== seedRelease.plan.release_version
+    || release.source_identity?.source_sha256 !== seedRelease.plan.source_identity.source_sha256
+    || release.source_identity?.source_commit !== seedRelease.plan.source_identity.source_commit
+    || release.execution_identity?.descriptor_sha256 !== seedRelease.plan.execution_identity.descriptor_sha256
+    || release.execution_identity?.source_inventory_sha256 !== seedRelease.plan.execution_identity.source_inventory_sha256
+    || release.execution_identity?.dependency_inventory_sha256
+      !== seedRelease.plan.execution_identity.dependency_inventory_sha256
+    || release.runtime_identity?.identity_sha256 !== seedRelease.plan.runtime_identity.identity_sha256
+    || release.runtime_identity?.executable_sha256 !== seedRelease.plan.runtime_identity.executable_sha256
+    || release.runtime_identity?.package_lock_sha256 !== seedRelease.plan.runtime_identity.package_lock_sha256
+    || release.seed_pack?.commitment !== seedRelease.plan.partitions.confirmation.commitment
+    || release.seed_pack?.commitment !== seedRelease.confirmation.document.commitment
+    || evidence.release?.seed_commitment !== seedRelease.confirmation.document.commitment
+    || evidence.release?.version !== seedRelease.plan.release_version
+  ) throw new Error("Candidate 010 promotion release/evidence identities differ from the selected seed-operator plan");
+
+  if (
+    promotionDisjointPaths.length !== 1
+    || !sameRealPath(await realpath(promotionDisjointPaths[0]), seedRelease.heldOut.path)
+  ) throw new Error("Candidate 010 promotion must use the exact operator held-out reveal as its disjoint pack");
+  await requireEvidenceIdentity(seedRelease.heldOut.path, "disjoint-seed-pack", "operator held-out reveal");
+  if (
+    seedRelease.attestation.partitions?.confirmation?.commitment
+      !== seedRelease.confirmation.document.commitment
+    || seedRelease.attestation.partitions?.["held-out"]?.commitment
+      !== seedRelease.heldOut.document.commitment
+    || seedRelease.attestation.plan_sha256 !== seedRelease.plan.plan_sha256
+  ) throw new Error("Candidate 010 reveal attestation is not bound to the promotion seed partitions");
 }
 
 async function artifactProtocolEligibility(root, manifest) {
@@ -684,6 +912,12 @@ export async function workstationPromotionChecks(root, manifest) {
       heldOutSeeds.detail = confirmationSeeds.detail;
     }
   }
+  const candidate010SeedRelease = await candidate010SeedReleaseIntegrityCheck(
+    root,
+    manifest,
+    confirmationSeeds,
+    heldOutSeeds,
+  );
   const hashChainIntegrated = manifest.outputs?.hash_chain === true
     && resumeIntegrated
     && manifest.implementation?.tests?.some((value) => /checkpoint|runner/.test(value));
@@ -751,6 +985,15 @@ export async function workstationPromotionChecks(root, manifest) {
         disjointSeedPackPaths: promotionDisjointPaths,
       };
       if (manifest.artifact === "candidate-010") {
+        await candidate010PromotionSeedCrossBinding({
+          root,
+          manifest,
+          seedRelease: candidate010SeedRelease,
+          promotionReleaseRoot,
+          promotionReleasePath,
+          promotionDisjointPaths,
+          evidence,
+        });
         const persistedValidation = await validateDurablePromotionEvidence(
           evidence,
           launchReceipt,
@@ -773,7 +1016,7 @@ export async function workstationPromotionChecks(root, manifest) {
           && fresh.capsule_destroyed === true
           && fresh.action_result?.evidence_sha256 === evidence.evidence_sha256;
         if (promotionEvidenceValid) {
-          promotionEvidenceDetail = "fresh live capsule recomputation validated every bound input; stored receipt integrity is diagnostic, not authenticity";
+          promotionEvidenceDetail = "fresh live capsule recomputation validated every bound input and its exact joint seed-operator plan/reveals; stored receipt integrity is diagnostic, not authenticity";
         }
       } else {
         const validator = promotion?.validator;

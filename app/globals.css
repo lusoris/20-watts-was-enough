@@ -1380,10 +1380,15 @@ button {
 
 .readiness-overview {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 22px;
   width: min(100%, 1180px);
   margin: 0 auto;
   color: #15231a;
+}
+
+.readiness-overview > * {
+  min-width: 0;
 }
 
 .readiness-intro,
@@ -1610,7 +1615,9 @@ button {
 }
 
 .readiness-table-wrap {
+  width: 100%;
   max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
   border: 1px solid #aebcaf;
   border-radius: 6px;
@@ -2217,6 +2224,26 @@ button {
 
   .book-shell {
     padding: 15px 12px 60px;
+  }
+
+  .diagram {
+    padding: 16px;
+  }
+
+  .diagram-wide .diagram-canvas {
+    min-width: min(var(--diagram-width), 760px);
+    justify-content: start;
+  }
+
+  .diagram-wide .diagram-canvas svg {
+    width: min(var(--diagram-width), 760px);
+    max-width: none;
+  }
+
+  .diagram-layout-note {
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 
   .book-actions {

@@ -6,5 +6,5 @@
   "seed_count": null,
   "commitment": null,
   "reveal": null,
-  "note": "Generate and seal a fresh unseen pack only after runner, backends, design, analysis, and meter contract are frozen. Previously visible planning seeds are ineligible."
+  "note": "Pending: first complete the target-hardware development pilot, powered preflight, production release-v4 block adapter, target meter/calibration/clock identities, key custody, and reveal ceremony. Then jointly generate and seal this fresh unseen pack with the confirmation pack using the registered operator. Previously visible planning seeds are ineligible."
 }

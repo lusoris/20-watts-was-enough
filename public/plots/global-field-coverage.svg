@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1160" viewBox="0 0 1200 1160" role="img" aria-labelledby="title description">
   <title id="title">Repository field coverage against EuroSciVoc, OECD, DFG and ANZSRC classifications</title>
-  <desc id="description">Stacked bars distinguish explicit child routing, dedicated audits, adjacent evidence, and unreviewed fields as of 2026-08-25.</desc>
+  <desc id="description">Stacked bars distinguish explicit child routing, dedicated audits, adjacent evidence, and unreviewed fields as of 2026-08-27.</desc>
   <metadata>Taxonomy attribution: DFG Fachsystematik 2024–2028 labels are redistributed for scientific use with source attribution under https://www.dfg.de/de/service/kontakt/impressum and are not granted for commercial reuse. ANZSRC data are from the Australian Bureau of Statistics and Stats NZ under CC BY 4.0. EuroSciVoc 1.6.0 is European Union material reused under CC BY 4.0. Project visualization: CC BY-SA 4.0.</metadata>
   <rect width="1200" height="1160" rx="24" fill="#0b1d18"/>
   <text x="56" y="72" fill="#fffaf0" font-family="Georgia, serif" font-size="34" font-weight="700">How global is the research search?</text>
-  <text x="56" y="104" fill="#b9c9c1" font-family="Segoe UI, sans-serif" font-size="16">Audit presence, not scientific completeness · 2026-08-25</text>
+  <text x="56" y="104" fill="#b9c9c1" font-family="Segoe UI, sans-serif" font-size="16">Audit presence, not scientific completeness · 2026-08-27</text>
   <g transform="translate(724 61)">
     <circle cx="0" cy="0" r="7" fill="#24b47e"/><text x="14" y="5" fill="#b9c9c1" font-family="Segoe UI, sans-serif" font-size="13">dedicated</text>
     <circle cx="112" cy="0" r="7" fill="#ffb547"/><text x="126" y="5" fill="#b9c9c1" font-family="Segoe UI, sans-serif" font-size="13">adjacent</text>
@@ -12,8 +12,8 @@
   </g>
   <rect x="36" y="132" width="1128" height="96" rx="16" fill="#122a22" stroke="#35584b"/>
   <text x="62" y="170" fill="#fffaf0" font-family="Georgia, serif" font-size="22" font-weight="700">EU EuroSciVoc 1.6 · 1,064 multilingual concepts</text>
-  <text x="62" y="201" fill="#b9c9c1" font-family="Cascadia Mono, monospace" font-size="13">9 dedicated routes · 13 adjacent routes · 1042 unassigned concepts</text>
-  <rect x="730" y="168" width="3.256578947368421" height="24" rx="0" fill="#24b47e"><title>9 dedicated</title></rect><rect x="733.2565789473684" y="168" width="4.703947368421052" height="24" rx="0" fill="#ffb547"><title>13 adjacent</title></rect><rect x="737.9605263157895" y="168" width="377.0394736842105" height="24" rx="4" fill="#f45b69"><title>1042 unreviewed</title></rect>
+  <text x="62" y="201" fill="#b9c9c1" font-family="Cascadia Mono, monospace" font-size="13">10 dedicated routes · 13 adjacent routes · 1041 unassigned concepts</text>
+  <rect x="730" y="168" width="3.6184210526315788" height="24" rx="0" fill="#24b47e"><title>10 dedicated</title></rect><rect x="733.6184210526316" y="168" width="4.703947368421052" height="24" rx="0" fill="#ffb547"><title>13 adjacent</title></rect><rect x="738.3223684210526" y="168" width="376.6776315789474" height="24" rx="4" fill="#f45b69"><title>1041 unreviewed</title></rect>
   <rect x="36" y="248" width="1128" height="378" rx="16" fill="#122a22" stroke="#35584b"/>
   <text x="62" y="294" fill="#fffaf0" font-family="Georgia, serif" font-size="23" font-weight="700">OECD FORD · 42 global second-level fields</text>
   <text x="62" y="323" fill="#b9c9c1" font-family="Cascadia Mono, monospace" font-size="13">39 dedicated · 3 adjacent · 0 unreviewed</text>

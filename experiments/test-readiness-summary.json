@@ -2,19 +2,19 @@
   "schema": 1,
   "generatedFrom": "experiments/test-coverage.json",
   "claims": {
-    "total": 1559,
-    "testRouted": 1463,
-    "protocolCovered": 1463,
+    "total": 1563,
+    "testRouted": 1471,
+    "protocolCovered": 1471,
     "executionReady": 0,
     "tierCounts": {
-      "ledger-only": 96,
+      "ledger-only": 92,
       "linked-description": 0,
-      "protocol-complete": 1463,
+      "protocol-complete": 1471,
       "workstation-executable": 0
     },
     "tierStatusCounts": {
       "ledger-only": {
-        "established": 83,
+        "established": 79,
         "plausible": 9,
         "speculative": 0,
         "disputed": 4,
@@ -28,7 +28,7 @@
         "unknown": 0
       },
       "protocol-complete": {
-        "established": 1137,
+        "established": 1145,
         "plausible": 210,
         "speculative": 60,
         "disputed": 47,
@@ -44,18 +44,18 @@
     }
   },
   "ledgerOnly": {
-    "total": 96,
+    "total": 92,
     "dispositionCounts": {
-      "evidence-input": 82,
+      "evidence-input": 81,
       "source-reproduction": 11,
       "existing-artifact-gap": 0,
-      "new-artifact-needed": 3
+      "new-artifact-needed": 0
     },
-    "proposedArtifactFamilies": 3
+    "proposedArtifactFamilies": 0
   },
   "artifacts": {
-    "total": 47,
-    "protocolComplete": 47,
+    "total": 48,
+    "protocolComplete": 48,
     "smokeReady": 10,
     "workstationReady": 0,
     "items": [
@@ -230,13 +230,13 @@
             "id": "confirmation-seeds",
             "label": "Frozen confirmation seeds",
             "passed": false,
-            "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+            "detail": "seeds.confirmation is explicitly pending the implementation/pilot freeze and has no sealed reveal"
           },
           {
             "id": "held_out-seeds",
             "label": "Frozen held-out seeds",
             "passed": false,
-            "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+            "detail": "seeds.held_out is explicitly pending the implementation/pilot freeze and has no sealed reveal"
           },
           {
             "id": "promotion-evidence",
@@ -509,13 +509,13 @@
             "id": "confirmation-seeds",
             "label": "Frozen confirmation seeds",
             "passed": false,
-            "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+            "detail": "seeds.confirmation is explicitly pending the implementation/pilot freeze and has no sealed reveal"
           },
           {
             "id": "held_out-seeds",
             "label": "Frozen held-out seeds",
             "passed": false,
-            "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+            "detail": "seeds.held_out is explicitly pending the implementation/pilot freeze and has no sealed reveal"
           },
           {
             "id": "promotion-evidence",
@@ -631,13 +631,13 @@
             "id": "confirmation-seeds",
             "label": "Frozen confirmation seeds",
             "passed": false,
-            "detail": "seeds.confirmation does not disclose a frozen non-empty seed list"
+            "detail": "seeds.confirmation is explicitly pending the implementation/pilot freeze and has no sealed reveal"
           },
           {
             "id": "held_out-seeds",
             "label": "Frozen held-out seeds",
             "passed": false,
-            "detail": "seeds.held_out does not disclose a frozen non-empty seed list"
+            "detail": "seeds.held_out is explicitly pending the implementation/pilot freeze and has no sealed reveal"
           },
           {
             "id": "promotion-evidence",
@@ -1106,7 +1106,7 @@
         "id": "fixture-026",
         "path": "experiments/fixtures/026-interface-qualified-relative-sensing.md",
         "title": "Fixture F-026 — Interface-qualified relative sensing and scale symmetry",
-        "linkedClaims": 15,
+        "linkedClaims": 19,
         "protocolComplete": true,
         "missingFacets": [],
         "executionReadiness": "smoke-ready",
@@ -1241,6 +1241,19 @@
             "detail": "strict promotion evidence is pending and no claim-eligible bundle exists"
           }
         ]
+      },
+      {
+        "id": "fixture-028",
+        "path": "experiments/fixtures/028-parasitology-adversarial-lifecycles.md",
+        "title": "Fixture F-028 — Parasitology-derived adversarial lifecycle boundaries",
+        "linkedClaims": 4,
+        "protocolComplete": true,
+        "missingFacets": [],
+        "executionReadiness": "absent",
+        "executionReady": false,
+        "executionManifest": null,
+        "executionClaims": [],
+        "promotionChecks": []
       }
     ]
   }

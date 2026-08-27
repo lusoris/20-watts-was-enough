@@ -27,6 +27,18 @@ const markdownDocument = await readFile(
   new URL("../app/components/markdown-document.tsx", import.meta.url),
   "utf8",
 );
+const readiness = await readFile(
+  new URL("../app/components/readiness-overview.tsx", import.meta.url),
+  "utf8",
+);
+const mermaidDiagram = await readFile(
+  new URL("../app/components/mermaid-diagram.tsx", import.meta.url),
+  "utf8",
+);
+const globalStyles = await readFile(
+  new URL("../app/globals.css", import.meta.url),
+  "utf8",
+);
 
 test("the book route keeps the complete corpus out of the Worker render", () => {
   assert.match(page, /import \{ BookLoader \}/);
@@ -37,11 +49,26 @@ test("the book route keeps the complete corpus out of the Worker render", () => 
   assert.match(loader, /useSyncExternalStore/);
   assert.match(loader, /\(\) => false/);
   assert.match(loader, /<BookLoadBoundary>/);
+  assert.match(loader, /new URLSearchParams\(window\.location\.search\)\.get\("pdf"\) === "1"/);
+  assert.match(loader, /<BookEdition surface=\{surface\}/);
 
   assert.match(edition, /import \{ bookDocuments as documents \}/);
   assert.match(edition, /import type \{ ResearchDocument \}/);
   assert.doesNotMatch(edition, /import \{ documents[^}]*\} from "\.\.\/content"/);
   assert.match(edition, /export function BookEdition\(/);
+});
+
+test("the generated PDF uses public links and zero-state readiness copy", () => {
+  assert.match(edition, /"owner-only-site" \| "github-pages" \| "public-pdf"/);
+  assert.match(edition, /const usesPublicLinks = isGitHubPages \|\| isPublicPdf/);
+  assert.match(edition, /if \(isPublicPdf\) return repositoryDocumentHref\(path, hash\)/);
+  assert.match(edition, /const canonicalPublicBook = "https:\/\/lusoris\.github\.io\/20-watts-was-enough\/"/);
+  assert.match(edition, /isPublicPdf \? canonicalPublicBook : assetBasePath/);
+  assert.match(edition, /usesPublicLinks \? "View source on GitHub" : "← Owner-only research site"/);
+  assert.match(edition, /publicSurface=\{usesPublicLinks\}/);
+  assert.match(readiness, /ledgerOnly\.proposedArtifactFamilies === 0/);
+  assert.match(readiness, /No ledger-only record currently requires a new experiment family/);
+  assert.match(readiness, /The public Git repository contains the complete artifact table/);
 });
 
 test("the private reader distinguishes JSON contracts and exposes linked source artifacts", () => {
@@ -50,6 +77,27 @@ test("the private reader distinguishes JSON contracts and exposes linked source 
   assert.match(content, /checked-in machine-readable experiment contract or artifact/);
   assert.match(markdownDocument, /repositoryArtifactHref\(internal\.path\)/);
   assert.match(markdownDocument, /data-repository-artifact/);
+});
+
+test("the book constrains readiness grids and keeps wide diagrams readable on narrow screens", () => {
+  assert.match(
+    globalStyles,
+    /\.readiness-overview\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s,
+  );
+  assert.match(globalStyles, /\.readiness-overview\s*>\s*\*\s*\{[^}]*min-width:\s*0/s);
+  assert.match(
+    globalStyles,
+    /\.readiness-table-wrap\s*\{[^}]*width:\s*100%[^}]*min-width:\s*0/s,
+  );
+  assert.match(
+    globalStyles,
+    /@media\s*\(max-width:\s*760px\)[\s\S]*\.diagram-wide\s+\.diagram-canvas\s*\{[^}]*min-width:\s*min\(var\(--diagram-width\),\s*760px\)/,
+  );
+  assert.match(
+    globalStyles,
+    /\.diagram-wide\s+\.diagram-canvas\s+svg\s*\{[^}]*width:\s*min\(var\(--diagram-width\),\s*760px\)[^}]*max-width:\s*none/s,
+  );
+  assert.match(mermaidDiagram, /Wide diagram · scroll horizontally on narrow screens/);
 });
 
 test("the full-book source identity includes the locked renderer dependency graph", async () => {

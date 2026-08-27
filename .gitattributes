@@ -7,6 +7,8 @@ experiments/workstation/fixture-026/rsd-t02-policy-bundle.inventory.json text eo
 experiments/workstation/fixture-026/policy-bundles/*.js text eol=lf
 experiments/workstation/fixture-026/** text eol=lf
 experiments/workstation/lib/checkpoint-ledger.mjs text eol=lf
+experiments/workstation/candidate-010/seeds/seed-release-artifacts.schema.json text eol=lf
+sources/** -text
 LICENSE text eol=lf
 LICENSES/*.txt text eol=lf
 THIRD_PARTY_NOTICES.txt text eol=lf

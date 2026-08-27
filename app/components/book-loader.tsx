@@ -72,11 +72,14 @@ export function BookLoader() {
   );
 
   if (!browserReady) return <BookLoading />;
+  const surface = new URLSearchParams(window.location.search).get("pdf") === "1"
+    ? "public-pdf"
+    : "owner-only-site";
 
   return (
     <BookLoadBoundary>
       <Suspense fallback={<BookLoading />}>
-        <BookEdition />
+        <BookEdition surface={surface} />
       </Suspense>
     </BookLoadBoundary>
   );

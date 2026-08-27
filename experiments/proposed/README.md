@@ -9,25 +9,33 @@ independent-reproduction gates remain those stated by the numbered artifact.
 
 ## Current backlog
 
+No unresolved `new-artifact-needed` disposition remains. The records below
+preserve how earlier backlog families were promoted to numbered written
+protocols; they do not imply execution or results.
+
+## Promoted families retained as provenance
+
 ### `proposed:rsd-t02-outer-lineage-split`
 
-- **Promotion state:** unresolved; no numbered experiment artifact.
+- **Promotion state:** promoted on 2026-08-27 to the
+  [`RSD-T02-POP` blocked-lineage track](../fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pop--population-shift-and-selective-risk-confirmation)
+  in Fixture F-026; the written protocol is complete and non-executable.
 - **Claim:** [C-1566](../../research/claims.md#c-1566).
 - **Unresolved question:** Which equation-, implementation-, and
   construction-ancestry relations must be blocked together so that an outer
   RSD-T02 family is genuinely unseen rather than a near-duplicate of a
   development family?
-- **Why current artifacts are insufficient:** the population contract can
+- **Why execution remains blocked:** the population contract can
   label lineage and equivalence components, but the registry is public,
   coverage is structurally thin for four property values, and no sealed
   confirmation or transfer family templates, commitments, custody records, or
   releases exist.
-- **Minimum promotion contract:** freeze a leakage graph before affected
+- **Written contract:** freeze a leakage graph before affected
   fitting; assign every connected component to exactly one of development,
   outer confirmation, or outer transfer; include deliberate code-sibling and
   equation-equivalent hostiles; and prove that role metadata, family payloads,
   and response-bearing artifacts cannot cross the information cut.
-- **Promotion condition:** a numbered artifact must define at least two
+- **Execution gate:** the runtime must define at least two
   materially distinct held-out lineages, an auditable component assignment,
   one-pass custody and release, and a falsification showing how a row-level or
   sibling-level split can overstate transfer without treating that direction
@@ -35,55 +43,57 @@ independent-reproduction gates remain those stated by the numbered artifact.
 
 ### `proposed:rsd-t02-parameterized-population-runner`
 
-- **Promotion state:** partially implemented; an exact-bound integrated release
-  composes the complete 20-instance receipt traversal with isolated durable
-  fixed-instance execution and satisfies the parameterized-runner
-  infrastructure gate, but it is not a powered population comparison.
+- **Promotion state:** promoted on 2026-08-27 to the
+  [`RSD-T02-POP` shift track](../fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pop--population-shift-and-selective-risk-confirmation)
+  in Fixture F-026. An exact-bound integrated release composes the complete
+  20-instance receipt traversal with isolated durable fixed-instance execution
+  and satisfies the parameterized-runner infrastructure gate, but the written
+  protocol is not a powered population comparison or result.
 - **Claim:** [C-1567](../../research/claims.md#c-1567).
 - **Unresolved question:** How does an estimator behave across independently
   drawn parameter instances and shifted equation lineages when additional
   episodes from one system are forbidden from inflating the effective sample
   size?
-- **Why current artifacts are insufficient:** the integrated release traverses
+- **Why execution remains blocked:** the integrated release traverses
   all 20 fixed instances, validates their workload receipts, and provides
   ownership-safe durable recovery at both fixed-instance and outer-ledger
   boundaries. It remains receipt-only: it executes no trained candidate or
   null, retains no instance-level endpoints, and still lacks role-disjoint
   fitting, calibrated models, a frozen power plan, and an outer-family path.
-- **Minimum promotion contract:** bind one family, canonical parameter vector,
+- **Written contract:** bind one family, canonical parameter vector,
   time constant, 26-episode protocol, policy-bundle identity, and terminal
   outcome to each independent instance; resume without duplicating units;
   aggregate with equal family weights; and keep episode, row, realization, and
   procedural-seed counts out of the scientific denominator.
-- **Promotion condition:** a numbered artifact must execute a prospectively
+- **Execution gate:** the runtime must execute a prospectively
   assigned public-development population end to end, expose typed failures and
   resource charges, and demonstrate that within-instance interpolation cannot
   be relabelled as parameter-instance or lineage transfer.
 
 ### `proposed:rsd-t02-calibrated-selective-comparison`
 
-- **Promotion state:** unresolved; two level-two trainable prototypes and a
-  method-check analyzer exist, but no mature calibrated comparator.
+- **Promotion state:** promoted on 2026-08-27 to the
+  [`RSD-T02-POP` selective-risk track](../fixtures/026-interface-qualified-relative-sensing.md#rsd-t02-pop--population-shift-and-selective-risk-confirmation)
+  in Fixture F-026; two level-two trainable prototypes and a method-check
+  analyzer exist, but no mature calibrated comparator or execution result.
 - **Claim:** [C-1568](../../research/claims.md#c-1568).
 - **Unresolved question:** Can frozen RSD-T02 candidate and null models provide
   useful, priced risk--coverage trade-offs on instance-disjoint data, and how
   badly do those guarantees degrade under an unseen lineage shift?
-- **Why current artifacts are insufficient:** current prototype scores are not
+- **Why execution remains blocked:** current prototype scores are not
   calibrated probabilities; support and abstention thresholds are unfrozen;
   no fit/calibration/development-evaluation instance split has executed; and no
   final loss, fallback charge, or comparison release exists.
-- **Minimum promotion contract:** freeze model weights before calibration;
+- **Written contract:** freeze model weights before calibration;
   calibrate value, property, support, and abstention outputs on a dedicated
   instance partition; evaluate the full registered risk--coverage curve with
   fallback and acquisition costs in denominator; and separately test outer
   lineage shift without transporting the in-distribution guarantee.
-- **Promotion condition:** a numbered artifact must satisfy the level-five null
+- **Execution gate:** the runtime must satisfy the level-five null
   maturity gates for both generic nulls, freeze the loss and decision rule
   before evaluation, and beat forced-decision and uncalibrated controls on a
   preregistered risk--coverage--resource criterion without hiding zero
   coverage.
-
-## Promoted families retained as provenance
 
 ### `proposed:sensorimotor-grounding-transfer`
 
