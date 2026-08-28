@@ -6,6 +6,12 @@
   "packages": {
     "numpy": "2.4.6"
   },
+  "package_artifacts": {
+    "numpy": {
+      "filename": "numpy-2.4.6-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "a7830bab239b79cda9c08c2da014761cafb48da6150e1da17ac06283f43b6089"
+    }
+  },
   "bit_generator": "PCG64DXSM",
   "network_install_during_run": false
 }

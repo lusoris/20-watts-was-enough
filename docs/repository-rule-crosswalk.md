@@ -70,6 +70,8 @@ The repository now treats the following as executable gates:
 - ESLint, accessibility, React, and framework linting;
 - parsed YAML and policy-surface validation;
 - pinned Action digests, explicit workflow permissions, and job timeouts;
+- hash-enforced Python build dependencies, exact npm declarations, and the npm
+  lockfile;
 - documentation links, source-publication boundaries, evidence coverage,
   taxonomies, mathematics, workstation contracts, readiness, site builds, and
   PDF freshness;

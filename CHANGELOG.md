@@ -25,7 +25,9 @@ No unreleased changes.
   security, support, and repository/tooling paths.
 
 - CI and release verification now provision the exact CPython 3.13.13 and
-  NumPy 2.4.6 environment required by Fixture 019. Platform-specific
+  NumPy 2.4.6 environment required by Fixture 019. The Linux wheel is also
+  bound to its PyPI SHA-256 digest and installed with pip hash enforcement,
+  rather than trusting a mutable package-index version lookup. Platform-specific
   environment tests no longer fail on Linux for behavior that exists only on
   Windows, and the authoritative quality job has enough bounded time to run the
   complete workstation suite on GitHub-hosted hardware.

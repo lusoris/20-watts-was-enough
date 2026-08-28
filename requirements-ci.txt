@@ -1,0 +1,4 @@
+# CPython 3.13 / Linux x86_64 scientific runtime used by GitHub-hosted jobs.
+# The artifact digest is published by PyPI for NumPy 2.4.6.
+numpy==2.4.6 \
+    --hash=sha256:a7830bab239b79cda9c08c2da014761cafb48da6150e1da17ac06283f43b6089

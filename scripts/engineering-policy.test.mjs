@@ -57,7 +57,7 @@ test("scientific workflows must provision the fixture-locked Python and NumPy ru
   const lock = { python_version: "3.13.13", packages: { numpy: "2.4.6" } };
   const validSteps = [
     { uses: "actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1", with: { "python-version": "3.13.13" } },
-    { run: "python -m pip install --disable-pip-version-check --no-deps \"numpy==2.4.6\"" },
+    { run: "python -m pip install --disable-pip-version-check --no-deps --require-hashes -r requirements-ci.txt" },
   ];
   assert.deepEqual(validateScientificRuntimeWorkflowObject(
     { jobs: { quality: { steps: validSteps } } },
@@ -70,7 +70,7 @@ test("scientific workflows must provision the fixture-locked Python and NumPy ru
     "quality",
   ), [
     "workflow.yml: job quality must use locked Python 3.13.13",
-    "workflow.yml: job quality must install locked NumPy 2.4.6 without dependencies",
+    "workflow.yml: job quality must install hash-locked NumPy 2.4.6 without dependencies",
   ]);
 });
 

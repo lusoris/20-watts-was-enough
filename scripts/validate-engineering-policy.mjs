@@ -45,6 +45,7 @@ const requiredFiles = [
   "experiments/workstation/fixture-019/python-environment.lock.json",
   "research/AGENTS.md",
   "renovate.json",
+  "requirements-ci.txt",
   "scripts/AGENTS.md",
   "scripts/audit-code-shape.mjs",
   "scripts/audit-code-shape.test.mjs",
@@ -196,11 +197,31 @@ export function validateScientificRuntimeWorkflowObject(
   const install = steps.find((step) => (
     typeof step?.run === "string" && step.run.includes("python -m pip install")
   ));
-  const expectedInstall = `python -m pip install --disable-pip-version-check --no-deps "numpy==${numpyVersion}"`;
+  const expectedInstall = "python -m pip install --disable-pip-version-check --no-deps --require-hashes -r requirements-ci.txt";
   if (install?.run?.trim() !== expectedInstall) {
-    findings.push(`${relativePath}: job ${jobName} must install locked NumPy ${numpyVersion} without dependencies`);
+    findings.push(`${relativePath}: job ${jobName} must install hash-locked NumPy ${numpyVersion} without dependencies`);
   }
   return findings;
+}
+
+function validateScientificRequirements(root, lock, findings) {
+  const relativePath = "requirements-ci.txt";
+  const numpyVersion = lock?.packages?.numpy;
+  const numpyDigest = lock?.package_artifacts?.numpy?.sha256;
+  if (!/^[0-9a-f]{64}$/u.test(numpyDigest ?? "")) {
+    findings.push("experiments/workstation/fixture-019/python-environment.lock.json: NumPy artifact needs a SHA-256 digest");
+    return;
+  }
+  const expected = [
+    "# CPython 3.13 / Linux x86_64 scientific runtime used by GitHub-hosted jobs.",
+    `# The artifact digest is published by PyPI for NumPy ${numpyVersion}.`,
+    `numpy==${numpyVersion} \\`,
+    `    --hash=sha256:${numpyDigest}`,
+    "",
+  ].join("\n");
+  if (readText(root, relativePath).replaceAll("\r\n", "\n") !== expected) {
+    findings.push(`${relativePath}: must bind locked NumPy ${numpyVersion} to its approved PyPI artifact digest`);
+  }
 }
 
 export function validateReleaseWorkflowObject(
@@ -516,6 +537,10 @@ export function validateRepositoryPolicy(root = defaultRoot) {
     ));
   } catch (error) {
     findings.push(`experiments/workstation/fixture-019/python-environment.lock.json: invalid JSON: ${error.message}`);
+  }
+
+  if (scientificRuntimeLock) {
+    validateScientificRequirements(root, scientificRuntimeLock, findings);
   }
 
   for (const relativePath of workflowFiles) {
