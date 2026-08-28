@@ -59,6 +59,13 @@ function digest(value, label) {
   return value;
 }
 
+function boundedSupervisorDiagnostic(bytes) {
+  const limit = 4_096;
+  const retained = bytes.subarray(0, limit);
+  const suffix = bytes.length > retained.length ? ` (truncated from ${bytes.length} bytes)` : "";
+  return `${JSON.stringify(retained.toString("utf8"))}${suffix}`;
+}
+
 function positive(value, label) {
   if (!Number.isSafeInteger(value) || value < 1) throw new Error(`${label} must be a positive integer.`);
   return value;
@@ -545,7 +552,8 @@ async function launchWindowsSupervisedProcess({
   if (outer.exitCode !== 0 || outer.signal !== null || outer.stderr.length !== 0) {
     throw new Fixture012ProcessAttemptError(
       "WINDOWS_SUPERVISOR_FAILURE",
-      `Windows supervisor failed with exit ${outer.exitCode ?? "null"} and stderr SHA-256 ${shaBuffer(outer.stderr)}.`,
+      `Windows supervisor failed with exit ${outer.exitCode ?? "null"}, signal ${outer.signal ?? "null"}, ` +
+        `stderr SHA-256 ${shaBuffer(outer.stderr)}, and bounded stderr ${boundedSupervisorDiagnostic(outer.stderr)}.`,
     );
   }
   let response;

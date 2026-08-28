@@ -1065,6 +1065,52 @@ test("Windows Job Object supervisor runs the physical adapter with bound QPC tim
   }
 });
 
+test("Windows adapter retains a bounded supervisor stderr diagnostic", async () => {
+  if (process.platform !== "win32") return;
+  const context = await makeContext("windows-supervisor-stderr");
+  try {
+    const configured = await processAdapterConfig(context);
+    await addWindowsJobSupervisor(context, configured);
+    const diagnostic = "fixture-012 supervisor diagnostic sentinel";
+    const harness = path.join(context.parent, "diagnostic supervisor.ps1");
+    const harnessBody = [
+      "$ErrorActionPreference = 'Stop'",
+      "if ($env:FIXTURE012_VERSION -eq '1') {",
+      `  [Console]::Out.Write("${FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION}")`,
+      "  exit 0",
+      "}",
+      `[Console]::Error.Write("${diagnostic}")`,
+      "exit 23",
+      "",
+    ].join("\n");
+    await writeFile(harness, harnessBody, { flag: "wx" });
+    configured.config.windows_job_supervisor.harness_path = relative(harness);
+    configured.config.windows_job_supervisor.harness_sha256 = sha256(harnessBody);
+    configured.config.windows_job_supervisor.version_stdout_sha256 = sha256(
+      FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+    );
+    await writeFile(configured.configPath, `${JSON.stringify(configured.config, null, 2)}\n`);
+    const adapter = await createFixture012ProcessWorkstationAdapter({
+      adapterConfig: configured.config,
+      experimentConfig: context.config,
+      repositoryRoot: root,
+      adapterConfigPath: configured.configPath,
+    });
+    await assert.rejects(
+      () => adapter.prepare({ config: context.config }),
+      (error) => {
+        assert.equal(error.code, "WINDOWS_SUPERVISOR_FAILURE");
+        assert.match(error.message, /exit 23/);
+        assert.match(error.message, /stderr SHA-256 [0-9a-f]{64}/);
+        assert.match(error.message, new RegExp(diagnostic));
+        return true;
+      },
+    );
+  } finally {
+    await cleanup(context);
+  }
+});
+
 test("Windows supervisor assignment-before-resume contains immediate descendants", async () => {
   if (process.platform !== "win32") return;
   const context = await makeContext("windows-descendant-containment");
@@ -1238,6 +1284,41 @@ test("Windows supervisor terminates the Job Object when a guarded directory iden
     assert.equal(response.termination, "windows-job-terminated");
     await new Promise((resolve) => setTimeout(resolve, 5_500));
     assert.equal(await pathExists(marker), false);
+  } finally {
+    await cleanup(context);
+  }
+});
+
+test("Windows supervisor ignores sibling writes beside a guarded directory ancestor", async () => {
+  if (process.platform !== "win32") return;
+  const context = await makeContext("windows-ancestor-sibling-write");
+  try {
+    const configured = await processAdapterConfig(context);
+    const receipt = await addWindowsJobSupervisor(context, configured);
+    const guardedDirectory = path.join(context.parent, "stable guarded cwd");
+    const sibling = path.join(context.parent, "unrelated sibling.txt");
+    await mkdir(guardedDirectory);
+    const responsePromise = invokeSupervisor(receipt, {
+      schema: 1,
+      protocol_version: FIXTURE_012_WINDOWS_JOB_SUPERVISOR_VERSION,
+      executable: process.execPath,
+      executable_sha256: await shaFile(process.execPath),
+      args: ["-e", "setTimeout(() => {}, 750)"],
+      cwd: guardedDirectory,
+      environment: {
+        SYSTEMROOT: process.env.SYSTEMROOT,
+        TEMP: process.env.TEMP,
+        TMP: process.env.TMP,
+      },
+      locked_inputs: [],
+      timeout_ms: 5_000,
+      max_output_bytes: 65_536,
+    });
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    await writeFile(sibling, "unrelated namespace change\n", { flag: "wx" });
+    const response = await responsePromise;
+    assert.equal(response.status, "completed");
+    assert.equal(response.termination, "natural-exit");
   } finally {
     await cleanup(context);
   }

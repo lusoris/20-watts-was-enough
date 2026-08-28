@@ -1062,7 +1062,12 @@ export async function runFixture012WorkstationAcquisition({
       await durableAppend(rawPath, record);
       ledger = { records: [...ledger.records, record], terminal: record.record_sha256, raw: "" };
       await replaceDurable(checkpointPath, checkpointFor(run, ledger.records));
-      if (record.status === "rejected") fail("LAYOUT_REJECTED", `${workUnit.work_unit_id} retained rejection: ${record.failure.code}`);
+      if (record.status === "rejected") {
+        fail(
+          "LAYOUT_REJECTED",
+          `${workUnit.work_unit_id} retained rejection: ${record.failure.code}: ${record.failure.message}`,
+        );
+      }
       added += 1;
     }
     return {

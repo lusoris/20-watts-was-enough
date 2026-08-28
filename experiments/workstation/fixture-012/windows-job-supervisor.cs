@@ -373,6 +373,15 @@ namespace Fixture012.WindowsJobSupervisor
             uint cbJobObjectInfoLength,
             IntPtr lpReturnLength);
 
+        [DllImport("kernel32.dll", SetLastError = true, EntryPoint = "QueryInformationJobObject")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool QueryJobProcessIds(
+            IntPtr hJob,
+            int JobObjectInfoClass,
+            IntPtr lpJobObjectInfo,
+            uint cbJobObjectInfoLength,
+            IntPtr lpReturnLength);
+
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern uint ResumeThread(IntPtr hThread);
 
@@ -441,8 +450,10 @@ namespace Fixture012.WindowsJobSupervisor
             private readonly uint initialFileIndexHigh;
             private readonly uint initialFileIndexLow;
             private readonly long initialUsn;
+            public string GuardedPath { get; }
 
             public PathOplockGuard(
+                string guardedPath,
                 SafeFileHandle handle,
                 IntPtr breakEvent,
                 IntPtr overlapped,
@@ -454,6 +465,7 @@ namespace Fixture012.WindowsJobSupervisor
                 SafeFileHandle? usnHandle,
                 long initialUsn)
             {
+                GuardedPath = guardedPath;
                 this.handle = handle;
                 this.breakEvent = breakEvent;
                 this.overlapped = overlapped;
@@ -473,6 +485,7 @@ namespace Fixture012.WindowsJobSupervisor
             {
                 get
                 {
+                    if (breakEvent == IntPtr.Zero) return false;
                     uint wait = WaitForSingleObject(breakEvent, 0);
                     if (wait == WAIT_OBJECT_0) return true;
                     if (wait == WAIT_TIMEOUT) return false;
@@ -503,13 +516,13 @@ namespace Fixture012.WindowsJobSupervisor
                     (!expectedDirectory && identity.NumberOfLinks != 1) ||
                     (!expectedDirectory && currentUsn != initialUsn))
                 {
-                    throw new InvalidDataException("Guarded path identity changed.");
+                    throw new InvalidDataException("Guarded path identity changed: " + GuardedPath);
                 }
             }
 
             public int RequestCancellation()
             {
-                if (cancellationRequested || handle.IsInvalid || handle.IsClosed) return 0;
+                if (cancellationRequested || breakEvent == IntPtr.Zero || handle.IsInvalid || handle.IsClosed) return 0;
                 cancellationRequested = true;
                 bool cancelled = CancelIoEx(handle, overlapped);
                 if (cancelled) return 0;
@@ -529,7 +542,7 @@ namespace Fixture012.WindowsJobSupervisor
                 usnHandle = null;
                 if (handle.IsInvalid || handle.IsClosed) return;
                 handle.Dispose();
-                if (ioCompleted)
+                if (ioCompleted && breakEvent != IntPtr.Zero)
                 {
                     Marshal.FreeHGlobal(overlapped);
                     Marshal.FreeHGlobal(inputBuffer);
@@ -714,7 +727,7 @@ namespace Fixture012.WindowsJobSupervisor
             }
         }
 
-        private static PathOplockGuard OpenPathOplockGuard(string path, bool directory)
+        private static PathOplockGuard OpenPathOplockGuard(string path, bool directory, bool monitorNamespace = true)
         {
             var security = new SECURITY_ATTRIBUTES
             {
@@ -769,6 +782,25 @@ namespace Fixture012.WindowsJobSupervisor
                     }
                     initialUsn = ReadFileUsn(usnHandle);
                 }
+                if (!monitorNamespace)
+                {
+                    var identityGuard = new PathOplockGuard(
+                        path,
+                        handle,
+                        IntPtr.Zero,
+                        IntPtr.Zero,
+                        IntPtr.Zero,
+                        IntPtr.Zero,
+                        directory,
+                        information,
+                        identity,
+                        usnHandle,
+                        initialUsn);
+                    handle = new SafeFileHandle(IntPtr.Zero, ownsHandle: true);
+                    usnHandle = null;
+                    identityGuard.ValidateAttributes();
+                    return identityGuard;
+                }
                 breakEvent = CreateEventW(IntPtr.Zero, bManualReset: true, bInitialState: false, null);
                 if (breakEvent == IntPtr.Zero) throw new IOException("CreateEventW(path-oplock) failed with Win32 error " + Marshal.GetLastWin32Error() + ".");
                 var state = new OVERLAPPED { hEvent = breakEvent };
@@ -803,6 +835,7 @@ namespace Fixture012.WindowsJobSupervisor
                     throw new InvalidDataException("Path R oplock was not granted; Win32 result " + error + ".");
                 }
                 var guard = new PathOplockGuard(
+                    path,
                     handle,
                     breakEvent,
                     overlapped,
@@ -838,15 +871,13 @@ namespace Fixture012.WindowsJobSupervisor
             }
         }
 
-        private static bool AnyPathGuardBroken(IEnumerable<PathOplockGuard> guards)
-        {
-            return guards.Any(guard => guard.Broken);
-        }
-
         private static void ValidatePathGuards(IEnumerable<PathOplockGuard> guards)
         {
-            foreach (PathOplockGuard guard in guards) guard.ValidateAttributes();
-            if (AnyPathGuardBroken(guards)) throw new InvalidDataException("A guarded path identity changed.");
+            foreach (PathOplockGuard guard in guards)
+            {
+                guard.ValidateAttributes();
+                if (guard.Broken) throw new InvalidDataException("Guarded path namespace changed: " + guard.GuardedPath);
+            }
         }
 
         private static bool PathIdentityIntact(IEnumerable<PathOplockGuard> guards)
@@ -903,7 +934,8 @@ namespace Fixture012.WindowsJobSupervisor
             string fullPath,
             bool includeLeaf,
             List<PathOplockGuard> guards,
-            HashSet<string> guardedPaths)
+            HashSet<string> guardedPaths,
+            HashSet<string> namespaceGuardedPaths)
         {
             string root = Path.GetPathRoot(fullPath)!;
             var components = fullPath.Substring(root.Length)
@@ -912,15 +944,30 @@ namespace Fixture012.WindowsJobSupervisor
             string current = root;
             if (guardedPaths.Add(current))
             {
-                guards.Add(OpenPathOplockGuard(current, directory: true));
+                // Holding the ancestor without delete sharing prevents its
+                // rename or replacement. A directory R oplock here would also
+                // report unrelated sibling creation anywhere below a shared
+                // root (including C:\), producing false identity breaks.
+                guards.Add(OpenPathOplockGuard(current, directory: true, monitorNamespace: false));
                 ValidatePathGuards(guards);
             }
             for (int index = 0; index < count; index += 1)
             {
                 current = Path.Combine(current, components[index]);
-                if (!guardedPaths.Add(current)) continue;
-                guards.Add(OpenPathOplockGuard(current, directory: true));
-                ValidatePathGuards(guards);
+                bool monitorNamespace = index == count - 1;
+                if (guardedPaths.Add(current))
+                {
+                    guards.Add(OpenPathOplockGuard(current, directory: true, monitorNamespace));
+                    if (monitorNamespace) namespaceGuardedPaths.Add(current);
+                    ValidatePathGuards(guards);
+                }
+                else if (monitorNamespace && namespaceGuardedPaths.Add(current))
+                {
+                    // A path first encountered as an ancestor still needs an
+                    // oplock when a later guarded path makes it the leaf.
+                    guards.Add(OpenPathOplockGuard(current, directory: true));
+                    ValidatePathGuards(guards);
+                }
             }
         }
 
@@ -928,10 +975,11 @@ namespace Fixture012.WindowsJobSupervisor
             string path,
             List<PathOplockGuard> guards,
             HashSet<string> guardedDirectoryPaths,
+            HashSet<string> namespaceGuardedDirectoryPaths,
             HashSet<string> guardedFilePaths)
         {
             string full = LocalPath(path, "Guarded file");
-            GuardDirectoryComponents(full, includeLeaf: false, guards, guardedDirectoryPaths);
+            GuardDirectoryComponents(full, includeLeaf: false, guards, guardedDirectoryPaths, namespaceGuardedDirectoryPaths);
             if (guardedFilePaths.Add(full))
             {
                 guards.Add(OpenPathOplockGuard(full, directory: false));
@@ -1055,6 +1103,37 @@ namespace Fixture012.WindowsJobSupervisor
             return accounting.ActiveProcesses;
         }
 
+        private static bool JobHasProcessOtherThan(IntPtr job, uint leaderProcessId)
+        {
+            const int capacity = 1024;
+            int headerBytes = sizeof(uint) * 2;
+            int bufferBytes = headerBytes + (capacity * IntPtr.Size);
+            IntPtr buffer = Marshal.AllocHGlobal(bufferBytes);
+            try
+            {
+                for (int offset = 0; offset < bufferBytes; offset += 1) Marshal.WriteByte(buffer, offset, 0);
+                Require(QueryJobProcessIds(job, 3, buffer, (uint)bufferBytes, IntPtr.Zero), "QueryInformationJobObject(process-id-list)");
+                uint assigned = unchecked((uint)Marshal.ReadInt32(buffer, 0));
+                uint listed = unchecked((uint)Marshal.ReadInt32(buffer, sizeof(uint)));
+                if (assigned > capacity || listed > capacity || listed > assigned)
+                {
+                    throw new InvalidOperationException("Job Object process-id list exceeded its bounded capacity.");
+                }
+                for (int index = 0; index < listed; index += 1)
+                {
+                    long processId = IntPtr.Size == 8
+                        ? Marshal.ReadInt64(buffer, headerBytes + (index * IntPtr.Size))
+                        : Marshal.ReadInt32(buffer, headerBytes + (index * IntPtr.Size));
+                    if (processId != leaderProcessId) return true;
+                }
+                return false;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(buffer);
+            }
+        }
+
         private static IntPtr EnvironmentBlock(Dictionary<string, string> environment)
         {
             if (environment.Keys.Any(key => string.IsNullOrWhiteSpace(key) || key.Contains('=') || key.Contains('\0'))) throw new InvalidDataException("Environment key is invalid.");
@@ -1096,6 +1175,7 @@ namespace Fixture012.WindowsJobSupervisor
             var lockedInputStreams = new List<FileStream>();
             var pathGuards = new List<PathOplockGuard>();
             var guardedDirectoryPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var namespaceGuardedDirectoryPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             var guardedFilePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             PROCESS_INFORMATION process = new PROCESS_INFORMATION();
             Task<byte[]>? stdoutTask = null;
@@ -1126,11 +1206,11 @@ namespace Fixture012.WindowsJobSupervisor
                 stdinNull = CreateFileW("NUL", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, ref security, OPEN_EXISTING, 0, IntPtr.Zero);
                 if (stdinNull == new IntPtr(-1)) throw new InvalidOperationException("CreateFile(NUL) failed with Win32 error " + Marshal.GetLastWin32Error() + ".");
 
-                GuardDirectoryComponents(cwd, includeLeaf: true, pathGuards, guardedDirectoryPaths);
+                GuardDirectoryComponents(cwd, includeLeaf: true, pathGuards, guardedDirectoryPaths, namespaceGuardedDirectoryPaths);
 
                 foreach (LockedInput input in request.locked_inputs)
                 {
-                    var stream = OpenGuardedFile(input.path, pathGuards, guardedDirectoryPaths, guardedFilePaths);
+                    var stream = OpenGuardedFile(input.path, pathGuards, guardedDirectoryPaths, namespaceGuardedDirectoryPaths, guardedFilePaths);
                     if (!string.Equals(Sha256Hex(stream), input.sha256, StringComparison.Ordinal))
                     {
                         stream.Dispose();
@@ -1139,7 +1219,7 @@ namespace Fixture012.WindowsJobSupervisor
                     lockedInputStreams.Add(stream);
                 }
 
-                using var executableLock = OpenGuardedFile(executable, pathGuards, guardedDirectoryPaths, guardedFilePaths);
+                using var executableLock = OpenGuardedFile(executable, pathGuards, guardedDirectoryPaths, namespaceGuardedDirectoryPaths, guardedFilePaths);
                 string actualExecutableSha256 = Sha256Hex(executableLock);
                 if (!string.Equals(actualExecutableSha256, request.executable_sha256, StringComparison.Ordinal)) throw new InvalidDataException("Target executable content identity mismatch inside supervisor.");
 
@@ -1280,7 +1360,10 @@ namespace Fixture012.WindowsJobSupervisor
                 CloseHandle(process.hProcess);
                 process.hProcess = IntPtr.Zero;
 
-                if (status == "completed" && ActiveJobProcesses(job) > 0)
+                // Job accounting may retain the already-signalled leader for
+                // a short interval. Classify a leak from the process-id list,
+                // not the lagging aggregate active-process count.
+                if (status == "completed" && JobHasProcessOtherThan(job, process.dwProcessId))
                 {
                     status = "descendant-survived";
                     termination = "windows-job-terminated";

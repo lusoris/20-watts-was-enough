@@ -17,6 +17,20 @@ const ACTIONS = new Set([
   "candidate-010-confirmation",
   "candidate-010-promotion-evidence",
 ]);
+export const CAPSULE_CHILD_DEADLINE_MS_BY_ACTION = Object.freeze({
+  "verified-handshake": 10_000,
+  "candidate-010-confirmation": 120_000,
+  "candidate-010-promotion-evidence": 120_000,
+});
+
+function resolveChildDeadline(action, override) {
+  const value = override ?? CAPSULE_CHILD_DEADLINE_MS_BY_ACTION[action];
+  if (!Number.isSafeInteger(value) || value < 1 || value > 300000) {
+    refuse("invalid child timeout");
+  }
+  return value;
+}
+
 const ENV = new Map([
   ["SYSTEMROOT", "SYSTEMROOT"],
   ["WINDIR", "WINDIR"],
@@ -385,7 +399,7 @@ export async function launchVerifiedCapsuleAction({
   requestParent = os.tmpdir(),
   environmentInherited = process.env,
   environmentOverrides = {},
-  timeoutMs = 10_000,
+  timeoutMs = null,
   maxOutputBytes = 64 * 1024,
 } = {}) {
   if (!ACTIONS.has(action)) refuse("unknown action");
@@ -398,9 +412,7 @@ export async function launchVerifiedCapsuleAction({
   if (action === "candidate-010-promotion-evidence" && (!promotionRequest || !expectedSourceBundle)) {
     refuse("promotion evidence requires request and expected source bundle");
   }
-  if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 300000) {
-    refuse("invalid child timeout");
-  }
+  const childDeadlineMs = resolveChildDeadline(action, timeoutMs);
   if (
     !Number.isSafeInteger(maxOutputBytes)
     || maxOutputBytes < 1024
@@ -522,7 +534,7 @@ export async function launchVerifiedCapsuleAction({
       requestPath,
       runtime.exec_path,
       sanitizedEnvironment,
-      timeoutMs,
+      childDeadlineMs,
       maxOutputBytes,
     );
     parentChildProcessElapsedMs = performance.now() - launchStarted;

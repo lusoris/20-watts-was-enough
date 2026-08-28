@@ -14,6 +14,7 @@ import path from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
 import {
+  CAPSULE_CHILD_DEADLINE_MS_BY_ACTION,
   CAPSULE_CHILD_RELATIVE_PATH,
   CAPSULE_CONFIRMATION_ENTRY_RELATIVE_PATH,
   CAPSULE_PROMOTION_ENTRY_RELATIVE_PATH,
@@ -32,6 +33,15 @@ const openedFilePath = `${candidate}/opened-file.mjs`;
 const sharedChild = path.resolve(candidate, "capsule-child.mjs");
 const sharedEntry = path.resolve(candidate, "capsule-confirmation-entry.mjs");
 const sharedOpenedFile = path.resolve(candidate, "opened-file.mjs");
+
+test("capsule defaults separate handshake and bounded work deadlines", () => {
+  assert.deepEqual(CAPSULE_CHILD_DEADLINE_MS_BY_ACTION, {
+    "verified-handshake": 10_000,
+    "candidate-010-confirmation": 120_000,
+    "candidate-010-promotion-evidence": 120_000,
+  });
+});
+
 async function git(root, ...args) {
   return execFileAsync("git", ["-C", root, ...args], { windowsHide: true });
 }
