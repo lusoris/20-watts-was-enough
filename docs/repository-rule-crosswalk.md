@@ -61,6 +61,8 @@ and integrated rather than replaced.
 | MkDocs workflow | **not applicable** | the existing Vite Pages portal and book are the maintained renderers |
 | Auto-assignment and stale bots | **not adopted** | no value with one maintainer and long-running evidence work |
 | US frameworks as normative defaults | **rejected** | EU/Germany applicability remains controlling; foreign material is comparative unless applicable |
+| Generated-sounding prose conventions | **replaced with a project-local skill and narrow tripwire** | `.agents/skills/research-writing/`, `npm run check:prose` |
+| University-specific research codes | **deduplicated by source authority and recurring control** | [`research/research-integrity-baseline.md`](../research/research-integrity-baseline.md); ALLEA/EU/DFG govern their actual scopes, institutional policies remain implementation examples |
 
 ## Enforcement now
 
@@ -75,6 +77,8 @@ The repository now treats the following as executable gates:
 - documentation links, source-publication boundaries, evidence coverage,
   taxonomies, mathematics, workstation contracts, readiness, site builds, and
   PDF freshness;
+- required research-integrity and writing-policy surfaces plus the
+  canonical-Markdown prose tripwire;
 - high-severity dependency advisories in CI;
 - CodeQL analysis plus a non-blocking supply-chain posture audit; and
 - exact-version tagged release packaging with deterministic assets, checksums,

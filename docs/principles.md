@@ -154,6 +154,55 @@ Similar-looking outcomes with different causal mechanisms are not deduplicated.
 - The strongest conventional engineering baseline is named before a
   bio-inspired candidate can earn an advantage claim.
 
+### 3.6 Research conduct and disclosure
+
+The [`research integrity baseline`](../research/research-integrity-baseline.md)
+deduplicates the ALLEA, EU, DFG, and institutional controls adopted by this
+project. Its authority hierarchy and trigger conditions are part of this
+contract.
+
+- Claim-eligible outputs identify contributors and roles, accountable approval,
+  funding and material support, competing interests, and material use of AI,
+  automated tools, or external services.
+- Authorship follows substantial contribution, review, approval, and
+  accountability. Funding, access, execution, tool use, seniority, or status
+  alone do not create authorship.
+- Research objects receive an explicit custodian, access class, provenance,
+  reuse basis, preservation period, deletion rule, and the metadata and
+  dependencies needed to interpret them. Access is as open as possible and as
+  closed as necessary.
+- Joint work agrees roles, applicable rules, data and material custody,
+  licensing, publication, credit, conflicts, departures, and integrity handling
+  before the collaboration creates authority-bearing material.
+- Accepted funds, donated compute, equipment, data access, and external services
+  are disclosed and included in comparison boundaries where they affect the
+  result.
+
+### 3.7 Ethics, correction, and review
+
+- Work involving people, personal data, animals, biological or cultural
+  material, environmental or physical intervention, safety-critical use,
+  surveillance, dual use, military or violent application, export controls, or
+  comparable harm receives a recorded pre-start screen. Any required competent
+  approval must precede collection or execution.
+- Foreseeable harm, misuse, rights, safety, environmental effects, and
+  less-invasive alternatives remain part of research design rather than a
+  publication-only check.
+- Corrections preserve history, identify every affected authority surface that
+  can reasonably be found, state the consequence, and mark invalid artifacts
+  as withdrawn or superseded. They are not hidden in a later prose rewrite.
+- Formal reviewers disclose conflicts and expertise limits, protect non-public
+  material, do not appropriate reviewed work, justify their conclusions, and
+  disclose material AI or external-service use. Maintainer review is never
+  labelled independent review.
+- Confidential integrity allegations are not posted in public issues. Handling
+  protects good-faith reporting and respondent rights, uses a conflict-free
+  investigator, preserves evidence, and does not claim independence when no
+  suitable person or channel exists.
+- Training, supervision, responsible assessment, and financial stewardship
+  controls become mandatory before the project takes on the corresponding
+  people, evaluation, or funding role.
+
 ## 4. Experiment and reproducibility contract
 
 ### 4.1 Frozen authority boundary
@@ -265,10 +314,18 @@ Before merging, answer all applicable questions with evidence:
 - Is this the smallest coherent authority change?
 - Are observation, translation, and hypothesis still distinguishable?
 - Are claim and principle identities stable and reciprocal?
+- Are contributors, support, competing interests, and material external or AI
+  tool use disclosed at the authority this output claims?
+- Does each claim-eligible research object have custody, access, retention,
+  reuse, and disposal rules?
+- Did every triggered ethics, rights, safety, or misuse review occur before the
+  affected work began?
 - Is every loop, retry, subprocess, search, and artifact bounded?
 - Are units, random sources, schemas, errors, and external inputs explicit?
 - Does the strongest conventional null remain in scope?
 - Are generated artifacts reproducible and current?
+- Are corrections, withdrawals, formal review, and collaboration duties handled
+  under the research-integrity baseline?
 - Is third-party provenance and licensing preserved?
 - Do the targeted checks and the aggregate gate pass?
 - Does the changelog or a new decision record explain the durable change?

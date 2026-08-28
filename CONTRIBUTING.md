@@ -89,6 +89,31 @@ Foreign law, standards, and regulator guidance remain valid comparative or
 technical research inputs. They are not German or EU compliance requirements
 without an explicit applicability hook.
 
+## Research-integrity workflow
+
+Follow the deduplicated
+[`research integrity baseline`](research/research-integrity-baseline.md). For a
+claim-eligible output, formal report, dataset, or tagged research snapshot,
+record contributor roles and accountable approval, funding and material
+support, competing interests, and material use of AI, automation, or external
+services. Describe the human verification actually performed; do not replace a
+disclosure with a generic statement that tools were used.
+
+Before affected work begins, complete the baseline's trigger screen for people,
+personal data, animals, biological or cultural material, physical or
+environmental intervention, safety-critical use, surveillance, dual use,
+military or violent use, export controls, or other credible harm. Obtain any
+required competent approval before collection or execution. Claim-eligible
+research objects also need a named custodian, access and reuse basis, metadata,
+preservation period, and disposal or withdrawal rule.
+
+Joint work that crosses an ordinary pull-request boundary needs a collaboration
+agreement covering roles, applicable rules, custody, licensing, publication,
+credit, conflicts, departures, and integrity handling. Formal reviewers follow
+the confidentiality, recusal, non-appropriation, reason-giving, and tool-
+disclosure rules in the baseline. Maintainer review is not described as
+independent review.
+
 ## Licensing and provenance
 
 Read [`LICENSING.md`](LICENSING.md) before contributing. Project-authored

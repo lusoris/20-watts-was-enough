@@ -16,6 +16,23 @@ an evidence status is wrong, provenance is incomplete, or units, derivation,
 uncertainty, or system boundary are incorrect. Give stable `C-` IDs and primary
 sources where possible. Do not paste third-party papers.
 
+### Research-integrity concern
+
+Use the evidence-correction route for an impersonal error in a claim, method,
+source, contributor record, disclosure, or research artifact. Do not place an
+allegation about a person, confidential record, personal data, or information
+that could enable retaliation in a public issue. If no suitable confidential
+channel is available, notify [`@lusoris`](https://github.com/lusoris) only that
+one is required and include no details publicly.
+
+Handling follows the
+[`research integrity baseline`](research/research-integrity-baseline.md). The
+project currently has one maintainer and no standing independent investigator;
+it therefore does not claim independent adjudication. A matter involving the
+maintainer requires a qualified, conflict-free external person before the
+project can reach such an outcome. Use the private vulnerability route only
+when the report also contains a security vulnerability or exploitable detail.
+
 ### Scientific disagreement or mechanism proposal
 
 If the disagreement identifies an error in an existing claim, use the evidence

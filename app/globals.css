@@ -1445,6 +1445,100 @@ button {
   color: #fff;
 }
 
+.language-access {
+  position: relative;
+  flex: 0 0 auto;
+  color: #f8fff9;
+}
+
+.language-access > summary {
+  padding: 9px 12px;
+  border: 1px solid #668174;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.045em;
+  list-style-position: inside;
+  text-transform: uppercase;
+}
+
+.language-access[open] > summary,
+.language-access > summary:hover {
+  border-color: #24d17e;
+  color: #fff;
+}
+
+.language-access-panel {
+  position: absolute;
+  z-index: 70;
+  top: calc(100% + 10px);
+  right: 0;
+  display: grid;
+  width: min(330px, calc(100vw - 32px));
+  gap: 10px;
+  padding: 16px;
+  border: 2px solid #345144;
+  background: #07140f;
+  box-shadow: 0 18px 44px rgb(0 0 0 / 28%);
+}
+
+.language-access-panel label {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.language-access-panel select,
+.language-access-panel a {
+  min-height: 42px;
+  border: 1px solid #668174;
+  border-radius: 3px;
+  font: inherit;
+}
+
+.language-access-panel select {
+  padding: 0 10px;
+  background: #fffef8;
+  color: #10271b;
+}
+
+.language-access-panel a {
+  display: grid;
+  place-items: center;
+  padding: 8px 12px;
+  background: #24d17e;
+  color: #06150e;
+  font-weight: 850;
+  text-align: center;
+  text-decoration: none;
+}
+
+.language-access-current,
+.language-access-panel small {
+  color: #c6d5cc;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.book-actions .language-access > summary {
+  border-color: #9eb2a7;
+}
+
+.book-actions .language-access-panel {
+  top: calc(100% + 6px);
+  color: #f8fff9;
+}
+
+@media screen and (max-width: 460px) {
+  .portal-header {
+    gap: 8px;
+  }
+
+  .portal-wordmark strong {
+    display: none;
+  }
+}
+
 .portal-hero {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.55fr);
@@ -4563,7 +4657,7 @@ button {
 
   @bottom-center {
     color: #52635a;
-    content: "20 Watts Was Enough  ·  " counter(page);
+    content: "20W  ·  " counter(page);
     font-family: "Cascadia Mono", Consolas, monospace;
     font-size: 7pt;
   }

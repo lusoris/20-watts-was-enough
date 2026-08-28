@@ -13,6 +13,7 @@ import type { ResearchDocument } from "../content";
 import { outlineFromMarkdown } from "../lib/heading-outline";
 import { synchronizePortalSeo } from "../lib/portal-seo";
 import { readinessSummary } from "../lib/readiness";
+import { LanguageAccess } from "./language-access";
 import {
   decodePortalFragment,
   loadPortalDocument,
@@ -422,6 +423,7 @@ export function PublicResearchPortal({
           GitHub <span aria-hidden="true">↗</span>
         </a>
       </nav>
+      <LanguageAccess />
       <details className="portal-mobile-menu" ref={mobileMenuRef}>
         <summary>Menu</summary>
         <nav aria-label="Mobile navigation">

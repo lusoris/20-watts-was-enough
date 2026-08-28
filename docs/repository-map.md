@@ -44,6 +44,8 @@ chapters.
 | [Domain inventory](../research/domain-inventory.md) | Audited, partial, and queued domains |
 | [Adoption matrix](../research/adoption-matrix.md) | Mechanisms to use, test, explore, or watch |
 | [Normative baseline](../research/normative-baseline.md) | EU/German applicability and source-role rules |
+| [Research integrity baseline](../research/research-integrity-baseline.md) | Deduplicated ALLEA, EU, DFG, and institutional rules for conduct, disclosure, stewardship, ethics, correction, and review |
+| [Research-output disclosures](../research/disclosures/README.md) | Contributor roles, support, competing interests, material tools, accountable approval, and verification for tagged snapshots |
 | [Open questions](../research/open-questions.md) | Unresolved research and architecture decisions |
 
 ## Mathematics, figures, and experiments
@@ -73,6 +75,9 @@ chapters.
   policy, licensing, and publication choices append-only.
 - [Engineering and research contract](principles.md) defines repository-wide
   scientific, software, experiment, and release rules.
+- [Research-writing skill](../.agents/skills/research-writing/SKILL.md) governs
+  natural, evidence-aware project prose; its automated audit is intentionally a
+  narrow canonical-Markdown tripwire.
 - [GitHub Pages portal](https://www.cordana.dev/) provides the web-native
   research surface; the [HTML book](https://www.cordana.dev/book/) and
   [downloadable PDF](https://www.cordana.dev/downloads/20-watts-was-enough-full-concept-book.pdf)

@@ -22,6 +22,9 @@ The maintainer is responsible for:
   development artifacts, confirmation evidence, and results;
 - reviewing claim and principle changes, evidence-status promotion, protocol
   versions, and experiment authority against their registered contracts;
+- recording contributor roles, support, competing interests, material tool use,
+  triggered ethics or misuse review, and research-object stewardship under the
+  [`research integrity baseline`](research/research-integrity-baseline.md);
 - keeping generated sites, the downloadable PDF and manifest, licences, and
   third-party notices tied to the canonical source state;
 - handling vulnerability reports without exposing confidential details;

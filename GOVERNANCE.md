@@ -30,6 +30,20 @@ presentation changes through the routes in [`SUPPORT.md`](SUPPORT.md) and
 being merged: its claim status and experimental meaning remain limited by the
 records and evidence attached to it.
 
+Contributor credit, funding and material support, competing interests, and
+material AI or external-service use follow the
+[`research integrity baseline`](research/research-integrity-baseline.md).
+Formal reviewers disclose conflicts and expertise limits, protect non-public
+material, give reviewable reasons, and do not appropriate work seen in review.
+Review by the sole maintainer is never represented as independent review.
+
+Research-integrity concerns receive the confidentiality, good-faith reporter
+protection, respondent notice, conflict-free handling, evidence preservation,
+and correction rights defined in that baseline. The repository does not claim
+an independent investigation capacity while it lacks an independent person and
+confidential channel. Public evidence corrections remain welcome; allegations
+about people and confidential records must not be posted publicly.
+
 ## Claims, principles, and evidence status
 
 The following changes require explicit traceability:

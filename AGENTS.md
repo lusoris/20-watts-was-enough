@@ -4,6 +4,10 @@ Read [`docs/principles.md`](docs/principles.md) before changing this repository.
 It is the project-wide engineering and research contract. Then read the nearest
 nested `AGENTS.md` for the files in scope.
 
+Before drafting or revising project-authored explanatory prose, read and apply
+the project-local [`research-writing` skill](.agents/skills/research-writing/SKILL.md).
+It does not apply to imported sources or verbatim quotations.
+
 ## Hard rules
 
 1. Git `main` is canonical. Do not synchronize or regenerate the concept from a
@@ -29,6 +33,14 @@ nested `AGENTS.md` for the files in scope.
     default. Do not infer compliance from a standard title or a checklist.
 12. Use pinned dependencies and full commit SHAs for GitHub Actions. Do not
     claim a GitHub setting is active without verifying it remotely.
+13. Project-authored prose must carry information rather than generated-sounding
+    filler. Run `npm run check:prose` after changing canonical Markdown. Prose
+    embedded in site code remains review-gated; the automated tripwire does not
+    attempt brittle JSX or HTML extraction.
+14. Apply [`research/research-integrity-baseline.md`](research/research-integrity-baseline.md)
+    at every triggered research boundary. Disclose contributors, support,
+    competing interests, and material AI or external-tool use; complete any
+    required ethics or misuse review before the affected work begins.
 
 ## Repository map
 
@@ -39,6 +51,8 @@ nested `AGENTS.md` for the files in scope.
 | `research/principle-registry.md` | Deduplicated cross-domain causal invariants |
 | `research/references.bib` | Bibliographic identities and primary-source locators |
 | `research/audits/` | Field- and mechanism-level evidence audits |
+| `research/research-integrity-baseline.md` | Deduplicated European research-conduct, disclosure, ethics, correction, and review rules |
+| `research/disclosures/` | Per-output contributors, support, competing interests, material tools, approval, and verification records |
 | `math/` | Notation, derivations, units, and testable models |
 | `experiments/candidates/` | Architecture-candidate comparison contracts |
 | `experiments/fixtures/` | Candidate-independent stress and falsification fixtures |

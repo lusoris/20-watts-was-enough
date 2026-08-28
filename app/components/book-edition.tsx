@@ -10,6 +10,7 @@ import {
 } from "../lib/book-release-identity.mjs";
 import { isRepositoryArtifact, repositoryArtifactHref } from "../lib/repository-artifacts";
 import { MarkdownDocument } from "./markdown-document";
+import { LanguageAccess } from "./language-access";
 import { ReadinessOverview } from "./readiness-overview";
 
 const appendixPaths = ["research/field-coverage.md"];
@@ -180,7 +181,7 @@ export function BookEdition({
         </a>
         <button type="button" onClick={() => window.print()}>
           Print this edition
-        </button>
+        </button>{!isPublicPdf && <LanguageAccess />}
       </nav>
 
       <header className="book-cover">

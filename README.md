@@ -37,6 +37,10 @@ architecture proposals, falsifiable experiments, and explicit failure rules.
 | Inspect proposed tests | [Experiment coverage](experiments/test-coverage.md) |
 | Find a specific area | [Repository map](docs/repository-map.md) |
 
+The portal and web book offer an explicit automatic-translation handoff for all
+24 official EU languages. English remains the reviewed canonical text; no
+machine translation is written back into the repository.
+
 ## Central thesis
 
 Useful adaptive intelligence may require much less active computation and data
@@ -73,6 +77,11 @@ standards, and conformity statements remain qualified by jurisdiction, role,
 version, applicability, and date under the
 [normative baseline](research/normative-baseline.md).
 
+Scientific conduct follows the
+[research integrity baseline](research/research-integrity-baseline.md), which
+deduplicates the recurring ALLEA, EU, DFG, and large European university rules
+for disclosure, stewardship, ethics, correction, and review.
+
 ## How the repository works
 
 ```text
@@ -105,6 +114,9 @@ project.
 
 Read [`AGENTS.md`](AGENTS.md) and the
 [engineering and research contract](docs/principles.md) before editing. The
+[research-writing skill](.agents/skills/research-writing/SKILL.md) keeps project
+prose direct and evidence-aware, with a deliberately narrow automated check for
+high-confidence generated filler. The
 [repository-rule crosswalk](docs/repository-rule-crosswalk.md) explains which
 conventions from the maintainer's other projects were adopted, adapted,
 staged, or rejected here.

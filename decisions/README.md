@@ -36,3 +36,5 @@ than silently changing its outcome.
 | [0028](0028-establish-first-public-release-baseline.md) | Establish the first public release baseline at v0.2.0 | accepted |
 | [0029](0029-bind-pages-to-the-custom-domain-root.md) | Bind GitHub Pages to the custom-domain root | accepted |
 | [0030](0030-publish-each-research-document-at-a-canonical-route.md) | Publish each research document at a canonical route | accepted |
+| [0031](0031-provide-eu-language-access-without-translation-copies.md) | Provide EU language access without translation copies | accepted |
+| [0032](0032-adopt-a-deduplicated-european-research-integrity-baseline.md) | Adopt a deduplicated European research-integrity baseline | accepted |

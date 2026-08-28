@@ -8,6 +8,7 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const defaultRoot = path.resolve(scriptDirectory, "..");
 
 const requiredFiles = [
+  ".agents/skills/research-writing/SKILL.md",
   ".editorconfig",
   ".gitleaks.toml",
   ".github/AGENTS.md",
@@ -44,11 +45,16 @@ const requiredFiles = [
   "experiments/workstation/AGENTS.md",
   "experiments/workstation/fixture-019/python-environment.lock.json",
   "research/AGENTS.md",
+  "research/disclosures/README.md",
+  "research/disclosures/v0.2.0.md",
+  "research/research-integrity-baseline.md",
   "renovate.json",
   "requirements-ci.txt",
   "scripts/AGENTS.md",
   "scripts/audit-code-shape.mjs",
   "scripts/audit-code-shape.test.mjs",
+  "scripts/audit-prose-style.mjs",
+  "scripts/audit-prose-style.test.mjs",
   "scripts/code-shape-baseline.json",
 ];
 
@@ -390,7 +396,9 @@ function validatePackage(root, findings) {
   for (const script of [
     "check",
     "check:code-shape",
+    "check:prose",
     "test:code-shape",
+    "test:prose",
     "test:release",
     "typecheck",
     "validate:policy",
@@ -437,6 +445,8 @@ function validatePrinciples(root, findings) {
 
   for (const heading of [
     "Scientific integrity contract",
+    "Research conduct and disclosure",
+    "Ethics, correction, and review",
     "Experiment and reproducibility contract",
     "Software and supply-chain contract",
     "Repository and release contract",

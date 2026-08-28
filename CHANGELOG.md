@@ -9,7 +9,48 @@ No unreleased changes.
 
 ## [0.2.0] - 2026-08-28
 
+### Added
+
+- The portal and web book now offer an explicit automatic-translation handoff
+  for all 24 official EU languages while retaining one reviewed English source
+  corpus, canonical route set, and PDF. Translation starts only after a reader
+  follows the labelled Google Translate link; no translator script, silent
+  redirect, copied translation corpus, or unreviewed `hreflang` surface was
+  added.
+- A project-local research-writing skill now guides direct, natural,
+  evidence-aware prose. A tested canonical-Markdown tripwire catches a narrow
+  set of high-confidence generated filler while protecting quotations and code
+  and allowing only reasoned, line-local suppressions.
+- A deduplicated research-integrity baseline now derives project rules from
+  ALLEA, EU, and DFG authority and compares their implementation across major
+  German, British, Swiss, and French research institutions. It closes policy
+  gaps for contributor credit, funding and conflicts, material AI and external
+  services, research-object stewardship, pre-start ethics and misuse review,
+  collaboration, correction, formal review, and confidential concerns without
+  claiming that foreign institutional rules automatically apply.
+
 ### Changed
+
+- Repository discovery metadata now uses 20 focused topics spanning biological
+  inspiration, sensing, memory, sparse and conditional computation, continual
+  learning, causal inference, embodiment, energy, and the EU AI Act instead of
+  a short generic topic list.
+
+- Candidate 010 now separates its 10-second verified-handshake deadline from
+  the bounded 120-second confirmation and promotion actions. The previous
+  shared default reproducibly terminated a valid capsule child before the real
+  action completed on both Linux CI and Windows.
+
+- Fixture 012 now guards shared ancestor directories with stable identity
+  handles while reserving namespace oplocks for the guarded leaves. Unrelated
+  writes beside broad ancestors such as `C:\` no longer create false path-
+  identity failures, and descendant detection excludes the already-signalled
+  leader from the bounded Job process-ID list. Supervisor failures also retain
+  a bounded escaped stderr diagnostic alongside its digest.
+
+- The generated book uses a compact `20W · page` footer that remains visible on
+  sparsely filled and final pages; the longer title was intermittently clipped
+  by the paged-media margin box.
 
 - The public corpus now has 49 clean document routes with static fallback
   content, unique canonical and social metadata, truthful JSON-LD, crawlable
