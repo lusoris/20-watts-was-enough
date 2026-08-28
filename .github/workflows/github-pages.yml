@@ -38,7 +38,7 @@ jobs:
         run: npm run prepare:reader-artifacts
       - name: Verify the downloadable book is current
         run: npm run validate:book-pdf
-      - name: Build the static full-book edition
+      - name: Build the public portal and full-book route
         run: npm run build:github-pages
       - name: Validate the Pages artifact
         run: npm run validate:github-pages

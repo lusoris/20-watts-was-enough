@@ -14,21 +14,33 @@ async function source(relative) {
   return readFile(path.join(repositoryRoot, relative), "utf8");
 }
 
-test("the Pages entry is a dedicated static book with a project-relative base", async () => {
-  const [config, entry, html] = await Promise.all([
+test("Pages builds a portal root and dedicated book route with a project-relative base", async () => {
+  const [config, portalEntry, portalHtml, bookEntry, bookHtml] = await Promise.all([
     source("vite.pages.config.ts"),
     source("github-pages/main.tsx"),
     source("github-pages/index.html"),
+    source("github-pages/book.tsx"),
+    source("github-pages/book/index.html"),
   ]);
 
   assert.match(config, /base:\s*["']\/20-watts-was-enough\/["']/);
   assert.match(config, /root:\s*path\.join\(repositoryRoot,\s*["']github-pages["']\)/);
   assert.match(config, /publicDir:\s*path\.join\(repositoryRoot,\s*["']public["']\)/);
-  assert.match(entry, /<BookEdition/);
-  assert.match(entry, /surface=["']github-pages["']/);
-  assert.match(entry, /assetBasePath=\{import\.meta\.env\.BASE_URL\}/);
-  assert.match(html, /<div id=["']root["']><\/div>/);
-  assert.doesNotMatch(entry, /vinext|next\/headers|next\/server/);
+  assert.match(config, /input:\s*\{/);
+  assert.match(config, /portal:\s*path\.join\(repositoryRoot,\s*["']github-pages["'],\s*["']index\.html["']\)/);
+  assert.match(config, /book:\s*path\.join\(repositoryRoot,\s*["']github-pages["'],\s*["']book["'],\s*["']index\.html["']\)/);
+
+  assert.match(portalHtml, /<div id=["']root["']><\/div>/);
+  assert.match(portalHtml, /src=["']\/main\.tsx["']/);
+  assert.doesNotMatch(portalEntry, /vinext|next\/headers|next\/server/);
+
+  assert.match(bookEntry, /<BookEdition/);
+  assert.match(bookEntry, /surface=["']github-pages["']/);
+  assert.match(bookEntry, /assetBasePath=\{import\.meta\.env\.BASE_URL\}/);
+  assert.match(bookHtml, /<div id=["']root["']><\/div>/);
+  assert.match(bookHtml, /src=["']\.\.\/book\.tsx["']/);
+  assert.match(bookHtml, /https:\/\/lusoris\.github\.io\/20-watts-was-enough\/book\//);
+  assert.doesNotMatch(bookEntry, /vinext|next\/headers|next\/server/);
 });
 
 test("the workflow uses GitHub's Pages artifact and deployment actions", async () => {

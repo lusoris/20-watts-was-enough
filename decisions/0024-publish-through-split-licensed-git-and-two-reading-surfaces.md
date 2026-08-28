@@ -21,13 +21,15 @@ interactive reader to become public.
 ## Decision
 
 1. Keep the public GitHub `main` branch as the canonical source and history.
-2. Keep the interactive research reader owner-only. It can expose the complete
-   searchable research and execution corpus to the owner without becoming the
-   public sharing boundary.
-3. Publish a second, static full-book edition through GitHub Pages. Build it
-   from the same committed source with a project-relative base path; include
-   the downloadable PDF, plots and inert linked repository artifacts; and do
-   not depend on a server, Worker, or copied prose store.
+2. Retain the existing owner-only interactive reader, but stop treating it as a
+   routine publication target. Rebuild or redeploy it only for a specific need;
+   it is not a canonical content store or the public sharing boundary.
+3. Publish GitHub Pages as the primary public research website. Its root is a
+   web-native portal for status, navigation, search, and document reading;
+   `/book/` is the separate static full-book route. Build both from the same
+   committed source with a project-relative base path; include the downloadable
+   PDF, plots and inert linked repository artifacts; and do not depend on a
+   server, Worker, or copied prose store.
 4. License project-authored technical material under `EUPL-1.2`, with the
    Article 5 later-version option stated in prose, and original project prose,
    mathematics, diagrams, plots and presentation under `CC-BY-SA-4.0`.
@@ -35,17 +37,19 @@ interactive reader to become public.
    material from that grant unless an explicit file-level notice says
    otherwise. Citation, linking, bibliography inclusion and lawful quotation
    do not relicense an underlying work.
-6. Deploy both reading surfaces only from a tested commit already pushed to
-   canonical `main`. Do not synchronize prose through Google Docs.
+6. Deploy GitHub Pages only from a tested commit already pushed to canonical
+   `main`. Any exceptional owner-only-reader deployment must use the same rule.
+   Do not synchronize prose through Google Docs.
 
 ## Consequences
 
-- Readers can inspect and fork the source or share the public book without
-  access to the owner-only application.
+- Readers can inspect and fork the source, navigate the research portal, or
+  share the public book without access to the owner-only application.
 - Commercial use remains permitted under the applicable open licence, while
   reciprocal or ShareAlike duties apply to covered modifications.
-- The Pages workflow must validate its subpath-prefixed assets, PDF, plots,
-  inert repository downloads and absence of server-only output.
+- The Pages workflow must validate both portal and `/book/` entries, their
+  subpath-prefixed assets, PDF, plots, inert repository downloads and absence of
+  server-only output.
 - The root licence cannot grant rights in imported papers, captures, official
   data or other material the contributors do not own.
 - `package.json` remains `private: true` as a publication safety control even

@@ -47,5 +47,11 @@ export default defineConfig({
   build: {
     outDir: path.join(repositoryRoot, "dist-github-pages"),
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        portal: path.join(repositoryRoot, "github-pages", "index.html"),
+        book: path.join(repositoryRoot, "github-pages", "book", "index.html"),
+      },
+    },
   },
 });

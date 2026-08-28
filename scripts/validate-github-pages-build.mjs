@@ -38,23 +38,47 @@ async function recursiveInventory(relative = "") {
 }
 
 await regularFile("index.html");
+await regularFile("book/index.html");
 await regularFile(".nojekyll");
-const html = await readFile(path.join(outputRoot, "index.html"), "utf8");
-const localReferences = [...html.matchAll(/(?:href|src)=["']([^"']+)["']/g)]
-  .map((match) => match[1])
-  .filter((reference) => reference.startsWith("/"));
 
-invariant(localReferences.length >= 3, "index.html must reference its favicon, stylesheet, and client entry");
-for (const reference of localReferences) {
-  invariant(reference.startsWith(pagesBase), `root-relative reference is not base-prefixed: ${reference}`);
-  const relative = reference.slice(pagesBase.length).split(/[?#]/, 1)[0];
-  await regularFile(relative);
+async function validatePage(relativeHtml, expectedEntryPrefix) {
+  const html = await readFile(path.join(outputRoot, ...relativeHtml.split("/")), "utf8");
+  const references = [...html.matchAll(/(?:href|src)=["']([^"']+)["']/g)]
+    .map((match) => match[1]);
+  const localReferences = references.filter((reference) => reference.startsWith("/"));
+  invariant(localReferences.length >= 3, `${relativeHtml} must reference local navigation or assets`);
+
+  for (const reference of localReferences) {
+    invariant(reference.startsWith(pagesBase), `${relativeHtml} has an unprefixed root-relative reference: ${reference}`);
+    const withoutFragment = reference.slice(pagesBase.length).split(/[?#]/, 1)[0];
+    const relative = withoutFragment === "" || withoutFragment.endsWith("/")
+      ? `${withoutFragment}index.html`
+      : withoutFragment;
+    await regularFile(relative);
+  }
+
+  const clientEntries = [...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+\.js(?:\?[^"']*)?)["'][^>]*>/g)]
+    .map((match) => match[1]);
+  invariant(clientEntries.length === 1, `${relativeHtml} must load exactly one client entry`);
+  invariant(
+    path.basename(clientEntries[0]).startsWith(`${expectedEntryPrefix}-`),
+    `${relativeHtml} does not load its ${expectedEntryPrefix} entry chunk`,
+  );
+  invariant(!html.includes("/_next/"), `${relativeHtml} contains a server-framework asset path`);
+  return { html, clientEntry: clientEntries[0] };
 }
-invariant(!html.includes("/_next/"), "index.html contains a server-framework asset path");
+
+const portalPage = await validatePage("index.html", "portal");
+const bookPage = await validatePage("book/index.html", "book");
+invariant(portalPage.clientEntry !== bookPage.clientEntry, "portal and book must have distinct client entries");
+invariant(
+  bookPage.html.includes("https://lusoris.github.io/20-watts-was-enough/book/"),
+  "book/index.html must declare the canonical public book route",
+);
 
 const assetEntries = await entries("assets");
 invariant(assetEntries.some((entry) => entry.isFile() && entry.name.endsWith(".js")), "client JavaScript is missing");
-invariant(assetEntries.some((entry) => entry.isFile() && entry.name.endsWith(".css")), "compiled book stylesheet is missing");
+invariant(assetEntries.some((entry) => entry.isFile() && entry.name.endsWith(".css")), "compiled Pages stylesheets are missing");
 
 const pdfPath = "downloads/20-watts-was-enough-full-concept-book.pdf";
 const pdfInformation = await regularFile(pdfPath);
