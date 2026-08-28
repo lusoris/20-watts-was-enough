@@ -10,6 +10,7 @@ const repositoryRoot = path.resolve(
 );
 const outputRoot = path.join(repositoryRoot, "dist-github-pages");
 const pagesBase = "/20-watts-was-enough/";
+const maximumPortalInitialJavaScriptBytes = 400_000;
 
 function invariant(condition, message) {
   if (!condition) throw new Error(`Invalid GitHub Pages build: ${message}`);
@@ -37,6 +38,26 @@ async function recursiveInventory(relative = "") {
   return found;
 }
 
+async function sourceMarkdownInventory(relative) {
+  const found = [];
+  for (const entry of await readdir(path.join(repositoryRoot, relative), { withFileTypes: true })) {
+    const child = `${relative}/${entry.name}`;
+    if (entry.isDirectory()) found.push(...await sourceMarkdownInventory(child));
+    else if (entry.isFile() && entry.name.endsWith(".md") && entry.name.toLowerCase() !== "readme.md") {
+      found.push(child);
+    }
+  }
+  return found;
+}
+
+function pagesRelative(reference) {
+  invariant(reference.startsWith(pagesBase), `unprefixed root-relative reference: ${reference}`);
+  const withoutFragment = reference.slice(pagesBase.length).split(/[?#]/, 1)[0];
+  return withoutFragment === "" || withoutFragment.endsWith("/")
+    ? `${withoutFragment}index.html`
+    : withoutFragment;
+}
+
 await regularFile("index.html");
 await regularFile("book/index.html");
 await regularFile(".nojekyll");
@@ -50,10 +71,7 @@ async function validatePage(relativeHtml, expectedEntryPrefix) {
 
   for (const reference of localReferences) {
     invariant(reference.startsWith(pagesBase), `${relativeHtml} has an unprefixed root-relative reference: ${reference}`);
-    const withoutFragment = reference.slice(pagesBase.length).split(/[?#]/, 1)[0];
-    const relative = withoutFragment === "" || withoutFragment.endsWith("/")
-      ? `${withoutFragment}index.html`
-      : withoutFragment;
+    const relative = pagesRelative(reference);
     await regularFile(relative);
   }
 
@@ -75,6 +93,44 @@ invariant(
   bookPage.html.includes("https://lusoris.github.io/20-watts-was-enough/book/"),
   "book/index.html must declare the canonical public book route",
 );
+const portalModulePreloads = [...portalPage.html.matchAll(
+  /<link\b(?=[^>]*\brel=["']modulepreload["'])[^>]*\bhref=["']([^"']+)["'][^>]*>/g,
+)].map((match) => match[1]);
+const portalInitialJavaScript = [portalPage.clientEntry, ...portalModulePreloads]
+  .filter((reference) => reference.endsWith(".js"));
+let portalInitialJavaScriptBytes = 0;
+for (const reference of portalInitialJavaScript) {
+  const relative = pagesRelative(reference);
+  invariant(
+    !/^assets\/(?:book|markdown-document)-/u.test(relative),
+    `portal eagerly loads book-only JavaScript: ${relative}`,
+  );
+  portalInitialJavaScriptBytes += (await regularFile(relative)).size;
+}
+invariant(
+  portalInitialJavaScriptBytes <= maximumPortalInitialJavaScriptBytes,
+  `portal initial JavaScript is ${portalInitialJavaScriptBytes} bytes; limit is ${maximumPortalInitialJavaScriptBytes}`,
+);
+
+const sourceDocuments = [
+  ...await sourceMarkdownInventory("concept"),
+  ...await sourceMarkdownInventory("math"),
+].sort();
+const builtDocuments = (await recursiveInventory("documents"))
+  .filter((relative) => relative.endsWith(".md"))
+  .map((relative) => relative.slice("documents/".length))
+  .sort();
+invariant(
+  JSON.stringify(builtDocuments) === JSON.stringify(sourceDocuments),
+  "portal document assets do not exactly match the canonical concept/math corpus",
+);
+for (const relative of sourceDocuments) {
+  const [source, built] = await Promise.all([
+    readFile(path.join(repositoryRoot, ...relative.split("/"))),
+    readFile(path.join(outputRoot, "documents", ...relative.split("/"))),
+  ]);
+  invariant(source.equals(built), `portal document asset differs from canonical source: ${relative}`);
+}
 
 const assetEntries = await entries("assets");
 invariant(assetEntries.some((entry) => entry.isFile() && entry.name.endsWith(".js")), "client JavaScript is missing");
@@ -162,5 +218,5 @@ for (const relative of inventory) {
 }
 
 console.log(
-  `GitHub Pages build validation passed: ${inventory.length} files, ${repositoryManifest.artifacts.length} repository artifacts, ${plotEntries.length} plot-directory entries.`,
+  `GitHub Pages build validation passed: ${inventory.length} files, ${builtDocuments.length} portal documents, ${portalInitialJavaScriptBytes} initial portal JS bytes, ${repositoryManifest.artifacts.length} repository artifacts, ${plotEntries.length} plot-directory entries.`,
 );

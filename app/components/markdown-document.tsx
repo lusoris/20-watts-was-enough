@@ -24,6 +24,7 @@ type MarkdownDocumentProps = {
   onNavigate: (path: string, hash?: string) => void;
   internalHref?: (path: string, hash: string) => string;
   isNavigablePath?: (path: string) => boolean;
+  nonNavigableHref?: (path: string, hash: string) => string;
   imageLoading?: "eager" | "lazy";
   assetBasePath?: string;
 };
@@ -101,8 +102,7 @@ function DiagramAwarePre({ children, ...props }: ComponentPropsWithoutRef<"pre">
   return <pre {...props}>{children}</pre>;
 }
 
-// The overflow region must receive keyboard focus so arrow-key users can scroll it.
-/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
+// Only an actual overflow region receives keyboard focus so arrow-key users can scroll it.
 function ResponsiveTable(props: ComponentPropsWithoutRef<"table">) {
   const regionRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLTableElement>(null);
@@ -117,6 +117,10 @@ function ResponsiveTable(props: ComponentPropsWithoutRef<"table">) {
       setOverflows(table.scrollWidth > region.clientWidth + 1);
     };
     measure();
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", measure);
+      return () => window.removeEventListener("resize", measure);
+    }
     const observer = new ResizeObserver(measure);
     observer.observe(region);
     observer.observe(table);
@@ -131,9 +135,9 @@ function ResponsiveTable(props: ComponentPropsWithoutRef<"table">) {
       </div>
       <div
         className="table-region"
-        role="region"
-        aria-label="Scrollable data table"
-        tabIndex={0}
+        role={overflows ? "region" : undefined}
+        aria-label={overflows ? "Scrollable data table" : undefined}
+        tabIndex={overflows ? 0 : undefined}
         ref={regionRef}
       >
         <table ref={tableRef} {...props} />
@@ -141,7 +145,6 @@ function ResponsiveTable(props: ComponentPropsWithoutRef<"table">) {
     </div>
   );
 }
-/* eslint-enable jsx-a11y/no-noninteractive-tabindex */
 
 export function MarkdownDocument({
   body,
@@ -149,6 +152,7 @@ export function MarkdownDocument({
   onNavigate,
   internalHref,
   isNavigablePath,
+  nonNavigableHref,
   imageLoading = "lazy",
   assetBasePath = "/",
 }: MarkdownDocumentProps) {
@@ -193,10 +197,23 @@ export function MarkdownDocument({
       if (isNavigablePath && !isNavigablePath(internal.path) && isRepositoryArtifact(internal.path)) {
         return (
           <a
-            href={repositoryArtifactHref(internal.path)}
+            href={joinAssetBase(assetBasePath, repositoryArtifactHref(internal.path))}
             target="_blank"
             rel="noreferrer"
             data-repository-artifact={internal.path}
+            {...props}
+          >
+            {children}
+          </a>
+        );
+      }
+
+      if (isNavigablePath && !isNavigablePath(internal.path) && nonNavigableHref) {
+        return (
+          <a
+            href={nonNavigableHref(internal.path, internal.hash)}
+            target="_blank"
+            rel="noreferrer"
             {...props}
           >
             {children}

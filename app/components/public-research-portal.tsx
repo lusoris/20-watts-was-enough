@@ -1,16 +1,25 @@
 "use client";
 
 import {
+  lazy,
+  Suspense,
   useDeferredValue,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-import { bookDocuments } from "../book-content";
+import type { ResearchDocument } from "../content";
 import { outlineFromMarkdown } from "../lib/heading-outline";
 import { readinessSummary } from "../lib/readiness";
-import { MarkdownDocument } from "./markdown-document";
+import {
+  loadPortalDocument,
+  portalDocuments,
+} from "../portal-content";
+
+const MarkdownDocument = lazy(() => import("./markdown-document").then(
+  (module) => ({ default: module.MarkdownDocument }),
+));
 
 const repositoryUrl = "https://github.com/lusoris/20-watts-was-enough";
 const defaultDocumentPath = "concept/00-thesis-and-principles.md";
@@ -27,6 +36,10 @@ function repositoryPath(path: string, kind: "blob" | "tree" = "blob") {
   return `${repositoryUrl}/${kind}/main/${path}`;
 }
 
+function repositoryDocumentHref(path: string, hash = "") {
+  return `${repositoryPath(path)}${hash ? `#${encodeURIComponent(hash)}` : ""}`;
+}
+
 function documentLocation(basePath: string, path: string, hash = "") {
   const target = new URL(withBase(basePath), window.location.origin);
   target.searchParams.set("doc", path);
@@ -37,7 +50,7 @@ function documentLocation(basePath: string, path: string, hash = "") {
 function initialDocumentPath() {
   if (typeof window === "undefined") return defaultDocumentPath;
   const requested = new URLSearchParams(window.location.search).get("doc");
-  return bookDocuments.some((document) => document.path === requested)
+  return portalDocuments.some((document) => document.path === requested)
     ? requested!
     : defaultDocumentPath;
 }
@@ -52,52 +65,77 @@ export function PublicResearchPortal({
   assetBasePath: string;
 }) {
   const [selectedPath, setSelectedPath] = useState(initialDocumentPath);
+  const [documentState, setDocumentState] = useState<{
+    path: string;
+    document?: ResearchDocument;
+    error?: string;
+  } | null>(null);
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<LibraryGroup>("All");
-  const deferredQuery = useDeferredValue(query.trim().toLocaleLowerCase());
+  const deferredQuery = useDeferredValue(query.trim().toLowerCase());
   const readerRef = useRef<HTMLElement>(null);
+  const documentCache = useRef(new Map<string, ResearchDocument>());
 
   const documentsByPath = useMemo(
-    () => new Map(bookDocuments.map((document) => [document.path, document])),
+    () => new Map(portalDocuments.map((document) => [document.path, document])),
     [],
   );
-  const selectedDocument =
+  const selectedMetadata =
     documentsByPath.get(selectedPath) ?? documentsByPath.get(defaultDocumentPath)!;
+  const selectedDocument = documentState?.path === selectedPath
+    ? documentState.document ?? null
+    : null;
+  const documentError = documentState?.path === selectedPath
+    ? documentState.error ?? ""
+    : "";
   const outline = useMemo(
-    () => outlineFromMarkdown(selectedDocument.body),
+    () => selectedDocument ? outlineFromMarkdown(selectedDocument.body) : [],
     [selectedDocument],
   );
 
   const libraryDocuments = useMemo(() => {
-    return bookDocuments.filter((document) => {
-      if (document.group !== "Concept" && document.group !== "Mathematics") {
-        return false;
-      }
+    return portalDocuments.filter((document) => {
       if (group !== "All" && document.group !== group) return false;
       if (!deferredQuery) return true;
-      const searchable = `${document.title}\n${document.path}\n${document.body}`
-        .toLocaleLowerCase();
-      return searchable.includes(deferredQuery);
+      return document.searchText.includes(deferredQuery);
     });
   }, [deferredQuery, group]);
 
-  const conceptCount = bookDocuments.filter(
+  const conceptCount = portalDocuments.filter(
     (document) => document.group === "Concept",
   ).length;
-  const mathematicsCount = bookDocuments.filter(
+  const mathematicsCount = portalDocuments.filter(
     (document) => document.group === "Mathematics",
   ).length;
-  const totalLibraryWords = bookDocuments
-    .filter(
-      (document) =>
-        document.group === "Concept" || document.group === "Mathematics",
-    )
+  const totalLibraryWords = portalDocuments
     .reduce((total, document) => total + document.words, 0);
+
+  useEffect(() => {
+    let cancelled = false;
+    const cached = documentCache.current.get(selectedPath);
+    const pendingDocument = cached
+      ? Promise.resolve(cached)
+      : loadPortalDocument(selectedPath, assetBasePath);
+    pendingDocument.then((document) => {
+      if (cancelled) return;
+      documentCache.current.set(selectedPath, document);
+      setDocumentState({ path: selectedPath, document });
+    }).catch((error: unknown) => {
+      if (cancelled) return;
+      setDocumentState({
+        path: selectedPath,
+        error: error instanceof Error ? error.message : "Document loading failed.",
+      });
+    });
+    return () => { cancelled = true; };
+  }, [assetBasePath, selectedPath]);
 
   useEffect(() => {
     const handleHistory = () => {
       const requested = new URLSearchParams(window.location.search).get("doc");
-      if (requested && documentsByPath.has(requested)) setSelectedPath(requested);
+      setSelectedPath(
+        requested && documentsByPath.has(requested) ? requested : defaultDocumentPath,
+      );
     };
     window.addEventListener("popstate", handleHistory);
     return () => window.removeEventListener("popstate", handleHistory);
@@ -110,12 +148,12 @@ export function PublicResearchPortal({
       document.getElementById(decodeURIComponent(hash))?.scrollIntoView();
     });
     return () => window.cancelAnimationFrame(frame);
-  }, [selectedPath]);
+  }, [selectedDocument]);
 
   const selectDocument = (path: string, hash = "", focusReader = true) => {
     if (!documentsByPath.has(path)) {
       window.open(
-        `${repositoryPath(path)}${hash ? `#${encodeURIComponent(hash)}` : ""}`,
+        repositoryDocumentHref(path, hash),
         "_blank",
         "noopener,noreferrer",
       );
@@ -128,8 +166,7 @@ export function PublicResearchPortal({
       documentLocation(assetBasePath, path, hash),
     );
     window.requestAnimationFrame(() => {
-      if (hash) document.getElementById(hash)?.scrollIntoView();
-      else readerRef.current?.scrollIntoView({ block: "start" });
+      if (!hash) readerRef.current?.scrollIntoView({ block: "start" });
       if (focusReader) readerRef.current?.focus({ preventScroll: true });
     });
   };
@@ -338,7 +375,7 @@ export function PublicResearchPortal({
 
           <div className="portal-reader-grid">
             <aside className="portal-library" aria-label="Document library">
-              <label htmlFor="portal-library-search">Search titles and text</label>
+              <label htmlFor="portal-library-search">Search titles and sections</label>
               <div className="portal-search-control">
                 <span aria-hidden="true">⌕</span>
                 <input
@@ -369,8 +406,8 @@ export function PublicResearchPortal({
                   <button
                     type="button"
                     key={document.path}
-                    className={document.path === selectedDocument.path ? "active" : ""}
-                    aria-current={document.path === selectedDocument.path ? "page" : undefined}
+                    className={document.path === selectedMetadata.path ? "active" : ""}
+                    aria-current={document.path === selectedMetadata.path ? "page" : undefined}
                     onClick={() => selectDocument(document.path)}
                   >
                     <span>{document.title}</span>
@@ -396,11 +433,11 @@ export function PublicResearchPortal({
             >
               <header className="portal-reader-header">
                 <div>
-                  <p>{selectedDocument.group} document</p>
-                  <h2 id="portal-reader-document-title">{selectedDocument.title}</h2>
+                  <p>{selectedMetadata.group} document</p>
+                  <h2 id="portal-reader-document-title">{selectedMetadata.title}</h2>
                 </div>
                 <a
-                  href={repositoryPath(selectedDocument.path)}
+                  href={repositoryPath(selectedMetadata.path)}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -408,17 +445,38 @@ export function PublicResearchPortal({
                 </a>
               </header>
               <div className="portal-reader-meta">
-                <code>{selectedDocument.path}</code>
-                <span>{formatNumber(selectedDocument.words)} words</span>
+                <code>{selectedMetadata.path}</code>
+                <span>{formatNumber(selectedMetadata.words)} words</span>
               </div>
               <div className="prose portal-prose">
-                <MarkdownDocument
-                  body={selectedDocument.body}
-                  currentPath={selectedDocument.path}
-                  onNavigate={selectDocument}
-                  isNavigablePath={(path) => documentsByPath.has(path)}
-                  assetBasePath={assetBasePath}
-                />
+                {selectedDocument ? (
+                  <Suspense
+                    fallback={(
+                      <div className="portal-document-state" role="status">
+                        Preparing mathematics and diagrams…
+                      </div>
+                    )}
+                  >
+                    <MarkdownDocument
+                      body={selectedDocument.body}
+                      currentPath={selectedDocument.path}
+                      onNavigate={selectDocument}
+                      isNavigablePath={(path) => documentsByPath.has(path)}
+                      nonNavigableHref={repositoryDocumentHref}
+                      assetBasePath={assetBasePath}
+                    />
+                  </Suspense>
+                ) : documentError ? (
+                  <div className="portal-document-state" role="alert">
+                    <strong>Document unavailable</strong>
+                    <p>{documentError}</p>
+                    <a href={repositoryPath(selectedMetadata.path)}>Read it on GitHub</a>
+                  </div>
+                ) : (
+                  <div className="portal-document-state" role="status">
+                    Loading document…
+                  </div>
+                )}
               </div>
             </article>
 

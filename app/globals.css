@@ -1508,7 +1508,7 @@ button {
   margin: 0 0 12px;
   color: var(--portal-green);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1590,7 +1590,7 @@ button {
 .portal-map-index {
   color: var(--portal-green-dark);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 900;
 }
 
@@ -1648,6 +1648,8 @@ button {
 
 .portal-map-card {
   --card-accent: var(--portal-green-dark);
+  --card-accent-text: #00663c;
+  --card-accent-on-dark: #43e69a;
   position: relative;
   display: grid;
   min-height: 270px;
@@ -1662,11 +1664,11 @@ button {
   transition: background 130ms ease, color 130ms ease;
 }
 
-.portal-map-card-blue { --card-accent: var(--portal-blue); }
-.portal-map-card-coral { --card-accent: var(--portal-coral); }
-.portal-map-card-violet { --card-accent: var(--portal-violet); }
-.portal-map-card-amber { --card-accent: var(--portal-amber); }
-.portal-map-card-cyan { --card-accent: var(--portal-cyan); }
+.portal-map-card-blue { --card-accent: var(--portal-blue); --card-accent-text: #1459b8; --card-accent-on-dark: #70a8ff; }
+.portal-map-card-coral { --card-accent: var(--portal-coral); --card-accent-text: #a92d31; --card-accent-on-dark: #ff8e87; }
+.portal-map-card-violet { --card-accent: var(--portal-violet); --card-accent-text: #6240b8; --card-accent-on-dark: #b8a1ff; }
+.portal-map-card-amber { --card-accent: var(--portal-amber); --card-accent-text: #805000; --card-accent-on-dark: #ffc45c; }
+.portal-map-card-cyan { --card-accent: var(--portal-cyan); --card-accent-text: #006971; --card-accent-on-dark: #55e5ef; }
 
 .portal-map-card::before {
   position: absolute;
@@ -1684,7 +1686,7 @@ button {
 }
 
 .portal-map-card .portal-map-index {
-  color: var(--card-accent);
+  color: var(--card-accent-text);
 }
 
 .portal-map-card h3 {
@@ -1697,7 +1699,7 @@ button {
 .portal-map-card strong {
   display: block;
   margin-bottom: 9px;
-  color: var(--card-accent);
+  color: var(--card-accent-text);
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.035em;
@@ -1718,9 +1720,15 @@ button {
 
 .portal-map-arrow {
   align-self: end;
-  color: var(--card-accent);
+  color: var(--card-accent-text);
   font-size: 27px;
   font-weight: 800;
+}
+
+.portal-map-card:hover .portal-map-index,
+.portal-map-card:hover strong,
+.portal-map-card:hover .portal-map-arrow {
+  color: var(--card-accent-on-dark);
 }
 
 .portal-library-section {
@@ -1761,7 +1769,7 @@ button {
   display: block;
   margin-bottom: 9px;
   color: #a9beb2;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1811,7 +1819,7 @@ button {
   color: #a9beb2;
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -1828,7 +1836,7 @@ button {
   margin: 15px 2px 8px;
   color: #8da397;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -1880,7 +1888,7 @@ button {
   margin-top: 5px;
   color: #89a095;
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 11px;
   line-height: 1.3;
   text-transform: uppercase;
 }
@@ -1922,7 +1930,7 @@ button {
   padding: 9px 11px;
   border: 1px solid var(--portal-green-dark);
   color: var(--portal-green-dark);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 850;
   letter-spacing: 0.055em;
   text-decoration: none;
@@ -1943,7 +1951,7 @@ button {
   border-bottom: 1px solid #c4d0c7;
   color: #53675a;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .portal-reader-meta code {
@@ -1955,6 +1963,39 @@ button {
   margin: 50px auto 0;
   font-size: 16px;
   line-height: 1.75;
+}
+
+.portal-document-state {
+  margin: 18px 0;
+  padding: 20px 22px;
+  border: 1px solid #b9c9bd;
+  border-left: 5px solid var(--portal-green-dark);
+  background: #edf3ec;
+  color: #203d2c;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.portal-document-state[role="alert"] {
+  border-color: #d9aaa7;
+  border-left-color: #a92d31;
+  background: #fff0ed;
+  color: #5f1d21;
+}
+
+.portal-document-state strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 16px;
+}
+
+.portal-document-state p {
+  margin: 0 0 10px;
+}
+
+.portal-document-state a {
+  color: #1459b8;
+  font-weight: 800;
 }
 
 .portal-prose > h1:first-child {
@@ -2016,7 +2057,7 @@ button {
 
 .portal-outline a.portal-outline-child {
   padding-left: 22px;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .portal-outline > span {
@@ -2994,6 +3035,11 @@ button {
   border: 1px solid var(--line);
   background: var(--paper-raised);
   box-shadow: 0 18px 48px rgb(11 29 20 / 9%);
+}
+
+.book-shell-web .book-document {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }
 
 .book-cover {

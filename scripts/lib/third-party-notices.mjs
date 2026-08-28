@@ -33,6 +33,9 @@ const VIRTUAL_MODULE_PACKAGES = Object.freeze({
     packagePath: "node_modules/vite",
   },
 });
+const PROJECT_VIRTUAL_MODULES = new Set([
+  "\0virtual:portal-document-index",
+]);
 
 function normalizedVirtualModuleId(moduleId) {
   const normalized = moduleId.split("?", 1)[0].replaceAll("\\", "/");
@@ -81,6 +84,7 @@ export function renderThirdPartyNotices({ moduleIds, repositoryRoot }) {
   for (const moduleId of moduleIds) {
     const virtualModuleId = normalizedVirtualModuleId(moduleId);
     if (virtualModuleId === null) continue;
+    if (PROJECT_VIRTUAL_MODULES.has(virtualModuleId)) continue;
     const mapping = VIRTUAL_MODULE_PACKAGES[virtualModuleId];
     if (!mapping) {
       throw new Error(`Unmapped virtual bundle module: ${JSON.stringify(virtualModuleId)}`);

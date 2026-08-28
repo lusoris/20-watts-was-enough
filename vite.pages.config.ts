@@ -1,5 +1,5 @@
 import react from "@vitejs/plugin-react";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
@@ -7,6 +7,101 @@ import { renderThirdPartyNotices } from "./scripts/lib/third-party-notices.mjs";
 
 const repositoryRoot = path.dirname(fileURLToPath(import.meta.url));
 const trackedNoticesPath = path.join(repositoryRoot, "THIRD_PARTY_NOTICES.txt");
+const portalIndexModuleId = "virtual:portal-document-index";
+const resolvedPortalIndexModuleId = `\0${portalIndexModuleId}`;
+
+type PortalSourceDocument = {
+  path: string;
+  title: string;
+  group: "Concept" | "Mathematics";
+  kind: "markdown";
+  words: number;
+  searchText: string;
+  body: string;
+};
+
+function markdownFiles(directory: string): string[] {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) return markdownFiles(entryPath);
+    return entry.isFile() && entry.name.endsWith(".md") ? [entryPath] : [];
+  });
+}
+
+function plainHeading(value: string) {
+  return value
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/[*_`~]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function portalSourceDocuments(): PortalSourceDocument[] {
+  const inputs = [
+    ...markdownFiles(path.join(repositoryRoot, "concept"))
+      .filter((file) => path.basename(file).toLowerCase() !== "readme.md"),
+    ...markdownFiles(path.join(repositoryRoot, "math"))
+      .filter((file) => path.basename(file).toLowerCase() !== "readme.md"),
+  ];
+  return inputs.map((file) => {
+    const body = readFileSync(file, "utf8");
+    const relativePath = path.relative(repositoryRoot, file).replaceAll("\\", "/");
+    const headings = [...body.matchAll(/^#{1,6}\s+(.+?)\s*#*\s*$/gm)]
+      .map((match) => plainHeading(match[1]))
+      .filter(Boolean);
+    const fallbackTitle = path.basename(file, ".md")
+      .replace(/^\d+-/, "")
+      .replaceAll("-", " ")
+      .replace(/\b\w/g, (character) => character.toUpperCase());
+    const title = headings[0] || fallbackTitle;
+    const group = relativePath.startsWith("concept/") ? "Concept" : "Mathematics";
+    return {
+      path: relativePath,
+      title,
+      group,
+      kind: "markdown",
+      words: body.trim().split(/\s+/).filter(Boolean).length,
+      searchText: [relativePath, title, ...headings].join("\n").toLowerCase(),
+      body,
+    };
+  }).sort((left, right) => {
+    const groupDelta = (left.group === "Concept" ? 0 : 1)
+      - (right.group === "Concept" ? 0 : 1);
+    return groupDelta || left.path.localeCompare(right.path, undefined, { numeric: true });
+  });
+}
+
+function portalDocumentAssets() {
+  const documents = portalSourceDocuments();
+  return {
+    name: "portal-document-assets",
+    resolveId(id: string) {
+      return id === portalIndexModuleId ? resolvedPortalIndexModuleId : null;
+    },
+    load(id: string) {
+      if (id !== resolvedPortalIndexModuleId) return null;
+      const index = documents.map((document) => ({
+        path: document.path,
+        title: document.title,
+        group: document.group,
+        kind: document.kind,
+        words: document.words,
+        searchText: document.searchText,
+      }));
+      return `export default ${JSON.stringify(index)};`;
+    },
+    generateBundle() {
+      for (const document of documents) {
+        this.emitFile({
+          type: "asset",
+          fileName: `documents/${document.path}`,
+          source: document.body,
+        });
+      }
+    },
+  };
+}
 
 function legalReleaseAssets() {
   return {
@@ -43,7 +138,7 @@ export default defineConfig({
   base: "/20-watts-was-enough/",
   publicDir: path.join(repositoryRoot, "public"),
   assetsInclude: ["**/*.md", "**/*.mmd", "**/*.bib"],
-  plugins: [react(), legalReleaseAssets()],
+  plugins: [react(), portalDocumentAssets(), legalReleaseAssets()],
   build: {
     outDir: path.join(repositoryRoot, "dist-github-pages"),
     emptyOutDir: true,

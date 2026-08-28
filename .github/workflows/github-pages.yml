@@ -38,6 +38,8 @@ jobs:
         run: npm run prepare:reader-artifacts
       - name: Verify the downloadable book is current
         run: npm run validate:book-pdf
+      - name: Test the public portal and full-book route
+        run: node --test scripts/github-pages.test.mjs scripts/book-edition-surface.test.mjs
       - name: Build the public portal and full-book route
         run: npm run build:github-pages
       - name: Validate the Pages artifact

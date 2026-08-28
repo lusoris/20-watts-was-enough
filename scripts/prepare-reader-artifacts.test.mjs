@@ -68,3 +68,26 @@ test("linked source artifacts outside the explicit public allowlist fail closed"
     await rm(root, { recursive: true, force: true });
   }
 });
+
+test("generated GitHub Pages Markdown is never rescanned as canonical source", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "reader-artifacts-pages-output-"));
+  try {
+    await mkdir(path.join(root, "dist-github-pages", "documents"), { recursive: true });
+    await mkdir(path.join(root, "github-pages"), { recursive: true });
+    await writeFile(
+      path.join(root, "dist-github-pages", "documents", "generated.md"),
+      "[generated-relative-link](assets/not-a-source.json)\n",
+    );
+    await writeFile(
+      path.join(root, "github-pages", "public-artifacts.json"),
+      `${JSON.stringify({ schema: 1, artifacts: [] }, null, 2)}\n`,
+    );
+    const prepared = await prepareReaderArtifacts({
+      repositoryRoot: root,
+      outputRoot: path.join(root, "public", "repository-files"),
+    });
+    assert.deepEqual(prepared.artifacts, []);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});

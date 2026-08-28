@@ -9,7 +9,8 @@ const SOURCE_EXTENSIONS = new Set([
   ".ts", ".tsx", ".tsv", ".yaml", ".yml",
 ]);
 const EXCLUDED_DIRECTORIES = new Set([
-  ".git", ".next", ".vinext", ".vite", ".wrangler", "dist", "node_modules", "tmp",
+  ".git", ".next", ".vinext", ".vite", ".wrangler", "dist", "dist-github-pages",
+  "node_modules", "tmp",
 ]);
 const LINK_PATTERN = /(?<!!)\[[^\]]+\]\((?<target>[^)]+)\)/gu;
 const FORBIDDEN_PUBLIC_PREFIXES = Object.freeze([

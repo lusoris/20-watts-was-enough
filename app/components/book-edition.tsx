@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { bookDocuments as documents } from "../book-content";
 import type { ResearchDocument } from "../content";
 import { isRepositoryArtifact, repositoryArtifactHref } from "../lib/repository-artifacts";
@@ -34,6 +34,56 @@ function repositoryDocumentHref(path: string, hash = "") {
 
 function bookId(path: string) {
   return `book-${path.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+}
+
+function documentHeadingId(path: string, headingId: string) {
+  return `${bookId(path)}--${headingId}`;
+}
+
+function BookDocumentArticle({
+  document: researchDocument,
+  navigate,
+  internalHref,
+  imageLoading,
+  assetBasePath,
+}: {
+  document: ResearchDocument;
+  navigate: (path: string, hash?: string) => void;
+  internalHref: (path: string, hash: string) => string;
+  imageLoading: "eager" | "lazy";
+  assetBasePath: string;
+}) {
+  const articleRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const article = articleRef.current;
+    if (!article) return;
+    for (const heading of article.querySelectorAll<HTMLElement>("h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]")) {
+      const legacyId = heading.dataset.bookLegacyHeadingId ?? heading.id;
+      heading.dataset.bookLegacyHeadingId = legacyId;
+      heading.id = documentHeadingId(researchDocument.path, legacyId);
+    }
+
+    const target = window.location.hash.slice(1);
+    if (!target.startsWith(`${bookId(researchDocument.path)}--`)) return;
+    const frame = window.requestAnimationFrame(() => {
+      window.document.getElementById(target)?.scrollIntoView();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [researchDocument.body, researchDocument.path]);
+
+  return (
+    <article className="prose book-prose" ref={articleRef}>
+      <MarkdownDocument
+        body={researchDocument.body}
+        currentPath={researchDocument.path}
+        onNavigate={navigate}
+        internalHref={internalHref}
+        imageLoading={imageLoading}
+        assetBasePath={assetBasePath}
+      />
+    </article>
+  );
 }
 
 function documentNumber(
@@ -103,7 +153,7 @@ export function BookEdition({
   };
   const bookHref = (path: string, hash: string) => {
     if (bookDocumentPaths.has(path)) {
-      return path === "README.md" && hash ? `#${hash}` : `#${bookId(path)}`;
+      return hash ? `#${documentHeadingId(path, hash)}` : `#${bookId(path)}`;
     }
     if (isRepositoryArtifact(path)) {
       if (isPublicPdf) return repositoryDocumentHref(path, hash);
@@ -117,7 +167,7 @@ export function BookEdition({
   };
 
   return (
-    <main className="book-shell">
+    <main className={`book-shell ${isGitHubPages ? "book-shell-web" : "book-shell-print"}`}>
       <nav className="book-actions" aria-label="Book actions">
         <a href={usesPublicLinks ? canonicalRepository : "/"}>
           {usesPublicLinks ? "View source on GitHub" : "← Owner-only research site"}
@@ -241,16 +291,13 @@ export function BookEdition({
             <code>{document.path}</code>
             <span>{document.words.toLocaleString("en-US")} words</span>
           </div>
-          <article className="prose book-prose">
-            <MarkdownDocument
-              body={document.body}
-              currentPath={document.path}
-              onNavigate={navigate}
-              internalHref={bookHref}
-              imageLoading="eager"
-              assetBasePath={assetBasePath}
-            />
-          </article>
+          <BookDocumentArticle
+            document={document}
+            navigate={navigate}
+            internalHref={bookHref}
+            imageLoading={isPublicPdf ? "eager" : "lazy"}
+            assetBasePath={assetBasePath}
+          />
         </section>
       ))}
       <footer className="book-legal" aria-label="Legal information">

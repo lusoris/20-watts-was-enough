@@ -57,6 +57,7 @@ test("the workflow uses GitHub's Pages artifact and deployment actions", async (
     "node --test scripts/source-boundary.test.mjs",
     "npm run prepare:reader-artifacts",
     "npm run validate:book-pdf",
+    "node --test scripts/github-pages.test.mjs scripts/book-edition-surface.test.mjs",
     "npm run build:github-pages",
     "npm run validate:github-pages",
     "path: dist-github-pages",
@@ -76,6 +77,67 @@ test("the workflow uses GitHub's Pages artifact and deployment actions", async (
   assert.match(workflow, /cancel-in-progress:\s*false/);
   assert.doesNotMatch(workflow, /\.openai\/hosting|lusoris\.chatgpt\.site/);
   assert.match(workflow, /actions\/(?:checkout|setup-node|configure-pages|upload-pages-artifact|deploy-pages)@[0-9a-f]{40}/);
+  assert.ok(
+    workflow.indexOf("node --test scripts/github-pages.test.mjs scripts/book-edition-surface.test.mjs")
+      < workflow.indexOf("npm run build:github-pages"),
+    "focused Pages tests must run before the public build",
+  );
+});
+
+test("the portal keeps history and native Markdown links honest on the Pages base", async () => {
+  const [portal, markdown] = await Promise.all([
+    source("app/components/public-research-portal.tsx"),
+    source("app/components/markdown-document.tsx"),
+  ]);
+
+  assert.match(
+    portal,
+    /requested\s*&&\s*documentsByPath\.has\(requested\)\s*\?\s*requested\s*:\s*defaultDocumentPath/,
+  );
+  assert.match(portal, /nonNavigableHref=\{repositoryDocumentHref\}/);
+  assert.match(portal, /window\.open\(\s*repositoryDocumentHref\(path, hash\)/);
+
+  assert.match(markdown, /nonNavigableHref\?:\s*\(path: string, hash: string\) => string/);
+  assert.match(
+    markdown,
+    /href=\{joinAssetBase\(assetBasePath, repositoryArtifactHref\(internal\.path\)\)\}/,
+  );
+  assert.match(
+    markdown,
+    /href=\{nonNavigableHref\(internal\.path, internal\.hash\)\}/,
+  );
+  assert.doesNotMatch(markdown, /href=\{repositoryArtifactHref\(internal\.path\)\}/);
+});
+
+test("only genuinely overflowing Markdown tables become labelled keyboard regions", async () => {
+  const markdown = await source("app/components/markdown-document.tsx");
+
+  assert.match(markdown, /role=\{overflows \? "region" : undefined\}/);
+  assert.match(
+    markdown,
+    /aria-label=\{overflows \? "Scrollable data table" : undefined\}/,
+  );
+  assert.match(markdown, /tabIndex=\{overflows \? 0 : undefined\}/);
+  assert.doesNotMatch(markdown, /tabIndex=\{0\}/);
+  assert.match(markdown, /typeof ResizeObserver === "undefined"/);
+});
+
+test("the portal loads canonical documents on demand and keeps book code off its initial path", async () => {
+  const [portal, content, config, validator] = await Promise.all([
+    source("app/components/public-research-portal.tsx"),
+    source("app/portal-content.ts"),
+    source("vite.pages.config.ts"),
+    source("scripts/validate-github-pages-build.mjs"),
+  ]);
+
+  assert.doesNotMatch(portal, /from ["']\.\.\/book-content["']/);
+  assert.match(portal, /from ["']\.\.\/portal-content["']/);
+  assert.match(portal, /lazy\(\(\) => import\(["']\.\/markdown-document["']\)/);
+  assert.match(content, /fetch\(withBase\(assetBasePath, `documents\/\$\{path\}`\)\)/);
+  assert.match(config, /virtual:portal-document-index/);
+  assert.match(config, /fileName: `documents\/\$\{document\.path\}`/);
+  assert.match(validator, /maximumPortalInitialJavaScriptBytes = 400_000/);
+  assert.match(validator, /portal document assets do not exactly match the canonical concept\/math corpus/);
 });
 
 test("the public-source wording does not weaken the primary site's access badge", async () => {
@@ -90,12 +152,13 @@ test("the public-source wording does not weaken the primary site's access badge"
   assert.match(book, /Generated from the public Git repository/);
 });
 
-test("third-party notices include every current virtual bundler runtime", () => {
+test("third-party notices include bundler runtimes and accept the project portal index", () => {
   const notices = renderThirdPartyNotices({
     moduleIds: new Set([
       "\0rolldown/runtime.js",
       "\0vite/modulepreload-polyfill.js",
       "\0vite/preload-helper.js",
+      "\0virtual:portal-document-index",
     ]),
     repositoryRoot,
   });
