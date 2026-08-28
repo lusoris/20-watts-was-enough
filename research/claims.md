@@ -24500,7 +24500,11 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
   regime, while losing outside its support region.
 - **Open question:** is any residual gain left after an optimized tagged queue
   receives the same evidence and effector access?
-- **Direct test:** [`F-029 / CMB-X01`](../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md#cmb-x01--recruited-maintenance-versus-occupancy-and-explicit-queueing).
+- **Direct test:** [F-029 / CMB-X01](../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md#cmb-x01--recruited-maintenance-versus-occupancy-and-explicit-queueing).
+- **Implementation state:** the [public-development CMB-X01 harness](../experiments/workstation/fixture-029/README.md)
+  exercises deterministic aggregate construction and scoped accounting only;
+  it does not run the registered comparison and leaves this claim
+  protocol-complete, `NO_RESULT`, and not workstation-executable.
 - **Traceability:** [clinical-biotechnology audit](audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md#1-induced-proximity-relation-triggered-action).
 
 ### C-1575
@@ -24644,8 +24648,9 @@ tracks C-1497--C-1505 as one no-promotion evaluation bundle.
 - **Open question:** does an ordinary package-and-validation state machine
   capture the complete residual once both arms receive the same phase signal?
 - **Direct test:** [F-029 / CMB-X04](../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md#cmb-x04--phase-selective-stabilization-and-release).
-- **Implementation state:** the [public-development CMB-X04 harness](../experiments/workstation/fixture-029/README.md)
-  exercises deterministic construction and accounting only; it does not run
-  the registered comparison and leaves this claim protocol-complete,
-  `NO_RESULT`, and not workstation-executable.
+- **Implementation state:** the [public-development CMB-X01 + CMB-X04 suite](../experiments/workstation/fixture-029/README.md)
+  exercises deterministic aggregate construction and scoped accounting for
+  CMB-X04 without comparing it with CMB-X01 or running the registered CMB-X04
+  comparison; this claim remains protocol-complete, `NO_RESULT`, and not
+  workstation-executable.
 - **Traceability:** [clinical-biotechnology audit](audits/2026-08-27-clinical-biotechnology-endogenous-machinery.md#4-phase-selective-pharmacological-chaperoning).

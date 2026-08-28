@@ -2605,7 +2605,7 @@
           "id": "full-profile",
           "label": "Frozen full profile",
           "passed": true,
-          "detail": "data.full_profile schema 1, development identity, opportunities_per_seed workload cardinality, and SHA-256 match the frozen repository file"
+          "detail": "data.full_profile schema 1, development identity, opportunities_per_seed workload cardinality, direct SHA-256, and any declared embedded seed/config hashes match repository files"
         },
         {
           "id": "full-tests",
@@ -7368,7 +7368,7 @@
           "id": "full-profile",
           "label": "Frozen full profile",
           "passed": true,
-          "detail": "data.full_profile schema 1, development identity, opportunities_per_seed workload cardinality, and SHA-256 match the frozen repository file"
+          "detail": "data.full_profile schema 1, development identity, opportunities_per_seed workload cardinality, direct SHA-256, and any declared embedded seed/config hashes match repository files"
         },
         {
           "id": "full-tests",
@@ -8250,7 +8250,7 @@
           "id": "full-profile",
           "label": "Frozen full profile",
           "passed": true,
-          "detail": "data.full_profile schema 1, development identity, opportunities_per_seed, studies_per_seed workload cardinality, and SHA-256 match the frozen repository file"
+          "detail": "data.full_profile schema 1, development identity, opportunities_per_seed, studies_per_seed workload cardinality, direct SHA-256, and any declared embedded seed/config hashes match repository files"
         },
         {
           "id": "full-tests",
@@ -8562,7 +8562,7 @@
           "id": "full-profile",
           "label": "Frozen full profile",
           "passed": true,
-          "detail": "data.full_profile schema 1, development identity, opportunities_per_seed workload cardinality, and SHA-256 match the frozen repository file"
+          "detail": "data.full_profile schema 1, development identity, opportunities_per_seed workload cardinality, direct SHA-256, and any declared embedded seed/config hashes match repository files"
         },
         {
           "id": "full-tests",
@@ -8778,7 +8778,7 @@
           "id": "full-profile",
           "label": "Frozen full profile",
           "passed": false,
-          "detail": "data.full_profile must match its registered artifact, development profile, schema version, exact positive safe-integer workload cardinality fields, and full_profile_sha256"
+          "detail": "data.full_profile must match its registered artifact, development profile, schema version, exact positive safe-integer workload cardinality fields, full_profile_sha256, and any declared embedded seed/config hashes"
         },
         {
           "id": "full-tests",
@@ -8886,7 +8886,7 @@
           "id": "full-profile",
           "label": "Frozen full profile",
           "passed": true,
-          "detail": "data.full_profile schema 1, development identity, t01_episodes_per_seed, t02_lifecycles_per_seed workload cardinality, and SHA-256 match the frozen repository file"
+          "detail": "data.full_profile schema 1, development identity, t01_episodes_per_seed, t02_lifecycles_per_seed workload cardinality, direct SHA-256, and any declared embedded seed/config hashes match repository files"
         },
         {
           "id": "full-tests",
@@ -8995,7 +8995,7 @@
           "id": "full-profile",
           "label": "Frozen full profile",
           "passed": true,
-          "detail": "data.full_profile schema 1, development identity, opportunities_per_seed workload cardinality, and SHA-256 match the frozen repository file"
+          "detail": "data.full_profile schema 1, development identity, opportunities_per_seed workload cardinality, direct SHA-256, and any declared embedded seed/config hashes match repository files"
         },
         {
           "id": "full-tests",
@@ -9085,7 +9085,7 @@
           "id": "full-profile",
           "label": "Frozen full profile",
           "passed": true,
-          "detail": "data.full_profile schema 1, development identity, worlds_per_seed workload cardinality, and SHA-256 match the frozen repository file"
+          "detail": "data.full_profile schema 1, development identity, worlds_per_seed workload cardinality, direct SHA-256, and any declared embedded seed/config hashes match repository files"
         },
         {
           "id": "full-tests",
@@ -9193,7 +9193,7 @@
           "id": "full-profile",
           "label": "Frozen full profile",
           "passed": true,
-          "detail": "data.full_profile schema 2, development identity, worlds_per_seed workload cardinality, and SHA-256 match the frozen repository file"
+          "detail": "data.full_profile schema 2, development identity, worlds_per_seed workload cardinality, direct SHA-256, and any declared embedded seed/config hashes match repository files"
         },
         {
           "id": "full-tests",
@@ -9328,7 +9328,7 @@
           "id": "full-profile",
           "label": "Frozen full profile",
           "passed": true,
-          "detail": "data.full_profile schema 1, development identity, worlds_per_seed workload cardinality, and SHA-256 match the frozen repository file"
+          "detail": "data.full_profile schema 1, development identity, worlds_per_seed workload cardinality, direct SHA-256, and any declared embedded seed/config hashes match repository files"
         },
         {
           "id": "full-tests",
@@ -9452,13 +9452,13 @@
           "id": "execution-claim-scope",
           "label": "Explicit execution-track claim scope",
           "passed": true,
-          "detail": "execution track is limited to C-1580"
+          "detail": "execution track is limited to C-1574, C-1580"
         },
         {
           "id": "full-profile",
           "label": "Frozen full profile",
           "passed": true,
-          "detail": "data.full_profile schema 1, development identity, worlds_per_seed workload cardinality, and SHA-256 match the frozen repository file"
+          "detail": "data.full_profile schema 1, development identity, worlds_per_seed workload cardinality, direct SHA-256, and any declared embedded seed/config hashes match repository files"
         },
         {
           "id": "full-tests",
@@ -9504,6 +9504,7 @@
         }
       ],
       "executionClaims": [
+        "C-1574",
         "C-1580"
       ],
       "claimSideClaims": [

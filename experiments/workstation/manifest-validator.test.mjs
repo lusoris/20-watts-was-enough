@@ -174,17 +174,78 @@ test("Fixture 026 is smoke-ready with an exact C-1540 ledger binding", async () 
   }
 });
 
-test("Fixture 029 is smoke-ready with an exact C-1580 scope ceiling", async () => {
+test("Fixture 029 is smoke-ready with an exact C-1574/C-1580 suite scope ceiling", async () => {
   const result = await validateExecutionManifest(root, fixture029Manifest, "fixture-029");
+  const manifest = JSON.parse(await readFile(fixture029Manifest, "utf8"));
+  const fullProfile = JSON.parse(await readFile(
+    path.join(root, manifest.data.full_profile),
+    "utf8",
+  ));
   assert.equal(result.readiness, "smoke-ready");
   assert.equal(result.ready, false);
   assert.deepEqual(result.errors, []);
-  assert.deepEqual(result.executionClaims, ["C-1580"]);
+  assert.deepEqual(result.executionClaims, ["C-1574", "C-1580"]);
+  assert.equal(manifest.outputs.schema,
+    "experiments/workstation/fixture-029/suite-receipt.schema.json");
+  assert.equal(manifest.outputs.analysis_schema,
+    "experiments/workstation/fixture-029/suite-output.schema.json");
+  assert.equal(fullProfile.seed_value_domain, "unsigned-uint32");
+  assert.match(fullProfile.shared_seed_pack_sha256, /^[0-9a-f]{64}$/u);
+  assert.ok(fullProfile.tracks.every((track) => /^[0-9a-f]{64}$/u.test(
+    track.configuration_sha256,
+  )));
   const promotionCheck = (id) => result.promotionChecks.find((check) => check.id === id);
   assert.equal(promotionCheck("execution-claim-scope").passed, true);
   assert.equal(promotionCheck("full-profile").passed, true);
   for (const id of ["confirmation-seeds", "held_out-seeds", "promotion-evidence"]) {
     assert.equal(promotionCheck(id).passed, false, id);
+  }
+});
+
+test("Fixture 029 full-profile freezing includes referenced configs and seed pack", async () => {
+  const temporary = await mkdtemp(path.join(root, "tmp-f029-profile-closure-"));
+  const sourceRoot = path.join(root, "experiments", "workstation", "fixture-029");
+  const profilePath = path.join(temporary, "configs", "suite-development.json");
+  try {
+    const manifest = JSON.parse(await readFile(fixture029Manifest, "utf8"));
+    const profileBytes = await readFile(
+      path.join(sourceRoot, "configs", "suite-development.json"),
+    );
+    const profile = JSON.parse(profileBytes.toString("utf8"));
+    await mkdir(path.dirname(profilePath), { recursive: true });
+    await mkdir(path.join(temporary, "seeds"), { recursive: true });
+    await writeFile(profilePath, profileBytes);
+    await writeFile(
+      path.join(temporary, profile.shared_seed_pack),
+      await readFile(path.join(sourceRoot, profile.shared_seed_pack)),
+    );
+    for (const track of profile.tracks) {
+      await writeFile(
+        path.join(temporary, track.configuration),
+        await readFile(path.join(sourceRoot, track.configuration)),
+      );
+    }
+    manifest.data.full_profile = path.relative(root, profilePath).replaceAll("\\", "/");
+    manifest.data.full_profile_sha256 = createHash("sha256").update(profileBytes).digest("hex");
+
+    let checks = await workstationPromotionChecks(root, manifest);
+    assert.equal(checks.find((check) => check.id === "full-profile").passed, true);
+
+    const firstTrackPath = path.join(temporary, profile.tracks[0].configuration);
+    await writeFile(firstTrackPath, `${await readFile(firstTrackPath, "utf8")}\n`);
+    checks = await workstationPromotionChecks(root, manifest);
+    assert.equal(checks.find((check) => check.id === "full-profile").passed, false);
+
+    await writeFile(
+      firstTrackPath,
+      await readFile(path.join(sourceRoot, profile.tracks[0].configuration)),
+    );
+    const seedPath = path.join(temporary, profile.shared_seed_pack);
+    await writeFile(seedPath, `${await readFile(seedPath, "utf8")}\n`);
+    checks = await workstationPromotionChecks(root, manifest);
+    assert.equal(checks.find((check) => check.id === "full-profile").passed, false);
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
   }
 });
 

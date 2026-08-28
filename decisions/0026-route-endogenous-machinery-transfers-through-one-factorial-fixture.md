@@ -59,9 +59,15 @@ does not require a new decision.
 
 ## Implementation note — 2026-08-28
 
-A bounded public-development CMB-X04 harness now exercises all eight registered
-preservation/release paths plus deterministic aggregate-record, resume,
-analysis, and validation plumbing. The manifest scope ceiling is C-1580, but the harness is
+Bounded public-development CMB-X01 and CMB-X04 harnesses now exercise all seven
+registered X01 arms and all eight preservation/release paths through
+deterministic aggregate-record, resume, analysis and validation plumbing. A
+version-2 suite receipts their separate subruns under the exact scope ceiling
+C-1574/C-1580 without pooling, comparison or ranking. The manifest remains
 `smoke-ready`, `NO_RESULT`, and non-promotable: it performs no strongest-null
-selection, confirmatory comparison, performance conclusion, or energy
-measurement. CMB-X01--CMB-X03 remain unimplemented.
+selection, confirmatory comparison, statistical or performance conclusion, or
+energy measurement. The public-development contracts now fail closed on harm
+and pending-queue limits, independently replay both subrun semantics, bind all
+reachable retry draws, freeze referenced seed/configuration content, and reject
+tampered authority metadata even when a ledger is correctly rehashed. CMB-X02
+and CMB-X03 remain unimplemented.

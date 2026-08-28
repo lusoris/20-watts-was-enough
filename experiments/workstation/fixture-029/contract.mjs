@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 
 import { FIXTURE_029_ARMS, FIXTURE_029_FAMILIES } from "./generator.mjs";
 
-export const FIXTURE_029_EVENT_CONTRACT_VERSION = "fixture-029.cmb-x04-event.v2";
+export const FIXTURE_029_EVENT_CONTRACT_VERSION = "fixture-029.cmb-x04-event.v3";
 export const FIXTURE_029_INTERPRETATION = "NO_RESULT: deterministic public-development CMB-X04 phase-preservation/release smoke diagnostic and integrity plumbing only.";
 
 const INPUT_HASH_KEYS = [
@@ -31,7 +31,8 @@ const RESOURCE_KEYS = [
   "logical_operations", "transported_bytes", "wrapper_state_bytes_created", "wrapper_byte_steps",
   "validation_operations", "retry_operations", "replication_operations", "reload_operations",
   "rebuild_operations", "wrapper_construction_operations", "compatibility_check_operations",
-  "release_operations", "cleanup_operations", "bytes_read", "bytes_written",
+  "release_operations", "cleanup_operations", "bytes_read", "transport_bytes_written",
+  "reconstruction_bytes_written", "bytes_written",
   "retained_state_byte_steps",
 ];
 const GATE_KEYS = [
@@ -107,7 +108,27 @@ export function assertFixture029Record(record, {
     + o.copies_bound + o.copies_invalid + o.copies_destroyed;
   const artifactConservation = o.artifacts_attempted === o.artifacts_active
     + o.artifacts_bound + o.artifacts_lost + o.artifacts_invalid;
-  const resourcesComplete = RESOURCE_KEYS.every((key) => count(r[key]));
+  const transportedPayloadBytes = o.copies_transported * publicContract.artifact_bytes;
+  const transportedWrapperBytes = r.wrapper_state_bytes_created;
+  const reconstructedArtifactBytes = o.rebuilt * publicContract.artifact_bytes;
+  const wrapperCopiesCreated = transportedWrapperBytes / publicContract.wrapper_state_bytes;
+  const resourcesComplete = RESOURCE_KEYS.every((key) => count(r[key]))
+    && Number.isSafeInteger(transportedPayloadBytes)
+    && Number.isSafeInteger(reconstructedArtifactBytes)
+    && Number.isSafeInteger(wrapperCopiesCreated)
+    && wrapperCopiesCreated <= o.copies_transported
+    && r.retry_operations === o.retried
+    && r.replication_operations === o.replicated
+    && r.reload_operations === o.reloaded
+    && r.rebuild_operations === o.rebuilt
+    && r.wrapper_construction_operations === wrapperCopiesCreated
+    && r.compatibility_check_operations === wrapperCopiesCreated
+    && r.transported_bytes === transportedPayloadBytes + transportedWrapperBytes
+    && r.transport_bytes_written === r.transported_bytes
+    && r.reconstruction_bytes_written === reconstructedArtifactBytes
+    && r.bytes_written === r.transport_bytes_written + r.reconstruction_bytes_written
+    && r.bytes_read >= transportedPayloadBytes
+    && r.wrapper_byte_steps >= transportedWrapperBytes * publicContract.transit_stages;
   const authorityParity = record?.maximum_simultaneous_copies_observed <= publicContract.maximum_simultaneous_copies
     && record?.maximum_lifetime_copies_observed <= publicContract.maximum_lifetime_copies;
   const taskGate = o.artifacts_attempted > 0 && p.useful_lifetime_steps > 0
@@ -171,6 +192,7 @@ export function assertFixture029Record(record, {
     || o.accepted_service_nsu !== o.active_artifact_steps || o.bound_active_impossible !== 0
     || o.copies_transported !== o.copies_created || o.copies_intact + o.copies_lost !== o.copies_created
     || o.artifacts_active > o.artifacts_attempted || o.artifacts_invalid > o.artifacts_attempted
+    || !resourcesComplete
     || Object.values(g).some((value) => typeof value !== "boolean")
     || g.information_parity !== (record.arm !== "X04-ORACLE")
     || g.action_authority_parity !== authorityParity || g.task_gate_pass !== taskGate

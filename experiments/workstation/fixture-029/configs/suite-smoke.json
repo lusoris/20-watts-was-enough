@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "artifact": "fixture-029",
+  "suite": "CMB-X01+CMB-X04",
+  "profile": "smoke",
+  "partition": "public-development-only",
+  "worlds_per_seed": 8,
+  "shared_seed_pack": "seeds/development.reveal.json",
+  "shared_seed_pack_sha256": "d99864e2b7ec1d72b40e88032e6995e0e8c8da6079fe2662a3b6b51d87e690c9",
+  "seed_value_domain": "unsigned-uint32",
+  "tracks": [
+    {
+      "track": "CMB-X01",
+      "claims": ["C-1574"],
+      "configuration": "configs/cmb-x01-smoke.json",
+      "configuration_sha256": "56cdc44c7a31223f6580ef6b07c48625d777f4ba70cc6211c9bd11c1f806e40c",
+      "output_directory": "cmb-x01"
+    },
+    {
+      "track": "CMB-X04",
+      "claims": ["C-1580"],
+      "configuration": "configs/smoke.json",
+      "configuration_sha256": "c80e289391e4b2116bf87b74694aef54d1c252ea1781e93eed0844d27a6960d6",
+      "output_directory": "cmb-x04"
+    }
+  ]
+}

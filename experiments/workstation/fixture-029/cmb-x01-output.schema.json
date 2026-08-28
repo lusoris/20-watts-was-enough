@@ -1,0 +1,428 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-029.cmb-x01-ledger-event.v3.schema.json",
+  "title": "Fixture 029 CMB-X01 public-development ledger event",
+  "description": "Outer append-only event containing one independently digested aggregate CMB-X01 construction record. This is diagnostic plumbing, not a protocol-native action trace or scientific result.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "cmb-x01-ledger-contract.mjs",
+    "export": "assertCmbX01LedgerRecord",
+    "version_export": "CMB_X01_LEDGER_CONTRACT_VERSION",
+    "contract_version": "fixture-029.cmb-x01-public-development-ledger-event.v3",
+    "test": "cmb-x01-runner.test.mjs"
+  },
+  "definitions": {
+    "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "count": { "type": "integer", "minimum": 0 },
+    "probabilityPpm": { "type": "integer", "minimum": 0, "maximum": 1000000 },
+    "profile": { "enum": ["smoke", "development"] },
+    "claimScope": {
+      "type": "array",
+      "items": { "const": "C-1574" },
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "family": {
+      "enum": [
+        "reference-pressure", "perfect-evidence", "no-harmful-targets", "no-engine",
+        "zero-productive-geometry", "binary-saturation",
+        "no-resynthesis-or-replacement", "cross-compartment-leakage"
+      ]
+    },
+    "arm": {
+      "enum": [
+        "X01-NONE", "X01-OCCUPY", "X01-DIRECT", "X01-GC", "X01-QUEUE",
+        "X01-RECRUIT", "X01-ORACLE"
+      ]
+    },
+    "actionAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_id", "engine_class", "engine_capacity_per_step",
+        "permitted_target_classes", "permitted_destructive_action",
+        "destructive_verification_required", "replacement_authorized"
+      ],
+      "properties": {
+        "authority_id": { "const": "cmb-x01-maintenance-authority-v1" },
+        "engine_class": { "const": "typed-maintenance-engine-v1" },
+        "engine_capacity_per_step": { "type": "integer", "minimum": 0, "maximum": 256 },
+        "permitted_target_classes": {
+          "type": "array",
+          "items": { "enum": ["cache-entry", "transient-worker"] },
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "permitted_destructive_action": { "const": "verified-remove-v1" },
+        "destructive_verification_required": { "const": true },
+        "replacement_authorized": { "type": "boolean" }
+      }
+    },
+    "publicContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_slots", "horizon_steps", "target_version", "action_score_threshold_ppm",
+        "garbage_collection_period_steps", "mediator_inventory_declared",
+        "target_metadata_bytes", "queue_entry_bytes", "mediator_state_bytes",
+        "suppression_state_bytes", "action_authority"
+      ],
+      "properties": {
+        "target_slots": { "type": "integer", "minimum": 16, "maximum": 256 },
+        "horizon_steps": { "type": "integer", "minimum": 16, "maximum": 256 },
+        "target_version": { "const": 1 },
+        "action_score_threshold_ppm": { "$ref": "#/definitions/probabilityPpm" },
+        "garbage_collection_period_steps": { "type": "integer", "minimum": 2 },
+        "mediator_inventory_declared": { "type": "integer", "minimum": 0, "maximum": 1024 },
+        "target_metadata_bytes": { "type": "integer", "minimum": 1 },
+        "queue_entry_bytes": { "type": "integer", "minimum": 1 },
+        "mediator_state_bytes": { "type": "integer", "minimum": 1 },
+        "suppression_state_bytes": { "type": "integer", "minimum": 1 },
+        "action_authority": { "$ref": "#/definitions/actionAuthority" }
+      }
+    },
+    "evaluatorParameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "initial_occupancy_ppm", "initial_harmful_ppm", "arrival_ppm",
+        "arrival_harmful_ppm", "harmful_conversion_ppm", "useful_recovery_ppm",
+        "resynthesis_ppm", "resynthesis_harmful_ppm", "evidence_sensitivity_ppm",
+        "evidence_false_positive_ppm", "evidence_delay_steps",
+        "engine_capacity_per_step", "mediator_inventory", "target_mediator_compatible",
+        "mediator_engine_compatible", "productive_geometry_ppm",
+        "mediator_reuse_enabled", "mediator_leakage_ppm", "replacement_enabled",
+        "binary_saturation"
+      ],
+      "properties": {
+        "evidence_delay_steps": { "$ref": "#/definitions/count" },
+        "engine_capacity_per_step": { "type": "integer", "minimum": 0, "maximum": 256 },
+        "mediator_inventory": { "type": "integer", "minimum": 0, "maximum": 1024 },
+        "target_mediator_compatible": { "type": "boolean" },
+        "mediator_engine_compatible": { "type": "boolean" },
+        "mediator_reuse_enabled": { "type": "boolean" },
+        "replacement_enabled": { "type": "boolean" },
+        "binary_saturation": { "type": "boolean" }
+      },
+      "patternProperties": {
+        "^(initial_occupancy_ppm|initial_harmful_ppm|arrival_ppm|arrival_harmful_ppm|harmful_conversion_ppm|useful_recovery_ppm|resynthesis_ppm|resynthesis_harmful_ppm|evidence_sensitivity_ppm|evidence_false_positive_ppm|productive_geometry_ppm|mediator_leakage_ppm)$": {
+          "$ref": "#/definitions/probabilityPpm"
+        }
+      }
+    },
+    "mechanism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "perfect_evidence", "harmful_targets_possible", "engine_available",
+        "productive_geometry_possible", "mediator_saturation", "resynthesis_enabled",
+        "replacement_enabled", "mediator_leakage_possible", "mediator_reuse_enabled"
+      ],
+      "patternProperties": {
+        "^(perfect_evidence|harmful_targets_possible|engine_available|productive_geometry_possible|mediator_saturation|resynthesis_enabled|replacement_enabled|mediator_leakage_possible|mediator_reuse_enabled)$": {
+          "type": "boolean"
+        }
+      }
+    },
+    "outcomes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_slots", "targets_initial", "target_arrivals", "target_resyntheses",
+        "target_replacements", "completed_removals", "harmful_removals",
+        "useful_target_deletions", "harmful_target_steps", "useful_target_steps",
+        "harmful_suppression_steps", "useful_suppression_steps", "accepted_service_nsu",
+        "potential_service_nsu", "harmful_misses_end", "evidence_false_positives",
+        "evidence_false_negatives", "queue_entries", "queue_service_attempts",
+        "queue_pending_end", "direct_capacity_misses", "queue_wait_p95_steps",
+        "queue_wait_p99_steps", "productive_recruitment_events", "failed_geometry_events",
+        "mediator_starvation_events", "verified_mediator_reuses",
+        "mediators_with_verified_reuse", "maximum_verified_completions_per_mediator"
+      ],
+      "properties": {
+        "queue_wait_p95_steps": {
+          "anyOf": [{ "type": "null" }, { "$ref": "#/definitions/count" }]
+        },
+        "queue_wait_p99_steps": {
+          "anyOf": [{ "type": "null" }, { "$ref": "#/definitions/count" }]
+        }
+      },
+      "patternProperties": {
+        "^(target_slots|targets_initial|target_arrivals|target_resyntheses|target_replacements|completed_removals|harmful_removals|useful_target_deletions|harmful_target_steps|useful_target_steps|harmful_suppression_steps|useful_suppression_steps|accepted_service_nsu|potential_service_nsu|harmful_misses_end|evidence_false_positives|evidence_false_negatives|queue_entries|queue_service_attempts|queue_pending_end|direct_capacity_misses|productive_recruitment_events|failed_geometry_events|mediator_starvation_events|verified_mediator_reuses|mediators_with_verified_reuse|maximum_verified_completions_per_mediator)$": {
+          "$ref": "#/definitions/count"
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "logical_operations", "evidence_reads", "target_search_operations",
+        "target_transition_operations", "queue_insert_operations", "queue_pop_operations",
+        "engine_service_operations", "direct_action_operations", "gc_scan_operations",
+        "occupancy_operations", "mediator_placement_operations",
+        "mediator_binding_operations", "productive_complex_operations",
+        "verification_operations", "replacement_operations", "resynthesis_operations",
+        "mediator_release_operations", "mediator_leak_operations", "bytes_read",
+        "bytes_written", "registry_byte_steps", "queue_entry_byte_steps",
+        "mediator_byte_steps", "suppression_byte_steps"
+      ],
+      "patternProperties": {
+        "^(logical_operations|evidence_reads|target_search_operations|target_transition_operations|queue_insert_operations|queue_pop_operations|engine_service_operations|direct_action_operations|gc_scan_operations|occupancy_operations|mediator_placement_operations|mediator_binding_operations|productive_complex_operations|verification_operations|replacement_operations|resynthesis_operations|mediator_release_operations|mediator_leak_operations|bytes_read|bytes_written|registry_byte_steps|queue_entry_byte_steps|mediator_byte_steps|suppression_byte_steps)$": {
+          "$ref": "#/definitions/count"
+        }
+      }
+    },
+    "inventories": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target", "engine", "mediator"],
+      "properties": {
+        "target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["created", "removed", "present_end"],
+          "patternProperties": {
+            "^(created|removed|present_end)$": { "$ref": "#/definitions/count" }
+          }
+        },
+        "engine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["service_capacity", "service_used", "service_idle"],
+          "patternProperties": {
+            "^(service_capacity|service_used|service_idle)$": { "$ref": "#/definitions/count" }
+          }
+        },
+        "mediator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "created", "free_end", "bound_end", "consumed", "leaked",
+            "verified_completion_counts"
+          ],
+          "properties": {
+            "verified_completion_counts": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/count" },
+              "maxItems": 1024
+            }
+          },
+          "patternProperties": {
+            "^(created|free_end|bound_end|consumed|leaked)$": {
+              "$ref": "#/definitions/count"
+            }
+          }
+        }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_evaluator_separation", "destructive_action_authority_parity",
+        "target_conservation_pass", "engine_conservation_pass",
+        "mediator_conservation_pass", "resource_ledger_complete", "task_gate_pass",
+        "harm_gate_pass", "protected_gate_pass", "queue_tail_gate_pass",
+        "verified_mediator_reuse_pass"
+      ],
+      "patternProperties": {
+        "^(observation_evaluator_separation|destructive_action_authority_parity|target_conservation_pass|engine_conservation_pass|mediator_conservation_pass|resource_ledger_complete|task_gate_pass|harm_gate_pass|protected_gate_pass|queue_tail_gate_pass|verified_mediator_reuse_pass)$": {
+          "type": "boolean"
+        }
+      }
+    },
+    "gateThresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_accepted_service_fraction_ppm", "maximum_useful_deletions",
+        "maximum_harmful_target_fraction_ppm", "maximum_harmful_miss_fraction_ppm",
+        "maximum_queue_p99_steps", "maximum_queue_pending_fraction_ppm"
+      ],
+      "properties": {
+        "minimum_accepted_service_fraction_ppm": {
+          "type": "integer", "minimum": 1, "maximum": 1000000
+        },
+        "maximum_useful_deletions": { "$ref": "#/definitions/count" },
+        "maximum_harmful_target_fraction_ppm": {
+          "type": "integer", "minimum": 1, "maximum": 1000000
+        },
+        "maximum_harmful_miss_fraction_ppm": {
+          "type": "integer", "minimum": 1, "maximum": 1000000
+        },
+        "maximum_queue_p99_steps": { "$ref": "#/definitions/count" },
+        "maximum_queue_pending_fraction_ppm": {
+          "type": "integer", "minimum": 1, "maximum": 1000000
+        }
+      }
+    },
+    "processMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_model", "maximum_concurrency", "aggregate_record_only",
+        "protocol_native_action_events_present", "per_arm_cpu_time_measured",
+        "per_arm_wall_time_measured", "per_arm_peak_memory_measured",
+        "measurement_boundary"
+      ],
+      "properties": {
+        "execution_model": {
+          "const": "single-process-deterministic-aggregate-construction-simulation"
+        },
+        "maximum_concurrency": { "const": 1 },
+        "aggregate_record_only": { "const": true },
+        "protocol_native_action_events_present": { "const": false },
+        "per_arm_cpu_time_measured": { "const": false },
+        "per_arm_wall_time_measured": { "const": false },
+        "per_arm_peak_memory_measured": { "const": false },
+        "measurement_boundary": {
+          "const": "construction diagnostics exclude comparative timing and energy endpoints"
+        }
+      }
+    },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target", "engine", "mediator", "service", "time", "bytes", "energy"],
+      "properties": {
+        "target": { "const": "target-instance" },
+        "engine": { "const": "engine-service-slot" },
+        "mediator": { "const": "mediator-instance" },
+        "service": { "const": "NSU" },
+        "time": { "const": "step" },
+        "bytes": { "const": "B" },
+        "energy": { "const": "not-measured" }
+      }
+    },
+    "construction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "contract_version", "generator_version", "artifact", "track",
+        "claim_scope", "record_kind", "status", "profile", "partition", "seed",
+        "world_index", "world_id", "generator_family", "arm", "config_sha256",
+        "public_contract", "evaluator_parameters",
+        "evaluator_disclosed_only_after_policy_decision", "paired_exogenous_sha256",
+        "policy_input_sha256", "policy_action_sha256", "policy_oracle_access",
+        "action_authority_sha256", "action_authority", "counterfactual_draw_domain",
+        "mechanism", "outcomes", "resources", "inventories", "gates",
+        "gate_thresholds", "process_metadata", "units", "result_label", "no_result",
+        "measured_energy_present", "energy_conclusion_allowed",
+        "comparison_inference_permitted", "claim_eligible", "scientific_result",
+        "performance_result", "interpretation", "integrity"
+      ],
+      "properties": {
+        "schema": { "const": 1 },
+        "contract_version": { "const": "fixture-029.cmb-x01-aggregate-construction.v3" },
+        "generator_version": { "const": "fixture-029.cmb-x01-generator.v3" },
+        "artifact": { "const": "fixture-029" },
+        "track": { "const": "CMB-X01" },
+        "claim_scope": { "$ref": "#/definitions/claimScope" },
+        "record_kind": {
+          "const": "aggregate-construction-diagnostic-not-protocol-native-action-events"
+        },
+        "status": { "const": "non-integrated-development-construction-only" },
+        "profile": { "$ref": "#/definitions/profile" },
+        "partition": { "const": "public-development-only" },
+        "seed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "world_index": { "type": "integer", "minimum": 0, "maximum": 63 },
+        "world_id": { "$ref": "#/definitions/hash" },
+        "generator_family": { "$ref": "#/definitions/family" },
+        "arm": { "$ref": "#/definitions/arm" },
+        "config_sha256": { "$ref": "#/definitions/hash" },
+        "public_contract": { "$ref": "#/definitions/publicContract" },
+        "evaluator_parameters": { "$ref": "#/definitions/evaluatorParameters" },
+        "evaluator_disclosed_only_after_policy_decision": { "const": true },
+        "paired_exogenous_sha256": { "$ref": "#/definitions/hash" },
+        "policy_input_sha256": { "$ref": "#/definitions/hash" },
+        "policy_action_sha256": { "$ref": "#/definitions/hash" },
+        "policy_oracle_access": { "type": "boolean" },
+        "action_authority_sha256": { "$ref": "#/definitions/hash" },
+        "action_authority": {
+          "const": "same-versioned-engine-service-and-verified-removal-authority-for-every-destructive-arm"
+        },
+        "counterfactual_draw_domain": {
+          "const": "F029/CMB-X01/seed/world/slot/step/stream/attempt; arm-excluded"
+        },
+        "mechanism": { "$ref": "#/definitions/mechanism" },
+        "outcomes": { "$ref": "#/definitions/outcomes" },
+        "resources": { "$ref": "#/definitions/resources" },
+        "inventories": { "$ref": "#/definitions/inventories" },
+        "gates": { "$ref": "#/definitions/gates" },
+        "gate_thresholds": { "$ref": "#/definitions/gateThresholds" },
+        "process_metadata": { "$ref": "#/definitions/processMetadata" },
+        "units": { "$ref": "#/definitions/units" },
+        "result_label": { "const": "NO_RESULT" },
+        "no_result": { "const": true },
+        "measured_energy_present": { "const": false },
+        "energy_conclusion_allowed": { "const": false },
+        "comparison_inference_permitted": { "const": false },
+        "claim_eligible": { "const": false },
+        "scientific_result": { "const": false },
+        "performance_result": { "const": false },
+        "interpretation": {
+          "const": "NO_RESULT: non-integrated deterministic CMB-X01 aggregate construction diagnostic only; no comparison, scientific, performance, claim, or energy authority."
+        },
+        "integrity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["payload_sha256"],
+          "properties": {
+            "payload_sha256": { "$ref": "#/definitions/hash" }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "schema", "ledger_contract_version", "artifact", "track", "claim_scope",
+    "run_id", "profile", "partition", "seed", "world_index", "world_id",
+    "generator_family", "arm", "work_key", "construction", "result_label",
+    "no_result", "measured_energy_present", "energy_conclusion_allowed",
+    "comparison_inference_permitted", "claim_eligible", "scientific_result",
+    "performance_result", "integrity"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "ledger_contract_version": {
+      "const": "fixture-029.cmb-x01-public-development-ledger-event.v3"
+    },
+    "artifact": { "const": "fixture-029" },
+    "track": { "const": "CMB-X01" },
+    "claim_scope": { "$ref": "#/definitions/claimScope" },
+    "run_id": { "$ref": "#/definitions/hash" },
+    "profile": { "$ref": "#/definitions/profile" },
+    "partition": { "const": "public-development-only" },
+    "seed": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+    "world_index": { "type": "integer", "minimum": 0, "maximum": 63 },
+    "world_id": { "$ref": "#/definitions/hash" },
+    "generator_family": { "$ref": "#/definitions/family" },
+    "arm": { "$ref": "#/definitions/arm" },
+    "work_key": {
+      "type": "string",
+      "pattern": "^CMB-X01/[0-9]+/[0-9]+/(reference-pressure|perfect-evidence|no-harmful-targets|no-engine|zero-productive-geometry|binary-saturation|no-resynthesis-or-replacement|cross-compartment-leakage)/(X01-NONE|X01-OCCUPY|X01-DIRECT|X01-GC|X01-QUEUE|X01-RECRUIT|X01-ORACLE)$"
+    },
+    "construction": { "$ref": "#/definitions/construction" },
+    "result_label": { "const": "NO_RESULT" },
+    "no_result": { "const": true },
+    "measured_energy_present": { "const": false },
+    "energy_conclusion_allowed": { "const": false },
+    "comparison_inference_permitted": { "const": false },
+    "claim_eligible": { "const": false },
+    "scientific_result": { "const": false },
+    "performance_result": { "const": false },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "previous_sha256", "record_sha256"],
+      "properties": {
+        "sequence": { "$ref": "#/definitions/count" },
+        "previous_sha256": { "$ref": "#/definitions/hash" },
+        "record_sha256": { "$ref": "#/definitions/hash" }
+      }
+    }
+  }
+}

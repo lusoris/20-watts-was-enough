@@ -75,6 +75,46 @@ async function fileSha256(file) {
   return createHash("sha256").update(await readFile(file)).digest("hex");
 }
 
+async function embeddedFullProfileClosureFrozen(root, fullProfile, profile) {
+  const tracks = Array.isArray(profile?.tracks) ? profile.tracks : [];
+  const declaresClosure = Object.hasOwn(profile ?? {}, "shared_seed_pack_sha256")
+    || tracks.some((track) => Object.hasOwn(track ?? {}, "configuration_sha256"));
+  if (!declaresClosure) return true;
+
+  try {
+    const profileRoot = path.resolve(path.dirname(fullProfile), "..");
+    if (
+      typeof profile.shared_seed_pack !== "string"
+      || !/^[0-9a-f]{64}$/u.test(profile.shared_seed_pack_sha256 ?? "")
+      || tracks.length === 0
+    ) return false;
+    const seedPack = await repositoryRegularFile(
+      root,
+      path.resolve(profileRoot, profile.shared_seed_pack),
+      "full-profile embedded seed pack",
+      { absoluteInput: true },
+    );
+    if (await fileSha256(seedPack) !== profile.shared_seed_pack_sha256) return false;
+
+    for (const [index, track] of tracks.entries()) {
+      if (
+        typeof track?.configuration !== "string"
+        || !/^[0-9a-f]{64}$/u.test(track.configuration_sha256 ?? "")
+      ) return false;
+      const configuration = await repositoryRegularFile(
+        root,
+        path.resolve(profileRoot, track.configuration),
+        `full-profile embedded track configuration ${index}`,
+        { absoluteInput: true },
+      );
+      if (await fileSha256(configuration) !== track.configuration_sha256) return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function resolveLocalSchemaReference(rootSchema, reference) {
   if (typeof reference !== "string" || !reference.startsWith("#/")) {
     throw new Error(`unsupported manifest schema reference ${reference}`);
@@ -808,7 +848,8 @@ export async function workstationPromotionChecks(root, manifest) {
         && profile.profile === profileContract.profile
         && JSON.stringify(declaredPerSeedFields) === JSON.stringify(expectedPerSeedFields)
         && expectedPerSeedFields.every((field) => Number.isSafeInteger(profile[field]) && profile[field] > 0)
-        && await fileSha256(fullProfile) === manifest.data.full_profile_sha256;
+        && await fileSha256(fullProfile) === manifest.data.full_profile_sha256
+        && await embeddedFullProfileClosureFrozen(root, fullProfile, profile);
     } catch {
       fullProfileFrozen = false;
     }
@@ -1088,8 +1129,8 @@ export async function workstationPromotionChecks(root, manifest) {
       label: "Frozen full profile",
       passed: fullProfileFrozen,
       detail: fullProfileFrozen
-        ? `data.full_profile schema ${fullProfileSchemaVersion}, development identity, ${fullProfileCardinalityFields.join(", ")} workload cardinality, and SHA-256 match the frozen repository file`
-        : "data.full_profile must match its registered artifact, development profile, schema version, exact positive safe-integer workload cardinality fields, and full_profile_sha256",
+        ? `data.full_profile schema ${fullProfileSchemaVersion}, development identity, ${fullProfileCardinalityFields.join(", ")} workload cardinality, direct SHA-256, and any declared embedded seed/config hashes match repository files`
+        : "data.full_profile must match its registered artifact, development profile, schema version, exact positive safe-integer workload cardinality fields, full_profile_sha256, and any declared embedded seed/config hashes",
     },
     {
       id: "full-tests",

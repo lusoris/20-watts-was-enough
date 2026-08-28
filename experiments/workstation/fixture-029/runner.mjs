@@ -15,11 +15,11 @@ import {
   simulateFixture029Arm, validateFixture029Config,
 } from "./generator.mjs";
 
-export const FIXTURE_029_RUNNER_VERSION = "fixture-029.cmb-x04-runner.v1";
+export const FIXTURE_029_RUNNER_VERSION = "fixture-029.cmb-x04-runner.v3";
 
 const fixtureRoot = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(fixtureRoot, "../../..");
-const ledgerFormat = "fixture-029.cmb-x04-ledger.v1";
+const ledgerFormat = "fixture-029.cmb-x04-ledger.v2";
 const sourceFiles = ["../lib/checkpoint-ledger.mjs", "contract.mjs", "generator.mjs", "output.schema.json", "runner.mjs"];
 
 async function exists(file) {
@@ -64,7 +64,7 @@ function validateSeeds(document) {
     document?.schema !== 1 || document.artifact !== "fixture-029"
     || document.partition !== "development" || document.state !== "public-development"
     || document.algorithm !== "literal-public-seed-list-v1"
-    || document.encoding !== "unsigned-little-endian-uint64"
+    || document.encoding !== "unsigned-little-endian-uint32"
     || !Array.isArray(document.seeds) || document.seeds.length < 2
     || document.seeds.some((seed) => !Number.isSafeInteger(seed) || seed < 0 || seed > 0xffff_ffff)
     || new Set(document.seeds).size !== document.seeds.length
@@ -202,6 +202,29 @@ function eventFor(unit, inputs, identity) {
   };
 }
 
+function auditExactRecordSet(records, inputs, identity) {
+  const expectedUnits = allWorkUnits(inputs);
+  if (records.length !== expectedUnits.length) {
+    throw new Error("Fixture 029 CMB-X04 record set has a missing or unexpected work unit.");
+  }
+  const byWorkKey = new Map();
+  for (const record of records) {
+    const key = fixture029WorkKey(record);
+    if (byWorkKey.has(key)) throw new Error(`Fixture 029 CMB-X04 duplicate work unit ${key}.`);
+    byWorkKey.set(key, record);
+  }
+  for (const unit of expectedUnits) {
+    const key = workUnitKey(unit);
+    const record = byWorkKey.get(key);
+    if (!record) throw new Error(`Fixture 029 CMB-X04 record set is missing work unit ${key}.`);
+    const regenerated = eventFor(unit, inputs, identity);
+    if (canonical(fixture029ScientificPayload(record)) !== canonical(regenerated)) {
+      throw new Error(`Fixture 029 CMB-X04 independently regenerated payload differs for ${key}.`);
+    }
+  }
+  return true;
+}
+
 function runBoundValidator(identity, inputs) {
   return (record, state) => assertFixture029Record(record, {
     ...state, runId: identity.run_id, profile: inputs.profile, inputSha256: inputs.inputSha256,
@@ -294,13 +317,20 @@ export async function computeFixture029Analysis(output) {
   const raw = await readFile(path.join(directory, "raw-events.jsonl"), "utf8");
   if (!raw.endsWith("\n") || raw.includes("\r")) throw new Error("Fixture 029 raw ledger is not canonical LF JSONL.");
   const records = raw.trimEnd().split("\n").map((line) => JSON.parse(line));
+  const exactReplayPass = auditExactRecordSet(records, inputs, identity);
   const byArm = Object.fromEntries(FIXTURE_029_ARMS.map((arm) => {
     const rows = records.filter((record) => record.arm === arm);
     return [arm, {
       records: rows.length,
       accepted_service_nsu: sum(rows, (row) => row.outcomes.accepted_service_nsu),
+      rebuilt: sum(rows, (row) => row.outcomes.rebuilt),
       logical_operations: sum(rows, (row) => row.resources.logical_operations),
+      copies_transported: sum(rows, (row) => row.outcomes.copies_transported),
       transported_bytes: sum(rows, (row) => row.resources.transported_bytes),
+      wrapper_state_bytes_created: sum(rows, (row) => row.resources.wrapper_state_bytes_created),
+      transport_bytes_written: sum(rows, (row) => row.resources.transport_bytes_written),
+      reconstruction_bytes_written: sum(rows, (row) => row.resources.reconstruction_bytes_written),
+      bytes_written: sum(rows, (row) => row.resources.bytes_written),
       wrapper_byte_steps: sum(rows, (row) => row.resources.wrapper_byte_steps),
       task_gate_passes: rows.filter((row) => row.gates.task_gate_pass).length,
       protected_gate_passes: rows.filter((row) => row.gates.protected_gate_pass).length,
@@ -308,7 +338,19 @@ export async function computeFixture029Analysis(output) {
     }];
   }));
   const family = (label, arm) => records.filter((record) => record.generator_family === label && record.arm === arm);
+  const recordFor = (source, arm) => records.find((record) => (
+    record.seed === source.seed && record.world_index === source.world_index && record.arm === arm
+  ));
+  const sequentialLifecycleRows = records.filter((record) => record.arm === "X04-RETRY").map((retry) => ({
+    retry,
+    reload: recordFor(retry, "X04-RELOAD"),
+    rebuild: recordFor(retry, "X04-REBUILD"),
+  }));
+  const orderedNullable = (left, right) => (
+    left === null ? right === null : right !== null && left <= right
+  );
   const checks = {
+    independently_regenerated_records_match: exactReplayPass,
     expected_records_present: records.length === run.expected_work_units,
     all_eight_arms_present_per_world: inputs.seeds.every((seed) => (
       generateFixture029Worlds({ seed, config: inputs.config }).every((world) => (
@@ -329,6 +371,49 @@ export async function computeFixture029Analysis(output) {
     resource_and_authority_gates_are_derived_and_pass: records.every((record) => (
       record.gates.resource_ledger_complete && record.gates.resource_gate_pass
       && record.gates.action_authority_parity
+    )),
+    transport_and_wrapper_accounting_hold: records.every((record) => (
+      record.resources.transported_bytes
+        === record.outcomes.copies_transported * record.public_contract.artifact_bytes
+          + record.resources.wrapper_state_bytes_created
+      && record.resources.transport_bytes_written === record.resources.transported_bytes
+      && record.resources.reconstruction_bytes_written
+        === record.outcomes.rebuilt * record.public_contract.artifact_bytes
+      && record.resources.bytes_written
+        === record.resources.transport_bytes_written
+          + record.resources.reconstruction_bytes_written
+      && Number.isSafeInteger(
+        record.resources.wrapper_state_bytes_created / record.public_contract.wrapper_state_bytes,
+      )
+      && record.resources.wrapper_construction_operations
+        === record.resources.wrapper_state_bytes_created / record.public_contract.wrapper_state_bytes
+      && record.resources.compatibility_check_operations
+        === record.resources.wrapper_construction_operations
+    )),
+    sequential_lifecycle_costs_are_visible: sequentialLifecycleRows.every(({ retry, reload, rebuild }) => (
+      reload !== undefined && rebuild !== undefined
+      && retry.outcomes.artifacts_active === reload.outcomes.artifacts_active
+      && reload.outcomes.artifacts_active === rebuild.outcomes.artifacts_active
+      && retry.outcomes.artifacts_lost === reload.outcomes.artifacts_lost
+      && reload.outcomes.artifacts_lost === rebuild.outcomes.artifacts_lost
+      && retry.outcomes.retried === reload.outcomes.reloaded
+      && reload.outcomes.reloaded === rebuild.outcomes.rebuilt
+      && retry.outcomes.accepted_service_nsu >= reload.outcomes.accepted_service_nsu
+      && reload.outcomes.accepted_service_nsu >= rebuild.outcomes.accepted_service_nsu
+      && retry.outcomes.missed_release_deadlines <= reload.outcomes.missed_release_deadlines
+      && reload.outcomes.missed_release_deadlines <= rebuild.outcomes.missed_release_deadlines
+      && orderedNullable(
+        retry.outcomes.activation_latency_p95_steps,
+        reload.outcomes.activation_latency_p95_steps,
+      )
+      && orderedNullable(
+        reload.outcomes.activation_latency_p95_steps,
+        rebuild.outcomes.activation_latency_p95_steps,
+      )
+    )) && sequentialLifecycleRows.some(({ retry, reload, rebuild }) => (
+      retry.outcomes.retried > 0
+      && retry.outcomes.accepted_service_nsu > reload.outcomes.accepted_service_nsu
+      && reload.outcomes.accepted_service_nsu > rebuild.outcomes.accepted_service_nsu
     )),
     retry_and_replication_nulls_are_exercised: byArm["X04-RETRY"].logical_operations > 0
       && records.some((record) => record.arm === "X04-RETRY" && record.outcomes.retried > 0)

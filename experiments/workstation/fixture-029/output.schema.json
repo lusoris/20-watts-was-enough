@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://20-watts-was-enough.local/schemas/fixture-029.cmb-x04-event.schema.json",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-029.cmb-x04-event.v3.schema.json",
   "title": "Fixture 029 CMB-X04 aggregate public-development construction record",
   "description": "One aggregate world-arm construction record for smoke plumbing; not a complete protocol-native action/event trace or scientific result.",
   "type": "object",
@@ -9,7 +9,7 @@
     "module": "contract.mjs",
     "export": "assertFixture029Record",
     "version_export": "FIXTURE_029_EVENT_CONTRACT_VERSION",
-    "contract_version": "fixture-029.cmb-x04-event.v2",
+    "contract_version": "fixture-029.cmb-x04-event.v3",
     "test": "contract.test.mjs"
   },
   "properties": {

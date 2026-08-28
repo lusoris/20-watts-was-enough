@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 
-export const FIXTURE_029_GENERATOR_VERSION = "fixture-029.cmb-x04-generator.v2";
+export const FIXTURE_029_GENERATOR_VERSION = "fixture-029.cmb-x04-generator.v4";
 
 export const FIXTURE_029_ARMS = Object.freeze([
   "X04-NONE", "X04-RETRY", "X04-REPLICA", "X04-RELOAD", "X04-REBUILD",
@@ -20,6 +20,9 @@ export const FIXTURE_029_FAMILIES = Object.freeze([
   "incompatible-artifact", "inverted-release-cue", "short-useful-lifetime",
   "weak-association",
 ]);
+
+const RELOAD_PREPARATION_STEPS = 2;
+const REBUILD_PREPARATION_STEPS = 5;
 
 function exactKeys(value, keys) {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -214,7 +217,8 @@ export function simulateFixture029Arm({ seed, world, arm, config }) {
     wrapper_byte_steps: 0, validation_operations: 0, retry_operations: 0,
     replication_operations: 0, reload_operations: 0, rebuild_operations: 0,
     wrapper_construction_operations: 0, compatibility_check_operations: 0,
-    release_operations: 0, cleanup_operations: 0, bytes_read: 0, bytes_written: 0,
+    release_operations: 0, cleanup_operations: 0, bytes_read: 0,
+    transport_bytes_written: 0, reconstruction_bytes_written: 0, bytes_written: 0,
     retained_state_byte_steps: 0,
   };
   const activationLatencies = [];
@@ -238,6 +242,7 @@ export function simulateFixture029Arm({ seed, world, arm, config }) {
     policyActions.push(action);
     const wrapped = action.wrap;
     let lifecycleCopies = action.mode === "replica" ? action.copies : 1;
+    let lifecycleSteps = p.transit_stages;
     maximumSimultaneousCopiesObserved = Math.max(
       maximumSimultaneousCopiesObserved,
       action.mode === "replica" ? action.copies : 1,
@@ -246,9 +251,11 @@ export function simulateFixture029Arm({ seed, world, arm, config }) {
     const transportCopy = (copyIndex) => {
       counts.copies_created += 1;
       counts.copies_transported += 1;
-      resources.transported_bytes += p.artifact_bytes;
+      const transportedBytes = p.artifact_bytes + (wrapped ? p.wrapper_state_bytes : 0);
+      resources.transported_bytes += transportedBytes;
       resources.bytes_read += p.artifact_bytes;
-      resources.bytes_written += p.artifact_bytes + (wrapped ? p.wrapper_state_bytes : 0);
+      resources.transport_bytes_written += transportedBytes;
+      resources.bytes_written += transportedBytes;
       resources.validation_operations += 1;
       resources.logical_operations += p.transit_stages + 2;
       if (wrapped) {
@@ -283,12 +290,17 @@ export function simulateFixture029Arm({ seed, world, arm, config }) {
           counts.reloaded += 1;
           resources.reload_operations += 1;
           resources.bytes_read += p.artifact_bytes;
+          lifecycleSteps += RELOAD_PREPARATION_STEPS;
         } else {
           counts.rebuilt += 1;
           resources.rebuild_operations += 1;
           resources.bytes_read += p.artifact_bytes;
+          resources.reconstruction_bytes_written += p.artifact_bytes;
+          resources.bytes_written += p.artifact_bytes;
+          lifecycleSteps += REBUILD_PREPARATION_STEPS;
         }
         resources.logical_operations += action.mode === "rebuild" ? 5 : 2;
+        lifecycleSteps += p.transit_stages;
         if (transportCopy(retry)) break;
       }
     }
@@ -340,7 +352,7 @@ export function simulateFixture029Arm({ seed, world, arm, config }) {
       }
       resources.wrapper_byte_steps += p.wrapper_state_bytes;
     }
-    const latency = p.transit_stages + (arm === "X04-PHASE" || arm === "X04-ORACLE" ? 1 : 0);
+    const latency = lifecycleSteps + (arm === "X04-PHASE" || arm === "X04-ORACLE" ? 1 : 0);
     counts.artifacts_active += 1;
     counts.copies_active += 1;
     counts.copies_destroyed += intactCopies.length - 1;

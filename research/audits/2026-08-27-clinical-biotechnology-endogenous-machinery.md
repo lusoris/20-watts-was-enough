@@ -14,7 +14,7 @@
   patient, genomic, trial, or product-development data
 - **Promotion state:** four biological observations and four speculative
   transfers are now recorded as [C-1573--C-1580](../claims.md#c-1573); only the
-  transfer claims route to [Fixture F-029](../../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md), whose CMB-X04 public-development harness remains construction-only and `NO_RESULT`,
+  transfer claims route to [Fixture F-029](../../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md), whose CMB-X01 and CMB-X04 public-development harnesses remain aggregate-construction-only and `NO_RESULT`,
   and no project principle or architecture candidate is added
 
 ## Executive finding
@@ -453,9 +453,11 @@ speculative transfers routed to F-029.
 
 ## F-CMB-01 — Endogenous-machinery transfer fixture
 
-**Fixture state:** protocol-complete and `NO_RESULT`; a bounded public-development
-CMB-X04 construction runner and smoke manifest exist, but no comparison,
-workstation-readiness, confirmation, performance, or energy authority follows.
+**Fixture state:** protocol-complete and `NO_RESULT`; bounded public-development
+CMB-X01 and CMB-X04 aggregate-construction runners plus a version-2 suite and
+smoke manifest exist, but no cross-track or within-track comparison,
+workstation-readiness, confirmation, statistical, performance, or energy
+authority follows. CMB-X02/CMB-X03 remain absent.
 
 The protocol-complete standalone specification is
 [Fixture F-029](../../experiments/fixtures/029-clinical-biotechnology-endogenous-machinery.md).
@@ -815,7 +817,12 @@ test authority. F-029 is split only if later executable runners require
 materially different environments or statistical designs; every transfer
 statement remains `NO_RESULT`.
 
-As of 2026-08-28, the public-development CMB-X04 construction harness exercises
-all eight registered paths and the observation, accounting, integrity, resume,
-analysis, and authority boundaries. It neither selects a strongest null nor
-tests the registered superiority hypothesis; CMB-X01--CMB-X03 remain prose-only.
+As of 2026-08-28, public-development CMB-X01 and CMB-X04 aggregate-construction
+harnesses exercise all seven and eight registered paths respectively, plus
+observation/evaluator separation, scoped accounting, integrity, resume,
+analysis and authority boundaries. The version-2 suite co-receipts the subruns
+but neither compares nor ranks them. Its hostile checks now reject unserved
+backlogs, omitted requeue or reconstruction writes, incomplete retry-draw
+commitments, semantically fabricated rechained ledgers, altered subrun
+metadata, and changed profile dependencies. It selects no strongest null and
+tests no registered superiority hypothesis; CMB-X02/CMB-X03 remain prose-only.

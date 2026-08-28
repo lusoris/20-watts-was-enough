@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-029.cmb-x01-x04-suite-receipt.schema.json",
+  "title": "Fixture 029 CMB-X01 plus CMB-X04 hash-chained subrun receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "suite-contract.mjs",
+    "export": "assertFixture029SuiteReceipt",
+    "version_export": "FIXTURE_029_SUITE_RECEIPT_CONTRACT_VERSION",
+    "contract_version": "fixture-029.cmb-x01-x04-suite-receipt.v2",
+    "test": "suite-runner.test.mjs"
+  },
+  "required": [
+    "schema", "contract_version", "artifact", "suite", "record_kind", "status",
+    "profile", "partition", "execution_claims", "suite_run_id", "track",
+    "receipt_index", "subrun_directory", "subrun_id", "subrun_summary",
+    "result_label", "no_result", "measured_energy_present", "energy_conclusion_allowed",
+    "comparison_inference_permitted", "ranking_permitted", "claim_eligible",
+    "scientific_result", "performance_result", "authority_reason", "interpretation",
+    "integrity"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-029.cmb-x01-x04-suite-receipt.v2" },
+    "artifact": { "const": "fixture-029" },
+    "suite": { "const": "CMB-X01+CMB-X04" },
+    "record_kind": { "const": "validated-subrun-receipt" },
+    "status": { "const": "public-development-diagnostic-only" },
+    "profile": { "enum": ["smoke", "development"] },
+    "partition": { "const": "public-development-only" },
+    "execution_claims": {
+      "type": "array", "prefixItems": [{ "const": "C-1574" }, { "const": "C-1580" }],
+      "items": false, "minItems": 2, "maxItems": 2
+    },
+    "suite_run_id": { "$ref": "#/$defs/hash" },
+    "track": { "enum": ["CMB-X01", "CMB-X04"] },
+    "receipt_index": { "type": "integer", "minimum": 0, "maximum": 1 },
+    "subrun_directory": { "enum": ["cmb-x01", "cmb-x04"] },
+    "subrun_id": { "$ref": "#/$defs/hash" },
+    "subrun_summary": { "$ref": "#/$defs/subrunSummary" },
+    "result_label": { "const": "NO_RESULT" },
+    "no_result": { "const": true },
+    "measured_energy_present": { "const": false },
+    "energy_conclusion_allowed": { "const": false },
+    "comparison_inference_permitted": { "const": false },
+    "ranking_permitted": { "const": false },
+    "claim_eligible": { "const": false },
+    "scientific_result": { "const": false },
+    "performance_result": { "const": false },
+    "authority_reason": {
+      "const": "Public-development aggregate-construction orchestration only; no comparison, ranking, confirmation, statistical, performance, claim, or energy authority."
+    },
+    "interpretation": {
+      "enum": [
+        "NO_RESULT: validated CMB-X01 public-development subrun receipt only.",
+        "NO_RESULT: validated CMB-X04 public-development subrun receipt only."
+      ]
+    },
+    "integrity": { "$ref": "#/$defs/integrity" }
+  },
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "subrunSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_payload_sha256", "raw_events_file_sha256", "checkpoint_file_sha256",
+        "analysis_payload_sha256", "expected_work_units", "ledger_records",
+        "scientific_payload_sha256", "hash_chain_sha256", "decision"
+      ],
+      "properties": {
+        "run_payload_sha256": { "$ref": "#/$defs/hash" },
+        "raw_events_file_sha256": { "$ref": "#/$defs/hash" },
+        "checkpoint_file_sha256": { "$ref": "#/$defs/hash" },
+        "analysis_payload_sha256": { "$ref": "#/$defs/hash" },
+        "expected_work_units": { "type": "integer", "minimum": 1 },
+        "ledger_records": { "type": "integer", "minimum": 1 },
+        "scientific_payload_sha256": { "$ref": "#/$defs/hash" },
+        "hash_chain_sha256": { "$ref": "#/$defs/hash" },
+        "decision": { "const": "diagnostic-pass" }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sequence", "previous_sha256", "record_sha256"],
+      "properties": {
+        "sequence": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "previous_sha256": { "$ref": "#/$defs/hash" },
+        "record_sha256": { "$ref": "#/$defs/hash" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "track": { "const": "CMB-X01" } }, "required": ["track"] },
+      "then": {
+        "properties": {
+          "receipt_index": { "const": 0 },
+          "subrun_directory": { "const": "cmb-x01" },
+          "interpretation": { "const": "NO_RESULT: validated CMB-X01 public-development subrun receipt only." }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "track": { "const": "CMB-X04" } }, "required": ["track"] },
+      "then": {
+        "properties": {
+          "receipt_index": { "const": 1 },
+          "subrun_directory": { "const": "cmb-x04" },
+          "interpretation": { "const": "NO_RESULT: validated CMB-X04 public-development subrun receipt only." }
+        }
+      }
+    }
+  ]
+}

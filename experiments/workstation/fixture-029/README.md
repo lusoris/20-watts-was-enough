@@ -1,39 +1,56 @@
-# Fixture 029 CMB-X04 public-development smoke harness
+# Fixture 029 CMB-X01 + CMB-X04 public-development smoke suite
 
-This directory contains a deterministic, CPU-only diagnostic for the `CMB-X04`
-slice of Fixture F-029 and claim scope `C-1580`. It exercises phase-qualified
-preservation and release against validation with retry, budget-matched
-replication, checkpoint reload, reconstruction, no intervention, permanent
-binding, and an ineligible oracle ceiling.
+This directory contains deterministic, CPU-only aggregate-construction
+diagnostics for two slices of Fixture F-029: `CMB-X01` / `C-1574` and
+`CMB-X04` / `C-1580`. The suite receipts the two subruns without comparing,
+ranking, pooling, or allowing one track to rescue the other. `CMB-X02` and
+`CMB-X03` are not implemented.
 
 Every event and command response is `NO_RESULT`. This harness is public
 development plumbing, not confirmation evidence, a workstation-ready protocol,
 an energy measurement, or authority for a scientific or performance claim.
-Each JSONL row is an aggregate **construction record** for one fixed
+Each subrun JSONL row is an aggregate **construction record** for one fixed
 world--arm work unit. It is not a complete protocol-native action/event trace.
 
 ## What is fixed
 
-1. All eight registered CMB-X04 arms execute on every fixed synthetic world.
-2. Transit and release random streams exclude the arm ID, preserving paired
-   counterfactual draws across arms.
-3. Actionable observations contain typed public metadata, a noisy release cue,
-   and a surface compatibility registry result. Evaluator-only compatibility,
-   hazard, and release truth open only after the action transcript is fixed.
-4. Every arm has the same declared authority: at most two simultaneous copies,
+1. All seven registered CMB-X01 arms and all eight registered CMB-X04 arms
+   execute on every fixed synthetic world in their respective subruns.
+2. Exogenous random streams exclude the arm ID, preserving paired
+   counterfactual draws across arms. The CMB-X01 commitment covers every
+   reachable geometry and mediator-leakage retry draw, not only attempt zero.
+3. CMB-X01 separates actionable target evidence from evaluator-only latent
+   target and productive-geometry state; CMB-X04 separates actionable phase,
+   release-cue and registry observations from evaluator-only compatibility,
+   hazard and release truth.
+4. CMB-X01 fixes equal engine/action authority across occupancy, direct,
+   garbage-collection, queue, recruitment and oracle diagnostics. CMB-X04
+   fixes at most two simultaneous copies,
    three lifetime copies, and two sequential retries. The oracle alone fails
    information parity and remains diagnostic-only.
-5. Copy and artifact conservation, accepted-service task performance, protected
-   integrity/release/tail limits, and resource completeness are recomputed by
-   the runtime validator.
-6. The control grid includes perfect latent compatibility with guaranteed
+5. CMB-X01 target, mediator, queue and engine inventories, an untreated
+   arm-independent service opportunity, registered harm ceilings, queue tail,
+   pending-work limits and declared synthetic counters are recomputed. A null
+   queue percentile passes only when no request remains pending.
+6. CMB-X04 copy and artifact conservation, accepted service, protected
+   integrity/release/tail limits and declared counters are recomputed. Analysis
+   independently replays every seeded world--arm payload before trusting a
+   correctly shaped or correctly rehashed ledger.
+7. The CMB-X04 control grid includes perfect latent compatibility with guaranteed
    physical release, zero transit hazard, blocked release, plausible-surface
-   incompatibility, inverted cues, short lifetime, and weak association.
+   incompatibility, inverted cues, short lifetime and weak association. The
+   CMB-X01 grid includes no harm, no engine capacity, zero productive geometry,
+   saturation, no resynthesis/replacement and cross-compartment leakage.
 
 ## Accounting and authority boundary
 
-- Copy creation, transport, loss, activation, binding, invalidation, and
-  destruction form a closed conservation ledger.
+- CMB-X01 closes its declared target, mediator, queue and engine inventories;
+  CMB-X04 closes copy creation, transport, loss, activation, binding,
+  invalidation and destruction in a separate conservation ledger.
+- Every CMB-X01 dequeue/requeue mutation is charged and the queue-flow and byte
+  equations are runtime-validated. CMB-X04 reports transport writes separately
+  from reconstructed-artifact materialisation writes before summing total
+  bytes written.
 - Logical operations; transported, read, and written bytes; retained
   byte-steps; wrapper construction, compatibility, release, cleanup, retry,
   replication, reload, and rebuild work remain separate counters.
@@ -52,20 +69,24 @@ world--arm work unit. It is not a complete protocol-native action/event trace.
 From the repository root:
 
 ```powershell
-node experiments/workstation/fixture-029/runner.mjs prepare --profile smoke
-node experiments/workstation/fixture-029/runner.mjs smoke --profile smoke --output tmp/fixture-029-smoke --resume false
-node experiments/workstation/fixture-029/runner.mjs run --profile development --output tmp/fixture-029-development --resume false
-node experiments/workstation/fixture-029/runner.mjs analyze --output tmp/fixture-029-development
-node experiments/workstation/fixture-029/runner.mjs validate --output tmp/fixture-029-development
+node experiments/workstation/fixture-029/suite-runner.mjs prepare --profile smoke
+node experiments/workstation/fixture-029/suite-runner.mjs smoke --profile smoke --output tmp/fixture-029-smoke --resume false
+node experiments/workstation/fixture-029/suite-runner.mjs run --profile development --output tmp/fixture-029-development --resume false
+node experiments/workstation/fixture-029/suite-runner.mjs analyze --output tmp/fixture-029-development
+node experiments/workstation/fixture-029/suite-runner.mjs validate --output tmp/fixture-029-development
 ```
 
 Focused tests:
 
 ```powershell
-node --test --test-isolation=none experiments/workstation/fixture-029/contract.test.mjs experiments/workstation/fixture-029/runner.test.mjs
+node --test --test-isolation=none experiments/workstation/fixture-029/cmb-x01-contract.test.mjs experiments/workstation/fixture-029/cmb-x01-runner.test.mjs experiments/workstation/fixture-029/contract.test.mjs experiments/workstation/fixture-029/runner.test.mjs experiments/workstation/fixture-029/suite-runner.test.mjs
 ```
 
-Raw events are canonical LF JSONL in an append-only SHA-256 chain. Resume state
-is reconstructed from those events; the replaceable checkpoint cannot override
-them. The run identity binds the public configuration, seed list, protocol
-source, audit, runtime contract, generator, runner, schema, and shared ledger.
+Each subrun and the two-receipt suite ledger use canonical LF JSONL in an
+append-only SHA-256 chain. Resume state is reconstructed from those records;
+replaceable checkpoints cannot override them. Closed runtime contracts and
+ordinary JSON Schemas reject unknown or malformed authority fields. Suite
+protocol v2 binds both public configurations, the shared uint32 development
+seed pack, subrun identities, runtime contracts, receipt/analysis schemas and
+runners. The manifest's frozen profile also verifies the embedded seed and
+track-configuration hashes. Passing it remains `NO_RESULT`.

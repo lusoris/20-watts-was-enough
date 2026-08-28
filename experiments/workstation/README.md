@@ -19,8 +19,9 @@ history grid, separately evaluated trace-fact vector, trajectory-score, and
 interface-validity diagnostics; and
 [Fixture F-027](fixture-027/README.md) exercises the RIN-T01 interconnection,
 edge-removal, interface-validity, and bounded-insulation diagnostics; and
-[Fixture F-029](fixture-029/README.md) exercises the CMB-X04 phase-qualified
-preservation/release construction boundary across all eight registered arms.
+[Fixture F-029](fixture-029/README.md) co-receipts separate CMB-X01 recruited-
+maintenance and CMB-X04 phase-qualified preservation/release construction
+diagnostics without cross-track comparison.
 A test becomes workstation-ready only when its
 checked manifest exists at `experiments/workstation/manifests/<artifact-id>.json`,
 passes `npm run validate:workstation`, declares `workstation-ready`, names all
@@ -221,16 +222,18 @@ confirmation comparison. RIN-T02--RIN-T10, private partitions, physical
 systems, calibrated energy and
 scientific adjudication remain absent. Every event is `NO_RESULT`.
 
-[Fixture F-029](fixture-029/README.md) implements a bounded public-development
-construction slice for C-1580 / CMB-X04. It exercises the diagnostic floor,
-retry, replication, reload, rebuild, permanent-wrapper, phase-qualified, and
-oracle paths over shared arm-independent synthetic worlds. Actionable phase and
-validation observations remain separate from evaluator truth; append-only
-records expose copy conservation, artifact-level outcomes, accepted service,
-wrapper lifecycle work, and scoped synthetic counters. The smoke analyzer does
-not rank arms or select a strongest null. CMB-X01--CMB-X03, private partitions,
-confirmatory inference, calibrated physical resources, performance conclusions,
-and energy measurement remain absent. Every output is `NO_RESULT`.
+[Fixture F-029](fixture-029/README.md) implements bounded public-development
+aggregate-construction slices for C-1574 / CMB-X01 and C-1580 / CMB-X04. X01
+exercises no-action, occupancy, direct, periodic-GC, tagged-queue, recruited-
+maintenance and oracle paths with explicit target, mediator, engine, service,
+harm and synthetic-resource records. X04 exercises its eight preservation and
+release paths with copy/artifact conservation, accepted service, wrapper
+lifecycle work and scoped synthetic counters. Both separate actionable input
+from evaluator truth. A version-2 suite receipts both hash-chained subruns but
+never compares or ranks them. CMB-X02/CMB-X03, protocol-native event streams,
+private partitions, confirmatory inference, complete comparative accounting,
+calibrated physical resources, performance conclusions and energy measurement
+remain absent. Every output is `NO_RESULT`.
 
 The machine-readable contract is
 [`manifest.schema.json`](manifest.schema.json). Referenced lockfiles, seed

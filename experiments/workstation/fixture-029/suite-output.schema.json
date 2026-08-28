@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://20-watts-was-enough.local/schemas/fixture-029.cmb-x01-x04-suite-analysis.schema.json",
+  "title": "Fixture 029 CMB-X01 plus CMB-X04 suite diagnostic analysis",
+  "type": "object",
+  "additionalProperties": false,
+  "x-runtime-validator": {
+    "module": "suite-contract.mjs",
+    "export": "assertFixture029SuiteAnalysis",
+    "version_export": "FIXTURE_029_SUITE_ANALYSIS_CONTRACT_VERSION",
+    "contract_version": "fixture-029.cmb-x01-x04-suite-analysis.v2",
+    "test": "suite-runner.test.mjs"
+  },
+  "required": [
+    "schema", "contract_version", "artifact", "suite", "profile", "partition",
+    "execution_claims", "suite_run_id", "receipts", "track_diagnostics", "checks",
+    "decision", "result_label", "no_result", "measured_energy_present",
+    "energy_conclusion_allowed", "comparison_inference_permitted", "ranking_permitted",
+    "claim_eligible", "scientific_result", "performance_result",
+    "authority_reason", "interpretation"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "contract_version": { "const": "fixture-029.cmb-x01-x04-suite-analysis.v2" },
+    "artifact": { "const": "fixture-029" },
+    "suite": { "const": "CMB-X01+CMB-X04" },
+    "profile": { "enum": ["smoke", "development"] },
+    "partition": { "const": "public-development-only" },
+    "execution_claims": {
+      "type": "array",
+      "prefixItems": [{ "const": "C-1574" }, { "const": "C-1580" }],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "suite_run_id": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "receipts": { "const": 2 },
+    "track_diagnostics": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        { "$ref": "#/$defs/x01Diagnostic" },
+        { "$ref": "#/$defs/x04Diagnostic" }
+      ],
+      "items": false
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_claim_scope", "fixed_track_order", "receipt_ledger_complete",
+        "receipts_bind_subruns", "subtrack_analyses_diagnostic_pass",
+        "subtrack_validators_pass", "strict_no_result_boundary",
+        "no_cross_track_comparison_or_ranking"
+      ],
+      "properties": {
+        "exact_claim_scope": { "const": true },
+        "fixed_track_order": { "const": true },
+        "receipt_ledger_complete": { "const": true },
+        "receipts_bind_subruns": { "const": true },
+        "subtrack_analyses_diagnostic_pass": { "const": true },
+        "subtrack_validators_pass": { "const": true },
+        "strict_no_result_boundary": { "const": true },
+        "no_cross_track_comparison_or_ranking": { "const": true }
+      }
+    },
+    "decision": { "const": "diagnostic-pass" },
+    "result_label": { "const": "NO_RESULT" },
+    "no_result": { "const": true },
+    "measured_energy_present": { "const": false },
+    "energy_conclusion_allowed": { "const": false },
+    "comparison_inference_permitted": { "const": false },
+    "ranking_permitted": { "const": false },
+    "claim_eligible": { "const": false },
+    "scientific_result": { "const": false },
+    "performance_result": { "const": false },
+    "authority_reason": {
+      "const": "Public-development aggregate-construction orchestration only; no comparison, ranking, confirmation, statistical, performance, claim, or energy authority."
+    },
+    "interpretation": {
+      "const": "NO_RESULT: independent CMB-X01 and CMB-X04 diagnostics are co-receipted; no cross-track comparison or ranking is permitted."
+    }
+  },
+  "$defs": {
+    "diagnosticBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "track", "execution_claims", "subrun_id", "records", "decision",
+        "receipt_sha256", "result_label", "no_result",
+        "comparison_inference_permitted", "ranking_permitted"
+      ],
+      "properties": {
+        "track": { "type": "string" },
+        "execution_claims": { "type": "array" },
+        "subrun_id": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "records": { "type": "integer", "minimum": 1 },
+        "decision": { "const": "diagnostic-pass" },
+        "receipt_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "result_label": { "const": "NO_RESULT" },
+        "no_result": { "const": true },
+        "comparison_inference_permitted": { "const": false },
+        "ranking_permitted": { "const": false }
+      }
+    },
+    "x01Diagnostic": {
+      "allOf": [
+        { "$ref": "#/$defs/diagnosticBase" },
+        {
+          "properties": {
+            "track": { "const": "CMB-X01" },
+            "execution_claims": {
+              "type": "array", "prefixItems": [{ "const": "C-1574" }],
+              "items": false, "minItems": 1, "maxItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "x04Diagnostic": {
+      "allOf": [
+        { "$ref": "#/$defs/diagnosticBase" },
+        {
+          "properties": {
+            "track": { "const": "CMB-X04" },
+            "execution_claims": {
+              "type": "array", "prefixItems": [{ "const": "C-1580" }],
+              "items": false, "minItems": 1, "maxItems": 1
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -4,6 +4,6 @@
   "partition": "development",
   "state": "public-development",
   "algorithm": "literal-public-seed-list-v1",
-  "encoding": "unsigned-little-endian-uint64",
+  "encoding": "unsigned-little-endian-uint32",
   "seeds": [1580001, 1580002, 1580003, 1580004, 1580005, 1580006, 1580007, 1580008]
 }

@@ -106,6 +106,87 @@ test("all eight arms are deterministic, bounded, conserved, and non-energy", () 
   }
 });
 
+test("sequential recovery charges failed transit and reload or rebuild preparation time", () => {
+  const seed = 1580001;
+  const world = generateFixture029Worlds({ seed, config })[0];
+  const retry = simulateFixture029Arm({ seed, world, arm: "X04-RETRY", config });
+  const reload = simulateFixture029Arm({ seed, world, arm: "X04-RELOAD", config });
+  const rebuild = simulateFixture029Arm({ seed, world, arm: "X04-REBUILD", config });
+  const oracle = simulateFixture029Arm({ seed, world, arm: "X04-ORACLE", config });
+
+  assert.deepEqual(
+    [retry.outcomes.copies_transported, reload.outcomes.copies_transported, rebuild.outcomes.copies_transported],
+    [42, 42, 42],
+  );
+  assert.deepEqual(
+    [retry.outcomes.retried, reload.outcomes.reloaded, rebuild.outcomes.rebuilt],
+    [18, 18, 18],
+  );
+  assert.deepEqual(
+    [retry.outcomes.activation_latency_p95_steps, reload.outcomes.activation_latency_p95_steps,
+      rebuild.outcomes.activation_latency_p95_steps],
+    [15, 19, 25],
+  );
+  assert.deepEqual(
+    [retry.outcomes.accepted_service_nsu, reload.outcomes.accepted_service_nsu,
+      rebuild.outcomes.accepted_service_nsu],
+    [210, 192, 174],
+  );
+  assert.deepEqual(
+    [retry.outcomes.missed_release_deadlines, reload.outcomes.missed_release_deadlines,
+      rebuild.outcomes.missed_release_deadlines],
+    [8, 8, 8],
+  );
+  assert.equal(oracle.outcomes.retried, 9);
+  assert.equal(oracle.outcomes.activation_latency_p95_steps, 16);
+  assert.equal(oracle.outcomes.accepted_service_nsu, 241);
+  assert.equal(oracle.outcomes.missed_release_deadlines, 5);
+});
+
+test("transport and reconstructed-artifact writes are distinct and complete", () => {
+  const seed = 1580001;
+  const worlds = generateFixture029Worlds({ seed, config });
+  for (const world of worlds) {
+    for (const arm of FIXTURE_029_ARMS) {
+      const simulation = simulateFixture029Arm({ seed, world, arm, config });
+      const { outcomes, resources } = simulation;
+      assert.equal(
+        resources.transported_bytes,
+        outcomes.copies_transported * world.evaluator_parameters.artifact_bytes
+          + resources.wrapper_state_bytes_created,
+        `${world.generator_family}/${arm} transport bytes`,
+      );
+      assert.equal(resources.transport_bytes_written, resources.transported_bytes);
+      assert.equal(
+        resources.reconstruction_bytes_written,
+        outcomes.rebuilt * world.evaluator_parameters.artifact_bytes,
+      );
+      assert.equal(
+        resources.bytes_written,
+        resources.transport_bytes_written + resources.reconstruction_bytes_written,
+      );
+      assert.equal(
+        resources.wrapper_construction_operations,
+        resources.wrapper_state_bytes_created / world.evaluator_parameters.wrapper_state_bytes,
+      );
+      assert.equal(resources.compatibility_check_operations, resources.wrapper_construction_operations);
+    }
+  }
+  const phase = simulateFixture029Arm({ seed, world: worlds[0], arm: "X04-PHASE", config });
+  assert.equal(phase.outcomes.copies_transported, 24);
+  assert.equal(phase.resources.wrapper_state_bytes_created, 3072);
+  assert.equal(phase.resources.transported_bytes, 101376);
+  assert.equal(phase.resources.reconstruction_bytes_written, 0);
+
+  const rebuild = simulateFixture029Arm({ seed, world: worlds[0], arm: "X04-REBUILD", config });
+  assert.ok(rebuild.outcomes.rebuilt > 0);
+  assert.equal(
+    rebuild.resources.reconstruction_bytes_written,
+    rebuild.outcomes.rebuilt * worlds[0].evaluator_parameters.artifact_bytes,
+  );
+  assert.ok(rebuild.resources.bytes_written > rebuild.resources.transport_bytes_written);
+});
+
 test("arm order and extra PHASE policy calls cannot perturb paired null outcomes", () => {
   const world = generateFixture029Worlds({ seed: 1580001, config })[1];
   const forward = Object.fromEntries(FIXTURE_029_ARMS.map((arm) => [
@@ -188,4 +269,29 @@ test("runtime contract rejects recomputed negative, unknown, and oracle-parity r
   const nonfinite = structuredClone(event());
   nonfinite.resources.logical_operations = Number.POSITIVE_INFINITY;
   assert.throws(() => assertFixture029Record(nonfinite), /Unsupported canonical value/);
+});
+
+test("runtime contract rejects payload-only transport accounting for wrapped copies", () => {
+  const payloadOnly = structuredClone(event("X04-PHASE"));
+  payloadOnly.resources.transported_bytes = payloadOnly.outcomes.copies_transported
+    * payloadOnly.public_contract.artifact_bytes;
+  payloadOnly.resources.bytes_written = payloadOnly.resources.transported_bytes;
+  payloadOnly.gates.resource_ledger_complete = false;
+  payloadOnly.gates.resource_gate_pass = false;
+  payloadOnly.integrity.record_sha256 = sha256(
+    `${"0".repeat(64)}\n${canonical(fixture029ScientificPayload(payloadOnly))}`,
+  );
+  assert.throws(() => assertFixture029Record(payloadOnly), /runtime contract/);
+});
+
+test("runtime contract rejects an omitted reconstructed-artifact materialization write", () => {
+  const missingMaterialization = structuredClone(event("X04-REBUILD"));
+  assert.ok(missingMaterialization.resources.reconstruction_bytes_written > 0);
+  missingMaterialization.resources.bytes_written -=
+    missingMaterialization.resources.reconstruction_bytes_written;
+  missingMaterialization.resources.reconstruction_bytes_written = 0;
+  missingMaterialization.integrity.record_sha256 = sha256(
+    `${"0".repeat(64)}\n${canonical(fixture029ScientificPayload(missingMaterialization))}`,
+  );
+  assert.throws(() => assertFixture029Record(missingMaterialization), /runtime contract/);
 });

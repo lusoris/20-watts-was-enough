@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "artifact": "fixture-029",
+  "track": "CMB-X01",
+  "profile": "smoke",
+  "worlds_per_seed": 8,
+  "target_slots_per_world": 24,
+  "horizon_steps": 24,
+  "action_score_threshold_ppm": 700000,
+  "garbage_collection_period_steps": 4,
+  "base_engine_capacity_per_step": 3,
+  "base_mediator_inventory": 6,
+  "target_metadata_bytes": 48,
+  "queue_entry_bytes": 40,
+  "mediator_state_bytes": 32,
+  "suppression_state_bytes": 16,
+  "minimum_accepted_service_fraction_ppm": 750000,
+  "maximum_useful_deletions": 2,
+  "maximum_harmful_target_fraction_ppm": 250000,
+  "maximum_harmful_miss_fraction_ppm": 250000,
+  "maximum_queue_p99_steps": 12,
+  "maximum_queue_pending_fraction_ppm": 500000
+}

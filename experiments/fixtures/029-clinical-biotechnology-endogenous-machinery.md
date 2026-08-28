@@ -2,7 +2,7 @@
 
 <!-- markdownlint-disable MD013 -->
 
-- **Status:** protocol-complete synthetic CPU research contract; one bounded public-development CMB-X04 construction smoke harness exists, while CMB-X01--CMB-X03, confirmation, statistical adjudication, measured energy, and every result remain absent
+- **Status:** protocol-complete synthetic CPU research contract; bounded public-development CMB-X01 and CMB-X04 aggregate-construction harnesses exist, while CMB-X02/CMB-X03, confirmation, statistical adjudication, measured energy, and every result remain absent
 - **Transfer hypotheses addressed:** [C-1574](../../research/claims.md#c-1574),
   [C-1576](../../research/claims.md#c-1576),
   [C-1578](../../research/claims.md#c-1578), and
@@ -16,7 +16,7 @@
   confirm, refute, reproduce, or extend those biological observations
 - **Fixture ID:** `F-029`
 - **Protocol IDs:** `CMB-X01`--`CMB-X04`
-- **Execution state:** the [CMB-X04 development harness](../workstation/fixture-029/README.md) and checked smoke manifest exercise deterministic construction-record, resume, analysis, and validation boundaries for C-1580 only. `smoke-ready` is not workstation-executable and creates no result authority
+- **Execution state:** the [CMB-X01 + CMB-X04 development suite](../workstation/fixture-029/README.md) and checked smoke manifest exercise deterministic aggregate-construction, resume, analysis and validation boundaries for C-1574/C-1580. Protocol v2 co-receipts but never compares the tracks. `smoke-ready` is not workstation-executable and creates no result authority
 - **Authority:** every hypothesis, predicted direction, comparison, margin class, and table in this file is **NO_RESULT** until an independently frozen implementation, development/confirmation split, valid execution receipt, complete raw artifacts, registered analysis, and calibrated resource boundary exist
 
 F-029 turns four speculative AI translations from the source audit into four
@@ -797,14 +797,15 @@ The entire fixture or affected track is killed if:
 
 Until every applicable gate is implemented and passed, `F-029`,
 `CMB-X01`--`CMB-X04`, and C-1574/C-1576/C-1578/C-1580 remain **NO_RESULT** and
-not workstation-executable. The CMB-X04 smoke path is construction plumbing,
-not execution of the registered comparison.
+not workstation-executable. The CMB-X01 and CMB-X04 smoke paths are aggregate
+construction plumbing, not execution of either registered comparison.
 
 ## Future artifact contract and implementation boundary
 
-The bounded [CMB-X04 public-development implementation](../workstation/fixture-029/README.md)
+The bounded [CMB-X01 + CMB-X04 public-development implementation](../workstation/fixture-029/README.md)
 supplies only part of the following artifact contract. Future maturation must
-add the missing tracks and authorities without weakening this prose contract:
+add CMB-X02/CMB-X03 and the missing event and result authorities without
+weakening this prose contract:
 
 1. JSON schemas for fixture registry, instance, arm, budget, raw event, failure,
    summary, and execution receipt;
