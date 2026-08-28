@@ -99,15 +99,28 @@ Host controls verified through the GitHub API on 2026-08-28 are:
 - active immutable release-tag ruleset `21727474` for `refs/tags/v*`, with tag
   update and deletion blocked and no bypass actor.
 
+The `cordana.dev` Cloudflare zone also has **Always Use HTTPS** enabled. A live
+check on 2026-08-28 verified `301 Moved Permanently` for both the site root and
+`/book/`, preserving the requested path on `https://www.cordana.dev/`. GitHub's
+Pages API still lacks its own origin certificate for the proxied hostname, so
+Cloudflare is the truthful enforcement boundary for the public custom domain.
+
+## Post-commit main protection
+
+The versioned policy requires the `main` ruleset to block branch deletion and
+non-fast-forward updates, require the exact strict `CI success` context, and
+require CodeQL to report no high-or-higher security alert or analysis error.
+The maintainer bypass is limited to pull-request operation. This host control is
+promoted only after the exact revision to be protected has passed those checks;
+the GitHub rulesets API is authoritative for its current activation state.
+
 ## Staged controls and exit conditions
 
 | Control | Why staged | Promotion condition |
 | --- | --- | --- |
 | Zero-debt P10-4 thresholds | The measured baseline contains 195 findings across 294 audited source files. A CI no-regression gate is active now. | Reduce the tracked file/rule groups to zero; the baseline may shrink but cannot grow or worsen. |
 | Property, fuzz, mutation, and hostile-input testing | Valuable only at selected authority boundaries. | Add first to source publication, receipts, manifests, paths, hashes, schemas, and promotion gates; measure useful fault discovery. |
-| Required main-branch ruleset | A bad initial check name or rule can block the sole maintainer. | Land the workflow, observe the exact green check contexts, then configure deletion/force-push protection and required CI deliberately. |
-| Enforced HTTPS for the custom Pages domain | GitHub currently records HTTPS enforcement as disabled and HTTP does not redirect permanently. | Deploy the corrected root-domain build, enable HTTPS enforcement, and verify a permanent HTTP-to-HTTPS redirect. |
-| Automated dependency merge | There is no verified required-check ruleset yet. | Enable only after CI and repository rules prevent an update from bypassing validation. |
+| Automated dependency merge | Deliberately disabled; branch protection alone does not prove an update safe. | Consider only after repeated dependency PRs demonstrate that the full gate and review policy catch relevant drift. |
 | REUSE lint | Split licences, `sources/`, restricted taxonomy data, and generated mixed works cannot be represented by a copied catch-all annotation. | Complete a file-level licence inventory with truthful third-party and `LicenseRef` mappings before declaring REUSE conformance. |
 | Dedicated Gitleaks CI | Native GitHub secret scanning and push protection are active; an unverified download pipeline would reduce supply-chain quality. | Use a full-SHA action that works for this repository or a checksum-pinned binary and retain only exact-value baseline exceptions. |
 

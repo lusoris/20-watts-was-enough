@@ -42,7 +42,8 @@ No unreleased changes.
 - GitHub Pages now builds for the custom-domain root at
   `https://www.cordana.dev/`; canonical metadata, public downloads, local
   preview guidance, and regression checks no longer assume the repository-name
-  subpath.
+  subpath. Cloudflare now permanently redirects the HTTP root and deep links
+  to the same HTTPS paths.
 
 - The repository now has one deduplicated engineering and research contract,
   a root operational guide, and bounded local instructions for research,
