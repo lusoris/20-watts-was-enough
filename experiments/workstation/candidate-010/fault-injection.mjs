@@ -1,9 +1,7 @@
 import { createHash } from "node:crypto";
 import {
   mkdir,
-  readFile,
   readdir,
-  stat,
 } from "node:fs/promises";
 import {
   mkdirSync,
@@ -14,6 +12,7 @@ import {
 import path from "node:path";
 import { executeBackendTrial } from "./backend-registry.mjs";
 import { generateOpportunities } from "./generator.mjs";
+import { readStableOpenedFile } from "./opened-file.mjs";
 
 function freezeEntry(entry) {
   return Object.freeze({ ...entry });
@@ -70,24 +69,37 @@ function findNamedFile(root, wanted) {
 }
 
 async function fileSnapshot(root) {
+  let entries;
   try {
-    await stat(root);
+    entries = await readdir(root, { recursive: true, withFileTypes: true });
   } catch (error) {
     if (error.code === "ENOENT") {
       return Object.freeze({ sha256: sha256("[]"), bytes: 0, files: Object.freeze([]) });
     }
     throw error;
   }
-  const names = (await readdir(root, { recursive: true }))
-    .map((name) => name.split(path.sep).join("/"))
-    .sort();
+  const names = [];
+  for (const entry of entries) {
+    const absolute = path.join(entry.parentPath, entry.name);
+    const relative = path.relative(root, absolute).split(path.sep).join("/");
+    if (entry.isSymbolicLink()) {
+      throw new Error(`Fault snapshot refuses linked entry: ${relative}`);
+    }
+    if (entry.isDirectory()) continue;
+    if (!entry.isFile()) {
+      throw new Error(`Fault snapshot refuses unsupported entry: ${relative}`);
+    }
+    names.push(relative);
+  }
+  names.sort();
   const files = [];
   let bytes = 0;
   for (const name of names) {
     const file = path.join(root, ...name.split("/"));
-    const information = await stat(file);
-    if (!information.isFile()) continue;
-    const body = await readFile(file);
+    const body = await readStableOpenedFile(file, {
+      label: `fault snapshot file ${name}`,
+      containedBy: root,
+    });
     bytes += body.length;
     files.push({ path: name, bytes: body.length, sha256: sha256(body) });
   }

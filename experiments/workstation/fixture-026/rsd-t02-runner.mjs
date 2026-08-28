@@ -67,6 +67,7 @@ import {
   fixture026RsdT02ScheduleSha256,
   generateFixture026RsdT02Transcript,
 } from "./rsd-t02-generator.mjs";
+import { readStableOpenedFile } from "./opened-file.mjs";
 import {
   acquireFixture026RsdT02RunLock,
   fixture026RsdT02RunLockPath,
@@ -394,7 +395,10 @@ async function writeJsonStable(file, value, { durable = false } = {}) {
 }
 
 async function readCanonicalJsonArtifact(file, label) {
-  const bytes = await readFile(file);
+  const bytes = await readStableOpenedFile(file, {
+    label,
+    containedBy: repositoryRoot,
+  });
   let text;
   try {
     text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
@@ -441,7 +445,11 @@ async function publishCanonicalJsonAtomic(file, value, label) {
       finalType: "file",
       label: `${label} pending publication`,
     });
-    if (await readFile(pendingPath, "utf8") !== body) {
+    const existing = await readStableOpenedFile(pendingPath, {
+      label: `${label} pending publication`,
+      containedBy: repositoryRoot,
+    });
+    if (existing.toString("utf8") !== body) {
       throw new Error(`Refusing to replace non-identical ${path.basename(pendingPath)}.`);
     }
   } finally {
@@ -452,7 +460,11 @@ async function publishCanonicalJsonAtomic(file, value, label) {
   } catch (error) {
     if (error.code !== "EEXIST") throw error;
     await assertSafeRepositoryPath(file, { finalType: "file", label });
-    if (await readFile(file, "utf8") !== body) {
+    const existing = await readStableOpenedFile(file, {
+      label,
+      containedBy: repositoryRoot,
+    });
+    if (existing.toString("utf8") !== body) {
       throw new Error(`Refusing to replace non-identical ${path.basename(file)}.`);
     }
   }

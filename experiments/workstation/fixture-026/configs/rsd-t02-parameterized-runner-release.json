@@ -45,7 +45,12 @@
     {
       "role": "isolated-durable-runner",
       "path": "rsd-t02-fixed-instance-isolated-durable-runner.mjs",
-      "sha256_exact_bytes": "6428ee9f53db922d273e16788527594ffca71d2419cc63f71cea5f6657d42bce"
+      "sha256_exact_bytes": "cc9fa44002cdf3f9a34fff30eb7d1e92cd8d482630a917f3e33a7150273cd976"
+    },
+    {
+      "role": "stable-opened-file-reader",
+      "path": "opened-file.mjs",
+      "sha256_exact_bytes": "9b6cce9c6fd20df313c03a0c591d21a8c2da7591cd36e60afdc693c3fdecc1d0"
     },
     {
       "role": "bounded-durable-store",

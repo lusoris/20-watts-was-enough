@@ -1,10 +1,21 @@
 import assert from "node:assert/strict";
-import { cp, mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import {
+  cp,
+  mkdtemp,
+  mkdir,
+  readFile,
+  rename,
+  rm,
+  symlink,
+  unlink,
+  writeFile,
+} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
+import { readStableOpenedFile, withStableOpenedFile } from "./lib/opened-file.mjs";
 import { validateSourceBoundary } from "./lib/source-boundary.mjs";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -109,4 +120,68 @@ test("a nested unreviewed record cannot bypass the closed allowlist", async () =
       /Source publication allowlist mismatch.*2026-08-27\/record\.md/u,
     );
   });
+});
+
+test("stable source reads refuse a symbolic-link pathname", async (context) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "source-boundary-link-"));
+  const target = path.join(root, "target.md");
+  const linked = path.join(root, "linked.md");
+  try {
+    await writeFile(target, "# trusted target\n");
+    try {
+      await symlink(target, linked, "file");
+    } catch (error) {
+      if (["EPERM", "EACCES", "ENOTSUP"].includes(error.code)) {
+        context.skip(`symbolic-link creation is unavailable: ${error.code}`);
+        return;
+      }
+      throw error;
+    }
+    await assert.rejects(
+      readStableOpenedFile(linked, {
+        label: "linked source record",
+        containedBy: root,
+        maximumBytes: 1024,
+      }),
+      /named path is linked|path resolves through a link/,
+    );
+  } finally {
+    await unlink(linked).catch((error) => {
+      if (error.code !== "ENOENT") throw error;
+    });
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("stable source reads detect named-path replacement after opening", async (context) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "source-boundary-swap-"));
+  const target = path.join(root, "record.md");
+  const original = path.join(root, "opened-original.md");
+  let openedBytes = null;
+  try {
+    await writeFile(target, "opened source identity\n");
+    try {
+      await assert.rejects(
+        withStableOpenedFile(
+          target,
+          { label: "swapped source record", containedBy: root, maximumBytes: 1024 },
+          async (handle) => {
+            await rename(target, original);
+            await writeFile(target, "replacement identity!\n");
+            openedBytes = await handle.readFile();
+          },
+        ),
+        /opened file changed while it was read|named path is linked, invalid, or no longer identifies the opened file/,
+      );
+    } catch (error) {
+      if (["EPERM", "EACCES", "EBUSY"].includes(error.code)) {
+        context.skip(`open-file replacement is unavailable: ${error.code}`);
+        return;
+      }
+      throw error;
+    }
+    assert.equal(openedBytes.toString("utf8"), "opened source identity\n");
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });

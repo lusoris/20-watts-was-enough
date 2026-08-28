@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
-import { lstat, readdir, readFile } from "node:fs/promises";
+import { lstat, readdir } from "node:fs/promises";
 import path from "node:path";
+import { readStableOpenedFile } from "./opened-file.mjs";
 
 const MAX_PROVENANCE_RECORD_BYTES = 16 * 1024;
 
@@ -128,16 +129,27 @@ function assertExactPathSet(actualPaths) {
 
 async function readPinnedFile(sourceRoot, relativePath, expected) {
   const absolute = path.join(sourceRoot, ...relativePath.split("/"));
-  const metadata = await lstat(absolute);
-  if (!metadata.isFile() || metadata.isSymbolicLink()) {
-    throw new Error(`${relativePath} must be a regular file, not a replacement path`);
+  let bytes;
+  try {
+    bytes = await readStableOpenedFile(absolute, {
+      label: `pinned source ${relativePath}`,
+      containedBy: sourceRoot,
+      maximumBytes: expected.bytes,
+    });
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("file exceeds")) {
+      throw new Error(
+        `${relativePath} integrity mismatch: expected ${expected.bytes} bytes; file exceeds that bound`,
+        { cause: error },
+      );
+    }
+    throw error;
   }
-  if (metadata.size !== expected.bytes) {
+  if (bytes.byteLength !== expected.bytes) {
     throw new Error(
-      `${relativePath} integrity mismatch: expected ${expected.bytes} bytes, found ${metadata.size}`,
+      `${relativePath} integrity mismatch: expected ${expected.bytes} bytes, found ${bytes.byteLength}`,
     );
   }
-  const bytes = await readFile(absolute);
   const actualDigest = createHash("sha256").update(bytes).digest("hex");
   if (actualDigest !== expected.sha256) {
     throw new Error(
@@ -175,6 +187,19 @@ function assertNoEmbeddedPayload(relativePath, text) {
   }
 }
 
+function linkedHttpUrls(text) {
+  const urls = [];
+  for (const match of text.matchAll(/<([^<>\r\n]+)>/gu)) {
+    try {
+      const url = new URL(match[1]);
+      if (url.protocol === "http:" || url.protocol === "https:") urls.push(url);
+    } catch {
+      // Non-URL angle-bracket syntax is not an origin locator.
+    }
+  }
+  return urls;
+}
+
 function assertProvenanceRecord(relativePath, text, byteLength, index) {
   if (byteLength > MAX_PROVENANCE_RECORD_BYTES) {
     throw new Error(
@@ -188,14 +213,17 @@ function assertProvenanceRecord(relativePath, text, byteLength, index) {
   if (!/\*\*Authority:\*\*/u.test(text)) {
     throw new Error(`${relativePath} must declare its authority boundary`);
   }
-  if (!/https?:\/\//u.test(text)) {
+  const originUrls = linkedHttpUrls(text);
+  if (originUrls.length === 0) {
     throw new Error(`${relativePath} must retain at least one origin URL`);
   }
   if (!index.includes(`(${relativePath})`)) {
     throw new Error(`${relativePath} is missing from sources/README.md`);
   }
 
-  const isGoogleOrGemini = /(?:docs\.google\.com|gemini\.google\.com)/iu.test(text);
+  const isGoogleOrGemini = originUrls.some(
+    (url) => url.hostname === "docs.google.com" || url.hostname === "gemini.google.com",
+  );
   if (!isGoogleOrGemini) return;
   if (!/^# Link-only source record:/mu.test(text)) {
     throw new Error(`${relativePath} must remain explicitly link-only`);

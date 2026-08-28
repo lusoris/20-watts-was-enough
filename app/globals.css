@@ -22,6 +22,44 @@
   --font-mono: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
 }
 
+.seo-static-page {
+  width: min(100% - 32px, 980px);
+  margin: 0 auto;
+  padding: 64px 0 96px;
+  color: var(--ink, #17211b);
+}
+
+.seo-static-page > header,
+.seo-static-page > article,
+.seo-static-page > nav,
+.seo-static-page > section {
+  margin-block: 32px;
+}
+
+.seo-static-page h1 {
+  max-width: 22ch;
+  font-size: clamp(2.25rem, 7vw, 5.5rem);
+  line-height: 0.98;
+}
+
+.seo-static-page ol {
+  padding-inline-start: 1.5rem;
+}
+
+.seo-static-page li {
+  margin-block: 0.45rem;
+}
+
+.seo-static-page img {
+  max-width: 100%;
+  height: auto;
+}
+
+.seo-static-page .table-region {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 * {
   box-sizing: border-box;
 }

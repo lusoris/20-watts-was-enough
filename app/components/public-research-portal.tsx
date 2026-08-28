@@ -11,9 +11,13 @@ import {
 } from "react";
 import type { ResearchDocument } from "../content";
 import { outlineFromMarkdown } from "../lib/heading-outline";
+import { synchronizePortalSeo } from "../lib/portal-seo";
 import { readinessSummary } from "../lib/readiness";
 import {
+  decodePortalFragment,
   loadPortalDocument,
+  portalDocumentLocation,
+  portalDocumentPathFromLocation,
   portalDocuments,
 } from "../portal-content";
 
@@ -50,18 +54,9 @@ function overviewLocation(basePath: string, hash = "") {
   return `${withBase(basePath)}${hash ? `#${hash}` : ""}`;
 }
 
-function portalDocumentLocation(basePath: string, path: string, hash = "") {
-  return `${withBase(basePath)}?doc=${encodeURIComponent(path)}${
-    hash ? `#${encodeURIComponent(hash)}` : ""
-  }`;
-}
-
-function initialDocumentPath(): string | null {
+function initialDocumentPath(basePath: string): string | null {
   if (typeof window === "undefined") return null;
-  const requested = new URLSearchParams(window.location.search).get("doc");
-  return portalDocuments.some((document) => document.path === requested)
-    ? requested
-    : null;
+  return portalDocumentPathFromLocation(window.location, basePath);
 }
 
 function formatNumber(value: number) {
@@ -85,12 +80,16 @@ function isSectionHeadingMatch(
     .includes(normalizedQuery);
 }
 
+function usePortalSeo(metadata: Parameters<typeof synchronizePortalSeo>[0]) {
+  useEffect(() => synchronizePortalSeo(metadata), [metadata]);
+}
+
 export function PublicResearchPortal({
   assetBasePath,
 }: {
   assetBasePath: string;
 }) {
-  const [selectedPath, setSelectedPath] = useState<string | null>(initialDocumentPath);
+  const [selectedPath, setSelectedPath] = useState<string | null>(() => initialDocumentPath(assetBasePath));
   const [documentState, setDocumentState] = useState<{
     path: string;
     document?: ResearchDocument;
@@ -122,6 +121,7 @@ export function PublicResearchPortal({
   const documentError = selectedPath && documentState?.path === selectedPath
     ? documentState.error ?? ""
     : "";
+  usePortalSeo(selectedMetadata);
   const outline = useMemo(
     () => selectedDocument ? outlineFromMarkdown(selectedDocument.body) : [],
     [selectedDocument],
@@ -212,20 +212,17 @@ export function PublicResearchPortal({
 
   useEffect(() => {
     const handleHistory = () => {
-      const requested = new URLSearchParams(window.location.search).get("doc");
-      setSelectedPath(
-        requested && documentsByPath.has(requested) ? requested : null,
-      );
+      setSelectedPath(portalDocumentPathFromLocation(window.location, assetBasePath));
     };
     window.addEventListener("popstate", handleHistory);
     return () => window.removeEventListener("popstate", handleHistory);
-  }, [documentsByPath]);
+  }, [assetBasePath]);
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
     const frame = window.requestAnimationFrame(() => {
-      document.getElementById(decodeURIComponent(hash))?.scrollIntoView();
+      document.getElementById(decodePortalFragment(hash))?.scrollIntoView();
     });
     return () => window.cancelAnimationFrame(frame);
   }, [selectedDocument, selectedPath]);
@@ -286,7 +283,7 @@ export function PublicResearchPortal({
     window.history.pushState(
       { document: path },
       "",
-      portalDocumentLocation(assetBasePath, path, hash),
+      portalDocumentLocation(path, assetBasePath, hash),
     );
     window.requestAnimationFrame(() => {
       if (!hash) readerRef.current?.scrollIntoView({ block: "start" });
@@ -495,7 +492,7 @@ export function PublicResearchPortal({
             <nav className="portal-reader-sequence" aria-label="Document sequence">
               {previousDocument ? (
                 <a
-                  href={portalDocumentLocation(assetBasePath, previousDocument.path)}
+                  href={portalDocumentLocation(previousDocument.path, assetBasePath)}
                   onClick={(event) => {
                     event.preventDefault();
                     selectDocument(previousDocument.path);
@@ -508,7 +505,7 @@ export function PublicResearchPortal({
               <b>{selectedDocumentIndex + 1} / {portalDocuments.length}</b>
               {nextDocument ? (
                 <a
-                  href={portalDocumentLocation(assetBasePath, nextDocument.path)}
+                  href={portalDocumentLocation(nextDocument.path, assetBasePath)}
                   onClick={(event) => {
                     event.preventDefault();
                     selectDocument(nextDocument.path);
@@ -585,8 +582,8 @@ export function PublicResearchPortal({
                 </div>
                 <p className="portal-result-count" aria-live="polite">
                   Showing {readerLibraryDocuments.length} of {libraryDocuments.length} matching documents
-                  {selectedPath && !libraryDocuments.some(
-                    (document) => document.path === selectedPath,
+                  {!libraryDocuments.some(
+                    (document) => document.path === selectedMetadata.path,
                   ) ? (
                     <span className="portal-filter-context">
                       Current document is outside this filter.
@@ -659,6 +656,7 @@ export function PublicResearchPortal({
                         currentPath={selectedDocument.path}
                         headingOffset={1}
                         onNavigate={selectDocument}
+                        internalHref={(path, hash) => portalDocumentLocation(path, assetBasePath, hash)}
                         isNavigablePath={(path) => documentsByPath.has(path)}
                         nonNavigableHref={repositoryDocumentHref}
                         assetBasePath={assetBasePath}
@@ -717,7 +715,7 @@ export function PublicResearchPortal({
               <div className="portal-dashboard-actions">
                 <a
                   className="portal-action portal-action-primary"
-                  href={portalDocumentLocation(assetBasePath, defaultDocumentPath)}
+                  href={portalDocumentLocation(defaultDocumentPath, assetBasePath)}
                   onClick={(event) => {
                     event.preventDefault();
                     selectDocument(defaultDocumentPath);
@@ -829,7 +827,7 @@ export function PublicResearchPortal({
               ].map((entry) => (
                 <a
                   className={`portal-start-card portal-start-card-${entry.tone}`}
-                  href={portalDocumentLocation(assetBasePath, entry.document.path)}
+                  href={portalDocumentLocation(entry.document.path, assetBasePath)}
                   key={entry.document.path}
                   onClick={(event) => {
                     event.preventDefault();
@@ -918,7 +916,7 @@ export function PublicResearchPortal({
                       {entry.documents.map((document) => (
                         <li key={document.path}>
                           <a
-                            href={portalDocumentLocation(assetBasePath, document.path)}
+                            href={portalDocumentLocation(document.path, assetBasePath)}
                             onClick={(event) => {
                               event.preventDefault();
                               selectDocument(document.path);

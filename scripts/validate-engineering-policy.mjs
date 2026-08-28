@@ -12,11 +12,13 @@ const requiredFiles = [
   ".gitleaks.toml",
   ".github/AGENTS.md",
   ".github/CODEOWNERS",
+  ".github/FUNDING.yml",
   ".github/PULL_REQUEST_TEMPLATE.md",
   ".github/ISSUE_TEMPLATE/config.yml",
   ".github/ISSUE_TEMPLATE/evidence-correction.yml",
   ".github/ISSUE_TEMPLATE/experiment-protocol-problem.yml",
   ".github/ISSUE_TEMPLATE/mechanism-principle-proposal.yml",
+  ".github/ISSUE_TEMPLATE/repository-tooling-problem.yml",
   ".github/ISSUE_TEMPLATE/site-documentation-problem.yml",
   ".github/labeler.yml",
   ".github/labels.yml",
@@ -31,6 +33,7 @@ const requiredFiles = [
   "CLAUDE.md",
   "CODE_OF_CONDUCT.md",
   "CONTRIBUTING.md",
+  "docs/repository-map.md",
   "GOVERNANCE.md",
   "MAINTAINERS.md",
   "SECURITY.md",
@@ -39,6 +42,7 @@ const requiredFiles = [
   "docs/principles.md",
   "experiments/AGENTS.md",
   "experiments/workstation/AGENTS.md",
+  "experiments/workstation/fixture-019/python-environment.lock.json",
   "research/AGENTS.md",
   "renovate.json",
   "scripts/AGENTS.md",
@@ -60,6 +64,7 @@ const issueFormFiles = [
   ".github/ISSUE_TEMPLATE/evidence-correction.yml",
   ".github/ISSUE_TEMPLATE/experiment-protocol-problem.yml",
   ".github/ISSUE_TEMPLATE/mechanism-principle-proposal.yml",
+  ".github/ISSUE_TEMPLATE/repository-tooling-problem.yml",
   ".github/ISSUE_TEMPLATE/site-documentation-problem.yml",
 ];
 
@@ -105,6 +110,26 @@ function collectUses(value, location = "root", output = []) {
   return output;
 }
 
+function validateWorkflowJob(job, jobName, relativePath) {
+  const findings = [];
+  if (!job || typeof job !== "object" || Array.isArray(job)) {
+    return [`${relativePath}: job ${jobName} must be a mapping`];
+  }
+  if (!Number.isFinite(job["timeout-minutes"]) || job["timeout-minutes"] <= 0) {
+    findings.push(`${relativePath}: job ${jobName} needs a positive timeout-minutes`);
+  }
+  for (const [stepIndex, step] of (job.steps ?? []).entries()) {
+    if (
+      typeof step?.uses === "string"
+      && step.uses.startsWith("actions/checkout@")
+      && step.with?.["persist-credentials"] !== false
+    ) {
+      findings.push(`${relativePath}: job ${jobName} step ${stepIndex} must set checkout persist-credentials to false`);
+    }
+  }
+  return findings;
+}
+
 export function validateWorkflowObject(workflow, relativePath = "workflow.yml") {
   const findings = [];
 
@@ -114,6 +139,18 @@ export function validateWorkflowObject(workflow, relativePath = "workflow.yml") 
 
   if (!workflow.permissions || typeof workflow.permissions !== "object") {
     findings.push(`${relativePath}: declare explicit top-level permissions`);
+  } else if (Object.values(workflow.permissions).includes("write")) {
+    findings.push(`${relativePath}: top-level permissions must not grant write access`);
+  }
+
+  if (
+    !workflow.concurrency
+    || typeof workflow.concurrency !== "object"
+    || typeof workflow.concurrency.group !== "string"
+    || workflow.concurrency.group.trim().length === 0
+    || typeof workflow.concurrency["cancel-in-progress"] !== "boolean"
+  ) {
+    findings.push(`${relativePath}: concurrency must define a group and explicit cancel-in-progress boolean`);
   }
 
   const jobs = workflow.jobs;
@@ -121,13 +158,7 @@ export function validateWorkflowObject(workflow, relativePath = "workflow.yml") 
     findings.push(`${relativePath}: jobs must be a non-empty mapping`);
   } else {
     for (const [jobName, job] of Object.entries(jobs)) {
-      if (!job || typeof job !== "object" || Array.isArray(job)) {
-        findings.push(`${relativePath}: job ${jobName} must be a mapping`);
-        continue;
-      }
-      if (!Number.isFinite(job["timeout-minutes"]) || job["timeout-minutes"] <= 0) {
-        findings.push(`${relativePath}: job ${jobName} needs a positive timeout-minutes`);
-      }
+      findings.push(...validateWorkflowJob(job, jobName, relativePath));
     }
   }
 
@@ -142,6 +173,33 @@ export function validateWorkflowObject(workflow, relativePath = "workflow.yml") 
     }
   }
 
+  return findings;
+}
+
+export function validateScientificRuntimeWorkflowObject(
+  workflow,
+  lock,
+  jobName,
+  relativePath = "workflow.yml",
+) {
+  const findings = [];
+  const steps = workflow?.jobs?.[jobName]?.steps;
+  if (!Array.isArray(steps)) {
+    return [`${relativePath}: job ${jobName} must provision the locked scientific runtime`];
+  }
+  const pythonVersion = lock?.python_version;
+  const numpyVersion = lock?.packages?.numpy;
+  const setup = steps.find((step) => step?.uses?.startsWith("actions/setup-python@"));
+  if (setup?.with?.["python-version"] !== pythonVersion) {
+    findings.push(`${relativePath}: job ${jobName} must use locked Python ${pythonVersion}`);
+  }
+  const install = steps.find((step) => (
+    typeof step?.run === "string" && step.run.includes("python -m pip install")
+  ));
+  const expectedInstall = `python -m pip install --disable-pip-version-check --no-deps "numpy==${numpyVersion}"`;
+  if (install?.run?.trim() !== expectedInstall) {
+    findings.push(`${relativePath}: job ${jobName} must install locked NumPy ${numpyVersion} without dependencies`);
+  }
   return findings;
 }
 
@@ -222,6 +280,78 @@ export function validateIssueForm(form, relativePath = "issue-form.yml") {
     ids.add(item.id);
   }
 
+  return findings;
+}
+
+export function validateFundingConfig(config, relativePath = ".github/FUNDING.yml") {
+  const findings = [];
+  if (!config || typeof config !== "object" || Array.isArray(config)) {
+    return [`${relativePath}: funding configuration must be a mapping`];
+  }
+
+  const expectedKeys = new Set(["github", "ko_fi"]);
+  for (const key of Object.keys(config)) {
+    if (!expectedKeys.has(key)) {
+      findings.push(`${relativePath}: unverified funding platform ${key}`);
+    }
+  }
+
+  if (
+    !Array.isArray(config.github)
+    || config.github.length !== 1
+    || config.github[0] !== "lusoris"
+  ) {
+    findings.push(`${relativePath}: github must contain only the verified lusoris sponsor identity`);
+  }
+  if (config.ko_fi !== "lusoris") {
+    findings.push(`${relativePath}: ko_fi must use the verified lusoris identity`);
+  }
+  return findings;
+}
+
+export function validateIssueConfig(config, relativePath = ".github/ISSUE_TEMPLATE/config.yml") {
+  const findings = [];
+  if (!config || typeof config !== "object" || Array.isArray(config)) {
+    return [`${relativePath}: issue configuration must be a mapping`];
+  }
+  if (config.blank_issues_enabled !== false) {
+    findings.push(`${relativePath}: blank issues must remain disabled`);
+  }
+
+  const links = config.contact_links;
+  if (!Array.isArray(links)) {
+    findings.push(`${relativePath}: contact_links must be a sequence`);
+    return findings;
+  }
+
+  const requiredUrls = new Set([
+    "https://github.com/lusoris/20-watts-was-enough/security/advisories/new",
+    "https://github.com/lusoris/20-watts-was-enough/blob/main/SUPPORT.md",
+  ]);
+  const seenUrls = new Set();
+  for (const [index, link] of links.entries()) {
+    if (
+      !link
+      || typeof link !== "object"
+      || typeof link.name !== "string"
+      || link.name.trim().length === 0
+      || typeof link.about !== "string"
+      || link.about.trim().length === 0
+      || typeof link.url !== "string"
+    ) {
+      findings.push(`${relativePath}: contact_links[${index}] must define non-empty name, url, and about strings`);
+      continue;
+    }
+    if (seenUrls.has(link.url)) {
+      findings.push(`${relativePath}: duplicate contact link ${link.url}`);
+    }
+    seenUrls.add(link.url);
+  }
+  for (const url of requiredUrls) {
+    if (!seenUrls.has(url)) {
+      findings.push(`${relativePath}: missing required contact link ${url}`);
+    }
+  }
   return findings;
 }
 
@@ -378,12 +508,36 @@ export function validateRepositoryPolicy(root = defaultRoot) {
   validatePrinciples(root, findings);
   validateRenovate(root, findings);
 
+  let scientificRuntimeLock;
+  try {
+    scientificRuntimeLock = JSON.parse(readText(
+      root,
+      "experiments/workstation/fixture-019/python-environment.lock.json",
+    ));
+  } catch (error) {
+    findings.push(`experiments/workstation/fixture-019/python-environment.lock.json: invalid JSON: ${error.message}`);
+  }
+
   for (const relativePath of workflowFiles) {
     const workflow = parseYaml(root, relativePath, findings);
     if (workflow) {
       findings.push(...validateWorkflowObject(workflow, relativePath));
       if (relativePath === ".github/workflows/release.yml") {
         findings.push(...validateReleaseWorkflowObject(workflow, relativePath));
+        findings.push(...validateScientificRuntimeWorkflowObject(
+          workflow,
+          scientificRuntimeLock,
+          "verify",
+          relativePath,
+        ));
+      }
+      if (relativePath === ".github/workflows/ci.yml") {
+        findings.push(...validateScientificRuntimeWorkflowObject(
+          workflow,
+          scientificRuntimeLock,
+          "quality",
+          relativePath,
+        ));
       }
     }
   }
@@ -399,9 +553,16 @@ export function validateRepositoryPolicy(root = defaultRoot) {
 
   validateLabels(root, findings, issueForms);
 
-  const issueConfig = parseYaml(root, ".github/ISSUE_TEMPLATE/config.yml", findings);
-  if (issueConfig?.blank_issues_enabled !== false) {
-    findings.push(".github/ISSUE_TEMPLATE/config.yml: blank issues must remain disabled");
+  const issueConfigPath = ".github/ISSUE_TEMPLATE/config.yml";
+  const issueConfig = parseYaml(root, issueConfigPath, findings);
+  if (issueConfig) {
+    findings.push(...validateIssueConfig(issueConfig, issueConfigPath));
+  }
+
+  const fundingPath = ".github/FUNDING.yml";
+  const funding = parseYaml(root, fundingPath, findings);
+  if (funding) {
+    findings.push(...validateFundingConfig(funding, fundingPath));
   }
 
   const citation = parseYaml(root, "CITATION.cff", findings);

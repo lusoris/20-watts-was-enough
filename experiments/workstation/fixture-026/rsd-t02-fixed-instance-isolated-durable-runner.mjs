@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
-import { lstat, readFile, realpath } from "node:fs/promises";
+import { lstat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -18,6 +18,7 @@ import {
   runFixture026RsdT02FixedInstance,
 } from "./rsd-t02-fixed-instance-runner.mjs";
 import { acquireFixture026RsdT02RunLock } from "./rsd-t02-run-lock.mjs";
+import { readStableOpenedFile } from "./opened-file.mjs";
 
 export const FIXTURE_026_RSD_T02_FIXED_INSTANCE_ISOLATED_DURABLE_CONFIG_VERSION =
   "fixture-026.rsd-t02-fixed-instance-isolated-durable-config.v1";
@@ -151,17 +152,16 @@ async function loadExactFixtureFile(descriptor, label) {
     const information = await lstat(cursor);
     if (information.isSymbolicLink()) refuse(`${label} path traverses a symbolic link or junction`);
   }
-  const [rootReal, fileReal] = await Promise.all([realpath(fixtureRoot), realpath(absolute)]);
-  if (!isInside(rootReal, fileReal)) refuse(`${label} resolves outside fixture root`);
-  const information = await lstat(fileReal);
-  if (!information.isFile() || information.isSymbolicLink()) refuse(`${label} is not a regular file`);
-  const bytes = await readFile(fileReal);
+  const bytes = await readStableOpenedFile(absolute, {
+    label,
+    containedBy: fixtureRoot,
+  });
   if (bytes.length !== descriptor.utf8_bytes || sha256(bytes) !== descriptor.sha256) {
     refuse(`${label} content identity mismatch`);
   }
   const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
   if (text.includes("\r") || !text.endsWith("\n")) refuse(`${label} is not canonical LF UTF-8`);
-  return Object.freeze({ path: fileReal, bytes, text });
+  return Object.freeze({ path: absolute, bytes, text });
 }
 
 export function assertFixture026RsdT02FixedInstanceIsolatedDurableConfig(config) {

@@ -1,6 +1,10 @@
 "use client";
 
 import { type CSSProperties, useEffect, useId, useRef, useState } from "react";
+import {
+  decodeBasicHtmlEntitiesOnce,
+  stripHtmlTagSyntax,
+} from "../../scripts/lib/plain-text.mjs";
 
 type RenderedDiagram = {
   svg: string;
@@ -41,12 +45,8 @@ const roleKeywords = {
 } as const;
 
 function cleanDiagramLabel(value: string): string {
-  const cleaned = value
-    .replace(/<br\s*\/?>/gi, " · ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
+  const withoutTags = stripHtmlTagSyntax(value.replace(/<br\s*\/?>/gi, " · "));
+  const cleaned = decodeBasicHtmlEntitiesOnce(withoutTags)
     .replace(/[_-]+/g, " ")
     .replace(/([a-z])([A-Z])/g, "$1 $2")
     .replace(/["'`*]/g, "")

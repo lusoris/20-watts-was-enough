@@ -1,11 +1,11 @@
 import { createHash } from "node:crypto";
 import {
   lstatSync,
-  readFileSync,
   readdirSync,
   realpathSync,
 } from "node:fs";
 import path from "node:path";
+import { readStableOpenedFileSync } from "./opened-file.mjs";
 
 const LICENSE_FILE = /^(?:licen[cs]e|copying|notice)(?:[._-].*)?$/iu;
 const LICENSE_OVERRIDES = Object.freeze({
@@ -63,12 +63,12 @@ function packageRoot(moduleId) {
   return realpathSync(path.normalize(`${prefix}${packageSegments.join("/")}`));
 }
 
-function textFile(pathname) {
-  const information = lstatSync(pathname);
-  if (!information.isFile() || information.isSymbolicLink() || information.size > 1_000_000) {
-    throw new Error(`Unsafe third-party notice file: ${pathname}`);
-  }
-  const normalized = readFileSync(pathname, "utf8")
+function textFile(pathname, containedBy) {
+  const normalized = readStableOpenedFileSync(pathname, {
+    label: `third-party notice ${pathname}`,
+    containedBy,
+    maximumBytes: 1_000_000,
+  }).toString("utf8")
     .replaceAll("\r\n", "\n")
     .split("\n")
     .map((line) => line.replace(/[\t ]+$/u, ""))
@@ -77,10 +77,87 @@ function textFile(pathname) {
   return `${normalized}\n`;
 }
 
+function packageMetadata(root) {
+  const bytes = readStableOpenedFileSync(path.join(root, "package.json"), {
+    label: `package metadata under ${root}`,
+    containedBy: root,
+    maximumBytes: 1_000_000,
+  });
+  return { bytes, value: JSON.parse(bytes.toString("utf8")) };
+}
+
+function collectPackageNotices(root, repositoryRoot, texts, expectedIdentity = null) {
+  const rootBefore = lstatSync(root, { bigint: true });
+  if (!rootBefore.isDirectory() || rootBefore.isSymbolicLink()) {
+    throw new Error(`Unsafe bundled-package root: ${root}`);
+  }
+  const initialNames = readdirSync(root).sort((left, right) => left.localeCompare(right, "en"));
+  const metadataRecord = packageMetadata(root);
+  const metadata = metadataRecord.value;
+  const candidates = initialNames.filter((name) => LICENSE_FILE.test(name));
+  const packageIdentity = `${metadata.name}@${metadata.version}`;
+  if (expectedIdentity !== null && packageIdentity !== expectedIdentity) {
+    throw new Error(`Bundled package expected ${expectedIdentity}, found ${packageIdentity}`);
+  }
+  const notices = candidates.map((candidate) => ({
+    filename: candidate,
+    pathname: path.join(root, candidate),
+    containedBy: root,
+  }));
+  const override = LICENSE_OVERRIDES[packageIdentity];
+  if (notices.length === 0 && override) {
+    notices.push({
+      filename: `${override.path} (${override.source})`,
+      pathname: path.join(repositoryRoot, ...override.path.split("/")),
+      containedBy: repositoryRoot,
+    });
+  }
+  if (notices.length === 0) {
+    throw new Error(`Bundled package lacks a redistributable notice file: ${packageIdentity}`);
+  }
+  const noticeDigests = [];
+  for (const notice of notices) {
+    const source = textFile(notice.pathname, notice.containedBy);
+    notice.source = source;
+    const digest = createHash("sha256").update(source).digest("hex");
+    noticeDigests.push(digest);
+    const record = texts.get(digest) ?? { source, packages: new Set(), filenames: new Set() };
+    record.packages.add(packageIdentity);
+    record.filenames.add(notice.filename);
+    texts.set(digest, record);
+  }
+  const finalMetadata = packageMetadata(root);
+  if (!finalMetadata.bytes.equals(metadataRecord.bytes)) {
+    throw new Error(`Bundled-package metadata changed while notices were read: ${root}`);
+  }
+  for (const notice of notices) {
+    if (textFile(notice.pathname, notice.containedBy) !== notice.source) {
+      throw new Error(`Bundled-package notice changed while notices were read: ${notice.pathname}`);
+    }
+  }
+  const finalNames = readdirSync(root).sort((left, right) => left.localeCompare(right, "en"));
+  const rootAfter = lstatSync(root, { bigint: true });
+  if (
+    rootBefore.dev !== rootAfter.dev
+    || rootBefore.ino !== rootAfter.ino
+    || rootBefore.mtimeNs !== rootAfter.mtimeNs
+    || rootBefore.ctimeNs !== rootAfter.ctimeNs
+    || JSON.stringify(initialNames) !== JSON.stringify(finalNames)
+  ) {
+    throw new Error(`Bundled-package inventory changed while notices were read: ${root}`);
+  }
+  return {
+    identity: packageIdentity,
+    license: typeof metadata.license === "string" ? metadata.license : "see included notice",
+    noticeDigests,
+  };
+}
+
 export function renderThirdPartyNotices({ moduleIds, repositoryRoot }) {
-  const roots = new Set(
-    [...moduleIds].map(packageRoot).filter((value) => value !== null),
-  );
+  const roots = new Map();
+  for (const root of [...moduleIds].map(packageRoot).filter((value) => value !== null)) {
+    roots.set(root, null);
+  }
   for (const moduleId of moduleIds) {
     const virtualModuleId = normalizedVirtualModuleId(moduleId);
     if (virtualModuleId === null) continue;
@@ -92,58 +169,23 @@ export function renderThirdPartyNotices({ moduleIds, repositoryRoot }) {
     const root = realpathSync(
       path.join(repositoryRoot, ...mapping.packagePath.split("/")),
     );
-    const metadata = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
-    const packageIdentity = `${metadata.name}@${metadata.version}`;
-    if (packageIdentity !== mapping.expectedIdentity) {
-      throw new Error(
-        `Virtual bundle module ${JSON.stringify(virtualModuleId)} expected `
-          + `${mapping.expectedIdentity}, found ${packageIdentity}`,
-      );
+    const priorExpectation = roots.get(root);
+    if (priorExpectation !== undefined && priorExpectation !== null
+      && priorExpectation !== mapping.expectedIdentity) {
+      throw new Error(`Conflicting identities for virtual bundle root ${root}`);
     }
-    roots.add(root);
+    roots.set(root, mapping.expectedIdentity);
   }
   const packages = [];
   const texts = new Map();
 
-  for (const root of roots) {
-    const metadata = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
-    const candidates = readdirSync(root)
-      .filter((name) => LICENSE_FILE.test(name))
-      .sort((left, right) => left.localeCompare(right, "en"));
-    const packageIdentity = `${metadata.name}@${metadata.version}`;
-    const noticeDigests = [];
-    const notices = candidates.map((candidate) => ({
-      filename: candidate,
-      source: textFile(path.join(root, candidate)),
-    }));
-    const override = LICENSE_OVERRIDES[packageIdentity];
-    if (notices.length === 0 && override) {
-      notices.push({
-        filename: `${override.path} (${override.source})`,
-        source: textFile(path.join(repositoryRoot, ...override.path.split("/"))),
-      });
-    }
-    if (notices.length === 0) {
-      throw new Error(`Bundled package lacks a redistributable notice file: ${packageIdentity}`);
-    }
-    for (const { filename, source } of notices) {
-      const digest = createHash("sha256").update(source).digest("hex");
-      noticeDigests.push(digest);
-      const record = texts.get(digest) ?? { source, packages: new Set(), filenames: new Set() };
-      record.packages.add(packageIdentity);
-      record.filenames.add(filename);
-      texts.set(digest, record);
-    }
-    packages.push({
-      identity: packageIdentity,
-      license: typeof metadata.license === "string" ? metadata.license : "see included notice",
-      noticeDigests,
-    });
+  for (const [root, expectedIdentity] of roots) {
+    packages.push(collectPackageNotices(root, repositoryRoot, texts, expectedIdentity));
   }
 
   packages.sort((left, right) => left.identity.localeCompare(right.identity, "en"));
   const blocks = [...texts.entries()].sort(([left], [right]) => left.localeCompare(right, "en"));
-  const ofl = textFile(path.join(repositoryRoot, "LICENSES", "OFL-1.1.txt"));
+  const ofl = textFile(path.join(repositoryRoot, "LICENSES", "OFL-1.1.txt"), repositoryRoot);
   const inventory = packages
     .map(({ identity, license }) => `- ${identity} — ${license}`)
     .join("\n");

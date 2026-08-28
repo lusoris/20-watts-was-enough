@@ -3,6 +3,14 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import {
+  decodePortalFragment,
+  encodePortalFragment,
+} from "../app/lib/portal-fragment.mjs";
+import {
+  decodeBasicHtmlEntitiesOnce,
+  stripHtmlTagSyntax,
+} from "./lib/plain-text.mjs";
 import { renderThirdPartyNotices } from "./lib/third-party-notices.mjs";
 
 const repositoryRoot = path.resolve(
@@ -13,6 +21,29 @@ const repositoryRoot = path.resolve(
 async function source(relative) {
   return readFile(path.join(repositoryRoot, relative), "utf8");
 }
+
+function assertNoLegacyDeploymentHost(html, label) {
+  const references = [...html.matchAll(/\b(?:href|src|content)=["']([^"']+)["']/gu)]
+    .map((match) => match[1]);
+  for (const reference of references) {
+    if (!/^https?:\/\//u.test(reference)) continue;
+    assert.notEqual(new URL(reference).hostname, "lusoris.github.io", label);
+  }
+}
+
+test("reader labels strip complete and unterminated tags and decode entities once", () => {
+  assert.equal(stripHtmlTagSyntax("alpha <em>beta</em> gamma"), "alpha  beta  gamma");
+  assert.equal(stripHtmlTagSyntax("safe comparison 4 < 5"), "safe comparison 4 < 5");
+  assert.equal(stripHtmlTagSyntax("safe <script"), "safe ");
+  assert.equal(decodeBasicHtmlEntitiesOnce("&lt;safe&gt; &amp;lt;"), "<safe> &lt;");
+});
+
+test("portal fragments preserve existing escapes without double encoding", () => {
+  assert.equal(encodePortalFragment("section details"), "#section%20details");
+  assert.equal(encodePortalFragment("section%20details"), "#section%20details");
+  assert.equal(encodePortalFragment("literal%2520escape"), "#literal%2520escape");
+  assert.equal(decodePortalFragment("malformed%fragment"), "malformed%fragment");
+});
 
 test("Pages builds a portal root and dedicated book route with a configurable safe base", async () => {
   const [config, portalEntry, portalHtml, bookEntry, bookHtml] = await Promise.all([
@@ -33,24 +64,24 @@ test("Pages builds a portal root and dedicated book route with a configurable sa
   assert.match(config, /portal:\s*path\.join\(repositoryRoot,\s*["']github-pages["'],\s*["']index\.html["']\)/);
   assert.match(config, /book:\s*path\.join\(repositoryRoot,\s*["']github-pages["'],\s*["']book["'],\s*["']index\.html["']\)/);
 
-  assert.match(portalHtml, /<div id=["']root["']><\/div>/);
+  assert.match(portalHtml, /<div id=["']root["']><!-- pages-seo:fallback -->/);
   assert.match(portalHtml, /src=["']\/main\.tsx["']/);
   assert.match(portalHtml, /https:\/\/www\.cordana\.dev\//);
-  assert.match(portalHtml, /https:\/\/www\.cordana\.dev\/og-v2\.jpg/);
+  assert.match(portalHtml, /pages-seo:head/);
   assert.match(portalHtml, /rel=["']canonical["'] href=["']https:\/\/www\.cordana\.dev\/["']/);
-  assert.doesNotMatch(portalHtml, /lusoris\.github\.io\/20-watts-was-enough/);
+  assertNoLegacyDeploymentHost(portalHtml, "portal HTML must not reference the legacy Pages host");
   assert.doesNotMatch(portalEntry, /vinext|next\/headers|next\/server/);
 
   assert.match(bookEntry, /<BookEdition/);
   assert.match(bookEntry, /surface=["']github-pages["']/);
   assert.match(bookEntry, /assetBasePath=\{import\.meta\.env\.BASE_URL\}/);
   assert.match(bookEntry, /sourceRef=["']main["']/);
-  assert.match(bookHtml, /<div id=["']root["']><\/div>/);
+  assert.match(bookHtml, /<div id=["']root["']><!-- pages-seo:fallback -->/);
   assert.match(bookHtml, /src=["']\.\.\/book\.tsx["']/);
   assert.match(bookHtml, /https:\/\/www\.cordana\.dev\/book\//);
-  assert.match(bookHtml, /https:\/\/www\.cordana\.dev\/og-v2\.jpg/);
+  assert.match(bookHtml, /pages-seo:head/);
   assert.match(bookHtml, /rel=["']canonical["'] href=["']https:\/\/www\.cordana\.dev\/book\/["']/);
-  assert.doesNotMatch(bookHtml, /lusoris\.github\.io\/20-watts-was-enough/);
+  assertNoLegacyDeploymentHost(bookHtml, "book HTML must not reference the legacy Pages host");
   assert.doesNotMatch(bookEntry, /vinext|next\/headers|next\/server/);
 });
 
@@ -96,17 +127,17 @@ test("the workflow uses GitHub's Pages artifact and deployment actions", async (
   );
 });
 
-test("the portal keeps history and native Markdown links honest on the Pages base", async () => {
-  const [portal, markdown] = await Promise.all([
+test("the portal keeps clean-route history and native Markdown links honest on the Pages base", async () => {
+  const [portal, markdown, content, entry, portalSeo] = await Promise.all([
     source("app/components/public-research-portal.tsx"),
     source("app/components/markdown-document.tsx"),
+    source("app/portal-content.ts"),
+    source("github-pages/main.tsx"),
+    source("app/lib/portal-seo.ts"),
   ]);
 
-  assert.match(
-    portal,
-    /requested\s*&&\s*documentsByPath\.has\(requested\)\s*\?\s*requested\s*:\s*null/,
-  );
-  assert.match(portal, /function initialDocumentPath\(\): string \| null/);
+  assert.match(portal, /function initialDocumentPath\(basePath: string\): string \| null/);
+  assert.match(portal, /portalDocumentPathFromLocation\(window\.location, basePath\)/);
   assert.match(portal, /if \(!selectedPath\) return;[\s\S]*loadPortalDocument\(selectedPath, assetBasePath\)/);
   assert.match(portal, /\{selectedPath && selectedMetadata \? \(/);
   assert.match(portal, /className="portal-dashboard"/);
@@ -127,6 +158,17 @@ test("the portal keeps history and native Markdown links honest on the Pages bas
   assert.match(portal, /document\.getElementById\(targetId\)\?\.focus\(\)/);
   assert.match(portal, /nonNavigableHref=\{repositoryDocumentHref\}/);
   assert.match(portal, /window\.open\(\s*repositoryDocumentHref\(path, hash\)/);
+  assert.match(portal, /portalDocumentLocation\(path, assetBasePath, hash\)/);
+  assert.match(portal, /internalHref=\{\(path, hash\) => portalDocumentLocation\(path, assetBasePath, hash\)\}/);
+  assert.match(portal, /usePortalSeo\(selectedMetadata\)/);
+  assert.doesNotMatch(portal, /`\?doc=\$\{encodeURIComponent\(path\)\}`/);
+  assert.match(content, /document\.route === route/);
+  assert.match(content, /encodePortalFragment\(hash\)/);
+  assert.match(content, /fetch\(portalDocumentAssetLocation\(metadata\.path, assetBasePath\)\)/);
+  assert.match(content, /\^\(\?:concept\|math\).*\\\.md\$/);
+  assert.match(entry, /new URLSearchParams\(window\.location\.search\)\.get\("doc"\)/);
+  assert.match(entry, /window\.location\.replace\(portalDocumentLocation\(/);
+  assert.match(entry, /window\.location\.hash\.slice\(1\)/);
 
   assert.match(markdown, /nonNavigableHref\?:\s*\(path: string, hash: string\) => string/);
   assert.match(
@@ -137,7 +179,22 @@ test("the portal keeps history and native Markdown links honest on the Pages bas
     markdown,
     /href=\{nonNavigableHref\(internal\.path, internal\.hash\)\}/,
   );
+  assert.match(markdown, /const resolvedHref = internalHref && isNavigable/);
+  assert.match(markdown, /navigateInternalLink\(event, internal, onNavigate\)/);
   assert.doesNotMatch(markdown, /href=\{repositoryArtifactHref\(internal\.path\)\}/);
+
+  for (const requiredMetadata of [
+    'window.document.title = descriptor.title',
+    '["name", "description", descriptor.description]',
+    '["name", "robots", "index,follow,max-image-preview:large"]',
+    '["property", "og:title", descriptor.title]',
+    '["property", "og:url", descriptor.canonical]',
+    '["name", "twitter:title", descriptor.title]',
+    "upsertCanonical(descriptor.canonical)",
+    "upsertStructuredData(descriptor.structuredData)",
+  ]) {
+    assert.ok(portalSeo.includes(requiredMetadata), `portal SEO sync lacks ${requiredMetadata}`);
+  }
 });
 
 test("only genuinely overflowing Markdown tables become labelled keyboard regions", async () => {
@@ -187,7 +244,7 @@ test("the portal loads canonical documents on demand and keeps book code off its
   assert.doesNotMatch(portal, /from ["']\.\.\/book-content["']/);
   assert.match(portal, /from ["']\.\.\/portal-content["']/);
   assert.match(portal, /lazy\(\(\) => import\(["']\.\/markdown-document["']\)/);
-  assert.match(content, /fetch\(withBase\(assetBasePath, `documents\/\$\{path\}`\)\)/);
+  assert.match(content, /fetch\(portalDocumentAssetLocation\(metadata\.path, assetBasePath\)\)/);
   assert.match(content, /contentType\.includes\("text\/html"\)/);
   assert.match(content, /Document request returned HTML instead of Markdown/);
   assert.match(config, /virtual:portal-document-index/);

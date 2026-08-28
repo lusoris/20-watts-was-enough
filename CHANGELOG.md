@@ -11,6 +11,32 @@ No unreleased changes.
 
 ### Changed
 
+- The public corpus now has 49 clean document routes with static fallback
+  content, unique canonical and social metadata, truthful JSON-LD, crawlable
+  internal links, a generated 51-URL sitemap, and an explicit robots policy.
+  Legacy `?doc=` links resolve to the corresponding canonical route, while
+  root and explicit subpath builds remain validated from one route registry.
+
+- The repository front page is now a concise public entry point instead of an
+  exhaustive inventory. It exposes the portal, book, PDF, evidence, tests,
+  citation, support, split licences, truthful status badges, and a separate
+  durable repository map. Verified GitHub Sponsors and Ko-fi identities now
+  drive the repository funding button, and issue routing includes private
+  security, support, and repository/tooling paths.
+
+- CI and release verification now provision the exact CPython 3.13.13 and
+  NumPy 2.4.6 environment required by Fixture 019. Platform-specific
+  environment tests no longer fail on Linux for behavior that exists only on
+  Windows, and the authoritative quality job has enough bounded time to run the
+  complete workstation suite on GitHub-hosted hardware.
+
+- The code-scanning remediation replaced predictable temporary paths, removed
+  quality findings, anchored URL and text processing, and hardened publication,
+  release, and workstation file reads around validated opened-file identities.
+  Symbolic-link, pathname-swap, incomplete-sanitization, and bounded-input
+  regressions now have focused tests; the remote scan remains the authority for
+  whether GitHub closes each previously reported alert.
+
 - GitHub Pages now builds for the custom-domain root at
   `https://www.cordana.dev/`; canonical metadata, public downloads, local
   preview guidance, and regression checks no longer assume the repository-name
@@ -29,7 +55,7 @@ No unreleased changes.
   governance surfaces, and unsafe dependency-automation drift.
 
 - P10-4 now has a measured no-regression gate instead of an aspirational line:
-  272 source files establish a 196-finding legacy baseline, while CI rejects
+  294 source files establish a 195-finding legacy baseline, while CI rejects
   new file/rule groups, higher finding counts, worse maxima, and attempts to
   reset the baseline against the previous revision. Existing debt may only
   shrink.

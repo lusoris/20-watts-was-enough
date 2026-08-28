@@ -43,7 +43,7 @@
     {
       "role": "evaluator",
       "path": "rsd-t02-evaluator.mjs",
-      "sha256_exact_bytes": "2bcf1c1dff42c337c2d544d99ad799b57fd58310979473ec8a96499d307f02e4"
+      "sha256_exact_bytes": "f7e209e07f94cee4af00e0ec3484b84da801d9a4342abcc035353f8a48cb4601"
     },
     {
       "role": "fixed-instance-generator",
@@ -63,7 +63,7 @@
     {
       "role": "parameterized-runner-release-closure",
       "path": "configs/rsd-t02-parameterized-runner-release.json",
-      "sha256_exact_bytes": "1df93cfd7873d3e208e938392576f8e5965e92c4ab019805d9b21a24a593ec3d"
+      "sha256_exact_bytes": "11ece60e6b1f7d13230aa4b726d8375aa5853026bc22ad53236a7239486ac5ba"
     }
   ],
   "maturity_ladder": [

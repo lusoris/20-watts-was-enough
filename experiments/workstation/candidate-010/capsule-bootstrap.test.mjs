@@ -1,6 +1,14 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import {
+  mkdir,
+  mkdtemp,
+  readFile,
+  rm,
+  symlink,
+  unlink,
+  writeFile,
+} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -20,8 +28,10 @@ import { captureRuntimeIdentity } from "./runtime-identity.mjs";
 const execFileAsync = promisify(execFile);
 const candidate = "experiments/workstation/candidate-010";
 const authorityPath = `${candidate}/capsule-execution-authority.mjs`;
+const openedFilePath = `${candidate}/opened-file.mjs`;
 const sharedChild = path.resolve(candidate, "capsule-child.mjs");
 const sharedEntry = path.resolve(candidate, "capsule-confirmation-entry.mjs");
+const sharedOpenedFile = path.resolve(candidate, "opened-file.mjs");
 async function git(root, ...args) {
   return execFileAsync("git", ["-C", root, ...args], { windowsHide: true });
 }
@@ -40,6 +50,7 @@ async function fixture({ successfulConfirmation = false } = {}) {
     await mkdir(executionParent);
     await mkdir(requestParent);
     await put(repositoryRoot, CAPSULE_CHILD_RELATIVE_PATH, await readFile(sharedChild));
+    await put(repositoryRoot, openedFilePath, await readFile(sharedOpenedFile));
     const confirmationEntry = successfulConfirmation
       ? `import { assertCapsuleExecutionAuthority } from "./capsule-execution-authority.mjs";
 export async function executeCandidate010Confirmation(input) {
@@ -81,6 +92,7 @@ export async function assertCapsuleExecutionAuthority(capability) {
       CAPSULE_CONFIRMATION_ENTRY_RELATIVE_PATH,
       CAPSULE_PROMOTION_ENTRY_RELATIVE_PATH,
       authorityPath,
+      openedFilePath,
       "package.json",
       "package-lock.json",
     ];
@@ -294,7 +306,39 @@ test("child refuses execArgv and loader or preload environment injection before 
   );
 });
 
-test("child refuses an allowlisted actual environment key absent from the bound sanitized identity", async () => {
+test("child refuses a symbolic-link request before parsing its bytes", async (context) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "20w-capsule-linked-request-"));
+  const target = path.join(root, "target.json");
+  const linked = path.join(root, "linked.json");
+  try {
+    await writeFile(target, "{}\n");
+    try {
+      await symlink(target, linked, "file");
+    } catch (error) {
+      if (["EPERM", "EACCES", "ENOTSUP"].includes(error.code)) {
+        context.skip(`symbolic-link creation is unavailable: ${error.code}`);
+        return;
+      }
+      throw error;
+    }
+    await assert.rejects(
+      execFileAsync(process.execPath, [sharedChild, linked], {
+        env: sanitizeCapsuleEnvironment(),
+        windowsHide: true,
+      }),
+      (error) => /capsule request: path is linked or not a regular file/.test(error.stderr),
+    );
+  } finally {
+    await unlink(linked).catch((error) => {
+      if (error.code !== "ENOENT") throw error;
+    });
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("child refuses an allowlisted actual environment key absent from the bound sanitized identity", {
+  skip: process.platform !== "win32",
+}, async () => {
   const value = await fixture();
   try {
     await assert.rejects(

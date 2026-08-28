@@ -77,6 +77,7 @@
       "experiments/workstation/fixture-026/rsd-t02-public-development-isolated-durable-population-runner.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-pilot-transcript-calibration.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-isolated-policy.test.mjs",
+      "experiments/workstation/fixture-026/opened-file.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-runner.test.mjs"
     ],
     "full_tests": [
@@ -110,9 +111,11 @@
       "experiments/workstation/fixture-026/rsd-t02-public-development-isolated-durable-population-runner.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-pilot-transcript-calibration.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-isolated-policy.test.mjs",
+      "experiments/workstation/fixture-026/opened-file.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-runner.test.mjs"
     ],
     "t02_entrypoint": "experiments/workstation/fixture-026/rsd-t02-runner.mjs",
+    "t02_stable_opened_file": "experiments/workstation/fixture-026/opened-file.mjs",
     "t02_schema": "experiments/workstation/fixture-026/rsd-t02-output.schema.json",
     "t02_config": "experiments/workstation/fixture-026/configs/rsd-t02-bounded-conformance.json",
     "t02_arm_bank": "experiments/workstation/fixture-026/rsd-t02-arm-bank.mjs",

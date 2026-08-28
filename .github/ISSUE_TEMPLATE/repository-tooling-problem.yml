@@ -1,0 +1,73 @@
+name: Repository or tooling problem
+description: Report a defect in CI, release automation, repository policy, dependencies, or contributor tooling.
+title: "[Repository] "
+labels: ["type:fix", "area:ci", "status:needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for repository operation and development tooling. Use the dedicated evidence, mechanism, experiment, or site form when one of those scopes fits. Report vulnerabilities privately through the security route; never paste secrets here.
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Affected surface
+      options:
+        - Continuous integration or validation
+        - Release, tag, or artifact automation
+        - Repository policy or contribution workflow
+        - Dependency or supply-chain tooling
+        - Local development command or environment
+        - Other repository tooling
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Affected file, workflow, or command
+      description: Give an exact repository path, workflow name, check name, or command where possible.
+      placeholder: ".github/workflows/ci.yml; Quality; npm run validate:policy"
+    validations:
+      required: true
+
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed problem
+      description: Describe the failure and include the smallest relevant error output.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: State the contract or outcome that should have held.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: Include the exact command, event, platform, runtime version, and bounded steps needed to reproduce it.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact and current workaround
+      description: Explain what is blocked or made unsafe and any workaround already tested.
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Submission checks
+      options:
+        - label: I removed credentials, secrets, personal data, private datasets, and machine-specific sensitive values.
+          required: true
+        - label: I checked the existing issues and selected the narrowest applicable issue form.
+          required: true

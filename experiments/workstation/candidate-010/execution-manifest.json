@@ -73,6 +73,7 @@
         "experiments/workstation/candidate-010/fault-injection.test.mjs",
         "experiments/workstation/candidate-010/immutable-capsule.test.mjs",
         "experiments/workstation/candidate-010/independent-verifier.test.mjs",
+        "experiments/workstation/candidate-010/opened-file.test.mjs",
         "experiments/workstation/candidate-010/persistent-service-runner.test.mjs",
         "experiments/workstation/candidate-010/retry-rollback-comparator.test.mjs",
         "experiments/workstation/candidate-010/run-lock.test.mjs",

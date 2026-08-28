@@ -47,6 +47,16 @@ stale generated artifacts, or incorrectly rendered equations, tables, plots,
 diagrams, HTML, or PDF. Use the evidence form instead when the presentation is
 readable but the scientific statement is wrong.
 
+### Repository or tooling problem
+
+Use the
+[repository or tooling problem form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=repository-tooling-problem.yml)
+for defects in continuous integration, validation, release automation,
+repository policy, dependency tooling, contribution workflows, or local
+development commands. Include the exact workflow, check, file, or command and
+the smallest safe reproduction. Use the site form for rendered-content
+problems and the private security route below for vulnerabilities.
+
 ### Security vulnerability
 
 Do not open a public issue. Follow [`SECURITY.md`](SECURITY.md) and use GitHub's

@@ -1,4 +1,5 @@
 import GithubSlugger from "github-slugger";
+import { stripHtmlTagSyntax } from "../../scripts/lib/plain-text.mjs";
 
 export type DocumentHeading = {
   depth: 2 | 3;
@@ -13,11 +14,10 @@ type ParsedHeading = {
 };
 
 function visibleHeadingText(source: string): string {
-  return source
+  return stripHtmlTagSyntax(source
     .replace(/\s+#+\s*$/, "")
     .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
-    .replace(/<[^>]+>/g, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1"))
     .replace(/[*_~`]/g, "")
     .trim();
 }

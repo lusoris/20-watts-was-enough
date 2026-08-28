@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
-import { lstat, readFile, readdir, realpath, stat } from "node:fs/promises";
+import { lstat, readFile, readdir, realpath } from "node:fs/promises";
 import path from "node:path";
 import { init, parse } from "es-module-lexer";
+import { readStableOpenedFile } from "./opened-file.mjs";
 
 export const CANDIDATE_010_SOURCE_FILES = Object.freeze([
   "package-lock.json",
@@ -37,6 +38,7 @@ export const CANDIDATE_010_SOURCE_FILES = Object.freeze([
   "experiments/workstation/candidate-010/immutable-capsule.mjs",
   "experiments/workstation/candidate-010/independent-verifier.mjs",
   "experiments/workstation/candidate-010/output.schema.json",
+  "experiments/workstation/candidate-010/opened-file.mjs",
   "experiments/workstation/candidate-010/persistent-service-runner.mjs",
   "experiments/workstation/candidate-010/policies.mjs",
   "experiments/workstation/candidate-010/promotion-evidence.mjs",
@@ -599,9 +601,12 @@ export async function verifyCandidate010SourceBundleAtRoot({ sourceRoot, expecte
   return recomputed;
 }
 
-async function readOptional(file) {
+async function readOptional(file, gitDirectory) {
   try {
-    return await readFile(file, "utf8");
+    return (await readStableOpenedFile(file, {
+      label: `Candidate 010 Git metadata ${path.basename(file)}`,
+      containedBy: gitDirectory,
+    })).toString("utf8");
   } catch (error) {
     if (error.code === "ENOENT") return null;
     throw error;
@@ -610,24 +615,39 @@ async function readOptional(file) {
 
 async function resolveGitDirectory(root) {
   const dotGit = path.join(root, ".git");
-  const information = await stat(dotGit);
-  if (information.isDirectory()) return dotGit;
-  const pointer = (await readFile(dotGit, "utf8")).trim();
+  const information = await lstat(dotGit);
+  if (information.isSymbolicLink()) {
+    throw new Error("Candidate 010 Git metadata refuses a symbolic link or reparse point.");
+  }
+  if (information.isDirectory()) return realpath(dotGit);
+  if (!information.isFile()) throw new Error("Candidate 010 .git metadata is not a regular file or directory.");
+  const pointer = (await readStableOpenedFile(dotGit, {
+    label: "Candidate 010 .git pointer",
+    containedBy: root,
+  })).toString("utf8").trim();
   const match = /^gitdir:\s*(.+)$/i.exec(pointer);
   if (!match) throw new Error("Cannot resolve the repository Git directory.");
-  return path.resolve(root, match[1]);
+  const gitDirectory = path.resolve(root, match[1]);
+  const gitInformation = await lstat(gitDirectory);
+  if (gitInformation.isSymbolicLink() || !gitInformation.isDirectory()) {
+    throw new Error("Candidate 010 resolved Git metadata is linked or not a directory.");
+  }
+  return realpath(gitDirectory);
 }
 
 async function readSourceCommit(root) {
   const gitDirectory = await resolveGitDirectory(root);
-  const head = (await readFile(path.join(gitDirectory, "HEAD"), "utf8")).trim();
+  const head = (await readStableOpenedFile(path.join(gitDirectory, "HEAD"), {
+    label: "Candidate 010 Git HEAD",
+    containedBy: gitDirectory,
+  })).toString("utf8").trim();
   if (/^[0-9a-f]{40}$/.test(head)) return head;
   const match = /^ref:\s*(.+)$/.exec(head);
   if (!match) throw new Error("Repository HEAD is neither a commit nor a symbolic reference.");
   const ref = match[1];
-  const loose = await readOptional(path.join(gitDirectory, ...ref.split("/")));
+  const loose = await readOptional(path.join(gitDirectory, ...ref.split("/")), gitDirectory);
   if (loose && /^[0-9a-f]{40}$/.test(loose.trim())) return loose.trim();
-  const packed = await readOptional(path.join(gitDirectory, "packed-refs"));
+  const packed = await readOptional(path.join(gitDirectory, "packed-refs"), gitDirectory);
   const packedMatch = packed?.split(/\r?\n/).find((line) => line.endsWith(` ${ref}`));
   const commit = packedMatch?.split(" ")[0];
   if (!/^[0-9a-f]{40}$/.test(commit ?? "")) throw new Error(`Cannot resolve Git reference ${ref}.`);

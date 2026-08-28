@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import {
+  lstat,
   mkdir,
   readFile,
   readdir,
@@ -10,6 +11,7 @@ import {
 } from "node:fs/promises";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
+import { readStableOpenedFile } from "./opened-file.mjs";
 import { traceBodyForJob } from "./trace-job.mjs";
 
 const BACKEND_ID = "local-versioned-transactional-kv-v1";
@@ -54,9 +56,13 @@ async function durableSnapshot(versionsDirectory) {
   const names = (await readdir(versionsDirectory, { recursive: true })).sort();
   for (const name of names) {
     const absolute = path.join(versionsDirectory, name);
-    const information = await stat(absolute);
+    const information = await lstat(absolute);
+    if (information.isSymbolicLink()) refuse(`durable snapshot refuses linked entry ${name}`);
     if (!information.isFile()) continue;
-    const body = await readFile(absolute);
+    const body = await readStableOpenedFile(absolute, {
+      label: `transactional KV durable snapshot file ${name}`,
+      containedBy: versionsDirectory,
+    });
     const relative = name.split(path.sep).join("/");
     digest.update(`${Buffer.byteLength(relative)}:${relative}:${body.length}:`);
     digest.update(body);

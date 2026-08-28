@@ -32,6 +32,7 @@ const moduleNames = Object.freeze([
   "checkpoint.mjs",
   "execution-capsule.mjs",
   "immutable-capsule.mjs",
+  "opened-file.mjs",
   "runtime-identity.mjs",
   "source-bundle.mjs",
 ]);

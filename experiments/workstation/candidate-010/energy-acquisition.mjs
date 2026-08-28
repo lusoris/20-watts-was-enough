@@ -1,10 +1,11 @@
 import { createHash } from "node:crypto";
-import { lstat, open, readFile, realpath } from "node:fs/promises";
+import { lstat, open, realpath } from "node:fs/promises";
 import path from "node:path";
 import {
   evaluateExternalEnergyReading,
   hashProvenanceReviewRecord,
 } from "./energy-provider.mjs";
+import { readStableOpenedFile } from "./opened-file.mjs";
 
 export const ENERGY_BLOCK_SCHEDULE_VERSION = "candidate-010.energy-block-schedule.v1";
 export const ENERGY_BLOCK_ACQUISITION_VERSION = "candidate-010.energy-block-acquisition.v1";
@@ -499,11 +500,15 @@ function samePath(left, right) {
 
 async function regularSource(file, label) {
   const absolute = path.resolve(file);
-  const information = await lstat(absolute);
-  if (!information.isFile() || information.isSymbolicLink()) fail("INVALID_SOURCE_FILE", `${label} must be a regular unlinked file`);
-  const resolved = await realpath(absolute);
-  if (!samePath(absolute, resolved)) fail("INVALID_SOURCE_FILE", `${label} traverses a link or reparse point`);
-  const contents = await readFile(absolute);
+  let contents;
+  try {
+    contents = await readStableOpenedFile(absolute, {
+      label,
+      containedBy: path.dirname(absolute),
+    });
+  } catch (error) {
+    fail("INVALID_SOURCE_FILE", `${label} cannot be consumed safely: ${error.message}`);
+  }
   return { absolute, contents, bytes: contents.length, sha256: sha256(contents) };
 }
 
@@ -533,7 +538,15 @@ async function persistExactDocument({ document, outputPath, mismatchCode, label 
     return Object.freeze({ output_path: output, resumed: false, bytes: bytes.length, sha256: sha256(bytes) });
   } catch (error) {
     if (error.code !== "EEXIST") throw error;
-    const existing = await readFile(output);
+    let existing;
+    try {
+      existing = await readStableOpenedFile(output, {
+        label: `existing ${label}`,
+        containedBy: path.dirname(output),
+      });
+    } catch (readError) {
+      fail("INVALID_OUTPUT", `existing ${label} cannot be resumed safely: ${readError.message}`);
+    }
     if (!existing.equals(bytes)) fail(mismatchCode, `existing ${label} differs from the exact recomputed document`);
     return Object.freeze({ output_path: output, resumed: true, bytes: bytes.length, sha256: sha256(bytes) });
   }

@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
-import { lstat, readFile, readdir } from "node:fs/promises";
+import { lstat, readdir } from "node:fs/promises";
 import path from "node:path";
+import { readStableOpenedFile } from "./opened-file.mjs";
 
 export const RETRY_ROLLBACK_IMPLEMENTATION_ID = "candidate-010-two-lifecycle-retry-rollback-v1";
 
@@ -35,7 +36,10 @@ export async function observeFilesystemSnapshot(root) {
         entries.push({ path: relative, type: "directory" });
         await visit(absolute, relative);
       } else if (information.isFile()) {
-        const body = await readFile(absolute);
+        const body = await readStableOpenedFile(absolute, {
+          label: `retry/rollback snapshot file ${relative}`,
+          containedBy: root,
+        });
         entries.push({ path: relative, type: "file", bytes: body.length, sha256: sha256(body) });
       } else {
         throw new Error(`Retry/rollback snapshot refuses unsupported entry: ${relative}`);

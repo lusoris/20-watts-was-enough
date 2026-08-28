@@ -1,12 +1,22 @@
 import react from "@vitejs/plugin-react";
-import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
+import { portalSourceDocuments } from "./scripts/lib/portal-documents.mjs";
+import {
+  populateSeoTemplate,
+  renderBookFallback,
+  renderDocumentFallback,
+  renderPortalFallback,
+  renderSeoHead,
+  renderSitemap,
+} from "./scripts/lib/pages-seo.mjs";
 import { resolvePagesBase } from "./scripts/lib/pages-base.mjs";
 import { renderThirdPartyNotices } from "./scripts/lib/third-party-notices.mjs";
 
 const repositoryRoot = path.dirname(fileURLToPath(import.meta.url));
+const pagesOutputRoot = path.join(repositoryRoot, "dist-github-pages");
 const pagesBase = resolvePagesBase(process.env.PAGES_BASE_PATH);
 const portalDocumentPrefixes = [...new Set([
   "/documents/",
@@ -18,7 +28,9 @@ const resolvedPortalIndexModuleId = `\0${portalIndexModuleId}`;
 
 type PortalSourceDocument = {
   path: string;
+  route: string;
   title: string;
+  description: string;
   group: "Concept" | "Mathematics";
   kind: "markdown";
   words: number;
@@ -26,62 +38,10 @@ type PortalSourceDocument = {
   body: string;
 };
 
-function markdownFiles(directory: string): string[] {
-  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    const entryPath = path.join(directory, entry.name);
-    if (entry.isDirectory()) return markdownFiles(entryPath);
-    return entry.isFile() && entry.name.endsWith(".md") ? [entryPath] : [];
-  });
-}
-
-function plainHeading(value: string) {
-  return value
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/[*_`~]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function portalSourceDocuments(): PortalSourceDocument[] {
-  const inputs = [
-    ...markdownFiles(path.join(repositoryRoot, "concept"))
-      .filter((file) => path.basename(file).toLowerCase() !== "readme.md"),
-    ...markdownFiles(path.join(repositoryRoot, "math"))
-      .filter((file) => path.basename(file).toLowerCase() !== "readme.md"),
-  ];
-  return inputs.map((file): PortalSourceDocument => {
-    const body = readFileSync(file, "utf8");
-    const relativePath = path.relative(repositoryRoot, file).replaceAll("\\", "/");
-    const headings = [...body.matchAll(/^#{1,6}\s+(.+?)\s*#*\s*$/gm)]
-      .map((match) => plainHeading(match[1]))
-      .filter(Boolean);
-    const fallbackTitle = path.basename(file, ".md")
-      .replace(/^\d+-/, "")
-      .replaceAll("-", " ")
-      .replace(/\b\w/g, (character) => character.toUpperCase());
-    const title = headings[0] || fallbackTitle;
-    const group = relativePath.startsWith("concept/") ? "Concept" : "Mathematics";
-    return {
-      path: relativePath,
-      title,
-      group,
-      kind: "markdown",
-      words: body.trim().split(/\s+/).filter(Boolean).length,
-      searchText: [relativePath, title, ...headings].join("\n").toLowerCase(),
-      body,
-    };
-  }).sort((left, right) => {
-    const groupDelta = (left.group === "Concept" ? 0 : 1)
-      - (right.group === "Concept" ? 0 : 1);
-    return groupDelta || left.path.localeCompare(right.path, undefined, { numeric: true });
-  });
-}
-
 function portalDocumentAssets(): Plugin {
-  let documents = portalSourceDocuments();
+  let documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
   const refreshDocuments = () => {
-    documents = portalSourceDocuments();
+    documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
     return documents;
   };
   return {
@@ -93,7 +53,9 @@ function portalDocumentAssets(): Plugin {
       if (id !== resolvedPortalIndexModuleId) return null;
       const index = refreshDocuments().map((document) => ({
         path: document.path,
+        route: document.route,
         title: document.title,
+        description: document.description,
         group: document.group,
         kind: document.kind,
         words: document.words,
@@ -166,6 +128,42 @@ function portalDocumentAssets(): Plugin {
   };
 }
 
+function seoStaticPages(): Plugin {
+  return {
+    name: "seo-static-pages",
+    closeBundle() {
+      const documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
+      const portalPath = path.join(pagesOutputRoot, "index.html");
+      const bookPath = path.join(pagesOutputRoot, "book", "index.html");
+      const portalTemplate = readFileSync(portalPath, "utf8");
+      writeFileSync(portalPath, populateSeoTemplate(
+        portalTemplate,
+        renderSeoHead("portal", null, pagesBase),
+        renderPortalFallback(documents, pagesBase),
+      ), "utf8");
+      writeFileSync(bookPath, populateSeoTemplate(
+        readFileSync(bookPath, "utf8"),
+        renderSeoHead("book", null, pagesBase),
+        renderBookFallback(documents, pagesBase),
+      ), "utf8");
+      for (const document of documents) {
+        const output = path.join(pagesOutputRoot, ...document.route.split("/"), "index.html");
+        mkdirSync(path.dirname(output), { recursive: true });
+        writeFileSync(output, populateSeoTemplate(
+          portalTemplate,
+          renderSeoHead("document", document, pagesBase),
+          renderDocumentFallback(document, documents, pagesBase),
+        ), "utf8");
+      }
+      writeFileSync(
+        path.join(pagesOutputRoot, "sitemap.xml"),
+        renderSitemap(documents),
+        "utf8",
+      );
+    },
+  };
+}
+
 function legalReleaseAssets(): Plugin {
   return {
     name: "legal-release-assets",
@@ -201,9 +199,9 @@ export default defineConfig({
   base: pagesBase,
   publicDir: path.join(repositoryRoot, "public"),
   assetsInclude: ["**/*.md", "**/*.mmd", "**/*.bib"],
-  plugins: [react(), portalDocumentAssets(), legalReleaseAssets()],
+  plugins: [react(), portalDocumentAssets(), legalReleaseAssets(), seoStaticPages()],
   build: {
-    outDir: path.join(repositoryRoot, "dist-github-pages"),
+    outDir: pagesOutputRoot,
     emptyOutDir: true,
     rollupOptions: {
       input: {

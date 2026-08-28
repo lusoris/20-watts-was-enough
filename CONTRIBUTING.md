@@ -7,6 +7,34 @@ Read [`AGENTS.md`](AGENTS.md), the project-wide
 [`engineering and research contract`](docs/principles.md), and the nearest
 nested `AGENTS.md` before editing an authority or executable boundary.
 
+## Prerequisites and bootstrap
+
+The complete validation gate currently binds these development tools:
+
+- Git;
+- Node.js 22.13 or newer within the Node 22 line;
+- npm with the committed `package-lock.json`;
+- CPython 3.13.13 with NumPy 2.4.6; and
+- PowerShell 7 (`pwsh`).
+
+Install JavaScript dependencies from the lockfile and verify the scientific
+runtime before editing:
+
+```powershell
+npm ci
+python -m pip install --disable-pip-version-check --no-deps "numpy==2.4.6"
+python --version
+python -c "import numpy; print(numpy.__version__)"
+```
+
+Fork the repository for an external contribution, clone the fork, create one
+short-lived branch for the smallest coherent change, and open a pull request
+against `lusoris/20-watts-was-enough:main`. Keep the branch current with
+`main`, use a Conventional Commit title, and complete the pull-request
+traceability and validation fields. Do not commit generated dependency
+directories, build output, workstation evidence, private source material, or
+machine-local files.
+
 ## Change workflow
 
 1. Start from the smallest affected chapter or claim; never regenerate the

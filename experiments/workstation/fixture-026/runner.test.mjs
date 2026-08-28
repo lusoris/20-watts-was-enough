@@ -508,9 +508,11 @@ test("analysis and resume reject internal or extra-terminal blank JSONL lines", 
     await executeFixture026({ profile: "smoke", output: fixture.output });
     const rawPath = path.join(fixture.output, "raw-events.jsonl");
     const raw = await readFile(rawPath, "utf8");
+    const firstLineEnd = raw.indexOf("\n");
+    assert.notEqual(firstLineEnd, -1, "fixture raw ledger must contain multiple JSONL records");
     const variants = [
       `${raw}\n`,
-      raw.replace("\n", "\n\n"),
+      `${raw.slice(0, firstLineEnd + 1)}\n${raw.slice(firstLineEnd + 1)}`,
     ];
     for (const corrupted of variants) {
       await writeFile(rawPath, corrupted);

@@ -102,7 +102,7 @@ function independentEquivalenceClass(equationId) {
 
 function expectedInputAndMask(transcript, timeS) {
   const schedule = transcript.schedule;
-  let normalized = { A: 1, B: 1 };
+  let normalized;
   let activeChannel = "A";
   let clamped = false;
   let reset = false;

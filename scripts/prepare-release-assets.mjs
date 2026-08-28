@@ -3,7 +3,6 @@ import {
   lstat,
   mkdir,
   mkdtemp,
-  readFile,
   readdir,
   rename,
   rm,
@@ -15,7 +14,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseDocument } from "yaml";
 
 import { assertBookManifestContract } from "./lib/book-manifest-contract.mjs";
-import { assertBookPdfIntegrity } from "./lib/book-pdf-integrity.mjs";
+import { assertBookPdfBytesIntegrity } from "./lib/book-pdf-integrity.mjs";
+import { readStableOpenedFile } from "./lib/opened-file.mjs";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const defaultRoot = path.resolve(scriptDirectory, "..");
@@ -25,6 +25,7 @@ const sha256Pattern = /^[0-9a-f]{64}$/u;
 const checksumLinePattern = /^([0-9a-f]{64}) {2}([^/\\]+)$/u;
 const bookPdfRelativePath = "public/downloads/20-watts-was-enough-full-concept-book.pdf";
 const bookManifestRelativePath = "public/downloads/book-manifest.json";
+const maximumReleaseAssetBytes = 256 * 1024 * 1024;
 
 function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
@@ -38,6 +39,31 @@ function invariant(condition, message) {
   if (!condition) {
     throw new Error(message);
   }
+}
+
+async function directorySnapshot(root, label) {
+  const before = await lstat(root, { bigint: true });
+  invariant(before.isDirectory() && !before.isSymbolicLink(), `${label} must be a real directory`);
+  const entries = (await readdir(root, { withFileTypes: true }))
+    .map((entry) => ({
+      name: entry.name,
+      regular: entry.isFile() && !entry.isSymbolicLink(),
+    }))
+    .sort((left, right) => compareText(left.name, right.name));
+  const after = await lstat(root, { bigint: true });
+  invariant(
+    before.dev === after.dev && before.ino === after.ino,
+    `${label} changed identity while its inventory was read`,
+  );
+  return { information: after, entries };
+}
+
+function sameDirectorySnapshot(left, right) {
+  return left.information.dev === right.information.dev
+    && left.information.ino === right.information.ino
+    && left.information.mtimeNs === right.information.mtimeNs
+    && left.information.ctimeNs === right.information.ctimeNs
+    && JSON.stringify(left.entries) === JSON.stringify(right.entries);
 }
 
 function parseJson(bytes, relativePath) {
@@ -62,9 +88,11 @@ function parseYaml(bytes, relativePath) {
 
 async function readRegularFile(root, relativePath) {
   const absolutePath = path.join(root, relativePath);
-  const information = await lstat(absolutePath);
-  invariant(information.isFile() && !information.isSymbolicLink(), `${relativePath} must be a regular file`);
-  return readFile(absolutePath);
+  return readStableOpenedFile(absolutePath, {
+    label: `release input ${relativePath}`,
+    containedBy: root,
+    maximumBytes: maximumReleaseAssetBytes,
+  });
 }
 
 export function parseReleaseTag(tag) {
@@ -263,10 +291,15 @@ function checksumManifest(records) {
 }
 
 export async function verifyReleaseChecksums(assetsRoot) {
-  const entries = await readdir(assetsRoot, { withFileTypes: true });
-  invariant(entries.every((entry) => entry.isFile() && !entry.isSymbolicLink()), "Release asset directory may contain only regular files");
-  const assetNames = entries.map((entry) => entry.name).filter((name) => name !== "SHA256SUMS").sort(compareText);
-  const checksumBytes = await readFile(path.join(assetsRoot, "SHA256SUMS"));
+  const initialSnapshot = await directorySnapshot(assetsRoot, "Release asset directory");
+  invariant(initialSnapshot.entries.every((entry) => entry.regular), "Release asset directory may contain only regular files");
+  const assetNames = initialSnapshot.entries.map((entry) => entry.name)
+    .filter((name) => name !== "SHA256SUMS").sort(compareText);
+  const checksumBytes = await readStableOpenedFile(path.join(assetsRoot, "SHA256SUMS"), {
+    label: "release checksum manifest",
+    containedBy: assetsRoot,
+    maximumBytes: 1_000_000,
+  });
   const lines = checksumBytes.toString("utf8").trimEnd().split("\n");
   const records = lines.map((line) => {
     const match = checksumLinePattern.exec(line);
@@ -278,8 +311,32 @@ export async function verifyReleaseChecksums(assetsRoot) {
   invariant(new Set(names).size === names.length, "SHA256SUMS contains duplicate asset names");
   invariant(JSON.stringify(names) === JSON.stringify(assetNames), "SHA256SUMS does not cover the exact release asset set");
   for (const { digest, name } of records) {
-    invariant(sha256(await readFile(path.join(assetsRoot, name))) === digest, `Release asset checksum mismatch: ${name}`);
+    const bytes = await readStableOpenedFile(path.join(assetsRoot, name), {
+      label: `release asset ${name}`,
+      containedBy: assetsRoot,
+      maximumBytes: maximumReleaseAssetBytes,
+    });
+    invariant(sha256(bytes) === digest, `Release asset checksum mismatch: ${name}`);
   }
+  const finalChecksumBytes = await readStableOpenedFile(path.join(assetsRoot, "SHA256SUMS"), {
+    label: "release checksum manifest final verification",
+    containedBy: assetsRoot,
+    maximumBytes: 1_000_000,
+  });
+  invariant(finalChecksumBytes.equals(checksumBytes), "SHA256SUMS changed during checksum verification");
+  for (const { digest, name } of records) {
+    const finalBytes = await readStableOpenedFile(path.join(assetsRoot, name), {
+      label: `release asset final verification ${name}`,
+      containedBy: assetsRoot,
+      maximumBytes: maximumReleaseAssetBytes,
+    });
+    invariant(sha256(finalBytes) === digest, `Release asset changed during checksum verification: ${name}`);
+  }
+  const finalSnapshot = await directorySnapshot(assetsRoot, "Release asset directory");
+  invariant(
+    sameDirectorySnapshot(initialSnapshot, finalSnapshot),
+    "Release asset inventory changed during checksum verification",
+  );
   return records;
 }
 
@@ -299,16 +356,23 @@ async function loadReleaseInputs(root) {
     relativePath,
     await readRegularFile(root, relativePath),
   ])));
-  const licenseEntries = await readdir(path.join(root, "LICENSES"), { withFileTypes: true });
+  const licensesRoot = path.join(root, "LICENSES");
+  const initialLicenseSnapshot = await directorySnapshot(licensesRoot, "LICENSES");
+  const licenseEntries = initialLicenseSnapshot.entries;
   invariant(licenseEntries.length > 0, "LICENSES must contain at least one licence text");
   invariant(
-    licenseEntries.every((entry) => entry.isFile() && !entry.isSymbolicLink()),
+    licenseEntries.every((entry) => entry.regular),
     "LICENSES may contain only regular files for release packaging",
   );
-  for (const entry of licenseEntries.sort((left, right) => compareText(left.name, right.name))) {
+  for (const entry of licenseEntries) {
     const relativePath = `LICENSES/${entry.name}`;
     bytesByPath.set(relativePath, await readRegularFile(root, relativePath));
   }
+  const finalLicenseSnapshot = await directorySnapshot(licensesRoot, "LICENSES");
+  invariant(
+    sameDirectorySnapshot(initialLicenseSnapshot, finalLicenseSnapshot),
+    "LICENSES inventory changed while release inputs were read",
+  );
   return bytesByPath;
 }
 
@@ -336,7 +400,7 @@ export async function prepareReleaseAssets({
     expectedPdf: bookPdfRelativePath,
     expectedSourceRef: tag,
   });
-  await assertBookPdfIntegrity(path.join(root, bookPdfRelativePath), bookManifest);
+  assertBookPdfBytesIntegrity(bytesByPath.get(bookPdfRelativePath), bookManifest);
 
   const assetRecords = [
     { name: path.basename(bookPdfRelativePath), bytes: bytesByPath.get(bookPdfRelativePath) },

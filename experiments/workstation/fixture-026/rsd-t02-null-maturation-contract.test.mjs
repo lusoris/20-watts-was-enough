@@ -51,7 +51,7 @@ test("null maturation design is schema-valid, hash-bound, prospective and NO_RES
   assert.equal(design.result_label, "NO_RESULT");
 });
 
-test("all twelve parents and the twenty-member runner release closure are exact-byte verified", async () => {
+test("all twelve parents and the twenty-one-member runner release closure are exact-byte verified", async () => {
   const { design } = await loadDesign();
   const parentEntries = await Promise.all(design.parent_artifacts.map(async ({ path: relativePath }) => (
     [relativePath, await readFile(path.join(fixtureRoot, relativePath))]

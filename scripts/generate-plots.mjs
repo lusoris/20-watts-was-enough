@@ -12,6 +12,7 @@ import {
 } from "../experiments/workstation/fixture-026/rsd-t02-pilot-transcript-calibration.mjs";
 import { constructFixture026RsdT02SkippingCell } from "../experiments/workstation/fixture-026/rsd-t02-pulse.mjs";
 import { summarizeFixture026RsdT02FamilyCoverage } from "../experiments/workstation/fixture-026/rsd-t02-system-family-generator.mjs";
+import { stripHtmlTagSyntax } from "./lib/plain-text.mjs";
 
 const root = process.cwd();
 const specs = JSON.parse(
@@ -2758,8 +2759,7 @@ const renderers = {
 };
 
 function githubHeadingSlug(heading) {
-  return heading
-    .replace(/<[^>]*>/gu, "")
+  return stripHtmlTagSyntax(heading)
     .replace(/\[([^\]]+)\]\([^)]*\)/gu, "$1")
     .replace(/[`*_~]/gu, "")
     .trim()

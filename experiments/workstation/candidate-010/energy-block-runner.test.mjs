@@ -5,6 +5,7 @@ import {
   readFile,
   readdir,
   rm,
+  symlink,
   writeFile,
 } from "node:fs/promises";
 import os from "node:os";
@@ -322,6 +323,30 @@ test("detects persisted schedule byte drift before committing a block", async ()
   });
   assert.equal(resumed.status, "complete");
   assert.equal(resumed.resumed, true);
+});
+
+test("refuses a linked schedule source before creating execution state", async (context) => {
+  const fixture = await fixturePaths();
+  const linkedSchedule = path.join(fixture.root, "linked-schedule.json");
+  try {
+    await symlink(fixture.schedulePath, linkedSchedule, "file");
+  } catch (error) {
+    if (["EPERM", "EACCES", "ENOTSUP", "UNKNOWN"].includes(error?.code)) {
+      context.skip(`symlink hostile unavailable on this host: ${error.code}`);
+      return;
+    }
+    throw error;
+  }
+  await assert.rejects(
+    runEnergyBlockFixture({
+      schedulePath: linkedSchedule,
+      outputDirectory: fixture.outputDirectory,
+      adapter: adapterFixture(),
+      clock: deterministicClock(),
+    }),
+    errorCode("INVALID_SOURCE_FILE"),
+  );
+  await assert.rejects(readdir(fixture.outputDirectory), { code: "ENOENT" });
 });
 
 test("refuses input substitution even when the outer schedule digest is recomputed", () => {

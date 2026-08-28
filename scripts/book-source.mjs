@@ -1,8 +1,15 @@
 import { createHash } from "node:crypto";
-import { readdir, readFile } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import path from "node:path";
 
+import { readStableOpenedFile } from "./lib/opened-file.mjs";
+
 export const bookPdfName = "20-watts-was-enough-full-concept-book.pdf";
+const maximumBookSourceBytes = 256 * 1024 * 1024;
+
+function relativeSourcePaths(projectRoot, files) {
+  return files.map((file) => path.relative(projectRoot, file).replaceAll("\\", "/"));
+}
 
 async function markdownFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -51,6 +58,7 @@ export async function bookSourceFiles(projectRoot) {
     "scripts/generate-book-pdf.mjs",
     "scripts/lib/book-pdf-generation-options.mjs",
     "scripts/lib/book-pdf-integrity.mjs",
+    "scripts/lib/opened-file.mjs",
     "scripts/lib/pages-base.mjs",
     "scripts/lib/pdf-metadata.mjs",
     "scripts/lib/third-party-notices.mjs",
@@ -69,18 +77,25 @@ export async function bookSourceFiles(projectRoot) {
 
 export async function bookSourceDigest(projectRoot) {
   const files = await bookSourceFiles(projectRoot);
+  const relativeFiles = relativeSourcePaths(projectRoot, files);
   const hash = createHash("sha256");
-  for (const file of files) {
-    const relative = path.relative(projectRoot, file).replaceAll("\\", "/");
+  for (const [index, file] of files.entries()) {
+    const relative = relativeFiles[index];
     hash.update(relative);
     hash.update("\0");
-    hash.update(await readFile(file));
+    hash.update(await readStableOpenedFile(file, {
+      label: `book source ${relative}`,
+      containedBy: projectRoot,
+      maximumBytes: maximumBookSourceBytes,
+    }));
     hash.update("\0");
+  }
+  const finalFiles = relativeSourcePaths(projectRoot, await bookSourceFiles(projectRoot));
+  if (JSON.stringify(finalFiles) !== JSON.stringify(relativeFiles)) {
+    throw new Error("Book source inventory changed while its digest was computed.");
   }
   return {
     digest: hash.digest("hex"),
-    files: files.map((file) =>
-      path.relative(projectRoot, file).replaceAll("\\", "/"),
-    ),
+    files: relativeFiles,
   };
 }

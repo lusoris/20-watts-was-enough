@@ -30,6 +30,15 @@ import {
 
 const execFileAsync = promisify(execFile);
 
+async function withTemporaryOutput(prefix, callback) {
+  const root = await mkdtemp(path.join(os.tmpdir(), prefix));
+  try {
+    return await callback(path.join(root, "output"));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+}
+
 test("factorial writers fail closed before output mutation when another lease owns the run", async () => {
   const temporary = await mkdtemp(path.join(os.tmpdir(), "20w-c010-factorial-lock-"));
   const outputDirectory = path.join(temporary, "contended-output");
@@ -579,38 +588,40 @@ test("factorial resume refuses mutations and reproduces stable decisions across 
 });
 
 test("confirmation task families cannot run as development evidence", async () => {
-  const output = path.join(os.tmpdir(), `20w-c010-forbidden-confirmation-${process.pid}-${Date.now()}`);
-  await assert.rejects(
-    runFactorialExperiment({
-      config: { ...smokeConfig, profile: "development", opportunities_per_seed: 1 },
-      seeds: [123],
-      scenarios: buildFactorialDesign({ splits: ["confirmation"] }),
-      outputDirectory: output,
-      executionMode: "development",
-    }),
-    /fresh frozen seed release/,
-  );
+  await withTemporaryOutput("20w-c010-forbidden-confirmation-", async (output) => {
+    await assert.rejects(
+      runFactorialExperiment({
+        config: { ...smokeConfig, profile: "development", opportunities_per_seed: 1 },
+        seeds: [123],
+        scenarios: buildFactorialDesign({ splits: ["confirmation"] }),
+        outputDirectory: output,
+        executionMode: "development",
+      }),
+      /fresh frozen seed release/,
+    );
+  });
 });
 
 test("canonical task-family binding rejects split relabeling before execution", async () => {
-  const output = path.join(os.tmpdir(), `20w-c010-mutated-split-${process.pid}-${Date.now()}`);
   const signed = buildFactorialDesign({ splits: ["confirmation"] })[0];
   const relabeled = {
     ...signed,
     id: "../../adversarial-scenario-id",
     split: "validation",
   };
-  await assert.rejects(
-    runFactorialExperiment({
-      config: { ...smokeConfig, profile: "implementation-test", opportunities_per_seed: 1 },
-      seeds: [808_081],
-      scenarios: [relabeled],
-      outputDirectory: output,
-      executionMode: "implementation-test",
-    }),
-    /canonically bound/,
-  );
-  await assert.rejects(readdir(output), (error) => error?.code === "ENOENT");
+  await withTemporaryOutput("20w-c010-mutated-split-", async (output) => {
+    await assert.rejects(
+      runFactorialExperiment({
+        config: { ...smokeConfig, profile: "implementation-test", opportunities_per_seed: 1 },
+        seeds: [808_081],
+        scenarios: [relabeled],
+        outputDirectory: output,
+        executionMode: "implementation-test",
+      }),
+      /canonically bound/,
+    );
+    await assert.rejects(readdir(output), (error) => error?.code === "ENOENT");
+  });
 });
 
 test("validation rejects arm-asymmetric paired input against the frozen schedule", async () => {
@@ -944,46 +955,52 @@ test("confirmation executes, resumes, validates, and analyzes only inside one li
 test("confirmation rejects raw seeds and caller-authored frozen flags", async () => {
   const config = { ...smokeConfig, profile: "confirmation-hostile", opportunities_per_seed: 1 };
   const scenarios = [buildFactorialDesign({ splits: ["confirmation"] })[0]];
-  await assert.rejects(
-    runFactorialExperiment({
-      config,
-      seeds: [123],
-      scenarios,
-      outputDirectory: path.join(os.tmpdir(), `20w-c010-raw-confirmation-${Date.now()}`),
-      executionMode: "confirmation",
-    }),
-    /refuses raw caller-provided seeds/,
-  );
-  await assert.rejects(
-    runFactorialExperiment({
-      config,
-      scenarios,
-      outputDirectory: path.join(os.tmpdir(), `20w-c010-flag-confirmation-${Date.now()}`),
-      executionMode: "confirmation",
-      frozen_release: true,
-    }),
-    /flags have no authority/,
-  );
+  await withTemporaryOutput("20w-c010-raw-confirmation-", async (output) => {
+    await assert.rejects(
+      runFactorialExperiment({
+        config,
+        seeds: [123],
+        scenarios,
+        outputDirectory: output,
+        executionMode: "confirmation",
+      }),
+      /refuses raw caller-provided seeds/,
+    );
+  });
+  await withTemporaryOutput("20w-c010-flag-confirmation-", async (output) => {
+    await assert.rejects(
+      runFactorialExperiment({
+        config,
+        scenarios,
+        outputDirectory: output,
+        executionMode: "confirmation",
+        frozen_release: true,
+      }),
+      /flags have no authority/,
+    );
+  });
 });
 
 test("direct worktree confirmation cannot open any release or mint capsule authority", async () => {
   const config = { ...smokeConfig, profile: "confirmation-hostile", opportunities_per_seed: 1 };
   const scenarios = [buildFactorialDesign({ splits: ["confirmation"] })[0]];
-  await assert.rejects(runFactorialExperiment({
-    config,
-    scenarios,
-    outputDirectory: path.join(os.tmpdir(), `20w-c010-worktree-confirmation-${Date.now()}`),
-    executionMode: "confirmation",
-    release: {
-      bindingRoot: repositoryRoot,
-      releasePath: path.join(repositoryRoot, "nonexistent-release.json"),
-      disjointWith: [],
-    },
-    executionAuthority: Object.freeze(function forgedAuthority() {}),
-    executionCapsule: {},
-    expectedSourceBundle: {},
-    launchProvenance: confirmationLaunchProvenance(),
-  }), /refuses import from a worktree|non-generated source root/);
+  await withTemporaryOutput("20w-c010-worktree-confirmation-", async (output) => {
+    await assert.rejects(runFactorialExperiment({
+      config,
+      scenarios,
+      outputDirectory: output,
+      executionMode: "confirmation",
+      release: {
+        bindingRoot: repositoryRoot,
+        releasePath: path.join(repositoryRoot, "nonexistent-release.json"),
+        disjointWith: [],
+      },
+      executionAuthority: Object.freeze(function forgedAuthority() {}),
+      executionCapsule: {},
+      expectedSourceBundle: {},
+      launchProvenance: confirmationLaunchProvenance(),
+    }), /refuses import from a worktree|non-generated source root/);
+  });
 });
 
 test("validation recomputes factorial science instead of trusting consistently rehashed values", async () => {

@@ -4,6 +4,12 @@ import { fileURLToPath } from "node:url";
 
 import { assertBookPdfIntegrity } from "./lib/book-pdf-integrity.mjs";
 import { resolvePagesBase } from "./lib/pages-base.mjs";
+import { portalSourceDocuments } from "./lib/portal-documents.mjs";
+import {
+  canonicalSite,
+  renderRobots,
+  renderSitemap,
+} from "./lib/pages-seo.mjs";
 
 const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -88,11 +94,58 @@ async function validatePage(relativeHtml, expectedEntryPrefix) {
   return { html, clientEntry: clientEntries[0] };
 }
 
+function oneMatch(source, pattern, label) {
+  const matches = [...source.matchAll(pattern)];
+  invariant(matches.length === 1, `${label} must occur exactly once`);
+  return matches[0][1];
+}
+
+function validateSeoDocument(html, document) {
+  const canonical = `${canonicalSite}${document.route}`;
+  const title = oneMatch(html, /<title>([^<]+)<\/title>/g, `${document.route} title`);
+  const description = oneMatch(
+    html,
+    /<meta\s+name="description"\s+content="([^"]+)"\s*\/>/g,
+    `${document.route} description`,
+  );
+  const declaredCanonical = oneMatch(
+    html,
+    /<link\s+rel="canonical"\s+href="([^"]+)"\s*\/>/g,
+    `${document.route} canonical`,
+  );
+  const robots = oneMatch(
+    html,
+    /<meta\s+name="robots"\s+content="([^"]+)"\s*\/>/g,
+    `${document.route} robots`,
+  );
+  const jsonLd = JSON.parse(oneMatch(
+    html,
+    /<script\s+type="application\/ld\+json">([^<]+)<\/script>/g,
+    `${document.route} JSON-LD`,
+  ));
+  invariant(declaredCanonical === canonical, `${document.route} canonical is not self-referential`);
+  invariant(title === `${document.title} — 20 Watts Was Enough`, `${document.route} title is stale`);
+  invariant(description === document.description.replaceAll("&", "&amp;").replaceAll('"', "&quot;"), `${document.route} description is stale`);
+  invariant(robots.includes("index") && robots.includes("follow") && !robots.includes("noindex"), `${document.route} is not indexable`);
+  invariant(jsonLd["@type"] === "TechArticle", `${document.route} JSON-LD type is not TechArticle`);
+  invariant(jsonLd.url === canonical && jsonLd.mainEntityOfPage === canonical, `${document.route} JSON-LD URL is stale`);
+  invariant(jsonLd.headline === document.title, `${document.route} JSON-LD headline is stale`);
+  invariant(jsonLd.wordCount === document.words, `${document.route} JSON-LD word count is stale`);
+  invariant(html.includes('<main class="seo-static-page">'), `${document.route} lacks static fallback content`);
+  invariant(html.includes(`<h1>${document.title.replaceAll("&", "&amp;")}</h1>`), `${document.route} static H1 is stale`);
+  invariant(!html.includes("?doc="), `${document.route} contains a query-parameter document link`);
+  return { title, description };
+}
+
 const portalPage = await validatePage("index.html", "portal");
 const bookPage = await validatePage("book/index.html", "book");
 invariant(portalPage.clientEntry !== bookPage.clientEntry, "portal and book must have distinct client entries");
 invariant(
-  bookPage.html.includes("https://www.cordana.dev/book/"),
+  oneMatch(
+    bookPage.html,
+    /<link\s+rel="canonical"\s+href="([^"]+)"\s*\/>/g,
+    "book/index.html canonical",
+  ) === `${canonicalSite}book/`,
   "book/index.html must declare the canonical public book route",
 );
 const portalModulePreloads = [...portalPage.html.matchAll(
@@ -118,6 +171,8 @@ const sourceDocuments = [
   ...await sourceMarkdownInventory("concept"),
   ...await sourceMarkdownInventory("math"),
 ].sort();
+const portalDocuments = portalSourceDocuments(repositoryRoot);
+invariant(portalDocuments.length === sourceDocuments.length, "SEO route registry does not cover the canonical portal corpus");
 const builtDocuments = (await recursiveInventory("documents"))
   .filter((relative) => relative.endsWith(".md"))
   .map((relative) => relative.slice("documents/".length))
@@ -132,6 +187,45 @@ for (const relative of sourceDocuments) {
     readFile(path.join(outputRoot, "documents", ...relative.split("/"))),
   ]);
   invariant(source.equals(built), `portal document asset differs from canonical source: ${relative}`);
+}
+
+const seoTitles = new Set();
+const seoDescriptions = new Set();
+for (const document of portalDocuments) {
+  const relativeHtml = `${document.route}index.html`;
+  const page = await validatePage(relativeHtml, "portal");
+  const metadata = validateSeoDocument(page.html, document);
+  invariant(!seoTitles.has(metadata.title), `duplicate SEO title: ${metadata.title}`);
+  invariant(!seoDescriptions.has(metadata.description), `duplicate SEO description: ${metadata.description}`);
+  seoTitles.add(metadata.title);
+  seoDescriptions.add(metadata.description);
+  invariant(
+    portalPage.html.includes(`href="${pagesBase}${document.route}"`),
+    `portal fallback does not link ${document.route}`,
+  );
+}
+
+const sitemap = await readFile(path.join(outputRoot, "sitemap.xml"), "utf8");
+invariant(sitemap === renderSitemap(portalDocuments), "sitemap.xml is stale or malformed");
+for (const match of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+  invariant(!/[?#]/u.test(match[1]), `sitemap.xml contains a parameter or fragment URL: ${match[1]}`);
+}
+const robots = await readFile(path.join(outputRoot, "robots.txt"), "utf8");
+invariant(robots === renderRobots(), "robots.txt is stale or malformed");
+invariant(robots.includes(`Sitemap: ${canonicalSite}sitemap.xml`), "robots.txt lacks the canonical sitemap directive");
+for (const [relative, page, expectedType] of [
+  ["index.html", portalPage, "WebSite"],
+  ["book/index.html", bookPage, "Book"],
+]) {
+  invariant(page.html.includes('<meta name="robots" content="index,follow,max-image-preview:large"'), `${relative} is not explicitly indexable`);
+  invariant(page.html.includes('<main class="seo-static-page">'), `${relative} lacks static fallback content`);
+  const jsonLd = JSON.parse(oneMatch(
+    page.html,
+    /<script\s+type="application\/ld\+json">([^<]+)<\/script>/g,
+    `${relative} JSON-LD`,
+  ));
+  const types = jsonLd["@graph"]?.map((entry) => entry["@type"]) ?? [jsonLd["@type"]];
+  invariant(types.includes(expectedType), `${relative} lacks ${expectedType} JSON-LD`);
 }
 
 const assetEntries = await entries("assets");
@@ -235,5 +329,5 @@ if (pagesBase === "/") {
 }
 
 console.log(
-  `GitHub Pages build validation passed: ${inventory.length} files, ${builtDocuments.length} portal documents, ${portalInitialJavaScriptBytes} initial portal JS bytes, ${repositoryManifest.artifacts.length} repository artifacts, ${plotEntries.length} plot-directory entries.`,
+  `GitHub Pages build validation passed: ${inventory.length} files, ${builtDocuments.length} portal documents and canonical SEO routes, ${portalInitialJavaScriptBytes} initial portal JS bytes, ${repositoryManifest.artifacts.length} repository artifacts, ${plotEntries.length} plot-directory entries.`,
 );

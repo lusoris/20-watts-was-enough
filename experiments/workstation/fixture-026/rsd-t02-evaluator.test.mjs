@@ -126,10 +126,7 @@ test("the evaluator derives every registered pair result from its exact certific
     const executionId = `O1-${episodeId}`;
     const left = transcriptFor(certificate.left_recipe_id, executionId);
     const right = transcriptFor(certificate.right_recipe_id, executionId);
-    const result = evaluateFixture026RsdT02Pair(left, right, {
-      analytic_equivalence: certificate.full_panel_status !== "equivalent",
-      refinement_error: 0,
-    });
+    const result = evaluateFixture026RsdT02Pair(left, right);
     assert.equal(result.pair_id, certificate.pair_id);
     assert.equal(result.status, certificate.full_panel_status);
     if (certificate.full_panel_status === "separated") {

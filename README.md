@@ -1,234 +1,155 @@
 # 20 Watts Was Enough
 
+[![CI](https://github.com/lusoris/20-watts-was-enough/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/lusoris/20-watts-was-enough/actions/workflows/ci.yml)
+[![GitHub Pages](https://github.com/lusoris/20-watts-was-enough/actions/workflows/github-pages.yml/badge.svg?branch=main)](https://github.com/lusoris/20-watts-was-enough/actions/workflows/github-pages.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/lusoris/20-watts-was-enough/badge)](https://scorecard.dev/viewer/?uri=github.com/lusoris/20-watts-was-enough)
+[![Latest release](https://img.shields.io/github/v/release/lusoris/20-watts-was-enough?sort=semver)](https://github.com/lusoris/20-watts-was-enough/releases/latest)
+[![Code: EUPL 1.2](https://img.shields.io/badge/code-EUPL--1.2-315c9b.svg)](LICENSING.md)
+[![Original content: CC BY-SA 4.0](https://img.shields.io/badge/original%20content-CC%20BY--SA%204.0-b85c00.svg)](LICENSING.md)
+[![Ko-fi](https://img.shields.io/badge/ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/lusoris)
+
+![Abstract botanical and computational network](public/og-v2.jpg)
+
 > A biologically inspired R&D blueprint for sparse, grounded, continual,
 > energy-efficient AI.
 
-The name is a joke with a serious target: metabolic accounting places the adult
-human brain's whole-organ power budget at roughly 17–20 watts, while
-contemporary AI systems often buy capability by activating and moving far more
-state than a task needs. The number names the constraint; comparisons with
-silicon require a shared task, quality envelope, and system boundary. See
-[C-001](research/claims.md#c-001) and the
-[energy-model chapter](concept/80-energy-model.md).
+The adult human brain operates within a whole-organ power budget of roughly
+17–20 watts ([C-001](research/claims.md#c-001)). That observation does not
+provide a fair brain-versus-silicon benchmark by itself; it establishes a
+serious engineering question: which computational constraints behind adaptive
+biological intelligence can be translated into measurable requirements for
+artificial systems? The [energy evaluation chapter](concept/80-energy-model.md)
+defines the boundary required for a comparison.
+
+This repository develops that question as a traceable research programme. It
+connects primary evidence, cross-domain principles, mathematical models,
+architecture proposals, falsifiable experiments, and explicit failure rules.
+
+## Read the project
+
+| Goal | Start here |
+| --- | --- |
+| Understand the argument | [Working architecture](concept/01-working-architecture.md) |
+| Browse the research online | [Research portal](https://www.cordana.dev/) |
+| Read continuously | [Full HTML book](https://www.cordana.dev/book/) |
+| Read offline or print | [Download the A4 PDF](https://www.cordana.dev/downloads/20-watts-was-enough-full-concept-book.pdf) |
+| Inspect evidence | [Claim ledger](research/claims.md) and [bibliography](research/references.bib) |
+| Inspect proposed tests | [Experiment coverage](experiments/test-coverage.md) |
+| Find a specific area | [Repository map](docs/repository-map.md) |
 
 ## Central thesis
 
-The brain is evidence that useful, adaptive intelligence can exist under a
-strict power and communication budget. This project asks which *computational
-constraints* behind that fact can become engineering requirements:
+Useful adaptive intelligence may require much less active computation and data
+movement than current systems routinely spend. The project investigates
+whether that gap can be attacked through a system that:
 
-- separate total capacity from active capacity;
-- ground representations in temporally aligned perception, action, and outcome;
-- allocate computation according to uncertainty and task demand;
-- separate rapid episodic learning from slow structural learning;
-- consolidate before pruning and hardening;
-- store mutable facts in inspectable memory instead of forcing all knowledge
-  into weights; and
-- measure energy, data movement, quality, and uncertainty together.
+- separates total capacity from active capacity;
+- grounds representations in aligned perception, action, and outcome;
+- allocates computation according to uncertainty and task demand;
+- separates rapid episodic learning from slow structural learning;
+- consolidates before pruning or hardening;
+- keeps mutable facts in inspectable memory rather than forcing everything into
+  weights; and
+- measures quality, energy, data movement, lifecycle cost, and uncertainty
+  together.
 
-## Project status
+Nature is a source of mechanisms, not a shortcut around engineering controls.
+Observations from neuroscience, biology, ecology, physics, chemistry,
+mathematics, social systems, and other fields are normalized by their causal
+operation, deduplicated into shared principle bundles, and tested against strong
+ordinary engineering alternatives.
 
-**Stage:** concept and evidence framework with eleven development-only smoke
-harnesses. There is no integrated model implementation or claim-eligible
-workstation result yet. The generated
-[test-coverage report](experiments/test-coverage.md) keeps those states
-separate.
+## Current state
 
-The repository is the canonical source. Origin links for the Google Doc and
-Gemini discussions are retained under [`sources/`](sources/README.md) as
-link-only, non-authoritative provenance records; their bodies are not published
-in the current tree.
+This is an evolving concept and evidence framework, not a finished model. The
+repository contains protocol-complete experiment descriptions and bounded
+development smoke harnesses, but no integrated AI system and no claim-eligible
+workstation result. The generated [coverage report](experiments/test-coverage.md)
+and [machine-readable readiness summary](experiments/test-readiness-summary.json)
+are the authoritative current status.
 
 The default normative context is the European Union and Germany. Legal,
-standards, and conformity claims remain applicability-, jurisdiction-, version-,
-and date-qualified under the
-[`normative baseline`](research/normative-baseline.md); foreign material is
-preserved as comparative unless a concrete project hook makes it applicable.
+standards, and conformity statements remain qualified by jurisdiction, role,
+version, applicability, and date under the
+[normative baseline](research/normative-baseline.md).
 
-**Why GitHub reports C#:** the repository contains one Windows-only
-[Job Object supervisor](experiments/workstation/fixture-012/windows-job-supervisor.cs)
-for fail-closed process containment, descendant cleanup, timeout enforcement,
-output limits, path-identity monitoring, and high-resolution workstation
-timing. It is experiment infrastructure, not an AI model implementation.
+## How the repository works
 
-The same files are rendered into a public
-[research portal](https://www.cordana.dev/), a separate
-[linear book edition](https://www.cordana.dev/book/), and
-a downloadable A4 PDF—not copied into additional document stores. The portal
-is the primary website: it exposes research status, navigation, search, and a
-web-native document reader. The book route preserves the complete long-form
-sequence for continuous reading. Saving a Markdown, equation, bibliography, or
-Mermaid file updates the local preview through hot reload; GitHub Pages builds
-from committed `main`. The existing owner-only hosted reader is retained but is
-no longer part of the routine publishing path. The PDF contains this README,
-all canonical concept chapters, the mathematical notes, and a generated field-
-coverage appendix, and its freshness is checked during the build. See
-[decision 0005](decisions/0005-rendered-private-edition.md) and
-[decision 0024](decisions/0024-publish-through-split-licensed-git-and-two-reading-surfaces.md).
-
-## Engineering contract
-
-The repository uses the same structural discipline as the maintainer's other
-projects, adapted to research rather than copied from a Go service framework.
-Start with [`AGENTS.md`](AGENTS.md) and the unified
-[`engineering and research contract`](docs/principles.md). The contract applies
-Holzmann's Power of Ten to bounded Node execution, experiments, generators,
-source boundaries, and publication; it also binds scientific claims,
-reproducibility, licensing, EU/German normative work, and releases.
-
-The [`repository-rule crosswalk`](docs/repository-rule-crosswalk.md) records
-which conventions from `golusoris`, `sveltesentio`, `goenvoy`, and the
-organization defaults were adopted, adapted, staged, or rejected. Staged rules
-are not described as enforced until their measurable exit condition is met.
-Public contribution and project operation are documented in
-[`CONTRIBUTING.md`](CONTRIBUTING.md), [`GOVERNANCE.md`](GOVERNANCE.md),
-[`SECURITY.md`](SECURITY.md), [`SUPPORT.md`](SUPPORT.md), and
-[`MAINTAINERS.md`](MAINTAINERS.md).
-
-## Concept map
-
-| Chapter | Question |
-| --- | --- |
-| [Thesis and principles](concept/00-thesis-and-principles.md) | What is the project's central engineering hypothesis? |
-| [Working architecture](concept/01-working-architecture.md) | How do runtime, adaptation, reconstructive generation, maintenance, and resource control form one system? |
-| [Biology is a launchpad](concept/05-biology-is-a-launchpad.md) | Which biological constraints transfer, and which substrate limits should engineering escape? |
-| [Cross-domain convergence](concept/07-cross-domain-convergence.md) | How do different sciences collapse into shared problem–solution principles without losing causal differences? |
-| [Structural growth and routing](concept/10-neurogenesis-and-routing.md) | How does a persistent capability gap create, test, specialize, merge, protect, or retire conditional modules? |
-| [Sensorimotor grounding](concept/20-sensorimotor-grounding.md) | Which event, clock, opportunity, action, intervention, history, language, uncertainty, and provenance contracts ground a world model? |
-| [Representative adaptive performance](concept/22-representative-adaptive-performance.md) | How are learning, transfer, fatigue, risk, recovery, coordination, and selection compared under the conditions in which action is actually possible? |
-| [Active acoustic inference](concept/23-active-acoustic-inference.md) | How do calibrated sound, timing, propagation, masking, spatial action, active emission, separation, and exposure form one operator-qualified inference loop? |
-| [Operator-qualified sensing](concept/24-operator-qualified-sensing.md) | What could a physical measurement resolve, what remains prior-dependent, when is another observation worth its cost, and which substrate should execute the transform? |
-| [Active chemical sensing](concept/25-active-chemical-sensing.md) | How do reaction, transport, mixtures, active sampling, plume motion, adaptation, drift, analytical confirmation, exposure, and cost qualify a chemical inference? |
-| [Reliability under mission profiles](concept/26-reliability-under-mission-profiles.md) | How should variable physical components be characterized, operated, protected, repaired, repurposed, or retired across real stress histories? |
-| [Physical computation boundaries](concept/28-physical-computation-boundaries.md) | Which fundamental, device, circuit, workload, facility, and lifecycle boundary supports an energy claim? |
-| [Sparse predictive compute](concept/30-sparse-predictive-compute.md) | How do event, context, and resource loops price the next computation or observation? |
-| [Memory and consolidation](concept/40-memory-and-consolidation.md) | How does an episode become a retained skill, external fact, weakened trace, or deletion? |
-| [Maturity and structural consolidation](concept/50-grokking-and-pruning.md) | When should a structure be protected, reopened, compacted, or retired? |
-| [Hardening and factual memory](concept/60-hardening-and-factual-memory.md) | Which qualified path becomes compiled, remains a reusable skill, enters versioned factual memory, or escalates? |
-| [System synthesis](concept/70-system-synthesis.md) | How do runtime, task, resource, adaptation, and maintenance control planes fit together? |
-| [Energy evaluation contract](concept/80-energy-model.md) | How are lifecycle boundaries, equal budgets, break-even, uncertainty, and null models enforced? |
-| [Research roadmap](concept/90-research-roadmap.md) | What evidence and experiments are required before building the full system? |
-
-Supporting material:
-
-- [`research/claims.md`](research/claims.md) — stable claim IDs and evidence status
-- [`research/references.bib`](research/references.bib) — primary-source bibliography
-- [`research/adoption-matrix.md`](research/adoption-matrix.md) — what to use, test, explore, or watch
-- [`research/principle-registry.md`](research/principle-registry.md) — canonical deduplicated problem–solution invariants
-- [`research/field-coverage.md`](research/field-coverage.md) — generated OECD/DFG field census, taxonomy blind spots, and breadth queue
-- [`research/taxonomies/field-depth.md`](research/taxonomies/field-depth.md) — searchable inventory of 1,064 EU EuroSciVoc concepts, 214 DFG subjects, 213 ANZSRC groups, and 1,967 fields without inherited coverage
-- [`research/domain-inventory.md`](research/domain-inventory.md) — audited, partial, and queued scientific fields
-- [`research/discovery-policy.md`](research/discovery-policy.md) — open-world search, extraction, deduplication, and promotion rules
-- [`research/normative-baseline.md`](research/normative-baseline.md) — EU/Germany default, source-role hierarchy, and applicability record
-- [`research/audits/`](research/audits/README.md) — dated primary-source research passes and engineering null-model audits
-- [`research/audits/2026-08-25-integrative-comparative-physiology.md`](research/audits/2026-08-25-integrative-comparative-physiology.md) — distributed supply, exchange, typed material balance, delayed control, prediction, synchrony, and fast/slow adaptation boundaries
-- [`research/audits/2026-08-25-tribology-contact-adaptive-interfaces.md`](research/audits/2026-08-25-tribology-contact-adaptive-interfaces.md) — contact, lubrication, wear, stick--slip, third-body, texture, adaptive-interface, and lifecycle boundaries
-- [`research/audits/2026-08-25-developmental-regeneration-depth.md`](research/audits/2026-08-25-developmental-regeneration-depth.md) — positional memory, repair instruction, field scaling, receiver geometry, mechanical boundaries, redundancy, and symmetry-breaking boundaries
-- [`research/audits/2026-08-25-plant-plasticity-memory-signalling.md`](research/audits/2026-08-25-plant-plasticity-memory-signalling.md) — plant memory modes, lifecycle reset, systemic routes, sense-by-growth admission, boundary sensing, and integrated context
-- [`research/audits/2026-08-25-applied-multiscale-reduction.md`](research/audits/2026-08-25-applied-multiscale-reduction.md) — projection memory, slow-manifold validity, heterogeneous micro-queries, and equation-free closure
-- [`research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md`](research/audits/2026-08-25-electrochemistry-interface-memory-degradation.md) — interface/transport separation, finite diffusion memory, impedance validity, timescale resolution, passivation, hysteresis, identifiability, and delayed degradation
-- [`research/audits/2026-08-25-relative-sensing-scale-symmetry.md`](research/audits/2026-08-25-relative-sensing-scale-symmetry.md) — full-trajectory scale symmetry, interface-qualified biological evidence, finite support, statistic-selection counterexamples, and observation-dependent recoverability
-- [`research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md`](research/audits/2026-08-25-interface-qualified-retroactivity-insulation.md) — downstream connection back-action, causal load classes, bounded insulation, useful coupling, and digital null controls
-- [`research/audits/2026-08-26-history-conditioned-modular-succession.md`](research/audits/2026-08-26-history-conditioned-modular-succession.md) — ecological priority effects, task order, curriculum selection, scheduling controls, and fixed-task/eligibility causal cuts
-- [`research/neuroscience-opportunity-map.md`](research/neuroscience-opportunity-map.md) — underused neural mechanisms and falsifiable translations
-- [`research/comparative-biology.md`](research/comparative-biology.md) — candidates from animals, plants, immune systems, and adaptive networks
-- [`research/source-crosswalk.md`](research/source-crosswalk.md) — recorded source leads mapped into evidence and principle bundles
-- [`research/open-questions.md`](research/open-questions.md) — unresolved decisions
-- [`math/`](math/README.md) — notation, boundaries, and derivations
-- [`math/visual-models.md`](math/visual-models.md) — interpretable plots of the
-  current efficiency equations and break-even boundaries
-- [`math/multiscale-reduction-contract.md`](math/multiscale-reduction-contract.md) — exact memory, slow-manifold, micro-query, lifting, healing, and closure boundaries
-- [`math/interface-qualified-scale-symmetry.md`](math/interface-qualified-scale-symmetry.md) — fold-change symmetry, equivariance, absolute counter-tasks, trajectory discrepancy, and reference-maintenance cost
-- [`math/interface-qualified-retroactivity.md`](math/interface-qualified-retroactivity.md) — full/reduced binding dynamics, connection sensitivity, service-qualified attenuation, causal controls, and lifecycle resource boundaries
-- [`math/history-conditioned-modular-succession.md`](math/history-conditioned-modular-succession.md) — order estimands, parity identities, mechanism interventions, lifecycle endpoints, and kill rules
-- [`assets/`](assets/README.md) — editable diagram and future figure sources
-- [`decisions/`](decisions/README.md) — durable project decisions
-- [`experiments/candidates/`](experiments/candidates/README.md) — falsifiable, equal-budget experiment contracts
-- [`experiments/fixtures/`](experiments/fixtures/README.md) — reusable cross-candidate stress benchmarks that add no architecture by themselves
-- [`experiments/fixtures/020-integrative-comparative-physiology.md`](experiments/fixtures/020-integrative-comparative-physiology.md) — nine complete CPU-only physiology contracts with no execution results
-- [`experiments/fixtures/021-tribology-contact-adaptive-interfaces.md`](experiments/fixtures/021-tribology-contact-adaptive-interfaces.md) — nine complete CPU-only tribology/interface contracts with no execution results
-- [`experiments/fixtures/022-regenerative-positional-memory.md`](experiments/fixtures/022-regenerative-positional-memory.md) — ten complete CPU-only developmental/regeneration contracts with no execution results
-- [`experiments/fixtures/023-plant-plasticity-memory-signalling.md`](experiments/fixtures/023-plant-plasticity-memory-signalling.md) — ten complete CPU-only plant plasticity and signalling contracts with no execution results
-- [`experiments/fixtures/024-applied-multiscale-reduction.md`](experiments/fixtures/024-applied-multiscale-reduction.md) — four complete CPU-only multiscale-reduction contracts with no execution results
-- [`experiments/fixtures/025-electrochemistry-interface-memory-degradation.md`](experiments/fixtures/025-electrochemistry-interface-memory-degradation.md) — ten complete CPU-only electrochemistry contracts with no execution results
-- [`experiments/fixtures/026-interface-qualified-relative-sensing.md`](experiments/fixtures/026-interface-qualified-relative-sensing.md) — ten complete CPU-only relative-sensing and scale-symmetry contracts, one public generator-only smoke implementation, and no confirmation results
-- [`experiments/fixtures/027-interface-qualified-retroactivity-insulation.md`](experiments/fixtures/027-interface-qualified-retroactivity-insulation.md) — ten detailed CPU-only back-action and bounded-insulation protocol contracts, one public smoke implementation, and no confirmation results
-- [`experiments/workstation/fixture-022/`](experiments/workstation/fixture-022/README.md) — deterministic DEV-T01 corruption, abstention, and charged-fallback development smoke path
-- [`experiments/workstation/fixture-023/`](experiments/workstation/fixture-023/README.md) — deterministic PLM-T01 duration-memory and PLM-T02 lifecycle-reset development smoke paths
-- [`experiments/workstation/fixture-024/`](experiments/workstation/fixture-024/README.md) — deterministic AMR-T01 development smoke path with no confirmation or energy authority
-- [`experiments/workstation/fixture-025/`](experiments/workstation/fixture-025/README.md) — deterministic ECM-T03 validity-gate development smoke path with no confirmation or energy authority
-- [`experiments/workstation/fixture-026/`](experiments/workstation/fixture-026/README.md) — deterministic RSD-T01 grid plus an RSD-T02 nine-policy construction bank, exact five-family/20-instance generator, a fresh restricted content-addressed policy boundary, durable per-instance and population-level recovery across the complete panel, two trainable level-two null prototypes, and exact-analyzer synthetic calibration that rejects the current planning assumptions; no comparison, confirmation, or energy authority
-- [`experiments/workstation/fixture-027/`](experiments/workstation/fixture-027/README.md) — deterministic RIN-T01 isolation/connection diagnostic with no confirmation, service-performance, or energy authority
-- [`experiments/workstation/fixture-029/`](experiments/workstation/fixture-029/README.md) — deterministic CMB-X01 recruited-maintenance and CMB-X04 phase-qualified preservation/release construction diagnostics under one suite receipt, with no scientific comparison, confirmation, performance, or energy authority
-- [`experiments/test-coverage.md`](experiments/test-coverage.md) — generated
-  claim-to-protocol coverage and workstation execution readiness
-- [`experiments/test-readiness-summary.json`](experiments/test-readiness-summary.json) — compact machine-readable readiness surface used by the site and book
-- [`CHANGELOG.md`](CHANGELOG.md) — human-readable evolution
-
-## Editing rule
-
-Do not regenerate the project from a prompt. Make an incremental change to a
-chapter, claim, equation, diagram, or decision; update links and the changelog;
-then run:
-
-```powershell
-pwsh -File scripts/validate-docs.ps1
-npm run validate:math
+```text
+primary sources -> scoped claims -> deduplicated principles
+                -> engineering translations -> equations and architecture
+                -> equal-budget tests -> bounded evidence -> revised claims
 ```
 
-For the public portal and book with live Markdown reload, install the locked
-dependencies once and start the Pages watcher:
+- [`research/claims.md`](research/claims.md) gives major assertions stable
+  `C-` identities and evidence status.
+- [`research/principle-registry.md`](research/principle-registry.md) groups
+  equivalent cross-domain mechanisms under stable `P-` identities.
+- [`concept/`](concept/README.md) develops the maintained system synthesis.
+- [`math/`](math/README.md) defines notation, units, derivations, and testable
+  efficiency models.
+- [`experiments/`](experiments/README.md) separates written protocols,
+  development plumbing, and result authority.
+- [`decisions/`](decisions/README.md) records durable choices without rewriting
+  their history.
+- [`sources/`](sources/README.md) preserves provenance and publication
+  boundaries; imported discussions and summaries are leads, not evidence.
+
+## Canonical source and editing
+
+Git `main` is the canonical source. The Pages portal, HTML book, and PDF are
+generated views of the same committed material; Google Docs and imported chats
+are not synchronized document stores. Work incrementally on one chapter,
+claim, equation, diagram, test, or decision rather than regenerating the whole
+project.
+
+Read [`AGENTS.md`](AGENTS.md) and the
+[engineering and research contract](docs/principles.md) before editing. The
+[repository-rule crosswalk](docs/repository-rule-crosswalk.md) explains which
+conventions from the maintainer's other projects were adopted, adapted,
+staged, or rejected here.
+
+For a local live preview:
 
 ```powershell
 npm ci
 npm run dev:github-pages
 ```
 
-The preview is served at
-`http://localhost:5173/`. Changes under `concept/` and
-`math/` invalidate the searchable index, reload the open page, and serve the
-new Markdown instead of the HTML fallback. Internal Markdown links,
-GitHub-style tables, LaTeX equations, the bibliography, and editable Mermaid
-sources are rendered in the same searchable reader.
+The preview runs at `http://localhost:5173/` and reloads canonical Markdown,
+equations, tables, diagrams, and plots as their source files change.
 
-Regenerate the full concept book after changing the README, a concept chapter,
-mathematical note, diagram renderer, plot, or book stylesheet:
+Before committing:
+
+```powershell
+npm run check
+```
+
+Changes to book sources also require:
 
 ```powershell
 npm run generate:book-pdf
 npm run validate:book-pdf
 ```
 
-The tracked artifact is
-`public/downloads/20-watts-was-enough-full-concept-book.pdf`. The public portal
-offers it directly for download, while `/book/` is the continuous HTML edition.
-GitHub Pages also publishes linked, inert repository artifacts needed to inspect
-the book's claims. Link-only provenance records and the complete audit and
-fixture corpus remain browsable through Git itself; the portal's web reader
-focuses on the maintained concept and mathematical documents.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the complete workflow and
+[`SUPPORT.md`](SUPPORT.md) for issue routing. GitHub may report a small amount
+of C# because one Windows Job Object helper provides bounded process
+containment for workstation experiments; it is infrastructure, not a model
+implementation.
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow.
+## Citation, support, and licence
 
-The complete local merge floor is:
+Use [`CITATION.cff`](CITATION.cff) and identify the exact release or commit when
+citing the project. Scientific use should also cite the original sources that
+support the specific claim; citing this synthesis does not replace them.
 
-```powershell
-npm run check
-```
+If the project is useful, support is available through
+[Ko-fi](https://ko-fi.com/lusoris) or
+[GitHub Sponsors](https://github.com/sponsors/lusoris).
 
-## License
-
-Copyright © 2026 lusoris contributors
-
-This public repository uses a split open licence:
-
-- project-authored software, scripts, tests, configurations, schemas, and
-  workflows are licensed under the EUPL v1.2 or later; and
-- original project prose, mathematical exposition, diagrams, plots, and the
-  generated book/site presentation are licensed under CC BY-SA 4.0.
-
-The root [`LICENSE`](LICENSE) contains the verbatim EUPL v1.2 English text.
-Read [`LICENSING.md`](LICENSING.md) for the controlling scope, attribution,
-third-party boundaries, and the CC BY-SA legal-code link. In particular,
-[`sources/`](sources/README.md), official taxonomy snapshots, cited papers, and
-other third-party material are not relicensed merely because they appear in
-this repository.
+Project-authored software, scripts, tests, configurations, schemas, and
+workflows are licensed under the EUPL v1.2 or later. Original project prose,
+mathematics, diagrams, plots, and presentation are licensed under CC BY-SA 4.0.
+Third-party and source material retains its own terms. Read
+[`LICENSING.md`](LICENSING.md) for the controlling boundary.

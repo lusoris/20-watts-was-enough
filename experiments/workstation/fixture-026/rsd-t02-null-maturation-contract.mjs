@@ -3,15 +3,15 @@ import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
 export const FIXTURE_026_RSD_T02_NULL_MATURATION_DESIGN_VERSION =
   "fixture-026.rsd-t02-null-maturation-design.v1";
 export const FIXTURE_026_RSD_T02_NULL_MATURATION_DESIGN_SHA256 =
-  "54e1f6f9efd91fcd1311b46b43727225f257e2704cfe9fa3c291ea303065642b";
+  "55318151c5d6476c0044fdcbecace1f3e111d782dfb727431fb0417c18c02180";
 export const FIXTURE_026_RSD_T02_NULL_PROTOTYPE_IMPLEMENTATION_SHA256 =
   "2a0440334adfc51b50ff22848ac0f675d1efa600b384462ad39dfa6068a0b405";
 export const FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_VERSION =
   "fixture-026.rsd-t02-parameterized-runner-release.v1";
 export const FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_SHA256 =
-  "46e41c1da834a5dafd9fe972b35fc03805c9640ad90e61587623baa81c3929f9";
+  "2a6dc6e19ed7d024681917ec45cc731680bb5a88e157566bf6302baa988be981";
 export const FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_EXACT_BYTES_SHA256 =
-  "1df93cfd7873d3e208e938392576f8e5965e92c4ab019805d9b21a24a593ec3d";
+  "11ece60e6b1f7d13230aa4b726d8375aa5853026bc22ad53236a7239486ac5ba";
 
 const REQUIRED_NULLS = Object.freeze(["B-STATE-SPACE", "B-RECURRENT"]);
 const REQUIRED_PRIMARY_PROPERTIES = Object.freeze([
@@ -74,9 +74,9 @@ export function assertFixture026RsdT02ParameterizedRunnerRelease(release) {
     || release.authority !== "public-development-infrastructure-release-binding-only"
     || release.closure_rule !== "all-listed-local-runtime-artifacts-required-at-exact-bytes"
     || !Array.isArray(artifacts)
-    || artifacts.length !== 20
-    || new Set(artifacts.map(({ role }) => role)).size !== 20
-    || new Set(artifacts.map(({ path }) => path)).size !== 20
+    || artifacts.length !== 21
+    || new Set(artifacts.map(({ role }) => role)).size !== 21
+    || new Set(artifacts.map(({ path }) => path)).size !== 21
     || artifacts.some((entry) => (
       !exactKeys(entry, ["role", "path", "sha256_exact_bytes"])
       || typeof entry.role !== "string"

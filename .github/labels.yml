@@ -97,3 +97,6 @@
 - name: "security"
   color: "b60205"
   description: "Public security-process work without confidential details"
+- name: "javascript"
+  color: "f1e05a"
+  description: "JavaScript dependency update"

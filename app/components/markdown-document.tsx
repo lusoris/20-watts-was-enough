@@ -67,6 +67,22 @@ function resolveInternalLink(href: string, currentPath: string) {
   return { path: normalizePath(`${base}${relativePath}`), hash };
 }
 
+function navigateInternalLink(
+  event: MouseEvent<HTMLAnchorElement>,
+  internal: { path: string; hash: string },
+  onNavigate: (path: string, hash?: string) => void,
+) {
+  if (
+    event.button !== 0
+    || event.altKey
+    || event.ctrlKey
+    || event.metaKey
+    || event.shiftKey
+  ) return;
+  event.preventDefault();
+  onNavigate(internal.path, internal.hash);
+}
+
 function joinAssetBase(assetBasePath: string, src: string): string {
   const base = assetBasePath.endsWith("/") ? assetBasePath : `${assetBasePath}/`;
   return `${base}${src.replace(/^\/+/, "")}`;
@@ -214,15 +230,8 @@ export function MarkdownDocument({
         );
       }
 
-      if (internalHref) {
-        return (
-          <a href={internalHref(internal.path, internal.hash)} {...props}>
-            {children}
-          </a>
-        );
-      }
-
-      if (isNavigablePath && !isNavigablePath(internal.path) && isRepositoryArtifact(internal.path)) {
+      const isNavigable = isNavigablePath?.(internal.path) ?? true;
+      if (!isNavigable && isRepositoryArtifact(internal.path)) {
         return (
           <a
             href={joinAssetBase(assetBasePath, repositoryArtifactHref(internal.path))}
@@ -236,7 +245,7 @@ export function MarkdownDocument({
         );
       }
 
-      if (isNavigablePath && !isNavigablePath(internal.path) && nonNavigableHref) {
+      if (!isNavigable && nonNavigableHref) {
         return (
           <a
             href={nonNavigableHref(internal.path, internal.hash)}
@@ -249,13 +258,16 @@ export function MarkdownDocument({
         );
       }
 
-      const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
-        event.preventDefault();
-        onNavigate(internal.path, internal.hash);
-      };
+      const resolvedHref = internalHref && isNavigable
+        ? internalHref(internal.path, internal.hash)
+        : `?doc=${encodeURIComponent(internal.path)}`;
 
       return (
-        <a href={`?doc=${encodeURIComponent(internal.path)}`} onClick={handleClick} {...props}>
+        <a
+          href={resolvedHref}
+          onClick={(event) => navigateInternalLink(event, internal, onNavigate)}
+          {...props}
+        >
           {children}
         </a>
       );

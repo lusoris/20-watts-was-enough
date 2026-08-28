@@ -5,7 +5,6 @@ import {
   lstat,
   mkdir,
   mkdtemp,
-  readFile,
   readdir,
   realpath,
   rm,
@@ -14,9 +13,11 @@ import {
 import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
+import { readStableOpenedFile } from "./opened-file.mjs";
 import { discoverCandidate010SourceFiles } from "./source-bundle.mjs";
 
 const executeFile = promisify(execFile);
+const INVENTORY_READ_CONCURRENCY = 8;
 const CAPSULE_PREFIX = "candidate-010-capsule-";
 
 export const IMMUTABLE_CAPSULE_VERSION = "candidate-010-immutable-capsule-v1";
@@ -184,9 +185,26 @@ async function committedBlob(repositoryRoot, headCommit, relative) {
   return { body, git_object_id: match[3], git_mode: match[1] };
 }
 
+async function mapBounded(values, limit, callback) {
+  const results = new Array(values.length);
+  let next = 0;
+  const worker = async () => {
+    while (next < values.length) {
+      const index = next;
+      next += 1;
+      results[index] = await callback(values[index]);
+    }
+  };
+  await Promise.all(Array.from(
+    { length: Math.min(limit, values.length) },
+    () => worker(),
+  ));
+  return results;
+}
+
 async function inventory(capsuleRoot) {
   const rootReal = await realpath(capsuleRoot);
-  const rows = [];
+  const files = [];
   async function visit(directory, prefix = "") {
     const entries = await readdir(directory, { withFileTypes: true });
     entries.sort((left, right) => left.name.localeCompare(right.name));
@@ -199,22 +217,21 @@ async function inventory(capsuleRoot) {
         if (!isInside(rootReal, resolved)) refuse(`capsule directory resolves outside root: ${relative}`);
         await visit(absolute, relative);
       } else if (entry.isFile()) {
-        const [information, resolved, body] = await Promise.all([
-          lstat(absolute),
-          realpath(absolute),
-          readFile(absolute),
-        ]);
-        if (information.isSymbolicLink() || !information.isFile() || !isInside(rootReal, resolved)) {
-          refuse(`capsule file is not a contained regular file: ${relative}`);
-        }
-        rows.push(Object.freeze({ path: relative, bytes: body.length, sha256: sha256(body) }));
+        files.push(Object.freeze({ absolute, relative }));
       } else {
         refuse(`capsule contains an unsupported filesystem entry: ${relative}`);
       }
     }
   }
   await visit(rootReal);
-  rows.sort((left, right) => left.path.localeCompare(right.path));
+  files.sort((left, right) => left.relative.localeCompare(right.relative));
+  const rows = await mapBounded(files, INVENTORY_READ_CONCURRENCY, async ({ absolute, relative }) => {
+    const body = await readStableOpenedFile(absolute, {
+      label: `immutable capsule file ${relative}`,
+      containedBy: rootReal,
+    });
+    return Object.freeze({ path: relative, bytes: body.length, sha256: sha256(body) });
+  });
   const aggregate = createHash("sha256");
   for (const row of rows) {
     aggregate.update(`${Buffer.byteLength(row.path)}:${row.path}:${row.bytes}:${row.sha256}\n`);

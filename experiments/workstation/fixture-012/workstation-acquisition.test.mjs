@@ -841,7 +841,7 @@ test("process config requires absolute content-identified commands and a frozen 
       () => validateFixture012ProcessAdapterConfig({
         ...config,
         effective_environment: {
-          allowlist: ["SYSTEMROOT", "TEMP", "TMP", "DOTNET_STARTUP_HOOKS"],
+          allowlist: [...config.effective_environment.allowlist, "DOTNET_STARTUP_HOOKS"],
           values: {
             ...config.effective_environment.values,
             DOTNET_STARTUP_HOOKS: "C:\\unbound-hook.dll",

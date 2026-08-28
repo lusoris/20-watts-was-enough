@@ -35,3 +35,4 @@ than silently changing its outcome.
 | [0027](0027-adopt-cross-repository-engineering-contract.md) | Adopt a cross-repository engineering contract | accepted |
 | [0028](0028-establish-first-public-release-baseline.md) | Establish the first public release baseline at v0.2.0 | accepted |
 | [0029](0029-bind-pages-to-the-custom-domain-root.md) | Bind GitHub Pages to the custom-domain root | accepted |
+| [0030](0030-publish-each-research-document-at-a-canonical-route.md) | Publish each research document at a canonical route | accepted |

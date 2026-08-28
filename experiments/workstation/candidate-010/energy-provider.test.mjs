@@ -479,6 +479,31 @@ test("counterbalanced block acquisition replaces unresolvable per-work-unit mete
   }
 });
 
+test("create-only energy documents refuse a linked resume target", async (context) => {
+  const temporary = await mkdtemp(path.join(os.tmpdir(), "20w-c010-energy-linked-output-"));
+  const target = path.join(temporary, "substituted.json");
+  const linked = path.join(temporary, "energy-block-schedule.json");
+  try {
+    await writeFile(target, "substituted output\n");
+    try {
+      await symlink(target, linked, "file");
+    } catch (error) {
+      if (["EPERM", "EACCES", "ENOTSUP", "UNKNOWN"].includes(error?.code)) {
+        context.skip(`symlink hostile unavailable on this host: ${error.code}`);
+        return;
+      }
+      throw error;
+    }
+    await assert.rejects(
+      persistEnergyBlockSchedule({ schedule: rehearsalSchedule(), outputPath: linked }),
+      (error) => error instanceof EnergyAcquisitionError && error.code === "INVALID_OUTPUT",
+    );
+    assert.equal(await readFile(target, "utf8"), "substituted output\n");
+  } finally {
+    await rm(temporary, { recursive: true, force: true });
+  }
+});
+
 test("the frozen block design is paired and bounded instead of pretending to meter millions of millisecond records", () => {
   const scenarios = Array.from({ length: 24 }, (_, index) => ({
     scenario_id: `confirmation-scenario-${index}`,

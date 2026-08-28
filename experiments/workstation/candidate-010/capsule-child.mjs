@@ -1,9 +1,10 @@
 import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
-import { lstat, readFile, readdir, realpath } from "node:fs/promises";
+import { lstat, readdir, realpath } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
+import { readStableOpenedFile } from "./opened-file.mjs";
 
 const PROTOCOL = "candidate-010-capsule-bootstrap-v2";
 const AUTHORITY = "experiments/workstation/candidate-010/capsule-execution-authority.mjs";
@@ -355,10 +356,7 @@ export async function runCapsuleChild(requestPath) {
   if (typeof requestPath !== "string" || !requestPath)
     refuse("one request path is required");
   const requestFile = path.resolve(requestPath);
-  const information = await lstat(requestFile);
-  if (information.isSymbolicLink() || !information.isFile())
-    refuse("request is linked or invalid");
-  const requestBytes = await readFile(requestFile);
+  const requestBytes = await readStableOpenedFile(requestFile, { label: "capsule request" });
   const body = requestShape(JSON.parse(requestBytes.toString("utf8")));
   const childPreVerificationStarted = performance.now();
   const pre = await verifyBuiltIns(body);

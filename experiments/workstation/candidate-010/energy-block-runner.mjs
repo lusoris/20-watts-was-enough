@@ -3,12 +3,12 @@ import {
   lstat,
   mkdir,
   open,
-  readFile,
   readdir,
   realpath,
 } from "node:fs/promises";
 import path from "node:path";
 import { ENERGY_BLOCK_SCHEDULE_VERSION } from "./energy-acquisition.mjs";
+import { readStableOpenedFile } from "./opened-file.mjs";
 
 export const ENERGY_BLOCK_RUNNER_VERSION = "candidate-010.energy-block-runner.v1";
 export const ENERGY_BLOCK_ADAPTER_INPUT_VERSION = "candidate-010.energy-block-adapter-input.v1";
@@ -977,18 +977,15 @@ export function validateEnergyBlockExecutionBundle({ schedule, bundle }) {
 
 async function regularFile(file, label) {
   const absolute = path.resolve(file);
-  let information;
+  let contents;
   try {
-    information = await lstat(absolute);
+    contents = await readStableOpenedFile(absolute, {
+      label,
+      containedBy: path.dirname(absolute),
+    });
   } catch (error) {
-    fail("INVALID_SOURCE_FILE", `${label} cannot be inspected: ${error.message}`, error);
+    fail("INVALID_SOURCE_FILE", `${label} cannot be consumed safely: ${error.message}`, error);
   }
-  if (!information.isFile() || information.isSymbolicLink()) {
-    fail("INVALID_SOURCE_FILE", `${label} must be a regular unlinked file`);
-  }
-  const resolved = await realpath(absolute);
-  if (!samePath(absolute, resolved)) fail("INVALID_SOURCE_FILE", `${label} traverses a link or reparse point`);
-  const contents = await readFile(absolute);
   return Object.freeze({ absolute, contents, bytes: contents.length, sha256: sha256(contents) });
 }
 
@@ -1063,11 +1060,15 @@ async function persistExact(document, outputPath, mismatchCode, label) {
     return Object.freeze({ resumed: false, bytes: bytes.length, sha256: sha256(bytes) });
   } catch (error) {
     if (error.code !== "EEXIST") throw error;
-    const information = await lstat(outputPath);
-    if (!information.isFile() || information.isSymbolicLink() || !samePath(outputPath, await realpath(outputPath))) {
-      fail("INVALID_OUTPUT", `existing ${label} must be a regular unlinked file`);
+    let existing;
+    try {
+      existing = await readStableOpenedFile(outputPath, {
+        label: `existing ${label}`,
+        containedBy: path.dirname(outputPath),
+      });
+    } catch (readError) {
+      fail("INVALID_OUTPUT", `existing ${label} cannot be resumed safely: ${readError.message}`, readError);
     }
-    const existing = await readFile(outputPath);
     if (!existing.equals(bytes)) fail(mismatchCode, `existing ${label} differs from the exact recomputed document`);
     return Object.freeze({ resumed: true, bytes: bytes.length, sha256: sha256(bytes) });
   }
