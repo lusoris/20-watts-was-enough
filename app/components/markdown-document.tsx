@@ -3,6 +3,7 @@
 import {
   Children,
   cloneElement,
+  createElement,
   isValidElement,
   useEffect,
   useRef,
@@ -27,7 +28,21 @@ type MarkdownDocumentProps = {
   nonNavigableHref?: (path: string, hash: string) => string;
   imageLoading?: "eager" | "lazy";
   assetBasePath?: string;
+  headingOffset?: number;
 };
+
+type MarkdownHeadingProps = ComponentPropsWithoutRef<"h1"> & {
+  node?: unknown;
+};
+
+function shiftedHeading(level: number, offset: number) {
+  const shiftedLevel = Math.min(6, Math.max(1, level + offset));
+  const tag = `h${shiftedLevel}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  return function ShiftedMarkdownHeading({ node, ...props }: MarkdownHeadingProps) {
+    void node;
+    return createElement(tag, props);
+  };
+}
 
 function normalizePath(path: string): string {
   const parts: string[] = [];
@@ -155,6 +170,7 @@ export function MarkdownDocument({
   nonNavigableHref,
   imageLoading = "lazy",
   assetBasePath = "/",
+  headingOffset = 0,
 }: MarkdownDocumentProps) {
   const ImageComponent = ({
     src = "",
@@ -175,7 +191,19 @@ export function MarkdownDocument({
     />
   );
 
+  const headingComponents: Components = headingOffset === 0
+    ? {}
+    : {
+        h1: shiftedHeading(1, headingOffset),
+        h2: shiftedHeading(2, headingOffset),
+        h3: shiftedHeading(3, headingOffset),
+        h4: shiftedHeading(4, headingOffset),
+        h5: shiftedHeading(5, headingOffset),
+        h6: shiftedHeading(6, headingOffset),
+      };
+
   const components: Components = {
+    ...headingComponents,
     a({ href = "", children, ...props }) {
       const internal = resolveInternalLink(href, currentPath);
       if (!internal) {

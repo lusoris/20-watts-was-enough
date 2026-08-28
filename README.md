@@ -51,16 +51,18 @@ for fail-closed process containment, descendant cleanup, timeout enforcement,
 output limits, path-identity monitoring, and high-resolution workstation
 timing. It is experiment infrastructure, not an AI model implementation.
 
-The same files are rendered as two generated reading surfaces—not as additional
-document stores. The interactive research reader remains an owner-only online
-edition. A public, static full-book release is published through
-[GitHub Pages](https://lusoris.github.io/20-watts-was-enough/) from the public
-repository. Saving a Markdown, equation, bibliography, or Mermaid file updates
-the local preview through hot reload; both publishing paths build from a
-committed Git state. The downloadable A4 book contains this README, all
-canonical concept chapters, the mathematical notes, and a generated field-
-coverage appendix. It is generated from the same files and checked for
-staleness during the build. See
+The same files are rendered into a public
+[research portal](https://lusoris.github.io/20-watts-was-enough/), a separate
+[linear book edition](https://lusoris.github.io/20-watts-was-enough/book/), and
+a downloadable A4 PDF—not copied into additional document stores. The portal
+is the primary website: it exposes research status, navigation, search, and a
+web-native document reader. The book route preserves the complete long-form
+sequence for continuous reading. Saving a Markdown, equation, bibliography, or
+Mermaid file updates the local preview through hot reload; GitHub Pages builds
+from committed `main`. The existing owner-only hosted reader is retained but is
+no longer part of the routine publishing path. The PDF contains this README,
+all canonical concept chapters, the mathematical notes, and a generated field-
+coverage appendix, and its freshness is checked during the build. See
 [decision 0005](decisions/0005-rendered-private-edition.md) and
 [decision 0024](decisions/0024-publish-through-split-licensed-git-and-two-reading-surfaces.md).
 
@@ -138,7 +140,7 @@ Supporting material:
 - [`experiments/workstation/fixture-025/`](experiments/workstation/fixture-025/README.md) — deterministic ECM-T03 validity-gate development smoke path with no confirmation or energy authority
 - [`experiments/workstation/fixture-026/`](experiments/workstation/fixture-026/README.md) — deterministic RSD-T01 grid plus an RSD-T02 nine-policy construction bank, exact five-family/20-instance generator, a fresh restricted content-addressed policy boundary, durable per-instance and population-level recovery across the complete panel, two trainable level-two null prototypes, and exact-analyzer synthetic calibration that rejects the current planning assumptions; no comparison, confirmation, or energy authority
 - [`experiments/workstation/fixture-027/`](experiments/workstation/fixture-027/README.md) — deterministic RIN-T01 isolation/connection diagnostic with no confirmation, service-performance, or energy authority
-- [`experiments/workstation/fixture-029/`](experiments/workstation/fixture-029/README.md) — deterministic CMB-X04 phase-qualified preservation/release construction diagnostic with eight arms and no comparison, confirmation, performance, or energy authority
+- [`experiments/workstation/fixture-029/`](experiments/workstation/fixture-029/README.md) — deterministic CMB-X01 recruited-maintenance and CMB-X04 phase-qualified preservation/release construction diagnostics under one suite receipt, with no scientific comparison, confirmation, performance, or energy authority
 - [`experiments/test-coverage.md`](experiments/test-coverage.md) — generated
   claim-to-protocol coverage and workstation execution readiness
 - [`experiments/test-readiness-summary.json`](experiments/test-readiness-summary.json) — compact machine-readable readiness surface used by the site and book
@@ -155,15 +157,18 @@ pwsh -File scripts/validate-docs.ps1
 npm run validate:math
 ```
 
-For the live rendered edition, install the locked dependencies once and start
-the watcher:
+For the public portal and book with live Markdown reload, install the locked
+dependencies once and start the Pages watcher:
 
 ```powershell
 npm ci
-npm run dev
+npm run dev:github-pages
 ```
 
-The preview is served at `http://localhost:3000`. Internal Markdown links,
+The preview is served at
+`http://localhost:5173/20-watts-was-enough/`. Changes under `concept/` and
+`math/` invalidate the searchable index, reload the open page, and serve the
+new Markdown instead of the HTML fallback. Internal Markdown links,
 GitHub-style tables, LaTeX equations, the bibliography, and editable Mermaid
 sources are rendered in the same searchable reader.
 
@@ -176,13 +181,12 @@ npm run validate:book-pdf
 ```
 
 The tracked artifact is
-`public/downloads/20-watts-was-enough-full-concept-book.pdf`; both online
-editions offer it directly for download, while `/book` remains the printable
-HTML edition in the interactive reader. The public static edition includes the
-book plus linked, inert repository artifacts needed to inspect its claims; it
-does not duplicate the searchable full-corpus reader. Link-only source
-provenance records and the complete audit and fixture corpus remain browsable
-through Git itself and the owner-only interactive reader.
+`public/downloads/20-watts-was-enough-full-concept-book.pdf`. The public portal
+offers it directly for download, while `/book/` is the continuous HTML edition.
+GitHub Pages also publishes linked, inert repository artifacts needed to inspect
+the book's claims. Link-only provenance records and the complete audit and
+fixture corpus remain browsable through Git itself; the portal's web reader
+focuses on the maintained concept and mathematical documents.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow.
 

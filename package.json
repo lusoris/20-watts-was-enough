@@ -12,8 +12,9 @@
   },
   "scripts": {
     "dev": "npm run prepare:reader-artifacts && vinext dev",
+    "dev:github-pages": "npm run prepare:reader-artifacts && vite --config vite.pages.config.ts",
     "build": "npm run prepare:reader-artifacts && npm run validate:book-pdf && vinext build",
-    "build:github-pages": "npm run prepare:reader-artifacts && vite build --config vite.pages.config.ts",
+    "build:github-pages": "npm run prepare:reader-artifacts && npm run validate:book-pdf && vite build --config vite.pages.config.ts",
     "start": "vinext start",
     "test": "npm run lint && npm run test:site && npm run validate:docs && npm run test:sources && npm run validate:coverage && npm run validate:taxonomies && npm run validate:math && npm run validate:workstation && npm run test:workstation && npm run check:test-coverage && npm run test:readiness && npm run build && npm run validate:site-build",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern tmp",

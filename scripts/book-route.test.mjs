@@ -39,6 +39,7 @@ const globalStyles = await readFile(
   new URL("../app/globals.css", import.meta.url),
   "utf8",
 );
+const viteConfig = await readFile(new URL("../vite.config.ts", import.meta.url), "utf8");
 
 test("the book route keeps the complete corpus out of the Worker render", () => {
   assert.match(page, /import \{ BookLoader \}/);
@@ -56,6 +57,13 @@ test("the book route keeps the complete corpus out of the Worker render", () => 
   assert.match(edition, /import type \{ ResearchDocument \}/);
   assert.doesNotMatch(edition, /import \{ documents[^}]*\} from "\.\.\/content"/);
   assert.match(edition, /export function BookEdition\(/);
+});
+
+test("the book renderer closes the Pages-only portal index during Vinext scans", () => {
+  assert.match(viteConfig, /const portalIndexModuleId = "virtual:portal-document-index"/);
+  assert.match(viteConfig, /name: "portal-index-fallback"/);
+  assert.match(viteConfig, /id === resolvedPortalIndexModuleId \? "export default \[\];" : null/);
+  assert.match(viteConfig, /portalIndexFallback\(\),\s*\n\s*vinext\(\)/);
 });
 
 test("the generated PDF uses public links and zero-state readiness copy", () => {

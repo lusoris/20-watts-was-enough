@@ -22,12 +22,20 @@ export async function loadPortalDocument(
   if (!response.ok) {
     throw new Error(`Document request failed (${response.status}): ${path}`);
   }
+  const body = await response.text();
+  const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+  if (
+    contentType.includes("text/html")
+    || /^\s*(?:<!doctype\s+html|<html\b)/i.test(body)
+  ) {
+    throw new Error(`Document request returned HTML instead of Markdown: ${path}`);
+  }
   return {
     path: metadata.path,
     title: metadata.title,
     group: metadata.group,
     kind: metadata.kind,
     words: metadata.words,
-    body: await response.text(),
+    body,
   };
 }

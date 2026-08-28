@@ -92,8 +92,27 @@ test("the portal keeps history and native Markdown links honest on the Pages bas
 
   assert.match(
     portal,
-    /requested\s*&&\s*documentsByPath\.has\(requested\)\s*\?\s*requested\s*:\s*defaultDocumentPath/,
+    /requested\s*&&\s*documentsByPath\.has\(requested\)\s*\?\s*requested\s*:\s*null/,
   );
+  assert.match(portal, /function initialDocumentPath\(\): string \| null/);
+  assert.match(portal, /if \(!selectedPath\) return;[\s\S]*loadPortalDocument\(selectedPath, assetBasePath\)/);
+  assert.match(portal, /\{selectedPath && selectedMetadata \? \(/);
+  assert.match(portal, /className="portal-dashboard"/);
+  assert.match(portal, /NO_RESULT/);
+  assert.match(portal, /const selectGroup = \(candidate: LibraryGroup\)/);
+  assert.match(portal, /selectedMetadata\?\.group !== candidate/);
+  assert.match(portal, /className="portal-mobile-menu"/);
+  assert.match(portal, /className="portal-mobile-outline"/);
+  assert.match(portal, /mobileMenuRef\.current\?\.removeAttribute\("open"\)/);
+  assert.match(portal, /mobileOutlineRef\.current\?\.removeAttribute\("open"\)/);
+  assert.match(portal, /selectHeading\(heading\.id\)/);
+  assert.match(portal, /--portal-reader-stack-top/);
+  assert.match(portal, /new ResizeObserver\(syncStickyStack\)/);
+  assert.match(portal, /readerLibraryRef/);
+  assert.match(portal, /list\.scrollTop \+= activeRect\.top/);
+  assert.match(portal, /section heading match/);
+  assert.match(portal, /Open \{step\.label\}/);
+  assert.match(portal, /document\.getElementById\(targetId\)\?\.focus\(\)/);
   assert.match(portal, /nonNavigableHref=\{repositoryDocumentHref\}/);
   assert.match(portal, /window\.open\(\s*repositoryDocumentHref\(path, hash\)/);
 
@@ -122,6 +141,29 @@ test("only genuinely overflowing Markdown tables become labelled keyboard region
   assert.match(markdown, /typeof ResizeObserver === "undefined"/);
 });
 
+test("focused portal documents have a coherent heading hierarchy", async () => {
+  const [portal, markdown] = await Promise.all([
+    source("app/components/public-research-portal.tsx"),
+    source("app/components/markdown-document.tsx"),
+  ]);
+
+  assert.match(portal, /<h1 id="portal-reader-title">/);
+  assert.match(portal, /headingOffset=\{1\}/);
+  assert.match(markdown, /headingOffset\?: number/);
+  assert.match(markdown, /h1: shiftedHeading\(1, headingOffset\)/);
+  assert.match(markdown, /h2: shiftedHeading\(2, headingOffset\)/);
+});
+
+test("wide diagrams expose a keyboard region only when they really overflow", async () => {
+  const diagram = await source("app/components/mermaid-diagram.tsx");
+
+  assert.match(diagram, /canvas\.scrollWidth > region\.clientWidth \+ 1/);
+  assert.match(diagram, /role=\{overflows \? "region" : undefined\}/);
+  assert.match(diagram, /aria-label=\{overflows \? "Scrollable diagram" : undefined\}/);
+  assert.match(diagram, /tabIndex=\{overflows \? 0 : undefined\}/);
+  assert.match(diagram, /\{overflows \? \(\s*<p className="diagram-layout-note">/);
+});
+
 test("the portal loads canonical documents on demand and keeps book code off its initial path", async () => {
   const [portal, content, config, validator] = await Promise.all([
     source("app/components/public-research-portal.tsx"),
@@ -134,10 +176,32 @@ test("the portal loads canonical documents on demand and keeps book code off its
   assert.match(portal, /from ["']\.\.\/portal-content["']/);
   assert.match(portal, /lazy\(\(\) => import\(["']\.\/markdown-document["']\)/);
   assert.match(content, /fetch\(withBase\(assetBasePath, `documents\/\$\{path\}`\)\)/);
+  assert.match(content, /contentType\.includes\("text\/html"\)/);
+  assert.match(content, /Document request returned HTML instead of Markdown/);
   assert.match(config, /virtual:portal-document-index/);
   assert.match(config, /fileName: `documents\/\$\{document\.path\}`/);
   assert.match(validator, /maximumPortalInitialJavaScriptBytes = 400_000/);
   assert.match(validator, /portal document assets do not exactly match the canonical concept\/math corpus/);
+});
+
+test("the Pages development server live-reloads canonical Markdown without an HTML fallback", async () => {
+  const [config, packageJson] = await Promise.all([
+    source("vite.pages.config.ts"),
+    source("package.json"),
+  ]);
+
+  assert.match(packageJson, /"dev:github-pages":\s*"npm run prepare:reader-artifacts && vite --config vite\.pages\.config\.ts"/);
+  assert.match(packageJson, /"build:github-pages":\s*"npm run prepare:reader-artifacts && npm run validate:book-pdf && vite build --config vite\.pages\.config\.ts"/);
+  assert.match(config, /configureServer\(server: ViteDevServer\)/);
+  assert.match(config, /server\.watcher\.on\("change", reloadPortal\)/);
+  assert.match(config, /server\.ws\.send\(\{ type: "full-reload" \}\)/);
+  assert.match(config, /"Content-Type", "text\/markdown; charset=utf-8"/);
+  assert.match(config, /\/20-watts-was-enough\/documents\//);
+});
+
+test("generated Pages Markdown cannot inflate canonical math validation", async () => {
+  const validator = await source("scripts/validate-math.mjs");
+  assert.match(validator, /["']dist-github-pages["']/);
 });
 
 test("the public-source wording does not weaken the primary site's access badge", async () => {

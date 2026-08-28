@@ -47,7 +47,24 @@ test("portal utility text and card accents retain readable contrast", async () =
     "--card-accent-text: #805000",
     "--card-accent-text: #006971",
   ]) assert.ok(portal.includes(contrastToken), contrastToken);
-  assert.match(portal, /\.portal-map-card:hover strong[\s\S]*color:\s*var\(--card-accent-on-dark\)/);
+  assert.match(stylesheet, /\.portal-start-card:hover\s*\{[^}]*background:\s*#0d2118/s);
+  assert.match(stylesheet, /\.portal-status-outcome\s*\{[^}]*border:\s*2px solid #ff827b/s);
+  assert.match(stylesheet, /\.portal-dashboard-funnel\s*\{[^}]*grid-column:\s*1 \/ -1/s);
   assert.match(portal, /\.portal-document-state\s*\{[^}]*font-size:\s*14px/s);
   assert.match(portal, /\.portal-document-state\[role="alert"\]\s*\{[^}]*border-left-color:\s*#a92d31/s);
+  assert.match(portal, /\.portal-shell\s*\{[^}]*overflow-x:\s*clip/s);
+  assert.match(stylesheet, /\.prose table\s*\{[^}]*font-size:\s*14px/s);
+  assert.match(stylesheet, /\.diagram-scroll-region\s*\{[^}]*overflow-x:\s*auto/s);
+  assert.match(stylesheet, /\.portal-reader-page \.portal-library\s*\{[^}]*display:\s*none/s);
+  assert.match(stylesheet, /\.portal-mobile-outline\s*\{[^}]*position:\s*sticky/s);
+  assert.match(stylesheet, /\.portal-mobile-menu nav a\s*\{[^}]*min-height:\s*44px/s);
+  assert.match(stylesheet, /\.portal-library \.portal-document-list\s*\{[^}]*flex:\s*1;[^}]*min-height:\s*0;[^}]*max-height:\s*none/s);
+  assert.match(stylesheet, /\.portal-prose h4\s*\{[^}]*font-size:\s*17px;[^}]*font-weight:\s*750/s);
+  assert.match(stylesheet, /\.prose th\s*\{[^}]*font-size:\s*14px;[^}]*line-height:\s*1\.35/s);
+  assert.match(stylesheet, /\.portal-reader-toolbar\s*\{[^}]*background:\s*#fff/s);
+  assert.match(stylesheet, /\.portal-reader \.portal-prose > h2:first-child\s*\{[^}]*display:\s*none/s);
+  assert.match(stylesheet, /top:\s*var\(--portal-reader-stack-top, 142px\)/);
+  assert.match(stylesheet, /scroll-margin-top:\s*calc\(var\(--portal-reader-stack-top, 142px\) \+ 8px\)/);
+  assert.match(stylesheet, /@media screen and \(max-width: 760px\)[\s\S]*\.portal-funnel-step a\s*\{[^}]*min-height:\s*44px/s);
+  assert.doesNotMatch(stylesheet, /\.portal-header nav a:(?:first-child|nth-child\()/);
 });

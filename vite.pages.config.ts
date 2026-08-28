@@ -2,7 +2,7 @@ import react from "@vitejs/plugin-react";
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 import { renderThirdPartyNotices } from "./scripts/lib/third-party-notices.mjs";
 
 const repositoryRoot = path.dirname(fileURLToPath(import.meta.url));
@@ -72,8 +72,12 @@ function portalSourceDocuments(): PortalSourceDocument[] {
   });
 }
 
-function portalDocumentAssets() {
-  const documents = portalSourceDocuments();
+function portalDocumentAssets(): Plugin {
+  let documents = portalSourceDocuments();
+  const refreshDocuments = () => {
+    documents = portalSourceDocuments();
+    return documents;
+  };
   return {
     name: "portal-document-assets",
     resolveId(id: string) {
@@ -81,7 +85,7 @@ function portalDocumentAssets() {
     },
     load(id: string) {
       if (id !== resolvedPortalIndexModuleId) return null;
-      const index = documents.map((document) => ({
+      const index = refreshDocuments().map((document) => ({
         path: document.path,
         title: document.title,
         group: document.group,
@@ -91,8 +95,62 @@ function portalDocumentAssets() {
       }));
       return `export default ${JSON.stringify(index)};`;
     },
+    configureServer(server: ViteDevServer) {
+      const sourceRoots = [
+        path.join(repositoryRoot, "concept"),
+        path.join(repositoryRoot, "math"),
+      ];
+      const reloadPortal = (file: string) => {
+        const relative = path.relative(repositoryRoot, file).replaceAll("\\", "/");
+        if (!/^(?:concept|math)\/.+\.md$/i.test(relative)) return;
+        refreshDocuments();
+        const indexModule = server.moduleGraph.getModuleById(resolvedPortalIndexModuleId);
+        if (indexModule) server.moduleGraph.invalidateModule(indexModule);
+        server.ws.send({ type: "full-reload" });
+      };
+      server.watcher.add(sourceRoots);
+      server.watcher.on("add", reloadPortal);
+      server.watcher.on("change", reloadPortal);
+      server.watcher.on("unlink", reloadPortal);
+
+      server.middlewares.use((request, response, next) => {
+        if (request.method !== "GET" && request.method !== "HEAD") {
+          next();
+          return;
+        }
+        let requestPath = "";
+        try {
+          requestPath = decodeURIComponent(
+            new URL(request.url ?? "/", "http://localhost").pathname,
+          );
+        } catch {
+          next();
+          return;
+        }
+        const prefix = [
+          "/documents/",
+          "/20-watts-was-enough/documents/",
+        ].find((candidate) => requestPath.startsWith(candidate));
+        if (!prefix) {
+          next();
+          return;
+        }
+        const documentPath = requestPath.slice(prefix.length);
+        const document = refreshDocuments().find(
+          (candidate) => candidate.path === documentPath,
+        );
+        if (!document) {
+          next();
+          return;
+        }
+        response.statusCode = 200;
+        response.setHeader("Content-Type", "text/markdown; charset=utf-8");
+        response.setHeader("Cache-Control", "no-store");
+        response.end(request.method === "HEAD" ? undefined : document.body);
+      });
+    },
     generateBundle() {
-      for (const document of documents) {
+      for (const document of refreshDocuments()) {
         this.emitFile({
           type: "asset",
           fileName: `documents/${document.path}`,

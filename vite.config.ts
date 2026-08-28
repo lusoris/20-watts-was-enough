@@ -17,6 +17,22 @@ const localBindingConfig = {
   compatibility_flags: ["nodejs_compat"],
 };
 
+const portalIndexModuleId = "virtual:portal-document-index";
+const resolvedPortalIndexModuleId = `\0${portalIndexModuleId}`;
+
+function portalIndexFallback() {
+  return {
+    name: "portal-index-fallback",
+    enforce: "pre" as const,
+    resolveId(id: string) {
+      return id === portalIndexModuleId ? resolvedPortalIndexModuleId : null;
+    },
+    load(id: string) {
+      return id === resolvedPortalIndexModuleId ? "export default [];" : null;
+    },
+  };
+}
+
 export default defineConfig(async () => {
   // Keep Wrangler and Miniflare state project-local. These are non-secret tool
   // settings; application environment belongs in ignored `.env*` files.
@@ -38,6 +54,10 @@ export default defineConfig(async () => {
       },
     },
     plugins: [
+      // The real searchable index is emitted only by vite.pages.config.ts.
+      // Vinext still scans all app modules while rendering /book, so give that
+      // unused Pages-only import a closed empty module instead of a warning.
+      portalIndexFallback(),
       vinext(),
       sites(),
       cloudflare({

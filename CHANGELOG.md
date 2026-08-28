@@ -7,13 +7,39 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
-- Fixture F-029 now has a bounded public-development CMB-X04 construction
-  harness covering all eight registered preservation/release arms, separate
-  actionable observations and evaluator truth, append-only integrity records,
-  resume, recomputed analysis, and fail-closed authority checks. It is the
-  eleventh `smoke-ready` harness and remains `NO_RESULT`: no strongest-null
-  selection, scientific comparison, performance conclusion, confirmation,
-  measured energy, or workstation-executable claim exists.
+- GitHub Pages now opens as a web-native research portal instead of mounting the
+  entire book at the site root. The portal provides a concise thesis and live
+  readiness surface, purpose-based navigation, a searchable concept and
+  mathematics library, and an in-page document reader. The complete linear
+  edition remains available at `/book/`, and the generated PDF remains the
+  offline/print export. Routine deployment of the redundant owner-only hosted
+  reader has stopped.
+
+- The focused reader now derives sticky offsets from the rendered toolbar
+  height, keeps the active library entry visible, removes the duplicate source
+  title, and preserves unobscured section anchors for long document names.
+  Narrow research funnels collapse before their text and link targets become
+  cramped, while heading-only search matches are labelled explicitly. Direct
+  Pages builds now reject a stale PDF before bundling.
+
+- Fixture F-029 now has bounded public-development construction harnesses for
+  CMB-X01 recruited maintenance and CMB-X04 phase-qualified preservation and
+  release. A suite runner co-receipts both independent tracks while preserving
+  their separate actionable observations, evaluator truth, append-only records,
+  resume paths, recomputed analyses, and fail-closed authority checks. The
+  fixture remains the eleventh `smoke-ready` artifact and remains `NO_RESULT`:
+  CMB-X02/CMB-X03, scientific comparison, strongest-null selection,
+  confirmation, measured energy, performance conclusions, and
+  workstation-executable evidence are absent.
+
+- An adversarial F-029 pass closed previously permissive boundaries: CMB-X01
+  now gates harmful burden and terminal misses, treats an unserved backlog as a
+  tail failure, charges requeues, uses an arm-independent service opportunity,
+  binds all reachable retry draws, and validates a closed JSON Schema. CMB-X04
+  now replays seeded record semantics and separates reconstruction writes from
+  transport writes. Suite authority and subrun metadata are closed and bound to
+  their receipts, while the manifest verifies the referenced seed/configuration
+  hash closure. All of these remain construction checks, not research results.
 
 - The evidence ledger now contains 1,571 claims: 1,475 have reciprocal,
   protocol-complete routes and 96 remain explicitly classified evidence inputs

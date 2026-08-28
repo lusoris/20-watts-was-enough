@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useEffect, useId, useState } from "react";
+import { type CSSProperties, useEffect, useId, useRef, useState } from "react";
 
 type RenderedDiagram = {
   svg: string;
@@ -114,6 +114,9 @@ export function MermaidDiagram({
   const reactId = useId();
   const [rendered, setRendered] = useState<RenderedDiagram | null>(null);
   const [error, setError] = useState("");
+  const [overflows, setOverflows] = useState(false);
+  const scrollRegionRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
   const caption = semanticDiagramCaption(chart, contextHeading);
   const captionId = `caption-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
 
@@ -174,6 +177,28 @@ export function MermaidDiagram({
     };
   }, [chart, reactId]);
 
+  useEffect(() => {
+    const region = scrollRegionRef.current;
+    const canvas = canvasRef.current;
+    if (!rendered || !region || !canvas) {
+      setOverflows(false);
+      return;
+    }
+
+    const measure = () => {
+      setOverflows(canvas.scrollWidth > region.clientWidth + 1);
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", measure);
+      return () => window.removeEventListener("resize", measure);
+    }
+    const observer = new ResizeObserver(measure);
+    observer.observe(region);
+    observer.observe(canvas);
+    return () => observer.disconnect();
+  }, [rendered]);
+
   if (error) {
     return (
       <figure className="diagram diagram-error">
@@ -197,17 +222,27 @@ export function MermaidDiagram({
       className={`semantic-figure diagram diagram-${rendered.shape}`}
       aria-labelledby={captionId}
     >
-      {rendered.shape === "wide" ? (
+      {overflows ? (
         <p className="diagram-layout-note">
           Wide diagram · scroll horizontally on narrow screens
         </p>
       ) : null}
       <div
-        className="diagram-canvas"
-        aria-hidden="true"
-        style={canvasStyle}
-        dangerouslySetInnerHTML={{ __html: rendered.svg }}
-      />
+        className={`diagram-scroll-region ${overflows ? "diagram-overflowing" : ""}`}
+        role={overflows ? "region" : undefined}
+        aria-label={overflows ? "Scrollable diagram" : undefined}
+        aria-describedby={overflows ? captionId : undefined}
+        tabIndex={overflows ? 0 : undefined}
+        ref={scrollRegionRef}
+      >
+        <div
+          className="diagram-canvas"
+          aria-hidden="true"
+          ref={canvasRef}
+          style={canvasStyle}
+          dangerouslySetInnerHTML={{ __html: rendered.svg }}
+        />
+      </div>
       <figcaption id={captionId}>{caption}</figcaption>
     </figure>
   );
