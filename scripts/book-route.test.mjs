@@ -40,6 +40,10 @@ const globalStyles = await readFile(
   "utf8",
 );
 const viteConfig = await readFile(new URL("../vite.config.ts", import.meta.url), "utf8");
+const generator = await readFile(
+  new URL("./generate-book-pdf.mjs", import.meta.url),
+  "utf8",
+);
 
 test("the book route keeps the complete corpus out of the Worker render", () => {
   assert.match(page, /import \{ BookLoader \}/);
@@ -50,8 +54,11 @@ test("the book route keeps the complete corpus out of the Worker render", () => 
   assert.match(loader, /useSyncExternalStore/);
   assert.match(loader, /\(\) => false/);
   assert.match(loader, /<BookLoadBoundary>/);
-  assert.match(loader, /new URLSearchParams\(window\.location\.search\)\.get\("pdf"\) === "1"/);
-  assert.match(loader, /<BookEdition surface=\{surface\}/);
+  assert.match(loader, /const parameters = new URLSearchParams\(window\.location\.search\)/);
+  assert.match(loader, /parameters\.get\("pdf"\) === "1"/);
+  assert.match(loader, /parameters\.get\("ref"\) \?\? "main"/);
+  assert.match(loader, /<BookEdition\s+surface=\{surface\}/);
+  assert.match(loader, /sourceRef=\{sourceRef\}/);
 
   assert.match(edition, /import \{ bookDocuments as documents \}/);
   assert.match(edition, /import type \{ ResearchDocument \}/);
@@ -69,14 +76,18 @@ test("the book renderer closes the Pages-only portal index during Vinext scans",
 test("the generated PDF uses public links and zero-state readiness copy", () => {
   assert.match(edition, /"owner-only-site" \| "github-pages" \| "public-pdf"/);
   assert.match(edition, /const usesPublicLinks = isGitHubPages \|\| isPublicPdf/);
-  assert.match(edition, /if \(isPublicPdf\) return repositoryDocumentHref\(path, hash\)/);
-  assert.match(edition, /const canonicalPublicBook = "https:\/\/lusoris\.github\.io\/20-watts-was-enough\/"/);
+  assert.match(edition, /const repositoryRef = repositoryRefForSurface\(surface, sourceRef, editionVersion\)/);
+  assert.match(edition, /const surfaceDocumentHref = repositoryDocumentHrefFor\(repositoryRef\)/);
+  assert.match(edition, /const canonicalPublicBook = "https:\/\/www\.cordana\.dev\/"/);
   assert.match(edition, /isPublicPdf \? canonicalPublicBook : assetBasePath/);
   assert.match(edition, /usesPublicLinks \? "View source on GitHub" : "← Owner-only research site"/);
   assert.match(edition, /publicSurface=\{usesPublicLinks\}/);
   assert.match(readiness, /ledgerOnly\.proposedArtifactFamilies === 0/);
   assert.match(readiness, /No ledger-only record currently requires a new experiment family/);
   assert.match(readiness, /The public Git repository contains the complete artifact table/);
+  assert.match(generator, /parseBookPdfGenerationOptions\(process\.argv\.slice\(2\)\)/);
+  assert.match(generator, /ref=\$\{encodeURIComponent\(sourceRef\)\}/);
+  assert.match(generator, /source_ref: sourceRef/);
 });
 
 test("the private reader distinguishes JSON contracts and exposes linked source artifacts", () => {
@@ -113,7 +124,13 @@ test("the full-book source identity includes the locked renderer dependency grap
     path.relative(repositoryRoot, file).replaceAll("\\", "/")
   ));
   assert.equal(sources.includes("package-lock.json"), true);
+  assert.equal(sources.includes("CITATION.cff"), true);
+  assert.equal(sources.includes("app/lib/book-release-identity.mjs"), true);
+  assert.equal(sources.includes("app/project-metadata.ts"), true);
+  assert.equal(sources.includes("scripts/lib/book-pdf-generation-options.mjs"), true);
   assert.equal(sources.includes("scripts/lib/book-pdf-integrity.mjs"), true);
+  assert.equal(sources.includes("scripts/lib/pages-base.mjs"), true);
+  assert.equal(sources.includes("scripts/lib/pdf-metadata.mjs"), true);
 });
 
 test("the book manifest rejects a same-size PDF byte replacement", async () => {

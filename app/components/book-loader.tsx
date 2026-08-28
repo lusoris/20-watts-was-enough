@@ -7,6 +7,7 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
+import { projectVersion } from "../project-metadata";
 
 const BookEdition = lazy(() =>
   import("./book-edition").then((module) => ({ default: module.BookEdition })),
@@ -72,14 +73,20 @@ export function BookLoader() {
   );
 
   if (!browserReady) return <BookLoading />;
-  const surface = new URLSearchParams(window.location.search).get("pdf") === "1"
+  const parameters = new URLSearchParams(window.location.search);
+  const surface = parameters.get("pdf") === "1"
     ? "public-pdf"
     : "owner-only-site";
+  const sourceRef = surface === "public-pdf" ? parameters.get("ref") ?? "main" : "main";
 
   return (
     <BookLoadBoundary>
       <Suspense fallback={<BookLoading />}>
-        <BookEdition surface={surface} />
+        <BookEdition
+          surface={surface}
+          editionVersion={projectVersion}
+          sourceRef={sourceRef}
+        />
       </Suspense>
     </BookLoadBoundary>
   );

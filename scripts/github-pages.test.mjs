@@ -14,7 +14,7 @@ async function source(relative) {
   return readFile(path.join(repositoryRoot, relative), "utf8");
 }
 
-test("Pages builds a portal root and dedicated book route with a project-relative base", async () => {
+test("Pages builds a portal root and dedicated book route with a configurable safe base", async () => {
   const [config, portalEntry, portalHtml, bookEntry, bookHtml] = await Promise.all([
     source("vite.pages.config.ts"),
     source("github-pages/main.tsx"),
@@ -23,7 +23,10 @@ test("Pages builds a portal root and dedicated book route with a project-relativ
     source("github-pages/book/index.html"),
   ]);
 
-  assert.match(config, /base:\s*["']\/20-watts-was-enough\/["']/);
+  assert.match(config, /import \{ resolvePagesBase \} from ["']\.\/scripts\/lib\/pages-base\.mjs["']/);
+  assert.match(config, /const pagesBase = resolvePagesBase\(process\.env\.PAGES_BASE_PATH\)/);
+  assert.match(config, /base:\s*pagesBase/);
+  assert.doesNotMatch(config, /base:\s*["']\/20-watts-was-enough\/["']/);
   assert.match(config, /root:\s*path\.join\(repositoryRoot,\s*["']github-pages["']\)/);
   assert.match(config, /publicDir:\s*path\.join\(repositoryRoot,\s*["']public["']\)/);
   assert.match(config, /input:\s*\{/);
@@ -32,14 +35,22 @@ test("Pages builds a portal root and dedicated book route with a project-relativ
 
   assert.match(portalHtml, /<div id=["']root["']><\/div>/);
   assert.match(portalHtml, /src=["']\/main\.tsx["']/);
+  assert.match(portalHtml, /https:\/\/www\.cordana\.dev\//);
+  assert.match(portalHtml, /https:\/\/www\.cordana\.dev\/og-v2\.jpg/);
+  assert.match(portalHtml, /rel=["']canonical["'] href=["']https:\/\/www\.cordana\.dev\/["']/);
+  assert.doesNotMatch(portalHtml, /lusoris\.github\.io\/20-watts-was-enough/);
   assert.doesNotMatch(portalEntry, /vinext|next\/headers|next\/server/);
 
   assert.match(bookEntry, /<BookEdition/);
   assert.match(bookEntry, /surface=["']github-pages["']/);
   assert.match(bookEntry, /assetBasePath=\{import\.meta\.env\.BASE_URL\}/);
+  assert.match(bookEntry, /sourceRef=["']main["']/);
   assert.match(bookHtml, /<div id=["']root["']><\/div>/);
   assert.match(bookHtml, /src=["']\.\.\/book\.tsx["']/);
-  assert.match(bookHtml, /https:\/\/lusoris\.github\.io\/20-watts-was-enough\/book\//);
+  assert.match(bookHtml, /https:\/\/www\.cordana\.dev\/book\//);
+  assert.match(bookHtml, /https:\/\/www\.cordana\.dev\/og-v2\.jpg/);
+  assert.match(bookHtml, /rel=["']canonical["'] href=["']https:\/\/www\.cordana\.dev\/book\/["']/);
+  assert.doesNotMatch(bookHtml, /lusoris\.github\.io\/20-watts-was-enough/);
   assert.doesNotMatch(bookEntry, /vinext|next\/headers|next\/server/);
 });
 
@@ -75,6 +86,7 @@ test("the workflow uses GitHub's Pages artifact and deployment actions", async (
   assert.match(topLevelPermissions, /contents:\s*read/);
   assert.doesNotMatch(topLevelPermissions, /(?:pages|id-token):/);
   assert.match(workflow, /cancel-in-progress:\s*false/);
+  assert.match(workflow, /env:\s*\n\s+PAGES_BASE_PATH:\s*["']?\/["']?/);
   assert.doesNotMatch(workflow, /\.openai\/hosting|lusoris\.chatgpt\.site/);
   assert.match(workflow, /actions\/(?:checkout|setup-node|configure-pages|upload-pages-artifact|deploy-pages)@[0-9a-f]{40}/);
   assert.ok(
@@ -182,6 +194,9 @@ test("the portal loads canonical documents on demand and keeps book code off its
   assert.match(config, /fileName: `documents\/\$\{document\.path\}`/);
   assert.match(validator, /maximumPortalInitialJavaScriptBytes = 400_000/);
   assert.match(validator, /portal document assets do not exactly match the canonical concept\/math corpus/);
+  assert.match(validator, /legacyDeploymentReference/);
+  assert.match(validator, /if \(pagesBase === ["']\/["']\)/);
+  assert.match(validator, /legacy repository-subpath deployment reference/);
 });
 
 test("the Pages development server live-reloads canonical Markdown without an HTML fallback", async () => {
@@ -196,7 +211,9 @@ test("the Pages development server live-reloads canonical Markdown without an HT
   assert.match(config, /server\.watcher\.on\("change", reloadPortal\)/);
   assert.match(config, /server\.ws\.send\(\{ type: "full-reload" \}\)/);
   assert.match(config, /"Content-Type", "text\/markdown; charset=utf-8"/);
-  assert.match(config, /\/20-watts-was-enough\/documents\//);
+  assert.match(config, /const portalDocumentPrefixes = \[\.\.\.new Set\(/);
+  assert.match(config, /`\$\{pagesBase\}documents\/`/);
+  assert.doesNotMatch(config, /["']\/20-watts-was-enough\/documents\/["']/);
 });
 
 test("generated Pages Markdown cannot inflate canonical math validation", async () => {
@@ -213,7 +230,8 @@ test("the public-source wording does not weaken the primary site's access badge"
   assert.match(reader, /Owner-only/);
   assert.match(reader, /public Git source/);
   assert.doesNotMatch(reader, /private Git source/);
-  assert.match(book, /Generated from the public Git repository/);
+  assert.match(book, /Git main snapshot/);
+  assert.match(book, /Immutable release tag \$\{repositoryRef\}/);
 });
 
 test("third-party notices include bundler runtimes and accept the project portal index", () => {

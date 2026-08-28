@@ -257,12 +257,12 @@ node experiments/workstation/fixture-026/runner.mjs validate --output experiment
 node --test experiments/workstation/fixture-026/rsd-t02-pulse.test.mjs
 node --test experiments/workstation/fixture-026/rsd-t02-pulse-panel-runner.test.mjs
 node --test experiments/workstation/fixture-026/rsd-t02-stage3-design.test.mjs
-node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-isolated-policy.test.mjs
-node --test --test-isolation=none experiments/workstation/fixture-026/build-rsd-t02-policy-bundle.test.mjs
-node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-transform-policies.test.mjs
-node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-population-contract.test.mjs
-node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-system-family-generator.test.mjs
-node --test --test-isolation=none experiments/workstation/fixture-026/rsd-t02-null-maturation-contract.test.mjs
+node --test --experimental-test-isolation=none experiments/workstation/fixture-026/rsd-t02-isolated-policy.test.mjs
+node --test --experimental-test-isolation=none experiments/workstation/fixture-026/build-rsd-t02-policy-bundle.test.mjs
+node --test --experimental-test-isolation=none experiments/workstation/fixture-026/rsd-t02-transform-policies.test.mjs
+node --test --experimental-test-isolation=none experiments/workstation/fixture-026/rsd-t02-population-contract.test.mjs
+node --test --experimental-test-isolation=none experiments/workstation/fixture-026/rsd-t02-system-family-generator.test.mjs
+node --test --experimental-test-isolation=none experiments/workstation/fixture-026/rsd-t02-null-maturation-contract.test.mjs
 node experiments/workstation/fixture-026/rsd-t02-fixed-instance-runner.test.mjs
 node experiments/workstation/fixture-026/rsd-t02-null-prototypes.test.mjs
 node experiments/workstation/fixture-026/rsd-t02-null-prototype-adapter.test.mjs
@@ -279,7 +279,7 @@ node experiments/workstation/fixture-026/runner.mjs t02-validate --output experi
 Focused tests:
 
 ```powershell
-node --test --test-isolation=none experiments/workstation/fixture-026/contract.test.mjs experiments/workstation/fixture-026/runner.test.mjs experiments/workstation/fixture-026/scientific-grid.test.mjs experiments/workstation/fixture-026/rsd-t02-contract.test.mjs experiments/workstation/fixture-026/rsd-t02-models.test.mjs experiments/workstation/fixture-026/rsd-t02-floor.test.mjs experiments/workstation/fixture-026/rsd-t02-generator.test.mjs experiments/workstation/fixture-026/rsd-t02-evaluator.test.mjs experiments/workstation/fixture-026/rsd-t02-event.test.mjs experiments/workstation/fixture-026/rsd-t02-arm-bank.test.mjs experiments/workstation/fixture-026/rsd-t02-runner.test.mjs
+node --test --experimental-test-isolation=none experiments/workstation/fixture-026/contract.test.mjs experiments/workstation/fixture-026/runner.test.mjs experiments/workstation/fixture-026/scientific-grid.test.mjs experiments/workstation/fixture-026/rsd-t02-contract.test.mjs experiments/workstation/fixture-026/rsd-t02-models.test.mjs experiments/workstation/fixture-026/rsd-t02-floor.test.mjs experiments/workstation/fixture-026/rsd-t02-generator.test.mjs experiments/workstation/fixture-026/rsd-t02-evaluator.test.mjs experiments/workstation/fixture-026/rsd-t02-event.test.mjs experiments/workstation/fixture-026/rsd-t02-arm-bank.test.mjs experiments/workstation/fixture-026/rsd-t02-runner.test.mjs
 ```
 
 ## Integrity

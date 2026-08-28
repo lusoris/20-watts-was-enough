@@ -1,8 +1,10 @@
 {
   "schema_version": 2,
   "title": "20 Watts Was Enough — Full Concept Book",
+  "version": "0.2.0",
+  "source_ref": "main",
   "pdf": "public/downloads/20-watts-was-enough-full-concept-book.pdf",
-  "source_digest": "d1a44cbc7c42d0e34ae27e1f04a7b1b6dc2203cf0071505f8a7ccfebfa4ad8fd",
+  "source_digest": "7117887e2ba2172eaa8b3c2e1dbf1039ec51c519767134f71d2bd81450e8f91d",
   "source_files": [
     "app/book-content.ts",
     "app/book/page.tsx",
@@ -14,8 +16,11 @@
     "app/content.ts",
     "app/globals.css",
     "app/layout.tsx",
+    "app/lib/book-release-identity.mjs",
     "app/lib/readiness.ts",
     "app/lib/repository-artifacts.ts",
+    "app/project-metadata.ts",
+    "CITATION.cff",
     "concept/00-thesis-and-principles.md",
     "concept/01-working-architecture.md",
     "concept/05-biology-is-a-launchpad.md",
@@ -109,7 +114,10 @@
     "research/field-coverage.md",
     "scripts/book-source.mjs",
     "scripts/generate-book-pdf.mjs",
+    "scripts/lib/book-pdf-generation-options.mjs",
     "scripts/lib/book-pdf-integrity.mjs",
+    "scripts/lib/pages-base.mjs",
+    "scripts/lib/pdf-metadata.mjs",
     "scripts/lib/third-party-notices.mjs",
     "sources/taxonomies/2026-08-25/README.md",
     "THIRD_PARTY_NOTICES.txt",
@@ -119,7 +127,6 @@
   "book_documents": 51,
   "generated_front_matter_sections": 1,
   "rendered_diagrams": 48,
-  "generated_at": "2026-08-28T08:44:07.968Z",
-  "size_bytes": 13164242,
-  "pdf_sha256": "3a67d4152329821756aa9c62d4b9ab88d16b4af4ce9a0fd818b5778dd3f82808"
+  "size_bytes": 13182864,
+  "pdf_sha256": "af7f8ee1bb8f80b334ccfe73e40c1c6d84ea5d2e9a6f463709aea613e39916d0"
 }

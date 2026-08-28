@@ -3,9 +3,15 @@ import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
+import { resolvePagesBase } from "./scripts/lib/pages-base.mjs";
 import { renderThirdPartyNotices } from "./scripts/lib/third-party-notices.mjs";
 
 const repositoryRoot = path.dirname(fileURLToPath(import.meta.url));
+const pagesBase = resolvePagesBase(process.env.PAGES_BASE_PATH);
+const portalDocumentPrefixes = [...new Set([
+  "/documents/",
+  `${pagesBase}documents/`,
+])];
 const trackedNoticesPath = path.join(repositoryRoot, "THIRD_PARTY_NOTICES.txt");
 const portalIndexModuleId = "virtual:portal-document-index";
 const resolvedPortalIndexModuleId = `\0${portalIndexModuleId}`;
@@ -44,7 +50,7 @@ function portalSourceDocuments(): PortalSourceDocument[] {
     ...markdownFiles(path.join(repositoryRoot, "math"))
       .filter((file) => path.basename(file).toLowerCase() !== "readme.md"),
   ];
-  return inputs.map((file) => {
+  return inputs.map((file): PortalSourceDocument => {
     const body = readFileSync(file, "utf8");
     const relativePath = path.relative(repositoryRoot, file).replaceAll("\\", "/");
     const headings = [...body.matchAll(/^#{1,6}\s+(.+?)\s*#*\s*$/gm)]
@@ -127,10 +133,9 @@ function portalDocumentAssets(): Plugin {
           next();
           return;
         }
-        const prefix = [
-          "/documents/",
-          "/20-watts-was-enough/documents/",
-        ].find((candidate) => requestPath.startsWith(candidate));
+        const prefix = portalDocumentPrefixes.find(
+          (candidate) => requestPath.startsWith(candidate),
+        );
         if (!prefix) {
           next();
           return;
@@ -161,10 +166,10 @@ function portalDocumentAssets(): Plugin {
   };
 }
 
-function legalReleaseAssets() {
+function legalReleaseAssets(): Plugin {
   return {
     name: "legal-release-assets",
-    generateBundle(_options: unknown, bundle: Record<string, { type: string; modules?: Record<string, unknown> }>) {
+    generateBundle(_options, bundle) {
       const moduleIds = new Set<string>();
       for (const output of Object.values(bundle)) {
         if (output.type !== "chunk") continue;
@@ -193,7 +198,7 @@ function legalReleaseAssets() {
 
 export default defineConfig({
   root: path.join(repositoryRoot, "github-pages"),
-  base: "/20-watts-was-enough/",
+  base: pagesBase,
   publicDir: path.join(repositoryRoot, "public"),
   assetsInclude: ["**/*.md", "**/*.mmd", "**/*.bib"],
   plugins: [react(), portalDocumentAssets(), legalReleaseAssets()],

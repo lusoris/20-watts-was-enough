@@ -3,8 +3,12 @@ import { access, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promise
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseDocument } from "yaml";
+import { assertBookSourceRefForVersion } from "../app/lib/book-release-identity.mjs";
 import { bookPdfName, bookSourceDigest } from "./book-source.mjs";
 import { inspectBookPdf } from "./lib/book-pdf-integrity.mjs";
+import { parseBookPdfGenerationOptions } from "./lib/book-pdf-generation-options.mjs";
+import { normalizeChromiumPdfMetadata } from "./lib/pdf-metadata.mjs";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDirectory = path.join(projectRoot, "public", "downloads");
@@ -13,13 +17,19 @@ const manifestPath = path.join(outputDirectory, "book-manifest.json");
 const tempRoot = path.join(projectRoot, "tmp", "pdfs");
 const sitePort = 3137;
 const debugPort = 3138;
-const bookUrl = `http://127.0.0.1:${sitePort}/book?pdf=1`;
+const { sourceRef } = parseBookPdfGenerationOptions(process.argv.slice(2));
+const bookUrl = `http://127.0.0.1:${sitePort}/book?pdf=1&ref=${encodeURIComponent(sourceRef)}`;
 const cli = path.join(projectRoot, "node_modules", "vinext", "dist", "cli.js");
 const browserCandidates = [
+  process.env.CHROME_PATH,
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
   "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
   "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe",
-];
+  "/usr/bin/google-chrome",
+  "/usr/bin/google-chrome-stable",
+  "/usr/bin/chromium",
+  "/usr/bin/chromium-browser",
+].filter((candidate) => typeof candidate === "string" && candidate.length > 0);
 
 async function firstExisting(paths) {
   for (const candidate of paths) {
@@ -30,7 +40,7 @@ async function firstExisting(paths) {
       // Continue to the next installed browser candidate.
     }
   }
-  throw new Error("Chrome or Edge is required to generate the full-book PDF.");
+  throw new Error("Chrome, Chromium, or Edge is required to generate the full-book PDF.");
 }
 
 async function waitForUrl(url, process, timeoutMs = 60_000) {
@@ -105,6 +115,9 @@ async function stopProcess(process) {
   ]);
 }
 
+const packageManifest = JSON.parse(await readFile(path.join(projectRoot, "package.json"), "utf8"));
+assertBookSourceRefForVersion(sourceRef, packageManifest.version);
+
 await mkdir(outputDirectory, { recursive: true });
 await mkdir(tempRoot, { recursive: true });
 const resolvedSystemTemp = path.resolve(tmpdir()) + path.sep;
@@ -116,6 +129,18 @@ if (!resolvedProfile.startsWith(resolvedSystemTemp)) {
 }
 
 const sourceSnapshot = await bookSourceDigest(projectRoot);
+const citationDocument = parseDocument(
+  await readFile(path.join(projectRoot, "CITATION.cff"), "utf8"),
+  { prettyErrors: true, strict: true, uniqueKeys: true },
+);
+if (citationDocument.errors.length > 0) {
+  throw new Error(`CITATION.cff is invalid: ${citationDocument.errors[0].message}`);
+}
+const citation = citationDocument.toJS();
+if (String(citation?.version ?? "") !== packageManifest.version) {
+  throw new Error("CITATION.cff version must match package.json before PDF generation.");
+}
+const releaseDate = citation?.["date-released"];
 const bookMarkdown = sourceSnapshot.files.filter(
   (file) =>
     file === "README.md" ||
@@ -269,7 +294,11 @@ try {
     },
     300_000,
   );
-  await writeFile(outputPdf, Buffer.from(printed.data, "base64"));
+  const normalizedPdf = normalizeChromiumPdfMetadata(
+    Buffer.from(printed.data, "base64"),
+    releaseDate,
+  );
+  await writeFile(outputPdf, normalizedPdf);
 } finally {
   cdp?.socket.close();
   if (browserProcess) await stopProcess(browserProcess);
@@ -289,18 +318,19 @@ const pdfIntegrity = await inspectBookPdf(outputPdf);
 const manifest = {
   schema_version: 2,
   title: "20 Watts Was Enough — Full Concept Book",
+  version: packageManifest.version,
+  source_ref: sourceRef,
   pdf: `public/downloads/${bookPdfName}`,
   source_digest: sourceSnapshot.digest,
   source_files: sourceSnapshot.files,
   book_documents: bookMarkdown.length,
   generated_front_matter_sections: 1,
   rendered_diagrams: expectedDiagrams,
-  generated_at: new Date().toISOString(),
   size_bytes: pdfIntegrity.size_bytes,
   pdf_sha256: pdfIntegrity.pdf_sha256,
 };
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 
 console.log(
-  `Generated ${path.relative(projectRoot, outputPdf)} (${pdfIntegrity.size_bytes} bytes, ${bookMarkdown.length} documents, ${expectedDiagrams} diagrams, sha256:${pdfIntegrity.pdf_sha256}).`,
+  `Generated ${path.relative(projectRoot, outputPdf)} from ${sourceRef} (${pdfIntegrity.size_bytes} bytes, ${bookMarkdown.length} documents, ${expectedDiagrams} diagrams, sha256:${pdfIntegrity.pdf_sha256}).`,
 );

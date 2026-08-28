@@ -79,7 +79,7 @@ node experiments/workstation/fixture-029/suite-runner.mjs validate --output tmp/
 Focused tests:
 
 ```powershell
-node --test --test-isolation=none experiments/workstation/fixture-029/cmb-x01-contract.test.mjs experiments/workstation/fixture-029/cmb-x01-runner.test.mjs experiments/workstation/fixture-029/contract.test.mjs experiments/workstation/fixture-029/runner.test.mjs experiments/workstation/fixture-029/suite-runner.test.mjs
+node --test --experimental-test-isolation=none experiments/workstation/fixture-029/cmb-x01-contract.test.mjs experiments/workstation/fixture-029/cmb-x01-runner.test.mjs experiments/workstation/fixture-029/contract.test.mjs experiments/workstation/fixture-029/runner.test.mjs experiments/workstation/fixture-029/suite-runner.test.mjs
 ```
 
 Each subrun and the two-receipt suite ledger use canonical LF JSONL in an

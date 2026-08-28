@@ -10,6 +10,7 @@ Desktop.ini
 # Local validation and build output
 .cache/
 tmp/
+/build/
 assets/rendered/*.tmp
 
 # Private documentation site build and local runtime

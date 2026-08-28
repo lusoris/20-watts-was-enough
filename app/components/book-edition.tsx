@@ -3,33 +3,29 @@
 import { Fragment, useEffect, useRef } from "react";
 import { bookDocuments as documents } from "../book-content";
 import type { ResearchDocument } from "../content";
+import {
+  repositoryDocumentHrefFor,
+  repositoryRefForSurface,
+  repositoryTreeHref,
+} from "../lib/book-release-identity.mjs";
 import { isRepositoryArtifact, repositoryArtifactHref } from "../lib/repository-artifacts";
 import { MarkdownDocument } from "./markdown-document";
 import { ReadinessOverview } from "./readiness-overview";
 
 const appendixPaths = ["research/field-coverage.md"];
 const canonicalSite = "https://twenty-watts-was-enough.lusoris.chatgpt.site";
-const canonicalRepository = "https://github.com/lusoris/20-watts-was-enough";
-const canonicalPublicBook = "https://lusoris.github.io/20-watts-was-enough/";
+const canonicalPublicBook = "https://www.cordana.dev/";
 
 type BookEditionProps = {
   surface?: "owner-only-site" | "github-pages" | "public-pdf";
   assetBasePath?: string;
+  editionVersion: string;
+  sourceRef: string;
 };
 
 function joinBasePath(basePath: string, path: string) {
   const base = basePath.endsWith("/") ? basePath : `${basePath}/`;
   return `${base}${path.replace(/^\/+/, "")}`;
-}
-
-function repositoryDocumentHref(path: string, hash = "") {
-  const encodedPath = path
-    .replaceAll("\\", "/")
-    .split("/")
-    .filter(Boolean)
-    .map(encodeURIComponent)
-    .join("/");
-  return `${canonicalRepository}/blob/main/${encodedPath}${hash ? `#${encodeURIComponent(hash)}` : ""}`;
 }
 
 function bookId(path: string) {
@@ -109,10 +105,14 @@ function documentLabel(path: string) {
 export function BookEdition({
   surface = "owner-only-site",
   assetBasePath = "/",
-}: BookEditionProps = {}) {
+  editionVersion, sourceRef,
+}: BookEditionProps) {
   const isGitHubPages = surface === "github-pages";
   const isPublicPdf = surface === "public-pdf";
   const usesPublicLinks = isGitHubPages || isPublicPdf;
+  const repositoryRef = repositoryRefForSurface(surface, sourceRef, editionVersion);
+  const isReleaseSnapshot = repositoryRef !== "main";
+  const surfaceDocumentHref = repositoryDocumentHrefFor(repositoryRef);
   const conceptDocuments = documents.filter(
     (document) =>
       document.kind === "markdown" &&
@@ -129,11 +129,7 @@ export function BookEdition({
       document.path.startsWith("math/") &&
       document.path !== "math/README.md",
   );
-  const bookDocuments = [
-    ...conceptDocuments,
-    ...mathDocuments,
-    ...appendixDocuments,
-  ];
+  const bookDocuments = [...conceptDocuments, ...mathDocuments, ...appendixDocuments];
   const bookDocumentPaths = new Set(
     bookDocuments.map((document) => document.path),
   );
@@ -143,7 +139,7 @@ export function BookEdition({
   );
   const navigate = (path: string, hash = "") => {
     if (usesPublicLinks) {
-      window.location.assign(repositoryDocumentHref(path, hash));
+      window.location.assign(surfaceDocumentHref(path, hash));
       return;
     }
     const url = new URL("/", window.location.origin);
@@ -156,10 +152,10 @@ export function BookEdition({
       return hash ? `#${documentHeadingId(path, hash)}` : `#${bookId(path)}`;
     }
     if (isRepositoryArtifact(path)) {
-      if (isPublicPdf) return repositoryDocumentHref(path, hash);
+      if (isPublicPdf) return surfaceDocumentHref(path, hash);
       return joinBasePath(assetBasePath, repositoryArtifactHref(path));
     }
-    if (usesPublicLinks) return repositoryDocumentHref(path, hash);
+    if (usesPublicLinks) return surfaceDocumentHref(path, hash);
     const url = new URL("/", canonicalSite);
     url.searchParams.set("doc", path);
     url.hash = hash;
@@ -169,7 +165,7 @@ export function BookEdition({
   return (
     <main className={`book-shell ${isGitHubPages ? "book-shell-web" : "book-shell-print"}`}>
       <nav className="book-actions" aria-label="Book actions">
-        <a href={usesPublicLinks ? canonicalRepository : "/"}>
+        <a href={usesPublicLinks ? repositoryTreeHref(repositoryRef) : "/"}>
           {usesPublicLinks ? "View source on GitHub" : "← Owner-only research site"}
         </a>
         <a
@@ -198,7 +194,7 @@ export function BookEdition({
         <dl>
           <div>
             <dt>Edition</dt>
-            <dd>Full concept book</dd>
+            <dd>{isReleaseSnapshot ? repositoryRef : "main snapshot"} · Full concept book</dd>
           </div>
           <div>
             <dt>Contents</dt>
@@ -212,7 +208,7 @@ export function BookEdition({
           </div>
           <div>
             <dt>Source</dt>
-            <dd>Generated from the public Git repository</dd>
+            <dd>{isReleaseSnapshot ? `Immutable release tag ${repositoryRef}` : "Git main snapshot"}</dd>
           </div>
         </dl>
       </header>
@@ -263,11 +259,11 @@ export function BookEdition({
         <div className="book-document-meta">
           <span>Generated front matter</span>
           <code>experiments/test-readiness-summary.json</code>
-          <span>Current Git edition</span>
+          <span>{isReleaseSnapshot ? `Release ${repositoryRef}` : "main snapshot"}</span>
         </div>
         <ReadinessOverview
           mode="book"
-          documentHref={usesPublicLinks ? repositoryDocumentHref : undefined}
+          documentHref={usesPublicLinks ? surfaceDocumentHref : undefined}
           publicSurface={usesPublicLinks}
         />
       </section>
@@ -302,7 +298,7 @@ export function BookEdition({
       ))}
       <footer className="book-legal" aria-label="Legal information">
         <strong>Licences and notices</strong>
-        <span>Source: github.com/lusoris/20-watts-was-enough</span>
+        <span>Source: github.com/lusoris/20-watts-was-enough @ {repositoryRef}</span>
         {[
           ["EUPL 1.2", "LICENSE"],
           ["CC BY-SA 4.0", "LICENSES/CC-BY-SA-4.0.txt"],
@@ -313,7 +309,7 @@ export function BookEdition({
             href={
               isGitHubPages
                 ? joinBasePath(assetBasePath, legalPath)
-                : `${canonicalRepository}/blob/main/${legalPath}`
+                : surfaceDocumentHref(legalPath)
             }
             key={legalPath}
           >

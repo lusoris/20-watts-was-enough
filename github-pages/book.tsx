@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "katex/dist/katex.min.css";
 import "../app/globals.css";
 import { BookEdition } from "../app/components/book-edition";
+import { projectVersion } from "../app/project-metadata";
 
 const container = document.getElementById("root");
 
@@ -15,6 +16,8 @@ createRoot(container).render(
     <BookEdition
       surface="github-pages"
       assetBasePath={import.meta.env.BASE_URL}
+      editionVersion={projectVersion}
+      sourceRef="main"
     />
   </StrictMode>,
 );

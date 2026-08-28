@@ -70,6 +70,7 @@
     "research/field-coverage.json",
     "research/taxonomies/fine-grained-fields.json",
     "research/taxonomies/fine-grained-routing.json",
+    "scripts/code-shape-baseline.json",
     "scripts/generate-field-coverage.mjs",
     "scripts/generate-plots.mjs",
     "scripts/generate-taxonomy-depth.mjs",

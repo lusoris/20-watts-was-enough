@@ -1,0 +1,67 @@
+name: Evidence or claim correction
+description: Report a source, scope, status, provenance, or quantitative problem in a research claim.
+title: "[Evidence] "
+labels: ["type:fix", "area:evidence", "status:needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for corrections to evidence or claims. Link to sources; do not paste copyrighted papers or other third-party bodies.
+
+  - type: input
+    id: claims
+    attributes:
+      label: Claim ID or affected passage
+      description: Give stable C-IDs and repository paths or public URLs.
+      placeholder: "C-001; research/claims.md#c-001"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: problem
+    attributes:
+      label: Problem type
+      options:
+        - Source does not support the statement
+        - Scope or certainty is overstated
+        - Evidence status is wrong
+        - Citation or provenance is wrong
+        - Units, derivation, or system boundary is wrong
+        - Contrary or replication evidence is missing
+        - Other evidence problem
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current statement and problem
+      description: Quote only the shortest necessary project passage, then explain the exact error.
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: Primary sources and provenance
+      description: Provide DOI, arXiv, official-source, or other direct links and state what each source actually establishes.
+    validations:
+      required: true
+
+  - type: textarea
+    id: boundary
+    attributes:
+      label: Correct scope and proposed change
+      description: State the applicable system, population, intervention, comparator, measurement, timescale, uncertainty, and corrected wording or status.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Submission checks
+      options:
+        - label: I have not treated citation or public access as permission to redistribute third-party material.
+          required: true
+        - label: I have distinguished a source-supported observation from an AI translation or project hypothesis.
+          required: true

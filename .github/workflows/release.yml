@@ -1,0 +1,190 @@
+name: Research release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing vMAJOR.MINOR.PATCH tag to rebuild
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: release-${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify tagged source and prepare assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    outputs:
+      release-tag: ${{ steps.release-ref.outputs.tag }}
+      release-commit: ${{ steps.release-ref.outputs.commit }}
+    steps:
+      - name: Resolve the requested release tag
+        id: requested-tag
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_TAG: ${{ inputs.tag }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            release_tag="$INPUT_TAG"
+          else
+            release_tag="$REF_NAME"
+          fi
+          if [[ ! "$release_tag" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "::error::release tag must have the exact form vMAJOR.MINOR.PATCH"
+            exit 1
+          fi
+          printf 'tag=%s\n' "$release_tag" >> "$GITHUB_OUTPUT"
+      - name: Check out the exact tagged source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ steps.requested-tag.outputs.tag }}
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+      - name: Prove HEAD is the requested existing tag
+        id: release-ref
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_SHA: ${{ github.sha }}
+          RELEASE_TAG: ${{ steps.requested-tag.outputs.tag }}
+        run: |
+          set -euo pipefail
+          if ! git show-ref --verify --quiet "refs/tags/${RELEASE_TAG}"; then
+            echo "::error::the requested release tag does not exist"
+            exit 1
+          fi
+          release_commit="$(git rev-parse "refs/tags/${RELEASE_TAG}^{commit}")"
+          head_commit="$(git rev-parse HEAD)"
+          if [[ "$head_commit" != "$release_commit" ]]; then
+            echo "::error::checkout HEAD does not match the requested release tag"
+            exit 1
+          fi
+          if [[ "$EVENT_NAME" == "push" ]]; then
+            pushed_commit="$(git rev-parse "${EVENT_SHA}^{commit}")"
+            if [[ "$pushed_commit" != "$release_commit" ]]; then
+              echo "::error::the release tag moved after the triggering push event"
+              exit 1
+            fi
+          fi
+          if ! git show-ref --verify --quiet refs/remotes/origin/main; then
+            echo "::error::origin/main is unavailable; release ancestry cannot be verified"
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor "$release_commit" refs/remotes/origin/main; then
+            echo "::error::the tagged commit is not contained in origin/main"
+            exit 1
+          fi
+          printf 'tag=%s\n' "$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+          printf 'commit=%s\n' "$release_commit" >> "$GITHUB_OUTPUT"
+      - name: Use Node.js 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Reject high-severity dependency advisories
+        run: npm audit --audit-level=high
+      - name: Run the full repository gate
+        run: npm run check
+      - name: Test the GitHub Pages publication
+        run: npm run test:github-pages
+      - name: Render the immutable tag-bound book
+        env:
+          RELEASE_TAG: ${{ steps.release-ref.outputs.tag }}
+        run: npm run generate:book-pdf -- --ref "$RELEASE_TAG"
+      - name: Prepare version-bound release assets
+        env:
+          RELEASE_TAG: ${{ steps.release-ref.outputs.tag }}
+        run: |
+          set -euo pipefail
+          npm run prepare:release -- --tag "$RELEASE_TAG"
+      - name: Upload the verified release workspace
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: research-release-${{ steps.release-ref.outputs.tag }}
+          path: build/release
+          if-no-files-found: error
+          retention-days: 1
+
+  release:
+    name: Attest and publish release assets
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Check out the exact tagged source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ needs.verify.outputs.release-tag }}
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+      - name: Reconfirm the immutable release input
+        env:
+          RELEASE_COMMIT: ${{ needs.verify.outputs.release-commit }}
+          RELEASE_TAG: ${{ needs.verify.outputs.release-tag }}
+        run: |
+          set -euo pipefail
+          tagged_commit="$(git rev-parse "refs/tags/${RELEASE_TAG}^{commit}")"
+          head_commit="$(git rev-parse HEAD)"
+          if [[ "$head_commit" != "$RELEASE_COMMIT" || "$tagged_commit" != "$RELEASE_COMMIT" ]]; then
+            echo "::error::release tag moved after verification"
+            exit 1
+          fi
+      - name: Download the verified release workspace
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: research-release-${{ needs.verify.outputs.release-tag }}
+          path: build/release
+      - name: Recheck release asset checksums
+        working-directory: build/release/assets
+        run: sha256sum --check --strict SHA256SUMS
+      - name: Attest the attached release assets
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
+        with:
+          subject-path: build/release/assets/*
+      - name: Create or safely rebuild the GitHub release
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.verify.outputs.release-tag }}
+        run: |
+          set -euo pipefail
+          mapfile -d '' assets < <(find build/release/assets -maxdepth 1 -type f -print0 | sort -z)
+          if [[ "${#assets[@]}" -eq 0 ]]; then
+            echo "::error::release workspace contains no assets"
+            exit 1
+          fi
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            if [[ "$EVENT_NAME" != "workflow_dispatch" ]]; then
+              echo "::error::an existing release may be rebuilt only by an explicit manual dispatch"
+              exit 1
+            fi
+            gh release edit "$RELEASE_TAG" \
+              --verify-tag \
+              --title "20 Watts Was Enough ${RELEASE_TAG}" \
+              --notes-file build/release/release-notes.md
+            gh release upload "$RELEASE_TAG" "${assets[@]}" --clobber
+          else
+            gh release create "$RELEASE_TAG" "${assets[@]}" \
+              --verify-tag \
+              --title "20 Watts Was Enough ${RELEASE_TAG}" \
+              --notes-file build/release/release-notes.md
+          fi

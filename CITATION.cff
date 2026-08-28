@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use or discuss this project, cite it with this metadata and identify the exact commit or release used."
+title: "20 Watts Was Enough"
+type: software
+authors:
+  - name: "lusoris contributors"
+abstract: >-
+  A biologically inspired research blueprint and evidence framework for sparse,
+  grounded, continual, and energy-efficient artificial intelligence.
+repository-code: "https://github.com/lusoris/20-watts-was-enough"
+url: "https://www.cordana.dev/"
+version: 0.2.0
+date-released: 2026-08-28
+keywords:
+  - biologically inspired artificial intelligence
+  - energy-efficient artificial intelligence
+  - sparse computation
+  - continual learning
+  - sensorimotor grounding
+  - scientific evidence

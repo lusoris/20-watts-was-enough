@@ -1,0 +1,85 @@
+"area:evidence":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "research/claims.md"
+          - "research/references.bib"
+          - "research/audits/**"
+          - "research/source-crosswalk.md"
+          - "sources/**"
+
+"area:research":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "concept/**"
+          - "research/**"
+
+"area:experiment":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "experiments/**"
+
+"area:math":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "math/**"
+          - "assets/plots/**"
+          - "public/plots/**"
+
+"area:site":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "app/**"
+          - "github-pages/**"
+          - "worker/**"
+          - "vite.config.ts"
+          - "vite.pages.config.ts"
+
+"area:publication":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "public/downloads/**"
+          - "scripts/*book*"
+          - "scripts/*reader-artifacts*"
+          - "THIRD_PARTY_NOTICES.txt"
+
+"area:governance":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/CODEOWNERS"
+          - ".github/ISSUE_TEMPLATE/**"
+          - ".github/PULL_REQUEST_TEMPLATE.md"
+          - "AGENTS.md"
+          - "CLAUDE.md"
+          - "CODE_OF_CONDUCT.md"
+          - "CONTRIBUTING.md"
+          - "GOVERNANCE.md"
+          - "LICENSING.md"
+          - "MAINTAINERS.md"
+          - "SUPPORT.md"
+          - "decisions/**"
+          - "docs/principles.md"
+          - "docs/repository-rule-crosswalk.md"
+
+"area:security":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".gitleaks.toml"
+          - "SECURITY.md"
+          - "scripts/*source-boundary*"
+          - "scripts/lib/source-boundary.mjs"
+
+"area:ci":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/labeler.yml"
+          - ".github/labels.yml"
+          - "renovate.json"
+          - "scripts/*policy*"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "package.json"
+          - "package-lock.json"
+          - "renovate.json"

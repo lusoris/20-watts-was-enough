@@ -1,0 +1,68 @@
+name: Site or documentation problem
+description: Report unreadable, missing, stale, inaccessible, or incorrectly rendered project material.
+title: "[Site/Docs] "
+labels: ["type:fix", "area:site", "status:needs-triage"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Affected page or file
+      description: Provide the public URL and/or repository path.
+      placeholder: "https://www.cordana.dev/... or concept/..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      options:
+        - Research portal
+        - Full-book HTML edition
+        - Downloadable PDF
+        - Repository Markdown
+        - Navigation, links, or search
+        - Diagram, equation, table, or plot rendering
+        - Accessibility or keyboard use
+        - Download or generated artifact
+    validations:
+      required: true
+
+  - type: textarea
+    id: observed
+    attributes:
+      label: What is wrong?
+      description: Describe missing content, rendering, navigation, readability, or freshness problems. Use the evidence-correction form for scientific claim disputes.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected presentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction details
+      description: Include steps, browser and version, viewport or device, route, and whether the problem also appears in the source Markdown.
+    validations:
+      required: true
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Screenshots or additional context
+      description: Optional. Remove personal, private, or copyrighted material not needed to show the defect.
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Submission checks
+      options:
+        - label: I checked that this is a presentation or documentation problem rather than an evidence correction.
+          required: true
+        - label: Any attached material is safe and permitted to share publicly.
+          required: true

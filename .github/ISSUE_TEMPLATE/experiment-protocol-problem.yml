@@ -1,0 +1,72 @@
+name: Experiment or protocol problem
+description: Report a defect in an experiment contract, workstation harness, analysis, or authority boundary.
+title: "[Experiment] "
+labels: ["type:fix", "area:experiment", "status:needs-triage"]
+body:
+  - type: input
+    id: artifact
+    attributes:
+      label: Affected artifact and IDs
+      description: Give repository paths plus Candidate, fixture, track, claim, or run IDs.
+      placeholder: "experiments/fixtures/...; F-...; TRACK-T01"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: problem
+    attributes:
+      label: Problem type
+      options:
+        - Protocol ambiguity or missing comparison
+        - Runtime or harness defect
+        - Result-status or authority error
+        - Units, boundary, or resource-accounting error
+        - Statistical or analysis error
+        - Reproducibility or provenance failure
+        - Isolation, cleanup, or safety failure
+        - Other experiment problem
+    validations:
+      required: true
+
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed problem
+      description: Describe what happened, including exact errors or the invalid protocol clause.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected contract or behavior
+      description: State the expected baseline, intervention, units, decision rule, or authority boundary.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: Include commands, configuration, platform, relevant versions, and the smallest safe input. Remove secrets and private data.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: authority
+    attributes:
+      label: Result and authority impact
+      description: State whether this affects NO_RESULT, specification, smoke, development, confirmation, performance, or energy authority and which claims must be withheld or invalidated.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Submission checks
+      options:
+        - label: I removed secrets, personal data, private datasets, and machine-specific credentials from the report.
+          required: true
+        - label: I have not promoted smoke, construction, or development output to a scientific result.
+          required: true

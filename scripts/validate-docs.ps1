@@ -8,7 +8,7 @@ $root = (Resolve-Path -LiteralPath $RepositoryRoot).Path
 $errors = [System.Collections.Generic.List[string]]::new()
 $warnings = [System.Collections.Generic.List[string]]::new()
 
-$excludedDirectories = '[\\/](\.git|node_modules|dist|dist-github-pages|\.next|\.wrangler)[\\/]'
+$excludedDirectories = '[\\/](\.git|\.cache|\.next|\.vinext|\.vite|\.wrangler|build|dist|dist-github-pages|node_modules|tmp)[\\/]'
 $markdownFiles = Get-ChildItem -LiteralPath $root -Recurse -File -Filter '*.md' |
     Where-Object { $_.FullName -notmatch $excludedDirectories }
 

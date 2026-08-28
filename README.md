@@ -52,8 +52,8 @@ output limits, path-identity monitoring, and high-resolution workstation
 timing. It is experiment infrastructure, not an AI model implementation.
 
 The same files are rendered into a public
-[research portal](https://lusoris.github.io/20-watts-was-enough/), a separate
-[linear book edition](https://lusoris.github.io/20-watts-was-enough/book/), and
+[research portal](https://www.cordana.dev/), a separate
+[linear book edition](https://www.cordana.dev/book/), and
 a downloadable A4 PDF—not copied into additional document stores. The portal
 is the primary website: it exposes research status, navigation, search, and a
 web-native document reader. The book route preserves the complete long-form
@@ -65,6 +65,25 @@ all canonical concept chapters, the mathematical notes, and a generated field-
 coverage appendix, and its freshness is checked during the build. See
 [decision 0005](decisions/0005-rendered-private-edition.md) and
 [decision 0024](decisions/0024-publish-through-split-licensed-git-and-two-reading-surfaces.md).
+
+## Engineering contract
+
+The repository uses the same structural discipline as the maintainer's other
+projects, adapted to research rather than copied from a Go service framework.
+Start with [`AGENTS.md`](AGENTS.md) and the unified
+[`engineering and research contract`](docs/principles.md). The contract applies
+Holzmann's Power of Ten to bounded Node execution, experiments, generators,
+source boundaries, and publication; it also binds scientific claims,
+reproducibility, licensing, EU/German normative work, and releases.
+
+The [`repository-rule crosswalk`](docs/repository-rule-crosswalk.md) records
+which conventions from `golusoris`, `sveltesentio`, `goenvoy`, and the
+organization defaults were adopted, adapted, staged, or rejected. Staged rules
+are not described as enforced until their measurable exit condition is met.
+Public contribution and project operation are documented in
+[`CONTRIBUTING.md`](CONTRIBUTING.md), [`GOVERNANCE.md`](GOVERNANCE.md),
+[`SECURITY.md`](SECURITY.md), [`SUPPORT.md`](SUPPORT.md), and
+[`MAINTAINERS.md`](MAINTAINERS.md).
 
 ## Concept map
 
@@ -166,7 +185,7 @@ npm run dev:github-pages
 ```
 
 The preview is served at
-`http://localhost:5173/20-watts-was-enough/`. Changes under `concept/` and
+`http://localhost:5173/`. Changes under `concept/` and
 `math/` invalidate the searchable index, reload the open page, and serve the
 new Markdown instead of the HTML fallback. Internal Markdown links,
 GitHub-style tables, LaTeX equations, the bibliography, and editable Mermaid
@@ -189,6 +208,12 @@ fixture corpus remain browsable through Git itself; the portal's web reader
 focuses on the maintained concept and mathematical documents.
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full workflow.
+
+The complete local merge floor is:
+
+```powershell
+npm run check
+```
 
 ## License
 

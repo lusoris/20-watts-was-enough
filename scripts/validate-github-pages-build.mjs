@@ -3,14 +3,16 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertBookPdfIntegrity } from "./lib/book-pdf-integrity.mjs";
+import { resolvePagesBase } from "./lib/pages-base.mjs";
 
 const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",
 );
 const outputRoot = path.join(repositoryRoot, "dist-github-pages");
-const pagesBase = "/20-watts-was-enough/";
+const pagesBase = resolvePagesBase(process.env.PAGES_BASE_PATH);
 const maximumPortalInitialJavaScriptBytes = 400_000;
+const legacyDeploymentReference = /\/20-watts-was-enough\/(?:assets|book|documents|downloads|plots|repository-files)(?:\/|["'?#)]|$)/u;
 
 function invariant(condition, message) {
   if (!condition) throw new Error(`Invalid GitHub Pages build: ${message}`);
@@ -90,7 +92,7 @@ const portalPage = await validatePage("index.html", "portal");
 const bookPage = await validatePage("book/index.html", "book");
 invariant(portalPage.clientEntry !== bookPage.clientEntry, "portal and book must have distinct client entries");
 invariant(
-  bookPage.html.includes("https://lusoris.github.io/20-watts-was-enough/book/"),
+  bookPage.html.includes("https://www.cordana.dev/book/"),
   "book/index.html must declare the canonical public book route",
 );
 const portalModulePreloads = [...portalPage.html.matchAll(
@@ -215,6 +217,21 @@ for (const relative of inventory) {
       && !["_worker.js", "worker.js"].includes(basename),
     `server-only path must not be public: ${relative}`,
   );
+}
+
+if (pagesBase === "/") {
+  const runtimeFiles = inventory.filter((relative) => (
+    relative.endsWith(".html")
+    || relative.endsWith(".js")
+    || relative.endsWith(".css")
+  ));
+  for (const relative of runtimeFiles) {
+    const source = await readFile(path.join(outputRoot, ...relative.split("/")), "utf8");
+    invariant(
+      !legacyDeploymentReference.test(source),
+      `${relative} contains a legacy repository-subpath deployment reference`,
+    );
+  }
 }
 
 console.log(

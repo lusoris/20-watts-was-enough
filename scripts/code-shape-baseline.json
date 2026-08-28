@@ -1,0 +1,869 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "complexity": 30,
+    "max-lines-per-function": 120,
+    "max-statements": 60
+  },
+  "auditedFileCount": 272,
+  "findings": [
+    {
+      "path": "app/components/book-edition.tsx",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 213
+    },
+    {
+      "path": "app/components/markdown-document.tsx",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 141
+    },
+    {
+      "path": "app/components/mermaid-diagram.tsx",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 134
+    },
+    {
+      "path": "app/components/public-research-portal.tsx",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 31
+    },
+    {
+      "path": "app/components/public-research-portal.tsx",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 866
+    },
+    {
+      "path": "app/components/readiness-overview.tsx",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 230
+    },
+    {
+      "path": "app/components/research-reader.tsx",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 396
+    },
+    {
+      "path": "experiments/workstation/candidate-010/actuator-command-track.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 141
+    },
+    {
+      "path": "experiments/workstation/candidate-010/capsule-bootstrap.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 51
+    },
+    {
+      "path": "experiments/workstation/candidate-010/capsule-bootstrap.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 254
+    },
+    {
+      "path": "experiments/workstation/candidate-010/capsule-bootstrap.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 79
+    },
+    {
+      "path": "experiments/workstation/candidate-010/capsule-child.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 31
+    },
+    {
+      "path": "experiments/workstation/candidate-010/checkpoint.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 31
+    },
+    {
+      "path": "experiments/workstation/candidate-010/checkpoint.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 127
+    },
+    {
+      "path": "experiments/workstation/candidate-010/confirmatory-analysis.mjs",
+      "rule": "complexity",
+      "count": 2,
+      "maxActual": 59
+    },
+    {
+      "path": "experiments/workstation/candidate-010/confirmatory-analysis.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 78
+    },
+    {
+      "path": "experiments/workstation/candidate-010/energy-acquisition.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 38
+    },
+    {
+      "path": "experiments/workstation/candidate-010/energy-acquisition.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 213
+    },
+    {
+      "path": "experiments/workstation/candidate-010/energy-acquisition.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 79
+    },
+    {
+      "path": "experiments/workstation/candidate-010/energy-block-analysis.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 153
+    },
+    {
+      "path": "experiments/workstation/candidate-010/energy-block-runner.mjs",
+      "rule": "complexity",
+      "count": 2,
+      "maxActual": 64
+    },
+    {
+      "path": "experiments/workstation/candidate-010/energy-block-runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 2,
+      "maxActual": 148
+    },
+    {
+      "path": "experiments/workstation/candidate-010/energy-block-runner.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 62
+    },
+    {
+      "path": "experiments/workstation/candidate-010/energy-provider.test.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 123
+    },
+    {
+      "path": "experiments/workstation/candidate-010/event-contract.test.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 73
+    },
+    {
+      "path": "experiments/workstation/candidate-010/factorial-runner.mjs",
+      "rule": "complexity",
+      "count": 3,
+      "maxActual": 154
+    },
+    {
+      "path": "experiments/workstation/candidate-010/factorial-runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 2,
+      "maxActual": 407
+    },
+    {
+      "path": "experiments/workstation/candidate-010/factorial-runner.mjs",
+      "rule": "max-statements",
+      "count": 2,
+      "maxActual": 153
+    },
+    {
+      "path": "experiments/workstation/candidate-010/factorial-runner.test.mjs",
+      "rule": "max-lines-per-function",
+      "count": 5,
+      "maxActual": 162
+    },
+    {
+      "path": "experiments/workstation/candidate-010/fault-injection.mjs",
+      "rule": "complexity",
+      "count": 2,
+      "maxActual": 69
+    },
+    {
+      "path": "experiments/workstation/candidate-010/persistent-service-runner.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 34
+    },
+    {
+      "path": "experiments/workstation/candidate-010/persistent-service-runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 232
+    },
+    {
+      "path": "experiments/workstation/candidate-010/persistent-service-runner.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 94
+    },
+    {
+      "path": "experiments/workstation/candidate-010/policies.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 35
+    },
+    {
+      "path": "experiments/workstation/candidate-010/promotion-evidence.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 57
+    },
+    {
+      "path": "experiments/workstation/candidate-010/promotion-evidence.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 349
+    },
+    {
+      "path": "experiments/workstation/candidate-010/promotion-evidence.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 97
+    },
+    {
+      "path": "experiments/workstation/candidate-010/promotion-evidence.test.mjs",
+      "rule": "max-lines-per-function",
+      "count": 4,
+      "maxActual": 417
+    },
+    {
+      "path": "experiments/workstation/candidate-010/promotion-evidence.test.mjs",
+      "rule": "max-statements",
+      "count": 2,
+      "maxActual": 106
+    },
+    {
+      "path": "experiments/workstation/candidate-010/release-contract-v4.test.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 213
+    },
+    {
+      "path": "experiments/workstation/candidate-010/release-contract.mjs",
+      "rule": "complexity",
+      "count": 3,
+      "maxActual": 47
+    },
+    {
+      "path": "experiments/workstation/candidate-010/release-contract.test.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 175
+    },
+    {
+      "path": "experiments/workstation/candidate-010/release-contract.test.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 81
+    },
+    {
+      "path": "experiments/workstation/candidate-010/retry-rollback-comparator.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 90
+    },
+    {
+      "path": "experiments/workstation/candidate-010/runner.mjs",
+      "rule": "complexity",
+      "count": 2,
+      "maxActual": 117
+    },
+    {
+      "path": "experiments/workstation/candidate-010/runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 5,
+      "maxActual": 245
+    },
+    {
+      "path": "experiments/workstation/candidate-010/runner.mjs",
+      "rule": "max-statements",
+      "count": 3,
+      "maxActual": 118
+    },
+    {
+      "path": "experiments/workstation/candidate-010/runner.test.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 240
+    },
+    {
+      "path": "experiments/workstation/candidate-010/runner.test.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 98
+    },
+    {
+      "path": "experiments/workstation/candidate-010/seed-release-operator.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 59
+    },
+    {
+      "path": "experiments/workstation/candidate-010/seed-release-operator.mjs",
+      "rule": "max-lines-per-function",
+      "count": 2,
+      "maxActual": 218
+    },
+    {
+      "path": "experiments/workstation/candidate-010/seed-release-operator.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 71
+    },
+    {
+      "path": "experiments/workstation/candidate-010/signed-publication-track.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 121
+    },
+    {
+      "path": "experiments/workstation/candidate-010/transactional-kv-track.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 36
+    },
+    {
+      "path": "experiments/workstation/candidate-010/transactional-kv-track.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 173
+    },
+    {
+      "path": "experiments/workstation/candidate-010/transactional-kv-track.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 74
+    },
+    {
+      "path": "experiments/workstation/fixture-007/contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 41
+    },
+    {
+      "path": "experiments/workstation/fixture-012/contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 53
+    },
+    {
+      "path": "experiments/workstation/fixture-012/generator.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 31
+    },
+    {
+      "path": "experiments/workstation/fixture-012/process-workstation-adapter.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 49
+    },
+    {
+      "path": "experiments/workstation/fixture-012/process-workstation-adapter.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 386
+    },
+    {
+      "path": "experiments/workstation/fixture-012/workstation-acquisition.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 34
+    },
+    {
+      "path": "experiments/workstation/fixture-012/workstation-acquisition.test.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 186
+    },
+    {
+      "path": "experiments/workstation/fixture-019/contract.mjs",
+      "rule": "complexity",
+      "count": 2,
+      "maxActual": 53
+    },
+    {
+      "path": "experiments/workstation/fixture-022/contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 144
+    },
+    {
+      "path": "experiments/workstation/fixture-022/contract.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 227
+    },
+    {
+      "path": "experiments/workstation/fixture-022/runner.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 56
+    },
+    {
+      "path": "experiments/workstation/fixture-022/runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 125
+    },
+    {
+      "path": "experiments/workstation/fixture-023/contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 211
+    },
+    {
+      "path": "experiments/workstation/fixture-023/contract.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 341
+    },
+    {
+      "path": "experiments/workstation/fixture-023/generator.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 40
+    },
+    {
+      "path": "experiments/workstation/fixture-023/runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 2,
+      "maxActual": 182
+    },
+    {
+      "path": "experiments/workstation/fixture-024/contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 75
+    },
+    {
+      "path": "experiments/workstation/fixture-024/contract.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 123
+    },
+    {
+      "path": "experiments/workstation/fixture-025/contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 75
+    },
+    {
+      "path": "experiments/workstation/fixture-026/contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 139
+    },
+    {
+      "path": "experiments/workstation/fixture-026/contract.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 199
+    },
+    {
+      "path": "experiments/workstation/fixture-026/policy-bundles/bf7b99d5ea169e33fdf3c4ba825ebe4085fceac97e973514e223881e765222e7.js",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 177
+    },
+    {
+      "path": "experiments/workstation/fixture-026/policy-bundles/d7cee7b1db27ceaf00789e95cadf1d6031454d32658560b79b601392dfd501df.js",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 392
+    },
+    {
+      "path": "experiments/workstation/fixture-026/policy-bundles/ee05826b7e83c08c9c8e08209b8895e3f1c6d7fd6a3229548944a95f08bada21.js",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 44
+    },
+    {
+      "path": "experiments/workstation/fixture-026/policy-bundles/ee05826b7e83c08c9c8e08209b8895e3f1c6d7fd6a3229548944a95f08bada21.js",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 788
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-arm-bank.mjs",
+      "rule": "complexity",
+      "count": 3,
+      "maxActual": 46
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-arm-bank.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 130
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 33
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-evaluator.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 39
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-event.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 83
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-fixed-instance-conformance-policy.source.js",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 177
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-fixed-instance-durable-store.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 32
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-fixed-instance-durable-store.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 210
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-fixed-instance-isolated-durable-runner.mjs",
+      "rule": "complexity",
+      "count": 2,
+      "maxActual": 50
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-fixed-instance-isolated-durable-runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 202
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-fixed-instance-runner.mjs",
+      "rule": "complexity",
+      "count": 3,
+      "maxActual": 67
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-fixed-instance-runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 178
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-holm4.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 36
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-holm4.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 165
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-isolated-policy.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 73
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-isolated-policy.mjs",
+      "rule": "max-lines-per-function",
+      "count": 2,
+      "maxActual": 140
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-models.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 43
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-null-maturation-contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 99
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-null-maturation-contract.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 157
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-null-prototypes.mjs",
+      "rule": "complexity",
+      "count": 2,
+      "maxActual": 42
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-pilot-transcript-calibration.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 94
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-pilot-transcript-calibration.mjs",
+      "rule": "max-lines-per-function",
+      "count": 2,
+      "maxActual": 206
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-pilot-transcript-calibration.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 83
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-policy-bundle.source.js",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 44
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-policy-bundle.source.js",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 788
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-population-contract.mjs",
+      "rule": "complexity",
+      "count": 2,
+      "maxActual": 36
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-power-plan.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 61
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-public-development-isolated-durable-population-runner.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 84
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-public-development-isolated-durable-population-runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 239
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-public-development-isolated-durable-population-runner.test.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 76
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-public-development-population-runner.mjs",
+      "rule": "complexity",
+      "count": 3,
+      "maxActual": 65
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-pulse-panel-runner.mjs",
+      "rule": "complexity",
+      "count": 2,
+      "maxActual": 39
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-pulse-panel-runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 148
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-runner.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 58
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 2,
+      "maxActual": 181
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-runner.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 61
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-runner.test.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 63
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-stage3-design.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 32
+    },
+    {
+      "path": "experiments/workstation/fixture-026/rsd-t02-system-family-generator.mjs",
+      "rule": "complexity",
+      "count": 2,
+      "maxActual": 92
+    },
+    {
+      "path": "experiments/workstation/fixture-026/runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 178
+    },
+    {
+      "path": "experiments/workstation/fixture-027/contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 95
+    },
+    {
+      "path": "experiments/workstation/fixture-027/contract.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 128
+    },
+    {
+      "path": "experiments/workstation/fixture-027/runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 142
+    },
+    {
+      "path": "experiments/workstation/fixture-029/cmb-x01-contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 229
+    },
+    {
+      "path": "experiments/workstation/fixture-029/cmb-x01-contract.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 285
+    },
+    {
+      "path": "experiments/workstation/fixture-029/cmb-x01-generator.mjs",
+      "rule": "complexity",
+      "count": 2,
+      "maxActual": 78
+    },
+    {
+      "path": "experiments/workstation/fixture-029/cmb-x01-generator.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 365
+    },
+    {
+      "path": "experiments/workstation/fixture-029/cmb-x01-generator.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 184
+    },
+    {
+      "path": "experiments/workstation/fixture-029/cmb-x01-ledger-contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 59
+    },
+    {
+      "path": "experiments/workstation/fixture-029/cmb-x01-runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 153
+    },
+    {
+      "path": "experiments/workstation/fixture-029/contract.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 174
+    },
+    {
+      "path": "experiments/workstation/fixture-029/contract.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 143
+    },
+    {
+      "path": "experiments/workstation/fixture-029/generator.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 48
+    },
+    {
+      "path": "experiments/workstation/fixture-029/generator.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 208
+    },
+    {
+      "path": "experiments/workstation/fixture-029/generator.mjs",
+      "rule": "max-statements",
+      "count": 1,
+      "maxActual": 104
+    },
+    {
+      "path": "experiments/workstation/fixture-029/runner.mjs",
+      "rule": "max-lines-per-function",
+      "count": 1,
+      "maxActual": 160
+    },
+    {
+      "path": "experiments/workstation/fixture-029/suite-contract.mjs",
+      "rule": "complexity",
+      "count": 3,
+      "maxActual": 50
+    },
+    {
+      "path": "scripts/generate-plots.mjs",
+      "rule": "max-lines-per-function",
+      "count": 2,
+      "maxActual": 220
+    },
+    {
+      "path": "scripts/lib/workstation-manifests.mjs",
+      "rule": "complexity",
+      "count": 6,
+      "maxActual": 166
+    },
+    {
+      "path": "scripts/lib/workstation-manifests.mjs",
+      "rule": "max-lines-per-function",
+      "count": 2,
+      "maxActual": 347
+    },
+    {
+      "path": "scripts/lib/workstation-manifests.mjs",
+      "rule": "max-statements",
+      "count": 2,
+      "maxActual": 112
+    },
+    {
+      "path": "scripts/prepare-reader-artifacts.mjs",
+      "rule": "complexity",
+      "count": 1,
+      "maxActual": 41
+    }
+  ]
+}

@@ -3,12 +3,90 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import {
+  repositoryDocumentHref,
+  repositoryRefForSurface,
+  repositoryTreeHref,
+} from "../app/lib/book-release-identity.mjs";
+import { assertBookManifestContract } from "./lib/book-manifest-contract.mjs";
+import { parseBookPdfGenerationOptions } from "./lib/book-pdf-generation-options.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 async function source(relative) {
   return readFile(path.join(repositoryRoot, relative), "utf8");
 }
+
+test("PDF source links use their explicit ref while Pages follows main", () => {
+  const releasePdfRef = repositoryRefForSurface("public-pdf", "v0.2.0", "0.2.0");
+  const currentPdfRef = repositoryRefForSurface("public-pdf", "main", "0.2.0");
+  const pagesRef = repositoryRefForSurface("github-pages", "main", "0.2.0");
+
+  assert.equal(releasePdfRef, "v0.2.0");
+  assert.equal(currentPdfRef, "main");
+  assert.equal(pagesRef, "main");
+  assert.equal(
+    repositoryDocumentHref(releasePdfRef, "concept/01-core-thesis.md", "efficiency model"),
+    "https://github.com/lusoris/20-watts-was-enough/blob/v0.2.0/concept/01-core-thesis.md#efficiency%20model",
+  );
+  assert.equal(
+    repositoryDocumentHref(pagesRef, "concept/01-core-thesis.md"),
+    "https://github.com/lusoris/20-watts-was-enough/blob/main/concept/01-core-thesis.md",
+  );
+  assert.equal(
+    repositoryTreeHref(releasePdfRef),
+    "https://github.com/lusoris/20-watts-was-enough/tree/v0.2.0",
+  );
+  assert.throws(
+    () => repositoryRefForSurface("public-pdf", "v0.3.0", "0.2.0"),
+    /does not match edition version/u,
+  );
+});
+
+test("PDF generation accepts only one bounded source-ref option", () => {
+  assert.deepEqual(parseBookPdfGenerationOptions([]), { sourceRef: "main" });
+  assert.deepEqual(
+    parseBookPdfGenerationOptions(["--ref", "v0.2.0"]),
+    { sourceRef: "v0.2.0" },
+  );
+  assert.throws(() => parseBookPdfGenerationOptions(["--ref"]), /Usage:/u);
+  assert.throws(() => parseBookPdfGenerationOptions(["--other", "main"]), /Usage:/u);
+  assert.throws(
+    () => parseBookPdfGenerationOptions(["--ref", "release/latest"]),
+    /main or vMAJOR\.MINOR\.PATCH/u,
+  );
+});
+
+test("the book manifest must carry the package version and explicit source ref", () => {
+  const manifest = {
+    schema_version: 2,
+    version: "0.2.0",
+    source_ref: "main",
+    pdf: "public/downloads/20-watts-was-enough-full-concept-book.pdf",
+  };
+  const contract = {
+    expectedVersion: "0.2.0",
+    expectedPdf: manifest.pdf,
+    expectedSourceRef: "main",
+  };
+
+  assert.equal(assertBookManifestContract({ manifest, ...contract }), manifest);
+  assert.throws(
+    () => assertBookManifestContract({
+      manifest: { ...manifest, version: "0.1.0" },
+      ...contract,
+    }),
+    /does not match package version "0\.2\.0"/u,
+  );
+  assert.throws(
+    () => assertBookManifestContract({
+      manifest,
+      ...contract,
+      expectedSourceRef: "v0.2.0",
+    }),
+    /does not match expected ref "v0\.2\.0"/u,
+  );
+});
 
 test("the book namespaces heading fragments while retaining document anchors", async () => {
   const edition = await source("app/components/book-edition.tsx");

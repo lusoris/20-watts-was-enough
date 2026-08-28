@@ -1,0 +1,67 @@
+name: Mechanism or principle proposal
+description: Propose a transferable mechanism and test whether it survives principle deduplication.
+title: "[Mechanism] "
+labels: ["type:feat", "area:research", "status:needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A recurring name or biological analogy is not a new principle. Describe the causal operation, its limits, and a test that can reject the transfer.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Constrained problem
+      description: What task is being solved, and which energy, material, information, risk, or time resource is constrained?
+    validations:
+      required: true
+
+  - type: textarea
+    id: observation
+    attributes:
+      label: Source observation and primary evidence
+      description: Identify the system, causal result, direct source links, evidence status, and boundary conditions. Do not paste third-party bodies.
+    validations:
+      required: true
+
+  - type: textarea
+    id: tuple
+    attributes:
+      label: Normalized mechanism tuple
+      description: "Provide: problem; source organization/scale; constrained resource; sensed state; causal transformation; information topology; timescale; failure boundary."
+    validations:
+      required: true
+
+  - type: textarea
+    id: deduplication
+    attributes:
+      label: Nearest P-bundles and deduplication result
+      description: Name the nearest P-IDs and the material difference in transformation, topology, reversibility, timescale, or failure mode.
+    validations:
+      required: true
+
+  - type: textarea
+    id: translation
+    attributes:
+      label: Proposed AI translation
+      description: Describe a silicon-native primitive without presenting the transfer as an established result.
+    validations:
+      required: true
+
+  - type: textarea
+    id: null_test
+    attributes:
+      label: Strongest null and rejecting test
+      description: Name the strongest ordinary engineering alternative, equal-budget comparison, measured outputs, and result that would retire the proposal.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Submission checks
+      options:
+        - label: This is a proposal and remains NO_RESULT until an eligible experiment produces claimable evidence.
+          required: true
+        - label: I have recorded provenance and have not copied third-party material without a reuse basis.
+          required: true

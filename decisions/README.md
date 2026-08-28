@@ -32,3 +32,6 @@ than silently changing its outcome.
 | [0024](0024-publish-through-split-licensed-git-and-two-reading-surfaces.md) | Publish through split-licensed Git and two reading surfaces | accepted |
 | [0025](0025-route-parasitology-through-adversarial-lifecycle-tests.md) | Route parasitology through adversarial lifecycle tests | accepted |
 | [0026](0026-route-endogenous-machinery-transfers-through-one-factorial-fixture.md) | Test recruited and phase-qualified machinery as one factorial family | accepted |
+| [0027](0027-adopt-cross-repository-engineering-contract.md) | Adopt a cross-repository engineering contract | accepted |
+| [0028](0028-establish-first-public-release-baseline.md) | Establish the first public release baseline at v0.2.0 | accepted |
+| [0029](0029-bind-pages-to-the-custom-domain-root.md) | Bind GitHub Pages to the custom-domain root | accepted |

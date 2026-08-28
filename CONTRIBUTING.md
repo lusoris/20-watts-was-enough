@@ -3,6 +3,10 @@
 This repository is a research notebook with stronger provenance than an
 ordinary notebook. Preserve uncertainty and history.
 
+Read [`AGENTS.md`](AGENTS.md), the project-wide
+[`engineering and research contract`](docs/principles.md), and the nearest
+nested `AGENTS.md` before editing an authority or executable boundary.
+
 ## Change workflow
 
 1. Start from the smallest affected chapter or claim; never regenerate the
@@ -21,7 +25,14 @@ ordinary notebook. Preserve uncertainty and history.
 6. Define every symbol and system boundary used in a calculation.
 7. Update [`CHANGELOG.md`](CHANGELOG.md) and, for a durable choice, add a
    decision record under [`decisions/`](decisions/README.md).
-8. Run `pwsh -File scripts/validate-docs.ps1` before committing.
+8. Run the focused validator while working and `npm run check` before
+   committing or opening a pull request.
+
+Use Conventional Commits for commit and pull-request titles:
+`type(scope): concise change`. Supported types are `feat`, `fix`, `docs`,
+`chore`, `refactor`, `test`, `perf`, `ci`, `build`, and `revert`. Mark an
+incompatible public CLI, schema, route, manifest, output, or analysis-law change
+with `!` or a `BREAKING CHANGE:` footer and include a `Migration:` footer.
 
 ## Discovery workflow
 
@@ -71,17 +82,15 @@ otherwise.
 
 ## Live research edition
 
-Run `npm ci` once, then `npm run dev`. The browser reader watches the canonical
-files in `concept/`, `research/`, `math/`, `decisions/`, `sources/`, and
-`assets/`; it does not maintain copied prose. A normal save triggers local hot
-reload.
+Run `npm ci` once, then `npm run dev:github-pages`. The public portal watcher
+renders the canonical files without maintaining copied prose; a normal save
+triggers local reload at the project-relative Pages path.
 
-Run `npm run build` before publishing the owner-only interactive edition. It
-must be built from the same committed state that is pushed to the canonical Git
-repository and must retain owner-only access. Run `npm run test:github-pages`
-for the separate public static full-book edition; the GitHub Pages workflow
-publishes it from `main`. Do not edit generated files under `dist/` or
-`dist-github-pages/`.
+Run `npm run test:github-pages` before a publication-facing change. The GitHub
+Pages workflow publishes the portal, `/book/`, and downloadable PDF from tested
+`main`. The older owner-only reader is retained for exceptional use but is not
+part of the routine publishing path. Do not edit generated files under
+`dist/`, `dist-github-pages/`, or the prepared reader-artifact directory.
 
 ## Evidence statuses
 
@@ -108,3 +117,33 @@ system boundary, precision, utilization definition, and time basis.
 Keep editable Mermaid or plotting sources under `assets/`. A rendered SVG or
 PNG may be committed beside its source, but never replace the source with an
 opaque image.
+
+## Software and dependency changes
+
+- Follow P10-1–P10-10 in [`docs/principles.md`](docs/principles.md).
+- Bound loops, retries, subprocesses, browser work, queues, outputs, and
+  timeouts; preserve cancellation and checked exit states.
+- A new dependency records the alternatives considered, exact version,
+  licence, security posture, runtime/build cost, and why it is needed.
+- GitHub Actions use full commit SHAs and the smallest permissions possible.
+- Do not suppress lint, type, security, schema, or freshness findings without a
+  nearby reason and a removal condition.
+
+## Validation and review
+
+`npm run check` is the aggregate local gate. It includes policy and strict
+TypeScript validation, linting, site tests, documentation, source boundaries,
+coverage, taxonomies, mathematics, workstation contracts and tests, readiness,
+the application build, and publication-artifact validation.
+
+Regenerate and validate the PDF after changing its source set or renderer:
+
+```powershell
+npm run generate:book-pdf
+npm run validate:book-pdf
+```
+
+Update [`CHANGELOG.md`](CHANGELOG.md) for notable changes and add an append-only
+decision record when authority, architecture, policy, licensing, publication,
+or release semantics change. The pull-request template records the exact checks
+run; a check not run needs an explanation, not an unchecked silent omission.

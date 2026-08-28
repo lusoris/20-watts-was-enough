@@ -17,6 +17,11 @@ const GROUP_ORDER = [
   "Sources & provenance",
 ];
 
+type ResearchNavigationDocument = Pick<
+  ResearchDocument,
+  "group" | "kind" | "path"
+>;
+
 function groupDocuments(documents: ResearchDocumentSummary[]) {
   return GROUP_ORDER.map((group) => ({
     group,
@@ -24,7 +29,7 @@ function groupDocuments(documents: ResearchDocumentSummary[]) {
   })).filter(({ documents: groupEntries }) => groupEntries.length > 0);
 }
 
-function navigationSubgroup(document: ResearchDocumentSummary): string {
+function navigationSubgroup(document: ResearchNavigationDocument): string {
   if (document.group === "Research") {
     if (document.path === "research/audits/README.md") return "Audit index";
     const auditDate = document.path.match(/^research\/audits\/(\d{4}-\d{2}-\d{2})-/)?.[1];
@@ -73,7 +78,7 @@ function navigationSubgroups(groupDocuments: ResearchDocumentSummary[]) {
 }
 
 function initialCollapsedGroups(
-  activeDocument: ResearchDocumentSummary,
+  activeDocument: ResearchNavigationDocument,
   documentGroups: ReturnType<typeof groupDocuments>,
 ): Set<string> {
   return new Set(
@@ -84,7 +89,7 @@ function initialCollapsedGroups(
 }
 
 function initialCollapsedSubgroups(
-  activeDocument: ResearchDocumentSummary,
+  activeDocument: ResearchNavigationDocument,
   documentGroups: ReturnType<typeof groupDocuments>,
 ): Set<string> {
   const activeKey = subgroupKey(

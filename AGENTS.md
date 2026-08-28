@@ -1,0 +1,87 @@
+# Repository agent contract
+
+Read [`docs/principles.md`](docs/principles.md) before changing this repository.
+It is the project-wide engineering and research contract. Then read the nearest
+nested `AGENTS.md` for the files in scope.
+
+## Hard rules
+
+1. Git `main` is canonical. Do not synchronize or regenerate the concept from a
+   chat or a parallel document store.
+2. Change the smallest coherent chapter, claim, equation, test, diagram, or
+   decision. Preserve unrelated and untracked files.
+3. Keep observation, engineering translation, and hypothesis distinct.
+4. Add or update a stable `C-` claim before promoting a major assertion. Map it
+   to an existing `P-` bundle before inventing a new principle.
+5. Primary or authoritative sources may support claims; imported conversations
+   and summaries may only identify leads.
+6. Never present smoke, readiness, construction, synthetic calibration, or
+   protocol conformance as a scientific result.
+7. Define every quantitative boundary, unit, symbol, comparator, hardware
+   context, and uncertainty source.
+8. Bound every experiment loop, retry, queue, subprocess, search grid, output,
+   and timeout. Record seeds and run identity at claim-eligible boundaries.
+9. Keep generated sources editable and deterministic. Do not edit `dist/`,
+   `dist-github-pages/`, `.next/`, `.vinext/`, or generated reader copies.
+10. Follow [`LICENSING.md`](LICENSING.md). Citation is not permission to copy;
+    `sources/` and all third-party material keep their own terms.
+11. EU and German law, official adoptions, and applicability are the normative
+    default. Do not infer compliance from a standard title or a checklist.
+12. Use pinned dependencies and full commit SHAs for GitHub Actions. Do not
+    claim a GitHub setting is active without verifying it remotely.
+
+## Repository map
+
+| Path | Authority |
+| --- | --- |
+| `concept/` | Maintained synthesis and architecture chapters |
+| `research/claims.md` | Stable evidence ledger and claim status |
+| `research/principle-registry.md` | Deduplicated cross-domain causal invariants |
+| `research/references.bib` | Bibliographic identities and primary-source locators |
+| `research/audits/` | Field- and mechanism-level evidence audits |
+| `math/` | Notation, derivations, units, and testable models |
+| `experiments/candidates/` | Architecture-candidate comparison contracts |
+| `experiments/fixtures/` | Candidate-independent stress and falsification fixtures |
+| `experiments/workstation/` | Executable development and claim-eligible run machinery |
+| `assets/` | Editable diagrams, plotting data, and rendered figures |
+| `decisions/` | Append-only durable decisions; supersede rather than rewrite |
+| `sources/` | Provenance records and explicitly licensed imports, not evidence by default |
+| `app/`, `github-pages/` | Interactive reader and public Pages portal |
+| `scripts/` | Validation, generation, and publication-boundary tooling |
+
+## Working sequence
+
+1. Inspect the affected authority file and its reciprocal links.
+2. Make the smallest patch; do not rewrite nearby material for style alone.
+3. Run the most focused relevant test.
+4. Run `npm run check` before commit. Changes that affect the book source set
+   also require `npm run generate:book-pdf` and
+   `npm run validate:book-pdf`.
+5. Update `CHANGELOG.md` for a notable change. Add a decision record when an
+   authority, architecture, policy, licensing, publication, or release rule
+   changes durably.
+6. Use a Conventional Commit message and push only a clean, validated tree.
+
+## Common commands
+
+```powershell
+npm ci
+npm run check
+npm run test:github-pages
+npm run generate:book-pdf
+npm run validate:book-pdf
+```
+
+Use targeted `test:workstation:*` scripts during development. The aggregate
+gate remains authoritative before a release or merge.
+
+## File-specific instructions
+
+- [`research/AGENTS.md`](research/AGENTS.md) governs claims, evidence, source
+  audits, principle deduplication, and normative material.
+- [`experiments/AGENTS.md`](experiments/AGENTS.md) governs candidate and fixture
+  contracts.
+- [`experiments/workstation/AGENTS.md`](experiments/workstation/AGENTS.md)
+  governs executable runs and authority boundaries.
+- [`app/AGENTS.md`](app/AGENTS.md) governs the interactive reader.
+- [`scripts/AGENTS.md`](scripts/AGENTS.md) governs validators and generators.

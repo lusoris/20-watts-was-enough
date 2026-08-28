@@ -68,7 +68,7 @@ Run the targeted tests without test-process isolation on restricted Windows
 hosts:
 
 ```powershell
-node --test --test-isolation=none experiments/workstation/fixture-027/contract.test.mjs experiments/workstation/fixture-027/runner.test.mjs
+node --test --experimental-test-isolation=none experiments/workstation/fixture-027/contract.test.mjs experiments/workstation/fixture-027/runner.test.mjs
 ```
 
 The ordinary `node --test` form is also valid where the runtime may spawn test

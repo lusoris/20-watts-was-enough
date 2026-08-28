@@ -44,9 +44,15 @@ test("all validated smoke manifests produce shell-free bounded plans", async () 
   ]);
   for (const plan of plans) {
     assert.equal(plan.readiness, "smoke-ready");
+    const entrypoint = plan.artifact === "fixture-029"
+      ? "suite-runner.mjs"
+      : "runner.mjs";
     for (const action of plan.actions) {
       assert.equal(action.executable, process.execPath);
-      assert.equal(action.args[0], `experiments/workstation/${plan.artifact}/runner.mjs`);
+      assert.equal(
+        action.args[0],
+        `experiments/workstation/${plan.artifact}/${entrypoint}`,
+      );
       assert.ok(!action.args.some((value) => value.includes("<run-directory>")));
     }
   }

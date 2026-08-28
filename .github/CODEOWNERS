@@ -1,0 +1,25 @@
+* @lusoris
+
+# Evidence, scientific synthesis, and experiment authority
+/research/ @lusoris
+/concept/ @lusoris
+/math/ @lusoris
+/experiments/ @lusoris
+/sources/ @lusoris
+/decisions/ @lusoris
+
+# Generated publications and their source toolchain
+/assets/ @lusoris
+/public/downloads/ @lusoris
+/app/ @lusoris
+/github-pages/ @lusoris
+/worker/ @lusoris
+/scripts/ @lusoris
+
+# Repository policy, licensing, and automation
+/.github/ @lusoris
+/LICENSE @lusoris
+/LICENSING.md @lusoris
+/LICENSES/ @lusoris
+/THIRD_PARTY_NOTICES.txt @lusoris
+/CITATION.cff @lusoris

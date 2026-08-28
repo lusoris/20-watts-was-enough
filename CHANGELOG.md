@@ -5,7 +5,85 @@ the exact diff; this file records why the project changed.
 
 ## [Unreleased]
 
+No unreleased changes.
+
+## [0.2.0] - 2026-08-28
+
 ### Changed
+
+- GitHub Pages now builds for the custom-domain root at
+  `https://www.cordana.dev/`; canonical metadata, public downloads, local
+  preview guidance, and regression checks no longer assume the repository-name
+  subpath.
+
+- The repository now has one deduplicated engineering and research contract,
+  a root operational guide, and bounded local instructions for research,
+  experiment contracts, workstation execution, the reader, generators, and
+  GitHub automation. The Power of Ten is adapted to the actual Node, document,
+  and scientific authority boundaries, with CI, review, guidance, and staged
+  rules distinguished explicitly.
+
+- Strict TypeScript checking and parsed repository-policy validation now join
+  the aggregate local gate. The new validator rejects mutable GitHub Action
+  tags, unbounded workflow jobs, malformed research issue forms, missing public
+  governance surfaces, and unsafe dependency-automation drift.
+
+- P10-4 now has a measured no-regression gate instead of an aspirational line:
+  272 source files establish a 196-finding legacy baseline, while CI rejects
+  new file/rule groups, higher finding counts, worse maxima, and attempts to
+  reset the baseline against the previous revision. Existing debt may only
+  shrink.
+
+- Direct npm dependencies are now exact-version declarations as well as
+  lockfile-resolved, and all no-isolation test commands use the spelling
+  supported by the declared Node 22 baseline. Repository policy rejects a
+  future range declaration or a Node-newer-only test flag.
+
+- Full-book generation now separates continuously updated `main` snapshots
+  from immutable release-tag snapshots. The manifest records that source ref,
+  releases require it to match the tag, and PDF metadata plus Chromium's
+  unstable tagged-structure IDs are normalized for byte-identical fixed-input
+  generation.
+
+- Tagged releases now prove that the tag commit belongs to `origin/main`, bind
+  tag-push execution to the triggering event SHA, and reconfirm the tag before
+  publication. This closes both unmerged-tag and moved-tag publication paths.
+
+- The contribution workflow now treats the GitHub Pages portal as the normal
+  live preview and publication path, uses Conventional Commits, documents
+  breaking migrations, and requires the complete `npm run check` merge floor.
+
+- Replaced two multi-megabyte PNG social-preview assets with one visually
+  equivalent progressive JPEG, reducing the production upload without changing
+  the page or book content.
+- Opened every document group by default in the private reader and added
+  explicit `Show all` and `Current section` controls; the previous collapsed
+  default made most of the 228-file library look absent.
+- Contained every Markdown table in a keyboard-accessible horizontal region,
+  widened the document canvas without widening prose, and gave six-column-plus
+  tables an explicit scroll cue and sticky first column.
+- Repaired four exact claim-to-test gaps: contestable audits, producer-product
+  locality, fuel-coupled physical leases, and correlation-qualified replica
+  diversity now have explicit tracks and bidirectional traceability.
+- Completed the confirmatory analysis contracts for Candidates 005–020, so all
+  31 candidate and fixture artifacts now pass the same eight-facet protocol
+  gate with explicit resource parity, units, uncertainty handling, and frozen
+  decision rules.
+- Added direct claim-range links to every fixture, exposed coverage by evidence
+  status, and made documentation, mathematics, and generated coverage freshness
+  mandatory parts of the normal test command.
+- Strengthened the private reader's palette, text hierarchy, secondary-text
+  contrast, table and equation treatment, full page outline, and mathematical
+  figure presentation.
+- Gave Mermaid nodes a shared high-contrast semantic palette and made wide
+  diagrams fit the reading surface instead of forcing a cropped canvas.
+- Extended documentation validation to four-digit claim IDs, claim-anchor
+  consistency, and all bibliography keys named in primary-source fields.
+- Wide Mermaid diagrams now retain their intrinsic geometry while fitting the
+  available reading surface; the constitutional control diagram follows a
+  horizontal reading path.
+- Display-equation validation now renders canonical Markdown through KaTeX and
+  flags likely missing command escapes before a commit can pass `npm test`.
 
 - GitHub Pages now opens as a web-native research portal instead of mounting the
   entire book at the site root. The portal provides a concise thesis and live
@@ -94,6 +172,32 @@ the exact diff; this file records why the project changed.
   notices have been regenerated from the updated build.
 
 ### Added
+
+- A cross-repository adoption ledger records which conventions from
+  `golusoris`, `sveltesentio`, `goenvoy`, and organization defaults were
+  adopted, adapted, staged, rejected, or found inapplicable, including explicit
+  exit conditions for complexity linting, repository rules, REUSE, secret-scan
+  CI, dependency automerge, and attested releases.
+
+- Decision 0028 preserves `0.1.0` as a changelog-only historical milestone and
+  establishes `v0.2.0` as the first public tagged release. This avoids
+  pretending that an arbitrary pre-publication commit was a frozen, tested
+  release or republishing its historical source tree through a new archive.
+
+- A tag-bound release workflow now reruns the complete repository and Pages
+  gates before publishing the full-book PDF and manifest, split-licence
+  material, third-party notices, a deterministic locked-graph SPDX SBOM,
+  sorted SHA-256 checksums, and GitHub build-provenance attestations. The PDF
+  identifies its exact edition and links repository material through the
+  immutable release tag.
+
+- Project-specific ownership, contribution, issue, conduct, governance,
+  security, support, citation, dependency-management, CodeQL, Scorecard, and
+  pull-request CI surfaces for the public repository. GitHub private
+  vulnerability reporting is enabled and its confidential reporting route is
+  verified. Repository Actions now require immutable full-SHA references, keep
+  the default workflow token read-only, and cannot approve pull-request
+  reviews.
 
 - A three-frontier research cycle audits clinical biotechnology, hybrid natural
   mechanisms, and institutional information allocation against primary papers
@@ -1303,40 +1407,6 @@ the exact diff; this file records why the project changed.
   the canonical private-site URL.
 - Printed table headers repeat across page breaks and rows remain intact where
   the PDF renderer paginates long research tables.
-
-### Changed
-
-- Replaced two multi-megabyte PNG social-preview assets with one visually
-  equivalent progressive JPEG, reducing the production upload without changing
-  the page or book content.
-- Opened every document group by default in the private reader and added
-  explicit `Show all` and `Current section` controls; the previous collapsed
-  default made most of the 228-file library look absent.
-- Contained every Markdown table in a keyboard-accessible horizontal region,
-  widened the document canvas without widening prose, and gave six-column-plus
-  tables an explicit scroll cue and sticky first column.
-- Repaired four exact claim-to-test gaps: contestable audits, producer-product
-  locality, fuel-coupled physical leases, and correlation-qualified replica
-  diversity now have explicit tracks and bidirectional traceability.
-- Completed the confirmatory analysis contracts for Candidates 005–020, so all
-  31 candidate and fixture artifacts now pass the same eight-facet protocol
-  gate with explicit resource parity, units, uncertainty handling, and frozen
-  decision rules.
-- Added direct claim-range links to every fixture, exposed coverage by evidence
-  status, and made documentation, mathematics, and generated coverage freshness
-  mandatory parts of the normal test command.
-- Strengthened the private reader's palette, text hierarchy, secondary-text
-  contrast, table and equation treatment, full page outline, and mathematical
-  figure presentation.
-- Gave Mermaid nodes a shared high-contrast semantic palette and made wide
-  diagrams fit the reading surface instead of forcing a cropped canvas.
-- Extended documentation validation to four-digit claim IDs, claim-anchor
-  consistency, and all bibliography keys named in primary-source fields.
-- Wide Mermaid diagrams now retain their intrinsic geometry while fitting the
-  available reading surface; the constitutional control diagram follows a
-  horizontal reading path.
-- Display-equation validation now renders canonical Markdown through KaTeX and
-  flags likely missing command escapes before a commit can pass `npm test`.
 
 ## [0.1.0] - 2026-08-05
 
