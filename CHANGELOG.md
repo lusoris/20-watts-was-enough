@@ -47,6 +47,10 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Release preflight now locates an exact tag through GitHub's GraphQL API and
+  reads the resulting numeric release through REST. Draft releases are no
+  longer misclassified as absent, while malformed, ambiguous and changed
+  identities still fail closed.
 - Candidate 010 source identity now resolves loose and packed branch references
   through Git's linked-worktree common directory. Its normal checkout and
   Git-free frozen-capsule verification paths retain their existing authority.
