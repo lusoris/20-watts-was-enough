@@ -10,6 +10,19 @@ Difficulty here means how much project context the task requires. It is not a
 status barrier. A new reader who can identify the sentence where an argument
 became opaque may provide more useful evidence than a large rewrite.
 
+## Choose live work before opening another issue
+
+The workstream forms below are for a new, reproducible gap. To continue work
+that is already bounded, start with the live queues:
+
+- [good first issues](https://github.com/lusoris/20-watts-was-enough/issues?q=is%3Aissue%20state%3Aopen%20label%3Agood-first-issue) need relatively little project context;
+- [help-wanted issues](https://github.com/lusoris/20-watts-was-enough/issues?q=is%3Aissue%20state%3Aopen%20label%3Ahelp-wanted) already name a contribution boundary and acceptance conditions; and
+- [all open issues](https://github.com/lusoris/20-watts-was-enough/issues?q=is%3Aissue%20state%3Aopen) show blocked decisions and work already in progress.
+
+Claim the smallest suitable issue with a comment before doing substantial
+work. If its evidence, authority boundary, or completion condition is unclear,
+ask there instead of opening a parallel task.
+
 ## Current workstreams
 
 | Workstream | Useful first contribution | Entry context | Authority boundary | Start here |

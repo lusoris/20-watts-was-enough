@@ -5,6 +5,11 @@ the exact diff; this file records why the project changed.
 
 ## [Unreleased]
 
+### Changed
+
+- The contribution map and issue picker now lead readers to bounded open work
+  before they open a parallel issue.
+
 ## [0.3.0] - 2026-08-30
 
 ### Added
