@@ -6,16 +6,26 @@
 - **Status:** bounded engineering-transfer audit; no scientific result,
   architecture decision, claim, principle, candidate, fixture, or performance
   comparison
-- **Source snapshot:** [`lusoris/k8s` commit
+- **Historical tested source snapshot:** [`lusoris/k8s` commit
   `91ef1abda09df5361859bd1010703113b3d439da`](https://github.com/lusoris/k8s/tree/91ef1abda09df5361859bd1010703113b3d439da),
-  verified locally as the current GitHub `main` commit at audit close; the
-  checkout advanced during inspection, and the intervening diff changed none
-  of the scoped controller, gateway, executor, dispatcher, test, or ADR files
+  which the local checkout and GitHub `main` both resolved to at the original
+  audit close. Earlier checkout movement during that pass changed none of the
+  scoped files. The source links and test counts in the original audit bind to
+  this commit.
+- **Later observed source snapshot:** [`lusoris/k8s` commit
+  `6ff7852a84600ae83ff97e15c0b3524260832a34`](https://github.com/lusoris/k8s/tree/6ff7852a84600ae83ff97e15c0b3524260832a34),
+  which the local checkout and GitHub `main` both resolved to at
+  `2026-08-30T19:47:55+02:00`. The later source comparison and live observation
+  below bind only to that commit and time; the focused tests were not rerun.
 - **Scope:** the Queue-Drain Optimizer (QDO), the llama-swap model-process
   manager, the LiteLLM gateway's QDO admission path, and the Paperclip work
   dispatcher; the wider cluster was not reviewed
-- **Method:** read-only source and history inspection plus focused local unit
-  and chart tests; no live-cluster mutation or fresh production experiment
+- **Historical method:** read-only source and history inspection plus focused
+  local unit and chart tests at the historical tested snapshot; no live-cluster
+  inspection, mutation, or fresh production experiment
+- **Refresh method:** exact Git comparison plus read-only GitHub, Argo CD,
+  Kubernetes API, service-readiness, and metrics queries at the later snapshot;
+  no source test rerun, live mutation, or production experiment
 - **Licensing boundary:** no repository-wide licence was present at the
   inspected root, so no source code is copied into this project. Only
   independently described mechanisms and test situations are retained here.
@@ -35,7 +45,11 @@ conditions. Its records can identify mechanisms and construct stress cases;
 they cannot establish that a small-specialist system beats a general model,
 uses less energy, or transfers beyond this cluster.
 
-## What is already exercised
+## What the tested source exercised
+
+This table remains pinned to the historical tested snapshot. The later live
+observation establishes deployment state at one instant; it does not replace
+the focused source tests or test the proposed research arm.
 
 | Cluster mechanism | Direct record at the snapshot | Transfer retained here | Boundary |
 | --- | --- | --- | --- |
@@ -53,9 +67,10 @@ to the resource that could safely act on it. The research arm should therefore
 test whether a gate names the exact physical executor whose effects it can
 control, not merely whether some lock or gate exists.
 
-## Validation reproduced during this audit
+## Historical validation at the tested snapshot
 
-Four focused surfaces passed `503` tests at the inspected commit:
+The original audit reran four focused surfaces at
+`91ef1abda09df5361859bd1010703113b3d439da`. They passed `503` tests in total:
 
 - QDO: `195` Python unit tests, including pure policy, footprint learning,
   pool measurement, lane admission, bounded Redis transport, actuation gates,
@@ -68,22 +83,77 @@ Four focused surfaces passed `503` tests at the inspected commit:
   artifact hydration, lifecycle, lane fit, batching, projection, monitoring
   and storage bounds.
 
-The QDO Helm configuration suite was not clean: `17` assertions passed and one
-deliberately invalid `source: guesswork` case errored because the values schema
+At that same commit, the QDO Helm configuration suite was not clean: `17`
+assertions passed and one deliberately invalid `source: guesswork` case errored
+because the values schema
 rejected the value before the test could reach its expected template-failure
 assertion. The rejection itself is fail-fast, but the harness and assertion
 layer disagree. This audit does not round that result up to a passing chart
-suite.
+suite. Later source changes align the assertion with schema-first rejection,
+but no current chart result is inferred from that edit.
 
-Repository records additionally describe live burn-in and incident-derived
-changes, including enforcing drain-gated arbitration and observed queue,
-thrash, timeout, and readiness failures. Those records were inspected but not
-reproduced against the live cluster in this pass. They remain documented
-operational evidence, not fresh independent verification.
+During the original pass, repository records additionally described live
+burn-in and incident-derived changes, including enforcing drain-gated
+arbitration and observed queue, thrash, timeout, and readiness failures. Those
+records were inspected but not reproduced against the live cluster. They
+remain documented operational evidence, not independently reproduced results.
+
+## Later source and live observation
+
+At `2026-08-30T19:47:55+02:00`, the local `lusoris/k8s` checkout and the GitHub
+`main` API both resolved to
+`6ff7852a84600ae83ff97e15c0b3524260832a34`. Read-only queries then observed:
+
+- the `litellm`, `llama-swap`, `llama-swap-b580`, `paperclip-dispatcher`, `qdo`,
+  and `qdo-b580` Argo CD Applications all reported `Synced` and `Healthy` at
+  that exact revision;
+- the LiteLLM Deployment reported `2/2` ready replicas, while each llama-swap
+  and QDO Deployment reported `1/1`;
+- llama-swap's two `/running` endpoints reported `qwen3-5-4b`, `qwen3-8-27b`,
+  and `qwythos-9b-v2` in `ready` state;
+- the live QDO Deployment carried
+  `QDO_ENGINE_QUEUE_ALLOWANCE_RATIO=0.5`; the two QDO metrics endpoints exposed
+  `qdo_lane_admit_writes_total` values of `2,981` and `2,950`,
+  `qdo_vram_signal_available=1`, and `qdo_fence_redis_errors_total=0` in their
+  current process lifetimes; and
+- the Paperclip dispatcher CronJob was not suspended and recorded its latest
+  successful tick at `2026-08-30T17:47:14Z`.
+
+The refresh used bounded `gh api`, `kubectl get`, and Kubernetes API-proxy
+`GET` requests only. These observations establish one-time GitOps convergence,
+process readiness, loaded-model state, and metric availability. They do not
+show that every route succeeded, that the queue policy is correct under load,
+that the cumulative counters cover an experiment boundary, or that the
+small-specialist hypothesis saves energy.
+
+## Bounded drift after the historical test campaign
+
+The [exact comparison from the tested snapshot to the later observed
+snapshot](https://github.com/lusoris/k8s/compare/91ef1abda09df5361859bd1010703113b3d439da...6ff7852a84600ae83ff97e15c0b3524260832a34)
+contains two scoped changes:
+
+1. [`3f8b141db9cb9a0590700eb4c13feb40cfe702f0`](https://github.com/lusoris/k8s/commit/3f8b141db9cb9a0590700eb4c13feb40cfe702f0)
+   changes QDO's engine-queue tolerance from one flat allowance to a
+   slot-scaled allowance with a configured ceiling and floor. It changes the
+   controller, values, schema, Deployment projection, and focused tests. It
+   also updates the Helm assertion that previously disagreed with schema-first
+   rejection. The live environment showed the new ratio, but this audit did
+   not rerun the changed tests or exercise the policy under a controlled load.
+2. [`25002e6632b95e5191a16c425ff2867c3e01d4af`](https://github.com/lusoris/k8s/commit/25002e6632b95e5191a16c425ff2867c3e01d4af)
+   adds the Cauda Cluster Ops boss-lead bootstrap record and its LiteLLM access
+   projection. It changes the seeded organization and access population, not
+   the dispatcher's work-selection algorithm.
+
+The pure QDO policy module, LiteLLM's QDO admission hook, llama-swap values, and
+Paperclip dispatcher implementation are byte-unchanged across the two
+snapshots. The controller/executor separation and test-scenario transfers
+therefore remain applicable engineering leads. The `503` count and QDO chart
+disagreement remain historical evidence for the old commit; the complete test
+status and count at `6ff7852a84600ae83ff97e15c0b3524260832a34` are unknown.
 
 ## Gaps retained as test material
 
-The snapshot is neither complete nor internally uniform:
+The tested snapshot is neither complete nor internally uniform:
 
 - QDO publishes a measured pool view but does not lock or schedule work across
   devices. Static gateway-to-lane topology remains load-bearing.

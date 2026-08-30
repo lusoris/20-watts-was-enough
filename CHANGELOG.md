@@ -22,6 +22,11 @@ the exact diff; this file records why the project changed.
   router. Exact source snapshots, implementation status, related-party limits,
   and a non-circular applied video shakedown are recorded without promoting a
   controller result.
+- The `lusoris/k8s` engineering-transfer audit now binds its 503-test campaign
+  and chart-harness disagreement to the exact historical source commit, then
+  records a separate dated live/source observation and bounded drift at the
+  later commit without presenting deployment health as a current test run or
+  scientific result.
 
 ## [0.3.0] - 2026-08-30
 
