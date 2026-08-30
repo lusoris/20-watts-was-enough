@@ -7,6 +7,29 @@ Read [`AGENTS.md`](AGENTS.md), the project-wide
 [`engineering and research contract`](docs/principles.md), and the nearest
 nested `AGENTS.md` before editing an authority or executable boundary.
 
+## Start with one bounded task
+
+The [research roadmap](concept/90-research-roadmap.md) defines the dependency
+order. [GitHub milestones](https://github.com/lusoris/20-watts-was-enough/milestones)
+turn its stages into live issue and pull-request queues. Check those queues
+before opening another issue, then claim the smallest task whose finish
+condition you can state. Closing the task records operational progress; it does
+not promote a research claim by itself.
+
+| Contribution | First route | Local entry check |
+| --- | --- | --- |
+| Report a confusing passage, broken page or inaccessible control | [How to help](docs/how-to-help.md) | No checkout required; include the exact route and point of failure |
+| Improve project-authored prose | [`research-writing`](.agents/skills/research-writing/SKILL.md), then [`reader-editor`](.agents/skills/reader-editor/SKILL.md) when comprehension is the problem | `npm run check:prose` and the nearest content validator |
+| Change layout, typography, colour, diagrams or visual identity | [`research-design`](.agents/skills/research-design/SKILL.md) | Focused site tests plus its rendered visual-review protocol |
+| Correct evidence or propose a mechanism | [`research/AGENTS.md`](research/AGENTS.md) | The affected claim, reference, audit and taxonomy checks |
+| Change an experiment or runner | [`experiments/AGENTS.md`](experiments/AGENTS.md) and the nearest nested contract | The affected fixture tests and `npm run validate:workstation` |
+| Improve Go tooling, CI or releases | [`tooling/AGENTS.md`](tooling/AGENTS.md) and [`scripts/AGENTS.md`](scripts/AGENTS.md) as applicable | Focused Go tests and the affected policy test |
+| Review or correct a translation | [Translation contract](translations/README.md) | `npm run validate:translations` |
+
+An issue report or reader review needs no development environment. A pull
+request still needs the focused checks while you work and the aggregate gate
+before submission.
+
 ## Prerequisites and bootstrap
 
 The complete validation gate currently binds these development tools:
@@ -44,10 +67,8 @@ traceability and validation fields. Do not commit generated dependency
 directories, build output, workstation evidence, private source material, or
 machine-local files.
 
-If you are deciding where to start, use the
-[bounded workstream and issue map](docs/how-to-help.md). It identifies tasks
-that need reader, translation, experiment, evidence, Go and security help,
-together with their authority boundaries and focused checks.
+The [bounded workstream and issue map](docs/how-to-help.md) gives each task type
+an authority boundary, expected evidence, focused checks and exact issue route.
 
 ## Change workflow
 

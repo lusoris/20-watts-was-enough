@@ -16,6 +16,27 @@ architecture writing, null-model comparison, and measurement design continue
 in parallel, but an integrated system does not inherit a mechanism merely
 because its audit is interesting.
 
+### Live operational view
+
+This document owns the stage order, gate meaning and exit conditions. The
+canonical [milestone manifest](../.github/milestones.json) projects Stages 0–5
+into [GitHub milestones](https://github.com/lusoris/20-watts-was-enough/milestones),
+where issues and pull requests can be assigned, discussed and closed. The Go
+metadata command recreates that projection from the manifest; GitHub is not a
+second roadmap source.
+
+The views answer different questions:
+
+| View | What completion means |
+| --- | --- |
+| GitHub milestone | the attached coordination records are closed |
+| stage gate in this roadmap | the stated dependency and rejection conditions are met for the affected mechanism |
+| claim ledger or result record | reviewed evidence supports the recorded status within its declared boundary |
+
+A milestone percentage therefore measures operational progress only. It cannot
+promote a claim, turn a smoke run into evidence or waive a later gate. Due dates
+are omitted until a real external commitment justifies one.
+
 ## Biological observation
 
 Development, adaptation, and maintenance operate on different timescales.
@@ -436,8 +457,9 @@ research automatically saves energy.
 - Mechanism-specific evidence remains in the
   [claims ledger](../research/claims.md); roadmap placement does not promote a
   claim.
-- The three existing experiment contracts are specified but not executed.
-- The five-stage composition and its lifecycle benefit remain speculative until
+- The candidate and fixture catalogues contain written contracts and bounded
+  development harnesses, but no claim-eligible result.
+- The six-stage composition and its lifecycle benefit remain speculative until
   the gates produce measured results.
 - Sensorimotor transfer remains speculative under
   [C-007](../research/claims.md#c-007).

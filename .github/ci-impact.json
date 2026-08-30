@@ -86,7 +86,9 @@
     {
       "id": "go-operations",
       "paths": [
-        "tooling/internal/githublabels/**"
+        "tooling/internal/githublabels/**",
+        "tooling/internal/githubmilestones/**",
+        "tooling/internal/repositorymanifest/**"
       ],
       "lanes": [
         "go"

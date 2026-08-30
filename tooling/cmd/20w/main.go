@@ -19,6 +19,7 @@ import (
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/docscheck"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/experiment"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githublabels"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubmilestones"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/nodeimage"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/ocimanifest"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/pdfrender"
@@ -49,6 +50,7 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w publication render-pdf [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--check]")
 	fmt.Fprintln(writer, "  20w translation export-candidate --source <concept-or-math.md> --language <code> --output <new.json> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w translation import-candidate --input <candidate.json> --source <concept-or-math.md> --language <code> --output <new-directory> [--root <repository>]")
+	fmt.Fprintln(writer, "  20w github sync-metadata [--root <repository>] [--check | --repository <owner/name>]")
 	fmt.Fprintln(writer, "  20w github sync-labels [--root <repository>] [--check | --repository <owner/name>]")
 	fmt.Fprintln(writer, "  20w release inspect-image --image <registry path> --tag <vX.Y.Z> --revision <commit> --platform <os/arch> --expected-label <key=value>")
 	fmt.Fprintln(writer, "  20w release asset-inventory --assets <directory> --phase source|publication")
@@ -128,6 +130,9 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 			return runTranslationImportCandidate(arguments[2:], stdout, stderr)
 		}
 	case "github":
+		if len(arguments) >= 2 && arguments[1] == "sync-metadata" {
+			return runGitHubSyncMetadata(arguments[2:], stdout, stderr)
+		}
 		if len(arguments) >= 2 && arguments[1] == "sync-labels" {
 			return runGitHubSyncLabels(arguments[2:], stdout, stderr)
 		}
@@ -390,6 +395,79 @@ func runPublicationRenderPDF(arguments []string, stdout, stderr io.Writer) int {
 	return 0
 }
 
+func githubMetadataHTTPClient() *http.Client {
+	return &http.Client{
+		Timeout: 20 * time.Second,
+		CheckRedirect: func(_ *http.Request, _ []*http.Request) error {
+			return errors.New("GitHub metadata API redirect refused")
+		},
+	}
+}
+
+func runGitHubSyncMetadata(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("github sync-metadata", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	root := flags.String("root", ".", "repository root")
+	repository := flags.String("repository", "", "GitHub owner/repository to synchronize")
+	check := flags.Bool("check", false, "validate local manifests without network access")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
+		return 2
+	}
+	labels, err := githublabels.Load(*root)
+	if err != nil {
+		fmt.Fprintf(stderr, "Load GitHub label manifest: %v\n", err)
+		return 1
+	}
+	milestones, err := githubmilestones.Load(*root)
+	if err != nil {
+		fmt.Fprintf(stderr, "Load GitHub milestone manifest: %v\n", err)
+		return 1
+	}
+	if *check {
+		if *repository != "" {
+			fmt.Fprintln(stderr, "github sync-metadata --check does not accept --repository")
+			return 2
+		}
+		fmt.Fprintf(
+			stdout,
+			"GitHub repository metadata validation passed: %d managed labels and %d managed milestones.\n",
+			len(labels.Labels),
+			len(milestones.Milestones),
+		)
+		return 0
+	}
+	client := githubMetadataHTTPClient()
+	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Minute)
+	defer cancel()
+	labelResult, err := githublabels.Sync(ctx, client, labels, githublabels.Options{
+		Repository: *repository,
+		Token:      os.Getenv("GH_TOKEN"),
+	})
+	if err != nil {
+		fmt.Fprintf(stderr, "Synchronize GitHub labels: %v\n", err)
+		return 1
+	}
+	milestoneResult, err := githubmilestones.Sync(ctx, client, milestones, githubmilestones.Options{
+		Repository: *repository,
+		Token:      os.Getenv("GH_TOKEN"),
+	})
+	if err != nil {
+		fmt.Fprintf(stderr, "Synchronize GitHub milestones: %v\n", err)
+		return 1
+	}
+	fmt.Fprintf(
+		stdout,
+		"GitHub repository metadata synchronization passed: labels %d created/%d updated/%d unchanged; milestones %d created/%d updated/%d unchanged.\n",
+		labelResult.Created,
+		labelResult.Updated,
+		labelResult.Unchanged,
+		milestoneResult.Created,
+		milestoneResult.Updated,
+		milestoneResult.Unchanged,
+	)
+	return 0
+}
+
 func runGitHubSyncLabels(arguments []string, stdout, stderr io.Writer) int {
 	flags := flag.NewFlagSet("github sync-labels", flag.ContinueOnError)
 	flags.SetOutput(stderr)
@@ -412,12 +490,7 @@ func runGitHubSyncLabels(arguments []string, stdout, stderr io.Writer) int {
 		fmt.Fprintf(stdout, "GitHub label manifest validation passed: %d managed labels.\n", len(manifest.Labels))
 		return 0
 	}
-	client := &http.Client{
-		Timeout: 20 * time.Second,
-		CheckRedirect: func(_ *http.Request, _ []*http.Request) error {
-			return errors.New("GitHub label API redirect refused")
-		},
-	}
+	client := githubMetadataHTTPClient()
 	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Minute)
 	defer cancel()
 	result, err := githublabels.Sync(ctx, client, manifest, githublabels.Options{

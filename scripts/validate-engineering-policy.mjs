@@ -89,6 +89,10 @@ const approvedActionPins = new Map([
 
 const requiredFiles = [
   ".agents/skills/research-writing/SKILL.md",
+  ".agents/skills/reader-editor/SKILL.md",
+  ".agents/skills/research-design/SKILL.md",
+  ".agents/skills/research-design/references/prior-art.md",
+  ".agents/skills/research-design/references/visual-review.md",
   ".dockerignore",
   ".editorconfig",
   ".gitleaks.toml",
@@ -106,19 +110,21 @@ const requiredFiles = [
   ".github/ISSUE_TEMPLATE/translation-problem.yml",
   ".github/labeler.yml",
   ".github/labels.json",
+  ".github/milestones.json",
   ".github/workflows/ci.yml",
   ".github/workflows/codeql.yml",
   ".github/workflows/github-pages.yml",
   ".github/workflows/labeler.yml",
   ".github/workflows/release.yml",
   ".github/workflows/scorecard.yml",
-  ".github/workflows/sync-labels.yml",
+  ".github/workflows/sync-repository-metadata.yml",
   "AGENTS.md",
   "CITATION.cff",
   "CLAUDE.md",
   "CODE_OF_CONDUCT.md",
   "CONTRIBUTING.md",
   "docs/repository-map.md",
+  "docs/design-system.md",
   "GOVERNANCE.md",
   "MAINTAINERS.md",
   "SECURITY.md",
@@ -155,6 +161,9 @@ const requiredFiles = [
   "tooling/go.mod",
   "tooling/go.sum",
   "tooling/internal/githublabels/labels.go",
+  "tooling/internal/githubmilestones/manifest.go",
+  "tooling/internal/githubmilestones/sync.go",
+  "tooling/internal/repositorymanifest/read.go",
 ];
 
 const forbiddenLegacyHostingPaths = [
@@ -179,7 +188,7 @@ const workflowFiles = [
   ".github/workflows/labeler.yml",
   ".github/workflows/release.yml",
   ".github/workflows/scorecard.yml",
-  ".github/workflows/sync-labels.yml",
+  ".github/workflows/sync-repository-metadata.yml",
 ];
 
 const issueFormFiles = [
@@ -739,9 +748,9 @@ export function validateGoCodeQlWorkflowObject(
   return findings;
 }
 
-export function validateLabelSyncWorkflowObject(
+export function validateRepositoryMetadataSyncWorkflowObject(
   workflow,
-  relativePath = ".github/workflows/sync-labels.yml",
+  relativePath = ".github/workflows/sync-repository-metadata.yml",
 ) {
   const findings = validateGoRuntimeWorkflowObject(workflow, "sync", relativePath);
   const trigger = workflow?.on;
@@ -749,30 +758,31 @@ export function validateLabelSyncWorkflowObject(
   if (
     !arrayIncludes(push?.branches, "main")
     || !arrayIncludes(push?.paths, ".github/labels.json")
+    || !arrayIncludes(push?.paths, ".github/milestones.json")
     || !Object.prototype.hasOwnProperty.call(trigger ?? {}, "workflow_dispatch")
   ) {
-    findings.push(`${relativePath}: label synchronization must run for the canonical manifest on main and allow manual repair`);
+    findings.push(`${relativePath}: repository metadata synchronization must run for both canonical manifests on main and allow manual repair`);
   }
   const job = workflow?.jobs?.sync;
   if (
     !propertiesMatch(job?.permissions, { contents: "read", issues: "write" })
     || Object.keys(job?.permissions ?? {}).length !== 2
   ) {
-    findings.push(`${relativePath}: label synchronization needs only contents:read and issues:write`);
+    findings.push(`${relativePath}: repository metadata synchronization needs only contents:read and issues:write`);
   }
   const checkout = (job?.steps ?? []).find((step) => actionUses(step, "actions/checkout"));
   if (checkout?.with?.ref !== "refs/heads/main") {
-    findings.push(`${relativePath}: manual label repair must still check out canonical main`);
+    findings.push(`${relativePath}: manual metadata repair must still check out canonical main`);
   }
   const synchronization = findStepByRunFragment(
     job?.steps ?? [],
-    "github sync-labels --root .. --repository",
+    "github sync-metadata --root .. --repository",
   );
   if (
-    synchronization?.run !== 'go -C tooling run ./cmd/20w github sync-labels --root .. --repository "$GITHUB_REPOSITORY"'
+    synchronization?.run !== 'go -C tooling run ./cmd/20w github sync-metadata --root .. --repository "$GITHUB_REPOSITORY"'
     || synchronization?.env?.GH_TOKEN !== "${{ github.token }}"
   ) {
-    findings.push(`${relativePath}: the trusted Go command must apply the canonical labels with the job token`);
+    findings.push(`${relativePath}: the trusted Go command must apply canonical labels and milestones with the job token`);
   }
   return findings;
 }
@@ -2300,12 +2310,12 @@ export function validateToolingValidationScript(
 ) {
   const expected = [
     "go -C tooling run ./cmd/20w experiment validate --root ..",
-    "go -C tooling run ./cmd/20w github sync-labels --root .. --check",
+    "go -C tooling run ./cmd/20w github sync-metadata --root .. --check",
     "go -C tooling run ./cmd/20w publication render-pdf --root .. --check",
   ].join(" && ");
   if (command === expected) return [];
   return [
-    `${relativePath}: validate:tooling must validate experiment, GitHub label, and publication-render authority offline in that order`,
+    `${relativePath}: validate:tooling must validate experiment, GitHub metadata, and publication-render authority offline in that order`,
   ];
 }
 
@@ -2597,8 +2607,8 @@ function validateWorkflowPolicy(workflow, relativePath, lock, findings) {
   if (relativePath === ".github/workflows/codeql.yml") {
     findings.push(...validateGoCodeQlWorkflowObject(workflow, relativePath));
   }
-  if (relativePath === ".github/workflows/sync-labels.yml") {
-    findings.push(...validateLabelSyncWorkflowObject(workflow, relativePath));
+  if (relativePath === ".github/workflows/sync-repository-metadata.yml") {
+    findings.push(...validateRepositoryMetadataSyncWorkflowObject(workflow, relativePath));
   }
 }
 

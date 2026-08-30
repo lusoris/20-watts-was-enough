@@ -87,6 +87,10 @@ chapters.
 - [Reader-editor skill](../.agents/skills/reader-editor/SKILL.md) supports
   conservative readability review for technically curious non-experts without
   changing claim authority.
+- [Research design system](design-system.md) and its
+  [project skill](../.agents/skills/research-design/SKILL.md) govern visual
+  hierarchy, typography, brand expression, component ownership, and retained
+  viewport evidence.
 - [Public-interface audit](public-research-interface-audit.md) records measured
   reading defaults, comparable GitHub-native structures, test hypotheses and
   the maintainer decision queue.

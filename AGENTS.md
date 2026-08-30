@@ -8,6 +8,12 @@ Before drafting or revising project-authored explanatory prose, read and apply
 the project-local [`research-writing` skill](.agents/skills/research-writing/SKILL.md).
 It does not apply to imported sources or verbatim quotations.
 
+Before changing public layout, typography, colour, interface hierarchy, or
+brand expression, read and apply the project-local
+[`research-design` skill](.agents/skills/research-design/SKILL.md). Use the
+[`reader-editor` skill](.agents/skills/reader-editor/SKILL.md) as well when the
+design problem exposes a comprehension failure in project prose.
+
 ## Hard rules
 
 1. Git `main` is canonical. Do not synchronize or regenerate the concept from a

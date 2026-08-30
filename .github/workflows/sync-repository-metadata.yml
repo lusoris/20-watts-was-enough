@@ -1,25 +1,28 @@
-name: Synchronize repository labels
+name: Synchronize repository metadata
 
 on:
   push:
     branches: [main]
     paths:
       - .github/labels.json
-      - .github/workflows/sync-labels.yml
+      - .github/milestones.json
+      - .github/workflows/sync-repository-metadata.yml
       - tooling/cmd/20w/main.go
       - tooling/internal/githublabels/**
+      - tooling/internal/githubmilestones/**
+      - tooling/internal/repositorymanifest/**
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: repository-label-sync
+  group: repository-metadata-sync
   cancel-in-progress: false
 
 jobs:
   sync:
-    name: Apply the canonical label manifest
+    name: Apply canonical labels and milestones
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -36,7 +39,7 @@ jobs:
         with:
           go-version-file: tooling/go.mod
           cache-dependency-path: tooling/go.sum
-      - name: Create or repair managed labels
+      - name: Create or repair managed metadata
         env:
           GH_TOKEN: ${{ github.token }}
-        run: go -C tooling run ./cmd/20w github sync-labels --root .. --repository "$GITHUB_REPOSITORY"
+        run: go -C tooling run ./cmd/20w github sync-metadata --root .. --repository "$GITHUB_REPOSITORY"

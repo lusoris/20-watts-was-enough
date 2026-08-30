@@ -21,7 +21,7 @@ import {
   validateIssueConfig,
   validateIssueForm,
   validateJavaScriptRuntimeWorkflowObject,
-  validateLabelSyncWorkflowObject,
+  validateRepositoryMetadataSyncWorkflowObject,
   validateNpmRuntimeLock,
   validateReleaseExperimentImageWorkflowObject,
   validateReleaseWorkflowObject,
@@ -133,14 +133,14 @@ test("the repository satisfies its engineering policy", () => {
 
 test("tooling validation runs all three offline authorities in order", () => {
   const experiment = "go -C tooling run ./cmd/20w experiment validate --root ..";
-  const labels = "go -C tooling run ./cmd/20w github sync-labels --root .. --check";
+  const metadata = "go -C tooling run ./cmd/20w github sync-metadata --root .. --check";
   const publication = "go -C tooling run ./cmd/20w publication render-pdf --root .. --check";
-  const expectedFinding = "package.json: validate:tooling must validate experiment, GitHub label, and publication-render authority offline in that order";
-  assert.deepEqual(validateToolingValidationScript(`${experiment} && ${labels} && ${publication}`), []);
+  const expectedFinding = "package.json: validate:tooling must validate experiment, GitHub metadata, and publication-render authority offline in that order";
+  assert.deepEqual(validateToolingValidationScript(`${experiment} && ${metadata} && ${publication}`), []);
   for (const command of [
-    `${labels} && ${experiment} && ${publication}`,
-    `${experiment} && ${labels}`,
-    `${experiment} && ${labels} && curl https://example.test && ${publication}`,
+    `${metadata} && ${experiment} && ${publication}`,
+    `${experiment} && ${metadata}`,
+    `${experiment} && ${metadata} && curl https://example.test && ${publication}`,
   ]) {
     assert.deepEqual(validateToolingValidationScript(command), [expectedFinding]);
   }
@@ -485,14 +485,14 @@ test("CI success accepts only the exact full or selected impact state vector", (
   }).status, 0, "full mode must expose false semantic selectors");
 });
 
-test("label synchronization is manifest-triggered and least-privileged", () => {
-  const valid = workflow("sync-labels");
-  assert.deepEqual(validateLabelSyncWorkflowObject(valid), []);
+test("repository metadata synchronization is manifest-triggered and least-privileged", () => {
+  const valid = workflow("sync-repository-metadata");
+  assert.deepEqual(validateRepositoryMetadataSyncWorkflowObject(valid), []);
 
   const tampered = structuredClone(valid);
   tampered.jobs.sync.permissions.contents = "write";
-  assert.ok(validateLabelSyncWorkflowObject(tampered).includes(
-    ".github/workflows/sync-labels.yml: label synchronization needs only contents:read and issues:write",
+  assert.ok(validateRepositoryMetadataSyncWorkflowObject(tampered).includes(
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization needs only contents:read and issues:write",
   ));
 
   const untrustedCheckout = structuredClone(valid);
@@ -500,8 +500,16 @@ test("label synchronization is manifest-triggered and least-privileged", () => {
     (step) => step.uses?.startsWith("actions/checkout@"),
   );
   checkout.with.ref = "refs/heads/feature";
-  assert.ok(validateLabelSyncWorkflowObject(untrustedCheckout).includes(
-    ".github/workflows/sync-labels.yml: manual label repair must still check out canonical main",
+  assert.ok(validateRepositoryMetadataSyncWorkflowObject(untrustedCheckout).includes(
+    ".github/workflows/sync-repository-metadata.yml: manual metadata repair must still check out canonical main",
+  ));
+
+  const incompleteTrigger = structuredClone(valid);
+  incompleteTrigger.on.push.paths = incompleteTrigger.on.push.paths.filter(
+    (entry) => entry !== ".github/milestones.json",
+  );
+  assert.ok(validateRepositoryMetadataSyncWorkflowObject(incompleteTrigger).includes(
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for both canonical manifests on main and allow manual repair",
   ));
 });
 

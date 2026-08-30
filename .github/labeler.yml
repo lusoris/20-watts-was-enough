@@ -82,6 +82,7 @@
           - ".github/workflows/**"
           - ".github/labeler.yml"
           - ".github/labels.json"
+          - ".github/milestones.json"
           - "renovate.json"
           - "scripts/*policy*"
 

@@ -191,11 +191,14 @@ execution path in YAML. Adding or changing a release image therefore requires
 the manifest and its workflow implementation to change together, or the gate
 fails closed.
 
-The `20w github sync-labels` command validates and applies the managed label
-manifest. A trusted-main workflow creates missing labels and repairs changed
-ones without deleting labels outside the manifest. Manual repair still checks
-out canonical `main`, so an arbitrary workflow ref cannot become a second label
-authority.
+The `20w github sync-metadata` command validates and applies the managed label
+and milestone manifests. A trusted-main workflow creates missing objects and
+repairs changed ones without deleting unmanaged labels or milestones. Manual
+repair still checks out canonical `main`, so an arbitrary workflow ref cannot
+become a second metadata authority. Milestones project the stage identities and
+links from the canonical [research roadmap](../concept/90-research-roadmap.md);
+their completion percentages count associated issues and pull requests, not
+scientific evidence.
 
 ## Research basis
 

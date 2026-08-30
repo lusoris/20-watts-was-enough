@@ -9,15 +9,18 @@ import { prepareReaderArtifacts } from "./prepare-reader-artifacts.mjs";
 test("linked source artifacts are copied as inert text without external or image links", async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), "reader-artifacts-"));
   try {
+    await mkdir(path.join(root, ".github"), { recursive: true });
     await mkdir(path.join(root, "docs"), { recursive: true });
     await mkdir(path.join(root, "code"), { recursive: true });
     await mkdir(path.join(root, "github-pages"), { recursive: true });
     await writeFile(path.join(root, "code", "runner.mjs"), "export const value = 1;\n");
+    await writeFile(path.join(root, ".github", "milestones.json"), "{\"schema\":1}\n");
     await writeFile(path.join(root, "docs", "contract.json"), "{\"schema\":1}\n");
     await writeFile(
       path.join(root, "docs", "README.md"),
       [
         "[runner](../code/runner.mjs)",
+        "[milestones](../.github/milestones.json)",
         "[contract](contract.json#schema)",
         "[external](https://example.com/file.py)",
         "![image](figure.json)",
@@ -26,11 +29,15 @@ test("linked source artifacts are copied as inert text without external or image
     );
     await writeFile(
       path.join(root, "github-pages", "public-artifacts.json"),
-      `${JSON.stringify({ schema: 1, artifacts: ["code/runner.mjs", "docs/contract.json"] }, null, 2)}\n`,
+      `${JSON.stringify({ schema: 1, artifacts: [".github/milestones.json", "code/runner.mjs", "docs/contract.json"] }, null, 2)}\n`,
     );
     const outputRoot = path.join(root, "public", "repository-files");
     const prepared = await prepareReaderArtifacts({ repositoryRoot: root, outputRoot });
-    assert.deepEqual(prepared.artifacts, ["code/runner.mjs", "docs/contract.json"]);
+    assert.deepEqual(prepared.artifacts, [".github/milestones.json", "code/runner.mjs", "docs/contract.json"]);
+    assert.equal(
+      await readFile(path.join(outputRoot, ".github", "milestones.json.txt"), "utf8"),
+      "{\"schema\":1}\n",
+    );
     assert.equal(
       await readFile(path.join(outputRoot, "code", "runner.mjs.txt"), "utf8"),
       "export const value = 1;\n",

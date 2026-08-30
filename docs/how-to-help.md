@@ -10,6 +10,13 @@ Difficulty here means how much project context the task requires. It is not a
 status barrier. A new reader who can identify the sentence where an argument
 became opaque may provide more useful evidence than a large rewrite.
 
+The [research roadmap](../concept/90-research-roadmap.md) defines six
+dependency stages. The [GitHub milestone view](https://github.com/lusoris/20-watts-was-enough/milestones)
+shows the issues and pull requests currently attached to each stage. Use it to
+see what is next and what has closed, but read a closed issue only as completed
+work: evidence status changes through the claim ledger and qualifying result
+path, not through the milestone percentage.
+
 ## Choose live work before opening another issue
 
 The workstream forms below are for a new, reproducible gap. To continue work
