@@ -5,6 +5,10 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { parseDocument } from "yaml";
 
 import { REQUIRED_NODE_VERSION } from "../experiments/workstation/lib/node-runtime-policy.mjs";
+import {
+  validatePortableOperationsTree,
+  validatePortableWorkflowObject,
+} from "./lib/portable-operations.mjs";
 import { validateResearchDisclosure } from "./prepare-release-assets.mjs";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -317,6 +321,8 @@ export function validateWorkflowObject(workflow, relativePath = "workflow.yml") 
       );
     }
   }
+
+  findings.push(...validatePortableWorkflowObject(workflow, relativePath));
 
   return findings;
 }
@@ -3116,6 +3122,7 @@ export function validateRepositoryPolicy(root = defaultRoot) {
   }
   findings.push(...validateCurrentResearchDisclosure(root));
   findings.push(...validateRetiredHostingPaths(root));
+  findings.push(...validatePortableOperationsTree(root));
 
   if (findings.some((finding) => finding.includes("required policy surface is missing"))) {
     return findings;

@@ -8,6 +8,11 @@ import test from "node:test";
 import { parse } from "yaml";
 
 import {
+  validateOperationalFilePaths,
+  validatePortableWorkflowObject,
+} from "./lib/portable-operations.mjs";
+
+import {
   formatFindings,
   validateCiExperimentImageWorkflowObject,
   validateCiFuzzingWorkflowObject,
@@ -263,6 +268,49 @@ test("workflow validation rejects ambient writes, unbounded concurrency, and cre
     "workflow.yml: top-level permissions must not grant write access",
     "workflow.yml: concurrency must define a group and explicit cancel-in-progress boolean",
     "workflow.yml: job unsafe step 0 must set checkout persist-credentials to false",
+  ]);
+});
+
+test("portable operations reject host-specific scripts without rejecting Go portability", () => {
+  assert.deepEqual(validateOperationalFilePaths([
+    "tooling/cmd/20w/main.go",
+    "tooling/internal/runner/runner_windows.go",
+    "release/20w-windows-amd64.exe",
+    "docs/windows-platform-notes.md",
+  ]), []);
+  assert.deepEqual(validateOperationalFilePaths([
+    "scripts/check.ps1",
+    ".github/helpers/release.cmd",
+    "experiments/workstation/fixture-012/workstation-acquisition.mjs",
+    "tooling/cmd/20w/main.go",
+  ]), [
+    ".github/helpers/release.cmd: host-specific operational artifact is forbidden; use the portable Go command or a scoped container",
+    "experiments/workstation/fixture-012/workstation-acquisition.mjs: host-specific operational artifact is forbidden; use the portable Go command or a scoped container",
+    "scripts/check.ps1: host-specific operational artifact is forbidden; use the portable Go command or a scoped container",
+  ]);
+});
+
+test("portable workflows reject Windows runners and PowerShell entry points", () => {
+  const findings = validatePortableWorkflowObject({
+    jobs: {
+      matrix: {
+        "runs-on": "${{ matrix.os }}",
+        strategy: { matrix: { os: ["ubuntu-24.04", "windows-2025"] } },
+        steps: [{ run: "go test ./..." }],
+      },
+      shell: {
+        "runs-on": "ubuntu-24.04",
+        steps: [
+          { shell: "pwsh", run: "Write-Output test" },
+          { run: "powershell.exe -File scripts/check.ps1" },
+        ],
+      },
+    },
+  });
+  assert.deepEqual(findings, [
+    "workflow.yml: job matrix must not add a Windows runner lane",
+    "workflow.yml: job shell step 0 must not use pwsh",
+    "workflow.yml: job shell step 1 must not invoke PowerShell",
   ]);
 });
 
