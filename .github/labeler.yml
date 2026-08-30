@@ -30,6 +30,9 @@
       - any-glob-to-any-file:
           - "app/**"
           - "github-pages/**"
+          - ".github/public-transport.json"
+          - "tooling/cmd/20w/public_transport*.go"
+          - "tooling/internal/publictransport/**"
           - "vite.pages.config.ts"
 
 "area:translation":
@@ -72,17 +75,22 @@
   - changed-files:
       - any-glob-to-any-file:
           - ".gitleaks.toml"
+          - ".github/public-transport.json"
           - "SECURITY.md"
           - "scripts/*source-boundary*"
           - "scripts/lib/source-boundary.mjs"
+          - "tooling/cmd/20w/public_transport*.go"
+          - "tooling/internal/publictransport/**"
 
 "area:ci":
   - changed-files:
       - any-glob-to-any-file:
           - ".github/workflows/**"
           - ".github/labeler.yml"
+          - ".github/issue-milestones.json"
           - ".github/labels.json"
           - ".github/milestones.json"
+          - ".github/public-transport.json"
           - "renovate.json"
           - "scripts/*policy*"
 

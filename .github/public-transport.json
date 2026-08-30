@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "http_url": "http://www.cordana.dev/",
+  "https_url": "https://www.cordana.dev/",
+  "http_status": 301,
+  "https_status": 200,
+  "redirect_location": "https://www.cordana.dev/",
+  "server": "cloudflare",
+  "required_header": "CF-Ray",
+  "timeout_seconds": 15,
+  "minimum_certificate_remaining_days": 14
+}

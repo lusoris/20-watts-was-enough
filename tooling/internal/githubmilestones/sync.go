@@ -35,6 +35,43 @@ type Result struct {
 	Unchanged int
 }
 
+// Plan is the immutable result of a complete read-only milestone inventory.
+// Private fields prevent callers from manufacturing a remote write plan.
+type Plan struct {
+	manifest   Manifest
+	repository string
+	apiBase    string
+	changes    []milestoneChange
+	unchanged  int
+}
+
+type milestoneChange struct {
+	number  int
+	desired Milestone
+}
+
+// Inventory is a verified stable-ID to numeric GitHub milestone projection.
+type Inventory struct {
+	numbers map[string]int
+}
+
+// Number returns the verified numeric GitHub identity for one managed stage.
+func (inventory Inventory) Number(id string) (int, bool) {
+	number, ok := inventory.numbers[id]
+	return number, ok
+}
+
+// Includes reports whether this preflight plan contains a committed milestone
+// identity, including one that still needs to be created.
+func (plan Plan) Includes(id string) bool {
+	for _, milestone := range plan.manifest.Milestones {
+		if milestone.ID == id {
+			return true
+		}
+	}
+	return false
+}
+
 // Options binds synchronization to one repository and authenticated API.
 type Options struct {
 	APIBase    string
@@ -61,56 +98,142 @@ type milestonePayload struct {
 	Description string `json:"description"`
 }
 
-// Sync creates missing managed milestones and repairs their title,
-// description, or state. Unmarked milestones remain untouched. Managed
-// milestones use no artificial due date; an existing due date fails closed
-// because the documented API schema does not define a portable clear value.
-func Sync(ctx context.Context, client HTTPClient, manifest Manifest, options Options) (Result, error) {
+// Preflight reads the complete bounded milestone inventory and prepares exact
+// managed changes without mutating GitHub. Unmarked milestones remain
+// untouched. Existing due dates fail closed before any write.
+func Preflight(ctx context.Context, client HTTPClient, manifest Manifest, options Options) (Plan, error) {
 	if err := validateManifest(manifest); err != nil {
-		return Result{}, err
+		return Plan{}, err
 	}
-	if client == nil || !repositoryPattern.MatchString(options.Repository) || options.Token == "" {
-		return Result{}, errors.New("milestone synchronization requires a client, owner/repository, and token")
-	}
-	base, err := parseAPIBase(options.APIBase)
+	base, err := validateOptions(client, options)
 	if err != nil {
-		return Result{}, err
+		return Plan{}, err
 	}
 	remote, err := listMilestones(ctx, client, base, options)
 	if err != nil {
-		return Result{}, err
+		return Plan{}, err
 	}
 	managed, err := indexManagedMilestones(remote, manifest)
 	if err != nil {
-		return Result{}, err
+		return Plan{}, err
 	}
 	for _, milestone := range manifest.Milestones {
 		if state := managed[milestone.ID]; state != nil && state.DueOn != nil {
-			return Result{}, fmt.Errorf("managed GitHub milestone %s has due date %q; remove it explicitly before synchronization", milestone.ID, *state.DueOn)
+			return Plan{}, fmt.Errorf("managed GitHub milestone %s has due date %q; remove it explicitly before synchronization", milestone.ID, *state.DueOn)
 		}
 	}
 
-	result := Result{}
+	plan := Plan{
+		manifest: manifest, repository: options.Repository, apiBase: base.String(),
+		changes: make([]milestoneChange, 0, len(manifest.Milestones)),
+	}
 	for _, milestone := range manifest.Milestones {
 		description := managedDescription(options.Repository, milestone)
 		state := managed[milestone.ID]
 		switch {
 		case state == nil:
-			if _, err := mutateMilestone(ctx, client, base, options, http.MethodPost, 0, milestone, description, http.StatusCreated); err != nil {
-				return Result{}, err
-			}
-			result.Created++
+			plan.changes = append(plan.changes, milestoneChange{desired: milestone})
 		case state.Title == milestone.Title && state.State == milestone.State &&
 			state.Description != nil && *state.Description == description:
-			result.Unchanged++
+			plan.unchanged++
 		default:
-			if _, err := mutateMilestone(ctx, client, base, options, http.MethodPatch, state.Number, milestone, description, http.StatusOK); err != nil {
-				return Result{}, err
-			}
+			plan.changes = append(plan.changes, milestoneChange{number: state.Number, desired: milestone})
+		}
+	}
+	return plan, nil
+}
+
+// Apply performs only mutations admitted by a prior complete Preflight.
+func (plan Plan) Apply(ctx context.Context, client HTTPClient, options Options) (Result, error) {
+	base, err := validatePlanOptions(client, options, plan.repository, plan.apiBase)
+	if err != nil {
+		return Result{}, err
+	}
+	result := Result{Unchanged: plan.unchanged}
+	for _, change := range plan.changes {
+		method := http.MethodPatch
+		expectedStatus := http.StatusOK
+		if change.number == 0 {
+			method = http.MethodPost
+			expectedStatus = http.StatusCreated
+		}
+		description := managedDescription(options.Repository, change.desired)
+		if _, err := mutateMilestone(
+			ctx, client, base, options, method, change.number, change.desired, description, expectedStatus,
+		); err != nil {
+			return Result{}, err
+		}
+		if change.number == 0 {
+			result.Created++
+		} else {
 			result.Updated++
 		}
 	}
 	return result, nil
+}
+
+// Verify performs a fresh complete inventory read, checks every managed
+// milestone, and returns the exact numeric identities required by issue
+// assignment maintenance.
+func (plan Plan) Verify(ctx context.Context, client HTTPClient, options Options) (Inventory, error) {
+	base, err := validatePlanOptions(client, options, plan.repository, plan.apiBase)
+	if err != nil {
+		return Inventory{}, err
+	}
+	remote, err := listMilestones(ctx, client, base, options)
+	if err != nil {
+		return Inventory{}, err
+	}
+	managed, err := indexManagedMilestones(remote, plan.manifest)
+	if err != nil {
+		return Inventory{}, err
+	}
+	numbers := make(map[string]int, len(plan.manifest.Milestones))
+	for _, desired := range plan.manifest.Milestones {
+		state := managed[desired.ID]
+		description := managedDescription(options.Repository, desired)
+		if state == nil || state.Number < 1 || state.Title != desired.Title || state.State != desired.State ||
+			state.DueOn != nil || state.Description == nil || *state.Description != description {
+			return Inventory{}, fmt.Errorf("managed GitHub milestone %s does not match the preflighted manifest after synchronization", desired.ID)
+		}
+		numbers[desired.ID] = state.Number
+	}
+	return Inventory{numbers: numbers}, nil
+}
+
+// Sync is the compatibility entry point for milestone-only maintenance. The
+// combined metadata command separates phases across all authorities.
+func Sync(ctx context.Context, client HTTPClient, manifest Manifest, options Options) (Result, error) {
+	plan, err := Preflight(ctx, client, manifest, options)
+	if err != nil {
+		return Result{}, err
+	}
+	result, err := plan.Apply(ctx, client, options)
+	if err != nil {
+		return Result{}, err
+	}
+	if _, err := plan.Verify(ctx, client, options); err != nil {
+		return Result{}, err
+	}
+	return result, nil
+}
+
+func validateOptions(client HTTPClient, options Options) (*url.URL, error) {
+	if client == nil || !repositoryPattern.MatchString(options.Repository) || options.Token == "" {
+		return nil, errors.New("milestone synchronization requires a client, owner/repository, and token")
+	}
+	return parseAPIBase(options.APIBase)
+}
+
+func validatePlanOptions(client HTTPClient, options Options, repository, apiBase string) (*url.URL, error) {
+	base, err := validateOptions(client, options)
+	if err != nil {
+		return nil, err
+	}
+	if repository == "" || options.Repository != repository || base.String() != apiBase {
+		return nil, errors.New("milestone synchronization options changed after preflight")
+	}
+	return base, nil
 }
 
 func parseAPIBase(value string) (*url.URL, error) {
@@ -267,7 +390,7 @@ func mutateMilestone(
 	if err := json.Unmarshal(responseBody, &state); err != nil {
 		return remoteMilestone{}, fmt.Errorf("synchronize GitHub milestone %s: decode response: %w", milestone.ID, err)
 	}
-	if state.Number < 1 || state.Title != milestone.Title || state.State != milestone.State || state.DueOn != nil ||
+	if state.Number < 1 || (number > 0 && state.Number != number) || state.Title != milestone.Title || state.State != milestone.State || state.DueOn != nil ||
 		state.Description == nil || *state.Description != description {
 		return remoteMilestone{}, fmt.Errorf("synchronize GitHub milestone %s: response identity does not match the requested state", milestone.ID)
 	}

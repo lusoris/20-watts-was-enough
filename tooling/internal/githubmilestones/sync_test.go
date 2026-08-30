@@ -45,11 +45,16 @@ func TestSyncCreatesUpdatesAndPreservesUnmanagedMilestones(t *testing.T) {
 	oldDescription := "<!-- 20w-roadmap-id:M1 -->\nOld projection"
 	unmanagedDescription := "A human-managed release target"
 	var mutex sync.Mutex
-	requests := make([]string, 0, 3)
+	requests := make([]string, 0, 6)
+	remote := []remoteMilestone{
+		{Number: 1, State: "open", Title: manifest.Milestones[0].Title, Description: &currentDescription},
+		{Number: 2, State: "closed", Title: "M1 — Old title", Description: &oldDescription},
+		{Number: 99, State: "open", Title: "Unmanaged release", Description: &unmanagedDescription},
+	}
 	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		mutex.Lock()
+		defer mutex.Unlock()
 		requests = append(requests, request.Method+" "+request.URL.RequestURI())
-		mutex.Unlock()
 		if request.Header.Get("Authorization") != "Bearer test-token" ||
 			request.Header.Get("X-GitHub-Api-Version") != apiVersion {
 			http.Error(writer, "missing identity headers", http.StatusUnauthorized)
@@ -61,21 +66,21 @@ func TestSyncCreatesUpdatesAndPreservesUnmanagedMilestones(t *testing.T) {
 				http.Error(writer, "bad pagination", http.StatusBadRequest)
 				return
 			}
-			_ = json.NewEncoder(writer).Encode([]remoteMilestone{
-				{Number: 1, State: "open", Title: manifest.Milestones[0].Title, Description: &currentDescription},
-				{Number: 2, State: "closed", Title: "M1 — Old title", Description: &oldDescription},
-				{Number: 99, State: "open", Title: "Unmanaged release", Description: &unmanagedDescription},
-			})
+			_ = json.NewEncoder(writer).Encode(remote)
 		case "PATCH /repos/owner/repository/milestones/2":
 			description := managedDescription(options.Repository, manifest.Milestones[1])
-			writeRemoteMilestone(t, writer, remoteMilestone{
+			state := remoteMilestone{
 				Number: 2, State: "open", Title: manifest.Milestones[1].Title, Description: &description,
-			}, http.StatusOK)
+			}
+			remote[1] = state
+			writeRemoteMilestone(t, writer, state, http.StatusOK)
 		case "POST /repos/owner/repository/milestones":
 			description := managedDescription(options.Repository, manifest.Milestones[2])
-			writeRemoteMilestone(t, writer, remoteMilestone{
+			state := remoteMilestone{
 				Number: 3, State: "open", Title: manifest.Milestones[2].Title, Description: &description,
-			}, http.StatusCreated)
+			}
+			remote = append(remote, state)
+			writeRemoteMilestone(t, writer, state, http.StatusCreated)
 		default:
 			http.Error(writer, "unexpected request", http.StatusBadRequest)
 		}
@@ -90,7 +95,11 @@ func TestSyncCreatesUpdatesAndPreservesUnmanagedMilestones(t *testing.T) {
 	if result != (Result{Created: 1, Updated: 1, Unchanged: 1}) {
 		t.Fatalf("Sync() = %#v", result)
 	}
-	if len(requests) != 3 {
+	second, err := Sync(context.Background(), server.Client(), manifest, options)
+	if err != nil || second != (Result{Unchanged: 3}) {
+		t.Fatalf("idempotent Sync() = %#v, %v", second, err)
+	}
+	if len(requests) != 6 || remote[2].Title != "Unmanaged release" {
 		t.Fatalf("requests = %#v", requests)
 	}
 }

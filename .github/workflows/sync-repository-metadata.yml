@@ -6,9 +6,12 @@ on:
     paths:
       - .github/labels.json
       - .github/milestones.json
+      - .github/issue-milestones.json
       - .github/workflows/sync-repository-metadata.yml
+      - tooling/cmd/20w/github_metadata.go
       - tooling/cmd/20w/main.go
       - tooling/internal/githublabels/**
+      - tooling/internal/githubissuemilestones/**
       - tooling/internal/githubmilestones/**
       - tooling/internal/repositorymanifest/**
   workflow_dispatch:
@@ -22,7 +25,7 @@ concurrency:
 
 jobs:
   sync:
-    name: Apply canonical labels and milestones
+    name: Apply canonical labels, milestones, and issue assignments
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
