@@ -16,6 +16,9 @@
 - **Funding, material support, and competing interests:** <!-- disclose or state none known/not applicable -->
 - **Material AI, automation, or external services:** <!-- tool/service, purpose, dated version where available, human verification, or none -->
 - **Ethics, rights, safety, misuse, and data-plan triggers:** <!-- approvals/records, no trigger with reason, or not applicable -->
+- **Intended reader:** <!-- domain expert, adjacent technical reader, curious non-expert, contributor, or another named audience -->
+- **Domain-accuracy review:** <!-- reviewer or why the change does not alter scientific meaning -->
+- **Curious-reader review:** <!-- reviewer, reader check outcome, or why no readability review was needed -->
 
 ## Checklist
 
@@ -28,6 +31,7 @@
 - [ ] Contributor credit, support, conflicts, and material tool use are disclosed at the authority this change claims.
 - [ ] Triggered ethics, misuse, collaboration, and research-object stewardship requirements were satisfied before the affected work began.
 - [ ] Editable sources and affected generated artifacts, indexes, plots, book files, or manifests were updated together.
+- [ ] A changed `Scope` gives its intended reader an entry ramp; acronyms and project terms are explained before they carry the argument.
 - [ ] I ran the relevant validation commands and list them below.
 
 ## Validation

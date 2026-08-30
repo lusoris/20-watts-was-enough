@@ -20,6 +20,11 @@ import {
   generateNullSpaceEpisodes,
   validateFixture007Config,
 } from "./generator.mjs";
+import {
+  assertCurrentExperimentExecutionIdentity,
+  assertExperimentExecutionEnvironment,
+  createExperimentExecutionReceipt,
+} from "../lib/execution-receipt.mjs";
 
 export const FIXTURE_007_RUNNER_VERSION = "fixture-007.null-space-runner.v1";
 
@@ -134,8 +139,20 @@ function armDecision(arm, episode, config) {
   };
 }
 
-export async function executeFixture007({ profile, output }) {
+export async function executeFixture007({
+  profile,
+  output,
+  executionEnvironment = process.env,
+  executionRuntime = process,
+}) {
   const inputs = await profileInputs(profile);
+  const executionReceipt = createExperimentExecutionReceipt({
+    artifact: "fixture-007",
+    command: profile === "smoke" ? "smoke" : "run",
+    profile,
+    environment: executionEnvironment,
+    runtime: executionRuntime,
+  });
   const directory = outputPath(output);
   await mkdir(path.dirname(directory), { recursive: true });
   await mkdir(directory);
@@ -195,6 +212,7 @@ export async function executeFixture007({ profile, output }) {
   const run = {
     ...identity,
     run_id: runId,
+    execution_receipt: executionReceipt,
     config_path: path.relative(repositoryRoot, inputs.configPath).replaceAll("\\", "/"),
     seeds_path: path.relative(repositoryRoot, inputs.seedsPath).replaceAll("\\", "/"),
     total_events: sequence,
@@ -241,7 +259,10 @@ function armMetrics(events, arm) {
   };
 }
 
-export async function computeFixture007Analysis(output) {
+export async function computeFixture007Analysis(
+  output,
+  { executionEnvironment = process.env, executionRuntime = process } = {},
+) {
   const directory = outputPath(output);
   const [run, raw] = await Promise.all([
     loadJson(path.join(directory, "run.json")),
@@ -254,6 +275,12 @@ export async function computeFixture007Analysis(output) {
     || run.terminal_record_sha256 !== raw.previousHash
     || raw.events.some((event) => event.run_id !== run.run_id)
   ) throw new Error("Fixture 007 run metadata disagree with the raw event ledger.");
+  assertCurrentExperimentExecutionIdentity(run.execution_receipt, {
+    artifact: "fixture-007",
+    profile: run.profile,
+    environment: executionEnvironment,
+    runtime: executionRuntime,
+  });
   const metrics = Object.fromEntries(arms.map((arm) => [arm, armMetrics(raw.events, arm)]));
   const matureActive = metrics["mature-active"];
   const qualifiedActive = metrics["operator-qualified-active"];
@@ -291,9 +318,9 @@ export async function computeFixture007Analysis(output) {
   };
 }
 
-export async function analyzeFixture007(output) {
+export async function analyzeFixture007(output, executionIdentity = {}) {
   const directory = outputPath(output);
-  const summary = await computeFixture007Analysis(directory);
+  const summary = await computeFixture007Analysis(directory, executionIdentity);
   await mkdir(path.join(directory, "analysis"), { recursive: true });
   await writeJsonStable(path.join(directory, "analysis", "summary.json"), summary);
   if (summary.decision !== "diagnostic-pass") {
@@ -302,10 +329,10 @@ export async function analyzeFixture007(output) {
   return summary;
 }
 
-export async function validateFixture007Output(output) {
+export async function validateFixture007Output(output, executionIdentity = {}) {
   const directory = outputPath(output);
   const [expected, stored] = await Promise.all([
-    computeFixture007Analysis(directory),
+    computeFixture007Analysis(directory, executionIdentity),
     loadJson(path.join(directory, "analysis", "summary.json")),
   ]);
   if (canonical(expected) !== canonical(stored)) {
@@ -331,17 +358,38 @@ export async function prepareFixture007(profile) {
   });
 }
 
-export async function main(argv = process.argv) {
+export async function main(
+  argv = process.argv,
+  executionEnvironment = process.env,
+  executionRuntime = process,
+) {
   const { action, options } = parseOptions(argv);
+  assertExperimentExecutionEnvironment({
+    artifact: "fixture-007",
+    environment: executionEnvironment,
+  });
+  const executionIdentity = { executionEnvironment, executionRuntime };
   if (action === "prepare") return prepareFixture007(options.profile);
   if (action === "smoke") {
-    await executeFixture007({ profile: options.profile, output: options.output });
-    await analyzeFixture007(options.output);
-    return validateFixture007Output(options.output);
+    await executeFixture007({
+      profile: options.profile,
+      output: options.output,
+      executionEnvironment,
+      executionRuntime,
+    });
+    await analyzeFixture007(options.output, executionIdentity);
+    return validateFixture007Output(options.output, executionIdentity);
   }
-  if (action === "run") return executeFixture007({ profile: options.profile, output: options.output });
-  if (action === "analyze") return analyzeFixture007(options.output);
-  return validateFixture007Output(options.output);
+  if (action === "run") {
+    return executeFixture007({
+      profile: options.profile,
+      output: options.output,
+      executionEnvironment,
+      executionRuntime,
+    });
+  }
+  if (action === "analyze") return analyzeFixture007(options.output, executionIdentity);
+  return validateFixture007Output(options.output, executionIdentity);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

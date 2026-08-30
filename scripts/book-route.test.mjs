@@ -6,6 +6,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { bookSourceFiles } from "./book-source.mjs";
+import { publication } from "../app/lib/publication.mjs";
 import {
   assertBookPdfIntegrity,
   inspectBookPdf,
@@ -13,16 +14,12 @@ import {
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-const page = await readFile(new URL("../app/book/page.tsx", import.meta.url), "utf8");
-const loader = await readFile(
-  new URL("../app/components/book-loader.tsx", import.meta.url),
-  "utf8",
-);
+const page = await readFile(new URL("../github-pages/book.tsx", import.meta.url), "utf8");
 const edition = await readFile(
   new URL("../app/components/book-edition.tsx", import.meta.url),
   "utf8",
 );
-const content = await readFile(new URL("../app/content.ts", import.meta.url), "utf8");
+const content = await readFile(new URL("../app/portal-content.ts", import.meta.url), "utf8");
 const markdownDocument = await readFile(
   new URL("../app/components/markdown-document.tsx", import.meta.url),
   "utf8",
@@ -39,49 +36,45 @@ const globalStyles = await readFile(
   new URL("../app/globals.css", import.meta.url),
   "utf8",
 );
-const viteConfig = await readFile(new URL("../vite.config.ts", import.meta.url), "utf8");
+const viteConfig = await readFile(new URL("../vite.pages.config.ts", import.meta.url), "utf8");
 const generator = await readFile(
   new URL("./generate-book-pdf.mjs", import.meta.url),
   "utf8",
 );
 
-test("the book route keeps the complete corpus out of the Worker render", () => {
-  assert.match(page, /import \{ BookLoader \}/);
-  assert.doesNotMatch(page, /from "\.\.\/content"/);
-  assert.doesNotMatch(page, /BookEdition/);
-
-  assert.match(loader, /lazy\(\(\) =>\s*import\("\.\/book-edition"\)/);
-  assert.match(loader, /useSyncExternalStore/);
-  assert.match(loader, /\(\) => false/);
-  assert.match(loader, /<BookLoadBoundary>/);
-  assert.match(loader, /const parameters = new URLSearchParams\(window\.location\.search\)/);
-  assert.match(loader, /parameters\.get\("pdf"\) === "1"/);
-  assert.match(loader, /parameters\.get\("ref"\) \?\? "main"/);
-  assert.match(loader, /<BookEdition\s+surface=\{surface\}/);
-  assert.match(loader, /sourceRef=\{sourceRef\}/);
-
+test("the Pages book route selects web and PDF identities without a server runtime", () => {
+  assert.match(page, /import \{ BookEdition \}/);
+  assert.match(page, /const parameters = new URLSearchParams\(window\.location\.search\)/);
+  assert.match(page, /parameters\.get\("pdf"\) === "1" \? "public-pdf" : "github-pages"/);
+  assert.match(page, /parameters\.get\("ref"\) \?\? "main"/);
+  assert.match(page, /<BookEdition/);
+  assert.match(page, /surface=\{surface\}/);
+  assert.match(page, /sourceRef=\{sourceRef\}/);
   assert.match(edition, /import \{ bookDocuments as documents \}/);
   assert.match(edition, /import type \{ ResearchDocument \}/);
-  assert.doesNotMatch(edition, /import \{ documents[^}]*\} from "\.\.\/content"/);
   assert.match(edition, /export function BookEdition\(/);
 });
 
-test("the book renderer closes the Pages-only portal index during Vinext scans", () => {
+test("the book renderer is one explicit entry in the static Pages build", () => {
   assert.match(viteConfig, /const portalIndexModuleId = "virtual:portal-document-index"/);
-  assert.match(viteConfig, /name: "portal-index-fallback"/);
-  assert.match(viteConfig, /id === resolvedPortalIndexModuleId \? "export default \[\];" : null/);
-  assert.match(viteConfig, /portalIndexFallback\(\),\s*\n\s*vinext\(\)/);
+  assert.match(viteConfig, /book:\s*path\.join\(repositoryRoot, "github-pages", "book", "index\.html"\)/);
+  assert.doesNotMatch(viteConfig, /vinext|cloudflare|sites\(\)/);
 });
 
 test("the generated PDF uses public links and zero-state readiness copy", () => {
-  assert.match(edition, /"owner-only-site" \| "github-pages" \| "public-pdf"/);
-  assert.match(edition, /const usesPublicLinks = isGitHubPages \|\| isPublicPdf/);
+  assert.match(edition, /"github-pages" \| "public-pdf"/);
   assert.match(edition, /const repositoryRef = repositoryRefForSurface\(surface, sourceRef, editionVersion\)/);
   assert.match(edition, /const surfaceDocumentHref = repositoryDocumentHrefFor\(repositoryRef\)/);
-  assert.match(edition, /const canonicalPublicBook = "https:\/\/www\.cordana\.dev\/"/);
+  assert.equal(publication.canonicalSite, "https://www.cordana.dev/");
+  assert.match(edition, /const canonicalPublicBook = publication\.canonicalSite/);
   assert.match(edition, /isPublicPdf \? canonicalPublicBook : assetBasePath/);
-  assert.match(edition, /usesPublicLinks \? "View source on GitHub" : "← Owner-only research site"/);
-  assert.match(edition, /publicSurface=\{usesPublicLinks\}/);
+  assert.match(edition, />View source on GitHub<\/a>/);
+  assert.match(edition, /const helpHref = joinBasePath\(supportBasePath, "help\/"\)/);
+  assert.match(edition, /`\[Site\/Docs\] book\/ @ \$\{repositoryRef\}`/);
+  assert.match(edition, /className="book-cover-support" aria-label="Edition support"/);
+  assert.match(edition, /<a href=\{helpHref\}>How to help<\/a>/);
+  assert.match(edition, /<a href=\{bookIssueHref\}>Report this edition<\/a>/);
+  assert.doesNotMatch(edition, /issues\/new\/choose/);
   assert.match(readiness, /ledgerOnly\.proposedArtifactFamilies === 0/);
   assert.match(readiness, /No ledger-only record currently requires a new experiment family/);
   assert.match(readiness, /The public Git repository contains the complete artifact table/);
@@ -90,10 +83,9 @@ test("the generated PDF uses public links and zero-state readiness copy", () => 
   assert.match(generator, /source_ref: sourceRef/);
 });
 
-test("the private reader distinguishes JSON contracts and exposes linked source artifacts", () => {
-  assert.match(content, /path\.startsWith\("assets\/plots\/"\)/);
-  assert.match(content, /checked-in machine-readable JSON Schema/);
-  assert.match(content, /checked-in machine-readable experiment contract or artifact/);
+test("the public reader loads canonical Markdown and exposes linked source artifacts", () => {
+  assert.match(content, /loadPortalDocument/);
+  assert.match(content, /Document request returned HTML instead of Markdown/);
   assert.match(markdownDocument, /repositoryArtifactHref\(internal\.path\)/);
   assert.match(markdownDocument, /data-repository-artifact/);
 });

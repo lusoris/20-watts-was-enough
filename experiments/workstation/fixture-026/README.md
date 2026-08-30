@@ -244,7 +244,7 @@ RSD-T01 remains the only claim-scoped implemented track.
 
 From the repository root:
 
-```powershell
+```bash
 npm run test:workstation:fixture-026:foundations
 npm run test:workstation:fixture-026:execution-v52
 node experiments/workstation/fixture-026/build-rsd-t02-policy-bundle.mjs --check
@@ -278,7 +278,7 @@ node experiments/workstation/fixture-026/runner.mjs t02-validate --output experi
 
 Focused tests:
 
-```powershell
+```bash
 node --test --experimental-test-isolation=none experiments/workstation/fixture-026/contract.test.mjs experiments/workstation/fixture-026/runner.test.mjs experiments/workstation/fixture-026/scientific-grid.test.mjs experiments/workstation/fixture-026/rsd-t02-contract.test.mjs experiments/workstation/fixture-026/rsd-t02-models.test.mjs experiments/workstation/fixture-026/rsd-t02-floor.test.mjs experiments/workstation/fixture-026/rsd-t02-generator.test.mjs experiments/workstation/fixture-026/rsd-t02-evaluator.test.mjs experiments/workstation/fixture-026/rsd-t02-event.test.mjs experiments/workstation/fixture-026/rsd-t02-arm-bank.test.mjs experiments/workstation/fixture-026/rsd-t02-runner.test.mjs
 ```
 

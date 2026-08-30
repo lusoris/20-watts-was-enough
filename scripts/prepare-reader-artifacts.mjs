@@ -9,7 +9,7 @@ const SOURCE_EXTENSIONS = new Set([
   ".ts", ".tsx", ".tsv", ".yaml", ".yml",
 ]);
 const EXCLUDED_DIRECTORIES = new Set([
-  ".git", ".next", ".vinext", ".vite", ".wrangler", "dist", "dist-github-pages",
+  ".git", ".vite", "dist", "dist-github-pages",
   "node_modules", "tmp",
 ]);
 const LINK_PATTERN = /(?<!!)\[[^\]]+\]\((?<target>[^)]+)\)/gu;

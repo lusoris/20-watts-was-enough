@@ -119,7 +119,7 @@ The current harness provides:
 
 Run:
 
-```powershell
+```bash
 npm run workstation:candidate-010 -- prepare --profile smoke
 npm run workstation:candidate-010 -- smoke --profile smoke
 npm run workstation:candidate-010 -- factorial --profile development --splits development --output <run-directory>
@@ -131,7 +131,7 @@ npm run test:workstation
 
 After a real version-3 release exists, the only confirmation entrypoint is:
 
-```powershell
+```bash
 node experiments/workstation/candidate-010/runner.mjs capsule-confirmation --release-root <release-root> --release <release.json> --disjoint-with <development-pack.json>,<held-out-pack.json> --output <run-directory>
 ```
 
@@ -144,7 +144,7 @@ The existing per-work-unit promotion path remains useful for adversarial
 plumbing tests. It is not the real metering path selected by
 [Decision 0011](../../../decisions/0011-measure-energy-in-paired-blocks.md):
 
-```powershell
+```bash
 node experiments/workstation/candidate-010/runner.mjs capsule-promotion-build --run-directory <run-directory> --release-root <release-root> --release <release.json> --energy-assignments <energy-assignments.json> --disjoint-seed-packs <held-out-pack.json> --capsule-parent <existing-temporary-parent> --evidence-output <new-promotion-directory>/evidence.json --receipt-output <new-promotion-directory>/promotion-validation.launch-receipt.json
 ```
 

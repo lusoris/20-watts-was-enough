@@ -13,6 +13,22 @@ project choice.
   factual memory, or the slow model?
 - **OQ-004:** Can a shared latent space retain modality-specific uncertainty
   instead of flattening incompatible signals?
+- **OQ-068:** Can a non-language controller that owns route selection, state
+  and budget access, candidate arbitration, final action, and abstention
+  coordinate task-derived small typed specialists on a better
+  quality--risk--latency--energy frontier than a capacity-matched general model
+  and tuned sparse mixture of experts after routing, communication, repeated
+  context, calibration, verification, cold-start, retry, maintenance, and
+  replacement costs are charged? A language model is eligible only as one
+  specialist where the task needs it. Gardner's eight multiple-intelligences
+  categories are tested only as an evaluation-coverage prompt, never assumed
+  to be eight independent faculties or model slots. Can an independently
+  useful component be retained on a preregistered Pareto frontier, while every
+  loss and regression remains visible and any later retest requires a stronger
+  mechanism, changed boundary, or new evidence before comparison with the
+  then-current baseline? See the
+  [bounded audit](audits/2026-08-29-capability-coverage-typed-specialist-control.md)
+  and [system-synthesis research arm](../concept/70-system-synthesis.md#a-typed-specialist-controller-remains-a-held-research-arm).
 
 ## Learning
 

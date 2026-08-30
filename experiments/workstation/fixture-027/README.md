@@ -56,7 +56,7 @@ claim scope beyond `RIN-T01` / `C-1550`.
 
 From the repository root:
 
-```powershell
+```bash
 node experiments/workstation/fixture-027/runner.mjs prepare --profile smoke
 node experiments/workstation/fixture-027/runner.mjs smoke --profile smoke --output experiments/workstation/runs/fixture-027-smoke --resume false
 node experiments/workstation/fixture-027/runner.mjs run --profile development --output experiments/workstation/runs/fixture-027-development --resume false
@@ -67,7 +67,7 @@ node experiments/workstation/fixture-027/runner.mjs validate --output experiment
 Run the targeted tests without test-process isolation on restricted Windows
 hosts:
 
-```powershell
+```bash
 node --test --experimental-test-isolation=none experiments/workstation/fixture-027/contract.test.mjs experiments/workstation/fixture-027/runner.test.mjs
 ```
 

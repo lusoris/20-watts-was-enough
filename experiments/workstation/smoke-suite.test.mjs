@@ -90,6 +90,9 @@ test("suite receipts preserve failure and NO_RESULT authority while continuing",
     assert.equal(outcome.exitCode, 1);
     assert.equal(outcome.receipt.status, "failed");
     assert.match(outcome.receipt.authority, /NO_RESULT/u);
+    assert.deepEqual(Object.keys(outcome.receipt.runtime).sort(), [
+      "architecture", "node", "platform",
+    ]);
     assert.equal(outcome.receipt.results[0].status, "failed");
     assert.equal(outcome.receipt.results[1].status, "passed");
     assert.deepEqual(calls, ["prepare", "smoke", "prepare", "smoke", "analyze", "validate"]);

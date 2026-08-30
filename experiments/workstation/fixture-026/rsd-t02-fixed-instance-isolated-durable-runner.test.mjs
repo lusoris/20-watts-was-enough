@@ -5,7 +5,7 @@ import path from "node:path";
 import { before, test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 
 import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
 import {
@@ -52,7 +52,7 @@ before(async () => {
     family_id: "F-DEV-IFFL-AFFINE",
     draw_index: 0,
   });
-  validateSchema = new Ajv({ allErrors: true, jsonPointers: true }).compile(
+  validateSchema = createAjv({ allErrors: true }).compile(
     JSON.parse(schemaText),
   );
 });

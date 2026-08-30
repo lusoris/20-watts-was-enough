@@ -2,6 +2,11 @@
   "schema": 1,
   "artifact": "fixture-012",
   "readiness": "smoke-ready",
+  "distribution": {
+    "state": "withheld-image",
+    "runtime_class": "windows-host-bound",
+    "authority": "NO_RESULT"
+  },
   "command": {
     "prepare": "node experiments/workstation/fixture-012/runner.mjs prepare --profile smoke",
     "smoke": "node experiments/workstation/fixture-012/runner.mjs smoke --profile smoke --output <run-directory>",
@@ -10,7 +15,7 @@
     "validate": "node experiments/workstation/fixture-012/runner.mjs validate --output <run-directory>"
   },
   "environment": {
-    "runtime": "Node.js >=22.13.0 on Windows 10+ or Windows Server 2016+ x64 (PROC_THREAD_ATTRIBUTE_JOB_LIST, R oplocks, and readable NTFS per-file USNs required; guarded paths restricted to the protected Windows system-volume drive)",
+    "runtime": "Node.js 26.8.1 on Windows 10+ or Windows Server 2016+ x64 (PROC_THREAD_ATTRIBUTE_JOB_LIST, R oplocks, and readable NTFS per-file USNs required; guarded paths restricted to the protected Windows system-volume drive)",
     "lockfiles": ["package-lock.json"]
   },
   "hardware": {

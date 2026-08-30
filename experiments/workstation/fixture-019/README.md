@@ -25,9 +25,24 @@ floor/cap boundaries restart the staged path and add the registered 0.01 charge
 when that fallback itself is valid. Small-sample sign tests enumerate every
 assignment exactly.
 
+## Run the released image
+
+The first future tag whose source contains and passes the release workflow will
+publish the scoped Linux `amd64` image at
+`ghcr.io/lusoris/20-watts-was-enough-fixture-019`. It binds Node.js 26.8.1,
+CPython 3.14.7 and NumPy 2.5.2 for this fixture only. The Go packager gives the
+build only the declared Fixture 019 files and a checked closure manifest; it
+does not send the repository root as container context. Follow the
+[digest-first container instructions](../README.md#fixture-019-fixed-point-forecast-diagnostic)
+to retain the smoke output and run analysis and validation against the same
+mounted directory. The container cannot remove the protocol limitation below,
+and every output remains `NO_RESULT`.
+
+## Run from source
+
 Run from the repository root:
 
-```powershell
+```bash
 npm run workstation:fixture-019 -- prepare --profile smoke
 npm run workstation:fixture-019 -- smoke --profile smoke --output experiments/workstation/runs/fixture-019-smoke --resume false
 npm run workstation:fixture-019 -- analyze --output experiments/workstation/runs/fixture-019-smoke
@@ -36,7 +51,7 @@ npm run workstation:fixture-019 -- validate --output experiments/workstation/run
 
 The 256-work-unit development profile is:
 
-```powershell
+```bash
 npm run workstation:fixture-019 -- run --profile development --output experiments/workstation/runs/fixture-019-development --resume false
 ```
 

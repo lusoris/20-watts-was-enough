@@ -1,0 +1,17 @@
+.git
+.github
+.next
+.openai
+.vinext
+.vite
+.wrangler
+build
+dist
+dist-github-pages
+node_modules
+public
+sources
+tmp
+experiments/workstation/runs
+experiments/workstation/releases
+experiments/workstation/promotion

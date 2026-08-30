@@ -16,7 +16,7 @@ import path from "node:path";
 import { before, test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 
 import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
 import {
@@ -104,7 +104,7 @@ before(async () => {
     runnerConfig,
     fixedDurableConfig,
   ] = texts.slice(0, 7).map(JSON.parse);
-  validateSchema = new Ajv({ allErrors: true, jsonPointers: true }).compile(
+  validateSchema = createAjv({ allErrors: true }).compile(
     JSON.parse(texts[7]),
   );
   const panel = generateFixture026RsdT02DevelopmentPanel({ registry, plan });

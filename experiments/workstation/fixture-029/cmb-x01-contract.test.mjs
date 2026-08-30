@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 
 import {
   CMB_X01_CONSTRUCTION_CONTRACT_VERSION,
@@ -325,7 +325,7 @@ test("declared JSON Schema is closed and standard-validator compatible", async (
   assert.equal(schema.definitions.resources.additionalProperties, false);
   assert.equal(schema["x-runtime-validator"].contract_version,
     "fixture-029.cmb-x01-public-development-ledger-event.v3");
-  assert.doesNotThrow(() => new Ajv({ allErrors: true, jsonPointers: true }).compile(schema));
+  assert.doesNotThrow(() => createAjv({ allErrors: true }).compile(schema));
 });
 
 test("construction records are honestly aggregate, non-integrated, and strictly NO_RESULT", () => {

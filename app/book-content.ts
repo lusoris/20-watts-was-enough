@@ -1,4 +1,4 @@
-import type { ResearchDocument } from "./content";
+import type { ResearchDocument } from "./research-document";
 
 const rawBookModules = import.meta.glob(
   [

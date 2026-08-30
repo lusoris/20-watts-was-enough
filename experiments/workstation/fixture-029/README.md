@@ -68,7 +68,7 @@ world--arm work unit. It is not a complete protocol-native action/event trace.
 
 From the repository root:
 
-```powershell
+```bash
 node experiments/workstation/fixture-029/suite-runner.mjs prepare --profile smoke
 node experiments/workstation/fixture-029/suite-runner.mjs smoke --profile smoke --output tmp/fixture-029-smoke --resume false
 node experiments/workstation/fixture-029/suite-runner.mjs run --profile development --output tmp/fixture-029-development --resume false
@@ -78,7 +78,7 @@ node experiments/workstation/fixture-029/suite-runner.mjs validate --output tmp/
 
 Focused tests:
 
-```powershell
+```bash
 node --test --experimental-test-isolation=none experiments/workstation/fixture-029/cmb-x01-contract.test.mjs experiments/workstation/fixture-029/cmb-x01-runner.test.mjs experiments/workstation/fixture-029/contract.test.mjs experiments/workstation/fixture-029/runner.test.mjs experiments/workstation/fixture-029/suite-runner.test.mjs
 ```
 

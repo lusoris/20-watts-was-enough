@@ -4,7 +4,7 @@ import path from "node:path";
 import { after, before, test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 
 import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
 import {
@@ -133,7 +133,7 @@ before(async () => {
     "rsd-t02-public-development-population-runner.schema.json",
   ].map((relativePath) => readFile(path.join(fixtureRoot, relativePath), "utf8")));
   [config, populationDesign, registry, plan, fixedRunnerConfig, schema] = texts.map(JSON.parse);
-  validateSchema = new Ajv({ allErrors: true, jsonPointers: true }).compile(schema);
+  validateSchema = createAjv({ allErrors: true }).compile(schema);
 
   const started = performance.now();
   partialTwo = runFixture026RsdT02PublicDevelopmentPopulation(request({

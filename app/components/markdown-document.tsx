@@ -194,7 +194,6 @@ export function MarkdownDocument({
     ...props
   }: ComponentPropsWithoutRef<"img">) => (
     // Plot SVGs are deterministic assets and retain their intrinsic viewBox.
-    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={resolveImageSource(
         typeof src === "string" ? src : "",

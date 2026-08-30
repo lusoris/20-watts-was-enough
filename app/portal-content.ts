@@ -1,6 +1,6 @@
-import type { ResearchDocument } from "./content";
+import type { ResearchDocument } from "./research-document";
 import { encodePortalFragment } from "./lib/portal-fragment.mjs";
-import documentIndex from "virtual:portal-document-index";
+import documentIndex, { portalMetrics } from "virtual:portal-document-index";
 
 export { decodePortalFragment } from "./lib/portal-fragment.mjs";
 
@@ -11,6 +11,7 @@ export type PortalDocumentMetadata = Omit<ResearchDocument, "body"> & {
 };
 
 export const portalDocuments = documentIndex as PortalDocumentMetadata[];
+export { portalMetrics };
 
 const portalDocumentPathPattern = /^(?:concept|math)\/[a-z0-9]+(?:-[a-z0-9]+)*\.md$/u;
 const relativeBaseOrigin = "https://portal.invalid";

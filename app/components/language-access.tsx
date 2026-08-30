@@ -2,15 +2,19 @@
 
 import { useState } from "react";
 import {
-  googleTranslationHandoffUrl,
   officialEuLanguages,
-} from "../lib/machine-translation.mjs";
+  reviewedTranslationUrl,
+  translationContributionUrl,
+} from "../lib/language-access.mjs";
 
 export function LanguageAccess() {
   const [language, setLanguage] = useState("en");
   const translationHref = typeof window === "undefined"
     ? null
-    : googleTranslationHandoffUrl(language, window.location);
+    : reviewedTranslationUrl(language, window.location);
+  const contributionHref = typeof window === "undefined"
+    ? null
+    : translationContributionUrl(language, window.location);
 
   return (
     <details className="language-access">
@@ -27,15 +31,19 @@ export function LanguageAccess() {
           ))}
         </select>
         {translationHref ? (
-          <a href={translationHref} target="_blank" rel="noreferrer">
-            Open automatic translation
+          <a href={translationHref}>
+            Open reviewed translation
+          </a>
+        ) : contributionHref ? (
+          <a href={contributionHref} target="_blank" rel="noreferrer">
+            Help translate or review this page
           </a>
         ) : (
           <span className="language-access-current">English is the canonical text.</span>
         )}
         <small>
-          Non-English versions are generated automatically by Google Translate
-          after you follow the link. Google&apos;s terms and privacy policy then apply.
+          Translations are published from Git only after source-version checks
+          and human review. No automatic translation is presented as project text.
         </small>
       </div>
     </details>

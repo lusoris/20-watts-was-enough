@@ -22,33 +22,26 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Check out canonical source
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Use Node.js 22
+      - name: Use Node.js 26
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: 22
+          node-version: 26.8.1
           cache: npm
+      - name: Use npm 12.0.2
+        run: npm install --global npm@12.0.2
       - name: Install locked dependencies
         run: npm ci
       - name: Verify the closed source-publication allowlist
         run: npm run validate:sources
       - name: Test source-publication tamper resistance
-        # Node 22 still exposes the no-isolation switch under its former
-        # experimental name. This suite is a single file, so the default
-        # process-isolated runner has identical test semantics in CI.
+        # This suite is a single file, so the default process-isolated runner
+        # has identical test semantics in CI.
         run: node --test scripts/source-boundary.test.mjs
-      - name: Prepare linked repository files
-        run: npm run prepare:reader-artifacts
-      - name: Verify the downloadable book is current
-        run: npm run validate:book-pdf
-      - name: Test the public portal and full-book route
-        run: node --test scripts/github-pages.test.mjs scripts/book-edition-surface.test.mjs
-      - name: Build the public portal and full-book route
-        run: npm run build:github-pages
-      - name: Validate the Pages artifact
-        run: npm run validate:github-pages
+      - name: Test, build, and validate the publication artifact
+        run: npm run test:github-pages
       - name: Upload the static site
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:

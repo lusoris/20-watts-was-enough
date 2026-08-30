@@ -4,7 +4,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 
 import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
 import {
@@ -35,7 +35,7 @@ async function loadDesign() {
 
 test("null maturation design is schema-valid, hash-bound, prospective and NO_RESULT", async () => {
   const { design, schema } = await loadDesign();
-  const validate = new Ajv({ allErrors: true, jsonPointers: true }).compile(schema);
+  const validate = createAjv({ allErrors: true }).compile(schema);
   assert.equal(validate(design), true, JSON.stringify(validate.errors));
   assert.equal(assertFixture026RsdT02NullMaturationDesign(design), design);
   assert.equal(
@@ -51,7 +51,7 @@ test("null maturation design is schema-valid, hash-bound, prospective and NO_RES
   assert.equal(design.result_label, "NO_RESULT");
 });
 
-test("all twelve parents and the twenty-one-member runner release closure are exact-byte verified", async () => {
+test("all twelve parents and the twenty-two-member runner release closure are exact-byte verified", async () => {
   const { design } = await loadDesign();
   const parentEntries = await Promise.all(design.parent_artifacts.map(async ({ path: relativePath }) => (
     [relativePath, await readFile(path.join(fixtureRoot, relativePath))]
@@ -65,7 +65,7 @@ test("all twelve parents and the twenty-one-member runner release closure are ex
     path.join(fixtureRoot, "rsd-t02-parameterized-runner-release.schema.json"),
     "utf8",
   ));
-  const validateRelease = new Ajv({ allErrors: true, jsonPointers: true }).compile(releaseSchema);
+  const validateRelease = createAjv({ allErrors: true }).compile(releaseSchema);
   assert.equal(validateRelease(release), true, JSON.stringify(validateRelease.errors));
   assert.equal(assertFixture026RsdT02ParameterizedRunnerRelease(release), release);
   assert.equal(sha256Hex(canonicalize(release)), FIXTURE_026_RSD_T02_PARAMETERIZED_RUNNER_RELEASE_SHA256);

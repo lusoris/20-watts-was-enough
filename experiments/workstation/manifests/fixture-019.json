@@ -2,6 +2,15 @@
   "schema": 1,
   "artifact": "fixture-019",
   "readiness": "smoke-ready",
+  "distribution": {
+    "state": "release-image",
+    "runtime_class": "node-python",
+    "image": "ghcr.io/lusoris/20-watts-was-enough-fixture-019",
+    "platforms": ["linux/amd64"],
+    "build_context": "closed-go-package",
+    "dockerfile": "experiments/workstation/fixture-019/Dockerfile",
+    "authority": "NO_RESULT"
+  },
   "command": {
     "prepare": "node experiments/workstation/fixture-019/runner.mjs prepare --profile smoke",
     "smoke": "node experiments/workstation/fixture-019/runner.mjs smoke --profile smoke --output <run-directory> --resume false",
@@ -10,7 +19,7 @@
     "validate": "node experiments/workstation/fixture-019/runner.mjs validate --output <run-directory>"
   },
   "environment": {
-    "runtime": "Node.js >=22.13.0 plus CPython 3.13.13 and NumPy 2.4.6 on a little-endian CPU",
+    "runtime": "Node.js 26.8.1 plus CPython 3.14.7 and NumPy 2.5.2 in the release-admitted Linux amd64 scoped OCI image; the first future tag containing this workflow creates the registry artifact",
     "lockfiles": [
       "package-lock.json",
       "experiments/workstation/fixture-019/python-environment.lock.json"
@@ -44,6 +53,7 @@
   "outputs": {
     "directory": "experiments/workstation/runs/fixture-019-*",
     "schema": "experiments/workstation/fixture-019/output.schema.json",
+    "execution_receipt": "run.json#execution_receipt (experiment.execution-receipt.v1; NO_RESULT; exact digest required for a release image)",
     "append_only": true,
     "hash_chain": true
   },

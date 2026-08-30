@@ -170,7 +170,11 @@ export async function executeSmokeSuite({
     started_at: now().toISOString(),
     completed_at: null,
     status: "running",
-    runtime: { node: process.version, platform: process.platform, architecture: process.arch },
+    runtime: {
+      node: process.version,
+      platform: process.platform,
+      architecture: process.arch,
+    },
     results: [],
   };
   await writeReceipt(outputRoot, receipt);

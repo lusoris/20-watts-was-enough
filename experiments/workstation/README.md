@@ -38,7 +38,7 @@ explicit run directory, it also executes the registered `analyze` and
 `validate` commands against that same directory. It never executes a
 development `run`, confirmation, held-out, release, or promotion action.
 
-```powershell
+```bash
 node experiments/workstation/smoke-suite.mjs --list
 node experiments/workstation/smoke-suite.mjs --all --dry-run
 node experiments/workstation/smoke-suite.mjs --artifact fixture-029 --output-root tmp/smoke-fixture-029
@@ -51,6 +51,135 @@ fails. `--fail-fast` stops after the first failed artifact. The receipt is
 explicitly `NO_RESULT`: passing all eleven smoke harnesses verifies bounded
 development plumbing only; it supplies no confirmation, scientific result,
 energy comparison, or claim-promotion evidence.
+
+The small Go catalogue command checks the same manifests as release planning,
+including their explicit source-only, withheld, or release-image boundary:
+
+```bash
+go -C tooling run ./cmd/20w experiment validate --root ..
+```
+
+## Run a released experiment image
+
+Containers are the public execution default. Release automation now admits one
+image per released experiment instead of one image containing unrelated
+harnesses, but no current release contains these new images. The first future
+tag whose source contains and passes the release workflow will publish the two
+Linux `amd64` images below:
+
+| Artifact | Image | Runtime boundary |
+| --- | --- | --- |
+| Fixture 007 | `ghcr.io/lusoris/20-watts-was-enough-fixture-007` | Node.js 26.8.1 and the closed Fixture 007 runtime files |
+| Fixture 019 | `ghcr.io/lusoris/20-watts-was-enough-fixture-019` | Node.js 26.8.1, CPython 3.14.7, NumPy 2.5.2 and the closed Fixture 019 runtime files |
+
+After that release, copy the complete `image@sha256:...` identity from its
+GitHub release notes. Pull and run that identity directly; do not reconstruct
+it from a tag or substitute `latest`:
+
+```bash
+image='ghcr.io/lusoris/20-watts-was-enough-fixture-007@sha256:...'
+docker pull "$image"
+digest=${image##*@}
+docker image inspect \
+  --format 'source={{index .Config.Labels "org.opencontainers.image.revision"}} platform={{.Os}}/{{.Architecture}}' \
+  "$image"
+```
+
+The release tag locates the snapshot; the digest identifies the exact image.
+The commands below forbid an implicit pull, disable networking, make the image
+filesystem read-only, drop Linux capabilities and prevent privilege
+escalation. Only the named result volume remains writable.
+
+### Fixture 007: optical null-space diagnostic
+
+The Fixture 007 image runs as UID 1000 and writes only through `/results`. A
+named Docker volume avoids assuming that the host user's numeric ID maps to the
+container user. Run the smoke, analysis and validation actions against the same
+volume:
+
+```bash
+volume=20w-fixture-007-vX-Y-Z-run-001
+docker volume create "$volume"
+docker run --rm --pull never --network none --read-only \
+  --cap-drop ALL --security-opt no-new-privileges \
+  --env "EXPERIMENT_IMAGE_DIGEST=$digest" \
+  --mount "type=volume,src=$volume,dst=/results" \
+  "$image" smoke --profile smoke --output /workspace/results/smoke
+docker run --rm --pull never --network none --read-only \
+  --cap-drop ALL --security-opt no-new-privileges \
+  --env "EXPERIMENT_IMAGE_DIGEST=$digest" \
+  --mount "type=volume,src=$volume,dst=/results" \
+  "$image" analyze --output /workspace/results/smoke
+docker run --rm --pull never --network none --read-only \
+  --cap-drop ALL --security-opt no-new-privileges \
+  --env "EXPERIMENT_IMAGE_DIGEST=$digest" \
+  --mount "type=volume,src=$volume,dst=/results" \
+  "$image" validate --output /workspace/results/smoke
+```
+
+Use a new volume name for each run; the append-only runner refuses to replace
+an existing output directory. The volume persists until you deliberately
+remove it. A bind mount is also valid when its host directory is writable by
+container UID 1000; that mapping depends on the host and container runtime, so
+it is not the portable default.
+
+### Fixture 019: fixed-point forecast diagnostic
+
+Copy Fixture 019's complete identity separately from the same release notes,
+because its digest and runtime are independent of Fixture 007:
+
+```bash
+image='ghcr.io/lusoris/20-watts-was-enough-fixture-019@sha256:...'
+docker pull "$image"
+digest=${image##*@}
+docker image inspect \
+  --format 'source={{index .Config.Labels "org.opencontainers.image.revision"}} platform={{.Os}}/{{.Architecture}}' \
+  "$image"
+volume=20w-fixture-019-vX-Y-Z-run-001
+docker volume create "$volume"
+docker run --rm --pull never --network none --read-only \
+  --cap-drop ALL --security-opt no-new-privileges \
+  --env "EXPERIMENT_IMAGE_DIGEST=$digest" \
+  --mount "type=volume,src=$volume,dst=/workspace/results" \
+  "$image" smoke --profile smoke --output /workspace/results/smoke --resume false
+docker run --rm --pull never --network none --read-only \
+  --cap-drop ALL --security-opt no-new-privileges \
+  --env "EXPERIMENT_IMAGE_DIGEST=$digest" \
+  --mount "type=volume,src=$volume,dst=/workspace/results" \
+  "$image" analyze --output /workspace/results/smoke
+docker run --rm --pull never --network none --read-only \
+  --cap-drop ALL --security-opt no-new-privileges \
+  --env "EXPERIMENT_IMAGE_DIGEST=$digest" \
+  --mount "type=volume,src=$volume,dst=/workspace/results" \
+  "$image" validate --output /workspace/results/smoke
+```
+
+Both images write development outputs with `claim_eligible=false` and
+`scientific_result=false`; report them as `NO_RESULT`. Passing their smoke,
+analysis and validation actions shows that the bounded diagnostic ran in the
+released software environment. It does not normalize host hardware or timing,
+provide calibrated energy measurements, reveal private confirmation material,
+repair a protocol limitation, or promote a scientific claim.
+
+The smoke action copies the explicitly supplied digest into
+`run.json.execution_receipt` beside the baked image name, release version and
+source revision, plus the observed Node.js version, operating system,
+architecture, command and profile. A release image refuses to create output
+when `EXPERIMENT_IMAGE_DIGEST` is missing or is not an exact lowercase
+`sha256:` digest. Image name, version, digest, source revision, Node.js runtime,
+operating system and architecture must still match that stored receipt during
+analysis and validation; a different image or a source-tree process refuses
+the output. This receipt is execution provenance; it is deliberately outside
+the scientific `run_id`.
+
+When reporting a defect through the
+[experiment issue form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=experiment-protocol-problem.yml),
+include the exact identity copied from the release notes, release tag, source
+revision and architecture, exact commands, output volume or bind path and the
+`NO_RESULT` receipt. Do not
+upload private inputs, secrets or machine credentials. The affected manifest
+remains the authority for any stronger workstation or confirmation
+requirement.
 
 1. **Command:** one non-interactive entry point with `prepare`, `smoke`, `run`,
    and `analyze` actions that returns a nonzero exit code when preparation,

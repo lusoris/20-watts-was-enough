@@ -38,8 +38,8 @@ decision record. Silencing a check without that record is not an exception.
 The source is Gerard J. Holzmann's
 [_The Power of 10: Rules for Developing Safety-Critical Code_](https://spinroot.com/gerard/pdf/P10.pdf).
 Its C-specific wording is not portable as-is. The invariant behind each rule is
-retained and translated to TypeScript/JavaScript, research protocols, document
-generation, and workstation execution.
+retained and translated to Go, TypeScript/JavaScript, research protocols,
+document generation, and workstation execution.
 
 | ID | Preserved invariant | Project adaptation | Enforcement |
 | --- | --- | --- | --- |
@@ -245,8 +245,9 @@ same observable contract.
 
 ## 5. Software and supply-chain contract
 
-- Use the locked Node dependency graph with the minimum supported Node version
-  in `package.json`; do not hand-edit `package-lock.json`.
+- Use the exact Go toolchain and module graph declared under `tooling/`, and the
+  locked Node dependency graph with the minimum supported Node version in
+  `package.json`; do not hand-edit either lockfile.
 - GitHub Actions use immutable full commit SHAs and minimal permissions.
 - Workflows define timeouts and concurrency where overlapping work can waste
   resources or publish stale state.
@@ -292,6 +293,11 @@ same observable contract.
 - A release is built from a committed `main` revision and renders a tag-bound
   PDF and manifest from that exact checkout before checksumming and attesting
   them. The continuously published tracked PDF remains a `main` snapshot.
+- Containers are the default public execution surface. Publish the static
+  tooling image and one scoped image for each released experiment; do not merge
+  unrelated experiment runtimes into one image. Native Go files are secondary
+  conveniences and retain their own checksum, module inventory, notice and
+  provenance boundary.
 - The Pages portal and book are generated views of the same canonical revision.
 - A release or deployment must not run from an unvalidated local-only state.
 

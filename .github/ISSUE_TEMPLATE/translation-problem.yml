@@ -1,0 +1,70 @@
+name: Translation contribution or problem
+description: Propose, review, or correct a source-controlled translation.
+title: "[Translation] "
+labels: ["type:docs", "area:translation", "status:needs-triage"]
+body:
+  - type: input
+    id: language
+    attributes:
+      label: Target language and code
+      description: Give the language name and its official two-letter EU code used by the reader.
+      placeholder: "Deutsch (de)"
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Canonical source
+      description: Give the public URL or exact concept/math path and the commit or release translated.
+      placeholder: "concept/00-thesis-and-principles.md at commit ..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: request
+    attributes:
+      label: Contribution type
+      options:
+        - Start or coordinate a translation
+        - Review an existing translation
+        - Report an inaccurate or stale translation
+        - Resolve terminology for a research domain
+    validations:
+      required: true
+
+  - type: textarea
+    id: detail
+    attributes:
+      label: Proposed work or observed problem
+      description: Identify the affected passage, terminology, equation qualification, link, or source-version mismatch.
+    validations:
+      required: true
+
+  - type: textarea
+    id: competence
+    attributes:
+      label: Language and domain review
+      description: State who can review the target language and the affected research domain. Do not include private personal information.
+    validations:
+      required: true
+
+  - type: textarea
+    id: tools
+    attributes:
+      label: Drafting tools
+      description: Disclose any machine translation or language model used, its role, and what a human checked. Write "none" for a human-only translation.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Submission checks
+      options:
+        - label: I understand that English Git source remains canonical and that a translation must name the exact source version.
+          required: true
+        - label: I will not present unreviewed machine output as project-authored research text.
+          required: true
+        - label: I checked existing issues for overlapping translation work.
+          required: true

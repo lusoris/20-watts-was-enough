@@ -128,7 +128,7 @@ function validateJsonSchemaNode(schema, value, rootSchema, location, errors) {
   const supportedKeywords = new Set([
     "$schema", "$id", "$defs", "$ref", "title", "description", "type", "const", "enum",
     "required", "properties", "additionalProperties", "minLength", "pattern", "minItems",
-    "uniqueItems", "items",
+    "maxItems", "uniqueItems", "items", "oneOf",
   ]);
   for (const keyword of Object.keys(schema)) {
     if (!supportedKeywords.has(keyword)) {
@@ -140,6 +140,23 @@ function validateJsonSchemaNode(schema, value, rootSchema, location, errors) {
     if (!resolved) errors.push(`${location} has an unresolved schema reference ${schema.$ref}`);
     else validateJsonSchemaNode(resolved, value, rootSchema, location, errors);
     return;
+  }
+  if (Array.isArray(schema.oneOf)) {
+    const alternatives = schema.oneOf.map((alternative) => {
+      const alternativeErrors = [];
+      validateJsonSchemaNode(alternative, value, rootSchema, location, alternativeErrors);
+      return alternativeErrors;
+    });
+    const matching = alternatives.filter((alternativeErrors) => alternativeErrors.length === 0);
+    if (matching.length !== 1) {
+      errors.push(`${location || "/"} must match exactly one schema alternative`);
+      if (matching.length === 0 && alternatives.length > 0) {
+        const closest = alternatives.reduce((left, right) => (
+          right.length < left.length ? right : left
+        ));
+        errors.push(...closest);
+      }
+    }
   }
   if (Object.hasOwn(schema, "const") && JSON.stringify(value) !== JSON.stringify(schema.const)) {
     errors.push(`${location} must equal the declared constant`);
@@ -163,6 +180,9 @@ function validateJsonSchemaNode(schema, value, rootSchema, location, errors) {
   if (actualType === "array") {
     if (Number.isInteger(schema.minItems) && value.length < schema.minItems) {
       errors.push(`${location} must contain at least ${schema.minItems} item(s)`);
+    }
+    if (Number.isInteger(schema.maxItems) && value.length > schema.maxItems) {
+      errors.push(`${location} must contain at most ${schema.maxItems} item(s)`);
     }
     if (schema.uniqueItems === true) {
       const identities = value.map((entry) => JSON.stringify(entry));

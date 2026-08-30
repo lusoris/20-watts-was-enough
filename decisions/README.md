@@ -10,7 +10,7 @@ than silently changing its outcome.
 | [0002](0002-evidence-before-assertion.md) | Evidence precedes major assertions | accepted |
 | [0003](0003-biology-is-a-constraint.md) | Translate biological mechanisms by preserved function | accepted |
 | [0004](0004-organize-by-invariant.md) | Organize research by recurring invariant | accepted |
-| [0005](0005-rendered-private-edition.md) | Render one private edition from canonical files | accepted |
+| [0005](0005-rendered-private-edition.md) | Render one private edition from canonical files | superseded by [0033](0033-retire-the-owner-only-reader.md) |
 | [0006](0006-open-world-scientific-search.md) | Search all sciences through shared problem classes | accepted |
 | [0007](0007-benchmark-fixtures-are-not-candidates.md) | Keep cross-candidate stress fixtures separate from architecture candidates | accepted |
 | [0008](0008-eu-germany-normative-default.md) | Use the European Union and Germany as the normative default | accepted |
@@ -29,12 +29,18 @@ than silently changing its outcome.
 | [0021](0021-bind-population-inference-to-system-lineages-and-instances.md) | Bind population inference to system lineages and fixed-parameter instances | accepted |
 | [0022](0022-separate-fixed-instance-construction-from-conformance-runtime.md) | Separate fixed-instance construction from the mixed-time-constant conformance runtime | accepted |
 | [0023](0023-bind-power-to-the-executable-analysis-law.md) | Bind power and attainable resolution to the executable analysis law | accepted |
-| [0024](0024-publish-through-split-licensed-git-and-two-reading-surfaces.md) | Publish through split-licensed Git and two reading surfaces | accepted |
+| [0024](0024-publish-through-split-licensed-git-and-two-reading-surfaces.md) | Publish through split-licensed Git and two reading surfaces | partly superseded by [0033](0033-retire-the-owner-only-reader.md) |
 | [0025](0025-route-parasitology-through-adversarial-lifecycle-tests.md) | Route parasitology through adversarial lifecycle tests | accepted |
 | [0026](0026-route-endogenous-machinery-transfers-through-one-factorial-fixture.md) | Test recruited and phase-qualified machinery as one factorial family | accepted |
 | [0027](0027-adopt-cross-repository-engineering-contract.md) | Adopt a cross-repository engineering contract | accepted |
 | [0028](0028-establish-first-public-release-baseline.md) | Establish the first public release baseline at v0.2.0 | accepted |
 | [0029](0029-bind-pages-to-the-custom-domain-root.md) | Bind GitHub Pages to the custom-domain root | accepted |
 | [0030](0030-publish-each-research-document-at-a-canonical-route.md) | Publish each research document at a canonical route | accepted |
-| [0031](0031-provide-eu-language-access-without-translation-copies.md) | Provide EU language access without translation copies | accepted |
+| [0031](0031-provide-eu-language-access-without-translation-copies.md) | Provide EU language access without translation copies | superseded by [0035](0035-publish-only-reviewed-source-bound-translations.md) |
 | [0032](0032-adopt-a-deduplicated-european-research-integrity-baseline.md) | Adopt a deduplicated European research-integrity baseline | accepted |
+| [0033](0033-retire-the-owner-only-reader.md) | Retire the owner-only reader | accepted |
+| [0034](0034-release-bounded-experiment-containers.md) | Release bounded experiment containers | superseded by [0037](0037-release-go-tooling-and-scope-experiment-images.md) |
+| [0035](0035-publish-only-reviewed-source-bound-translations.md) | Publish only reviewed, source-bound translations | accepted |
+| [0036](0036-use-one-source-to-publication-and-feedback-graph.md) | Use one source-to-publication-and-feedback graph | accepted |
+| [0037](0037-release-go-tooling-and-scope-experiment-images.md) | Release one scoped image per experiment | accepted; clause 3 partly superseded by [0038](0038-publish-only-release-exercised-container-platforms.md) |
+| [0038](0038-publish-only-release-exercised-container-platforms.md) | Publish only release-exercised container platforms | accepted |

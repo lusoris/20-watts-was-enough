@@ -18,8 +18,8 @@ const tempRoot = path.join(projectRoot, "tmp", "pdfs");
 const sitePort = 3137;
 const debugPort = 3138;
 const { sourceRef } = parseBookPdfGenerationOptions(process.argv.slice(2));
-const bookUrl = `http://127.0.0.1:${sitePort}/book?pdf=1&ref=${encodeURIComponent(sourceRef)}`;
-const cli = path.join(projectRoot, "node_modules", "vinext", "dist", "cli.js");
+const bookUrl = `http://127.0.0.1:${sitePort}/book/?pdf=1&ref=${encodeURIComponent(sourceRef)}`;
+const cli = path.join(projectRoot, "node_modules", "vite", "bin", "vite.js");
 const browserCandidates = [
   process.env.CHROME_PATH,
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -158,7 +158,16 @@ for (const relative of bookMarkdown) {
 const browser = await firstExisting(browserCandidates);
 const server = spawn(
   process.execPath,
-  [cli, "dev", "--port", String(sitePort), "--hostname", "127.0.0.1"],
+  [
+    cli,
+    "--config",
+    "vite.pages.config.ts",
+    "--port",
+    String(sitePort),
+    "--host",
+    "127.0.0.1",
+    "--strictPort",
+  ],
   {
     cwd: projectRoot,
     env: { ...process.env, BROWSER: "none" },

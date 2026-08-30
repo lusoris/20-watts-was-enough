@@ -1,4 +1,5 @@
 import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
+import { assertNodeRuntimePolicy } from "../lib/node-runtime-policy.mjs";
 import {
   FIXTURE_026_RSD_T02_ACTIONABLE_ARM_IDS,
   FIXTURE_026_RSD_T02_EPISODES,
@@ -283,6 +284,7 @@ function assertNoEvaluatorValueLeak(instance, view) {
 }
 
 export function assertFixture026RsdT02FixedInstanceRunnerConfig(config) {
+  assertNodeRuntimePolicy();
   if (
     !exactKeys(config, RUNNER_CONFIG_KEYS)
     || digest(config) !== FIXTURE_026_RSD_T02_FIXED_INSTANCE_RUNNER_CONFIG_SHA256

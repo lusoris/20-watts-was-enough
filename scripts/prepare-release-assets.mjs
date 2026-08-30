@@ -23,9 +23,12 @@ const tagPattern = /^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/u;
 const releaseDatePattern = /^\d{4}-\d{2}-\d{2}$/u;
 const sha256Pattern = /^[0-9a-f]{64}$/u;
 const checksumLinePattern = /^([0-9a-f]{64}) {2}([^/\\]+)$/u;
+const additionalAssetNamePattern = /^[a-z0-9][a-z0-9._-]{0,199}$/u;
 const bookPdfRelativePath = "public/downloads/20-watts-was-enough-full-concept-book.pdf";
 const bookManifestRelativePath = "public/downloads/book-manifest.json";
 const maximumReleaseAssetBytes = 256 * 1024 * 1024;
+const maximumAdditionalAssetCount = 64;
+const maximumAdditionalAssetBytes = 512 * 1024 * 1024;
 
 function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
@@ -93,6 +96,63 @@ async function readRegularFile(root, relativePath) {
     containedBy: root,
     maximumBytes: maximumReleaseAssetBytes,
   });
+}
+
+function isInside(parent, candidate) {
+  const relative = path.relative(parent, candidate);
+  return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
+}
+
+async function loadAdditionalAssetRecords({ repositoryRoot, additionalAssetsRoot, outputRoot }) {
+  if (additionalAssetsRoot === undefined || additionalAssetsRoot === null) return [];
+  invariant(
+    typeof additionalAssetsRoot === "string" && additionalAssetsRoot.trim().length > 0,
+    "Additional asset root must be a non-empty path",
+  );
+  const assetsRoot = path.resolve(repositoryRoot, additionalAssetsRoot);
+  const resolvedOutputRoot = path.resolve(outputRoot);
+  invariant(
+    !isInside(assetsRoot, resolvedOutputRoot) && !isInside(resolvedOutputRoot, assetsRoot),
+    "Additional asset root and release output root must be disjoint",
+  );
+
+  const initialSnapshot = await directorySnapshot(assetsRoot, "Additional asset directory");
+  invariant(initialSnapshot.entries.length > 0, "Additional asset directory must not be empty");
+  invariant(
+    initialSnapshot.entries.length <= maximumAdditionalAssetCount,
+    `Additional asset directory exceeds the ${maximumAdditionalAssetCount}-file limit`,
+  );
+  invariant(
+    initialSnapshot.entries.every((entry) => entry.regular),
+    "Additional asset directory may contain only top-level regular files",
+  );
+
+  let totalBytes = 0;
+  const records = [];
+  for (const entry of initialSnapshot.entries) {
+    invariant(
+      additionalAssetNamePattern.test(entry.name),
+      `Additional asset name is not a safe release basename: ${entry.name}`,
+    );
+    const bytes = await readStableOpenedFile(path.join(assetsRoot, entry.name), {
+      label: `additional release asset ${entry.name}`,
+      containedBy: assetsRoot,
+      maximumBytes: maximumReleaseAssetBytes,
+    });
+    totalBytes += bytes.byteLength;
+    invariant(
+      totalBytes <= maximumAdditionalAssetBytes,
+      `Additional assets exceed the ${maximumAdditionalAssetBytes}-byte aggregate limit`,
+    );
+    records.push({ name: entry.name, bytes });
+  }
+
+  const finalSnapshot = await directorySnapshot(assetsRoot, "Additional asset directory");
+  invariant(
+    sameDirectorySnapshot(initialSnapshot, finalSnapshot),
+    "Additional asset inventory changed while release inputs were read",
+  );
+  return records;
 }
 
 export function parseReleaseTag(tag) {
@@ -379,6 +439,7 @@ async function loadReleaseInputs(root) {
 export async function prepareReleaseAssets({
   root = defaultRoot,
   outputRoot = path.join(root, "build", "release"),
+  additionalAssetsRoot,
   tag,
 } = {}) {
   const bytesByPath = await loadReleaseInputs(root);
@@ -412,9 +473,18 @@ export async function prepareReleaseAssets({
     ...[...bytesByPath.entries()]
       .filter(([relativePath]) => relativePath.startsWith("LICENSES/"))
       .map(([relativePath, bytes]) => ({ name: path.basename(relativePath), bytes })),
+    ...await loadAdditionalAssetRecords({
+      repositoryRoot: root,
+      additionalAssetsRoot,
+      outputRoot,
+    }),
   ];
   const names = assetRecords.map(({ name }) => name);
   invariant(new Set(names).size === names.length, "Release asset basenames must be unique");
+  invariant(
+    new Set(names.map((name) => name.toLowerCase())).size === names.length,
+    "Release asset basenames must be unique without case distinctions",
+  );
   invariant(!names.includes("SHA256SUMS") && !names.includes("sbom.spdx.json"), "Canonical files collide with generated release assets");
 
   const sbom = buildSpdxDocument({
@@ -455,13 +525,16 @@ export async function prepareReleaseAssets({
   });
 }
 
-function parseArguments(argv) {
+export function parseReleaseArguments(argv) {
   const values = {};
+  const allowedArguments = new Set(["--additional-assets-root", "--tag"]);
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
-    invariant(argument === "--tag", `Unknown argument: ${argument}`);
+    invariant(allowedArguments.has(argument), `Unknown argument: ${argument}`);
     invariant(index + 1 < argv.length, `${argument} requires a value`);
-    values[argument.slice(2).replaceAll("-", "_")] = argv[index + 1];
+    const key = argument.slice(2).replaceAll("-", "_");
+    invariant(values[key] === undefined, `${argument} may be specified only once`);
+    values[key] = argv[index + 1];
     index += 1;
   }
   invariant(values.tag, "--tag is required");
@@ -469,8 +542,9 @@ function parseArguments(argv) {
 }
 
 async function main() {
-  const arguments_ = parseArguments(process.argv.slice(2));
+  const arguments_ = parseReleaseArguments(process.argv.slice(2));
   const result = await prepareReleaseAssets({
+    additionalAssetsRoot: arguments_.additional_assets_root,
     tag: arguments_.tag,
   });
   console.log(`Prepared ${result.assetNames.length} release assets for ${result.tag} under ${path.relative(defaultRoot, result.outputRoot)}.`);

@@ -35,11 +35,15 @@ architecture proposals, falsifiable experiments, and explicit failure rules.
 | Read offline or print | [Download the A4 PDF](https://www.cordana.dev/downloads/20-watts-was-enough-full-concept-book.pdf) |
 | Inspect evidence | [Claim ledger](research/claims.md) and [bibliography](research/references.bib) |
 | Inspect proposed tests | [Experiment coverage](experiments/test-coverage.md) |
+| Run development smoke harnesses | [Source now; release images after the first qualifying tag](experiments/workstation/README.md#run-a-released-experiment-image) |
+| Help with a bounded task | [Public contribution map](https://www.cordana.dev/help/) |
 | Find a specific area | [Repository map](docs/repository-map.md) |
 
-The portal and web book offer an explicit automatic-translation handoff for all
-24 official EU languages. English remains the reviewed canonical text; no
-machine translation is written back into the repository.
+The portal and web book list all 24 official EU languages, but publish only
+translations tied to an exact canonical source digest and human review. English
+remains canonical. Where a reviewed translation does not yet exist, the
+language control opens a focused contribution issue instead of unlabelled
+machine output. See the [translation contract](translations/README.md).
 
 ## Central thesis
 
@@ -123,7 +127,7 @@ staged, or rejected here.
 
 For a local live preview:
 
-```powershell
+```bash
 npm ci
 npm run dev:github-pages
 ```
@@ -131,15 +135,46 @@ npm run dev:github-pages
 The preview runs at `http://localhost:5173/` and reloads canonical Markdown,
 equations, tables, diagrams, and plots as their source files change.
 
-Before committing:
+The release workflow is prepared to publish repository validation as a static
+`20w` image for Linux `amd64`. The first future tag whose source contains and
+passes that workflow will publish it; older releases do not contain this
+image. Linux `arm64` remains withheld until the release path executes and
+verifies that target. Each candidate is pushed first under its canonical
+digest without a release tag. The workflow inspects and executes that exact
+digest, establishes and verifies its source-bound attestation, and only then
+attaches the release tag and checks the final binding. A rerun re-admits an
+existing tag without replacing it and can repair a missing attestation after
+execution passes. Tag creation is serialized and absence-checked, but GHCR
+package writers remain trusted because this registry path has no documented
+atomic create-if-absent operation. Once the admitted image exists, copy its
+complete
+`image@sha256:...` identity from the GitHub release notes and run that digest,
+not a tag:
 
-```powershell
+```bash
+image='ghcr.io/lusoris/20-watts-was-enough-20w@sha256:...'
+docker pull "$image"
+docker run --rm --network none \
+  --pull never \
+  --mount "type=bind,src=$PWD,dst=/repo,readonly" \
+  "$image" \
+  validate docs --root /repo
+```
+
+The attached native convenience scope is narrower: release verification
+currently executes and admits only `20w-linux-amd64`. Copy that file and its
+checksum from the same release page; macOS, Windows and native `arm64` files
+remain withheld until their release paths are exercised.
+
+Before committing locally:
+
+```bash
 npm run check
 ```
 
 Changes to book sources also require:
 
-```powershell
+```bash
 npm run generate:book-pdf
 npm run validate:book-pdf
 ```

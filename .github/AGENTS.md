@@ -11,8 +11,9 @@ files under `.github/`.
   may cancel stale runs; an in-progress Pages deployment must not be cancelled.
 - Use `actions/checkout` with `persist-credentials: false` unless a reviewed
   step must push to the repository.
-- Run Node workflows on the declared Node 22 baseline, install with `npm ci`,
-  and keep `package-lock.json` authoritative.
+- Run JavaScript workflows on the exact Node 26 and npm 12 pins, install with
+  `npm ci`, and keep `package-lock.json` authoritative. Run Go tooling with the
+  exact version declared by `tooling/go.mod`.
 - Required CI and security gates fail closed. Do not add `continue-on-error` to
   a required check or weaken an existing validator to make a workflow green.
 - Never execute or check out pull-request code from a `pull_request_target`
@@ -32,3 +33,6 @@ files under `.github/`.
 - Treat repository settings as external state. Verify branch rules, Actions
   permissions, environments, and security features before documenting them as
   active.
+- `.github/labels.json` is the canonical managed-label manifest. The trusted
+  main-branch workflow may create or repair those labels, but it does not
+  delete labels outside the manifest.

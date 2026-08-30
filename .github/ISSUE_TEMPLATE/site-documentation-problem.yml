@@ -24,6 +24,7 @@ body:
         - Navigation, links, or search
         - Diagram, equation, table, or plot rendering
         - Accessibility or keyboard use
+        - Readability or unexplained terminology
         - Download or generated artifact
     validations:
       required: true
@@ -42,6 +43,23 @@ body:
       label: Expected presentation
     validations:
       required: true
+
+  - type: dropdown
+    id: familiarity
+    attributes:
+      label: Familiarity with this topic
+      description: Optional. This helps distinguish an expert shorthand problem from a general-reader entry problem.
+      options:
+        - New to the topic
+        - Technically experienced, but not in this field
+        - Experienced in the affected field
+        - Project contributor or maintainer
+
+  - type: textarea
+    id: reader_interpretation
+    attributes:
+      label: Where did the thread break, and what did you think it meant?
+      description: For readability reports, quote only the shortest necessary passage or name its heading and explain your interpretation. Do not copy third-party text.
 
   - type: textarea
     id: reproduce

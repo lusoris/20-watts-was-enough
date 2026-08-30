@@ -1,5 +1,9 @@
 # Repository map
 
+The [research publication and feedback workflow](publication-workflow.md)
+explains how these authorities generate Pages, PDF, release containers and
+reviewed translations without creating parallel content stores.
+
 This map is the durable navigation surface for the canonical Git repository.
 It points to maintained authorities and their own indexes instead of copying
 their contents into the root README.
@@ -64,6 +68,8 @@ chapters.
   and falsification tests.
 - [Workstation contract](../experiments/workstation/README.md) defines the
   boundary between smoke plumbing and claim-eligible execution.
+- [Go tooling contract](../tooling/AGENTS.md) defines the small portable `20w`
+  command, deterministic native release builder and static tooling image.
 - [Test coverage](../experiments/test-coverage.md) is the generated claim-to-
   protocol and execution-readiness report.
 
@@ -78,6 +84,12 @@ chapters.
 - [Research-writing skill](../.agents/skills/research-writing/SKILL.md) governs
   natural, evidence-aware project prose; its automated audit is intentionally a
   narrow canonical-Markdown tripwire.
+- [Reader-editor skill](../.agents/skills/reader-editor/SKILL.md) supports
+  conservative readability review for technically curious non-experts without
+  changing claim authority.
+- [Public-interface audit](public-research-interface-audit.md) records measured
+  reading defaults, comparable GitHub-native structures, test hypotheses and
+  the maintainer decision queue.
 - [GitHub Pages portal](https://www.cordana.dev/) provides the web-native
   research surface; the [HTML book](https://www.cordana.dev/book/) and
   [downloadable PDF](https://www.cordana.dev/downloads/20-watts-was-enough-full-concept-book.pdf)
@@ -86,6 +98,8 @@ chapters.
 ## Project operation
 
 - [Contribution guide](../CONTRIBUTING.md)
+- [Public contribution map](https://www.cordana.dev/help/) and its [canonical
+  source](how-to-help.md)
 - [Governance](../GOVERNANCE.md)
 - [Maintainers](../MAINTAINERS.md)
 - [Security policy](../SECURITY.md)

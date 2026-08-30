@@ -3,7 +3,7 @@ import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 
 import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
 import {
@@ -97,7 +97,7 @@ test("the JSON schema and runtime validator close one materialized event", async
       "experiments/workstation/fixture-026/rsd-t02-output.schema.json",
       "utf8",
     ));
-    const validate = new Ajv({ allErrors: true, jsonPointers: true }).compile(schema);
+    const validate = createAjv({ allErrors: true }).compile(schema);
     assert.equal(validate(fixture.record), true, JSON.stringify(validate.errors));
     assert.equal(assertFixture026RsdT02Event(fixture.record), fixture.record);
     assert.deepEqual(
@@ -195,7 +195,7 @@ test("JSON Schema and runtime agree on the canonical uint64 seed boundary", asyn
       "experiments/workstation/fixture-026/rsd-t02-output.schema.json",
       "utf8",
     ));
-    const validate = new Ajv({ allErrors: true, jsonPointers: true }).compile(schema);
+    const validate = createAjv({ allErrors: true }).compile(schema);
     for (const [seed, accepted] of [
       ["0", true],
       ["18446744073709551615", true],

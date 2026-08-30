@@ -2,23 +2,23 @@
 
 import { Fragment, useEffect, useRef } from "react";
 import { bookDocuments as documents } from "../book-content";
-import type { ResearchDocument } from "../content";
+import type { ResearchDocument } from "../research-document";
 import {
   repositoryDocumentHrefFor,
   repositoryRefForSurface,
   repositoryTreeHref,
 } from "../lib/book-release-identity.mjs";
 import { isRepositoryArtifact, repositoryArtifactHref } from "../lib/repository-artifacts";
+import { publication, repositoryIssueUrl } from "../lib/publication.mjs";
 import { MarkdownDocument } from "./markdown-document";
 import { LanguageAccess } from "./language-access";
 import { ReadinessOverview } from "./readiness-overview";
 
 const appendixPaths = ["research/field-coverage.md"];
-const canonicalSite = "https://twenty-watts-was-enough.lusoris.chatgpt.site";
-const canonicalPublicBook = "https://www.cordana.dev/";
+const canonicalPublicBook = publication.canonicalSite;
 
 type BookEditionProps = {
-  surface?: "owner-only-site" | "github-pages" | "public-pdf";
+  surface?: "github-pages" | "public-pdf";
   assetBasePath?: string;
   editionVersion: string;
   sourceRef: string;
@@ -104,16 +104,21 @@ function documentLabel(path: string) {
 }
 
 export function BookEdition({
-  surface = "owner-only-site",
+  surface = "github-pages",
   assetBasePath = "/",
   editionVersion, sourceRef,
 }: BookEditionProps) {
   const isGitHubPages = surface === "github-pages";
   const isPublicPdf = surface === "public-pdf";
-  const usesPublicLinks = isGitHubPages || isPublicPdf;
   const repositoryRef = repositoryRefForSurface(surface, sourceRef, editionVersion);
   const isReleaseSnapshot = repositoryRef !== "main";
   const surfaceDocumentHref = repositoryDocumentHrefFor(repositoryRef);
+  const supportBasePath = isPublicPdf ? canonicalPublicBook : assetBasePath;
+  const helpHref = joinBasePath(supportBasePath, "help/");
+  const bookIssueHref = repositoryIssueUrl(
+    "site-documentation-problem.yml",
+    `[Site/Docs] book/ @ ${repositoryRef}`,
+  );
   const conceptDocuments = documents.filter(
     (document) =>
       document.kind === "markdown" &&
@@ -139,14 +144,7 @@ export function BookEdition({
     0,
   );
   const navigate = (path: string, hash = "") => {
-    if (usesPublicLinks) {
-      window.location.assign(surfaceDocumentHref(path, hash));
-      return;
-    }
-    const url = new URL("/", window.location.origin);
-    url.searchParams.set("doc", path);
-    url.hash = hash;
-    window.location.assign(url);
+    window.location.assign(surfaceDocumentHref(path, hash));
   };
   const bookHref = (path: string, hash: string) => {
     if (bookDocumentPaths.has(path)) {
@@ -156,19 +154,13 @@ export function BookEdition({
       if (isPublicPdf) return surfaceDocumentHref(path, hash);
       return joinBasePath(assetBasePath, repositoryArtifactHref(path));
     }
-    if (usesPublicLinks) return surfaceDocumentHref(path, hash);
-    const url = new URL("/", canonicalSite);
-    url.searchParams.set("doc", path);
-    url.hash = hash;
-    return url.toString();
+    return surfaceDocumentHref(path, hash);
   };
 
   return (
     <main className={`book-shell ${isGitHubPages ? "book-shell-web" : "book-shell-print"}`}>
       <nav className="book-actions" aria-label="Book actions">
-        <a href={usesPublicLinks ? repositoryTreeHref(repositoryRef) : "/"}>
-          {usesPublicLinks ? "View source on GitHub" : "← Owner-only research site"}
-        </a>
+        <a href={repositoryTreeHref(repositoryRef)}>View source on GitHub</a>
         <a
           className="book-download-primary"
           href={joinBasePath(
@@ -212,6 +204,11 @@ export function BookEdition({
             <dd>{isReleaseSnapshot ? `Immutable release tag ${repositoryRef}` : "Git main snapshot"}</dd>
           </div>
         </dl>
+        <nav className="book-cover-support" aria-label="Edition support">
+          <span>Support for {repositoryRef}</span>
+          <a href={helpHref}>How to help</a>
+          <a href={bookIssueHref}>Report this edition</a>
+        </nav>
       </header>
 
       <section className="book-toc" aria-labelledby="book-toc-heading">
@@ -264,8 +261,7 @@ export function BookEdition({
         </div>
         <ReadinessOverview
           mode="book"
-          documentHref={usesPublicLinks ? surfaceDocumentHref : undefined}
-          publicSurface={usesPublicLinks}
+          documentHref={surfaceDocumentHref}
         />
       </section>
 

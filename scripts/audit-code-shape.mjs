@@ -22,10 +22,7 @@ export const CODE_SHAPE_POLICY = Object.freeze({
 const SOURCE_GLOB = "**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}";
 const EXCLUDED_PATHS = Object.freeze([
   ".git/**",
-  ".next/**",
-  ".vinext/**",
   ".vite/**",
-  ".wrangler/**",
   "build/**",
   "dist/**",
   "dist-github-pages/**",

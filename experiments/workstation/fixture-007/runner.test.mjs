@@ -14,6 +14,26 @@ import {
 const root = process.cwd();
 const temporaryRoot = path.join(root, "tmp");
 
+function releaseEnvironment(artifact) {
+  return {
+    EXPERIMENT_ARTIFACT: artifact,
+    EXPERIMENT_IMAGE_NAME: `ghcr.io/lusoris/20-watts-was-enough-${artifact}`,
+    EXPERIMENT_IMAGE_VERSION: "v1.2.3",
+    EXPERIMENT_SOURCE_REVISION: "a".repeat(40),
+    EXPERIMENT_RESULT_AUTHORITY: "NO_RESULT",
+    EXPERIMENT_IMAGE_DIGEST: `sha256:${"b".repeat(64)}`,
+  };
+}
+
+function releaseIdentityMismatches(environment) {
+  return [
+    { ...environment, EXPERIMENT_IMAGE_NAME: `${environment.EXPERIMENT_IMAGE_NAME}-other` },
+    { ...environment, EXPERIMENT_IMAGE_VERSION: "v1.2.4" },
+    { ...environment, EXPERIMENT_SOURCE_REVISION: "c".repeat(40) },
+    { ...environment, EXPERIMENT_IMAGE_DIGEST: `sha256:${"d".repeat(64)}` },
+  ];
+}
+
 async function temporaryOutput(prefix) {
   await mkdir(temporaryRoot, { recursive: true });
   const parent = await mkdtemp(path.join(temporaryRoot, prefix));
@@ -37,7 +57,10 @@ test("smoke preparation declares its exact bounded event count", async () => {
 test("null-space smoke run exposes false specificity without beating the mature active null", async () => {
   const fixture = await temporaryOutput("fixture-007-run-");
   try {
-    await executeFixture007({ profile: "smoke", output: fixture.output });
+    const execution = await executeFixture007({ profile: "smoke", output: fixture.output });
+    assert.equal(execution.run.execution_receipt.execution_mode, "source");
+    assert.equal(execution.run.execution_receipt.result_authority, "NO_RESULT");
+    assert.equal(execution.run.execution_receipt.command, "smoke");
     const summary = await analyzeFixture007(fixture.output);
     const validation = await validateFixture007Output(fixture.output);
     assert.equal(summary.decision, "diagnostic-pass");
@@ -64,12 +87,37 @@ test("identical profile and seeds reproduce byte-identical raw ledgers", async (
   const left = await temporaryOutput("fixture-007-left-");
   const right = await temporaryOutput("fixture-007-right-");
   try {
-    await executeFixture007({ profile: "smoke", output: left.output });
-    await executeFixture007({ profile: "smoke", output: right.output });
+    const source = await executeFixture007({ profile: "smoke", output: left.output });
+    const environment = releaseEnvironment("fixture-007");
+    const released = await executeFixture007({
+      profile: "smoke",
+      output: right.output,
+      executionEnvironment: environment,
+    });
     assert.equal(
       await readFile(path.join(left.output, "raw-events.jsonl"), "utf8"),
       await readFile(path.join(right.output, "raw-events.jsonl"), "utf8"),
     );
+    assert.equal(source.run.run_id, released.run.run_id);
+    assert.equal(released.run.execution_receipt.execution_mode, "release-image");
+    assert.deepEqual(released.run.execution_receipt.image.digest, {
+      state: "explicit",
+      value: `sha256:${"b".repeat(64)}`,
+    });
+    const current = { executionEnvironment: environment };
+    await analyzeFixture007(right.output, current);
+    assert.equal((await validateFixture007Output(right.output, current)).valid, true);
+    for (const mismatch of releaseIdentityMismatches(environment)) {
+      const mismatched = { executionEnvironment: mismatch };
+      await assert.rejects(
+        () => analyzeFixture007(right.output, mismatched),
+        /does not match the stored execution receipt/u,
+      );
+      await assert.rejects(
+        () => validateFixture007Output(right.output, mismatched),
+        /does not match the stored execution receipt/u,
+      );
+    }
   } finally {
     await rm(left.parent, { recursive: true, force: true });
     await rm(right.parent, { recursive: true, force: true });
@@ -120,4 +168,30 @@ test("CLI parsing refuses implicit outputs and unknown options", async () => {
     () => main(["node", "runner.mjs", "prepare", "--profile", "smoke", "--oracle", "yes"]),
     /Unknown or duplicate/,
   );
+});
+
+test("release image execution fails before output without an explicit digest", async () => {
+  const fixture = await temporaryOutput("fixture-007-release-identity-");
+  const environment = releaseEnvironment("fixture-007");
+  delete environment.EXPERIMENT_IMAGE_DIGEST;
+  try {
+    await assert.rejects(
+      () => executeFixture007({
+        profile: "smoke",
+        output: fixture.output,
+        executionEnvironment: environment,
+      }),
+      /requires EXPERIMENT_IMAGE_DIGEST/u,
+    );
+    await assert.rejects(
+      () => main(
+        ["node", "runner.mjs", "prepare", "--profile", "smoke"],
+        environment,
+      ),
+      /requires EXPERIMENT_IMAGE_DIGEST/u,
+    );
+    await assert.rejects(() => readFile(path.join(fixture.output, "run.json")), /ENOENT/u);
+  } finally {
+    await rm(fixture.parent, { recursive: true, force: true });
+  }
 });

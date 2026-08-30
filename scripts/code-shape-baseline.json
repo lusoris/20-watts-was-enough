@@ -44,12 +44,6 @@
       "maxActual": 230
     },
     {
-      "path": "app/components/research-reader.tsx",
-      "rule": "max-lines-per-function",
-      "count": 1,
-      "maxActual": 396
-    },
-    {
       "path": "experiments/workstation/candidate-010/actuator-command-track.mjs",
       "rule": "max-lines-per-function",
       "count": 1,
