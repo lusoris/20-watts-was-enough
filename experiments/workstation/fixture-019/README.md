@@ -27,8 +27,8 @@ assignment exactly.
 
 ## Run the released image
 
-The first future tag whose source contains and passes the release workflow will
-publish the scoped Linux `amd64` image at
+A v0.3.0 or later release whose source contains and passes the release workflow
+publishes the scoped Linux `amd64` image at
 `ghcr.io/lusoris/20-watts-was-enough-fixture-019`. It binds Node.js 26.8.1,
 CPython 3.14.7 and NumPy 2.5.2 for this fixture only. The Go packager gives the
 build only the declared Fixture 019 files and a checked closure manifest; it

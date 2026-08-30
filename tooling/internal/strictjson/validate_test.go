@@ -1,6 +1,7 @@
 package strictjson
 
 import (
+	"encoding/json"
 	"strings"
 	"testing"
 )
@@ -32,4 +33,25 @@ func TestValidateRejectsTrailingDataAndDepthExhaustion(t *testing.T) {
 	if err := Validate([]byte(`[[[]]]`), 2); err == nil || !strings.Contains(err.Error(), "nesting") {
 		t.Fatalf("Validate() depth error = %v", err)
 	}
+}
+
+func FuzzValidate(f *testing.F) {
+	for _, body := range [][]byte{
+		[]byte(`{"outer":{"name":"value"},"items":[1,true,null]}`),
+		[]byte(`{"name":"left","name":"right"}`),
+		[]byte(`{} {}`),
+		[]byte(`[[[[[]]]]]`),
+		{0x00, 0xff, '{', '}'},
+	} {
+		f.Add(body)
+	}
+	f.Fuzz(func(t *testing.T, body []byte) {
+		const maximumFuzzInput = 1 << 20
+		if len(body) > maximumFuzzInput {
+			return
+		}
+		if err := Validate(body, 64); err == nil && !json.Valid(body) {
+			t.Fatalf("Validate accepted input rejected by encoding/json: %q", body)
+		}
+	})
 }

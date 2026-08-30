@@ -1,0 +1,382 @@
+package pdfrender
+
+import (
+	"context"
+	"errors"
+	"os"
+	"path/filepath"
+	"slices"
+	"strings"
+	"testing"
+)
+
+const testImageID = "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+func TestRenderPlanUsesTheExactImageAndHardenedContainer(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	executor := &recordingExecutor{imageID: testImageID}
+	result, err := renderWithDependencies(
+		context.Background(), configuration, "main", noOpPreparer{}, executor,
+	)
+	if err != nil {
+		t.Fatalf("renderWithDependencies() error = %v", err)
+	}
+	if result.ImageID != testImageID || result.LockSHA256 != configuration.LockSHA256 {
+		t.Fatalf("renderWithDependencies() result = %+v", result)
+	}
+	if len(executor.requests) != 6 {
+		t.Fatalf("renderer executed %d commands, want version, create, build, two runs, and cleanup", len(executor.requests))
+	}
+	build := requestWithPrefix(t, executor.requests, "buildx", "build").arguments
+	for _, expected := range []string{
+		"SOURCE_DATE_EPOCH=" + decimal(configuration.Lock.SourceDateEpoch),
+		"RENDERER_LOCK_SHA256=" + configuration.LockSHA256,
+		"--builder",
+	} {
+		if !slices.Contains(build, expected) {
+			t.Fatalf("build arguments omit %q: %v", expected, build)
+		}
+	}
+	if strings.Contains(strings.Join(build, "\n"), "NODE_IMAGE=") ||
+		strings.Contains(strings.Join(build, "\n"), "PUPPETEER_IMAGE=") {
+		t.Fatalf("build arguments retain an ARG-based base image: %v", build)
+	}
+	create := requestWithPrefix(t, executor.requests, "buildx", "create").arguments
+	for _, expected := range []string{
+		"docker-container",
+		"image=" + configuration.Lock.Builder.BuildKitImage,
+		configuration.Lock.Platform,
+		"--bootstrap",
+	} {
+		if !slices.Contains(create, expected) {
+			t.Fatalf("builder creation omits %q: %v", expected, create)
+		}
+	}
+	runs := requestsWithPrefix(executor.requests, "run")
+	if len(runs) != 2 {
+		t.Fatalf("renderer run count = %d, want two", len(runs))
+	}
+	run := runs[0].arguments
+	for _, expected := range []string{
+		"none", "never", "ALL", "no-new-privileges", "BOOK_RENDERER_IMAGE_ID=" + testImageID,
+		"BOOK_RENDERER_LOCK_SHA256=" + configuration.LockSHA256,
+		"VITE_CACHE_DIR=/tmp/vite-cache", testImageID,
+	} {
+		if !slices.Contains(run, expected) {
+			t.Fatalf("run arguments omit %q: %v", expected, run)
+		}
+	}
+	if !slices.Contains(run, dockerBind(configuration.RepositoryRoot, "/workspace", true)) ||
+		mountSource(run, "/workspace/public/downloads") == "" {
+		t.Fatalf("run bind mounts are incomplete: %v", run)
+	}
+	if mountSource(runs[0].arguments, "/workspace/public/downloads") ==
+		mountSource(runs[1].arguments, "/workspace/public/downloads") {
+		t.Fatalf("fresh renders share an output directory")
+	}
+	if strings.Contains(strings.Join(run, "\n"), "node_modules/.vite") {
+		t.Fatalf("run arguments depend on pre-existing Vite cache mountpoints: %v", run)
+	}
+}
+
+func TestRenderRejectsMalformedImageIDBeforeStartingAContainer(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	executor := &recordingExecutor{imageID: testImageID + " "}
+	_, err := renderWithDependencies(
+		context.Background(), configuration, "main", noOpPreparer{}, executor,
+	)
+	if err == nil || !strings.Contains(err.Error(), "trailing") {
+		t.Fatalf("renderWithDependencies() error = %v", err)
+	}
+	if len(executor.requests) != 4 {
+		t.Fatalf("malformed IID executed %d commands, want version, create, build, cleanup", len(executor.requests))
+	}
+}
+
+func TestReadImageIDRejectsAnOversizedOrSymlinkedFile(t *testing.T) {
+	t.Parallel()
+	root := t.TempDir()
+	oversized := filepath.Join(root, "oversized.iid")
+	if err := os.WriteFile(oversized, []byte(strings.Repeat("a", 81)), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := readImageID(oversized); err == nil || !strings.Contains(err.Error(), "bounded") {
+		t.Fatalf("readImageID() oversized error = %v", err)
+	}
+	link := filepath.Join(root, "link.iid")
+	if err := os.Symlink(oversized, link); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := readImageID(link); err == nil || !strings.Contains(err.Error(), "non-symlink") {
+		t.Fatalf("readImageID() symlink error = %v", err)
+	}
+}
+
+func TestRenderRejectsAuthorityDriftDuringTheImageBuild(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	executor := &recordingExecutor{
+		imageID: testImageID,
+		afterBuild: func() error {
+			file, err := os.OpenFile(configuration.LockPath, os.O_APPEND|os.O_WRONLY, 0)
+			if err != nil {
+				return err
+			}
+			if _, err := file.WriteString("\n"); err != nil {
+				_ = file.Close()
+				return err
+			}
+			return file.Close()
+		},
+	}
+	_, err := renderWithDependencies(
+		context.Background(), configuration, "main", noOpPreparer{}, executor,
+	)
+	if err == nil || !strings.Contains(err.Error(), "changed during") {
+		t.Fatalf("renderWithDependencies() error = %v", err)
+	}
+	if len(executor.requests) != 4 {
+		t.Fatalf("authority drift executed %d commands, want version, create, build, cleanup", len(executor.requests))
+	}
+}
+
+func TestRenderFailureForcesCleanupOfTheNamedContainer(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	executor := &recordingExecutor{imageID: testImageID, failRun: true}
+	_, err := renderWithDependencies(
+		context.Background(), configuration, "v1.2.3", noOpPreparer{}, executor,
+	)
+	if err == nil || !strings.Contains(err.Error(), "injected run failure") {
+		t.Fatalf("renderWithDependencies() error = %v", err)
+	}
+	if len(executor.requests) != 6 {
+		t.Fatalf("failed render executed %d commands, want version, create, build, run, container and builder cleanup", len(executor.requests))
+	}
+	runRequest := requestWithPrefix(t, executor.requests, "run")
+	runName := argumentAfter(t, runRequest.arguments, "--name")
+	cleanup := requestWithPrefix(t, executor.requests, "rm", "--force").arguments
+	if !slices.Equal(cleanup, []string{"rm", "--force", runName}) {
+		t.Fatalf("cleanup arguments = %v", cleanup)
+	}
+	if !slices.Contains(runRequest.arguments, "v1.2.3") {
+		t.Fatalf("release ref is absent from run arguments: %v", runRequest.arguments)
+	}
+}
+
+func TestRenderRejectsDifferentFreshOutputsWithoutReplacingPublication(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	oldPDF := []byte("old-pdf")
+	oldManifest := []byte("old-manifest")
+	writePublicationFixture(t, configuration.RepositoryRoot, oldPDF, oldManifest)
+	executor := &recordingExecutor{imageID: testImageID, differentSecondRender: true}
+	_, err := renderWithDependencies(
+		context.Background(), configuration, "main", noOpPreparer{}, executor,
+	)
+	if err == nil || !strings.Contains(err.Error(), "fresh PDF renders differ") {
+		t.Fatalf("renderWithDependencies() error = %v", err)
+	}
+	assertPublicationFixture(t, configuration.RepositoryRoot, oldPDF, oldManifest)
+}
+
+func TestRenderRejectsAnUnreviewedBuildxBinaryBeforeCreatingABuilder(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	executor := &recordingExecutor{imageID: testImageID, buildxOutput: "github.com/docker/buildx 0.0.0 bad"}
+	_, err := renderWithDependencies(
+		context.Background(), configuration, "main", noOpPreparer{}, executor,
+	)
+	if err == nil || !strings.Contains(err.Error(), "does not match the renderer lock") {
+		t.Fatalf("renderWithDependencies() error = %v", err)
+	}
+	if len(executor.requests) != 1 {
+		t.Fatalf("unreviewed Buildx executed %d commands, want version only", len(executor.requests))
+	}
+}
+
+func TestRenderRejectsAConcurrentPublicationBeforeDocker(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	lock, err := acquirePublicationLock(configuration.RepositoryRoot)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if err := lock.release(); err != nil {
+			t.Error(err)
+		}
+	})
+	executor := &recordingExecutor{imageID: testImageID}
+	_, err = renderWithDependencies(
+		context.Background(), configuration, "main", noOpPreparer{}, executor,
+	)
+	if err == nil || !strings.Contains(err.Error(), "already locked") {
+		t.Fatalf("renderWithDependencies() error = %v", err)
+	}
+	if len(executor.requests) != 0 {
+		t.Fatalf("concurrent publication executed %d Docker commands", len(executor.requests))
+	}
+}
+
+func TestContainerUserNeverElevatesRoot(t *testing.T) {
+	t.Parallel()
+	if observed := containerUserFor("linux", "0", "0"); observed != "" {
+		t.Fatalf("containerUserFor(root) = %q", observed)
+	}
+	if observed := containerUserFor("windows", "1000", "1000"); observed != "" {
+		t.Fatalf("containerUserFor(windows) = %q", observed)
+	}
+	if observed := containerUserFor("linux", "1000", "1001"); observed != "1000:1001" {
+		t.Fatalf("containerUserFor(user) = %q", observed)
+	}
+}
+
+type noOpPreparer struct{}
+
+func (noOpPreparer) prepare(context.Context, Configuration, string) error { return nil }
+
+type recordingExecutor struct {
+	requests              []commandRequest
+	imageID               string
+	failRun               bool
+	differentSecondRender bool
+	buildxOutput          string
+	renderCount           int
+	afterBuild            func() error
+}
+
+func (executor *recordingExecutor) run(_ context.Context, request commandRequest) ([]byte, error) {
+	executor.requests = append(executor.requests, request)
+	if slices.Equal(request.arguments, []string{"buildx", "version"}) {
+		output := executor.buildxOutput
+		if output == "" {
+			output = "github.com/docker/buildx 0.36.1 1d8dde89b8aba914e05e45366770736fea1fd690"
+		}
+		return []byte(output + "\n"), nil
+	}
+	if len(request.arguments) > 1 && request.arguments[0] == "buildx" && request.arguments[1] == "build" {
+		iidPath := argumentAfterValue(request.arguments, "--iidfile")
+		if err := os.WriteFile(iidPath, []byte(executor.imageID+"\n"), 0o600); err != nil {
+			return nil, err
+		}
+		if executor.afterBuild != nil {
+			if err := executor.afterBuild(); err != nil {
+				return nil, err
+			}
+		}
+	}
+	if len(request.arguments) > 0 && request.arguments[0] == "run" {
+		if executor.failRun {
+			return nil, errors.New("injected run failure")
+		}
+		executor.renderCount++
+		outputDirectory := mountSource(request.arguments, "/workspace/public/downloads")
+		if outputDirectory == "" {
+			return nil, errors.New("missing output mount")
+		}
+		manifest := []byte("{\"render\":\"stable\"}\n")
+		if executor.differentSecondRender && executor.renderCount == 2 {
+			manifest = []byte("{\"render\":\"different\"}\n")
+		}
+		if err := os.WriteFile(filepath.Join(outputDirectory, bookPDFName), []byte("%PDF-test\n"), 0o644); err != nil {
+			return nil, err
+		}
+		if err := os.WriteFile(filepath.Join(outputDirectory, bookManifestName), manifest, 0o644); err != nil {
+			return nil, err
+		}
+	}
+	return nil, nil
+}
+
+func renderConfiguration(t *testing.T) Configuration {
+	t.Helper()
+	root := rendererFixture(t)
+	for _, relative := range []string{"node_modules", "public/downloads", "tmp"} {
+		if err := os.MkdirAll(filepath.Join(root, filepath.FromSlash(relative)), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	configuration, err := Check(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return configuration
+}
+
+func argumentAfter(t *testing.T, arguments []string, flag string) string {
+	t.Helper()
+	value := argumentAfterValue(arguments, flag)
+	if value == "" {
+		t.Fatalf("arguments %v omit %s", arguments, flag)
+	}
+	return value
+}
+
+func argumentAfterValue(arguments []string, flag string) string {
+	for index := 0; index+1 < len(arguments); index++ {
+		if arguments[index] == flag {
+			return arguments[index+1]
+		}
+	}
+	return ""
+}
+
+func requestsWithPrefix(requests []commandRequest, prefix ...string) []commandRequest {
+	var matches []commandRequest
+	for _, request := range requests {
+		if len(request.arguments) >= len(prefix) && slices.Equal(request.arguments[:len(prefix)], prefix) {
+			matches = append(matches, request)
+		}
+	}
+	return matches
+}
+
+func requestWithPrefix(t *testing.T, requests []commandRequest, prefix ...string) commandRequest {
+	t.Helper()
+	matches := requestsWithPrefix(requests, prefix...)
+	if len(matches) != 1 {
+		t.Fatalf("requests with prefix %v = %d, want one", prefix, len(matches))
+	}
+	return matches[0]
+}
+
+func mountSource(arguments []string, destination string) string {
+	for index := 0; index+1 < len(arguments); index++ {
+		if arguments[index] != "--mount" {
+			continue
+		}
+		mount := arguments[index+1]
+		suffix := ",dst=" + destination
+		if strings.HasPrefix(mount, "type=bind,src=") && strings.HasSuffix(mount, suffix) {
+			return strings.TrimSuffix(strings.TrimPrefix(mount, "type=bind,src="), suffix)
+		}
+	}
+	return ""
+}
+
+func writePublicationFixture(t *testing.T, root string, pdf, manifest []byte) {
+	t.Helper()
+	directory := filepath.Join(root, "public", "downloads")
+	if err := os.WriteFile(filepath.Join(directory, bookPDFName), pdf, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(directory, bookManifestName), manifest, 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func assertPublicationFixture(t *testing.T, root string, pdf, manifest []byte) {
+	t.Helper()
+	for name, expected := range map[string][]byte{bookPDFName: pdf, bookManifestName: manifest} {
+		observed, err := os.ReadFile(filepath.Join(root, "public", "downloads", name))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !slices.Equal(observed, expected) {
+			t.Fatalf("%s = %q, want %q", name, observed, expected)
+		}
+	}
+}

@@ -63,18 +63,19 @@ go -C tooling run ./cmd/20w experiment validate --root ..
 
 Containers are the public execution default. Release automation now admits one
 image per released experiment instead of one image containing unrelated
-harnesses, but no current release contains these new images. The first future
-tag whose source contains and passes the release workflow will publish the two
-Linux `amd64` images below:
+harnesses. Releases from v0.3.0 whose source contains and passes the release
+workflow publish the two Linux `amd64` images below:
 
 | Artifact | Image | Runtime boundary |
 | --- | --- | --- |
 | Fixture 007 | `ghcr.io/lusoris/20-watts-was-enough-fixture-007` | Node.js 26.8.1 and the closed Fixture 007 runtime files |
 | Fixture 019 | `ghcr.io/lusoris/20-watts-was-enough-fixture-019` | Node.js 26.8.1, CPython 3.14.7, NumPy 2.5.2 and the closed Fixture 019 runtime files |
 
-After that release, copy the complete `image@sha256:...` identity from its
-GitHub release notes. Pull and run that identity directly; do not reconstruct
-it from a tag or substitute `latest`:
+For an admitted release, download its checksum-bound and attested
+`oci-images.json` asset and copy the complete `image@sha256:...` identity from
+that file. Pull and run that identity directly; do not reconstruct it from a
+tag or substitute `latest`. Release notes may repeat the identity but are not
+its authority:
 
 ```bash
 image='ghcr.io/lusoris/20-watts-was-enough-fixture-007@sha256:...'
@@ -125,8 +126,9 @@ it is not the portable default.
 
 ### Fixture 019: fixed-point forecast diagnostic
 
-Copy Fixture 019's complete identity separately from the same release notes,
-because its digest and runtime are independent of Fixture 007:
+Copy Fixture 019's complete identity separately from the same
+`oci-images.json` asset, because its digest and runtime are independent of
+Fixture 007:
 
 ```bash
 image='ghcr.io/lusoris/20-watts-was-enough-fixture-019@sha256:...'
@@ -174,7 +176,7 @@ the scientific `run_id`.
 
 When reporting a defect through the
 [experiment issue form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=experiment-protocol-problem.yml),
-include the exact identity copied from the release notes, release tag, source
+include the exact identity copied from `oci-images.json`, release tag, source
 revision and architecture, exact commands, output volume or bind path and the
 `NO_RESULT` receipt. Do not
 upload private inputs, secrets or machine credentials. The affected manifest

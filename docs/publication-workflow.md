@@ -22,22 +22,23 @@ reader feedback
 
 ## Why this structure fits research work
 
-The useful pattern in established GitHub publishing systems is not a specific
-site generator. It is a reproducible source-to-publication boundary. Quarto's
-official guidance uses GitHub Pages for repository-hosted work, renders in CI,
-supports navigable and searchable document collections, and adds scholarly
-citation metadata. FAIR4RS asks research software to expose identifiers,
-metadata, licences, provenance and qualified references. This repository keeps
-its custom Vite reader because it already implements the required route,
-search, mathematical rendering, fallback and PDF contracts; migrating
-generators would duplicate work without fixing an identified boundary.
+The useful pattern in established Git-centred research projects is not a
+specific site generator. It is a reproducible source-to-publication boundary.
+The [external infrastructure
+audit](../research/audits/2026-08-30-git-centred-open-research-publication-infrastructure.md)
+compares that boundary across repositories, papers, specifications and current
+service documentation. This repository keeps its custom Vite reader because
+it already implements the required route, search, mathematical rendering,
+fallback and PDF contracts; migrating generators would duplicate work without
+fixing an identified boundary.
 
-The reading column follows the accessibility constraint that users must be able
-to keep lines at no more than 80 characters. Focused documents and the web book
-use a 72-character measure, 16–16.5 px body text and approximately 1.72 line
-spacing. Tables, equations and diagrams may use bounded overflow regions rather
-than widening prose. Navigation and metadata remain visually subordinate but
-must not fall below the tested readable scale.
+The reading column applies the externally recorded bounded-line, reflow and
+text-spacing guidance. Focused documents use an `18px` body, approximately
+`1.66` line height and a `68ch` argument measure on wide screens. Small screens
+start around `17px`, `1.68` and `20px` gutters. These are project defaults, not
+universal accessibility thresholds. Tables, equations and diagrams may use
+bounded overflow regions rather than widening prose. Navigation and metadata
+remain visually subordinate but must not fall below the tested readable scale.
 
 ## One authority per concern
 
@@ -75,10 +76,10 @@ The issue is a triage and coordination record. Accepted text, code, data and
 policy changes still land through the authoritative file and its validation
 gate.
 
-The [public-interface audit and maintainer decision
-queue](public-research-interface-audit.md) benchmarks the current reading
-surface and keeps unresolved community, archive, annotation and translation
-service choices out of presentation code.
+The [external research audit](../research/audits/2026-08-30-git-centred-open-research-publication-infrastructure.md)
+holds the comparison evidence and unresolved service choices. The
+[interface implementation audit](public-research-interface-audit.md) records
+only rendered observations, adopted rules and falsifiable reader tasks.
 
 ## Automation boundary
 
@@ -87,25 +88,99 @@ authority. Pages deployment runs the narrower `npm run test:github-pages`
 pipeline because it must produce the upload artifact. Tagged release
 verification runs the aggregate gate once, then creates tag-bound assets, the
 static `20w` image, and scoped experiment images from the already verified
-source. The first future tag whose source contains and passes this release path
-will publish the new images; older releases are not backfilled. Their complete
-`image@sha256:...` identities appear in the release notes. The only native
-convenience file currently exercised and admitted is `20w-linux-amd64`. Each
-external GitHub Action is pinned to a full commit SHA and every job has bounded
-time and least privilege.
+source. Releases from v0.3.0 whose source contains and passes this path publish
+the new images; earlier releases are not backfilled. Their complete
+`image@sha256:...` identities are recorded in the checksum-bound
+`oci-images.json` release asset. The release notes render the same identities
+for readers, but are not digest authority. The only native convenience file
+currently exercised and admitted is `20w-linux-amd64`. Each external GitHub
+Action is pinned to a full commit SHA and every job has bounded time and least
+privilege.
+
+The PDF renderer's checked-in JSON lock is the authority for its container,
+browser and resource inputs. The Go renderer validates that lock and generates
+a temporary closed Dockerfile whose two `FROM` instructions contain the lock's
+literal OCI digests. The template contains no image identity, and the generated
+Dockerfile is not a second maintained source. The separate `package-lock.json`
+binds JavaScript packages, and tagged release CI realizes that graph with the
+exact locked Node and npm versions before rendering. Both locks and the Go
+generator contribute to the book source digest.
+
+The two render containers use disjoint output, work and browser-cache
+directories, but currently share that one read-only installed JavaScript
+dependency tree. Their byte comparison therefore tests deterministic rendering
+conditional on one clean `npm ci` realization; it does not independently
+reinstall or byte-bind two realized `node_modules` trees.
 
 Container publication has a separate two-phase boundary. The build pushes a
 candidate under its canonical digest without a release tag. The workflow then
-validates and executes that exact digest, creates a missing source-bound
-attestation, verifies provenance, and only then attaches the release tag and
-checks its final digest binding. On a rerun, an existing tag is re-admitted at
-the same digest; the workflow can repair a missing attestation after execution
-passes, and recovery has no intentional deletion or replacement path. Tag
+validates and executes that exact digest. Only a digest produced by a build
+step in the current run receives a new source-bound build attestation, using
+that step's digest directly. On a rerun, an existing tag is re-admitted at the
+same digest only if its workflow-, tag- and commit-bound provenance already
+verifies; missing provenance stops the release. The workflow then attaches a
+missing release tag and checks its final digest binding. Recovery has no
+intentional deletion or replacement path. Tag
 creation is serialized and immediately absence-checked. GHCR does not expose a
 documented atomic create-if-absent operation through this path, so package
 writers remain a trusted concurrent-writer boundary; final inspection rejects
 a divergent binding. A candidate that fails before tag attachment is not a
 release-tag identity.
+
+GitHub Release publication starts only after all three final image digests can
+be pulled without credentials from a fresh, empty Docker configuration. GitHub
+[creates a personal-account package as private by
+default](https://docs.github.com/en/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility),
+even when its linked repository is public. GitHub also warns that changing a
+package from private to public is irreversible. For the v0.3.0 release, this
+one-time settings action is limited to these three package identities:
+
+- `ghcr.io/lusoris/20-watts-was-enough-20w`
+- `ghcr.io/lusoris/20-watts-was-enough-fixture-007`
+- `ghcr.io/lusoris/20-watts-was-enough-fixture-019`
+
+The first run that creates them can therefore stop at this gate. Set only these
+packages to **Public** in GitHub's package settings, then manually rerun the
+same exact release tag. Do not create or move a replacement tag to pass the
+visibility gate.
+
+Repository [immutable releases must be
+enabled](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases)
+before v0.3.0 is published. Reading that setting requires repository
+administration permission, which the release job does not receive. The
+maintainer enables it through the administrative boundary; after publication,
+the least-privileged workflow instead requires GitHub to report the release as
+immutable. It also resolves either a lightweight or bounded annotated tag
+chain to the verified source commit before it considers release state.
+
+After final tag binding and the first anonymous pull gate, the Go release tool
+writes one closed `oci-images.json`. It contains schema and contract versions,
+the source tag and commit, `linux/amd64`, `NO_RESULT`, and the sorted exact
+identities of the tooling, Fixture 007 and Fixture 019 images. The workflow
+adds that file to `SHA256SUMS`, verifies the complete checksum inventory, and
+attests every asset before publication. Release notes remain presentation;
+editing prose cannot change the persisted container authority.
+
+A same-tag run begins with a read-only preflight. The Go release command reads
+every source asset twice, binds initial and final directory snapshots, and
+derives the only allowed names from `SHA256SUMS`. Existing remote assets are
+downloaded by asset ID and compared by hash and bytes. Before any upload,
+creation or publication edit, the final step repeats the local stable-read and
+attestation checks. It then validates the complete downloaded remote directory
+against its own checksum authority and verifies attestations over those remote
+bytes. No path deletes or moves a tag or asset, replaces an existing asset, or
+uses `--clobber`.
+
+GitHub recommends creating a draft, attaching every asset, and publishing only
+after the draft is complete. A fresh run follows that sequence, verifies all
+draft bytes, publishes it, and then requires GitHub to report the release as
+immutable. A manual rerun may fill only missing assets in an existing
+non-prerelease draft after every present asset compares exactly. An existing
+published release must already be non-prerelease, complete, byte-matching and
+immutable; that branch performs no container-image build, upload, attestation
+creation, release edit or other remote mutation. It still verifies
+release-asset attestations, every persisted image and tag binding, image
+provenance, and anonymous exact-digest pulls.
 
 The Go catalogue derives `experiment-release-plan.json` from the checked
 workstation manifests. Policy validation reads the same manifest projection
@@ -122,12 +197,9 @@ ones without deleting labels outside the manifest. Manual repair still checks
 out canonical `main`, so an arbitrary workflow ref cannot become a second label
 authority.
 
-## Sources used for this benchmark
+## Research basis
 
-- [Quarto websites](https://quarto.org/docs/websites/)
-- [Quarto publishing with GitHub Pages](https://quarto.org/docs/publishing/github-pages.html)
-- [Quarto continuous integration](https://quarto.org/docs/publishing/ci.html)
-- [Quarto citeable articles](https://quarto.org/docs/authoring/create-citeable-articles.html)
-- [W3C sufficient techniques for visual presentation](https://www.w3.org/WAI/WCAG22/Techniques/css/C20)
-- [FAIR Principles for Research Software](https://www.researchsoft.org/blog/2022-08/)
-- [GitHub issue-form syntax](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms)
+The primary sources, repository snapshots, observations, retained boundaries
+and open decisions are maintained once in the
+[Git-centred open research publication infrastructure
+audit](../research/audits/2026-08-30-git-centred-open-research-publication-infrastructure.md).

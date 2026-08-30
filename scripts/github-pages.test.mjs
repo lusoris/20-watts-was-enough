@@ -183,6 +183,17 @@ test("the portal keeps clean-route history and native Markdown links honest on t
   assert.match(portal, /\{selectedPath && selectedMetadata \? \(/);
   assert.match(portal, /className="portal-dashboard"/);
   assert.match(portal, /NO_RESULT/);
+  assert.match(portal, /smokeReady\} development smoke harnesses/);
+  assert.doesNotMatch(portal, /smokeReady\} artifacts ready/);
+  assert.match(portal, /className="portal-system-figure"/);
+  assert.match(portal, /Repository logic, not an experimental result/);
+  assert.match(portal, /const catalogPageSize = 8/);
+  assert.match(portal, /readerPageRef\.current\?\.scrollIntoView\(\{ block: "start" \}\)/);
+  assert.doesNotMatch(portal, /readerRef\.current\?\.scrollIntoView/);
+  assert.match(portal, />Read<\/a>/);
+  assert.match(portal, />Evidence<\/a>/);
+  assert.match(portal, />Experiments /);
+  assert.match(portal, />Contribute<\/a>/);
   assert.match(portal, /const selectGroup = \(candidate: LibraryGroup\)/);
   assert.match(portal, /selectedMetadata\?\.group !== candidate/);
   assert.match(portal, /className="portal-mobile-menu"/);

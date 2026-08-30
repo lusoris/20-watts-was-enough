@@ -16,9 +16,5 @@ indent_size = 2
 # Markdown hard line breaks are present in canonical research records.
 trim_trailing_whitespace = false
 
-[*.ps1]
-indent_style = space
-indent_size = 4
-
 [Makefile]
 indent_style = tab

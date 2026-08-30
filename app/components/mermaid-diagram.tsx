@@ -104,6 +104,10 @@ function decorateDiagram(renderedSvg: string): string {
   return svg.outerHTML;
 }
 
+function diagramRenderId(reactId: string, attempt: number): string {
+  return `diagram-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}-${attempt}`;
+}
+
 export function MermaidDiagram({
   chart,
   contextHeading,
@@ -115,14 +119,14 @@ export function MermaidDiagram({
   const [rendered, setRendered] = useState<RenderedDiagram | null>(null);
   const [error, setError] = useState("");
   const [overflows, setOverflows] = useState(false);
+  const renderAttemptRef = useRef(0);
   const scrollRegionRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
-  const caption = semanticDiagramCaption(chart, contextHeading);
   const captionId = `caption-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
 
   useEffect(() => {
     let active = true;
-    const diagramId = `diagram-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
+    const diagramId = diagramRenderId(reactId, ++renderAttemptRef.current);
 
     import("mermaid")
       .then(({ default: mermaid }) => {
@@ -243,7 +247,7 @@ export function MermaidDiagram({
           dangerouslySetInnerHTML={{ __html: rendered.svg }}
         />
       </div>
-      <figcaption id={captionId}>{caption}</figcaption>
+      <figcaption id={captionId}>{semanticDiagramCaption(chart, contextHeading)}</figcaption>
     </figure>
   );
 }

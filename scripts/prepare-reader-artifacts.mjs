@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const scriptPath = fileURLToPath(import.meta.url);
 const defaultRepositoryRoot = path.resolve(path.dirname(scriptPath), "..");
 const SOURCE_EXTENSIONS = new Set([
-  ".csv", ".js", ".json", ".mjs", ".ps1", ".py", ".sh", ".toml",
+  ".csv", ".js", ".json", ".mjs", ".py", ".sh", ".toml",
   ".ts", ".tsx", ".tsv", ".yaml", ".yml",
 ]);
 const EXCLUDED_DIRECTORIES = new Set([

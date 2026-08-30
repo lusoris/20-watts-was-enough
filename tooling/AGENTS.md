@@ -39,9 +39,9 @@ These instructions extend the repository-wide [`AGENTS.md`](../AGENTS.md) and
   needs remote state must have an explicit timeout, cancellation path, and
   output contract, and must keep remote observations separate from Git
   authority.
-- Avoid shell and PowerShell orchestration in portable tooling. If a subprocess
-  is unavoidable, invoke it directly with `exec.CommandContext`, a bounded
-  environment and output buffer, and a checked exit status.
+- Avoid platform-specific shell orchestration in portable tooling. If a
+  subprocess is unavoidable, invoke it directly with `exec.CommandContext`, a
+  bounded environment and output buffer, and a checked exit status.
 
 ## Command contract
 

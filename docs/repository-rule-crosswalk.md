@@ -103,27 +103,36 @@ Host controls verified through the GitHub API on 2026-08-28 are:
 - active immutable release-tag ruleset `21727474` for `refs/tags/v*`, with tag
   update and deletion blocked and no bypass actor.
 
+The `main` ruleset was strengthened and read back through the API on
+2026-08-30. Active ruleset `21746706` now has no bypass actor, requires a pull
+request, strict `CI success`, resolved review threads, linear history, and
+CodeQL with no high-or-higher security alert or analysis error. Squash and
+rebase are the admitted merge methods. The approval count remains zero because
+the repository has one human maintainer; GitHub's [ruleset
+guidance](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets)
+confirms that zero is a supported setting. A second-human approval gate should
+be added only when a second reviewer can actually serve it.
+
 The `cordana.dev` Cloudflare zone also has **Always Use HTTPS** enabled. A live
 check on 2026-08-28 verified `301 Moved Permanently` for both the site root and
 `/book/`, preserving the requested path on `https://www.cordana.dev/`. GitHub's
 Pages API still lacks its own origin certificate for the proxied hostname, so
 Cloudflare is the truthful enforcement boundary for the public custom domain.
 
-## Post-commit main protection
+## Main protection
 
-The versioned policy requires the `main` ruleset to block branch deletion and
-non-fast-forward updates, require the exact strict `CI success` context, and
-require CodeQL to report no high-or-higher security alert or analysis error.
-The maintainer bypass is limited to pull-request operation. This host control is
-promoted only after the exact revision to be protected has passed those checks;
-the GitHub rulesets API is authoritative for its current activation state.
+The active `main` ruleset blocks branch deletion and non-fast-forward updates,
+requires the exact strict `CI success` context and a pull request, and requires
+CodeQL to report no high-or-higher security alert or analysis error. No actor,
+including the maintainer, can bypass it. The GitHub rulesets API is
+authoritative for its current activation state.
 
 ## Staged controls and exit conditions
 
 | Control | Why staged | Promotion condition |
 | --- | --- | --- |
 | Zero-debt P10-4 thresholds | The measured baseline contains 195 findings across 294 audited source files. A CI no-regression gate is active now. | Reduce the tracked file/rule groups to zero; the baseline may shrink but cannot grow or worsen. |
-| Property, fuzz, mutation, and hostile-input testing | Valuable only at selected authority boundaries. | Add first to source publication, receipts, manifests, paths, hashes, schemas, and promotion gates; measure useful fault discovery. |
+| Broader property, fuzz, mutation, and hostile-input testing | The strict JSON parser now has a bounded Go fuzz target in required CI; wider adoption remains staged. | Extend it to the next parser or promotion boundary only when the target has a concrete invariant and the campaign remains resource-bounded. |
 | Automated dependency merge | Deliberately disabled; branch protection alone does not prove an update safe. | Consider only after repeated dependency PRs demonstrate that the full gate and review policy catch relevant drift. |
 | REUSE lint | Split licences, `sources/`, restricted taxonomy data, and generated mixed works cannot be represented by a copied catch-all annotation. | Complete a file-level licence inventory with truthful third-party and `LicenseRef` mappings before declaring REUSE conformance. |
 | Dedicated Gitleaks CI | Native GitHub secret scanning and push protection are active; an unverified download pipeline would reduce supply-chain quality. | Use a full-SHA action that works for this repository or a checksum-pinned binary and retain only exact-value baseline exceptions. |

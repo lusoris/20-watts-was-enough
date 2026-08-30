@@ -10,6 +10,11 @@ import {
 } from "../app/lib/book-release-identity.mjs";
 import { assertBookManifestContract } from "./lib/book-manifest-contract.mjs";
 import { parseBookPdfGenerationOptions } from "./lib/book-pdf-generation-options.mjs";
+import {
+  assertBookRendererLockIdentity,
+  bookRendererIdentityFromEnvironment,
+  bookRendererLockSHA256,
+} from "./lib/book-renderer-identity.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -57,17 +62,54 @@ test("PDF generation accepts only one bounded source-ref option", () => {
   );
 });
 
+test("PDF renderer identity is exact and source-lock-bound", () => {
+  const lockSHA256 = bookRendererLockSHA256(Buffer.from("locked renderer\n"));
+  const identity = bookRendererIdentityFromEnvironment({
+    BOOK_RENDERER_LOCK_SHA256: lockSHA256,
+    BOOK_RENDERER_IMAGE_ID: `sha256:${"d".repeat(64)}`,
+    BOOK_RENDERER_PLATFORM: "linux/amd64",
+  });
+  assert.deepEqual(identity, {
+    lock: "tooling/pdf-renderer/lock.json",
+    lock_sha256: lockSHA256,
+    image_id: `sha256:${"d".repeat(64)}`,
+    platform: "linux/amd64",
+  });
+  assert.equal(assertBookRendererLockIdentity(identity, Buffer.from("locked renderer\n")), identity);
+  assert.throws(
+    () => assertBookRendererLockIdentity(identity, Buffer.from("changed renderer\n")),
+    /does not match the checked-in lock bytes/u,
+  );
+  assert.throws(() => bookRendererIdentityFromEnvironment({}), /lock SHA-256 is missing/u);
+  assert.throws(
+    () => bookRendererIdentityFromEnvironment({
+      BOOK_RENDERER_LOCK_SHA256: lockSHA256,
+      BOOK_RENDERER_IMAGE_ID: "renderer:latest",
+      BOOK_RENDERER_PLATFORM: "linux/amd64",
+    }),
+    /image ID is missing or invalid/u,
+  );
+});
+
 test("the book manifest must carry the package version and explicit source ref", () => {
+  const rendererLockSHA256 = "a".repeat(64);
   const manifest = {
-    schema_version: 2,
+    schema_version: 3,
     version: "0.2.0",
     source_ref: "main",
     pdf: "public/downloads/20-watts-was-enough-full-concept-book.pdf",
+    renderer: {
+      lock: "tooling/pdf-renderer/lock.json",
+      lock_sha256: rendererLockSHA256,
+      image_id: `sha256:${"b".repeat(64)}`,
+      platform: "linux/amd64",
+    },
   };
   const contract = {
     expectedVersion: "0.2.0",
     expectedPdf: manifest.pdf,
     expectedSourceRef: "main",
+    expectedRendererLockSHA256: rendererLockSHA256,
   };
 
   assert.equal(assertBookManifestContract({ manifest, ...contract }), manifest);
@@ -85,6 +127,14 @@ test("the book manifest must carry the package version and explicit source ref",
       expectedSourceRef: "v0.2.0",
     }),
     /does not match expected ref "v0\.2\.0"/u,
+  );
+  assert.throws(
+    () => assertBookManifestContract({
+      manifest,
+      ...contract,
+      expectedRendererLockSHA256: "c".repeat(64),
+    }),
+    /renderer lock SHA-256 does not match/u,
   );
 });
 
@@ -123,15 +173,6 @@ test("portal utility text and card accents retain readable contrast", async () =
   const portal = stylesheet.slice(portalStart, portalEnd);
 
   assert.doesNotMatch(portal, /font-size:\s*(?:8|9|10)px/);
-  for (const contrastToken of [
-    "--card-accent-text: #1459b8",
-    "--card-accent-text: #a92d31",
-    "--card-accent-text: #6240b8",
-    "--card-accent-text: #805000",
-    "--card-accent-text: #006971",
-  ]) assert.ok(portal.includes(contrastToken), contrastToken);
-  assert.match(stylesheet, /\.portal-start-card:hover\s*\{[^}]*background:\s*#0d2118/s);
-  assert.match(stylesheet, /\.portal-status-outcome\s*\{[^}]*border:\s*2px solid #ff827b/s);
   assert.match(stylesheet, /\.portal-dashboard-funnel\s*\{[^}]*grid-column:\s*1 \/ -1/s);
   assert.match(portal, /\.portal-document-state\s*\{[^}]*font-size:\s*14px/s);
   assert.match(portal, /\.portal-document-state\[role="alert"\]\s*\{[^}]*border-left-color:\s*#a92d31/s);
@@ -148,6 +189,39 @@ test("portal utility text and card accents retain readable contrast", async () =
   assert.match(stylesheet, /\.portal-reader \.portal-prose > h2:first-child\s*\{[^}]*display:\s*none/s);
   assert.match(stylesheet, /top:\s*var\(--portal-reader-stack-top, 142px\)/);
   assert.match(stylesheet, /scroll-margin-top:\s*calc\(var\(--portal-reader-stack-top, 142px\) \+ 8px\)/);
-  assert.match(stylesheet, /@media screen and \(max-width: 760px\)[\s\S]*\.portal-funnel-step a\s*\{[^}]*min-height:\s*44px/s);
   assert.doesNotMatch(stylesheet, /\.portal-header nav a:(?:first-child|nth-child\()/);
+
+  const publicationPass = stylesheet.slice(stylesheet.indexOf(
+    "/* Research-publication pass: manuscript first, evidence chrome second. */",
+  ));
+  const mobilePublicationStart = publicationPass.indexOf(
+    "@media screen and (max-width: 700px)",
+  );
+  assert.ok(mobilePublicationStart >= 0);
+  const mobilePublicationPass = publicationPass.slice(mobilePublicationStart);
+  assert.match(
+    mobilePublicationPass,
+    /\.portal-funnel-step a\s*\{[^}]*min-height:\s*44px/s,
+  );
+  assert.doesNotMatch(
+    mobilePublicationPass,
+    /\.portal-funnel-step a\s*\{[^}]*min-height:\s*(?:[0-9]|[1-3][0-9]|4[0-3])px/s,
+  );
+  assert.match(
+    mobilePublicationPass,
+    /\.portal-dashboard \.portal-action-tertiary\s*\{[^}]*min-height:\s*44px/s,
+  );
+  assert.doesNotMatch(
+    mobilePublicationPass,
+    /\.portal-dashboard \.portal-action-tertiary\s*\{[^}]*min-height:\s*(?:[0-9]|[1-3][0-9]|4[0-3])px/s,
+  );
+  assert.match(publicationPass, /\.portal-funnel-step strong\s*\{[^}]*color:\s*#285d41/s);
+  assert.match(publicationPass, /\.portal-start-card > span\s*\{[^}]*color:\s*#596c61/s);
+  assert.match(publicationPass, /\.portal-start-card:hover\s*\{[^}]*background:\s*transparent;[^}]*color:\s*#0f5534/s);
+  assert.match(publicationPass, /\.portal-dashboard\s*\{[^}]*grid-template-columns:\s*minmax\(0, 650px\) minmax\(380px, 520px\)[^}]*background:\s*var\(--portal-cream\)/s);
+  assert.match(publicationPass, /\.portal-status-outcome\s*\{[^}]*border-left:\s*3px solid #b37b1c[^}]*background:\s*transparent/s);
+  assert.match(publicationPass, /\.portal-funnel\s*\{[^}]*grid-template-columns:\s*1fr[^}]*border:\s*0/s);
+  assert.match(publicationPass, /\.portal-reader-grid\s*\{[^}]*grid-template-columns:\s*235px minmax\(0, 900px\) 195px[^}]*border:\s*0/s);
+  assert.match(publicationPass, /\.portal-prose\s*\{[^}]*font-size:\s*18px[^}]*line-height:\s*1\.66/s);
+  assert.match(publicationPass, /@media screen and \(max-width: 460px\)[\s\S]*\.portal-wordmark strong\s*\{[^}]*display:\s*block/s);
 });

@@ -3,7 +3,6 @@ const REPOSITORY_ARTIFACT_EXTENSIONS = new Set([
   ".js",
   ".json",
   ".mjs",
-  ".ps1",
   ".py",
   ".sh",
   ".toml",

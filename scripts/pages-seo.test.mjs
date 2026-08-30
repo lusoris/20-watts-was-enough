@@ -5,6 +5,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { publication, repositoryIssueUrl } from "../app/lib/publication.mjs";
+import { createSeoStaticPages } from "../vite.pages.config.ts";
 import {
   markdownSourceDocument,
   portalSourceDocuments,
@@ -67,6 +68,8 @@ test("help metadata and fallback come from the canonical contribution map", () =
   const fallback = renderHelpFallback(helpDocument, documents, "/research/");
   assert.match(fallback, /<h1>Help one bounded part move forward<\/h1>/);
   assert.match(fallback, /Current workstreams/);
+  assert.match(fallback, /template=experiment-run-failure\.yml/);
+  assert.match(fallback, /Short failed-run form/);
   assert.match(fallback, /href="https:\/\/github\.com\/lusoris\/20-watts-was-enough\/blob\/main\/experiments\/workstation\/README\.md/);
   assert.match(fallback, /<details class="portal-mobile-menu"><summary>Menu<\/summary><nav aria-label="Mobile navigation">/);
   assert.match(fallback, /<nav aria-label="Primary navigation">/);
@@ -76,6 +79,31 @@ test("help metadata and fallback come from the canonical contribution map", () =
     stylesheet,
     /\.help-page \.help-prose table\s*\{[^}]*min-width:\s*960px;/s,
   );
+});
+
+test("the local Pages server renders the canonical no-JavaScript help page", async () => {
+  const template = await readFile(
+    path.join(repositoryRoot, "github-pages", "help", "index.html"),
+    "utf8",
+  );
+  const transform = createSeoStaticPages().transformIndexHtml;
+  const handler = typeof transform === "function" ? transform : transform?.handler;
+  assert.ok(handler);
+  const rendered = await handler.call({}, template, {
+    path: "/help/",
+    filename: path.join(repositoryRoot, "github-pages", "help", "index.html"),
+    server: {},
+  });
+
+  assert.match(rendered, /<h1>Help one bounded part move forward<\/h1>/u);
+  assert.match(rendered, /template=experiment-run-failure\.yml/u);
+  assert.match(rendered, /<link rel="stylesheet" href="\.\.\/help\.css" \/>/u);
+  assert.ok(
+    template.indexOf('<link rel="stylesheet" href="../help.css" />')
+      > template.indexOf("<!-- /pages-seo:head -->"),
+    "the development stylesheet must survive SEO-head replacement",
+  );
+  assert.doesNotMatch(rendered, /<script\b[^>]*(?:\bsrc=|\btype=["']module["'])/u);
 });
 
 test("no-JS reading fallbacks expose help and source-bound issue routes", () => {

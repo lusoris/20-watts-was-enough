@@ -19,6 +19,7 @@ import {
 } from "./scripts/lib/pages-seo.mjs";
 import { resolvePagesBase } from "./scripts/lib/pages-base.mjs";
 import { renderThirdPartyNotices } from "./scripts/lib/third-party-notices.mjs";
+import { resolveViteCacheDirectory } from "./scripts/lib/vite-cache-directory.mjs";
 import {
   translatedSourceDocuments,
   writeTranslationPages,
@@ -27,6 +28,10 @@ import {
 const repositoryRoot = path.dirname(fileURLToPath(import.meta.url));
 const pagesOutputRoot = path.join(repositoryRoot, "dist-github-pages");
 const pagesBase = resolvePagesBase(process.env.PAGES_BASE_PATH);
+const pagesCacheDirectory = resolveViteCacheDirectory({
+  override: process.env.VITE_CACHE_DIR,
+  repositoryRoot,
+});
 const portalDocumentPrefixes = [...new Set([
   "/documents/",
   `${pagesBase}documents/`,
@@ -156,8 +161,30 @@ export function createSeoStaticPages({
   outputRoot?: string;
   translationDocuments?: readonly TranslationSourceDocument[] | null;
 } = {}): Plugin {
+  const renderCurrentHelpPage = (template: string) => {
+    const documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
+    const helpDocument = markdownSourceDocument(
+      repositoryRoot,
+      "docs/how-to-help.md",
+      "Project",
+    );
+    return populateSeoTemplate(
+      template,
+      renderSeoHead("help", helpDocument, pagesBase),
+      renderHelpFallback(helpDocument, documents, pagesBase),
+    );
+  };
   return {
     name: "seo-static-pages",
+    transformIndexHtml: {
+      order: "post",
+      handler(html, context) {
+        if (!context.server) return undefined;
+        const requestPath = context.path.replace(/index\.html$/u, "");
+        if (requestPath !== `${pagesBase}help/`) return undefined;
+        return renderCurrentHelpPage(html);
+      },
+    },
     writeBundle() {
       const documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
       const translations = translationDocuments
@@ -167,11 +194,6 @@ export function createSeoStaticPages({
       const helpPath = path.join(outputRoot, "help", "index.html");
       const portalTemplate = readFileSync(portalPath, "utf8");
       const staticTemplate = readFileSync(helpPath, "utf8");
-      const helpDocument = markdownSourceDocument(
-        repositoryRoot,
-        "docs/how-to-help.md",
-        "Project",
-      );
       writeFileSync(portalPath, populateSeoTemplate(
         portalTemplate,
         renderSeoHead("portal", null, pagesBase),
@@ -182,11 +204,7 @@ export function createSeoStaticPages({
         renderSeoHead("book", null, pagesBase),
         renderBookFallback(documents, pagesBase),
       ), "utf8");
-      writeFileSync(helpPath, populateSeoTemplate(
-        readFileSync(helpPath, "utf8"),
-        renderSeoHead("help", helpDocument, pagesBase),
-        renderHelpFallback(helpDocument, documents, pagesBase),
-      ), "utf8");
+      writeFileSync(helpPath, renderCurrentHelpPage(readFileSync(helpPath, "utf8")), "utf8");
       for (const document of documents) {
         const output = path.join(outputRoot, ...document.route.split("/"), "index.html");
         mkdirSync(path.dirname(output), { recursive: true });
@@ -243,6 +261,7 @@ function legalReleaseAssets(): Plugin {
 
 export default defineConfig({
   root: path.join(repositoryRoot, "github-pages"),
+  cacheDir: pagesCacheDirectory,
   base: pagesBase,
   publicDir: path.join(repositoryRoot, "public"),
   assetsInclude: ["**/*.md", "**/*.mmd", "**/*.bib"],

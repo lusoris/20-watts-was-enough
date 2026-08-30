@@ -2,15 +2,24 @@
 
 **Audit date:** 2026-08-05
 
-**Source addition:** 2026-08-06 — Rillig et al. (2025),
-"Concurrent common fungal networks formed by different guilds of fungi"
-([DOI](https://doi.org/10.1111/nph.20418)).
+**Source additions:**
+
+- 2026-08-06 — Rillig et al. (2025), "Concurrent common fungal networks
+  formed by different guilds of fungi"
+  ([DOI](https://doi.org/10.1111/nph.20418)); and
+- 2026-08-30 — a bounded common-mycorrhizal-network update covering sampled
+  forest topology, path-identification controls, defence-associated receiver
+  effects, and the active dispute over forest-scale inference.
+
+The Wikipedia article supplied as the 2026-08-30 source lead framed search
+questions only. No observation or evidence status below depends on it.
 
 **Scope:** hyphal branching and anastomosis, oscillatory and growth-induced
 transport, nutrient foraging and translocation, source--sink reallocation,
 damage containment and bypass, nuclear heterogeneity, priming and directional
-"memory," plant--fungus exchange, concurrent fungal guild networks, causal
-link attribution, and network remodeling
+"memory," common-mycorrhizal-network topology and signalling, plant--fungus
+exchange, concurrent fungal guild networks, causal link attribution, and
+network remodelling
 
 **Purpose:** candidate evidence for later claim-ledger review. This file does
 not promote a claim, create a stable claim ID, amend the principle registry, or
@@ -124,7 +133,9 @@ proxy for common control, common genotype, or freely shared resources.
 | Directional memory | transfer-and-regrowth assay in *P. velutina*; negative *Laccaria bicolor* assay | prior asymmetric growth can predict later asymmetric regrowth in one preparation | disputed/generalization unsupported | residual biomass, polarity, viability, and unequal propagule state |
 | Stress priming | controlled heat and drought prime--delay--challenge experiments | prior sublethal stress can transiently alter later growth/activity | plausible to established by isolate; substrate unresolved | acclimation, retained metabolites, damage selection, or growth-state carryover |
 | Plant--fungus trade | partner manipulation and isotope tracing | carbon supply can alter fungal N/P uptake and allocation; exchange can be unequal | established in scoped AM systems | local carbon limitation and ordinary exchange economics |
-| Concurrent fungal guild networks | peer-reviewed perspective plus a proposed spatial-mapping and intervention agenda | multiple guilds may link the same plant endpoints, but their existence, continuity, interaction, and function require separate tests | research program proposed; functional effects unestablished | mixed inoculum, shared endpoints, and co-severed paths confound attribution |
+| Common-network topology | fungal and tree microsatellite genotyping in Douglas-fir forest plots | sampled roots can share *Rhizopogon* genets and form non-random association graphs | established for the sampled species and plots; continuous active hyphae and flux were not observed by genotyping | shared fungal identity or spatial overlap is mistaken for an active transport path |
+| Defence-associated receiver effects | compartmented tomato experiments, defence assays, labelled jasmonic acid, root exudates, and microbiome interventions | an intact AM-fungal path can alter a receiver response; one recent system identifies jasmonic acid as a transported signal | established for the tested tomato systems; forest and cross-species generality unestablished | root, soil, water, volatile, or microbial pathways reproduce the receiver effect |
+| Concurrent fungal guild networks | peer-reviewed perspective plus a proposed spatial-mapping and intervention agenda | multiple guilds may link the same plant endpoints, but their existence, continuity, interaction, and function require separate tests | research programme proposed; functional effects unestablished | mixed inoculum, shared endpoints, and co-severed paths confound attribution |
 | Ecosystem consequence | connected-litter microcosms | fungal reallocation can alter decomposition, N retention, and carbon-use efficiency | plausible and system-specific | species turnover, substrate chemistry, and microbial competition |
 
 ## Mechanism synthesis
@@ -395,17 +406,76 @@ P-003 and P-012 and the
 - A true directional state must survive biomass equalization, rotation,
   transfer, viability matching, and reversal tests.
 
-### 8. Fungal--plant exchange is strategic exchange, not organismal routing
+## Common mycorrhizal networks: topology, transfer, and disputed inference
+
+Common mycorrhizal networks merit a distinct evidence boundary because five
+propositions are often collapsed into one story: two roots share a fungal
+genet; uninterrupted hyphae connect them; material crosses that path; the
+receiver changes; and the change benefits the wider plant community. Evidence
+for one proposition does not establish the next. This section consolidates
+[C-213](../claims.md#c-213), [C-214](../claims.md#c-214),
+[C-215](../claims.md#c-215), [C-217](../claims.md#c-217), and
+[C-584](../claims.md#c-584); it creates no new principle, candidate, or
+architecture.
+
+### A shared genet is not yet an active channel
+
+Beiler et al. sampled tuberculate mycorrhizas in one 30 × 30 m interior
+Douglas-fir plot and matched tree and *Rhizopogon* genets with microsatellite
+markers. A genet is one genetically distinct fungal individual; the markers
+assigned samples to those genets. Their graph joined two trees when sampled
+roots shared a fungal genet; a few genets linked many trees while most linked
+fewer. The graph included links between trees from multiple age cohorts
+([DOI](https://doi.org/10.1111/j.1469-8137.2009.03069.x)). A later study of six
+10 × 10 m plots found non-random, nested association graphs whose topology
+varied with tree and fungal species attributes
+([DOI](https://doi.org/10.1111/1365-2745.12387)). These are observations
+of sampled plant--fungus association structure. The edge definition does not,
+by itself, image an uninterrupted hyphal path, show that the path was active at
+measurement time, or measure flux between plant tissues.
+
+The distinction changes what the graph demonstrates. Lehmann and Rillig
+systematically mapped 123
+arbuscular-mycorrhizal-network studies
+([DOI](https://doi.org/10.1002/ppp3.10618)). Of 84 laboratory studies that
+excluded other filamentous fungi, seven combined all five of their criteria:
+at least two plants, all mycorrhizal, separated roots, a hyphal-link
+intervention, and a continuity control that excluded the soil path. Two more
+laboratory studies met all five while other filamentous fungi remained
+present. The authors also stress that this design approaches, but does not
+directly prove, continuous cytoplasmic flow. Network identity, continuity,
+transport, and effect therefore remain separate measurements.
+
+### Material transfer and receiver effects answer different questions
+
+Direct carbon transfer in one controlled vesicular--arbuscular system and a
+defence-associated receiver response in connected tomatoes are already bounded
+by [C-213](../claims.md#c-213). Song et al. measured receiver defence-gene and
+enzyme changes after a connected donor was challenged, but did not identify a
+transported payload ([DOI](https://doi.org/10.1371/journal.pone.0013324)).
+
+Zhang et al. narrowed that gap in a compartmented tomato system. The study used
+root boxes with 38 μm mesh and an air gap, detected labelled jasmonic acid in
+connected receivers, and linked the receiver response to changed root
+exudates, recruitment of *Streptomyces* and *Actinoplanes*, and suppression of
+*Botrytis cinerea* infection
+([DOI](https://doi.org/10.1016/j.chom.2025.08.016)). This establishes a
+transported chemical and a downstream response for that preparation. It does
+not establish sender intent, a universal fungal code, preferential warning of
+kin, or forest-scale signalling.
+
+### Conditional exchange does not imply organismal routing
 
 #### Biological observation
 
-Kiers et al. manipulated plant and AM-fungal partner quality and found
+Kiers et al. manipulated plant and arbuscular-mycorrhizal (AM) fungal partner
+quality and found
 preferential allocation consistent with reciprocal rewards
 ([DOI](https://doi.org/10.1126/science.1208473)). Fellbaum et al. showed that
-plant carbon availability altered fungal N uptake, transport, and gene
-expression ([DOI](https://doi.org/10.1073/pnas.1118650109)). In common
-mycorrhizal networks, carbon-source strength influenced fungal N and P
-allocation, although shaded hosts were not simply abandoned
+plant carbon availability altered fungal nitrogen (N) uptake, transport, and
+gene expression ([DOI](https://doi.org/10.1073/pnas.1118650109)). In common
+mycorrhizal networks, carbon-source strength influenced fungal N and phosphorus
+(P) allocation, although shaded hosts were not simply abandoned
 ([DOI](https://doi.org/10.1111/nph.12827)). Walder et al. measured strongly
 unequal terms of trade between plant species linked by an AM fungus
 ([DOI](https://doi.org/10.1104/pp.112.195727)).
@@ -417,6 +487,17 @@ Candidate 001's topology dynamics, but it does not turn symbiosis into one
 controller. This observation is already canonical as
 [C-034](../claims.md#c-034); `FUNG-T26` below is an audit-local cross-reference,
 not a second claim.
+
+Calling reduced allocation a sanction would add an interpretation. The cited
+interventions establish conditional allocation and reciprocal reward, not
+deliberate punishment, universal fairness, or one enforcement rule across
+mycorrhizal systems.
+
+Context is part of the result, not residual noise: sampled topology varied with
+tree and fungal attributes, allocation varied with carbon-source strength,
+terms of trade varied between plant partners, and the defence result used one
+compartmented tomato preparation. A comparable report must therefore name the
+mycorrhizal type, partners, resource gradient, path controls, and endpoint.
 
 #### Proposed AI translation
 
@@ -432,7 +513,7 @@ is unnecessary overhead; ordinary constrained allocation is the null.
 - partner choice can reduce diversity or strand weak participants;
 - isotope arrival does not identify intent or ultimate fitness effect.
 
-### 9. Concurrent guild networks require channel-specific intervention
+### Concurrent guild networks require channel-specific intervention
 
 Rillig et al. distinguish common mycorrhizal networks with demonstrated hyphal
 continuity from broader common mycorrhizal and common fungal networks, which
@@ -440,24 +521,24 @@ may include direct or indirect links formed by mycorrhizal, endophytic,
 parasitic, or saprobic fungi
 ([DOI](https://doi.org/10.1111/nph.20418)). The article argues that several
 guilds can plausibly form concurrent links among the same plants and proposes a
-research program using spatial sampling, mesh compartments, link severing, and
-factorial guild combinations.
+research programme using spatial sampling, mesh compartments, link severing,
+and factorial guild combinations.
 
 The evidence status matters: this is a conceptual Letter grounded in cited
-prior literature and a proposed mapping program, not direct evidence that
-concurrent guild networks normally exist, remain continuous, or produce complementary,
-synergistic, or antagonistic effects. Those outcomes are explicit hypotheses.
-Even detecting one fungal genet at both endpoints establishes an initial link
-candidate, not transport, causal function, benefit, or an independently
-controlled path.
+prior literature and a proposed mapping programme, not direct evidence that
+concurrent guild networks normally exist, remain continuous, or produce
+complementary, synergistic, or antagonistic effects. Those outcomes are
+explicit hypotheses. Even detecting one fungal genet at both endpoints
+establishes an initial link candidate, not transport, causal function, benefit,
+or an independently controlled path.
 
-For this project, the result deduplicates into typed provenance and causal
-intervention. If multiple physical or learned channels share endpoints, a
+For this project, the result requires separate provenance and interventions for
+each causal channel. If multiple physical or learned channels share endpoints, a
 single aggregate output change cannot credit one channel. Tests must identify
 the active channel, independently disable it where possible, retain indirect
-path nulls, and report actor-specific outcomes. This tightens P-013 and the
-observation/intervention contracts already used by Candidate 014; it adds no
-new principle or architecture candidate.
+path nulls, and report actor-specific outcomes. This maps to P-013 and
+Candidate 014's existing observation/intervention contracts; it adds no new
+principle or architecture candidate.
 
 #### Failure modes and measurable predictions
 
@@ -469,11 +550,43 @@ new principle or architecture candidate.
 - complementarity, synergy, and antagonism remain indistinguishable without a
   factorial design that can intervene on guilds separately.
 
-### 10. Ecosystem effects stay at ecosystem scale
+### The live dispute concerns reach and attribution
+
+The scientific disagreement is not over whether mycorrhizal fungi affect
+plants. Karst et al. argue that evidence remains insufficient for three
+stronger forest claims: that continuous common networks are widespread, that
+resource transfer through them generally improves seedlings, and that mature
+trees preferentially send resources or defence signals to offspring
+([DOI](https://doi.org/10.1038/s41559-023-01986-1)). Their author correction
+removed four extraneous references without changing those stated conclusions
+([correction](https://doi.org/10.1038/s41559-023-02035-7)). Henriksson et al.
+separately re-examined isotope and physiological arguments and concluded that
+significant net carbon transfer through ectomycorrhizal networks that benefits
+receiver trees remains unestablished
+([DOI](https://doi.org/10.1111/nph.18935)).
+
+Simard, Ryan, and Perry contest the critique's search boundary and treatment of
+colonisation, and argue that place-specific transfer and facilitation findings
+remain informative even when several belowground paths operate at once
+([DOI](https://doi.org/10.3389/ffgc.2024.1512518)). That response is an author
+opinion, not a new path-isolating experiment. The 2025 systematic map supplies
+a narrower methodological result from arbuscular-mycorrhizal experiments: only
+a small subset combined root separation, a hyphal-link intervention, and a
+continuity control, while experiments that jointly isolate roots, soil, fungal
+identity, hyphal continuity, and the active path remain scarce. It does not
+adjudicate the forest and ectomycorrhizal claims by itself.
+
+The audit therefore retains controlled transfer, exchange, and receiver
+effects at their demonstrated scale while marking general forest aid,
+community optimisation, and plant or fungal intent as disputed. “Wood wide
+web” is useful public shorthand only when the exact link and endpoint are named;
+it is not an evidence-bearing biological unit or a project architecture.
+
+### Ecosystem effects stay at ecosystem scale
 
 Fungal networks alter decomposition, mineral retention, water access, and
 interactions among species. Those effects can be large while no organism
-optimizes community welfare. The relevant result vector includes fungal
+optimises community welfare. The relevant result vector includes fungal
 fitness, each plant's growth and reproduction, decomposition rate, nutrient
 retention/loss, community diversity, inequality, and disturbance recovery.
 
@@ -1025,10 +1138,12 @@ make-before-break reconfiguration, periodic graph optimization, or
 backpressure/primal--dual allocation ties the full quality--risk--energy
 frontier. Fungal vocabulary does not lower that bar.
 
-## Audit-local bibliography (primary sources)
+## Audit-local bibliography
 
-These entries are intentionally local. Promotion should move verified entries
-to `research/references.bib` in a separate change.
+These entries are intentionally local. The list includes primary experiments
+and the evidence syntheses or scientific responses explicitly identified as
+such in the text. Promotion should move verified entries to
+`research/references.bib` in a separate change.
 
 ```bibtex
 @article{bebber2007biological,
@@ -1329,5 +1444,112 @@ to `research/references.bib` in a separate change.
   pages = {33--38},
   doi = {10.1111/nph.20418},
   url = {https://doi.org/10.1111/nph.20418}
+}
+
+@article{beiler2010architecture,
+  author = {Beiler, Kevin J. and Durall, Daniel M. and Simard, Suzanne W. and Maxwell, Sheri A. and Kretzer, Annette M.},
+  title = {Architecture of the Wood-Wide Web: {Rhizopogon} spp. Genets Link Multiple {Douglas-fir} Cohorts},
+  journal = {New Phytologist},
+  year = {2010},
+  volume = {185},
+  number = {2},
+  pages = {543--553},
+  doi = {10.1111/j.1469-8137.2009.03069.x},
+  url = {https://doi.org/10.1111/j.1469-8137.2009.03069.x}
+}
+
+@article{beiler2015topology,
+  author = {Beiler, Kevin J. and Simard, Suzanne W. and Durall, Daniel M.},
+  title = {Topology of Tree--Mycorrhizal Fungus Interaction Networks in Xeric and Mesic {Douglas-fir} Forests},
+  journal = {Journal of Ecology},
+  year = {2015},
+  volume = {103},
+  number = {3},
+  pages = {616--628},
+  doi = {10.1111/1365-2745.12387},
+  url = {https://doi.org/10.1111/1365-2745.12387}
+}
+
+@article{song2010communication,
+  author = {Song, Yuan Yuan and Zeng, Ren Sen and Xu, Jian Feng and Li, Jun and Shen, Xiang and Yihdego, Woldemariam Gebrehiwot},
+  title = {Interplant Communication of Tomato Plants through Underground Common Mycorrhizal Networks},
+  journal = {PLOS ONE},
+  year = {2010},
+  volume = {5},
+  number = {10},
+  pages = {e13324},
+  doi = {10.1371/journal.pone.0013324},
+  url = {https://doi.org/10.1371/journal.pone.0013324}
+}
+
+@article{zhang2025cmn,
+  author = {Zhang, Xianhong and Jin, Xue and Li, Jiawei and Dini-Andreote, Francisco and Li, Hongyu and Khashi u Rahman, Muhammad and Du, Minmin and Wu, Fengzhi and Wei, Zhong and Zhou, Xingang and van der Heijden, Marcel G. A. and Rillig, Matthias C.},
+  title = {Common Mycorrhizal Networks Facilitate Plant Disease Resistance by Altering Rhizosphere Microbiome Assembly},
+  journal = {Cell Host \& Microbe},
+  year = {2025},
+  volume = {33},
+  number = {10},
+  pages = {1765--1778.e7},
+  doi = {10.1016/j.chom.2025.08.016},
+  url = {https://doi.org/10.1016/j.chom.2025.08.016}
+}
+
+@article{lehmann2025systematic,
+  author = {Lehmann, Anika and Rillig, Matthias C.},
+  title = {Systematic Mapping of Experimental Approaches to Studying Common Mycorrhizal Networks in Arbuscular Mycorrhiza},
+  journal = {Plants, People, Planet},
+  year = {2025},
+  volume = {7},
+  number = {4},
+  pages = {920--933},
+  doi = {10.1002/ppp3.10618},
+  url = {https://doi.org/10.1002/ppp3.10618}
+}
+
+@article{karst2023bias,
+  author = {Karst, Justine and Jones, Melanie D. and Hoeksema, Jason D.},
+  title = {Positive Citation Bias and Overinterpreted Results Lead to Misinformation on Common Mycorrhizal Networks in Forests},
+  journal = {Nature Ecology \& Evolution},
+  year = {2023},
+  volume = {7},
+  number = {4},
+  pages = {501--511},
+  doi = {10.1038/s41559-023-01986-1},
+  url = {https://doi.org/10.1038/s41559-023-01986-1}
+}
+
+@article{karst2023correction,
+  author = {Karst, Justine and Jones, Melanie D. and Hoeksema, Jason D.},
+  title = {Author Correction: Positive Citation Bias and Overinterpreted Results Lead to Misinformation on Common Mycorrhizal Networks in Forests},
+  journal = {Nature Ecology \& Evolution},
+  year = {2023},
+  volume = {7},
+  number = {4},
+  pages = {623--623},
+  doi = {10.1038/s41559-023-02035-7},
+  url = {https://doi.org/10.1038/s41559-023-02035-7}
+}
+
+@article{henriksson2023mothertree,
+  author = {Henriksson, Nils and Marshall, John and H{\"o}gberg, Mona N. and H{\"o}gberg, Peter and Polle, Andrea and Franklin, Oskar and N{\"a}sholm, Torgny},
+  title = {Re-Examining the Evidence for the Mother Tree Hypothesis: Resource Sharing among Trees via Ectomycorrhizal Networks},
+  journal = {New Phytologist},
+  year = {2023},
+  volume = {239},
+  number = {1},
+  pages = {19--28},
+  doi = {10.1111/nph.18935},
+  url = {https://doi.org/10.1111/nph.18935}
+}
+
+@article{simard2025response,
+  author = {Simard, Suzanne W. and Ryan, Teresa (Sm'hayetsk) L. and Perry, David A.},
+  title = {Opinion: Response to Questions about Common Mycorrhizal Networks},
+  journal = {Frontiers in Forests and Global Change},
+  year = {2025},
+  volume = {7},
+  pages = {1512518},
+  doi = {10.3389/ffgc.2024.1512518},
+  url = {https://doi.org/10.3389/ffgc.2024.1512518}
 }
 ```

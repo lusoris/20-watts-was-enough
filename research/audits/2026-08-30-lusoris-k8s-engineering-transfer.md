@@ -1,0 +1,142 @@
+# Cluster mechanisms worth transferring, without transferring the cluster
+
+<!-- markdownlint-disable MD013 -->
+
+- **Audit date:** 2026-08-30
+- **Status:** bounded engineering-transfer audit; no scientific result,
+  architecture decision, claim, principle, candidate, fixture, or performance
+  comparison
+- **Source snapshot:** [`lusoris/k8s` commit
+  `91ef1abda09df5361859bd1010703113b3d439da`](https://github.com/lusoris/k8s/tree/91ef1abda09df5361859bd1010703113b3d439da),
+  verified locally as the current GitHub `main` commit at audit close; the
+  checkout advanced during inspection, and the intervening diff changed none
+  of the scoped controller, gateway, executor, dispatcher, test, or ADR files
+- **Scope:** the Queue-Drain Optimizer (QDO), the llama-swap model-process
+  manager, the LiteLLM gateway's QDO admission path, and the Paperclip work
+  dispatcher; the wider cluster was not reviewed
+- **Method:** read-only source and history inspection plus focused local unit
+  and chart tests; no live-cluster mutation or fresh production experiment
+- **Licensing boundary:** no repository-wide licence was present at the
+  inspected root, so no source code is copied into this project. Only
+  independently described mechanisms and test situations are retained here.
+
+## Finding
+
+The cluster is already useful as an engineering donor. It has exercised a
+controller outside the model, one executor per accelerator device,
+measurement-derived
+resource admission, expiring lane signals, queue-aware backpressure, bounded
+fairness, and a distinction between proxy health and requested-model
+readiness. Those are close to the proposed typed-specialist control arm.
+
+It is not a scientific baseline for that arm. The deployment joins many
+changing models, incidents, operators, workloads, patches, and hardware
+conditions. Its records can identify mechanisms and construct stress cases;
+they cannot establish that a small-specialist system beats a general model,
+uses less energy, or transfers beyond this cluster.
+
+## What is already exercised
+
+| Cluster mechanism | Direct record at the snapshot | Transfer retained here | Boundary |
+| --- | --- | --- | --- |
+| Separate controller, gateway, and executor authority | [QDO's contract](https://github.com/lusoris/k8s/blob/91ef1abda09df5361859bd1010703113b3d439da/apps/ai/qdo/AGENTS.md) gives QDO one lane's residency decisions, llama-swap local process lifecycle, and LiteLLM request admission. | Keep routing, execution, admission, verification, and final action as typed authorities instead of allowing one model to acquire them implicitly. | The deployed components and protocols are implementation choices, not a universal topology. |
+| Measurement-derived fit with explicit unknowns | [QDO policy and pool tests](https://github.com/lusoris/k8s/tree/91ef1abda09df5361859bd1010703113b3d439da/apps/ai/qdo/tests) cover measured free memory, lane-scoped footprints, unreadable devices, unmeasured models, preference by measurement, and sole-resident learning. [ADR-0062](https://github.com/lusoris/k8s/blob/91ef1abda09df5361859bd1010703113b3d439da/docs/adr/0062-one-dynamic-accelerator-pool-and-loaded-model-admission.md) records the incident that motivated it. | Represent `measured fit`, `measured no-fit`, and `unknown` separately. Emit the measurements and decision inputs with every admission receipt. | Some unknowns deliberately fail open in lane steering while bounded-lane catalogue admission fails closed. That choice must be frozen per experiment boundary, not copied as one global rule. |
+| Expiring, executor-scoped steering | [QDO values](https://github.com/lusoris/k8s/blob/91ef1abda09df5361859bd1010703113b3d439da/apps/ai/qdo/values.yaml) publish a short-lived admission envelope for each device-backed execution lane; [the paired LiteLLM tests](https://github.com/lusoris/k8s/blob/91ef1abda09df5361859bd1010703113b3d439da/apps/ai/litellm/tests/test_qdo_fence_admission_hook.py) cover malformed, missing, expired, refusing, and unavailable lane state. | Treat a specialist's present eligibility as expiring observed state, not a permanent capability or model-to-device map. | The Redis key and LiteLLM hook are cluster plumbing and are not transferred. |
+| Loaded capability is different from reachable gateway | [ADR-0062](https://github.com/lusoris/k8s/blob/91ef1abda09df5361859bd1010703113b3d439da/docs/adr/0062-one-dynamic-accelerator-pool-and-loaded-model-admission.md) records requests admitted through a healthy proxy while no suitable physical model was ready. The [llama-swap exporter contract](https://github.com/lusoris/k8s/blob/91ef1abda09df5361859bd1010703113b3d439da/apps/ai/llama-swap/README.md#observability) keeps model state, in-flight work, completions, errors, and latency distinct. | Add a stress case in which the controller is healthy but the requested specialist is absent, loading, saturated, or unable to satisfy the typed request. | The incident is an engineering observation with changing operational confounders. It supplies a scenario, not an effect size. |
+| Queue state changes the safe action | [ADR-0088](https://github.com/lusoris/k8s/blob/91ef1abda09df5361859bd1010703113b3d439da/docs/adr/0088-batch-calls-that-expire-into-a-deep-queue-are-rejected.md) separates an expired bounded wait with a shallow queue from one whose depth exceeds measured engine slots. Current tests cover the rejection, retry header, ledger release, disconnect, burst, and aged-call paths. | Make queue depth, service slots, deadline, caller class, cancellation, and retry semantics explicit inputs. Charge abandoned work rather than counting only completed calls. | A retrying batch consumer and an interactive request need not share the same failure policy. |
+| Bounded fairness and recovery authority | [Paperclip dispatcher tests](https://github.com/lusoris/k8s/tree/91ef1abda09df5361859bd1010703113b3d439da/apps/ai/paperclip-dispatcher/files) cover rotated cross-organization scheduling, per-class caps, circuit opening and half-open probes, and bounded state repair. Its [contract](https://github.com/lusoris/k8s/blob/91ef1abda09df5361859bd1010703113b3d439da/apps/ai/paperclip-dispatcher/AGENTS.md) separates recurring selection from finite migration authority. | Give the controller explicit queue, retry, cancellation, recovery, and migration budgets. Test that an unhealthy specialist cannot consume every attempt. | Organization, database, and Kubernetes lifecycle rules are application-specific and stay out of the research controller. |
+
+The most useful negative lesson is also transferable: a logical-model fence
+was deployed and then disabled after it could block healthy physical workers
+outside one lane. A control signal was scoped to the name the caller saw, not
+to the resource that could safely act on it. The research arm should therefore
+test whether a gate names the exact physical executor whose effects it can
+control, not merely whether some lock or gate exists.
+
+## Validation reproduced during this audit
+
+Four focused surfaces passed `503` tests at the inspected commit:
+
+- QDO: `195` Python unit tests, including pure policy, footprint learning,
+  pool measurement, lane admission, bounded Redis transport, actuation gates,
+  and engine-queue observation;
+- LiteLLM's two QDO hooks: `115` Python tests for lane filtering, bounded
+  admission, queue backpressure, cancellation and failure behavior;
+- the Paperclip dispatcher: `119` Python tests for selection, caps, circuit
+  state, fallbacks and bounded repair; and
+- llama-swap: `10` Helm suites containing `74` configuration tests for
+  artifact hydration, lifecycle, lane fit, batching, projection, monitoring
+  and storage bounds.
+
+The QDO Helm configuration suite was not clean: `17` assertions passed and one
+deliberately invalid `source: guesswork` case errored because the values schema
+rejected the value before the test could reach its expected template-failure
+assertion. The rejection itself is fail-fast, but the harness and assertion
+layer disagree. This audit does not round that result up to a passing chart
+suite.
+
+Repository records additionally describe live burn-in and incident-derived
+changes, including enforcing drain-gated arbitration and observed queue,
+thrash, timeout, and readiness failures. Those records were inspected but not
+reproduced against the live cluster in this pass. They remain documented
+operational evidence, not fresh independent verification.
+
+## Gaps retained as test material
+
+The snapshot is neither complete nor internally uniform:
+
+- QDO publishes a measured pool view but does not lock or schedule work across
+  devices. Static gateway-to-lane topology remains load-bearing.
+- ADR-0062 asks for fail-closed loaded-model readiness, while the current lane
+  hook deliberately fails open on missing or malformed envelopes and after a
+  bounded interactive wait. That hook is best-effort steering, not the
+  proposed readiness gate.
+- Batch admission reads a sorted-set count and performs a later `ZADD`; the
+  reservation is not one atomic operation across gateway replicas. Burst tests
+  do not prove that two replicas cannot over-admit the same final slot.
+- The dispatcher's source defaults remain `14` global and `-q27:4`, while the
+  deployed values inject `12` and `-q27:2`. Cluster deployment masks that
+  mismatch; direct execution does not.
+- Proposed ADRs and retained rollout prose describe several older settings.
+  Current values, source and tests therefore outrank their status narratives.
+
+These are useful falsification cases for a later Go adapter: global-view
+without global authority, best-effort versus fail-closed admission, atomic
+reservation under competing controllers, and configured versus fallback
+policy. They are not defects this research repository can silently correct in
+the separate cluster.
+
+## Adaptation boundary
+
+The reusable unit is a small policy package plus fixtures, not a containerized
+copy of the cluster. A later implementation should translate the behavior into
+Go with no Kubernetes, Helm, LiteLLM, Redis, or model-name dependency:
+
+1. a pure typed admission function over capability readiness, measured
+   resource fit, queue state, caller class, deadline, and evidence freshness;
+2. a closed decision receipt recording every input, unknown, selected action,
+   rejected alternative, expiry, and resource accounting boundary;
+3. scenario fixtures for healthy-controller/unavailable-specialist,
+   measurement unavailable, stale state, deep queue at deadline, caller
+   cancellation, retry, and one unhealthy specialist monopolizing attempts;
+4. comparators that run the same scenarios without the controller policy and
+   with a capacity-matched general model; and
+5. energy, latency, task quality, failure, abandoned-work, cold-start, and
+   controller-overhead accounting over the same accepted-task boundary.
+
+Do not import the cluster's hardware numbers, model priorities, queue caps,
+timeouts, hostnames, incident frequencies, or observed throughput as research
+constants. Derive or freeze each from the target experiment. Do not describe
+the existing cluster as the proposed AI brain: it is one operational source of
+controller problems and tested policy shapes, not a result for the research
+hypothesis.
+
+## Immediate disposition
+
+This audit sharpens the held typed-specialist comparison without creating a
+new architecture candidate. The first implementation slice, when its task
+family is chosen, should reuse these scenario shapes in a dependency-light Go
+policy package and expose them through the existing containerized experiment
+runner. Until the task, comparator, measurements, and stopping law are frozen,
+the work remains an engineering adapter lead under
+[OQ-068](../open-questions.md#architecture).

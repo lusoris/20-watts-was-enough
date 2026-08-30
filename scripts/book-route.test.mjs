@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 
 import { bookSourceFiles } from "./book-source.mjs";
 import { publication } from "../app/lib/publication.mjs";
+import { resolveViteCacheDirectory } from "./lib/vite-cache-directory.mjs";
 import {
   assertBookPdfIntegrity,
   inspectBookPdf,
@@ -61,6 +62,29 @@ test("the book renderer is one explicit entry in the static Pages build", () => 
   assert.doesNotMatch(viteConfig, /vinext|cloudflare|sites\(\)/);
 });
 
+test("the renderer Vite cache accepts only its canonical temporary directory", async (t) => {
+  const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "20w-vite-cache-test-"));
+  t.after(() => rm(temporaryRoot, { recursive: true, force: true }));
+  const expected = path.join(temporaryRoot, "vite-cache");
+  assert.equal(resolveViteCacheDirectory({
+    override: expected,
+    repositoryRoot,
+    systemTemporaryDirectory: temporaryRoot,
+  }), expected);
+  assert.throws(() => resolveViteCacheDirectory({
+    override: path.join(temporaryRoot, "..", "escaped"),
+    repositoryRoot,
+    systemTemporaryDirectory: temporaryRoot,
+  }), /must be exactly/u);
+  await mkdir(path.join(temporaryRoot, "target"));
+  await symlink(path.join(temporaryRoot, "target"), expected);
+  assert.throws(() => resolveViteCacheDirectory({
+    override: expected,
+    repositoryRoot,
+    systemTemporaryDirectory: temporaryRoot,
+  }), /non-symlink directory/u);
+});
+
 test("the generated PDF uses public links and zero-state readiness copy", () => {
   assert.match(edition, /"github-pages" \| "public-pdf"/);
   assert.match(edition, /const repositoryRef = repositoryRefForSurface\(surface, sourceRef, editionVersion\)/);
@@ -81,6 +105,19 @@ test("the generated PDF uses public links and zero-state readiness copy", () => 
   assert.match(generator, /parseBookPdfGenerationOptions\(process\.argv\.slice\(2\)\)/);
   assert.match(generator, /ref=\$\{encodeURIComponent\(sourceRef\)\}/);
   assert.match(generator, /source_ref: sourceRef/);
+  assert.match(generator, /schema_version: 3/);
+  assert.match(generator, /renderer: rendererIdentity/);
+  assert.match(generator, /"--configLoader",\s*"runner"/s);
+  assert.match(viteConfig, /cacheDir: pagesCacheDirectory/);
+  assert.match(mermaidDiagram, /diagramRenderId\(reactId, \+\+renderAttemptRef\.current\)/);
+  assert.match(mermaidDiagram, /-\$\{attempt\}`/);
+  assert.match(generator, /\.diagram-canvas > svg/);
+  assert.match(generator, /rendered_diagrams: observedRenderedDiagrams/);
+  assert.match(generator, /invalidDiagrams: invalid/);
+  assert.match(generator, /replaceFilePair/);
+  assert.match(edition, /renderExternalImages=\{!isPublicPdf\}/);
+  assert.match(markdownDocument, /!renderExternalImages && isExternalImageSource\(source\)/);
+  assert.match(markdownDocument, /className="external-image-reference"/);
 });
 
 test("the public reader loads canonical Markdown and exposes linked source artifacts", () => {
@@ -115,14 +152,52 @@ test("the full-book source identity includes the locked renderer dependency grap
   const sources = (await bookSourceFiles(repositoryRoot)).map((file) => (
     path.relative(repositoryRoot, file).replaceAll("\\", "/")
   ));
-  assert.equal(sources.includes("package-lock.json"), true);
-  assert.equal(sources.includes("CITATION.cff"), true);
-  assert.equal(sources.includes("app/lib/book-release-identity.mjs"), true);
-  assert.equal(sources.includes("app/project-metadata.ts"), true);
-  assert.equal(sources.includes("scripts/lib/book-pdf-generation-options.mjs"), true);
-  assert.equal(sources.includes("scripts/lib/book-pdf-integrity.mjs"), true);
-  assert.equal(sources.includes("scripts/lib/pages-base.mjs"), true);
-  assert.equal(sources.includes("scripts/lib/pdf-metadata.mjs"), true);
+  const requiredClosure = [
+    "CITATION.cff",
+    "app/components/language-access.tsx",
+    "app/lib/book-release-identity.mjs",
+    "app/lib/eu-languages.mjs",
+    "app/lib/language-access.mjs",
+    "app/lib/publication.mjs",
+    "app/project-metadata.ts",
+    "package-lock.json",
+    "public/og-v2.jpg",
+    "scripts/lib/book-pdf-generation-options.mjs",
+    "scripts/lib/book-pdf-integrity.mjs",
+    "scripts/lib/book-renderer-identity.mjs",
+    "scripts/lib/pages-base.mjs",
+    "scripts/lib/pages-seo.mjs",
+    "scripts/lib/pdf-metadata.mjs",
+    "scripts/lib/plain-text.mjs",
+    "scripts/lib/portal-documents.mjs",
+    "scripts/lib/portal-metrics.mjs",
+    "scripts/lib/source-boundary.mjs",
+    "scripts/lib/strict-json.mjs",
+    "scripts/lib/translation-manifest.mjs",
+    "scripts/lib/translation-pages.mjs",
+    "scripts/lib/vite-cache-directory.mjs",
+    "scripts/install-locked-npm.mjs",
+    "scripts/npm-runtime-lock.json",
+    "tooling/go.mod",
+    "tooling/internal/buildinfo/buildinfo.go",
+    "tooling/internal/docscheck/check.go",
+    "tooling/internal/experiment/catalog.go",
+    "tooling/internal/githublabels/labels.go",
+    "tooling/internal/nodeimage/package.go",
+    "tooling/internal/ocimanifest/manifest.go",
+    "tooling/internal/pdfrender/dockerfile.go",
+    "tooling/internal/pdfrender/publication.go",
+    "tooling/internal/pdfrender/render.go",
+    "tooling/internal/releasecheck/inventory.go",
+    "tooling/internal/releasecheck/release_state.go",
+    "tooling/internal/releasecheck/remote_assets.go",
+    "tooling/internal/releasecheck/tag.go",
+    "tooling/internal/releaseimage/inspect.go",
+    "tooling/internal/strictjson/validate.go",
+    "tooling/pdf-renderer/lock.json",
+    "translations/manifest.json",
+  ];
+  for (const source of requiredClosure) assert.equal(sources.includes(source), true, source);
 });
 
 test("the book manifest rejects a same-size PDF byte replacement", async () => {

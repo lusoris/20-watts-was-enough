@@ -51,7 +51,7 @@ test("distribution schema alternatives fail closed when state and runtime disagr
   const alteredPath = path.join(temporary, "fixture-012.json");
   try {
     const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
-    manifest.distribution.runtime_class = "node-source";
+    manifest.distribution.runtime_class = "legacy-host-bound";
     await writeFile(alteredPath, `${JSON.stringify(manifest, null, 2)}\n`);
     const result = await validateExecutionManifest(root, alteredPath, "fixture-012");
     assert.ok(result.errors.some((error) => /exactly one schema alternative/u.test(error)));
