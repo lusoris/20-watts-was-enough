@@ -82,6 +82,7 @@ export async function bookSourceFiles(projectRoot) {
     "scripts/npm-runtime-lock.json",
     "sources/taxonomies/2026-08-25/README.md",
     "tooling/cmd/20w/main.go",
+    "tooling/cmd/20w/translation.go",
     "tooling/go.mod",
     "tooling/go.sum",
     "tooling/internal/buildinfo/buildinfo.go",
@@ -102,8 +103,13 @@ export async function bookSourceFiles(projectRoot) {
     "tooling/internal/releasecheck/tag.go",
     "tooling/internal/releaseimage/inspect.go",
     "tooling/internal/strictjson/validate.go",
+    "tooling/internal/translationbundle/bundle.go",
+    "tooling/internal/translationbundle/files.go",
+    "tooling/internal/translationbundle/languages.go",
+    "tooling/internal/translationbundle/shape.go",
     "tooling/pdf-renderer/lock.json",
     "translations/manifest.json",
+    "translations/eu-languages.json",
     "vite.pages.config.ts",
   ].map((file) => path.join(projectRoot, file));
   const plotFiles = await readdir(path.join(projectRoot, "public", "plots"), {

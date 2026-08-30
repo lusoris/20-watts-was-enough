@@ -5,6 +5,60 @@ the exact diff; this file records why the project changed.
 
 ## [Unreleased]
 
+### Added
+
+- The Go command now exports deterministic, source-bound translation candidate
+  bundles and imports returned drafts into candidate-only working artifacts.
+  The provider-neutral exchange preserves glossary choices, drafting-tool
+  disclosure and language/domain review metadata, rejects stale English source,
+  and cannot write to the reviewed translation tree or publication manifest.
+- Pull-request CI now derives a bounded Go impact plan from the exact base and
+  head commits, then runs a common gate plus only the selected Go, release,
+  research, site, container, and workstation lanes. Workstation artifacts use
+  an allowlisted matrix capped at four concurrent jobs; selector changes,
+  unknown paths, renames, deletions, and invalid plans fail closed to the full
+  gate. Pushes to `main`, manual runs, and release verification retain the
+  complete repository gate.
+- A standard-library-only Go scaffold encodes the six-task CLRS-Text
+  development slice as a pure typed policy and a decision-record-before-effect
+  runner seam. It bounds request and result bytes, requires a separate exact
+  verifier, terminates unsafe states through typed refusal or abstention, and
+  keeps every output at `NO_RESULT`; generator, fixture, model and resource-
+  receipt identities remain unfrozen.
+
+### Changed
+
+- The contribution map and issue picker now lead readers to bounded open work
+  before they open a parallel issue.
+- The typed-specialist audit now separates two related engineering donors:
+  VMAFx's tiny typed estimators and Pelorus's proposed non-language content
+  router. Exact source snapshots, implementation status, related-party limits,
+  and a non-circular applied video shakedown are recorded without promoting a
+  controller result.
+- The `lusoris/k8s` engineering-transfer audit now binds its 503-test campaign
+  and chart-harness disagreement to the exact historical source commit, then
+  records a separate dated live/source observation and bounded drift at the
+  later commit without presenting deployment health as a current test run or
+  scientific result.
+- The focused Pages reader now has one publication-owned CSS cascade. Dead
+  legacy shell rules and their sticky-stack observer were removed; the
+  document rail uses a two-row filter at compact desktop widths so the full
+  Mathematics label remains visible without changing the 68ch prose
+  measure or narrow-screen reading order.
+
+### Fixed
+
+- Release preflight now locates an exact tag through GitHub's GraphQL API and
+  reads the resulting numeric release through REST. Draft releases are no
+  longer misclassified as absent, while malformed, ambiguous and changed
+  identities still fail closed.
+- Candidate 010 source identity now resolves loose and packed branch references
+  through Git's linked-worktree common directory. Its normal checkout and
+  Git-free frozen-capsule verification paths retain their existing authority.
+- Browser verification now waits through a bounded termination grace and
+  forced-exit interval before deleting its temporary profile, removing a race
+  with a still-running Chromium process.
+
 ## [0.3.0] - 2026-08-30
 
 ### Added

@@ -6,7 +6,12 @@ import {
   reviewedTranslationUrl,
   translationContributionUrl,
 } from "../app/lib/language-access.mjs";
-import { openGraphLocaleForEuLanguage } from "../app/lib/eu-languages.mjs";
+import {
+  openGraphLocaleForEuLanguage,
+  validateEuLanguageRegistry,
+} from "../app/lib/eu-languages.mjs";
+import languageRegistry from "../translations/eu-languages.json" with { type: "json" };
+import { parseStrictJson } from "./lib/strict-json.mjs";
 
 test("language access enumerates the 24 official EU languages once", () => {
   const codes = officialEuLanguages.map(([code]) => code);
@@ -19,6 +24,45 @@ test("language access enumerates the 24 official EU languages once", () => {
   assert.equal(openGraphLocaleForEuLanguage("de"), "de_DE");
   assert.equal(openGraphLocaleForEuLanguage("ga"), "ga_IE");
   assert.equal(openGraphLocaleForEuLanguage("invalid"), null);
+});
+
+test("the shared EU language registry fails closed on identity, order, bounds, and schema drift", async () => {
+  const raw = await readFile("translations/eu-languages.json");
+  const parsed = parseStrictJson(raw, {
+    label: "EU language registry JSON",
+    maximumDepth: 4,
+    maximumContainerEntries: 64,
+  });
+  assert.equal(validateEuLanguageRegistry(parsed).length, 24);
+  const duplicate = raw.toString("utf8").replace('"schema": 1', '"schema": 1, "schema": 1');
+  assert.throws(
+    () => parseStrictJson(duplicate, {
+      label: "EU language registry JSON",
+      maximumDepth: 4,
+      maximumContainerEntries: 64,
+    }),
+    /repeats name "schema"/u,
+  );
+
+  const wrongCode = structuredClone(languageRegistry);
+  wrongCode.languages[9].code = "zz";
+  assert.throws(() => validateEuLanguageRegistry(wrongCode), /exact ordered 24-code records/u);
+
+  const wrongOrder = structuredClone(languageRegistry);
+  [wrongOrder.languages[8], wrongOrder.languages[9]] = [wrongOrder.languages[9], wrongOrder.languages[8]];
+  assert.throws(() => validateEuLanguageRegistry(wrongOrder), /exact ordered 24-code records/u);
+
+  const openRecord = structuredClone(languageRegistry);
+  openRecord.languages[0].provider = "none";
+  assert.throws(() => validateEuLanguageRegistry(openRecord), /exact ordered 24-code records/u);
+
+  const missingRecord = structuredClone(languageRegistry);
+  missingRecord.languages.pop();
+  assert.throws(() => validateEuLanguageRegistry(missingRecord), /exact ordered 24-code set/u);
+
+  const oversizedLabel = structuredClone(languageRegistry);
+  oversizedLabel.languages[0].label = "ä".repeat(65);
+  assert.throws(() => validateEuLanguageRegistry(oversizedLabel), /exact ordered 24-code records/u);
 });
 
 test("unreviewed languages route to a contribution issue, never machine output", () => {

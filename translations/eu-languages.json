@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "languages": [
+    { "code": "en", "label": "English", "openGraphLocale": "en_GB" },
+    { "code": "bg", "label": "Български", "openGraphLocale": "bg_BG" },
+    { "code": "hr", "label": "Hrvatski", "openGraphLocale": "hr_HR" },
+    { "code": "cs", "label": "Čeština", "openGraphLocale": "cs_CZ" },
+    { "code": "da", "label": "Dansk", "openGraphLocale": "da_DK" },
+    { "code": "nl", "label": "Nederlands", "openGraphLocale": "nl_NL" },
+    { "code": "et", "label": "Eesti", "openGraphLocale": "et_EE" },
+    { "code": "fi", "label": "Suomi", "openGraphLocale": "fi_FI" },
+    { "code": "fr", "label": "Français", "openGraphLocale": "fr_FR" },
+    { "code": "de", "label": "Deutsch", "openGraphLocale": "de_DE" },
+    { "code": "el", "label": "Ελληνικά", "openGraphLocale": "el_GR" },
+    { "code": "hu", "label": "Magyar", "openGraphLocale": "hu_HU" },
+    { "code": "ga", "label": "Gaeilge", "openGraphLocale": "ga_IE" },
+    { "code": "it", "label": "Italiano", "openGraphLocale": "it_IT" },
+    { "code": "lv", "label": "Latviešu", "openGraphLocale": "lv_LV" },
+    { "code": "lt", "label": "Lietuvių", "openGraphLocale": "lt_LT" },
+    { "code": "mt", "label": "Malti", "openGraphLocale": "mt_MT" },
+    { "code": "pl", "label": "Polski", "openGraphLocale": "pl_PL" },
+    { "code": "pt", "label": "Português", "openGraphLocale": "pt_PT" },
+    { "code": "ro", "label": "Română", "openGraphLocale": "ro_RO" },
+    { "code": "sk", "label": "Slovenčina", "openGraphLocale": "sk_SK" },
+    { "code": "sl", "label": "Slovenščina", "openGraphLocale": "sl_SI" },
+    { "code": "es", "label": "Español", "openGraphLocale": "es_ES" },
+    { "code": "sv", "label": "Svenska", "openGraphLocale": "sv_SE" }
+  ]
+}

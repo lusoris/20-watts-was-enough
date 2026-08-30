@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
   workflow_dispatch:
 
 permissions: {}
@@ -14,6 +15,54 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  impact-plan:
+    name: CI impact plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      mode: ${{ steps.plan.outputs.mode }}
+      reason: ${{ steps.plan.outputs.reason }}
+      container: ${{ steps.plan.outputs.container }}
+      go: ${{ steps.plan.outputs.go }}
+      release: ${{ steps.plan.outputs.release }}
+      research: ${{ steps.plan.outputs.research }}
+      site: ${{ steps.plan.outputs.site }}
+      workstation_any: ${{ steps.plan.outputs.workstation_any }}
+      workstation_matrix: ${{ steps.plan.outputs.workstation_matrix }}
+    steps:
+      - name: Check out the complete comparison history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Use Go 1.27
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: tooling/go.mod
+          cache-dependency-path: tooling/go.sum
+      - name: Validate and project the bounded CI plan
+        id: plan
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            go -C tooling run ./cmd/20w ci plan --root .. \
+              --base "$BASE_SHA" --head "$HEAD_SHA" --json \
+              > build/ci-impact-plan.json
+          else
+            go -C tooling run ./cmd/20w ci plan --root .. --full --json \
+              > build/ci-impact-plan.json
+          fi
+          test -s build/ci-impact-plan.json
+          go -C tooling run ./cmd/20w ci project \
+            < build/ci-impact-plan.json >> "$GITHUB_OUTPUT"
+
   pr-title:
     name: PR title
     if: github.event_name == 'pull_request'
@@ -29,8 +78,10 @@ jobs:
             exit 1
           fi
 
-  quality:
-    name: Quality
+  quality-full:
+    name: Full quality
+    needs: impact-plan
+    if: needs.impact-plan.outputs.mode == 'full'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     permissions:
@@ -82,8 +133,235 @@ jobs:
       - name: Fuzz the untrusted JSON boundary
         run: go -C tooling test ./internal/strictjson -run '^$' -fuzz '^FuzzValidate$' -fuzztime=30s -fuzzminimizetime=5s -parallel=2 -timeout=2m
 
-  experiment-image:
+  impact-common:
+    name: Impact common
+    needs: impact-plan
+    if: needs.impact-plan.outputs.mode == 'impact'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out canonical source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Use Node.js 26
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 26.8.1
+          cache: npm
+      - name: Install locked npm 12.0.2
+        run: node scripts/install-locked-npm.mjs
+      - name: Verify locked npm 12.0.2
+        run: test "$(npm --version)" = "12.0.2"
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run common impact checks
+        run: npm run check:impact-common
+
+  lane-go:
+    name: Go lane
+    needs: impact-plan
+    if: needs.impact-plan.outputs.mode == 'impact' && needs.impact-plan.outputs.go == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Check out canonical source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Use Go 1.27
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: tooling/go.mod
+          cache-dependency-path: tooling/go.sum
+      - name: Test and vet Go packages
+        run: go -C tooling test ./... && go -C tooling vet ./...
+
+  lane-release:
+    name: Release lane
+    needs: impact-plan
+    if: needs.impact-plan.outputs.mode == 'impact' && needs.impact-plan.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out canonical source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Use Go 1.27
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: tooling/go.mod
+          cache-dependency-path: tooling/go.sum
+      - name: Use Node.js 26
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 26.8.1
+          cache: npm
+      - name: Install locked npm 12.0.2
+        run: node scripts/install-locked-npm.mjs
+      - name: Verify locked npm 12.0.2
+        run: test "$(npm --version)" = "12.0.2"
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run release checks
+        run: npm run check:lane-release
+
+  lane-research:
+    name: Research lane
+    needs: impact-plan
+    if: needs.impact-plan.outputs.mode == 'impact' && needs.impact-plan.outputs.research == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out canonical source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Use Go 1.27
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: tooling/go.mod
+          cache-dependency-path: tooling/go.sum
+      - name: Use Node.js 26
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 26.8.1
+          cache: npm
+      - name: Install locked npm 12.0.2
+        run: node scripts/install-locked-npm.mjs
+      - name: Verify locked npm 12.0.2
+        run: test "$(npm --version)" = "12.0.2"
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run research checks
+        run: npm run check:lane-research
+
+  lane-site:
+    name: Site lane
+    needs: impact-plan
+    if: needs.impact-plan.outputs.mode == 'impact' && needs.impact-plan.outputs.site == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Check out canonical source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Use Node.js 26
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 26.8.1
+          cache: npm
+      - name: Install locked npm 12.0.2
+        run: node scripts/install-locked-npm.mjs
+      - name: Verify locked npm 12.0.2
+        run: test "$(npm --version)" = "12.0.2"
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run site checks
+        run: npm run check:lane-site
+
+  workstation-core:
+    name: Workstation core
+    needs: impact-plan
+    if: needs.impact-plan.outputs.mode == 'impact' && needs.impact-plan.outputs.workstation_any == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Check out canonical source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Use Node.js 26
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 26.8.1
+          cache: npm
+      - name: Install locked npm 12.0.2
+        run: node scripts/install-locked-npm.mjs
+      - name: Verify locked npm 12.0.2
+        run: test "$(npm --version)" = "12.0.2"
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Validate the workstation inventory and core
+        run: npm run validate:workstation && npm run test:workstation:core
+
+  workstation-artifacts:
+    name: Workstation artifact (${{ matrix.artifact }})
+    needs: impact-plan
+    if: needs.impact-plan.outputs.mode == 'impact' && needs.impact-plan.outputs.workstation_any == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        artifact: ${{ fromJSON(needs.impact-plan.outputs.workstation_matrix) }}
+    steps:
+      - name: Check out canonical source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Use the locked Python runtime for Fixture 019
+        if: matrix.artifact == 'fixture-019'
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.14.7'
+      - name: Install the locked scientific runtime for Fixture 019
+        if: matrix.artifact == 'fixture-019'
+        run: python -m pip install --disable-pip-version-check --no-deps --require-hashes -r requirements-ci.txt
+      - name: Use Node.js 26
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 26.8.1
+          cache: npm
+      - name: Install locked npm 12.0.2
+        run: node scripts/install-locked-npm.mjs
+      - name: Verify locked npm 12.0.2
+        run: test "$(npm --version)" = "12.0.2"
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run the allowlisted artifact test script
+        env:
+          ARTIFACT: ${{ matrix.artifact }}
+        run: |
+          set -euo pipefail
+          case "$ARTIFACT" in
+            candidate-010) npm run test:workstation:candidate-010 ;;
+            fixture-007) npm run test:workstation:fixture-007 ;;
+            fixture-012) npm run test:workstation:fixture-012 ;;
+            fixture-019) npm run test:workstation:fixture-019 ;;
+            fixture-022) npm run test:workstation:fixture-022 ;;
+            fixture-023) npm run test:workstation:fixture-023 ;;
+            fixture-024) npm run test:workstation:fixture-024 ;;
+            fixture-025) npm run test:workstation:fixture-025 ;;
+            fixture-026) npm run test:workstation:fixture-026 ;;
+            fixture-027) npm run test:workstation:fixture-027 ;;
+            fixture-029) npm run test:workstation:fixture-029 ;;
+            *) echo "::error::unallowlisted workstation artifact: $ARTIFACT"; exit 1 ;;
+          esac
+
+  container-smoke:
     name: Container smoke paths
+    needs: impact-plan
+    if: needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.container == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     permissions:
@@ -234,18 +512,109 @@ jobs:
   ci-success:
     name: CI success
     if: always()
-    needs: [pr-title, quality, experiment-image, dependency-review]
+    needs:
+      - impact-plan
+      - pr-title
+      - quality-full
+      - impact-common
+      - lane-go
+      - lane-release
+      - lane-research
+      - lane-site
+      - workstation-core
+      - workstation-artifacts
+      - container-smoke
+      - dependency-review
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Require every applicable gate to pass
+      - name: Require every expected gate state
         env:
-          RESULTS: ${{ join(needs.*.result, ',') }}
+          EVENT_NAME: ${{ github.event_name }}
+          MODE: ${{ needs.impact-plan.outputs.mode }}
+          SELECT_CONTAINER: ${{ needs.impact-plan.outputs.container }}
+          SELECT_GO: ${{ needs.impact-plan.outputs.go }}
+          SELECT_RELEASE: ${{ needs.impact-plan.outputs.release }}
+          SELECT_RESEARCH: ${{ needs.impact-plan.outputs.research }}
+          SELECT_SITE: ${{ needs.impact-plan.outputs.site }}
+          SELECT_WORKSTATION: ${{ needs.impact-plan.outputs.workstation_any }}
+          RESULT_PLAN: ${{ needs.impact-plan.result }}
+          RESULT_PR_TITLE: ${{ needs.pr-title.result }}
+          RESULT_QUALITY_FULL: ${{ needs.quality-full.result }}
+          RESULT_IMPACT_COMMON: ${{ needs.impact-common.result }}
+          RESULT_GO: ${{ needs.lane-go.result }}
+          RESULT_RELEASE: ${{ needs.lane-release.result }}
+          RESULT_RESEARCH: ${{ needs.lane-research.result }}
+          RESULT_SITE: ${{ needs.lane-site.result }}
+          RESULT_WORKSTATION_CORE: ${{ needs.workstation-core.result }}
+          RESULT_WORKSTATION_ARTIFACTS: ${{ needs.workstation-artifacts.result }}
+          RESULT_CONTAINER: ${{ needs.container-smoke.result }}
+          RESULT_DEPENDENCY_REVIEW: ${{ needs.dependency-review.result }}
         run: |
-          echo "gate results: $RESULTS"
-          case ",$RESULTS," in
-            *,failure,*|*,cancelled,*)
-              echo "::error::one or more CI gates failed or were cancelled: $RESULTS"
+          set -euo pipefail
+
+          require_state() {
+            local gate="$1"
+            local actual="$2"
+            local expected="$3"
+            if [[ "$actual" != "$expected" ]]; then
+              echo "::error::$gate state is $actual, want $expected"
+              exit 1
+            fi
+          }
+
+          require_selection() {
+            local gate="$1"
+            local actual="$2"
+            local selected="$3"
+            case "$selected" in
+              true) require_state "$gate" "$actual" success ;;
+              false) require_state "$gate" "$actual" skipped ;;
+              *) echo "::error::$gate selector is malformed: $selected"; exit 1 ;;
+            esac
+          }
+
+          require_state impact-plan "$RESULT_PLAN" success
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            require_state pr-title "$RESULT_PR_TITLE" success
+            require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" success
+          else
+            require_state pr-title "$RESULT_PR_TITLE" skipped
+            require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" skipped
+          fi
+
+          case "$MODE" in
+            full)
+              for selector in "$SELECT_CONTAINER" "$SELECT_GO" "$SELECT_RELEASE" \
+                "$SELECT_RESEARCH" "$SELECT_SITE" "$SELECT_WORKSTATION"; do
+                if [[ "$selector" != "false" ]]; then
+                  echo "::error::full plan exposed a non-false semantic selector: $selector"
+                  exit 1
+                fi
+              done
+              require_state quality-full "$RESULT_QUALITY_FULL" success
+              require_state impact-common "$RESULT_IMPACT_COMMON" skipped
+              require_state lane-go "$RESULT_GO" skipped
+              require_state lane-release "$RESULT_RELEASE" skipped
+              require_state lane-research "$RESULT_RESEARCH" skipped
+              require_state lane-site "$RESULT_SITE" skipped
+              require_state workstation-core "$RESULT_WORKSTATION_CORE" skipped
+              require_state workstation-artifacts "$RESULT_WORKSTATION_ARTIFACTS" skipped
+              require_state container-smoke "$RESULT_CONTAINER" success
+              ;;
+            impact)
+              require_state quality-full "$RESULT_QUALITY_FULL" skipped
+              require_state impact-common "$RESULT_IMPACT_COMMON" success
+              require_selection lane-go "$RESULT_GO" "$SELECT_GO"
+              require_selection lane-release "$RESULT_RELEASE" "$SELECT_RELEASE"
+              require_selection lane-research "$RESULT_RESEARCH" "$SELECT_RESEARCH"
+              require_selection lane-site "$RESULT_SITE" "$SELECT_SITE"
+              require_selection workstation-core "$RESULT_WORKSTATION_CORE" "$SELECT_WORKSTATION"
+              require_selection workstation-artifacts "$RESULT_WORKSTATION_ARTIFACTS" "$SELECT_WORKSTATION"
+              require_selection container-smoke "$RESULT_CONTAINER" "$SELECT_CONTAINER"
+              ;;
+            *)
+              echo "::error::impact plan mode is malformed: $MODE"
               exit 1
               ;;
           esac

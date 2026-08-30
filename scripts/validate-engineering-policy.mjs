@@ -517,9 +517,9 @@ export function validateCiFuzzingWorkflowObject(
   workflow,
   relativePath = ".github/workflows/ci.yml",
 ) {
-  const steps = workflow?.jobs?.quality?.steps;
+  const steps = workflow?.jobs?.["quality-full"]?.steps;
   if (!Array.isArray(steps)) {
-    return [`${relativePath}: quality must run the bounded strict-JSON fuzz target`];
+    return [`${relativePath}: quality-full must run the bounded strict-JSON fuzz target`];
   }
   const expectedCommand = [
     "go -C tooling test ./internal/strictjson",
@@ -541,12 +541,184 @@ export function validateCiFuzzingWorkflowObject(
   const findings = [];
   if (fuzzIndex < 0 || repositoryCheckIndex < 0 || fuzzIndex <= repositoryCheckIndex) {
     findings.push(
-      `${relativePath}: quality must run the exact bounded strict-JSON fuzz target after the repository check`,
+      `${relativePath}: quality-full must run the exact bounded strict-JSON fuzz target after the repository check`,
     );
   }
-  if (!arrayIncludes(workflow?.jobs?.["ci-success"]?.needs, "quality")) {
-    findings.push(`${relativePath}: ci-success must require the fuzzing quality gate`);
+  if (!arrayIncludes(workflow?.jobs?.["ci-success"]?.needs, "quality-full")) {
+    findings.push(`${relativePath}: ci-success must require the fuzzing quality-full gate`);
   }
+  return findings;
+}
+
+function validateCiImpactPlanJob(jobs, relativePath, findings) {
+  const plan = jobs["impact-plan"];
+  const expectedOutputs = {
+    mode: "${{ steps.plan.outputs.mode }}",
+    reason: "${{ steps.plan.outputs.reason }}",
+    container: "${{ steps.plan.outputs.container }}",
+    go: "${{ steps.plan.outputs.go }}",
+    release: "${{ steps.plan.outputs.release }}",
+    research: "${{ steps.plan.outputs.research }}",
+    site: "${{ steps.plan.outputs.site }}",
+    workstation_any: "${{ steps.plan.outputs.workstation_any }}",
+    workstation_matrix: "${{ steps.plan.outputs.workstation_matrix }}",
+  };
+  recordExpectation(
+    findings,
+    Object.keys(plan?.outputs ?? {}).length === Object.keys(expectedOutputs).length
+      && propertiesMatch(plan?.outputs, expectedOutputs),
+    `${relativePath}: impact-plan must expose only the fixed validated Go projection`,
+  );
+  const planStep = (plan?.steps ?? []).find((step) => step?.id === "plan");
+  recordExpectation(
+    findings,
+    stringIncludesAll(planStep?.run, [
+      'if [[ "$EVENT_NAME" == "pull_request" ]]',
+      '--base "$BASE_SHA" --head "$HEAD_SHA" --json',
+      "ci plan --root .. --full --json",
+      "ci project",
+      '< build/ci-impact-plan.json >> "$GITHUB_OUTPUT"',
+    ]) && !String(planStep?.run ?? "").includes("PR_DRAFT"),
+    `${relativePath}: every pull_request must project its exact base/head diff and only non-PR events may force full`,
+  );
+}
+
+function validateCiImpactLaneJobs(jobs, relativePath, findings) {
+  const impactMode = "needs.impact-plan.outputs.mode == 'impact'";
+  recordExpectation(
+    findings,
+    jobs["quality-full"]?.if === "needs.impact-plan.outputs.mode == 'full'",
+    `${relativePath}: quality-full must run only for full plans`,
+  );
+  recordExpectation(
+    findings,
+    jobs["impact-common"]?.if === impactMode,
+    `${relativePath}: impact-common must run for every impact plan`,
+  );
+  for (const lane of ["go", "release", "research", "site"]) {
+    recordExpectation(
+      findings,
+      jobs[`lane-${lane}`]?.if === `${impactMode} && needs.impact-plan.outputs.${lane} == 'true'`,
+      `${relativePath}: lane-${lane} must use only its fixed Go selector`,
+    );
+  }
+  recordExpectation(
+    findings,
+    jobs["container-smoke"]?.if
+      === "needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.container == 'true'",
+    `${relativePath}: container-smoke must run for full plans or its fixed selector`,
+  );
+}
+
+function validateCiImpactWorkstationJobs(jobs, relativePath, findings) {
+  const impactMode = "needs.impact-plan.outputs.mode == 'impact'";
+  const workstationCondition = `${impactMode} && needs.impact-plan.outputs.workstation_any == 'true'`;
+  const artifacts = jobs["workstation-artifacts"];
+  recordExpectation(
+    findings,
+    jobs["workstation-core"]?.if === workstationCondition
+      && artifacts?.if === workstationCondition
+      && artifacts?.strategy?.["fail-fast"] === false
+      && artifacts?.strategy?.["max-parallel"] === 4
+      && artifacts?.strategy?.matrix?.artifact
+        === "${{ fromJSON(needs.impact-plan.outputs.workstation_matrix) }}",
+    `${relativePath}: an empty workstation matrix must skip both workstation jobs and selected artifacts must use the bounded four-way matrix`,
+  );
+  const artifactStep = (artifacts?.steps ?? []).find((step) => (
+    step?.name === "Run the allowlisted artifact test script"
+  ));
+  const artifactScripts = [
+    "candidate-010",
+    "fixture-007",
+    "fixture-012",
+    "fixture-019",
+    "fixture-022",
+    "fixture-023",
+    "fixture-024",
+    "fixture-025",
+    "fixture-026",
+    "fixture-027",
+    "fixture-029",
+  ].map((artifact) => `${artifact}) npm run test:workstation:${artifact} ;;`);
+  recordExpectation(
+    findings,
+    stringIncludesAll(artifactStep?.run, [
+      ...artifactScripts,
+      "*) echo \"::error::unallowlisted workstation artifact: $ARTIFACT\"; exit 1 ;;",
+    ]),
+    `${relativePath}: workstation matrix execution must dispatch only the eleven static artifact scripts`,
+  );
+  const pythonSteps = (artifacts?.steps ?? []).filter((step) => (
+    step?.uses?.startsWith("actions/setup-python@")
+      || String(step?.run ?? "").includes("requirements-ci.txt")
+  ));
+  recordExpectation(
+    findings,
+    pythonSteps.length === 2
+      && pythonSteps.every((step) => step.if === "matrix.artifact == 'fixture-019'"),
+    `${relativePath}: only Fixture 019 may provision the locked scientific runtime in the artifact matrix`,
+  );
+}
+
+function validateCiImpactSuccessJob(jobs, relativePath, findings) {
+  const expectedNeeds = [
+    "impact-plan",
+    "pr-title",
+    "quality-full",
+    "impact-common",
+    "lane-go",
+    "lane-release",
+    "lane-research",
+    "lane-site",
+    "workstation-core",
+    "workstation-artifacts",
+    "container-smoke",
+    "dependency-review",
+  ];
+  const success = jobs["ci-success"];
+  const successSource = success?.steps?.find((step) => (
+    step?.name === "Require every expected gate state"
+  ))?.run;
+  recordExpectation(
+    findings,
+    Array.isArray(success?.needs)
+      && success.needs.length === expectedNeeds.length
+      && expectedNeeds.every((job) => success.needs.includes(job)),
+    `${relativePath}: ci-success must depend on every full, impact, matrix, container, and PR gate`,
+  );
+  recordExpectation(
+    findings,
+    stringIncludesAll(successSource, [
+      'require_state impact-plan "$RESULT_PLAN" success',
+      'require_state pr-title "$RESULT_PR_TITLE" success',
+      'require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" success',
+      'require_state quality-full "$RESULT_QUALITY_FULL" success',
+      'require_state impact-common "$RESULT_IMPACT_COMMON" success',
+      'require_selection lane-go "$RESULT_GO" "$SELECT_GO"',
+      'require_selection lane-release "$RESULT_RELEASE" "$SELECT_RELEASE"',
+      'require_selection lane-research "$RESULT_RESEARCH" "$SELECT_RESEARCH"',
+      'require_selection lane-site "$RESULT_SITE" "$SELECT_SITE"',
+      'require_selection workstation-core "$RESULT_WORKSTATION_CORE" "$SELECT_WORKSTATION"',
+      'require_selection workstation-artifacts "$RESULT_WORKSTATION_ARTIFACTS" "$SELECT_WORKSTATION"',
+      'require_selection container-smoke "$RESULT_CONTAINER" "$SELECT_CONTAINER"',
+      'full plan exposed a non-false semantic selector: $selector',
+      'false) require_state "$gate" "$actual" skipped ;;',
+      '*) echo "::error::$gate selector is malformed: $selected"; exit 1 ;;',
+    ]),
+    `${relativePath}: ci-success must reject unexpected states and any skipped selected lane`,
+  );
+}
+
+export function validateCiImpactWorkflowObject(
+  workflow,
+  relativePath = ".github/workflows/ci.yml",
+) {
+  const findings = [];
+  const jobs = workflow?.jobs ?? {};
+  validateCiImpactPlanJob(jobs, relativePath, findings);
+  validateCiImpactLaneJobs(jobs, relativePath, findings);
+  validateCiImpactWorkstationJobs(jobs, relativePath, findings);
+  validateCiImpactSuccessJob(jobs, relativePath, findings);
   return findings;
 }
 
@@ -1213,7 +1385,7 @@ function validateManifestReleaseImageParity(root, workflow, relativePath, findin
 
 function validateCiManifestReleaseImageParity(root, workflow, relativePath, findings) {
   const declarations = loadReleaseImageDeclarations(root, findings);
-  const steps = workflow?.jobs?.["experiment-image"]?.steps ?? [];
+  const steps = workflow?.jobs?.["container-smoke"]?.steps ?? [];
   for (const declaration of declarations) {
     const build = findStepByInput(steps, "tags", `20w-${declaration.artifact}:test`);
     const expectedContext = declaration.build_context === "closed-go-package"
@@ -1249,7 +1421,7 @@ function validateCiFixtureImageSteps(steps, relativePath, findings) {
         tags: "20w-fixture-019:test",
       }),
     ].every(Boolean),
-    `${relativePath}: experiment-image must build only the scoped Fixture 019 test image`,
+    `${relativePath}: container-smoke must build only the scoped Fixture 019 test image`,
   );
   recordExpectation(
     findings,
@@ -1300,7 +1472,7 @@ function validateCiFixture007Build(steps, relativePath, findings) {
       push: false,
       tags: fixture007ImagePolicy.ciTag,
     }),
-    `${relativePath}: experiment-image must build only the scoped Fixture 007 test image from its closed context`,
+    `${relativePath}: container-smoke must build only the scoped Fixture 007 test image from its closed context`,
   );
   recordExpectation(
     findings,
@@ -1363,7 +1535,7 @@ function validateCiToolingImageSteps(steps, relativePath, findings) {
   recordExpectation(
     findings,
     accepted,
-    `${relativePath}: experiment-image must build the separate static 20w tooling image`,
+    `${relativePath}: container-smoke must build the separate static 20w tooling image`,
   );
 
   const source = findStepByRunFragment(steps, "20w-tooling:test version --json")?.run;
@@ -1414,9 +1586,9 @@ export function validateCiExperimentImageWorkflowObject(
   root = defaultRoot,
 ) {
   const findings = [];
-  const steps = workflow?.jobs?.["experiment-image"]?.steps;
+  const steps = workflow?.jobs?.["container-smoke"]?.steps;
   if (!Array.isArray(steps)) {
-    return [`${relativePath}: experiment-image job must validate the scoped Fixture 007 and Fixture 019 images`];
+    return [`${relativePath}: container-smoke job must validate the scoped Fixture 007 and Fixture 019 images`];
   }
   validateBuildxSetup(steps, relativePath, findings);
   validateCiManifestReleaseImageParity(root, workflow, relativePath, findings);
@@ -1427,8 +1599,8 @@ export function validateCiExperimentImageWorkflowObject(
   validateCiImageRuntimeSteps(steps, relativePath, findings);
   recordExpectation(
     findings,
-    arrayIncludes(workflow?.jobs?.["ci-success"]?.needs, "experiment-image"),
-    `${relativePath}: ci-success must require the scoped experiment-image gate`,
+    arrayIncludes(workflow?.jobs?.["ci-success"]?.needs, "container-smoke"),
+    `${relativePath}: ci-success must require the scoped container-smoke gate`,
   );
   return findings;
 }
@@ -2398,16 +2570,17 @@ function validateReleaseWorkflowPolicy(workflow, relativePath, lock, findings) {
 }
 
 function validateCiWorkflowPolicy(workflow, relativePath, lock, findings) {
+  findings.push(...validateCiImpactWorkflowObject(workflow, relativePath));
   findings.push(...validateCiExperimentImageWorkflowObject(workflow, relativePath));
   findings.push(...validateCiFuzzingWorkflowObject(workflow, relativePath));
   findings.push(...validateScientificRuntimeWorkflowObject(
     workflow,
     lock,
-    "quality",
+    "quality-full",
     relativePath,
   ));
-  findings.push(...validateJavaScriptRuntimeWorkflowObject(workflow, "quality", relativePath));
-  findings.push(...validateGoRuntimeWorkflowObject(workflow, "quality", relativePath));
+  findings.push(...validateJavaScriptRuntimeWorkflowObject(workflow, "quality-full", relativePath));
+  findings.push(...validateGoRuntimeWorkflowObject(workflow, "quality-full", relativePath));
 }
 
 function validateWorkflowPolicy(workflow, relativePath, lock, findings) {

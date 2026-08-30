@@ -174,21 +174,11 @@ test("portal utility text and card accents retain readable contrast", async () =
 
   assert.doesNotMatch(portal, /font-size:\s*(?:8|9|10)px/);
   assert.match(stylesheet, /\.portal-dashboard-funnel\s*\{[^}]*grid-column:\s*1 \/ -1/s);
-  assert.match(portal, /\.portal-document-state\s*\{[^}]*font-size:\s*14px/s);
-  assert.match(portal, /\.portal-document-state\[role="alert"\]\s*\{[^}]*border-left-color:\s*#a92d31/s);
   assert.match(portal, /\.portal-shell\s*\{[^}]*overflow-x:\s*clip/s);
   assert.match(stylesheet, /\.prose table\s*\{[^}]*font-size:\s*14px/s);
   assert.match(stylesheet, /\.diagram-scroll-region\s*\{[^}]*overflow-x:\s*auto/s);
-  assert.match(stylesheet, /\.portal-reader-page \.portal-library\s*\{[^}]*display:\s*none/s);
-  assert.match(stylesheet, /\.portal-mobile-outline\s*\{[^}]*position:\s*sticky/s);
   assert.match(stylesheet, /\.portal-mobile-menu nav a\s*\{[^}]*min-height:\s*44px/s);
-  assert.match(stylesheet, /\.portal-library \.portal-document-list\s*\{[^}]*flex:\s*1;[^}]*min-height:\s*0;[^}]*max-height:\s*none/s);
-  assert.match(stylesheet, /\.portal-prose h4\s*\{[^}]*font-size:\s*17px;[^}]*font-weight:\s*750/s);
   assert.match(stylesheet, /\.prose th\s*\{[^}]*font-size:\s*14px;[^}]*line-height:\s*1\.35/s);
-  assert.match(stylesheet, /\.portal-reader-toolbar\s*\{[^}]*background:\s*#fff/s);
-  assert.match(stylesheet, /\.portal-reader \.portal-prose > h2:first-child\s*\{[^}]*display:\s*none/s);
-  assert.match(stylesheet, /top:\s*var\(--portal-reader-stack-top, 142px\)/);
-  assert.match(stylesheet, /scroll-margin-top:\s*calc\(var\(--portal-reader-stack-top, 142px\) \+ 8px\)/);
   assert.doesNotMatch(stylesheet, /\.portal-header nav a:(?:first-child|nth-child\()/);
 
   const publicationPass = stylesheet.slice(stylesheet.indexOf(
@@ -224,4 +214,57 @@ test("portal utility text and card accents retain readable contrast", async () =
   assert.match(publicationPass, /\.portal-reader-grid\s*\{[^}]*grid-template-columns:\s*235px minmax\(0, 900px\) 195px[^}]*border:\s*0/s);
   assert.match(publicationPass, /\.portal-prose\s*\{[^}]*font-size:\s*18px[^}]*line-height:\s*1\.66/s);
   assert.match(publicationPass, /@media screen and \(max-width: 460px\)[\s\S]*\.portal-wordmark strong\s*\{[^}]*display:\s*block/s);
+});
+
+test("the focused reader has one publication owner and a non-clipping rail", async () => {
+  const [portalComponent, stylesheet] = await Promise.all([
+    source("app/components/public-research-portal.tsx"),
+    source("app/globals.css"),
+  ]);
+  const ownerMarker = "/* Focused research reader: one publication layout owns every viewport. */";
+  const ownerStart = stylesheet.indexOf(ownerMarker);
+  assert.ok(ownerStart >= 0);
+  assert.equal(stylesheet.split(ownerMarker).length - 1, 1);
+  assert.doesNotMatch(stylesheet, /Screen reading pass/u);
+
+  const beforeOwner = stylesheet.slice(0, ownerStart);
+  for (const selector of [
+    "portal-reader-page",
+    "portal-reader-toolbar",
+    "portal-reader-workspace",
+    "portal-reader-grid",
+    "portal-library",
+    "portal-document-list",
+    "portal-reader",
+    "portal-reader-header",
+    "portal-reader-meta",
+    "portal-prose",
+    "portal-document-state",
+    "portal-outline",
+    "portal-mobile-outline",
+  ]) {
+    assert.doesNotMatch(
+      beforeOwner,
+      new RegExp(`^\\s*\\.${selector}\\s*\\{`, "mu"),
+      `${selector} must be owned by the focused reader section`,
+    );
+  }
+
+  assert.doesNotMatch(
+    stylesheet,
+    /^\.(?:research-shell|topbar|sidebar|reader-main|document-wrap|document-pager|outline)\s*\{/mu,
+  );
+  assert.doesNotMatch(portalComponent, /portal-reader-stack-top|readerToolbarRef|ResizeObserver/u);
+
+  const reader = stylesheet.slice(ownerStart);
+  assert.match(reader, /\.portal-reader\s*\{[^}]*--reading-measure:\s*68ch/s);
+  assert.match(reader, /\.portal-prose\s*\{[^}]*font-size:\s*18px;[^}]*line-height:\s*1\.66/s);
+  assert.match(reader, /\.portal-prose > :is\([^)]*\)\s*\{[^}]*max-width:\s*var\(--reading-measure\)/s);
+  assert.match(reader, /\.portal-library \.portal-filter-tabs\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/s);
+  assert.match(reader, /\.portal-library \.portal-filter-tabs button:last-child\s*\{[^}]*grid-column:\s*1 \/ -1/s);
+  assert.match(reader, /@media screen and \(max-width: 1080px\)[\s\S]*\.portal-reader-grid\s*\{[^}]*grid-template-columns:\s*225px minmax\(0, 820px\)/s);
+  assert.match(reader, /@media screen and \(max-width: 880px\)[\s\S]*\.portal-reader-page \.portal-library\s*\{[^}]*display:\s*none/s);
+  assert.match(reader, /\.portal-mobile-outline summary\s*\{[^}]*min-height:\s*44px/s);
+  assert.match(reader, /\.portal-document-state\s*\{[^}]*font-size:\s*14px/s);
+  assert.match(reader, /\.portal-document-state\[role="alert"\]\s*\{[^}]*border-left-color:\s*#a92d31/s);
 });

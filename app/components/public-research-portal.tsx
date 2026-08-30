@@ -223,7 +223,6 @@ export function PublicResearchPortal({
   const overviewRef = useRef<HTMLElement>(null);
   const readerRef = useRef<HTMLElement>(null);
   const readerPageRef = useRef<HTMLElement>(null);
-  const readerToolbarRef = useRef<HTMLElement>(null);
   const readerLibraryRef = useRef<HTMLElement>(null);
   const mobileMenuRef = useRef<HTMLDetailsElement>(null);
   const mobileOutlineRef = useRef<HTMLDetailsElement>(null);
@@ -347,33 +346,6 @@ export function PublicResearchPortal({
     });
     return () => window.cancelAnimationFrame(frame);
   }, [selectedDocument, selectedPath]);
-
-  useEffect(() => {
-    if (!selectedPath) return;
-    const page = readerPageRef.current;
-    const toolbar = readerToolbarRef.current;
-    const headerElement = document.querySelector<HTMLElement>(".portal-header");
-    if (!page || !toolbar || !headerElement) return;
-
-    const syncStickyStack = () => {
-      const stackHeight = Math.ceil(
-        headerElement.getBoundingClientRect().height
-        + toolbar.getBoundingClientRect().height,
-      );
-      page.style.setProperty("--portal-reader-stack-top", `${stackHeight}px`);
-    };
-    syncStickyStack();
-    const observer = typeof ResizeObserver === "undefined"
-      ? null
-      : new ResizeObserver(syncStickyStack);
-    observer?.observe(headerElement);
-    observer?.observe(toolbar);
-    window.addEventListener("resize", syncStickyStack);
-    return () => {
-      observer?.disconnect();
-      window.removeEventListener("resize", syncStickyStack);
-    };
-  }, [selectedPath]);
 
   useEffect(() => {
     if (!selectedPath) return;
@@ -593,7 +565,6 @@ export function PublicResearchPortal({
         <main id="portal-main" className="portal-reader-page" ref={readerPageRef}>
           <section
             className="portal-reader-toolbar"
-            ref={readerToolbarRef}
             aria-labelledby="portal-reader-title"
           >
             <a

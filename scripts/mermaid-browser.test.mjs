@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { mkdtemp, rm } from "node:fs/promises";
+import { once } from "node:events";
+import { access, mkdtemp, rm } from "node:fs/promises";
 import { createServer as createTcpServer } from "node:net";
 import os from "node:os";
 import path from "node:path";
@@ -16,6 +17,49 @@ import {
 } from "./lib/chromium-cdp.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+test("browser process shutdown waits for a stubborn child before profile cleanup", async () => {
+  const profile = await mkdtemp(path.join(os.tmpdir(), "20w-browser-stop-"));
+  const browserProcess = spawn(process.execPath, [
+    "-e",
+    `const fs = require("node:fs");
+const path = require("node:path");
+const profile = process.argv[1];
+const active = path.join(profile, "Default");
+fs.mkdirSync(active, { recursive: true });
+process.on("SIGTERM", () => {});
+let sequence = 0;
+setInterval(() => fs.writeFileSync(path.join(active, String(sequence++)), "active"), 5);
+process.stdout.write("ready\\n");`,
+    profile,
+  ], { stdio: ["ignore", "pipe", "ignore"], windowsHide: true });
+  let exited = false;
+  browserProcess.once("exit", () => {
+    exited = true;
+  });
+  try {
+    const [ready] = await once(browserProcess.stdout, "data");
+    assert.equal(String(ready), "ready\n");
+    await stopProcess(browserProcess, { terminationGraceMs: 50, forcedExitWaitMs: 2_000 });
+    assert.equal(exited, true, "stopProcess returned before the child exit event");
+    if (process.platform !== "win32") assert.equal(browserProcess.signalCode, "SIGKILL");
+    await rm(profile, { recursive: true, force: true });
+    await assert.rejects(access(profile), (error) => error.code === "ENOENT");
+  } finally {
+    if (!exited) {
+      await stopProcess(browserProcess, { terminationGraceMs: 50, forcedExitWaitMs: 2_000 });
+    }
+    await rm(profile, { recursive: true, force: true });
+  }
+});
+
+test("browser process shutdown is a no-op after exit", async () => {
+  const child = spawn(process.execPath, ["-e", ""], { stdio: "ignore", windowsHide: true });
+  await once(child, "exit");
+  const state = { exitCode: child.exitCode, signalCode: child.signalCode };
+  await stopProcess(child, { terminationGraceMs: 1, forcedExitWaitMs: 1 });
+  assert.deepEqual({ exitCode: child.exitCode, signalCode: child.signalCode }, state);
+});
 
 async function reserveLocalPort() {
   const server = createTcpServer();

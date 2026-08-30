@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/buildinfo"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/ciplan"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/docscheck"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/experiment"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githublabels"
@@ -38,12 +39,16 @@ func (values *repeatedString) Set(value string) error {
 
 func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "Usage:")
+	fmt.Fprintln(writer, "  20w ci plan [--root <repository>] [--base <commit> --head <commit> | --full] [--json]")
+	fmt.Fprintln(writer, "  20w ci project")
 	fmt.Fprintln(writer, "  20w validate docs [--root <repository>]")
 	fmt.Fprintln(writer, "  20w experiment list [--root <repository>] [--json]")
 	fmt.Fprintln(writer, "  20w experiment validate [--root <repository>]")
 	fmt.Fprintln(writer, "  20w experiment release-plan [--root <repository>] [--json]")
 	fmt.Fprintln(writer, "  20w experiment package-node-image --artifact <id> --output <directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w publication render-pdf [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--check]")
+	fmt.Fprintln(writer, "  20w translation export-candidate --source <concept-or-math.md> --language <code> --output <new.json> [--root <repository>]")
+	fmt.Fprintln(writer, "  20w translation import-candidate --input <candidate.json> --source <concept-or-math.md> --language <code> --output <new-directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w github sync-labels [--root <repository>] [--check | --repository <owner/name>]")
 	fmt.Fprintln(writer, "  20w release inspect-image --image <registry path> --tag <vX.Y.Z> --revision <commit> --platform <os/arch> --expected-label <key=value>")
 	fmt.Fprintln(writer, "  20w release asset-inventory --assets <directory> --phase source|publication")
@@ -62,6 +67,13 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 		return 0
 	}
 	switch arguments[0] {
+	case "ci":
+		if len(arguments) >= 2 && arguments[1] == "plan" {
+			return runCIPlan(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "project" {
+			return runCIProject(arguments[2:], os.Stdin, stdout, stderr)
+		}
 	case "validate":
 		if len(arguments) >= 2 && arguments[1] == "docs" {
 			return runValidateDocs(arguments[2:], stdout, stderr)
@@ -108,6 +120,13 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 		if len(arguments) >= 2 && arguments[1] == "render-pdf" {
 			return runPublicationRenderPDF(arguments[2:], stdout, stderr)
 		}
+	case "translation":
+		if len(arguments) >= 2 && arguments[1] == "export-candidate" {
+			return runTranslationExportCandidate(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "import-candidate" {
+			return runTranslationImportCandidate(arguments[2:], stdout, stderr)
+		}
 	case "github":
 		if len(arguments) >= 2 && arguments[1] == "sync-labels" {
 			return runGitHubSyncLabels(arguments[2:], stdout, stderr)
@@ -118,6 +137,60 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 	fmt.Fprintf(stderr, "Unknown 20w command: %s\n", arguments[0])
 	usage(stderr)
 	return 2
+}
+
+func runCIProject(arguments []string, stdin io.Reader, stdout, stderr io.Writer) int {
+	if len(arguments) != 0 {
+		fmt.Fprintln(stderr, "ci project accepts a plan on standard input and no arguments")
+		return 2
+	}
+	projection, err := ciplan.ReadProjection(stdin)
+	if err != nil {
+		fmt.Fprintf(stderr, "Project bounded CI plan: %v\n", err)
+		return 1
+	}
+	if err := ciplan.WriteGitHubOutputs(stdout, projection); err != nil {
+		fmt.Fprintf(stderr, "Write bounded CI outputs: %v\n", err)
+		return 1
+	}
+	return 0
+}
+
+func runCIPlan(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("ci plan", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	root := flags.String("root", ".", "repository root")
+	baseRevision := flags.String("base", "", "exact 40-character base commit")
+	headRevision := flags.String("head", "", "exact 40-character head commit")
+	forceFull := flags.Bool("full", false, "select the complete repository gate")
+	jsonOutput := flags.Bool("json", false, "write one stable JSON plan")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
+		return 2
+	}
+	if *forceFull && (*baseRevision != "" || *headRevision != "") {
+		fmt.Fprintln(stderr, "ci plan accepts either --full or --base with --head")
+		return 2
+	}
+	plan, err := ciplan.Build(context.Background(), ciplan.Options{
+		RepositoryRoot: *root,
+		BaseRevision:   *baseRevision,
+		HeadRevision:   *headRevision,
+		ForceFull:      *forceFull,
+	})
+	if err != nil {
+		fmt.Fprintf(stderr, "Build bounded CI plan: %v\n", err)
+		return 1
+	}
+	if *jsonOutput {
+		if err := json.NewEncoder(stdout).Encode(plan); err != nil {
+			fmt.Fprintf(stderr, "Write CI plan: %v\n", err)
+			return 1
+		}
+		return 0
+	}
+	fmt.Fprintf(stdout, "CI plan: %s (%s)\n", plan.Mode, plan.Reason)
+	fmt.Fprintf(stdout, "CI lanes: %s\n", strings.Join(plan.Lanes, ","))
+	return 0
 }
 
 func runReleaseAssetInventory(arguments []string, stdout, stderr io.Writer) int {

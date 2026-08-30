@@ -3,9 +3,11 @@ package main
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -34,6 +36,59 @@ func TestRunVersionReturnsBuildIdentity(t *testing.T) {
 	}
 	if stdout.Len() == 0 {
 		t.Fatal("run() wrote no version identity")
+	}
+}
+
+func TestRunCIPlanWritesAClosedFullPlan(t *testing.T) {
+	t.Parallel()
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	exitCode := run([]string{"ci", "plan", "--root", root, "--full", "--json"}, &stdout, &stderr)
+	if exitCode != 0 {
+		t.Fatalf("run() exit/stderr = %d/%q", exitCode, stderr.String())
+	}
+	var plan struct {
+		Mode         string   `json:"mode"`
+		Reason       string   `json:"reason"`
+		ChangedPaths []string `json:"changed_paths"`
+		Lanes        []string `json:"lanes"`
+	}
+	if err := json.Unmarshal(stdout.Bytes(), &plan); err != nil {
+		t.Fatal(err)
+	}
+	if plan.Mode != "full" || plan.Reason != "explicit-full" || plan.ChangedPaths == nil ||
+		len(plan.ChangedPaths) != 0 || !reflect.DeepEqual(plan.Lanes, []string{"full"}) {
+		t.Fatalf("CI plan = %#v, want explicit closed full plan", plan)
+	}
+}
+
+func TestRunCIPlanRejectsAmbiguousFullAndRevisionArguments(t *testing.T) {
+	t.Parallel()
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	exitCode := run([]string{
+		"ci", "plan", "--full", "--base", strings.Repeat("1", 40),
+	}, &stdout, &stderr)
+	if exitCode != 2 || !strings.Contains(stderr.String(), "either --full or --base") {
+		t.Fatalf("run() exit/stderr = %d/%q, want usage failure", exitCode, stderr.String())
+	}
+}
+
+func TestRunCIProjectWritesOnlyFixedValidatedOutputs(t *testing.T) {
+	t.Parallel()
+	plan := `{"schema":1,"mode":"impact","reason":"mapped-change-set",` +
+		`"base_revision":"1111111111111111111111111111111111111111",` +
+		`"head_revision":"2222222222222222222222222222222222222222",` +
+		`"changed_paths":["app/main.tsx"],"lanes":["site"]}`
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	if exitCode := runCIProject(nil, strings.NewReader(plan), &stdout, &stderr); exitCode != 0 {
+		t.Fatalf("runCIProject() exit/stderr = %d/%q", exitCode, stderr.String())
+	}
+	if stdout.String() != "mode=impact\nreason=mapped-change-set\ncontainer=false\ngo=false\n"+
+		"release=false\nresearch=false\nsite=true\nworkstation_any=false\nworkstation_matrix=[]\n" {
+		t.Fatalf("runCIProject() output = %q", stdout.String())
 	}
 }
 

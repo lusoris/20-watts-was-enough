@@ -846,6 +846,13 @@ async function artifactProtocolEligibility(root, manifest) {
   }
 }
 
+function coversCompleteWorkstationTestInventory(command) {
+  return typeof command === "string" && [
+    "experiments/workstation/*.test.mjs",
+    "experiments/workstation/**/*.test.mjs",
+  ].every((pattern) => command.includes(pattern));
+}
+
 export async function workstationPromotionChecks(root, manifest) {
   const fullProfile = localPath(root, manifest.data?.full_profile);
   const fullProfileExists = Boolean(fullProfile && (await exists(fullProfile)));
@@ -884,7 +891,7 @@ export async function workstationPromotionChecks(root, manifest) {
     const packageDocument = JSON.parse(await readFile(packagePath, "utf8"));
     workstationTestPipeline = packageDocument.scripts?.test?.includes("npm run test:workstation") === true
       && packageDocument.scripts?.["test:workstation"]?.includes("node --test") === true
-      && packageDocument.scripts["test:workstation"].includes("experiments/workstation/**/*.test.mjs");
+      && coversCompleteWorkstationTestInventory(packageDocument.scripts["test:workstation"]);
   } catch {
     workstationTestPipeline = false;
   }

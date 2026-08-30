@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -10,6 +11,7 @@ import {
   formatFindings,
   validateCiExperimentImageWorkflowObject,
   validateCiFuzzingWorkflowObject,
+  validateCiImpactWorkflowObject,
   validateCurrentResearchDisclosure,
   validateExperimentReportIdentity,
   validateExperimentRunFailureForm,
@@ -65,7 +67,7 @@ function policyDisclosure(version) {
 }
 
 function ciImageStep(subject, name) {
-  return subject.jobs["experiment-image"].steps.find((step) => step.name === name);
+  return subject.jobs["container-smoke"].steps.find((step) => step.name === name);
 }
 
 function releaseImageStep(subject, id) {
@@ -96,6 +98,33 @@ function disableExitAfterDiagnostic(step, diagnostic) {
   assert.equal(lines[exitIndex]?.trim(), "exit 1", `diagnostic ${diagnostic} is not followed by exit 1`);
   lines[exitIndex] = lines[exitIndex].replace("exit 1", ":");
   step.run = lines.join("\n");
+}
+
+function runCiSuccessGate(source, overrides = {}) {
+  const environment = {
+    EVENT_NAME: "push",
+    MODE: "full",
+    SELECT_CONTAINER: "false",
+    SELECT_GO: "false",
+    SELECT_RELEASE: "false",
+    SELECT_RESEARCH: "false",
+    SELECT_SITE: "false",
+    SELECT_WORKSTATION: "false",
+    RESULT_PLAN: "success",
+    RESULT_PR_TITLE: "skipped",
+    RESULT_QUALITY_FULL: "success",
+    RESULT_IMPACT_COMMON: "skipped",
+    RESULT_GO: "skipped",
+    RESULT_RELEASE: "skipped",
+    RESULT_RESEARCH: "skipped",
+    RESULT_SITE: "skipped",
+    RESULT_WORKSTATION_CORE: "skipped",
+    RESULT_WORKSTATION_ARTIFACTS: "skipped",
+    RESULT_CONTAINER: "success",
+    RESULT_DEPENDENCY_REVIEW: "skipped",
+    ...overrides,
+  };
+  return spawnSync("/bin/bash", ["-c", source], { encoding: "utf8", env: environment });
 }
 
 test("the repository satisfies its engineering policy", () => {
@@ -350,29 +379,110 @@ test("CI runs the strict-JSON fuzzer with explicit time and process bounds", () 
   assert.deepEqual(validateCiFuzzingWorkflowObject(valid), []);
 
   const unboundedMinimisation = structuredClone(valid);
-  const fuzz = unboundedMinimisation.jobs.quality.steps.find((step) => (
+  const fuzz = unboundedMinimisation.jobs["quality-full"].steps.find((step) => (
     step.name === "Fuzz the untrusted JSON boundary"
   ));
   fuzz.run = fuzz.run.replace(" -fuzzminimizetime=5s", "");
   assert.deepEqual(validateCiFuzzingWorkflowObject(unboundedMinimisation), [
-    ".github/workflows/ci.yml: quality must run the exact bounded strict-JSON fuzz target after the repository check",
+    ".github/workflows/ci.yml: quality-full must run the exact bounded strict-JSON fuzz target after the repository check",
   ]);
 
   const allowedFailure = structuredClone(valid);
-  allowedFailure.jobs.quality.steps.find((step) => (
+  allowedFailure.jobs["quality-full"].steps.find((step) => (
     step.name === "Fuzz the untrusted JSON boundary"
   ))["continue-on-error"] = true;
   assert.deepEqual(validateCiFuzzingWorkflowObject(allowedFailure), [
-    ".github/workflows/ci.yml: quality must run the exact bounded strict-JSON fuzz target after the repository check",
+    ".github/workflows/ci.yml: quality-full must run the exact bounded strict-JSON fuzz target after the repository check",
   ]);
 
   const detachedGate = structuredClone(valid);
   detachedGate.jobs["ci-success"].needs = detachedGate.jobs["ci-success"].needs.filter(
-    (job) => job !== "quality",
+    (job) => job !== "quality-full",
   );
   assert.deepEqual(validateCiFuzzingWorkflowObject(detachedGate), [
-    ".github/workflows/ci.yml: ci-success must require the fuzzing quality gate",
+    ".github/workflows/ci.yml: ci-success must require the fuzzing quality-full gate",
   ]);
+});
+
+test("CI impact selection is projected once and every job state fails closed", () => {
+  const valid = workflow("ci");
+  assert.deepEqual(validateCiImpactWorkflowObject(valid), []);
+
+  const draftOnly = structuredClone(valid);
+  const plan = draftOnly.jobs["impact-plan"].steps.find((step) => step.id === "plan");
+  plan.run = plan.run.replace(
+    'if [[ "$EVENT_NAME" == "pull_request" ]]',
+    'if [[ "$EVENT_NAME" == "pull_request" && "$PR_DRAFT" == "true" ]]',
+  );
+  assert.ok(validateCiImpactWorkflowObject(draftOnly).includes(
+    ".github/workflows/ci.yml: every pull_request must project its exact base/head diff and only non-PR events may force full",
+  ));
+
+  const openEmptyMatrix = structuredClone(valid);
+  openEmptyMatrix.jobs["workstation-artifacts"].if = "needs.impact-plan.outputs.mode == 'impact'";
+  assert.ok(validateCiImpactWorkflowObject(openEmptyMatrix).includes(
+    ".github/workflows/ci.yml: an empty workstation matrix must skip both workstation jobs and selected artifacts must use the bounded four-way matrix",
+  ));
+
+  const skippedSelectedLane = structuredClone(valid);
+  const success = skippedSelectedLane.jobs["ci-success"].steps.find((step) => (
+    step.name === "Require every expected gate state"
+  ));
+  success.run = success.run.replace(
+    'require_selection lane-go "$RESULT_GO" "$SELECT_GO"',
+    'require_state lane-go "$RESULT_GO" skipped',
+  );
+  assert.ok(validateCiImpactWorkflowObject(skippedSelectedLane).includes(
+    ".github/workflows/ci.yml: ci-success must reject unexpected states and any skipped selected lane",
+  ));
+
+  const dynamicCommand = structuredClone(valid);
+  const artifactStep = dynamicCommand.jobs["workstation-artifacts"].steps.find((step) => (
+    step.name === "Run the allowlisted artifact test script"
+  ));
+  artifactStep.run = 'eval "$PLAN_COMMAND"';
+  assert.ok(validateCiImpactWorkflowObject(dynamicCommand).includes(
+    ".github/workflows/ci.yml: workstation matrix execution must dispatch only the eleven static artifact scripts",
+  ));
+});
+
+test("CI success accepts only the exact full or selected impact state vector", () => {
+  const subject = workflow("ci");
+  const source = subject.jobs["ci-success"].steps.find((step) => (
+    step.name === "Require every expected gate state"
+  )).run;
+  assert.equal(runCiSuccessGate(source).status, 0);
+
+  const impact = {
+    EVENT_NAME: "pull_request",
+    MODE: "impact",
+    SELECT_SITE: "true",
+    SELECT_WORKSTATION: "true",
+    RESULT_PR_TITLE: "success",
+    RESULT_QUALITY_FULL: "skipped",
+    RESULT_IMPACT_COMMON: "success",
+    RESULT_SITE: "success",
+    RESULT_WORKSTATION_CORE: "success",
+    RESULT_WORKSTATION_ARTIFACTS: "success",
+    RESULT_CONTAINER: "skipped",
+    RESULT_DEPENDENCY_REVIEW: "success",
+  };
+  assert.equal(runCiSuccessGate(source, impact).status, 0);
+  assert.notEqual(runCiSuccessGate(source, {
+    ...impact,
+    RESULT_WORKSTATION_ARTIFACTS: "skipped",
+  }).status, 0, "a selected matrix may not skip");
+  assert.notEqual(runCiSuccessGate(source, {
+    ...impact,
+    RESULT_GO: "success",
+  }).status, 0, "an unselected lane may not succeed unexpectedly");
+  assert.notEqual(runCiSuccessGate(source, {
+    ...impact,
+    RESULT_SITE: "cancelled",
+  }).status, 0, "a selected lane may not be cancelled");
+  assert.notEqual(runCiSuccessGate(source, {
+    SELECT_GO: "true",
+  }).status, 0, "full mode must expose false semantic selectors");
 });
 
 test("label synchronization is manifest-triggered and least-privileged", () => {
@@ -860,16 +970,16 @@ test("CI and release image policy preserve separate tooling and experiment ident
   assert.deepEqual(validateReleaseExperimentImageWorkflowObject(releaseWorkflow), []);
 
   const sharedCiImage = structuredClone(ciWorkflow);
-  const ciBuild = sharedCiImage.jobs["experiment-image"].steps.find((step) => (
+  const ciBuild = sharedCiImage.jobs["container-smoke"].steps.find((step) => (
     step.with?.tags === "20w-fixture-019:test"
   ));
   ciBuild.with.file = "experiments/workstation/Dockerfile";
   assert.ok(validateCiExperimentImageWorkflowObject(sharedCiImage).includes(
-    ".github/workflows/ci.yml: experiment-image must build only the scoped Fixture 019 test image",
+    ".github/workflows/ci.yml: container-smoke must build only the scoped Fixture 019 test image",
   ));
 
   const unnamedCiImage = structuredClone(ciWorkflow);
-  const unnamedCiBuild = unnamedCiImage.jobs["experiment-image"].steps.find((step) => (
+  const unnamedCiBuild = unnamedCiImage.jobs["container-smoke"].steps.find((step) => (
     step.with?.tags === "20w-fixture-019:test"
   ));
   unnamedCiBuild.with["build-args"] = unnamedCiBuild.with["build-args"].replace(
@@ -927,7 +1037,7 @@ test("Fixture 019 uses the closed Go-packaged context in CI and release", () => 
     (subject) => {
       ciImageStep(subject, "Build the Fixture 019 image").with.context = ".";
     },
-    ".github/workflows/ci.yml: experiment-image must build only the scoped Fixture 019 test image",
+    ".github/workflows/ci.yml: container-smoke must build only the scoped Fixture 019 test image",
   );
   assertWorkflowTamper(
     "release",
@@ -1092,7 +1202,7 @@ test("CI enforces the exact Fixture 007 Node runtime", () => {
 
 test("CI locks Fixture 007 packaging, scoped build inputs, and offline smoke", () => {
   const buildName = "Build the Fixture 007 image";
-  const buildFinding = ".github/workflows/ci.yml: experiment-image must build only the scoped Fixture 007 test image from its closed context";
+  const buildFinding = ".github/workflows/ci.yml: container-smoke must build only the scoped Fixture 007 test image from its closed context";
   const cases = [
     {
       expected: ".github/workflows/ci.yml: Fixture 007 test image must use its exact closed Go-packaged runtime context",

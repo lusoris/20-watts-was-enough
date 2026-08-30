@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -55,18 +56,18 @@ func (resolver *fakeReleaseStateResolver) ResolveReleaseState(
 	return resolver.state, resolver.err
 }
 
-func TestParseIncludedGitHubResponseAcceptsStrictCRLFAnd404JSON(t *testing.T) {
+func TestParseIncludedGitHubResponseAcceptsStrictCRLFAnd200JSON(t *testing.T) {
 	t.Parallel()
-	response := []byte("HTTP/2 404 Not Found\r\ncontent-type: application/json\r\n\r\n{\"message\":\"Not Found\"}\r\n")
+	response := []byte("HTTP/2 200 OK\r\ncontent-type: application/json\r\n\r\n{\"id\":7}\r\n")
 	status, body, err := parseIncludedGitHubResponse(response)
 	if err != nil {
 		t.Fatalf("parseIncludedGitHubResponse() error = %v", err)
 	}
-	if status != 404 {
-		t.Fatalf("status = %d, want 404", status)
+	if status != 200 {
+		t.Fatalf("status = %d, want 200", status)
 	}
-	if err := validateSingleJSONValue(body); err != nil {
-		t.Fatalf("validateSingleJSONValue() error = %v", err)
+	if string(body) != "{\"id\":7}\r\n" {
+		t.Fatalf("body = %q, want exact JSON body", body)
 	}
 }
 
@@ -126,12 +127,12 @@ func TestReleaseStateJSONRejectsTrailingResponseBlocksAndNonExactObjects(t *test
 		{
 			name: "trailing JSON",
 			body: valid + ` {}`,
-			want: "trailing data or another response block",
+			want: "trailing",
 		},
 		{
 			name: "trailing HTTP block",
 			body: valid + "\nHTTP/2 200 OK\n\n{}",
-			want: "trailing data or another response block",
+			want: "trailing",
 		},
 		{
 			name: "unknown field",
@@ -155,13 +156,173 @@ func TestReleaseStateJSONRejectsTrailingResponseBlocksAndNonExactObjects(t *test
 		})
 	}
 
-	for _, body := range []string{
-		`{"message":"Not Found"} {}`,
-		"{\"message\":\"Not Found\"}\nHTTP/2 404 Not Found\n\n{}",
-	} {
-		if err := validateSingleJSONValue([]byte(body)); err == nil || !strings.Contains(err.Error(), "trailing data or another response block") {
-			t.Fatalf("validateSingleJSONValue(%q) error = %v, want trailing block rejection", body, err)
+}
+
+func TestDecodeReleaseLocatorAcceptsOnlyExplicitNullOrExactIdentity(t *testing.T) {
+	t.Parallel()
+	absent := []byte(`{"data":{"repository":{"release":null}}}`)
+	if id, present, err := decodeReleaseLocator(absent, testReleaseTag); err != nil || present || id != 0 {
+		t.Fatalf("decodeReleaseLocator(absent) = %d, %t, %v", id, present, err)
+	}
+	present := []byte(`{"data":{"repository":{"release":{"databaseId":7,"tagName":"v1.2.3"}}}}`)
+	if id, found, err := decodeReleaseLocator(present, testReleaseTag); err != nil || !found || id != 7 {
+		t.Fatalf("decodeReleaseLocator(present) = %d, %t, %v", id, found, err)
+	}
+}
+
+func TestDecodeReleaseLocatorRejectsEveryAmbiguousOrInexactShape(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name string
+		body string
+		want string
+	}{
+		{name: "missing data", body: `{}`, want: "missing non-null data"},
+		{name: "null data", body: `{"data":null}`, want: "missing non-null data"},
+		{name: "null repository", body: `{"data":{"repository":null}}`, want: "non-null repository"},
+		{name: "missing release", body: `{"data":{"repository":{}}}`, want: "missing the release field"},
+		{name: "GraphQL errors", body: `{"data":{"repository":{"release":null}},"errors":[]}`, want: "GraphQL errors"},
+		{name: "unknown wrapper field", body: `{"data":{"repository":{"release":null}},"extra":true}`, want: "unknown field"},
+		{name: "trailing response", body: `{"data":{"repository":{"release":null}}} {}`, want: "trailing"},
+		{name: "duplicate field", body: `{"data":{"repository":{"release":null,"release":null}}}`, want: "repeats name"},
+		{name: "null ID", body: `{"data":{"repository":{"release":{"databaseId":null,"tagName":"v1.2.3"}}}}`, want: "missing an exact required field"},
+		{name: "zero ID", body: `{"data":{"repository":{"release":{"databaseId":0,"tagName":"v1.2.3"}}}}`, want: "nonpositive database ID"},
+		{name: "missing tag", body: `{"data":{"repository":{"release":{"databaseId":7}}}}`, want: "missing an exact required field"},
+		{name: "wrong tag", body: `{"data":{"repository":{"release":{"databaseId":7,"tagName":"v1.2.4"}}}}`, want: "expected v1.2.3"},
+	}
+	for _, test := range tests {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			_, _, err := decodeReleaseLocator([]byte(test.body), testReleaseTag)
+			if err == nil || !strings.Contains(err.Error(), test.want) {
+				t.Fatalf("decodeReleaseLocator() error = %v, want %q", err, test.want)
+			}
+		})
+	}
+}
+
+func TestGHReleaseStateResolverLocatesDraftThenReadsNumericRelease(t *testing.T) {
+	t.Parallel()
+	responses := []ghReleaseCommandResult{
+		{stdout: []byte(`{"data":{"repository":{"release":{"databaseId":7,"tagName":"v1.2.3"}}}}`)},
+		{stdout: []byte("HTTP/2 200 OK\n\n{\"id\":7,\"tag_name\":\"v1.2.3\",\"draft\":true,\"prerelease\":false,\"immutable\":false}\n")},
+	}
+	var calls [][]string
+	resolver := GHReleaseStateResolver{run: func(_ context.Context, arguments ...string) (ghReleaseCommandResult, error) {
+		calls = append(calls, append([]string(nil), arguments...))
+		return responses[len(calls)-1], nil
+	}}
+	got, err := resolver.ResolveReleaseState(context.Background(), testReleaseRepository, testReleaseTag)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := ReleaseState{Present: true, ID: 7, Tag: testReleaseTag, Draft: true}
+	if got != want {
+		t.Fatalf("ResolveReleaseState() = %+v, want %+v", got, want)
+	}
+	wantLocator := []string{
+		"api", "graphql", "-f", "query=" + releaseByTagQuery,
+		"-F", "owner=owner", "-F", "name=project", "-F", "tagName=v1.2.3",
+	}
+	if len(calls) != 2 || !reflect.DeepEqual(calls[0], wantLocator) {
+		t.Fatalf("locator calls = %#v, want exact GraphQL locator then numeric REST", calls)
+	}
+	if strings.Join(calls[1], " ") != "api repos/owner/project/releases/7 -H Accept: application/vnd.github+json -H X-GitHub-Api-Version: 2022-11-28 --include --jq {id, tag_name, draft, prerelease, immutable}" {
+		t.Fatalf("numeric REST arguments = %#v", calls[1])
+	}
+}
+
+func TestGHReleaseStateResolverStopsAfterExplicitAbsentLocator(t *testing.T) {
+	t.Parallel()
+	calls := 0
+	resolver := GHReleaseStateResolver{run: func(_ context.Context, _ ...string) (ghReleaseCommandResult, error) {
+		calls++
+		return ghReleaseCommandResult{stdout: []byte(`{"data":{"repository":{"release":null}}}`)}, nil
+	}}
+	got, err := resolver.ResolveReleaseState(context.Background(), testReleaseRepository, testReleaseTag)
+	if err != nil || got != (ReleaseState{}) || calls != 1 {
+		t.Fatalf("ResolveReleaseState(absent) = %+v, %v; calls = %d", got, err, calls)
+	}
+}
+
+func TestGHReleaseStateResolverAcceptsPublishedStateAfterDraftLocator(t *testing.T) {
+	t.Parallel()
+	calls := 0
+	resolver := GHReleaseStateResolver{run: func(_ context.Context, _ ...string) (ghReleaseCommandResult, error) {
+		calls++
+		if calls == 1 {
+			return ghReleaseCommandResult{stdout: []byte(`{"data":{"repository":{"release":{"databaseId":7,"tagName":"v1.2.3"}}}}`)}, nil
 		}
+		return ghReleaseCommandResult{stdout: []byte("HTTP/2 200 OK\n\n{\"id\":7,\"tag_name\":\"v1.2.3\",\"draft\":false,\"prerelease\":false,\"immutable\":true}")}, nil
+	}}
+	got, err := resolver.ResolveReleaseState(context.Background(), testReleaseRepository, testReleaseTag)
+	want := ReleaseState{Present: true, ID: 7, Tag: testReleaseTag, Immutable: true}
+	if err != nil || got != want {
+		t.Fatalf("ResolveReleaseState(published transition) = %+v, %v; want %+v", got, err, want)
+	}
+}
+
+func TestGHReleaseStateResolverRejectsNumericReleaseErrorsAndIdentityDrift(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name         string
+		response     string
+		commandError error
+		want         string
+	}{
+		{name: "not found is not absence", response: "HTTP/2 404 Not Found\n\n{\"message\":\"Not Found\"}\n", commandError: errors.New("exit status 1"), want: "returned HTTP 404"},
+		{name: "server error", response: "HTTP/2 503 Service Unavailable\n\n{\"message\":\"Unavailable\"}\n", commandError: errors.New("exit status 1"), want: "returned HTTP 503"},
+		{name: "failed command with HTTP 200", response: "HTTP/2 200 OK\n\n{\"id\":7,\"tag_name\":\"v1.2.3\",\"draft\":true,\"prerelease\":false,\"immutable\":false}", commandError: errors.New("jq failed"), want: "numeric release lookup failed"},
+		{name: "ID drift", response: "HTTP/2 200 OK\n\n{\"id\":8,\"tag_name\":\"v1.2.3\",\"draft\":true,\"prerelease\":false,\"immutable\":false}", want: "ID = 8, locator ID = 7"},
+		{name: "tag drift", response: "HTTP/2 200 OK\n\n{\"id\":7,\"tag_name\":\"v1.2.4\",\"draft\":true,\"prerelease\":false,\"immutable\":false}", want: "tag v1.2.4, expected v1.2.3"},
+		{name: "missing immutable", response: "HTTP/2 200 OK\n\n{\"id\":7,\"tag_name\":\"v1.2.3\",\"draft\":true,\"prerelease\":false}", want: "missing an exact required field"},
+		{name: "unknown field", response: "HTTP/2 200 OK\n\n{\"id\":7,\"tag_name\":\"v1.2.3\",\"draft\":true,\"prerelease\":false,\"immutable\":false,\"extra\":true}", want: "unknown field"},
+		{name: "trailing response", response: "HTTP/2 200 OK\n\n{\"id\":7,\"tag_name\":\"v1.2.3\",\"draft\":true,\"prerelease\":false,\"immutable\":false} {}", want: "trailing"},
+	}
+	for _, test := range tests {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			calls := 0
+			resolver := GHReleaseStateResolver{run: func(_ context.Context, _ ...string) (ghReleaseCommandResult, error) {
+				calls++
+				if calls == 1 {
+					return ghReleaseCommandResult{stdout: []byte(`{"data":{"repository":{"release":{"databaseId":7,"tagName":"v1.2.3"}}}}`)}, nil
+				}
+				return ghReleaseCommandResult{
+					stdout:       []byte(test.response),
+					stderr:       "diagnostic",
+					commandError: test.commandError,
+				}, nil
+			}}
+			_, err := resolver.ResolveReleaseState(context.Background(), testReleaseRepository, testReleaseTag)
+			if err == nil || !strings.Contains(err.Error(), test.want) {
+				t.Fatalf("ResolveReleaseState() error = %v, want %q", err, test.want)
+			}
+		})
+	}
+}
+
+func TestGHReleaseStateResolverPropagatesLocatorCommandAndExecutionFailures(t *testing.T) {
+	t.Parallel()
+	for name, runner := range map[string]ghReleaseCommandRunner{
+		"command": func(context.Context, ...string) (ghReleaseCommandResult, error) {
+			return ghReleaseCommandResult{commandError: errors.New("exit status 1"), stderr: "denied"}, nil
+		},
+		"execution": func(context.Context, ...string) (ghReleaseCommandResult, error) {
+			return ghReleaseCommandResult{}, errors.New("response exceeds its bounded output size")
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			_, err := (GHReleaseStateResolver{run: runner}).ResolveReleaseState(
+				context.Background(), testReleaseRepository, testReleaseTag,
+			)
+			if err == nil {
+				t.Fatal("ResolveReleaseState() succeeded")
+			}
+		})
 	}
 }
 

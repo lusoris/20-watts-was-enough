@@ -4,7 +4,7 @@
   "version": "0.3.0",
   "source_ref": "main",
   "pdf": "public/downloads/20-watts-was-enough-full-concept-book.pdf",
-  "source_digest": "bb3c92b0ec55262e6ac6bb2acc786bdd9e0b06b26d468fe0c3674a6ac479f0fe",
+  "source_digest": "1f8075e03b753c3e9974fde1f482954ef6286bc616263118cba7dc893b9c37f2",
   "source_files": [
     "app/book-content.ts",
     "app/components/book-edition.tsx",
@@ -141,6 +141,7 @@
     "sources/taxonomies/2026-08-25/README.md",
     "THIRD_PARTY_NOTICES.txt",
     "tooling/cmd/20w/main.go",
+    "tooling/cmd/20w/translation.go",
     "tooling/go.mod",
     "tooling/go.sum",
     "tooling/internal/buildinfo/buildinfo.go",
@@ -161,14 +162,19 @@
     "tooling/internal/releasecheck/tag.go",
     "tooling/internal/releaseimage/inspect.go",
     "tooling/internal/strictjson/validate.go",
+    "tooling/internal/translationbundle/bundle.go",
+    "tooling/internal/translationbundle/files.go",
+    "tooling/internal/translationbundle/languages.go",
+    "tooling/internal/translationbundle/shape.go",
     "tooling/pdf-renderer/lock.json",
+    "translations/eu-languages.json",
     "translations/manifest.json",
     "vite.pages.config.ts"
   ],
   "renderer": {
     "lock": "tooling/pdf-renderer/lock.json",
     "lock_sha256": "a12b0aa91f04019f1be3956ee95324d4940ea89aa0940e57505b03b68c64f0ad",
-    "image_id": "sha256:34470efe86dfd47ffde09886fae02e92821cf28736c44a62a3339b212756c2f3",
+    "image_id": "sha256:50695bb7136009ac19e0def4228c81d26a9f88337b287c4a98b17ffe72fd11e7",
     "platform": "linux/amd64"
   },
   "book_documents": 51,
