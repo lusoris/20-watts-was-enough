@@ -12,6 +12,11 @@ the exact diff; this file records why the project changed.
   The provider-neutral exchange preserves glossary choices, drafting-tool
   disclosure and language/domain review metadata, rejects stale English source,
   and cannot write to the reviewed translation tree or publication manifest.
+- Pull-request CI now reports a bounded Go impact plan from exact base and head
+  commits plus one declarative path-to-lane map. Draft changes can select
+  focused lanes for the next sharding step; ready pull requests, non-PR events,
+  selector changes, unknown paths, renames and deletions select the full gate.
+  Existing test jobs remain unchanged until the shards are independently safe.
 
 ### Changed
 
@@ -32,6 +37,15 @@ the exact diff; this file records why the project changed.
   document rail uses a two-row filter at compact desktop widths so the full
   Mathematics label remains visible without changing the 68ch prose
   measure or narrow-screen reading order.
+
+### Fixed
+
+- Candidate 010 source identity now resolves loose and packed branch references
+  through Git's linked-worktree common directory. Its normal checkout and
+  Git-free frozen-capsule verification paths retain their existing authority.
+- Browser verification now waits through a bounded termination grace and
+  forced-exit interval before deleting its temporary profile, removing a race
+  with a still-running Chromium process.
 
 ## [0.3.0] - 2026-08-30
 

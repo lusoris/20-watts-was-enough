@@ -1,0 +1,301 @@
+{
+  "schema": 1,
+  "rules": [
+    {
+      "id": "container",
+      "paths": [
+        ".dockerignore",
+        "experiments/workstation/Dockerfile.node-artifact",
+        "tooling/Dockerfile"
+      ],
+      "lanes": [
+        "container",
+        "go",
+        "release"
+      ]
+    },
+    {
+      "id": "global",
+      "paths": [
+        ".agents/**",
+        ".editorconfig",
+        ".gitattributes",
+        ".github/**",
+        ".gitignore",
+        ".gitleaks.toml",
+        ".npmrc",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "docs/principles.md",
+        "eslint.config.mjs",
+        "experiments/workstation/AGENTS.md",
+        "experiments/workstation/lib/**",
+        "experiments/workstation/manifest-validator.test.mjs",
+        "experiments/workstation/manifest.schema.json",
+        "experiments/workstation/smoke-suite.mjs",
+        "experiments/workstation/smoke-suite.test.mjs",
+        "package-lock.json",
+        "package.json",
+        "renovate.json",
+        "requirements-ci.txt",
+        "scripts/**",
+        "tooling/AGENTS.md",
+        "tooling/cmd/20w/**",
+        "tooling/go.mod",
+        "tooling/go.sum",
+        "tooling/internal/ciplan/**",
+        "tooling/internal/strictjson/**"
+      ],
+      "lanes": [
+        "full"
+      ]
+    },
+    {
+      "id": "go-build",
+      "paths": [
+        "tooling/cmd/build-release/**",
+        "tooling/internal/buildinfo/**"
+      ],
+      "lanes": [
+        "go",
+        "release"
+      ]
+    },
+    {
+      "id": "go-documentation",
+      "paths": [
+        "tooling/internal/docscheck/**"
+      ],
+      "lanes": [
+        "go",
+        "research"
+      ]
+    },
+    {
+      "id": "go-experiment",
+      "paths": [
+        "tooling/internal/experiment/**",
+        "tooling/internal/nodeimage/**"
+      ],
+      "lanes": [
+        "container",
+        "go",
+        "release"
+      ]
+    },
+    {
+      "id": "go-operations",
+      "paths": [
+        "tooling/internal/githublabels/**"
+      ],
+      "lanes": [
+        "go"
+      ]
+    },
+    {
+      "id": "go-pdf",
+      "paths": [
+        "tooling/internal/pdfrender/**",
+        "tooling/pdf-renderer/**"
+      ],
+      "lanes": [
+        "go",
+        "release",
+        "site"
+      ]
+    },
+    {
+      "id": "go-release",
+      "paths": [
+        "tooling/internal/ocimanifest/**",
+        "tooling/internal/releasebuild/**",
+        "tooling/internal/releasecheck/**",
+        "tooling/internal/releaseimage/**"
+      ],
+      "lanes": [
+        "go",
+        "release"
+      ]
+    },
+    {
+      "id": "publication",
+      "paths": [
+        "CHANGELOG.md",
+        "CITATION.cff",
+        "LICENSE",
+        "LICENSES/**",
+        "LICENSING.md",
+        "THIRD_PARTY_NOTICES.txt",
+        "public/**"
+      ],
+      "lanes": [
+        "release",
+        "research",
+        "site"
+      ]
+    },
+    {
+      "id": "research",
+      "paths": [
+        "*.md",
+        "assets/**",
+        "concept/**",
+        "decisions/**",
+        "docs/**",
+        "experiments/AGENTS.md",
+        "experiments/README.md",
+        "experiments/candidates/**",
+        "experiments/claim-dispositions/**",
+        "experiments/fixtures/**",
+        "experiments/proposed/**",
+        "experiments/test-coverage.json",
+        "experiments/test-coverage.md",
+        "experiments/test-readiness-summary.json",
+        "math/**",
+        "research/**",
+        "sources/**"
+      ],
+      "lanes": [
+        "research",
+        "site"
+      ]
+    },
+    {
+      "id": "site",
+      "paths": [
+        "app/**",
+        "github-pages/**",
+        "postcss.config.mjs",
+        "translations/**",
+        "tsconfig.json",
+        "vite.pages.config.ts"
+      ],
+      "lanes": [
+        "site"
+      ]
+    },
+    {
+      "id": "workstation-candidate-010",
+      "paths": [
+        "experiments/workstation/candidate-010/**",
+        "experiments/workstation/manifests/candidate-010.json"
+      ],
+      "lanes": [
+        "workstation-candidate-010"
+      ]
+    },
+    {
+      "id": "workstation-documentation",
+      "paths": [
+        "experiments/workstation/*.md",
+        "experiments/workstation/*/*.md"
+      ],
+      "lanes": [
+        "research",
+        "site"
+      ]
+    },
+    {
+      "id": "workstation-fixture-007",
+      "paths": [
+        "experiments/workstation/fixture-007/**",
+        "experiments/workstation/manifests/fixture-007.json"
+      ],
+      "lanes": [
+        "container",
+        "workstation-fixture-007"
+      ]
+    },
+    {
+      "id": "workstation-fixture-012",
+      "paths": [
+        "experiments/workstation/fixture-012/**",
+        "experiments/workstation/manifests/fixture-012.json"
+      ],
+      "lanes": [
+        "workstation-fixture-012"
+      ]
+    },
+    {
+      "id": "workstation-fixture-019",
+      "paths": [
+        "experiments/workstation/fixture-019/**",
+        "experiments/workstation/manifests/fixture-019.json"
+      ],
+      "lanes": [
+        "container",
+        "workstation-fixture-019"
+      ]
+    },
+    {
+      "id": "workstation-fixture-022",
+      "paths": [
+        "experiments/workstation/fixture-022/**",
+        "experiments/workstation/manifests/fixture-022.json"
+      ],
+      "lanes": [
+        "workstation-fixture-022"
+      ]
+    },
+    {
+      "id": "workstation-fixture-023",
+      "paths": [
+        "experiments/workstation/fixture-023/**",
+        "experiments/workstation/manifests/fixture-023.json"
+      ],
+      "lanes": [
+        "workstation-fixture-023"
+      ]
+    },
+    {
+      "id": "workstation-fixture-024",
+      "paths": [
+        "experiments/workstation/fixture-024/**",
+        "experiments/workstation/manifests/fixture-024.json"
+      ],
+      "lanes": [
+        "workstation-fixture-024"
+      ]
+    },
+    {
+      "id": "workstation-fixture-025",
+      "paths": [
+        "experiments/workstation/fixture-025/**",
+        "experiments/workstation/manifests/fixture-025.json"
+      ],
+      "lanes": [
+        "workstation-fixture-025"
+      ]
+    },
+    {
+      "id": "workstation-fixture-026",
+      "paths": [
+        "experiments/workstation/fixture-026/**",
+        "experiments/workstation/manifests/fixture-026.json"
+      ],
+      "lanes": [
+        "workstation-fixture-026"
+      ]
+    },
+    {
+      "id": "workstation-fixture-027",
+      "paths": [
+        "experiments/workstation/fixture-027/**",
+        "experiments/workstation/manifests/fixture-027.json"
+      ],
+      "lanes": [
+        "workstation-fixture-027"
+      ]
+    },
+    {
+      "id": "workstation-fixture-029",
+      "paths": [
+        "experiments/workstation/fixture-029/**",
+        "experiments/workstation/manifests/fixture-029.json"
+      ],
+      "lanes": [
+        "workstation-fixture-029"
+      ]
+    }
+  ]
+}

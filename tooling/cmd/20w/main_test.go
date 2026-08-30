@@ -3,9 +3,11 @@ package main
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -34,6 +36,42 @@ func TestRunVersionReturnsBuildIdentity(t *testing.T) {
 	}
 	if stdout.Len() == 0 {
 		t.Fatal("run() wrote no version identity")
+	}
+}
+
+func TestRunCIPlanWritesAClosedFullPlan(t *testing.T) {
+	t.Parallel()
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	exitCode := run([]string{"ci", "plan", "--root", root, "--full", "--json"}, &stdout, &stderr)
+	if exitCode != 0 {
+		t.Fatalf("run() exit/stderr = %d/%q", exitCode, stderr.String())
+	}
+	var plan struct {
+		Mode         string   `json:"mode"`
+		Reason       string   `json:"reason"`
+		ChangedPaths []string `json:"changed_paths"`
+		Lanes        []string `json:"lanes"`
+	}
+	if err := json.Unmarshal(stdout.Bytes(), &plan); err != nil {
+		t.Fatal(err)
+	}
+	if plan.Mode != "full" || plan.Reason != "explicit-full" || plan.ChangedPaths == nil ||
+		len(plan.ChangedPaths) != 0 || !reflect.DeepEqual(plan.Lanes, []string{"full"}) {
+		t.Fatalf("CI plan = %#v, want explicit closed full plan", plan)
+	}
+}
+
+func TestRunCIPlanRejectsAmbiguousFullAndRevisionArguments(t *testing.T) {
+	t.Parallel()
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	exitCode := run([]string{
+		"ci", "plan", "--full", "--base", strings.Repeat("1", 40),
+	}, &stdout, &stderr)
+	if exitCode != 2 || !strings.Contains(stderr.String(), "either --full or --base") {
+		t.Fatalf("run() exit/stderr = %d/%q, want usage failure", exitCode, stderr.String())
 	}
 }
 

@@ -615,30 +615,88 @@ async function readOptional(file, gitDirectory) {
   }
 }
 
-async function resolveGitDirectory(root) {
+async function resolveGitDirectories(root) {
   const dotGit = path.join(root, ".git");
   const information = await lstat(dotGit);
   if (information.isSymbolicLink()) {
     throw new Error("Candidate 010 Git metadata refuses a symbolic link or reparse point.");
   }
-  if (information.isDirectory()) return realpath(dotGit);
-  if (!information.isFile()) throw new Error("Candidate 010 .git metadata is not a regular file or directory.");
-  const pointer = (await readStableOpenedFile(dotGit, {
-    label: "Candidate 010 .git pointer",
-    containedBy: root,
-  })).toString("utf8").trim();
-  const match = /^gitdir:\s*(.+)$/i.exec(pointer);
-  if (!match) throw new Error("Cannot resolve the repository Git directory.");
-  const gitDirectory = path.resolve(root, match[1]);
+  let gitDirectory;
+  if (information.isDirectory()) {
+    gitDirectory = await realpath(dotGit);
+  } else {
+    if (!information.isFile()) throw new Error("Candidate 010 .git metadata is not a regular file or directory.");
+    const pointer = (await readStableOpenedFile(dotGit, {
+      label: "Candidate 010 .git pointer",
+      containedBy: root,
+    })).toString("utf8").trim();
+    const match = /^gitdir:\s*(.+)$/i.exec(pointer);
+    if (!match) throw new Error("Cannot resolve the repository Git directory.");
+    gitDirectory = path.resolve(root, match[1]);
+  }
   const gitInformation = await lstat(gitDirectory);
   if (gitInformation.isSymbolicLink() || !gitInformation.isDirectory()) {
     throw new Error("Candidate 010 resolved Git metadata is linked or not a directory.");
   }
-  return realpath(gitDirectory);
+  gitDirectory = await realpath(gitDirectory);
+  const commonPointer = await readOptional(path.join(gitDirectory, "commondir"), gitDirectory);
+  if (commonPointer === null) return { gitDirectory, commonDirectory: gitDirectory };
+  const commonValue = commonPointer.trim();
+  if (commonValue.length === 0 || /[\0\r\n]/.test(commonValue)) {
+    throw new Error("Candidate 010 Git commondir is empty or malformed.");
+  }
+  const commonDirectory = path.resolve(gitDirectory, commonValue);
+  const commonInformation = await lstat(commonDirectory);
+  if (commonInformation.isSymbolicLink() || !commonInformation.isDirectory()) {
+    throw new Error("Candidate 010 common Git metadata is linked or not a directory.");
+  }
+  return { gitDirectory, commonDirectory: await realpath(commonDirectory) };
 }
 
-async function readSourceCommit(root) {
-  const gitDirectory = await resolveGitDirectory(root);
+function isWorktreeReference(reference) {
+  return ["refs/bisect", "refs/rewritten", "refs/worktree"].some(
+    (namespace) => reference === namespace || reference.startsWith(`${namespace}/`),
+  );
+}
+
+function packedReference(body, reference) {
+  for (const line of body?.split(/\r?\n/) ?? []) {
+    if (line.length === 0 || line.startsWith("#") || line.startsWith("^")) continue;
+    const separator = line.indexOf(" ");
+    if (separator < 0 || line.slice(separator + 1) !== reference) continue;
+    const commit = line.slice(0, separator);
+    if (!/^[0-9a-f]{40}$/.test(commit)) {
+      throw new Error(`Git packed reference ${reference} has an invalid commit identity.`);
+    }
+    return commit;
+  }
+  return null;
+}
+
+async function resolveGitReference(reference, directories, visited = new Set()) {
+  if (!reference.startsWith("refs/") || visited.has(reference) || visited.size >= 8) {
+    throw new Error(`Cannot safely resolve Git reference ${reference}.`);
+  }
+  visited.add(reference);
+  const looseDirectory = isWorktreeReference(reference)
+    ? directories.gitDirectory
+    : directories.commonDirectory;
+  const loose = await readOptional(path.join(looseDirectory, ...reference.split("/")), looseDirectory);
+  const value = loose?.trim();
+  if (/^[0-9a-f]{40}$/.test(value ?? "")) return value;
+  const symbolic = /^ref:\s*(.+)$/.exec(value ?? "");
+  if (symbolic) return resolveGitReference(symbolic[1], directories, visited);
+  if (loose !== null) throw new Error(`Git loose reference ${reference} is malformed.`);
+  const packed = await readOptional(
+    path.join(directories.commonDirectory, "packed-refs"),
+    directories.commonDirectory,
+  );
+  return packedReference(packed, reference);
+}
+
+export async function readCandidate010SourceCommit(root = process.cwd()) {
+  const directories = await resolveGitDirectories(root);
+  const { gitDirectory } = directories;
   const head = (await readStableOpenedFile(path.join(gitDirectory, "HEAD"), {
     label: "Candidate 010 Git HEAD",
     containedBy: gitDirectory,
@@ -647,17 +705,13 @@ async function readSourceCommit(root) {
   const match = /^ref:\s*(.+)$/.exec(head);
   if (!match) throw new Error("Repository HEAD is neither a commit nor a symbolic reference.");
   const ref = match[1];
-  const loose = await readOptional(path.join(gitDirectory, ...ref.split("/")), gitDirectory);
-  if (loose && /^[0-9a-f]{40}$/.test(loose.trim())) return loose.trim();
-  const packed = await readOptional(path.join(gitDirectory, "packed-refs"), gitDirectory);
-  const packedMatch = packed?.split(/\r?\n/).find((line) => line.endsWith(` ${ref}`));
-  const commit = packedMatch?.split(" ")[0];
+  const commit = await resolveGitReference(ref, directories);
   if (!/^[0-9a-f]{40}$/.test(commit ?? "")) throw new Error(`Cannot resolve Git reference ${ref}.`);
   return commit;
 }
 
 export async function captureCandidate010SourceBundle(root = process.cwd()) {
-  const sourceCommit = await readSourceCommit(root);
+  const sourceCommit = await readCandidate010SourceCommit(root);
   if (!/^[0-9a-f]{40}$/.test(sourceCommit)) throw new Error("Candidate 010 source commit is not a full Git SHA-1.");
   const vcs = {
     source_commit: sourceCommit,

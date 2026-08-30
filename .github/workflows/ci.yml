@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
   workflow_dispatch:
 
 permissions: {}
@@ -14,6 +15,42 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  impact-plan:
+    name: CI impact plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Check out the complete comparison history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Use Go 1.27
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: tooling/go.mod
+          cache-dependency-path: tooling/go.sum
+      - name: Validate and report the bounded CI plan
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_DRAFT: ${{ github.event.pull_request.draft }}
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          if [[ "$EVENT_NAME" != "pull_request" || "$PR_DRAFT" != "true" ]]; then
+            go -C tooling run ./cmd/20w ci plan --root .. --full --json \
+              | tee build/ci-impact-plan.json
+          else
+            go -C tooling run ./cmd/20w ci plan --root .. \
+              --base "$BASE_SHA" --head "$HEAD_SHA" --json \
+              | tee build/ci-impact-plan.json
+          fi
+          test -s build/ci-impact-plan.json
+
   pr-title:
     name: PR title
     if: github.event_name == 'pull_request'
@@ -234,7 +271,7 @@ jobs:
   ci-success:
     name: CI success
     if: always()
-    needs: [pr-title, quality, experiment-image, dependency-review]
+    needs: [impact-plan, pr-title, quality, experiment-image, dependency-review]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

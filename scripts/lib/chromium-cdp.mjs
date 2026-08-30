@@ -85,12 +85,47 @@ export async function connectCdp(webSocketUrl) {
   return { socket, send };
 }
 
-export async function stopProcess(process) {
-  if (!process || process.exitCode !== null) return;
-  const exited = new Promise((resolve) => process.once("exit", resolve));
-  process.kill();
-  await Promise.race([
-    exited,
-    new Promise((resolve) => setTimeout(resolve, 5_000)),
-  ]);
+function processStopped(process) {
+  return process.exitCode !== null || process.signalCode !== null;
+}
+
+function stopTimeout(value, label) {
+  if (!Number.isSafeInteger(value) || value < 1 || value > 60_000) {
+    throw new Error(`${label} must be an integer from 1 through 60000 milliseconds.`);
+  }
+  return value;
+}
+
+function waitForProcessExit(process, timeoutMs) {
+  if (processStopped(process)) return Promise.resolve(true);
+  return new Promise((resolve, reject) => {
+    const finish = (callback, value) => {
+      clearTimeout(timeout);
+      process.off("exit", onExit);
+      process.off("error", onError);
+      callback(value);
+    };
+    const onExit = () => finish(resolve, true);
+    const onError = (error) => finish(reject, error);
+    const timeout = setTimeout(() => finish(resolve, processStopped(process)), timeoutMs);
+    process.once("exit", onExit);
+    process.once("error", onError);
+  });
+}
+
+export async function stopProcess(process, {
+  terminationGraceMs = 5_000,
+  forcedExitWaitMs = 5_000,
+} = {}) {
+  if (!process || processStopped(process)) return;
+  const grace = stopTimeout(terminationGraceMs, "Termination grace");
+  const forcedWait = stopTimeout(forcedExitWaitMs, "Forced-exit wait");
+  const gracefulExit = waitForProcessExit(process, grace);
+  process.kill("SIGTERM");
+  if (await gracefulExit) return;
+  const forcedExit = waitForProcessExit(process, forcedWait);
+  if (!processStopped(process)) process.kill("SIGKILL");
+  if (!await forcedExit) {
+    throw new Error(`Process ${process.pid ?? "unknown"} did not exit after SIGKILL.`);
+  }
 }

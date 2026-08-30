@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
 import {
+  access,
   mkdir,
   mkdtemp,
   readFile,
@@ -12,6 +14,7 @@ import {
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { promisify } from "node:util";
 import {
   CANDIDATE_010_SOURCE_FILES,
   CANDIDATE_010_TEST_SUPPORT_FILES,
@@ -19,8 +22,25 @@ import {
   captureCandidate010SourceBundle,
   computeSourceBundle,
   discoverCandidate010SourceFiles,
+  readCandidate010SourceCommit,
   verifyCandidate010SourceBundleAtRoot,
 } from "./source-bundle.mjs";
+
+const executeFile = promisify(execFile);
+
+async function git(repositoryRoot, ...arguments_) {
+  return executeFile("git", ["-C", repositoryRoot, ...arguments_], {
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      GIT_CONFIG_GLOBAL: os.devNull,
+      GIT_CONFIG_NOSYSTEM: "1",
+    },
+    maxBuffer: 64 * 1024,
+    timeout: 10_000,
+    windowsHide: true,
+  });
+}
 
 async function unlinkIfPresent(file) {
   try {
@@ -29,6 +49,44 @@ async function unlinkIfPresent(file) {
     if (error.code !== "ENOENT") throw error;
   }
 }
+
+test("source commit resolution follows linked-worktree common loose and packed refs", async () => {
+  const container = await mkdtemp(path.join(os.tmpdir(), "20w-c010-linked-worktree-"));
+  const repositoryRoot = path.join(container, "repository");
+  const linkedRoot = path.join(container, "linked worktree");
+  try {
+    await mkdir(repositoryRoot);
+    await git(repositoryRoot, "init", "--quiet");
+    await git(repositoryRoot, "config", "user.name", "Candidate 010 Test");
+    await git(repositoryRoot, "config", "user.email", "candidate-010@example.invalid");
+    await git(repositoryRoot, "config", "commit.gpgsign", "false");
+    await writeFile(path.join(repositoryRoot, "source.txt"), "bound source\n");
+    await git(repositoryRoot, "add", "--", "source.txt");
+    await git(repositoryRoot, "commit", "--quiet", "-m", "fixture");
+    const { stdout } = await git(repositoryRoot, "rev-parse", "HEAD");
+    const expectedCommit = stdout.trim();
+    const branch = "linked/source-bundle-test";
+    await git(repositoryRoot, "worktree", "add", "--quiet", "-b", branch, linkedRoot, "HEAD");
+
+    assert.equal(await readCandidate010SourceCommit(linkedRoot), expectedCommit);
+
+    await git(repositoryRoot, "pack-refs", "--all", "--prune");
+    await assert.rejects(
+      access(path.join(repositoryRoot, ".git", "refs", "heads", ...branch.split("/"))),
+      (error) => error.code === "ENOENT",
+    );
+    assert.equal(await readCandidate010SourceCommit(linkedRoot), expectedCommit);
+
+    const looseReference = path.join(repositoryRoot, ".git", "refs", "heads", ...branch.split("/"));
+    await mkdir(path.dirname(looseReference), { recursive: true });
+    await writeFile(looseReference, "not-a-commit\n");
+    await assert.rejects(readCandidate010SourceCommit(linkedRoot), /loose reference .* is malformed/);
+    await rm(looseReference);
+    assert.equal(await readCandidate010SourceCommit(linkedRoot), expectedCommit);
+  } finally {
+    await rm(container, { recursive: true, force: true });
+  }
+});
 
 test("Candidate 010 source identity covers every executable layer and is deterministic", async () => {
   const coverage = await discoverCandidate010SourceFiles();
