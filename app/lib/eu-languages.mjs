@@ -7,6 +7,8 @@ const expectedCodes = Object.freeze([
 const recordFields = Object.freeze(["code", "label", "openGraphLocale"]);
 const utf8Encoder = new TextEncoder();
 
+/** @typedef {readonly [code: string, label: string]} EuLanguageOption */
+
 function hasExactFields(value, expected) {
   return value !== null
     && typeof value === "object"
@@ -43,6 +45,7 @@ export function validateEuLanguageRegistry(registry) {
 
 const officialEuLanguageRecords = validateEuLanguageRegistry(languageRegistry);
 
+/** @type {readonly EuLanguageOption[]} */
 export const officialEuLanguages = Object.freeze(
   officialEuLanguageRecords.map(({ code, label }) => Object.freeze([code, label])),
 );
