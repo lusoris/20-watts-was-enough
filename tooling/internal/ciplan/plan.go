@@ -49,12 +49,12 @@ func Build(ctx context.Context, options Options) (Plan, error) {
 	if err != nil {
 		return Plan{}, fmt.Errorf("validate CI impact authority: %w", err)
 	}
-	if options.ForceFull {
-		return newFullPlan(options, "explicit-full", nil), nil
+	if options.ForceFull && options.BaseRevision == "" && options.HeadRevision == "" {
+		return newFullPlan(options, "explicit-full", nil, true), nil
 	}
 	if !revisionPattern.MatchString(options.BaseRevision) ||
 		!revisionPattern.MatchString(options.HeadRevision) {
-		return newFullPlan(options, "missing-or-invalid-revision", nil), nil
+		return newFullPlan(options, "missing-or-invalid-revision", nil, true), nil
 	}
 	changedPaths, nonAdditive, err := readGitChangedPaths(
 		ctx,
@@ -63,25 +63,44 @@ func Build(ctx context.Context, options Options) (Plan, error) {
 		options.HeadRevision,
 	)
 	if err != nil {
-		return newFullPlan(options, "git-diff-unavailable", nil), nil
+		return newFullPlan(options, "git-diff-unavailable", nil, true), nil
 	}
 	if nonAdditive {
-		return newFullPlan(options, "rename-delete-copy-or-type-change", changedPaths), nil
+		return newFullPlan(
+			options,
+			"rename-delete-copy-or-type-change",
+			changedPaths,
+			rendererRequiredForNonAdditive(mapping, changedPaths),
+		), nil
 	}
-	return selectChangedPaths(mapping, options, changedPaths), nil
+	selected := selectChangedPaths(mapping, options, changedPaths)
+	if !options.ForceFull {
+		return selected, nil
+	}
+	return newFullPlan(
+		options,
+		"explicit-full",
+		selected.ChangedPaths,
+		planSelectsLane(selected, "renderer"),
+	), nil
 }
 
 func selectChangedPaths(mapping Mapping, options Options, changedPaths []string) Plan {
 	paths, valid := normalizeChangedPaths(changedPaths)
 	if !valid {
-		return newFullPlan(options, "invalid-or-excessive-change-set", nil)
+		return newFullPlan(options, "invalid-or-excessive-change-set", nil, true)
 	}
 	if len(paths) == 0 {
-		return newFullPlan(options, "empty-change-set", paths)
+		return newFullPlan(options, "empty-change-set", paths, true)
 	}
 	for _, changedPath := range paths {
 		if isSelectorAuthority(changedPath) {
-			return newFullPlan(options, "selector-authority-changed", paths)
+			return newFullPlan(
+				options,
+				"selector-authority-changed",
+				paths,
+				true,
+			)
 		}
 	}
 	lanes := make(map[string]struct{})
@@ -97,15 +116,24 @@ func selectChangedPaths(mapping Mapping, options Options, changedPaths []string)
 			}
 		}
 		if !matched {
-			return newFullPlan(options, "unmapped-path:"+changedPath, paths)
+			return newFullPlan(options, "unmapped-path:"+changedPath, paths, true)
 		}
 	}
+	if rendererRequiredForPaths(paths) {
+		lanes["renderer"] = struct{}{}
+	}
 	if _, requiresFull := lanes[fullLane]; requiresFull {
-		return newFullPlan(options, "full-authority-changed", paths)
+		_, rendererSelected := lanes["renderer"]
+		return newFullPlan(
+			options,
+			"full-authority-changed",
+			paths,
+			rendererSelected,
+		)
 	}
 	selected := sortedKeys(lanes)
 	if len(selected) == 0 {
-		return newFullPlan(options, "empty-lane-selection", paths)
+		return newFullPlan(options, "empty-lane-selection", paths, true)
 	}
 	return Plan{
 		Schema:       planSchema,
@@ -118,7 +146,11 @@ func selectChangedPaths(mapping Mapping, options Options, changedPaths []string)
 	}
 }
 
-func newFullPlan(options Options, reason string, changedPaths []string) Plan {
+func newFullPlan(options Options, reason string, changedPaths []string, renderer bool) Plan {
+	lanes := []string{fullLane}
+	if renderer {
+		lanes = append(lanes, "renderer")
+	}
 	return Plan{
 		Schema:       planSchema,
 		Mode:         "full",
@@ -126,8 +158,105 @@ func newFullPlan(options Options, reason string, changedPaths []string) Plan {
 		BaseRevision: options.BaseRevision,
 		HeadRevision: options.HeadRevision,
 		ChangedPaths: append([]string{}, changedPaths...),
-		Lanes:        []string{fullLane},
+		Lanes:        lanes,
 	}
+}
+
+func planSelectsLane(plan Plan, lane string) bool {
+	index := sort.SearchStrings(plan.Lanes, lane)
+	return index < len(plan.Lanes) && plan.Lanes[index] == lane
+}
+
+func rendererRequiredForPaths(changedPaths []string) bool {
+	for _, changedPath := range changedPaths {
+		if isRendererAuthority(changedPath) {
+			return true
+		}
+	}
+	return false
+}
+
+func rendererRequiredForNonAdditive(mapping Mapping, changedPaths []string) bool {
+	if rendererRequiredForPaths(changedPaths) {
+		return true
+	}
+	for _, changedPath := range changedPaths {
+		if isSelectorAuthority(changedPath) {
+			return true
+		}
+		matched := false
+		for _, rule := range mapping.Rules {
+			if ruleMatches(rule, changedPath) {
+				matched = true
+				break
+			}
+		}
+		if !matched {
+			return true
+		}
+	}
+	return false
+}
+
+func isRendererAuthority(changedPath string) bool {
+	for _, exact := range []string{
+		".github/ci-impact.json",
+		".github/workflows/ci.yml",
+		".github/workflows/release.yml",
+		"app/book-content.ts",
+		"app/components/book-edition.tsx",
+		"app/components/language-access.tsx",
+		"app/components/markdown-document.tsx",
+		"app/components/mermaid-diagram.tsx",
+		"app/components/readiness-overview.tsx",
+		"app/globals.css",
+		"app/lib/book-release-identity.mjs",
+		"app/lib/eu-languages.mjs",
+		"app/lib/language-access.mjs",
+		"app/lib/publication.mjs",
+		"app/lib/readiness.ts",
+		"app/lib/repository-artifacts.ts",
+		"app/project-metadata.ts",
+		"app/research-document.ts",
+		"experiments/test-readiness-summary.json",
+		"github-pages/book.tsx",
+		"github-pages/book/index.html",
+		"package-lock.json",
+		"package.json",
+		"scripts/book-source.mjs",
+		"scripts/generate-book-pdf.mjs",
+		"scripts/install-locked-npm.mjs",
+		"scripts/lib/atomic-file-pair.mjs",
+		"scripts/lib/book-pdf-generation-options.mjs",
+		"scripts/lib/book-pdf-integrity.mjs",
+		"scripts/lib/book-renderer-identity.mjs",
+		"scripts/lib/chromium-cdp.mjs",
+		"scripts/lib/opened-file.mjs",
+		"scripts/lib/pdf-metadata.mjs",
+		"scripts/npm-runtime-lock.json",
+		"tooling/cmd/20w/main.go",
+		"tooling/cmd/20w/pdf_reproducibility.go",
+		"tooling/go.mod",
+		"tooling/go.sum",
+		"translations/eu-languages.json",
+		"translations/manifest.json",
+		"vite.pages.config.ts",
+	} {
+		if changedPath == exact {
+			return true
+		}
+	}
+	for _, prefix := range []string{
+		"tooling/internal/ciplan/",
+		"tooling/internal/pdfrender/",
+		"tooling/internal/strictjson/",
+		"tooling/pdf-renderer/",
+	} {
+		if strings.HasPrefix(changedPath, prefix) {
+			return true
+		}
+	}
+	return false
 }
 
 func normalizeChangedPaths(values []string) ([]string, bool) {

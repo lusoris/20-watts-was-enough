@@ -28,10 +28,13 @@ var (
 	ruleIDPattern = regexp.MustCompile(`^[a-z][a-z0-9-]{0,63}$`)
 	lanePattern   = regexp.MustCompile(`^[a-z][a-z0-9-]{0,63}$`)
 	allowedLanes  = map[string]laneDefinition{
+		"common":                    {},
 		"container":                 {},
+		"dependency":                {},
 		"full":                      {},
 		"go":                        {},
 		"release":                   {},
+		"renderer":                  {},
 		"research":                  {},
 		"site":                      {},
 		"workstation-candidate-010": {WorkstationJobs: []string{"candidate-010"}},

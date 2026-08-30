@@ -17,6 +17,7 @@ const (
   "schema": 1,
   "rules": [
     {"id":"global","paths":["experiments/workstation/lib/**"],"lanes":["full"]},
+    {"id":"renderer","paths":["tooling/internal/pdfrender/**"],"lanes":["renderer"]},
     {"id":"research","paths":["research/**"],"lanes":["research","site"]},
     {"id":"site","paths":["app/**"],"lanes":["site"]},
     {"id":"workstation","paths":["experiments/workstation/fixture-026/**"],"lanes":["workstation-fixture-026"]}
@@ -36,6 +37,8 @@ func TestPlanChangedPathsSelectsOnlyMappedImpactLanes(t *testing.T) {
 		{name: "site", paths: []string{"app/main.tsx"}, lanes: []string{"site"}},
 		{name: "research", paths: []string{"research/claims.md"}, lanes: []string{"research", "site"}},
 		{name: "artifact", paths: []string{"experiments/workstation/fixture-026/runner.mjs"}, lanes: []string{"workstation-fixture-026"}},
+		{name: "renderer", paths: []string{"tooling/internal/pdfrender/render.go"}, lanes: []string{"renderer"}},
+		{name: "book renderer", paths: []string{"app/globals.css"}, lanes: []string{"renderer", "site"}},
 		{name: "union", paths: []string{"research/claims.md", "app/main.tsx"}, lanes: []string{"research", "site"}},
 	}
 	for _, test := range tests {
@@ -49,22 +52,107 @@ func TestPlanChangedPathsSelectsOnlyMappedImpactLanes(t *testing.T) {
 	}
 }
 
-func TestBuildFullPlansStillValidateAuthorityAndEncodeClosedEmptyArrays(t *testing.T) {
+func TestRendererAuthorityPredicateCoversTheClosedExecutionBoundary(t *testing.T) {
+	t.Parallel()
+	for _, changedPath := range []string{
+		".github/ci-impact.json",
+		".github/workflows/ci.yml",
+		".github/workflows/release.yml",
+		"app/components/markdown-document.tsx",
+		"app/globals.css",
+		"github-pages/book.tsx",
+		"package-lock.json",
+		"scripts/generate-book-pdf.mjs",
+		"scripts/lib/chromium-cdp.mjs",
+		"scripts/npm-runtime-lock.json",
+		"tooling/cmd/20w/main.go",
+		"tooling/cmd/20w/pdf_reproducibility.go",
+		"tooling/go.mod",
+		"tooling/internal/ciplan/plan.go",
+		"tooling/internal/pdfrender/reproducibility.go",
+		"tooling/internal/strictjson/validate.go",
+		"tooling/pdf-renderer/lock.json",
+		"vite.pages.config.ts",
+	} {
+		if !isRendererAuthority(changedPath) {
+			t.Errorf("isRendererAuthority(%q) = false", changedPath)
+		}
+	}
+	for _, changedPath := range []string{
+		"app/main.tsx",
+		"concept/00-overview.md",
+		"scripts/audit-prose-style.mjs",
+		"tooling/internal/githublabels/labels.go",
+	} {
+		if isRendererAuthority(changedPath) {
+			t.Errorf("isRendererAuthority(%q) = true", changedPath)
+		}
+	}
+}
+
+func TestNonAdditiveRendererSignalUsesBothRetainedPathsAndFailsClosedOnUnknowns(t *testing.T) {
 	t.Parallel()
 	root := writePlanRepository(t, testMapping)
-	for name, options := range map[string]Options{
-		"explicit": {RepositoryRoot: root, ForceFull: true},
-		"missing revision": {
-			RepositoryRoot: root,
-			HeadRevision:   testHeadRevision,
+	mapping, err := loadMapping(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for name, test := range map[string]struct {
+		paths []string
+		want  bool
+	}{
+		"known unrelated rename": {
+			paths: []string{"app/new.tsx", "app/old.tsx"},
+		},
+		"renderer source deleted": {
+			paths: []string{"app/globals.css"},
+			want:  true,
+		},
+		"rename enters unmapped path": {
+			paths: []string{"app/old.tsx", "new-root/unmapped.tsx"},
+			want:  true,
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
-			plan, err := Build(context.Background(), options)
+			if observed := rendererRequiredForNonAdditive(mapping, test.paths); observed != test.want {
+				t.Fatalf("rendererRequiredForNonAdditive(%v) = %t, want %t", test.paths, observed, test.want)
+			}
+		})
+	}
+}
+
+func TestBuildFullPlansStillValidateAuthorityAndEncodeClosedEmptyArrays(t *testing.T) {
+	t.Parallel()
+	root := writePlanRepository(t, testMapping)
+	for name, test := range map[string]struct {
+		options Options
+		reason  string
+	}{
+		"explicit": {
+			options: Options{RepositoryRoot: root, ForceFull: true},
+			reason:  "explicit-full",
+		},
+		"missing revision": {
+			options: Options{RepositoryRoot: root, HeadRevision: testHeadRevision},
+			reason:  "missing-or-invalid-revision",
+		},
+		"unavailable diff": {
+			options: Options{
+				RepositoryRoot: root,
+				BaseRevision:   testBaseRevision,
+				HeadRevision:   testHeadRevision,
+			},
+			reason: "git-diff-unavailable",
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			plan, err := Build(context.Background(), test.options)
 			if err != nil {
 				t.Fatal(err)
 			}
-			if plan.Mode != "full" || len(plan.ChangedPaths) != 0 || plan.ChangedPaths == nil {
+			if plan.Mode != "full" || plan.Reason != test.reason ||
+				len(plan.ChangedPaths) != 0 || plan.ChangedPaths == nil ||
+				!reflect.DeepEqual(plan.Lanes, []string{"full", "renderer"}) {
 				t.Fatalf("Build() = %#v, want closed full plan", plan)
 			}
 			body, err := json.Marshal(plan)
@@ -83,23 +171,28 @@ func TestPlanChangedPathsFallsBackToFullAtEveryAmbiguousBoundary(t *testing.T) {
 	root := writePlanRepository(t, testMapping)
 	options := testOptions(root)
 	tests := []struct {
-		name   string
-		paths  []string
-		reason string
+		name     string
+		paths    []string
+		reason   string
+		renderer bool
 	}{
 		{name: "shared library", paths: []string{"experiments/workstation/lib/checkpoint-ledger.mjs"}, reason: "full-authority-changed"},
-		{name: "unknown", paths: []string{"new-root/tool.mjs"}, reason: "unmapped-path:new-root/tool.mjs"},
-		{name: "mapping", paths: []string{mappingRelativePath}, reason: "selector-authority-changed"},
-		{name: "selector", paths: []string{"tooling/internal/ciplan/plan.go"}, reason: "selector-authority-changed"},
-		{name: "workflow", paths: []string{".github/workflows/ci.yml"}, reason: "selector-authority-changed"},
-		{name: "empty", paths: nil, reason: "empty-change-set"},
-		{name: "unsafe", paths: []string{"../escape"}, reason: "invalid-or-excessive-change-set"},
+		{name: "unknown", paths: []string{"new-root/tool.mjs"}, reason: "unmapped-path:new-root/tool.mjs", renderer: true},
+		{name: "mapping", paths: []string{mappingRelativePath}, reason: "selector-authority-changed", renderer: true},
+		{name: "selector", paths: []string{"tooling/internal/ciplan/plan.go"}, reason: "selector-authority-changed", renderer: true},
+		{name: "workflow", paths: []string{".github/workflows/ci.yml"}, reason: "selector-authority-changed", renderer: true},
+		{name: "empty", paths: nil, reason: "empty-change-set", renderer: true},
+		{name: "unsafe", paths: []string{"../escape"}, reason: "invalid-or-excessive-change-set", renderer: true},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			plan := selectTestPaths(t, root, options, test.paths)
+			wantLanes := []string{"full"}
+			if test.renderer {
+				wantLanes = append(wantLanes, "renderer")
+			}
 			if plan.Mode != "full" || plan.Reason != test.reason ||
-				!reflect.DeepEqual(plan.Lanes, []string{"full"}) {
+				!reflect.DeepEqual(plan.Lanes, wantLanes) {
 				t.Fatalf("planChangedPaths() = %#v, want full/%s", plan, test.reason)
 			}
 		})

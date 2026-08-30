@@ -21,7 +21,7 @@ jobs:
   verify:
     name: Verify tagged source and prepare assets
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 180
     permissions:
       contents: read
     outputs:
@@ -145,6 +145,14 @@ jobs:
           ./build/release-inputs/20w-linux-amd64 version --json
           ./build/release-inputs/20w-linux-amd64 validate docs --root .
           go -C tooling run ./cmd/20w experiment release-plan --root .. --json > build/release-inputs/experiment-release-plan.json
+      - name: Rebuild the final PDF renderer twice without cache
+        env:
+          RELEASE_TAG: ${{ steps.release-ref.outputs.tag }}
+        run: >-
+          ./build/release-inputs/20w-linux-amd64
+          publication verify-pdf-reproducibility
+          --root . --ref "$RELEASE_TAG"
+          --receipt build/release-inputs/pdf-renderer-reproducibility.json
       - name: Prepare version-bound release assets
         env:
           RELEASE_TAG: ${{ steps.release-ref.outputs.tag }}
