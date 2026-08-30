@@ -18,6 +18,12 @@ the exact diff; this file records why the project changed.
   an allowlisted four-way matrix; selector changes, unknown paths, renames,
   deletions, and invalid plans fail closed to the full gate. Pushes to `main`,
   manual runs, and release verification retain the complete repository gate.
+- A standard-library-only Go scaffold encodes the six-task CLRS-Text
+  development slice as a pure typed policy and a decision-record-before-effect
+  runner seam. It bounds request and result bytes, requires a separate exact
+  verifier, terminates unsafe states through typed refusal or abstention, and
+  keeps every output at `NO_RESULT`; generator, fixture, model and resource-
+  receipt identities remain unfrozen.
 
 ### Changed
 
