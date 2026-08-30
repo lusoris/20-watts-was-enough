@@ -52,6 +52,7 @@ var (
 			"fixture-026-shard-4",
 			"fixture-026-shard-5",
 			"fixture-026-shard-6",
+			"fixture-026-shard-7",
 		}},
 		"workstation-fixture-027": {WorkstationJobs: []string{"fixture-027"}},
 		"workstation-fixture-029": {WorkstationJobs: []string{
