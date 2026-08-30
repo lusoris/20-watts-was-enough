@@ -26,9 +26,21 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		reason string
 	}{
 		{path: "app/App.tsx", mode: "impact", lanes: []string{"site"}},
+		{path: "app/globals.css", mode: "impact", lanes: []string{"renderer", "site"}},
+		{path: ".github/ISSUE_TEMPLATE/site-documentation-problem.yml", mode: "impact", lanes: []string{"common"}},
+		{path: ".github/issue-milestones.json", mode: "impact", lanes: []string{"go"}},
+		{path: ".github/labels.json", mode: "impact", lanes: []string{"go"}},
+		{path: ".github/public-transport.json", mode: "impact", lanes: []string{"go", "site"}},
+		{path: "renovate.json", mode: "impact", lanes: []string{"dependency"}},
+		{path: "package-lock.json", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
+		{path: "scripts/generate-book-pdf.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
+		{path: "scripts/audit-prose-style.mjs", mode: "full", lanes: []string{"full"}, reason: "full-authority-changed"},
 		{path: "experiments/workstation/fixture-026/runner.mjs", mode: "impact", lanes: []string{"workstation-fixture-026"}},
 		{path: "experiments/workstation/fixture-007/runner.mjs", mode: "impact", lanes: []string{"container", "workstation-fixture-007"}},
+		{path: "tooling/internal/pdfrender/render.go", mode: "impact", lanes: []string{"go", "release", "renderer", "site"}},
 		{path: "experiments/workstation/lib/execution-receipt.mjs", mode: "full", lanes: []string{"full"}, reason: "full-authority-changed"},
+		{path: ".github/workflows/ci.yml", mode: "full", lanes: []string{"full", "renderer"}, reason: "selector-authority-changed"},
+		{path: ".github/unowned-metadata.yml", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:.github/unowned-metadata.yml"},
 	}
 	for _, test := range tests {
 		plan := selectTestPaths(t, root, options, []string{test.path})
@@ -36,6 +48,40 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 			(test.reason != "" && plan.Reason != test.reason) {
 			t.Fatalf("path %s produced %#v, want %s/%v", test.path, plan, test.mode, test.lanes)
 		}
+	}
+}
+
+func TestEveryWorkstationManifestSelectsItsArtifactAndReadinessConsumers(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	mapping, err := loadMapping(root)
+	if err != nil {
+		t.Fatalf("loadMapping(repository) error = %v", err)
+	}
+	options := testOptions(root)
+	entries, err := os.ReadDir(filepath.Join(root, "experiments", "workstation", "manifests"))
+	if err != nil {
+		t.Fatalf("read workstation manifests: %v", err)
+	}
+	for _, entry := range entries {
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".json") {
+			t.Fatalf("unexpected workstation manifest entry %q", entry.Name())
+		}
+		artifact := strings.TrimSuffix(entry.Name(), ".json")
+		t.Run(artifact, func(t *testing.T) {
+			lanes := []string{"research", "site", "workstation-" + artifact}
+			if artifact == "fixture-007" || artifact == "fixture-019" {
+				lanes = append([]string{"container"}, lanes...)
+			}
+			plan := selectChangedPaths(
+				mapping,
+				options,
+				[]string{"experiments/workstation/manifests/" + artifact + ".json"},
+			)
+			if plan.Mode != "impact" || !reflect.DeepEqual(plan.Lanes, lanes) {
+				t.Fatalf("manifest plan = %#v, want impact/%v", plan, lanes)
+			}
+		})
 	}
 }
 

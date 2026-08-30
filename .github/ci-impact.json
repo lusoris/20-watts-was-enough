@@ -15,12 +15,20 @@
       ]
     },
     {
+      "id": "dependencies",
+      "paths": [
+        "renovate.json"
+      ],
+      "lanes": [
+        "dependency"
+      ]
+    },
+    {
       "id": "global",
       "paths": [
         ".agents/**",
         ".editorconfig",
         ".gitattributes",
-        ".github/**",
         ".gitignore",
         ".gitleaks.toml",
         ".npmrc",
@@ -36,7 +44,6 @@
         "experiments/workstation/smoke-suite.test.mjs",
         "package-lock.json",
         "package.json",
-        "renovate.json",
         "requirements-ci.txt",
         "scripts/**",
         "tooling/AGENTS.md",
@@ -45,6 +52,50 @@
         "tooling/go.sum",
         "tooling/internal/ciplan/**",
         "tooling/internal/strictjson/**"
+      ],
+      "lanes": [
+        "full"
+      ]
+    },
+    {
+      "id": "global-github-metadata",
+      "paths": [
+        ".github/FUNDING.yml",
+        ".github/ISSUE_TEMPLATE/**",
+        ".github/PULL_REQUEST_TEMPLATE.md",
+        ".github/labeler.yml"
+      ],
+      "lanes": [
+        "common"
+      ]
+    },
+    {
+      "id": "global-github-operations",
+      "paths": [
+        ".github/issue-milestones.json",
+        ".github/labels.json",
+        ".github/milestones.json"
+      ],
+      "lanes": [
+        "go"
+      ]
+    },
+    {
+      "id": "global-github-public-transport",
+      "paths": [
+        ".github/public-transport.json"
+      ],
+      "lanes": [
+        "go",
+        "site"
+      ]
+    },
+    {
+      "id": "global-github-security",
+      "paths": [
+        ".github/AGENTS.md",
+        ".github/CODEOWNERS",
+        ".github/workflows/**"
       ],
       "lanes": [
         "full"
@@ -86,6 +137,7 @@
     {
       "id": "go-operations",
       "paths": [
+        "tooling/internal/githubissuemilestones/**",
         "tooling/internal/githublabels/**",
         "tooling/internal/githubmilestones/**",
         "tooling/internal/repositorymanifest/**"
@@ -103,6 +155,17 @@
       "lanes": [
         "go",
         "release",
+        "renderer",
+        "site"
+      ]
+    },
+    {
+      "id": "go-public-transport",
+      "paths": [
+        "tooling/internal/publictransport/**"
+      ],
+      "lanes": [
+        "go",
         "site"
       ]
     },
@@ -191,10 +254,20 @@
     {
       "id": "workstation-candidate-010",
       "paths": [
-        "experiments/workstation/candidate-010/**",
+        "experiments/workstation/candidate-010/**"
+      ],
+      "lanes": [
+        "workstation-candidate-010"
+      ]
+    },
+    {
+      "id": "workstation-candidate-010-manifest",
+      "paths": [
         "experiments/workstation/manifests/candidate-010.json"
       ],
       "lanes": [
+        "research",
+        "site",
         "workstation-candidate-010"
       ]
     },
@@ -212,8 +285,7 @@
     {
       "id": "workstation-fixture-007",
       "paths": [
-        "experiments/workstation/fixture-007/**",
-        "experiments/workstation/manifests/fixture-007.json"
+        "experiments/workstation/fixture-007/**"
       ],
       "lanes": [
         "container",
@@ -221,20 +293,41 @@
       ]
     },
     {
+      "id": "workstation-fixture-007-manifest",
+      "paths": [
+        "experiments/workstation/manifests/fixture-007.json"
+      ],
+      "lanes": [
+        "container",
+        "research",
+        "site",
+        "workstation-fixture-007"
+      ]
+    },
+    {
       "id": "workstation-fixture-012",
       "paths": [
-        "experiments/workstation/fixture-012/**",
-        "experiments/workstation/manifests/fixture-012.json"
+        "experiments/workstation/fixture-012/**"
       ],
       "lanes": [
         "workstation-fixture-012"
       ]
     },
     {
+      "id": "workstation-fixture-012-manifest",
+      "paths": [
+        "experiments/workstation/manifests/fixture-012.json"
+      ],
+      "lanes": [
+        "research",
+        "site",
+        "workstation-fixture-012"
+      ]
+    },
+    {
       "id": "workstation-fixture-019",
       "paths": [
-        "experiments/workstation/fixture-019/**",
-        "experiments/workstation/manifests/fixture-019.json"
+        "experiments/workstation/fixture-019/**"
       ],
       "lanes": [
         "container",
@@ -242,72 +335,154 @@
       ]
     },
     {
+      "id": "workstation-fixture-019-manifest",
+      "paths": [
+        "experiments/workstation/manifests/fixture-019.json"
+      ],
+      "lanes": [
+        "container",
+        "research",
+        "site",
+        "workstation-fixture-019"
+      ]
+    },
+    {
       "id": "workstation-fixture-022",
       "paths": [
-        "experiments/workstation/fixture-022/**",
-        "experiments/workstation/manifests/fixture-022.json"
+        "experiments/workstation/fixture-022/**"
       ],
       "lanes": [
         "workstation-fixture-022"
       ]
     },
     {
+      "id": "workstation-fixture-022-manifest",
+      "paths": [
+        "experiments/workstation/manifests/fixture-022.json"
+      ],
+      "lanes": [
+        "research",
+        "site",
+        "workstation-fixture-022"
+      ]
+    },
+    {
       "id": "workstation-fixture-023",
       "paths": [
-        "experiments/workstation/fixture-023/**",
-        "experiments/workstation/manifests/fixture-023.json"
+        "experiments/workstation/fixture-023/**"
       ],
       "lanes": [
         "workstation-fixture-023"
       ]
     },
     {
+      "id": "workstation-fixture-023-manifest",
+      "paths": [
+        "experiments/workstation/manifests/fixture-023.json"
+      ],
+      "lanes": [
+        "research",
+        "site",
+        "workstation-fixture-023"
+      ]
+    },
+    {
       "id": "workstation-fixture-024",
       "paths": [
-        "experiments/workstation/fixture-024/**",
-        "experiments/workstation/manifests/fixture-024.json"
+        "experiments/workstation/fixture-024/**"
       ],
       "lanes": [
         "workstation-fixture-024"
       ]
     },
     {
+      "id": "workstation-fixture-024-manifest",
+      "paths": [
+        "experiments/workstation/manifests/fixture-024.json"
+      ],
+      "lanes": [
+        "research",
+        "site",
+        "workstation-fixture-024"
+      ]
+    },
+    {
       "id": "workstation-fixture-025",
       "paths": [
-        "experiments/workstation/fixture-025/**",
-        "experiments/workstation/manifests/fixture-025.json"
+        "experiments/workstation/fixture-025/**"
       ],
       "lanes": [
         "workstation-fixture-025"
       ]
     },
     {
+      "id": "workstation-fixture-025-manifest",
+      "paths": [
+        "experiments/workstation/manifests/fixture-025.json"
+      ],
+      "lanes": [
+        "research",
+        "site",
+        "workstation-fixture-025"
+      ]
+    },
+    {
       "id": "workstation-fixture-026",
       "paths": [
-        "experiments/workstation/fixture-026/**",
-        "experiments/workstation/manifests/fixture-026.json"
+        "experiments/workstation/fixture-026/**"
       ],
       "lanes": [
         "workstation-fixture-026"
       ]
     },
     {
+      "id": "workstation-fixture-026-manifest",
+      "paths": [
+        "experiments/workstation/manifests/fixture-026.json"
+      ],
+      "lanes": [
+        "research",
+        "site",
+        "workstation-fixture-026"
+      ]
+    },
+    {
       "id": "workstation-fixture-027",
       "paths": [
-        "experiments/workstation/fixture-027/**",
-        "experiments/workstation/manifests/fixture-027.json"
+        "experiments/workstation/fixture-027/**"
       ],
       "lanes": [
         "workstation-fixture-027"
       ]
     },
     {
+      "id": "workstation-fixture-027-manifest",
+      "paths": [
+        "experiments/workstation/manifests/fixture-027.json"
+      ],
+      "lanes": [
+        "research",
+        "site",
+        "workstation-fixture-027"
+      ]
+    },
+    {
       "id": "workstation-fixture-029",
       "paths": [
-        "experiments/workstation/fixture-029/**",
+        "experiments/workstation/fixture-029/**"
+      ],
+      "lanes": [
+        "workstation-fixture-029"
+      ]
+    },
+    {
+      "id": "workstation-fixture-029-manifest",
+      "paths": [
         "experiments/workstation/manifests/fixture-029.json"
       ],
       "lanes": [
+        "research",
+        "site",
         "workstation-fixture-029"
       ]
     }

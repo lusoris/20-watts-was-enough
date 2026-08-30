@@ -25,8 +25,10 @@ type Projection struct {
 	Mode              string
 	Reason            string
 	Container         bool
+	Dependency        bool
 	Go                bool
 	Release           bool
+	Renderer          bool
 	Research          bool
 	Site              bool
 	WorkstationAny    bool
@@ -65,6 +67,7 @@ func Project(plan Plan) (Projection, error) {
 	projection := Projection{
 		Mode:              plan.Mode,
 		Reason:            plan.Reason,
+		Renderer:          planSelectsLane(plan, "renderer"),
 		WorkstationMatrix: "[]",
 	}
 	if plan.Mode == "full" {
@@ -77,12 +80,18 @@ func Project(plan Plan) (Projection, error) {
 	jobs := make([]string, 0)
 	for _, lane := range plan.Lanes {
 		switch lane {
+		case "common":
+			// Every impact plan already runs the common gate.
 		case "container":
 			projection.Container = true
+		case "dependency":
+			projection.Dependency = true
 		case "go":
 			projection.Go = true
 		case "release":
 			projection.Release = true
+		case "renderer":
+			projection.Renderer = true
 		case "research":
 			projection.Research = true
 		case "site":
@@ -130,8 +139,10 @@ func WriteGitHubOutputs(writer io.Writer, projection Projection) error {
 		{name: "mode", value: projection.Mode},
 		{name: "reason", value: projection.Reason},
 		{name: "container", value: strconv.FormatBool(projection.Container)},
+		{name: "dependency", value: strconv.FormatBool(projection.Dependency)},
 		{name: "go", value: strconv.FormatBool(projection.Go)},
 		{name: "release", value: strconv.FormatBool(projection.Release)},
+		{name: "renderer", value: strconv.FormatBool(projection.Renderer)},
 		{name: "research", value: strconv.FormatBool(projection.Research)},
 		{name: "site", value: strconv.FormatBool(projection.Site)},
 		{name: "workstation_any", value: strconv.FormatBool(projection.WorkstationAny)},
@@ -174,8 +185,10 @@ func validatePlan(plan Plan) error {
 		}
 	}
 	if plan.Mode == "full" {
-		if plan.Reason == "mapped-change-set" || len(plan.Lanes) != 1 || plan.Lanes[0] != fullLane {
-			return errors.New("full CI plan must select only the full lane")
+		validLanes := len(plan.Lanes) == 1 && plan.Lanes[0] == fullLane
+		validLanes = validLanes || (len(plan.Lanes) == 2 && plan.Lanes[0] == fullLane && plan.Lanes[1] == "renderer")
+		if plan.Reason == "mapped-change-set" || !validLanes {
+			return errors.New("full CI plan must select only the full lane and optional renderer signal")
 		}
 		if err := validateFullReasonPaths(plan.Reason, plan.ChangedPaths); err != nil {
 			return err

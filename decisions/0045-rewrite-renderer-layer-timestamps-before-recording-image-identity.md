@@ -3,6 +3,7 @@
 - **Status:** accepted
 - **Date:** 2026-08-30
 - **Partly supersedes:** [0040](0040-bind-publications-to-reproducible-and-public-artifacts.md), clauses 1 and 4 for renderer-image assembly
+- **Implements:** [issue 11](https://github.com/lusoris/20-watts-was-enough/issues/11)
 
 ## Context
 
@@ -28,6 +29,10 @@ and the same 19 rootfs diff IDs. Neither emitted a timestamp-rewrite warning.
 This is build-boundary evidence, not a scientific result or a cross-platform
 reproducibility claim.
 
+That retained reproduction established the decision input, but it was not a
+repeatable regression boundary. The earlier Go test injected one image ID and
+therefore could not prove that two real builders would derive it again.
+
 ## Decision
 
 1. Renderer-lock schema 3 adds one exporter contract:
@@ -48,6 +53,18 @@ reproducibility claim.
    exporter policy, platform, normalized context, runtime images, browser
    bytes and `SOURCE_DATE_EPOCH`. The PDF digest remains a separate output
    identity.
+6. Make the two-builder comparison executable through
+   `20w publication verify-pdf-reproducibility`. One run prepares and hashes
+   the exact normalized context, creates two distinct pinned builders, disables
+   their build caches, records each image, config and manifest digest, renders
+   each image once, and byte-compares the complete PDF and book-manifest pair.
+   Renderer-selected CI and every tagged release run this acceptance. Ready
+   pull requests and main pushes still use a full plan, but preserve their
+   exact diff so unrelated changes do not select the renderer gate. Manual,
+   unavailable, invalid, unmapped and selector-authority diffs select it
+   fail-closed. Non-additive diffs inspect both retained paths.
+   CI retains the deterministic JSON receipt; a tagged release includes the
+   receipt in its checksum-bound assets.
 
 ## Alternatives considered
 
@@ -72,5 +89,9 @@ reproducibility claim.
   and validated as one pair.
 - BuildKit upgrades are not mechanical version bumps. They require a reviewed
   compatibility default and the same two-fresh-builder falsification test.
+- The recurring acceptance owns only its uniquely named builders and image
+  tags, bounds every Docker call and total run time, and removes those resources
+  after success or failure. Its receipt is engineering evidence, not a
+  scientific result or a claim beyond the locked Linux `amd64` boundary.
 - Decision 0040 continues to control container execution, two-render PDF
   comparison, immutable release assembly and anonymous release-image access.

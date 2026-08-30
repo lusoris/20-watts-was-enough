@@ -81,7 +81,8 @@ func TestReadGitChangedPathsUsesTheExactThreeDotRenameDiff(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if plan.Mode != "full" || plan.Reason != "rename-delete-copy-or-type-change" {
+	if plan.Mode != "full" || plan.Reason != "rename-delete-copy-or-type-change" ||
+		!reflect.DeepEqual(plan.Lanes, []string{"full"}) {
 		t.Fatalf("Build(rename) = %#v, want non-additive full fallback", plan)
 	}
 }
@@ -116,6 +117,63 @@ func TestBuildSelectsMappedImpactLaneFromExactDiff(t *testing.T) {
 		!reflect.DeepEqual(plan.ChangedPaths, []string{"app/main.tsx"}) ||
 		!reflect.DeepEqual(plan.Lanes, []string{"site"}) {
 		t.Fatalf("Build(site change) = %#v, want mapped site impact plan", plan)
+	}
+}
+
+func TestBuildFullPlanPreservesOnlyTheOrthogonalRendererSignal(t *testing.T) {
+	t.Parallel()
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("Git is unavailable")
+	}
+	for name, change := range map[string]struct {
+		path         string
+		wantRenderer bool
+	}{
+		"unrelated site": {
+			path: "app/main.tsx",
+		},
+		"renderer authority": {
+			path:         "tooling/internal/pdfrender/render.go",
+			wantRenderer: true,
+		},
+		"book renderer authority": {
+			path:         "app/globals.css",
+			wantRenderer: true,
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			root := initializeGitPlanRepository(t)
+			file := filepath.Join(root, filepath.FromSlash(change.path))
+			if err := os.MkdirAll(filepath.Dir(file), 0o755); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(file, []byte("first\n"), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			base := commitGitPlanRepository(t, root, "base")
+			if err := os.WriteFile(file, []byte("second\n"), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			head := commitGitPlanRepository(t, root, "change")
+			plan, err := Build(context.Background(), Options{
+				RepositoryRoot: root,
+				BaseRevision:   base,
+				HeadRevision:   head,
+				ForceFull:      true,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			wantLanes := []string{"full"}
+			if change.wantRenderer {
+				wantLanes = append(wantLanes, "renderer")
+			}
+			if plan.Mode != "full" || plan.Reason != "explicit-full" ||
+				!reflect.DeepEqual(plan.ChangedPaths, []string{change.path}) ||
+				!reflect.DeepEqual(plan.Lanes, wantLanes) {
+				t.Fatalf("Build(force full) = %#v, want %v", plan, wantLanes)
+			}
+		})
 	}
 }
 

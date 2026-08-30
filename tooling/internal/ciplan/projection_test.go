@@ -20,7 +20,7 @@ func TestProjectEmitsClosedFullSemanticsAndEveryWorkstationJob(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if projection.Container || projection.Go || projection.Release || projection.Research ||
+	if projection.Container || projection.Dependency || projection.Go || projection.Release || projection.Renderer || projection.Research ||
 		projection.Site || !projection.WorkstationAny {
 		t.Fatalf("Project(full) = %#v, want false lane semantics and workstation jobs", projection)
 	}
@@ -55,13 +55,30 @@ func TestProjectEmitsClosedFullSemanticsAndEveryWorkstationJob(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, expected := range []string{
-		"container=false\n", "go=false\n", "release=false\n", "research=false\n",
+		"container=false\n", "dependency=false\n", "go=false\n", "release=false\n", "renderer=false\n", "research=false\n",
 		"site=false\n", "workstation_any=true\n",
 		"workstation_matrix=[\"candidate-010\",\"fixture-007\"",
 	} {
 		if !strings.Contains(output.String(), expected) {
 			t.Fatalf("full GitHub outputs = %q, missing %q", output.String(), expected)
 		}
+	}
+}
+
+func TestProjectPreservesRendererSignalInAFullPlan(t *testing.T) {
+	t.Parallel()
+	projection, err := Project(Plan{
+		Schema:       planSchema,
+		Mode:         "full",
+		Reason:       "explicit-full",
+		ChangedPaths: []string{"tooling/internal/pdfrender/render.go"},
+		Lanes:        []string{"full", "renderer"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !projection.Renderer || projection.Release || !projection.WorkstationAny {
+		t.Fatalf("Project(full renderer) = %#v", projection)
 	}
 }
 
@@ -110,12 +127,12 @@ func TestProjectDerivesOnlyFixedAllowlistedOutputs(t *testing.T) {
 		BaseRevision: testBaseRevision,
 		HeadRevision: testHeadRevision,
 		ChangedPaths: []string{"experiments/workstation/fixture-019/runner.mjs", "research/claims.md"},
-		Lanes:        []string{"container", "research", "site", "workstation-candidate-010", "workstation-fixture-019"},
+		Lanes:        []string{"common", "container", "dependency", "renderer", "research", "site", "workstation-candidate-010", "workstation-fixture-019"},
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !projection.Container || projection.Go || projection.Release || !projection.Research ||
+	if !projection.Container || !projection.Dependency || projection.Go || projection.Release || !projection.Renderer || !projection.Research ||
 		!projection.Site || !projection.WorkstationAny {
 		t.Fatalf("Project(impact) = %#v, want exact lane booleans", projection)
 	}
@@ -131,8 +148,8 @@ func TestProjectDerivesOnlyFixedAllowlistedOutputs(t *testing.T) {
 	if err := WriteGitHubOutputs(&output, projection); err != nil {
 		t.Fatal(err)
 	}
-	want := "mode=impact\nreason=mapped-change-set\ncontainer=true\ngo=false\n" +
-		"release=false\nresearch=true\nsite=true\nworkstation_any=true\n" +
+	want := "mode=impact\nreason=mapped-change-set\ncontainer=true\ndependency=true\ngo=false\n" +
+		"release=false\nrenderer=true\nresearch=true\nsite=true\nworkstation_any=true\n" +
 		"workstation_matrix=[\"candidate-010\",\"fixture-019\"]\n"
 	if output.String() != want {
 		t.Fatalf("GitHub outputs = %q, want %q", output.String(), want)
