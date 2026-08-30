@@ -246,7 +246,7 @@ func extractChromeArchive(archivePath, destination string) error {
 }
 
 func cleanArchiveEntry(name string) (string, error) {
-	if name == "" || strings.ContainsAny(name, "\\\x00") || strings.HasPrefix(name, "/") {
+	if name == "" || strings.Contains(name, "..") || strings.ContainsAny(name, "\\\x00") || strings.HasPrefix(name, "/") {
 		return "", errors.New("Chrome for Testing archive contains an invalid path")
 	}
 	clean := path.Clean(name)

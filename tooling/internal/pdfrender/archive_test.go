@@ -53,8 +53,9 @@ func TestExtractedBuildContextMetadataIsDeterministic(t *testing.T) {
 func TestExtractChromeArchiveRejectsTraversalAndSymlinks(t *testing.T) {
 	t.Parallel()
 	for name, entry := range map[string]zipEntry{
-		"traversal": {name: "chrome-linux64/../outside", body: "bad", mode: 0o644},
-		"symlink":   {name: "chrome-linux64/link", body: "target", mode: os.ModeSymlink | 0o777},
+		"traversal":         {name: "chrome-linux64/../outside", body: "bad", mode: 0o644},
+		"dot-dot substring": {name: "chrome-linux64/resource..pak", body: "bad", mode: 0o644},
+		"symlink":           {name: "chrome-linux64/link", body: "target", mode: os.ModeSymlink | 0o777},
 	} {
 		name, entry := name, entry
 		t.Run(name, func(t *testing.T) {
