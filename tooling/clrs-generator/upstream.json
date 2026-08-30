@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "authority": "NO_RESULT",
+  "repository": "https://github.com/google-deepmind/clrs",
+  "commit": "d33c3cfc765a18950194205a1ddb92a0981a355e",
+  "tree": "b196ea83bd13516054dff405aa738dcd58d8c0c6",
+  "inspected_on": "2026-08-30",
+  "license": {
+    "spdx": "Apache-2.0",
+    "path": "LICENSE",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  "generator": {
+    "path": "clrs/_src/clrs_text/generate_clrs_text.py",
+    "sha256": "07f1134c0682d3102fa6e39a5e439276b39b5719a2dc197ffdc697c09c4f6e1c"
+  },
+  "requirements": {
+    "path": "requirements/requirements.txt",
+    "sha256": "aa0eb5e95b8c0b51541b9aa15543b71270ffbada619c00ed4988a94e49e27276"
+  }
+}
