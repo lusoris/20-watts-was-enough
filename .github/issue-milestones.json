@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "repository": "lusoris/20-watts-was-enough",
+  "assignments": [
+    { "issue": 7, "milestone": "M0" },
+    { "issue": 8, "milestone": "M0" },
+    { "issue": 9, "milestone": "M0" },
+    { "issue": 10, "milestone": "M0" },
+    { "issue": 11, "milestone": "M0" },
+    { "issue": 12, "milestone": "M1" },
+    { "issue": 13, "milestone": "M0" },
+    { "issue": 14, "milestone": "M0" }
+  ]
+}

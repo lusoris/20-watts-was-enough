@@ -89,7 +89,7 @@ established. The authorities remain separate:
 | Question | Authority |
 | --- | --- |
 | What should happen next? | [Research roadmap](concept/90-research-roadmap.md) |
-| Which bounded tasks are open or finished? | [GitHub milestones](https://github.com/lusoris/20-watts-was-enough/milestones) generated from [the milestone manifest](.github/milestones.json) |
+| Which bounded tasks are open or finished? | [GitHub milestones](https://github.com/lusoris/20-watts-was-enough/milestones) projected from [the milestone manifest](.github/milestones.json) and [repository-bound issue map](.github/issue-milestones.json) |
 | What does the evidence support? | [Claim ledger](research/claims.md) |
 | Which experiment paths are actually ready? | [Coverage report](experiments/test-coverage.md) and [readiness summary](experiments/test-readiness-summary.json) |
 

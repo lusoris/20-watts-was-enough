@@ -113,11 +113,13 @@ guidance](https://docs.github.com/en/repositories/configuring-branches-and-merge
 confirms that zero is a supported setting. A second-human approval gate should
 be added only when a second reviewer can actually serve it.
 
-The `cordana.dev` Cloudflare zone also has **Always Use HTTPS** enabled. A live
-check on 2026-08-28 verified `301 Moved Permanently` for both the site root and
-`/book/`, preserving the requested path on `https://www.cordana.dev/`. GitHub's
-Pages API still lacks its own origin certificate for the proxied hostname, so
-Cloudflare is the truthful enforcement boundary for the public custom domain.
+The `cordana.dev` Cloudflare zone has **Always Use HTTPS** enabled. A live check
+on 2026-08-30 verified the exact root redirect and successful HTTPS response;
+the Pages workflow now repeats that bounded public check after deployment.
+[Decision 0047](../decisions/0047-keep-cloudflare-as-the-public-pages-tls-authority.md)
+keeps Cloudflare as the truthful public enforcement boundary and records the
+current automatic **Full** origin-mode limitation separately. GitHub's Pages
+API still lacks its own origin certificate for the proxied hostname.
 
 ## Main protection
 

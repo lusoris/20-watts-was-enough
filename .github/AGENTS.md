@@ -34,8 +34,10 @@ files under `.github/`.
 - Treat repository settings as external state. Verify branch rules, Actions
   permissions, environments, and security features before documenting them as
   active.
-- `.github/labels.json` and `.github/milestones.json` are the canonical
-  operational metadata manifests. The trusted main-branch workflow may create
-  or repair their marked objects, but it does not delete unmanaged labels or
-  milestones. Milestone progress reflects associated issues and pull requests;
-  it never promotes scientific evidence.
+- `.github/labels.json`, `.github/milestones.json`, and
+  `.github/issue-milestones.json` are the canonical operational metadata
+  manifests. The trusted main-branch workflow may create or repair their
+  marked objects and mapped issue assignments, but it does not delete unmanaged
+  labels or milestones or infer a pull-request assignment. Milestone progress
+  reflects associated issues and pull requests; it never promotes scientific
+  evidence.
