@@ -41,10 +41,11 @@ than silently changing its outcome.
 | [0033](0033-retire-the-owner-only-reader.md) | Retire the owner-only reader | accepted |
 | [0034](0034-release-bounded-experiment-containers.md) | Release bounded experiment containers | superseded by [0037](0037-release-go-tooling-and-scope-experiment-images.md) |
 | [0035](0035-publish-only-reviewed-source-bound-translations.md) | Publish only reviewed, source-bound translations | accepted |
-| [0036](0036-use-one-source-to-publication-and-feedback-graph.md) | Use one source-to-publication-and-feedback graph | accepted |
+| [0036](0036-use-one-source-to-publication-and-feedback-graph.md) | Use one source-to-publication-and-feedback graph | accepted; CI aggregate-gate sentence partly superseded by [0043](0043-impact-scope-pull-request-ci.md) |
 | [0037](0037-release-go-tooling-and-scope-experiment-images.md) | Release one scoped image per experiment | accepted; clause 3 partly superseded by [0038](0038-publish-only-release-exercised-container-platforms.md), clause 8 superseded by [0042](0042-retire-the-host-specific-fixture-012-acquisition-lane.md) |
 | [0038](0038-publish-only-release-exercised-container-platforms.md) | Publish only release-exercised container platforms | accepted; clauses 2 and 3 partly superseded by [0041](0041-attest-only-current-run-build-outputs.md) |
 | [0039](0039-make-pages-a-research-publication-surface.md) | Make Pages a research-publication surface | accepted |
 | [0040](0040-bind-publications-to-reproducible-and-public-artifacts.md) | Bind publications to reproducible and public artifacts | accepted |
 | [0041](0041-attest-only-current-run-build-outputs.md) | Attest only current-run build outputs | accepted |
 | [0042](0042-retire-the-host-specific-fixture-012-acquisition-lane.md) | Retire the host-specific Fixture 012 acquisition lane | accepted |
+| [0043](0043-impact-scope-pull-request-ci.md) | Impact-scope pull-request CI | accepted |

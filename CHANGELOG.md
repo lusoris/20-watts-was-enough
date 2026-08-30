@@ -15,9 +15,10 @@ the exact diff; this file records why the project changed.
 - Pull-request CI now derives a bounded Go impact plan from the exact base and
   head commits, then runs a common gate plus only the selected Go, release,
   research, site, container, and workstation lanes. Workstation artifacts use
-  an allowlisted four-way matrix; selector changes, unknown paths, renames,
-  deletions, and invalid plans fail closed to the full gate. Pushes to `main`,
-  manual runs, and release verification retain the complete repository gate.
+  an allowlisted matrix capped at four concurrent jobs; selector changes,
+  unknown paths, renames, deletions, and invalid plans fail closed to the full
+  gate. Pushes to `main`, manual runs, and release verification retain the
+  complete repository gate.
 - A standard-library-only Go scaffold encodes the six-task CLRS-Text
   development slice as a pure typed policy and a decision-record-before-effect
   runner seam. It bounds request and result bytes, requires a separate exact
