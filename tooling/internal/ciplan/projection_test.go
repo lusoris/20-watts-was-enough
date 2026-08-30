@@ -43,6 +43,7 @@ func TestProjectEmitsClosedFullSemanticsAndEveryWorkstationJob(t *testing.T) {
 		"fixture-026-shard-4",
 		"fixture-026-shard-5",
 		"fixture-026-shard-6",
+		"fixture-026-shard-7",
 		"fixture-027",
 		"fixture-029-shard-1",
 		"fixture-029-shard-2",
@@ -110,6 +111,7 @@ func TestProjectExpandsOnlySelectedShardedArtifacts(t *testing.T) {
 		"fixture-026-shard-4",
 		"fixture-026-shard-5",
 		"fixture-026-shard-6",
+		"fixture-026-shard-7",
 		"fixture-029-shard-1",
 		"fixture-029-shard-2",
 	}

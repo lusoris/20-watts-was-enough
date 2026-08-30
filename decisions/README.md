@@ -49,10 +49,11 @@ than silently changing its outcome.
 | [0041](0041-attest-only-current-run-build-outputs.md) | Attest only current-run build outputs | accepted |
 | [0042](0042-retire-the-host-specific-fixture-012-acquisition-lane.md) | Retire the host-specific Fixture 012 acquisition lane | accepted |
 | [0043](0043-impact-scope-pull-request-ci.md) | Impact-scope pull-request CI | accepted; workstation matrix and full-plan execution shape partly superseded by [0044](0044-shard-workstation-ci-without-splitting-test-authority.md), ready-PR and GitHub-path semantics partly superseded by [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md) |
-| [0044](0044-shard-workstation-ci-without-splitting-test-authority.md) | Shard workstation CI without splitting test authority | accepted; ready-PR gate extended by [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md) |
+| [0044](0044-shard-workstation-ci-without-splitting-test-authority.md) | Shard workstation CI without splitting test authority | accepted; ready-PR gate extended by [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md), six-Fixture-026-shard clauses partly superseded by [0051](0051-add-a-seventh-fixture-026-shard-after-live-timing.md) |
 | [0045](0045-rewrite-renderer-layer-timestamps-before-recording-image-identity.md) | Rewrite renderer layer timestamps before recording image identity | accepted |
 | [0046](0046-project-the-research-roadmap-into-github-milestones.md) | Project the research roadmap into GitHub milestones | accepted |
 | [0047](0047-keep-cloudflare-as-the-public-pages-tls-authority.md) | Keep Cloudflare as the public Pages TLS authority | accepted |
 | [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md) | Gate ready pull requests with the full CI matrix | accepted |
 | [0049](0049-adopt-bounded-maintenance-automation.md) | Adopt bounded maintenance automation | accepted |
 | [0050](0050-review-the-book-and-pdf-as-one-publication.md) | Review the book and PDF as one publication | accepted |
+| [0051](0051-add-a-seventh-fixture-026-shard-after-live-timing.md) | Add a seventh Fixture 026 shard after live timing | accepted |
