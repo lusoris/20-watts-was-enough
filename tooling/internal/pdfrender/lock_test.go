@@ -14,7 +14,8 @@ func TestCheckAcceptsTheTrackedRendererAuthority(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Check() error = %v", err)
 	}
-	if configuration.Lock.Schema != 2 || configuration.Lock.Platform != "linux/amd64" {
+	if configuration.Lock.Schema != 3 || configuration.Lock.Platform != "linux/amd64" ||
+		!configuration.Lock.Exporter.RewriteTimestamp || configuration.Lock.Exporter.CompatibilityVersion != 30 {
 		t.Fatalf("Check() lock = %+v", configuration.Lock)
 	}
 	if !rawSHA256Pattern.MatchString(configuration.LockSHA256) {
@@ -25,7 +26,7 @@ func TestCheckAcceptsTheTrackedRendererAuthority(t *testing.T) {
 func TestCheckRejectsAmbiguousOrExtendedLockJSON(t *testing.T) {
 	t.Parallel()
 	for name, mutate := range map[string]func(string) string{
-		"duplicate": func(body string) string { return strings.Replace(body, `"schema": 2`, `"schema": 2, "schema": 2`, 1) },
+		"duplicate": func(body string) string { return strings.Replace(body, `"schema": 3`, `"schema": 3, "schema": 3`, 1) },
 		"unknown":   func(body string) string { return strings.Replace(body, "{", `{"unknown": true,`, 1) },
 		"trailing":  func(body string) string { return body + "{}\n" },
 	} {
@@ -43,6 +44,35 @@ func TestCheckRejectsAmbiguousOrExtendedLockJSON(t *testing.T) {
 			}
 			if _, err := Check(root); err == nil {
 				t.Fatal("Check() accepted an ambiguous or extended lock")
+			}
+		})
+	}
+}
+
+func TestCheckRejectsAnUnboundExporterPolicy(t *testing.T) {
+	t.Parallel()
+	for name, mutate := range map[string]func(string) string{
+		"timestamp-rewrite-disabled": func(body string) string {
+			return strings.Replace(body, `"rewrite_timestamp": true`, `"rewrite_timestamp": false`, 1)
+		},
+		"different-compatibility-default": func(body string) string {
+			return strings.Replace(body, `"compatibility_version": 30`, `"compatibility_version": 20`, 1)
+		},
+	} {
+		name, mutate := name, mutate
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			root := rendererFixture(t)
+			lockPath := filepath.Join(root, filepath.FromSlash(lockRelativePath))
+			body, err := os.ReadFile(lockPath)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := os.WriteFile(lockPath, []byte(mutate(string(body))), 0o644); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := Check(root); err == nil {
+				t.Fatal("Check() accepted an unbound exporter policy")
 			}
 		})
 	}

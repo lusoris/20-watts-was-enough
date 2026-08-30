@@ -124,13 +124,17 @@ func renderWithDependencies(
 		}
 	}()
 	iidPath := filepath.Join(temporaryRoot, "renderer.iid")
-	if _, err := executor.run(buildContext, commandRequest{
+	buildOutput, err := executor.run(buildContext, commandRequest{
 		operation:  "build pinned PDF renderer image",
 		directory:  configuration.RepositoryRoot,
 		timeout:    time.Duration(configuration.Lock.Limits.BuildSeconds) * time.Second,
 		outputSize: configuration.Lock.Limits.OutputBytes,
 		arguments:  buildArguments(configuration, builderName, contextRoot, iidPath),
-	}); err != nil {
+	})
+	if err != nil {
+		return Result{}, err
+	}
+	if err := rejectTimestampRewriteWarnings(buildOutput); err != nil {
 		return Result{}, err
 	}
 	if err := checkAuthorityUnchanged(configuration); err != nil {
@@ -252,7 +256,7 @@ func buildArguments(configuration Configuration, builderName, contextRoot, iidPa
 	return []string{
 		"buildx", "build",
 		"--builder", builderName,
-		"--load",
+		"--output", fmt.Sprintf("type=docker,rewrite-timestamp=%t", lock.Exporter.RewriteTimestamp),
 		"--pull",
 		"--platform", lock.Platform,
 		"--provenance=false",
@@ -267,6 +271,17 @@ func buildArguments(configuration Configuration, builderName, contextRoot, iidPa
 		"--file", filepath.Join(contextRoot, "Dockerfile"),
 		contextRoot,
 	}
+}
+
+func rejectTimestampRewriteWarnings(output []byte) error {
+	message := string(output)
+	missingEpoch := "rewrite-timestamp is specified, but no source-date-epoch was found"
+	rewriteFailure := strings.Contains(message, "failed to rewrite layer ") &&
+		strings.Contains(message, " to match source-date-epoch ")
+	if strings.Contains(message, missingEpoch) || rewriteFailure {
+		return errors.New("BuildKit did not apply the required PDF renderer timestamp rewrite")
+	}
+	return nil
 }
 
 func runArguments(

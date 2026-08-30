@@ -39,6 +39,7 @@ type Lock struct {
 	Platform           string           `json:"platform"`
 	SourceDateEpoch    int64            `json:"source_date_epoch"`
 	Builder            Builder          `json:"builder"`
+	Exporter           Exporter         `json:"exporter"`
 	Node               RuntimeImage     `json:"node"`
 	BrowserEnvironment RuntimeImage     `json:"browser_environment"`
 	ChromeForTesting   ChromeForTesting `json:"chrome_for_testing"`
@@ -52,6 +53,13 @@ type Builder struct {
 	BuildxRevision  string `json:"buildx_revision"`
 	BuildKitVersion string `json:"buildkit_version"`
 	BuildKitImage   string `json:"buildkit_image"`
+}
+
+// Exporter binds digest-affecting image assembly choices. CompatibilityVersion
+// records the reviewed BuildKit default; it is not passed as an exporter option.
+type Exporter struct {
+	RewriteTimestamp     bool `json:"rewrite_timestamp"`
+	CompatibilityVersion int  `json:"compatibility_version"`
 }
 
 // RuntimeImage binds a named runtime version to one immutable OCI image index.
@@ -124,14 +132,17 @@ func Check(repositoryRoot string) (Configuration, error) {
 }
 
 func validateLock(lock Lock) error {
-	if lock.Schema != 2 || lock.Platform != "linux/amd64" {
-		return errors.New("schema must be 2 and platform must be linux/amd64")
+	if lock.Schema != 3 || lock.Platform != "linux/amd64" {
+		return errors.New("schema must be 3 and platform must be linux/amd64")
 	}
 	if lock.SourceDateEpoch < 946_684_800 || lock.SourceDateEpoch > 4_102_444_800 {
 		return errors.New("source_date_epoch must be a Unix time between 2000 and 2100")
 	}
 	if err := validateBuilder(lock.Builder); err != nil {
 		return err
+	}
+	if !lock.Exporter.RewriteTimestamp || lock.Exporter.CompatibilityVersion != 30 {
+		return errors.New("exporter must enable rewrite_timestamp and record compatibility_version 30")
 	}
 	if err := validateRuntimeImage(lock.Node, "node", "-bookworm-slim"); err != nil {
 		return err

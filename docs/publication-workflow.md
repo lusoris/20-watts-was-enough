@@ -106,6 +106,13 @@ binds JavaScript packages, and tagged release CI realizes that graph with the
 exact locked Node and npm versions before rendering. Both locks and the Go
 generator contribute to the book source digest.
 
+The same lock binds the Docker exporter's layer-timestamp rewrite and records
+compatibility version 30 as the reviewed default of the pinned BuildKit 0.32.2
+image. Go uses `type=docker,rewrite-timestamp=true` explicitly and rejects the
+known warnings for a missing epoch or failed layer rewrite. Compatibility 30 is
+review metadata, not a passed Docker-exporter attribute; changing BuildKit
+requires a fresh review and two-builder comparison.
+
 The two render containers use disjoint output, work and browser-cache
 directories, but currently share that one read-only installed JavaScript
 dependency tree. Their byte comparison therefore tests deterministic rendering

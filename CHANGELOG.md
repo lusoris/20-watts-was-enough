@@ -68,6 +68,10 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Renderer image identity is now stable across the locked two-fresh-builder
+  comparison. Lock schema 3 requires BuildKit's layer-timestamp rewrite and
+  records compatibility version 30 as the reviewed BuildKit 0.32.2 default;
+  the Go renderer rejects rewrite warnings before it records the image ID.
 - Release preflight now locates an exact tag through GitHub's GraphQL API and
   reads the resulting numeric release through REST. Draft releases are no
   longer misclassified as absent, while malformed, ambiguous and changed
