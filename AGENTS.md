@@ -14,6 +14,18 @@ brand expression, read and apply the project-local
 [`reader-editor` skill](.agents/skills/reader-editor/SKILL.md) as well when the
 design problem exposes a comprehension failure in project prose.
 
+Before changing the continuous book or generated PDF hierarchy, print
+typography, pagination, navigation, figures, tables, equations, or visual QA
+contract, also read and apply the project-local
+[`publication-design` skill](.agents/skills/publication-design/SKILL.md).
+
+Before adding or changing recurring dependency, CI, release, generation,
+GitHub-metadata, security-drift, or translation-freshness automation, read and
+apply the project-local
+[`maintenance-automation` skill](.agents/skills/maintenance-automation/SKILL.md).
+It does not grant authority to automate scientific judgement, claim promotion,
+or consequential remote state.
+
 ## Hard rules
 
 1. Git `main` is canonical. Do not synchronize or regenerate the concept from a
@@ -67,6 +79,7 @@ design problem exposes a comprehension failure in project prose.
 | `decisions/` | Append-only durable decisions; supersede rather than rewrite |
 | `sources/` | Provenance records and explicitly licensed imports, not evidence by default |
 | `app/`, `github-pages/` | Interactive reader and public Pages portal |
+| `.agents/skills/publication-design/` | Continuous-book and PDF review contract |
 | `translations/` | Reviewed, source-version-bound derivatives; English Git source remains canonical |
 | `scripts/` | Validation, generation, and publication-boundary tooling |
 

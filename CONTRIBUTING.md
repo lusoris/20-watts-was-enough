@@ -21,9 +21,11 @@ not promote a research claim by itself.
 | Report a confusing passage, broken page or inaccessible control | [How to help](docs/how-to-help.md) | No checkout required; include the exact route and point of failure |
 | Improve project-authored prose | [`research-writing`](.agents/skills/research-writing/SKILL.md), then [`reader-editor`](.agents/skills/reader-editor/SKILL.md) when comprehension is the problem | `npm run check:prose` and the nearest content validator |
 | Change layout, typography, colour, diagrams or visual identity | [`research-design`](.agents/skills/research-design/SKILL.md) | Focused site tests plus its rendered visual-review protocol |
+| Change book hierarchy, print typography, pagination, figures, equations or PDF layout | [`publication-design`](.agents/skills/publication-design/SKILL.md), plus `research-design` for shared screen owners | Focused book tests, generated-pair validation and bounded rendered-page inspection |
 | Correct evidence or propose a mechanism | [`research/AGENTS.md`](research/AGENTS.md) | The affected claim, reference, audit and taxonomy checks |
 | Change an experiment or runner | [`experiments/AGENTS.md`](experiments/AGENTS.md) and the nearest nested contract | The affected fixture tests and `npm run validate:workstation` |
-| Improve Go tooling, CI or releases | [`tooling/AGENTS.md`](tooling/AGENTS.md) and [`scripts/AGENTS.md`](scripts/AGENTS.md) as applicable | Focused Go tests and the affected policy test |
+| Automate recurring dependencies, CI, releases, generated artifacts or GitHub upkeep | [`maintenance-automation`](.agents/skills/maintenance-automation/SKILL.md), then the owning Go, script or GitHub contract | Read-only check, focused owner tests, idempotent repair test and affected CI lanes |
+| Improve one-off Go tooling, CI or releases | [`tooling/AGENTS.md`](tooling/AGENTS.md) and [`scripts/AGENTS.md`](scripts/AGENTS.md) as applicable | Focused Go tests and the affected policy test |
 | Review or correct a translation | [Translation contract](translations/README.md) | `npm run validate:translations` |
 
 An issue report or reader review needs no development environment. A pull
