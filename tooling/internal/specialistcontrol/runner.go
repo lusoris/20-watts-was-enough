@@ -30,7 +30,7 @@ type Specialist interface {
 
 // ExactVerifier scores a candidate independently of the originating specialist.
 type ExactVerifier interface {
-	Verify(context.Context, Invocation, SpecialistResult) (Verification, error)
+	Verify(context.Context, Invocation, Candidate) (Verification, error)
 }
 
 // RunResult retains both the pre-effect decision and terminal construction state.
@@ -89,7 +89,12 @@ func (runner Runner) Run(ctx context.Context, request Request) (RunResult, error
 		run.Outcome = terminalOutcome(OutcomeAbstained, specialistFailureReason(err), decision.Binding, nil)
 		return run, fmt.Errorf("specialist-control context ended before invocation: %w", err)
 	}
-	remaining := decision.Deadline.Sub(runner.now())
+	invocationAt := runner.now()
+	if invocationAt.IsZero() || invocationAt.Before(decision.DecidedAt) {
+		run.Outcome = terminalOutcome(OutcomeRefused, ReasonMalformedRequest, decision.Binding, nil)
+		return run, nil
+	}
+	remaining := decision.Deadline.Sub(invocationAt)
 	if remaining <= 0 {
 		run.Outcome = terminalOutcome(OutcomeAbstained, ReasonDeadlineElapsed, decision.Binding, nil)
 		return run, nil
@@ -102,32 +107,39 @@ func (runner Runner) Run(ctx context.Context, request Request) (RunResult, error
 	invocation := invocationFor(request, decision)
 	invokeContext, cancel := context.WithTimeout(ctx, remaining)
 	defer cancel()
+	if err := invokeContext.Err(); err != nil {
+		run.Outcome = terminalOutcome(OutcomeAbstained, specialistFailureReason(err), decision.Binding, nil)
+		return run, fmt.Errorf("specialist-control context ended before invocation: %w", err)
+	}
 	result, err := runner.specialists[decision.SpecialistID].Invoke(invokeContext, invocation)
 	if err != nil {
 		run.Outcome = terminalOutcome(OutcomeAbstained, specialistFailureReason(err), decision.Binding, nil)
 		return run, fmt.Errorf("invoke specialist %s: %w", decision.SpecialistID, err)
 	}
+	result = snapshotResult(result, decision.MaxResultBytes)
 	if err := invokeContext.Err(); err != nil {
 		run.Outcome = terminalOutcome(OutcomeAbstained, specialistFailureReason(err), decision.Binding, nil)
 		return run, fmt.Errorf("specialist %s exceeded its execution context: %w", decision.SpecialistID, err)
 	}
 
-	resultDecision := runner.policy.InspectResult(runner.now(), request, decision, result)
+	observedAt := runner.now()
+	resultDecision := runner.policy.InspectResult(observedAt, request, decision, result)
 	if resultDecision.State != ResultVerify {
-		run.Outcome = runner.policy.Finalise(resultDecision, Verification{})
+		run.Outcome = runner.policy.Finalise(observedAt, request, decision, resultDecision, Verification{})
 		return run, nil
 	}
 	if err := invokeContext.Err(); err != nil {
 		run.Outcome = terminalOutcome(OutcomeAbstained, verificationFailureReason(err), decision.Binding, nil)
 		return run, fmt.Errorf("specialist-control context ended before verification: %w", err)
 	}
-	normalizedResult := SpecialistResult{
-		Binding:      resultDecision.Binding,
-		SpecialistID: decision.SpecialistID,
-		State:        ResultCompleted,
-		Payload:      append([]byte(nil), resultDecision.Payload...),
+	normalizedCandidate := Candidate{
+		Binding:          resultDecision.Binding,
+		CandidateBinding: resultDecision.CandidateBinding,
+		SpecialistID:     decision.SpecialistID,
+		State:            ResultCompleted,
+		Payload:          append([]byte(nil), resultDecision.Payload...),
 	}
-	verification, err := runner.verifier.Verify(invokeContext, invocationFor(request, decision), normalizedResult)
+	verification, err := runner.verifier.Verify(invokeContext, invocationFor(request, decision), normalizedCandidate)
 	if err != nil {
 		run.Outcome = terminalOutcome(OutcomeAbstained, verificationFailureReason(err), decision.Binding, nil)
 		return run, fmt.Errorf("verify specialist %s output: %w", decision.SpecialistID, err)
@@ -136,7 +148,12 @@ func (runner Runner) Run(ctx context.Context, request Request) (RunResult, error
 		run.Outcome = terminalOutcome(OutcomeAbstained, verificationFailureReason(err), decision.Binding, nil)
 		return run, fmt.Errorf("verification for specialist %s exceeded its execution context: %w", decision.SpecialistID, err)
 	}
-	run.Outcome = runner.policy.Finalise(resultDecision, verification)
+	finalisedAt := runner.now()
+	if err := invokeContext.Err(); err != nil {
+		run.Outcome = terminalOutcome(OutcomeAbstained, verificationFailureReason(err), decision.Binding, nil)
+		return run, fmt.Errorf("specialist-control context ended before finalisation: %w", err)
+	}
+	run.Outcome = runner.policy.Finalise(finalisedAt, request, decision, resultDecision, verification)
 	return run, nil
 }
 
@@ -150,6 +167,15 @@ func invocationFor(request Request, decision Decision) Invocation {
 		Deadline:       decision.Deadline,
 		MaxResultBytes: decision.MaxResultBytes,
 	}
+}
+
+func snapshotResult(result SpecialistResult, maximumBytes int) SpecialistResult {
+	if len(result.Payload) > maximumBytes {
+		result.Payload = make([]byte, maximumBytes+1)
+		return result
+	}
+	result.Payload = append([]byte(nil), result.Payload...)
+	return result
 }
 
 func outcomeFromDecision(decision Decision) Outcome {

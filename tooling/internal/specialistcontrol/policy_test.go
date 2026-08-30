@@ -34,6 +34,10 @@ func TestPolicyRoutesTheAcceptedSixTaskSubsetDeterministically(t *testing.T) {
 		if first.Authority != ResultAuthority || first.SpecialistID != "exact-"+string(task) || first.Binding == (Binding{}) {
 			t.Fatalf("Decide(%s) identity = %#v, want bound NO_RESULT route", task, first)
 		}
+		later := policy.Decide(testNow.Add(time.Nanosecond), request)
+		if first.DecidedAt != testNow || later.DecidedAt == first.DecidedAt || later.Binding == first.Binding {
+			t.Fatalf("Decide(%s) decision-time binding = %s/%x then %s/%x", task, first.DecidedAt, first.Binding, later.DecidedAt, later.Binding)
+		}
 	}
 }
 
@@ -175,8 +179,9 @@ func TestPolicyInspectResultRefusesInvalidObservationTimes(t *testing.T) {
 		Payload:      []byte("answer"),
 	}
 	for name, observedAt := range map[string]time.Time{
-		"zero":            {},
-		"before issuance": request.IssuedAt.Add(-time.Nanosecond),
+		"zero":                 {},
+		"before issuance":      request.IssuedAt.Add(-time.Nanosecond),
+		"before decision time": decision.DecidedAt.Add(-time.Nanosecond),
 	} {
 		name, observedAt := name, observedAt
 		t.Run(name, func(t *testing.T) {
@@ -209,6 +214,7 @@ func TestPolicyRejectsForgedOrMutatedRecordedDecisions(t *testing.T) {
 		"request":          func(decision *Decision) { decision.RequestID = "request-002" },
 		"task":             func(decision *Decision) { decision.Task = TaskBinarySearch },
 		"specialist":       func(decision *Decision) { decision.SpecialistID = "exact-other" },
+		"decision time":    func(decision *Decision) { decision.DecidedAt = decision.DecidedAt.Add(time.Nanosecond) },
 		"deadline":         func(decision *Decision) { decision.Deadline = decision.Deadline.Add(time.Second) },
 		"max result bytes": func(decision *Decision) { decision.MaxResultBytes++ },
 		"binding":          func(decision *Decision) { decision.Binding[0]++ },
@@ -241,22 +247,48 @@ func TestPolicyFinaliseNeverPromotesConstructionOutput(t *testing.T) {
 		VerificationAbstain:  OutcomeAbstained,
 		"unknown":            OutcomeRefused,
 	} {
-		outcome := policy.Finalise(checked, Verification{Binding: decision.Binding, Verdict: verdict})
+		outcome := policy.Finalise(testNow, request, decision, checked, Verification{
+			Binding: decision.Binding, CandidateBinding: checked.CandidateBinding, Verdict: verdict,
+		})
 		if outcome.State != expected || outcome.Authority != ResultAuthority {
 			t.Fatalf("Finalise(%s) = %s/%s, want %s/%s", verdict, outcome.State, outcome.Authority, expected, ResultAuthority)
 		}
 	}
 	stale := decision.Binding
 	stale[0]++
-	outcome := policy.Finalise(checked, Verification{Binding: stale, Verdict: VerificationExact})
+	outcome := policy.Finalise(testNow, request, decision, checked, Verification{
+		Binding: stale, CandidateBinding: checked.CandidateBinding, Verdict: VerificationExact,
+	})
 	if outcome.State != OutcomeRefused || outcome.Reason != ReasonStaleResult || len(outcome.Payload) != 0 {
 		t.Fatalf("Finalise(stale) = %#v, want closed stale-verification refusal", outcome)
 	}
 	forged := checked
 	forged.Authority = "RESULT"
-	outcome = policy.Finalise(forged, Verification{Binding: decision.Binding, Verdict: VerificationExact})
+	outcome = policy.Finalise(testNow, request, decision, forged, Verification{
+		Binding: decision.Binding, CandidateBinding: checked.CandidateBinding, Verdict: VerificationExact,
+	})
 	if outcome.State != OutcomeRefused || outcome.Authority != ResultAuthority {
 		t.Fatalf("Finalise(forged authority) = %#v, want NO_RESULT refusal", outcome)
+	}
+	substituted := checked
+	substituted.Payload = append([]byte(nil), checked.Payload...)
+	substituted.Payload[0] ^= 0xff
+	outcome = policy.Finalise(testNow, request, decision, substituted, Verification{
+		Binding: decision.Binding, CandidateBinding: checked.CandidateBinding, Verdict: VerificationExact,
+	})
+	if outcome.State != OutcomeRefused || outcome.Reason != ReasonStaleResult || len(outcome.Payload) != 0 {
+		t.Fatalf("Finalise(substituted candidate) = %#v, want candidate-binding refusal", outcome)
+	}
+	wrongSpecialist := checked
+	wrongSpecialist.SpecialistID = "exact-other"
+	wrongSpecialist.CandidateBinding = bindCandidate(
+		wrongSpecialist.Binding, wrongSpecialist.SpecialistID, ResultCompleted, wrongSpecialist.Payload,
+	)
+	outcome = policy.Finalise(testNow, request, decision, wrongSpecialist, Verification{
+		Binding: decision.Binding, CandidateBinding: wrongSpecialist.CandidateBinding, Verdict: VerificationExact,
+	})
+	if outcome.State != OutcomeRefused || len(outcome.Payload) != 0 {
+		t.Fatalf("Finalise(substituted specialist) = %#v, want route-bound refusal", outcome)
 	}
 }
 

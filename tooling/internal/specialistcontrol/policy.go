@@ -66,6 +66,9 @@ type Request struct {
 // Binding is a deterministic request/route identity, not evidence authority.
 type Binding [sha256.Size]byte
 
+// CandidateBinding binds one exact candidate to its request and specialist.
+type CandidateBinding [sha256.Size]byte
+
 // DecisionState is the terminal policy state before a specialist effect.
 type DecisionState string
 
@@ -109,6 +112,7 @@ type Decision struct {
 	Task           TaskKind
 	SpecialistID   string
 	Binding        Binding
+	DecidedAt      time.Time
 	Deadline       time.Time
 	MaxResultBytes int
 }
@@ -133,11 +137,13 @@ const (
 // ResultDecision determines whether a candidate may reach the independent
 // verifier or must terminate first.
 type ResultDecision struct {
-	State     ResultDecisionState
-	Reason    Reason
-	Authority string
-	Binding   Binding
-	Payload   []byte
+	State            ResultDecisionState
+	Reason           Reason
+	Authority        string
+	Binding          Binding
+	CandidateBinding CandidateBinding
+	SpecialistID     string
+	Payload          []byte
 }
 
 // ResultDecisionState is the policy state after specialist execution.
@@ -151,8 +157,18 @@ const (
 
 // Verification is returned by a separate exact-scoring implementation.
 type Verification struct {
-	Binding Binding
-	Verdict VerificationVerdict
+	Binding          Binding
+	CandidateBinding CandidateBinding
+	Verdict          VerificationVerdict
+}
+
+// Candidate is the normalized, policy-bound value sent to the verifier.
+type Candidate struct {
+	Binding          Binding
+	CandidateBinding CandidateBinding
+	SpecialistID     string
+	State            ResultState
+	Payload          []byte
 }
 
 // VerificationVerdict is the verifier's closed response vocabulary.
@@ -233,6 +249,7 @@ func (policy Policy) Decide(now time.Time, request Request) Decision {
 		RunID:          request.RunID,
 		RequestID:      request.RequestID,
 		Task:           request.Task,
+		DecidedAt:      now,
 		Deadline:       request.Deadline,
 		MaxResultBytes: policy.limits.MaxResultBytes,
 	}
@@ -248,7 +265,7 @@ func (policy Policy) Decide(now time.Time, request Request) Decision {
 		decision.Reason = ReasonOversizedRequest
 		return decision
 	}
-	decision.Binding = bindRequest(request, specialistID)
+	decision.Binding = bindRequest(request, specialistID, now)
 	if !now.Before(request.Deadline) {
 		decision.State = DecisionAbstain
 		decision.Reason = ReasonDeadlineElapsed
@@ -272,10 +289,7 @@ func (policy Policy) Decide(now time.Time, request Request) Decision {
 // InspectResult determines whether a candidate may be independently verified.
 func (policy Policy) InspectResult(now time.Time, request Request, decision Decision, result SpecialistResult) ResultDecision {
 	checked := ResultDecision{State: ResultRefuse, Reason: ReasonMalformedResult, Authority: ResultAuthority, Binding: decision.Binding}
-	if now.IsZero() || now.Before(request.IssuedAt) {
-		return checked
-	}
-	if !policy.validDecision(request, decision) {
+	if now.IsZero() || !policy.validDecision(request, decision) || now.Before(decision.DecidedAt) {
 		return checked
 	}
 	if !now.Before(decision.Deadline) {
@@ -302,7 +316,9 @@ func (policy Policy) InspectResult(now time.Time, request Request, decision Deci
 		}
 		checked.State = ResultVerify
 		checked.Reason = ReasonReady
+		checked.SpecialistID = result.SpecialistID
 		checked.Payload = append([]byte(nil), result.Payload...)
+		checked.CandidateBinding = bindCandidate(checked.Binding, result.SpecialistID, result.State, checked.Payload)
 	case ResultRefused:
 		if len(result.Payload) != 0 {
 			return checked
@@ -319,16 +335,34 @@ func (policy Policy) InspectResult(now time.Time, request Request, decision Deci
 }
 
 // Finalise converts an independent verification into a terminal NO_RESULT outcome.
-func (policy Policy) Finalise(result ResultDecision, verification Verification) Outcome {
+func (policy Policy) Finalise(
+	now time.Time,
+	request Request,
+	decision Decision,
+	result ResultDecision,
+	verification Verification,
+) Outcome {
+	if now.IsZero() || !policy.validDecision(request, decision) || now.Before(decision.DecidedAt) {
+		return terminalOutcome(OutcomeRefused, ReasonMalformedResult, decision.Binding, nil)
+	}
+	if !now.Before(decision.Deadline) {
+		return terminalOutcome(OutcomeAbstained, ReasonDeadlineElapsed, decision.Binding, nil)
+	}
+	if result.Authority != ResultAuthority || result.Binding != decision.Binding {
+		return terminalOutcome(OutcomeRefused, ReasonStaleResult, decision.Binding, nil)
+	}
 	if result.State == ResultRefuse {
 		return terminalOutcome(OutcomeRefused, result.Reason, result.Binding, nil)
 	}
 	if result.State == ResultAbstain {
 		return terminalOutcome(OutcomeAbstained, result.Reason, result.Binding, nil)
 	}
-	if result.State != ResultVerify || result.Reason != ReasonReady || result.Authority != ResultAuthority ||
-		result.Binding == (Binding{}) || len(result.Payload) == 0 || len(result.Payload) > policy.limits.MaxResultBytes ||
-		verification.Binding != result.Binding {
+	expectedCandidate := bindCandidate(result.Binding, result.SpecialistID, ResultCompleted, result.Payload)
+	if result.State != ResultVerify || result.Reason != ReasonReady || result.Binding == (Binding{}) ||
+		len(result.Payload) == 0 || len(result.Payload) > policy.limits.MaxResultBytes ||
+		result.SpecialistID != decision.SpecialistID || result.CandidateBinding != expectedCandidate ||
+		verification.Binding != result.Binding ||
+		verification.CandidateBinding != expectedCandidate {
 		return terminalOutcome(OutcomeRefused, ReasonStaleResult, result.Binding, nil)
 	}
 	switch verification.Verdict {
@@ -357,9 +391,13 @@ func (policy Policy) validDecision(request Request, decision Decision) bool {
 	return knownTask && decision.State == DecisionInvoke && decision.Reason == ReasonReady &&
 		decision.Authority == ResultAuthority && decision.RunID == request.RunID &&
 		decision.RequestID == request.RequestID && decision.Task == request.Task &&
-		decision.SpecialistID == expectedSpecialist && decision.Deadline.Equal(request.Deadline) &&
+		decision.SpecialistID == expectedSpecialist && !decision.DecidedAt.IsZero() &&
+		!decision.DecidedAt.Before(request.IssuedAt) && decision.DecidedAt.Before(request.Deadline) &&
+		decision.DecidedAt.Sub(request.IssuedAt) <= policy.limits.MaxRequestAge &&
+		request.Deadline.Sub(decision.DecidedAt) <= policy.limits.MaxExecution &&
+		decision.Deadline.Equal(request.Deadline) &&
 		decision.MaxResultBytes == policy.limits.MaxResultBytes &&
-		decision.Binding == bindRequest(request, expectedSpecialist)
+		decision.Binding == bindRequest(request, expectedSpecialist, decision.DecidedAt)
 }
 
 func validRequestMetadata(now time.Time, request Request) bool {
@@ -382,19 +420,35 @@ func validIdentity(value string) bool {
 	return true
 }
 
-func bindRequest(request Request, specialistID string) Binding {
+func bindRequest(request Request, specialistID string, decidedAt time.Time) Binding {
 	hash := sha256.New()
 	for _, value := range []string{request.RunID, request.RequestID, string(request.Task), specialistID} {
 		_ = binary.Write(hash, binary.BigEndian, uint64(len(value)))
 		_, _ = hash.Write([]byte(value))
 	}
-	for _, value := range []int64{request.IssuedAt.UnixNano(), request.Deadline.UnixNano(), int64(len(request.Payload))} {
+	for _, value := range []int64{
+		request.IssuedAt.UnixNano(), decidedAt.UnixNano(), request.Deadline.UnixNano(), int64(len(request.Payload)),
+	} {
 		_ = binary.Write(hash, binary.BigEndian, value)
 	}
 	_, _ = hash.Write(request.Payload)
 	var binding Binding
 	copy(binding[:], hash.Sum(nil))
 	return binding
+}
+
+func bindCandidate(binding Binding, specialistID string, state ResultState, payload []byte) CandidateBinding {
+	hash := sha256.New()
+	_, _ = hash.Write(binding[:])
+	for _, value := range []string{specialistID, string(state)} {
+		_ = binary.Write(hash, binary.BigEndian, uint64(len(value)))
+		_, _ = hash.Write([]byte(value))
+	}
+	_ = binary.Write(hash, binary.BigEndian, uint64(len(payload)))
+	_, _ = hash.Write(payload)
+	var candidateBinding CandidateBinding
+	copy(candidateBinding[:], hash.Sum(nil))
+	return candidateBinding
 }
 
 func terminalOutcome(state OutcomeState, reason Reason, binding Binding, payload []byte) Outcome {

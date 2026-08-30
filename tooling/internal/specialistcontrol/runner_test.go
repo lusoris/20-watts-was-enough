@@ -20,10 +20,10 @@ func (function specialistFunc) Invoke(ctx context.Context, invocation Invocation
 	return function(ctx, invocation)
 }
 
-type verifierFunc func(context.Context, Invocation, SpecialistResult) (Verification, error)
+type verifierFunc func(context.Context, Invocation, Candidate) (Verification, error)
 
-func (function verifierFunc) Verify(ctx context.Context, invocation Invocation, result SpecialistResult) (Verification, error) {
-	return function(ctx, invocation, result)
+func (function verifierFunc) Verify(ctx context.Context, invocation Invocation, candidate Candidate) (Verification, error) {
+	return function(ctx, invocation, candidate)
 }
 
 func TestRunnerRecordsDecisionBeforeSpecialistAndVerifierEffects(t *testing.T) {
@@ -54,13 +54,13 @@ func TestRunnerRecordsDecisionBeforeSpecialistAndVerifierEffects(t *testing.T) {
 			Payload:      specialistPayload,
 		}, nil
 	})
-	verifier := verifierFunc(func(_ context.Context, invocation Invocation, result SpecialistResult) (Verification, error) {
+	verifier := verifierFunc(func(_ context.Context, invocation Invocation, result Candidate) (Verification, error) {
 		if !slices.Equal(events, []string{"record:" + targetID, "invoke:" + targetID}) {
 			t.Fatalf("events before Verify() = %v, want record then invoke", events)
 		}
 		events = append(events, "verify:"+targetID)
 		result.Payload[0] = 'X'
-		return Verification{Binding: result.Binding, Verdict: VerificationExact}, nil
+		return Verification{Binding: result.Binding, CandidateBinding: result.CandidateBinding, Verdict: VerificationExact}, nil
 	})
 	runner := testRunner(t, policy, recorder, specialists, verifier)
 	originalPayload := append([]byte(nil), request.Payload...)
@@ -91,7 +91,7 @@ func TestRunnerSnapshotsRequestBeforeClockOrCallerAliasMutation(t *testing.T) {
 	boundRequest := request
 	boundRequest.Payload = append([]byte(nil), expectedPayload...)
 	targetID := "exact-" + string(request.Task)
-	expectedBinding := bindRequest(boundRequest, targetID)
+	expectedBinding := bindRequest(boundRequest, targetID, testNow)
 	clockCalls := 0
 	now := func() time.Time {
 		clockCalls++
@@ -108,11 +108,11 @@ func TestRunnerSnapshotsRequestBeforeClockOrCallerAliasMutation(t *testing.T) {
 		invocation.Payload[0] = 'Y'
 		return SpecialistResult{Binding: invocation.Binding, SpecialistID: targetID, State: ResultCompleted, Payload: []byte("answer")}, nil
 	})
-	verifier := verifierFunc(func(_ context.Context, invocation Invocation, result SpecialistResult) (Verification, error) {
+	verifier := verifierFunc(func(_ context.Context, invocation Invocation, result Candidate) (Verification, error) {
 		if !slices.Equal(invocation.Payload, expectedPayload) {
 			t.Fatalf("verifier invocation payload = %q, want fresh canonical %q", invocation.Payload, expectedPayload)
 		}
-		return Verification{Binding: result.Binding, Verdict: VerificationExact}, nil
+		return Verification{Binding: result.Binding, CandidateBinding: result.CandidateBinding, Verdict: VerificationExact}, nil
 	})
 	runner, err := NewRunner(
 		policy,
@@ -151,7 +151,7 @@ func TestRunnerRecorderFailurePreventsSpecialistEffects(t *testing.T) {
 		policy,
 		recorderFunc(func(context.Context, Decision) error { return errors.New("closed recorder") }),
 		specialists,
-		verifierFunc(func(context.Context, Invocation, SpecialistResult) (Verification, error) {
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
 			t.Fatal("verifier ran after recorder failure")
 			return Verification{}, nil
 		}),
@@ -190,7 +190,7 @@ func TestRunnerSkipsVerifierForUnsafeOrAbstainedResults(t *testing.T) {
 				policy,
 				recorderFunc(func(context.Context, Decision) error { return nil }),
 				specialists,
-				verifierFunc(func(context.Context, Invocation, SpecialistResult) (Verification, error) {
+				verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
 					verifierCalled = true
 					return Verification{}, nil
 				}),
@@ -201,6 +201,54 @@ func TestRunnerSkipsVerifierForUnsafeOrAbstainedResults(t *testing.T) {
 				t.Fatalf("Run() error/verifier/outcome = %v/%t/%#v", err, verifierCalled, run.Outcome)
 			}
 		})
+	}
+}
+
+func TestRunnerSnapshotsSpecialistResultBeforeClockCallback(t *testing.T) {
+	t.Parallel()
+	policy := testPolicy(t)
+	request := testRequest(TaskBellmanFord)
+	targetID := "exact-" + string(request.Task)
+	retainedPayload := []byte("answer")
+	clockCalls := 0
+	now := func() time.Time {
+		clockCalls++
+		if clockCalls == 3 {
+			retainedPayload[0] = 'X'
+		}
+		return testNow
+	}
+	specialists := testSpecialists(policy)
+	specialists[targetID] = specialistFunc(func(_ context.Context, invocation Invocation) (SpecialistResult, error) {
+		return SpecialistResult{
+			Binding: invocation.Binding, SpecialistID: targetID, State: ResultCompleted, Payload: retainedPayload,
+		}, nil
+	})
+	verifier := verifierFunc(func(_ context.Context, _ Invocation, candidate Candidate) (Verification, error) {
+		if string(candidate.Payload) != "answer" || candidate.CandidateBinding != bindCandidate(
+			candidate.Binding, targetID, ResultCompleted, []byte("answer"),
+		) {
+			t.Fatalf("candidate after retained-slice mutation = %#v", candidate)
+		}
+		return Verification{
+			Binding: candidate.Binding, CandidateBinding: candidate.CandidateBinding, Verdict: VerificationExact,
+		}, nil
+	})
+	runner, err := NewRunner(
+		policy,
+		recorderFunc(func(context.Context, Decision) error { return nil }),
+		specialists,
+		verifier,
+		now,
+	)
+	if err != nil {
+		t.Fatalf("NewRunner() error = %v", err)
+	}
+
+	run, runErr := runner.Run(context.Background(), request)
+	if runErr != nil || string(retainedPayload) != "Xnswer" || string(run.Outcome.Payload) != "answer" ||
+		run.Outcome.State != OutcomeVerified {
+		t.Fatalf("Run() error/retained/outcome = %v/%q/%#v", runErr, retainedPayload, run.Outcome)
 	}
 }
 
@@ -232,11 +280,11 @@ func TestRunnerTypesSpecialistAndVerifierFailuresAsAbstentions(t *testing.T) {
 				policy,
 				recorderFunc(func(context.Context, Decision) error { return nil }),
 				specialists,
-				verifierFunc(func(_ context.Context, _ Invocation, result SpecialistResult) (Verification, error) {
+				verifierFunc(func(_ context.Context, _ Invocation, result Candidate) (Verification, error) {
 					if test.verifier != nil {
 						return Verification{}, test.verifier
 					}
-					return Verification{Binding: result.Binding, Verdict: VerificationExact}, nil
+					return Verification{Binding: result.Binding, CandidateBinding: result.CandidateBinding, Verdict: VerificationExact}, nil
 				}),
 			)
 
@@ -267,7 +315,7 @@ func TestRunnerEnforcesLiveExecutionDeadline(t *testing.T) {
 		policy,
 		recorderFunc(func(context.Context, Decision) error { return nil }),
 		specialists,
-		verifierFunc(func(context.Context, Invocation, SpecialistResult) (Verification, error) {
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
 			t.Fatal("verifier ran after execution deadline")
 			return Verification{}, nil
 		}),
@@ -304,7 +352,7 @@ func TestRunnerDistinguishesParentCancellation(t *testing.T) {
 			return nil
 		}),
 		specialists,
-		verifierFunc(func(context.Context, Invocation, SpecialistResult) (Verification, error) {
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
 			t.Fatal("verifier ran after parent cancellation")
 			return Verification{}, nil
 		}),
@@ -316,6 +364,86 @@ func TestRunnerDistinguishesParentCancellation(t *testing.T) {
 	if !errors.Is(err, context.Canceled) || !recorded || invoked ||
 		run.Outcome.State != OutcomeAbstained || run.Outcome.Reason != ReasonCancelled {
 		t.Fatalf("Run() error/recorded/invoked/outcome = %v/%t/%t/%#v, want recorded cancellation without invocation", err, recorded, invoked, run.Outcome)
+	}
+}
+
+func TestRunnerRechecksDerivedContextAfterSecondClock(t *testing.T) {
+	t.Parallel()
+	policy := testPolicy(t)
+	request := testRequest(TaskBinarySearch)
+	targetID := "exact-" + string(request.Task)
+	invoked := false
+	specialists := testSpecialists(policy)
+	specialists[targetID] = specialistFunc(func(context.Context, Invocation) (SpecialistResult, error) {
+		invoked = true
+		return SpecialistResult{}, nil
+	})
+	ctx, cancel := context.WithCancel(context.Background())
+	clockCalls := 0
+	now := func() time.Time {
+		clockCalls++
+		if clockCalls == 2 {
+			cancel()
+		}
+		return testNow
+	}
+	runner, err := NewRunner(
+		policy,
+		recorderFunc(func(context.Context, Decision) error { return nil }),
+		specialists,
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
+			t.Fatal("verifier ran after second-clock cancellation")
+			return Verification{}, nil
+		}),
+		now,
+	)
+	if err != nil {
+		t.Fatalf("NewRunner() error = %v", err)
+	}
+
+	run, runErr := runner.Run(ctx, request)
+	if !errors.Is(runErr, context.Canceled) || invoked ||
+		run.Outcome.State != OutcomeAbstained || run.Outcome.Reason != ReasonCancelled {
+		t.Fatalf("Run() error/invoked/outcome = %v/%t/%#v, want pre-invocation cancellation", runErr, invoked, run.Outcome)
+	}
+}
+
+func TestRunnerRefusesSecondClockRollback(t *testing.T) {
+	t.Parallel()
+	policy := testPolicy(t)
+	request := testRequest(TaskBinarySearch)
+	invoked := false
+	specialists := testSpecialists(policy)
+	targetID := "exact-" + string(request.Task)
+	specialists[targetID] = specialistFunc(func(context.Context, Invocation) (SpecialistResult, error) {
+		invoked = true
+		return SpecialistResult{}, nil
+	})
+	clockCalls := 0
+	now := func() time.Time {
+		clockCalls++
+		if clockCalls == 2 {
+			return testNow.Add(-time.Nanosecond)
+		}
+		return testNow
+	}
+	runner, err := NewRunner(
+		policy,
+		recorderFunc(func(context.Context, Decision) error { return nil }),
+		specialists,
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
+			t.Fatal("verifier ran after clock rollback")
+			return Verification{}, nil
+		}),
+		now,
+	)
+	if err != nil {
+		t.Fatalf("NewRunner() error = %v", err)
+	}
+
+	run, runErr := runner.Run(context.Background(), request)
+	if runErr != nil || invoked || run.Outcome.State != OutcomeRefused || run.Outcome.Reason != ReasonMalformedRequest {
+		t.Fatalf("Run() error/invoked/outcome = %v/%t/%#v, want clock-rollback refusal", runErr, invoked, run.Outcome)
 	}
 }
 
@@ -344,7 +472,7 @@ func TestRunnerRechecksContextBeforeVerifierEffect(t *testing.T) {
 		policy,
 		recorderFunc(func(context.Context, Decision) error { return nil }),
 		specialists,
-		verifierFunc(func(context.Context, Invocation, SpecialistResult) (Verification, error) {
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
 			verifierCalled = true
 			return Verification{}, nil
 		}),
@@ -358,6 +486,49 @@ func TestRunnerRechecksContextBeforeVerifierEffect(t *testing.T) {
 	if !errors.Is(runErr, context.Canceled) || !specialistCalled || verifierCalled ||
 		run.Outcome.State != OutcomeAbstained || run.Outcome.Reason != ReasonCancelled {
 		t.Fatalf("Run() error/specialist/verifier/outcome = %v/%t/%t/%#v", runErr, specialistCalled, verifierCalled, run.Outcome)
+	}
+}
+
+func TestRunnerRejectsExactVerificationAfterPolicyDeadline(t *testing.T) {
+	t.Parallel()
+	policy := testPolicy(t)
+	request := testRequest(TaskKMPMatcher)
+	targetID := "exact-" + string(request.Task)
+	specialists := testSpecialists(policy)
+	specialists[targetID] = specialistFunc(func(_ context.Context, invocation Invocation) (SpecialistResult, error) {
+		return SpecialistResult{
+			Binding: invocation.Binding, SpecialistID: targetID, State: ResultCompleted, Payload: []byte("answer"),
+		}, nil
+	})
+	clockCalls := 0
+	now := func() time.Time {
+		clockCalls++
+		if clockCalls == 4 {
+			return request.Deadline
+		}
+		return testNow
+	}
+	verifierCalled := false
+	runner, err := NewRunner(
+		policy,
+		recorderFunc(func(context.Context, Decision) error { return nil }),
+		specialists,
+		verifierFunc(func(_ context.Context, _ Invocation, candidate Candidate) (Verification, error) {
+			verifierCalled = true
+			return Verification{
+				Binding: candidate.Binding, CandidateBinding: candidate.CandidateBinding, Verdict: VerificationExact,
+			}, nil
+		}),
+		now,
+	)
+	if err != nil {
+		t.Fatalf("NewRunner() error = %v", err)
+	}
+
+	run, runErr := runner.Run(context.Background(), request)
+	if runErr != nil || !verifierCalled || run.Outcome.State != OutcomeAbstained ||
+		run.Outcome.Reason != ReasonDeadlineElapsed || len(run.Outcome.Payload) != 0 {
+		t.Fatalf("Run() error/verifier/outcome = %v/%t/%#v, want terminal deadline abstention", runErr, verifierCalled, run.Outcome)
 	}
 }
 
@@ -381,7 +552,7 @@ func TestRunnerRecordsTerminalPolicyDecisionWithoutInvoking(t *testing.T) {
 			return nil
 		}),
 		specialists,
-		verifierFunc(func(context.Context, Invocation, SpecialistResult) (Verification, error) {
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
 			t.Fatal("verifier ran for refused request")
 			return Verification{}, nil
 		}),
