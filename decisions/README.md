@@ -48,5 +48,6 @@ than silently changing its outcome.
 | [0040](0040-bind-publications-to-reproducible-and-public-artifacts.md) | Bind publications to reproducible and public artifacts | accepted |
 | [0041](0041-attest-only-current-run-build-outputs.md) | Attest only current-run build outputs | accepted |
 | [0042](0042-retire-the-host-specific-fixture-012-acquisition-lane.md) | Retire the host-specific Fixture 012 acquisition lane | accepted |
-| [0043](0043-impact-scope-pull-request-ci.md) | Impact-scope pull-request CI | accepted |
+| [0043](0043-impact-scope-pull-request-ci.md) | Impact-scope pull-request CI | accepted; workstation matrix and full-plan execution shape partly superseded by [0044](0044-shard-workstation-ci-without-splitting-test-authority.md) |
+| [0044](0044-shard-workstation-ci-without-splitting-test-authority.md) | Shard workstation CI without splitting test authority | accepted |
 | [0046](0046-project-the-research-roadmap-into-github-milestones.md) | Project the research roadmap into GitHub milestones | accepted |

@@ -128,8 +128,8 @@ jobs:
           else
             echo "No prior code-shape baseline exists at $BASE_SHA; the tracked baseline remains authoritative."
           fi
-      - name: Run the authoritative repository check
-        run: npm run check
+      - name: Run the full quality check without workstation tests
+        run: npm run check:full-without-workstation
       - name: Fuzz the untrusted JSON boundary
         run: go -C tooling test ./internal/strictjson -run '^$' -fuzz '^FuzzValidate$' -fuzztime=30s -fuzzminimizetime=5s -parallel=2 -timeout=2m
 
@@ -276,7 +276,7 @@ jobs:
   workstation-core:
     name: Workstation core
     needs: impact-plan
-    if: needs.impact-plan.outputs.mode == 'impact' && needs.impact-plan.outputs.workstation_any == 'true'
+    if: needs.impact-plan.outputs.workstation_any == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -301,16 +301,16 @@ jobs:
         run: npm run validate:workstation && npm run test:workstation:core
 
   workstation-artifacts:
-    name: Workstation artifact (${{ matrix.artifact }})
+    name: Workstation test (${{ matrix.artifact }})
     needs: impact-plan
-    if: needs.impact-plan.outputs.mode == 'impact' && needs.impact-plan.outputs.workstation_any == 'true'
+    if: needs.impact-plan.outputs.workstation_any == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 8
       matrix:
         artifact: ${{ fromJSON(needs.impact-plan.outputs.workstation_matrix) }}
     steps:
@@ -352,9 +352,15 @@ jobs:
             fixture-023) npm run test:workstation:fixture-023 ;;
             fixture-024) npm run test:workstation:fixture-024 ;;
             fixture-025) npm run test:workstation:fixture-025 ;;
-            fixture-026) npm run test:workstation:fixture-026 ;;
+            fixture-026-shard-1) npm run test:workstation:fixture-026:shard-1 ;;
+            fixture-026-shard-2) npm run test:workstation:fixture-026:shard-2 ;;
+            fixture-026-shard-3) npm run test:workstation:fixture-026:shard-3 ;;
+            fixture-026-shard-4) npm run test:workstation:fixture-026:shard-4 ;;
+            fixture-026-shard-5) npm run test:workstation:fixture-026:shard-5 ;;
+            fixture-026-shard-6) npm run test:workstation:fixture-026:shard-6 ;;
             fixture-027) npm run test:workstation:fixture-027 ;;
-            fixture-029) npm run test:workstation:fixture-029 ;;
+            fixture-029-shard-1) npm run test:workstation:fixture-029:shard-1 ;;
+            fixture-029-shard-2) npm run test:workstation:fixture-029:shard-2 ;;
             *) echo "::error::unallowlisted workstation artifact: $ARTIFACT"; exit 1 ;;
           esac
 
@@ -586,20 +592,24 @@ jobs:
           case "$MODE" in
             full)
               for selector in "$SELECT_CONTAINER" "$SELECT_GO" "$SELECT_RELEASE" \
-                "$SELECT_RESEARCH" "$SELECT_SITE" "$SELECT_WORKSTATION"; do
+                "$SELECT_RESEARCH" "$SELECT_SITE"; do
                 if [[ "$selector" != "false" ]]; then
                   echo "::error::full plan exposed a non-false semantic selector: $selector"
                   exit 1
                 fi
               done
+              if [[ "$SELECT_WORKSTATION" != "true" ]]; then
+                echo "::error::full plan did not expose its closed workstation matrix"
+                exit 1
+              fi
               require_state quality-full "$RESULT_QUALITY_FULL" success
               require_state impact-common "$RESULT_IMPACT_COMMON" skipped
               require_state lane-go "$RESULT_GO" skipped
               require_state lane-release "$RESULT_RELEASE" skipped
               require_state lane-research "$RESULT_RESEARCH" skipped
               require_state lane-site "$RESULT_SITE" skipped
-              require_state workstation-core "$RESULT_WORKSTATION_CORE" skipped
-              require_state workstation-artifacts "$RESULT_WORKSTATION_ARTIFACTS" skipped
+              require_state workstation-core "$RESULT_WORKSTATION_CORE" success
+              require_state workstation-artifacts "$RESULT_WORKSTATION_ARTIFACTS" success
               require_state container-smoke "$RESULT_CONTAINER" success
               ;;
             impact)

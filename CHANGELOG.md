@@ -42,6 +42,12 @@ the exact diff; this file records why the project changed.
   status, roadmap stages, live milestone work, authority boundaries and focused
   entry checks before implementation detail. The portal overview leads with the
   research question a new reader must be able to recover.
+- Full CI now runs non-workstation quality checks beside a fail-closed
+  workstation matrix. Fixture 026 is partitioned into six exact file-level
+  jobs and Fixture 029 into two, capped at eight concurrent jobs; local
+  `npm run check` still runs the complete serial inventory. Five to seven
+  minutes is the initial matrix planning expectation, not a measured result;
+  complete GitHub runs must establish the observed wall time.
 - The contribution map and issue picker now lead readers to bounded open work
   before they open a parallel issue.
 - The typed-specialist audit now separates two related engineering donors:
