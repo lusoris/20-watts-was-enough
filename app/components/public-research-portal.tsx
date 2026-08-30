@@ -805,9 +805,10 @@ export function PublicResearchPortal({
               <p className="portal-eyebrow">Open research programme · living source</p>
               <h1 id="portal-title">20 Watts Was Enough</h1>
               <p className="portal-dashboard-thesis">
-                A cross-disciplinary blueprint for sparse, grounded, continual
-                and energy-accountable AI. Recurring mechanisms become explicit
-                principles, scoped claims and test contracts.
+                Can an artificial system learn and adapt while activating less
+                computation and moving less data? This programme turns
+                mechanisms from living and engineered systems into scoped
+                claims, explicit principles and equal-budget tests.
               </p>
               <dl className="portal-hero-meta" aria-label="Publication identity">
                 <div><dt>Authority</dt><dd>Git <code>main</code></dd></div>

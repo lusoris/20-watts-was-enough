@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "milestones": [
+    {
+      "id": "M0",
+      "title": "M0 — Evidence, synthesis, and contracts",
+      "state": "open",
+      "roadmap": "concept/90-research-roadmap.md#stage-0--evidence-synthesis-and-contracts",
+      "summary": "Make claims, principles, architecture, publication, tooling, and experiment contracts inspectable before treating any development run as evidence."
+    },
+    {
+      "id": "M1",
+      "title": "M1 — Isolated mechanism experiments",
+      "state": "open",
+      "roadmap": "concept/90-research-roadmap.md#stage-1--isolated-mechanism-experiments",
+      "summary": "Test one proposed operation at a time against its strongest ordinary null under matched interfaces, budgets, hardware, and decision rules."
+    },
+    {
+      "id": "M2",
+      "title": "M2 — Runtime plus adaptation",
+      "state": "open",
+      "roadmap": "concept/90-research-roadmap.md#stage-2--runtime-plus-adaptation",
+      "summary": "Combine sparse event control with attributable adaptation while pricing storage, replay, rollback, maintenance, and lifecycle energy."
+    },
+    {
+      "id": "M3",
+      "title": "M3 — Grounded developmental curriculum",
+      "state": "open",
+      "roadmap": "concept/90-research-roadmap.md#stage-3--grounded-developmental-curriculum",
+      "summary": "Test aligned perception, action, outcome, and language against passive, text-centric, leakage, memorisation, and simulator-shortcut controls."
+    },
+    {
+      "id": "M4",
+      "title": "M4 — Structural maturation",
+      "state": "open",
+      "roadmap": "concept/90-research-roadmap.md#stage-4--structural-maturation",
+      "summary": "Retain compilation, pruning, placement, quantisation, externalisation, or protection only when measured savings survive migration and recovery cost."
+    },
+    {
+      "id": "M5",
+      "title": "M5 — Substrate co-design",
+      "state": "open",
+      "roadmap": "concept/90-research-roadmap.md#stage-5--substrate-co-design",
+      "summary": "Compare accepted mechanisms across conventional and specialised substrates and require a reproducible end-to-end lifecycle advantage."
+    }
+  ]
+}

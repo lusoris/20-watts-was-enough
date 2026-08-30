@@ -6,9 +6,9 @@
 [![Latest release](https://img.shields.io/github/v/release/lusoris/20-watts-was-enough?sort=semver)](https://github.com/lusoris/20-watts-was-enough/releases/latest)
 [![Code: EUPL 1.2](https://img.shields.io/badge/code-EUPL--1.2-315c9b.svg)](LICENSING.md)
 [![Original content: CC BY-SA 4.0](https://img.shields.io/badge/original%20content-CC%20BY--SA%204.0-b85c00.svg)](LICENSING.md)
-[![Ko-fi](https://img.shields.io/badge/ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/lusoris)
-
-![Abstract botanical and computational network](public/og-v2.jpg)
+<p align="center">
+  <img src="public/og-v2.jpg" width="840" alt="Abstract botanical and computational network">
+</p>
 
 > A biologically inspired R&D blueprint for sparse, grounded, continual,
 > energy-efficient AI.
@@ -21,21 +21,28 @@ biological intelligence can be translated into measurable requirements for
 artificial systems? The [energy evaluation chapter](concept/80-energy-model.md)
 defines the boundary required for a comparison.
 
-This repository develops that question as a traceable research programme. It
-connects primary evidence, cross-domain principles, mathematical models,
-architecture proposals, falsifiable experiments, and explicit failure rules.
+This repository turns that question into a traceable research programme:
+primary evidence becomes scoped claims, cross-domain mechanisms are
+deduplicated, and retained ideas face explicit null models and failure rules.
+
+**Current status:** the evidence framework, architecture and bounded experiment
+machinery exist. An integrated AI system and claim-eligible workstation result
+do not. Development smoke checks remain `NO_RESULT`. The generated
+[coverage report](experiments/test-coverage.md) and
+[readiness summary](experiments/test-readiness-summary.json) record the exact
+current boundary.
 
 ## Read the project
 
 | Goal | Start here |
 | --- | --- |
-| Understand the argument | [Working architecture](concept/01-working-architecture.md) |
+| Understand the question and proposed system | [Working architecture](concept/01-working-architecture.md) |
 | Browse the research online | [Research portal](https://www.cordana.dev/) |
 | Read continuously | [Full HTML book](https://www.cordana.dev/book/) |
 | Read offline or print | [Download the A4 PDF](https://www.cordana.dev/downloads/20-watts-was-enough-full-concept-book.pdf) |
 | Inspect evidence | [Claim ledger](research/claims.md) and [bibliography](research/references.bib) |
-| Inspect proposed tests | [Experiment coverage](experiments/test-coverage.md) |
-| Run development smoke harnesses | [Source now; admitted images from a passing v0.3.0 or later release](experiments/workstation/README.md#run-a-released-experiment-image) |
+| Inspect the plan and proposed tests | [Research roadmap](concept/90-research-roadmap.md) and [experiment coverage](experiments/test-coverage.md) |
+| Run a released experiment image | [Container execution contract](experiments/workstation/README.md#run-a-released-experiment-image) |
 | Help with a bounded task | [Public contribution map](https://www.cordana.dev/help/) |
 | Find a specific area | [Repository map](docs/repository-map.md) |
 
@@ -45,7 +52,7 @@ remains canonical. Where a reviewed translation does not yet exist, the
 language control opens a focused contribution issue instead of unlabelled
 machine output. See the [translation contract](translations/README.md).
 
-## Central thesis
+## What the project tests
 
 Useful adaptive intelligence may require much less active computation and data
 movement than current systems routinely spend. The project investigates
@@ -67,14 +74,27 @@ mathematics, social systems, and other fields are normalized by their causal
 operation, deduplicated into shared principle bundles, and tested against strong
 ordinary engineering alternatives.
 
-## Current state
+## Plan and progress
 
-This is an evolving concept and evidence framework, not a finished model. The
-repository contains protocol-complete experiment descriptions and bounded
-development smoke harnesses, but no integrated AI system and no claim-eligible
-workstation result. The generated [coverage report](experiments/test-coverage.md)
-and [machine-readable readiness summary](experiments/test-readiness-summary.json)
-are the authoritative current status.
+The [research roadmap](concept/90-research-roadmap.md) is the canonical
+dependency order. Its stages run from evidence and experiment contracts through
+isolated mechanisms, adaptation, grounding, structural maturation and substrate
+co-design. They are gates, not promised dates.
+
+[GitHub milestones](https://github.com/lusoris/20-watts-was-enough/milestones)
+project those stages into issues and pull requests. They answer *what work is
+open and who is doing it*; they do not decide whether a scientific claim is
+established. The authorities remain separate:
+
+| Question | Authority |
+| --- | --- |
+| What should happen next? | [Research roadmap](concept/90-research-roadmap.md) |
+| Which bounded tasks are open or finished? | [GitHub milestones](https://github.com/lusoris/20-watts-was-enough/milestones) generated from [the milestone manifest](.github/milestones.json) |
+| What does the evidence support? | [Claim ledger](research/claims.md) |
+| Which experiment paths are actually ready? | [Coverage report](experiments/test-coverage.md) and [readiness summary](experiments/test-readiness-summary.json) |
+
+Closing an issue updates operational progress. Only a reviewed evidence change
+updates a claim, and only a qualifying run updates result status.
 
 The default normative context is the European Union and Germany. Legal,
 standards, and conformity statements remain qualified by jurisdiction, role,
@@ -135,22 +155,14 @@ npm run dev:github-pages
 The preview runs at `http://localhost:5173/` and reloads canonical Markdown,
 equations, tables, diagrams, and plots as their source files change.
 
-A v0.3.0 or later release whose source contains and passes the release workflow
-publishes repository validation as a static `20w` image for Linux `amd64`;
-earlier releases do not contain this image. Linux `arm64` remains withheld
-until the release path executes and verifies that target. Each candidate is
-pushed first under its canonical
-digest without a release tag. The workflow inspects and executes that exact
-digest. A digest built in that run receives source-bound provenance from its
-own build output; an existing digest must already carry provenance bound to the
-same workflow, tag and commit. Missing provenance stops the rerun. Only after
-verification does the workflow attach the release tag and check the final
-binding. Tag creation is serialized and absence-checked, but GHCR
-package writers remain trusted because this registry path has no documented
-atomic create-if-absent operation. For an admitted release, download the
-checksum-bound and attested `oci-images.json` release asset, copy the complete
-`image@sha256:...` identity from it, and run that digest, not a tag. Release
-notes may mirror the identity for convenience but are not its authority:
+Qualifying releases publish repository tooling and individual experiments as
+small container images. Use the complete `image@sha256:...` identity from the
+release's checksum-bound `oci-images.json`, not a mutable tag. The
+[release contract](docs/publication-workflow.md) explains admission,
+provenance and supported platforms; the
+[experiment instructions](experiments/workstation/README.md#run-a-released-experiment-image)
+provide the exact isolated commands. For example, the static validation image
+runs without network access:
 
 ```bash
 image='ghcr.io/lusoris/20-watts-was-enough-20w@sha256:...'
@@ -162,10 +174,8 @@ docker run --rm --network none \
   validate docs --root /repo
 ```
 
-The attached native convenience scope is narrower: release verification
-currently executes and admits only `20w-linux-amd64`. Copy that file and its
-checksum from the same release page; macOS, Windows and native `arm64` files
-remain withheld until their release paths are exercised.
+Releases may also attach a verified native Go binary as a convenience. The
+containers are the portable public default and remain scoped per experiment.
 
 Before committing locally:
 
@@ -181,10 +191,8 @@ npm run validate:book-pdf
 ```
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the complete workflow and
-[`SUPPORT.md`](SUPPORT.md) for issue routing. GitHub may report a small amount
-of platform-specific code from locked third-party dependencies, but the
-repository no longer maintains a PowerShell, C#, or host-specific execution
-lane.
+[`SUPPORT.md`](SUPPORT.md) for issue routing. The repository does not maintain
+a PowerShell, C# or host-specific execution lane.
 
 ## Citation, support, and licence
 

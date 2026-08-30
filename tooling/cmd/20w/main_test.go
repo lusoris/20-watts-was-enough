@@ -179,6 +179,36 @@ func TestRunGitHubSyncLabelsCheckUsesLocalManifestOnly(t *testing.T) {
 	}
 }
 
+func TestRunGitHubSyncMetadataChecksBothLocalAuthorities(t *testing.T) {
+	t.Parallel()
+	root := t.TempDir()
+	if err := os.MkdirAll(filepath.Join(root, ".github"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	labels := `{"schema":1,"labels":[{"name":"area:test","color":"0e8a16","description":"Test label"}]}`
+	milestones := `{
+  "schema": 1,
+  "milestones": [{
+    "id": "M0",
+    "title": "M0 — Evidence contracts",
+    "state": "open",
+    "roadmap": "concept/90-research-roadmap.md#stage-0--evidence-synthesis-and-contracts",
+    "summary": "Make one evidence boundary inspectable before execution begins."
+  }]
+}`
+	for name, body := range map[string]string{"labels.json": labels, "milestones.json": milestones} {
+		if err := os.WriteFile(filepath.Join(root, ".github", name), []byte(body), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	exitCode := run([]string{"github", "sync-metadata", "--root", root, "--check"}, &stdout, &stderr)
+	if exitCode != 0 || !strings.Contains(stdout.String(), "1 managed labels and 1 managed milestones") {
+		t.Fatalf("run() exit/stdout/stderr = %d/%q/%q", exitCode, stdout.String(), stderr.String())
+	}
+}
+
 func TestRunReleaseInspectImageRejectsAmbiguousMachineOutput(t *testing.T) {
 	t.Parallel()
 	var stdout bytes.Buffer

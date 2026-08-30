@@ -7,6 +7,16 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- The six research-roadmap stages now project into declarative GitHub
+  milestones through one bounded standard-library Go command and a
+  least-privilege trusted-main workflow. GitHub counts coordination records;
+  the roadmap, claim ledger and qualifying result path retain their separate
+  scientific authority.
+- A project-local research-design skill and design-system contract now ground
+  layout, typography, colour, diagrams and visual identity in reader tasks,
+  semantic ownership, accessibility and retained rendered evidence. An audited
+  prior-art record preserves the useful external skill patterns without runtime
+  instruction fetching, taste scores or automatic humanising.
 - The Go command now exports deterministic, source-bound translation candidate
   bundles and imports returned drafts into candidate-only working artifacts.
   The provider-neutral exchange preserves glossary choices, drafting-tool
@@ -28,6 +38,10 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- The README, contribution guide and public help route now expose current
+  status, roadmap stages, live milestone work, authority boundaries and focused
+  entry checks before implementation detail. The portal overview leads with the
+  research question a new reader must be able to recover.
 - The contribution map and issue picker now lead readers to bounded open work
   before they open a parallel issue.
 - The typed-specialist audit now separates two related engineering donors:

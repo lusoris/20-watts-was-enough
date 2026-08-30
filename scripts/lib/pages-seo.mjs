@@ -283,7 +283,7 @@ export function renderPortalFallback(documents, basePath) {
       .join("");
     return `<section><h2>${group}</h2><ol>${links}</ol></section>`;
   }).join("");
-  return `<main class="seo-static-page"><p class="portal-eyebrow">Open research programme</p><h1>20 Watts Was Enough</h1><p>Evidence-led research into sparse, grounded, continual and energy-accountable artificial intelligence.</p>${renderReaderSupport(basePath, "research portal", "Report a portal problem")}<nav aria-label="Research library">${groups}</nav><p><a href="${withBase(basePath, "book/")}">Read the full concept book</a></p></main>`;
+  return `<main class="seo-static-page"><p class="portal-eyebrow">Open research programme</p><h1>20 Watts Was Enough</h1><p>Can an artificial system learn and adapt while activating less computation and moving less data? This programme turns mechanisms from living and engineered systems into scoped claims, explicit principles and equal-budget tests.</p>${renderReaderSupport(basePath, "research portal", "Report a portal problem")}<nav aria-label="Research library">${groups}</nav><p><a href="${withBase(basePath, "book/")}">Read the full concept book</a></p></main>`;
 }
 
 export function renderBookFallback(documents, basePath) {

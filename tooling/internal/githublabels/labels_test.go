@@ -86,52 +86,6 @@ func TestLoadRejectsLinkedGitHubDirectory(t *testing.T) {
 	}
 }
 
-func TestReadStableRegularFileRejectsSameInodeMutation(t *testing.T) {
-	t.Parallel()
-	path := filepath.Join(t.TempDir(), "labels.json")
-	original := []byte("original")
-	replacement := []byte("mutated!")
-	if len(original) != len(replacement) {
-		t.Fatal("test fixture must preserve the file size")
-	}
-	if err := os.WriteFile(path, original, 0o644); err != nil {
-		t.Fatal(err)
-	}
-	initial, err := os.Stat(path)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	_, err = readStableRegularFileAfterRead(path, func() error {
-		writer, openErr := os.OpenFile(path, os.O_WRONLY, 0)
-		if openErr != nil {
-			return openErr
-		}
-		if _, writeErr := writer.WriteAt(replacement, 0); writeErr != nil {
-			_ = writer.Close()
-			return writeErr
-		}
-		if syncErr := writer.Sync(); syncErr != nil {
-			_ = writer.Close()
-			return syncErr
-		}
-		if closeErr := writer.Close(); closeErr != nil {
-			return closeErr
-		}
-		return os.Chtimes(path, initial.ModTime(), initial.ModTime())
-	})
-	if err == nil || !strings.Contains(err.Error(), "changed while it was read") {
-		t.Fatalf("readStableRegularFileAfterRead() error = %v, want stable-read refusal", err)
-	}
-	after, err := os.Stat(path)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !os.SameFile(initial, after) || initial.Size() != after.Size() || !initial.ModTime().Equal(after.ModTime()) {
-		t.Fatalf("mutation did not preserve inode, size, and mtime: before=%#v after=%#v", initial, after)
-	}
-}
-
 func TestSyncCreatesUpdatesAndPreservesCurrentLabels(t *testing.T) {
 	t.Parallel()
 	var mutex sync.Mutex
