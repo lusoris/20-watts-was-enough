@@ -44,6 +44,8 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w experiment release-plan [--root <repository>] [--json]")
 	fmt.Fprintln(writer, "  20w experiment package-node-image --artifact <id> --output <directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w publication render-pdf [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--check]")
+	fmt.Fprintln(writer, "  20w translation export-candidate --source <concept-or-math.md> --language <code> --output <new.json> [--root <repository>]")
+	fmt.Fprintln(writer, "  20w translation import-candidate --input <candidate.json> --source <concept-or-math.md> --language <code> --output <new-directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w github sync-labels [--root <repository>] [--check | --repository <owner/name>]")
 	fmt.Fprintln(writer, "  20w release inspect-image --image <registry path> --tag <vX.Y.Z> --revision <commit> --platform <os/arch> --expected-label <key=value>")
 	fmt.Fprintln(writer, "  20w release asset-inventory --assets <directory> --phase source|publication")
@@ -107,6 +109,13 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 	case "publication":
 		if len(arguments) >= 2 && arguments[1] == "render-pdf" {
 			return runPublicationRenderPDF(arguments[2:], stdout, stderr)
+		}
+	case "translation":
+		if len(arguments) >= 2 && arguments[1] == "export-candidate" {
+			return runTranslationExportCandidate(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "import-candidate" {
+			return runTranslationImportCandidate(arguments[2:], stdout, stderr)
 		}
 	case "github":
 		if len(arguments) >= 2 && arguments[1] == "sync-labels" {

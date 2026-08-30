@@ -178,6 +178,8 @@ test("the full-book source identity includes the locked renderer dependency grap
     "scripts/lib/vite-cache-directory.mjs",
     "scripts/install-locked-npm.mjs",
     "scripts/npm-runtime-lock.json",
+    "tooling/cmd/20w/main.go",
+    "tooling/cmd/20w/translation.go",
     "tooling/go.mod",
     "tooling/internal/buildinfo/buildinfo.go",
     "tooling/internal/docscheck/check.go",
@@ -194,7 +196,12 @@ test("the full-book source identity includes the locked renderer dependency grap
     "tooling/internal/releasecheck/tag.go",
     "tooling/internal/releaseimage/inspect.go",
     "tooling/internal/strictjson/validate.go",
+    "tooling/internal/translationbundle/bundle.go",
+    "tooling/internal/translationbundle/files.go",
+    "tooling/internal/translationbundle/languages.go",
+    "tooling/internal/translationbundle/shape.go",
     "tooling/pdf-renderer/lock.json",
+    "translations/eu-languages.json",
     "translations/manifest.json",
   ];
   for (const source of requiredClosure) assert.equal(sources.includes(source), true, source);

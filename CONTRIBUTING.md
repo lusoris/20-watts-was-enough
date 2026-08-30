@@ -184,6 +184,13 @@ qualifications, equations, units, links and evidence status—not grammar alone.
 When the canonical source digest changes, validation deliberately marks the
 translation stale until it is checked again.
 
+For a source-bound German draft, use `20w translation export-candidate` and
+`20w translation import-candidate` as documented in the
+[candidate exchange](translations/README.md#candidate-exchange). The exchange
+records glossary, tool and reviewer metadata, but import produces only a
+candidate-marked working artifact. It cannot update the reviewed manifest or
+publish a page.
+
 ## Evidence statuses
 
 - **established:** directly supported within a clearly stated experimental or

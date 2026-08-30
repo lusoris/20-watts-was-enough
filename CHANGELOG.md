@@ -5,6 +5,14 @@ the exact diff; this file records why the project changed.
 
 ## [Unreleased]
 
+### Added
+
+- The Go command now exports deterministic, source-bound translation candidate
+  bundles and imports returned drafts into candidate-only working artifacts.
+  The provider-neutral exchange preserves glossary choices, drafting-tool
+  disclosure and language/domain review metadata, rejects stale English source,
+  and cannot write to the reviewed translation tree or publication manifest.
+
 ### Changed
 
 - The contribution map and issue picker now lead readers to bounded open work

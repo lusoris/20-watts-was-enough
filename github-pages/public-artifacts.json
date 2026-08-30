@@ -76,6 +76,7 @@
     "scripts/generate-taxonomy-depth.mjs",
     "scripts/import-science-taxonomies.py",
     "scripts/validate-science-taxonomies.mjs",
-    "tooling/pdf-renderer/lock.json"
+    "tooling/pdf-renderer/lock.json",
+    "translations/eu-languages.json"
   ]
 }

@@ -1,29 +1,47 @@
-const officialEuLanguageRecords = Object.freeze([
-  Object.freeze({ code: "en", label: "English", openGraphLocale: "en_GB" }),
-  Object.freeze({ code: "bg", label: "Български", openGraphLocale: "bg_BG" }),
-  Object.freeze({ code: "hr", label: "Hrvatski", openGraphLocale: "hr_HR" }),
-  Object.freeze({ code: "cs", label: "Čeština", openGraphLocale: "cs_CZ" }),
-  Object.freeze({ code: "da", label: "Dansk", openGraphLocale: "da_DK" }),
-  Object.freeze({ code: "nl", label: "Nederlands", openGraphLocale: "nl_NL" }),
-  Object.freeze({ code: "et", label: "Eesti", openGraphLocale: "et_EE" }),
-  Object.freeze({ code: "fi", label: "Suomi", openGraphLocale: "fi_FI" }),
-  Object.freeze({ code: "fr", label: "Français", openGraphLocale: "fr_FR" }),
-  Object.freeze({ code: "de", label: "Deutsch", openGraphLocale: "de_DE" }),
-  Object.freeze({ code: "el", label: "Ελληνικά", openGraphLocale: "el_GR" }),
-  Object.freeze({ code: "hu", label: "Magyar", openGraphLocale: "hu_HU" }),
-  Object.freeze({ code: "ga", label: "Gaeilge", openGraphLocale: "ga_IE" }),
-  Object.freeze({ code: "it", label: "Italiano", openGraphLocale: "it_IT" }),
-  Object.freeze({ code: "lv", label: "Latviešu", openGraphLocale: "lv_LV" }),
-  Object.freeze({ code: "lt", label: "Lietuvių", openGraphLocale: "lt_LT" }),
-  Object.freeze({ code: "mt", label: "Malti", openGraphLocale: "mt_MT" }),
-  Object.freeze({ code: "pl", label: "Polski", openGraphLocale: "pl_PL" }),
-  Object.freeze({ code: "pt", label: "Português", openGraphLocale: "pt_PT" }),
-  Object.freeze({ code: "ro", label: "Română", openGraphLocale: "ro_RO" }),
-  Object.freeze({ code: "sk", label: "Slovenčina", openGraphLocale: "sk_SK" }),
-  Object.freeze({ code: "sl", label: "Slovenščina", openGraphLocale: "sl_SI" }),
-  Object.freeze({ code: "es", label: "Español", openGraphLocale: "es_ES" }),
-  Object.freeze({ code: "sv", label: "Svenska", openGraphLocale: "sv_SE" }),
+import languageRegistry from "../../translations/eu-languages.json" with { type: "json" };
+
+const expectedCodes = Object.freeze([
+  "en", "bg", "hr", "cs", "da", "nl", "et", "fi", "fr", "de", "el", "hu",
+  "ga", "it", "lv", "lt", "mt", "pl", "pt", "ro", "sk", "sl", "es", "sv",
 ]);
+const recordFields = Object.freeze(["code", "label", "openGraphLocale"]);
+const utf8Encoder = new TextEncoder();
+
+function hasExactFields(value, expected) {
+  return value !== null
+    && typeof value === "object"
+    && !Array.isArray(value)
+    && Object.keys(value).toSorted().join("\0") === expected.toSorted().join("\0");
+}
+
+export function validateEuLanguageRegistry(registry) {
+  if (
+    !hasExactFields(registry, ["schema", "languages"])
+    || registry.schema !== 1
+    || !Array.isArray(registry.languages)
+    || registry.languages.length !== expectedCodes.length
+  ) {
+    throw new Error("EU language registry must contain the exact ordered 24-code set.");
+  }
+  return Object.freeze(registry.languages.map((record, index) => {
+    if (
+      !hasExactFields(record, recordFields)
+      || record.code !== expectedCodes[index]
+      || typeof record.label !== "string"
+      || record.label.length === 0
+      || record.label !== record.label.trim()
+      || utf8Encoder.encode(record.label).length > 128
+      || typeof record.openGraphLocale !== "string"
+      || !/^[a-z]{2}_[A-Z]{2}$/u.test(record.openGraphLocale)
+      || !record.openGraphLocale.startsWith(`${record.code}_`)
+    ) {
+      throw new Error("EU language registry does not match the exact ordered 24-code records.");
+    }
+    return Object.freeze({ ...record });
+  }));
+}
+
+const officialEuLanguageRecords = validateEuLanguageRegistry(languageRegistry);
 
 export const officialEuLanguages = Object.freeze(
   officialEuLanguageRecords.map(({ code, label }) => Object.freeze([code, label])),
