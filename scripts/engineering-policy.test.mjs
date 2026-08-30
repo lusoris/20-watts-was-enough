@@ -30,6 +30,7 @@ import {
   validateScientificRuntimeLock,
   validateScientificRuntimeWorkflowObject,
   validateToolingValidationScript,
+  validateWorkstationShardScriptsObject,
   validateWorkflowObject,
 } from "./validate-engineering-policy.mjs";
 
@@ -109,7 +110,7 @@ function runCiSuccessGate(source, overrides = {}) {
     SELECT_RELEASE: "false",
     SELECT_RESEARCH: "false",
     SELECT_SITE: "false",
-    SELECT_WORKSTATION: "false",
+    SELECT_WORKSTATION: "true",
     RESULT_PLAN: "success",
     RESULT_PR_TITLE: "skipped",
     RESULT_QUALITY_FULL: "success",
@@ -118,8 +119,8 @@ function runCiSuccessGate(source, overrides = {}) {
     RESULT_RELEASE: "skipped",
     RESULT_RESEARCH: "skipped",
     RESULT_SITE: "skipped",
-    RESULT_WORKSTATION_CORE: "skipped",
-    RESULT_WORKSTATION_ARTIFACTS: "skipped",
+    RESULT_WORKSTATION_CORE: "success",
+    RESULT_WORKSTATION_ARTIFACTS: "success",
     RESULT_CONTAINER: "success",
     RESULT_DEPENDENCY_REVIEW: "skipped",
     ...overrides,
@@ -144,6 +145,58 @@ test("tooling validation runs all three offline authorities in order", () => {
   ]) {
     assert.deepEqual(validateToolingValidationScript(command), [expectedFinding]);
   }
+});
+
+test("workstation shard scripts retain their exact disjoint inventories", () => {
+  const manifest = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+  const workstationManifests = Object.fromEntries(["026", "029"].map((fixture) => [
+    fixture,
+    JSON.parse(readFileSync(
+      new URL(`../experiments/workstation/manifests/fixture-${fixture}.json`, import.meta.url),
+      "utf8",
+    )),
+  ]));
+  const validate = (subject, inventories = workstationManifests) => (
+    validateWorkstationShardScriptsObject(subject, inventories)
+  );
+  assert.deepEqual(validate(manifest), []);
+
+  const missingHeavyTest = structuredClone(manifest);
+  missingHeavyTest.scripts["test:workstation:fixture-026:shard-1"] =
+    "node --test experiments/workstation/fixture-026/rsd-t02-runner.test.mjs";
+  assert.ok(validate(missingHeavyTest).includes(
+    "package.json: test:workstation:fixture-026:shard-1 must retain its exact bounded test inventory",
+  ));
+
+  const extraShard = structuredClone(manifest);
+  extraShard.scripts["test:workstation:fixture-029:shard-3"] =
+    extraShard.scripts["test:workstation:fixture-029:shard-2"];
+  assert.ok(validate(extraShard).includes(
+    "package.json: workstation shard script identities must be exactly the eight allowlisted names",
+  ));
+
+  const serialFullGate = structuredClone(manifest);
+  serialFullGate.scripts["check:full-without-workstation"] += " && npm run test:workstation";
+  assert.ok(validate(serialFullGate).includes(
+    "package.json: check:full-without-workstation must retain the complete non-workstation aggregate gate",
+  ));
+
+  const weakenedLocalGate = structuredClone(manifest);
+  weakenedLocalGate.scripts.test = weakenedLocalGate.scripts.test.replace(
+    "npm run validate:workstation && npm run test:workstation",
+    "echo 'npm run validate:workstation && npm run test:workstation'",
+  );
+  assert.ok(validate(weakenedLocalGate).includes(
+    "package.json: the local aggregate gate must retain the complete workstation suite",
+  ));
+
+  const unshardedRegisteredTest = structuredClone(workstationManifests);
+  const unshardedPath = "experiments/workstation/fixture-026/future-contract.test.mjs";
+  unshardedRegisteredTest["026"].implementation.tests.push(unshardedPath);
+  unshardedRegisteredTest["026"].implementation.full_tests.push(unshardedPath);
+  assert.ok(validate(manifest, unshardedRegisteredTest).includes(
+    "package.json: Fixture 026 tests and full_tests must match and every registered test must appear in exactly one shard",
+  ));
 });
 
 test("the current package version requires a matching, structured research disclosure", (t) => {
@@ -384,7 +437,7 @@ test("CI runs the strict-JSON fuzzer with explicit time and process bounds", () 
   ));
   fuzz.run = fuzz.run.replace(" -fuzzminimizetime=5s", "");
   assert.deepEqual(validateCiFuzzingWorkflowObject(unboundedMinimisation), [
-    ".github/workflows/ci.yml: quality-full must run the exact bounded strict-JSON fuzz target after the repository check",
+    ".github/workflows/ci.yml: quality-full must run the exact bounded strict-JSON fuzz target after the full non-workstation check",
   ]);
 
   const allowedFailure = structuredClone(valid);
@@ -392,7 +445,23 @@ test("CI runs the strict-JSON fuzzer with explicit time and process bounds", () 
     step.name === "Fuzz the untrusted JSON boundary"
   ))["continue-on-error"] = true;
   assert.deepEqual(validateCiFuzzingWorkflowObject(allowedFailure), [
-    ".github/workflows/ci.yml: quality-full must run the exact bounded strict-JSON fuzz target after the repository check",
+    ".github/workflows/ci.yml: quality-full must run the exact bounded strict-JSON fuzz target after the full non-workstation check",
+  ]);
+
+  const allowedRepositoryCheckFailure = structuredClone(valid);
+  allowedRepositoryCheckFailure.jobs["quality-full"].steps.find((step) => (
+    step.run === "npm run check:full-without-workstation"
+  ))["continue-on-error"] = true;
+  assert.deepEqual(validateCiFuzzingWorkflowObject(allowedRepositoryCheckFailure), [
+    ".github/workflows/ci.yml: quality-full must run the exact bounded strict-JSON fuzz target after the full non-workstation check",
+  ]);
+
+  const skippedRepositoryCheck = structuredClone(valid);
+  skippedRepositoryCheck.jobs["quality-full"].steps.find((step) => (
+    step.run === "npm run check:full-without-workstation"
+  )).if = "false";
+  assert.deepEqual(validateCiFuzzingWorkflowObject(skippedRepositoryCheck), [
+    ".github/workflows/ci.yml: quality-full must run the exact bounded strict-JSON fuzz target after the full non-workstation check",
   ]);
 
   const detachedGate = structuredClone(valid);
@@ -421,8 +490,16 @@ test("CI impact selection is projected once and every job state fails closed", (
   const openEmptyMatrix = structuredClone(valid);
   openEmptyMatrix.jobs["workstation-artifacts"].if = "needs.impact-plan.outputs.mode == 'impact'";
   assert.ok(validateCiImpactWorkflowObject(openEmptyMatrix).includes(
-    ".github/workflows/ci.yml: an empty workstation matrix must skip both workstation jobs and selected artifacts must use the bounded four-way matrix",
+    ".github/workflows/ci.yml: an empty workstation matrix must skip both workstation jobs and selected tests must use the bounded eight-way matrix",
   ));
+
+  for (const job of ["workstation-core", "workstation-artifacts"]) {
+    const allowedJobFailure = structuredClone(valid);
+    allowedJobFailure.jobs[job]["continue-on-error"] = true;
+    assert.ok(validateCiImpactWorkflowObject(allowedJobFailure).includes(
+      ".github/workflows/ci.yml: workstation core, setup, and shard execution must fail closed",
+    ));
+  }
 
   const skippedSelectedLane = structuredClone(valid);
   const success = skippedSelectedLane.jobs["ci-success"].steps.find((step) => (
@@ -442,8 +519,72 @@ test("CI impact selection is projected once and every job state fails closed", (
   ));
   artifactStep.run = 'eval "$PLAN_COMMAND"';
   assert.ok(validateCiImpactWorkflowObject(dynamicCommand).includes(
-    ".github/workflows/ci.yml: workstation matrix execution must dispatch only the eleven static artifact scripts",
+    ".github/workflows/ci.yml: workstation matrix execution must dispatch only the seventeen static test scripts",
   ));
+
+  const extraDispatch = structuredClone(valid);
+  const extraArtifactStep = extraDispatch.jobs["workstation-artifacts"].steps.find((step) => (
+    step.name === "Run the allowlisted artifact test script"
+  ));
+  extraArtifactStep.run = extraArtifactStep.run.replace(
+    "  fixture-026-shard-1) npm run test:workstation:fixture-026:shard-1 ;;",
+    "  fixture-026-shard-1) true ;;\n  fixture-026-shard-1) npm run test:workstation:fixture-026:shard-1 ;;",
+  );
+  assert.ok(validateCiImpactWorkflowObject(extraDispatch).includes(
+    ".github/workflows/ci.yml: workstation matrix execution must dispatch only the seventeen static test scripts",
+  ));
+
+  const ignoredShardFailure = structuredClone(valid);
+  ignoredShardFailure.jobs["workstation-artifacts"].steps.find((step) => (
+    step.name === "Run the allowlisted artifact test script"
+  ))["continue-on-error"] = "${{ true }}";
+  assert.ok(validateCiImpactWorkflowObject(ignoredShardFailure).includes(
+    ".github/workflows/ci.yml: workstation core, setup, and shard execution must fail closed",
+  ));
+
+  const constantArtifact = structuredClone(valid);
+  constantArtifact.jobs["workstation-artifacts"].steps.find((step) => (
+    step.name === "Run the allowlisted artifact test script"
+  )).env.ARTIFACT = "fixture-026-shard-1";
+  assert.ok(validateCiImpactWorkflowObject(constantArtifact).includes(
+    ".github/workflows/ci.yml: workstation matrix execution must dispatch only the seventeen static test scripts",
+  ));
+});
+
+test("CI workstation and success authority cannot be conditionally skipped", () => {
+  const valid = workflow("ci");
+  const matrixFinding = ".github/workflows/ci.yml: an empty workstation matrix must skip both workstation jobs and selected tests must use the bounded eight-way matrix";
+  const coreFinding = ".github/workflows/ci.yml: workstation core must run its complete authority step unconditionally";
+  const dispatchFinding = ".github/workflows/ci.yml: workstation matrix execution must dispatch only the seventeen static test scripts";
+  const successFinding = ".github/workflows/ci.yml: ci-success must unconditionally inspect the exact fail-closed state vector";
+
+  const excludedShard = structuredClone(valid);
+  excludedShard.jobs["workstation-artifacts"].strategy.matrix.exclude = [
+    { artifact: "fixture-026-shard-1" },
+  ];
+  assert.ok(validateCiImpactWorkflowObject(excludedShard).includes(matrixFinding));
+
+  const skippedCore = structuredClone(valid);
+  skippedCore.jobs["workstation-core"].steps.find((step) => (
+    step.name === "Validate the workstation inventory and core"
+  )).if = "false";
+  assert.ok(validateCiImpactWorkflowObject(skippedCore).includes(coreFinding));
+
+  const skippedShard = structuredClone(valid);
+  skippedShard.jobs["workstation-artifacts"].steps.find((step) => (
+    step.name === "Run the allowlisted artifact test script"
+  )).if = "matrix.artifact != 'fixture-026-shard-1'";
+  assert.ok(validateCiImpactWorkflowObject(skippedShard).includes(dispatchFinding));
+
+  const skippedSuccess = structuredClone(valid);
+  delete skippedSuccess.jobs["ci-success"].if;
+  assert.ok(validateCiImpactWorkflowObject(skippedSuccess).includes(successFinding));
+
+  const forgedSuccess = structuredClone(valid);
+  forgedSuccess.jobs["ci-success"].steps.find((step) => (
+    step.name === "Require every expected gate state"
+  )).env.RESULT_WORKSTATION_ARTIFACTS = "success";
+  assert.ok(validateCiImpactWorkflowObject(forgedSuccess).includes(successFinding));
 });
 
 test("CI success accepts only the exact full or selected impact state vector", () => {
@@ -483,6 +624,12 @@ test("CI success accepts only the exact full or selected impact state vector", (
   assert.notEqual(runCiSuccessGate(source, {
     SELECT_GO: "true",
   }).status, 0, "full mode must expose false semantic selectors");
+  assert.notEqual(runCiSuccessGate(source, {
+    SELECT_WORKSTATION: "false",
+  }).status, 0, "full mode must expose its closed workstation matrix");
+  assert.notEqual(runCiSuccessGate(source, {
+    RESULT_WORKSTATION_ARTIFACTS: "skipped",
+  }).status, 0, "the full workstation matrix may not skip");
 });
 
 test("repository metadata synchronization is manifest-triggered and least-privileged", () => {

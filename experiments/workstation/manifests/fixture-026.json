@@ -83,6 +83,10 @@
       "experiments/workstation/fixture-026/rsd-t02-pilot-transcript-calibration.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-isolated-policy.test.mjs",
       "experiments/workstation/fixture-026/opened-file.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-runner-boundaries.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-runner-ledger-format.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-runner-ledger-semantics.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-runner-resume.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-runner.test.mjs"
     ],
     "full_tests": [
@@ -117,6 +121,10 @@
       "experiments/workstation/fixture-026/rsd-t02-pilot-transcript-calibration.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-isolated-policy.test.mjs",
       "experiments/workstation/fixture-026/opened-file.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-runner-boundaries.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-runner-ledger-format.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-runner-ledger-semantics.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-runner-resume.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-runner.test.mjs"
     ],
     "t02_entrypoint": "experiments/workstation/fixture-026/rsd-t02-runner.mjs",

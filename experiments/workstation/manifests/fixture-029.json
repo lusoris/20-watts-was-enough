@@ -57,6 +57,7 @@
       "experiments/workstation/fixture-029/cmb-x01-runner.test.mjs",
       "experiments/workstation/fixture-029/contract.test.mjs",
       "experiments/workstation/fixture-029/runner.test.mjs",
+      "experiments/workstation/fixture-029/suite-runner-integrity.test.mjs",
       "experiments/workstation/fixture-029/suite-runner.test.mjs"
     ],
     "full_tests": [
@@ -64,6 +65,7 @@
       "experiments/workstation/fixture-029/cmb-x01-runner.test.mjs",
       "experiments/workstation/fixture-029/contract.test.mjs",
       "experiments/workstation/fixture-029/runner.test.mjs",
+      "experiments/workstation/fixture-029/suite-runner-integrity.test.mjs",
       "experiments/workstation/fixture-029/suite-runner.test.mjs"
     ],
     "execution_claims": ["C-1574", "C-1580"]

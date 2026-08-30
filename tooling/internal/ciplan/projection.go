@@ -15,8 +15,9 @@ import (
 )
 
 const (
-	maximumPlanBytes   = 8 << 20
-	maximumReasonBytes = maximumPathBytes + 64
+	maximumPlanBytes       = 8 << 20
+	maximumReasonBytes     = maximumPathBytes + 64
+	maximumWorkstationJobs = 32
 )
 
 // Projection is the fixed workflow-facing view of one validated plan.
@@ -67,9 +68,13 @@ func Project(plan Plan) (Projection, error) {
 		WorkstationMatrix: "[]",
 	}
 	if plan.Mode == "full" {
-		return projection, nil
+		jobs := make([]string, 0, maximumWorkstationJobs)
+		for _, definition := range allowedLanes {
+			jobs = append(jobs, definition.WorkstationJobs...)
+		}
+		return projectWorkstationJobs(projection, jobs)
 	}
-	artifacts := make([]string, 0)
+	jobs := make([]string, 0)
 	for _, lane := range plan.Lanes {
 		switch lane {
 		case "container":
@@ -84,14 +89,31 @@ func Project(plan Plan) (Projection, error) {
 			projection.Site = true
 		default:
 			definition, present := allowedLanes[lane]
-			if !present || definition.WorkstationArtifact == "" {
+			if !present || len(definition.WorkstationJobs) == 0 {
 				return Projection{}, fmt.Errorf("CI plan contains an unprojected lane %q", lane)
 			}
-			artifacts = append(artifacts, definition.WorkstationArtifact)
+			jobs = append(jobs, definition.WorkstationJobs...)
 		}
 	}
-	projection.WorkstationAny = len(artifacts) > 0
-	matrix, err := json.Marshal(artifacts)
+	return projectWorkstationJobs(projection, jobs)
+}
+
+func projectWorkstationJobs(projection Projection, jobs []string) (Projection, error) {
+	if len(jobs) > maximumWorkstationJobs {
+		return Projection{}, fmt.Errorf(
+			"workstation projection contains %d jobs, limit is %d",
+			len(jobs),
+			maximumWorkstationJobs,
+		)
+	}
+	sort.Strings(jobs)
+	for index, job := range jobs {
+		if !lanePattern.MatchString(job) || (index > 0 && job == jobs[index-1]) {
+			return Projection{}, fmt.Errorf("workstation projection job is invalid or repeated: %q", job)
+		}
+	}
+	projection.WorkstationAny = len(jobs) > 0
+	matrix, err := json.Marshal(jobs)
 	if err != nil {
 		return Projection{}, fmt.Errorf("encode workstation matrix: %w", err)
 	}

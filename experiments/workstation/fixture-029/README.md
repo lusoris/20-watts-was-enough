@@ -76,10 +76,14 @@ node experiments/workstation/fixture-029/suite-runner.mjs analyze --output tmp/f
 node experiments/workstation/fixture-029/suite-runner.mjs validate --output tmp/fixture-029-development
 ```
 
-Focused tests:
+CI uses two fixed file-level shards. Each file creates and removes its own suite
+base; mutable run state is not shared across shards. The aggregate command
+still runs the complete Fixture 029 inventory:
 
 ```bash
-node --test --experimental-test-isolation=none experiments/workstation/fixture-029/cmb-x01-contract.test.mjs experiments/workstation/fixture-029/cmb-x01-runner.test.mjs experiments/workstation/fixture-029/contract.test.mjs experiments/workstation/fixture-029/runner.test.mjs experiments/workstation/fixture-029/suite-runner.test.mjs
+npm run test:workstation:fixture-029:shard-1
+npm run test:workstation:fixture-029:shard-2
+npm run test:workstation:fixture-029
 ```
 
 Each subrun and the two-receipt suite ledger use canonical LF JSONL in an

@@ -245,6 +245,12 @@ RSD-T01 remains the only claim-scoped implemented track.
 From the repository root:
 
 ```bash
+npm run test:workstation:fixture-026:shard-1
+npm run test:workstation:fixture-026:shard-2
+npm run test:workstation:fixture-026:shard-3
+npm run test:workstation:fixture-026:shard-4
+npm run test:workstation:fixture-026:shard-5
+npm run test:workstation:fixture-026:shard-6
 npm run test:workstation:fixture-026:foundations
 npm run test:workstation:fixture-026:execution-v52
 node experiments/workstation/fixture-026/build-rsd-t02-policy-bundle.mjs --check
@@ -276,10 +282,12 @@ node experiments/workstation/fixture-026/runner.mjs t02-analyze --output experim
 node experiments/workstation/fixture-026/runner.mjs t02-validate --output experiments/workstation/runs/fixture-026-t02-development
 ```
 
-Focused tests:
+The six shard commands partition the complete Fixture 026 test inventory for
+CI scheduling. They do not select assertions within a file or change any seed,
+horizon, result label or experiment authority. The aggregate command remains:
 
 ```bash
-node --test --experimental-test-isolation=none experiments/workstation/fixture-026/contract.test.mjs experiments/workstation/fixture-026/runner.test.mjs experiments/workstation/fixture-026/scientific-grid.test.mjs experiments/workstation/fixture-026/rsd-t02-contract.test.mjs experiments/workstation/fixture-026/rsd-t02-models.test.mjs experiments/workstation/fixture-026/rsd-t02-floor.test.mjs experiments/workstation/fixture-026/rsd-t02-generator.test.mjs experiments/workstation/fixture-026/rsd-t02-evaluator.test.mjs experiments/workstation/fixture-026/rsd-t02-event.test.mjs experiments/workstation/fixture-026/rsd-t02-arm-bank.test.mjs experiments/workstation/fixture-026/rsd-t02-runner.test.mjs
+npm run test:workstation:fixture-026
 ```
 
 ## Integrity

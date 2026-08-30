@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestProjectEmitsClosedFullSemantics(t *testing.T) {
+func TestProjectEmitsClosedFullSemanticsAndEveryWorkstationJob(t *testing.T) {
 	t.Parallel()
 	projection, err := Project(Plan{
 		Schema:       planSchema,
@@ -21,8 +21,34 @@ func TestProjectEmitsClosedFullSemantics(t *testing.T) {
 		t.Fatal(err)
 	}
 	if projection.Container || projection.Go || projection.Release || projection.Research ||
-		projection.Site || projection.WorkstationAny || projection.WorkstationMatrix != "[]" {
-		t.Fatalf("Project(full) = %#v, want false semantics and an empty matrix", projection)
+		projection.Site || !projection.WorkstationAny {
+		t.Fatalf("Project(full) = %#v, want false lane semantics and workstation jobs", projection)
+	}
+	var jobs []string
+	if err := json.Unmarshal([]byte(projection.WorkstationMatrix), &jobs); err != nil {
+		t.Fatal(err)
+	}
+	wantJobs := []string{
+		"candidate-010",
+		"fixture-007",
+		"fixture-012",
+		"fixture-019",
+		"fixture-022",
+		"fixture-023",
+		"fixture-024",
+		"fixture-025",
+		"fixture-026-shard-1",
+		"fixture-026-shard-2",
+		"fixture-026-shard-3",
+		"fixture-026-shard-4",
+		"fixture-026-shard-5",
+		"fixture-026-shard-6",
+		"fixture-027",
+		"fixture-029-shard-1",
+		"fixture-029-shard-2",
+	}
+	if !reflect.DeepEqual(jobs, wantJobs) {
+		t.Fatalf("full workstation matrix = %v, want %v", jobs, wantJobs)
 	}
 	var output bytes.Buffer
 	if err := WriteGitHubOutputs(&output, projection); err != nil {
@@ -30,11 +56,48 @@ func TestProjectEmitsClosedFullSemantics(t *testing.T) {
 	}
 	for _, expected := range []string{
 		"container=false\n", "go=false\n", "release=false\n", "research=false\n",
-		"site=false\n", "workstation_any=false\n", "workstation_matrix=[]\n",
+		"site=false\n", "workstation_any=true\n",
+		"workstation_matrix=[\"candidate-010\",\"fixture-007\"",
 	} {
 		if !strings.Contains(output.String(), expected) {
 			t.Fatalf("full GitHub outputs = %q, missing %q", output.String(), expected)
 		}
+	}
+}
+
+func TestProjectExpandsOnlySelectedShardedArtifacts(t *testing.T) {
+	t.Parallel()
+	projection, err := Project(Plan{
+		Schema:       planSchema,
+		Mode:         "impact",
+		Reason:       "mapped-change-set",
+		BaseRevision: testBaseRevision,
+		HeadRevision: testHeadRevision,
+		ChangedPaths: []string{
+			"experiments/workstation/fixture-026/runner.mjs",
+			"experiments/workstation/fixture-029/suite-runner.mjs",
+		},
+		Lanes: []string{"workstation-fixture-026", "workstation-fixture-029"},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var jobs []string
+	if err := json.Unmarshal([]byte(projection.WorkstationMatrix), &jobs); err != nil {
+		t.Fatal(err)
+	}
+	want := []string{
+		"fixture-026-shard-1",
+		"fixture-026-shard-2",
+		"fixture-026-shard-3",
+		"fixture-026-shard-4",
+		"fixture-026-shard-5",
+		"fixture-026-shard-6",
+		"fixture-029-shard-1",
+		"fixture-029-shard-2",
+	}
+	if !projection.WorkstationAny || !reflect.DeepEqual(jobs, want) {
+		t.Fatalf("sharded projection = %#v / %v, want %v", projection, jobs, want)
 	}
 }
 
@@ -110,6 +173,20 @@ func TestProjectRejectsMalformedPlanCombinations(t *testing.T) {
 			mutate(&plan)
 			if _, err := Project(plan); err == nil {
 				t.Fatalf("Project(%#v) accepted malformed plan", plan)
+			}
+		})
+	}
+}
+
+func TestProjectWorkstationJobsRejectsDuplicateAndExcessiveMatrices(t *testing.T) {
+	t.Parallel()
+	for name, jobs := range map[string][]string{
+		"duplicate": {"fixture-026-shard-1", "fixture-026-shard-1"},
+		"excessive": make([]string, maximumWorkstationJobs+1),
+	} {
+		t.Run(name, func(t *testing.T) {
+			if _, err := projectWorkstationJobs(Projection{}, jobs); err == nil {
+				t.Fatalf("projectWorkstationJobs(%q) accepted an invalid matrix", name)
 			}
 		})
 	}

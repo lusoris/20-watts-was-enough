@@ -526,7 +526,8 @@ export function validateCiFuzzingWorkflowObject(
   workflow,
   relativePath = ".github/workflows/ci.yml",
 ) {
-  const steps = workflow?.jobs?.["quality-full"]?.steps;
+  const qualityJob = workflow?.jobs?.["quality-full"];
+  const steps = qualityJob?.steps;
   if (!Array.isArray(steps)) {
     return [`${relativePath}: quality-full must run the bounded strict-JSON fuzz target`];
   }
@@ -540,17 +541,25 @@ export function validateCiFuzzingWorkflowObject(
     "-timeout=2m",
   ].join(" ");
   const repositoryCheckIndex = steps.findIndex((step) => (
-    step?.run?.trim() === "npm run check"
+    step?.run?.trim() === "npm run check:full-without-workstation"
+    && step?.if === undefined
+    && continueOnErrorIsDisabled(step)
   ));
   const fuzzIndex = steps.findIndex((step) => (
     step?.name === "Fuzz the untrusted JSON boundary"
     && step?.run?.trim() === expectedCommand
-    && step?.["continue-on-error"] !== true
+    && step?.if === undefined
+    && continueOnErrorIsDisabled(step)
   ));
   const findings = [];
-  if (fuzzIndex < 0 || repositoryCheckIndex < 0 || fuzzIndex <= repositoryCheckIndex) {
+  if (
+    !continueOnErrorIsDisabled(qualityJob)
+    || fuzzIndex < 0
+    || repositoryCheckIndex < 0
+    || fuzzIndex <= repositoryCheckIndex
+  ) {
     findings.push(
-      `${relativePath}: quality-full must run the exact bounded strict-JSON fuzz target after the repository check`,
+      `${relativePath}: quality-full must run the exact bounded strict-JSON fuzz target after the full non-workstation check`,
     );
   }
   if (!arrayIncludes(workflow?.jobs?.["ci-success"]?.needs, "quality-full")) {
@@ -619,43 +628,94 @@ function validateCiImpactLaneJobs(jobs, relativePath, findings) {
   );
 }
 
+function workstationJobsUseBoundedMatrix(core, artifacts, workstationCondition) {
+  const matrix = artifacts?.strategy?.matrix;
+  return [
+    core?.if === workstationCondition,
+    artifacts?.if === workstationCondition,
+    artifacts?.strategy?.["fail-fast"] === false,
+    artifacts?.strategy?.["max-parallel"] === 8,
+    Object.keys(matrix ?? {}).length === 1,
+    matrix?.artifact
+      === "${{ fromJSON(needs.impact-plan.outputs.workstation_matrix) }}",
+  ].every(Boolean);
+}
+
+function workstationJobsFailClosed(core, artifacts) {
+  return [
+    continueOnErrorIsDisabled(core),
+    continueOnErrorIsDisabled(artifacts),
+    (core?.steps ?? []).every(continueOnErrorIsDisabled),
+    (artifacts?.steps ?? []).every(continueOnErrorIsDisabled),
+  ].every(Boolean);
+}
+
+function workstationDispatchIsExact(step, expectedDispatch) {
+  return [
+    step?.if === undefined,
+    Object.keys(step?.env ?? {}).length === 1,
+    step?.env?.ARTIFACT === "${{ matrix.artifact }}",
+    String(step?.run ?? "").trim() === expectedDispatch,
+  ].every(Boolean);
+}
+
 function validateCiImpactWorkstationJobs(jobs, relativePath, findings) {
-  const impactMode = "needs.impact-plan.outputs.mode == 'impact'";
-  const workstationCondition = `${impactMode} && needs.impact-plan.outputs.workstation_any == 'true'`;
+  const workstationCondition = "needs.impact-plan.outputs.workstation_any == 'true'";
+  const core = jobs["workstation-core"];
   const artifacts = jobs["workstation-artifacts"];
   recordExpectation(
     findings,
-    jobs["workstation-core"]?.if === workstationCondition
-      && artifacts?.if === workstationCondition
-      && artifacts?.strategy?.["fail-fast"] === false
-      && artifacts?.strategy?.["max-parallel"] === 4
-      && artifacts?.strategy?.matrix?.artifact
-        === "${{ fromJSON(needs.impact-plan.outputs.workstation_matrix) }}",
-    `${relativePath}: an empty workstation matrix must skip both workstation jobs and selected artifacts must use the bounded four-way matrix`,
+    workstationJobsUseBoundedMatrix(core, artifacts, workstationCondition),
+    `${relativePath}: an empty workstation matrix must skip both workstation jobs and selected tests must use the bounded eight-way matrix`,
   );
   const artifactStep = (artifacts?.steps ?? []).find((step) => (
     step?.name === "Run the allowlisted artifact test script"
   ));
-  const artifactScripts = [
-    "candidate-010",
-    "fixture-007",
-    "fixture-012",
-    "fixture-019",
-    "fixture-022",
-    "fixture-023",
-    "fixture-024",
-    "fixture-025",
-    "fixture-026",
-    "fixture-027",
-    "fixture-029",
-  ].map((artifact) => `${artifact}) npm run test:workstation:${artifact} ;;`);
+  const coreStep = (core?.steps ?? []).find((step) => (
+    step?.name === "Validate the workstation inventory and core"
+  ));
   recordExpectation(
     findings,
-    stringIncludesAll(artifactStep?.run, [
-      ...artifactScripts,
-      "*) echo \"::error::unallowlisted workstation artifact: $ARTIFACT\"; exit 1 ;;",
-    ]),
-    `${relativePath}: workstation matrix execution must dispatch only the eleven static artifact scripts`,
+    workstationJobsFailClosed(core, artifacts),
+    `${relativePath}: workstation core, setup, and shard execution must fail closed`,
+  );
+  recordExpectation(
+    findings,
+    coreStep?.if === undefined
+      && coreStep?.run?.trim()
+        === "npm run validate:workstation && npm run test:workstation:core",
+    `${relativePath}: workstation core must run its complete authority step unconditionally`,
+  );
+  const artifactScripts = [
+    ["candidate-010", "test:workstation:candidate-010"],
+    ["fixture-007", "test:workstation:fixture-007"],
+    ["fixture-012", "test:workstation:fixture-012"],
+    ["fixture-019", "test:workstation:fixture-019"],
+    ["fixture-022", "test:workstation:fixture-022"],
+    ["fixture-023", "test:workstation:fixture-023"],
+    ["fixture-024", "test:workstation:fixture-024"],
+    ["fixture-025", "test:workstation:fixture-025"],
+    ["fixture-026-shard-1", "test:workstation:fixture-026:shard-1"],
+    ["fixture-026-shard-2", "test:workstation:fixture-026:shard-2"],
+    ["fixture-026-shard-3", "test:workstation:fixture-026:shard-3"],
+    ["fixture-026-shard-4", "test:workstation:fixture-026:shard-4"],
+    ["fixture-026-shard-5", "test:workstation:fixture-026:shard-5"],
+    ["fixture-026-shard-6", "test:workstation:fixture-026:shard-6"],
+    ["fixture-027", "test:workstation:fixture-027"],
+    ["fixture-029-shard-1", "test:workstation:fixture-029:shard-1"],
+    ["fixture-029-shard-2", "test:workstation:fixture-029:shard-2"],
+  ].map(([job, script]) => `${job}) npm run ${script} ;;`);
+  const expectedDispatch = [
+    "set -euo pipefail",
+    "case \"$ARTIFACT\" in",
+    ...artifactScripts.map((line) => `  ${line}`),
+    "  *) echo \"::error::unallowlisted workstation artifact: $ARTIFACT\"; exit 1 ;;",
+    "esac",
+  ].join("\n");
+  recordExpectation(
+    findings,
+    workstationDispatchIsExact(artifactStep, expectedDispatch),
+    `${relativePath}: workstation matrix execution must dispatch only the seventeen static test scripts`,
   );
   const pythonSteps = (artifacts?.steps ?? []).filter((step) => (
     step?.uses?.startsWith("actions/setup-python@")
@@ -685,9 +745,32 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
     "dependency-review",
   ];
   const success = jobs["ci-success"];
-  const successSource = success?.steps?.find((step) => (
+  const successStep = success?.steps?.find((step) => (
     step?.name === "Require every expected gate state"
-  ))?.run;
+  ));
+  const successSource = successStep?.run;
+  const expectedEnvironment = {
+    EVENT_NAME: "${{ github.event_name }}",
+    MODE: "${{ needs.impact-plan.outputs.mode }}",
+    SELECT_CONTAINER: "${{ needs.impact-plan.outputs.container }}",
+    SELECT_GO: "${{ needs.impact-plan.outputs.go }}",
+    SELECT_RELEASE: "${{ needs.impact-plan.outputs.release }}",
+    SELECT_RESEARCH: "${{ needs.impact-plan.outputs.research }}",
+    SELECT_SITE: "${{ needs.impact-plan.outputs.site }}",
+    SELECT_WORKSTATION: "${{ needs.impact-plan.outputs.workstation_any }}",
+    RESULT_PLAN: "${{ needs.impact-plan.result }}",
+    RESULT_PR_TITLE: "${{ needs.pr-title.result }}",
+    RESULT_QUALITY_FULL: "${{ needs.quality-full.result }}",
+    RESULT_IMPACT_COMMON: "${{ needs.impact-common.result }}",
+    RESULT_GO: "${{ needs.lane-go.result }}",
+    RESULT_RELEASE: "${{ needs.lane-release.result }}",
+    RESULT_RESEARCH: "${{ needs.lane-research.result }}",
+    RESULT_SITE: "${{ needs.lane-site.result }}",
+    RESULT_WORKSTATION_CORE: "${{ needs.workstation-core.result }}",
+    RESULT_WORKSTATION_ARTIFACTS: "${{ needs.workstation-artifacts.result }}",
+    RESULT_CONTAINER: "${{ needs.container-smoke.result }}",
+    RESULT_DEPENDENCY_REVIEW: "${{ needs.dependency-review.result }}",
+  };
   recordExpectation(
     findings,
     Array.isArray(success?.needs)
@@ -697,11 +780,25 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
   );
   recordExpectation(
     findings,
+    [
+      success?.if === "always()",
+      continueOnErrorIsDisabled(success),
+      successStep?.if === undefined,
+      continueOnErrorIsDisabled(successStep),
+      Object.keys(successStep?.env ?? {}).length === Object.keys(expectedEnvironment).length,
+      propertiesMatch(successStep?.env, expectedEnvironment),
+    ].every(Boolean),
+    `${relativePath}: ci-success must unconditionally inspect the exact fail-closed state vector`,
+  );
+  recordExpectation(
+    findings,
     stringIncludesAll(successSource, [
       'require_state impact-plan "$RESULT_PLAN" success',
       'require_state pr-title "$RESULT_PR_TITLE" success',
       'require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" success',
       'require_state quality-full "$RESULT_QUALITY_FULL" success',
+      'require_state workstation-core "$RESULT_WORKSTATION_CORE" success',
+      'require_state workstation-artifacts "$RESULT_WORKSTATION_ARTIFACTS" success',
       'require_state impact-common "$RESULT_IMPACT_COMMON" success',
       'require_selection lane-go "$RESULT_GO" "$SELECT_GO"',
       'require_selection lane-release "$RESULT_RELEASE" "$SELECT_RELEASE"',
@@ -711,6 +808,7 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
       'require_selection workstation-artifacts "$RESULT_WORKSTATION_ARTIFACTS" "$SELECT_WORKSTATION"',
       'require_selection container-smoke "$RESULT_CONTAINER" "$SELECT_CONTAINER"',
       'full plan exposed a non-false semantic selector: $selector',
+      "full plan did not expose its closed workstation matrix",
       'false) require_state "$gate" "$actual" skipped ;;',
       '*) echo "::error::$gate selector is malformed: $selected"; exit 1 ;;',
     ]),
@@ -1265,6 +1363,11 @@ function actionUses(step, actionName) {
 function stringIncludesAll(value, fragments) {
   if (typeof value !== "string") return false;
   return fragments.every((fragment) => value.includes(fragment));
+}
+
+function continueOnErrorIsDisabled(subject) {
+  return subject?.["continue-on-error"] === undefined
+    || subject["continue-on-error"] === false;
 }
 
 function findStepById(steps, id) {
@@ -2319,6 +2422,171 @@ export function validateToolingValidationScript(
   ];
 }
 
+function workstationShardCommand(files) {
+  return [
+    "node --test --experimental-test-isolation=none --test-concurrency=1",
+    ...files,
+  ].join(" ");
+}
+
+const aggregateTestScripts = Object.freeze([
+  "test:go", "validate:tooling", "validate:policy", "test:runtime", "test:policy",
+  "test:release", "check:code-shape", "test:code-shape", "check:prose", "test:prose",
+  "typecheck", "lint", "test:site", "validate:translations", "test:translations",
+  "validate:docs", "test:sources", "validate:coverage", "validate:taxonomies", "validate:math",
+  "validate:workstation", "test:workstation", "check:test-coverage", "test:readiness",
+  "build", "validate:site-build",
+]);
+
+function npmRunChain(scripts) {
+  return scripts.map((script) => `npm run ${script}`).join(" && ");
+}
+
+function validateWorkstationShardManifestCoverage(
+  scripts,
+  expectedShardNames,
+  workstationManifests,
+  relativePath,
+) {
+  const findings = [];
+  for (const fixture of ["026", "029"]) {
+    const implementation = workstationManifests?.[fixture]?.implementation;
+    const tests = implementation?.tests;
+    const fullTests = implementation?.full_tests;
+    const fixtureShardNames = expectedShardNames.filter((name) => (
+      name.startsWith(`test:workstation:fixture-${fixture}:shard-`)
+    ));
+    const shardFiles = fixtureShardNames.flatMap((name) => (
+      String(scripts[name] ?? "").split(" ").filter((entry) => entry.endsWith(".test.mjs"))
+    ));
+    const shardCounts = new Map();
+    for (const file of shardFiles) shardCounts.set(file, (shardCounts.get(file) ?? 0) + 1);
+    const inventoriesMatch = Array.isArray(tests)
+      && Array.isArray(fullTests)
+      && tests.length === fullTests.length
+      && tests.every((file, index) => file === fullTests[index]);
+    const everyTestShardedOnce = inventoriesMatch
+      && shardFiles.length === fullTests.length
+      && fullTests.every((file) => shardCounts.get(file) === 1);
+    if (!everyTestShardedOnce) {
+      findings.push(
+        `${relativePath}: Fixture ${fixture} tests and full_tests must match and every registered test must appear in exactly one shard`,
+      );
+    }
+  }
+  return findings;
+}
+
+export function validateWorkstationShardScriptsObject(
+  manifest,
+  workstationManifests,
+  relativePath = "package.json",
+) {
+  const scripts = manifest?.scripts ?? {};
+  const findings = [];
+  const fullWithoutWorkstation = npmRunChain([
+    "validate:runtime",
+    ...aggregateTestScripts.filter((script) => ![
+      "validate:workstation", "test:workstation",
+    ].includes(script)),
+  ]);
+  if (scripts["check:full-without-workstation"] !== fullWithoutWorkstation) {
+    findings.push(
+      `${relativePath}: check:full-without-workstation must retain the complete non-workstation aggregate gate`,
+    );
+  }
+  if (
+    scripts.check !== "npm test"
+    || scripts.pretest !== "npm run validate:runtime"
+    || scripts.test !== npmRunChain(aggregateTestScripts)
+  ) {
+    findings.push(`${relativePath}: the local aggregate gate must retain the complete workstation suite`);
+  }
+
+  const expected = new Map([
+    ["test:workstation:fixture-026:shard-1", workstationShardCommand([
+      "experiments/workstation/fixture-026/rsd-t02-runner-resume.test.mjs",
+    ])],
+    ["test:workstation:fixture-026:shard-2", workstationShardCommand([
+      "experiments/workstation/fixture-026/rsd-t02-runner.test.mjs",
+    ])],
+    ["test:workstation:fixture-026:shard-3", workstationShardCommand([
+      "experiments/workstation/fixture-026/rsd-t02-public-development-isolated-durable-population-runner.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-transform-policies.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-pilot-transcript-calibration.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-system-family-generator.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-run-lock.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-fixed-instance-durable-store.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-population-contract.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-floor.test.mjs",
+      "experiments/workstation/fixture-026/scientific-grid.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-stage3-design.test.mjs",
+    ])],
+    ["test:workstation:fixture-026:shard-4", workstationShardCommand([
+      "experiments/workstation/fixture-026/rsd-t02-runner-ledger-format.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-arm-bank.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-isolated-policy.test.mjs",
+      "experiments/workstation/fixture-026/build-rsd-t02-policy-bundle.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-null-prototypes.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-generator.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-pulse-panel-runner.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-null-maturation-contract.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-power-plan.test.mjs",
+      "experiments/workstation/fixture-026/opened-file.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-contract.test.mjs",
+    ])],
+    ["test:workstation:fixture-026:shard-5", workstationShardCommand([
+      "experiments/workstation/fixture-026/rsd-t02-runner-ledger-semantics.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-fixed-instance-isolated-durable-runner.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-pulse.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-public-development-population-runner.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-fixed-instance-runner.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-null-prototype-adapter.test.mjs",
+    ])],
+    ["test:workstation:fixture-026:shard-6", workstationShardCommand([
+      "experiments/workstation/fixture-026/rsd-t02-runner-boundaries.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-event.test.mjs",
+      "experiments/workstation/fixture-026/contract.test.mjs",
+      "experiments/workstation/fixture-026/runner.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-evaluator.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-models.test.mjs",
+      "experiments/workstation/fixture-026/rsd-t02-holm4.test.mjs",
+    ])],
+    ["test:workstation:fixture-029:shard-1", workstationShardCommand([
+      "experiments/workstation/fixture-029/suite-runner.test.mjs",
+      "experiments/workstation/fixture-029/contract.test.mjs",
+    ])],
+    ["test:workstation:fixture-029:shard-2", workstationShardCommand([
+      "experiments/workstation/fixture-029/suite-runner-integrity.test.mjs",
+      "experiments/workstation/fixture-029/cmb-x01-runner.test.mjs",
+      "experiments/workstation/fixture-029/cmb-x01-contract.test.mjs",
+      "experiments/workstation/fixture-029/runner.test.mjs",
+    ])],
+  ]);
+  const actualShardNames = Object.keys(scripts)
+    .filter((name) => /^test:workstation:fixture-(026|029):shard-/.test(name))
+    .sort();
+  const expectedShardNames = [...expected.keys()].sort();
+  if (
+    actualShardNames.length !== expectedShardNames.length
+    || actualShardNames.some((name, index) => name !== expectedShardNames[index])
+  ) {
+    findings.push(`${relativePath}: workstation shard script identities must be exactly the eight allowlisted names`);
+  }
+  for (const [name, command] of expected) {
+    if (scripts[name] !== command) {
+      findings.push(`${relativePath}: ${name} must retain its exact bounded test inventory`);
+    }
+  }
+  findings.push(...validateWorkstationShardManifestCoverage(
+    scripts,
+    expectedShardNames,
+    workstationManifests,
+    relativePath,
+  ));
+  return findings;
+}
+
 function validatePackage(root, findings) {
   const relativePath = "package.json";
   let manifest;
@@ -2330,6 +2598,20 @@ function validatePackage(root, findings) {
   }
 
   const scripts = manifest.scripts ?? {};
+  const workstationManifests = {};
+  for (const fixture of ["026", "029"]) {
+    const manifestPath = `experiments/workstation/manifests/fixture-${fixture}.json`;
+    try {
+      workstationManifests[fixture] = JSON.parse(readText(root, manifestPath));
+    } catch (error) {
+      findings.push(`${manifestPath}: invalid JSON: ${error.message}`);
+    }
+  }
+  findings.push(...validateWorkstationShardScriptsObject(
+    manifest,
+    workstationManifests,
+    relativePath,
+  ));
   for (const script of [
     "check",
     "check:code-shape",
