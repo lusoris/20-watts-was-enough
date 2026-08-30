@@ -122,6 +122,8 @@
     {
       "id": "go-research-operations",
       "paths": [
+        "tooling/clrs-generator/**",
+        "tooling/internal/clrsfixture/**",
         "tooling/internal/specialistcontrol/**",
         "tooling/internal/translationbundle/**"
       ],

@@ -35,6 +35,12 @@ the exact diff; this file records why the project changed.
   verifier, terminates unsafe states through typed refusal or abstention, and
   keeps every output at `NO_RESULT`; generator, fixture, model and resource-
   receipt identities remain unfrozen.
+- A strict CLRS-Text source lock pins the inspected Apache-2.0 upstream commit,
+  tree, generator and requirements file. Its standard-library Go importer
+  rejects ambiguous or unbounded JSON, separates candidate-visible prompts
+  from verifier-only answers, records requested length versus fixed-four-
+  endpoint semantics, and emits deterministic `NO_RESULT` identities without
+  selecting tasks, sizes, seeds or a generator image.
 
 ### Changed
 
