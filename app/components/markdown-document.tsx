@@ -16,7 +16,11 @@ import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
-import { isRepositoryArtifact, repositoryArtifactHref } from "../lib/repository-artifacts";
+import {
+  isPublicRepositoryArtifact,
+  isRepositoryArtifact,
+  repositoryArtifactHref,
+} from "../lib/repository-artifacts";
 import { MermaidDiagram } from "./mermaid-diagram";
 
 type MarkdownDocumentProps = {
@@ -290,7 +294,9 @@ export function MarkdownDocument({
       }
 
       const isNavigable = isNavigablePath?.(internal.path) ?? true;
-      if (!isNavigable && isRepositoryArtifact(internal.path)) {
+      if (!isNavigable
+          && isRepositoryArtifact(internal.path)
+          && isPublicRepositoryArtifact(internal.path)) {
         return (
           <a
             href={joinAssetBase(assetBasePath, repositoryArtifactHref(internal.path))}
