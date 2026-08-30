@@ -32,6 +32,7 @@ func TestRenderPlanUsesTheExactImageAndHardenedContainer(t *testing.T) {
 	for _, expected := range []string{
 		"SOURCE_DATE_EPOCH=" + decimal(configuration.Lock.SourceDateEpoch),
 		"RENDERER_LOCK_SHA256=" + configuration.LockSHA256,
+		"type=docker,rewrite-timestamp=true",
 		"--builder",
 	} {
 		if !slices.Contains(build, expected) {
@@ -41,6 +42,9 @@ func TestRenderPlanUsesTheExactImageAndHardenedContainer(t *testing.T) {
 	if strings.Contains(strings.Join(build, "\n"), "NODE_IMAGE=") ||
 		strings.Contains(strings.Join(build, "\n"), "PUPPETEER_IMAGE=") {
 		t.Fatalf("build arguments retain an ARG-based base image: %v", build)
+	}
+	if slices.Contains(build, "--load") || strings.Contains(strings.Join(build, "\n"), "compatibility-version") {
+		t.Fatalf("build arguments bypass the locked exporter boundary: %v", build)
 	}
 	create := requestWithPrefix(t, executor.requests, "buildx", "create").arguments
 	for _, expected := range []string{
@@ -77,6 +81,30 @@ func TestRenderPlanUsesTheExactImageAndHardenedContainer(t *testing.T) {
 	}
 	if strings.Contains(strings.Join(run, "\n"), "node_modules/.vite") {
 		t.Fatalf("run arguments depend on pre-existing Vite cache mountpoints: %v", run)
+	}
+}
+
+func TestRenderRejectsTimestampRewriteWarnings(t *testing.T) {
+	t.Parallel()
+	for name, buildOutput := range map[string]string{
+		"missing-epoch": "rewrite-timestamp is specified, but no source-date-epoch was found",
+		"layer-failure": "failed to rewrite layer 17/19 to match source-date-epoch 1787612224 (date)",
+	} {
+		name, buildOutput := name, buildOutput
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			configuration := renderConfiguration(t)
+			executor := &recordingExecutor{imageID: testImageID, buildOutput: buildOutput}
+			_, err := renderWithDependencies(
+				context.Background(), configuration, "main", noOpPreparer{}, executor,
+			)
+			if err == nil || !strings.Contains(err.Error(), "did not apply") {
+				t.Fatalf("renderWithDependencies() error = %v", err)
+			}
+			if len(executor.requests) != 4 {
+				t.Fatalf("rewrite warning executed %d commands, want version, create, build, cleanup", len(executor.requests))
+			}
+		})
 	}
 }
 
@@ -244,6 +272,7 @@ type recordingExecutor struct {
 	failRun               bool
 	differentSecondRender bool
 	buildxOutput          string
+	buildOutput           string
 	renderCount           int
 	afterBuild            func() error
 }
@@ -267,6 +296,7 @@ func (executor *recordingExecutor) run(_ context.Context, request commandRequest
 				return nil, err
 			}
 		}
+		return []byte(executor.buildOutput), nil
 	}
 	if len(request.arguments) > 0 && request.arguments[0] == "run" {
 		if executor.failRun {

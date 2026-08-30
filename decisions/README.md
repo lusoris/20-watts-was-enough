@@ -45,9 +45,10 @@ than silently changing its outcome.
 | [0037](0037-release-go-tooling-and-scope-experiment-images.md) | Release one scoped image per experiment | accepted; clause 3 partly superseded by [0038](0038-publish-only-release-exercised-container-platforms.md), clause 8 superseded by [0042](0042-retire-the-host-specific-fixture-012-acquisition-lane.md) |
 | [0038](0038-publish-only-release-exercised-container-platforms.md) | Publish only release-exercised container platforms | accepted; clauses 2 and 3 partly superseded by [0041](0041-attest-only-current-run-build-outputs.md) |
 | [0039](0039-make-pages-a-research-publication-surface.md) | Make Pages a research-publication surface | accepted |
-| [0040](0040-bind-publications-to-reproducible-and-public-artifacts.md) | Bind publications to reproducible and public artifacts | accepted |
+| [0040](0040-bind-publications-to-reproducible-and-public-artifacts.md) | Bind publications to reproducible and public artifacts | accepted; renderer-image clauses 1 and 4 partly superseded by [0045](0045-rewrite-renderer-layer-timestamps-before-recording-image-identity.md) |
 | [0041](0041-attest-only-current-run-build-outputs.md) | Attest only current-run build outputs | accepted |
 | [0042](0042-retire-the-host-specific-fixture-012-acquisition-lane.md) | Retire the host-specific Fixture 012 acquisition lane | accepted |
 | [0043](0043-impact-scope-pull-request-ci.md) | Impact-scope pull-request CI | accepted; workstation matrix and full-plan execution shape partly superseded by [0044](0044-shard-workstation-ci-without-splitting-test-authority.md) |
 | [0044](0044-shard-workstation-ci-without-splitting-test-authority.md) | Shard workstation CI without splitting test authority | accepted |
+| [0045](0045-rewrite-renderer-layer-timestamps-before-recording-image-identity.md) | Rewrite renderer layer timestamps before recording image identity | accepted |
 | [0046](0046-project-the-research-roadmap-into-github-milestones.md) | Project the research roadmap into GitHub milestones | accepted |
