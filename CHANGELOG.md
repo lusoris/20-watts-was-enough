@@ -9,6 +9,11 @@ the exact diff; this file records why the project changed.
 
 - The contribution map and issue picker now lead readers to bounded open work
   before they open a parallel issue.
+- The typed-specialist audit now separates two related engineering donors:
+  VMAFx's tiny typed estimators and Pelorus's proposed non-language content
+  router. Exact source snapshots, implementation status, related-party limits,
+  and a non-circular applied video shakedown are recorded without promoting a
+  controller result.
 
 ## [0.3.0] - 2026-08-30
 

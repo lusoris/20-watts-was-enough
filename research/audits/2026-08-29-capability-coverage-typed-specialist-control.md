@@ -3,6 +3,8 @@
 <!-- markdownlint-disable MD013 -->
 
 - **Audit date:** 2026-08-29
+- **Cross-project update:** 2026-08-30; exact public source snapshots from
+  `VMAFx/vmafx` and `VMAFx/pelorus`
 - **Status:** bounded research note; no architecture decision, result, or
   performance claim
 - **Trigger:** a maintainer-supplied image suggested using Howard Gardner's
@@ -160,7 +162,9 @@ This rule prevents both all-or-nothing architecture selection and selective
 resurrection of attractive ideas. It remains an evaluation hypothesis until a
 protocol implements the ledger, trigger gate, and interaction retest.
 
-## Existing engineering donor
+## Existing engineering donors
+
+### Cluster control donor
 
 The read-only [cluster transfer
 audit](2026-08-30-lusoris-k8s-engineering-transfer.md) identifies a current
@@ -171,6 +175,56 @@ shape a dependency-light Go policy package and stress fixtures for this arm.
 The cluster code, component choices, hardware constants and incident outcomes
 do not transfer, and its operational records are not evidence that the held
 specialist comparison wins.
+
+### Tiny estimators and a non-language content router
+
+Two maintainer-related repositories make the proposed composition more
+concrete without validating it. They were inspected at exact public commits:
+[`VMAFx/vmafx@d6cb877`](https://github.com/VMAFx/vmafx/tree/d6cb87711b5883b55af07b9473db150ac8d4c6c0)
+and
+[`VMAFx/pelorus@9724133`](https://github.com/VMAFx/pelorus/tree/9724133530561a71960b091ebbb29283472ab8d5).
+Both repositories state BSD-2-Clause-Patent for their own core code. Individual
+VMAFx model-registry entries retain model-specific licences, and no code,
+weights, data, or benchmark output is imported here.
+
+| Source observation | Engineering translation for this arm | Boundary retained here |
+| --- | --- | --- |
+| The VMAFx [Tiny-AI surface](https://github.com/VMAFx/vmafx/blob/d6cb87711b5883b55af07b9473db150ac8d4c6c0/README.md#tiny-ai) and [model registry](https://github.com/VMAFx/vmafx/blob/d6cb87711b5883b55af07b9473db150ac8d4c6c0/model/tiny/registry.json) expose typed full-reference regressors, no-reference metrics, learned filters, saliency models, scene detectors, and explicit smoke-only artifacts through one ONNX-backed runtime. Registry records distinguish kind, licence, digest, quantisation, and smoke status. | A specialist pool need not be a set of language models. Small estimators, filters, solvers, and conventional programs can share one typed invocation and provenance boundary while retaining task-specific semantics. | This is a domain implementation, not a controller comparison. A common runtime and registry do not show that routing among the registered components improves any complete system frontier. |
+| The VMAFx [v3](https://github.com/VMAFx/vmafx/blob/d6cb87711b5883b55af07b9473db150ac8d4c6c0/docs/ai/models/vmaf_tiny_v3.md) and [v4](https://github.com/VMAFx/vmafx/blob/d6cb87711b5883b55af07b9473db150ac8d4c6c0/docs/ai/models/vmaf_tiny_v4.md) cards report a capacity ladder from 257 to 769 to 3,073 parameters. The repository keeps the smallest v2 model as its default and records v4 as an opt-in saturation point rather than promoting the largest model automatically. | Freeze a strong smallest-model null, measure marginal gain per added capacity and runtime cost, and stop expanding a specialist when the held-out gain saturates. | The values are repository-reported video-quality evaluations that were not reproduced for this audit. They approximate a teacher metric from pre-extracted features and do not establish general reasoning, energy, or controller performance. |
+| VMAFx [ADR-0660](https://github.com/VMAFx/vmafx/blob/d6cb87711b5883b55af07b9473db150ac8d4c6c0/docs/adr/0660-tiny-ai-disabled-runtime-gate.md) gives every Tiny-AI extractor one shared `-ENOSYS` result when the optional DNN runtime is unavailable, before probing a model path. | Availability, unsupported capability, invalid input, uncertainty, and task abstention should remain distinct typed outcomes. A controller can route or stop on those states without asking a language model to reinterpret an error string. | One C API failure-order contract is an implementation lead, not evidence that the proposed end-to-end abstention policy is calibrated or safe. |
+| Pelorus [ADR-0142](https://github.com/VMAFx/pelorus/blob/9724133530561a71960b091ebbb29283472ab8d5/docs/adr/0142-tune-auto-content-router.md) proposes a per-shot, hysteretic controller over measured video features. It would select a content-specific reductive filter configuration or a clean-content `NO-OP` route. Each route must be admitted on a held-out clip before entering the table. | This is a direct non-language-controller analogue: typed sensors feed an explicit route table; bounded executors perform specialized work; doing nothing is a first-class action; and route-specific evidence controls admission. | The ADR is still **Proposed**. At the inspected commit it says the first grain-sigma metadata enabler shipped while the remaining detectors, route legs, and router are follow-up work. It cannot be cited as a completed controller or measured whole-system win. |
+| Pelorus [ADR-0111](https://github.com/VMAFx/pelorus/blob/9724133530561a71960b091ebbb29283472ab8d5/docs/adr/0111-benchmark-methodology.md) requires the same encoder in both arms, clean-reference scoring for restoration, pinned inputs, bounded scoring, and a metric matched to the impairment. Its benchmark record also preserves negative and stand-in results. | Route admission must bind task intent, comparator, reference, metric, and implementation identity. A specialist is not retained because a convenient proxy improves or because a related algorithm class worked. | These rules are a useful experiment pattern, but the reported video results do not measure the proposed AI controller, total lifecycle energy, or generalize outside their codec, content, hardware, and reference assumptions. |
+
+The most useful applied follow-up is therefore not to relabel the VMAFx models
+as a complete artificial brain. It is a separate video-domain shakedown in
+which a small controller receives declared per-shot features and chooses among
+`NO-OP` and a bounded pool of deterministic or learned filter executors. VMAFx
+metrics and tiny estimators can supply typed observations or independent
+candidate checks, but the final quality endpoint must not be the same teacher
+or proxy that trained and routed the system. Compare a frozen threshold table,
+a compact learned router, an always-on tuned chain, the best single fixed
+executor, and a per-shot oracle under identical encoder, data, latency, memory,
+and measured wall-energy opportunities.
+
+That track has two safeguards. First, it remains distinct from the
+[CLRS-Text shakedown](https://github.com/lusoris/20-watts-was-enough/issues/12),
+which tests typed algorithmic specialists without the shared authorship,
+metrics, and video pipeline of these donor repositories. Second, no Pelorus or
+VMAFx result enters as a project result: source code, models, corpus licences,
+metric independence, exact hardware, and current router implementation must be
+re-audited before an executable protocol imports anything.
+
+### Process disclosure for the cross-project update
+
+`@lusoris` supplied the source lead, research direction, and owns or maintains
+the source repositories as well as this project. They are therefore
+related-party engineering sources, not independent confirmation. OpenAI Codex
+inspected the public repositories and drafted this update on 2026-08-30. No
+model, dataset, benchmark artifact, private repository state, or donated
+compute was used; the reported experiments were not rerun. No independent
+scientific, statistical, video-quality, energy, or code review is recorded.
+The update is limited to source-bound architecture and experiment leads and
+does not promote a claim.
 
 ## Decisions required before an experiment exists
 
@@ -186,7 +240,10 @@ This note intentionally does not choose the following:
 5. the arbitration rule for contradictory candidates and the exact abstention
    contract; and
 6. the independence boundary for training data, source roots, evaluators, and
-   calibration sets.
+   calibration sets; and
+7. whether the video-domain donor track is worth a separate applied fixture
+   after its router exists, without allowing shared authorship or metric
+   circularity to substitute for the heterogeneous first test.
 
 Until those decisions are frozen, [OQ-068](../open-questions.md#architecture)
 is a research question rather than a candidate architecture or experiment.
