@@ -83,6 +83,59 @@ func TestRunnerRecordsDecisionBeforeSpecialistAndVerifierEffects(t *testing.T) {
 	}
 }
 
+func TestRunnerSnapshotsRequestBeforeClockOrCallerAliasMutation(t *testing.T) {
+	t.Parallel()
+	policy := testPolicy(t)
+	request := testRequest(TaskInsertionSort)
+	expectedPayload := append([]byte(nil), request.Payload...)
+	boundRequest := request
+	boundRequest.Payload = append([]byte(nil), expectedPayload...)
+	targetID := "exact-" + string(request.Task)
+	expectedBinding := bindRequest(boundRequest, targetID)
+	clockCalls := 0
+	now := func() time.Time {
+		clockCalls++
+		if clockCalls == 1 {
+			request.Payload[0] = 'X'
+		}
+		return testNow
+	}
+	specialists := testSpecialists(policy)
+	specialists[targetID] = specialistFunc(func(_ context.Context, invocation Invocation) (SpecialistResult, error) {
+		if !slices.Equal(invocation.Payload, expectedPayload) || invocation.Binding != expectedBinding {
+			t.Fatalf("specialist invocation payload/binding = %q/%x, want snapshotted %q/%x", invocation.Payload, invocation.Binding, expectedPayload, expectedBinding)
+		}
+		invocation.Payload[0] = 'Y'
+		return SpecialistResult{Binding: invocation.Binding, SpecialistID: targetID, State: ResultCompleted, Payload: []byte("answer")}, nil
+	})
+	verifier := verifierFunc(func(_ context.Context, invocation Invocation, result SpecialistResult) (Verification, error) {
+		if !slices.Equal(invocation.Payload, expectedPayload) {
+			t.Fatalf("verifier invocation payload = %q, want fresh canonical %q", invocation.Payload, expectedPayload)
+		}
+		return Verification{Binding: result.Binding, Verdict: VerificationExact}, nil
+	})
+	runner, err := NewRunner(
+		policy,
+		recorderFunc(func(_ context.Context, decision Decision) error {
+			if decision.Binding != expectedBinding {
+				t.Fatalf("recorded binding = %x, want %x", decision.Binding, expectedBinding)
+			}
+			return nil
+		}),
+		specialists,
+		verifier,
+		now,
+	)
+	if err != nil {
+		t.Fatalf("NewRunner() error = %v", err)
+	}
+
+	run, runErr := runner.Run(context.Background(), request)
+	if runErr != nil || request.Payload[0] != 'X' || run.Outcome.State != OutcomeVerified || run.Outcome.Binding != expectedBinding {
+		t.Fatalf("Run() error/caller/outcome = %v/%q/%#v", runErr, request.Payload, run.Outcome)
+	}
+}
+
 func TestRunnerRecorderFailurePreventsSpecialistEffects(t *testing.T) {
 	t.Parallel()
 	policy := testPolicy(t)

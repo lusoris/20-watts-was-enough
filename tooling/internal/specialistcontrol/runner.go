@@ -76,6 +76,7 @@ func NewRunner(
 
 // Run records the pure policy decision before invoking any specialist effect.
 func (runner Runner) Run(ctx context.Context, request Request) (RunResult, error) {
+	request.Payload = append([]byte(nil), request.Payload...)
 	decision := runner.policy.Decide(runner.now(), request)
 	run := RunResult{Decision: decision, Outcome: outcomeFromDecision(decision)}
 	if err := runner.recorder.RecordDecision(ctx, decision); err != nil {
@@ -98,15 +99,7 @@ func (runner Runner) Run(ctx context.Context, request Request) (RunResult, error
 		return run, nil
 	}
 
-	invocation := Invocation{
-		RunID:          request.RunID,
-		RequestID:      request.RequestID,
-		Task:           request.Task,
-		Payload:        append([]byte(nil), request.Payload...),
-		Binding:        decision.Binding,
-		Deadline:       decision.Deadline,
-		MaxResultBytes: decision.MaxResultBytes,
-	}
+	invocation := invocationFor(request, decision)
 	invokeContext, cancel := context.WithTimeout(ctx, remaining)
 	defer cancel()
 	result, err := runner.specialists[decision.SpecialistID].Invoke(invokeContext, invocation)
@@ -134,7 +127,7 @@ func (runner Runner) Run(ctx context.Context, request Request) (RunResult, error
 		State:        ResultCompleted,
 		Payload:      append([]byte(nil), resultDecision.Payload...),
 	}
-	verification, err := runner.verifier.Verify(invokeContext, invocation, normalizedResult)
+	verification, err := runner.verifier.Verify(invokeContext, invocationFor(request, decision), normalizedResult)
 	if err != nil {
 		run.Outcome = terminalOutcome(OutcomeAbstained, verificationFailureReason(err), decision.Binding, nil)
 		return run, fmt.Errorf("verify specialist %s output: %w", decision.SpecialistID, err)
@@ -145,6 +138,18 @@ func (runner Runner) Run(ctx context.Context, request Request) (RunResult, error
 	}
 	run.Outcome = runner.policy.Finalise(resultDecision, verification)
 	return run, nil
+}
+
+func invocationFor(request Request, decision Decision) Invocation {
+	return Invocation{
+		RunID:          request.RunID,
+		RequestID:      request.RequestID,
+		Task:           request.Task,
+		Payload:        append([]byte(nil), request.Payload...),
+		Binding:        decision.Binding,
+		Deadline:       decision.Deadline,
+		MaxResultBytes: decision.MaxResultBytes,
+	}
 }
 
 func outcomeFromDecision(decision Decision) Outcome {

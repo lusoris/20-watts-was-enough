@@ -272,6 +272,9 @@ func (policy Policy) Decide(now time.Time, request Request) Decision {
 // InspectResult determines whether a candidate may be independently verified.
 func (policy Policy) InspectResult(now time.Time, request Request, decision Decision, result SpecialistResult) ResultDecision {
 	checked := ResultDecision{State: ResultRefuse, Reason: ReasonMalformedResult, Authority: ResultAuthority, Binding: decision.Binding}
+	if now.IsZero() || now.Before(request.IssuedAt) {
+		return checked
+	}
 	if !policy.validDecision(request, decision) {
 		return checked
 	}

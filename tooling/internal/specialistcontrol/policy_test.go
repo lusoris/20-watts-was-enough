@@ -163,6 +163,33 @@ func TestPolicyRefusesUnsafeSpecialistResultsBeforeVerification(t *testing.T) {
 	}
 }
 
+func TestPolicyInspectResultRefusesInvalidObservationTimes(t *testing.T) {
+	t.Parallel()
+	policy := testPolicy(t)
+	request := testRequest(TaskBinarySearch)
+	decision := policy.Decide(testNow, request)
+	result := SpecialistResult{
+		Binding:      decision.Binding,
+		SpecialistID: decision.SpecialistID,
+		State:        ResultCompleted,
+		Payload:      []byte("answer"),
+	}
+	for name, observedAt := range map[string]time.Time{
+		"zero":            {},
+		"before issuance": request.IssuedAt.Add(-time.Nanosecond),
+	} {
+		name, observedAt := name, observedAt
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			checked := policy.InspectResult(observedAt, request, decision, result)
+			if checked.State != ResultRefuse || checked.Reason != ReasonMalformedResult ||
+				checked.Authority != ResultAuthority {
+				t.Fatalf("InspectResult(%s) = %#v, want typed NO_RESULT refusal", name, checked)
+			}
+		})
+	}
+}
+
 func TestPolicyRejectsForgedOrMutatedRecordedDecisions(t *testing.T) {
 	t.Parallel()
 	policy := testPolicy(t)
