@@ -75,6 +75,23 @@ func TestRunCIPlanRejectsAmbiguousFullAndRevisionArguments(t *testing.T) {
 	}
 }
 
+func TestRunCIProjectWritesOnlyFixedValidatedOutputs(t *testing.T) {
+	t.Parallel()
+	plan := `{"schema":1,"mode":"impact","reason":"mapped-change-set",` +
+		`"base_revision":"1111111111111111111111111111111111111111",` +
+		`"head_revision":"2222222222222222222222222222222222222222",` +
+		`"changed_paths":["app/main.tsx"],"lanes":["site"]}`
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	if exitCode := runCIProject(nil, strings.NewReader(plan), &stdout, &stderr); exitCode != 0 {
+		t.Fatalf("runCIProject() exit/stderr = %d/%q", exitCode, stderr.String())
+	}
+	if stdout.String() != "mode=impact\nreason=mapped-change-set\ncontainer=false\ngo=false\n"+
+		"release=false\nresearch=false\nsite=true\nworkstation_any=false\nworkstation_matrix=[]\n" {
+		t.Fatalf("runCIProject() output = %q", stdout.String())
+	}
+}
+
 func TestRunPackageNodeImageRequiresClosedArguments(t *testing.T) {
 	t.Parallel()
 	var stdout bytes.Buffer

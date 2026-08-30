@@ -27,26 +27,30 @@ const (
 var (
 	ruleIDPattern = regexp.MustCompile(`^[a-z][a-z0-9-]{0,63}$`)
 	lanePattern   = regexp.MustCompile(`^[a-z][a-z0-9-]{0,63}$`)
-	allowedLanes  = map[string]struct{}{
+	allowedLanes  = map[string]laneDefinition{
 		"container":                 {},
 		"full":                      {},
 		"go":                        {},
 		"release":                   {},
 		"research":                  {},
 		"site":                      {},
-		"workstation-candidate-010": {},
-		"workstation-fixture-007":   {},
-		"workstation-fixture-012":   {},
-		"workstation-fixture-019":   {},
-		"workstation-fixture-022":   {},
-		"workstation-fixture-023":   {},
-		"workstation-fixture-024":   {},
-		"workstation-fixture-025":   {},
-		"workstation-fixture-026":   {},
-		"workstation-fixture-027":   {},
-		"workstation-fixture-029":   {},
+		"workstation-candidate-010": {WorkstationArtifact: "candidate-010"},
+		"workstation-fixture-007":   {WorkstationArtifact: "fixture-007"},
+		"workstation-fixture-012":   {WorkstationArtifact: "fixture-012"},
+		"workstation-fixture-019":   {WorkstationArtifact: "fixture-019"},
+		"workstation-fixture-022":   {WorkstationArtifact: "fixture-022"},
+		"workstation-fixture-023":   {WorkstationArtifact: "fixture-023"},
+		"workstation-fixture-024":   {WorkstationArtifact: "fixture-024"},
+		"workstation-fixture-025":   {WorkstationArtifact: "fixture-025"},
+		"workstation-fixture-026":   {WorkstationArtifact: "fixture-026"},
+		"workstation-fixture-027":   {WorkstationArtifact: "fixture-027"},
+		"workstation-fixture-029":   {WorkstationArtifact: "fixture-029"},
 	}
 )
+
+type laneDefinition struct {
+	WorkstationArtifact string
+}
 
 // Mapping is the closed path-to-lane authority.
 type Mapping struct {

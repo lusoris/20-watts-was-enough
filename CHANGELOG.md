@@ -12,11 +12,12 @@ the exact diff; this file records why the project changed.
   The provider-neutral exchange preserves glossary choices, drafting-tool
   disclosure and language/domain review metadata, rejects stale English source,
   and cannot write to the reviewed translation tree or publication manifest.
-- Pull-request CI now reports a bounded Go impact plan from exact base and head
-  commits plus one declarative path-to-lane map. Draft changes can select
-  focused lanes for the next sharding step; ready pull requests, non-PR events,
-  selector changes, unknown paths, renames and deletions select the full gate.
-  Existing test jobs remain unchanged until the shards are independently safe.
+- Pull-request CI now derives a bounded Go impact plan from the exact base and
+  head commits, then runs a common gate plus only the selected Go, release,
+  research, site, container, and workstation lanes. Workstation artifacts use
+  an allowlisted four-way matrix; selector changes, unknown paths, renames,
+  deletions, and invalid plans fail closed to the full gate. Pushes to `main`,
+  manual runs, and release verification retain the complete repository gate.
 
 ### Changed
 

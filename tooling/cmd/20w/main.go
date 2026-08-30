@@ -40,6 +40,7 @@ func (values *repeatedString) Set(value string) error {
 func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "Usage:")
 	fmt.Fprintln(writer, "  20w ci plan [--root <repository>] [--base <commit> --head <commit> | --full] [--json]")
+	fmt.Fprintln(writer, "  20w ci project")
 	fmt.Fprintln(writer, "  20w validate docs [--root <repository>]")
 	fmt.Fprintln(writer, "  20w experiment list [--root <repository>] [--json]")
 	fmt.Fprintln(writer, "  20w experiment validate [--root <repository>]")
@@ -69,6 +70,9 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 	case "ci":
 		if len(arguments) >= 2 && arguments[1] == "plan" {
 			return runCIPlan(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "project" {
+			return runCIProject(arguments[2:], os.Stdin, stdout, stderr)
 		}
 	case "validate":
 		if len(arguments) >= 2 && arguments[1] == "docs" {
@@ -133,6 +137,23 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 	fmt.Fprintf(stderr, "Unknown 20w command: %s\n", arguments[0])
 	usage(stderr)
 	return 2
+}
+
+func runCIProject(arguments []string, stdin io.Reader, stdout, stderr io.Writer) int {
+	if len(arguments) != 0 {
+		fmt.Fprintln(stderr, "ci project accepts a plan on standard input and no arguments")
+		return 2
+	}
+	projection, err := ciplan.ReadProjection(stdin)
+	if err != nil {
+		fmt.Fprintf(stderr, "Project bounded CI plan: %v\n", err)
+		return 1
+	}
+	if err := ciplan.WriteGitHubOutputs(stdout, projection); err != nil {
+		fmt.Fprintf(stderr, "Write bounded CI outputs: %v\n", err)
+		return 1
+	}
+	return 0
 }
 
 func runCIPlan(arguments []string, stdout, stderr io.Writer) int {
