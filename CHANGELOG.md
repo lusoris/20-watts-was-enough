@@ -7,11 +7,29 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A project-local publication-design skill now treats the continuous web book
+  and generated PDF as one source-bound publication. It requires bounded
+  page-class sampling, rendered PNG inspection, extracted reading-order checks,
+  explicit accessibility limits, and focused generation/integrity evidence
+  instead of approving print design from CSS or tag state alone.
+- Decision 0047 keeps Cloudflare as the public Pages TLS authority, records the
+  current automatic Full origin-mode limitation, and adds a bounded Go probe
+  after every successful Pages deployment for the exact redirect, Cloudflare
+  response headers, HTTPS status and trusted certificate lifetime.
+- A project-local maintenance-automation skill now admits only recurring,
+  machine-checkable upkeep and routes it through existing Go, manifest,
+  validator, Renovate, or GitHub-workflow authorities with bounded check,
+  repair, idempotence, permission, and removal contracts. Its pinned prior-art
+  audit records retained patterns from `obra/superpowers` and K-Dense AI's
+  `scientific-agent-skills` without importing their runtime machinery.
 - The six research-roadmap stages now project into declarative GitHub
-  milestones through one bounded standard-library Go command and a
-  least-privilege trusted-main workflow. GitHub counts coordination records;
-  the roadmap, claim ledger and qualifying result path retain their separate
-  scientific authority.
+  milestones and one repository-bound issue map through a bounded
+  standard-library Go command and least-privilege trusted-main workflow. The
+  command preflights every remote scope before writing, validates mutation
+  responses, reads the result back and resumes safely after partial transport
+  failure. It does not infer pull-request assignments. GitHub counts
+  coordination records; the roadmap, claim ledger and qualifying result path
+  retain their separate scientific authority.
 - A project-local research-design skill and design-system contract now ground
   layout, typography, colour, diagrams and visual identity in reader tasks,
   semantic ownership, accessibility and retained rendered evidence. An audited
@@ -25,7 +43,7 @@ the exact diff; this file records why the project changed.
 - Pull-request CI now derives a bounded Go impact plan from the exact base and
   head commits, then runs a common gate plus only the selected Go, release,
   research, site, container, and workstation lanes. Workstation artifacts use
-  an allowlisted matrix capped at four concurrent jobs; selector changes,
+  an allowlisted matrix; selector changes,
   unknown paths, renames, deletions, and invalid plans fail closed to the full
   gate. Pushes to `main`, manual runs, and release verification retain the
   complete repository gate.
@@ -44,6 +62,12 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- Draft pull requests retain bounded impact-scoped feedback, while every
+  non-draft or ready pull request now runs the complete sharded matrix before
+  merge. Workstation manifest edits also select their coverage, readiness and
+  reader consumers; dependency review runs only for full pull requests or an
+  explicit dependency lane, and routine issue metadata no longer inherits the
+  full gate from a broad `.github/**` rule.
 - The README, contribution guide and public help route now expose current
   status, roadmap stages, live milestone work, authority boundaries and focused
   entry checks before implementation detail. The portal overview leads with the
@@ -74,10 +98,16 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Linked operational manifests outside the public reader-artifact allowlist
+  now remain canonical GitHub-source links instead of being copied under
+  hidden static paths that the Pages safety validator rejects.
 - Renderer image identity is now stable across the locked two-fresh-builder
   comparison. Lock schema 3 requires BuildKit's layer-timestamp rewrite and
   records compatibility version 30 as the reviewed BuildKit 0.32.2 default;
-  the Go renderer rejects rewrite warnings before it records the image ID.
+  the Go renderer rejects rewrite warnings before it records the image ID. A
+  real-Docker release acceptance now rebuilds the final context without cache
+  in two separate pinned builders, compares the image, config and manifest
+  identities and complete PDF/manifest outputs, and retains a bounded receipt.
 - Release preflight now locates an exact tag through GitHub's GraphQL API and
   reads the resulting numeric release through REST. Draft releases are no
   longer misclassified as absent, while malformed, ambiguous and changed
@@ -199,7 +229,10 @@ the exact diff; this file records why the project changed.
   npm versions; the two isolated render containers share that read-only tree,
   so their comparison is conditional on one clean realization rather than two
   independent installs. The offline print surface keeps remote badge links and
-  text without fetching their mutable image endpoints.
+  text without fetching their mutable image endpoints. A dedicated
+  change-scoped CI gate now repeats the final schema-3 image and publication
+  pair with two fresh no-cache builders; tagged releases always run the same
+  acceptance and checksum its deterministic engineering receipt.
 - GitHub immutable releases are now enabled for future publications. The
   workflow assembles and verifies the checksum-derived asset set in a draft
   before publishing its locked tag and assets; a same-tag published rerun is

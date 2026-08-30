@@ -18,6 +18,7 @@ import (
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/ciplan"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/docscheck"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/experiment"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubissuemilestones"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githublabels"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubmilestones"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/nodeimage"
@@ -48,6 +49,8 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w experiment release-plan [--root <repository>] [--json]")
 	fmt.Fprintln(writer, "  20w experiment package-node-image --artifact <id> --output <directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w publication render-pdf [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--check]")
+	fmt.Fprintln(writer, "  20w publication verify-pdf-reproducibility --receipt <new.json> [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH]")
+	fmt.Fprintln(writer, "  20w publication verify-public-transport [--root <repository>] [--check]")
 	fmt.Fprintln(writer, "  20w translation export-candidate --source <concept-or-math.md> --language <code> --output <new.json> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w translation import-candidate --input <candidate.json> --source <concept-or-math.md> --language <code> --output <new-directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w github sync-metadata [--root <repository>] [--check | --repository <owner/name>]")
@@ -122,6 +125,12 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 		if len(arguments) >= 2 && arguments[1] == "render-pdf" {
 			return runPublicationRenderPDF(arguments[2:], stdout, stderr)
 		}
+		if len(arguments) >= 2 && arguments[1] == "verify-pdf-reproducibility" {
+			return runPublicationVerifyPDFReproducibility(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "verify-public-transport" {
+			return runPublicationVerifyPublicTransport(arguments[2:], stdout, stderr)
+		}
 	case "translation":
 		if len(arguments) >= 2 && arguments[1] == "export-candidate" {
 			return runTranslationExportCandidate(arguments[2:], stdout, stderr)
@@ -172,8 +181,8 @@ func runCIPlan(arguments []string, stdout, stderr io.Writer) int {
 	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
 		return 2
 	}
-	if *forceFull && (*baseRevision != "" || *headRevision != "") {
-		fmt.Fprintln(stderr, "ci plan accepts either --full or --base with --head")
+	if (*baseRevision == "") != (*headRevision == "") {
+		fmt.Fprintln(stderr, "ci plan requires --base and --head together")
 		return 2
 	}
 	plan, err := ciplan.Build(context.Background(), ciplan.Options{
@@ -423,6 +432,11 @@ func runGitHubSyncMetadata(arguments []string, stdout, stderr io.Writer) int {
 		fmt.Fprintf(stderr, "Load GitHub milestone manifest: %v\n", err)
 		return 1
 	}
+	issues, err := githubissuemilestones.Load(*root)
+	if err != nil {
+		fmt.Fprintf(stderr, "Load GitHub issue-assignment manifest: %v\n", err)
+		return 1
+	}
 	if *check {
 		if *repository != "" {
 			fmt.Fprintln(stderr, "github sync-metadata --check does not accept --repository")
@@ -430,40 +444,34 @@ func runGitHubSyncMetadata(arguments []string, stdout, stderr io.Writer) int {
 		}
 		fmt.Fprintf(
 			stdout,
-			"GitHub repository metadata validation passed: %d managed labels and %d managed milestones.\n",
+			"GitHub repository metadata validation passed: %d managed labels, %d managed milestones, and %d managed issue assignments.\n",
 			len(labels.Labels),
 			len(milestones.Milestones),
+			len(issues.Assignments),
 		)
 		return 0
 	}
 	client := githubMetadataHTTPClient()
 	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Minute)
 	defer cancel()
-	labelResult, err := githublabels.Sync(ctx, client, labels, githublabels.Options{
-		Repository: *repository,
-		Token:      os.Getenv("GH_TOKEN"),
-	})
+	result, err := syncGitHubMetadata(ctx, client, githubMetadataManifests{
+		labels: labels, milestones: milestones, issues: issues,
+	}, githubMetadataOptions{Repository: *repository, Token: os.Getenv("GH_TOKEN")})
 	if err != nil {
-		fmt.Fprintf(stderr, "Synchronize GitHub labels: %v\n", err)
-		return 1
-	}
-	milestoneResult, err := githubmilestones.Sync(ctx, client, milestones, githubmilestones.Options{
-		Repository: *repository,
-		Token:      os.Getenv("GH_TOKEN"),
-	})
-	if err != nil {
-		fmt.Fprintf(stderr, "Synchronize GitHub milestones: %v\n", err)
+		fmt.Fprintf(stderr, "Synchronize GitHub repository metadata: %v\n", err)
 		return 1
 	}
 	fmt.Fprintf(
 		stdout,
-		"GitHub repository metadata synchronization passed: labels %d created/%d updated/%d unchanged; milestones %d created/%d updated/%d unchanged.\n",
-		labelResult.Created,
-		labelResult.Updated,
-		labelResult.Unchanged,
-		milestoneResult.Created,
-		milestoneResult.Updated,
-		milestoneResult.Unchanged,
+		"GitHub repository metadata synchronization passed: labels %d created/%d updated/%d unchanged; milestones %d created/%d updated/%d unchanged; issues %d updated/%d unchanged.\n",
+		result.labels.Created,
+		result.labels.Updated,
+		result.labels.Unchanged,
+		result.milestones.Created,
+		result.milestones.Updated,
+		result.milestones.Unchanged,
+		result.issues.Updated,
+		result.issues.Unchanged,
 	)
 	return 0
 }

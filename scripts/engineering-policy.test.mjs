@@ -28,6 +28,8 @@ import {
   validateJavaScriptRuntimeWorkflowObject,
   validateRepositoryMetadataSyncWorkflowObject,
   validateNpmRuntimeLock,
+  validatePagesPublicTransportWorkflowObject,
+  validatePDFRendererReproducibilityWorkflowObject,
   validateReleaseExperimentImageWorkflowObject,
   validateReleaseWorkflowObject,
   validateRetiredHostingPaths,
@@ -111,8 +113,10 @@ function runCiSuccessGate(source, overrides = {}) {
     EVENT_NAME: "push",
     MODE: "full",
     SELECT_CONTAINER: "false",
+    SELECT_DEPENDENCY: "false",
     SELECT_GO: "false",
     SELECT_RELEASE: "false",
+    SELECT_RENDERER: "false",
     SELECT_RESEARCH: "false",
     SELECT_SITE: "false",
     SELECT_WORKSTATION: "true",
@@ -122,6 +126,7 @@ function runCiSuccessGate(source, overrides = {}) {
     RESULT_IMPACT_COMMON: "skipped",
     RESULT_GO: "skipped",
     RESULT_RELEASE: "skipped",
+    RESULT_RENDERER: "skipped",
     RESULT_RESEARCH: "skipped",
     RESULT_SITE: "skipped",
     RESULT_WORKSTATION_CORE: "success",
@@ -137,16 +142,17 @@ test("the repository satisfies its engineering policy", () => {
   assert.deepEqual(validateRepositoryPolicy(), []);
 });
 
-test("tooling validation runs all three offline authorities in order", () => {
+test("tooling validation runs all four offline authorities in order", () => {
   const experiment = "go -C tooling run ./cmd/20w experiment validate --root ..";
   const metadata = "go -C tooling run ./cmd/20w github sync-metadata --root .. --check";
   const publication = "go -C tooling run ./cmd/20w publication render-pdf --root .. --check";
-  const expectedFinding = "package.json: validate:tooling must validate experiment, GitHub metadata, and publication-render authority offline in that order";
-  assert.deepEqual(validateToolingValidationScript(`${experiment} && ${metadata} && ${publication}`), []);
+  const transport = "go -C tooling run ./cmd/20w publication verify-public-transport --root .. --check";
+  const expectedFinding = "package.json: validate:tooling must validate experiment, GitHub metadata, publication-render, and public-transport authority offline in that order";
+  assert.deepEqual(validateToolingValidationScript(`${experiment} && ${metadata} && ${publication} && ${transport}`), []);
   for (const command of [
-    `${metadata} && ${experiment} && ${publication}`,
+    `${metadata} && ${experiment} && ${publication} && ${transport}`,
     `${experiment} && ${metadata}`,
-    `${experiment} && ${metadata} && curl https://example.test && ${publication}`,
+    `${experiment} && ${metadata} && ${publication} && curl https://example.test && ${transport}`,
   ]) {
     assert.deepEqual(validateToolingValidationScript(command), [expectedFinding]);
   }
@@ -475,6 +481,66 @@ test("Go workflows use tooling/go.mod and the Go CodeQL lane", () => {
   ]);
 });
 
+test("Pages verifies the Cloudflare public transport boundary after deployment", () => {
+  const valid = workflow("github-pages");
+  assert.deepEqual(validateGoRuntimeWorkflowObject(valid, "verify-public-transport"), []);
+  assert.deepEqual(validatePagesPublicTransportWorkflowObject(valid), []);
+
+  const detached = structuredClone(valid);
+  detached.jobs["verify-public-transport"].needs = "build";
+  assert.deepEqual(validatePagesPublicTransportWorkflowObject(detached), [
+    ".github/workflows/github-pages.yml: Pages must run the bounded read-only public-transport check after deployment",
+  ]);
+
+  const writable = structuredClone(valid);
+  writable.jobs["verify-public-transport"].permissions.issues = "write";
+  assert.deepEqual(validatePagesPublicTransportWorkflowObject(writable), [
+    ".github/workflows/github-pages.yml: Pages must run the bounded read-only public-transport check after deployment",
+  ]);
+
+  const dispatched = structuredClone(valid);
+  dispatched.on.workflow_dispatch = {};
+  assert.deepEqual(validatePagesPublicTransportWorkflowObject(dispatched), [
+    ".github/workflows/github-pages.yml: production Pages publication must run only from canonical main pushes",
+  ]);
+
+  for (const field of ["if", "continue-on-error"]) {
+    const skippedSetup = structuredClone(valid);
+    const setup = skippedSetup.jobs["verify-public-transport"].steps.find(
+      (step) => step.uses?.startsWith("actions/setup-go@"),
+    );
+    setup[field] = field === "if" ? "${{ false }}" : true;
+    assert.deepEqual(validatePagesPublicTransportWorkflowObject(skippedSetup), [
+      ".github/workflows/github-pages.yml: Pages must run the exact public-transport command from canonical source with no credential persistence or failure bypass",
+    ]);
+  }
+
+  const maskedPipeline = structuredClone(valid);
+  maskedPipeline.jobs["verify-public-transport"].steps.find(
+    (step) => step.run?.includes("verify-public-transport"),
+  ).shell = undefined;
+  assert.deepEqual(validatePagesPublicTransportWorkflowObject(maskedPipeline), [
+    ".github/workflows/github-pages.yml: Pages must run the exact public-transport command from canonical source with no credential persistence or failure bypass",
+  ]);
+
+  const bypassed = structuredClone(valid);
+  const verify = bypassed.jobs["verify-public-transport"].steps.find(
+    (step) => step.run?.includes("verify-public-transport"),
+  );
+  verify.run += " || true";
+  assert.deepEqual(validatePagesPublicTransportWorkflowObject(bypassed), [
+    ".github/workflows/github-pages.yml: Pages must run the exact public-transport command from canonical source with no credential persistence or failure bypass",
+    ".github/workflows/github-pages.yml: Pages must retain the bounded public-transport observation for exactly 30 days",
+  ]);
+
+  const unretained = structuredClone(valid);
+  const receipt = unretained.jobs["verify-public-transport"].steps.at(-1);
+  receipt.with["retention-days"] = 31;
+  assert.deepEqual(validatePagesPublicTransportWorkflowObject(unretained), [
+    ".github/workflows/github-pages.yml: Pages must retain the bounded public-transport observation for exactly 30 days",
+  ]);
+});
+
 test("CI runs the strict-JSON fuzzer with explicit time and process bounds", () => {
   const valid = workflow("ci");
   assert.deepEqual(validateCiFuzzingWorkflowObject(valid), []);
@@ -521,18 +587,126 @@ test("CI runs the strict-JSON fuzzer with explicit time and process bounds", () 
   ]);
 });
 
+test("real PDF reproducibility acceptance stays in the renderer-selected and tagged boundaries", () => {
+  const finding = ".github/workflows/ci.yml: CI must run the exact two-builder PDF reproducibility acceptance only in its renderer-selected gate and retain its receipt";
+  const validCi = workflow("ci");
+  assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
+    validCi,
+    ".github/workflows/ci.yml",
+  ), []);
+
+  const bypassed = structuredClone(validCi);
+  bypassed.jobs["pdf-renderer-reproducibility"].steps.find((step) => (
+    step.name === "Rebuild the final PDF renderer twice without cache"
+  )).run += " || true";
+  assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
+    bypassed,
+    ".github/workflows/ci.yml",
+  ), [finding]);
+
+  const unretained = structuredClone(validCi);
+  unretained.jobs["pdf-renderer-reproducibility"].steps.find((step) => (
+    step.name === "Retain the PDF renderer reproducibility receipt"
+  )).with["retention-days"] = 1;
+  assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
+    unretained,
+    ".github/workflows/ci.yml",
+  ), [finding]);
+
+  const broadened = structuredClone(validCi);
+  broadened.jobs["pdf-renderer-reproducibility"].if =
+    "needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.renderer == 'true'";
+  assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
+    broadened,
+    ".github/workflows/ci.yml",
+  ), [finding]);
+
+  const duplicatedIntoFull = structuredClone(validCi);
+  duplicatedIntoFull.jobs["quality-full"].steps.push({
+    name: "Rebuild the final PDF renderer twice without cache",
+    run: "go -C tooling run ./cmd/20w publication verify-pdf-reproducibility",
+  });
+  assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
+    duplicatedIntoFull,
+    ".github/workflows/ci.yml",
+  ), [finding]);
+
+  const releaseFinding = ".github/workflows/release.yml: tagged releases must run the exact two-builder PDF reproducibility acceptance and checksum its receipt as a release input";
+  const validRelease = workflow("release");
+  assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
+    validRelease,
+    ".github/workflows/release.yml",
+  ), []);
+
+  const unbound = structuredClone(validRelease);
+  unbound.jobs.verify.steps.find((step) => (
+    step.name === "Rebuild the final PDF renderer twice without cache"
+  )).run = unbound.jobs.verify.steps.find((step) => (
+    step.name === "Rebuild the final PDF renderer twice without cache"
+  )).run.replace("build/release-inputs/", "build/evidence/");
+  assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
+    unbound,
+    ".github/workflows/release.yml",
+  ), [releaseFinding]);
+});
+
 test("CI impact selection is projected once and every job state fails closed", () => {
   const valid = workflow("ci");
+  const planFinding = ".github/workflows/ci.yml: draft pull requests must use an exact impact diff, ready pull requests and main pushes must preserve an exact diff in full mode, and manual runs must fail closed";
   assert.deepEqual(validateCiImpactWorkflowObject(valid), []);
 
-  const draftOnly = structuredClone(valid);
-  const plan = draftOnly.jobs["impact-plan"].steps.find((step) => step.id === "plan");
+  const readyBypass = structuredClone(valid);
+  const plan = readyBypass.jobs["impact-plan"].steps.find((step) => step.id === "plan");
   plan.run = plan.run.replace(
-    'if [[ "$EVENT_NAME" == "pull_request" ]]',
     'if [[ "$EVENT_NAME" == "pull_request" && "$PR_DRAFT" == "true" ]]',
+    'if [[ "$EVENT_NAME" == "pull_request" ]]',
   );
-  assert.ok(validateCiImpactWorkflowObject(draftOnly).includes(
-    ".github/workflows/ci.yml: every pull_request must project its exact base/head diff and only non-PR events may force full",
+  assert.ok(validateCiImpactWorkflowObject(readyBypass).includes(planFinding));
+
+  const ambientDraftState = structuredClone(valid);
+  delete ambientDraftState.jobs["impact-plan"].steps.find((step) => step.id === "plan").env.PR_DRAFT;
+  assert.ok(validateCiImpactWorkflowObject(ambientDraftState).includes(planFinding));
+
+  for (const mutate of [
+    (source) => source.replace(
+      "go -C tooling run ./cmd/20w ci plan --root .. --full \\",
+      "go -C tooling run ./cmd/20w ci plan --root .. \\",
+    ),
+    (source) => source.replace(
+      '--base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \\',
+      "--json \\",
+    ),
+    (source) => source.replace(
+      "ci plan --root .. --full --json",
+      "ci plan --root .. --json",
+    ),
+  ]) {
+    const weakenedRouting = structuredClone(valid);
+    const routing = weakenedRouting.jobs["impact-plan"].steps.find((step) => step.id === "plan");
+    routing.run = mutate(routing.run);
+    assert.ok(validateCiImpactWorkflowObject(weakenedRouting).includes(planFinding));
+  }
+
+  for (const eventType of ["ready_for_review", "converted_to_draft"]) {
+    const missingTransition = structuredClone(valid);
+    missingTransition.on.pull_request.types = missingTransition.on.pull_request.types.filter(
+      (type) => type !== eventType,
+    );
+    assert.ok(validateCiImpactWorkflowObject(missingTransition).includes(
+      ".github/workflows/ci.yml: CI must run on main pushes, manual dispatches, and every draft or ready pull-request transition",
+    ));
+  }
+
+  const unselectedDependencyReview = structuredClone(valid);
+  unselectedDependencyReview.jobs["dependency-review"].if = "github.event_name == 'pull_request'";
+  assert.ok(validateCiImpactWorkflowObject(unselectedDependencyReview).includes(
+    ".github/workflows/ci.yml: dependency review must run only for full pull requests or its fixed impact selector and must fail closed",
+  ));
+
+  const ignoredDependencyFailure = structuredClone(valid);
+  ignoredDependencyFailure.jobs["dependency-review"]["continue-on-error"] = true;
+  assert.ok(validateCiImpactWorkflowObject(ignoredDependencyFailure).includes(
+    ".github/workflows/ci.yml: dependency review must run only for full pull requests or its fixed impact selector and must fail closed",
   ));
 
   const openEmptyMatrix = structuredClone(valid);
@@ -549,6 +723,12 @@ test("CI impact selection is projected once and every job state fails closed", (
     ));
   }
 
+});
+
+test("CI selected-lane aggregation and artifact dispatch fail closed", () => {
+  const valid = workflow("ci");
+  const successFinding = ".github/workflows/ci.yml: ci-success must reject unexpected states and any skipped selected lane";
+
   const skippedSelectedLane = structuredClone(valid);
   const success = skippedSelectedLane.jobs["ci-success"].steps.find((step) => (
     step.name === "Require every expected gate state"
@@ -557,9 +737,27 @@ test("CI impact selection is projected once and every job state fails closed", (
     'require_selection lane-go "$RESULT_GO" "$SELECT_GO"',
     'require_state lane-go "$RESULT_GO" skipped',
   );
-  assert.ok(validateCiImpactWorkflowObject(skippedSelectedLane).includes(
-    ".github/workflows/ci.yml: ci-success must reject unexpected states and any skipped selected lane",
+  assert.ok(validateCiImpactWorkflowObject(skippedSelectedLane).includes(successFinding));
+
+  const missingFullRendererGate = structuredClone(valid);
+  const missingRendererSource = missingFullRendererGate.jobs["ci-success"].steps.find((step) => (
+    step.name === "Require every expected gate state"
   ));
+  missingRendererSource.run = missingRendererSource.run.replace(
+    'require_selection pdf-renderer-reproducibility "$RESULT_RENDERER" "$SELECT_RENDERER"',
+    'require_state pdf-renderer-reproducibility "$RESULT_RENDERER" skipped',
+  );
+  assert.ok(validateCiImpactWorkflowObject(missingFullRendererGate).includes(successFinding));
+
+  const rendererFoldedIntoFullSelectors = structuredClone(valid);
+  const foldedRendererSource = rendererFoldedIntoFullSelectors.jobs["ci-success"].steps.find((step) => (
+    step.name === "Require every expected gate state"
+  ));
+  foldedRendererSource.run = foldedRendererSource.run.replace(
+    '"$SELECT_GO" "$SELECT_RELEASE" \\',
+    '"$SELECT_GO" "$SELECT_RELEASE" "$SELECT_RENDERER" \\',
+  );
+  assert.ok(validateCiImpactWorkflowObject(rendererFoldedIntoFullSelectors).includes(successFinding));
 
   const dynamicCommand = structuredClone(valid);
   const artifactStep = dynamicCommand.jobs["workstation-artifacts"].steps.find((step) => (
@@ -641,10 +839,15 @@ test("CI success accepts only the exact full or selected impact state vector", (
     step.name === "Require every expected gate state"
   )).run;
   assert.equal(runCiSuccessGate(source).status, 0);
+  assert.equal(runCiSuccessGate(source, {
+    SELECT_RENDERER: "true",
+    RESULT_RENDERER: "success",
+  }).status, 0, "a full plan may select the orthogonal renderer gate");
 
   const impact = {
     EVENT_NAME: "pull_request",
     MODE: "impact",
+    SELECT_DEPENDENCY: "true",
     SELECT_SITE: "true",
     SELECT_WORKSTATION: "true",
     RESULT_PR_TITLE: "success",
@@ -657,6 +860,21 @@ test("CI success accepts only the exact full or selected impact state vector", (
     RESULT_DEPENDENCY_REVIEW: "success",
   };
   assert.equal(runCiSuccessGate(source, impact).status, 0);
+  assert.equal(runCiSuccessGate(source, {
+    ...impact,
+    SELECT_RENDERER: "true",
+    RESULT_RENDERER: "success",
+  }).status, 0, "an impact plan may select the orthogonal renderer gate");
+  assert.equal(runCiSuccessGate(source, {
+    ...impact,
+    SELECT_DEPENDENCY: "false",
+    RESULT_DEPENDENCY_REVIEW: "skipped",
+  }).status, 0);
+  assert.equal(runCiSuccessGate(source, {
+    EVENT_NAME: "pull_request",
+    RESULT_PR_TITLE: "success",
+    RESULT_DEPENDENCY_REVIEW: "success",
+  }).status, 0, "a full pull request must require dependency review");
   assert.notEqual(runCiSuccessGate(source, {
     ...impact,
     RESULT_WORKSTATION_ARTIFACTS: "skipped",
@@ -667,11 +885,34 @@ test("CI success accepts only the exact full or selected impact state vector", (
   }).status, 0, "an unselected lane may not succeed unexpectedly");
   assert.notEqual(runCiSuccessGate(source, {
     ...impact,
+    RESULT_RENDERER: "success",
+  }).status, 0, "an unselected renderer gate may not run unexpectedly");
+  assert.notEqual(runCiSuccessGate(source, {
+    ...impact,
+    SELECT_RENDERER: "true",
+    RESULT_RENDERER: "skipped",
+  }).status, 0, "a selected renderer gate may not skip");
+  assert.notEqual(runCiSuccessGate(source, {
+    ...impact,
     RESULT_SITE: "cancelled",
   }).status, 0, "a selected lane may not be cancelled");
   assert.notEqual(runCiSuccessGate(source, {
+    ...impact,
+    SELECT_DEPENDENCY: "false",
+    RESULT_DEPENDENCY_REVIEW: "success",
+  }).status, 0, "an unselected dependency review may not run unexpectedly");
+  assert.notEqual(runCiSuccessGate(source, {
+    ...impact,
+    EVENT_NAME: "push",
+    RESULT_PR_TITLE: "skipped",
+    RESULT_DEPENDENCY_REVIEW: "skipped",
+  }).status, 0, "impact mode is limited to pull requests");
+  assert.notEqual(runCiSuccessGate(source, {
     SELECT_GO: "true",
   }).status, 0, "full mode must expose false semantic selectors");
+  assert.notEqual(runCiSuccessGate(source, {
+    SELECT_DEPENDENCY: "true",
+  }).status, 0, "full mode must expose a false dependency selector");
   assert.notEqual(runCiSuccessGate(source, {
     SELECT_WORKSTATION: "false",
   }).status, 0, "full mode must expose its closed workstation matrix");
@@ -701,10 +942,10 @@ test("repository metadata synchronization is manifest-triggered and least-privil
 
   const incompleteTrigger = structuredClone(valid);
   incompleteTrigger.on.push.paths = incompleteTrigger.on.push.paths.filter(
-    (entry) => entry !== ".github/milestones.json",
+    (entry) => entry !== ".github/issue-milestones.json",
   );
   assert.ok(validateRepositoryMetadataSyncWorkflowObject(incompleteTrigger).includes(
-    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for both canonical manifests on main and allow manual repair",
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for all three canonical manifests on main and allow manual repair",
   ));
 });
 
