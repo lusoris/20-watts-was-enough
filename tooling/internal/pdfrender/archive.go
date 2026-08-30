@@ -260,7 +260,12 @@ func cleanArchiveEntry(name string) (string, error) {
 }
 
 func extractArchiveEntry(entry *zip.File, destination, clean string) (returnError error) {
-	target := filepath.Join(destination, filepath.FromSlash(clean))
+	cleanDestination := filepath.Clean(destination)
+	target := filepath.Join(cleanDestination, filepath.FromSlash(clean))
+	rel, err := filepath.Rel(cleanDestination, target)
+	if err != nil || rel == ".." || strings.HasPrefix(rel, ".."+string(os.PathSeparator)) {
+		return fmt.Errorf("Chrome for Testing archive entry %q escapes destination", clean)
+	}
 	if entry.FileInfo().IsDir() {
 		if err := os.MkdirAll(target, 0o755); err != nil {
 			return fmt.Errorf("create Chrome for Testing directory %q: %w", clean, err)
