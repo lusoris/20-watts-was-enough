@@ -136,7 +136,7 @@ export async function prepareReaderArtifacts({
       }
       const relative = path.relative(root, realCandidate).replaceAll("\\", "/");
       if (!allowedArtifacts.has(relative)) {
-        throw new Error(`Linked reader artifact is not in the public allowlist: ${relative}`);
+        continue;
       }
       targets.add(relative);
     }

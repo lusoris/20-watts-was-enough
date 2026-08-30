@@ -1,7 +1,6 @@
 {
   "schema": 1,
   "artifacts": [
-    ".github/milestones.json",
     "assets/plots/core-models.json",
     "experiments/test-coverage.json",
     "experiments/test-readiness-summary.json",

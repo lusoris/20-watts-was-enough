@@ -8,7 +8,11 @@ import {
   repositoryRefForSurface,
   repositoryTreeHref,
 } from "../lib/book-release-identity.mjs";
-import { isRepositoryArtifact, repositoryArtifactHref } from "../lib/repository-artifacts";
+import {
+  isPublicRepositoryArtifact,
+  isRepositoryArtifact,
+  repositoryArtifactHref,
+} from "../lib/repository-artifacts";
 import { publication, repositoryIssueUrl } from "../lib/publication.mjs";
 import { MarkdownDocument } from "./markdown-document";
 import { LanguageAccess } from "./language-access";
@@ -154,7 +158,9 @@ export function BookEdition({
       return hash ? `#${documentHeadingId(path, hash)}` : `#${bookId(path)}`;
     }
     if (isRepositoryArtifact(path)) {
-      if (isPublicPdf) return surfaceDocumentHref(path, hash);
+      if (isPublicPdf || !isPublicRepositoryArtifact(path)) {
+        return surfaceDocumentHref(path, hash);
+      }
       return joinBasePath(assetBasePath, repositoryArtifactHref(path));
     }
     return surfaceDocumentHref(path, hash);

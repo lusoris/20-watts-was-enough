@@ -7,6 +7,10 @@ import { fileURLToPath } from "node:url";
 
 import { bookSourceFiles } from "./book-source.mjs";
 import { publication } from "../app/lib/publication.mjs";
+import {
+  isPublicRepositoryArtifact,
+  repositoryArtifactHref,
+} from "../app/lib/repository-artifacts.ts";
 import { resolveViteCacheDirectory } from "./lib/vite-cache-directory.mjs";
 import {
   assertBookPdfIntegrity,
@@ -124,7 +128,18 @@ test("the public reader loads canonical Markdown and exposes linked source artif
   assert.match(content, /loadPortalDocument/);
   assert.match(content, /Document request returned HTML instead of Markdown/);
   assert.match(markdownDocument, /repositoryArtifactHref\(internal\.path\)/);
+  assert.match(markdownDocument, /isPublicRepositoryArtifact\(internal\.path\)/);
   assert.match(markdownDocument, /data-repository-artifact/);
+});
+
+test("only explicitly public repository artifacts receive static reader copies", () => {
+  assert.equal(isPublicRepositoryArtifact("assets/plots/core-models.json"), true);
+  assert.equal(isPublicRepositoryArtifact(".github/milestones.json"), false);
+  assert.equal(
+    repositoryArtifactHref("assets/plots/core-models.json"),
+    "/repository-files/assets/plots/core-models.json.txt",
+  );
+  assert.match(edition, /!isPublicRepositoryArtifact\(path\)/);
 });
 
 test("the book constrains readiness grids and keeps wide diagrams readable on narrow screens", () => {
@@ -159,6 +174,7 @@ test("the full-book source identity includes the locked renderer dependency grap
     "app/lib/eu-languages.mjs",
     "app/lib/language-access.mjs",
     "app/lib/publication.mjs",
+    "github-pages/public-artifacts.json",
     "app/project-metadata.ts",
     "package-lock.json",
     "public/og-v2.jpg",
@@ -179,6 +195,7 @@ test("the full-book source identity includes the locked renderer dependency grap
     "scripts/install-locked-npm.mjs",
     "scripts/npm-runtime-lock.json",
     "tooling/cmd/20w/main.go",
+    "tooling/cmd/20w/pdf_reproducibility.go",
     "tooling/cmd/20w/translation.go",
     "tooling/go.mod",
     "tooling/internal/buildinfo/buildinfo.go",
@@ -190,6 +207,8 @@ test("the full-book source identity includes the locked renderer dependency grap
     "tooling/internal/pdfrender/dockerfile.go",
     "tooling/internal/pdfrender/publication.go",
     "tooling/internal/pdfrender/render.go",
+    "tooling/internal/pdfrender/reproducibility.go",
+    "tooling/internal/pdfrender/reproducibility_receipt.go",
     "tooling/internal/releasecheck/inventory.go",
     "tooling/internal/releasecheck/release_state.go",
     "tooling/internal/releasecheck/remote_assets.go",
