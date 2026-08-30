@@ -1,0 +1,42 @@
+name: Synchronize repository labels
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/labels.json
+      - .github/workflows/sync-labels.yml
+      - tooling/cmd/20w/main.go
+      - tooling/internal/githublabels/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-label-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Apply the canonical label manifest
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Check out canonical main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/heads/main
+          persist-credentials: false
+      - name: Use Go 1.27
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: tooling/go.mod
+          cache-dependency-path: tooling/go.sum
+      - name: Create or repair managed labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: go -C tooling run ./cmd/20w github sync-labels --root .. --repository "$GITHUB_REPOSITORY"

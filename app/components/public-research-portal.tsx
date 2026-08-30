@@ -9,32 +9,30 @@ import {
   useRef,
   useState,
 } from "react";
-import type { ResearchDocument } from "../content";
+import type { ResearchDocument } from "../research-document";
 import { outlineFromMarkdown } from "../lib/heading-outline";
 import { synchronizePortalSeo } from "../lib/portal-seo";
 import { readinessSummary } from "../lib/readiness";
+import { publication, repositoryIssueUrl } from "../lib/publication.mjs";
 import { LanguageAccess } from "./language-access";
+import { PortalFooter } from "./portal-footer";
 import {
   decodePortalFragment,
   loadPortalDocument,
   portalDocumentLocation,
   portalDocumentPathFromLocation,
   portalDocuments,
+  portalMetrics,
 } from "../portal-content";
 
 const MarkdownDocument = lazy(() => import("./markdown-document").then(
   (module) => ({ default: module.MarkdownDocument }),
 ));
 
-const repositoryUrl = "https://github.com/lusoris/20-watts-was-enough";
+const repositoryUrl = publication.repository;
 const defaultDocumentPath = "concept/00-thesis-and-principles.md";
 const libraryGroups = ["All", "Concept", "Mathematics"] as const;
 const documentGroups = ["Concept", "Mathematics"] as const;
-
-// These are counts of the current canonical registries. Generated readiness
-// counts below continue to come from experiments/test-readiness-summary.json.
-const provenanceFileCount = 17;
-const principleCount = 13;
 
 type LibraryGroup = (typeof libraryGroups)[number];
 
@@ -49,6 +47,13 @@ function repositoryPath(path: string, kind: "blob" | "tree" = "blob") {
 
 function repositoryDocumentHref(path: string, hash = "") {
   return `${repositoryPath(path)}${hash ? `#${encodeURIComponent(hash)}` : ""}`;
+}
+
+function documentIssueHref(path: string) {
+  return repositoryIssueUrl(
+    "site-documentation-problem.yml",
+    `[Site/Docs] ${path}`,
+  );
 }
 
 function overviewLocation(basePath: string, hash = "") {
@@ -341,14 +346,14 @@ export function PublicResearchPortal({
   const funnelSteps = [
     {
       label: "Thesis + observations",
-      metric: `1 thesis · ${provenanceFileCount} provenance files`,
+      metric: `1 thesis · ${portalMetrics.provenanceFiles} provenance files`,
       description: "The thesis states the target; dated inputs retain origin while audited literature supports claims.",
       href: repositoryPath(defaultDocumentPath),
       tone: "source",
     },
     {
       label: "Deduplicated principles",
-      metric: `${principleCount} P-series bundles`,
+      metric: `${portalMetrics.principles} P-series bundles`,
       description: "Recurring causal patterns are merged without erasing their domain-specific evidence.",
       href: repositoryPath("research/principle-registry.md"),
       tone: "principle",
@@ -419,6 +424,7 @@ export function PublicResearchPortal({
           }}
         >Library</a>
         <a href={withBase(assetBasePath, "book/")}>Book</a>
+        <a href={withBase(assetBasePath, "help/")}>Help</a>
         <a href={repositoryUrl} target="_blank" rel="noreferrer">
           GitHub <span aria-hidden="true">↗</span>
         </a>
@@ -449,6 +455,7 @@ export function PublicResearchPortal({
             }}
           >Library</a>
           <a href={withBase(assetBasePath, "book/")}>Book</a>
+          <a href={withBase(assetBasePath, "help/")}>Help</a>
           <a href={repositoryUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
         </nav>
       </details>
@@ -524,6 +531,11 @@ export function PublicResearchPortal({
                 target="_blank"
                 rel="noreferrer"
               >Source <span aria-hidden="true">↗</span></a>
+              <a
+                href={documentIssueHref(selectedMetadata.path)}
+                target="_blank"
+                rel="noreferrer"
+              >Report issue <span aria-hidden="true">↗</span></a>
               <a href={withBase(assetBasePath, "book/")}>Full book</a>
               <a
                 href={withBase(
@@ -757,6 +769,7 @@ export function PublicResearchPortal({
                 <a href={repositoryUrl} target="_blank" rel="noreferrer">
                   Inspect GitHub <span aria-hidden="true">↗</span>
                 </a>
+                <a href={withBase(assetBasePath, "help/")}>How to help</a>
               </nav>
             </aside>
 
@@ -963,23 +976,7 @@ export function PublicResearchPortal({
         </main>
       )}
 
-      <footer className="portal-footer">
-        <div>
-          <strong>20 Watts Was Enough</strong>
-          <p>
-            Canonical public research source. European Union and German normative
-            context by default.
-          </p>
-        </div>
-        <nav aria-label="Project links">
-          <a href={repositoryUrl} target="_blank" rel="noreferrer">Repository</a>
-          <a href={repositoryPath("research/references.bib")} target="_blank" rel="noreferrer">
-            Bibliography
-          </a>
-          <a href={withBase(assetBasePath, "LICENSING.md")}>Licensing</a>
-          <a href={withBase(assetBasePath, "book/")}>Full book</a>
-        </nav>
-      </footer>
+      <PortalFooter assetBasePath={assetBasePath} />
     </div>
   );
 }

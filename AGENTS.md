@@ -26,7 +26,7 @@ It does not apply to imported sources or verbatim quotations.
 8. Bound every experiment loop, retry, queue, subprocess, search grid, output,
    and timeout. Record seeds and run identity at claim-eligible boundaries.
 9. Keep generated sources editable and deterministic. Do not edit `dist/`,
-   `dist-github-pages/`, `.next/`, `.vinext/`, or generated reader copies.
+   `dist-github-pages/`, or generated reader copies.
 10. Follow [`LICENSING.md`](LICENSING.md). Citation is not permission to copy;
     `sources/` and all third-party material keep their own terms.
 11. EU and German law, official adoptions, and applicability are the normative
@@ -61,6 +61,7 @@ It does not apply to imported sources or verbatim quotations.
 | `decisions/` | Append-only durable decisions; supersede rather than rewrite |
 | `sources/` | Provenance records and explicitly licensed imports, not evidence by default |
 | `app/`, `github-pages/` | Interactive reader and public Pages portal |
+| `translations/` | Reviewed, source-version-bound derivatives; English Git source remains canonical |
 | `scripts/` | Validation, generation, and publication-boundary tooling |
 
 ## Working sequence
@@ -78,7 +79,7 @@ It does not apply to imported sources or verbatim quotations.
 
 ## Common commands
 
-```powershell
+```bash
 npm ci
 npm run check
 npm run test:github-pages

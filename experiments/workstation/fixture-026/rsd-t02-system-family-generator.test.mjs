@@ -4,7 +4,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 
 import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
 import {
@@ -89,7 +89,7 @@ function populationAssignmentsForRegistry(registry) {
 
 test("family registry binds all five public equations without granting population authority", async () => {
   const { registry, registrySchema } = await loadContracts();
-  const validate = new Ajv({ allErrors: true, jsonPointers: true }).compile(registrySchema);
+  const validate = createAjv({ allErrors: true }).compile(registrySchema);
   assert.equal(validate(registry), true, JSON.stringify(validate.errors));
   assert.equal(assertFixture026RsdT02SystemFamilyRegistry(registry), registry);
   assert.equal(sha256Hex(canonicalize(registry)), FIXTURE_026_RSD_T02_FAMILY_REGISTRY_SHA256);
@@ -192,7 +192,7 @@ test("one exact integer draw creates one canonical population-contract packet", 
 
 test("the fixed public plan produces twenty canonical instances and no trajectories", async () => {
   const { registry, plan, planSchema, generatedArtifactSchema } = await loadContracts();
-  const validate = new Ajv({ allErrors: true, jsonPointers: true }).compile(planSchema);
+  const validate = createAjv({ allErrors: true }).compile(planSchema);
   assert.equal(validate(plan), true, JSON.stringify(validate.errors));
   assert.equal(assertFixture026RsdT02DevelopmentInstancePlan({ registry, plan }), plan);
   assert.equal(sha256Hex(canonicalize(plan)), FIXTURE_026_RSD_T02_DEVELOPMENT_PLAN_SHA256);
@@ -201,7 +201,7 @@ test("the fixed public plan produces twenty canonical instances and no trajector
     FIXTURE_026_RSD_T02_DEVELOPMENT_PLAN_SHA256,
   );
   const panel = generateFixture026RsdT02DevelopmentPanel({ registry, plan });
-  const validateGeneratedArtifact = new Ajv({ allErrors: true, jsonPointers: true })
+  const validateGeneratedArtifact = createAjv({ allErrors: true })
     .compile(generatedArtifactSchema);
   assert.equal(validateGeneratedArtifact(panel), true, JSON.stringify(validateGeneratedArtifact.errors));
   assert.equal(panel.instances.every((artifact) => validateGeneratedArtifact(artifact)), true);

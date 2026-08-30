@@ -57,6 +57,12 @@ The static web distribution accompanies these project licences with
 under [`LICENSES/`](LICENSES/). Its build fails if the notices do not match the
 packages actually bundled into the browser application.
 
+Tagged native `20w` files carry a separate generated Go-module notice and SPDX
+inventory. The reviewed Goldmark MIT text is retained verbatim in
+[`LICENSES/goldmark-MIT.txt`](LICENSES/goldmark-MIT.txt); release preparation
+fails if that text or the compiled module graph differs from the reviewed
+identity.
+
 ## Material not relicensed by this repository
 
 The licences above apply only to rights that the project contributors are

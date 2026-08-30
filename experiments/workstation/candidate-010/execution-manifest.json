@@ -3,6 +3,11 @@
   "execution_contract": {
     "schema": 1,
     "artifact": "candidate-010",
+    "distribution": {
+      "state": "source-only",
+      "runtime_class": "node-source",
+      "authority": "NO_RESULT"
+    },
     "command": {
       "prepare": "node experiments/workstation/candidate-010/runner.mjs prepare --profile smoke",
       "smoke": "node experiments/workstation/candidate-010/runner.mjs smoke --profile smoke",
@@ -11,7 +16,7 @@
       "validate": "node experiments/workstation/candidate-010/runner.mjs validate --output <run-directory>"
     },
     "environment": {
-      "runtime": "Node.js >=22 on Windows x64; exact runtime captured per run",
+      "runtime": "Node.js 26.8.1 on Windows x64; exact runtime captured per run",
       "lockfiles": [
         "package-lock.json"
       ]
@@ -29,9 +34,6 @@
         "disk_bytes": 1073741824,
         "energy": "external calibrated wall or rail meter required before workstation-ready promotion"
       }
-    },
-    "seeds": {
-      "development": "experiments/workstation/candidate-010/seeds/development.json"
     },
     "seed_integrity": {
       "artifact_schema": "experiments/workstation/candidate-010/seeds/seed-release-artifacts.schema.json",
@@ -115,6 +117,9 @@
       "supported": true,
       "module": "experiments/workstation/candidate-010/checkpoint.mjs",
       "test": "experiments/workstation/candidate-010/checkpoint.test.mjs"
+    },
+    "seeds": {
+      "development": "experiments/workstation/candidate-010/seeds/development.json"
     }
   },
   "seed_release_contract": {

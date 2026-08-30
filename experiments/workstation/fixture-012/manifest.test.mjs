@@ -45,3 +45,18 @@ test("manifest claim scope fails closed when the ledger lacks the exact fixture 
     await rm(temporary, { recursive: true, force: true });
   }
 });
+
+test("distribution schema alternatives fail closed when state and runtime disagree", async () => {
+  const temporary = await mkdtemp(path.join(root, "tmp-fixture-012-distribution-"));
+  const alteredPath = path.join(temporary, "fixture-012.json");
+  try {
+    const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+    manifest.distribution.runtime_class = "node-source";
+    await writeFile(alteredPath, `${JSON.stringify(manifest, null, 2)}\n`);
+    const result = await validateExecutionManifest(root, alteredPath, "fixture-012");
+    assert.ok(result.errors.some((error) => /exactly one schema alternative/u.test(error)));
+  } finally {
+    assert.ok(temporary.startsWith(root));
+    await rm(temporary, { recursive: true, force: true });
+  }
+});

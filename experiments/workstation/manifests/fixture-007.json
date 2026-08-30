@@ -2,6 +2,15 @@
   "schema": 1,
   "artifact": "fixture-007",
   "readiness": "smoke-ready",
+  "distribution": {
+    "state": "release-image",
+    "runtime_class": "transitional-node",
+    "image": "ghcr.io/lusoris/20-watts-was-enough-fixture-007",
+    "platforms": ["linux/amd64"],
+    "build_context": "closed-go-package",
+    "dockerfile": "experiments/workstation/Dockerfile.node-artifact",
+    "authority": "NO_RESULT"
+  },
   "command": {
     "prepare": "node experiments/workstation/fixture-007/runner.mjs prepare --profile smoke",
     "smoke": "node experiments/workstation/fixture-007/runner.mjs smoke --profile smoke --output <run-directory>",
@@ -10,7 +19,7 @@
     "validate": "node experiments/workstation/fixture-007/runner.mjs validate --output <run-directory>"
   },
   "environment": {
-    "runtime": "Node.js >=22 on Windows x64",
+    "runtime": "Node.js 26.8.1 in the release-admitted Linux amd64 scoped OCI image; the first future tag containing this workflow creates the registry artifact",
     "lockfiles": ["package-lock.json"]
   },
   "hardware": {
@@ -41,6 +50,7 @@
   "outputs": {
     "directory": "experiments/workstation/runs/fixture-007-*",
     "schema": "experiments/workstation/fixture-007/output.schema.json",
+    "execution_receipt": "run.json#execution_receipt (experiment.execution-receipt.v1; NO_RESULT; exact digest required for a release image)",
     "append_only": true,
     "hash_chain": true
   },

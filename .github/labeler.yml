@@ -30,9 +30,16 @@
       - any-glob-to-any-file:
           - "app/**"
           - "github-pages/**"
-          - "worker/**"
-          - "vite.config.ts"
           - "vite.pages.config.ts"
+
+"area:translation":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "translations/**"
+          - "app/components/language-access.tsx"
+          - "app/lib/language-access.mjs"
+          - "scripts/*translation*"
+          - "scripts/lib/*translation*"
 
 "area:publication":
   - changed-files:
@@ -74,7 +81,7 @@
       - any-glob-to-any-file:
           - ".github/workflows/**"
           - ".github/labeler.yml"
-          - ".github/labels.yml"
+          - ".github/labels.json"
           - "renovate.json"
           - "scripts/*policy*"
 

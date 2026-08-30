@@ -7,10 +7,12 @@ import {
   decodePortalFragment,
   encodePortalFragment,
 } from "../app/lib/portal-fragment.mjs";
+import { publication } from "../app/lib/publication.mjs";
 import {
   decodeBasicHtmlEntitiesOnce,
   stripHtmlTagSyntax,
 } from "./lib/plain-text.mjs";
+import { assertExactPublicationCopy } from "./lib/publication-copy-integrity.mjs";
 import { renderThirdPartyNotices } from "./lib/third-party-notices.mjs";
 
 const repositoryRoot = path.resolve(
@@ -45,13 +47,44 @@ test("portal fragments preserve existing escapes without double encoding", () =>
   assert.equal(decodePortalFragment("malformed%fragment"), "malformed%fragment");
 });
 
-test("Pages builds a portal root and dedicated book route with a configurable safe base", async () => {
-  const [config, portalEntry, portalHtml, bookEntry, bookHtml] = await Promise.all([
+test("Pages publication copies reject stale PDF and manifest bytes", async () => {
+  const sourceBytes = Buffer.from("current publication bytes");
+  for (const label of [
+    "downloads/20-watts-was-enough-full-concept-book.pdf",
+    "downloads/book-manifest.json",
+  ]) {
+    assert.doesNotThrow(() => assertExactPublicationCopy(
+      sourceBytes,
+      Buffer.from(sourceBytes),
+      label,
+    ));
+    assert.throws(
+      () => assertExactPublicationCopy(
+        sourceBytes,
+        Buffer.from("stale publication bytes"),
+        label,
+      ),
+      new RegExp(`${label.replaceAll(".", "\\.")} differs from its current public source`),
+    );
+  }
+
+  const validator = await source("scripts/validate-github-pages-build.mjs");
+  assert.match(validator, /assertExactPublicationCopy\(publicPdf, pdfHeader, pdfPath\)/u);
+  assert.match(
+    validator,
+    /assertExactPublicationCopy\(publicBookManifest, builtBookManifest, bookManifestPath\)/u,
+  );
+});
+
+test("Pages builds portal, book, and source-bound help routes with a configurable safe base", async () => {
+  const [config, portalEntry, portalHtml, bookEntry, bookHtml, helpCss, helpHtml] = await Promise.all([
     source("vite.pages.config.ts"),
     source("github-pages/main.tsx"),
     source("github-pages/index.html"),
     source("github-pages/book.tsx"),
     source("github-pages/book/index.html"),
+    source("github-pages/help.css"),
+    source("github-pages/help/index.html"),
   ]);
 
   assert.match(config, /import \{ resolvePagesBase \} from ["']\.\/scripts\/lib\/pages-base\.mjs["']/);
@@ -63,33 +96,45 @@ test("Pages builds a portal root and dedicated book route with a configurable sa
   assert.match(config, /input:\s*\{/);
   assert.match(config, /portal:\s*path\.join\(repositoryRoot,\s*["']github-pages["'],\s*["']index\.html["']\)/);
   assert.match(config, /book:\s*path\.join\(repositoryRoot,\s*["']github-pages["'],\s*["']book["'],\s*["']index\.html["']\)/);
+  assert.match(config, /help:\s*path\.join\(repositoryRoot,\s*["']github-pages["'],\s*["']help["'],\s*["']index\.html["']\)/);
 
   assert.match(portalHtml, /<div id=["']root["']><!-- pages-seo:fallback -->/);
   assert.match(portalHtml, /src=["']\/main\.tsx["']/);
   assert.match(portalHtml, /https:\/\/www\.cordana\.dev\//);
   assert.match(portalHtml, /pages-seo:head/);
   assert.match(portalHtml, /rel=["']canonical["'] href=["']https:\/\/www\.cordana\.dev\/["']/);
+  assert.match(portalHtml, /source-linked library below remains available/);
   assertNoLegacyDeploymentHost(portalHtml, "portal HTML must not reference the legacy Pages host");
   assert.doesNotMatch(portalEntry, /vinext|next\/headers|next\/server/);
 
   assert.match(bookEntry, /<BookEdition/);
-  assert.match(bookEntry, /surface=["']github-pages["']/);
+  assert.match(bookEntry, /parameters\.get\(["']pdf["']\) === ["']1["']/);
+  assert.match(bookEntry, /surface=\{surface\}/);
   assert.match(bookEntry, /assetBasePath=\{import\.meta\.env\.BASE_URL\}/);
-  assert.match(bookEntry, /sourceRef=["']main["']/);
+  assert.match(bookEntry, /sourceRef=\{sourceRef\}/);
   assert.match(bookHtml, /<div id=["']root["']><!-- pages-seo:fallback -->/);
   assert.match(bookHtml, /src=["']\.\.\/book\.tsx["']/);
   assert.match(bookHtml, /https:\/\/www\.cordana\.dev\/book\//);
   assert.match(bookHtml, /pages-seo:head/);
   assert.match(bookHtml, /rel=["']canonical["'] href=["']https:\/\/www\.cordana\.dev\/book\/["']/);
+  assert.match(bookHtml, /source-linked contents below remain available/);
   assertNoLegacyDeploymentHost(bookHtml, "book HTML must not reference the legacy Pages host");
   assert.doesNotMatch(bookEntry, /vinext|next\/headers|next\/server/);
+
+  assert.match(helpCss, /@import ["']\.\.\/app\/globals\.css["']/);
+  assert.match(helpHtml, /<div id=["']root["']><!-- pages-seo:fallback -->/);
+  assert.match(helpHtml, /href=["']\.\.\/help\.css["']/);
+  assert.doesNotMatch(helpHtml, /<script\b/);
+  assert.match(helpHtml, /https:\/\/www\.cordana\.dev\/help\//);
+  assertNoLegacyDeploymentHost(helpHtml, "help HTML must not reference the legacy Pages host");
 });
 
 test("the workflow uses GitHub's Pages artifact and deployment actions", async () => {
   const workflow = await source(".github/workflows/github-pages.yml");
+  const packageManifest = JSON.parse(await source("package.json"));
 
   for (const required of [
-    "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6",
+    "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1",
     "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7",
     "actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6",
     "actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5",
@@ -97,11 +142,7 @@ test("the workflow uses GitHub's Pages artifact and deployment actions", async (
     "npm ci",
     "npm run validate:sources",
     "node --test scripts/source-boundary.test.mjs",
-    "npm run prepare:reader-artifacts",
-    "npm run validate:book-pdf",
-    "node --test scripts/github-pages.test.mjs scripts/book-edition-surface.test.mjs",
-    "npm run build:github-pages",
-    "npm run validate:github-pages",
+    "npm run test:github-pages",
     "path: dist-github-pages",
     "include-hidden-files: true",
   ]) {
@@ -121,8 +162,8 @@ test("the workflow uses GitHub's Pages artifact and deployment actions", async (
   assert.doesNotMatch(workflow, /\.openai\/hosting|lusoris\.chatgpt\.site/);
   assert.match(workflow, /actions\/(?:checkout|setup-node|configure-pages|upload-pages-artifact|deploy-pages)@[0-9a-f]{40}/);
   assert.ok(
-    workflow.indexOf("node --test scripts/github-pages.test.mjs scripts/book-edition-surface.test.mjs")
-      < workflow.indexOf("npm run build:github-pages"),
+    packageManifest.scripts["test:github-pages"].indexOf("node --test")
+      < packageManifest.scripts["test:github-pages"].indexOf("npm run build:github-pages"),
     "focused Pages tests must run before the public build",
   );
 });
@@ -278,17 +319,18 @@ test("generated Pages Markdown cannot inflate canonical math validation", async 
   assert.match(validator, /["']dist-github-pages["']/);
 });
 
-test("the public-source wording does not weaken the primary site's access badge", async () => {
-  const [reader, book] = await Promise.all([
-    source("app/components/research-reader.tsx"),
+test("the sole public reader names its Git source and release identity", async () => {
+  const [portal, book] = await Promise.all([
+    source("app/components/public-research-portal.tsx"),
     source("app/components/book-edition.tsx"),
   ]);
 
-  assert.match(reader, /Owner-only/);
-  assert.match(reader, /public Git source/);
-  assert.doesNotMatch(reader, /private Git source/);
+  assert.equal(publication.repository, "https://github.com/lusoris/20-watts-was-enough");
+  assert.match(portal, /const repositoryUrl = publication\.repository/);
+  assert.doesNotMatch(portal, /Owner-only|private Git source/);
   assert.match(book, /Git main snapshot/);
   assert.match(book, /Immutable release tag \$\{repositoryRef\}/);
+  assert.doesNotMatch(book, /Owner-only|chatgpt\.site/);
 });
 
 test("third-party notices include bundler runtimes and accept the project portal index", () => {
@@ -302,8 +344,8 @@ test("third-party notices include bundler runtimes and accept the project portal
     repositoryRoot,
   });
 
-  assert.match(notices, /- rolldown@1\.0\.3 — MIT/);
-  assert.match(notices, /- vite@8\.0\.16 — MIT/);
+  assert.match(notices, /- rolldown@1\.2\.6 — MIT/);
+  assert.match(notices, /- vite@8\.2\.2 — MIT/);
   assert.match(notices, /Copyright \(c\) 2024-present VoidZero Inc\. & Contributors/);
   assert.match(notices, /Copyright \(c\) 2019-present, VoidZero Inc\. and Vite contributors/);
 });

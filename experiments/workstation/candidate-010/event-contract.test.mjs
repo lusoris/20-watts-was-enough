@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 import {
   CANDIDATE_010_EVENT_CONTRACT_VERSION,
   Candidate010EventContractError,
@@ -256,7 +256,7 @@ test("factorial identities, interval ownership, and privilege boundaries are exa
 });
 
 test("draft-07 schema is structurally compatible while runtime remains semantic authority", () => {
-  const ajv = new Ajv({ allErrors: true, jsonPointers: true });
+  const ajv = createAjv({ allErrors: true });
   const validateSchema = ajv.compile(outputSchema);
   const runtimeAccepts = (event, kind) => {
     try {

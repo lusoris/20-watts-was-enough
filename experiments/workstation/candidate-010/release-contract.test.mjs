@@ -8,7 +8,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 import { BACKEND_METADATA } from "./backend-registry.mjs";
 import { createConfirmatoryPreregistration } from "./confirmatory-analysis.mjs";
 import { buildFactorialDesign } from "./factorial-design.mjs";
@@ -44,7 +44,7 @@ async function seedArtifactValidator() {
     ),
     "utf8",
   ));
-  return new Ajv({ allErrors: true, jsonPointers: true }).compile(schema);
+  return createAjv({ allErrors: true }).compile(schema);
 }
 
 function assertSeedArtifactSchema(validate, document, label) {

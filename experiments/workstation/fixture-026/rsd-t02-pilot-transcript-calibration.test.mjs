@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 
 import { analyzeFixture026RsdT02PairedPanel } from "./rsd-t02-holm4.mjs";
 import {
@@ -631,7 +631,7 @@ test("runtime exact-key rejection matches JSON Schema at every object level", as
     new URL("rsd-t02-pilot-transcript-calibration.schema.json", directory),
     "utf8",
   ));
-  const ajv = new Ajv({ allErrors: true, schemaId: "auto" });
+  const ajv = createAjv({ allErrors: true });
   const validateInput = ajv.compile(inputSchema);
   const cases = [];
 
@@ -695,7 +695,7 @@ test("canonical configuration and generated output validate against their JSON s
   const canonical = JSON.parse(await readFile(new URL("configs/rsd-t02-pilot-transcript-calibration.json", directory), "utf8"));
   const inputSchema = JSON.parse(await readFile(new URL("rsd-t02-pilot-transcript-calibration.schema.json", directory), "utf8"));
   const outputSchema = JSON.parse(await readFile(new URL("rsd-t02-pilot-transcript-calibration-output.schema.json", directory), "utf8"));
-  const ajv = new Ajv({ allErrors: true, schemaId: "auto" });
+  const ajv = createAjv({ allErrors: true });
   const validateInput = ajv.compile(inputSchema);
   assert.equal(validateInput(canonical), true, JSON.stringify(validateInput.errors));
   assert.equal(assertFixture026RsdT02PilotTranscriptCalibrationConfiguration(canonical), true);

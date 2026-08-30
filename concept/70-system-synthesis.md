@@ -130,6 +130,54 @@ promote a change into protected state. A local corrective action also cannot
 hide the shared-system cost it exports when the same trigger becomes
 widespread ([C-1493](../research/claims.md#c-1493)).
 
+### A typed-specialist controller remains a held research arm
+
+One speculative implementation makes the coordinating loop explicit without
+putting a general language model in charge. The controller would own run state,
+route selection, specialist and memory access, tool authority, budgets,
+deadlines, candidate arbitration, final output or action, and abstention. Each
+specialist would receive a bounded typed request and return a typed candidate,
+calibrated uncertainty or abstention, provenance, and a resource receipt. A
+specialist could be a small neural model, estimator, solver, conventional
+program, or tool. A language model would be one optional linguistic specialist,
+not the controller or an assumed system-wide brain.
+
+Capability boundaries would come from task contracts and demonstrated causal
+contribution. Howard Gardner's eight multiple-intelligences categories are a
+possible omission prompt for evaluation design, not eight model slots. Their
+independence remains empirically contested, and a human ability label does not
+establish a neural or artificial module boundary. The
+[bounded source audit](../research/audits/2026-08-29-capability-coverage-typed-specialist-control.md)
+preserves the proposal, contrary evidence, measurement dispute, and exact
+limits of that analogy.
+
+The arm must face a capacity-matched general model and a tuned sparse mixture
+of experts with the same tools, state, training opportunity, routing
+information, hardware, and outcome access. Count controller work,
+serialization, repeated context, communication, memory traffic, cold starts,
+calibration, verification, retries, failed routes, maintenance, replacement,
+latency tails, and measured energy. If an ordinary controller or router reaches
+the same quality--risk--latency--energy frontier, the extra specialist boundary
+leaves the architecture.
+
+Evaluation need not demand that one complete architecture win every reported
+axis. Before outcomes are opened, define task-quality and protected-risk floors,
+comparators, uncertainty analysis, and the axes on which a component may earn
+retention. Keep a component only when an independent ablation shows a
+reproducible Pareto contribution without crossing those floors; an energy
+reduction is particularly useful, but cannot buy lower declared quality or
+hidden risk. Report every regression and interaction because separately useful
+components need not compose additively.
+
+A non-winning component moves to a versioned retest backlog with its negative
+result, failed boundary, and strongest comparator. It is not rerun on a timer.
+Reopening requires a predeclared concrete trigger: a stronger mechanism, a
+changed workload or physical boundary, or new evidence that changes the tested
+prediction. The retest then uses the current stronger baseline rather than the
+one the component previously lost to. This portfolio rule is itself a research
+hypothesis under [OQ-068](../research/open-questions.md#architecture), not an
+accepted architecture decision.
+
 ### Governance is activated by a real authority problem
 
 Aggregation rules, delegation, vetoes, constitutions, and participation are

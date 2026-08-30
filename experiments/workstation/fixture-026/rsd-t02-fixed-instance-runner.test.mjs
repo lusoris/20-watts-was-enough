@@ -4,7 +4,7 @@ import path from "node:path";
 import { after, before, test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 
 import { canonicalize, sha256Hex } from "../lib/checkpoint-ledger.mjs";
 import {
@@ -60,7 +60,7 @@ before(async () => {
   registry = JSON.parse(registryText);
   config = JSON.parse(configText);
   schema = JSON.parse(schemaText);
-  validateSchema = new Ajv({ allErrors: true, jsonPointers: true }).compile(schema);
+  validateSchema = createAjv({ allErrors: true }).compile(schema);
   instance = generateFixture026RsdT02DevelopmentInstance({
     registry,
     family_id: "F-DEV-IFFL-AFFINE",

@@ -5,7 +5,101 @@ the exact diff; this file records why the project changed.
 
 ## [Unreleased]
 
-No unreleased changes.
+### Added
+
+- The Go 1.27 `20w` command now provides bounded documentation validation,
+  experiment discovery and deterministic native release construction. The
+  first future tag whose source contains and passes the release workflow will
+  publish its static `scratch` image for Linux `amd64`; Linux `arm64` remains
+  withheld until its release path is exercised. The only native file currently
+  exercised and admitted is `20w-linux-amd64`; both forms bind source identity,
+  checksums, a Go-module SPDX inventory, third-party notices, provenance and
+  attestations.
+- Experiment distribution now defines one scoped OCI image per released
+  experiment. The same qualifying tag will first publish Fixture 007's closed
+  Node image and Fixture 019's digest-pinned Node, CPython and NumPy image;
+  pull-request CI executes their bounded `NO_RESULT` smoke paths without
+  network access. Future static Go runners use the same per-experiment identity
+  rather than a shared all-harness runtime.
+- Reviewed translations now have a Git-native manifest contract, exact English
+  source digests, named human review, generated static locale routes, focused
+  fail-closed bounded validation, contribution guidance and a dedicated GitHub
+  issue route.
+- A project-local reader-editor skill now separates conservative readability
+  review from claim authority. Pull requests record intended readers and
+  domain/readability review, while site issues can identify the exact point and
+  interpretation where a non-expert lost the argument.
+- A public how-to-help map now turns reader, translation, container, evidence,
+  experiment, Go and security work into bounded entry points with named
+  authority limits, review evidence, focused checks and exact issue routes.
+  Pages generates `/help/` directly from that Markdown as a zero-client-
+  JavaScript reading surface.
+- A public-interface audit records current reading measures, comparable
+  GitHub-native research structures, safe layout defaults, bounded reader
+  tests and the maintainer decisions still required for Discussions, archival
+  deposits, annotations and translation tooling.
+- A bounded architecture audit now tests an explicit non-language controller
+  over task-derived small typed specialists against a capacity-matched general
+  model and tuned sparse mixture of experts. Gardner's eight categories remain
+  only a disputed coverage prompt, while independently demonstrated Pareto
+  gains enter a trigger-gated portfolio and retest backlog rather than becoming
+  a fixed eight-part architecture.
+
+### Changed
+
+- GitHub Pages is now the sole hosted reader and local web target. The obsolete
+  owner-only ChatGPT Site was deleted, and its Vinext routes, Cloudflare Worker,
+  hosting metadata, private-reader code, framework dependencies, and duplicate
+  build validator were removed. PDF generation now renders the same static
+  Pages book entry used online.
+- The language control no longer delegates research prose to Google Translate.
+  It opens only reviewed, source-version-bound translations and otherwise
+  routes the selected language and page into the translation contribution
+  workflow.
+- Publication identity now comes from one shared registry, document and book
+  surfaces link directly to typed feedback routes, compact supporting text is
+  more readable, and duplicate Pages checks were removed from CI and tagged
+  release verification. The publication workflow now documents the single
+  source-to-Pages/PDF/container/translation graph.
+- The repository-wide documentation validator now runs in the small Go 1.27
+  module and the validation command is also available as a static container;
+  PowerShell is no longer a general contribution or CI dependency. The
+  Windows-only physical containment fixture retains its platform-specific
+  harness as an experiment boundary rather than a repository-wide requirement.
+- Compatible direct dependencies, scientific runtimes and GitHub Actions were
+  moved to their current stable releases: Node 26.8.1, npm 12.0.2, CPython
+  3.14.7, NumPy 2.5.2, TypeScript 6.0.3, Vite 8.2.2 and Go 1.27.0. ESLint 9 and
+  TypeScript 6 remain at the newest versions accepted by their current plugin
+  peer ranges; unsupported major upgrades are reported rather than forced.
+- Release SBOM generation now pins BuildKit's Syft scanner by its
+  multi-platform digest.
+- Fixture 007 and Fixture 019 now write one shared execution receipt containing
+  the image, source, runtime, platform, command and `NO_RESULT` boundary.
+  Release images require the caller's exact resolved digest before any action;
+  local and development runs retain typed unavailable states without changing
+  the scientific `run_id`.
+- Both released experiment images now build from deterministic closed contexts
+  packaged by the Go command. Catalogue validation rejects missing, non-regular
+  or symlink-traversed lockfiles, and release verification checks the exact Go,
+  Node.js, CPython and NumPy identities from immutable image digests.
+- Container release publication is now two-phase. Builds push untagged
+  canonical digests; exact inspection, offline execution, attestation repair
+  and provenance verification must pass before the workflow attaches a
+  release tag and checks its final digest binding. Reruns re-admit existing
+  tags and repair missing attestations without an intentional deletion or
+  replacement path. Tag attachment is serialized and absence-checked; package
+  writers remain trusted because GHCR has no documented atomic create-if-
+  absent operation for this path.
+- Managed GitHub issue labels now come from one closed JSON manifest. A bounded
+  Go command validates and applies it from canonical `main`, creating or
+  repairing managed labels without deleting repository labels outside the
+  manifest. Manifest reads compare opened-descriptor size, modification time
+  and change time before and after bounded duplicate reads, rejecting
+  same-inode mutation as well as path replacement.
+- Node-based reruns now fail before expensive work unless the process is exact
+  Node.js 26.8.1 and reproduces a frozen Fixture 026 exponential-ramp numeric
+  sentinel. Experiment manifests use the same exact runtime instead of a broad
+  semver range that admitted numerically divergent vendor builds.
 
 ## [0.2.0] - 2026-08-28
 

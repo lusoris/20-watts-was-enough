@@ -35,7 +35,7 @@
     {
       "role": "fixed-instance-runner",
       "path": "rsd-t02-fixed-instance-runner.mjs",
-      "sha256_exact_bytes": "732b09a53cc39410e06cfcbc33d6f0cdc28e4c9c9b30bf11c6091aff25ad743e"
+      "sha256_exact_bytes": "756b234c1729f67f8d90939467e3706ed530d0e8723046686186d68a2f02cf8d"
     },
     {
       "role": "isolated-durable-config",
@@ -76,6 +76,11 @@
       "role": "checkpoint-ledger-library",
       "path": "../lib/checkpoint-ledger.mjs",
       "sha256_exact_bytes": "3d94ba7135a692136cf279936b87834a598695b7bf6a9004920b6a3d1c8d2eb5"
+    },
+    {
+      "role": "node-runtime-policy",
+      "path": "../lib/node-runtime-policy.mjs",
+      "sha256_exact_bytes": "59289a91c9e5541fd8ab89655492be962a0b799980da330ff89bbb3f9139423f"
     },
     {
       "role": "population-contract",

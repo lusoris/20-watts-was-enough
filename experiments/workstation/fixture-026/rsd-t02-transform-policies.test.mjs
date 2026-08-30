@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 
 import { sha256Hex } from "../lib/checkpoint-ledger.mjs";
 import {
@@ -281,7 +281,7 @@ test("C-DUAL requires unanimous drive votes and never invokes a fallback", async
   }
 
   const schema = JSON.parse(await readFile(SCHEMA_PATH, "utf8"));
-  const validate = new Ajv({ allErrors: true, jsonPointers: true }).compile(schema);
+  const validate = createAjv({ allErrors: true }).compile(schema);
   assert.equal(validate(commitment), true, JSON.stringify(validate.errors));
   assert.deepEqual(FIXTURE_026_RSD_T02_ACTIVE_ARM_IDS, EXPECTED_ACTIVE_ARM_IDS);
   assert.deepEqual(FIXTURE_026_RSD_T02_INACTIVE_ARM_IDS, []);

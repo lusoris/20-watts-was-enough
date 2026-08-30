@@ -7,13 +7,13 @@
 /experiments/ @lusoris
 /sources/ @lusoris
 /decisions/ @lusoris
+/translations/ @lusoris
 
 # Generated publications and their source toolchain
 /assets/ @lusoris
 /public/downloads/ @lusoris
 /app/ @lusoris
 /github-pages/ @lusoris
-/worker/ @lusoris
 /scripts/ @lusoris
 
 # Repository policy, licensing, and automation

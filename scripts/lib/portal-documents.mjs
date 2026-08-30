@@ -53,34 +53,42 @@ function routeFromPath(relativePath) {
   return `${relativePath.replace(/\.md$/u, "")}/`;
 }
 
+export function markdownDocumentFromBody(relativePath, group, body) {
+  const fallbackTitle = path.basename(relativePath, ".md")
+    .replace(/^\d+-/u, "")
+    .replaceAll("-", " ")
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+  const title = titleFromMarkdown(body, fallbackTitle);
+  const headings = [...body.matchAll(/^#{1,6}\s+(.+?)\s*#*\s*$/gm)]
+    .map((match) => visibleMarkdown(match[1]))
+    .filter(Boolean);
+  return {
+    path: relativePath,
+    route: routeFromPath(relativePath),
+    title,
+    description: descriptionFromMarkdown(body, title, group),
+    group,
+    kind: "markdown",
+    words: body.trim().split(/\s+/).filter(Boolean).length,
+    searchText: [relativePath, title, ...headings].join("\n").toLowerCase(),
+    body,
+  };
+}
+
+export function markdownSourceDocument(repositoryRoot, relativePath, group) {
+  const file = path.join(repositoryRoot, relativePath);
+  return markdownDocumentFromBody(relativePath, group, readFileSync(file, "utf8"));
+}
+
 export function portalSourceDocuments(repositoryRoot) {
   const inputs = ["concept", "math"].flatMap((directory) => (
     markdownFiles(path.join(repositoryRoot, directory))
       .filter((file) => path.basename(file).toLowerCase() !== "readme.md")
   ));
   return inputs.map((file) => {
-    const body = readFileSync(file, "utf8");
     const relativePath = path.relative(repositoryRoot, file).replaceAll("\\", "/");
-    const fallbackTitle = path.basename(file, ".md")
-      .replace(/^\d+-/u, "")
-      .replaceAll("-", " ")
-      .replace(/\b\w/g, (character) => character.toUpperCase());
-    const title = titleFromMarkdown(body, fallbackTitle);
-    const headings = [...body.matchAll(/^#{1,6}\s+(.+?)\s*#*\s*$/gm)]
-      .map((match) => visibleMarkdown(match[1]))
-      .filter(Boolean);
     const group = relativePath.startsWith("concept/") ? "Concept" : "Mathematics";
-    return {
-      path: relativePath,
-      route: routeFromPath(relativePath),
-      title,
-      description: descriptionFromMarkdown(body, title, group),
-      group,
-      kind: "markdown",
-      words: body.trim().split(/\s+/).filter(Boolean).length,
-      searchText: [relativePath, title, ...headings].join("\n").toLowerCase(),
-      body,
-    };
+    return markdownSourceDocument(repositoryRoot, relativePath, group);
   }).sort((left, right) => {
     const groupDelta = (left.group === "Concept" ? 0 : 1)
       - (right.group === "Concept" ? 0 : 1);

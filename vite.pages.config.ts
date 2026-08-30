@@ -3,17 +3,26 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
-import { portalSourceDocuments } from "./scripts/lib/portal-documents.mjs";
+import {
+  markdownSourceDocument,
+  portalSourceDocuments,
+} from "./scripts/lib/portal-documents.mjs";
+import { portalSourceMetrics } from "./scripts/lib/portal-metrics.mjs";
 import {
   populateSeoTemplate,
   renderBookFallback,
   renderDocumentFallback,
+  renderHelpFallback,
   renderPortalFallback,
   renderSeoHead,
   renderSitemap,
 } from "./scripts/lib/pages-seo.mjs";
 import { resolvePagesBase } from "./scripts/lib/pages-base.mjs";
 import { renderThirdPartyNotices } from "./scripts/lib/third-party-notices.mjs";
+import {
+  translatedSourceDocuments,
+  writeTranslationPages,
+} from "./scripts/lib/translation-pages.mjs";
 
 const repositoryRoot = path.dirname(fileURLToPath(import.meta.url));
 const pagesOutputRoot = path.join(repositoryRoot, "dist-github-pages");
@@ -38,6 +47,15 @@ type PortalSourceDocument = {
   body: string;
 };
 
+type TranslationSourceDocument = PortalSourceDocument & {
+  language: string;
+  canonicalSourcePath: string;
+  canonicalSourceRoute: string;
+  sourceSha256: string;
+  targetSha256: string;
+  reviewers: readonly string[];
+};
+
 function portalDocumentAssets(): Plugin {
   let documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
   const refreshDocuments = () => {
@@ -49,7 +67,7 @@ function portalDocumentAssets(): Plugin {
     resolveId(id: string) {
       return id === portalIndexModuleId ? resolvedPortalIndexModuleId : null;
     },
-    load(id: string) {
+    async load(id: string) {
       if (id !== resolvedPortalIndexModuleId) return null;
       const index = refreshDocuments().map((document) => ({
         path: document.path,
@@ -61,16 +79,19 @@ function portalDocumentAssets(): Plugin {
         words: document.words,
         searchText: document.searchText,
       }));
-      return `export default ${JSON.stringify(index)};`;
+      const metrics = await portalSourceMetrics(repositoryRoot);
+      return `export const portalMetrics = ${JSON.stringify(metrics)};\nexport default ${JSON.stringify(index)};`;
     },
     configureServer(server: ViteDevServer) {
       const sourceRoots = [
         path.join(repositoryRoot, "concept"),
         path.join(repositoryRoot, "math"),
+        path.join(repositoryRoot, "research", "principle-registry.md"),
+        path.join(repositoryRoot, "sources"),
       ];
       const reloadPortal = (file: string) => {
         const relative = path.relative(repositoryRoot, file).replaceAll("\\", "/");
-        if (!/^(?:concept|math)\/.+\.md$/i.test(relative)) return;
+        if (!/^(?:(?:concept|math)\/.+\.md|research\/principle-registry\.md|sources\/.+)$/i.test(relative)) return;
         refreshDocuments();
         const indexModule = server.moduleGraph.getModuleById(resolvedPortalIndexModuleId);
         if (indexModule) server.moduleGraph.invalidateModule(indexModule);
@@ -128,14 +149,29 @@ function portalDocumentAssets(): Plugin {
   };
 }
 
-function seoStaticPages(): Plugin {
+export function createSeoStaticPages({
+  outputRoot = pagesOutputRoot,
+  translationDocuments = null,
+}: {
+  outputRoot?: string;
+  translationDocuments?: readonly TranslationSourceDocument[] | null;
+} = {}): Plugin {
   return {
     name: "seo-static-pages",
-    closeBundle() {
+    writeBundle() {
       const documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
-      const portalPath = path.join(pagesOutputRoot, "index.html");
-      const bookPath = path.join(pagesOutputRoot, "book", "index.html");
+      const translations = translationDocuments
+        ?? translatedSourceDocuments(repositoryRoot) as TranslationSourceDocument[];
+      const portalPath = path.join(outputRoot, "index.html");
+      const bookPath = path.join(outputRoot, "book", "index.html");
+      const helpPath = path.join(outputRoot, "help", "index.html");
       const portalTemplate = readFileSync(portalPath, "utf8");
+      const staticTemplate = readFileSync(helpPath, "utf8");
+      const helpDocument = markdownSourceDocument(
+        repositoryRoot,
+        "docs/how-to-help.md",
+        "Project",
+      );
       writeFileSync(portalPath, populateSeoTemplate(
         portalTemplate,
         renderSeoHead("portal", null, pagesBase),
@@ -146,8 +182,13 @@ function seoStaticPages(): Plugin {
         renderSeoHead("book", null, pagesBase),
         renderBookFallback(documents, pagesBase),
       ), "utf8");
+      writeFileSync(helpPath, populateSeoTemplate(
+        readFileSync(helpPath, "utf8"),
+        renderSeoHead("help", helpDocument, pagesBase),
+        renderHelpFallback(helpDocument, documents, pagesBase),
+      ), "utf8");
       for (const document of documents) {
-        const output = path.join(pagesOutputRoot, ...document.route.split("/"), "index.html");
+        const output = path.join(outputRoot, ...document.route.split("/"), "index.html");
         mkdirSync(path.dirname(output), { recursive: true });
         writeFileSync(output, populateSeoTemplate(
           portalTemplate,
@@ -155,9 +196,15 @@ function seoStaticPages(): Plugin {
           renderDocumentFallback(document, documents, pagesBase),
         ), "utf8");
       }
+      writeTranslationPages({
+        outputRoot,
+        template: staticTemplate,
+        documents: translations,
+        basePath: pagesBase,
+      });
       writeFileSync(
-        path.join(pagesOutputRoot, "sitemap.xml"),
-        renderSitemap(documents),
+        path.join(outputRoot, "sitemap.xml"),
+        renderSitemap([...documents, ...translations]),
         "utf8",
       );
     },
@@ -199,7 +246,7 @@ export default defineConfig({
   base: pagesBase,
   publicDir: path.join(repositoryRoot, "public"),
   assetsInclude: ["**/*.md", "**/*.mmd", "**/*.bib"],
-  plugins: [react(), portalDocumentAssets(), legalReleaseAssets(), seoStaticPages()],
+  plugins: [react(), portalDocumentAssets(), legalReleaseAssets(), createSeoStaticPages()],
   build: {
     outDir: pagesOutputRoot,
     emptyOutDir: true,
@@ -207,6 +254,7 @@ export default defineConfig({
       input: {
         portal: path.join(repositoryRoot, "github-pages", "index.html"),
         book: path.join(repositoryRoot, "github-pages", "book", "index.html"),
+        help: path.join(repositoryRoot, "github-pages", "help", "index.html"),
       },
     },
   },

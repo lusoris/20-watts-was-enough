@@ -10,7 +10,7 @@ import {
 import path from "node:path";
 import test from "node:test";
 
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 
 import {
   canonicalCmbX01,
@@ -154,7 +154,7 @@ test("standard JSON Schema rejects hostile outer and nested event shapes", async
     new URL("./cmb-x01-output.schema.json", import.meta.url),
     "utf8",
   ));
-  const validate = new Ajv({ allErrors: true, jsonPointers: true }).compile(schema);
+  const validate = createAjv({ allErrors: true }).compile(schema);
   for (const value of records) {
     assert.equal(validate(value), true, JSON.stringify(validate.errors));
   }

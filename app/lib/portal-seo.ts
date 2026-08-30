@@ -1,9 +1,10 @@
-const canonicalSite = "https://www.cordana.dev/";
-const projectImage = `${canonicalSite}og-v2.jpg`;
-const proseLicense = "https://creativecommons.org/licenses/by-sa/4.0/";
-const siteName = "20 Watts Was Enough";
-const portalDescription =
-  "Explore the living concept, evidence, experiments and mathematics behind 20 Watts Was Enough: a biologically inspired R&D blueprint for sparse, grounded, continual, energy-efficient AI.";
+import { publication } from "./publication.mjs";
+
+const canonicalSite = publication.canonicalSite;
+const projectImage = `${canonicalSite}${publication.imagePath}`;
+const proseLicense = publication.proseLicense;
+const siteName = publication.siteName;
+const portalDescription = publication.portalDescription;
 
 type PortalSeoDocument = {
   title: string;
@@ -12,7 +13,7 @@ type PortalSeoDocument = {
   words: number;
 };
 
-function pageDescriptor(metadata: PortalSeoDocument | null) {
+export function portalSeoDescriptor(metadata: PortalSeoDocument | null) {
   if (metadata) {
     const canonical = `${canonicalSite}${metadata.route}`;
     return {
@@ -106,7 +107,7 @@ function upsertStructuredData(value: object) {
 
 export function synchronizePortalSeo(metadata: PortalSeoDocument | null) {
   if (typeof window === "undefined") return;
-  const descriptor = pageDescriptor(metadata);
+  const descriptor = portalSeoDescriptor(metadata);
   window.document.title = descriptor.title;
   for (const [attribute, key, content] of [
     ["name", "description", descriptor.description],
@@ -116,14 +117,14 @@ export function synchronizePortalSeo(metadata: PortalSeoDocument | null) {
     ["property", "og:type", descriptor.ogType],
     ["property", "og:url", descriptor.canonical],
     ["property", "og:image", projectImage],
-    ["property", "og:image:alt", "Biological branching, neural connectivity and computational structures joined in one system diagram."],
+    ["property", "og:image:alt", publication.imageAlt],
     ["property", "og:site_name", siteName],
     ["property", "og:locale", "en_GB"],
     ["name", "twitter:card", "summary_large_image"],
     ["name", "twitter:title", descriptor.title],
     ["name", "twitter:description", descriptor.description],
     ["name", "twitter:image", projectImage],
-    ["name", "twitter:image:alt", "Biological branching, neural connectivity and computational structures joined in one system diagram."],
+    ["name", "twitter:image:alt", publication.imageAlt],
   ] as const) {
     upsertMeta(attribute, key, content);
   }

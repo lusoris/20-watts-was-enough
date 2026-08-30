@@ -64,6 +64,8 @@ export const CANDIDATE_010_EXECUTION_MANIFEST_PROJECTION_VERSION =
   "candidate-010.execution-manifest-projection.v1";
 
 export const CANDIDATE_010_TEST_SUPPORT_FILES = Object.freeze([
+  // Shared strict Ajv construction used by registered schema-contract tests.
+  "experiments/workstation/lib/ajv.mjs",
   // Loaded by runner.test.mjs as the deterministic expected-output fixture.
   "experiments/workstation/candidate-010/golden-smoke.json",
 ]);

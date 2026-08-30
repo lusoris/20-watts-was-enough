@@ -7,11 +7,32 @@ import test from "node:test";
 import {
   analyzeFixture019,
   executeFixture019,
+  main,
   prepareFixture019,
   validateFixture019,
 } from "./runner.mjs";
 
 const root = process.cwd();
+
+function releaseEnvironment() {
+  return {
+    EXPERIMENT_ARTIFACT: "fixture-019",
+    EXPERIMENT_IMAGE_NAME: "ghcr.io/lusoris/20-watts-was-enough-fixture-019",
+    EXPERIMENT_IMAGE_VERSION: "v1.2.3",
+    EXPERIMENT_SOURCE_REVISION: "a".repeat(40),
+    EXPERIMENT_RESULT_AUTHORITY: "NO_RESULT",
+    EXPERIMENT_IMAGE_DIGEST: `sha256:${"b".repeat(64)}`,
+  };
+}
+
+function releaseIdentityMismatches(environment) {
+  return [
+    { ...environment, EXPERIMENT_IMAGE_NAME: `${environment.EXPERIMENT_IMAGE_NAME}-other` },
+    { ...environment, EXPERIMENT_IMAGE_VERSION: "v1.2.4" },
+    { ...environment, EXPERIMENT_SOURCE_REVISION: "c".repeat(40) },
+    { ...environment, EXPERIMENT_IMAGE_DIGEST: `sha256:${"d".repeat(64)}` },
+  ];
+}
 
 test("smoke execution covers all mandatory FM-T02 cells while private seed packs remain unavailable", async () => {
   const parent = await mkdtemp(path.join(root, "tmp-f019-runner-"));
@@ -22,11 +43,27 @@ test("smoke execution covers all mandatory FM-T02 cells while private seed packs
     assert.equal(prepared.work_units, 32);
     assert.equal(prepared.confirmation_seed_state, "pending-private-escrow-unavailable");
     assert.equal(prepared.held_out_seed_state, "pending-private-escrow-unavailable");
-    const executed = await executeFixture019({ profile: "smoke", output: relative, resume: false });
+    const environment = releaseEnvironment();
+    const executed = await executeFixture019({
+      profile: "smoke",
+      output: relative,
+      resume: false,
+      executionEnvironment: environment,
+    });
     assert.equal(executed.run.expected_work_units, 32);
     assert.equal(executed.run.ledger.completed_work_units, 32);
     assert.match(executed.run.source_hashes["../lib/checkpoint-ledger.mjs"], /^[0-9a-f]{64}$/);
-    const analysis = await analyzeFixture019(relative);
+    assert.equal(executed.run.execution_receipt.execution_mode, "release-image");
+    assert.equal(executed.run.execution_receipt.runtime.os, process.platform);
+    assert.deepEqual(executed.run.execution_receipt.image.digest, {
+      state: "explicit",
+      value: `sha256:${"b".repeat(64)}`,
+    });
+    const checkpoint = JSON.parse(await readFile(path.join(output, "checkpoint.json"), "utf8"));
+    assert.equal(checkpoint.run_identity.run_id, executed.run.run_id);
+    assert.equal(Object.hasOwn(checkpoint.run_identity, "execution_receipt"), false);
+    const current = { executionEnvironment: environment };
+    const analysis = await analyzeFixture019(relative, current);
     assert.equal(analysis.decision, "diagnostic-pass");
     assert.equal(analysis.confirmation_executed, false);
     assert.equal(analysis.transfer_executed, false);
@@ -36,14 +73,58 @@ test("smoke execution covers all mandatory FM-T02 cells while private seed packs
     assert.equal(analysis.scientific_eligibility.confirmation_eligible, false);
     assert.equal(analysis.scientific_eligibility.seed_variation_reaches_primary_at_1e_12, false);
     assert.match(analysis.scientific_eligibility.blockers.join(" "), /seed-invariant/);
-    assert.deepEqual(await validateFixture019(relative), {
+    assert.deepEqual(await validateFixture019(relative, current), {
       valid: true,
       decision: "diagnostic-pass",
       claim_eligible: false,
       scientific_result: false,
     });
-    const resumed = await executeFixture019({ profile: "smoke", output: relative, resume: true });
+    for (const mismatch of releaseIdentityMismatches(environment)) {
+      const mismatched = { executionEnvironment: mismatch };
+      await assert.rejects(
+        () => analyzeFixture019(relative, mismatched),
+        /does not match the stored execution receipt/u,
+      );
+      await assert.rejects(
+        () => validateFixture019(relative, mismatched),
+        /does not match the stored execution receipt/u,
+      );
+    }
+    const resumed = await executeFixture019({
+      profile: "smoke",
+      output: relative,
+      resume: true,
+      executionEnvironment: environment,
+    });
     assert.equal(resumed.run.ledger.completed_work_units, 32);
+  } finally {
+    await rm(parent, { recursive: true, force: true });
+  }
+});
+
+test("release image execution fails before output without an explicit digest", async () => {
+  const parent = await mkdtemp(path.join(root, "tmp-f019-release-identity-"));
+  const output = path.join(parent, "run");
+  const environment = releaseEnvironment();
+  delete environment.EXPERIMENT_IMAGE_DIGEST;
+  try {
+    await assert.rejects(
+      () => executeFixture019({
+        profile: "smoke",
+        output: path.relative(root, output),
+        resume: false,
+        executionEnvironment: environment,
+      }),
+      /requires EXPERIMENT_IMAGE_DIGEST/u,
+    );
+    await assert.rejects(
+      () => main(
+        ["node", "runner.mjs", "prepare", "--profile", "smoke"],
+        environment,
+      ),
+      /requires EXPERIMENT_IMAGE_DIGEST/u,
+    );
+    await assert.rejects(() => readFile(path.join(output, "run.json")), /ENOENT/u);
   } finally {
     await rm(parent, { recursive: true, force: true });
   }

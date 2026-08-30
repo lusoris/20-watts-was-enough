@@ -12,20 +12,28 @@ nested `AGENTS.md` before editing an authority or executable boundary.
 The complete validation gate currently binds these development tools:
 
 - Git;
-- Node.js 22.13 or newer within the Node 22 line;
-- npm with the committed `package-lock.json`;
-- CPython 3.13.13 with NumPy 2.4.6; and
-- PowerShell 7 (`pwsh`).
+- Go 1.27.0 from `tooling/go.mod`;
+- the official Node.js 26.8.1 distribution or a pinned project container;
+- npm 12.0.2 with the committed `package-lock.json`;
+- CPython 3.14.7 with NumPy 2.5.2; and
+- an OCI runtime with Docker Buildx for container changes.
 
 Install JavaScript dependencies from the lockfile and verify the scientific
 runtime before editing:
 
-```powershell
+```bash
 npm ci
-python -m pip install --disable-pip-version-check --no-deps "numpy==2.4.6"
+npm run validate:runtime
+python -m pip install --disable-pip-version-check --no-deps --require-hashes -r requirements-ci.txt
+go -C tooling version
 python --version
 python -c "import numpy; print(numpy.__version__)"
 ```
+
+The Node preflight checks both the exact version and a frozen Fixture 026
+numeric sentinel. This catches vendor builds whose floating-point library path
+does not reproduce the admitted experiment bytes even when the version label
+looks compatible.
 
 Fork the repository for an external contribution, clone the fork, create one
 short-lived branch for the smallest coherent change, and open a pull request
@@ -34,6 +42,11 @@ against `lusoris/20-watts-was-enough:main`. Keep the branch current with
 traceability and validation fields. Do not commit generated dependency
 directories, build output, workstation evidence, private source material, or
 machine-local files.
+
+If you are deciding where to start, use the
+[bounded workstream and issue map](docs/how-to-help.md). It identifies tasks
+that need reader, translation, experiment, evidence, Go and security help,
+together with their authority boundaries and focused checks.
 
 ## Change workflow
 
@@ -141,9 +154,34 @@ triggers local reload at the project-relative Pages path.
 
 Run `npm run test:github-pages` before a publication-facing change. The GitHub
 Pages workflow publishes the portal, `/book/`, and downloadable PDF from tested
-`main`. The older owner-only reader is retained for exceptional use but is not
-part of the routine publishing path. Do not edit generated files under
-`dist/`, `dist-github-pages/`, or the prepared reader-artifact directory.
+`main`. It is the repository's only hosted reader and uses the same book entry
+as PDF generation. Do not edit generated files under `dist-github-pages/` or
+the prepared reader-artifact directory.
+
+Each released experiment has its own image, documented in the
+[workstation execution contract](experiments/workstation/README.md#run-a-released-experiment-image).
+Container commands are the public default. Reports should include the exact
+image digest, source revision, command, architecture, and `NO_RESULT` receipt.
+Native `20w` files are secondary conveniences; installing one is not required
+to run an experiment. Docker with Buildx is needed only for container changes,
+not prose-only contribution checks.
+
+## Translations
+
+Coordinate new or corrected translations through the
+[translation issue form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=translation-problem.yml).
+Translated Markdown mirrors its canonical path under `translations/<language>/`.
+Its `translations/manifest.json` entry must record the exact canonical and
+translated repository paths, the SHA-256 digest of the English source, the
+SHA-256 digest of the reviewed translated file, and at least one named human
+reviewer. Run `npm run validate:translations` before submitting the pull
+request.
+
+Machine translation may be disclosed as a drafting aid, but its output is not
+published directly. Review must cover research terminology, negation,
+qualifications, equations, units, links and evidence status—not grammar alone.
+When the canonical source digest changes, validation deliberately marks the
+translation stale until it is checked again.
 
 ## Evidence statuses
 
@@ -191,7 +229,7 @@ the application build, and publication-artifact validation.
 
 Regenerate and validate the PDF after changing its source set or renderer:
 
-```powershell
+```bash
 npm run generate:book-pdf
 npm run validate:book-pdf
 ```

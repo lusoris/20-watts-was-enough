@@ -7,6 +7,7 @@ import {
   readFile,
   readdir,
   rm,
+  truncate,
   writeFile,
 } from "node:fs/promises";
 import os from "node:os";
@@ -16,6 +17,7 @@ import test from "node:test";
 import {
   buildSpdxDocument,
   extractChangelogSection,
+  parseReleaseArguments,
   parseReleaseTag,
   prepareReleaseAssets,
   validateVersionAgreement,
@@ -177,6 +179,107 @@ test("release preparation binds versions, the locked graph, licence material, no
   );
 });
 
+test("release preparation ingests additional binary assets into deterministic checksums", async (t) => {
+  const fixture = await createFixture(t);
+  const additionalAssetsRoot = path.join(fixture.root, "build", "go-assets");
+  await mkdir(additionalAssetsRoot, { recursive: true });
+  const additionalAssets = new Map([
+    ["20w-linux-amd64.tar.gz", Buffer.from("linux binary archive\n")],
+    ["20w-windows-amd64.zip", Buffer.from("windows binary archive\n")],
+  ]);
+  await Promise.all([...additionalAssets].map(([name, bytes]) => (
+    writeFile(path.join(additionalAssetsRoot, name), bytes)
+  )));
+
+  const outputRoot = path.join(fixture.root, "build", "release-with-binaries");
+  const result = await prepareReleaseAssets({
+    root: fixture.root,
+    outputRoot,
+    additionalAssetsRoot: path.relative(fixture.root, additionalAssetsRoot),
+    tag,
+  });
+  const checksumRecords = await verifyReleaseChecksums(path.join(outputRoot, "assets"));
+  const checksums = new Map(checksumRecords.map(({ name, digest: checksum }) => [name, checksum]));
+  for (const [name, bytes] of additionalAssets) {
+    assert(result.assetNames.includes(name), `${name} is absent from the release inventory`);
+    assert.deepEqual(await readFile(path.join(outputRoot, "assets", name)), bytes);
+    assert.equal(checksums.get(name), digest(bytes));
+  }
+
+  const repeatedOutputRoot = path.join(fixture.root, "build", "release-with-binaries-again");
+  await prepareReleaseAssets({
+    root: fixture.root,
+    outputRoot: repeatedOutputRoot,
+    additionalAssetsRoot,
+    tag,
+  });
+  assert.deepEqual(
+    await directorySnapshot(outputRoot),
+    await directorySnapshot(repeatedOutputRoot),
+    "fixed additional assets must produce byte-identical release workspaces",
+  );
+});
+
+test("release preparation rejects an empty or non-flat additional asset directory", async (t) => {
+  const fixture = await createFixture(t);
+  const additionalAssetsRoot = path.join(fixture.root, "build", "go-assets");
+  await mkdir(additionalAssetsRoot, { recursive: true });
+  await assert.rejects(
+    prepareReleaseAssets({ root: fixture.root, additionalAssetsRoot, tag }),
+    /must not be empty/u,
+  );
+
+  await writeFile(path.join(additionalAssetsRoot, "20w-linux-amd64"), "binary\n");
+  await mkdir(path.join(additionalAssetsRoot, "nested"));
+  await assert.rejects(
+    prepareReleaseAssets({ root: fixture.root, additionalAssetsRoot, tag }),
+    /only top-level regular files/u,
+  );
+});
+
+test("release preparation rejects unsafe, colliding, and excessive additional assets", async (t) => {
+  const fixture = await createFixture(t);
+  const additionalAssetsRoot = path.join(fixture.root, "build", "go-assets");
+  await mkdir(additionalAssetsRoot, { recursive: true });
+  await writeFile(path.join(additionalAssetsRoot, "unsafe name"), "binary\n");
+  await assert.rejects(
+    prepareReleaseAssets({ root: fixture.root, additionalAssetsRoot, tag }),
+    /not a safe release basename/u,
+  );
+
+  await rm(additionalAssetsRoot, { recursive: true });
+  await mkdir(additionalAssetsRoot);
+  await writeFile(path.join(additionalAssetsRoot, "license"), "collision\n");
+  await assert.rejects(
+    prepareReleaseAssets({ root: fixture.root, additionalAssetsRoot, tag }),
+    /unique without case distinctions/u,
+  );
+
+  await rm(additionalAssetsRoot, { recursive: true });
+  await mkdir(additionalAssetsRoot);
+  await Promise.all(Array.from({ length: 65 }, (_, index) => (
+    writeFile(path.join(additionalAssetsRoot, `asset-${String(index).padStart(2, "0")}`), "x")
+  )));
+  await assert.rejects(
+    prepareReleaseAssets({ root: fixture.root, additionalAssetsRoot, tag }),
+    /64-file limit/u,
+  );
+});
+
+test("release preparation rejects an oversized additional asset before reading it", async (t) => {
+  const fixture = await createFixture(t);
+  const additionalAssetsRoot = path.join(fixture.root, "build", "go-assets");
+  const oversized = path.join(additionalAssetsRoot, "20w-linux-amd64.tar.gz");
+  await mkdir(additionalAssetsRoot, { recursive: true });
+  await writeFile(oversized, "x");
+  await truncate(oversized, 256 * 1024 * 1024 + 1);
+
+  await assert.rejects(
+    prepareReleaseAssets({ root: fixture.root, additionalAssetsRoot, tag }),
+    /file exceeds the 268435456-byte limit/u,
+  );
+});
+
 test("version validation rejects disagreement and extracts only the exact release section", async (t) => {
   const fixture = await createFixture(t);
   assert.equal(parseReleaseTag(tag), version);
@@ -197,6 +300,21 @@ test("version validation rejects disagreement and extracts only the exact releas
     changelog: fixture.changelog,
   }), /package-lock\.json="0\.1\.1"/u);
   assert.throws(() => extractChangelogSection(fixture.changelog, "9.9.9"), /exactly one dated/u);
+});
+
+test("release arguments accept one optional additional asset root", () => {
+  assert.deepEqual(
+    parseReleaseArguments(["--additional-assets-root", "build/go-assets", "--tag", tag]),
+    { additional_assets_root: "build/go-assets", tag },
+  );
+  assert.throws(
+    () => parseReleaseArguments(["--tag", tag, "--tag", tag]),
+    /--tag may be specified only once/u,
+  );
+  assert.throws(
+    () => parseReleaseArguments(["--additional-assets-root", "build/go-assets"]),
+    /--tag is required/u,
+  );
 });
 
 test("release preparation rejects a PDF generated from main", async (t) => {

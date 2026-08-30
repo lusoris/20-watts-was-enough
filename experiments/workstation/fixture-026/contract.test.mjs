@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import Ajv from "ajv";
+import { createAjv } from "../lib/ajv.mjs";
 
 import {
   FIXTURE_026_EVENT_CONTRACT_VERSION,
@@ -500,7 +500,7 @@ test("standard JSON Schema and runtime agree on uint64 seeds and the 24-world gr
   ));
   const schema = { ...declared };
   delete schema.$schema;
-  const validateSchema = new Ajv({ allErrors: true, jsonPointers: true }).compile(schema);
+  const validateSchema = createAjv({ allErrors: true }).compile(schema);
 
   const accepted = fixture();
   accepted.seed = "18446744073709551615";

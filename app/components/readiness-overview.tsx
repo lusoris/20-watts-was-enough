@@ -6,14 +6,12 @@ import {
   researchDocumentHref,
   type ReadinessArtifact,
 } from "../lib/readiness";
+import { publication } from "../lib/publication.mjs";
 
 type ReadinessOverviewProps = {
   mode?: "page" | "book";
   documentHref?: (path: string) => string;
-  publicSurface?: boolean;
 };
-
-const canonicalSite = "https://twenty-watts-was-enough.lusoris.chatgpt.site";
 
 function readinessDocumentHref(
   path: string,
@@ -22,7 +20,7 @@ function readinessDocumentHref(
 ) {
   if (documentHref) return documentHref(path);
   const href = researchDocumentHref(path);
-  return mode === "book" ? new URL(href, canonicalSite).toString() : href;
+  return mode === "book" ? new URL(href, publication.canonicalSite).toString() : href;
 }
 
 const tierLabels = {
@@ -81,7 +79,6 @@ function coverageBar({
 export function ReadinessOverview({
   mode = "page",
   documentHref,
-  publicSurface = false,
 }: ReadinessOverviewProps) {
   const { claims, artifacts, ledgerOnly } = readinessSummary;
   const smokeArtifact = artifacts.items.find(
@@ -307,9 +304,7 @@ export function ReadinessOverview({
         </section>
       ) : (
         <p className="readiness-book-link">
-          {publicSurface
-            ? "The public Git repository contains the complete artifact table and generated coverage report."
-            : "The owner-only research site contains the complete artifact table and live generated coverage report."}
+          The public Git repository contains the complete artifact table and generated coverage report.
         </p>
       )}
     </div>

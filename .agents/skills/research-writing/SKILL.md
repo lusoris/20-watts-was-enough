@@ -90,6 +90,6 @@ necessary in ordinary prose, add a concrete, reviewable reason on that same
 line using `<!-- prose-audit: ignore-line: reason -->`. Do not use the marker
 to exempt a passage or file.
 
-Machine-translated reading views are access aids, not canonical prose. Do not
-silently write generated translations back into the English source or present
-them as reviewed translations.
+Translations are reviewed derivatives, not canonical prose. Do not silently
+write generated translations back into the English source or present machine
+output as a reviewed translation.

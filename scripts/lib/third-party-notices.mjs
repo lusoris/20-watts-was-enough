@@ -9,6 +9,10 @@ import { readStableOpenedFileSync } from "./opened-file.mjs";
 
 const LICENSE_FILE = /^(?:licen[cs]e|copying|notice)(?:[._-].*)?$/iu;
 const LICENSE_OVERRIDES = Object.freeze({
+  "fastdom@1.0.12": {
+    path: "LICENSES/fastdom-MIT.txt",
+    source: "fastdom 1.0.12 npm package README licence section",
+  },
   "rehype-katex@7.0.1": {
     path: "LICENSES/remark-math-MIT.txt",
     source: "remarkjs/remark-math tag rehype-katex@7.0.1, root license",
@@ -21,15 +25,15 @@ const LICENSE_OVERRIDES = Object.freeze({
 
 const VIRTUAL_MODULE_PACKAGES = Object.freeze({
   "\0rolldown/runtime.js": {
-    expectedIdentity: "rolldown@1.0.3",
+    expectedIdentity: "rolldown@1.2.6",
     packagePath: "node_modules/rolldown",
   },
   "\0vite/modulepreload-polyfill.js": {
-    expectedIdentity: "vite@8.0.16",
+    expectedIdentity: "vite@8.2.2",
     packagePath: "node_modules/vite",
   },
   "\0vite/preload-helper.js": {
-    expectedIdentity: "vite@8.0.16",
+    expectedIdentity: "vite@8.2.2",
     packagePath: "node_modules/vite",
   },
 });

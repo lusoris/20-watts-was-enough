@@ -1,8 +1,9 @@
-const canonicalRepository = "https://github.com/lusoris/20-watts-was-enough";
+import { publication } from "./publication.mjs";
+
 const semanticVersionPattern = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/u;
 const sourceRefPattern = /^(?:main|v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*))$/u;
 
-/** @typedef {"owner-only-site" | "github-pages" | "public-pdf"} BookSurface */
+/** @typedef {"github-pages" | "public-pdf"} BookSurface */
 
 /**
  * @param {string} sourceRef
@@ -41,7 +42,7 @@ export function repositoryRefForSurface(surface, sourceRef, editionVersion) {
 
 /** @param {string} ref */
 export function repositoryTreeHref(ref) {
-  return `${canonicalRepository}/tree/${encodeURIComponent(ref)}`;
+  return `${publication.repository}/tree/${encodeURIComponent(ref)}`;
 }
 
 /**
@@ -56,7 +57,7 @@ export function repositoryDocumentHref(ref, path, hash = "") {
     .filter(Boolean)
     .map(encodeURIComponent)
     .join("/");
-  return `${canonicalRepository}/blob/${encodeURIComponent(ref)}/${encodedPath}${hash ? `#${encodeURIComponent(hash)}` : ""}`;
+  return `${publication.repository}/blob/${encodeURIComponent(ref)}/${encodedPath}${hash ? `#${encodeURIComponent(hash)}` : ""}`;
 }
 
 /** @param {string} ref */

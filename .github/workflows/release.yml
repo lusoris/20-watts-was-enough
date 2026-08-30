@@ -14,7 +14,7 @@ on:
 permissions: {}
 
 concurrency:
-  group: release-${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+  group: research-release-publication
   cancel-in-progress: false
 
 jobs:
@@ -27,6 +27,8 @@ jobs:
     outputs:
       release-tag: ${{ steps.release-ref.outputs.tag }}
       release-commit: ${{ steps.release-ref.outputs.commit }}
+      release-timestamp: ${{ steps.release-ref.outputs.timestamp }}
+      release-epoch: ${{ steps.release-ref.outputs.epoch }}
     steps:
       - name: Resolve the requested release tag
         id: requested-tag
@@ -47,16 +49,21 @@ jobs:
           fi
           printf 'tag=%s\n' "$release_tag" >> "$GITHUB_OUTPUT"
       - name: Check out the exact tagged source
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ steps.requested-tag.outputs.tag }}
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
+      - name: Use Go 1.27
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: tooling/go.mod
+          cache-dependency-path: tooling/go.sum
       - name: Prove HEAD is the requested existing tag
         id: release-ref
         env:
-          EVENT_NAME: ${{ github.event_name }}
+          EVENT_REF: ${{ github.ref }}
           EVENT_SHA: ${{ github.sha }}
           RELEASE_TAG: ${{ steps.requested-tag.outputs.tag }}
         run: |
@@ -71,12 +78,10 @@ jobs:
             echo "::error::checkout HEAD does not match the requested release tag"
             exit 1
           fi
-          if [[ "$EVENT_NAME" == "push" ]]; then
-            pushed_commit="$(git rev-parse "${EVENT_SHA}^{commit}")"
-            if [[ "$pushed_commit" != "$release_commit" ]]; then
-              echo "::error::the release tag moved after the triggering push event"
-              exit 1
-            fi
+          event_commit="$(git rev-parse "${EVENT_SHA}^{commit}")"
+          if [[ "$EVENT_REF" != "refs/tags/${RELEASE_TAG}" || "$event_commit" != "$release_commit" ]]; then
+            echo "::error::release runs, including manual rebuilds, must be dispatched at the exact existing tag ref"
+            exit 1
           fi
           if ! git show-ref --verify --quiet refs/remotes/origin/main; then
             echo "::error::origin/main is unavailable; release ancestry cannot be verified"
@@ -86,37 +91,59 @@ jobs:
             echo "::error::the tagged commit is not contained in origin/main"
             exit 1
           fi
-          printf 'tag=%s\n' "$RELEASE_TAG" >> "$GITHUB_OUTPUT"
-          printf 'commit=%s\n' "$release_commit" >> "$GITHUB_OUTPUT"
+          {
+            printf 'tag=%s\n' "$RELEASE_TAG"
+            printf 'commit=%s\n' "$release_commit"
+            printf 'timestamp=%s\n' "$(git show -s --format=%cI "$release_commit")"
+            printf 'epoch=%s\n' "$(git show -s --format=%ct "$release_commit")"
+          } >> "$GITHUB_OUTPUT"
       - name: Use the locked Python runtime
-        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: '3.13.13'
+          python-version: '3.14.7'
       - name: Install the locked scientific runtime
         run: python -m pip install --disable-pip-version-check --no-deps --require-hashes -r requirements-ci.txt
-      - name: Use Node.js 22
+      - name: Use Node.js 26
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: 22
+          node-version: 26.8.1
           cache: npm
+      - name: Use npm 12.0.2
+        run: npm install --global npm@12.0.2
       - name: Install locked dependencies
         run: npm ci
       - name: Reject high-severity dependency advisories
         run: npm audit --audit-level=high
       - name: Run the full repository gate
         run: npm run check
-      - name: Test the GitHub Pages publication
-        run: npm run test:github-pages
       - name: Render the immutable tag-bound book
         env:
           RELEASE_TAG: ${{ steps.release-ref.outputs.tag }}
         run: npm run generate:book-pdf -- --ref "$RELEASE_TAG"
+      - name: Build the native 20w convenience binary
+        env:
+          RELEASE_COMMIT: ${{ steps.release-ref.outputs.commit }}
+          RELEASE_TAG: ${{ steps.release-ref.outputs.tag }}
+        run: |
+          set -euo pipefail
+          source_timestamp="$(git show -s --format=%cI "$RELEASE_COMMIT")"
+          go -C tooling run ./cmd/build-release \
+            --version "$RELEASE_TAG" \
+            --revision "$RELEASE_COMMIT" \
+            --built-at "$source_timestamp" \
+            --output-root ../build/release-inputs
+      - name: Execute the native release binary and materialize the experiment plan
+        run: |
+          set -euo pipefail
+          ./build/release-inputs/20w-linux-amd64 version --json
+          ./build/release-inputs/20w-linux-amd64 validate docs --root .
+          go -C tooling run ./cmd/20w experiment release-plan --root .. --json > ../build/release-inputs/experiment-release-plan.json
       - name: Prepare version-bound release assets
         env:
           RELEASE_TAG: ${{ steps.release-ref.outputs.tag }}
         run: |
           set -euo pipefail
-          npm run prepare:release -- --tag "$RELEASE_TAG"
+          npm run prepare:release -- --tag "$RELEASE_TAG" --additional-assets-root build/release-inputs
       - name: Upload the verified release workspace
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
@@ -126,17 +153,18 @@ jobs:
           retention-days: 1
 
   release:
-    name: Attest and publish release assets
+    name: Attest and publish release assets and experiment images
     needs: verify
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     permissions:
       contents: write
       id-token: write
       attestations: write
+      packages: write
     steps:
       - name: Check out the exact tagged source
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ needs.verify.outputs.release-tag }}
           fetch-depth: 0
@@ -154,6 +182,11 @@ jobs:
             echo "::error::release tag moved after verification"
             exit 1
           fi
+      - name: Use Go 1.27 for closed image contexts
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: tooling/go.mod
+          cache-dependency-path: tooling/go.sum
       - name: Download the verified release workspace
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -166,6 +199,603 @@ jobs:
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
         with:
           subject-path: build/release/assets/*
+      - name: Verify the release-asset attestations against the tag source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_COMMIT: ${{ needs.verify.outputs.release-commit }}
+          RELEASE_TAG: ${{ needs.verify.outputs.release-tag }}
+        run: |
+          set -euo pipefail
+          verify_asset() {
+            local asset="$1"
+            local attempt
+            local delay
+            for attempt in 1 2 3 4 5; do
+              if gh attestation verify "$asset" \
+                --repo "$GITHUB_REPOSITORY" \
+                --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release.yml" \
+                --source-digest "$RELEASE_COMMIT" \
+                --source-ref "refs/tags/$RELEASE_TAG"; then
+                return 0
+              fi
+              if [[ "$attempt" -eq 5 ]]; then
+                echo "::error::release-asset provenance did not converge after five verification attempts"
+                return 1
+              fi
+              delay=$((attempt * 2))
+              echo "::notice::release-asset provenance is not visible yet; retrying in ${delay}s (attempt ${attempt}/5)"
+              sleep "$delay"
+            done
+          }
+          for asset in build/release/assets/*; do
+            verify_asset "$asset"
+          done
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+        with:
+          version: v0.36.1
+          driver-opts: image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8
+      - name: Authenticate to GitHub Container Registry
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - name: Inspect existing release image tags
+        id: image-status
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+          RELEASE_COMMIT: ${{ needs.verify.outputs.release-commit }}
+          RELEASE_TAG: ${{ needs.verify.outputs.release-tag }}
+          RELEASE_TIMESTAMP: ${{ needs.verify.outputs.release-timestamp }}
+        run: |
+          set -euo pipefail
+          mkdir -p build/release-tools
+          go -C tooling build -trimpath -buildvcs=false -o ../build/release-tools/20w ./cmd/20w
+          tool=build/release-tools/20w
+          "$tool" release inspect-image \
+            --image "ghcr.io/${GITHUB_REPOSITORY}-20w" \
+            --tag "$RELEASE_TAG" \
+            --revision "$RELEASE_COMMIT" \
+            --platform linux/amd64 \
+            --expected-label "org.opencontainers.image.created=$RELEASE_TIMESTAMP" \
+            --expected-label "org.opencontainers.image.version=$RELEASE_TAG" \
+            --expected-label "org.opencontainers.image.revision=$RELEASE_COMMIT" \
+            --expected-label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+            --expected-label "io.github.lusoris.20-watts-was-enough.image-name=ghcr.io/${GITHUB_REPOSITORY}-20w" \
+            --github-output-prefix tooling >> "$GITHUB_OUTPUT"
+          for fixture in fixture-007 fixture-019; do
+            prefix="${fixture//-/}"
+            "$tool" release inspect-image \
+              --image "ghcr.io/${GITHUB_REPOSITORY}-${fixture}" \
+              --tag "$RELEASE_TAG" \
+              --revision "$RELEASE_COMMIT" \
+              --platform linux/amd64 \
+              --expected-label "org.opencontainers.image.created=$RELEASE_TIMESTAMP" \
+              --expected-label "org.opencontainers.image.version=$RELEASE_TAG" \
+              --expected-label "org.opencontainers.image.revision=$RELEASE_COMMIT" \
+              --expected-label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+              --expected-label "io.github.lusoris.20-watts-was-enough.image-name=ghcr.io/${GITHUB_REPOSITORY}-${fixture}" \
+              --expected-label "io.github.lusoris.20-watts-was-enough.result-authority=NO_RESULT" \
+              --github-output-prefix "$prefix" >> "$GITHUB_OUTPUT"
+          done
+      - name: Derive 20w image tags and labels
+        if: steps.image-status.outputs.tooling_publish == 'true'
+        id: tooling-image-metadata
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ghcr.io/${{ github.repository }}-20w
+          flavor: latest=false
+          tags: type=raw,value=${{ needs.verify.outputs.release-tag }}
+          labels: |
+            org.opencontainers.image.title=20 Watts Was Enough command
+            org.opencontainers.image.description=Static repository validation and experiment catalogue command
+            org.opencontainers.image.url=https://github.com/${{ github.repository }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ needs.verify.outputs.release-tag }}
+            org.opencontainers.image.created=${{ needs.verify.outputs.release-timestamp }}
+            org.opencontainers.image.revision=${{ needs.verify.outputs.release-commit }}
+            org.opencontainers.image.licenses=EUPL-1.2
+            io.github.lusoris.20-watts-was-enough.image-name=ghcr.io/${{ github.repository }}-20w
+      - name: Build and push the untagged static 20w candidate
+        if: steps.image-status.outputs.tooling_publish == 'true'
+        id: build-tooling-image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: .
+          file: tooling/Dockerfile
+          platforms: linux/amd64
+          outputs: type=registry,name=ghcr.io/${{ github.repository }}-20w,push-by-digest=true,name-canonical=true
+          labels: ${{ steps.tooling-image-metadata.outputs.labels }}
+          build-args: |
+            IMAGE_NAME=ghcr.io/${{ github.repository }}-20w
+            IMAGE_VERSION=${{ needs.verify.outputs.release-tag }}
+            SOURCE_REVISION=${{ needs.verify.outputs.release-commit }}
+            SOURCE_TIMESTAMP=${{ needs.verify.outputs.release-timestamp }}
+          provenance: mode=max
+          sbom: generator=docker.io/docker/buildkit-syft-scanner@sha256:ae4f3b554449e7e25548e7d8ccc029d17357348e30c6e3df01b92bc93654d6a9
+          cache-from: type=gha,scope=20w-tooling-image
+          cache-to: type=gha,mode=max,scope=20w-tooling-image
+        env:
+          SOURCE_DATE_EPOCH: ${{ needs.verify.outputs.release-epoch }}
+      - name: Package the closed Fixture 007 runtime context
+        if: steps.image-status.outputs.fixture007_publish == 'true'
+        run: go -C tooling run ./cmd/20w experiment package-node-image --root .. --artifact fixture-007 --output ../build/container-contexts/fixture-007
+      - name: Derive Fixture 007 image tags and labels
+        if: steps.image-status.outputs.fixture007_publish == 'true'
+        id: fixture-007-image-metadata
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ghcr.io/${{ github.repository }}-fixture-007
+          flavor: latest=false
+          tags: type=raw,value=${{ needs.verify.outputs.release-tag }}
+          labels: |
+            org.opencontainers.image.title=20 Watts Was Enough Fixture 007 runtime
+            org.opencontainers.image.description=Scoped Node.js runtime for the bounded Fixture 007 NO_RESULT diagnostic
+            org.opencontainers.image.url=https://github.com/${{ github.repository }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ needs.verify.outputs.release-tag }}
+            org.opencontainers.image.created=${{ needs.verify.outputs.release-timestamp }}
+            org.opencontainers.image.revision=${{ needs.verify.outputs.release-commit }}
+            org.opencontainers.image.licenses=EUPL-1.2
+            io.github.lusoris.20-watts-was-enough.image-name=ghcr.io/${{ github.repository }}-fixture-007
+            io.github.lusoris.20-watts-was-enough.result-authority=NO_RESULT
+      - name: Build and push the untagged Fixture 007 candidate
+        if: steps.image-status.outputs.fixture007_publish == 'true'
+        id: build-fixture-007-image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: build/container-contexts/fixture-007
+          file: experiments/workstation/Dockerfile.node-artifact
+          platforms: linux/amd64
+          outputs: type=registry,name=ghcr.io/${{ github.repository }}-fixture-007,push-by-digest=true,name-canonical=true
+          labels: ${{ steps.fixture-007-image-metadata.outputs.labels }}
+          build-args: |
+            EXPERIMENT_ARTIFACT=fixture-007
+            IMAGE_NAME=ghcr.io/${{ github.repository }}-fixture-007
+            IMAGE_VERSION=${{ needs.verify.outputs.release-tag }}
+            SOURCE_REVISION=${{ needs.verify.outputs.release-commit }}
+          provenance: mode=max
+          sbom: generator=docker.io/docker/buildkit-syft-scanner@sha256:ae4f3b554449e7e25548e7d8ccc029d17357348e30c6e3df01b92bc93654d6a9
+          cache-from: type=gha,scope=fixture-007-image
+          cache-to: type=gha,mode=max,scope=fixture-007-image
+        env:
+          SOURCE_DATE_EPOCH: ${{ needs.verify.outputs.release-epoch }}
+      - name: Package the closed Fixture 019 runtime context
+        if: steps.image-status.outputs.fixture019_publish == 'true'
+        run: go -C tooling run ./cmd/20w experiment package-node-image --root .. --artifact fixture-019 --output ../build/container-contexts/fixture-019
+      - name: Derive Fixture 019 image tags and labels
+        if: steps.image-status.outputs.fixture019_publish == 'true'
+        id: fixture-019-image-metadata
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ghcr.io/${{ github.repository }}-fixture-019
+          flavor: latest=false
+          tags: type=raw,value=${{ needs.verify.outputs.release-tag }}
+          labels: |
+            org.opencontainers.image.title=20 Watts Was Enough Fixture 019 runtime
+            org.opencontainers.image.description=Scoped CPython and NumPy runtime for the bounded Fixture 019 NO_RESULT harness
+            org.opencontainers.image.url=https://github.com/${{ github.repository }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.version=${{ needs.verify.outputs.release-tag }}
+            org.opencontainers.image.created=${{ needs.verify.outputs.release-timestamp }}
+            org.opencontainers.image.revision=${{ needs.verify.outputs.release-commit }}
+            org.opencontainers.image.licenses=EUPL-1.2
+            io.github.lusoris.20-watts-was-enough.image-name=ghcr.io/${{ github.repository }}-fixture-019
+            io.github.lusoris.20-watts-was-enough.result-authority=NO_RESULT
+      - name: Build and push the untagged Fixture 019 candidate
+        if: steps.image-status.outputs.fixture019_publish == 'true'
+        id: build-fixture-019-image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: build/container-contexts/fixture-019
+          file: experiments/workstation/fixture-019/Dockerfile
+          platforms: linux/amd64
+          outputs: type=registry,name=ghcr.io/${{ github.repository }}-fixture-019,push-by-digest=true,name-canonical=true
+          labels: ${{ steps.fixture-019-image-metadata.outputs.labels }}
+          build-args: |
+            IMAGE_NAME=ghcr.io/${{ github.repository }}-fixture-019
+            IMAGE_VERSION=${{ needs.verify.outputs.release-tag }}
+            SOURCE_REVISION=${{ needs.verify.outputs.release-commit }}
+          provenance: mode=max
+          sbom: generator=docker.io/docker/buildkit-syft-scanner@sha256:ae4f3b554449e7e25548e7d8ccc029d17357348e30c6e3df01b92bc93654d6a9
+          cache-from: type=gha,scope=fixture-019-image
+          cache-to: type=gha,mode=max,scope=fixture-019-image
+        env:
+          SOURCE_DATE_EPOCH: ${{ needs.verify.outputs.release-epoch }}
+      - name: Select exact image digests for admission
+        id: admission-images
+        env:
+          TOOLING_PUBLISH: ${{ steps.image-status.outputs.tooling_publish }}
+          TOOLING_EXISTING: ${{ steps.image-status.outputs.tooling_digest }}
+          TOOLING_BUILD: ${{ steps.build-tooling-image.outputs.digest }}
+          FIXTURE_007_PUBLISH: ${{ steps.image-status.outputs.fixture007_publish }}
+          FIXTURE_007_EXISTING: ${{ steps.image-status.outputs.fixture007_digest }}
+          FIXTURE_007_BUILD: ${{ steps.build-fixture-007-image.outputs.digest }}
+          FIXTURE_019_PUBLISH: ${{ steps.image-status.outputs.fixture019_publish }}
+          FIXTURE_019_EXISTING: ${{ steps.image-status.outputs.fixture019_digest }}
+          FIXTURE_019_BUILD: ${{ steps.build-fixture-019-image.outputs.digest }}
+        run: |
+          set -euo pipefail
+          select_digest() {
+            local prefix="$1"
+            local publish="$2"
+            local existing="$3"
+            local built="$4"
+            local selected
+            case "$publish" in
+              true) selected="$built" ;;
+              false) selected="$existing" ;;
+              *) echo "::error::image publication state is invalid"; return 1 ;;
+            esac
+            if [[ ! "$selected" =~ ^sha256:[0-9a-f]{64}$ ]]; then
+              echo "::error::selected image digest is absent or malformed"
+              return 1
+            fi
+            printf '%s_digest=%s\n' "$prefix" "$selected" >> "$GITHUB_OUTPUT"
+          }
+          select_digest tooling "$TOOLING_PUBLISH" "$TOOLING_EXISTING" "$TOOLING_BUILD"
+          select_digest fixture007 "$FIXTURE_007_PUBLISH" "$FIXTURE_007_EXISTING" "$FIXTURE_007_BUILD"
+          select_digest fixture019 "$FIXTURE_019_PUBLISH" "$FIXTURE_019_EXISTING" "$FIXTURE_019_BUILD"
+      - name: Validate the exact image digests before admission
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+          RELEASE_COMMIT: ${{ needs.verify.outputs.release-commit }}
+          RELEASE_TAG: ${{ needs.verify.outputs.release-tag }}
+          RELEASE_TIMESTAMP: ${{ needs.verify.outputs.release-timestamp }}
+          TOOLING_DIGEST: ${{ steps.admission-images.outputs.tooling_digest }}
+          FIXTURE_007_DIGEST: ${{ steps.admission-images.outputs.fixture007_digest }}
+          FIXTURE_019_DIGEST: ${{ steps.admission-images.outputs.fixture019_digest }}
+        run: |
+          set -euo pipefail
+          tool=build/release-tools/20w
+          "$tool" release inspect-image \
+            --image "ghcr.io/${GITHUB_REPOSITORY}-20w" \
+            --digest "$TOOLING_DIGEST" \
+            --require-existing \
+            --revision "$RELEASE_COMMIT" \
+            --platform linux/amd64 \
+            --expected-label "org.opencontainers.image.created=$RELEASE_TIMESTAMP" \
+            --expected-label "org.opencontainers.image.version=$RELEASE_TAG" \
+            --expected-label "org.opencontainers.image.revision=$RELEASE_COMMIT" \
+            --expected-label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+            --expected-label "io.github.lusoris.20-watts-was-enough.image-name=ghcr.io/${GITHUB_REPOSITORY}-20w"
+          for fixture in fixture-007 fixture-019; do
+            if [[ "$fixture" == "fixture-007" ]]; then
+              digest="$FIXTURE_007_DIGEST"
+            else
+              digest="$FIXTURE_019_DIGEST"
+            fi
+            "$tool" release inspect-image \
+              --image "ghcr.io/${GITHUB_REPOSITORY}-${fixture}" \
+              --digest "$digest" \
+              --require-existing \
+              --revision "$RELEASE_COMMIT" \
+              --platform linux/amd64 \
+              --expected-label "org.opencontainers.image.created=$RELEASE_TIMESTAMP" \
+              --expected-label "org.opencontainers.image.version=$RELEASE_TAG" \
+              --expected-label "org.opencontainers.image.revision=$RELEASE_COMMIT" \
+              --expected-label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+              --expected-label "io.github.lusoris.20-watts-was-enough.image-name=ghcr.io/${GITHUB_REPOSITORY}-${fixture}" \
+              --expected-label "io.github.lusoris.20-watts-was-enough.result-authority=NO_RESULT"
+          done
+      - name: Run the admitted candidates by immutable digest
+        env:
+          RELEASE_COMMIT: ${{ needs.verify.outputs.release-commit }}
+          RELEASE_TAG: ${{ needs.verify.outputs.release-tag }}
+          RELEASE_TIMESTAMP: ${{ needs.verify.outputs.release-timestamp }}
+          TOOLING_DIGEST: ${{ steps.admission-images.outputs.tooling_digest }}
+          FIXTURE_007_DIGEST: ${{ steps.admission-images.outputs.fixture007_digest }}
+          FIXTURE_019_DIGEST: ${{ steps.admission-images.outputs.fixture019_digest }}
+        run: |
+          set -euo pipefail
+          tooling="ghcr.io/${GITHUB_REPOSITORY}-20w@${TOOLING_DIGEST}"
+          fixture_007="ghcr.io/${GITHUB_REPOSITORY}-fixture-007@${FIXTURE_007_DIGEST}"
+          fixture_019="ghcr.io/${GITHUB_REPOSITORY}-fixture-019@${FIXTURE_019_DIGEST}"
+          docker pull "$tooling"
+          docker pull "$fixture_007"
+          docker pull "$fixture_019"
+          tooling_identity="$(docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            "$tooling" version --json)"
+          expected_tooling_identity="$(printf '{"version":"%s","revision":"%s","built_at":"%s","go_version":"go1.27.0","os":"linux","architecture":"amd64"}' \
+            "$RELEASE_TAG" "$RELEASE_COMMIT" "$RELEASE_TIMESTAMP")"
+          if [[ "$tooling_identity" != "$expected_tooling_identity" ]]; then
+            echo "::error::admitted 20w binary identity does not match the tag, commit, timestamp, Go version, OS, and architecture"
+            printf 'actual:   %s\nexpected: %s\n' "$tooling_identity" "$expected_tooling_identity"
+            exit 1
+          fi
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --mount "type=bind,src=$GITHUB_WORKSPACE,dst=/repo,readonly" \
+            "$tooling" validate docs --root /repo
+          fixture_007_node="$(docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --entrypoint node "$fixture_007" --version)"
+          if [[ "$fixture_007_node" != "v26.8.1" ]]; then
+            echo "::error::admitted Fixture 007 Node.js runtime is $fixture_007_node, want v26.8.1"
+            exit 1
+          fi
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --entrypoint sh "$fixture_019" -c \
+            'test "$(node --version)" = "v26.8.1" && test "$(python --version)" = "Python 3.14.7" && python -c "import numpy; assert numpy.__version__ == \"2.5.2\""'
+          volume_007="20w-release-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-007"
+          volume_019="20w-release-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-019"
+          docker volume create "$volume_007"
+          docker volume create "$volume_019"
+          cleanup() {
+            docker volume rm "$volume_007" "$volume_019" >/dev/null
+          }
+          trap cleanup EXIT
+          for action in smoke analyze validate; do
+            if [[ "$action" == "smoke" ]]; then
+              arguments=(smoke --profile smoke --output /workspace/results/smoke)
+            else
+              arguments=("$action" --output /workspace/results/smoke)
+            fi
+            docker run --rm --pull never --network none --read-only \
+              --cap-drop ALL --security-opt no-new-privileges \
+              --env "EXPERIMENT_IMAGE_DIGEST=$FIXTURE_007_DIGEST" \
+              --mount "type=volume,src=$volume_007,dst=/results" \
+              "$fixture_007" "${arguments[@]}"
+          done
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --env "EXPERIMENT_IMAGE_DIGEST=$FIXTURE_019_DIGEST" \
+            --mount "type=volume,src=$volume_019,dst=/workspace/results" \
+            "$fixture_019" smoke --profile smoke --output /workspace/results/smoke --resume false
+          for action in analyze validate; do
+            docker run --rm --pull never --network none --read-only \
+              --cap-drop ALL --security-opt no-new-privileges \
+              --env "EXPERIMENT_IMAGE_DIGEST=$FIXTURE_019_DIGEST" \
+              --mount "type=volume,src=$volume_019,dst=/workspace/results" \
+              "$fixture_019" "$action" --output /workspace/results/smoke
+          done
+      - name: Determine whether admitted digests need attestations
+        id: attestation-status
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_COMMIT: ${{ needs.verify.outputs.release-commit }}
+          RELEASE_TAG: ${{ needs.verify.outputs.release-tag }}
+          TOOLING_DIGEST: ${{ steps.admission-images.outputs.tooling_digest }}
+          FIXTURE_007_DIGEST: ${{ steps.admission-images.outputs.fixture007_digest }}
+          FIXTURE_019_DIGEST: ${{ steps.admission-images.outputs.fixture019_digest }}
+        run: |
+          set -euo pipefail
+          check_attestation() {
+            local prefix="$1"
+            local image_name="$2"
+            local digest="$3"
+            local repair=true
+            if gh attestation verify "oci://${image_name}@${digest}" \
+              --repo "$GITHUB_REPOSITORY" \
+              --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release.yml" \
+              --source-digest "$RELEASE_COMMIT" \
+              --source-ref "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+              repair=false
+            else
+              echo "::notice::the admitted ${image_name}@${digest} needs a source-bound attestation"
+            fi
+            printf '%s_repair=%s\n' "$prefix" "$repair" >> "$GITHUB_OUTPUT"
+          }
+          check_attestation tooling "ghcr.io/${GITHUB_REPOSITORY}-20w" "$TOOLING_DIGEST"
+          check_attestation fixture007 "ghcr.io/${GITHUB_REPOSITORY}-fixture-007" "$FIXTURE_007_DIGEST"
+          check_attestation fixture019 "ghcr.io/${GITHUB_REPOSITORY}-fixture-019" "$FIXTURE_019_DIGEST"
+      - name: Attest the admitted static 20w digest
+        if: steps.attestation-status.outputs.tooling_repair == 'true'
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
+        with:
+          subject-name: ghcr.io/${{ github.repository }}-20w
+          subject-digest: ${{ steps.admission-images.outputs.tooling_digest }}
+          push-to-registry: true
+      - name: Attest the admitted Fixture 007 digest
+        if: steps.attestation-status.outputs.fixture007_repair == 'true'
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
+        with:
+          subject-name: ghcr.io/${{ github.repository }}-fixture-007
+          subject-digest: ${{ steps.admission-images.outputs.fixture007_digest }}
+          push-to-registry: true
+      - name: Attest the admitted Fixture 019 digest
+        if: steps.attestation-status.outputs.fixture019_repair == 'true'
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4
+        with:
+          subject-name: ghcr.io/${{ github.repository }}-fixture-019
+          subject-digest: ${{ steps.admission-images.outputs.fixture019_digest }}
+          push-to-registry: true
+      - name: Verify admitted image provenance against the tag source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_COMMIT: ${{ needs.verify.outputs.release-commit }}
+          RELEASE_TAG: ${{ needs.verify.outputs.release-tag }}
+          TOOLING_DIGEST: ${{ steps.admission-images.outputs.tooling_digest }}
+          FIXTURE_007_DIGEST: ${{ steps.admission-images.outputs.fixture007_digest }}
+          FIXTURE_019_DIGEST: ${{ steps.admission-images.outputs.fixture019_digest }}
+        run: |
+          set -euo pipefail
+          verify_image() {
+            local image_name="$1"
+            local digest="$2"
+            local attempt
+            local delay
+            for attempt in 1 2 3 4 5; do
+              if gh attestation verify "oci://${image_name}@${digest}" \
+                --repo "$GITHUB_REPOSITORY" \
+                --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release.yml" \
+                --source-digest "$RELEASE_COMMIT" \
+                --source-ref "refs/tags/$RELEASE_TAG"; then
+                return 0
+              fi
+              if [[ "$attempt" -eq 5 ]]; then
+                echo "::error::image provenance did not converge after five verification attempts"
+                return 1
+              fi
+              delay=$((attempt * 2))
+              echo "::notice::image provenance is not visible yet; retrying in ${delay}s (attempt ${attempt}/5)"
+              sleep "$delay"
+            done
+          }
+          verify_image "ghcr.io/${GITHUB_REPOSITORY}-20w" "$TOOLING_DIGEST"
+          verify_image "ghcr.io/${GITHUB_REPOSITORY}-fixture-007" "$FIXTURE_007_DIGEST"
+          verify_image "ghcr.io/${GITHUB_REPOSITORY}-fixture-019" "$FIXTURE_019_DIGEST"
+      - name: Attach missing release tags to admitted digests
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+          RELEASE_COMMIT: ${{ needs.verify.outputs.release-commit }}
+          RELEASE_TAG: ${{ needs.verify.outputs.release-tag }}
+          RELEASE_TIMESTAMP: ${{ needs.verify.outputs.release-timestamp }}
+          TOOLING_PUBLISH: ${{ steps.image-status.outputs.tooling_publish }}
+          TOOLING_DIGEST: ${{ steps.admission-images.outputs.tooling_digest }}
+          FIXTURE_007_PUBLISH: ${{ steps.image-status.outputs.fixture007_publish }}
+          FIXTURE_007_DIGEST: ${{ steps.admission-images.outputs.fixture007_digest }}
+          FIXTURE_019_PUBLISH: ${{ steps.image-status.outputs.fixture019_publish }}
+          FIXTURE_019_DIGEST: ${{ steps.admission-images.outputs.fixture019_digest }}
+        run: |
+          set -euo pipefail
+          tool=build/release-tools/20w
+          publish_tag() {
+            local image_name="$1"
+            local digest="$2"
+            local publish="$3"
+            local authority="$4"
+            local observation
+            local -a arguments
+            if [[ "$publish" == "false" ]]; then
+              return 0
+            fi
+            if [[ "$publish" != "true" ]]; then
+              echo "::error::image publication state is invalid"
+              return 1
+            fi
+            arguments=(
+              --image "$image_name"
+              --tag "$RELEASE_TAG"
+              --revision "$RELEASE_COMMIT"
+              --platform linux/amd64
+              --expected-label "org.opencontainers.image.created=$RELEASE_TIMESTAMP"
+              --expected-label "org.opencontainers.image.version=$RELEASE_TAG"
+              --expected-label "org.opencontainers.image.revision=$RELEASE_COMMIT"
+              --expected-label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY"
+              --expected-label "io.github.lusoris.20-watts-was-enough.image-name=$image_name"
+              --github-output-prefix candidate
+            )
+            if [[ "$authority" == "NO_RESULT" ]]; then
+              arguments+=(--expected-label "io.github.lusoris.20-watts-was-enough.result-authority=NO_RESULT")
+            fi
+            observation="$("$tool" release inspect-image "${arguments[@]}")"
+            if ! grep -qx 'candidate_status=absent' <<< "$observation"; then
+              echo "::error::refusing to overwrite an image tag that became present during admission"
+              return 1
+            fi
+            docker buildx imagetools create \
+              --tag "${image_name}:${RELEASE_TAG}" \
+              "${image_name}@${digest}"
+          }
+          publish_tag "ghcr.io/${GITHUB_REPOSITORY}-20w" "$TOOLING_DIGEST" "$TOOLING_PUBLISH" tooling
+          publish_tag "ghcr.io/${GITHUB_REPOSITORY}-fixture-007" "$FIXTURE_007_DIGEST" "$FIXTURE_007_PUBLISH" NO_RESULT
+          publish_tag "ghcr.io/${GITHUB_REPOSITORY}-fixture-019" "$FIXTURE_019_DIGEST" "$FIXTURE_019_PUBLISH" NO_RESULT
+      - name: Resolve and validate the final release image tags
+        id: final-images
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+          RELEASE_COMMIT: ${{ needs.verify.outputs.release-commit }}
+          RELEASE_TAG: ${{ needs.verify.outputs.release-tag }}
+          RELEASE_TIMESTAMP: ${{ needs.verify.outputs.release-timestamp }}
+        run: |
+          set -euo pipefail
+          tool=build/release-tools/20w
+          inspect_final_image() {
+            local prefix="$1"
+            shift
+            local attempt
+            local delay
+            local output
+            output="$(mktemp)"
+            for attempt in 1 2 3 4 5 6; do
+              : > "$output"
+              if "$tool" release inspect-image "$@" \
+                --require-existing \
+                --github-output-prefix "$prefix" > "$output"; then
+                cat "$output" >> "$GITHUB_OUTPUT"
+                rm -f "$output"
+                return 0
+              fi
+              if [[ "$attempt" -eq 6 ]]; then
+                rm -f "$output"
+                echo "::error::release image tag did not converge after six registry inspections"
+                return 1
+              fi
+              delay=$((attempt * 2))
+              echo "::notice::registry identity is not visible yet; retrying in ${delay}s (attempt ${attempt}/6)"
+              sleep "$delay"
+            done
+          }
+          inspect_final_image finaltooling \
+            --image "ghcr.io/${GITHUB_REPOSITORY}-20w" \
+            --tag "$RELEASE_TAG" \
+            --revision "$RELEASE_COMMIT" \
+            --platform linux/amd64 \
+            --expected-label "org.opencontainers.image.created=$RELEASE_TIMESTAMP" \
+            --expected-label "org.opencontainers.image.version=$RELEASE_TAG" \
+            --expected-label "org.opencontainers.image.revision=$RELEASE_COMMIT" \
+            --expected-label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+            --expected-label "io.github.lusoris.20-watts-was-enough.image-name=ghcr.io/${GITHUB_REPOSITORY}-20w"
+          for fixture in fixture-007 fixture-019; do
+            prefix="final${fixture//-/}"
+            inspect_final_image "$prefix" \
+              --image "ghcr.io/${GITHUB_REPOSITORY}-${fixture}" \
+              --tag "$RELEASE_TAG" \
+              --revision "$RELEASE_COMMIT" \
+              --platform linux/amd64 \
+              --expected-label "org.opencontainers.image.created=$RELEASE_TIMESTAMP" \
+              --expected-label "org.opencontainers.image.version=$RELEASE_TAG" \
+              --expected-label "org.opencontainers.image.revision=$RELEASE_COMMIT" \
+              --expected-label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+              --expected-label "io.github.lusoris.20-watts-was-enough.image-name=ghcr.io/${GITHUB_REPOSITORY}-${fixture}" \
+              --expected-label "io.github.lusoris.20-watts-was-enough.result-authority=NO_RESULT"
+          done
+      - name: Bind final release tags to the admitted digests
+        env:
+          TOOLING_ADMITTED: ${{ steps.admission-images.outputs.tooling_digest }}
+          TOOLING_FINAL: ${{ steps.final-images.outputs.finaltooling_digest }}
+          FIXTURE_007_ADMITTED: ${{ steps.admission-images.outputs.fixture007_digest }}
+          FIXTURE_007_FINAL: ${{ steps.final-images.outputs.finalfixture007_digest }}
+          FIXTURE_019_ADMITTED: ${{ steps.admission-images.outputs.fixture019_digest }}
+          FIXTURE_019_FINAL: ${{ steps.final-images.outputs.finalfixture019_digest }}
+        run: |
+          set -euo pipefail
+          require_digest_match() {
+            local admitted="$1"
+            local resolved="$2"
+            if [[ "$admitted" != "$resolved" ]]; then
+              echo "::error::final image tag does not resolve to the admitted digest"
+              return 1
+            fi
+          }
+          require_digest_match "$TOOLING_ADMITTED" "$TOOLING_FINAL"
+          require_digest_match "$FIXTURE_007_ADMITTED" "$FIXTURE_007_FINAL"
+          require_digest_match "$FIXTURE_019_ADMITTED" "$FIXTURE_019_FINAL"
+      - name: Add immutable container identities to the release notes
+        env:
+          RELEASE_COMMIT: ${{ needs.verify.outputs.release-commit }}
+          RELEASE_TAG: ${{ needs.verify.outputs.release-tag }}
+          TOOLING_DIGEST: ${{ steps.final-images.outputs.finaltooling_digest }}
+          FIXTURE_007_DIGEST: ${{ steps.final-images.outputs.finalfixture007_digest }}
+          FIXTURE_019_DIGEST: ${{ steps.final-images.outputs.finalfixture019_digest }}
+        run: |
+          set -euo pipefail
+          notes=build/release/published-release-notes.md
+          cp build/release/release-notes.md "$notes"
+          {
+            printf '\n## Immutable container images\n\n'
+            printf '%s\n' "- \`ghcr.io/${GITHUB_REPOSITORY}-20w@${TOOLING_DIGEST}\` — \`${RELEASE_TAG}\`, \`${RELEASE_COMMIT}\`, \`linux/amd64\`"
+            printf '%s\n' "- \`ghcr.io/${GITHUB_REPOSITORY}-fixture-007@${FIXTURE_007_DIGEST}\` — \`${RELEASE_TAG}\`, \`${RELEASE_COMMIT}\`, \`linux/amd64\`, \`NO_RESULT\`"
+            printf '%s\n' "- \`ghcr.io/${GITHUB_REPOSITORY}-fixture-019@${FIXTURE_019_DIGEST}\` — \`${RELEASE_TAG}\`, \`${RELEASE_COMMIT}\`, \`linux/amd64\`, \`NO_RESULT\`"
+          } >> "$notes"
       - name: Create or safely rebuild the GitHub release
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -186,11 +816,11 @@ jobs:
             gh release edit "$RELEASE_TAG" \
               --verify-tag \
               --title "20 Watts Was Enough ${RELEASE_TAG}" \
-              --notes-file build/release/release-notes.md
+              --notes-file build/release/published-release-notes.md
             gh release upload "$RELEASE_TAG" "${assets[@]}" --clobber
           else
             gh release create "$RELEASE_TAG" "${assets[@]}" \
               --verify-tag \
               --title "20 Watts Was Enough ${RELEASE_TAG}" \
-              --notes-file build/release/release-notes.md
+              --notes-file build/release/published-release-notes.md
           fi

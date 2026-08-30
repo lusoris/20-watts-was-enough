@@ -52,8 +52,10 @@ Use the
 for ambiguous comparisons, runner defects, invalid status or authority,
 resource-accounting errors, statistical problems, reproducibility failures, or
 unsafe isolation and cleanup. Include the artifact, fixture, track, claim, run,
-and exact command or protocol clause. State which authority tier is affected;
-do not promote smoke or development output to a result.
+and exact command or protocol clause. For a released image, include its exact
+digest, source revision, architecture, command, mounted output path, and
+`NO_RESULT` receipt. State which authority tier is affected; do not promote
+smoke or development output to a result.
 
 ### Site or documentation bug
 
@@ -63,6 +65,16 @@ for missing or unreadable content, broken navigation, inaccessible controls,
 stale generated artifacts, or incorrectly rendered equations, tables, plots,
 diagrams, HTML, or PDF. Use the evidence form instead when the presentation is
 readable but the scientific statement is wrong.
+
+### Translation contribution or problem
+
+Use the
+[translation contribution or problem form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=translation-problem.yml)
+to start or coordinate a translation, volunteer domain-language review, report
+an inaccurate passage, or update a translation after its canonical source
+changed. Include the target language, canonical path, exact commit or release,
+and any machine drafting tool used. Use the evidence form as well if the English
+canonical claim is itself wrong.
 
 ### Repository or tooling problem
 

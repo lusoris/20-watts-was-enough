@@ -37,21 +37,28 @@ jobs:
       contents: read
     steps:
       - name: Check out canonical source
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Use the locked Python runtime
-        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+      - name: Use Go 1.27
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          python-version: '3.13.13'
+          go-version-file: tooling/go.mod
+          cache-dependency-path: tooling/go.sum
+      - name: Use the locked Python runtime
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.14.7'
       - name: Install the locked scientific runtime
         run: python -m pip install --disable-pip-version-check --no-deps --require-hashes -r requirements-ci.txt
-      - name: Use Node.js 22
+      - name: Use Node.js 26
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: 22
+          node-version: 26.8.1
           cache: npm
+      - name: Use npm 12.0.2
+        run: npm install --global npm@12.0.2
       - name: Install locked dependencies
         run: npm ci
       - name: Reject high-severity dependency advisories
@@ -71,26 +78,141 @@ jobs:
       - name: Run the authoritative repository check
         run: npm run check
 
-  github-pages:
-    name: GitHub Pages edition
+  experiment-image:
+    name: Container smoke paths
     runs-on: ubuntu-latest
     timeout-minutes: 35
     permissions:
       contents: read
     steps:
       - name: Check out canonical source
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Use Node.js 22
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+      - name: Use Go 1.27 for closed image contexts
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          node-version: 22
-          cache: npm
-      - name: Install locked dependencies
-        run: npm ci
-      - name: Test the public portal, book, and publication artifact
-        run: npm run test:github-pages
+          go-version-file: tooling/go.mod
+          cache-dependency-path: tooling/go.sum
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+        with:
+          version: v0.36.1
+          driver-opts: image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8
+      - name: Build the static 20w image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: .
+          file: tooling/Dockerfile
+          load: true
+          push: false
+          tags: 20w-tooling:test
+          build-args: |
+            IMAGE_VERSION=development
+            SOURCE_REVISION=${{ github.sha }}
+            SOURCE_TIMESTAMP=unknown
+          cache-from: type=gha,scope=20w-tooling-image
+          cache-to: type=gha,mode=max,scope=20w-tooling-image
+      - name: Verify the static 20w image against the mounted repository
+        run: |
+          set -euo pipefail
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            20w-tooling:test version --json
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --mount "type=bind,src=$GITHUB_WORKSPACE,dst=/repo,readonly" \
+            20w-tooling:test validate docs --root /repo
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --mount "type=bind,src=$GITHUB_WORKSPACE,dst=/repo,readonly" \
+            20w-tooling:test experiment list --root /repo --json
+      - name: Package the closed Fixture 007 runtime context
+        run: go -C tooling run ./cmd/20w experiment package-node-image --root .. --artifact fixture-007 --output ../build/container-contexts/fixture-007
+      - name: Build the Fixture 007 image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: build/container-contexts/fixture-007
+          file: experiments/workstation/Dockerfile.node-artifact
+          load: true
+          push: false
+          tags: 20w-fixture-007:test
+          build-args: |
+            EXPERIMENT_ARTIFACT=fixture-007
+            IMAGE_NAME=ghcr.io/${{ github.repository }}-fixture-007
+            IMAGE_VERSION=development
+            SOURCE_REVISION=${{ github.sha }}
+          cache-from: type=gha,scope=fixture-007-image
+          cache-to: type=gha,mode=max,scope=fixture-007-image
+      - name: Execute the bounded Fixture 007 smoke path
+        run: |
+          set -euo pipefail
+          node_version="$(docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --entrypoint node 20w-fixture-007:test --version)"
+          if [[ "$node_version" != "v26.8.1" ]]; then
+            echo "::error::Fixture 007 Node.js runtime is $node_version, want v26.8.1"
+            exit 1
+          fi
+          volume="20w-ci-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-fixture-007"
+          docker volume create "$volume"
+          trap 'docker volume rm "$volume" >/dev/null' EXIT
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --mount "type=volume,src=$volume,dst=/results" \
+            20w-fixture-007:test smoke --profile smoke --output /workspace/results/ci-fixture-007
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --mount "type=volume,src=$volume,dst=/results" \
+            20w-fixture-007:test analyze --output /workspace/results/ci-fixture-007
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --mount "type=volume,src=$volume,dst=/results" \
+            20w-fixture-007:test validate --output /workspace/results/ci-fixture-007
+      - name: Package the closed Fixture 019 runtime context
+        run: go -C tooling run ./cmd/20w experiment package-node-image --root .. --artifact fixture-019 --output ../build/container-contexts/fixture-019
+      - name: Build the Fixture 019 image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: build/container-contexts/fixture-019
+          file: experiments/workstation/fixture-019/Dockerfile
+          load: true
+          push: false
+          tags: 20w-fixture-019:test
+          build-args: |
+            IMAGE_NAME=ghcr.io/${{ github.repository }}-fixture-019
+            IMAGE_VERSION=development
+            SOURCE_REVISION=${{ github.sha }}
+          cache-from: type=gha,scope=fixture-019-image
+          cache-to: type=gha,mode=max,scope=fixture-019-image
+      - name: Verify the locked runtimes and smoke profile
+        run: |
+          set -euo pipefail
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --entrypoint sh 20w-fixture-019:test -c \
+            'test "$(node --version)" = "v26.8.1" && test "$(python --version)" = "Python 3.14.7" && python -c "import numpy; assert numpy.__version__ == \"2.5.2\""'
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            20w-fixture-019:test prepare --profile smoke
+      - name: Execute the bounded Fixture 019 smoke path
+        run: |
+          set -euo pipefail
+          volume="20w-ci-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-fixture-019"
+          docker volume create "$volume"
+          trap 'docker volume rm "$volume" >/dev/null' EXIT
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --mount "type=volume,src=$volume,dst=/workspace/results" \
+            20w-fixture-019:test smoke --profile smoke --output /workspace/results/ci-fixture-019 --resume false
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --mount "type=volume,src=$volume,dst=/workspace/results" \
+            20w-fixture-019:test analyze --output /workspace/results/ci-fixture-019
+          docker run --rm --pull never --network none --read-only \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --mount "type=volume,src=$volume,dst=/workspace/results" \
+            20w-fixture-019:test validate --output /workspace/results/ci-fixture-019
 
   dependency-review:
     name: Dependency review
@@ -108,7 +230,7 @@ jobs:
   ci-success:
     name: CI success
     if: always()
-    needs: [pr-title, quality, github-pages, dependency-review]
+    needs: [pr-title, quality, experiment-image, dependency-review]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

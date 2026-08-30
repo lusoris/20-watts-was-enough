@@ -5,11 +5,13 @@ import { fileURLToPath } from "node:url";
 import { assertBookPdfIntegrity } from "./lib/book-pdf-integrity.mjs";
 import { resolvePagesBase } from "./lib/pages-base.mjs";
 import { portalSourceDocuments } from "./lib/portal-documents.mjs";
+import { assertExactPublicationCopy } from "./lib/publication-copy-integrity.mjs";
 import {
   canonicalSite,
   renderRobots,
   renderSitemap,
 } from "./lib/pages-seo.mjs";
+import { translatedSourceDocuments } from "./lib/translation-pages.mjs";
 
 const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -68,6 +70,7 @@ function pagesRelative(reference) {
 
 await regularFile("index.html");
 await regularFile("book/index.html");
+await regularFile("help/index.html");
 await regularFile(".nojekyll");
 
 async function validatePage(relativeHtml, expectedEntryPrefix) {
@@ -85,13 +88,19 @@ async function validatePage(relativeHtml, expectedEntryPrefix) {
 
   const clientEntries = [...html.matchAll(/<script\b[^>]*\bsrc=["']([^"']+\.js(?:\?[^"']*)?)["'][^>]*>/g)]
     .map((match) => match[1]);
-  invariant(clientEntries.length === 1, `${relativeHtml} must load exactly one client entry`);
+  const expectedClientEntries = expectedEntryPrefix ? 1 : 0;
   invariant(
-    path.basename(clientEntries[0]).startsWith(`${expectedEntryPrefix}-`),
-    `${relativeHtml} does not load its ${expectedEntryPrefix} entry chunk`,
+    clientEntries.length === expectedClientEntries,
+    `${relativeHtml} must load exactly ${expectedClientEntries} client entries`,
   );
+  if (expectedEntryPrefix) {
+    invariant(
+      path.basename(clientEntries[0]).startsWith(`${expectedEntryPrefix}-`),
+      `${relativeHtml} does not load its ${expectedEntryPrefix} entry chunk`,
+    );
+  }
   invariant(!html.includes("/_next/"), `${relativeHtml} contains a server-framework asset path`);
-  return { html, clientEntry: clientEntries[0] };
+  return { html, clientEntry: clientEntries[0] ?? null };
 }
 
 function oneMatch(source, pattern, label) {
@@ -102,6 +111,7 @@ function oneMatch(source, pattern, label) {
 
 function validateSeoDocument(html, document) {
   const canonical = `${canonicalSite}${document.route}`;
+  const language = document.language ?? "en";
   const title = oneMatch(html, /<title>([^<]+)<\/title>/g, `${document.route} title`);
   const description = oneMatch(
     html,
@@ -123,6 +133,16 @@ function validateSeoDocument(html, document) {
     /<script\s+type="application\/ld\+json">([^<]+)<\/script>/g,
     `${document.route} JSON-LD`,
   ));
+  const citationLanguage = oneMatch(
+    html,
+    /<meta\s+name="citation_language"\s+content="([^"]+)"\s*\/>/g,
+    `${document.route} citation language`,
+  );
+  const htmlLanguage = oneMatch(
+    html,
+    /<html\s+lang="([^"]+)">/g,
+    `${document.route} HTML language`,
+  );
   invariant(declaredCanonical === canonical, `${document.route} canonical is not self-referential`);
   invariant(title === `${document.title} — 20 Watts Was Enough`, `${document.route} title is stale`);
   invariant(description === document.description.replaceAll("&", "&amp;").replaceAll('"', "&quot;"), `${document.route} description is stale`);
@@ -131,6 +151,9 @@ function validateSeoDocument(html, document) {
   invariant(jsonLd.url === canonical && jsonLd.mainEntityOfPage === canonical, `${document.route} JSON-LD URL is stale`);
   invariant(jsonLd.headline === document.title, `${document.route} JSON-LD headline is stale`);
   invariant(jsonLd.wordCount === document.words, `${document.route} JSON-LD word count is stale`);
+  invariant(jsonLd.inLanguage === language, `${document.route} JSON-LD language is stale`);
+  invariant(citationLanguage === language, `${document.route} citation language is stale`);
+  invariant(htmlLanguage === language, `${document.route} HTML language is stale`);
   invariant(html.includes('<main class="seo-static-page">'), `${document.route} lacks static fallback content`);
   invariant(html.includes(`<h1>${document.title.replaceAll("&", "&amp;")}</h1>`), `${document.route} static H1 is stale`);
   invariant(!html.includes("?doc="), `${document.route} contains a query-parameter document link`);
@@ -139,7 +162,12 @@ function validateSeoDocument(html, document) {
 
 const portalPage = await validatePage("index.html", "portal");
 const bookPage = await validatePage("book/index.html", "book");
-invariant(portalPage.clientEntry !== bookPage.clientEntry, "portal and book must have distinct client entries");
+const helpPage = await validatePage("help/index.html", null);
+invariant(
+  portalPage.clientEntry !== bookPage.clientEntry,
+  "portal and book must have distinct client entries",
+);
+invariant(helpPage.clientEntry === null, "the static help page must not load client JavaScript");
 invariant(
   oneMatch(
     bookPage.html,
@@ -147,6 +175,18 @@ invariant(
     "book/index.html canonical",
   ) === `${canonicalSite}book/`,
   "book/index.html must declare the canonical public book route",
+);
+invariant(
+  oneMatch(
+    helpPage.html,
+    /<link\s+rel="canonical"\s+href="([^"]+)"\s*\/>/g,
+    "help/index.html canonical",
+  ) === `${canonicalSite}help/`,
+  "help/index.html must declare the canonical contribution-map route",
+);
+invariant(
+  helpPage.html.includes("Current workstreams"),
+  "help/index.html must render the canonical contribution map without JavaScript",
 );
 const portalModulePreloads = [...portalPage.html.matchAll(
   /<link\b(?=[^>]*\brel=["']modulepreload["'])[^>]*\bhref=["']([^"']+)["'][^>]*>/g,
@@ -172,6 +212,7 @@ const sourceDocuments = [
   ...await sourceMarkdownInventory("math"),
 ].sort();
 const portalDocuments = portalSourceDocuments(repositoryRoot);
+const translatedDocuments = translatedSourceDocuments(repositoryRoot);
 invariant(portalDocuments.length === sourceDocuments.length, "SEO route registry does not cover the canonical portal corpus");
 const builtDocuments = (await recursiveInventory("documents"))
   .filter((relative) => relative.endsWith(".md"))
@@ -205,8 +246,17 @@ for (const document of portalDocuments) {
   );
 }
 
+for (const document of translatedDocuments) {
+  const relativeHtml = `${document.route}index.html`;
+  const page = await validatePage(relativeHtml, null);
+  validateSeoDocument(page.html, document);
+}
+
 const sitemap = await readFile(path.join(outputRoot, "sitemap.xml"), "utf8");
-invariant(sitemap === renderSitemap(portalDocuments), "sitemap.xml is stale or malformed");
+invariant(
+  sitemap === renderSitemap([...portalDocuments, ...translatedDocuments]),
+  "sitemap.xml is stale or malformed",
+);
 for (const match of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
   invariant(!/[?#]/u.test(match[1]), `sitemap.xml contains a parameter or fragment URL: ${match[1]}`);
 }
@@ -216,9 +266,13 @@ invariant(robots.includes(`Sitemap: ${canonicalSite}sitemap.xml`), "robots.txt l
 for (const [relative, page, expectedType] of [
   ["index.html", portalPage, "WebSite"],
   ["book/index.html", bookPage, "Book"],
+  ["help/index.html", helpPage, "WebPage"],
 ]) {
   invariant(page.html.includes('<meta name="robots" content="index,follow,max-image-preview:large"'), `${relative} is not explicitly indexable`);
-  invariant(page.html.includes('<main class="seo-static-page">'), `${relative} lacks static fallback content`);
+  const fallbackMarker = relative === "help/index.html"
+    ? '<main id="help-content" class="help-main">'
+    : '<main class="seo-static-page">';
+  invariant(page.html.includes(fallbackMarker), `${relative} lacks static fallback content`);
   const jsonLd = JSON.parse(oneMatch(
     page.html,
     /<script\s+type="application\/ld\+json">([^<]+)<\/script>/g,
@@ -236,13 +290,20 @@ const pdfPath = "downloads/20-watts-was-enough-full-concept-book.pdf";
 const pdfInformation = await regularFile(pdfPath);
 invariant(pdfInformation.size >= 100_000, "book PDF is unexpectedly small");
 const builtPdfPath = path.join(outputRoot, ...pdfPath.split("/"));
-const pdfHeader = await readFile(builtPdfPath);
+const [publicPdf, pdfHeader] = await Promise.all([
+  readFile(path.join(repositoryRoot, "public", ...pdfPath.split("/"))),
+  readFile(builtPdfPath),
+]);
+assertExactPublicationCopy(publicPdf, pdfHeader, pdfPath);
 invariant(pdfHeader.subarray(0, 5).toString("ascii") === "%PDF-", "book download is not a PDF");
 const bookManifestPath = "downloads/book-manifest.json";
 await regularFile(bookManifestPath);
-const bookManifest = JSON.parse(
-  await readFile(path.join(outputRoot, ...bookManifestPath.split("/")), "utf8"),
-);
+const [publicBookManifest, builtBookManifest] = await Promise.all([
+  readFile(path.join(repositoryRoot, "public", ...bookManifestPath.split("/"))),
+  readFile(path.join(outputRoot, ...bookManifestPath.split("/"))),
+]);
+assertExactPublicationCopy(publicBookManifest, builtBookManifest, bookManifestPath);
+const bookManifest = JSON.parse(builtBookManifest.toString("utf8"));
 invariant(bookManifest.schema_version === 2, "book manifest schema is invalid");
 await assertBookPdfIntegrity(builtPdfPath, bookManifest);
 for (const legalFile of [
@@ -329,5 +390,5 @@ if (pagesBase === "/") {
 }
 
 console.log(
-  `GitHub Pages build validation passed: ${inventory.length} files, ${builtDocuments.length} portal documents and canonical SEO routes, ${portalInitialJavaScriptBytes} initial portal JS bytes, ${repositoryManifest.artifacts.length} repository artifacts, ${plotEntries.length} plot-directory entries.`,
+  `GitHub Pages build validation passed: ${inventory.length} files, ${builtDocuments.length} portal documents, ${translatedDocuments.length} reviewed translations and canonical SEO routes, ${portalInitialJavaScriptBytes} initial portal JS bytes, ${repositoryManifest.artifacts.length} repository artifacts, ${plotEntries.length} plot-directory entries.`,
 );

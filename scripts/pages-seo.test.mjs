@@ -1,20 +1,34 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { portalSourceDocuments } from "./lib/portal-documents.mjs";
+import { publication, repositoryIssueUrl } from "../app/lib/publication.mjs";
+import {
+  markdownSourceDocument,
+  portalSourceDocuments,
+} from "./lib/portal-documents.mjs";
 import {
   canonicalSite,
   populateSeoTemplate,
+  renderBookFallback,
   renderDocumentFallback,
+  renderHelpFallback,
+  renderPortalFallback,
   renderRobots,
   renderSeoHead,
   renderSitemap,
 } from "./lib/pages-seo.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const stylesheet = await readFile(path.join(repositoryRoot, "app/globals.css"), "utf8");
 const documents = portalSourceDocuments(repositoryRoot);
+const helpDocument = markdownSourceDocument(
+  repositoryRoot,
+  "docs/how-to-help.md",
+  "Project",
+);
 
 test("portal documents have unique descriptive routes and search metadata", () => {
   assert.equal(documents.length, 49);
@@ -34,10 +48,65 @@ test("sitemap contains exactly the canonical public HTML routes", () => {
   assert.deepEqual(locations, [
     canonicalSite,
     `${canonicalSite}book/`,
+    `${canonicalSite}help/`,
     ...documents.map((document) => `${canonicalSite}${document.route}`),
   ]);
   assert.doesNotMatch(sitemap, /<(?:priority|changefreq|lastmod)>/);
   assert.doesNotMatch(locations.join("\n"), /[?#]/);
+});
+
+test("help metadata and fallback come from the canonical contribution map", () => {
+  const head = renderSeoHead("help", helpDocument, "/research/");
+  const jsonLd = JSON.parse(
+    head.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)?.[1] ?? "",
+  );
+  assert.equal(jsonLd["@type"], "WebPage");
+  assert.equal(jsonLd.url, `${canonicalSite}help/`);
+  assert.match(head, new RegExp(`rel="canonical" href="${canonicalSite}help/"`));
+
+  const fallback = renderHelpFallback(helpDocument, documents, "/research/");
+  assert.match(fallback, /<h1>Help one bounded part move forward<\/h1>/);
+  assert.match(fallback, /Current workstreams/);
+  assert.match(fallback, /href="https:\/\/github\.com\/lusoris\/20-watts-was-enough\/blob\/main\/experiments\/workstation\/README\.md/);
+  assert.match(fallback, /<details class="portal-mobile-menu"><summary>Menu<\/summary><nav aria-label="Mobile navigation">/);
+  assert.match(fallback, /<nav aria-label="Primary navigation">/);
+  assert.match(fallback, /role="region" aria-label="Scrollable contribution table" tabindex="0"/);
+  assert.doesNotMatch(fallback, /<script\b/);
+  assert.match(
+    stylesheet,
+    /\.help-page \.help-prose table\s*\{[^}]*min-width:\s*960px;/s,
+  );
+});
+
+test("no-JS reading fallbacks expose help and source-bound issue routes", () => {
+  const document = documents[0];
+  const cases = [
+    {
+      fallback: renderPortalFallback(documents, "/research/"),
+      identity: "research portal",
+      reportLabel: "Report a portal problem",
+    },
+    {
+      fallback: renderBookFallback(documents, "/research/"),
+      identity: "book/",
+      reportLabel: "Report a book problem",
+    },
+    {
+      fallback: renderDocumentFallback(document, documents, "/research/"),
+      identity: document.path,
+      reportLabel: "Report this document",
+    },
+  ];
+
+  for (const { fallback, identity, reportLabel } of cases) {
+    const issueHref = repositoryIssueUrl(
+      "site-documentation-problem.yml",
+      `[Site/Docs] ${identity} @ main`,
+    ).replaceAll("&", "&amp;");
+    assert.match(fallback, /<nav aria-label="Reader support">/);
+    assert.ok(fallback.includes('href="/research/help/">How to help</a>'));
+    assert.ok(fallback.includes(`href="${issueHref}">${reportLabel}</a>`));
+  }
 });
 
 test("robots allows rendering and identifies the canonical sitemap", () => {
@@ -65,6 +134,83 @@ test("document metadata and fallback are self-canonical, truthful, and subpath-s
   assert.match(fallback, /href="\/research\/concept\//);
   assert.match(fallback, /<article class="prose markdown-body">/);
   assert.doesNotMatch(fallback, /\?doc=|node="\[object Object\]"/);
+});
+
+test("document metadata carries a reviewed translation language", () => {
+  const document = { ...documents[0], language: "de" };
+  const head = renderSeoHead("document", document, "/research/");
+  const jsonLd = JSON.parse(
+    head.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)?.[1] ?? "",
+  );
+
+  assert.equal(jsonLd.inLanguage, "de");
+  assert.match(head, /name="citation_language" content="de"/);
+  assert.match(head, /property="og:locale" content="de_DE"/);
+  assert.equal(publication.htmlLanguage, "en");
+  assert.match(
+    renderSeoHead("document", documents[0], "/research/"),
+    /name="citation_language" content="en"/,
+  );
+  assert.throws(
+    () => renderSeoHead("document", { ...documents[0], language: "xx" }, "/research/"),
+    /No Open Graph locale is registered/,
+  );
+});
+
+test("translated Markdown resolves media and links from its canonical source", () => {
+  const source = documents[0];
+  const peer = documents[1];
+  const translatedPath = `translations/de/${source.path}`;
+  const translated = {
+    ...source,
+    body: [
+      "# Übersetzter Titel",
+      "",
+      `[Self](./${path.basename(source.path)}#scope)`,
+      `[Peer](./${path.basename(peer.path)})`,
+      "![Diagram](../assets/diagrams/example.svg)",
+      "[Claims](../research/claims.md)",
+    ].join("\n"),
+    canonicalSourcePath: source.path,
+    language: "de",
+    path: translatedPath,
+    route: `de/${source.route}`,
+    sourceSha256: "a".repeat(64),
+    targetSha256: "b".repeat(64),
+    reviewers: ["reviewer-handle"],
+  };
+  const translatedPeer = {
+    ...peer,
+    canonicalSourcePath: peer.path,
+    language: "de",
+    path: `translations/de/${peer.path}`,
+    route: `de/${peer.route}`,
+  };
+  const fallback = renderDocumentFallback(
+    translated,
+    [translated, translatedPeer],
+    "/research/",
+  );
+
+  assert.ok(fallback.includes('href="#scope"'));
+  assert.ok(fallback.includes(`href="/research/${translatedPeer.route}"`));
+  assert.match(fallback, /src="\/research\/assets\/diagrams\/example\.svg"/);
+  assert.ok(fallback.includes(
+    `href="${publication.repository}/blob/main/research/claims.md"`,
+  ));
+  assert.match(fallback, /<p lang="en"><a href="\/research\/">Research portal<\/a><\/p>/);
+  assert.match(fallback, /<nav lang="en" aria-label="Reader support">/);
+  assert.match(fallback, /<nav lang="en" aria-label="Document sequence">/);
+  assert.match(fallback, /<span lang="de">/);
+  const issue = new URL(
+    fallback.match(/href="([^"]+)">Report this translation<\/a>/u)?.[1].replaceAll("&amp;", "&") ?? "",
+  );
+  assert.equal(issue.searchParams.get("template"), "translation-problem.yml");
+  assert.equal(issue.searchParams.get("language"), "de");
+  assert.match(issue.searchParams.get("source"), new RegExp(`^${source.path} at source SHA-256 `));
+  assert.match(issue.searchParams.get("detail"), new RegExp(`${translated.route}`));
+  assert.match(issue.searchParams.get("competence"), /^Recorded reviewer\(s\): /u);
+  assert.doesNotMatch(fallback, /template=site-documentation-problem\.yml/u);
 });
 
 test("SEO template population fails closed when a marker is absent", () => {

@@ -2,10 +2,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
-  canonicalRouteUrl,
-  googleTranslationHandoffUrl,
   officialEuLanguages,
-} from "../app/lib/machine-translation.mjs";
+  reviewedTranslationUrl,
+  translationContributionUrl,
+} from "../app/lib/language-access.mjs";
+import { openGraphLocaleForEuLanguage } from "../app/lib/eu-languages.mjs";
 
 test("language access enumerates the 24 official EU languages once", () => {
   const codes = officialEuLanguages.map(([code]) => code);
@@ -15,26 +16,24 @@ test("language access enumerates the 24 official EU languages once", () => {
     "bg", "cs", "da", "de", "el", "en", "es", "et", "fi", "fr", "ga", "hr",
     "hu", "it", "lt", "lv", "mt", "nl", "pl", "pt", "ro", "sk", "sl", "sv",
   ]);
+  assert.equal(openGraphLocaleForEuLanguage("de"), "de_DE");
+  assert.equal(openGraphLocaleForEuLanguage("ga"), "ga_IE");
+  assert.equal(openGraphLocaleForEuLanguage("invalid"), null);
 });
 
-test("translation is an explicit handoff for the same canonical HTTPS route", () => {
+test("unreviewed languages route to a contribution issue, never machine output", () => {
   const location = {
     pathname: "/concept/00-thesis-and-principles/",
     search: "?view=reader",
     hash: "#efficiency",
   };
-  const canonical = canonicalRouteUrl(location);
-  assert.equal(
-    canonical,
-    "https://www.cordana.dev/concept/00-thesis-and-principles/?view=reader#efficiency",
-  );
-  const handoff = new URL(googleTranslationHandoffUrl("de", location));
-  assert.equal(handoff.origin, "https://translate.google.com");
-  assert.equal(handoff.searchParams.get("sl"), "en");
-  assert.equal(handoff.searchParams.get("tl"), "de");
-  assert.equal(handoff.searchParams.get("u"), canonical);
-  assert.equal(googleTranslationHandoffUrl("en", location), null);
-  assert.equal(googleTranslationHandoffUrl("invalid", location), null);
+  assert.equal(reviewedTranslationUrl("de", location), null);
+  const contribution = new URL(translationContributionUrl("de", location));
+  assert.equal(contribution.origin, "https://github.com");
+  assert.equal(contribution.searchParams.get("template"), "translation-problem.yml");
+  assert.match(contribution.searchParams.get("title"), /de: \/concept\/00-thesis-and-principles\//);
+  assert.equal(translationContributionUrl("en", location), null);
+  assert.equal(translationContributionUrl("invalid", location), null);
 });
 
 test("portal and web book share one labelled language control", async () => {
@@ -45,7 +44,9 @@ test("portal and web book share one labelled language control", async () => {
   ]);
   assert.match(portal, /<LanguageAccess\s*\/>/);
   assert.match(book, /!isPublicPdf && <LanguageAccess\s*\/>/);
-  assert.match(control, /Open automatic translation/);
-  assert.match(control, /Google(?:&apos;|')s terms and privacy policy/);
+  assert.match(control, /Open reviewed translation/);
+  assert.match(control, /Help translate or review this page/);
+  assert.match(control, /No automatic translation is presented as project text/);
+  assert.doesNotMatch(control, /Google|translate\.google/);
   assert.doesNotMatch(control, /<script|dangerouslySetInnerHTML|window\.location\.(?:assign|replace)/);
 });

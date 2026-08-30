@@ -108,6 +108,11 @@ test("the web book defers media work while PDF rendering stays eager", async () 
   assert.match(edition, /isGitHubPages \? "book-shell-web" : "book-shell-print"/);
   assert.match(stylesheet, /\.book-shell-web \.book-document\s*\{[^}]*content-visibility:\s*auto;/s);
   assert.match(stylesheet, /contain-intrinsic-size:\s*auto 900px/);
+  assert.match(stylesheet, /\.book-cover-support\s*\{[^}]*display:\s*flex;/s);
+  assert.match(
+    stylesheet,
+    /@media print[\s\S]*\.book-cover-support\s*\{[^}]*break-inside:\s*avoid;/s,
+  );
 });
 
 test("portal utility text and card accents retain readable contrast", async () => {

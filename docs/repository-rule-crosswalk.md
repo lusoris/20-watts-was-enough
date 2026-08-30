@@ -44,7 +44,7 @@ and integrated rather than replaced.
 | Nested per-module contracts | **adapted** to real trust boundaries only | `research/`, `experiments/`, `experiments/workstation/`, `app/`, `scripts/`, `.github/` |
 | NASA/JPL Power of Ten | **adapted** by preserved invariant | [`docs/principles.md`](principles.md), P10-1–P10-10 |
 | Zero-warning merge floor | **adopted** | `npm run check`, PR CI, Pages validation |
-| Go lint/security/race toolchain | **rejected as language-specific** | TypeScript, ESLint, Node tests, CodeQL, dependency review instead |
+| Go test, vet and race gates | **adapted** to the portable `20w` module | `tooling/go.mod`, `go test -race ./...`, `go vet ./...`, CodeQL |
 | Global numerical coverage quota | **not adopted** | risk- and authority-based coverage; thresholds require a measured decision |
 | Conventional Commits | **adopted** | contribution contract and PR-title CI |
 | Semantic Versioning | **adopted for tagged snapshots** | release contract; no npm publication |
@@ -56,8 +56,8 @@ and integrated rather than replaced.
 | Pinned GitHub Actions | **adopted** | all workflows use full commit SHAs |
 | Renovate automerge | **staged** | config present; automerge remains off until required checks and repository rules are verified |
 | Dependency licence deny-list | **rejected** | dependencies are reviewed against the actual EUPL/CC BY-SA boundary, not a copied GPL/AGPL ban |
-| GoReleaser/OCI releases | **not applicable** | this project releases source, a static site, and a PDF research snapshot |
-| Tag-bound release packaging and provenance | **adopted** | exact-version release workflow, deterministic SPDX SBOM, checksums, notices, PDF manifest, and GitHub build provenance |
+| GoReleaser/OCI releases | **adapted without GoReleaser** | a small in-repository Go builder, an exercised static Linux `amd64` tooling image, the `20w-linux-amd64` native convenience file, and one scoped image per released experiment; further targets remain withheld until their release paths execute |
+| Tag-bound release packaging and provenance | **adopted** | exact-version release workflow, untagged digest admission before container-tag attachment, deterministic SPDX SBOM, checksums, notices, PDF manifest, and GitHub build provenance |
 | MkDocs workflow | **not applicable** | the existing Vite Pages portal and book are the maintained renderers |
 | Auto-assignment and stale bots | **not adopted** | no value with one maintainer and long-running evidence work |
 | US frameworks as normative defaults | **rejected** | EU/Germany applicability remains controlling; foreign material is comparative unless applicable |
@@ -130,7 +130,8 @@ the GitHub rulesets API is authoritative for its current activation state.
 
 ## Deliberate non-goals
 
-The contract does not import Kubernetes, OCI, HTTP, database, Go module,
-Go race-detector, Go linter, Claude hook, or package-release conventions before
-the repository has the corresponding architecture. It also does not create a
+The contract does not import Kubernetes, HTTP, database, broad Go framework,
+Claude hook, or package-release conventions before the repository has the
+corresponding architecture. Its OCI and Go rules cover only the current
+tooling and experiment distribution boundaries. It also does not create a
 second roadmap, ADR tree, prose store, or generated source of truth.

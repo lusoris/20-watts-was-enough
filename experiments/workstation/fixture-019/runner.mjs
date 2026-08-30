@@ -22,6 +22,11 @@ import {
   sha256Hex,
 } from "../lib/checkpoint-ledger.mjs";
 import {
+  assertCurrentExperimentExecutionIdentity,
+  assertExperimentExecutionEnvironment,
+  createExperimentExecutionReceipt,
+} from "../lib/execution-receipt.mjs";
+import {
   assertFixture019Record,
   fixture019ScientificPayload,
   fixture019WorkKey,
@@ -338,8 +343,21 @@ function runIdentity(inputs) {
   return { ...body, run_id: sha256Hex(canonicalize(body)) };
 }
 
-export async function executeFixture019({ profile, output, resume = false }) {
+export async function executeFixture019({
+  profile,
+  output,
+  resume = false,
+  executionEnvironment = process.env,
+  executionRuntime = process,
+}) {
   const inputs = await loadInputs(profile);
+  const executionReceipt = createExperimentExecutionReceipt({
+    artifact: "fixture-019",
+    command: profile === "smoke" ? "smoke" : "run",
+    profile,
+    environment: executionEnvironment,
+    runtime: executionRuntime,
+  });
   const directory = outputDirectory(output);
   await assertSafeOutputPath(directory);
   await mkdir(path.dirname(directory), { recursive: true });
@@ -389,6 +407,7 @@ export async function executeFixture019({ profile, output, resume = false }) {
     const run = {
       ...identity,
       command_profile: profile,
+      execution_receipt: executionReceipt,
       environment,
       expected_work_units: units.length,
       ledger: ledger.summary(),
@@ -431,7 +450,13 @@ async function readValidatedRecords(directory) {
   };
 }
 
-async function verifyFrozenRunIdentity(directory, run, raw, inputs) {
+async function verifyFrozenRunIdentity(
+  directory,
+  run,
+  raw,
+  inputs,
+  { executionEnvironment = process.env, executionRuntime = process } = {},
+) {
   const freshIdentity = runIdentity(inputs);
   for (const [field, expected] of Object.entries(freshIdentity)) {
     if (canonicalize(run[field]) !== canonicalize(expected)) {
@@ -439,6 +464,12 @@ async function verifyFrozenRunIdentity(directory, run, raw, inputs) {
     }
   }
   if (run.command_profile !== run.profile) throw new Error("Fixture 019 command profile is not frozen to the run profile.");
+  assertCurrentExperimentExecutionIdentity(run.execution_receipt, {
+    artifact: "fixture-019",
+    profile: run.profile,
+    environment: executionEnvironment,
+    runtime: executionRuntime,
+  });
   if (
     run.ledger.records !== raw.records.length
     || run.ledger.completed_work_units !== raw.records.length
@@ -460,7 +491,7 @@ async function verifyFrozenRunIdentity(directory, run, raw, inputs) {
   return freshIdentity;
 }
 
-export async function computeFixture019Analysis(output) {
+export async function computeFixture019Analysis(output, executionIdentity = {}) {
   const directory = outputDirectory(output);
   await assertSafeOutputPath(directory, { requireExisting: true });
   await Promise.all([
@@ -476,7 +507,7 @@ export async function computeFixture019Analysis(output) {
     run.artifact !== "fixture-019"
   ) throw new Error("Fixture 019 run metadata disagree with its raw ledger.");
   const inputs = await loadInputs(run.profile);
-  await verifyFrozenRunIdentity(directory, run, raw, inputs);
+  await verifyFrozenRunIdentity(directory, run, raw, inputs, executionIdentity);
   const expected = workUnits(inputs).map(workUnitKey).sort();
   const observed = raw.records.map((record) => fixture019WorkKey(record)).sort();
   if (canonicalize(expected) !== canonicalize(observed)) throw new Error("Fixture 019 work-unit population is incomplete.");
@@ -581,9 +612,9 @@ export async function computeFixture019Analysis(output) {
   };
 }
 
-export async function analyzeFixture019(output) {
+export async function analyzeFixture019(output, executionIdentity = {}) {
   const directory = outputDirectory(output);
-  const summary = await computeFixture019Analysis(directory);
+  const summary = await computeFixture019Analysis(directory, executionIdentity);
   const analysisDirectory = path.join(directory, "analysis");
   await assertSafeOutputPath(analysisDirectory);
   await mkdir(analysisDirectory, { recursive: true });
@@ -593,10 +624,10 @@ export async function analyzeFixture019(output) {
   return summary;
 }
 
-export async function validateFixture019(output) {
+export async function validateFixture019(output, executionIdentity = {}) {
   const directory = outputDirectory(output);
   await assertSafeOutputPath(directory, { requireExisting: true });
-  const expected = await computeFixture019Analysis(directory);
+  const expected = await computeFixture019Analysis(directory, executionIdentity);
   const stored = await loadJson(path.join(directory, "analysis", "summary.json"));
   if (canonicalize(expected) !== canonicalize(stored)) throw new Error("Fixture 019 stored analysis is not reproducible.");
   const files = await Promise.all([
@@ -635,8 +666,17 @@ export async function prepareFixture019(profile) {
   }
 }
 
-async function main() {
-  const { action, options } = parseOptions(process.argv);
+export async function main(
+  argv = process.argv,
+  executionEnvironment = process.env,
+  executionRuntime = process,
+) {
+  const { action, options } = parseOptions(argv);
+  assertExperimentExecutionEnvironment({
+    artifact: "fixture-019",
+    environment: executionEnvironment,
+  });
+  const executionIdentity = { executionEnvironment, executionRuntime };
   if (action === "prepare") {
     console.log(JSON.stringify(await prepareFixture019(options.profile), null, 2));
     return;
@@ -646,15 +686,17 @@ async function main() {
       profile: options.profile,
       output: options.output,
       resume: options.resume === "true",
+      executionEnvironment,
+      executionRuntime,
     });
     console.log(JSON.stringify({ output: path.relative(repositoryRoot, result.directory).replaceAll("\\", "/"), run: result.run }, null, 2));
     return;
   }
   if (action === "analyze") {
-    console.log(JSON.stringify(await analyzeFixture019(options.output), null, 2));
+    console.log(JSON.stringify(await analyzeFixture019(options.output, executionIdentity), null, 2));
     return;
   }
-  console.log(JSON.stringify(await validateFixture019(options.output), null, 2));
+  console.log(JSON.stringify(await validateFixture019(options.output, executionIdentity), null, 2));
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
