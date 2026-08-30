@@ -41,16 +41,6 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": ["state", "runtime_class", "authority"],
-          "properties": {
-            "state": { "const": "withheld-image" },
-            "runtime_class": { "const": "windows-host-bound" },
-            "authority": { "const": "NO_RESULT" }
-          }
-        },
-        {
-          "type": "object",
-          "additionalProperties": false,
           "required": ["state", "runtime_class", "image", "platforms", "build_context", "dockerfile", "authority"],
           "properties": {
             "state": { "const": "release-image" },

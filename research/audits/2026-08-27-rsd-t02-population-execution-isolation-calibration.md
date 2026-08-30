@@ -312,7 +312,7 @@ blockers remain; mature-null, comparison and claim authority are still false.
 
 From the repository root:
 
-```powershell
+```bash
 npm run test:workstation:fixture-026:execution-v52
 node experiments/workstation/fixture-026/build-rsd-t02-fixed-instance-conformance-policy.mjs --check
 npm run validate:workstation

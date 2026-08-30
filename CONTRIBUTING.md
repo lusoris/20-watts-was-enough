@@ -16,7 +16,8 @@ The complete validation gate currently binds these development tools:
 - the official Node.js 26.8.1 distribution or a pinned project container;
 - npm 12.0.2 with the committed `package-lock.json`;
 - CPython 3.14.7 with NumPy 2.5.2; and
-- an OCI runtime with Docker Buildx for container changes.
+- an OCI runtime with Docker Buildx for container changes and authoritative PDF
+  generation.
 
 Install JavaScript dependencies from the lockfile and verify the scientific
 runtime before editing:
@@ -163,8 +164,8 @@ Each released experiment has its own image, documented in the
 Container commands are the public default. Reports should include the exact
 image digest, source revision, command, architecture, and `NO_RESULT` receipt.
 Native `20w` files are secondary conveniences; installing one is not required
-to run an experiment. Docker with Buildx is needed only for container changes,
-not prose-only contribution checks.
+to run an experiment. Docker with Buildx is needed for container changes and
+authoritative PDF generation, not prose-only contribution checks.
 
 ## Translations
 

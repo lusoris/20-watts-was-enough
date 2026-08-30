@@ -1,0 +1,37 @@
+{
+  "schema": 2,
+  "platform": "linux/amd64",
+  "source_date_epoch": 1787612224,
+  "builder": {
+    "buildx_version": "0.36.1",
+    "buildx_revision": "1d8dde89b8aba914e05e45366770736fea1fd690",
+    "buildkit_version": "0.32.2",
+    "buildkit_image": "moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8"
+  },
+  "node": {
+    "version": "26.8.1",
+    "image": "docker.io/library/node:26.8.1-bookworm-slim@sha256:367679cf9792759492a486e4aa4b421764d71a9546a6dae8aab81a99eb797b3e"
+  },
+  "browser_environment": {
+    "version": "25.9.0",
+    "image": "ghcr.io/puppeteer/puppeteer:25.9.0@sha256:5c341215d78353c3416b6c92aae9fac66e8f11c146c3753234980443d6792f8f"
+  },
+  "chrome_for_testing": {
+    "version": "152.0.7977.64",
+    "revision": "r1669021",
+    "archive_url": "https://storage.googleapis.com/download/storage/v1/b/chrome-for-testing-public/o/152.0.7977.64%2Flinux64%2Fchrome-linux64.zip?alt=media&generation=1787612224233727",
+    "archive_generation": "1787612224233727",
+    "archive_size_bytes": 194030544,
+    "archive_sha256": "8b592f066af71f054aab2cc80fc26f73c775c6d44ebb99d16ade924b24756c2e",
+    "executable_path": "/opt/chrome/chrome-linux64/chrome",
+    "executable_sha256": "3ed7df7904694145caf8da676d053f68300e8d2778a507e27b15f142c4efd0af"
+  },
+  "limits": {
+    "build_seconds": 900,
+    "render_seconds": 600,
+    "output_bytes": 4194304,
+    "memory_bytes": 4294967296,
+    "pids": 512,
+    "temporary_bytes": 1073741824
+  }
+}

@@ -1,8 +1,17 @@
-# Public research interface audit
+# Public research interface implementation audit
 
-**Snapshot:** 2026-08-29 working tree. This is an interface benchmark and a
-maintainer decision queue, not a publication policy or an accessibility
-conformance claim. The controlling source and feedback rules remain in the
+**Snapshot:** deployed site and working tree on 2026-08-30. This is an
+implementation and rendered-regression audit. It is not external research, an
+accessibility-conformance claim, a reader-comprehension result or evidence for
+the project's scientific hypotheses.
+
+The external evidence and comparison authority is the
+[Git-centred open research publication infrastructure
+audit](../research/audits/2026-08-30-git-centred-open-research-publication-infrastructure.md).
+This document records only what the prior and replacement Pages interfaces did
+with that evidence.
+
+The controlling source and feedback rules remain in the
 [publication workflow](publication-workflow.md) and Decisions
 [0035](../decisions/0035-publish-only-reviewed-source-bound-translations.md)
 and
@@ -10,230 +19,185 @@ and
 
 ## Finding
 
-The Pages reader already has the structure needed for serious research work:
-bounded prose, source-level navigation, visible authority, a full book, search,
-and routes from a document to its source and issue form. Replacing it with a
-stock research-site generator would not repair an identified authority or
-reproducibility defect.
+The deployed landing page looks like an operations dashboard wrapped around a
+research library. Its large dark first screen, seven accent colours, boxed
+metrics, dense six-column funnel and red `NO_RESULT` panel make repository state
+more visually important than the argument. The focused reader has a sound text
+measure, but heavy navigation rails cage the article.
 
-The weaker surface is the overview. Its display type is deliberately large,
-while some explanations and metadata are much smaller than the research prose.
-That contrast is useful for orientation. It also creates the untested risk that
-readers perceive a dashboard first and a research programme second. The next
-layout change should therefore be chosen by a reader task, not by an assumed
-“scientific” visual style.
+The external audit does not support that hierarchy. Its repository, paper,
+specification and rendered-publication evidence instead puts the research
+object, publication identity, argument, provenance and correction route first.
 
-For this audit, *research-grade* means that a reader can:
+The adopted direction is therefore a compact research-first surface:
 
-1. find the maintained source and its evidence status;
-2. read the argument without an unnecessarily wide or dense text block;
-3. move between the overview, one document, the book and an experiment;
-4. report a problem against the exact source or artifact; and
-5. distinguish a generated reading surface from its canonical authority.
+1. thesis and plain-language scope first;
+2. one explanatory system figure;
+3. a neutral statement of evidence status;
+4. publication formats and source identity;
+5. the detailed evidence path and library below; and
+6. a quieter reader whose article is the dominant object.
 
-This definition is operational. It does not claim that one typeface, colour
-scheme or site generator makes research credible.
+This is an engineering translation from observed patterns, not proof that the
+new design improves comprehension. The task tests below retain that empirical
+boundary.
 
 ## Method and limits
 
-The observations below come from the active screen rules in
-[`app/globals.css`](../app/globals.css), the current Pages components, the
-translation manifest, and a read-only GitHub repository query on the snapshot
-date. The comparison uses current official documentation from W3C, Quarto,
-Jupyter Book, GitHub, The Turing Way, Zenodo, Weblate and Hypothesis. Community
-settings were read with `gh api repos/lusoris/20-watts-was-enough`; the deployed
-site may lag this working-tree snapshot.
+The implementation audit combined:
 
-This pass did not run a comprehension study, contrast audit, assistive
-technology matrix or complete cross-browser visual test. A CSS `ch` unit
-approximates the advance width of the font's `0` glyph; it does not prove an
-exact character count in every font. The pixel values below are source
-declarations after the screen-reading overrides, not measurements of every
-rendered viewport.
+- browser inspection of the deployed site at `1440 × 1000` and `390 × 844` CSS
+  pixels;
+- source inspection of the portal component and active screen CSS;
+- rendered inspection of the replacement at `1440 × 1000`, `390 × 844` and
+  `320 × 844`; and
+- focused source tests for hierarchy, mobile identity and route entry.
 
-## Observation: the current local interface
+The visual observations were agent-assisted. No independent designer,
+accessibility specialist or representative reader panel reviewed this pass.
+The work did not test assistive-technology combinations, font fallback on all
+platforms or comprehension. Those limits prohibit a claim that the result is
+optimal, conformant or easier to understand.
 
-| Surface | Current source contract | What it means |
+## Observation: the deployed interface before this pass
+
+| Surface | Rendered observation | Consequence to test |
 | --- | --- | --- |
-| Focused research document | `16.5px` body above the `620px` breakpoint and `16px` at or below it, `1.72` line-height, `75ch` container and `72ch` prose blocks | The maintained argument uses the full reading tier and a bounded measure. |
-| Web book | `16px` base body, `1.72` line-height, `75ch` book column and `72ch` prose blocks | The book and focused reader use the same reading model rather than separate prose layouts. |
-| Overview thesis | `17–21px`, `1.52` line-height and `68ch` maximum measure | The initial thesis is readable and subordinate to a `40–64px` display heading across the screen cascade. |
-| Overview explanation | Explicit status, funnel, catalogue and card paragraphs use `13–15px` with `1.45–1.55` line-height; nearby labels and metrics use `11–14px`, sometimes with `1.35` or inherited line-height | Some text that explains research state competes with labels and compact dashboard density. Essential meaning should not depend on the smallest tier. |
-| Navigation and metadata | Generally `11–13px`; mobile menus and outline links use at least `44px` control height | The compact tier is suitable for provenance and navigation, but it needs zoom, contrast and low-vision testing before being treated as settled. |
-| Wide document layout | Above `1180px`: `290px` library, flexible document and `230px` outline; the outline disappears at `1180px` and below, and the reader becomes one column at `880px` and below | Source discovery and section navigation remain available without forcing three columns onto narrow screens. |
-| Document actions | Source, report, full-book and PDF links sit beside the document title; the body names its canonical Markdown path | Feedback can retain the affected source identity instead of becoming detached commentary. |
-| Translation | `translations/manifest.json` currently contains no reviewed documents; unavailable languages open a translation issue rather than machine output | The unreviewed automatic-translation path is closed, but German and every other non-English route still need a human language-and-domain review. |
-| Community channels | GitHub Issues is enabled and Discussions is disabled | Actionable reports have a route. Open-ended questions currently have no repository-native forum. |
+| Desktop landing page | At `1440 × 1000`, the dashboard occupied about `953px` vertically and exposed 19 links in the first viewport. | Readers had to distinguish a pitch, two action buttons, a status panel, four metrics, publication links and six process stages before reaching the library. |
+| Evidence funnel | The funnel was about `1310px` wide, divided into six columns, with most explanatory text at `12–13px`. | The sequence was visible, but its narrow cells forced the explanation into a metadata-sized tier. |
+| Evidence status | `NO_RESULT` appeared in a red bordered panel. | A truthful eligibility boundary looked like a system failure. Red should remain available for invalidated, retracted or failed research objects. |
+| Visual language | Thick borders, monospace labels, metrics and green, blue, cyan, coral, violet and amber accents appeared together. | The combined signal resembled monitoring software more than a maintained manuscript. |
+| Mobile landing page | At `390 × 844`, the page was about `6573px` long. The first screen held the title, pitch and two large actions; research state began below it. | The interface was neither compact for returning readers nor sufficiently explanatory for a new reader above the fold. |
+| Mobile header | The project name disappeared while Language and Menu remained. | The two utilities displaced the identity of the work they controlled. |
+| Focused reader | At desktop width, a dark `290px` library and `230px` outline surrounded the article inside a heavy frame. The body itself was about `688px` wide at `16.5px` with roughly `28.4px` line height. | The prose measure was reasonable; surrounding chrome, borders and type contrast were the larger defect. |
+| Mobile document entry | Selecting a document scrolled the article element into view after the route changed. The static document-title toolbar remained above that target. | A mobile reader could arrive at Contents or the body without seeing the title and source context. |
 
-The `72ch` limit is a sensible default, not a compliance certificate. W3C
-Technique C20 describes relative widths that let lines average 80 characters
-or fewer and explicitly says techniques are examples rather than mandatory
-implementations. The current relative measure and line spacing support that
-goal, but a browser test still has to check reflow, resizing and zoom
-([W3C C20](https://www.w3.org/WAI/WCAG22/Techniques/css/C20),
-[WCAG 2.2 visual presentation](https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html)).
+These measurements describe the inspected render only. They are not stable
+product metrics and should not be copied into publication claims.
 
-## Observation: comparable GitHub-native structures
+## Engineering translation adopted for Pages
 
-These projects are implementation benchmarks, not evidence that copying their
-themes would improve comprehension here.
+These rules apply the externally supported boundaries recorded in the
+[research audit](../research/audits/2026-08-30-git-centred-open-research-publication-infrastructure.md).
+They are project choices, not conclusions copied from any one publication.
 
-| Benchmark | Structure worth retaining | Translation for this repository |
-| --- | --- | --- |
-| Quarto websites and manuscripts | Hybrid navigation, local search, a reader mode, and per-page source, edit and issue actions; manuscripts connect an article to notebooks and code ([website navigation](https://quarto.org/docs/websites/website-navigation), [manuscript components](https://quarto.org/docs/manuscripts/components.html)) | Keep the current custom reader, catalogue and per-document actions. Treat experiment images, receipts and code as attached research objects rather than folding their contents into the article. |
-| Jupyter Book 2 | An explicit table of contents controls page order, nesting and sidebar navigation; the authoring model also supports citations, equations and cross-references ([table-of-contents guide](https://jupyterbook.org/stable/authoring/table-of-contents/), [authoring guide](https://jupyterbook.org/stable/authoring/)) | Generate the portal catalogue and book order from the canonical source registry. Do not maintain a second hand-written site hierarchy. |
-| The Turing Way and GitHub | A contribution handbook routes questions and ideas to Discussions, concrete work to Issues, and small reviewed changes to pull requests; `good first issue` marks bounded entry work ([Turing Way contribution guide](https://book.the-turing-way.org/community-handbook/contributing/), [GitHub channel guidance](https://docs.github.com/en/get-started/using-github/communicating-on-github)) | Keep the new [help map](how-to-help.md), typed issue forms and difficulty/context boundaries. If Discussions is enabled, convert accepted work into a bounded issue instead of treating the conversation as authority. |
+### Landing page
 
-The common pattern is not “use GitHub Pages and a left sidebar”. It is one
-versioned source, generated navigation, visible provenance, a focused reading
-surface and a short path back to reviewable work.
+- Limit the primary composition to about `1260px` and use a warm paper field,
+  dark ink, muted ink, hairline borders and one project green. Amber and red are
+  semantic colours, not section decoration.
+- Put the thesis, current authority and evidence stage beside a numbered system
+  figure. The figure must describe the repository's actual observation →
+  principle → claim → protocol → run → evidence return path and state that it
+  is not an experimental result.
+- Keep the status immediately visible but neutral: “Framework and development
+  harnesses” and `NO_RESULT` describe eligibility. They do not signal an
+  application error.
+- Move the six detailed stages below the first composition and render them as
+  one ordered evidence trail rather than six narrow cards.
+- Use four primary navigation concepts: Read, Evidence, Experiments and
+  Contribute. Keep source and language as utilities. Preserve the project name
+  on mobile.
+- Present question-based entry points as quiet editorial links. Do not assign a
+  different decorative colour to every question.
 
-## Engineering translation: safe defaults
+### Focused reader
 
-These defaults fit the existing architecture and do not require a maintainer
-choice:
+- Use about `18px` type with `1.66` line height and a `68ch` maximum for argument
+  text on wide screens. Use about `17px`, `1.68` and `20px` gutters on small
+  screens. These are project defaults, not universal accessibility minima.
+- Retain one quiet library rail at wide desktop sizes and one optional outline
+  rail only while there is space. Remove the heavy shared frame and dark rail.
+- Let figures, display mathematics, code and tables use the article width while
+  ordinary paragraphs remain bounded.
+- Scroll a newly selected route to the document page, not past its title. On
+  mobile, title, sequence and source actions precede the collapsible Contents
+  block and body.
+- Keep wide tables and diagrams in local keyboard-accessible overflow regions.
+  Never widen the entire page to accommodate one object.
 
-- Keep argument text at the reader scale: `16–16.5px`, at least the current
-  line spacing, and a relative measure no wider than the present `72ch` prose
-  blocks. This is a project default, not a universal minimum-font rule.
-- Reserve `11–13px` for short labels, counts and provenance. Research status,
-  failure conditions and contribution instructions belong in the explanatory
-  tier, even when that makes a card taller.
-- Preserve one document action group containing the canonical source, a typed
-  report route, the full book and the downloadable artifact. Add another copy
-  only when a responsive layout makes the primary group unreachable.
-- Keep tables, equations, diagrams and code in bounded overflow regions rather
-  than widening the surrounding prose.
-- Generate catalogues, reading order, translation availability and issue
-  targets from their maintained registries. A manually repeated list needs a
-  freshness check or removal.
-- Test keyboard order, focus visibility, 200% zoom, a
-  [320 CSS-pixel viewport](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html),
-  actual line length after font fallback, and contrast before calling the
-  reading pass complete. A source declaration alone is not rendered evidence.
-- Keep a low-context contribution route for readers who can identify a broken
-  explanation but cannot review its scientific meaning. Their report should
-  name where the argument was lost; a domain reviewer decides whether wording
-  can change safely.
+### Research objects and contribution
 
-## Hypotheses to test
+- Keep source, issue, book and PDF actions adjacent to a document's identity.
+- Add an experiment-record surface only when it can derive source, release
+  artifact, immutable image digest, execution receipt, review route and
+  eligibility state from maintained registries. Do not hand-copy those fields.
+- End-state contribution routes should distinguish clarity reports, evidence
+  corrections, reproductions and reviewed translations. A future document-end
+  callout must generate its target from the same source identity already used
+  by the toolbar.
 
-The layout questions are empirical enough to test but are not scientific
-results.
+## Rendered verification of the working-tree implementation
 
-1. A compact hybrid landing page will let experienced readers reach a document
-   faster than the expanded dashboard without reducing a new reader's ability
-   to state the project status. Reject this if either reader group loses the
-   correct status or source path more often.
-2. Moving essential overview explanations out of the `12–13px` tier will make
-   the evidence funnel and `NO_RESULT` boundary easier to paraphrase. Reject
-   this if a task-based reader check finds no improvement or the larger layout
-   obscures the sequence.
-3. A dedicated open-ended discussion channel will produce useful questions
-   that typed issue forms currently suppress. Reject this if moderation cost,
-   duplicate threads or conversion to actionable work overwhelms the useful
-   questions.
+The implementation was rebuilt in the local Pages development surface and
+inspected in Chrome after the source tests passed.
 
-A small moderated reader check should include technically curious non-experts
-and people who already work with research software. Ask whether each reader can
-state the current result status, find the maintained source, choose the correct
-feedback route and locate a runnable experiment. Do not optimise a cosmetic
-metric in place of those tasks.
+| View | Observed result |
+| --- | --- |
+| `1440 × 1000` landing page | The first viewport contained 13 links rather than the deployed 19. The thesis and research-cycle figure ended at about `746px`; the neutral status strip began at about `832px`. The detailed evidence trail began below the first viewport at about `1143px`. No horizontal overflow occurred. |
+| `1440 × 1000` evidence trail | Six stages rendered as one ordered list. Rows were about `111–133px` high, and explanatory text rendered at `14px` rather than the previous `12–13px` narrow-cell tier. |
+| `1440 × 1000` focused reader | The grid rendered as a `235px` library, `900px` article and `195px` outline with quiet gaps and no shared frame. Argument text rendered at `18px` with about `29.9px` line height and a `68ch` bound; research media retained more width than ordinary paragraphs. |
+| `390 × 844` landing page | The project name remained visible, the research figure entered at the bottom of the first screen, eight initial catalogue results kept the full page to about `6375px`, and no horizontal overflow occurred. |
+| `375 × 844` open language control | A headless-browser regression opened the control and kept both the panel and selector inside the document's client width without introducing horizontal overflow. The panel uses a viewport-bound width and a finite vertical scroll region. |
+| `390 × 844` document entry | After selecting the thesis, the sticky site header ended at `62px` and the document title began at about `109px`. The title, sequence, source actions and Contents block all preceded the article body. |
+| `390 × 844` contribution page | The local Pages server rendered the canonical contribution map rather than an empty template. The short failed-run route appeared twice in context; wide tables and the receipt example scrolled inside their own regions while document width remained `375px`. |
 
-## Maintainer decision queue
+These values are rendered regression evidence for one browser and snapshot,
+not universal layout guarantees. The focused source tests also protect the
+title-preserving scroll target, figure authority caption, reduced catalogue
+page size, dominant article measure and mobile project identity.
 
-### 1. Landing page
+## Quantitative reading boundary
 
-- **Expanded dashboard:** retain the current hierarchy and rich overview. It
-  gives new readers context but makes experienced readers traverse more visual
-  material.
-- **Manuscript first:** open on the concept or book. It is direct for experts
-  but hides programme state and contribution routes from newcomers.
-- **Compact hybrid — recommended:** show the thesis, current result status and
-  direct routes to documents, experiments and help above the fold; keep the
-  full evidence funnel and catalogue below. Adopt only after the reader check
-  above, not from visual preference alone.
+The [external research audit](../research/audits/2026-08-30-git-centred-open-research-publication-infrastructure.md#research-publication-layout-boundary)
+records the W3C sources for bounded lines, reflow and user text spacing. The
+project's `68ch` argument measure is a starting constraint, not a certificate
+that every font fallback produces the same number of characters.
 
-### 2. GitHub Discussions
+Rendered tests still need to cover text zoom, reflow at
+[320 CSS pixels](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html),
+keyboard order, focus visibility, contrast, figure captions and fallback fonts.
 
-- **Issues only:** one moderation surface and strong task structure, but broad
-  questions are forced into an issue form.
-- **Enable Discussions — recommended after setup:** use `Q&A`, `Ideas` and
-  `Announcements`; require a code of conduct, moderation owner and a rule that
-  accepted work moves to an issue. GitHub itself distinguishes open-ended
-  conversation from actionable Issues.
-- **External chat/forum:** easier informal conversation for an existing
-  community, but it fragments search, identity and preservation. Do not add one
-  without a community that already needs it.
+## Falsifiable interface hypotheses
 
-Discussions is currently disabled. Enabling it is a remote repository change
-and should follow the maintainer's explicit decision.
+These hypotheses evaluate the publication interface, not the scientific
+concept.
 
-### 3. Digital object identifier (DOI) and archival deposit
+1. **Research-first landing:** technically curious non-experts and research-
+   software contributors will identify the thesis, evidence status and first
+   reading route more accurately with the compact composition than with the
+   deployed dashboard. Reject this if either group loses any of those three
+   facts more often.
+2. **Neutral status:** readers will paraphrase `NO_RESULT` as “no eligible
+   scientific result yet”, not “the project failed”. Reject this if moderated
+   task responses retain the failure interpretation.
+3. **Quiet reader rails:** the lighter reader will reduce time to begin the
+   argument without increasing time to find another document or its source.
+   Reject this if source discovery or document switching becomes materially
+   worse.
+4. **Title-preserving mobile entry:** a selected document's title and source
+   context will remain visible before its body at `320–430px`. Reject this on
+   any supported route or browser where navigation still lands below the
+   title.
 
-- **Git tag and release only:** lowest overhead, but no repository-issued
-  persistent research identifier.
-- **Zenodo GitHub integration — recommended before the first externally citable
-  snapshot:** archive release objects and expose the DOI beside the exact tag.
-  Zenodo documents repository enablement, `CITATION.cff` metadata and release
-  archiving ([Zenodo GitHub guide](https://help.zenodo.org/docs/github/)).
-- **Manual or institutional deposit:** useful when an institution must curate
-  the record, but creates a second release procedure that needs an identity and
-  freshness check.
+A bounded moderated check should include technically curious non-experts and
+people who maintain research software. Ask each reader to state the hypothesis,
+current result status, canonical source, correct feedback route and location of
+a runnable experiment. Record viewport, browser, task order and failures. Do
+not optimise click count or aesthetic preference in place of those tasks.
 
-The repository already has `CITATION.cff`; its people, version, licence and
-artifact metadata still need release-time review before deposit. A deposited
-tagged research snapshot also needs the output disclosure required by the
-[research-integrity baseline](../research/research-integrity-baseline.md):
-contributors and roles, accountable approval, material support, competing
-interests, material tools and the scope of human verification.
+## Remaining decisions outside the visual pass
 
-### 4. Inline annotation
+The external audit surfaced useful research-publication extensions, but the
+layout does not authorise them:
 
-- **Source-bound issue links only — recommended now:** one public moderation
-  and authority path, at the cost of losing sentence-level discussion in the
-  reading surface.
-- **Hypothesis group or embed:** readers can annotate passages and group owners
-  can moderate, but Open, Restricted and Private groups have different access
-  rules ([group model](https://web.hypothes.is/help/annotating-with-groups/)).
-  The service processes account and usage data, including transfer to the
-  United States. Enabling it therefore triggers the baseline's recorded
-  pre-start screen for personal data and rights; that screen must also cover
-  accessibility, moderation and source-version handling
-  ([Hypothesis privacy policy](https://web.hypothes.is/privacy/)).
-- **Project-hosted annotation:** maximum control, but it creates an account,
-  moderation, retention, security and migration system unrelated to the core
-  research. Do not build it without evidence that issue links fail.
+- GitHub Discussions still requires a moderation owner and channel rules;
+- a Zenodo deposit requires a specific approved release and identity check;
+- inline annotation creates privacy, moderation, accessibility and source-
+  version boundaries; and
+- a translator interface must preserve Decision 0035's reviewed, source-bound
+  Git authority.
 
-### 5. Translation authoring interface
-
-Decision 0035 already settles the authority: reviewed, source-digest-bound Git
-files are the only publishable translations. The remaining decision is how
-translators reach that Git workflow.
-
-- **Pull requests and typed issues — recommended now:** no additional service
-  or permissions; the Git interface remains a barrier for some language
-  reviewers.
-- **Hosted Weblate through its GitHub App:** a translator-focused interface
-  that can create translation branches and pull requests while Git remains
-  upstream. It adds an external account, repository permission, service
-  availability and data-processing boundary
-  ([Weblate version-control integration](https://docs.weblate.org/en/latest/vcs.html)).
-- **Self-hosted Weblate:** retains more operational control but adds upgrades,
-  backups, authentication, monitoring and incident response.
-
-Revisit this choice when at least one competent reviewer is blocked by the Git
-workflow or recurring translation updates make manual coordination the dominant
-cost. No interface may publish machine output without the language-and-domain
-review already required by Decision 0035.
-
-## Recommended sequence
-
-1. Keep the current reader architecture and safe defaults.
-2. Run the bounded reader tasks before choosing the landing-page variant.
-3. Decide whether to enable Discussions and name its moderator before inviting
-   broad questions.
-4. Connect Zenodo only when a specific release is ready to become the first
-   externally citable snapshot.
-5. Keep source-bound issue feedback and Git-native translations until observed
-   participation justifies another service boundary.
+Those are governance and service decisions, not missing decoration. Their
+evidence and decision boundaries remain in the
+[external audit](../research/audits/2026-08-30-git-centred-open-research-publication-infrastructure.md#decisions-and-tests).

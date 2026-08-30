@@ -54,20 +54,20 @@ func TestLoadCatalogRejectsOversizedManifestAndInvalidLockfiles(t *testing.T) {
 	}
 }
 
-func TestLoadCatalogWithholdsFixture012Image(t *testing.T) {
+func TestLoadCatalogKeepsFixture012AsPortableSource(t *testing.T) {
 	t.Parallel()
 	root := t.TempDir()
 	manifestRoot := filepath.Join(root, "experiments", "workstation", "manifests")
 	if err := os.MkdirAll(manifestRoot, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeManifest(t, manifestRoot, "fixture-012", `{"schema":1,"artifact":"fixture-012","readiness":"smoke-ready","distribution":{"state":"withheld-image","runtime_class":"windows-host-bound","authority":"NO_RESULT"},"environment":{"runtime":"Windows","lockfiles":["package-lock.json"]}}`)
+	writeManifest(t, manifestRoot, "fixture-012", `{"schema":1,"artifact":"fixture-012","readiness":"smoke-ready","distribution":{"state":"source-only","runtime_class":"node-source","authority":"NO_RESULT"},"environment":{"runtime":"Node","lockfiles":["package-lock.json"]}}`)
 	writeRepositoryFile(t, root, "package-lock.json")
 	catalog, err := LoadCatalog(root)
 	if err != nil {
 		t.Fatalf("LoadCatalog() error = %v", err)
 	}
-	if catalog[0].Distribution.State != "withheld-image" {
+	if catalog[0].Distribution.State != "source-only" {
 		t.Fatalf("fixture-012 distribution = %+v", catalog[0].Distribution)
 	}
 }
@@ -79,12 +79,12 @@ func TestLoadCatalogRejectsUnknownDistributionAuthorityFields(t *testing.T) {
 	if err := os.MkdirAll(manifestRoot, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	writeManifest(t, manifestRoot, "fixture-012", `{"schema":1,"artifact":"fixture-012","readiness":"smoke-ready","distribution":{"state":"withheld-image","runtime_class":"windows-host-bound","authority":"NO_RESULT","publish":true},"environment":{"runtime":"Windows","lockfiles":["package-lock.json"]}}`)
+	writeManifest(t, manifestRoot, "fixture-012", `{"schema":1,"artifact":"fixture-012","readiness":"smoke-ready","distribution":{"state":"source-only","runtime_class":"node-source","authority":"NO_RESULT","publish":true},"environment":{"runtime":"Node","lockfiles":["package-lock.json"]}}`)
 	writeRepositoryFile(t, root, "package-lock.json")
 	if _, err := LoadCatalog(root); err == nil {
 		t.Fatal("LoadCatalog() accepted an unknown distribution authority field")
 	}
-	writeManifest(t, manifestRoot, "fixture-012", `{"schema":1,"artifact":"fixture-012","readiness":"smoke-ready","distribution":{"state":"withheld-image","state":"release-image","runtime_class":"windows-host-bound","authority":"NO_RESULT"},"environment":{"runtime":"Windows","lockfiles":["package-lock.json"]}}`)
+	writeManifest(t, manifestRoot, "fixture-012", `{"schema":1,"artifact":"fixture-012","readiness":"smoke-ready","distribution":{"state":"source-only","state":"release-image","runtime_class":"node-source","authority":"NO_RESULT"},"environment":{"runtime":"Node","lockfiles":["package-lock.json"]}}`)
 	if _, err := LoadCatalog(root); err == nil {
 		t.Fatal("LoadCatalog() accepted a duplicate JSON authority field")
 	}

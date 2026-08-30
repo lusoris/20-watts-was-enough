@@ -333,7 +333,7 @@ quality.
 
 From the repository root:
 
-```powershell
+```bash
 npm run test:workstation:fixture-026:foundations
 node experiments/workstation/fixture-026/rsd-t02-fixed-instance-runner.test.mjs
 node experiments/workstation/fixture-026/rsd-t02-null-prototypes.test.mjs

@@ -5,19 +5,21 @@ the exact diff; this file records why the project changed.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-30
+
 ### Added
 
 - The Go 1.27 `20w` command now provides bounded documentation validation,
   experiment discovery and deterministic native release construction. The
-  first future tag whose source contains and passes the release workflow will
-  publish its static `scratch` image for Linux `amd64`; Linux `arm64` remains
+  v0.3.0 release publishes its static `scratch` image for Linux `amd64` after
+  the release workflow passes; Linux `arm64` remains
   withheld until its release path is exercised. The only native file currently
   exercised and admitted is `20w-linux-amd64`; both forms bind source identity,
   checksums, a Go-module SPDX inventory, third-party notices, provenance and
   attestations.
 - Experiment distribution now defines one scoped OCI image per released
-  experiment. The same qualifying tag will first publish Fixture 007's closed
-  Node image and Fixture 019's digest-pinned Node, CPython and NumPy image;
+  experiment. The passing v0.3.0 release publishes Fixture 007's closed Node
+  image and Fixture 019's digest-pinned Node, CPython and NumPy image;
   pull-request CI executes their bounded `NO_RESULT` smoke paths without
   network access. Future static Go runners use the same per-experiment identity
   rather than a shared all-harness runtime.
@@ -32,18 +34,33 @@ the exact diff; this file records why the project changed.
 - A public how-to-help map now turns reader, translation, container, evidence,
   experiment, Go and security work into bounded entry points with named
   authority limits, review evidence, focused checks and exact issue routes.
+  Failed release-image launches have a separate short, redaction-aware form so
+  contributors need not complete the full protocol and authority report.
   Pages generates `/help/` directly from that Markdown as a zero-client-
   JavaScript reading surface.
-- A public-interface audit records current reading measures, comparable
-  GitHub-native research structures, safe layout defaults, bounded reader
-  tests and the maintainer decisions still required for Discussions, archival
-  deposits, annotations and translation tooling.
+- An external infrastructure audit compares repository, publication and
+  specification evidence from IBEX, The Turing Way, JOSS, ReScience C, Real
+  World Data Science, research compendia, FAIR4RS, RO-Crate, GitHub Pages, OCI,
+  Weblate, po4a and W3C guidance. A separate implementation audit records the
+  old and replacement Pages renders, explicit limits and falsifiable reader-
+  task hypotheses.
 - A bounded architecture audit now tests an explicit non-language controller
   over task-derived small typed specialists against a capacity-matched general
   model and tuned sparse mixture of experts. Gardner's eight categories remain
   only a disputed coverage prompt, while independently demonstrated Pareto
   gains enter a trigger-gated portfolio and retest backlog rather than becoming
   a fixed eight-part architecture.
+- A read-only audit of the current `lusoris/k8s` AI control surfaces separates
+  reusable controller, measured-admission, readiness, queue and recovery
+  mechanisms from cluster-specific plumbing and operational outcomes. It
+  reproduces 503 focused tests, records one separate chart-harness disagreement
+  plus non-atomic and authority gaps, and retains only dependency-light Go
+  adapter and stress-fixture leads.
+- The fungal-network audit now gives common mycorrhizal networks their own
+  bounded section. It separates shared fungal identity, continuous paths,
+  material transfer, receiver effects and community benefit, and records the
+  live dispute over forest-scale inference without turning the “wood wide web”
+  metaphor into an architecture claim.
 
 ### Changed
 
@@ -61,18 +78,54 @@ the exact diff; this file records why the project changed.
   more readable, and duplicate Pages checks were removed from CI and tagged
   release verification. The publication workflow now documents the single
   source-to-Pages/PDF/container/translation graph.
+- Pages now opens as a research publication rather than a status dashboard: a
+  source-derived research-cycle figure, neutral evidence boundary, quiet
+  ordered evidence trail and manuscript-first navigation replace the oversized
+  dark hero, red `NO_RESULT` alert, rainbow process cards and heavy reader
+  rails. Focused documents use a wider text tier and mobile navigation retains
+  the title and source context before the body.
 - The repository-wide documentation validator now runs in the small Go 1.27
   module and the validation command is also available as a static container;
-  PowerShell is no longer a general contribution or CI dependency. The
-  Windows-only physical containment fixture retains its platform-specific
-  harness as an experiment boundary rather than a repository-wide requirement.
+  portable tooling no longer depends on a platform-specific shell. Fixture
+  012's development-only physical acquisition lane and its separate supervisor,
+  build harness and operator surface were retired; a future physical lane must
+  expose one Go command and test each admitted platform's containment contract.
 - Compatible direct dependencies, scientific runtimes and GitHub Actions were
   moved to their current stable releases: Node 26.8.1, npm 12.0.2, CPython
   3.14.7, NumPy 2.5.2, TypeScript 6.0.3, Vite 8.2.2 and Go 1.27.0. ESLint 9 and
   TypeScript 6 remain at the newest versions accepted by their current plugin
   peer ranges; unsupported major upgrades are reported rather than forced.
+  Because the locked Node distribution includes npm 11.19.0, workflows now
+  install npm 12.0.2 from one URL-, byte-count- and SHA-256-bound archive and
+  verify the installed version before `npm ci`.
 - Release SBOM generation now pins BuildKit's Syft scanner by its
   multi-platform digest.
+- Full-book generation now runs through the Go command in two isolated bounded
+  Linux `amd64` containers. One lock binds the exact Buildx client revision,
+  BuildKit image, Node and browser-environment images, Chrome for Testing
+  archive and executable hashes, platform and resource limits. Go projects its
+  two runtime image identities into a temporary
+  Dockerfile with literal digests, so no second maintained file or build
+  argument can redirect a base image. Schema-3 manifests record that renderer
+  identity; two fresh renders must reproduce the same PDF and manifest bytes
+  before Go installs the pair under an exclusive rollback-capable publication
+  lock. The source digest covers the complete local static module graph,
+  renderer Go dependency closure, translation manifest and every rendered
+  local image. Release CI realizes the JavaScript lock once with exact Node and
+  npm versions; the two isolated render containers share that read-only tree,
+  so their comparison is conditional on one clean realization rather than two
+  independent installs. The offline print surface keeps remote badge links and
+  text without fetching their mutable image endpoints.
+- GitHub immutable releases are now enabled for future publications. The
+  workflow assembles and verifies the checksum-derived asset set in a draft
+  before publishing its locked tag and assets; a same-tag published rerun is
+  read-only, while an incomplete draft may add only missing, byte-checked
+  assets. The workflow also proves that each final OCI digest can be pulled
+  without registry credentials before the public release is published.
+- Main ruleset `21746706` now has no bypass actor and requires pull requests,
+  strict `CI success`, resolved review threads, linear history and CodeQL.
+  The approval count remains zero so the one-maintainer repository is not
+  deadlocked; a second-human gate waits for an actual second reviewer.
 - Fixture 007 and Fixture 019 now write one shared execution receipt containing
   the image, source, runtime, platform, command and `NO_RESULT` boundary.
   Release images require the caller's exact resolved digest before any action;
@@ -83,13 +136,18 @@ the exact diff; this file records why the project changed.
   or symlink-traversed lockfiles, and release verification checks the exact Go,
   Node.js, CPython and NumPy identities from immutable image digests.
 - Container release publication is now two-phase. Builds push untagged
-  canonical digests; exact inspection, offline execution, attestation repair
-  and provenance verification must pass before the workflow attaches a
-  release tag and checks its final digest binding. Reruns re-admit existing
-  tags and repair missing attestations without an intentional deletion or
-  replacement path. Tag attachment is serialized and absence-checked; package
-  writers remain trusted because GHCR has no documented atomic create-if-
-  absent operation for this path.
+  canonical digests; exact inspection, offline execution and provenance
+  verification must pass before the workflow attaches a release tag and checks
+  its final digest binding. Only current-run build outputs receive new build
+  attestations. An existing digest must already have source-bound provenance;
+  missing provenance fails closed instead of being attributed to a later run.
+  Tag attachment is serialized and absence-checked; package writers remain
+  trusted because GHCR has no documented atomic create-if-absent operation for
+  this path.
+- Release asset and tag admission now use the Go command as their shared
+  authority. It performs bounded two-pass asset reads with directory snapshots,
+  compares source and publication checksum manifests, validates downloaded
+  remote bytes, and peels only a bounded remote annotated-tag chain.
 - Managed GitHub issue labels now come from one closed JSON manifest. A bounded
   Go command validates and applies it from canonical `main`, creating or
   repairing managed labels without deleting repository labels outside the
@@ -100,6 +158,12 @@ the exact diff; this file records why the project changed.
   Node.js 26.8.1 and reproduces a frozen Fixture 026 exponential-ramp numeric
   sentinel. Experiment manifests use the same exact runtime instead of a broad
   semver range that admitted numerically divergent vendor builds.
+- Release-plan generation now writes inside the repository's bounded
+  `build/release-inputs` directory; policy tests reject shell redirections that
+  would escape it before release-asset preparation.
+- The local Pages development server now renders the canonical, styled
+  `/help/` contribution page. Its wide tables and receipt example scroll
+  locally on mobile instead of widening the document.
 
 ## [0.2.0] - 2026-08-28
 

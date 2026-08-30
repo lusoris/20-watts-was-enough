@@ -35,7 +35,7 @@ architecture proposals, falsifiable experiments, and explicit failure rules.
 | Read offline or print | [Download the A4 PDF](https://www.cordana.dev/downloads/20-watts-was-enough-full-concept-book.pdf) |
 | Inspect evidence | [Claim ledger](research/claims.md) and [bibliography](research/references.bib) |
 | Inspect proposed tests | [Experiment coverage](experiments/test-coverage.md) |
-| Run development smoke harnesses | [Source now; release images after the first qualifying tag](experiments/workstation/README.md#run-a-released-experiment-image) |
+| Run development smoke harnesses | [Source now; admitted images from a passing v0.3.0 or later release](experiments/workstation/README.md#run-a-released-experiment-image) |
 | Help with a bounded task | [Public contribution map](https://www.cordana.dev/help/) |
 | Find a specific area | [Repository map](docs/repository-map.md) |
 
@@ -135,21 +135,22 @@ npm run dev:github-pages
 The preview runs at `http://localhost:5173/` and reloads canonical Markdown,
 equations, tables, diagrams, and plots as their source files change.
 
-The release workflow is prepared to publish repository validation as a static
-`20w` image for Linux `amd64`. The first future tag whose source contains and
-passes that workflow will publish it; older releases do not contain this
-image. Linux `arm64` remains withheld until the release path executes and
-verifies that target. Each candidate is pushed first under its canonical
+A v0.3.0 or later release whose source contains and passes the release workflow
+publishes repository validation as a static `20w` image for Linux `amd64`;
+earlier releases do not contain this image. Linux `arm64` remains withheld
+until the release path executes and verifies that target. Each candidate is
+pushed first under its canonical
 digest without a release tag. The workflow inspects and executes that exact
-digest, establishes and verifies its source-bound attestation, and only then
-attaches the release tag and checks the final binding. A rerun re-admits an
-existing tag without replacing it and can repair a missing attestation after
-execution passes. Tag creation is serialized and absence-checked, but GHCR
+digest. A digest built in that run receives source-bound provenance from its
+own build output; an existing digest must already carry provenance bound to the
+same workflow, tag and commit. Missing provenance stops the rerun. Only after
+verification does the workflow attach the release tag and check the final
+binding. Tag creation is serialized and absence-checked, but GHCR
 package writers remain trusted because this registry path has no documented
-atomic create-if-absent operation. Once the admitted image exists, copy its
-complete
-`image@sha256:...` identity from the GitHub release notes and run that digest,
-not a tag:
+atomic create-if-absent operation. For an admitted release, download the
+checksum-bound and attested `oci-images.json` release asset, copy the complete
+`image@sha256:...` identity from it, and run that digest, not a tag. Release
+notes may mirror the identity for convenience but are not its authority:
 
 ```bash
 image='ghcr.io/lusoris/20-watts-was-enough-20w@sha256:...'
@@ -181,9 +182,9 @@ npm run validate:book-pdf
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the complete workflow and
 [`SUPPORT.md`](SUPPORT.md) for issue routing. GitHub may report a small amount
-of C# because one Windows Job Object helper provides bounded process
-containment for workstation experiments; it is infrastructure, not a model
-implementation.
+of platform-specific code from locked third-party dependencies, but the
+repository no longer maintains a PowerShell, C#, or host-specific execution
+lane.
 
 ## Citation, support, and licence
 

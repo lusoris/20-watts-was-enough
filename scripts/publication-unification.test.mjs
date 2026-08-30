@@ -81,3 +81,29 @@ test("portal headline metrics are derived from their canonical registries", asyn
   assert.match(portal, /portalMetrics\.principles/u);
   assert.doesNotMatch(portal, /const (?:provenanceFileCount|principleCount) = \d+/u);
 });
+
+test("v0.3.0 publication surfaces describe admitted releases without stale prospective wording", async () => {
+  const releaseSurfaces = [
+    "CHANGELOG.md",
+    "README.md",
+    "docs/publication-workflow.md",
+    "docs/how-to-help.md",
+    "experiments/workstation/README.md",
+    "experiments/workstation/fixture-007/README.md",
+    "experiments/workstation/fixture-019/README.md",
+    "experiments/workstation/manifests/fixture-007.json",
+    "experiments/workstation/manifests/fixture-019.json",
+  ];
+  const staleProspectiveLanguage = /(?:first future tag|first qualifying tag|same qualifying tag|no current release contains|future release-image testing|after that release)/iu;
+  const entries = await Promise.all(releaseSurfaces.map(async (relativePath) => [
+    relativePath,
+    await readFile(path.join(repositoryRoot, relativePath), "utf8"),
+  ]));
+
+  for (const [relativePath, content] of entries) {
+    assert.doesNotMatch(content, staleProspectiveLanguage, relativePath);
+  }
+  const changelog = entries.find(([relativePath]) => relativePath === "CHANGELOG.md")?.[1] ?? "";
+  assert.match(changelog, /## \[0\.3\.0\][\s\S]*The\s+v0\.3\.0 release publishes/u);
+  assert.match(changelog, /## \[0\.3\.0\][\s\S]*The\s+passing v0\.3\.0 release publishes/u);
+});

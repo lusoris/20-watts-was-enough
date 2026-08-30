@@ -16,7 +16,7 @@ became opaque may provide more useful evidence than a large rewrite.
 | --- | --- | --- | --- | --- |
 | Readability and Pages | Name one broken route, inaccessible control, dense passage or missing definition and explain where your interpretation diverged | Low; no local setup required for a report | Presentation may change; evidence status and scientific meaning may not | [Site or documentation form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=site-documentation-problem.yml) |
 | Reviewed translation | Review one source-bound document, settle domain terminology, or correct a stale translation | Medium; fluent target-language review and enough domain context to check qualifications | English Git source remains canonical; machine output alone is not publishable | [Translation form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=translation-problem.yml) |
-| Future release-image testing | After the first qualifying tag publishes Fixture 007 and Fixture 019, run one on a Linux `amd64` host and report a minimal reproducible runtime, mount or receipt defect | Low to medium; Docker and the [image instructions](../experiments/workstation/README.md#run-a-released-experiment-image) | A passing container run remains `NO_RESULT`; it is not confirmation or an energy result | [Experiment form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=experiment-protocol-problem.yml) |
+| Release-image testing | After a passing v0.3.0 or later release publishes Fixture 007 and Fixture 019, run one on a Linux `amd64` host and report a minimal reproducible runtime, mount or receipt defect | Low to medium; Docker and the [image instructions](../experiments/workstation/README.md#run-a-released-experiment-image) | A passing container run remains `NO_RESULT`; it is not confirmation or an energy result | [Short failed-run form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=experiment-run-failure.yml) |
 | Experiment contracts and runners | Close one named protocol ambiguity, failure path, bound, comparator or test gap | High; read the fixture, linked claims, manifest and nearest `AGENTS.md` | Development and confirmation identities stay disjoint; the manifest and claim ledger control readiness | [Experiment form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=experiment-protocol-problem.yml) |
 | Evidence correction | Check one claim against a primary or authoritative source and state the exact supported scope | Medium to high; source and methods literacy in the affected field | Sources support only what they tested; citation does not grant redistribution rights | [Evidence correction form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=evidence-correction.yml) |
 | Mechanism proposal | Describe one causal mechanism, map its nearest `P-` bundles, and define the strongest ordinary null and rejecting test | High; cross-domain comparison and experimental design | An analogy or issue does not create a principle or promote a claim | [Mechanism proposal form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=mechanism-principle-proposal.yml) |
@@ -65,12 +65,19 @@ and add the book generation and validation commands when a book source changes.
 
 ## What a useful container report looks like
 
+A released image that did not start or finish belongs in the
+[short failed-run form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=experiment-run-failure.yml).
+It asks only for the experiment, image identity, platform, command and smallest
+useful error excerpt. Use the full experiment form when the problem concerns a
+protocol, analysis, evidence status or authority boundary.
+
 A container report can be valuable even when the diagnostic passes. Once a
-qualifying release publishes the images, copy the complete
-`image@sha256:...` identity from its release notes rather than resolving a
-mutable tag. Different hosts can expose permissions, mount, architecture,
-runtime and error-reporting problems. Include only the bounded evidence needed
-to reproduce the behaviour:
+qualifying release publishes the images, download its checksum-bound and
+attested `oci-images.json` asset and copy the complete `image@sha256:...`
+identity from there rather than resolving a mutable tag. Release notes are a
+convenience display, not the identity authority. Different hosts can expose
+permissions, mount, architecture, runtime and error-reporting problems.
+Include only the bounded evidence needed to reproduce the behaviour:
 
 ```text
 artifact: fixture-007

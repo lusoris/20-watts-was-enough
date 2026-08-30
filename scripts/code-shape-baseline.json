@@ -356,30 +356,6 @@
       "maxActual": 31
     },
     {
-      "path": "experiments/workstation/fixture-012/process-workstation-adapter.mjs",
-      "rule": "complexity",
-      "count": 1,
-      "maxActual": 49
-    },
-    {
-      "path": "experiments/workstation/fixture-012/process-workstation-adapter.mjs",
-      "rule": "max-lines-per-function",
-      "count": 1,
-      "maxActual": 386
-    },
-    {
-      "path": "experiments/workstation/fixture-012/workstation-acquisition.mjs",
-      "rule": "complexity",
-      "count": 1,
-      "maxActual": 34
-    },
-    {
-      "path": "experiments/workstation/fixture-012/workstation-acquisition.test.mjs",
-      "rule": "max-lines-per-function",
-      "count": 1,
-      "maxActual": 186
-    },
-    {
       "path": "experiments/workstation/fixture-019/contract.mjs",
       "rule": "complexity",
       "count": 2,

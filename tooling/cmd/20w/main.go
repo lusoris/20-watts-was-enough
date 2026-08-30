@@ -19,6 +19,9 @@ import (
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/experiment"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githublabels"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/nodeimage"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/ocimanifest"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/pdfrender"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/releasecheck"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/releaseimage"
 )
 
@@ -40,8 +43,16 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w experiment validate [--root <repository>]")
 	fmt.Fprintln(writer, "  20w experiment release-plan [--root <repository>] [--json]")
 	fmt.Fprintln(writer, "  20w experiment package-node-image --artifact <id> --output <directory> [--root <repository>]")
+	fmt.Fprintln(writer, "  20w publication render-pdf [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--check]")
 	fmt.Fprintln(writer, "  20w github sync-labels [--root <repository>] [--check | --repository <owner/name>]")
 	fmt.Fprintln(writer, "  20w release inspect-image --image <registry path> --tag <vX.Y.Z> --revision <commit> --platform <os/arch> --expected-label <key=value>")
+	fmt.Fprintln(writer, "  20w release asset-inventory --assets <directory> --phase source|publication")
+	fmt.Fprintln(writer, "  20w release fetch-assets --repository <owner/name> --release-id <id> --expected-assets <directory> --phase source|publication --output <new-directory> [--tag <vX.Y.Z> --revision <commit>]")
+	fmt.Fprintln(writer, "  20w release state --repository <owner/name> --tag <vX.Y.Z> [--json]")
+	fmt.Fprintln(writer, "  20w release compare-publication-manifest --source <SHA256SUMS> --publication <SHA256SUMS> [--oci <oci-images.json>]")
+	fmt.Fprintln(writer, "  20w release verify-tag --repository <owner/name> --tag <vX.Y.Z> --commit <commit>")
+	fmt.Fprintln(writer, "  20w release write-oci-images --output <path> --repository <owner/name> --tag <vX.Y.Z> --revision <commit> --tooling-digest <sha256> --fixture-007-digest <sha256> --fixture-019-digest <sha256>")
+	fmt.Fprintln(writer, "  20w release validate-oci-images --input <path> --repository <owner/name> --tag <vX.Y.Z> --revision <commit> [--github-output]")
 	fmt.Fprintln(writer, "  20w version [--json]")
 }
 
@@ -72,6 +83,31 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 		if len(arguments) >= 2 && arguments[1] == "inspect-image" {
 			return runReleaseInspectImage(arguments[2:], stdout, stderr)
 		}
+		if len(arguments) >= 2 && arguments[1] == "asset-inventory" {
+			return runReleaseAssetInventory(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "fetch-assets" {
+			return runReleaseFetchAssets(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "state" {
+			return runReleaseState(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "compare-publication-manifest" {
+			return runReleaseComparePublicationManifest(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "verify-tag" {
+			return runReleaseVerifyTag(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "write-oci-images" {
+			return runReleaseWriteOCIImages(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "validate-oci-images" {
+			return runReleaseValidateOCIImages(arguments[2:], stdout, stderr)
+		}
+	case "publication":
+		if len(arguments) >= 2 && arguments[1] == "render-pdf" {
+			return runPublicationRenderPDF(arguments[2:], stdout, stderr)
+		}
 	case "github":
 		if len(arguments) >= 2 && arguments[1] == "sync-labels" {
 			return runGitHubSyncLabels(arguments[2:], stdout, stderr)
@@ -82,6 +118,203 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 	fmt.Fprintf(stderr, "Unknown 20w command: %s\n", arguments[0])
 	usage(stderr)
 	return 2
+}
+
+func runReleaseAssetInventory(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("release asset-inventory", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	assets := flags.String("assets", "", "flat release asset directory")
+	phaseValue := flags.String("phase", "", "source or publication inventory phase")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 || *assets == "" {
+		return 2
+	}
+	phase := releasecheck.InventoryPhase(*phaseValue)
+	if phase != releasecheck.SourceAssets && phase != releasecheck.PublicationAssets {
+		fmt.Fprintln(stderr, "release asset-inventory requires --phase source or --phase publication")
+		return 2
+	}
+	names, err := releasecheck.ValidateAssetInventory(*assets, phase)
+	if err != nil {
+		fmt.Fprintf(stderr, "Validate release asset inventory: %v\n", err)
+		return 1
+	}
+	for _, name := range names {
+		fmt.Fprintln(stdout, name)
+	}
+	return 0
+}
+
+func runReleaseFetchAssets(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("release fetch-assets", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	repository := flags.String("repository", "", "GitHub owner/repository")
+	releaseID := flags.Int64("release-id", 0, "positive GitHub Release ID")
+	expectedAssets := flags.String("expected-assets", "", "validated local release asset directory")
+	phaseValue := flags.String("phase", "", "source or publication inventory phase")
+	output := flags.String("output", "", "new downloaded asset directory")
+	tag := flags.String("tag", "", "source-phase vMAJOR.MINOR.PATCH tag")
+	revision := flags.String("revision", "", "source-phase lowercase 40-character commit")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 || *repository == "" ||
+		*releaseID <= 0 || *expectedAssets == "" || *output == "" {
+		return 2
+	}
+	phase := releasecheck.InventoryPhase(*phaseValue)
+	if phase != releasecheck.SourceAssets && phase != releasecheck.PublicationAssets {
+		fmt.Fprintln(stderr, "release fetch-assets requires --phase source or --phase publication")
+		return 2
+	}
+	if (phase == releasecheck.SourceAssets && (*tag == "" || *revision == "")) ||
+		(phase == releasecheck.PublicationAssets && (*tag != "" || *revision != "")) {
+		fmt.Fprintln(stderr, "release fetch-assets requires --tag and --revision only for the source phase")
+		return 2
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 70*time.Minute)
+	defer cancel()
+	names, err := releasecheck.FetchReleaseAssets(ctx, releasecheck.FetchAssetsOptions{
+		Repository:      *repository,
+		ReleaseID:       *releaseID,
+		ExpectedAssets:  *expectedAssets,
+		Phase:           phase,
+		OutputDirectory: *output,
+		ReleaseTag:      *tag,
+		ReleaseCommit:   *revision,
+	}, releasecheck.GHReleaseAssetClient{})
+	if err != nil {
+		fmt.Fprintf(stderr, "Fetch bounded GitHub Release assets: %v\n", err)
+		return 1
+	}
+	for _, name := range names {
+		fmt.Fprintln(stdout, name)
+	}
+	return 0
+}
+
+func runReleaseState(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("release state", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	repository := flags.String("repository", "", "GitHub owner/repository")
+	tag := flags.String("tag", "", "exact vMAJOR.MINOR.PATCH tag")
+	jsonOutput := flags.Bool("json", false, "write one stable JSON object")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 || *repository == "" || *tag == "" {
+		return 2
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+	state, err := releasecheck.LookupReleaseState(
+		ctx,
+		*repository,
+		*tag,
+		releasecheck.GHReleaseStateResolver{},
+	)
+	if err != nil {
+		fmt.Fprintf(stderr, "Resolve exact GitHub Release state: %v\n", err)
+		return 1
+	}
+	if *jsonOutput {
+		if err := json.NewEncoder(stdout).Encode(state); err != nil {
+			fmt.Fprintf(stderr, "Write GitHub Release state: %v\n", err)
+			return 1
+		}
+		return 0
+	}
+	if !state.Present {
+		fmt.Fprintln(stdout, "absent")
+		return 0
+	}
+	fmt.Fprintf(
+		stdout,
+		"present\t%d\t%t\t%t\t%t\t%s\n",
+		state.ID,
+		state.Draft,
+		state.Prerelease,
+		state.Immutable,
+		state.Tag,
+	)
+	return 0
+}
+
+func runReleaseComparePublicationManifest(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("release compare-publication-manifest", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	source := flags.String("source", "", "verified source SHA256SUMS path")
+	publication := flags.String("publication", "", "candidate publication SHA256SUMS path")
+	oci := flags.String("oci", "", "optional downloaded oci-images.json path")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 || *source == "" || *publication == "" {
+		return 2
+	}
+	if err := releasecheck.ComparePublicationManifest(*source, *publication, *oci); err != nil {
+		fmt.Fprintf(stderr, "Compare release checksum authorities: %v\n", err)
+		return 1
+	}
+	fmt.Fprintln(stdout, "Publication SHA256SUMS preserves every source identity and adds one OCI image identity.")
+	return 0
+}
+
+func runReleaseVerifyTag(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("release verify-tag", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	repository := flags.String("repository", "", "GitHub owner/repository")
+	tag := flags.String("tag", "", "exact vMAJOR.MINOR.PATCH tag")
+	commit := flags.String("commit", "", "lowercase 40-character release commit")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 || *repository == "" || *tag == "" || *commit == "" {
+		return 2
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	if err := releasecheck.VerifyTagBinding(ctx, *repository, *tag, *commit, releasecheck.GHResolver{}); err != nil {
+		fmt.Fprintf(stderr, "Verify immutable release tag binding: %v\n", err)
+		return 1
+	}
+	fmt.Fprintf(stdout, "Remote release tag %s is bound to %s.\n", *tag, *commit)
+	return 0
+}
+
+func runPublicationRenderPDF(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("publication render-pdf", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	root := flags.String("root", ".", "repository root")
+	sourceRef := flags.String("ref", "main", "book source ref")
+	check := flags.Bool("check", false, "validate the renderer lock without Docker or network access")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
+		return 2
+	}
+	if err := pdfrender.ValidateSourceRef(*sourceRef); err != nil {
+		fmt.Fprintf(stderr, "publication render-pdf: %v\n", err)
+		return 2
+	}
+	if *check {
+		configuration, err := pdfrender.Check(*root)
+		if err != nil {
+			fmt.Fprintf(stderr, "Validate PDF renderer: %v\n", err)
+			return 1
+		}
+		fmt.Fprintf(
+			stdout,
+			"PDF renderer validation passed: Buildx %s, BuildKit %s, Node %s, Chrome for Testing %s, %s.\n",
+			configuration.Lock.Builder.BuildxVersion,
+			configuration.Lock.Builder.BuildKitVersion,
+			configuration.Lock.Node.Version,
+			configuration.Lock.ChromeForTesting.Version,
+			configuration.Lock.Platform,
+		)
+		return 0
+	}
+	result, err := pdfrender.Render(context.Background(), pdfrender.Options{
+		RepositoryRoot: *root,
+		SourceRef:      *sourceRef,
+	})
+	if err != nil {
+		fmt.Fprintf(stderr, "Render PDF publication: %v\n", err)
+		return 1
+	}
+	fmt.Fprintf(
+		stdout,
+		"PDF publication rendered twice identically with %s (%s, lock sha256:%s).\n",
+		result.ImageID,
+		result.Platform,
+		result.LockSHA256,
+	)
+	return 0
 }
 
 func runGitHubSyncLabels(arguments []string, stdout, stderr io.Writer) int {
@@ -190,6 +423,73 @@ func runReleaseInspectImage(arguments []string, stdout, stderr io.Writer) int {
 		fmt.Fprintf(stdout, " at %s for %s", result.Digest, strings.Join(result.Platforms, ", "))
 	}
 	fmt.Fprintln(stdout, ".")
+	return 0
+}
+
+func runReleaseWriteOCIImages(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("release write-oci-images", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	output := flags.String("output", "", "new canonical oci-images.json path")
+	repository := flags.String("repository", "", "lowercase GitHub owner/repository")
+	tag := flags.String("tag", "", "exact vMAJOR.MINOR.PATCH tag")
+	revision := flags.String("revision", "", "lowercase 40-character source commit")
+	toolingDigest := flags.String("tooling-digest", "", "immutable 20w image digest")
+	fixture007Digest := flags.String("fixture-007-digest", "", "immutable Fixture 007 image digest")
+	fixture019Digest := flags.String("fixture-019-digest", "", "immutable Fixture 019 image digest")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 || *output == "" {
+		return 2
+	}
+	if err := ocimanifest.Write(*output, ocimanifest.Options{
+		Repository:       *repository,
+		Tag:              *tag,
+		Commit:           *revision,
+		ToolingDigest:    *toolingDigest,
+		Fixture007Digest: *fixture007Digest,
+		Fixture019Digest: *fixture019Digest,
+	}); err != nil {
+		fmt.Fprintf(stderr, "Write immutable OCI image manifest: %v\n", err)
+		return 1
+	}
+	fmt.Fprintf(stdout, "Wrote immutable OCI image manifest at %s.\n", *output)
+	return 0
+}
+
+func runReleaseValidateOCIImages(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("release validate-oci-images", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	input := flags.String("input", "", "canonical oci-images.json path")
+	repository := flags.String("repository", "", "lowercase GitHub owner/repository")
+	tag := flags.String("tag", "", "exact vMAJOR.MINOR.PATCH tag")
+	revision := flags.String("revision", "", "lowercase 40-character source commit")
+	githubOutput := flags.Bool("github-output", false, "write stable GitHub step-output records")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 || *input == "" {
+		return 2
+	}
+	manifest, err := ocimanifest.Load(*input, ocimanifest.Release{
+		Repository: *repository,
+		Tag:        *tag,
+		Commit:     *revision,
+	})
+	if err != nil {
+		fmt.Fprintf(stderr, "Validate immutable OCI image manifest: %v\n", err)
+		return 1
+	}
+	tooling, fixture007, fixture019, err := ocimanifest.Digests(manifest, *repository)
+	if err != nil {
+		fmt.Fprintf(stderr, "Resolve immutable OCI image manifest: %v\n", err)
+		return 1
+	}
+	if *githubOutput {
+		fmt.Fprintf(
+			stdout,
+			"tooling_digest=%s\nfixture007_digest=%s\nfixture019_digest=%s\n",
+			tooling,
+			fixture007,
+			fixture019,
+		)
+		return 0
+	}
+	fmt.Fprintln(stdout, "Immutable OCI image manifest validation passed: 3 linux/amd64 identities, NO_RESULT authority.")
 	return 0
 }
 

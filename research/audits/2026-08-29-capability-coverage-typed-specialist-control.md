@@ -160,6 +160,18 @@ This rule prevents both all-or-nothing architecture selection and selective
 resurrection of attractive ideas. It remains an evaluation hypothesis until a
 protocol implements the ledger, trigger gate, and interaction retest.
 
+## Existing engineering donor
+
+The read-only [cluster transfer
+audit](2026-08-30-lusoris-k8s-engineering-transfer.md) identifies a current
+operational source for controller/executor separation, measurement-qualified
+admission, expiring capability state, loaded-model readiness, queue-aware
+backpressure, bounded fairness and recovery authority. Those mechanisms can
+shape a dependency-light Go policy package and stress fixtures for this arm.
+The cluster code, component choices, hardware constants and incident outcomes
+do not transfer, and its operational records are not evidence that the held
+specialist comparison wins.
+
 ## Decisions required before an experiment exists
 
 This note intentionally does not choose the following:

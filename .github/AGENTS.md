@@ -11,9 +11,10 @@ files under `.github/`.
   may cancel stale runs; an in-progress Pages deployment must not be cancelled.
 - Use `actions/checkout` with `persist-credentials: false` unless a reviewed
   step must push to the repository.
-- Run JavaScript workflows on the exact Node 26 and npm 12 pins, install with
-  `npm ci`, and keep `package-lock.json` authoritative. Run Go tooling with the
-  exact version declared by `tooling/go.mod`.
+- Run JavaScript workflows on the exact Node 26 pin. Install npm 12 only from
+  the repository's URL-, size- and SHA-256-bound archive before checking its
+  version, then use `npm ci` with `package-lock.json` as authority. Run Go
+  tooling with the exact version declared by `tooling/go.mod`.
 - Required CI and security gates fail closed. Do not add `continue-on-error` to
   a required check or weaken an existing validator to make a workflow green.
 - Never execute or check out pull-request code from a `pull_request_target`

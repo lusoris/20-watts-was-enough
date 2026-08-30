@@ -3370,6 +3370,7 @@ describes the exact statement here, not a broader interpretation.
 - **Open issue:** Direct path, payload, donor benefit, receiver benefit,
   intentional signaling, and ecosystem effect remain separate claims.
 - **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
   [P-008](principle-registry.md#p-008--compartmentalized-interaction),
   [P-013](principle-registry.md#p-013--externalized-shared-state).
 
@@ -3385,6 +3386,7 @@ describes the exact statement here, not a broader interpretation.
 - **Open issue:** Reciprocal reward does not establish equality, altruism,
   shared intent, or benefit to every participant.
 - **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
   [P-001](principle-registry.md#p-001--selective-allocation),
   [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
   [P-008](principle-registry.md#p-008--compartmentalized-interaction),
@@ -3403,6 +3405,7 @@ describes the exact statement here, not a broader interpretation.
 - **Open issue:** Productivity, distribution, robustness, exclusion, and each
   participant's benefit require separate measurements.
 - **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
   [P-004](principle-registry.md#p-004--diversity-selection-and-protection),
   [P-008](principle-registry.md#p-008--compartmentalized-interaction),
   [P-013](principle-registry.md#p-013--externalized-shared-state).
@@ -3443,8 +3446,9 @@ describes the exact statement here, not a broader interpretation.
   Concurrent mycorrhizal, endophytic, parasitic, or saprobic links would add a
   second attribution problem: a cut that changes several guilds identifies a
   bundle effect, not the active guild (`rillig2025concurrent`, a perspective
-  and proposed research program rather than a decisive experiment).
+  and proposed research programme rather than a decisive experiment).
 - **Used by:** [plant audit](audits/2026-08-05-plant-distributed-control.md),
+  [fungal audit](audits/2026-08-05-fungal-networks-resource-allocation.md),
   [P-013](principle-registry.md#p-013--externalized-shared-state).
 
 ### C-218

@@ -15,6 +15,10 @@ import { parseDocument } from "yaml";
 
 import { assertBookManifestContract } from "./lib/book-manifest-contract.mjs";
 import { assertBookPdfBytesIntegrity } from "./lib/book-pdf-integrity.mjs";
+import {
+  bookRendererLockPath,
+  bookRendererLockSHA256,
+} from "./lib/book-renderer-identity.mjs";
 import { readStableOpenedFile } from "./lib/opened-file.mjs";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -91,11 +95,18 @@ function parseYaml(bytes, relativePath) {
 
 async function readRegularFile(root, relativePath) {
   const absolutePath = path.join(root, relativePath);
-  return readStableOpenedFile(absolutePath, {
-    label: `release input ${relativePath}`,
-    containedBy: root,
-    maximumBytes: maximumReleaseAssetBytes,
-  });
+  try {
+    return await readStableOpenedFile(absolutePath, {
+      label: `release input ${relativePath}`,
+      containedBy: root,
+      maximumBytes: maximumReleaseAssetBytes,
+    });
+  } catch (error) {
+    if (error?.code === "ENOENT") {
+      throw new Error(`Release input ${relativePath} is missing`, { cause: error });
+    }
+    throw error;
+  }
 }
 
 function isInside(parent, candidate) {
@@ -164,6 +175,75 @@ function escapedRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
 }
 
+function assertCalendarDate(value, label) {
+  invariant(
+    typeof value === "string" && releaseDatePattern.test(value),
+    `${label} must use the exact YYYY-MM-DD form`,
+  );
+  invariant(
+    new Date(`${value}T00:00:00Z`).toISOString().slice(0, 10) === value,
+    `${label} is not a real calendar date`,
+  );
+  return value;
+}
+
+export function validateResearchDisclosure(disclosure, version, relativePath = `research/disclosures/v${version}.md`) {
+  invariant(typeof disclosure === "string", `${relativePath} must be text`);
+  invariant(tagPattern.test(`v${version}`), `${relativePath} version must use MAJOR.MINOR.PATCH`);
+  invariant(!disclosure.includes("\0"), `${relativePath} must not contain NUL bytes`);
+  invariant(disclosure.endsWith("\n"), `${relativePath} must end with a newline`);
+
+  const lines = disclosure.replaceAll("\r\n", "\n").split("\n");
+  const expectedTitle = `# Research-output disclosure — v${version}`;
+  invariant(lines[0] === expectedTitle, `${relativePath} must begin with ${expectedTitle}`);
+
+  const outputLines = lines.filter((line) => line.startsWith("- **Output:**"));
+  invariant(outputLines.length === 1, `${relativePath} must contain exactly one Output identity`);
+  const outputTags = [...outputLines[0].matchAll(/`v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)`/gu)]
+    .map(([outputTag]) => outputTag);
+  invariant(
+    outputTags.length === 1 && outputTags[0] === `\`v${version}\``,
+    `${relativePath} Output identity must name only v${version}`,
+  );
+
+  const recordDateLines = lines.filter((line) => line.startsWith("- **Record date:**"));
+  invariant(recordDateLines.length === 1, `${relativePath} must contain exactly one Record date`);
+  assertCalendarDate(recordDateLines[0].slice("- **Record date:**".length).trim(), `${relativePath} Record date`);
+  invariant(
+    lines.filter((line) => line.startsWith("- **Authority:**")).length === 1,
+    `${relativePath} must contain exactly one Authority boundary`,
+  );
+
+  const requiredHeadings = [
+    ["## Contributors and responsibility"],
+    ["## Funding and material support"],
+    ["## Competing interests"],
+    ["## Material AI, automation and external services", "## Material AI, automation, and external services"],
+    ["## Pre-release evidence and publication conditions"],
+  ];
+  let precedingIndex = 0;
+  const headingIndexes = [];
+  for (const alternatives of requiredHeadings) {
+    const matches = lines
+      .map((line, index) => ({ index, line }))
+      .filter(({ line }) => alternatives.includes(line));
+    invariant(matches.length === 1, `${relativePath} must contain exactly one ${alternatives[0]}`);
+    invariant(matches[0].index > precedingIndex, `${relativePath} disclosure sections are out of order`);
+    headingIndexes.push(matches[0].index);
+    precedingIndex = matches[0].index;
+  }
+  for (const [index, headingIndex] of headingIndexes.entries()) {
+    const followingIndex = headingIndexes[index + 1] ?? lines.length;
+    invariant(
+      lines.slice(headingIndex + 1, followingIndex).some((line) => (
+        line.trim().length > 0 && !/^#{1,6}\s/u.test(line)
+      )),
+      `${relativePath} ${requiredHeadings[index][0]} section must contain content`,
+    );
+  }
+  return disclosure;
+}
+
 export function extractChangelogSection(changelog, version) {
   invariant(typeof changelog === "string", "CHANGELOG.md must be text");
   const normalized = changelog.replaceAll("\r\n", "\n");
@@ -191,16 +271,12 @@ function changelogReleaseDate(changelog, version) {
   );
   const matches = [...normalized.matchAll(releaseHeading)];
   invariant(matches.length === 1, `CHANGELOG.md must contain exactly one dated [${version}] release section`);
-  const releaseDate = matches[0][1];
-  invariant(
-    new Date(`${releaseDate}T00:00:00Z`).toISOString().slice(0, 10) === releaseDate,
-    `CHANGELOG.md [${version}] has an invalid release date`,
-  );
-  return releaseDate;
+  return assertCalendarDate(matches[0][1], `CHANGELOG.md [${version}] release date`);
 }
 
 export function validateVersionAgreement({ tag, packageManifest, packageLock, citation, changelog }) {
   const version = parseReleaseTag(tag);
+  const releaseDate = changelogReleaseDate(changelog, version);
   const observed = [
     ["package.json", packageManifest?.version],
     ["package-lock.json", packageLock?.version],
@@ -218,9 +294,17 @@ export function validateVersionAgreement({ tag, packageManifest, packageLock, ci
     packageManifest?.name === packageLock?.name && packageManifest?.name === packageLock?.packages?.[""]?.name,
     "package.json and package-lock.json package names disagree",
   );
+  const citationReleaseDate = assertCalendarDate(
+    citation?.["date-released"],
+    "CITATION.cff date-released",
+  );
+  invariant(
+    citationReleaseDate === releaseDate,
+    `CITATION.cff date-released ${citationReleaseDate} disagrees with CHANGELOG.md [${version}] date ${releaseDate}`,
+  );
   return Object.freeze({
     version,
-    releaseDate: changelogReleaseDate(changelog, version),
+    releaseDate,
     releaseNotes: extractChangelogSection(changelog, version),
   });
 }
@@ -400,7 +484,7 @@ export async function verifyReleaseChecksums(assetsRoot) {
   return records;
 }
 
-async function loadReleaseInputs(root) {
+async function loadReleaseInputs(root, version) {
   const paths = [
     "package.json",
     "package-lock.json",
@@ -408,9 +492,11 @@ async function loadReleaseInputs(root) {
     "CHANGELOG.md",
     bookPdfRelativePath,
     bookManifestRelativePath,
+    bookRendererLockPath,
     "LICENSE",
     "LICENSING.md",
     "THIRD_PARTY_NOTICES.txt",
+    `research/disclosures/v${version}.md`,
   ];
   const bytesByPath = new Map(await Promise.all(paths.map(async (relativePath) => [
     relativePath,
@@ -442,7 +528,10 @@ export async function prepareReleaseAssets({
   additionalAssetsRoot,
   tag,
 } = {}) {
-  const bytesByPath = await loadReleaseInputs(root);
+  const requestedVersion = parseReleaseTag(tag);
+  const disclosureRelativePath = `research/disclosures/v${requestedVersion}.md`;
+  const disclosureAssetName = `research-output-disclosure-${tag}.md`;
+  const bytesByPath = await loadReleaseInputs(root, requestedVersion);
   const packageManifest = parseJson(bytesByPath.get("package.json"), "package.json");
   const packageLock = parseJson(bytesByPath.get("package-lock.json"), "package-lock.json");
   const citation = parseYaml(bytesByPath.get("CITATION.cff"), "CITATION.cff");
@@ -454,12 +543,23 @@ export async function prepareReleaseAssets({
     citation,
     changelog,
   });
+  const disclosureBytes = bytesByPath.get(disclosureRelativePath);
+  validateResearchDisclosure(disclosureBytes.toString("utf8"), version, disclosureRelativePath);
+  const releaseNotesWithDisclosure = [
+    releaseNotes.trimEnd(),
+    "",
+    "## Research-output disclosure",
+    "",
+    `[Research-output disclosure for ${tag}](https://github.com/lusoris/20-watts-was-enough/releases/download/${tag}/${disclosureAssetName})`,
+    "",
+  ].join("\n");
   const bookManifest = parseJson(bytesByPath.get(bookManifestRelativePath), bookManifestRelativePath);
   assertBookManifestContract({
     manifest: bookManifest,
     expectedVersion: version,
     expectedPdf: bookPdfRelativePath,
     expectedSourceRef: tag,
+    expectedRendererLockSHA256: bookRendererLockSHA256(bytesByPath.get(bookRendererLockPath)),
   });
   assertBookPdfBytesIntegrity(bytesByPath.get(bookPdfRelativePath), bookManifest);
 
@@ -470,6 +570,7 @@ export async function prepareReleaseAssets({
     { name: "LICENSE", bytes: bytesByPath.get("LICENSE") },
     { name: "LICENSING.md", bytes: bytesByPath.get("LICENSING.md") },
     { name: "THIRD_PARTY_NOTICES.txt", bytes: bytesByPath.get("THIRD_PARTY_NOTICES.txt") },
+    { name: disclosureAssetName, bytes: disclosureBytes },
     ...[...bytesByPath.entries()]
       .filter(([relativePath]) => relativePath.startsWith("LICENSES/"))
       .map(([relativePath, bytes]) => ({ name: path.basename(relativePath), bytes })),
@@ -508,7 +609,7 @@ export async function prepareReleaseAssets({
       await writeFile(path.join(assetsRoot, name), bytes, { flag: "wx" });
     }
     await writeFile(path.join(assetsRoot, "SHA256SUMS"), checksums, { flag: "wx" });
-    await writeFile(path.join(stagingRoot, "release-notes.md"), releaseNotes, { flag: "wx" });
+    await writeFile(path.join(stagingRoot, "release-notes.md"), releaseNotesWithDisclosure, { flag: "wx" });
     await verifyReleaseChecksums(assetsRoot);
     await rm(outputRoot, { recursive: true, force: true });
     await rename(stagingRoot, outputRoot);

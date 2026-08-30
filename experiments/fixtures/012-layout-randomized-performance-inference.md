@@ -43,11 +43,10 @@ layout and counterbalance order.
 
 The deterministic diagnostic slice is a measurement-inference fixture: it does
 not execute a compiler, relink binaries, or measure latency on physical
-hardware. A separate [workstation-development acquisition
-lane](../workstation/fixture-012/WORKSTATION-RUNBOOK.md) now performs those
-operations with operator-supplied build, telemetry, and optional calibrated
-meter commands. That lane remains development-only and supplies no result in
-this repository by itself.
+hardware. The former host-specific acquisition lane has been retired. A future
+physical runner must be portable Go, preserve the same frozen-input and
+process-containment contract on every admitted platform, and pass its own
+platform tests before it can supply development evidence.
 
 ## Arms and strongest nulls
 

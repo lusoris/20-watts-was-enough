@@ -42,12 +42,14 @@ function BookDocumentArticle({
   navigate,
   internalHref,
   imageLoading,
+  renderExternalImages,
   assetBasePath,
 }: {
   document: ResearchDocument;
   navigate: (path: string, hash?: string) => void;
   internalHref: (path: string, hash: string) => string;
   imageLoading: "eager" | "lazy";
+  renderExternalImages: boolean;
   assetBasePath: string;
 }) {
   const articleRef = useRef<HTMLElement>(null);
@@ -77,6 +79,7 @@ function BookDocumentArticle({
         onNavigate={navigate}
         internalHref={internalHref}
         imageLoading={imageLoading}
+        renderExternalImages={renderExternalImages}
         assetBasePath={assetBasePath}
       />
     </article>
@@ -289,6 +292,7 @@ export function BookEdition({
             navigate={navigate}
             internalHref={bookHref}
             imageLoading={isPublicPdf ? "eager" : "lazy"}
+            renderExternalImages={!isPublicPdf}
             assetBasePath={assetBasePath}
           />
         </section>

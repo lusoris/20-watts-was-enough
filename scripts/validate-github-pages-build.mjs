@@ -3,6 +3,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertBookPdfIntegrity } from "./lib/book-pdf-integrity.mjs";
+import { assertBookManifestContract } from "./lib/book-manifest-contract.mjs";
+import {
+  bookRendererLockPath,
+  bookRendererLockSHA256,
+} from "./lib/book-renderer-identity.mjs";
 import { resolvePagesBase } from "./lib/pages-base.mjs";
 import { portalSourceDocuments } from "./lib/portal-documents.mjs";
 import { assertExactPublicationCopy } from "./lib/publication-copy-integrity.mjs";
@@ -304,7 +309,16 @@ const [publicBookManifest, builtBookManifest] = await Promise.all([
 ]);
 assertExactPublicationCopy(publicBookManifest, builtBookManifest, bookManifestPath);
 const bookManifest = JSON.parse(builtBookManifest.toString("utf8"));
-invariant(bookManifest.schema_version === 2, "book manifest schema is invalid");
+const packageManifest = JSON.parse(await readFile(path.join(repositoryRoot, "package.json"), "utf8"));
+assertBookManifestContract({
+  manifest: bookManifest,
+  expectedVersion: packageManifest.version,
+  expectedPdf: "public/downloads/20-watts-was-enough-full-concept-book.pdf",
+  expectedSourceRef: "main",
+  expectedRendererLockSHA256: bookRendererLockSHA256(
+    await readFile(path.join(repositoryRoot, bookRendererLockPath)),
+  ),
+});
 await assertBookPdfIntegrity(builtPdfPath, bookManifest);
 for (const legalFile of [
   "LICENSE",

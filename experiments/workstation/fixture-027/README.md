@@ -64,8 +64,8 @@ node experiments/workstation/fixture-027/runner.mjs analyze --output experiments
 node experiments/workstation/fixture-027/runner.mjs validate --output experiments/workstation/runs/fixture-027-development
 ```
 
-Run the targeted tests without test-process isolation on restricted Windows
-hosts:
+Run the targeted tests without test-process isolation on hosts that prohibit
+test-worker processes:
 
 ```bash
 node --test --experimental-test-isolation=none experiments/workstation/fixture-027/contract.test.mjs experiments/workstation/fixture-027/runner.test.mjs

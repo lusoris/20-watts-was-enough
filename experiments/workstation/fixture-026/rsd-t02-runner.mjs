@@ -97,7 +97,7 @@ const ARM_COMMITMENT_FILE = "rsd-t02-arm-commitment.json";
 const ARM_ABSTENTION_FILE = "rsd-t02-arm-abstention.json";
 const ARM_ABSTENTION_PENDING_FILE = `${ARM_ABSTENTION_FILE}.pending`;
 const SUMMARY_FILE = path.join("analysis", "rsd-t02-summary.json");
-const DEFAULT_POLICY_TIMEOUT_MS = 15_000;
+const DEFAULT_POLICY_TIMEOUT_MS = 30_000;
 export const FIXTURE_026_RSD_T02_BOUNDARY_ABSTENTION_VERSION =
   "fixture-026.rsd-t02-policy-boundary-abstention.v1";
 const BOUNDARY_ABSTENTION_AUTHORITY =

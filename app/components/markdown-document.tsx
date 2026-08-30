@@ -27,6 +27,7 @@ type MarkdownDocumentProps = {
   isNavigablePath?: (path: string) => boolean;
   nonNavigableHref?: (path: string, hash: string) => string;
   imageLoading?: "eager" | "lazy";
+  renderExternalImages?: boolean;
   assetBasePath?: string;
   headingOffset?: number;
 };
@@ -102,6 +103,75 @@ function resolveImageSource(
   return resolved.startsWith("public/")
     ? joinAssetBase(assetBasePath, resolved.slice("public/".length))
     : src;
+}
+
+function isExternalImageSource(src: string): boolean {
+  return /^https?:\/\//i.test(src);
+}
+
+type MarkdownImageOptions = {
+  assetBasePath: string;
+  currentPath: string;
+  imageLoading: "eager" | "lazy";
+  renderExternalImages: boolean;
+};
+
+function markdownImageComponents({
+  assetBasePath,
+  currentPath,
+  imageLoading,
+  renderExternalImages,
+}: MarkdownImageOptions) {
+  const ImageComponent = ({
+    src = "",
+    alt = "",
+    ...props
+  }: ComponentPropsWithoutRef<"img">) => {
+    const source = typeof src === "string" ? src : "";
+    if (!renderExternalImages && isExternalImageSource(source)) {
+      return (
+        <span className="external-image-reference">
+          {alt.trim() || "External image omitted from the offline edition"}
+        </span>
+      );
+    }
+    return (
+      // Plot SVGs are deterministic assets and retain their intrinsic viewBox.
+      <img
+        src={resolveImageSource(source, currentPath, assetBasePath)}
+        alt={alt}
+        loading={imageLoading}
+        {...props}
+      />
+    );
+  };
+
+  const ParagraphComponent = ({ children }: ComponentPropsWithoutRef<"p">) => {
+    const visibleChildren = Children.toArray(children).filter(
+      (child) => typeof child !== "string" || child.trim().length > 0,
+    );
+    const onlyChild = visibleChildren.length === 1 ? visibleChildren[0] : null;
+    if (
+      isValidElement<ComponentPropsWithoutRef<"img">>(onlyChild) &&
+      onlyChild.type === ImageComponent
+    ) {
+      const source = typeof onlyChild.props.src === "string" ? onlyChild.props.src : "";
+      if (!renderExternalImages && isExternalImageSource(source)) {
+        return <p className="external-image-paragraph">{onlyChild}</p>;
+      }
+      const caption = onlyChild.props.alt?.trim() ||
+        "Generated figure from the canonical editable source.";
+      return (
+        <figure className="semantic-figure plot-figure">
+          {cloneElement(onlyChild, { alt: "", "aria-hidden": true })}
+          <figcaption>{caption}</figcaption>
+        </figure>
+      );
+    }
+    return <p>{children}</p>;
+  };
+
+  return { ImageComponent, ParagraphComponent };
 }
 
 function headingBeforeLine(body: string, line?: number): string | undefined {
@@ -185,26 +255,16 @@ export function MarkdownDocument({
   isNavigablePath,
   nonNavigableHref,
   imageLoading = "lazy",
+  renderExternalImages = true,
   assetBasePath = "/",
   headingOffset = 0,
 }: MarkdownDocumentProps) {
-  const ImageComponent = ({
-    src = "",
-    alt = "",
-    ...props
-  }: ComponentPropsWithoutRef<"img">) => (
-    // Plot SVGs are deterministic assets and retain their intrinsic viewBox.
-    <img
-      src={resolveImageSource(
-        typeof src === "string" ? src : "",
-        currentPath,
-        assetBasePath,
-      )}
-      alt={alt}
-      loading={imageLoading}
-      {...props}
-    />
-  );
+  const { ImageComponent, ParagraphComponent } = markdownImageComponents({
+    assetBasePath,
+    currentPath,
+    imageLoading,
+    renderExternalImages,
+  });
 
   const headingComponents: Components = headingOffset === 0
     ? {}
@@ -271,26 +331,7 @@ export function MarkdownDocument({
         </a>
       );
     },
-    p({ children }) {
-      const visibleChildren = Children.toArray(children).filter(
-        (child) => typeof child !== "string" || child.trim().length > 0,
-      );
-      const onlyChild = visibleChildren.length === 1 ? visibleChildren[0] : null;
-      if (
-        isValidElement<ComponentPropsWithoutRef<"img">>(onlyChild) &&
-        onlyChild.type === ImageComponent
-      ) {
-        const caption = onlyChild.props.alt?.trim() ||
-          "Generated figure from the canonical editable source.";
-        return (
-          <figure className="semantic-figure plot-figure">
-            {cloneElement(onlyChild, { alt: "", "aria-hidden": true })}
-            <figcaption>{caption}</figcaption>
-          </figure>
-        );
-      }
-      return <p>{children}</p>;
-    },
+    p: ParagraphComponent,
     img: ImageComponent,
     code({ className, children, node, ...props }) {
       const language = className?.replace("language-", "");

@@ -15,18 +15,18 @@
     "validate": "node experiments/workstation/candidate-010/runner.mjs validate --output <run-directory>"
   },
   "environment": {
-    "runtime": "Node.js 26.8.1 on Windows x64; exact runtime captured per run",
+    "runtime": "Node.js 26.8.1 on an admitted platform; exact runtime captured per run",
     "lockfiles": ["package-lock.json"]
   },
   "hardware": {
     "smoke": {
-      "cpu": "one x64 CPU thread or more",
+      "cpu": "one supported CPU thread or more",
       "memory_bytes": 268435456,
       "disk_bytes": 104857600,
       "energy": "not required; measured joules remain null"
     },
     "workstation": {
-      "cpu": "x64 CPU",
+      "cpu": "supported CPU architecture recorded in the execution receipt",
       "memory_bytes": 2147483648,
       "disk_bytes": 1073741824,
       "energy": "external calibrated wall or rail meter required before workstation-ready promotion"

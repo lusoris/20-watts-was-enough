@@ -1,0 +1,62 @@
+name: Experiment did not run
+description: Report a released experiment command or container that did not start or complete.
+title: "[Run failure] "
+labels: ["type:fix", "area:experiment", "status:needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this short form for an execution failure. Use the full experiment form for protocol, analysis, result-status, or authority problems. A run report diagnoses the harness; it does not create a scientific result.
+
+  - type: input
+    id: experiment_ref
+    attributes:
+      label: Experiment and source ref
+      description: Name the fixture or candidate and the release tag, commit, or repository path you followed.
+      placeholder: "Fixture 007; v0.3.0; experiments/workstation/fixture-007/README.md"
+    validations:
+      required: true
+
+  - type: input
+    id: image_identity
+    attributes:
+      label: Image digest or release tag
+      description: If available, paste the complete image@sha256 identity. Otherwise give the release tag or image tag you used.
+      placeholder: "ghcr.io/lusoris/20-watts-was-enough-fixture-007@sha256:... or v0.3.0"
+
+  - type: input
+    id: platform
+    attributes:
+      label: Platform
+      description: Give the operating system, architecture, and container runtime with its version.
+      placeholder: "Ubuntu 26.04; linux/amd64; Docker 29.0.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command
+      description: Paste the command you ran after removing private values.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: failure
+    attributes:
+      label: Observed failure and log excerpt
+      description: Say where the run stopped and paste only the shortest relevant error or log excerpt.
+      render: shell
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Public report checks
+      options:
+        - label: I removed credentials, tokens, personal data, private paths or hostnames, private inputs, and material I may not publish.
+          required: true
+        - label: I understand that this is a public issue and consent to publishing the command and log excerpt left above.
+          required: true

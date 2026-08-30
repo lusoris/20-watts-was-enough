@@ -75,6 +75,7 @@
     "scripts/generate-plots.mjs",
     "scripts/generate-taxonomy-depth.mjs",
     "scripts/import-science-taxonomies.py",
-    "scripts/validate-science-taxonomies.mjs"
+    "scripts/validate-science-taxonomies.mjs",
+    "tooling/pdf-renderer/lock.json"
   ]
 }

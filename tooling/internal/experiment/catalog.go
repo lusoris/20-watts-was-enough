@@ -249,10 +249,6 @@ func validateDistribution(root, artifact string, distribution Distribution) erro
 		if distribution.RuntimeClass != "node-source" || hasImageFields(distribution) {
 			return errors.New("source-only distribution contains an image boundary")
 		}
-	case "withheld-image":
-		if distribution.RuntimeClass != "windows-host-bound" || hasImageFields(distribution) {
-			return errors.New("withheld image has an invalid runtime or published image boundary")
-		}
 	case "release-image":
 		if err := validateReleaseImage(root, artifact, distribution); err != nil {
 			return err

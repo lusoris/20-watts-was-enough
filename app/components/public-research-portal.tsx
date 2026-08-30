@@ -32,6 +32,7 @@ const MarkdownDocument = lazy(() => import("./markdown-document").then(
 const repositoryUrl = publication.repository;
 const defaultDocumentPath = "concept/00-thesis-and-principles.md";
 const libraryGroups = ["All", "Concept", "Mathematics"] as const;
+const catalogPageSize = 8;
 const documentGroups = ["Concept", "Mathematics"] as const;
 
 type LibraryGroup = (typeof libraryGroups)[number];
@@ -90,6 +91,120 @@ function usePortalSeo(metadata: Parameters<typeof synchronizePortalSeo>[0]) {
   useEffect(() => synchronizePortalSeo(metadata), [metadata]);
 }
 
+function ResearchCycleFigure() {
+  const nodes = [
+    { x: 225, y: 20, label: "Observation" },
+    { x: 435, y: 103, label: "Principle" },
+    { x: 435, y: 290, label: "Claim" },
+    { x: 225, y: 394, label: "Protocol" },
+    { x: 15, y: 290, label: "Bounded run" },
+    { x: 15, y: 103, label: "Evidence" },
+  ];
+  return (
+    <figure className="portal-system-figure" aria-labelledby="portal-system-figure-title">
+      <header>
+        <p>Research cycle</p>
+        <h2 id="portal-system-figure-title">Claims must survive a return path</h2>
+      </header>
+      <svg
+        className="portal-cycle-diagram"
+        viewBox="0 0 600 450"
+        role="img"
+        aria-labelledby="portal-cycle-title portal-cycle-description"
+      >
+        <title id="portal-cycle-title">The repository research cycle</title>
+        <desc id="portal-cycle-description">
+          Observation leads to a deduplicated principle, a scoped claim,
+          a protocol, a bounded run and eligible evidence. Evidence then
+          changes or rejects the earlier statement.
+        </desc>
+        <defs>
+          <marker
+            id="portal-cycle-arrow"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
+            <path d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
+        </defs>
+        <path className="portal-cycle-path" d="M 375 56 L 440 112" />
+        <path className="portal-cycle-path" d="M 510 158 L 510 290" />
+        <path className="portal-cycle-path" d="M 440 337 L 375 394" />
+        <path className="portal-cycle-path" d="M 225 394 L 160 337" />
+        <path className="portal-cycle-path" d="M 90 290 L 90 158" />
+        <path className="portal-cycle-path" d="M 160 112 L 225 56" />
+        {nodes.map((node, index) => (
+          <g className="portal-cycle-node" key={node.label}>
+            <rect x={node.x} y={node.y} width="150" height="55" rx="27.5" />
+            <text x={node.x + 75} y={node.y + 34}>{node.label}</text>
+            <text className="portal-cycle-number" x={node.x + 17} y={node.y + 34}>
+              {index + 1}
+            </text>
+          </g>
+        ))}
+        <circle className="portal-cycle-centre" cx="300" cy="225" r="92" />
+        <text className="portal-cycle-centre-title" x="300" y="211">Falsify · revise</text>
+        <text className="portal-cycle-centre-title" x="300" y="237">· rerun</text>
+        <text className="portal-cycle-centre-note" x="300" y="267">under explicit cost</text>
+      </svg>
+      <figcaption>
+        <span>Figure 1.</span> Repository logic, not an experimental result.
+        Every arrow must preserve source identity and uncertainty.
+      </figcaption>
+    </figure>
+  );
+}
+
+function ResearchStatus({
+  assetBasePath,
+  conceptCount,
+  mathematicsCount,
+  totalLibraryWords,
+}: {
+  assetBasePath: string;
+  conceptCount: number;
+  mathematicsCount: number;
+  totalLibraryWords: number;
+}) {
+  return (
+    <aside className="portal-overview-status" aria-label="Current research status">
+      <div className="portal-status-copy">
+        <p className="portal-status-label">Current repository state</p>
+        <h2>Framework and development harnesses</h2>
+        <p className="portal-status-summary">
+          The knowledge structure and protocol layer are extensive; the
+          workstation execution layer is not yet ready.
+        </p>
+      </div>
+      <div className="portal-status-outcome" role="status">
+        <strong>NO_RESULT</strong>
+        <span>{readinessSummary.artifacts.workstationReady} workstation-ready artifacts</span>
+      </div>
+      <dl className="portal-overview-metrics">
+        <div><dt>Reader</dt><dd>{portalDocuments.length} documents</dd></div>
+        <div><dt>Concept</dt><dd>{conceptCount} chapters</dd></div>
+        <div><dt>Mathematics</dt><dd>{mathematicsCount} notes</dd></div>
+        <div><dt>Corpus</dt><dd>{formatNumber(totalLibraryWords)} words</dd></div>
+      </dl>
+      <nav className="portal-status-links" aria-label="Publication formats">
+        <a href={withBase(assetBasePath, "book/")}>Read the full book</a>
+        <a href={withBase(
+          assetBasePath,
+          "downloads/20-watts-was-enough-full-concept-book.pdf",
+        )}>Download PDF</a>
+        <a href={repositoryUrl} target="_blank" rel="noreferrer">
+          Inspect GitHub <span aria-hidden="true">↗</span>
+        </a>
+        <a href={withBase(assetBasePath, "help/")}>How to help</a>
+      </nav>
+    </aside>
+  );
+}
+
 export function PublicResearchPortal({
   assetBasePath,
 }: {
@@ -103,7 +218,7 @@ export function PublicResearchPortal({
   } | null>(null);
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<LibraryGroup>("All");
-  const [catalogLimit, setCatalogLimit] = useState(12);
+  const [catalogLimit, setCatalogLimit] = useState(catalogPageSize);
   const deferredQuery = useDeferredValue(query.trim().toLowerCase());
   const overviewRef = useRef<HTMLElement>(null);
   const readerRef = useRef<HTMLElement>(null);
@@ -292,14 +407,14 @@ export function PublicResearchPortal({
       portalDocumentLocation(path, assetBasePath, hash),
     );
     window.requestAnimationFrame(() => {
-      if (!hash) readerRef.current?.scrollIntoView({ block: "start" });
+      if (!hash) readerPageRef.current?.scrollIntoView({ block: "start" });
       if (focusReader) readerRef.current?.focus({ preventScroll: true });
     });
   };
 
   const selectGroup = (candidate: LibraryGroup) => {
     setGroup(candidate);
-    setCatalogLimit(12);
+    setCatalogLimit(catalogPageSize);
     if (
       selectedPath
       && candidate !== "All"
@@ -374,7 +489,7 @@ export function PublicResearchPortal({
     },
     {
       label: "Runnable harnesses",
-      metric: `${readinessSummary.artifacts.smokeReady} artifacts ready`,
+      metric: `${readinessSummary.artifacts.smokeReady} development smoke harnesses`,
       description: "Development runs check contracts, telemetry and reproducibility machinery.",
       href: repositoryPath("experiments/workstation", "tree"),
       tone: "smoke",
@@ -403,60 +518,57 @@ export function PublicResearchPortal({
       </a>
       <nav aria-label="Primary navigation">
         <a
-          href={overviewLocation(assetBasePath)}
+          href={portalDocumentLocation(defaultDocumentPath, assetBasePath)}
           onClick={(event) => {
             event.preventDefault();
-            showOverview();
+            selectDocument(defaultDocumentPath);
           }}
-        >Overview</a>
+        >Read</a>
         <a
           href={overviewLocation(assetBasePath, "research-system")}
           onClick={(event) => {
             event.preventDefault();
             showOverview("research-system");
           }}
-        >Research system</a>
+        >Evidence</a>
         <a
-          href={overviewLocation(assetBasePath, "library")}
-          onClick={(event) => {
-            event.preventDefault();
-            showOverview("library");
-          }}
-        >Library</a>
-        <a href={withBase(assetBasePath, "book/")}>Book</a>
-        <a href={withBase(assetBasePath, "help/")}>Help</a>
-        <a href={repositoryUrl} target="_blank" rel="noreferrer">
-          GitHub <span aria-hidden="true">↗</span>
-        </a>
+          href={repositoryPath("experiments/README.md")}
+          target="_blank"
+          rel="noreferrer"
+        >Experiments <span aria-hidden="true">↗</span></a>
+        <a href={withBase(assetBasePath, "help/")}>Contribute</a>
       </nav>
+      <a className="portal-source-link" href={repositoryUrl} target="_blank" rel="noreferrer">
+        Source <span aria-hidden="true">↗</span>
+      </a>
       <LanguageAccess />
       <details className="portal-mobile-menu" ref={mobileMenuRef}>
         <summary>Menu</summary>
         <nav aria-label="Mobile navigation">
           <a
-            href={overviewLocation(assetBasePath)}
+            href={portalDocumentLocation(defaultDocumentPath, assetBasePath)}
             onClick={(event) => {
               event.preventDefault();
-              showOverview();
+              selectDocument(defaultDocumentPath);
             }}
-          >Overview</a>
+          >Read the thesis</a>
           <a
             href={overviewLocation(assetBasePath, "research-system")}
             onClick={(event) => {
               event.preventDefault();
               showOverview("research-system");
             }}
-          >Research system</a>
+          >Evidence path</a>
           <a
-            href={overviewLocation(assetBasePath, "library")}
-            onClick={(event) => {
-              event.preventDefault();
-              showOverview("library");
-            }}
-          >Library</a>
-          <a href={withBase(assetBasePath, "book/")}>Book</a>
-          <a href={withBase(assetBasePath, "help/")}>Help</a>
-          <a href={repositoryUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
+            href={repositoryPath("experiments/README.md")}
+            target="_blank"
+            rel="noreferrer"
+          >Experiments ↗</a>
+          <a href={withBase(assetBasePath, "book/")}>Full book</a>
+          <a href={withBase(assetBasePath, "help/")}>Contribute</a>
+          <a href={repositoryUrl} target="_blank" rel="noreferrer">
+            Source on GitHub ↗
+          </a>
         </nav>
       </details>
     </header>
@@ -579,7 +691,7 @@ export function PublicResearchPortal({
                     value={query}
                     onChange={(event) => {
                       setQuery(event.target.value);
-                      setCatalogLimit(12);
+                      setCatalogLimit(catalogPageSize);
                     }}
                     placeholder="routing, memory, energy…"
                   />
@@ -719,13 +831,18 @@ export function PublicResearchPortal({
             aria-labelledby="portal-title"
           >
             <div className="portal-dashboard-intro">
-              <p className="portal-eyebrow">Open research programme · canonical public source</p>
+              <p className="portal-eyebrow">Open research programme · living source</p>
               <h1 id="portal-title">20 Watts Was Enough</h1>
               <p className="portal-dashboard-thesis">
                 A cross-disciplinary blueprint for sparse, grounded, continual
                 and energy-accountable AI. Recurring mechanisms become explicit
                 principles, scoped claims and test contracts.
               </p>
+              <dl className="portal-hero-meta" aria-label="Publication identity">
+                <div><dt>Authority</dt><dd>Git <code>main</code></dd></div>
+                <div><dt>Stage</dt><dd>Framework and harnesses</dd></div>
+                <div><dt>Evidence</dt><dd>No eligible result yet</dd></div>
+              </dl>
               <div className="portal-dashboard-actions">
                 <a
                   className="portal-action portal-action-primary"
@@ -735,43 +852,26 @@ export function PublicResearchPortal({
                     selectDocument(defaultDocumentPath);
                   }}
                 >Read the thesis</a>
-                <a className="portal-action portal-action-secondary" href="#research-system">
-                  See the research system
+                <a className="portal-action portal-action-secondary" href={withBase(assetBasePath, "book/")}>
+                  Read the book
                 </a>
+                <a
+                  className="portal-action portal-action-tertiary"
+                  href={repositoryPath("experiments/README.md")}
+                  target="_blank"
+                  rel="noreferrer"
+                >Inspect experiments <span aria-hidden="true">↗</span></a>
               </div>
             </div>
 
-            <aside className="portal-overview-status" aria-label="Current research status">
-              <p className="portal-status-label">Current phase</p>
-              <h2>Framework + development harnesses</h2>
-              <p className="portal-status-summary">
-                The knowledge structure and protocol layer are extensive; the
-                workstation execution layer is not yet ready.
-              </p>
-              <div className="portal-status-outcome" role="status">
-                <strong>NO_RESULT</strong>
-                <span>{readinessSummary.artifacts.workstationReady} workstation-ready artifacts</span>
-              </div>
-              <dl className="portal-overview-metrics">
-                <div><dt>Reader</dt><dd>{portalDocuments.length} documents</dd></div>
-                <div><dt>Concept</dt><dd>{conceptCount} chapters</dd></div>
-                <div><dt>Mathematics</dt><dd>{mathematicsCount} notes</dd></div>
-                <div><dt>Corpus</dt><dd>{formatNumber(totalLibraryWords)} words</dd></div>
-              </dl>
-              <nav className="portal-status-links" aria-label="Publication formats">
-                <a href={withBase(assetBasePath, "book/")}>Read the full book</a>
-                <a
-                  href={withBase(
-                    assetBasePath,
-                    "downloads/20-watts-was-enough-full-concept-book.pdf",
-                  )}
-                >Download PDF</a>
-                <a href={repositoryUrl} target="_blank" rel="noreferrer">
-                  Inspect GitHub <span aria-hidden="true">↗</span>
-                </a>
-                <a href={withBase(assetBasePath, "help/")}>How to help</a>
-              </nav>
-            </aside>
+            <ResearchCycleFigure />
+
+            <ResearchStatus
+              assetBasePath={assetBasePath}
+              conceptCount={conceptCount}
+              mathematicsCount={mathematicsCount}
+              totalLibraryWords={totalLibraryWords}
+            />
 
             <div
               className="portal-dashboard-funnel"
@@ -781,10 +881,13 @@ export function PublicResearchPortal({
             >
               <header className="portal-funnel-heading">
                 <div>
-                  <p>Research logic</p>
-                  <h2 id="research-system-title">Thesis → principles → claims → tests → results</h2>
+                  <p>Evidence path</p>
+                  <h2 id="research-system-title">How a statement earns weight</h2>
                 </div>
-                <span>Current repository state; each stage opens its canonical artifact.</span>
+                <span>
+                  Each stage opens the maintained artifact. Construction and
+                  smoke checks stop short of a scientific result.
+                </span>
               </header>
               <ol className="portal-funnel portal-funnel-compact">
               {funnelSteps.map((step, index) => (
@@ -893,7 +996,7 @@ export function PublicResearchPortal({
                     value={query}
                     onChange={(event) => {
                       setQuery(event.target.value);
-                      setCatalogLimit(12);
+                      setCatalogLimit(catalogPageSize);
                     }}
                     placeholder="Try routing, memory, energy or measurement"
                   />
@@ -956,9 +1059,9 @@ export function PublicResearchPortal({
                   <button
                     className="portal-catalog-more"
                     type="button"
-                    onClick={() => setCatalogLimit((current) => current + 12)}
+                    onClick={() => setCatalogLimit((current) => current + catalogPageSize)}
                   >
-                    Show 12 more
+                    Show {catalogPageSize} more
                     <span>
                       {libraryDocuments.length - visibleCatalogDocuments.length} remaining
                     </span>

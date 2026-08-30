@@ -47,6 +47,12 @@ general discussion forum.
 
 ### Experiment or protocol problem
 
+If a released experiment command or container did not start or complete, use
+the [short failed-run form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=experiment-run-failure.yml).
+It asks for the experiment and source ref, image digest or tag when available,
+platform, exact command and shortest relevant error excerpt. Redact private
+values before consenting to publish the remaining command and log text.
+
 Use the
 [experiment or protocol problem form](https://github.com/lusoris/20-watts-was-enough/issues/new?template=experiment-protocol-problem.yml)
 for ambiguous comparisons, runner defects, invalid status or authority,

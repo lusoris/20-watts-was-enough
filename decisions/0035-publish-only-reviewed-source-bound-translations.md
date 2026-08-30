@@ -50,4 +50,4 @@ readers to automatic translation or present machine output as project text.
 ## References
 
 - [W3C, *Authoring HTML: Language declarations*](https://www.w3.org/TR/i18n-html-tech-lang/)
-- [Weblate, *Continuous localisation*](https://docs.weblate.org/en/latest/admin/continuous.html)
+- [Weblate 2026.8.1, *Continuous localisation*](https://docs.weblate.org/en/weblate-2026.8.1/admin/continuous.html)

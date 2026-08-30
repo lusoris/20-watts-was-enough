@@ -302,11 +302,11 @@ sizes.
 If the isolated policy boundary abstains first, the runner instead publishes a
 closed-schema, self-hashed `rsd-t02-arm-abstention.json` through a pending-file,
 file flush and atomic same-directory link, then requests parent-directory sync
-where the platform permits it. Windows can reject directory-handle `fsync`, so
-that directory sync is best-effort there; artifact-file synchronization and
-atomic publication remain enforced. A repeated invocation revalidates and
-replays the exact artifact; replacement, disappearance, mutation or coexistence
-with evaluator-bearing state fails closed.
+where the filesystem permits it. Directory-handle `fsync` is not available on
+every platform, so that directory sync is best-effort; artifact-file
+synchronization and atomic publication remain enforced. A repeated invocation
+revalidates and replays the exact artifact; replacement, disappearance,
+mutation or coexistence with evaluator-bearing state fails closed.
 
 The active policy computation no longer relies on the parent process's
 statically imported policy helpers: it loads a checked-in content-addressed

@@ -27,9 +27,44 @@ import {
 const version = "0.1.0";
 const tag = `v${version}`;
 const pdfRelativePath = "public/downloads/20-watts-was-enough-full-concept-book.pdf";
+const disclosureRelativePath = `research/disclosures/${tag}.md`;
+const disclosureAssetName = `research-output-disclosure-${tag}.md`;
+const rendererLock = Buffer.from("fixture renderer lock\n");
+const rendererLockSHA256 = digest(rendererLock);
 
 function digest(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
+}
+
+function fixtureDisclosure(outputVersion = version) {
+  return [
+    `# Research-output disclosure — v${outputVersion}`,
+    "",
+    `- **Output:** repository snapshot \`v${outputVersion}\``,
+    "- **Record date:** 2026-08-05",
+    "- **Authority:** fixture release boundary; no scientific result",
+    "",
+    "## Contributors and responsibility",
+    "",
+    "The fixture maintainer is the accountable approver.",
+    "",
+    "## Funding and material support",
+    "",
+    "No funding is declared for this fixture.",
+    "",
+    "## Competing interests",
+    "",
+    "No separate declaration is supplied for this fixture.",
+    "",
+    "## Material AI, automation and external services",
+    "",
+    "The release generator is the only material automated tool in this fixture.",
+    "",
+    "## Pre-release evidence and publication conditions",
+    "",
+    "The release-boundary tests were completed.",
+    "",
+  ].join("\n");
 }
 
 async function directorySnapshot(root, relative = "") {
@@ -52,6 +87,8 @@ async function createFixture(t) {
   t.after(() => rm(root, { recursive: true, force: true }));
   await mkdir(path.join(root, "public", "downloads"), { recursive: true });
   await mkdir(path.join(root, "LICENSES"));
+  await mkdir(path.join(root, "research", "disclosures"), { recursive: true });
+  await mkdir(path.join(root, "tooling", "pdf-renderer"), { recursive: true });
 
   const packageManifest = {
     name: "20-watts-was-enough",
@@ -79,12 +116,18 @@ async function createFixture(t) {
   const pdf = Buffer.alloc(100_128, 0x20);
   pdf.write("%PDF-1.7\n", 0, "ascii");
   const manifest = {
-    schema_version: 2,
+    schema_version: 3,
     version,
     source_ref: tag,
     pdf: pdfRelativePath,
     size_bytes: pdf.length,
     pdf_sha256: digest(pdf),
+    renderer: {
+      lock: "tooling/pdf-renderer/lock.json",
+      lock_sha256: rendererLockSHA256,
+      image_id: `sha256:${"a".repeat(64)}`,
+      platform: "linux/amd64",
+    },
   };
   const changelog = [
     "# Changelog",
@@ -112,7 +155,7 @@ async function createFixture(t) {
   await Promise.all([
     writeFile(path.join(root, "package.json"), `${JSON.stringify(packageManifest, null, 2)}\n`),
     writeFile(path.join(root, "package-lock.json"), packageLockBytes),
-    writeFile(path.join(root, "CITATION.cff"), `cff-version: 1.2.0\ntitle: Test\nversion: ${version}\n`),
+    writeFile(path.join(root, "CITATION.cff"), `cff-version: 1.2.0\ntitle: Test\nversion: ${version}\ndate-released: 2026-08-05\n`),
     writeFile(path.join(root, "CHANGELOG.md"), changelog),
     writeFile(path.join(root, pdfRelativePath), pdf),
     writeFile(path.join(root, "public", "downloads", "book-manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`),
@@ -121,6 +164,8 @@ async function createFixture(t) {
     writeFile(path.join(root, "THIRD_PARTY_NOTICES.txt"), "Notices fixture\n"),
     writeFile(path.join(root, "LICENSES", "CC-BY-SA-4.0.txt"), "CC fixture\n"),
     writeFile(path.join(root, "LICENSES", "OFL-1.1.txt"), "OFL fixture\n"),
+    writeFile(path.join(root, disclosureRelativePath), fixtureDisclosure()),
+    writeFile(path.join(root, "tooling", "pdf-renderer", "lock.json"), rendererLock),
   ]);
 
   return {
@@ -145,6 +190,10 @@ test("release preparation binds versions, the locked graph, licence material, no
   assert.deepEqual(result.assetNames, [...result.assetNames].sort());
   assert.match(await readFile(path.join(outputRoot, "release-notes.md"), "utf8"), /^## \[0\.1\.0\] - 2026-08-05/mu);
   assert.doesNotMatch(await readFile(path.join(outputRoot, "release-notes.md"), "utf8"), /0\.0\.9/u);
+  assert.match(
+    await readFile(path.join(outputRoot, "release-notes.md"), "utf8"),
+    new RegExp(`https://github\\.com/lusoris/20-watts-was-enough/releases/download/${tag}/${disclosureAssetName}`, "u"),
+  );
 
   const assetsRoot = path.join(outputRoot, "assets");
   const checksums = await verifyReleaseChecksums(assetsRoot);
@@ -157,11 +206,16 @@ test("release preparation binds versions, the locked graph, licence material, no
     "LICENSING.md",
     "CC-BY-SA-4.0.txt",
     "OFL-1.1.txt",
+    disclosureAssetName,
     "THIRD_PARTY_NOTICES.txt",
     "sbom.spdx.json",
   ]) {
     assert(checksums.some(({ name }) => name === expected), `${expected} is not checksummed`);
   }
+  assert.equal(
+    await readFile(path.join(assetsRoot, disclosureAssetName), "utf8"),
+    fixtureDisclosure(),
+  );
 
   const sbom = JSON.parse(await readFile(path.join(assetsRoot, "sbom.spdx.json"), "utf8"));
   assert.equal(sbom.spdxVersion, "SPDX-2.3");
@@ -185,7 +239,7 @@ test("release preparation ingests additional binary assets into deterministic ch
   await mkdir(additionalAssetsRoot, { recursive: true });
   const additionalAssets = new Map([
     ["20w-linux-amd64.tar.gz", Buffer.from("linux binary archive\n")],
-    ["20w-windows-amd64.zip", Buffer.from("windows binary archive\n")],
+    ["20w-extra-test-artifact.bin", Buffer.from("secondary binary artifact\n")],
   ]);
   await Promise.all([...additionalAssets].map(([name, bytes]) => (
     writeFile(path.join(additionalAssetsRoot, name), bytes)
@@ -288,7 +342,7 @@ test("version validation rejects disagreement and extracts only the exact releas
     tag,
     packageManifest: fixture.packageManifest,
     packageLock: fixture.packageLock,
-    citation: { version },
+    citation: { version, "date-released": "2026-08-05" },
     changelog: fixture.changelog,
   });
   assert.equal(agreement.releaseNotes, extractChangelogSection(fixture.changelog, version));
@@ -296,10 +350,61 @@ test("version validation rejects disagreement and extracts only the exact releas
     tag,
     packageManifest: fixture.packageManifest,
     packageLock: { ...fixture.packageLock, version: "0.1.1" },
-    citation: { version },
+    citation: { version, "date-released": "2026-08-05" },
     changelog: fixture.changelog,
   }), /package-lock\.json="0\.1\.1"/u);
+  assert.throws(() => validateVersionAgreement({
+    tag,
+    packageManifest: fixture.packageManifest,
+    packageLock: fixture.packageLock,
+    citation: { version, "date-released": "2026-08-06" },
+    changelog: fixture.changelog,
+  }), /date-released 2026-08-06 disagrees with CHANGELOG\.md \[0\.1\.0\] date 2026-08-05/u);
+  assert.throws(() => validateVersionAgreement({
+    tag,
+    packageManifest: fixture.packageManifest,
+    packageLock: fixture.packageLock,
+    citation: { version, "date-released": "2026-02-30" },
+    changelog: fixture.changelog,
+  }), /date-released is not a real calendar date/u);
   assert.throws(() => extractChangelogSection(fixture.changelog, "9.9.9"), /exactly one dated/u);
+});
+
+test("release preparation rejects a missing, wrong-version, or malformed disclosure before output", async (t) => {
+  const fixture = await createFixture(t);
+  const disclosurePath = path.join(fixture.root, disclosureRelativePath);
+  const outputRoot = path.join(fixture.root, "build", "release");
+
+  await rm(disclosurePath);
+  await assert.rejects(
+    prepareReleaseAssets({ root: fixture.root, outputRoot, tag }),
+    /Release input research\/disclosures\/v0\.1\.0\.md is missing/u,
+  );
+
+  await writeFile(disclosurePath, fixtureDisclosure("0.1.1"));
+  await assert.rejects(
+    prepareReleaseAssets({ root: fixture.root, outputRoot, tag }),
+    /must begin with # Research-output disclosure — v0\.1\.0/u,
+  );
+
+  await writeFile(
+    disclosurePath,
+    fixtureDisclosure().replace("repository snapshot `v0.1.0`", "repository snapshot `v0.1.1`"),
+  );
+  await assert.rejects(
+    prepareReleaseAssets({ root: fixture.root, outputRoot, tag }),
+    /Output identity must name only v0\.1\.0/u,
+  );
+
+  await writeFile(
+    disclosurePath,
+    fixtureDisclosure().replace("## Pre-release evidence and publication conditions\n\nThe release-boundary tests were completed.\n", ""),
+  );
+  await assert.rejects(
+    prepareReleaseAssets({ root: fixture.root, outputRoot, tag }),
+    /must contain exactly one ## Pre-release evidence and publication conditions/u,
+  );
+  await assert.rejects(readFile(path.join(outputRoot, "release-notes.md")), /ENOENT/u);
 });
 
 test("release arguments accept one optional additional asset root", () => {
@@ -329,6 +434,18 @@ test("release preparation rejects a PDF generated from main", async (t) => {
   );
 });
 
+test("release preparation rejects renderer-lock drift", async (t) => {
+  const fixture = await createFixture(t);
+  await writeFile(
+    path.join(fixture.root, "tooling", "pdf-renderer", "lock.json"),
+    "changed renderer lock\n",
+  );
+  await assert.rejects(
+    prepareReleaseAssets({ root: fixture.root, tag }),
+    /renderer lock SHA-256 does not match/u,
+  );
+});
+
 test("release preparation rejects a same-size PDF substitution before writing output", async (t) => {
   const fixture = await createFixture(t);
   const pdfPath = path.join(fixture.root, pdfRelativePath);
@@ -349,8 +466,11 @@ test("checksum verification detects post-packaging asset tampering", async (t) =
   const outputRoot = path.join(fixture.root, "build", "release");
   await prepareReleaseAssets({ root: fixture.root, outputRoot, tag });
   const assetsRoot = path.join(outputRoot, "assets");
-  await appendFile(path.join(assetsRoot, "LICENSING.md"), "tampered\n");
-  await assert.rejects(verifyReleaseChecksums(assetsRoot), /checksum mismatch: LICENSING\.md/u);
+  await appendFile(path.join(assetsRoot, disclosureAssetName), "tampered\n");
+  await assert.rejects(
+    verifyReleaseChecksums(assetsRoot),
+    /checksum mismatch: research-output-disclosure-v0\.1\.0\.md/u,
+  );
 });
 
 test("SPDX generation rejects an unlocked graph or invalid timestamp", () => {
