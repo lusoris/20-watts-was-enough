@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintenance Automation"
+  short_description: "Bounded automation for recurring repository upkeep"
+  default_prompt: "Use $maintenance-automation to audit this recurring task, reuse its existing authority, and implement the smallest bounded automation with focused verification."

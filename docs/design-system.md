@@ -163,6 +163,9 @@ failure, owning token or component, and rejecting observation. Implement the
 smallest coherent owner change, then run the focused site tests and the visual
 review protocol in the project-local
 [`research-design` skill](../.agents/skills/research-design/SKILL.md).
+Changes to the continuous book or generated PDF also use the bounded page-
+class and extracted-reading-order review in the
+[`publication-design` skill](../.agents/skills/publication-design/SKILL.md).
 
 Broad publication changes cover the portal, one dense document, the book, and
 the help route at narrow, medium, and wide widths plus 200% browser zoom.
