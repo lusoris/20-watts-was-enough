@@ -91,6 +91,17 @@ chapters.
   [project skill](../.agents/skills/research-design/SKILL.md) govern visual
   hierarchy, typography, brand expression, component ownership, and retained
   viewport evidence.
+- [Publication-design skill](../.agents/skills/publication-design/SKILL.md)
+  governs the continuous book and generated PDF hierarchy, print typography,
+  pagination, page-class sampling, extracted reading order, and visual QA.
+- [Maintenance-automation skill](../.agents/skills/maintenance-automation/SKILL.md)
+  routes repeated dependencies, CI, releases, generated artifacts, GitHub
+  metadata, security drift, and translation freshness through one existing
+  authority with bounded checks and repairs.
+- [Roadmap milestones](../.github/milestones.json) and the repository-bound
+  [issue assignment map](../.github/issue-milestones.json) are the reconstructible
+  Git authority for the live coordination projection; they do not change claim
+  or result status.
 - [Public-interface audit](public-research-interface-audit.md) records measured
   reading defaults, comparable GitHub-native structures, test hypotheses and
   the maintainer decision queue.

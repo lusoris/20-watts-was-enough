@@ -58,19 +58,19 @@ func TestRunCIPlanWritesAClosedFullPlan(t *testing.T) {
 		t.Fatal(err)
 	}
 	if plan.Mode != "full" || plan.Reason != "explicit-full" || plan.ChangedPaths == nil ||
-		len(plan.ChangedPaths) != 0 || !reflect.DeepEqual(plan.Lanes, []string{"full"}) {
+		len(plan.ChangedPaths) != 0 || !reflect.DeepEqual(plan.Lanes, []string{"full", "renderer"}) {
 		t.Fatalf("CI plan = %#v, want explicit closed full plan", plan)
 	}
 }
 
-func TestRunCIPlanRejectsAmbiguousFullAndRevisionArguments(t *testing.T) {
+func TestRunCIPlanRequiresPairedRevisionArguments(t *testing.T) {
 	t.Parallel()
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	exitCode := run([]string{
 		"ci", "plan", "--full", "--base", strings.Repeat("1", 40),
 	}, &stdout, &stderr)
-	if exitCode != 2 || !strings.Contains(stderr.String(), "either --full or --base") {
+	if exitCode != 2 || !strings.Contains(stderr.String(), "requires --base and --head together") {
 		t.Fatalf("run() exit/stderr = %d/%q, want usage failure", exitCode, stderr.String())
 	}
 }
@@ -86,8 +86,8 @@ func TestRunCIProjectWritesOnlyFixedValidatedOutputs(t *testing.T) {
 	if exitCode := runCIProject(nil, strings.NewReader(plan), &stdout, &stderr); exitCode != 0 {
 		t.Fatalf("runCIProject() exit/stderr = %d/%q", exitCode, stderr.String())
 	}
-	if stdout.String() != "mode=impact\nreason=mapped-change-set\ncontainer=false\ngo=false\n"+
-		"release=false\nresearch=false\nsite=true\nworkstation_any=false\nworkstation_matrix=[]\n" {
+	if stdout.String() != "mode=impact\nreason=mapped-change-set\ncontainer=false\ndependency=false\ngo=false\n"+
+		"release=false\nrenderer=false\nresearch=false\nsite=true\nworkstation_any=false\nworkstation_matrix=[]\n" {
 		t.Fatalf("runCIProject() output = %q", stdout.String())
 	}
 }
@@ -179,7 +179,7 @@ func TestRunGitHubSyncLabelsCheckUsesLocalManifestOnly(t *testing.T) {
 	}
 }
 
-func TestRunGitHubSyncMetadataChecksBothLocalAuthorities(t *testing.T) {
+func TestRunGitHubSyncMetadataChecksAllLocalAuthorities(t *testing.T) {
 	t.Parallel()
 	root := t.TempDir()
 	if err := os.MkdirAll(filepath.Join(root, ".github"), 0o755); err != nil {
@@ -196,7 +196,10 @@ func TestRunGitHubSyncMetadataChecksBothLocalAuthorities(t *testing.T) {
     "summary": "Make one evidence boundary inspectable before execution begins."
   }]
 }`
-	for name, body := range map[string]string{"labels.json": labels, "milestones.json": milestones} {
+	issues := `{"schema":1,"repository":"owner/repository","assignments":[{"issue":7,"milestone":"M0"}]}`
+	for name, body := range map[string]string{
+		"labels.json": labels, "milestones.json": milestones, "issue-milestones.json": issues,
+	} {
 		if err := os.WriteFile(filepath.Join(root, ".github", name), []byte(body), 0o644); err != nil {
 			t.Fatal(err)
 		}
@@ -204,7 +207,7 @@ func TestRunGitHubSyncMetadataChecksBothLocalAuthorities(t *testing.T) {
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	exitCode := run([]string{"github", "sync-metadata", "--root", root, "--check"}, &stdout, &stderr)
-	if exitCode != 0 || !strings.Contains(stdout.String(), "1 managed labels and 1 managed milestones") {
+	if exitCode != 0 || !strings.Contains(stdout.String(), "1 managed labels, 1 managed milestones, and 1 managed issue assignments") {
 		t.Fatalf("run() exit/stdout/stderr = %d/%q/%q", exitCode, stdout.String(), stderr.String())
 	}
 }

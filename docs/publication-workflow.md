@@ -52,7 +52,8 @@ remain visually subordinate but must not fall below the tested readable scale.
 | Public identity | `app/lib/publication.mjs` | dynamic and static SEO, reader links and issue routes |
 | Translation status | `translations/manifest.json` | reviewed language routes bound to exact source and target bytes |
 | Feedback | typed issue forms | pull requests against the matching authority |
-| Managed issue labels | `.github/labels.json` | repository labels used by issue forms and triage |
+| Managed GitHub coordination | `.github/labels.json`, `.github/milestones.json`, `.github/issue-milestones.json` | labels, roadmap stages and explicit issue assignments on the named repository |
+| Public transport | `.github/public-transport.json` and decision 0047 | post-deployment Cloudflare redirect, response and certificate probe |
 | Durable policy | append-only `decisions/` | contributor and automation rules |
 
 Duplication is allowed only when the derivative is necessary for distribution
@@ -112,6 +113,22 @@ image. Go uses `type=docker,rewrite-timestamp=true` explicitly and rejects the
 known warnings for a missing epoch or failed layer rewrite. Compatibility 30 is
 review metadata, not a passed Docker-exporter attribute; changing BuildKit
 requires a fresh review and two-builder comparison.
+
+`20w publication verify-pdf-reproducibility` makes that comparison a real
+release acceptance rather than a mock-only unit check. It hashes one exact
+normalized schema-3 build context, builds it without cache in two separate
+builders pinned to the lock, compares the image, config and manifest identities,
+then byte-compares the complete PDF and `book-manifest.json` outputs. The
+command does not publish either render. It writes one new deterministic receipt
+under the bounded evidence or release-input directories and removes only its
+own builder names and image tags. The dedicated renderer-selected CI gate
+retains the receipt for 30 days. Ready pull requests and main pushes preserve
+their exact diff even in full mode, so this expensive proof does not run for a
+known unrelated change. Manual, unavailable, invalid, unmapped and
+selector-authority diffs select it fail-closed; non-additive diffs inspect both
+retained paths. Tagged releases always run the proof and add its
+receipt to the checksum-bound release assets. A mismatch blocks the boundary;
+the receipt remains engineering evidence and is not a scientific result.
 
 The two render containers use disjoint output, work and browser-cache
 directories, but currently share that one read-only installed JavaScript
@@ -198,14 +215,30 @@ execution path in YAML. Adding or changing a release image therefore requires
 the manifest and its workflow implementation to change together, or the gate
 fails closed.
 
-The `20w github sync-metadata` command validates and applies the managed label
-and milestone manifests. A trusted-main workflow creates missing objects and
-repairs changed ones without deleting unmanaged labels or milestones. Manual
-repair still checks out canonical `main`, so an arbitrary workflow ref cannot
-become a second metadata authority. Milestones project the stage identities and
-links from the canonical [research roadmap](../concept/90-research-roadmap.md);
-their completion percentages count associated issues and pull requests, not
-scientific evidence.
+The `20w github sync-metadata` command validates and applies the managed label,
+milestone and [issue-assignment](../.github/issue-milestones.json) manifests.
+It reads all three remote scopes before its first write, validates exact
+mutation responses and reads the result back. A trusted-main workflow creates
+missing objects, repairs managed values and changes only the milestone field of
+mapped issues; unmanaged labels, milestones, issues and pull requests remain
+untouched. Manual repair still checks out canonical `main`, so an arbitrary
+workflow ref cannot become a second metadata authority. Milestones project the
+stage identities and links from the canonical
+[research roadmap](../concept/90-research-roadmap.md); their completion
+percentages count associated issues and pull requests, not scientific evidence.
+The mapping names its repository and stable issue numbers. It does not infer a
+pull-request assignment.
+
+Cloudflare remains the public TLS authority for `www.cordana.dev`; GitHub Pages
+builds and serves the origin artifact. The authenticated dashboard observation
+behind [decision 0047](../decisions/0047-keep-cloudflare-as-the-public-pages-tls-authority.md)
+records **Always Use HTTPS** with automatic **Full** origin encryption. Full
+encrypts but does not certificate-validate the origin leg, so the Pages
+workflow's bounded live probe claims only what it can observe publicly: the
+exact redirect, Cloudflare response headers, HTTPS status, trusted hostname
+certificate and remaining validity. The workflow retains the probe output as
+a bounded Actions artifact for 30 days. A DNS or origin-mode change requires a
+fresh administrative check.
 
 ## Research basis
 

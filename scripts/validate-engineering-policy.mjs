@@ -97,6 +97,12 @@ const requiredFiles = [
   ".agents/skills/research-design/SKILL.md",
   ".agents/skills/research-design/references/prior-art.md",
   ".agents/skills/research-design/references/visual-review.md",
+  ".agents/skills/maintenance-automation/SKILL.md",
+  ".agents/skills/maintenance-automation/agents/openai.yaml",
+  ".agents/skills/maintenance-automation/references/automation-map.md",
+  ".agents/skills/maintenance-automation/references/prior-art.md",
+  ".agents/skills/publication-design/SKILL.md",
+  ".agents/skills/publication-design/agents/openai.yaml",
   ".dockerignore",
   ".editorconfig",
   ".gitleaks.toml",
@@ -113,7 +119,9 @@ const requiredFiles = [
   ".github/ISSUE_TEMPLATE/site-documentation-problem.yml",
   ".github/ISSUE_TEMPLATE/translation-problem.yml",
   ".github/labeler.yml",
+  ".github/issue-milestones.json",
   ".github/labels.json",
+  ".github/public-transport.json",
   ".github/milestones.json",
   ".github/workflows/ci.yml",
   ".github/workflows/codeql.yml",
@@ -160,11 +168,14 @@ const requiredFiles = [
   "scripts/validate-node-runtime.mjs",
   "tooling/AGENTS.md",
   "tooling/Dockerfile",
+  "tooling/cmd/20w/github_metadata.go",
   "tooling/cmd/20w/main.go",
   "tooling/cmd/build-release/main.go",
   "tooling/go.mod",
   "tooling/go.sum",
   "tooling/internal/githublabels/labels.go",
+  "tooling/internal/githubissuemilestones/manifest.go",
+  "tooling/internal/githubissuemilestones/sync.go",
   "tooling/internal/githubmilestones/manifest.go",
   "tooling/internal/githubmilestones/sync.go",
   "tooling/internal/repositorymanifest/read.go",
@@ -528,6 +539,95 @@ export function validateGoRuntimeWorkflowObject(
   return findings;
 }
 
+function pagesPublicTransportJobBoundaryIsExact(job) {
+  return (
+    job?.needs === "deploy"
+    && job?.["runs-on"] === "ubuntu-latest"
+    && job?.["timeout-minutes"] === 5
+    && job?.if === undefined
+    && continueOnErrorIsDisabled(job)
+    && Object.keys(job?.permissions ?? {}).length === 1
+    && job?.permissions?.contents === "read"
+  );
+}
+
+function pagesPublicationTriggerIsExact(trigger) {
+  const push = trigger?.push;
+  return (
+    Object.keys(trigger ?? {}).length === 1
+    && Object.keys(push ?? {}).length === 1
+    && Array.isArray(push?.branches)
+    && push.branches.length === 1
+    && push.branches[0] === "main"
+  );
+}
+
+function pagesPublicTransportExecutionStepsAreExact(steps, expectedCommand) {
+  const checkoutIndex = steps.findIndex((step) => step?.uses?.startsWith("actions/checkout@"));
+  const setupIndex = steps.findIndex((step) => step?.uses?.startsWith("actions/setup-go@"));
+  const verifyIndex = steps.findIndex((step) => step?.run?.trim() === expectedCommand);
+  const checkout = checkoutIndex >= 0 ? steps[checkoutIndex] : undefined;
+  const setup = setupIndex >= 0 ? steps[setupIndex] : undefined;
+  const verify = verifyIndex >= 0 ? steps[verifyIndex] : undefined;
+  return (
+    checkout?.with?.["persist-credentials"] === false
+    && checkout?.with?.ref === undefined
+    && checkout?.if === undefined
+    && continueOnErrorIsDisabled(checkout)
+    && setup?.if === undefined
+    && continueOnErrorIsDisabled(setup)
+    && verify?.if === undefined
+    && verify?.shell === "bash"
+    && continueOnErrorIsDisabled(verify)
+    && checkoutIndex >= 0
+    && setupIndex > checkoutIndex
+    && verifyIndex > setupIndex
+  );
+}
+
+function pagesPublicTransportReceiptStepIsExact(steps, verifyCommand) {
+  const verifyIndex = steps.findIndex((step) => step?.run?.trim() === verifyCommand);
+  const receiptIndex = steps.findIndex((step) => (
+    step?.uses === "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
+  ));
+  const receipt = receiptIndex >= 0 ? steps[receiptIndex] : undefined;
+  return (
+    verifyIndex >= 0
+    && receiptIndex > verifyIndex
+    && receipt?.if === "${{ always() }}"
+    && continueOnErrorIsDisabled(receipt)
+    && receipt?.with?.name === "public-transport-observation"
+    && receipt?.with?.path === "public-transport-observation.txt"
+    && receipt?.with?.["if-no-files-found"] === "error"
+    && receipt?.with?.["retention-days"] === 30
+  );
+}
+
+export function validatePagesPublicTransportWorkflowObject(
+  workflow,
+  relativePath = ".github/workflows/github-pages.yml",
+) {
+  const job = workflow?.jobs?.["verify-public-transport"];
+  const steps = job?.steps;
+  const expectedCommand = "go -C tooling run ./cmd/20w publication verify-public-transport --root .. 2>&1 | tee public-transport-observation.txt";
+  const findings = [];
+  if (!pagesPublicationTriggerIsExact(workflow?.on)) {
+    findings.push(`${relativePath}: production Pages publication must run only from canonical main pushes`);
+  }
+  if (!pagesPublicTransportJobBoundaryIsExact(job) || !Array.isArray(steps)) {
+    findings.push(`${relativePath}: Pages must run the bounded read-only public-transport check after deployment`);
+    return findings;
+  }
+
+  if (!pagesPublicTransportExecutionStepsAreExact(steps, expectedCommand)) {
+    findings.push(`${relativePath}: Pages must run the exact public-transport command from canonical source with no credential persistence or failure bypass`);
+  }
+  if (!pagesPublicTransportReceiptStepIsExact(steps, expectedCommand)) {
+    findings.push(`${relativePath}: Pages must retain the bounded public-transport observation for exactly 30 days`);
+  }
+  return findings;
+}
+
 export function validateCiFuzzingWorkflowObject(
   workflow,
   relativePath = ".github/workflows/ci.yml",
@@ -574,14 +674,121 @@ export function validateCiFuzzingWorkflowObject(
   return findings;
 }
 
+const pdfReproducibilitySetupAction = "docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e";
+const pdfReproducibilityBuildKit = "image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8";
+const pdfReproducibilityCiCommand = [
+  "go -C tooling run ./cmd/20w publication verify-pdf-reproducibility",
+  "--root .. --ref main",
+  "--receipt build/evidence/pdf-renderer-reproducibility.json",
+].join(" ");
+const pdfReproducibilityReleaseCommand = [
+  "./build/release-inputs/20w-linux-amd64",
+  "publication verify-pdf-reproducibility",
+  '--root . --ref "$RELEASE_TAG"',
+  "--receipt build/release-inputs/pdf-renderer-reproducibility.json",
+].join(" ");
+
+function pdfReproducibilitySetupIsExact(step) {
+  return step?.name === "Set up the locked PDF Docker Buildx client"
+    && step?.uses === pdfReproducibilitySetupAction
+    && step?.if === undefined
+    && continueOnErrorIsDisabled(step)
+    && Object.keys(step?.with ?? {}).length === 2
+    && step.with.version === "v0.36.1"
+    && step.with["driver-opts"] === pdfReproducibilityBuildKit;
+}
+
+function pdfReproducibilityCiJobIsExact(job) {
+  const steps = job?.steps ?? [];
+  const setupIndex = steps.findIndex(pdfReproducibilitySetupIsExact);
+  const verifyIndex = steps.findIndex((step) => (
+    step?.name === "Rebuild the final PDF renderer twice without cache"
+    && step?.run?.trim() === pdfReproducibilityCiCommand
+    && step?.if === undefined
+    && continueOnErrorIsDisabled(step)
+  ));
+  const receiptIndex = steps.findIndex((step) => (
+    step?.name === "Retain the PDF renderer reproducibility receipt"
+  ));
+  const receipt = receiptIndex >= 0 ? steps[receiptIndex] : undefined;
+  return job?.needs === "impact-plan"
+    && job?.if === "needs.impact-plan.outputs.renderer == 'true'"
+    && job?.["timeout-minutes"] === 75
+    && Object.keys(job?.permissions ?? {}).length === 1
+    && job.permissions.contents === "read"
+    && continueOnErrorIsDisabled(job)
+    && setupIndex >= 0
+    && verifyIndex > setupIndex
+    && receiptIndex > verifyIndex
+    && receipt?.if === "${{ always() && !cancelled() }}"
+    && receipt?.uses === "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
+    && continueOnErrorIsDisabled(receipt)
+    && Object.keys(receipt?.with ?? {}).length === 4
+    && receipt.with.name === "pdf-renderer-reproducibility"
+    && receipt.with.path === "build/evidence/pdf-renderer-reproducibility.json"
+    && receipt.with["if-no-files-found"] === "error"
+    && receipt.with["retention-days"] === 30;
+}
+
+// validatePDFRendererReproducibilityWorkflowObject protects the real-Docker
+// regression boundary without placing it in common or fast unit-test lanes.
+export function validatePDFRendererReproducibilityWorkflowObject(workflow, relativePath) {
+  if (relativePath === ".github/workflows/ci.yml") {
+    const jobs = workflow?.jobs ?? {};
+    const broadJobsContainHeavyProof = ["quality-full", "lane-release"].some((jobName) => (
+      (jobs[jobName]?.steps ?? []).some((step) => (
+        String(step?.run ?? "").includes("publication verify-pdf-reproducibility")
+      ))
+    ));
+    return !broadJobsContainHeavyProof
+      && pdfReproducibilityCiJobIsExact(jobs["pdf-renderer-reproducibility"])
+      ? []
+      : [`${relativePath}: CI must run the exact two-builder PDF reproducibility acceptance only in its renderer-selected gate and retain its receipt`];
+  }
+  if (relativePath === ".github/workflows/release.yml") {
+    const job = workflow?.jobs?.verify;
+    const steps = job?.steps ?? [];
+    const setupIndex = steps.findIndex(pdfReproducibilitySetupIsExact);
+    const nativeIndex = steps.findIndex((step) => (
+      step?.name === "Execute the native release binary and materialize the experiment plan"
+    ));
+    const verifyIndex = steps.findIndex((step) => (
+      step?.name === "Rebuild the final PDF renderer twice without cache"
+      && step?.run?.trim() === pdfReproducibilityReleaseCommand
+      && step?.if === undefined
+      && continueOnErrorIsDisabled(step)
+      && Object.keys(step?.env ?? {}).length === 1
+      && step.env.RELEASE_TAG === "${{ steps.release-ref.outputs.tag }}"
+    ));
+    const prepareIndex = steps.findIndex((step) => (
+      step?.name === "Prepare version-bound release assets"
+      && String(step?.run ?? "").includes("--additional-assets-root build/release-inputs")
+    ));
+    if (
+      job?.["timeout-minutes"] === 180
+      && continueOnErrorIsDisabled(job)
+      && setupIndex >= 0
+      && nativeIndex > setupIndex
+      && verifyIndex > nativeIndex
+      && prepareIndex > verifyIndex
+    ) {
+      return [];
+    }
+    return [`${relativePath}: tagged releases must run the exact two-builder PDF reproducibility acceptance and checksum its receipt as a release input`];
+  }
+  return [`${relativePath}: PDF reproducibility validator received an unsupported workflow`];
+}
+
 function validateCiImpactPlanJob(jobs, relativePath, findings) {
   const plan = jobs["impact-plan"];
   const expectedOutputs = {
     mode: "${{ steps.plan.outputs.mode }}",
     reason: "${{ steps.plan.outputs.reason }}",
     container: "${{ steps.plan.outputs.container }}",
+    dependency: "${{ steps.plan.outputs.dependency }}",
     go: "${{ steps.plan.outputs.go }}",
     release: "${{ steps.plan.outputs.release }}",
+    renderer: "${{ steps.plan.outputs.renderer }}",
     research: "${{ steps.plan.outputs.research }}",
     site: "${{ steps.plan.outputs.site }}",
     workstation_any: "${{ steps.plan.outputs.workstation_any }}",
@@ -594,16 +801,43 @@ function validateCiImpactPlanJob(jobs, relativePath, findings) {
     `${relativePath}: impact-plan must expose only the fixed validated Go projection`,
   );
   const planStep = (plan?.steps ?? []).find((step) => step?.id === "plan");
+  const expectedEnvironment = {
+    BASE_SHA: "${{ github.event.pull_request.base.sha }}",
+    BEFORE_SHA: "${{ github.event.before }}",
+    CURRENT_SHA: "${{ github.sha }}",
+    EVENT_NAME: "${{ github.event_name }}",
+    HEAD_SHA: "${{ github.event.pull_request.head.sha }}",
+    PR_DRAFT: "${{ github.event.pull_request.draft }}",
+  };
+  const expectedPlanSource = [
+    "set -euo pipefail",
+    "mkdir -p build",
+    'if [[ "$EVENT_NAME" == "pull_request" && "$PR_DRAFT" == "true" ]]; then',
+    "  go -C tooling run ./cmd/20w ci plan --root .. \\",
+    '    --base "$BASE_SHA" --head "$HEAD_SHA" --json \\',
+    "    > build/ci-impact-plan.json",
+    'elif [[ "$EVENT_NAME" == "pull_request" ]]; then',
+    "  go -C tooling run ./cmd/20w ci plan --root .. --full \\",
+    '    --base "$BASE_SHA" --head "$HEAD_SHA" --json \\',
+    "    > build/ci-impact-plan.json",
+    'elif [[ "$EVENT_NAME" == "push" ]]; then',
+    "  go -C tooling run ./cmd/20w ci plan --root .. --full \\",
+    '    --base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \\',
+    "    > build/ci-impact-plan.json",
+    "else",
+    "  go -C tooling run ./cmd/20w ci plan --root .. --full --json \\",
+    "    > build/ci-impact-plan.json",
+    "fi",
+    "test -s build/ci-impact-plan.json",
+    "go -C tooling run ./cmd/20w ci project \\",
+    '  < build/ci-impact-plan.json >> "$GITHUB_OUTPUT"',
+  ].join("\n");
   recordExpectation(
     findings,
-    stringIncludesAll(planStep?.run, [
-      'if [[ "$EVENT_NAME" == "pull_request" ]]',
-      '--base "$BASE_SHA" --head "$HEAD_SHA" --json',
-      "ci plan --root .. --full --json",
-      "ci project",
-      '< build/ci-impact-plan.json >> "$GITHUB_OUTPUT"',
-    ]) && !String(planStep?.run ?? "").includes("PR_DRAFT"),
-    `${relativePath}: every pull_request must project its exact base/head diff and only non-PR events may force full`,
+    Object.keys(planStep?.env ?? {}).length === Object.keys(expectedEnvironment).length
+      && propertiesMatch(planStep?.env, expectedEnvironment)
+      && String(planStep?.run ?? "").trim() === expectedPlanSource,
+    `${relativePath}: draft pull requests must use an exact impact diff, ready pull requests and main pushes must preserve an exact diff in full mode, and manual runs must fail closed`,
   );
 }
 
@@ -631,6 +865,16 @@ function validateCiImpactLaneJobs(jobs, relativePath, findings) {
     jobs["container-smoke"]?.if
       === "needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.container == 'true'",
     `${relativePath}: container-smoke must run for full plans or its fixed selector`,
+  );
+  const dependency = jobs["dependency-review"];
+  recordExpectation(
+    findings,
+    dependency?.needs === "impact-plan"
+      && dependency?.if
+        === "github.event_name == 'pull_request' && (needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.dependency == 'true')"
+      && continueOnErrorIsDisabled(dependency)
+      && (dependency?.steps ?? []).every(continueOnErrorIsDisabled),
+    `${relativePath}: dependency review must run only for full pull requests or its fixed impact selector and must fail closed`,
   );
 }
 
@@ -743,6 +987,7 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
     "impact-common",
     "lane-go",
     "lane-release",
+    "pdf-renderer-reproducibility",
     "lane-research",
     "lane-site",
     "workstation-core",
@@ -759,8 +1004,10 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
     EVENT_NAME: "${{ github.event_name }}",
     MODE: "${{ needs.impact-plan.outputs.mode }}",
     SELECT_CONTAINER: "${{ needs.impact-plan.outputs.container }}",
+    SELECT_DEPENDENCY: "${{ needs.impact-plan.outputs.dependency }}",
     SELECT_GO: "${{ needs.impact-plan.outputs.go }}",
     SELECT_RELEASE: "${{ needs.impact-plan.outputs.release }}",
+    SELECT_RENDERER: "${{ needs.impact-plan.outputs.renderer }}",
     SELECT_RESEARCH: "${{ needs.impact-plan.outputs.research }}",
     SELECT_SITE: "${{ needs.impact-plan.outputs.site }}",
     SELECT_WORKSTATION: "${{ needs.impact-plan.outputs.workstation_any }}",
@@ -770,6 +1017,7 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
     RESULT_IMPACT_COMMON: "${{ needs.impact-common.result }}",
     RESULT_GO: "${{ needs.lane-go.result }}",
     RESULT_RELEASE: "${{ needs.lane-release.result }}",
+    RESULT_RENDERER: "${{ needs.pdf-renderer-reproducibility.result }}",
     RESULT_RESEARCH: "${{ needs.lane-research.result }}",
     RESULT_SITE: "${{ needs.lane-site.result }}",
     RESULT_WORKSTATION_CORE: "${{ needs.workstation-core.result }}",
@@ -808,16 +1056,28 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
       'require_state impact-common "$RESULT_IMPACT_COMMON" success',
       'require_selection lane-go "$RESULT_GO" "$SELECT_GO"',
       'require_selection lane-release "$RESULT_RELEASE" "$SELECT_RELEASE"',
+      'require_selection pdf-renderer-reproducibility "$RESULT_RENDERER" "$SELECT_RENDERER"',
       'require_selection lane-research "$RESULT_RESEARCH" "$SELECT_RESEARCH"',
       'require_selection lane-site "$RESULT_SITE" "$SELECT_SITE"',
       'require_selection workstation-core "$RESULT_WORKSTATION_CORE" "$SELECT_WORKSTATION"',
       'require_selection workstation-artifacts "$RESULT_WORKSTATION_ARTIFACTS" "$SELECT_WORKSTATION"',
       'require_selection container-smoke "$RESULT_CONTAINER" "$SELECT_CONTAINER"',
+      'require_selection dependency-review "$RESULT_DEPENDENCY_REVIEW" "$SELECT_DEPENDENCY"',
+      'impact mode is allowed only for draft pull requests',
+      '"$SELECT_CONTAINER" "$SELECT_DEPENDENCY" "$SELECT_GO"',
       'full plan exposed a non-false semantic selector: $selector',
       "full plan did not expose its closed workstation matrix",
       'false) require_state "$gate" "$actual" skipped ;;',
       '*) echo "::error::$gate selector is malformed: $selected"; exit 1 ;;',
-    ]),
+    ])
+      && countOccurrences(
+        successSource,
+        'require_selection pdf-renderer-reproducibility "$RESULT_RENDERER" "$SELECT_RENDERER"',
+      ) === 2
+      && String(successSource ?? "").includes([
+        'for selector in "$SELECT_CONTAINER" "$SELECT_DEPENDENCY" "$SELECT_GO" "$SELECT_RELEASE" \\',
+        '      "$SELECT_RESEARCH" "$SELECT_SITE"; do',
+      ].join("\n")),
     `${relativePath}: ci-success must reject unexpected states and any skipped selected lane`,
   );
 }
@@ -827,6 +1087,26 @@ export function validateCiImpactWorkflowObject(
   relativePath = ".github/workflows/ci.yml",
 ) {
   const findings = [];
+  const trigger = workflow?.on;
+  const pullRequest = trigger?.pull_request;
+  recordExpectation(
+    findings,
+    Object.keys(trigger ?? {}).length === 3
+      && Array.isArray(trigger?.push?.branches)
+      && trigger.push.branches.length === 1
+      && trigger.push.branches[0] === "main"
+      && Object.keys(trigger?.push ?? {}).length === 1
+      && Array.isArray(pullRequest?.branches)
+      && pullRequest.branches.length === 1
+      && pullRequest.branches[0] === "main"
+      && Array.isArray(pullRequest?.types)
+      && pullRequest.types.length === 5
+      && ["opened", "synchronize", "reopened", "ready_for_review", "converted_to_draft"]
+        .every((type) => pullRequest.types.includes(type))
+      && Object.keys(pullRequest ?? {}).length === 2
+      && Object.prototype.hasOwnProperty.call(trigger ?? {}, "workflow_dispatch"),
+    `${relativePath}: CI must run on main pushes, manual dispatches, and every draft or ready pull-request transition`,
+  );
   const jobs = workflow?.jobs ?? {};
   validateCiImpactPlanJob(jobs, relativePath, findings);
   validateCiImpactLaneJobs(jobs, relativePath, findings);
@@ -852,26 +1132,42 @@ export function validateGoCodeQlWorkflowObject(
   return findings;
 }
 
+function repositoryMetadataTriggerIsExact(trigger) {
+  const push = trigger?.push;
+  return (
+    arrayIncludes(push?.branches, "main")
+    && arrayIncludes(push?.paths, ".github/labels.json")
+    && arrayIncludes(push?.paths, ".github/milestones.json")
+    && arrayIncludes(push?.paths, ".github/issue-milestones.json")
+    && Object.prototype.hasOwnProperty.call(trigger ?? {}, "workflow_dispatch")
+  );
+}
+
+function repositoryMetadataPermissionsAreExact(job) {
+  return (
+    propertiesMatch(job?.permissions, { contents: "read", issues: "write" })
+    && Object.keys(job?.permissions ?? {}).length === 2
+  );
+}
+
+function repositoryMetadataCommandIsExact(synchronization) {
+  return (
+    synchronization?.run === 'go -C tooling run ./cmd/20w github sync-metadata --root .. --repository "$GITHUB_REPOSITORY"'
+    && synchronization?.env?.GH_TOKEN === "${{ github.token }}"
+  );
+}
+
 export function validateRepositoryMetadataSyncWorkflowObject(
   workflow,
   relativePath = ".github/workflows/sync-repository-metadata.yml",
 ) {
   const findings = validateGoRuntimeWorkflowObject(workflow, "sync", relativePath);
   const trigger = workflow?.on;
-  const push = trigger?.push;
-  if (
-    !arrayIncludes(push?.branches, "main")
-    || !arrayIncludes(push?.paths, ".github/labels.json")
-    || !arrayIncludes(push?.paths, ".github/milestones.json")
-    || !Object.prototype.hasOwnProperty.call(trigger ?? {}, "workflow_dispatch")
-  ) {
-    findings.push(`${relativePath}: repository metadata synchronization must run for both canonical manifests on main and allow manual repair`);
+  if (!repositoryMetadataTriggerIsExact(trigger)) {
+    findings.push(`${relativePath}: repository metadata synchronization must run for all three canonical manifests on main and allow manual repair`);
   }
   const job = workflow?.jobs?.sync;
-  if (
-    !propertiesMatch(job?.permissions, { contents: "read", issues: "write" })
-    || Object.keys(job?.permissions ?? {}).length !== 2
-  ) {
+  if (!repositoryMetadataPermissionsAreExact(job)) {
     findings.push(`${relativePath}: repository metadata synchronization needs only contents:read and issues:write`);
   }
   const checkout = (job?.steps ?? []).find((step) => actionUses(step, "actions/checkout"));
@@ -882,11 +1178,8 @@ export function validateRepositoryMetadataSyncWorkflowObject(
     job?.steps ?? [],
     "github sync-metadata --root .. --repository",
   );
-  if (
-    synchronization?.run !== 'go -C tooling run ./cmd/20w github sync-metadata --root .. --repository "$GITHUB_REPOSITORY"'
-    || synchronization?.env?.GH_TOKEN !== "${{ github.token }}"
-  ) {
-    findings.push(`${relativePath}: the trusted Go command must apply canonical labels and milestones with the job token`);
+  if (!repositoryMetadataCommandIsExact(synchronization)) {
+    findings.push(`${relativePath}: the trusted Go command must apply canonical labels, milestones, and mapped issue assignments with the job token`);
   }
   return findings;
 }
@@ -2421,10 +2714,11 @@ export function validateToolingValidationScript(
     "go -C tooling run ./cmd/20w experiment validate --root ..",
     "go -C tooling run ./cmd/20w github sync-metadata --root .. --check",
     "go -C tooling run ./cmd/20w publication render-pdf --root .. --check",
+    "go -C tooling run ./cmd/20w publication verify-public-transport --root .. --check",
   ].join(" && ");
   if (command === expected) return [];
   return [
-    `${relativePath}: validate:tooling must validate experiment, GitHub metadata, and publication-render authority offline in that order`,
+    `${relativePath}: validate:tooling must validate experiment, GitHub metadata, publication-render, and public-transport authority offline in that order`,
   ];
 }
 
@@ -2865,6 +3159,7 @@ function validateReleaseWorkflowPolicy(workflow, relativePath, lock, findings) {
   ));
   findings.push(...validateJavaScriptRuntimeWorkflowObject(workflow, "verify", relativePath));
   findings.push(...validateGoRuntimeWorkflowObject(workflow, "verify", relativePath));
+  findings.push(...validatePDFRendererReproducibilityWorkflowObject(workflow, relativePath));
 }
 
 function validateCiWorkflowPolicy(workflow, relativePath, lock, findings) {
@@ -2879,6 +3174,7 @@ function validateCiWorkflowPolicy(workflow, relativePath, lock, findings) {
   ));
   findings.push(...validateJavaScriptRuntimeWorkflowObject(workflow, "quality-full", relativePath));
   findings.push(...validateGoRuntimeWorkflowObject(workflow, "quality-full", relativePath));
+  findings.push(...validatePDFRendererReproducibilityWorkflowObject(workflow, relativePath));
 }
 
 function validateWorkflowPolicy(workflow, relativePath, lock, findings) {
@@ -2891,6 +3187,12 @@ function validateWorkflowPolicy(workflow, relativePath, lock, findings) {
   }
   if (relativePath === ".github/workflows/github-pages.yml") {
     findings.push(...validateJavaScriptRuntimeWorkflowObject(workflow, "build", relativePath));
+    findings.push(...validateGoRuntimeWorkflowObject(
+      workflow,
+      "verify-public-transport",
+      relativePath,
+    ));
+    findings.push(...validatePagesPublicTransportWorkflowObject(workflow, relativePath));
   }
   if (relativePath === ".github/workflows/codeql.yml") {
     findings.push(...validateGoCodeQlWorkflowObject(workflow, relativePath));
