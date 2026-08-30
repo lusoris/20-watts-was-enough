@@ -201,8 +201,8 @@ test("the portal keeps clean-route history and native Markdown links honest on t
   assert.match(portal, /mobileMenuRef\.current\?\.removeAttribute\("open"\)/);
   assert.match(portal, /mobileOutlineRef\.current\?\.removeAttribute\("open"\)/);
   assert.match(portal, /selectHeading\(heading\.id\)/);
-  assert.match(portal, /--portal-reader-stack-top/);
-  assert.match(portal, /new ResizeObserver\(syncStickyStack\)/);
+  assert.doesNotMatch(portal, /--portal-reader-stack-top/);
+  assert.doesNotMatch(portal, /ResizeObserver/);
   assert.match(portal, /readerLibraryRef/);
   assert.match(portal, /list\.scrollTop \+= activeRect\.top/);
   assert.match(portal, /section heading match/);

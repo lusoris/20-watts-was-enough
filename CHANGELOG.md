@@ -27,6 +27,11 @@ the exact diff; this file records why the project changed.
   records a separate dated live/source observation and bounded drift at the
   later commit without presenting deployment health as a current test run or
   scientific result.
+- The focused Pages reader now has one publication-owned CSS cascade. Dead
+  legacy shell rules and their sticky-stack observer were removed; the
+  document rail uses a two-row filter at compact desktop widths so the full
+  Mathematics label remains visible without changing the 68ch prose
+  measure or narrow-screen reading order.
 
 ## [0.3.0] - 2026-08-30
 
