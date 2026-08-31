@@ -17,7 +17,7 @@ concurrency:
 jobs:
   impact-plan:
     name: CI impact plan
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 10
     permissions:
       contents: read
@@ -88,7 +88,7 @@ jobs:
   pr-title:
     name: PR title
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 5
     steps:
       - name: Require a Conventional Commit title
@@ -104,7 +104,7 @@ jobs:
     name: Full quality
     needs: impact-plan
     if: needs.impact-plan.outputs.mode == 'full'
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 120
     permissions:
       contents: read
@@ -159,7 +159,7 @@ jobs:
     name: Impact common
     needs: impact-plan
     if: needs.impact-plan.outputs.mode == 'impact'
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 30
     permissions:
       contents: read
@@ -186,7 +186,7 @@ jobs:
     name: Go lane
     needs: impact-plan
     if: needs.impact-plan.outputs.mode == 'impact' && needs.impact-plan.outputs.go == 'true'
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 20
     permissions:
       contents: read
@@ -207,7 +207,7 @@ jobs:
     name: Release lane
     needs: impact-plan
     if: needs.impact-plan.outputs.mode == 'impact' && needs.impact-plan.outputs.release == 'true'
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 30
     permissions:
       contents: read
@@ -240,7 +240,7 @@ jobs:
     name: PDF renderer reproducibility
     needs: impact-plan
     if: needs.impact-plan.outputs.renderer == 'true'
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 75
     permissions:
       contents: read
@@ -290,7 +290,7 @@ jobs:
     name: Research lane
     needs: impact-plan
     if: needs.impact-plan.outputs.mode == 'impact' && needs.impact-plan.outputs.research == 'true'
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 30
     permissions:
       contents: read
@@ -322,7 +322,7 @@ jobs:
     name: Site lane
     needs: impact-plan
     if: needs.impact-plan.outputs.mode == 'impact' && needs.impact-plan.outputs.site == 'true'
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 30
     permissions:
       contents: read
@@ -349,7 +349,7 @@ jobs:
     name: Workstation core
     needs: impact-plan
     if: needs.impact-plan.outputs.workstation_any == 'true'
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 20
     permissions:
       contents: read
@@ -376,7 +376,7 @@ jobs:
     name: Workstation test (${{ matrix.artifact }})
     needs: impact-plan
     if: needs.impact-plan.outputs.workstation_any == 'true'
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 30
     permissions:
       contents: read
@@ -441,7 +441,7 @@ jobs:
     name: Container smoke paths
     needs: impact-plan
     if: needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.container == 'true'
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 35
     permissions:
       contents: read
@@ -579,7 +579,7 @@ jobs:
     name: Dependency review
     needs: impact-plan
     if: github.event_name == 'pull_request' && (needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.dependency == 'true')
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 10
     permissions:
       contents: read
@@ -606,7 +606,7 @@ jobs:
       - workstation-artifacts
       - container-smoke
       - dependency-review
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 5
     steps:
       - name: Require every expected gate state

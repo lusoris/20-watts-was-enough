@@ -28,6 +28,8 @@ const runtimePolicy = Object.freeze({
   pythonVersion: "3.14.7",
 });
 
+const githubActionsRunner = "arc-cauda-lusoris-20-watts";
+
 const sbomGenerator = "generator=docker.io/docker/buildkit-syft-scanner@sha256:ae4f3b554449e7e25548e7d8ccc029d17357348e30c6e3df01b92bc93654d6a9";
 
 const buildxPolicy = Object.freeze({
@@ -338,6 +340,21 @@ export function validateWorkflowObject(workflow, relativePath = "workflow.yml") 
   return findings;
 }
 
+export function validateOfficeArcRunnerWorkflowObject(
+  workflow,
+  relativePath = "workflow.yml",
+) {
+  const findings = [];
+  for (const [jobName, job] of Object.entries(workflow?.jobs ?? {})) {
+    if (job?.["runs-on"] !== githubActionsRunner) {
+      findings.push(
+        `${relativePath}: job ${jobName} must run on the repository-scoped office ARC label ${githubActionsRunner}`,
+      );
+    }
+  }
+  return findings;
+}
+
 export function validateScientificRuntimeWorkflowObject(
   workflow,
   lock,
@@ -542,7 +559,7 @@ export function validateGoRuntimeWorkflowObject(
 function pagesPublicTransportJobBoundaryIsExact(job) {
   return (
     job?.needs === "deploy"
-    && job?.["runs-on"] === "ubuntu-latest"
+    && job?.["runs-on"] === githubActionsRunner
     && job?.["timeout-minutes"] === 5
     && job?.if === undefined
     && continueOnErrorIsDisabled(job)
@@ -3205,6 +3222,7 @@ function validateCiWorkflowPolicy(workflow, relativePath, lock, findings) {
 
 function validateWorkflowPolicy(workflow, relativePath, lock, findings) {
   findings.push(...validateWorkflowObject(workflow, relativePath));
+  findings.push(...validateOfficeArcRunnerWorkflowObject(workflow, relativePath));
   if (relativePath === ".github/workflows/release.yml") {
     validateReleaseWorkflowPolicy(workflow, relativePath, lock, findings);
   }

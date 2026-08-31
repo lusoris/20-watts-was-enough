@@ -28,6 +28,7 @@ import {
   validateJavaScriptRuntimeWorkflowObject,
   validateRepositoryMetadataSyncWorkflowObject,
   validateNpmRuntimeLock,
+  validateOfficeArcRunnerWorkflowObject,
   validatePagesPublicTransportWorkflowObject,
   validatePDFRendererReproducibilityWorkflowObject,
   validateReleaseExperimentImageWorkflowObject,
@@ -275,6 +276,26 @@ test("workflow validation rejects ambient writes, unbounded concurrency, and cre
     "workflow.yml: top-level permissions must not grant write access",
     "workflow.yml: concurrency must define a group and explicit cancel-in-progress boolean",
     "workflow.yml: job unsafe step 0 must set checkout persist-credentials to false",
+  ]);
+});
+
+test("repository workflows cannot fall back to billed GitHub-hosted runners", () => {
+  const label = "arc-cauda-lusoris-20-watts";
+  assert.deepEqual(validateOfficeArcRunnerWorkflowObject({
+    jobs: {
+      ci: { "runs-on": label },
+      release: { "runs-on": label },
+    },
+  }), []);
+
+  assert.deepEqual(validateOfficeArcRunnerWorkflowObject({
+    jobs: {
+      hosted: { "runs-on": "ubuntu-latest" },
+      dynamic: { "runs-on": "${{ matrix.os }}" },
+    },
+  }), [
+    `workflow.yml: job hosted must run on the repository-scoped office ARC label ${label}`,
+    `workflow.yml: job dynamic must run on the repository-scoped office ARC label ${label}`,
   ]);
 });
 

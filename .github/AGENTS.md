@@ -9,6 +9,10 @@ files under `.github/`.
   only to the individual job that requires them.
 - Set explicit job timeouts and bounded concurrency. Pull-request validation
   may cancel stale runs; an in-progress Pages deployment must not be cancelled.
+- Run every repository workflow job on the repository-scoped office ARC label
+  `arc-cauda-lusoris-20-watts`. Do not fall back to billed GitHub-hosted
+  `ubuntu-*` labels; add an explicitly reviewed runner pool if a future job
+  genuinely needs a different operating system or hardware class.
 - Use `actions/checkout` with `persist-credentials: false` unless a reviewed
   step must push to the repository.
 - Run JavaScript workflows on the exact Node 26 pin. Install npm 12 only from

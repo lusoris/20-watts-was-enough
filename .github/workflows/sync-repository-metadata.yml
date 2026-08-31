@@ -26,7 +26,7 @@ concurrency:
 jobs:
   sync:
     name: Apply canonical labels, milestones, and issue assignments
-    runs-on: ubuntu-latest
+    runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 5
     permissions:
       contents: read
