@@ -131,6 +131,14 @@ always run the proof and add its
 receipt to the checksum-bound release assets. A mismatch blocks the boundary;
 the receipt remains engineering evidence and is not a scientific result.
 
+Script impact is classified by an exact executable consumer, not by the
+`scripts/` directory name. The browser reader regression therefore selects the
+site lane, while the checked PDF semantic baseline selects the release lane
+that reads and binds it to the tracked PDF, manifest and book source. Shared
+policy, runtime and renderer scripts remain explicit full-gate authority.
+Every other script path is deliberately unmatched and therefore expands to the
+full gate; a new file cannot inherit a narrow lane from its directory alone.
+
 The two render containers use disjoint output, work and browser-cache
 directories, but currently share that one read-only installed JavaScript
 dependency tree. Their byte comparison therefore tests deterministic rendering

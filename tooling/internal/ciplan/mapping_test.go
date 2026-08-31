@@ -33,8 +33,11 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		{path: ".github/public-transport.json", mode: "impact", lanes: []string{"go", "site"}},
 		{path: "renovate.json", mode: "impact", lanes: []string{"dependency"}},
 		{path: "package-lock.json", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
+		{path: "scripts/book-pdf-semantic-baseline.json", mode: "impact", lanes: []string{"release"}},
 		{path: "scripts/generate-book-pdf.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
 		{path: "scripts/audit-prose-style.mjs", mode: "full", lanes: []string{"full"}, reason: "full-authority-changed"},
+		{path: "scripts/mermaid-browser.test.mjs", mode: "impact", lanes: []string{"site"}},
+		{path: "scripts/unclassified-future-check.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:scripts/unclassified-future-check.mjs"},
 		{path: "experiments/workstation/fixture-026/runner.mjs", mode: "impact", lanes: []string{"workstation-fixture-026"}},
 		{path: "experiments/workstation/fixture-007/runner.mjs", mode: "impact", lanes: []string{"container", "workstation-fixture-007"}},
 		{path: "tooling/internal/pdfrender/render.go", mode: "impact", lanes: []string{"go", "release", "renderer", "site"}},
@@ -49,6 +52,21 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 			(test.reason != "" && plan.Reason != test.reason) {
 			t.Fatalf("path %s produced %#v, want %s/%v", test.path, plan, test.mode, test.lanes)
 		}
+	}
+}
+
+func TestReaderLikeDiffSelectsOnlyItsPublicationConsumers(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	plan := selectTestPaths(t, root, testOptions(root), []string{
+		"CHANGELOG.md",
+		"app/globals.css",
+		"scripts/mermaid-browser.test.mjs",
+	})
+	want := []string{"release", "renderer", "research", "site"}
+	if plan.Mode != "impact" || plan.Reason != "mapped-change-set" ||
+		!reflect.DeepEqual(plan.Lanes, want) {
+		t.Fatalf("reader-like plan = %#v, want impact/%v", plan, want)
 	}
 }
 
