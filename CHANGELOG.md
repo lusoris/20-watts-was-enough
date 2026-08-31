@@ -37,6 +37,12 @@ the exact diff; this file records why the project changed.
   CI impact map now routes the importer and all six contract-named specialist
   packages through the Go lane instead of treating each new package as an
   unknown path.
+- The insertion-sort construction vertical now accepts only the validated
+  candidate and held-reference sets selected by that contract. Candidate IDs
+  become controller request IDs, prompt length and no-hint semantics are checked
+  against the parsed input, and the exact answer stays in a separate verifier.
+  Synthetic tests exercise the boundary; no dataset or scientific result is
+  added.
 - A versioned PDF semantic sentinel now binds the current source, book, A4 and
   tag metadata, Poppler tool identity, separate structure and text streams,
   exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps
