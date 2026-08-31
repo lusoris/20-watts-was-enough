@@ -33,7 +33,10 @@ the exact diff; this file records why the project changed.
   runtime smoke or byte-compared fixture generation is claimed.
   The same slice hardens the shared renderer-authority reader against ancestor
   links, pathname replacement and same-size byte mutation without rejecting a
-  valid Windows path solely because its canonical drive spelling differs.
+  valid Windows path solely because its canonical drive spelling differs. The
+  CI impact map now routes the importer and all six contract-named specialist
+  packages through the Go lane instead of treating each new package as an
+  unknown path.
 - A versioned PDF semantic sentinel now binds the current source, book, A4 and
   tag metadata, Poppler tool identity, separate structure and text streams,
   exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps
