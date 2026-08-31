@@ -71,12 +71,13 @@ the exact diff; this file records why the project changed.
 - Documentation validation now treats byte-identical Mermaid bodies as staged
   source-ownership debt. The exact checked baseline may shrink through reviewed
   owner repairs, while unknown, changed, malformed, or stale groups fail closed.
-- Draft pull requests retain bounded impact-scoped feedback, while every
-  non-draft or ready pull request now runs the complete sharded matrix before
-  merge. Workstation manifest edits also select their coverage, readiness and
-  reader consumers; dependency review runs only for full pull requests or an
-  explicit dependency lane, and routine issue metadata no longer inherits the
-  full gate from a broad `.github/**` rule.
+- Every pull-request code update now uses the exact Go impact plan regardless
+  of draft state, so mapped site, prose and isolated experiment changes do not
+  execute unrelated workstation shards. Unknown, non-additive, shared and
+  selector-authority changes still expand to full CI; `main`, manual and
+  exact-tag release validation remain complete. Workstation manifests retain
+  their coverage, readiness and reader consumers, and dependency review runs
+  only for full pull requests or an explicit dependency lane.
 - The README, contribution guide and public help route now expose current
   status, roadmap stages, live milestone work, authority boundaries and focused
   entry checks before implementation detail. The portal overview leads with the

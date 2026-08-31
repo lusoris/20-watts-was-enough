@@ -56,10 +56,12 @@ energy comparison, or claim-promotion evidence.
 
 `npm run check` remains the complete local merge floor and runs the workstation
 inventory as one serial suite. GitHub full CI separates the non-workstation
-quality gate from workstation core and a closed test matrix. Fixture 026 uses
-six fixed file-level jobs and Fixture 029 uses two; the other nine artifacts
-retain one job each. Impact plans expand only the selected artifact, while a
-full plan requires all 17 matrix entries. The eight-job concurrency cap is a
+quality gate from workstation core and a closed test matrix. Under
+[decision 0051](../../decisions/0051-add-a-seventh-fixture-026-shard-after-live-timing.md),
+Fixture 026 uses seven fixed file-level jobs and Fixture 029 uses two; the other
+nine artifacts retain one job each. Impact plans expand only the selected
+artifact, while a
+full plan requires all 18 matrix entries. The eight-job concurrency cap is a
 scheduling bound, not experiment parallelism or scientific evidence.
 
 With eight GitHub runners available, the workstation matrix is initially

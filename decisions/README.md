@@ -53,7 +53,8 @@ than silently changing its outcome.
 | [0045](0045-rewrite-renderer-layer-timestamps-before-recording-image-identity.md) | Rewrite renderer layer timestamps before recording image identity | accepted |
 | [0046](0046-project-the-research-roadmap-into-github-milestones.md) | Project the research roadmap into GitHub milestones | accepted |
 | [0047](0047-keep-cloudflare-as-the-public-pages-tls-authority.md) | Keep Cloudflare as the public Pages TLS authority | accepted |
-| [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md) | Gate ready pull requests with the full CI matrix | accepted |
+| [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md) | Gate ready pull requests with the full CI matrix | accepted; readiness-based full-matrix rule partly superseded by [0052](0052-impact-scope-every-pull-request.md) |
 | [0049](0049-adopt-bounded-maintenance-automation.md) | Adopt bounded maintenance automation | accepted |
 | [0050](0050-review-the-book-and-pdf-as-one-publication.md) | Review the book and PDF as one publication | accepted |
 | [0051](0051-add-a-seventh-fixture-026-shard-after-live-timing.md) | Add a seventh Fixture 026 shard after live timing | accepted |
+| [0052](0052-impact-scope-every-pull-request.md) | Impact-scope every pull request | accepted |

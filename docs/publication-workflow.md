@@ -122,11 +122,12 @@ then byte-compares the complete PDF and `book-manifest.json` outputs. The
 command does not publish either render. It writes one new deterministic receipt
 under the bounded evidence or release-input directories and removes only its
 own builder names and image tags. The dedicated renderer-selected CI gate
-retains the receipt for 30 days. Ready pull requests and main pushes preserve
-their exact diff even in full mode, so this expensive proof does not run for a
-known unrelated change. Manual, unavailable, invalid, unmapped and
-selector-authority diffs select it fail-closed; non-additive diffs inspect both
-retained paths. Tagged releases always run the proof and add its
+retains the receipt for 30 days. Pull requests and `main` pushes preserve their
+exact diff, so this expensive proof does not run for a known unrelated change;
+the pull request may remain impact-scoped while the `main` plan stays full.
+Manual, unavailable, invalid, unmapped and selector-authority diffs select it
+fail-closed; non-additive diffs inspect both retained paths. Tagged releases
+always run the proof and add its
 receipt to the checksum-bound release assets. A mismatch blocks the boundary;
 the receipt remains engineering evidence and is not a scientific result.
 
