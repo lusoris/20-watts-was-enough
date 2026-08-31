@@ -43,6 +43,11 @@ the exact diff; this file records why the project changed.
   against the parsed input, and the exact answer stays in a separate verifier.
   Synthetic tests exercise the boundary; no dataset or scientific result is
   added.
+- The binary-search construction vertical now reproduces the pinned CLRS
+  lower-bound operation in Go: it returns the first index whose key is not below
+  the target, clamped to the final index. A separate linear verifier checks the
+  contract-selected references while candidate requests retain only source-bound
+  prompts and IDs. Synthetic tests add no dataset or scientific result.
 - A versioned PDF semantic sentinel now binds the current source, book, A4 and
   tag metadata, Poppler tool identity, separate structure and text streams,
   exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps
