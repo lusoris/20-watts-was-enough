@@ -115,6 +115,101 @@ const diagramSnapshotExpression = `(() => {
   };
 })()`;
 
+async function assertBookReflowSurface(cdp, address) {
+  await cdp.send("Emulation.setDeviceMetricsOverride", {
+    width: 320,
+    height: 1200,
+    deviceScaleFactor: 1,
+    mobile: true,
+  });
+  await new Promise((resolve) => setTimeout(resolve, 250));
+  const reflow = (await cdp.send("Runtime.evaluate", {
+    expression: `(() => {
+      const root = document.documentElement;
+      const fieldCoverage = document.querySelector('#book-research-field-coverage-md .book-prose');
+      const wideRegions = [...document.querySelectorAll('.diagram-wide .diagram-scroll-region')];
+      return {
+        clientWidth: root.clientWidth,
+        scrollWidth: root.scrollWidth,
+        fieldCoverage: fieldCoverage && {
+          clientWidth: fieldCoverage.clientWidth,
+          scrollWidth: fieldCoverage.scrollWidth,
+        },
+        wideRegions: wideRegions.length,
+        locallyOverflowing: wideRegions.filter(
+          (region) => region.scrollWidth > region.clientWidth + 1,
+        ).length,
+      };
+    })()`,
+    returnByValue: true,
+  })).result?.value;
+  assert.ok(reflow.fieldCoverage, JSON.stringify(reflow));
+  assert.ok(reflow.wideRegions > 0, JSON.stringify(reflow));
+  assert.equal(reflow.locallyOverflowing, reflow.wideRegions, JSON.stringify(reflow));
+  assert.ok(reflow.fieldCoverage.scrollWidth <= reflow.fieldCoverage.clientWidth, JSON.stringify(reflow));
+  assert.ok(reflow.scrollWidth <= reflow.clientWidth, JSON.stringify(reflow));
+
+  // This layout models a 1,440-device-pixel surface at DPR 2.
+  // DPR emulation alone is not a browser-zoom or text-zoom assertion.
+  await cdp.send("Emulation.setDeviceMetricsOverride", {
+    width: 720,
+    height: 600,
+    deviceScaleFactor: 2,
+    mobile: false,
+  });
+  const bookUrl = `http://127.0.0.1:${address.port}/book/`;
+  const navigation = await cdp.send("Page.navigate", { url: bookUrl });
+  assert.equal(navigation.errorText, undefined);
+  const deadline = Date.now() + 20_000;
+  let ready = false;
+  while (Date.now() < deadline) {
+    const result = await cdp.send("Runtime.evaluate", {
+      expression: `document.readyState === "complete" && document.querySelectorAll(".book-actions > *").length === 4`,
+      returnByValue: true,
+    });
+    ready = result.result?.value === true;
+    if (ready) break;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  assert.equal(ready, true, "Web-book actions did not render in the 720 CSS pixel lane");
+  const denseViewport = (await cdp.send("Runtime.evaluate", {
+    expression: `(() => {
+      const root = document.documentElement;
+      const actions = document.querySelector('.book-actions');
+      const bounds = actions?.getBoundingClientRect();
+      const controls = [...(actions?.children ?? [])].map((control) => {
+        const rect = control.getBoundingClientRect();
+        return { left: rect.left, right: rect.right };
+      });
+      return {
+        clientWidth: root.clientWidth,
+        scrollWidth: root.scrollWidth,
+        devicePixelRatio,
+        actions: bounds && { left: bounds.left, right: bounds.right },
+        controls,
+      };
+    })()`,
+    returnByValue: true,
+  })).result?.value;
+  assert.equal(denseViewport.devicePixelRatio, 2, JSON.stringify(denseViewport));
+  assert.ok(denseViewport.actions, JSON.stringify(denseViewport));
+  assert.ok(
+    denseViewport.actions.left >= 0 && denseViewport.actions.right <= denseViewport.clientWidth,
+    JSON.stringify(denseViewport),
+  );
+  assert.equal(
+    denseViewport.controls.every(
+      (control) => control.left >= 0 && control.right <= denseViewport.clientWidth,
+    ),
+    true,
+    JSON.stringify(denseViewport),
+  );
+  assert.ok(
+    denseViewport.scrollWidth <= denseViewport.clientWidth,
+    JSON.stringify(denseViewport),
+  );
+}
+
 async function assertMobilePortalSurface(cdp, address) {
   await cdp.send("Emulation.setDeviceMetricsOverride", {
     width: 375,
@@ -203,8 +298,8 @@ async function assertMobilePortalSurface(cdp, address) {
   assert.ok(snapshot.contrast.funnelIndex >= 4.5, JSON.stringify(snapshot));
 }
 
-test("browser rendering keeps Mermaid stable and mobile language access viewport-bound", {
-  timeout: 120_000,
+test("browser rendering keeps Mermaid stable and publication controls reflowing", {
+  timeout: 150_000,
 }, async () => {
   const browser = await firstExistingChromium();
   const debugPort = await reserveLocalPort();
@@ -287,6 +382,7 @@ test("browser rendering keeps Mermaid stable and mobile language access viewport
     assert.equal(stable.rendered, stable.diagrams);
     assert.deepEqual(stable.svgIds, first.svgIds, "Mermaid SVG identity changed after readiness");
 
+    await assertBookReflowSurface(cdp, address);
     await assertMobilePortalSurface(cdp, address);
   } finally {
     cdp?.socket.close();

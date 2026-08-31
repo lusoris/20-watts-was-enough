@@ -2012,6 +2012,10 @@ button {
   max-width: 78ch;
 }
 
+.book-prose li {
+  overflow-wrap: anywhere;
+}
+
 .book-prose h1,
 .book-prose h2,
 .book-prose h3,
