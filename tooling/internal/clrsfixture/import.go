@@ -24,7 +24,8 @@ const (
 	LengthFixedFourEndpoints LengthSemantics = "fixed_four_endpoints"
 )
 
-// ImportLimits are safety caps, not selected experiment sizes or sample counts.
+// ImportLimits are caller safety caps. The generation contract can only narrow
+// them; it cannot enlarge them.
 type ImportLimits struct {
 	MaxDatasetBytes   int64
 	MaxExamples       int
@@ -39,7 +40,9 @@ type CandidateExample struct {
 	ID                 CandidateID
 	Authority          string
 	Source             SourceID
-	Task               string
+	Contract           ContractID
+	OutputRelativePath string
+	Task               TaskKind
 	Ordinal            uint64
 	Prompt             string
 	LengthSemantics    LengthSemantics
@@ -54,26 +57,40 @@ type VerifierExample struct {
 	ID          VerifierID
 	Authority   string
 	Source      SourceID
+	Contract    ContractID
 	CandidateID CandidateID
 	Reference   string
 }
 
 // CandidateSet contains only values safe to send across a candidate seam.
 type CandidateSet struct {
-	Authority       string
-	Source          SourceID
-	DatasetName     string
-	Task            string
-	LengthSemantics LengthSemantics
-	Examples        []CandidateExample
+	Authority          string
+	Source             SourceID
+	Contract           ContractID
+	OutputRelativePath string
+	DatasetName        string
+	Task               TaskKind
+	LengthSemantics    LengthSemantics
+	Examples           []CandidateExample
 }
 
 // VerifierSet contains the exact answers for a separate verifier boundary.
 type VerifierSet struct {
-	Authority   string
-	Source      SourceID
-	DatasetName string
-	Examples    []VerifierExample
+	Authority          string
+	Source             SourceID
+	Contract           ContractID
+	OutputRelativePath string
+	DatasetName        string
+	Task               TaskKind
+	LengthSemantics    LengthSemantics
+	Examples           []VerifierExample
+}
+
+// PairedExample is returned only after both separated records have been
+// validated against their source-bound generation contract.
+type PairedExample struct {
+	Candidate CandidateExample
+	Verifier  VerifierExample
 }
 
 type upstreamDataset struct {
@@ -102,25 +119,48 @@ type checkedExample struct {
 	useHints        bool
 }
 
-// ImportDataset splits one exact upstream JSON file into candidate and verifier
-// views. It does not select tasks, lengths, seeds, splits, or sample counts.
+type contractScope struct {
+	sourceID   SourceID
+	contractID ContractID
+	plan       GenerationPlan
+	task       TaskPlan
+}
+
+type importScope struct {
+	contractScope
+	maxDatasetBytes   int64
+	maxPromptBytes    int
+	maxReferenceBytes int
+	maxDeclaredLength int64
+}
+
+type cellKey struct {
+	length int64
+	seed   int64
+}
+
+type cellCounter struct {
+	allowed map[cellKey]int
+	seen    map[cellKey]int
+	task    TaskPlan
+	plan    GenerationPlan
+}
+
+// ImportDataset splits the one exact task file selected by outputRelativePath
+// into candidate and verifier views. Task, length, seed, hint, and sample-count
+// authority comes only from the validated generation contract.
 func ImportDataset(
 	reader io.Reader,
 	source SourceRecord,
-	semantics LengthSemantics,
+	contract GenerationContract,
+	outputRelativePath string,
 	limits ImportLimits,
 ) (CandidateSet, VerifierSet, error) {
-	if err := limits.Validate(); err != nil {
+	scope, err := newImportScope(source, contract, outputRelativePath, limits)
+	if err != nil {
 		return CandidateSet{}, VerifierSet{}, err
 	}
-	sourceID, err := source.Identity()
-	if err != nil {
-		return CandidateSet{}, VerifierSet{}, fmt.Errorf("validate CLRS import source: %w", err)
-	}
-	if !validLengthSemantics(semantics) {
-		return CandidateSet{}, VerifierSet{}, fmt.Errorf("unsupported CLRS length semantics %q", semantics)
-	}
-	body, err := readBounded(reader, limits.MaxDatasetBytes)
+	body, err := readBounded(reader, scope.maxDatasetBytes)
 	if err != nil {
 		return CandidateSet{}, VerifierSet{}, fmt.Errorf("read CLRS dataset: %w", err)
 	}
@@ -128,26 +168,109 @@ func ImportDataset(
 	if err := decodeStrict(body, 5, &dataset); err != nil {
 		return CandidateSet{}, VerifierSet{}, fmt.Errorf("parse CLRS dataset: %w", err)
 	}
-	task, err := validateDatasetName(dataset.Name)
-	if err != nil {
-		return CandidateSet{}, VerifierSet{}, err
+	expectedName := datasetName(scope.task.Task)
+	if dataset.Name != expectedName {
+		return CandidateSet{}, VerifierSet{}, fmt.Errorf("CLRS dataset name = %q, want %q for %s", dataset.Name, expectedName, outputRelativePath)
 	}
-	if len(dataset.Examples) == 0 || len(dataset.Examples) > limits.MaxExamples {
-		return CandidateSet{}, VerifierSet{}, fmt.Errorf("CLRS example count = %d, want 1..%d", len(dataset.Examples), limits.MaxExamples)
+	if len(dataset.Examples) != scope.task.ExpectedExamples {
+		return CandidateSet{}, VerifierSet{}, fmt.Errorf(
+			"CLRS example count = %d, want exactly %d for %s",
+			len(dataset.Examples), scope.task.ExpectedExamples, outputRelativePath,
+		)
 	}
-	candidates := newCandidateSet(sourceID, dataset.Name, task, semantics, len(dataset.Examples))
-	verifiers := newVerifierSet(sourceID, dataset.Name, len(dataset.Examples))
+
+	candidates := newCandidateSet(scope.contractScope, dataset.Name, len(dataset.Examples))
+	verifiers := newVerifierSet(scope.contractScope, dataset.Name, len(dataset.Examples))
+	cells := newCellCounter(scope.contractScope)
 	for index, raw := range dataset.Examples {
-		checked, checkErr := checkExample(raw, task, semantics, limits)
+		checked, checkErr := checkUpstreamExample(raw, scope)
 		if checkErr != nil {
 			return CandidateSet{}, VerifierSet{}, fmt.Errorf("validate CLRS example %d: %w", index, checkErr)
 		}
-		candidate := makeCandidate(sourceID, dataset.Name, task, semantics, uint64(index), checked)
-		verifier := makeVerifier(sourceID, candidate.ID, checked.reference)
+		if checkErr := cells.observe(checked.requestedLength, checked.seed); checkErr != nil {
+			return CandidateSet{}, VerifierSet{}, fmt.Errorf("validate CLRS example %d: %w", index, checkErr)
+		}
+		candidate := makeCandidate(scope.contractScope, dataset.Name, uint64(index), checked)
+		verifier := makeVerifier(scope.contractScope, candidate.ID, checked.reference)
 		candidates.Examples = append(candidates.Examples, candidate)
 		verifiers.Examples = append(verifiers.Examples, verifier)
 	}
+	if err := cells.complete(); err != nil {
+		return CandidateSet{}, VerifierSet{}, err
+	}
+	if _, err := PairExamples(source, contract, outputRelativePath, candidates, verifiers); err != nil {
+		return CandidateSet{}, VerifierSet{}, fmt.Errorf("validate imported CLRS records: %w", err)
+	}
 	return candidates, verifiers, nil
+}
+
+// PairExamples validates both separated sets against the caller's exact
+// contract-selected output path, recomputes every identity, and returns
+// verifier records in candidate order. It rejects identity-inconsistent,
+// missing, duplicate, foreign, or contract-incomplete records.
+func PairExamples(
+	source SourceRecord,
+	contract GenerationContract,
+	outputRelativePath string,
+	candidates CandidateSet,
+	verifiers VerifierSet,
+) ([]PairedExample, error) {
+	scope, err := newContractScope(source, contract, outputRelativePath)
+	if err != nil {
+		return nil, err
+	}
+	if err := validateCandidateSetMetadata(scope, candidates); err != nil {
+		return nil, err
+	}
+	if err := validateVerifierSetMetadata(scope, verifiers); err != nil {
+		return nil, err
+	}
+	if len(candidates.Examples) != scope.task.ExpectedExamples {
+		return nil, fmt.Errorf("CLRS candidate count = %d, want exactly %d", len(candidates.Examples), scope.task.ExpectedExamples)
+	}
+	if len(verifiers.Examples) != scope.task.ExpectedExamples {
+		return nil, fmt.Errorf("CLRS verifier count = %d, want exactly %d", len(verifiers.Examples), scope.task.ExpectedExamples)
+	}
+
+	byCandidate := make(map[CandidateID]VerifierExample, len(verifiers.Examples))
+	for index, verifier := range verifiers.Examples {
+		if err := validateVerifierRecord(scope, verifier); err != nil {
+			return nil, fmt.Errorf("validate CLRS verifier %d: %w", index, err)
+		}
+		if _, exists := byCandidate[verifier.CandidateID]; exists {
+			return nil, fmt.Errorf("CLRS verifier %d duplicates candidate identity %s", index, verifier.CandidateID.String())
+		}
+		byCandidate[verifier.CandidateID] = verifier
+	}
+
+	cells := newCellCounter(scope)
+	seenCandidates := make(map[CandidateID]struct{}, len(candidates.Examples))
+	pairs := make([]PairedExample, 0, len(candidates.Examples))
+	for index, candidate := range candidates.Examples {
+		if err := validateCandidateRecord(scope, candidates.DatasetName, uint64(index), candidate); err != nil {
+			return nil, fmt.Errorf("validate CLRS candidate %d: %w", index, err)
+		}
+		if _, exists := seenCandidates[candidate.ID]; exists {
+			return nil, fmt.Errorf("CLRS candidate %d duplicates identity %s", index, candidate.ID.String())
+		}
+		seenCandidates[candidate.ID] = struct{}{}
+		if err := cells.observe(candidate.RequestedLength, candidate.Seed); err != nil {
+			return nil, fmt.Errorf("validate CLRS candidate %d: %w", index, err)
+		}
+		verifier, exists := byCandidate[candidate.ID]
+		if !exists {
+			return nil, fmt.Errorf("CLRS candidate %d has no verifier", index)
+		}
+		pairs = append(pairs, PairedExample{Candidate: candidate, Verifier: verifier})
+		delete(byCandidate, candidate.ID)
+	}
+	if err := cells.complete(); err != nil {
+		return nil, err
+	}
+	if len(byCandidate) != 0 {
+		return nil, fmt.Errorf("CLRS verifier set contains %d foreign candidate bindings", len(byCandidate))
+	}
+	return pairs, nil
 }
 
 // Validate rejects limits that are non-positive or too large to remain useful
@@ -169,102 +292,214 @@ func (limits ImportLimits) Validate() error {
 	return nil
 }
 
-func checkExample(raw upstreamExample, task string, semantics LengthSemantics, limits ImportLimits) (checkedExample, error) {
-	if raw.Prompt == "" || len(raw.Prompt) > limits.MaxPromptBytes || strings.IndexByte(raw.Prompt, 0) >= 0 {
-		return checkedExample{}, fmt.Errorf("prompt must contain 1..%d non-NUL bytes", limits.MaxPromptBytes)
+func newImportScope(
+	source SourceRecord,
+	contract GenerationContract,
+	outputRelativePath string,
+	limits ImportLimits,
+) (importScope, error) {
+	if err := limits.Validate(); err != nil {
+		return importScope{}, err
 	}
-	if !strings.HasPrefix(raw.Prompt, task+":\n") {
-		return checkedExample{}, fmt.Errorf("prompt does not bind dataset task %q", task)
+	scope, err := newContractScope(source, contract, outputRelativePath)
+	if err != nil {
+		return importScope{}, err
+	}
+	if limits.MaxExamples < scope.task.ExpectedExamples {
+		return importScope{}, fmt.Errorf(
+			"CLRS caller example limit = %d, below required task count %d",
+			limits.MaxExamples, scope.task.ExpectedExamples,
+		)
+	}
+	for _, size := range scope.task.Sizes {
+		if size.RequestedLength > limits.MaxDeclaredLength {
+			return importScope{}, fmt.Errorf(
+				"CLRS caller declared-length limit = %d, below selected length %d",
+				limits.MaxDeclaredLength, size.RequestedLength,
+			)
+		}
+	}
+	return importScope{
+		contractScope:     scope,
+		maxDatasetBytes:   smallerInt64(limits.MaxDatasetBytes, scope.plan.Output.MaxDatasetBytes),
+		maxPromptBytes:    smallerInt(limits.MaxPromptBytes, scope.plan.Output.MaxPromptBytes),
+		maxReferenceBytes: smallerInt(limits.MaxReferenceBytes, scope.plan.Output.MaxReferenceBytes),
+		maxDeclaredLength: smallerInt64(limits.MaxDeclaredLength, scope.plan.Output.MaxRequestedLength),
+	}, nil
+}
+
+func newContractScope(
+	source SourceRecord,
+	contract GenerationContract,
+	outputRelativePath string,
+) (contractScope, error) {
+	plan, err := contract.Plan(source)
+	if err != nil {
+		return contractScope{}, fmt.Errorf("validate CLRS import contract: %w", err)
+	}
+	for _, task := range plan.Tasks {
+		if outputRelativePath == task.OutputRelativePath {
+			return contractScope{
+				sourceID:   plan.SourceID,
+				contractID: plan.ContractID,
+				plan:       plan,
+				task:       task,
+			}, nil
+		}
+	}
+	return contractScope{}, fmt.Errorf("CLRS output path %q is not selected by the generation contract", outputRelativePath)
+}
+
+func checkUpstreamExample(raw upstreamExample, scope importScope) (checkedExample, error) {
+	if err := validatePrompt(raw.Prompt, scope.task.Task, scope.maxPromptBytes); err != nil {
+		return checkedExample{}, err
 	}
 	if len(raw.References) != 1 {
 		return checkedExample{}, fmt.Errorf("reference count = %d, want exactly 1", len(raw.References))
 	}
-	reference := raw.References[0]
-	if reference == "" || len(reference) > limits.MaxReferenceBytes || strings.IndexByte(reference, 0) >= 0 {
-		return checkedExample{}, fmt.Errorf("reference must contain 1..%d non-NUL bytes", limits.MaxReferenceBytes)
+	if err := validateReference(raw.References[0], scope.maxReferenceBytes); err != nil {
+		return checkedExample{}, err
 	}
 	if raw.Auxiliary.Length == nil || raw.Auxiliary.Seed == nil || raw.Auxiliary.UseHints == nil {
 		return checkedExample{}, errors.New("auxiliary length, seed, and use_hints are all required")
 	}
-	if *raw.Auxiliary.Length <= 0 || *raw.Auxiliary.Length > limits.MaxDeclaredLength {
-		return checkedExample{}, fmt.Errorf("declared length = %d, want 1..%d", *raw.Auxiliary.Length, limits.MaxDeclaredLength)
+	if *raw.Auxiliary.Length <= 0 || *raw.Auxiliary.Length > scope.maxDeclaredLength {
+		return checkedExample{}, fmt.Errorf("declared length = %d, want 1..%d", *raw.Auxiliary.Length, scope.maxDeclaredLength)
 	}
 	if *raw.Auxiliary.Seed < math.MinInt32 || *raw.Auxiliary.Seed > math.MaxInt32 {
 		return checkedExample{}, errors.New("seed is outside the upstream signed 32-bit range")
 	}
-	effectiveSize := *raw.Auxiliary.Length
-	if semantics == LengthFixedFourEndpoints {
-		effectiveSize = 4
+	if *raw.Auxiliary.UseHints != scope.plan.UseHints {
+		return checkedExample{}, fmt.Errorf("use_hints = %t, want contract value %t", *raw.Auxiliary.UseHints, scope.plan.UseHints)
+	}
+	effectiveSize, err := effectiveInputSize(*raw.Auxiliary.Length, scope.task.LengthSemantics)
+	if err != nil {
+		return checkedExample{}, err
 	}
 	return checkedExample{
 		requestedLength: *raw.Auxiliary.Length,
 		effectiveSize:   effectiveSize,
 		seed:            *raw.Auxiliary.Seed,
 		prompt:          raw.Prompt,
-		reference:       reference,
+		reference:       raw.References[0],
 		useHints:        *raw.Auxiliary.UseHints,
 	}, nil
 }
 
-func validateDatasetName(name string) (string, error) {
-	const prefix = "clrs_text_"
-	if !strings.HasPrefix(name, prefix) {
-		return "", fmt.Errorf("CLRS dataset name %q lacks %q prefix", name, prefix)
+func validatePrompt(prompt string, task TaskKind, maximumBytes int) error {
+	if prompt == "" || len(prompt) > maximumBytes || strings.IndexByte(prompt, 0) >= 0 {
+		return fmt.Errorf("prompt must contain 1..%d non-NUL bytes", maximumBytes)
 	}
-	task := strings.TrimPrefix(name, prefix)
-	if len(task) == 0 || len(task) > 64 {
-		return "", fmt.Errorf("CLRS task name length = %d, want 1..64", len(task))
+	if !strings.HasPrefix(prompt, string(task)+":\n") {
+		return fmt.Errorf("prompt does not bind contract task %q", task)
 	}
-	previousUnderscore := false
-	for index, character := range []byte(task) {
-		letter := character >= 'a' && character <= 'z'
-		digit := character >= '0' && character <= '9'
-		underscore := character == '_'
-		if !letter && !(index > 0 && digit) && !(index > 0 && underscore && !previousUnderscore && index < len(task)-1) {
-			return "", fmt.Errorf("CLRS task name %q is not lowercase snake case", task)
+	return nil
+}
+
+func validateReference(reference string, maximumBytes int) error {
+	if reference == "" || len(reference) > maximumBytes || strings.IndexByte(reference, 0) >= 0 {
+		return fmt.Errorf("reference must contain 1..%d non-NUL bytes", maximumBytes)
+	}
+	return nil
+}
+
+func effectiveInputSize(requestedLength int64, semantics LengthSemantics) (int64, error) {
+	switch semantics {
+	case LengthDeclaredInput:
+		return requestedLength, nil
+	case LengthFixedFourEndpoints:
+		return 4, nil
+	default:
+		return 0, fmt.Errorf("unsupported CLRS length semantics %q", semantics)
+	}
+}
+
+func newCellCounter(scope contractScope) cellCounter {
+	allowed := make(map[cellKey]int, len(scope.task.Sizes)*len(scope.plan.Seeds))
+	for _, size := range scope.task.Sizes {
+		for _, seed := range scope.plan.Seeds {
+			allowed[cellKey{length: size.RequestedLength, seed: seed}] = scope.plan.SamplesPerCell
 		}
-		previousUnderscore = underscore
 	}
-	return task, nil
+	return cellCounter{
+		allowed: allowed,
+		seen:    make(map[cellKey]int, len(allowed)),
+		task:    scope.task,
+		plan:    scope.plan,
+	}
 }
 
-func validLengthSemantics(semantics LengthSemantics) bool {
-	return semantics == LengthDeclaredInput || semantics == LengthFixedFourEndpoints
+func (counter *cellCounter) observe(length, seed int64) error {
+	key := cellKey{length: length, seed: seed}
+	allowed, selected := counter.allowed[key]
+	if !selected {
+		return fmt.Errorf("length/seed cell (%d, %d) is not selected by the generation contract", length, seed)
+	}
+	counter.seen[key]++
+	if counter.seen[key] > allowed {
+		return fmt.Errorf(
+			"length/seed cell (%d, %d) multiplicity = %d, want %d",
+			length, seed, counter.seen[key], allowed,
+		)
+	}
+	return nil
 }
 
-func newCandidateSet(source SourceID, datasetName, task string, semantics LengthSemantics, capacity int) CandidateSet {
+func (counter cellCounter) complete() error {
+	for _, size := range counter.task.Sizes {
+		for _, seed := range counter.plan.Seeds {
+			key := cellKey{length: size.RequestedLength, seed: seed}
+			if counter.seen[key] != counter.allowed[key] {
+				return fmt.Errorf(
+					"length/seed cell (%d, %d) multiplicity = %d, want %d",
+					key.length, key.seed, counter.seen[key], counter.allowed[key],
+				)
+			}
+		}
+	}
+	return nil
+}
+
+func newCandidateSet(scope contractScope, datasetName string, capacity int) CandidateSet {
 	return CandidateSet{
-		Authority:       ResultAuthority,
-		Source:          source,
-		DatasetName:     datasetName,
-		Task:            task,
-		LengthSemantics: semantics,
-		Examples:        make([]CandidateExample, 0, capacity),
+		Authority:          ResultAuthority,
+		Source:             scope.sourceID,
+		Contract:           scope.contractID,
+		OutputRelativePath: scope.task.OutputRelativePath,
+		DatasetName:        datasetName,
+		Task:               scope.task.Task,
+		LengthSemantics:    scope.task.LengthSemantics,
+		Examples:           make([]CandidateExample, 0, capacity),
 	}
 }
 
-func newVerifierSet(source SourceID, datasetName string, capacity int) VerifierSet {
+func newVerifierSet(scope contractScope, datasetName string, capacity int) VerifierSet {
 	return VerifierSet{
-		Authority:   ResultAuthority,
-		Source:      source,
-		DatasetName: datasetName,
-		Examples:    make([]VerifierExample, 0, capacity),
+		Authority:          ResultAuthority,
+		Source:             scope.sourceID,
+		Contract:           scope.contractID,
+		OutputRelativePath: scope.task.OutputRelativePath,
+		DatasetName:        datasetName,
+		Task:               scope.task.Task,
+		LengthSemantics:    scope.task.LengthSemantics,
+		Examples:           make([]VerifierExample, 0, capacity),
 	}
 }
 
 func makeCandidate(
-	source SourceID,
+	scope contractScope,
 	datasetName string,
-	task string,
-	semantics LengthSemantics,
 	ordinal uint64,
 	example checkedExample,
 ) CandidateExample {
-	builder := newIdentityBuilder("20w/clrs-candidate/v1")
-	builder.addBytes(source[:])
+	builder := newIdentityBuilder("20w/clrs-candidate/v2")
+	builder.addString(ResultAuthority)
+	builder.addBytes(scope.sourceID[:])
+	builder.addBytes(scope.contractID[:])
+	builder.addString(scope.task.OutputRelativePath)
 	builder.addString(datasetName)
-	builder.addString(task)
-	builder.addString(string(semantics))
+	builder.addString(string(scope.task.Task))
+	builder.addString(string(scope.task.LengthSemantics))
 	builder.addUint64(ordinal)
 	builder.addInt64(example.requestedLength)
 	builder.addInt64(example.effectiveSize)
@@ -274,11 +509,13 @@ func makeCandidate(
 	return CandidateExample{
 		ID:                 CandidateID(builder.sum()),
 		Authority:          ResultAuthority,
-		Source:             source,
-		Task:               task,
+		Source:             scope.sourceID,
+		Contract:           scope.contractID,
+		OutputRelativePath: scope.task.OutputRelativePath,
+		Task:               scope.task.Task,
 		Ordinal:            ordinal,
 		Prompt:             example.prompt,
-		LengthSemantics:    semantics,
+		LengthSemantics:    scope.task.LengthSemantics,
 		RequestedLength:    example.requestedLength,
 		EffectiveInputSize: example.effectiveSize,
 		Seed:               example.seed,
@@ -286,16 +523,122 @@ func makeCandidate(
 	}
 }
 
-func makeVerifier(source SourceID, candidateID CandidateID, reference string) VerifierExample {
-	builder := newIdentityBuilder("20w/clrs-verifier/v1")
-	builder.addBytes(source[:])
+func makeVerifier(
+	scope contractScope,
+	candidateID CandidateID,
+	reference string,
+) VerifierExample {
+	builder := newIdentityBuilder("20w/clrs-verifier/v2")
+	builder.addString(ResultAuthority)
+	builder.addBytes(scope.sourceID[:])
+	builder.addBytes(scope.contractID[:])
 	builder.addBytes(candidateID[:])
 	builder.addString(reference)
 	return VerifierExample{
 		ID:          VerifierID(builder.sum()),
 		Authority:   ResultAuthority,
-		Source:      source,
+		Source:      scope.sourceID,
+		Contract:    scope.contractID,
 		CandidateID: candidateID,
 		Reference:   reference,
 	}
+}
+
+func validateCandidateSetMetadata(scope contractScope, set CandidateSet) error {
+	if set.Authority != ResultAuthority {
+		return fmt.Errorf("CLRS candidate authority = %q, want %q", set.Authority, ResultAuthority)
+	}
+	if set.Source != scope.sourceID || set.Contract != scope.contractID {
+		return errors.New("CLRS candidate set source or contract identity is foreign")
+	}
+	if set.OutputRelativePath != scope.task.OutputRelativePath ||
+		set.DatasetName != datasetName(scope.task.Task) ||
+		set.Task != scope.task.Task ||
+		set.LengthSemantics != scope.task.LengthSemantics {
+		return errors.New("CLRS candidate set metadata does not match the selected contract task")
+	}
+	return nil
+}
+
+func validateVerifierSetMetadata(scope contractScope, set VerifierSet) error {
+	if set.Authority != ResultAuthority {
+		return fmt.Errorf("CLRS verifier authority = %q, want %q", set.Authority, ResultAuthority)
+	}
+	if set.Source != scope.sourceID || set.Contract != scope.contractID {
+		return errors.New("CLRS verifier set source or contract identity is foreign")
+	}
+	if set.OutputRelativePath != scope.task.OutputRelativePath ||
+		set.DatasetName != datasetName(scope.task.Task) ||
+		set.Task != scope.task.Task ||
+		set.LengthSemantics != scope.task.LengthSemantics {
+		return errors.New("CLRS verifier set metadata does not match the selected contract task")
+	}
+	return nil
+}
+
+func validateCandidateRecord(
+	scope contractScope,
+	datasetName string,
+	ordinal uint64,
+	candidate CandidateExample,
+) error {
+	if candidate.RequestedLength <= 0 || candidate.RequestedLength > scope.plan.Output.MaxRequestedLength {
+		return fmt.Errorf(
+			"declared length = %d, want 1..%d",
+			candidate.RequestedLength, scope.plan.Output.MaxRequestedLength,
+		)
+	}
+	if candidate.Seed < math.MinInt32 || candidate.Seed > math.MaxInt32 {
+		return errors.New("seed is outside the upstream signed 32-bit range")
+	}
+	if candidate.UseHints != scope.plan.UseHints {
+		return fmt.Errorf("use_hints = %t, want contract value %t", candidate.UseHints, scope.plan.UseHints)
+	}
+	if err := validatePrompt(candidate.Prompt, scope.task.Task, scope.plan.Output.MaxPromptBytes); err != nil {
+		return err
+	}
+	effectiveSize, err := effectiveInputSize(candidate.RequestedLength, scope.task.LengthSemantics)
+	if err != nil {
+		return err
+	}
+	expected := makeCandidate(scope, datasetName, ordinal, checkedExample{
+		requestedLength: candidate.RequestedLength,
+		effectiveSize:   effectiveSize,
+		seed:            candidate.Seed,
+		prompt:          candidate.Prompt,
+		useHints:        candidate.UseHints,
+	})
+	if candidate != expected {
+		return errors.New("candidate record or identity does not match its contract-bound contents")
+	}
+	return nil
+}
+
+func validateVerifierRecord(scope contractScope, verifier VerifierExample) error {
+	if err := validateReference(verifier.Reference, scope.plan.Output.MaxReferenceBytes); err != nil {
+		return err
+	}
+	expected := makeVerifier(scope, verifier.CandidateID, verifier.Reference)
+	if verifier != expected {
+		return errors.New("verifier record or identity does not match its contract-bound contents")
+	}
+	return nil
+}
+
+func datasetName(task TaskKind) string {
+	return "clrs_text_" + string(task)
+}
+
+func smallerInt(left, right int) int {
+	if left < right {
+		return left
+	}
+	return right
+}
+
+func smallerInt64(left, right int64) int64 {
+	if left < right {
+		return left
+	}
+	return right
 }
