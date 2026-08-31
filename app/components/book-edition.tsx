@@ -41,6 +41,41 @@ function documentHeadingId(path: string, headingId: string) {
   return `${bookId(path)}--${headingId}`;
 }
 
+function useBookFragmentRestoration() {
+  useEffect(() => {
+    let frame = 0;
+    const restoreFragment = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const target = window.location.hash.slice(1);
+        if (target) window.document.getElementById(target)?.scrollIntoView();
+      });
+    };
+
+    restoreFragment();
+    window.addEventListener("hashchange", restoreFragment);
+    return () => {
+      window.removeEventListener("hashchange", restoreFragment);
+      window.cancelAnimationFrame(frame);
+    };
+  }, []);
+}
+
+function navigateFromBook(
+  path: string,
+  hash: string,
+  bookDocumentPaths: Set<string>,
+  externalHref: (path: string, hash?: string) => string,
+) {
+  if (bookDocumentPaths.has(path)) {
+    window.location.assign(
+      hash ? `#${documentHeadingId(path, hash)}` : `#${bookId(path)}`,
+    );
+    return;
+  }
+  window.location.assign(externalHref(path, hash));
+}
+
 function BookDocumentArticle({
   document: researchDocument,
   navigate,
@@ -66,13 +101,6 @@ function BookDocumentArticle({
       heading.dataset.bookLegacyHeadingId = legacyId;
       heading.id = documentHeadingId(researchDocument.path, legacyId);
     }
-
-    const target = window.location.hash.slice(1);
-    if (!target.startsWith(`${bookId(researchDocument.path)}--`)) return;
-    const frame = window.requestAnimationFrame(() => {
-      window.document.getElementById(target)?.scrollIntoView();
-    });
-    return () => window.cancelAnimationFrame(frame);
   }, [researchDocument.body, researchDocument.path]);
 
   return (
@@ -150,9 +178,9 @@ export function BookEdition({
     (sum, document) => sum + document.words,
     0,
   );
-  const navigate = (path: string, hash = "") => {
-    window.location.assign(surfaceDocumentHref(path, hash));
-  };
+  useBookFragmentRestoration();
+  const navigate = (path: string, hash = "") =>
+    navigateFromBook(path, hash, bookDocumentPaths, surfaceDocumentHref);
   const bookHref = (path: string, hash: string) => {
     if (bookDocumentPaths.has(path)) {
       return hash ? `#${documentHeadingId(path, hash)}` : `#${bookId(path)}`;

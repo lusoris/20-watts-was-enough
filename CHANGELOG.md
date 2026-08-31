@@ -134,6 +134,11 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Continuous-book deep links now restore every chapter and heading below the
+  responsive action bar on cold load and later hash navigation. Internal book
+  links remain in the namespaced edition while preserving the current Pages
+  base path, query and route; a real-browser desktop/mobile regression guards
+  the observable clearance.
 - The page-27 biomimetic-transfer figure now uses a print-safe vertical flow.
   Print hides the screen-only overflow cue and resets the diagram caption from
   sticky positioning so the caption stays with the figure before the following

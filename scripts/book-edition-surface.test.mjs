@@ -138,14 +138,27 @@ test("the book manifest must carry the package version and explicit source ref",
   );
 });
 
-test("the book namespaces heading fragments while retaining document anchors", async () => {
-  const edition = await source("app/components/book-edition.tsx");
+test("the book namespaces and restores fragments while retaining document anchors", async () => {
+  const [edition, stylesheet] = await Promise.all([
+    source("app/components/book-edition.tsx"),
+    source("app/globals.css"),
+  ]);
 
   assert.match(edition, /function documentHeadingId\(path: string, headingId: string\)/);
   assert.match(edition, /heading\.dataset\.bookLegacyHeadingId \?\? heading\.id/);
   assert.match(edition, /heading\.id = documentHeadingId\(researchDocument\.path, legacyId\)/);
   assert.match(edition, /return hash \? `#\$\{documentHeadingId\(path, hash\)\}` : `#\$\{bookId\(path\)\}`/);
   assert.match(edition, /id=\{bookId\(document\.path\)\}/);
+  assert.match(edition, /window\.addEventListener\("hashchange", restoreFragment\)/);
+  assert.match(edition, /window\.removeEventListener\("hashchange", restoreFragment\)/);
+  assert.match(
+    edition,
+    /if \(bookDocumentPaths\.has\(path\)\) \{[\s\S]*window\.location\.assign\([\s\S]*documentHeadingId\(path, hash\)/,
+  );
+  assert.match(
+    stylesheet,
+    /\.book-shell-web \.book-document,[\s\S]*\.book-prose h6 \{\s*scroll-margin-top:\s*96px;/,
+  );
 });
 
 test("the web book defers media work while PDF rendering stays eager", async () => {

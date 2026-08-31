@@ -48,7 +48,7 @@
     "test:workstation": "node --test --experimental-test-isolation=none --test-concurrency=1 experiments/workstation/*.test.mjs experiments/workstation/**/*.test.mjs",
     "test:workstation:core": "node --test --experimental-test-isolation=none --test-concurrency=1 experiments/workstation/*.test.mjs experiments/workstation/lib/*.test.mjs",
     "test:readiness": "node --test --experimental-test-isolation=none scripts/readiness-summary.test.mjs",
-    "test:site": "node --test --experimental-test-isolation=none scripts/book-route.test.mjs scripts/book-edition-surface.test.mjs scripts/github-pages.test.mjs scripts/language-access.test.mjs scripts/mermaid-browser.test.mjs scripts/pages-base.test.mjs scripts/pages-seo.test.mjs scripts/prepare-reader-artifacts.test.mjs scripts/publication-unification.test.mjs",
+    "test:site": "node --test --experimental-test-isolation=none scripts/book-route.test.mjs scripts/book-edition-surface.test.mjs scripts/book-fragment-browser.test.mjs scripts/github-pages.test.mjs scripts/language-access.test.mjs scripts/mermaid-browser.test.mjs scripts/pages-base.test.mjs scripts/pages-seo.test.mjs scripts/prepare-reader-artifacts.test.mjs scripts/publication-unification.test.mjs",
     "validate:translations": "node scripts/validate-translations.mjs",
     "test:translations": "node --test --experimental-test-isolation=none scripts/translation-manifest.test.mjs scripts/translation-pages.test.mjs scripts/translation-vite-build.test.mjs",
     "validate:site-build": "node scripts/validate-github-pages-build.mjs",
