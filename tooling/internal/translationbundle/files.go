@@ -33,6 +33,32 @@ type ImportOptions struct {
 	OutputDirectory        string
 }
 
+// ValidateOptions selects one returned bundle and its expected canonical identity.
+type ValidateOptions struct {
+	RepositoryRoot         string
+	InputPath              string
+	ExpectedSourcePath     string
+	ExpectedTargetLanguage string
+}
+
+// ValidationResult reports the checked identities without granting publication authority.
+type ValidationResult struct {
+	BundleSHA256       string
+	SourcePath         string
+	SourceSHA256       string
+	TargetLanguage     string
+	TargetSHA256       string
+	UnresolvedGlossary int
+	DraftingMode       string
+	ReviewStatus       string
+}
+
+type validatedCandidate struct {
+	root   string
+	bundle Bundle
+	body   []byte
+}
+
 // ImportResult reports exact candidate artifact identities.
 type ImportResult struct {
 	MarkdownPath       string
@@ -80,53 +106,48 @@ func ExportCandidate(options ExportOptions) (Bundle, error) {
 	return bundle, nil
 }
 
-// ImportCandidate validates a returned bundle against current Git source and
+// ValidateCandidate checks a returned bundle against current canonical source without
+// writing candidate artifacts or changing translation publication authority.
+func ValidateCandidate(options ValidateOptions) (ValidationResult, error) {
+	candidate, err := validateReturnedCandidate(options)
+	if err != nil {
+		return ValidationResult{}, err
+	}
+	return ValidationResult{
+		BundleSHA256:       digest(candidate.body),
+		SourcePath:         candidate.bundle.Source.Path,
+		SourceSHA256:       candidate.bundle.Source.SHA256,
+		TargetLanguage:     candidate.bundle.Target.Language,
+		TargetSHA256:       digest([]byte(candidate.bundle.Target.Markdown)),
+		UnresolvedGlossary: countUnresolvedGlossary(candidate.bundle.Glossary),
+		DraftingMode:       candidate.bundle.Drafting.Mode,
+		ReviewStatus:       candidate.bundle.Review.Status,
+	}, nil
+}
+
+// ImportCandidate validates a returned bundle against current canonical source and
 // writes only candidate-marked artifacts. It never edits translations/ or its manifest.
 func ImportCandidate(options ImportOptions) (ImportResult, error) {
-	root, err := resolveRepositoryRoot(options.RepositoryRoot)
+	validation := ValidateOptions{
+		RepositoryRoot:         options.RepositoryRoot,
+		InputPath:              options.InputPath,
+		ExpectedSourcePath:     options.ExpectedSourcePath,
+		ExpectedTargetLanguage: options.ExpectedTargetLanguage,
+	}
+	candidate, err := validateReturnedCandidate(validation)
 	if err != nil {
 		return ImportResult{}, err
 	}
-	languages, err := loadOfficialTargetLanguages(root)
-	if err != nil {
-		return ImportResult{}, err
-	}
-	if !sourcePathPattern.MatchString(options.ExpectedSourcePath) {
-		return ImportResult{}, errors.New("expected translation source must be canonical concept/math Markdown")
-	}
-	if err := requireOfficialTargetLanguage(languages, options.ExpectedTargetLanguage); err != nil {
-		return ImportResult{}, err
-	}
-	body, err := readStableRegularFile(options.InputPath, maximumBundleBytes)
-	if err != nil {
-		return ImportResult{}, fmt.Errorf("read returned candidate bundle: %w", err)
-	}
-	bundle, err := decodeBundle(body)
-	if err != nil {
-		return ImportResult{}, err
-	}
-	if err := validateBundle(bundle, true); err != nil {
-		return ImportResult{}, fmt.Errorf("validate returned candidate bundle: %w", err)
-	}
-	if err := requireOfficialTargetLanguage(languages, bundle.Target.Language); err != nil {
-		return ImportResult{}, err
-	}
-	if bundle.Source.Path != options.ExpectedSourcePath || bundle.Target.Language != options.ExpectedTargetLanguage {
-		return ImportResult{}, errors.New("returned candidate does not match the expected source path and target language")
-	}
-	if err := bindCurrentSource(root, bundle.Source); err != nil {
-		return ImportResult{}, err
-	}
-	receipt, unresolved := candidateReceipt(bundle, body)
+	receipt, unresolved := candidateReceipt(candidate.bundle, candidate.body)
 	receiptBody, err := encodeJSON(receipt)
 	if err != nil {
 		return ImportResult{}, fmt.Errorf("encode candidate receipt: %w", err)
 	}
-	output, err := safeCandidateOutput(root, options.OutputDirectory)
+	output, err := safeCandidateOutput(candidate.root, options.OutputDirectory)
 	if err != nil {
 		return ImportResult{}, err
 	}
-	markdownPath, receiptPath, err := writeCandidateDirectory(output, []byte(bundle.Target.Markdown), receiptBody)
+	markdownPath, receiptPath, err := writeCandidateDirectory(output, []byte(candidate.bundle.Target.Markdown), receiptBody)
 	if err != nil {
 		return ImportResult{}, err
 	}
@@ -136,6 +157,44 @@ func ImportCandidate(options ImportOptions) (ImportResult, error) {
 		TargetSHA256:       receipt.Target.SHA256,
 		UnresolvedGlossary: unresolved,
 	}, nil
+}
+
+func validateReturnedCandidate(options ValidateOptions) (validatedCandidate, error) {
+	root, err := resolveRepositoryRoot(options.RepositoryRoot)
+	if err != nil {
+		return validatedCandidate{}, err
+	}
+	languages, err := loadOfficialTargetLanguages(root)
+	if err != nil {
+		return validatedCandidate{}, err
+	}
+	if !sourcePathPattern.MatchString(options.ExpectedSourcePath) {
+		return validatedCandidate{}, errors.New("expected translation source must be canonical concept/math Markdown")
+	}
+	if err := requireOfficialTargetLanguage(languages, options.ExpectedTargetLanguage); err != nil {
+		return validatedCandidate{}, err
+	}
+	body, err := readStableRegularFile(options.InputPath, maximumBundleBytes)
+	if err != nil {
+		return validatedCandidate{}, fmt.Errorf("read returned candidate bundle: %w", err)
+	}
+	bundle, err := decodeBundle(body)
+	if err != nil {
+		return validatedCandidate{}, err
+	}
+	if err := validateBundle(bundle, true); err != nil {
+		return validatedCandidate{}, fmt.Errorf("validate returned candidate bundle: %w", err)
+	}
+	if err := requireOfficialTargetLanguage(languages, bundle.Target.Language); err != nil {
+		return validatedCandidate{}, err
+	}
+	if bundle.Source.Path != options.ExpectedSourcePath || bundle.Target.Language != options.ExpectedTargetLanguage {
+		return validatedCandidate{}, errors.New("returned candidate does not match the expected source path and target language")
+	}
+	if err := bindCurrentSource(root, bundle.Source); err != nil {
+		return validatedCandidate{}, err
+	}
+	return validatedCandidate{root: root, bundle: bundle, body: body}, nil
 }
 
 func bindCurrentSource(root string, source Source) error {
@@ -151,12 +210,7 @@ func bindCurrentSource(root string, source Source) error {
 }
 
 func candidateReceipt(bundle Bundle, body []byte) (Receipt, int) {
-	unresolved := 0
-	for _, entry := range bundle.Glossary {
-		if entry.Status == "unresolved" {
-			unresolved++
-		}
-	}
+	unresolved := countUnresolvedGlossary(bundle.Glossary)
 	return Receipt{
 		Schema:       1,
 		Authority:    candidateAuthorityLabel,
@@ -174,6 +228,16 @@ func candidateReceipt(bundle Bundle, body []byte) (Receipt, int) {
 		Drafting: bundle.Drafting,
 		Review:   bundle.Review,
 	}, unresolved
+}
+
+func countUnresolvedGlossary(entries []GlossaryEntry) int {
+	unresolved := 0
+	for _, entry := range entries {
+		if entry.Status == "unresolved" {
+			unresolved++
+		}
+	}
+	return unresolved
 }
 
 func encodeJSON(value any) ([]byte, error) {

@@ -109,6 +109,53 @@ func TestExportCandidateIsDeterministicAndSourceBound(t *testing.T) {
 	}
 }
 
+func TestValidateCandidateIsReadOnlyAndSourceBound(t *testing.T) {
+	t.Parallel()
+	const expectedSourceSHA256 = "b3f391a23f372aad83e72b09020b9dedc5eee6b9daffb2d176db6c752f9d7da0"
+	const expectedTargetSHA256 = "7e6cd71ee235c247db46c1d1247760afa0677395d351694800d44c61ab5637c1"
+	root := repositoryFixture(t)
+	input := returnedFixture(t, root, func(bundle *Bundle) {
+		bundle.Glossary = []GlossaryEntry{{
+			Source: "evidence status", Target: "", Status: "unresolved", Note: "Awaiting German domain review.",
+		}}
+		bundle.Drafting = Drafting{
+			Mode: "machine-assisted",
+			Tools: []DraftingTool{{
+				Name: "example-translator", Version: "sha256:fixture", Purpose: "first-pass wording",
+			}},
+			Notes: "No quality decision recorded.",
+		}
+	})
+	inputBefore, err := os.ReadFile(input)
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := ValidateCandidate(ValidateOptions{
+		RepositoryRoot:         root,
+		InputPath:              input,
+		ExpectedSourcePath:     fixtureSourcePath,
+		ExpectedTargetLanguage: "de",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if result.BundleSHA256 != digest(inputBefore) || result.SourcePath != fixtureSourcePath || result.SourceSHA256 != expectedSourceSHA256 || result.TargetLanguage != "de" ||
+		result.TargetSHA256 != expectedTargetSHA256 || result.UnresolvedGlossary != 1 || result.DraftingMode != "machine-assisted" ||
+		result.ReviewStatus != "unreviewed" {
+		t.Fatalf("ValidateCandidate() = %#v", result)
+	}
+	inputAfter, err := os.ReadFile(input)
+	if err != nil || !bytes.Equal(inputBefore, inputAfter) {
+		t.Fatalf("read-only validation changed input: %v", err)
+	}
+	if _, err := os.Lstat(filepath.Join(root, ".workingdir2")); !os.IsNotExist(err) {
+		t.Fatalf("read-only validation created candidate output: %v", err)
+	}
+	if _, err := os.Lstat(filepath.Join(root, "translations", "manifest.json")); !os.IsNotExist(err) {
+		t.Fatalf("read-only validation touched translation authority: %v", err)
+	}
+}
+
 func TestImportCandidatePreservesDisclosureAndNeverWritesPublicationAuthority(t *testing.T) {
 	t.Parallel()
 	root := repositoryFixture(t)
@@ -149,6 +196,28 @@ func TestImportCandidatePreservesDisclosureAndNeverWritesPublicationAuthority(t 
 	}
 	if _, err := os.Lstat(filepath.Join(root, "translations", "manifest.json")); !os.IsNotExist(err) {
 		t.Fatalf("candidate import touched translation authority: %v", err)
+	}
+}
+
+func TestValidateCandidateRejectsStaleSource(t *testing.T) {
+	t.Parallel()
+	root := repositoryFixture(t)
+	input := returnedFixture(t, root, nil)
+	if err := os.WriteFile(
+		filepath.Join(root, filepath.FromSlash(fixtureSourcePath)),
+		[]byte("# Changed source\n"),
+		0o644,
+	); err != nil {
+		t.Fatal(err)
+	}
+	_, err := ValidateCandidate(ValidateOptions{
+		RepositoryRoot:         root,
+		InputPath:              input,
+		ExpectedSourcePath:     fixtureSourcePath,
+		ExpectedTargetLanguage: "de",
+	})
+	if err == nil || !strings.Contains(err.Error(), "stale") {
+		t.Fatalf("ValidateCandidate() error = %v, want stale-source refusal", err)
 	}
 }
 
