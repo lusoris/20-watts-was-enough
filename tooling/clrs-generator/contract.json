@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "authority": "NO_RESULT",
+  "purpose": "controller_shakedown",
+  "issue": "https://github.com/lusoris/20-watts-was-enough/issues/12",
+  "source_id": "sha256:7ec3b6b7528d04f517c4e9b7c3e0cd0f7034a775d225d469d1aca5c00fec10d1",
+  "generation_state": "blocked_on_generator_image",
+  "split_name": "shakedown",
+  "samples_per_cell": 1,
+  "use_hints": false,
+  "num_decimals_in_float": 6,
+  "seeds": [3, 14, 35],
+  "tasks": [
+    {
+      "task": "insertion_sort",
+      "family": "sequence",
+      "length_semantics": "declared_length",
+      "sizes": [
+        {"role": "published_training_size", "requested_length": 10},
+        {"role": "published_interpolation_probe", "requested_length": 8},
+        {"role": "published_extrapolation_probe", "requested_length": 32}
+      ]
+    },
+    {
+      "task": "binary_search",
+      "family": "search",
+      "length_semantics": "declared_length",
+      "sizes": [
+        {"role": "published_training_size", "requested_length": 10},
+        {"role": "published_interpolation_probe", "requested_length": 8},
+        {"role": "published_extrapolation_probe", "requested_length": 32}
+      ]
+    },
+    {
+      "task": "matrix_chain_order",
+      "family": "dynamic_programming",
+      "length_semantics": "declared_length",
+      "sizes": [
+        {"role": "published_training_size", "requested_length": 10},
+        {"role": "published_interpolation_probe", "requested_length": 8},
+        {"role": "published_extrapolation_probe", "requested_length": 11}
+      ]
+    },
+    {
+      "task": "bellman_ford",
+      "family": "graph",
+      "length_semantics": "declared_length",
+      "sizes": [
+        {"role": "published_training_size", "requested_length": 10},
+        {"role": "published_interpolation_probe", "requested_length": 8},
+        {"role": "published_extrapolation_probe", "requested_length": 32}
+      ]
+    },
+    {
+      "task": "kmp_matcher",
+      "family": "string",
+      "length_semantics": "declared_length",
+      "sizes": [
+        {"role": "published_training_size", "requested_length": 10},
+        {"role": "published_interpolation_probe", "requested_length": 8},
+        {"role": "published_extrapolation_probe", "requested_length": 32}
+      ]
+    },
+    {
+      "task": "segments_intersect",
+      "family": "geometry",
+      "length_semantics": "fixed_four_endpoints",
+      "sizes": [
+        {"role": "fixed_geometry_control", "requested_length": 4}
+      ]
+    }
+  ],
+  "output": {
+    "expected_files": 6,
+    "expected_examples": 48,
+    "max_dataset_bytes": 4194304,
+    "max_total_bytes": 25165824,
+    "max_prompt_bytes": 1048576,
+    "max_reference_bytes": 1048576,
+    "max_requested_length": 32
+  }
+}

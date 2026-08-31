@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"sort"
 	"time"
+
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/clrsfixture"
 )
 
 const (
@@ -18,25 +20,18 @@ const (
 )
 
 // TaskKind is one accepted CLRS-Text development-shakedown task family.
-type TaskKind string
+type TaskKind = clrsfixture.TaskKind
 
 const (
-	TaskInsertionSort     TaskKind = "insertion_sort"
-	TaskBinarySearch      TaskKind = "binary_search"
-	TaskMatrixChainOrder  TaskKind = "matrix_chain_order"
-	TaskBellmanFord       TaskKind = "bellman_ford"
-	TaskKMPMatcher        TaskKind = "kmp_matcher"
-	TaskSegmentsIntersect TaskKind = "segments_intersect"
+	TaskInsertionSort     = clrsfixture.TaskInsertionSort
+	TaskBinarySearch      = clrsfixture.TaskBinarySearch
+	TaskMatrixChainOrder  = clrsfixture.TaskMatrixChainOrder
+	TaskBellmanFord       = clrsfixture.TaskBellmanFord
+	TaskKMPMatcher        = clrsfixture.TaskKMPMatcher
+	TaskSegmentsIntersect = clrsfixture.TaskSegmentsIntersect
 )
 
-var taskKinds = []TaskKind{
-	TaskInsertionSort,
-	TaskBinarySearch,
-	TaskMatrixChainOrder,
-	TaskBellmanFord,
-	TaskKMPMatcher,
-	TaskSegmentsIntersect,
-}
+var taskKinds = clrsfixture.ShakedownTasks()
 
 // Limits are caller-owned development bounds. They are not model, dataset, or
 // claim thresholds.
