@@ -85,6 +85,11 @@ the exact diff; this file records why the project changed.
   exact-tag release validation remain complete. Workstation manifests retain
   their coverage, readiness and reader consumers, and dependency review runs
   only for full pull requests or an explicit dependency lane.
+- Script impact now follows exact executable consumers instead of a blanket
+  `scripts/**` full-gate rule. The browser reader regression selects the site
+  lane and the checked PDF semantic baseline selects its release validation;
+  shared script authorities stay explicitly full, while every unclassified or
+  newly added script still expands to the full gate.
 - The README, contribution guide and public help route now expose current
   status, roadmap stages, live milestone work, authority boundaries and focused
   entry checks before implementation detail. The portal overview leads with the

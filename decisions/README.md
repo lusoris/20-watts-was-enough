@@ -59,3 +59,4 @@ than silently changing its outcome.
 | [0051](0051-add-a-seventh-fixture-026-shard-after-live-timing.md) | Add a seventh Fixture 026 shard after live timing | accepted |
 | [0052](0052-impact-scope-every-pull-request.md) | Impact-scope every pull request | accepted |
 | [0053](0053-lock-the-poppler-pdf-tools-image-foundation.md) | Lock the Poppler PDF-tools image foundation | accepted |
+| [0054](0054-classify-script-impact-by-executable-consumer.md) | Classify script impact by executable consumer | accepted |

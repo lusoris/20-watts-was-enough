@@ -45,7 +45,32 @@
         "package-lock.json",
         "package.json",
         "requirements-ci.txt",
-        "scripts/**",
+        "scripts/AGENTS.md",
+        "scripts/audit-code-shape.mjs",
+        "scripts/audit-code-shape.test.mjs",
+        "scripts/audit-prose-style.mjs",
+        "scripts/audit-prose-style.test.mjs",
+        "scripts/audit-test-coverage.mjs",
+        "scripts/book-source.mjs",
+        "scripts/code-shape-baseline.json",
+        "scripts/engineering-policy.test.mjs",
+        "scripts/generate-book-pdf.mjs",
+        "scripts/install-locked-npm.mjs",
+        "scripts/install-locked-npm.test.mjs",
+        "scripts/lib/atomic-file-pair.mjs",
+        "scripts/lib/book-pdf-generation-options.mjs",
+        "scripts/lib/book-pdf-integrity.mjs",
+        "scripts/lib/book-renderer-identity.mjs",
+        "scripts/lib/chromium-cdp.mjs",
+        "scripts/lib/opened-file.mjs",
+        "scripts/lib/pdf-metadata.mjs",
+        "scripts/lib/portable-operations.mjs",
+        "scripts/lib/strict-json.mjs",
+        "scripts/lib/workstation-manifests.mjs",
+        "scripts/npm-runtime-lock.json",
+        "scripts/validate-engineering-policy.mjs",
+        "scripts/validate-node-runtime.mjs",
+        "scripts/validate-workstation.mjs",
         "tooling/AGENTS.md",
         "tooling/cmd/20w/**",
         "tooling/go.mod",
@@ -245,6 +270,24 @@
       ],
       "lanes": [
         "research",
+        "site"
+      ]
+    },
+    {
+      "id": "script-publication-semantic-baseline",
+      "paths": [
+        "scripts/book-pdf-semantic-baseline.json"
+      ],
+      "lanes": [
+        "release"
+      ]
+    },
+    {
+      "id": "script-site-tests",
+      "paths": [
+        "scripts/mermaid-browser.test.mjs"
+      ],
+      "lanes": [
         "site"
       ]
     },
