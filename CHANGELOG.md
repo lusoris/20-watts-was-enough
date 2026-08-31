@@ -7,6 +7,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A versioned PDF semantic sentinel now binds the current source, book, A4 and
+  tag metadata, Poppler tool identity, separate structure and text streams,
+  exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps
+  both validated reports and failure envelopes. Recognized structure and
+  reading-order defects remain explicit `known-debt` failures; the sentinel
+  makes no PDF/UA or WCAG conformance claim.
 - A project-local publication-design skill now treats the continuous web book
   and generated PDF as one source-bound publication. It requires bounded
   page-class sampling, rendered PNG inspection, extracted reading-order checks,
@@ -121,8 +127,9 @@ the exact diff; this file records why the project changed.
   through Git's linked-worktree common directory. Its normal checkout and
   Git-free frozen-capsule verification paths retain their existing authority.
 - Browser verification now waits through a bounded termination grace and
-  forced-exit interval before deleting its temporary profile, removing a race
-  with a still-running Chromium process.
+  forced-exit interval, then retries temporary-profile removal through a
+  bounded filesystem backoff. This covers both a still-running Chromium
+  process and late child-process writes after the main process exits.
 
 ## [0.3.0] - 2026-08-30
 

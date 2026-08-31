@@ -17,6 +17,12 @@ import {
 } from "./lib/chromium-cdp.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const profileRemovalOptions = Object.freeze({
+  force: true,
+  maxRetries: 5,
+  recursive: true,
+  retryDelay: 100,
+});
 
 test("browser process shutdown waits for a stubborn child before profile cleanup", async () => {
   const profile = await mkdtemp(path.join(os.tmpdir(), "20w-browser-stop-"));
@@ -43,13 +49,13 @@ process.stdout.write("ready\\n");`,
     await stopProcess(browserProcess, { terminationGraceMs: 50, forcedExitWaitMs: 2_000 });
     assert.equal(exited, true, "stopProcess returned before the child exit event");
     if (process.platform !== "win32") assert.equal(browserProcess.signalCode, "SIGKILL");
-    await rm(profile, { recursive: true, force: true });
+    await rm(profile, profileRemovalOptions);
     await assert.rejects(access(profile), (error) => error.code === "ENOENT");
   } finally {
     if (!exited) {
       await stopProcess(browserProcess, { terminationGraceMs: 50, forcedExitWaitMs: 2_000 });
     }
-    await rm(profile, { recursive: true, force: true });
+    await rm(profile, profileRemovalOptions);
   }
 });
 
@@ -286,6 +292,6 @@ test("browser rendering keeps Mermaid stable and mobile language access viewport
     cdp?.socket.close();
     await stopProcess(browserProcess);
     await vite.close();
-    await rm(profile, { recursive: true, force: true });
+    await rm(profile, profileRemovalOptions);
   }
 });

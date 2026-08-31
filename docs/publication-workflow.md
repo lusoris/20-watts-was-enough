@@ -136,6 +136,20 @@ dependency tree. Their byte comparison therefore tests deterministic rendering
 conditional on one clean `npm ci` realization; it does not independently
 reinstall or byte-bind two realized `node_modules` trees.
 
+`node scripts/audit-book-pdf-semantics.mjs --evidence-dir
+.workingdir2/evidence/design/<new-directory-name>` captures plain `pdfinfo`,
+`pdfinfo -struct`, `pdfinfo -struct-text`, default text extraction and raw text
+extraction as separate bounded streams. Evidence is published atomically under
+that declared root; a semantic mismatch retains the streams with an explicit
+failure envelope. The checked baseline binds the current source digest, PDF,
+manifest, A4 page format, tag state, Poppler 26.08.0 identity, exact diagnostics
+and six content anchors. Its current expected outcome is `known-debt`, so a
+matching audit exits non-zero; it is a regression sentinel, not a PDF/UA or WCAG
+conformance check. DOM and accessibility-tree order are outside this Poppler
+snapshot and require the pinned-Chrome renderer-aware follow-up. Required CI
+enforcement waits for the separately locked PDF-tools container so an ambient
+host Poppler cannot silently redefine the baseline.
+
 Container publication has a separate two-phase boundary. The build pushes a
 candidate under its canonical digest without a release tag. The workflow then
 validates and executes that exact digest. Only a digest produced by a build
