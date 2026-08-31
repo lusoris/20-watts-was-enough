@@ -53,6 +53,7 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w publication verify-pdf-reproducibility --receipt <new.json> [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH]")
 	fmt.Fprintln(writer, "  20w publication verify-public-transport [--root <repository>] [--check]")
 	fmt.Fprintln(writer, "  20w translation export-candidate --source <concept-or-math.md> --language <code> --output <new.json> [--root <repository>]")
+	fmt.Fprintln(writer, "  20w translation validate-candidate --input <candidate.json> --source <concept-or-math.md> --language <code> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w translation import-candidate --input <candidate.json> --source <concept-or-math.md> --language <code> --output <new-directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w github sync-metadata [--root <repository>] [--check | --repository <owner/name>]")
 	fmt.Fprintln(writer, "  20w github sync-labels [--root <repository>] [--check | --repository <owner/name>]")
@@ -138,6 +139,9 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 	case "translation":
 		if len(arguments) >= 2 && arguments[1] == "export-candidate" {
 			return runTranslationExportCandidate(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "validate-candidate" {
+			return runTranslationValidateCandidate(arguments[2:], stdout, stderr)
 		}
 		if len(arguments) >= 2 && arguments[1] == "import-candidate" {
 			return runTranslationImportCandidate(arguments[2:], stdout, stderr)

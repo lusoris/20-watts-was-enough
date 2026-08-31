@@ -54,10 +54,12 @@ the exact diff; this file records why the project changed.
   prior-art record preserves the useful external skill patterns without runtime
   instruction fetching, taste scores or automatic humanising.
 - The Go command now exports deterministic, source-bound translation candidate
-  bundles and imports returned drafts into candidate-only working artifacts.
-  The provider-neutral exchange preserves glossary choices, drafting-tool
-  disclosure and language/domain review metadata, rejects stale English source,
-  and cannot write to the reviewed translation tree or publication manifest.
+  bundles, validates returned bundles without writing, and imports structurally
+  valid drafts into candidate-only working artifacts. The provider-neutral
+  exchange preserves glossary choices, drafting-tool disclosure and
+  language/domain review metadata, rejects stale English source, and cannot
+  write to the reviewed translation tree or publication manifest. Structural
+  validation does not assess translation quality or grant publication authority.
 - Pull-request CI now derives a bounded Go impact plan from the exact base and
   head commits, then runs a common gate plus only the selected Go, release,
   research, site, container, and workstation lanes. Workstation artifacts use

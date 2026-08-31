@@ -57,6 +57,21 @@ each material tool, version or dated service identity, and purpose. Glossary
 entries are either `unresolved` with an empty target or `preferred` with the
 wording a reviewer should check.
 
+Check a returned bundle before creating any candidate artifact:
+
+```bash
+go -C tooling run ./cmd/20w translation validate-candidate \
+  --root .. \
+  --input ../.workingdir2/cache/translation-candidates/de-thesis.json \
+  --source concept/00-thesis-and-principles.md \
+  --language de
+```
+
+This read-only preflight rejects a stale or altered English source, unexpected
+path or language, ambiguous metadata and missing drafting disclosure. It does
+not assess the German wording, record a human review or grant publication
+authority.
+
 Import the returned bundle into a new candidate directory:
 
 ```bash
@@ -74,15 +89,16 @@ malformed reviewer/glossary metadata, symlinks, oversized files and an existing
 output. Repository-local output is allowed only under
 `.workingdir2/cache/translation-candidates/`. The result is named
 `candidate-not-for-publication.md` and its receipt says
-`candidate-only-not-publication-authority`; neither command writes beneath the
-public `translations/` tree or changes `manifest.json`.
+`candidate-only-not-publication-authority`; none of the candidate commands
+writes beneath the public `translations/` tree or changes `manifest.json`.
 
 The candidate boundary deliberately uses canonical path, embedded bytes and
 SHA-256 rather than requiring a `.git` directory. This permits work from a
-tagged source archive or release checkout. Import also requires the operator to
-repeat the expected source path and language, then compares the bundle with the
-current local source. The later pull request and reviewed manifest supply the
-Git revision and publication authority; the digest alone does not claim that a
+tagged source archive or release checkout. Validation and import both require
+the operator to repeat the expected source path and language, then compare the
+bundle with the current local source. The later pull request and reviewed
+manifest supply the Git revision and publication authority; the digest alone
+does not claim that a
 candidate came from `main`.
 
 After a competent human has checked meaning, terminology, negation,
