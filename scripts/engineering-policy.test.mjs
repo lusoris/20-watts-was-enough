@@ -652,19 +652,20 @@ test("real PDF reproducibility acceptance stays in the renderer-selected and tag
 
 test("CI impact selection is projected once and every job state fails closed", () => {
   const valid = workflow("ci");
-  const planFinding = ".github/workflows/ci.yml: draft pull requests must use an exact impact diff, ready pull requests and main pushes must preserve an exact diff in full mode, and manual runs must fail closed";
+  const planFinding = ".github/workflows/ci.yml: pull requests must use an exact impact diff, main pushes must preserve an exact diff in full mode, and manual runs must fail closed";
   assert.deepEqual(validateCiImpactWorkflowObject(valid), []);
 
-  const readyBypass = structuredClone(valid);
-  const plan = readyBypass.jobs["impact-plan"].steps.find((step) => step.id === "plan");
+  const forcedPullRequestFull = structuredClone(valid);
+  const plan = forcedPullRequestFull.jobs["impact-plan"].steps.find((step) => step.id === "plan");
   plan.run = plan.run.replace(
-    'if [[ "$EVENT_NAME" == "pull_request" && "$PR_DRAFT" == "true" ]]',
-    'if [[ "$EVENT_NAME" == "pull_request" ]]',
+    "go -C tooling run ./cmd/20w ci plan --root .. \\",
+    "go -C tooling run ./cmd/20w ci plan --root .. --full \\",
   );
-  assert.ok(validateCiImpactWorkflowObject(readyBypass).includes(planFinding));
+  assert.ok(validateCiImpactWorkflowObject(forcedPullRequestFull).includes(planFinding));
 
   const ambientDraftState = structuredClone(valid);
-  delete ambientDraftState.jobs["impact-plan"].steps.find((step) => step.id === "plan").env.PR_DRAFT;
+  ambientDraftState.jobs["impact-plan"].steps.find((step) => step.id === "plan").env.PR_DRAFT
+    = "${{ github.event.pull_request.draft }}";
   assert.ok(validateCiImpactWorkflowObject(ambientDraftState).includes(planFinding));
 
   for (const mutate of [
@@ -687,13 +688,13 @@ test("CI impact selection is projected once and every job state fails closed", (
     assert.ok(validateCiImpactWorkflowObject(weakenedRouting).includes(planFinding));
   }
 
-  for (const eventType of ["ready_for_review", "converted_to_draft"]) {
-    const missingTransition = structuredClone(valid);
-    missingTransition.on.pull_request.types = missingTransition.on.pull_request.types.filter(
+  for (const eventType of ["opened", "synchronize", "reopened"]) {
+    const missingCodeUpdate = structuredClone(valid);
+    missingCodeUpdate.on.pull_request.types = missingCodeUpdate.on.pull_request.types.filter(
       (type) => type !== eventType,
     );
-    assert.ok(validateCiImpactWorkflowObject(missingTransition).includes(
-      ".github/workflows/ci.yml: CI must run on main pushes, manual dispatches, and every draft or ready pull-request transition",
+    assert.ok(validateCiImpactWorkflowObject(missingCodeUpdate).includes(
+      ".github/workflows/ci.yml: CI must run on main pushes, manual dispatches, and every pull-request code update",
     ));
   }
 

@@ -807,17 +807,12 @@ function validateCiImpactPlanJob(jobs, relativePath, findings) {
     CURRENT_SHA: "${{ github.sha }}",
     EVENT_NAME: "${{ github.event_name }}",
     HEAD_SHA: "${{ github.event.pull_request.head.sha }}",
-    PR_DRAFT: "${{ github.event.pull_request.draft }}",
   };
   const expectedPlanSource = [
     "set -euo pipefail",
     "mkdir -p build",
-    'if [[ "$EVENT_NAME" == "pull_request" && "$PR_DRAFT" == "true" ]]; then',
+    'if [[ "$EVENT_NAME" == "pull_request" ]]; then',
     "  go -C tooling run ./cmd/20w ci plan --root .. \\",
-    '    --base "$BASE_SHA" --head "$HEAD_SHA" --json \\',
-    "    > build/ci-impact-plan.json",
-    'elif [[ "$EVENT_NAME" == "pull_request" ]]; then',
-    "  go -C tooling run ./cmd/20w ci plan --root .. --full \\",
     '    --base "$BASE_SHA" --head "$HEAD_SHA" --json \\',
     "    > build/ci-impact-plan.json",
     'elif [[ "$EVENT_NAME" == "push" ]]; then',
@@ -837,7 +832,7 @@ function validateCiImpactPlanJob(jobs, relativePath, findings) {
     Object.keys(planStep?.env ?? {}).length === Object.keys(expectedEnvironment).length
       && propertiesMatch(planStep?.env, expectedEnvironment)
       && String(planStep?.run ?? "").trim() === expectedPlanSource,
-    `${relativePath}: draft pull requests must use an exact impact diff, ready pull requests and main pushes must preserve an exact diff in full mode, and manual runs must fail closed`,
+    `${relativePath}: pull requests must use an exact impact diff, main pushes must preserve an exact diff in full mode, and manual runs must fail closed`,
   );
 }
 
@@ -1064,7 +1059,7 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
       'require_selection workstation-artifacts "$RESULT_WORKSTATION_ARTIFACTS" "$SELECT_WORKSTATION"',
       'require_selection container-smoke "$RESULT_CONTAINER" "$SELECT_CONTAINER"',
       'require_selection dependency-review "$RESULT_DEPENDENCY_REVIEW" "$SELECT_DEPENDENCY"',
-      'impact mode is allowed only for draft pull requests',
+      'impact mode is allowed only for pull requests',
       '"$SELECT_CONTAINER" "$SELECT_DEPENDENCY" "$SELECT_GO"',
       'full plan exposed a non-false semantic selector: $selector',
       "full plan did not expose its closed workstation matrix",
@@ -1101,12 +1096,12 @@ export function validateCiImpactWorkflowObject(
       && pullRequest.branches.length === 1
       && pullRequest.branches[0] === "main"
       && Array.isArray(pullRequest?.types)
-      && pullRequest.types.length === 5
-      && ["opened", "synchronize", "reopened", "ready_for_review", "converted_to_draft"]
+      && pullRequest.types.length === 3
+      && ["opened", "synchronize", "reopened"]
         .every((type) => pullRequest.types.includes(type))
       && Object.keys(pullRequest ?? {}).length === 2
       && Object.prototype.hasOwnProperty.call(trigger ?? {}, "workflow_dispatch"),
-    `${relativePath}: CI must run on main pushes, manual dispatches, and every draft or ready pull-request transition`,
+    `${relativePath}: CI must run on main pushes, manual dispatches, and every pull-request code update`,
   );
   const jobs = workflow?.jobs ?? {};
   validateCiImpactPlanJob(jobs, relativePath, findings);
