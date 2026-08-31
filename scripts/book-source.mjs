@@ -89,6 +89,8 @@ export async function bookSourceFiles(projectRoot) {
     "tooling/go.sum",
     "tooling/internal/buildinfo/buildinfo.go",
     "tooling/internal/docscheck/check.go",
+    "tooling/internal/docscheck/mermaid-duplicate-baseline.json",
+    "tooling/internal/docscheck/mermaid.go",
     "tooling/internal/experiment/catalog.go",
     "tooling/internal/githublabels/labels.go",
     "tooling/internal/nodeimage/package.go",

@@ -4,7 +4,7 @@
   "version": "0.3.0",
   "source_ref": "main",
   "pdf": "public/downloads/20-watts-was-enough-full-concept-book.pdf",
-  "source_digest": "4f29a4f9b58caa8962ad5c64d1d503086bfdf2eda992c81d76627fc8cec76841",
+  "source_digest": "24dfe4226c8b3503a78c4034ea4c38dcd8204b40e0a84b04728c551df07c2710",
   "source_files": [
     "app/book-content.ts",
     "app/components/book-edition.tsx",
@@ -148,6 +148,8 @@
     "tooling/go.sum",
     "tooling/internal/buildinfo/buildinfo.go",
     "tooling/internal/docscheck/check.go",
+    "tooling/internal/docscheck/mermaid-duplicate-baseline.json",
+    "tooling/internal/docscheck/mermaid.go",
     "tooling/internal/experiment/catalog.go",
     "tooling/internal/githublabels/labels.go",
     "tooling/internal/nodeimage/package.go",
@@ -184,6 +186,6 @@
   "book_documents": 51,
   "generated_front_matter_sections": 1,
   "rendered_diagrams": 48,
-  "size_bytes": 12818327,
-  "pdf_sha256": "8466c9ae2c0ebb63bf41eb74f32e2fbe75435fe85577577bef95a4f7de2a10b3"
+  "size_bytes": 12817261,
+  "pdf_sha256": "aaab0416b8d648394aa5edd7cba25c629768de46cf8b1a4498aff628cd3bc745"
 }

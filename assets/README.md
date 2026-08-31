@@ -28,9 +28,6 @@ scientific evidence.
   to `../public/plots/` for GitHub and the private reader.
 - `diagrams/evidence-to-principles.mmd` shows how domain findings are audited,
   bundled, translated, and tested without duplicating concepts.
-- `diagrams/biomimetic-bidirectional-transfer.mmd` gives phenomenon-push and
-  problem-pull search distinct colored lanes before both enter functional
-  abstraction, deduplication, substrate redesign, and falsification.
 - `diagrams/recurring-solution-families.mmd` groups the current principle
   registry into scarcity, locality, reversible-change, maintenance, and
   structural-computation families without merging their mechanisms.

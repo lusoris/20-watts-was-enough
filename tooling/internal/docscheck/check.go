@@ -34,8 +34,6 @@ var (
 	principleUsePattern    = regexp.MustCompile(`\bP-[0-9]{3}\b`)
 	bibliographyKeyPattern = regexp.MustCompile(`(?m)^@[[:alnum:]_]+\{([^,]+),`)
 	backtickPattern        = regexp.MustCompile("`([^`]+)`")
-	mermaidStartPattern    = regexp.MustCompile(`(?m)^[[:space:]]*(flowchart|graph|sequenceDiagram|stateDiagram)\b`)
-	mermaidEdgePattern     = regexp.MustCompile(`-->|---|==>`)
 )
 
 var excludedDirectories = map[string]struct{}{
@@ -114,7 +112,7 @@ func Validate(repositoryRoot string) Result {
 	}
 
 	report := &collector{}
-	documents := loadMarkdown(realRoot, report)
+	documents, markdownComplete := loadMarkdown(realRoot, report)
 	for _, document := range documents {
 		validateLinks(realRoot, document, report)
 		validateControlCharacters(document, report)
@@ -126,7 +124,8 @@ func Validate(repositoryRoot string) Result {
 	chapters := validateChapters(realRoot, report)
 	validateBibliography(realRoot, report)
 	validateUnsupportedPhrases(documents, report)
-	mermaidFiles := validateMermaid(realRoot, report)
+	mermaidFiles, standaloneMermaid, standaloneComplete := validateMermaid(realRoot, report)
+	validateMermaidDuplicateDebt(realRoot, documents, markdownComplete, standaloneMermaid, standaloneComplete, report)
 
 	return Result{
 		Errors:        report.errors,
@@ -137,12 +136,18 @@ func Validate(repositoryRoot string) Result {
 	}
 }
 
-func loadMarkdown(root string, report *collector) []markdownDocument {
+func loadMarkdown(root string, report *collector) ([]markdownDocument, bool) {
 	documents := make([]markdownDocument, 0, 512)
 	var totalBytes int64
 	err := filepath.WalkDir(root, func(path string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
+		}
+		if entry.Type()&fs.ModeSymlink != 0 {
+			if _, excluded := excludedDirectories[entry.Name()]; excluded {
+				return nil
+			}
+			return fmt.Errorf("Markdown inventory path must not be a symlink: %s", relativePath(root, path))
 		}
 		if entry.IsDir() {
 			if path != root {
@@ -189,7 +194,7 @@ func loadMarkdown(root string, report *collector) []markdownDocument {
 	if len(documents) == 0 {
 		report.addError("No Markdown files found")
 	}
-	return documents
+	return documents, err == nil
 }
 
 func validateControlCharacters(document markdownDocument, report *collector) {
@@ -454,34 +459,6 @@ func validateUnsupportedPhrases(documents []markdownDocument, report *collector)
 			report.addError("Unsupported inherited phrase found in canonical material: '%s'", phrase)
 		}
 	}
-}
-
-func validateMermaid(root string, report *collector) int {
-	diagramRoot := filepath.Join(root, "assets", "diagrams")
-	entries, err := os.ReadDir(diagramRoot)
-	if err != nil {
-		report.addError("Read Mermaid sources: %v", err)
-		return 0
-	}
-	count := 0
-	for _, entry := range entries {
-		if entry.IsDir() || filepath.Ext(entry.Name()) != ".mmd" {
-			continue
-		}
-		count++
-		content, err := os.ReadFile(filepath.Join(diagramRoot, entry.Name()))
-		if err != nil {
-			report.addError("Read assets/diagrams/%s: %v", entry.Name(), err)
-			continue
-		}
-		if !mermaidStartPattern.Match(content) {
-			report.addError("Unrecognized Mermaid declaration in assets/diagrams/%s", entry.Name())
-		}
-		if !mermaidEdgePattern.Match(content) {
-			report.addWarning("No edge found in assets/diagrams/%s", entry.Name())
-		}
-	}
-	return count
 }
 
 func documentByPath(documents []markdownDocument, relative string) *markdownDocument {

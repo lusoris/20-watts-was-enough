@@ -104,6 +104,7 @@ func validRepository(t *testing.T) string {
 	writeFile(t, root, "research/references.bib", "@article{reference,\n  title = {Reference}\n}\n")
 	writeFile(t, root, "concept/01-example.md", strings.Join(requiredChapterSections, "\n\n")+"\n")
 	writeFile(t, root, "assets/diagrams/example.mmd", "flowchart LR\n  A --> B\n")
+	writeFile(t, root, mermaidBaselineRelativePath, "{\n  \"schemaVersion\": 1,\n  \"groups\": []\n}\n")
 	return root
 }
 
