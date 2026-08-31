@@ -29,6 +29,8 @@ func TestRenderPlanUsesTheExactImageAndHardenedContainer(t *testing.T) {
 		t.Fatalf("renderer executed %d commands, want version, create, build, two runs, and cleanup", len(executor.requests))
 	}
 	build := requestWithPrefix(t, executor.requests, "buildx", "build").arguments
+	assertRepositoryTemporaryPath(t, configuration.RepositoryRoot, argumentAfter(t, build, "--iidfile"))
+	assertRepositoryTemporaryPath(t, configuration.RepositoryRoot, build[len(build)-1])
 	for _, expected := range []string{
 		"SOURCE_DATE_EPOCH=" + decimal(configuration.Lock.SourceDateEpoch),
 		"RENDERER_LOCK_SHA256=" + configuration.LockSHA256,
@@ -62,6 +64,16 @@ func TestRenderPlanUsesTheExactImageAndHardenedContainer(t *testing.T) {
 		t.Fatalf("renderer run count = %d, want two", len(runs))
 	}
 	run := runs[0].arguments
+	for _, rendererRun := range runs {
+		assertRepositoryTemporaryPath(
+			t, configuration.RepositoryRoot,
+			mountSource(rendererRun.arguments, "/workspace/public/downloads"),
+		)
+		assertRepositoryTemporaryPath(
+			t, configuration.RepositoryRoot,
+			mountSource(rendererRun.arguments, "/workspace/tmp"),
+		)
+	}
 	for _, expected := range []string{
 		"none", "never", "ALL", "no-new-privileges", "BOOK_RENDERER_IMAGE_ID=" + testImageID,
 		"BOOK_RENDERER_LOCK_SHA256=" + configuration.LockSHA256,
@@ -385,6 +397,18 @@ func mountSource(arguments []string, destination string) string {
 		}
 	}
 	return ""
+}
+
+func assertRepositoryTemporaryPath(t *testing.T, repositoryRoot, candidate string) {
+	t.Helper()
+	if candidate == "" {
+		t.Fatal("Docker-visible temporary path is empty")
+	}
+	relative, err := filepath.Rel(filepath.Join(repositoryRoot, "tmp"), candidate)
+	if err != nil || relative == "." || relative == ".." ||
+		strings.HasPrefix(relative, ".."+string(filepath.Separator)) {
+		t.Fatalf("Docker-visible path %q is outside repository tmp root %q", candidate, repositoryRoot)
+	}
 }
 
 func writePublicationFixture(t *testing.T, root string, pdf, manifest []byte) {

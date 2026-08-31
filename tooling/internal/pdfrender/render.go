@@ -83,7 +83,9 @@ func renderWithDependencies(
 			}
 		}
 	}()
-	temporaryRoot, err := os.MkdirTemp("", "20w-pdf-renderer-")
+	temporaryRoot, err := createDockerVisibleTemporaryRoot(
+		configuration.RepositoryRoot, "20w-pdf-renderer-",
+	)
 	if err != nil {
 		return Result{}, fmt.Errorf("create PDF renderer staging root: %w", err)
 	}
@@ -375,6 +377,17 @@ func prepareWritableRenderPaths(root string) error {
 		}
 	}
 	return nil
+}
+
+func createDockerVisibleTemporaryRoot(root, prefix string) (string, error) {
+	// ARC's Docker daemon is a sibling container. Only the checked-out workspace
+	// is mounted into both containers, so every Docker bind source must live
+	// below the repository instead of the runner container's private /tmp.
+	temporaryRoot, err := os.MkdirTemp(filepath.Join(root, "tmp"), prefix)
+	if err != nil {
+		return "", err
+	}
+	return temporaryRoot, nil
 }
 
 func requireContainedDirectory(root, relative string, create bool) error {

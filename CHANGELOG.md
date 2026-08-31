@@ -188,6 +188,9 @@ the exact diff; this file records why the project changed.
   the two high-severity unbounded-memory advisories reported by Dependabot and
   OpenSSF Scorecard. The regenerated book manifest and semantic sentinel bind
   the dependency change without changing the rendered PDF bytes.
+- PDF rendering and reproducibility now stage every Docker bind source below
+  the checked-out repository, keeping the paths visible to ARC's sibling DinD
+  container while preserving per-run isolation and cleanup.
 - Continuous-book deep links now restore every chapter and heading below the
   responsive action bar on cold load and later hash navigation. Internal book
   links remain in the namespaced edition while preserving the current Pages
