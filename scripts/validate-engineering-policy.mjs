@@ -820,9 +820,23 @@ function validateCiImpactPlanJob(jobs, relativePath, findings) {
     '    --base "$BASE_SHA" --head "$HEAD_SHA" --json \\',
     "    > build/ci-impact-plan.json",
     'elif [[ "$EVENT_NAME" == "push" ]]; then',
-    "  go -C tooling run ./cmd/20w ci plan --root .. --full \\",
-    '    --base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \\',
-    "    > build/ci-impact-plan.json",
+    "  zero_sha=0000000000000000000000000000000000000000",
+    "  valid_commit() {",
+    '    local sha="$1"',
+    '    [[ "$sha" =~ ^[0-9a-f]{40}$ ]] && git cat-file -e "${sha}^{commit}" 2>/dev/null',
+    "  }",
+    '  if [[ "$BEFORE_SHA" != "$zero_sha" ]] \\',
+    '    && valid_commit "$BEFORE_SHA" \\',
+    '    && valid_commit "$CURRENT_SHA" \\',
+    '    && git merge-base --is-ancestor "$BEFORE_SHA" "$CURRENT_SHA"; then',
+    "    go -C tooling run ./cmd/20w ci plan --root .. \\",
+    '      --base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \\',
+    "      > build/ci-impact-plan.json",
+    "  else",
+    '    echo "::notice::Main-push comparison is unavailable; running the fail-closed full plan."',
+    "    go -C tooling run ./cmd/20w ci plan --root .. --full --json \\",
+    "      > build/ci-impact-plan.json",
+    "  fi",
     "else",
     "  go -C tooling run ./cmd/20w ci plan --root .. --full --json \\",
     "    > build/ci-impact-plan.json",
@@ -836,7 +850,7 @@ function validateCiImpactPlanJob(jobs, relativePath, findings) {
     Object.keys(planStep?.env ?? {}).length === Object.keys(expectedEnvironment).length
       && propertiesMatch(planStep?.env, expectedEnvironment)
       && String(planStep?.run ?? "").trim() === expectedPlanSource,
-    `${relativePath}: pull requests must use an exact impact diff, main pushes must preserve an exact diff in full mode, and manual runs must fail closed`,
+    `${relativePath}: pull requests and comparable main pushes must use exact impact diffs, while unavailable push ancestry and manual runs must fail closed`,
   );
 }
 
@@ -1063,7 +1077,8 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
       'require_selection workstation-artifacts "$RESULT_WORKSTATION_ARTIFACTS" "$SELECT_WORKSTATION"',
       'require_selection container-smoke "$RESULT_CONTAINER" "$SELECT_CONTAINER"',
       'require_selection dependency-review "$RESULT_DEPENDENCY_REVIEW" "$SELECT_DEPENDENCY"',
-      'impact mode is allowed only for pull requests',
+      'if [[ "$EVENT_NAME" != "pull_request" && "$EVENT_NAME" != "push" ]]; then\n      echo "::error::impact mode is allowed only for pull requests and pushes"\n      exit 1\n    fi',
+      'if [[ "$EVENT_NAME" == "pull_request" ]]; then\n      require_selection dependency-review "$RESULT_DEPENDENCY_REVIEW" "$SELECT_DEPENDENCY"\n    else\n      require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" skipped\n    fi',
       '"$SELECT_CONTAINER" "$SELECT_DEPENDENCY" "$SELECT_GO"',
       'full plan exposed a non-false semantic selector: $selector',
       "full plan did not expose its closed workstation matrix",
@@ -1073,6 +1088,14 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
       && countOccurrences(
         successSource,
         'require_selection pdf-renderer-reproducibility "$RESULT_RENDERER" "$SELECT_RENDERER"',
+      ) === 2
+      && countOccurrences(
+        successSource,
+        'require_selection dependency-review "$RESULT_DEPENDENCY_REVIEW" "$SELECT_DEPENDENCY"',
+      ) === 1
+      && countOccurrences(
+        successSource,
+        'require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" skipped',
       ) === 2
       && String(successSource ?? "").includes([
         'for selector in "$SELECT_CONTAINER" "$SELECT_DEPENDENCY" "$SELECT_GO" "$SELECT_RELEASE" \\',

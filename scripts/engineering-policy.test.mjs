@@ -662,7 +662,7 @@ test("real PDF reproducibility acceptance stays in the renderer-selected and tag
 
 test("CI impact selection is projected once and every job state fails closed", () => {
   const valid = workflow("ci");
-  const planFinding = ".github/workflows/ci.yml: pull requests must use an exact impact diff, main pushes must preserve an exact diff in full mode, and manual runs must fail closed";
+  const planFinding = ".github/workflows/ci.yml: pull requests and comparable main pushes must use exact impact diffs, while unavailable push ancestry and manual runs must fail closed";
   assert.deepEqual(validateCiImpactWorkflowObject(valid), []);
 
   const forcedPullRequestFull = structuredClone(valid);
@@ -680,16 +680,32 @@ test("CI impact selection is projected once and every job state fails closed", (
 
   for (const mutate of [
     (source) => source.replace(
-      "go -C tooling run ./cmd/20w ci plan --root .. --full \\",
-      "go -C tooling run ./cmd/20w ci plan --root .. \\",
+      '[[ "$BEFORE_SHA" != "$zero_sha" ]]',
+      '[[ "$BEFORE_SHA" == "$zero_sha" ]]',
+    ),
+    (source) => source.replace(
+      'git cat-file -e "${sha}^{commit}"',
+      'git rev-parse --verify "$sha"',
+    ),
+    (source) => source.replace(
+      'git merge-base --is-ancestor "$BEFORE_SHA" "$CURRENT_SHA"',
+      "true",
+    ),
+    (source) => source.replace(
+      "    go -C tooling run ./cmd/20w ci plan --root .. \\",
+      "    go -C tooling run ./cmd/20w ci plan --root .. --full \\",
     ),
     (source) => source.replace(
       '--base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \\',
       "--json \\",
     ),
     (source) => source.replace(
-      "ci plan --root .. --full --json",
-      "ci plan --root .. --json",
+      "    go -C tooling run ./cmd/20w ci plan --root .. --full --json \\",
+      "    go -C tooling run ./cmd/20w ci plan --root .. --json \\",
+    ),
+    (source) => source.replace(
+      "  go -C tooling run ./cmd/20w ci plan --root .. --full --json \\",
+      "  go -C tooling run ./cmd/20w ci plan --root .. --json \\",
     ),
   ]) {
     const weakenedRouting = structuredClone(valid);
@@ -769,6 +785,32 @@ test("CI selected-lane aggregation and artifact dispatch fail closed", () => {
     '"$SELECT_GO" "$SELECT_RELEASE" "$SELECT_RENDERER" \\',
   );
   assert.ok(validateCiImpactWorkflowObject(rendererFoldedIntoFullSelectors).includes(successFinding));
+
+  const pullRequestOnlyImpact = structuredClone(valid);
+  const pullRequestOnlySource = pullRequestOnlyImpact.jobs["ci-success"].steps.find((step) => (
+    step.name === "Require every expected gate state"
+  ));
+  pullRequestOnlySource.run = pullRequestOnlySource.run.replace(
+    'if [[ "$EVENT_NAME" != "pull_request" && "$EVENT_NAME" != "push" ]]; then',
+    'if [[ "$EVENT_NAME" != "pull_request" ]]; then',
+  );
+  assert.ok(validateCiImpactWorkflowObject(pullRequestOnlyImpact).includes(successFinding));
+
+  const pushRunsDependencyReview = structuredClone(valid);
+  const pushDependencySource = pushRunsDependencyReview.jobs["ci-success"].steps.find((step) => (
+    step.name === "Require every expected gate state"
+  ));
+  pushDependencySource.run = pushDependencySource.run.replace(
+    [
+      'if [[ "$EVENT_NAME" == "pull_request" ]]; then',
+      '      require_selection dependency-review "$RESULT_DEPENDENCY_REVIEW" "$SELECT_DEPENDENCY"',
+      "    else",
+      '      require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" skipped',
+      "    fi",
+    ].join("\n"),
+    'require_selection dependency-review "$RESULT_DEPENDENCY_REVIEW" "$SELECT_DEPENDENCY"',
+  );
+  assert.ok(validateCiImpactWorkflowObject(pushRunsDependencyReview).includes(successFinding));
 
   const dynamicCommand = structuredClone(valid);
   const artifactStep = dynamicCommand.jobs["workstation-artifacts"].steps.find((step) => (
@@ -871,6 +913,17 @@ test("CI success accepts only the exact full or selected impact state vector", (
     RESULT_DEPENDENCY_REVIEW: "success",
   };
   assert.equal(runCiSuccessGate(source, impact).status, 0);
+  const pushImpact = {
+    ...impact,
+    EVENT_NAME: "push",
+    RESULT_PR_TITLE: "skipped",
+    RESULT_DEPENDENCY_REVIEW: "skipped",
+  };
+  assert.equal(
+    runCiSuccessGate(source, pushImpact).status,
+    0,
+    "a comparable main push may use impact mode and must skip dependency review",
+  );
   assert.equal(runCiSuccessGate(source, {
     ...impact,
     SELECT_RENDERER: "true",
@@ -913,11 +966,15 @@ test("CI success accepts only the exact full or selected impact state vector", (
     RESULT_DEPENDENCY_REVIEW: "success",
   }).status, 0, "an unselected dependency review may not run unexpectedly");
   assert.notEqual(runCiSuccessGate(source, {
+    ...pushImpact,
+    RESULT_DEPENDENCY_REVIEW: "success",
+  }).status, 0, "a push must not run dependency review even when its semantic selector is true");
+  assert.notEqual(runCiSuccessGate(source, {
     ...impact,
-    EVENT_NAME: "push",
+    EVENT_NAME: "workflow_dispatch",
     RESULT_PR_TITLE: "skipped",
     RESULT_DEPENDENCY_REVIEW: "skipped",
-  }).status, 0, "impact mode is limited to pull requests");
+  }).status, 0, "manual dispatch may not enter impact mode");
   assert.notEqual(runCiSuccessGate(source, {
     SELECT_GO: "true",
   }).status, 0, "full mode must expose false semantic selectors");
