@@ -1,0 +1,32 @@
+contents:
+  repositories:
+    - https://packages.wolfi.dev/os
+  keyring:
+    - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+  packages:
+    - poppler=26.08.0-r0
+    - poppler-doc=26.08.0-r0
+    - poppler-utils=26.08.0-r0
+
+accounts:
+  groups:
+    - groupname: nonroot
+      gid: 65532
+  users:
+    - username: nonroot
+      uid: 65532
+  run-as: nonroot
+
+environment:
+  PATH: /usr/bin
+
+archs:
+  - amd64
+
+annotations:
+  org.opencontainers.image.title: 20 Watts Was Enough PDF tools
+  org.opencontainers.image.description: Locked Poppler tools for bounded publication audits
+  org.opencontainers.image.source: https://github.com/lusoris/20-watts-was-enough
+  io.github.lusoris.20-watts-was-enough.image-name: ghcr.io/lusoris/20-watts-was-enough-pdf-tools
+  io.github.lusoris.20-watts-was-enough.poppler-version: 26.08.0
+  io.github.lusoris.20-watts-was-enough.result-authority: NO_RESULT

@@ -2710,11 +2710,12 @@ export function validateToolingValidationScript(
     "go -C tooling run ./cmd/20w experiment validate --root ..",
     "go -C tooling run ./cmd/20w github sync-metadata --root .. --check",
     "go -C tooling run ./cmd/20w publication render-pdf --root .. --check",
+    "go -C tooling run ./cmd/20w publication verify-pdf-tools --root ..",
     "go -C tooling run ./cmd/20w publication verify-public-transport --root .. --check",
   ].join(" && ");
   if (command === expected) return [];
   return [
-    `${relativePath}: validate:tooling must validate experiment, GitHub metadata, publication-render, and public-transport authority offline in that order`,
+    `${relativePath}: validate:tooling must validate experiment, GitHub metadata, publication-render, PDF-tools, and public-transport authority offline in that order`,
   ];
 }
 

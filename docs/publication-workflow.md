@@ -148,9 +148,14 @@ and the full checked semantic-sentinel set. Its current expected outcome is
 `known-debt`, so a
 matching audit exits non-zero; it is a regression sentinel, not a PDF/UA or WCAG
 conformance check. DOM and accessibility-tree order are outside this Poppler
-snapshot and require the pinned-Chrome renderer-aware follow-up. Required CI
-enforcement waits for the separately locked PDF-tools container so an ambient
-host Poppler cannot silently redefine the baseline.
+snapshot and require the pinned-Chrome renderer-aware follow-up. The separate
+PDF-tools authority now locks apko, Poppler 26.08.0, the 45-package graph,
+runtime expectations, notices, the Wolfi recipe-licence snapshot and
+source-retention metadata. Its offline Go validator prevents repository drift.
+Required semantic CI enforcement still
+waits for deterministic notice-layer assembly, a two-build final-image match,
+publication and exact-digest admission; ambient host Poppler remains
+non-authoritative.
 
 Container publication has a separate two-phase boundary. The build pushes a
 candidate under its canonical digest without a release tag. The workflow then

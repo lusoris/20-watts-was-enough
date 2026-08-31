@@ -49,6 +49,7 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w experiment release-plan [--root <repository>] [--json]")
 	fmt.Fprintln(writer, "  20w experiment package-node-image --artifact <id> --output <directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w publication render-pdf [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--check]")
+	fmt.Fprintln(writer, "  20w publication verify-pdf-tools [--root <repository>]")
 	fmt.Fprintln(writer, "  20w publication verify-pdf-reproducibility --receipt <new.json> [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH]")
 	fmt.Fprintln(writer, "  20w publication verify-public-transport [--root <repository>] [--check]")
 	fmt.Fprintln(writer, "  20w translation export-candidate --source <concept-or-math.md> --language <code> --output <new.json> [--root <repository>]")
@@ -124,6 +125,9 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 	case "publication":
 		if len(arguments) >= 2 && arguments[1] == "render-pdf" {
 			return runPublicationRenderPDF(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "verify-pdf-tools" {
+			return runPublicationVerifyPDFTools(arguments[2:], stdout, stderr)
 		}
 		if len(arguments) >= 2 && arguments[1] == "verify-pdf-reproducibility" {
 			return runPublicationVerifyPDFReproducibility(arguments[2:], stdout, stderr)

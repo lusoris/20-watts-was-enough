@@ -142,17 +142,18 @@ test("the repository satisfies its engineering policy", () => {
   assert.deepEqual(validateRepositoryPolicy(), []);
 });
 
-test("tooling validation runs all four offline authorities in order", () => {
+test("tooling validation runs all five offline authorities in order", () => {
   const experiment = "go -C tooling run ./cmd/20w experiment validate --root ..";
   const metadata = "go -C tooling run ./cmd/20w github sync-metadata --root .. --check";
   const publication = "go -C tooling run ./cmd/20w publication render-pdf --root .. --check";
+  const pdfTools = "go -C tooling run ./cmd/20w publication verify-pdf-tools --root ..";
   const transport = "go -C tooling run ./cmd/20w publication verify-public-transport --root .. --check";
-  const expectedFinding = "package.json: validate:tooling must validate experiment, GitHub metadata, publication-render, and public-transport authority offline in that order";
-  assert.deepEqual(validateToolingValidationScript(`${experiment} && ${metadata} && ${publication} && ${transport}`), []);
+  const expectedFinding = "package.json: validate:tooling must validate experiment, GitHub metadata, publication-render, PDF-tools, and public-transport authority offline in that order";
+  assert.deepEqual(validateToolingValidationScript(`${experiment} && ${metadata} && ${publication} && ${pdfTools} && ${transport}`), []);
   for (const command of [
-    `${metadata} && ${experiment} && ${publication} && ${transport}`,
+    `${metadata} && ${experiment} && ${publication} && ${pdfTools} && ${transport}`,
     `${experiment} && ${metadata}`,
-    `${experiment} && ${metadata} && ${publication} && curl https://example.test && ${transport}`,
+    `${experiment} && ${metadata} && ${publication} && ${pdfTools} && curl https://example.test && ${transport}`,
   ]) {
     assert.deepEqual(validateToolingValidationScript(command), [expectedFinding]);
   }

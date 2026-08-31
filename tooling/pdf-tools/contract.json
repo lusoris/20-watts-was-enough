@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "contract": "publication.pdf-tools-image.v1",
+  "image": "ghcr.io/lusoris/20-watts-was-enough-pdf-tools",
+  "platform": "linux/amd64",
+  "result_authority": "NO_RESULT",
+  "builder": {
+    "image": "cgr.dev/chainguard/apko@sha256:b94253818432d013d96ece3fa4d8fa3930d325ec56d901e3e5edd46f83ed2cd5",
+    "version": "1.2.41",
+    "revision": "c89724f244e9d41f5e14cc7a5f3d0bd08a82128e",
+    "go_version": "1.27.0"
+  },
+  "source_date_epoch": 1785757696,
+  "apko": {
+    "config": "apko.yaml",
+    "config_sha256": "11e7e0de31de4ca005007a0fd57cfcdd4359245e2d44f69f74c53cc34b4179db",
+    "lock": "apko.lock.json",
+    "lock_sha256": "c33b1eeeaf73a4c7ce69fa507be7620ef623c4b067e5f2122a8acf8530678404",
+    "output_tag": "pdf-tools:26.08.0-r0",
+    "repository": "https://packages.wolfi.dev/os",
+    "keyring": "https://packages.wolfi.dev/os/wolfi-signing.rsa.pub",
+    "direct_packages": [
+      "poppler=26.08.0-r0",
+      "poppler-doc=26.08.0-r0",
+      "poppler-utils=26.08.0-r0"
+    ],
+    "locked_package_count": 45
+  },
+  "base_image": {
+    "archive_sha256": "53355e7620c02fa9bd71f72f1f078a1debc31fd07fbbe881c4d668ac18cc98d1",
+    "archive_size_bytes": 33133568,
+    "manifest_digest": "sha256:74bb3b2f7e0783cac70d58ad276b40b58795327ed40485768ee8ba64298fc47c",
+    "config_digest": "sha256:ec7b184be25657686299b62442b0f62635b776daf903d2e88e87c884b6043d48",
+    "layer_digest": "sha256:170d0daae786b83b82baeb6dd8ca39d718ca41cca4053d053dcf7345ed366136",
+    "layer_diff_id": "sha256:1f7bcd328d0a22207c3b8d8197860057bc08aa0e6098b9e2c220b500cae9a196",
+    "spdx_sha256": "fe95a42355a16b8424790f3666bf49d500fc30dd4470697b147eabd8ef196ed6",
+    "spdx_size_bytes": 202202
+  },
+  "runtime": {
+    "uid": 65532,
+    "gid": 65532,
+    "path": "/usr/bin",
+    "network": "none",
+    "read_only_root": true,
+    "capabilities": "drop-all",
+    "no_new_privileges": true,
+    "required_tools": [
+      {
+        "name": "pdfinfo",
+        "version": "26.08.0",
+        "version_stream": "stderr"
+      },
+      {
+        "name": "pdftotext",
+        "version": "26.08.0",
+        "version_stream": "stderr"
+      }
+    ],
+    "forbidden_paths": [
+      "/bin/sh",
+      "/sbin/apk"
+    ],
+    "man_pages": [
+      "pdfattach.1",
+      "pdfdetach.1",
+      "pdffonts.1",
+      "pdfimages.1",
+      "pdfinfo.1",
+      "pdfseparate.1",
+      "pdfsig.1",
+      "pdftocairo.1",
+      "pdftohtml.1",
+      "pdftoppm.1",
+      "pdftops.1",
+      "pdftotext.1",
+      "pdfunite.1"
+    ]
+  },
+  "upstream": {
+    "poppler_archive": {
+      "url": "https://poppler.freedesktop.org/poppler-26.08.0.tar.xz",
+      "sha256": "dc906e68cea698109706ac6aa3d2c9d4512fcfcac42d90b8afcda486d1b9abd0",
+      "size_bytes": 2031352,
+      "root": "poppler-26.08.0"
+    },
+    "wolfi_recipe": {
+      "url": "https://raw.githubusercontent.com/wolfi-dev/os/5e69451b1ecde444999cd951257e19a98dd3320a/poppler.yaml",
+      "revision": "5e69451b1ecde444999cd951257e19a98dd3320a",
+      "sha256": "f998689ff4f760a5a4a1c4ec87079b132a24dfb806ae50c1d7bd1e099b502611",
+      "size_bytes": 4874,
+      "snapshot": "upstream/wolfi-poppler.yaml",
+      "license": {
+        "spdx": "Apache-2.0",
+        "url": "https://raw.githubusercontent.com/wolfi-dev/os/5e69451b1ecde444999cd951257e19a98dd3320a/LICENSE",
+        "revision": "5e69451b1ecde444999cd951257e19a98dd3320a",
+        "sha256": "5f7a57459627fff76b53831c6582d839da4cbd8d31de642452f28dd0adcb4d01",
+        "size_bytes": 12003,
+        "snapshot": "upstream/wolfi-LICENSE"
+      }
+    }
+  },
+  "notice_layer": {
+    "assembly": "deterministic-final-layer",
+    "buildkit_lock": "../pdf-renderer/lock.json",
+    "buildkit_authority_sha256": "463c367cdc2e700a4300e0ed8a6a910ab8e15112695410baee70455cd50e892c",
+    "entries": [
+      {
+        "source": "notices/AUTHORS",
+        "archive_path": "poppler-26.08.0/AUTHORS",
+        "destination": "/usr/share/licenses/poppler/AUTHORS",
+        "sha256": "9bb2a2d73128adae6044ccbaa6a477640c4ce86e30771b0efad67ec7385588a4",
+        "size_bytes": 145
+      },
+      {
+        "source": "notices/COPYING",
+        "archive_path": "poppler-26.08.0/COPYING",
+        "destination": "/usr/share/licenses/poppler/COPYING",
+        "sha256": "ab15fd526bd8dd18a9e77ebc139656bf4d33e97fc7238cd11bf60e2b9b8666c6",
+        "size_bytes": 17987
+      },
+      {
+        "source": "notices/COPYING3",
+        "archive_path": "poppler-26.08.0/COPYING3",
+        "destination": "/usr/share/licenses/poppler/COPYING3",
+        "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+        "size_bytes": 35147
+      },
+      {
+        "source": "notices/README-XPDF",
+        "archive_path": "poppler-26.08.0/README-XPDF",
+        "destination": "/usr/share/licenses/poppler/README-XPDF",
+        "sha256": "c8c3915181d5003f9cec6b2b88b01b612cbd109287aeb0f7e741feca2d983502",
+        "size_bytes": 15147
+      },
+      {
+        "source": "notices/README.contributors",
+        "archive_path": "poppler-26.08.0/README.contributors",
+        "destination": "/usr/share/licenses/poppler/README.contributors",
+        "sha256": "f88fa437aa92a91542da067a5aa10799f588fd9a513085b80ba61ce510d75ebf",
+        "size_bytes": 2488
+      }
+    ]
+  },
+  "source_delivery": {
+    "apk_manifest": "apk-retention.json",
+    "apk_manifest_sha256": "367368e7e075f20f30604b81497e65befe6987eaf526ed28da9f1506029ad1df",
+    "apk_count": 45,
+    "candidate_bundle": "20w-pdf-tools-26.08.0-r0-linux-amd64-sources.tar.gz",
+    "candidate_retention_days": 30,
+    "release_route": "checksum-bound GitHub Release asset",
+    "contents": [
+      "45 exact APK files",
+      "apko.yaml",
+      "apko.lock.json",
+      "apk-retention.json",
+      "contract.json",
+      "Poppler 26.08.0 source archive",
+      "pinned Wolfi recipe",
+      "Wolfi root Apache-2.0 recipe licence",
+      "Poppler notices",
+      "generated SPDX SBOM"
+    ]
+  },
+  "limits": {
+    "lock_bytes": 65536,
+    "packages": 64,
+    "notice_bytes": 131072,
+    "base_archive_bytes": 67108864,
+    "source_bundle_bytes": 67108864,
+    "lock_seconds": 120,
+    "build_seconds": 300,
+    "captured_output_bytes": 1048576
+  }
+}

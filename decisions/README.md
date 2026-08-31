@@ -58,3 +58,4 @@ than silently changing its outcome.
 | [0050](0050-review-the-book-and-pdf-as-one-publication.md) | Review the book and PDF as one publication | accepted |
 | [0051](0051-add-a-seventh-fixture-026-shard-after-live-timing.md) | Add a seventh Fixture 026 shard after live timing | accepted |
 | [0052](0052-impact-scope-every-pull-request.md) | Impact-scope every pull request | accepted |
+| [0053](0053-lock-the-poppler-pdf-tools-image-foundation.md) | Lock the Poppler PDF-tools image foundation | accepted |

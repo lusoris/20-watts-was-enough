@@ -1,0 +1,459 @@
+{
+  "schema": 1,
+  "contract": "publication.pdf-tools-apk-retention.v1",
+  "platform": "linux/amd64",
+  "package_count": 45,
+  "total_bytes": 33667496,
+  "packages": [
+    {
+      "name": "ca-certificates-bundle",
+      "version": "20260611-r0",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/ca-certificates-bundle-20260611-r0.apk",
+      "filename": "ca-certificates-bundle-20260611-r0.apk",
+      "size_bytes": 116384,
+      "sha256": "19789740d3ea575cf31cd2eb9ede9f826766ea8aae129af23036054fa3b07687",
+      "license_declared": "MPL-2.0 AND MIT"
+    },
+    {
+      "name": "cairo",
+      "version": "1.18.4-r8",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/cairo-1.18.4-r8.apk",
+      "filename": "cairo-1.18.4-r8.apk",
+      "size_bytes": 854916,
+      "sha256": "23604b7d3f7e0b215663dde351fe0aa088a3ee8793f77349c29c62c92d3429d5",
+      "license_declared": "LGPL-2.1"
+    },
+    {
+      "name": "fontconfig-config",
+      "version": "2.18.3-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/fontconfig-config-2.18.3-r1.apk",
+      "filename": "fontconfig-config-2.18.3-r1.apk",
+      "size_bytes": 37037,
+      "sha256": "bfdf7cdb19d4e83e588541f1ba53f6653064d43bfbc1ad633945276a3beb0ce7",
+      "license_declared": "MIT"
+    },
+    {
+      "name": "freetype",
+      "version": "2.14.3-r6",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/freetype-2.14.3-r6.apk",
+      "filename": "freetype-2.14.3-r6.apk",
+      "size_bytes": 477534,
+      "sha256": "c2322713858bd81484ae1ad61c3a08537b9b2ed3fc78b6bcf08c44aa5f54d979",
+      "license_declared": "FTL OR GPL-2.0-or-later"
+    },
+    {
+      "name": "gdbm",
+      "version": "1.26-r6",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/gdbm-1.26-r6.apk",
+      "filename": "gdbm-1.26-r6.apk",
+      "size_bytes": 279815,
+      "sha256": "1c880511436ea833e2d5798d1886f1e3ee9936dce2d4dc223dae41e1f15b52ff",
+      "license_declared": "GPL-3.0-or-later"
+    },
+    {
+      "name": "glibc-2.44",
+      "version": "2.44-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/glibc-2.44-2.44-r1.apk",
+      "filename": "glibc-2.44-2.44-r1.apk",
+      "size_bytes": 3163645,
+      "sha256": "5c58b20fa340bc3eed813513b306c53b831cac2be713cf58b9113234567d2b48",
+      "license_declared": "LGPL-2.1-or-later"
+    },
+    {
+      "name": "glibc-2.44-locale-posix",
+      "version": "2.44-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/glibc-2.44-locale-posix-2.44-r1.apk",
+      "filename": "glibc-2.44-locale-posix-2.44-r1.apk",
+      "size_bytes": 93427,
+      "sha256": "c8ce27bc898af1ea3b874ef19ecfae8870f6c462938bc18bc1c22bb840d0c4aa",
+      "license_declared": "LGPL-2.1-or-later"
+    },
+    {
+      "name": "groff",
+      "version": "1.24.1-r4",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/groff-1.24.1-r4.apk",
+      "filename": "groff-1.24.1-r4.apk",
+      "size_bytes": 2061741,
+      "sha256": "8b5df96fe179cf5f617ecef066d52f1b254fabf9f84d7820c3cc2bde75acdb1f",
+      "license_declared": "GPL-3.0-or-later"
+    },
+    {
+      "name": "groff-base",
+      "version": "1.24.1-r4",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/groff-base-1.24.1-r4.apk",
+      "filename": "groff-base-1.24.1-r4.apk",
+      "size_bytes": 1175625,
+      "sha256": "4cbb5afef63c2e6562b0175f6b27ce55cbb0b2d89e8b239f84ea128c1e029aa4",
+      "license_declared": "GPL-3.0-or-later"
+    },
+    {
+      "name": "lcms2",
+      "version": "2.19.1-r2",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/lcms2-2.19.1-r2.apk",
+      "filename": "lcms2-2.19.1-r2.apk",
+      "size_bytes": 236801,
+      "sha256": "4548114ddadd10ee87c6252b0bad67db5d4ae1c57032c0d8a0d9748494ed147c",
+      "license_declared": "MIT AND GPL-3.0-only"
+    },
+    {
+      "name": "ld-linux-2.44",
+      "version": "2.44-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/ld-linux-2.44-2.44-r1.apk",
+      "filename": "ld-linux-2.44-2.44-r1.apk",
+      "size_bytes": 157458,
+      "sha256": "20328a5157d968ccc4ee61d6afd36e92ebe6d38405ad929374575783b2aa8976",
+      "license_declared": "LGPL-2.1-or-later"
+    },
+    {
+      "name": "libbrotlicommon1",
+      "version": "1.2.0-r4",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libbrotlicommon1-1.2.0-r4.apk",
+      "filename": "libbrotlicommon1-1.2.0-r4.apk",
+      "size_bytes": 77569,
+      "sha256": "a986516818e66d44f5415cc130b5b8159d9dbf450c62e72978c194272528dd97",
+      "license_declared": "MIT"
+    },
+    {
+      "name": "libbrotlidec1",
+      "version": "1.2.0-r4",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libbrotlidec1-1.2.0-r4.apk",
+      "filename": "libbrotlidec1-1.2.0-r4.apk",
+      "size_bytes": 40856,
+      "sha256": "677b850893791ed2afcc64caba5ca4de77ca1907ea6c12a83de1dcc2105999a5",
+      "license_declared": "MIT"
+    },
+    {
+      "name": "libbz2-1",
+      "version": "1.0.8-r23",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libbz2-1-1.0.8-r23.apk",
+      "filename": "libbz2-1-1.0.8-r23.apk",
+      "size_bytes": 48860,
+      "sha256": "796efdde62e76824bb22c55534ed6ed4acb9dcc08de35aaa9ed63900600a5ecb",
+      "license_declared": "MPL-2.0 AND MIT"
+    },
+    {
+      "name": "libcrypt1-2.44",
+      "version": "2.44-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libcrypt1-2.44-2.44-r1.apk",
+      "filename": "libcrypt1-2.44-2.44-r1.apk",
+      "size_bytes": 18338,
+      "sha256": "701ebf17f1e8c913f7ac472ef5eb00a47b18ac9335afea93c27499ba6cff0933",
+      "license_declared": "LGPL-2.1-or-later"
+    },
+    {
+      "name": "libexpat1",
+      "version": "2.8.3-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libexpat1-2.8.3-r1.apk",
+      "filename": "libexpat1-2.8.3-r1.apk",
+      "size_bytes": 111331,
+      "sha256": "fe53fe3da67abde09cf1f6427de821e8008198c67fd15944e9c8736a811af2e2",
+      "license_declared": "MIT"
+    },
+    {
+      "name": "libfontconfig1",
+      "version": "2.18.3-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libfontconfig1-2.18.3-r1.apk",
+      "filename": "libfontconfig1-2.18.3-r1.apk",
+      "size_bytes": 209605,
+      "sha256": "682e27c2263e57c7e4e2b4e4d1b0bb2a2be9646725cce1342d7e27225b3e94e2",
+      "license_declared": "MIT"
+    },
+    {
+      "name": "libgcc",
+      "version": "16.2.0-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libgcc-16.2.0-r1.apk",
+      "filename": "libgcc-16.2.0-r1.apk",
+      "size_bytes": 106134,
+      "sha256": "6c41a73a5e07bfa17ff3fa6c64d0a898905168c780a04f2092eacb53545106db",
+      "license_declared": "GPL-3.0-or-later WITH GCC-exception-3.1"
+    },
+    {
+      "name": "libjpeg-turbo",
+      "version": "3.2.0-r2",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libjpeg-turbo-3.2.0-r2.apk",
+      "filename": "libjpeg-turbo-3.2.0-r2.apk",
+      "size_bytes": 651799,
+      "sha256": "51f93a4ffa997456eef360d4096975f9620666d75375db7969d3995928d099a4",
+      "license_declared": "BSD-3-Clause AND IJG AND Zlib"
+    },
+    {
+      "name": "libnspr",
+      "version": "4.40-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libnspr-4.40-r1.apk",
+      "filename": "libnspr-4.40-r1.apk",
+      "size_bytes": 170264,
+      "sha256": "ac0db59fe9353851521d43d23335c9f8ab1bf457436b98c29fb0e50bab31e845",
+      "license_declared": "MPL-2.0"
+    },
+    {
+      "name": "libnss",
+      "version": "3.128-r2",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libnss-3.128-r2.apk",
+      "filename": "libnss-3.128-r2.apk",
+      "size_bytes": 1774546,
+      "sha256": "6dcd73c92ac2ad417c7b2ec91b33b3c9835481063477540616802dbd52963841",
+      "license_declared": "MPL-2.0"
+    },
+    {
+      "name": "libpipeline",
+      "version": "1.5.8-r6",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libpipeline-1.5.8-r6.apk",
+      "filename": "libpipeline-1.5.8-r6.apk",
+      "size_bytes": 48078,
+      "sha256": "1245802077ff440d9fdefd2ea71a6a92821e57186ee499eb9e52f6cc9253de24",
+      "license_declared": "GPL-3.0-or-later"
+    },
+    {
+      "name": "libpng",
+      "version": "1.6.58-r3",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libpng-1.6.58-r3.apk",
+      "filename": "libpng-1.6.58-r3.apk",
+      "size_bytes": 142656,
+      "sha256": "2d18051a9cf21577e531b68130dd07205fa50f96f42393a652f3ca848b52f362",
+      "license_declared": "libpng-2.0"
+    },
+    {
+      "name": "libseccomp",
+      "version": "2.6.1-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libseccomp-2.6.1-r1.apk",
+      "filename": "libseccomp-2.6.1-r1.apk",
+      "size_bytes": 75629,
+      "sha256": "ae49829a768305713bbd66ce80fccea373a00be39b7b8d4fc1c5a8869c178bd0",
+      "license_declared": "LGPL-2.1-or-later"
+    },
+    {
+      "name": "libstdc++",
+      "version": "16.2.0-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libstdc++-16.2.0-r1.apk",
+      "filename": "libstdc++-16.2.0-r1.apk",
+      "size_bytes": 1260650,
+      "sha256": "fc233c091aa551d6ba6da3e444d99a94e9947d53814d20183a0a7ded9a668f80",
+      "license_declared": "GPL-3.0-or-later WITH GCC-exception-3.1"
+    },
+    {
+      "name": "libwebp",
+      "version": "1.6.0-r6",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libwebp-1.6.0-r6.apk",
+      "filename": "libwebp-1.6.0-r6.apk",
+      "size_bytes": 338855,
+      "sha256": "ae1e9981b6ab1b956213cda5f00418d08b74dcdd69979a2f49782c49d983d5c4",
+      "license_declared": "BSD-3-Clause"
+    },
+    {
+      "name": "libx11",
+      "version": "1.8.13-r5",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libx11-1.8.13-r5.apk",
+      "filename": "libx11-1.8.13-r5.apk",
+      "size_bytes": 1894898,
+      "sha256": "a4408e335afd6fe53f7f236935aae8516543d0485ebea072fda102071b1319a4",
+      "license_declared": "XFree86-1.1"
+    },
+    {
+      "name": "libxau",
+      "version": "1.0.12-r8",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libxau-1.0.12-r8.apk",
+      "filename": "libxau-1.0.12-r8.apk",
+      "size_bytes": 15615,
+      "sha256": "5e280d25493c9578db8ffc77cb495feccd4fa487e6cc28e472a775dbaa056447",
+      "license_declared": "MIT"
+    },
+    {
+      "name": "libxcb",
+      "version": "1.17.0-r16",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libxcb-1.17.0-r16.apk",
+      "filename": "libxcb-1.17.0-r16.apk",
+      "size_bytes": 398857,
+      "sha256": "820a311ba58d4a0e7729230cde08932a403460af813b7c888a5d8b7ef2d0fc36",
+      "license_declared": "MIT"
+    },
+    {
+      "name": "libxcrypt",
+      "version": "4.5.2-r5",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libxcrypt-4.5.2-r5.apk",
+      "filename": "libxcrypt-4.5.2-r5.apk",
+      "size_bytes": 107323,
+      "sha256": "56db97bbb709ae6d15323e3e470584171f17ac46ae06e7f9dd66d343df7d014e",
+      "license_declared": "GPL-2.0-or-later AND LGPL-2.1-or-later"
+    },
+    {
+      "name": "libxdmcp",
+      "version": "1.1.5-r10",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libxdmcp-1.1.5-r10.apk",
+      "filename": "libxdmcp-1.1.5-r10.apk",
+      "size_bytes": 20657,
+      "sha256": "9a96e44d381e1772047b91b690f9cba076a36994f2f40c869df12f8b466b16dd",
+      "license_declared": "MIT"
+    },
+    {
+      "name": "libxext",
+      "version": "1.3.7-r3",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libxext-1.3.7-r3.apk",
+      "filename": "libxext-1.3.7-r3.apk",
+      "size_bytes": 74475,
+      "sha256": "78d5b0abcebd295de4438001272da5c561461c984d17320568a5bee06f4bc710",
+      "license_declared": "MIT"
+    },
+    {
+      "name": "libxrender",
+      "version": "0.9.12-r9",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libxrender-0.9.12-r9.apk",
+      "filename": "libxrender-0.9.12-r9.apk",
+      "size_bytes": 31950,
+      "sha256": "41d05cd13cd3dac34cdc066ef323bb740c3d0a661ca7b50ea1bb096cb44532f9",
+      "license_declared": "XFree86-1.1"
+    },
+    {
+      "name": "libzstd1",
+      "version": "1.5.7-r8",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/libzstd1-1.5.7-r8.apk",
+      "filename": "libzstd1-1.5.7-r8.apk",
+      "size_bytes": 639443,
+      "sha256": "c69353cfdd6d47169a53333be562384f28ad596027a63fc9630802396da007b2",
+      "license_declared": "BSD-2-Clause AND GPL-2.0-only"
+    },
+    {
+      "name": "man-db",
+      "version": "2.13.1-r55",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/man-db-2.13.1-r55.apk",
+      "filename": "man-db-2.13.1-r55.apk",
+      "size_bytes": 769468,
+      "sha256": "8c25a22e7f9e034fb0026fca939e11883551e916d261bace6d3fd7be2fd7989a",
+      "license_declared": "GPL-3.0"
+    },
+    {
+      "name": "openjpeg",
+      "version": "2.5.4-r3",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/openjpeg-2.5.4-r3.apk",
+      "filename": "openjpeg-2.5.4-r3.apk",
+      "size_bytes": 244855,
+      "sha256": "eca7c6ea6d158a9d07cef353b9a7af8b2080e92c7a58dddae74f5a92f9fcd83d",
+      "license_declared": "BSD-2-Clause"
+    },
+    {
+      "name": "perl",
+      "version": "5.44.0-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/perl-5.44.0-r1.apk",
+      "filename": "perl-5.44.0-r1.apk",
+      "size_bytes": 11315392,
+      "sha256": "99bfd65a774c164045d28e880c403063d0a61c1aeebbf65b0adf0b8b613f2738",
+      "license_declared": "Artistic-1.0-Perl OR GPL-1.0-or-later"
+    },
+    {
+      "name": "pixman",
+      "version": "0.46.4-r6",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/pixman-0.46.4-r6.apk",
+      "filename": "pixman-0.46.4-r6.apk",
+      "size_bytes": 363572,
+      "sha256": "3ae20a002aec566bc93925d1f980b740edb41061a19b93581d1cc1e94c95e6d0",
+      "license_declared": "MIT"
+    },
+    {
+      "name": "poppler",
+      "version": "26.08.0-r0",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/poppler-26.08.0-r0.apk",
+      "filename": "poppler-26.08.0-r0.apk",
+      "size_bytes": 1989906,
+      "sha256": "50bf8d181c364fd3225e0f0e3c9b9a92d588cf6444a7cce35de7a788439f654f",
+      "license_declared": "GPL-2.0-or-later"
+    },
+    {
+      "name": "poppler-doc",
+      "version": "26.08.0-r0",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/poppler-doc-26.08.0-r0.apk",
+      "filename": "poppler-doc-26.08.0-r0.apk",
+      "size_bytes": 28175,
+      "sha256": "91b11ad8dbd63879f8fd0e5843236614a44128fccf013979e846f6fda1d36edf",
+      "license_declared": "GPL-2.0-or-later"
+    },
+    {
+      "name": "poppler-utils",
+      "version": "26.08.0-r0",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/poppler-utils-26.08.0-r0.apk",
+      "filename": "poppler-utils-26.08.0-r0.apk",
+      "size_bytes": 437450,
+      "sha256": "1b33dfeb0b3b5e8ea321a7d064ac00c5c8fc39ecf107ab5cd2963317bdb33bcf",
+      "license_declared": "GPL-2.0-or-later"
+    },
+    {
+      "name": "sqlite-libs",
+      "version": "3.53.4-r1",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/sqlite-libs-3.53.4-r1.apk",
+      "filename": "sqlite-libs-3.53.4-r1.apk",
+      "size_bytes": 978842,
+      "sha256": "0c0dd851759aad4b5576c3ef964f98ebf3adf3392a5603299720646384020824",
+      "license_declared": "blessing"
+    },
+    {
+      "name": "tiff",
+      "version": "4.7.2-r2",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/tiff-4.7.2-r2.apk",
+      "filename": "tiff-4.7.2-r2.apk",
+      "size_bytes": 539849,
+      "sha256": "058ec2e8a38fd9cfef424bec098f3bf5ae4f94beb9a82258da0161e835436fde",
+      "license_declared": "libtiff"
+    },
+    {
+      "name": "wolfi-baselayout",
+      "version": "20230201-r29",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/wolfi-baselayout-20230201-r29.apk",
+      "filename": "wolfi-baselayout-20230201-r29.apk",
+      "size_bytes": 13953,
+      "sha256": "c7aef94f6c8e3060cac5a6b1dfa6257ad0d2d4d0a6ff93d02bba26e0ea518457",
+      "license_declared": "MIT"
+    },
+    {
+      "name": "zlib",
+      "version": "1.3.2-r5",
+      "architecture": "x86_64",
+      "url": "https://packages.wolfi.dev/os/x86_64/zlib-1.3.2-r5.apk",
+      "filename": "zlib-1.3.2-r5.apk",
+      "size_bytes": 73263,
+      "sha256": "f9cdf26db1c5c27be8bc711e251f8988854d155f369a683b6813e7fdfff1ab9f",
+      "license_declared": "MPL-2.0 AND MIT"
+    }
+  ]
+}
