@@ -14,6 +14,11 @@ the exact diff; this file records why the project changed.
   the deterministic final-layer design.
   Recorded base-image checks remain `NO_RESULT`; final assembly, publication
   and exact-digest CI consumption stay open behind issue 20.
+- Decision 0055 and a source-bound Go contract now freeze the CLRS-Text
+  controller shakedown to six named task families, a bounded 48-example
+  construction plan and explicit fixed-four-endpoint semantics for segment
+  intersection. The shared registry removes the controller's parallel task
+  list; no generator image, dataset, model run or scientific result is added.
 - A versioned PDF semantic sentinel now binds the current source, book, A4 and
   tag metadata, Poppler tool identity, separate structure and text streams,
   exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps

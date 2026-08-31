@@ -10,6 +10,9 @@ import (
 // SourceID binds one validated upstream source record.
 type SourceID [sha256.Size]byte
 
+// ContractID binds one validated generation contract to its exact source.
+type ContractID [sha256.Size]byte
+
 // CandidateID binds candidate-visible input without incorporating its answer.
 type CandidateID [sha256.Size]byte
 
@@ -17,6 +20,10 @@ type CandidateID [sha256.Size]byte
 type VerifierID [sha256.Size]byte
 
 func (id SourceID) String() string {
+	return "sha256:" + hex.EncodeToString(id[:])
+}
+
+func (id ContractID) String() string {
 	return "sha256:" + hex.EncodeToString(id[:])
 }
 
