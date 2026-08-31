@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "contract": "experiment.clrs-generator-image.v1",
+  "authority": "NO_RESULT",
+  "state": "blocked",
+  "issue": "https://github.com/lusoris/20-watts-was-enough/issues/12",
+  "image": "ghcr.io/lusoris/20-watts-was-enough-clrs-generator",
+  "platform": "linux/amd64",
+  "source_id": "sha256:7ec3b6b7528d04f517c4e9b7c3e0cd0f7034a775d225d469d1aca5c00fec10d1",
+  "generation_contract_id": "sha256:cc14fce405e8fa7d4719f1fc906e28d5e4b73235085c8f0722795efded2891a8",
+  "lock_input": {
+    "path": "tooling/clrs-generator/lock-input.json",
+    "sha256": "d7ff2963aa2f11e3cf001fc095520780539c85e4923448939c9ef9ede41eb827"
+  },
+  "builder": {
+    "authority_path": "tooling/pdf-renderer/lock.json",
+    "authority_subset_sha256": "463c367cdc2e700a4300e0ed8a6a910ab8e15112695410baee70455cd50e892c",
+    "buildx_version": "0.36.1",
+    "buildx_revision": "1d8dde89b8aba914e05e45366770736fea1fd690",
+    "buildkit_version": "0.32.2",
+    "buildkit_image": "moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8",
+    "rewrite_timestamp": true,
+    "compatibility_version": 30,
+    "source_date_epoch": 1787658740
+  },
+  "dependency_lock": {
+    "state": "missing",
+    "path": "tooling/clrs-generator/uv.lock",
+    "sha256": "",
+    "package_count": 0,
+    "artifact_count": 0
+  },
+  "build_context": {
+    "state": "missing",
+    "dockerfile_path": "tooling/clrs-generator/Dockerfile",
+    "dockerfile_sha256": "",
+    "wheelhouse_manifest_path": "tooling/clrs-generator/wheelhouse.json",
+    "wheelhouse_manifest_sha256": "",
+    "context_sha256": "",
+    "install_network": "none"
+  },
+  "license_material": {
+    "state": "missing",
+    "spdx": "Apache-2.0",
+    "source_path": "LICENSE",
+    "source_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "source_size_bytes": 11358,
+    "destination_path": "/usr/share/licenses/clrs/LICENSE",
+    "image_digest": "",
+    "receipt_path": "build/evidence/clrs-generator/license-material-receipt.json",
+    "receipt_sha256": "",
+    "receipt_size_bytes": 0
+  },
+  "image_identity": {
+    "state": "missing",
+    "required_builds": 2,
+    "observed_builds": 0,
+    "manifest_digest": "",
+    "config_digest": "",
+    "layer_digests": []
+  },
+  "sbom": {
+    "state": "missing",
+    "format": "spdx-json",
+    "generator_image": "docker.io/docker/buildkit-syft-scanner@sha256:ae4f3b554449e7e25548e7d8ccc029d17357348e30c6e3df01b92bc93654d6a9",
+    "path": "build/evidence/clrs-generator/image.spdx.json",
+    "image_digest": "",
+    "sha256": "",
+    "size_bytes": 0,
+    "package_count": 0,
+    "receipt_path": "build/evidence/clrs-generator/sbom-receipt.json",
+    "receipt_sha256": "",
+    "receipt_size_bytes": 0
+  },
+  "runtime": {
+    "entrypoint": [
+      "/opt/venv/bin/python",
+      "-m",
+      "clrs._src.clrs_text.generate_clrs_text"
+    ],
+    "working_directory": "/work",
+    "source_root": "/opt/clrs",
+    "output_root": "/output",
+    "temporary_root": "/tmp",
+    "uid": 65532,
+    "gid": 65532,
+    "network": "none",
+    "read_only_root": true,
+    "capabilities": "drop-all",
+    "no_new_privileges": true,
+    "cpu_millis": 1000,
+    "memory_bytes": 4294967296,
+    "pids": 256,
+    "wall_clock_seconds": 300,
+    "stop_grace_seconds": 5,
+    "temporary_bytes": 536870912,
+    "output_bytes": 25165824,
+    "captured_output_bytes": 1048576,
+    "environment": [
+      "CUDA_VISIBLE_DEVICES=",
+      "HOME=/tmp/home",
+      "JAX_PLATFORMS=cpu",
+      "LANG=C.UTF-8",
+      "LC_ALL=C.UTF-8",
+      "OMP_NUM_THREADS=1",
+      "PYTHONHASHSEED=0",
+      "PYTHONPATH=/opt/clrs",
+      "TF_CPP_MIN_LOG_LEVEL=2"
+    ]
+  },
+  "limits": {
+    "source_archive_bytes": 67108864,
+    "dependency_artifact_bytes": 2147483648,
+    "dependency_lock_bytes": 16777216,
+    "wheelhouse_manifest_bytes": 16777216,
+    "dependency_package_count": 1024,
+    "dependency_artifact_count": 2048,
+    "build_context_bytes": 2147483648,
+    "compressed_image_bytes": 2147483648,
+    "unpacked_image_bytes": 4294967296,
+    "sbom_bytes": 67108864,
+    "sbom_package_count": 10000,
+    "acceptance_receipt_bytes": 4194304,
+    "build_seconds": 1800
+  },
+  "runtime_smoke": {
+    "state": "missing",
+    "required_network": "none",
+    "require_source_import": true,
+    "image_digest": "",
+    "receipt_sha256": ""
+  },
+  "fixture_comparison": {
+    "state": "missing",
+    "required_runs": 2,
+    "comparison": "recursive-byte-for-byte",
+    "expected_files": 6,
+    "expected_examples": 48,
+    "image_digest": "",
+    "first_tree_sha256": "",
+    "second_tree_sha256": "",
+    "receipt_sha256": ""
+  },
+  "acceptance": {
+    "state": "blocked",
+    "source_context": "locked",
+    "blocked_on": [
+      "checksum_closed_build_context",
+      "exact_dependency_lock",
+      "pinned_upstream_license_material",
+      "image_bound_spdx_sbom",
+      "no_network_runtime_smoke",
+      "pinned_source_import_smoke",
+      "two_build_image_identity",
+      "two_run_fixture_byte_comparison"
+    ]
+  }
+}
