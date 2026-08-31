@@ -48,6 +48,11 @@ the exact diff; this file records why the project changed.
   the target, clamped to the final index. A separate linear verifier checks the
   contract-selected references while candidate requests retain only source-bound
   prompts and IDs. Synthetic tests add no dataset or scientific result.
+- The matrix-chain construction vertical now reproduces the pinned synchronous
+  split-cost operation and the generator's full split-pointer probe matrix in
+  Go. A separate interval-order verifier proves each held split is cost-minimal
+  without calling the specialist solver; source-bound requests remain isolated
+  from held answers, and all construction output remains `NO_RESULT`.
 - A versioned PDF semantic sentinel now binds the current source, book, A4 and
   tag metadata, Poppler tool identity, separate structure and text streams,
   exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps
