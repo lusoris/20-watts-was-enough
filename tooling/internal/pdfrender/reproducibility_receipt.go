@@ -22,24 +22,40 @@ import (
 )
 
 const (
-	reproducibilityReceiptSchema       = 1
+	reproducibilityReceiptSchema       = 2
 	maximumBuildMetadataBytes    int64 = 2 * 1024 * 1024
 )
 
 // ReproducibilityReceipt is the retained, deterministic evidence from one
 // non-scientific renderer build acceptance run.
 type ReproducibilityReceipt struct {
-	Schema           int                            `json:"schema"`
-	Status           string                         `json:"status"`
-	Scope            string                         `json:"scope"`
-	Authority        string                         `json:"authority"`
-	ScientificResult bool                           `json:"scientific_result"`
-	SourceRef        string                         `json:"source_ref"`
-	Renderer         ReproducibilityRenderer        `json:"renderer"`
-	Context          ReproducibilityContext         `json:"normalized_build_context"`
-	PublicationPair  ReproducibilityPublicationPair `json:"publication_pair"`
-	Builds           []ReproducibilityBuild         `json:"builds"`
-	Comparison       ReproducibilityComparison      `json:"comparison"`
+	Schema           int                              `json:"schema"`
+	Status           string                           `json:"status"`
+	Scope            string                           `json:"scope"`
+	Authority        string                           `json:"authority"`
+	ScientificResult bool                             `json:"scientific_result"`
+	SourceRef        string                           `json:"source_ref"`
+	Renderer         ReproducibilityRenderer          `json:"renderer"`
+	Context          ReproducibilityContext           `json:"normalized_build_context"`
+	PublicationPair  ReproducibilityPublicationPair   `json:"publication_pair"`
+	Builds           []ReproducibilityBuild           `json:"builds"`
+	Comparison       ReproducibilityComparison        `json:"comparison"`
+	MismatchEvidence *ReproducibilityMismatchEvidence `json:"mismatch_evidence,omitempty"`
+}
+
+// ReproducibilityMismatchEvidence identifies the exact compared bytes retained
+// only when the two independent builds disagree.
+type ReproducibilityMismatchEvidence struct {
+	Root   string                                 `json:"root"`
+	Builds []ReproducibilityMismatchEvidenceBuild `json:"builds"`
+}
+
+// ReproducibilityMismatchEvidenceBuild binds one build sequence to its retained
+// PDF and manifest paths.
+type ReproducibilityMismatchEvidenceBuild struct {
+	Sequence int    `json:"sequence"`
+	PDF      string `json:"pdf"`
+	Manifest string `json:"manifest"`
 }
 
 // ReproducibilityRenderer records the exact checked-in schema-3 build
@@ -336,6 +352,99 @@ func artifactEqual(first, second []renderedArtifact, name string) bool {
 		}
 	}
 	return false
+}
+
+func retainReproducibilityMismatch(
+	repositoryRoot, receiptPath string,
+	builds []ReproducibilityBuild,
+	removeAll func(string) error,
+) (_ *ReproducibilityMismatchEvidence, returnError error) {
+	if removeAll == nil {
+		return nil, errors.New("PDF reproducibility mismatch evidence requires a cleanup function")
+	}
+	if len(builds) != reproducibilityBuildCount {
+		return nil, errors.New("PDF reproducibility mismatch evidence requires exactly two builds")
+	}
+	receiptRelative, err := filepath.Rel(repositoryRoot, receiptPath)
+	if err != nil || receiptRelative == "." || receiptRelative == ".." ||
+		strings.HasPrefix(receiptRelative, ".."+string(filepath.Separator)) {
+		return nil, errors.New("PDF reproducibility receipt escapes the repository root")
+	}
+	evidenceRelative := strings.TrimSuffix(receiptRelative, filepath.Ext(receiptRelative)) + "-mismatch"
+	parentRelative := filepath.Dir(evidenceRelative)
+	if err := requireContainedDirectory(repositoryRoot, parentRelative, false); err != nil {
+		return nil, err
+	}
+	evidenceRoot := filepath.Join(repositoryRoot, evidenceRelative)
+	if err := os.Mkdir(evidenceRoot, 0o755); err != nil {
+		if errors.Is(err, os.ErrExist) {
+			return nil, errors.New("PDF reproducibility mismatch evidence already exists")
+		}
+		return nil, fmt.Errorf("create PDF reproducibility mismatch evidence root: %w", err)
+	}
+	defer func() {
+		if returnError != nil {
+			if removeError := removeAll(evidenceRoot); removeError != nil {
+				returnError = errors.Join(
+					returnError,
+					fmt.Errorf("remove partial PDF reproducibility mismatch evidence: %w", removeError),
+				)
+			}
+		}
+	}()
+
+	evidence := &ReproducibilityMismatchEvidence{
+		Root:   filepath.ToSlash(evidenceRelative),
+		Builds: make([]ReproducibilityMismatchEvidenceBuild, 0, len(builds)),
+	}
+	for index, build := range builds {
+		sequence := index + 1
+		if build.Sequence != sequence || len(build.Pair.artifacts) != 2 ||
+			build.Pair.artifacts[0].name != bookPDFName ||
+			build.Pair.artifacts[1].name != bookManifestName {
+			return nil, errors.New("PDF reproducibility mismatch evidence does not contain the exact compared pair")
+		}
+		buildRelative := filepath.Join(evidenceRelative, fmt.Sprintf("build-%d", sequence))
+		buildRoot := filepath.Join(repositoryRoot, buildRelative)
+		if err := os.Mkdir(buildRoot, 0o755); err != nil {
+			return nil, fmt.Errorf("create PDF reproducibility mismatch build directory: %w", err)
+		}
+		for _, artifact := range build.Pair.artifacts {
+			if err := writeReproducibilityMismatchArtifact(
+				filepath.Join(buildRoot, artifact.name), artifact.body,
+			); err != nil {
+				return nil, err
+			}
+		}
+		evidence.Builds = append(evidence.Builds, ReproducibilityMismatchEvidenceBuild{
+			Sequence: sequence,
+			PDF:      filepath.ToSlash(filepath.Join(buildRelative, bookPDFName)),
+			Manifest: filepath.ToSlash(filepath.Join(buildRelative, bookManifestName)),
+		})
+	}
+	return evidence, nil
+}
+
+func writeReproducibilityMismatchArtifact(file string, body []byte) (returnError error) {
+	opened, err := os.OpenFile(file, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o644)
+	if err != nil {
+		return fmt.Errorf("create PDF reproducibility mismatch artifact: %w", err)
+	}
+	defer func() {
+		if closeError := opened.Close(); returnError == nil && closeError != nil {
+			returnError = fmt.Errorf("close PDF reproducibility mismatch artifact: %w", closeError)
+		}
+		if returnError != nil {
+			_ = os.Remove(file)
+		}
+	}()
+	if _, err := opened.Write(body); err != nil {
+		return fmt.Errorf("write PDF reproducibility mismatch artifact: %w", err)
+	}
+	if err := opened.Sync(); err != nil {
+		return fmt.Errorf("sync PDF reproducibility mismatch artifact: %w", err)
+	}
+	return nil
 }
 
 func newReproducibilityReceipt(

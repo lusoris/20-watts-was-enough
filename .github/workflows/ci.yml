@@ -261,12 +261,14 @@ jobs:
           go -C tooling run ./cmd/20w publication verify-pdf-reproducibility
           --root .. --ref main
           --receipt build/evidence/pdf-renderer-reproducibility.json
-      - name: Retain the PDF renderer reproducibility receipt
+      - name: Retain the PDF renderer reproducibility evidence
         if: ${{ always() && !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: pdf-renderer-reproducibility
-          path: build/evidence/pdf-renderer-reproducibility.json
+          path: |-
+            build/evidence/pdf-renderer-reproducibility.json
+            build/evidence/pdf-renderer-reproducibility-mismatch
           if-no-files-found: error
           retention-days: 30
 

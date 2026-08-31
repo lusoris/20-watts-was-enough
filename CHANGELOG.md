@@ -100,6 +100,10 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- A failed two-builder PDF reproducibility check now retains both exact PDF and
+  manifest pairs beside its comparison receipt. CI uploads the bounded mismatch
+  bundle for 30 days, so a rare renderer disagreement can be byte-diffed without
+  rerunning or weakening the acceptance gate.
 - Documentation validation now treats byte-identical Mermaid bodies as staged
   source-ownership debt. The exact checked baseline may shrink through reviewed
   owner repairs, while unknown, changed, malformed, or stale groups fail closed.

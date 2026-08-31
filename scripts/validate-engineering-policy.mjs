@@ -681,6 +681,10 @@ const pdfReproducibilityCiCommand = [
   "--root .. --ref main",
   "--receipt build/evidence/pdf-renderer-reproducibility.json",
 ].join(" ");
+const pdfReproducibilityCiEvidence = [
+  "build/evidence/pdf-renderer-reproducibility.json",
+  "build/evidence/pdf-renderer-reproducibility-mismatch",
+].join("\n");
 const pdfReproducibilityReleaseCommand = [
   "./build/release-inputs/20w-linux-amd64",
   "publication verify-pdf-reproducibility",
@@ -708,7 +712,7 @@ function pdfReproducibilityCiJobIsExact(job) {
     && continueOnErrorIsDisabled(step)
   ));
   const receiptIndex = steps.findIndex((step) => (
-    step?.name === "Retain the PDF renderer reproducibility receipt"
+    step?.name === "Retain the PDF renderer reproducibility evidence"
   ));
   const receipt = receiptIndex >= 0 ? steps[receiptIndex] : undefined;
   return job?.needs === "impact-plan"
@@ -725,7 +729,7 @@ function pdfReproducibilityCiJobIsExact(job) {
     && continueOnErrorIsDisabled(receipt)
     && Object.keys(receipt?.with ?? {}).length === 4
     && receipt.with.name === "pdf-renderer-reproducibility"
-    && receipt.with.path === "build/evidence/pdf-renderer-reproducibility.json"
+    && receipt.with.path === pdfReproducibilityCiEvidence
     && receipt.with["if-no-files-found"] === "error"
     && receipt.with["retention-days"] === 30;
 }
@@ -743,7 +747,7 @@ export function validatePDFRendererReproducibilityWorkflowObject(workflow, relat
     return !broadJobsContainHeavyProof
       && pdfReproducibilityCiJobIsExact(jobs["pdf-renderer-reproducibility"])
       ? []
-      : [`${relativePath}: CI must run the exact two-builder PDF reproducibility acceptance only in its renderer-selected gate and retain its receipt`];
+      : [`${relativePath}: CI must run the exact two-builder PDF reproducibility acceptance only in its renderer-selected gate and retain its receipt plus mismatch bytes`];
   }
   if (relativePath === ".github/workflows/release.yml") {
     const job = workflow?.jobs?.verify;

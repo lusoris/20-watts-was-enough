@@ -34,7 +34,8 @@ func TestVerifyReproducibilityUsesTwoFreshNoCacheBuildersAndRetainsAReceipt(t *t
 	if err != nil {
 		t.Fatalf("verifyReproducibilityWithDependencies() error = %v", err)
 	}
-	if receipt.Status != "pass" || !receipt.Comparison.AllMatch || receipt.ScientificResult {
+	if receipt.Schema != 2 || receipt.Status != "pass" || !receipt.Comparison.AllMatch ||
+		receipt.ScientificResult || receipt.MismatchEvidence != nil {
 		t.Fatalf("reproducibility receipt = %+v", receipt)
 	}
 	if receipt.Renderer.LockSchema != 3 || !receipt.Renderer.NoCache ||
@@ -91,7 +92,7 @@ func TestVerifyReproducibilityUsesTwoFreshNoCacheBuildersAndRetainsAReceipt(t *t
 func TestVerifyReproducibilityWritesMismatchReceiptAndFails(t *testing.T) {
 	t.Parallel()
 	configuration := renderConfiguration(t)
-	receiptRelative := "build/evidence/pdf-reproducibility-mismatch.json"
+	receiptRelative := "build/evidence/pdf-reproducibility.json"
 	executor := &reproducibilityExecutor{
 		imageIDs:                []string{testImageID, testImageID},
 		manifestDigests:         []string{testManifestDigest, testManifestDigest},
@@ -109,12 +110,158 @@ func TestVerifyReproducibilityWritesMismatchReceiptAndFails(t *testing.T) {
 	if receipt.Status != "mismatch" || receipt.Comparison.ManifestBytes || receipt.Comparison.CompletePair {
 		t.Fatalf("mismatch receipt = %+v", receipt)
 	}
+	if receipt.MismatchEvidence == nil ||
+		receipt.MismatchEvidence.Root != "build/evidence/pdf-reproducibility-mismatch" ||
+		len(receipt.MismatchEvidence.Builds) != 2 {
+		t.Fatalf("mismatch evidence = %+v", receipt.MismatchEvidence)
+	}
 	body, readError := os.ReadFile(filepath.Join(configuration.RepositoryRoot, filepath.FromSlash(receiptRelative)))
-	if readError != nil || !strings.Contains(string(body), `"status": "mismatch"`) {
+	if readError != nil || !strings.Contains(string(body), `"status": "mismatch"`) ||
+		!strings.Contains(string(body), `"mismatch_evidence"`) {
 		t.Fatalf("retained mismatch receipt = %q, error = %v", body, readError)
+	}
+	for index, evidence := range receipt.MismatchEvidence.Builds {
+		if evidence.Sequence != index+1 {
+			t.Fatalf("mismatch evidence sequence = %+v", evidence)
+		}
+		pdf, pdfError := os.ReadFile(filepath.Join(
+			configuration.RepositoryRoot, filepath.FromSlash(evidence.PDF),
+		))
+		manifest, manifestError := os.ReadFile(filepath.Join(
+			configuration.RepositoryRoot, filepath.FromSlash(evidence.Manifest),
+		))
+		expectedManifest := "{\"render\":\"stable\"}\n"
+		if index == 1 {
+			expectedManifest = "{\"render\":\"change\"}\n"
+		}
+		if pdfError != nil || manifestError != nil || string(pdf) != "%PDF-stable\n" ||
+			string(manifest) != expectedManifest {
+			t.Fatalf(
+				"mismatch evidence build %d = pdf %q (%v), manifest %q (%v)",
+				index+1, pdf, pdfError, manifest, manifestError,
+			)
+		}
 	}
 	if len(requestsWithPrefix(executor.requests, "image", "rm", "--force")) != 2 {
 		t.Fatalf("mismatch did not clean its owned images: %v", executor.requests)
+	}
+}
+
+func TestVerifyReproducibilityRetainsMismatchBeforeImageCleanupFailure(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	receiptRelative := "build/evidence/pdf-reproducibility.json"
+	executor := &reproducibilityExecutor{
+		imageIDs:                []string{testImageID, testImageID},
+		manifestDigests:         []string{testManifestDigest, testManifestDigest},
+		configDigests:           []string{testImageID, testImageID},
+		differentSecondManifest: true,
+		failImageCleanup:        true,
+	}
+
+	receipt, err := verifyReproducibilityWithDependencies(
+		context.Background(), configuration, "main", receiptRelative,
+		reproducibilityFixturePreparer{}, executor,
+	)
+	if err == nil || !strings.Contains(err.Error(), "comparison failed") ||
+		!strings.Contains(err.Error(), "injected image cleanup failure") {
+		t.Fatalf("verifyReproducibilityWithDependencies() error = %v", err)
+	}
+	if receipt.MismatchEvidence == nil {
+		t.Fatalf("mismatch receipt omitted evidence: %+v", receipt)
+	}
+	for _, file := range []string{
+		filepath.Join(configuration.RepositoryRoot, filepath.FromSlash(receiptRelative)),
+		filepath.Join(
+			configuration.RepositoryRoot,
+			filepath.FromSlash(receipt.MismatchEvidence.Builds[0].PDF),
+		),
+	} {
+		if _, statError := os.Stat(file); statError != nil {
+			t.Fatalf("retained mismatch file %s: %v", file, statError)
+		}
+	}
+}
+
+func TestRetainReproducibilityMismatchReportsPartialCleanupFailure(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	evidenceParent := filepath.Join(configuration.RepositoryRoot, "build", "evidence")
+	if err := os.MkdirAll(evidenceParent, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	receiptPath := filepath.Join(evidenceParent, "pdf-reproducibility.json")
+	pair := ReproducibilityPair{artifacts: []renderedArtifact{
+		{name: bookPDFName, body: []byte("%PDF-first\n")},
+		{name: bookManifestName, body: []byte("{\"build\":1}\n")},
+	}}
+	builds := []ReproducibilityBuild{
+		{Sequence: 1, Pair: pair},
+		{Sequence: 3, Pair: pair},
+	}
+	evidenceRoot := filepath.Join(evidenceParent, "pdf-reproducibility-mismatch")
+	t.Cleanup(func() { _ = os.RemoveAll(evidenceRoot) })
+	removeCalls := 0
+
+	evidence, err := retainReproducibilityMismatch(
+		configuration.RepositoryRoot,
+		receiptPath,
+		builds,
+		func(string) error {
+			removeCalls++
+			return errors.New("injected partial evidence cleanup failure")
+		},
+	)
+	if evidence != nil || err == nil ||
+		!strings.Contains(err.Error(), "does not contain the exact compared pair") ||
+		!strings.Contains(err.Error(), "remove partial PDF reproducibility mismatch evidence") ||
+		!strings.Contains(err.Error(), "injected partial evidence cleanup failure") {
+		t.Fatalf("retainReproducibilityMismatch() = %+v, %v", evidence, err)
+	}
+	if removeCalls != 1 {
+		t.Fatalf("partial mismatch cleanup calls = %d, want 1", removeCalls)
+	}
+	if _, statError := os.Stat(filepath.Join(evidenceRoot, "build-1", bookPDFName)); statError != nil {
+		t.Fatalf("injected cleanup failure did not leave its auditable partial file: %v", statError)
+	}
+}
+
+func TestVerifyReproducibilityRefusesExistingMismatchEvidence(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	receiptRelative := "build/evidence/pdf-reproducibility.json"
+	evidenceRoot := filepath.Join(
+		configuration.RepositoryRoot, "build", "evidence", "pdf-reproducibility-mismatch",
+	)
+	if err := os.MkdirAll(evidenceRoot, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	sentinel := filepath.Join(evidenceRoot, "preserve")
+	if err := os.WriteFile(sentinel, []byte("keep\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	executor := &reproducibilityExecutor{
+		imageIDs:                []string{testImageID, testImageID},
+		manifestDigests:         []string{testManifestDigest, testManifestDigest},
+		configDigests:           []string{testImageID, testImageID},
+		differentSecondManifest: true,
+	}
+
+	_, err := verifyReproducibilityWithDependencies(
+		context.Background(), configuration, "main", receiptRelative,
+		reproducibilityFixturePreparer{}, executor,
+	)
+	if err == nil || !strings.Contains(err.Error(), "mismatch evidence already exists") {
+		t.Fatalf("verifyReproducibilityWithDependencies() error = %v", err)
+	}
+	body, readError := os.ReadFile(sentinel)
+	if readError != nil || string(body) != "keep\n" {
+		t.Fatalf("existing mismatch evidence changed to %q, error = %v", body, readError)
+	}
+	if _, receiptError := os.Stat(filepath.Join(
+		configuration.RepositoryRoot, filepath.FromSlash(receiptRelative),
+	)); !errors.Is(receiptError, os.ErrNotExist) {
+		t.Fatalf("mismatch receipt unexpectedly exists: %v", receiptError)
 	}
 }
 
@@ -236,6 +383,7 @@ type reproducibilityExecutor struct {
 	manifestDigests         []string
 	configDigests           []string
 	differentSecondManifest bool
+	failImageCleanup        bool
 	buildCount              int
 	renderCount             int
 	loadedTags              map[string]string
@@ -286,6 +434,9 @@ func (executor *reproducibilityExecutor) run(_ context.Context, request commandR
 		return nil, errors.New("missing loaded image tag")
 	}
 	if len(request.arguments) == 4 && slices.Equal(request.arguments[:3], []string{"image", "rm", "--force"}) {
+		if executor.failImageCleanup {
+			return nil, errors.New("injected image cleanup failure")
+		}
 		delete(executor.loadedTags, request.arguments[3])
 		return nil, nil
 	}

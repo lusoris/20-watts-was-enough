@@ -49,6 +49,19 @@ func verifyReproducibilityWithDependencies(
 	if err != nil {
 		return ReproducibilityReceipt{}, err
 	}
+	retainedMismatchRoot := ""
+	mismatchEvidenceCommitted := false
+	defer func() {
+		if retainedMismatchRoot == "" || mismatchEvidenceCommitted {
+			return
+		}
+		if removeError := os.RemoveAll(retainedMismatchRoot); removeError != nil {
+			returnError = errors.Join(
+				returnError,
+				fmt.Errorf("remove uncommitted PDF reproducibility mismatch evidence: %w", removeError),
+			)
+		}
+	}()
 	if err := prepareWritableRenderPaths(configuration.RepositoryRoot); err != nil {
 		return ReproducibilityReceipt{}, err
 	}
@@ -121,17 +134,34 @@ func verifyReproducibilityWithDependencies(
 	}
 	comparison := compareReproducibilityBuilds(builds[0], builds[1])
 	receipt := newReproducibilityReceipt(configuration, sourceRef, contextIdentity, builds, comparison)
-	if err := removeOwnedImages(configuration, executor, ownedImageTags); err != nil {
-		return ReproducibilityReceipt{}, err
+	if receipt.Status != "pass" {
+		evidence, err := retainReproducibilityMismatch(
+			configuration.RepositoryRoot, receiptPath, builds, os.RemoveAll,
+		)
+		if err != nil {
+			return receipt, err
+		}
+		receipt.MismatchEvidence = evidence
+		retainedMismatchRoot = filepath.Join(
+			configuration.RepositoryRoot, filepath.FromSlash(evidence.Root),
+		)
 	}
-	cleanedImages = true
 	if err := writeReproducibilityReceipt(receiptPath, receipt); err != nil {
 		return ReproducibilityReceipt{}, err
 	}
+	mismatchEvidenceCommitted = true
+	var comparisonError error
 	if receipt.Status != "pass" {
-		return receipt, errors.New("PDF renderer reproducibility comparison failed; inspect the retained receipt")
+		comparisonError = fmt.Errorf(
+			"PDF renderer reproducibility comparison failed; inspect the retained receipt and %s",
+			receipt.MismatchEvidence.Root,
+		)
 	}
-	return receipt, nil
+	cleanupError := removeOwnedImages(configuration, executor, ownedImageTags)
+	if cleanupError == nil {
+		cleanedImages = true
+	}
+	return receipt, errors.Join(comparisonError, cleanupError)
 }
 
 func reproducibilityBuild(
