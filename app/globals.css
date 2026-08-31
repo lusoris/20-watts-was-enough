@@ -2016,10 +2016,13 @@ button {
   overflow-wrap: anywhere;
 }
 
+.book-shell-web .book-document,
 .book-prose h1,
 .book-prose h2,
 .book-prose h3,
-.book-prose h4 {
+.book-prose h4,
+.book-prose h5,
+.book-prose h6 {
   scroll-margin-top: 96px;
 }
 
@@ -2085,10 +2088,13 @@ button {
     flex-direction: column;
   }
 
+  .book-shell-web .book-document,
   .book-prose h1,
   .book-prose h2,
   .book-prose h3,
-  .book-prose h4 {
+  .book-prose h4,
+  .book-prose h5,
+  .book-prose h6 {
     scroll-margin-top: 28px;
   }
 }
