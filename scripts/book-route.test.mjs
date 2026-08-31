@@ -200,6 +200,8 @@ test("the full-book source identity includes the locked renderer dependency grap
     "tooling/go.mod",
     "tooling/internal/buildinfo/buildinfo.go",
     "tooling/internal/docscheck/check.go",
+    "tooling/internal/docscheck/mermaid-duplicate-baseline.json",
+    "tooling/internal/docscheck/mermaid.go",
     "tooling/internal/experiment/catalog.go",
     "tooling/internal/githublabels/labels.go",
     "tooling/internal/nodeimage/package.go",

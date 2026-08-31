@@ -145,9 +145,6 @@ flowchart LR
     class resemblance,reject fail;
 ```
 
-Editable source:
-[biomimetic-bidirectional-transfer.mmd](../assets/diagrams/biomimetic-bidirectional-transfer.mmd).
-
 The public descriptions of biomimicry are useful for discovering biological
 strategies and unifying themes, while [ISO 18458:2015](https://www.iso.org/standard/62500.html)
 and [VDI 6220 Part 2](https://www.vdi.de/en/home/vdi-standards/details/vdi-6220-blatt-2-biomimetics-biomimetic-design-methodology-products-and-processes)

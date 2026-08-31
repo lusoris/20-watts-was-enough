@@ -89,34 +89,9 @@ The later [ISO/WD 25895](https://www.iso.org/standard/91868.html) is retained as
 a provisional international method lead. The project's evidence and test gates
 remain stricter than any terminology label.
 
-```mermaid
-flowchart LR
-    bio["PHENOMENON PUSH<br/>observe a reproducible effect"] --> bmeasure["Measure function,<br/>mechanism, cost, boundary"]
-    problem["PROBLEM PULL<br/>declare failure + budget"] --> pspec["Specify function,<br/>constraints, strongest null"]
-    bmeasure --> abstract["FUNCTIONAL ABSTRACTION<br/>normalized mechanism record"]
-    pspec --> abstract
-    resemblance["Shape-only or story-only resemblance"] --> reject["REJECT AS LEAD<br/>no functional transfer"]
-    abstract --> dedup["DEDUPLICATE<br/>merge · discriminate · hold"]
-    dedup --> substrate["RE-ENGINEER<br/>use silicon affordances"]
-    substrate --> test["FALSIFY<br/>equal quality · risk · lifecycle budget"]
-    test --> keep["KEEP / MERGE / RETIRE"]
-
-    classDef bio fill:#087f5b,stroke:#34d399,color:#ffffff,stroke-width:2px;
-    classDef pull fill:#c2410c,stroke:#fb923c,color:#ffffff,stroke-width:2px;
-    classDef shared fill:#6d28d9,stroke:#a78bfa,color:#ffffff,stroke-width:2px;
-    classDef gate fill:#1d4ed8,stroke:#60a5fa,color:#ffffff,stroke-width:2px;
-    classDef pass fill:#166534,stroke:#4ade80,color:#ffffff,stroke-width:2px;
-    classDef fail fill:#991b1b,stroke:#fb7185,color:#ffffff,stroke-width:2px;
-    class bio,bmeasure bio;
-    class problem,pspec pull;
-    class abstract,dedup,substrate shared;
-    class test gate;
-    class keep pass;
-    class resemblance,reject fail;
-```
-
-Editable source:
-[biomimetic-bidirectional-transfer.mmd](../assets/diagrams/biomimetic-bidirectional-transfer.mmd).
+The canonical [bidirectional-transfer diagram and its editable Mermaid
+source](../concept/07-cross-domain-convergence.md#biomimetic-transfer-is-a-search-method-not-an-evidence-grade)
+live in the convergence chapter.
 
 ## Field horizon
 

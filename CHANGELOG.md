@@ -62,6 +62,9 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- Documentation validation now treats byte-identical Mermaid bodies as staged
+  source-ownership debt. The exact checked baseline may shrink through reviewed
+  owner repairs, while unknown, changed, malformed, or stale groups fail closed.
 - Draft pull requests retain bounded impact-scoped feedback, while every
   non-draft or ready pull request now runs the complete sharded matrix before
   merge. Workstation manifest edits also select their coverage, readiness and
