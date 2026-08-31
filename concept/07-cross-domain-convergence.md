@@ -120,7 +120,7 @@ function without a causal and cost model remains only a lead; and a validated
 source mechanism does not establish that its artificial translation works.
 
 ```mermaid
-flowchart LR
+flowchart TB
     bio["PHENOMENON PUSH<br/>observe a reproducible effect"] --> bmeasure["Measure function,<br/>mechanism, cost, boundary"]
     problem["PROBLEM PULL<br/>declare failure + budget"] --> pspec["Specify function,<br/>constraints, strongest null"]
     bmeasure --> abstract["FUNCTIONAL ABSTRACTION<br/>normalized mechanism record"]
