@@ -19,6 +19,11 @@ the exact diff; this file records why the project changed.
   construction plan and explicit fixed-four-endpoint semantics for segment
   intersection. The shared registry removes the controller's parallel task
   list; no generator image, dataset, model run or scientific result is added.
+- The CLRS-Text importer now admits only the exact task files and length/seed
+  cells selected by that source-bound generation contract. Candidate and held-
+  reference records carry versioned source-and-contract identities, remain
+  separated, and must pass deterministic pairing validation before controller
+  use. No dataset is generated or executed; every record remains `NO_RESULT`.
 - A versioned PDF semantic sentinel now binds the current source, book, A4 and
   tag metadata, Poppler tool identity, separate structure and text streams,
   exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps
