@@ -10,6 +10,8 @@
     { "issue": 12, "milestone": "M1" },
     { "issue": 13, "milestone": "M0" },
     { "issue": 14, "milestone": "M0" },
-    { "issue": 17, "milestone": "M0" }
+    { "issue": 17, "milestone": "M0" },
+    { "issue": 20, "milestone": "M0" },
+    { "issue": 21, "milestone": "M0" }
   ]
 }
