@@ -160,6 +160,17 @@
       ]
     },
     {
+      "id": "go-pdf-tools",
+      "paths": [
+        "tooling/internal/pdftools/**",
+        "tooling/pdf-tools/**"
+      ],
+      "lanes": [
+        "go",
+        "release"
+      ]
+    },
+    {
       "id": "go-public-transport",
       "paths": [
         "tooling/internal/publictransport/**"

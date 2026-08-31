@@ -7,6 +7,13 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A digest-pinned apko/Wolfi foundation now closes the Linux `amd64` Poppler
+  26.08.0 PDF-tools graph at 45 APKs. Its offline Go validator binds the config,
+  lock, exact APK retention metadata, upstream source identities, the pinned
+  Wolfi root recipe licence, five missing notice files, runtime containment and
+  the deterministic final-layer design.
+  Recorded base-image checks remain `NO_RESULT`; final assembly, publication
+  and exact-digest CI consumption stay open behind issue 20.
 - A versioned PDF semantic sentinel now binds the current source, book, A4 and
   tag metadata, Poppler tool identity, separate structure and text streams,
   exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps

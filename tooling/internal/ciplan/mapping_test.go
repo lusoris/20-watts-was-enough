@@ -38,6 +38,7 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		{path: "experiments/workstation/fixture-026/runner.mjs", mode: "impact", lanes: []string{"workstation-fixture-026"}},
 		{path: "experiments/workstation/fixture-007/runner.mjs", mode: "impact", lanes: []string{"container", "workstation-fixture-007"}},
 		{path: "tooling/internal/pdfrender/render.go", mode: "impact", lanes: []string{"go", "release", "renderer", "site"}},
+		{path: "tooling/pdf-tools/apko.yaml", mode: "impact", lanes: []string{"go", "release"}},
 		{path: "experiments/workstation/lib/execution-receipt.mjs", mode: "full", lanes: []string{"full"}, reason: "full-authority-changed"},
 		{path: ".github/workflows/ci.yml", mode: "full", lanes: []string{"full", "renderer"}, reason: "selector-authority-changed"},
 		{path: ".github/unowned-metadata.yml", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:.github/unowned-metadata.yml"},
