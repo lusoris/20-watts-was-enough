@@ -114,6 +114,10 @@ the exact diff; this file records why the project changed.
   Print hides the screen-only overflow cue and resets the diagram caption from
   sticky positioning so the caption stays with the figure before the following
   prose. The diagram's nodes, edges, labels and scientific meaning are unchanged.
+- Long entries in the continuous book's generated field-coverage lists now
+  wrap within the reading column at 320 CSS pixels while wide diagrams retain
+  their labelled local scroll regions. Browser coverage now also verifies the
+  existing action bar in a 720 CSS pixel viewport rendered at DPR 2.
 - Linked operational manifests outside the public reader-artifact allowlist
   now remain canonical GitHub-source links instead of being copied under
   hidden static paths that the Pages safety validator rejects.
