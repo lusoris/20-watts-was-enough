@@ -165,6 +165,34 @@ test("the web book defers media work while PDF rendering stays eager", async () 
   );
 });
 
+test("the biomimetic transfer figure uses a print-safe flow and caption", async () => {
+  const [chapter, stylesheet] = await Promise.all([
+    source("concept/07-cross-domain-convergence.md"),
+    source("app/globals.css"),
+  ]);
+  const sectionStart = chapter.indexOf(
+    "### Biomimetic transfer is a search method, not an evidence grade",
+  );
+  const sectionEnd = chapter.indexOf("### Five solution families", sectionStart);
+  assert.ok(sectionStart >= 0 && sectionEnd > sectionStart);
+  const section = chapter.slice(sectionStart, sectionEnd);
+
+  assert.match(section, /```mermaid\s+flowchart TB/u);
+  assert.doesNotMatch(section, /```mermaid\s+flowchart LR/u);
+
+  const printStart = stylesheet.lastIndexOf("@media print");
+  assert.ok(printStart >= 0);
+  const print = stylesheet.slice(printStart);
+  assert.match(
+    print,
+    /\.book-prose \.diagram-layout-note\s*\{[^}]*display:\s*none;/s,
+  );
+  assert.match(
+    print,
+    /\.book-prose \.diagram\.semantic-figure > figcaption\s*\{[^}]*position:\s*static;[^}]*left:\s*auto;[^}]*width:\s*auto;/s,
+  );
+});
+
 test("portal utility text and card accents retain readable contrast", async () => {
   const stylesheet = await source("app/globals.css");
   const portalStart = stylesheet.indexOf("/* Public research portal");

@@ -240,7 +240,11 @@ test("the tracked semantic baseline is closed and records failing debt", async (
     new URL("../book-pdf-semantic-baseline.json", import.meta.url),
   ));
   assert.equal(baseline.expected_outcome, "known-debt");
-  assert.equal(baseline.sentinels.length, 6);
+  assert.equal(baseline.sentinels.length, 5);
+  assert.equal(
+    baseline.sentinels.some(({ id }) => id === "biomimetic-figure-caption-late"),
+    false,
+  );
   assert.deepEqual(
     baseline.diagnostics.structure.map(({ count }) => count),
     [14, 613],

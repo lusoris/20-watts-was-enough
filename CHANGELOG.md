@@ -109,6 +109,10 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- The page-27 biomimetic-transfer figure now uses a print-safe vertical flow.
+  Print hides the screen-only overflow cue and resets the diagram caption from
+  sticky positioning so the caption stays with the figure before the following
+  prose. The diagram's nodes, edges, labels and scientific meaning are unchanged.
 - Linked operational manifests outside the public reader-artifact allowlist
   now remain canonical GitHub-source links instead of being copied under
   hidden static paths that the Pages safety validator rejects.

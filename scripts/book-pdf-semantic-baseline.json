@@ -6,10 +6,10 @@
   "artifact": {
     "pdf": "public/downloads/20-watts-was-enough-full-concept-book.pdf",
     "manifest": "public/downloads/book-manifest.json",
-    "pdf_sha256": "aaab0416b8d648394aa5edd7cba25c629768de46cf8b1a4498aff628cd3bc745",
-    "manifest_sha256": "77f271275a76add72a370727d05cd3655b95a504036830e0018238178fca1dfc",
-    "size_bytes": 12817261,
-    "pages": 413,
+    "pdf_sha256": "a3bd7e9fb4982e5fd63d07b301a3dfa7152b1d64dd7c744c9fcf4ceebaa422c8",
+    "manifest_sha256": "27fd723c9c28d99740322d3153e6bf8776a380dc4b2e955dd841e29001b04f10",
+    "size_bytes": 12780003,
+    "pages": 412,
     "page_size_name": "A4",
     "page_size_points": {
       "width": 594.96,
@@ -18,7 +18,7 @@
     "pdf_version": "1.4",
     "tagged": true,
     "source_ref": "main",
-    "source_digest": "24dfe4226c8b3503a78c4034ea4c38dcd8204b40e0a84b04728c551df07c2710",
+    "source_digest": "730988588f176343fb67f8cf6ba43f85a28c7e8cf2a29bbc47cc4d681b794325",
     "version": "0.3.0"
   },
   "tools": {
@@ -36,7 +36,7 @@
       "exit_status": 0,
       "stdout": {
         "bytes": 627,
-        "sha256": "54e5324efbca72b730cf015b99e92f7b540c37da566ab3f54d3c7b9f7f2e0d54"
+        "sha256": "f9089ff239a9994f545cc4137a3986fb49c4dece4128cc22005dc93c85e7c583"
       },
       "stderr": {
         "bytes": 0,
@@ -46,8 +46,8 @@
     "structure": {
       "exit_status": 0,
       "stdout": {
-        "bytes": 1057763,
-        "sha256": "536758274b750f38e6590d53b718bd75d8e0418b38c580b6dc6382b373faeb3c"
+        "bytes": 1056148,
+        "sha256": "2ff0ffdd90608642399fa6fd54df6730d75cc6f4f1d57b1700c62e6c98cae077"
       },
       "stderr": {
         "bytes": 34429,
@@ -57,8 +57,8 @@
     "structure_text": {
       "exit_status": 0,
       "stdout": {
-        "bytes": 2393142,
-        "sha256": "d3de126e6fb074b828ca71f99442d19144de10a8f33cb05a54546e4bd5ff0fa5"
+        "bytes": 2389553,
+        "sha256": "9309159b2343e4b2d340f1a42fa098f3eb286110a11861a47ec2e43eb940c0d3"
       },
       "stderr": {
         "bytes": 34429,
@@ -68,8 +68,8 @@
     "default_text": {
       "exit_status": 0,
       "stdout": {
-        "bytes": 1119498,
-        "sha256": "a946aece2b90e4ca8111a777e4028c7402529acd546c0ee73d488bfff9c3f68d"
+        "bytes": 1117698,
+        "sha256": "56cef8af61986d4c004b40be7914660e88e62bb98f9c12d1f5d74e2fbe99bd6c"
       },
       "stderr": {
         "bytes": 0,
@@ -79,8 +79,8 @@
     "raw_text": {
       "exit_status": 0,
       "stdout": {
-        "bytes": 1110034,
-        "sha256": "40080242633f88c7fd2989a9981126a8e022b0722d1551cbcb215e278d154cb0"
+        "bytes": 1108235,
+        "sha256": "ff822008e116dbcff94ba575977f04fd0606b1916c958a8610ef574e5120af41"
       },
       "stderr": {
         "bytes": 0,
@@ -170,41 +170,14 @@
       "defect": "The displayed frontier equation moves behind its explanation in content-stream extraction and is absent from tagged structure text."
     },
     {
-      "id": "biomimetic-figure-caption-late",
-      "class": "diagram-figure",
-      "recorded_page": 27,
-      "default_anchor": "The public descriptions of biomimicry are useful for discovering biological strategies",
-      "default_fragments": [
-        "The public descriptions of biomimicry are useful for discovering biological strategies",
-        "Five solution families"
-      ],
-      "struct_text_fragments": [
-        "Biomimetic transfer is a search method, not an evidence grade",
-        "Wide diagram · scroll horizontally on narrow screens",
-        "Process diagram for Biomimetic transfer",
-        "The public descriptions of biomimicry are useful for discovering biological strategies",
-        "Five solution families"
-      ],
-      "raw_fragments": [
-        "The public descriptions of biomimicry are useful for discovering biological strategies",
-        "Five solution families",
-        "Wide diagram · scroll horizontally on narrow screens",
-        "FIGURE 6"
-      ],
-      "state": "known-debt",
-      "defect": "The printed layout cue and Figure 6 caption paint after the following prose."
-    },
-    {
       "id": "lifecycle-equation-late",
       "class": "table-displayed-equation",
-      "recorded_page": 36,
+      "recorded_page": 35,
       "default_anchor": "expected recovery are joules over the same observation",
       "default_fragments": [
         "expected recovery are joules over the same observation",
         "A positive",
-        "Evidence status",
-        "Speculative extensions",
-        "Failure modes"
+        "Evidence status"
       ],
       "struct_text_fragments": [
         "lifecycle acceptance uses the energy contract",
@@ -217,17 +190,15 @@
       "raw_fragments": [
         "where is a dimensionless count",
         "Evidence status",
-        "Failure modes",
-        "Positive-result bias",
         "ΔE"
       ],
       "state": "known-debt",
-      "defect": "The lifecycle equation moves to the end of the page in content-stream extraction and is absent from tagged structure text."
+      "defect": "The lifecycle equation moves behind the beginning of Evidence status in raw content-stream extraction and is absent from tagged structure text."
     },
     {
       "id": "adiabatic-equation-fragmented",
       "class": "diagram-figure",
-      "recorded_page": 378,
+      "recorded_page": 377,
       "default_anchor": "Four normalized adiabatic energy curves form different U-shaped crossovers",
       "default_fragments": [
         "Four normalized adiabatic energy curves form different U-shaped crossovers",
@@ -254,7 +225,7 @@
     {
       "id": "field-coverage-heading-merged",
       "class": "diagram-figure",
-      "recorded_page": 387,
+      "recorded_page": 386,
       "default_anchor": "This is the repository's breadth control",
       "default_fragments": [
         "This is the repository's breadth control",

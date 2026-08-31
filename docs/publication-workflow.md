@@ -143,7 +143,8 @@ extraction as separate bounded streams. Evidence is published atomically under
 that declared root; a semantic mismatch retains the streams with an explicit
 failure envelope. The checked baseline binds the current source digest, PDF,
 manifest, A4 page format, tag state, Poppler 26.08.0 identity, exact diagnostics
-and six content anchors. Its current expected outcome is `known-debt`, so a
+and the full checked semantic-sentinel set. Its current expected outcome is
+`known-debt`, so a
 matching audit exits non-zero; it is a regression sentinel, not a PDF/UA or WCAG
 conformance check. DOM and accessibility-tree order are outside this Poppler
 snapshot and require the pinned-Chrome renderer-aware follow-up. Required CI

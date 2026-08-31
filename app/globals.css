@@ -4577,6 +4577,10 @@ button {
     break-inside: avoid;
   }
 
+  .book-prose .diagram-layout-note {
+    display: none;
+  }
+
   .book-prose .diagram-canvas svg,
   .book-prose img {
     max-width: 100% !important;
@@ -4595,6 +4599,12 @@ button {
     margin-top: 2.5mm;
     font-size: 7.4pt;
     line-height: 1.35;
+  }
+
+  .book-prose .diagram.semantic-figure > figcaption {
+    position: static;
+    left: auto;
+    width: auto;
   }
 
   .book-readiness-frontmatter .book-document-meta {
