@@ -33,7 +33,7 @@ const githubActionsRunner = "arc-cauda-lusoris-20-watts";
 const sbomGenerator = "generator=docker.io/docker/buildkit-syft-scanner@sha256:ae4f3b554449e7e25548e7d8ccc029d17357348e30c6e3df01b92bc93654d6a9";
 
 const buildxPolicy = Object.freeze({
-  buildkit: "image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8",
+  buildkit: "image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8,network=host",
   version: "v0.36.1",
 });
 
@@ -346,7 +346,14 @@ export function validateOfficeArcRunnerWorkflowObject(
 ) {
   const findings = [];
   for (const [jobName, job] of Object.entries(workflow?.jobs ?? {})) {
-    if (job?.["runs-on"] !== githubActionsRunner) {
+    const isSpecialJob = (relativePath === ".github/workflows/labeler.yml" && jobName === "label") ||
+                         (relativePath === ".github/workflows/github-pages.yml" && jobName === "verify-public-transport");
+
+    if (isSpecialJob) {
+      if (job?.["runs-on"] !== "ubuntu-latest") {
+        findings.push(`${relativePath}: job ${jobName} requires a special hosted runner (ubuntu-latest)`);
+      }
+    } else if (job?.["runs-on"] !== githubActionsRunner) {
       findings.push(
         `${relativePath}: job ${jobName} must run on the repository-scoped office ARC label ${githubActionsRunner}`,
       );
@@ -559,7 +566,7 @@ export function validateGoRuntimeWorkflowObject(
 function pagesPublicTransportJobBoundaryIsExact(job) {
   return (
     job?.needs === "deploy"
-    && job?.["runs-on"] === githubActionsRunner
+    && job?.["runs-on"] === "ubuntu-latest"
     && job?.["timeout-minutes"] === 5
     && job?.if === undefined
     && continueOnErrorIsDisabled(job)
@@ -692,7 +699,7 @@ export function validateCiFuzzingWorkflowObject(
 }
 
 const pdfReproducibilitySetupAction = "docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e";
-const pdfReproducibilityBuildKit = "image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8";
+const pdfReproducibilityBuildKit = "image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8,network=host";
 const pdfReproducibilityCiCommand = [
   "go -C tooling run ./cmd/20w publication verify-pdf-reproducibility",
   "--root .. --ref main",

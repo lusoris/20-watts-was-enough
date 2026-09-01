@@ -51,7 +51,7 @@ func TestRenderPlanUsesTheExactImageAndHardenedContainer(t *testing.T) {
 	create := requestWithPrefix(t, executor.requests, "buildx", "create").arguments
 	for _, expected := range []string{
 		"docker-container",
-		"image=" + configuration.Lock.Builder.BuildKitImage,
+		"image=" + configuration.Lock.Builder.BuildKitImage + ",network=host",
 		configuration.Lock.Platform,
 		"--bootstrap",
 	} {

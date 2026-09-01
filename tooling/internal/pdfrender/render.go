@@ -209,7 +209,7 @@ func createLockedBuilder(ctx context.Context, configuration Configuration, execu
 			"buildx", "create",
 			"--name", name,
 			"--driver", "docker-container",
-			"--driver-opt", "image=" + configuration.Lock.Builder.BuildKitImage,
+			"--driver-opt", "image=" + configuration.Lock.Builder.BuildKitImage + ",network=host",
 			"--platform", configuration.Lock.Platform,
 			"--bootstrap",
 		},

@@ -71,7 +71,7 @@ jobs:
     needs: deploy
     permissions:
       contents: read
-    runs-on: arc-cauda-lusoris-20-watts
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Check out canonical source
