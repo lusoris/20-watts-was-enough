@@ -104,6 +104,59 @@ func TestCheckRejectsSymlinkedAuthority(t *testing.T) {
 	}
 }
 
+func TestReadRegularBoundedRejectsPathReplacementAfterRead(t *testing.T) {
+	t.Parallel()
+	root := t.TempDir()
+	path := filepath.Join(root, "authority.json")
+	if err := os.WriteFile(path, []byte("stable"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	parked := filepath.Join(root, "parked.json")
+	_, err := readRegularBoundedWithInterlock(root, path, 64, "test authority", func() error {
+		if renameErr := os.Rename(path, parked); renameErr != nil {
+			return renameErr
+		}
+		return os.WriteFile(path, []byte("mutate"), 0o644)
+	})
+	if err == nil || (runtime.GOOS != "windows" && !strings.Contains(err.Error(), "changed while it was read")) {
+		t.Fatalf("readRegularBoundedWithInterlock() error = %v, want pathname-replacement refusal", err)
+	}
+}
+
+func TestReadRegularBoundedRejectsByteMutationAfterRead(t *testing.T) {
+	t.Parallel()
+	root := t.TempDir()
+	path := filepath.Join(root, "authority.json")
+	if err := os.WriteFile(path, []byte("stable"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	initial, err := os.Stat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = readRegularBoundedWithInterlock(root, path, 64, "test authority", func() error {
+		writer, openErr := os.OpenFile(path, os.O_WRONLY, 0)
+		if openErr != nil {
+			return openErr
+		}
+		if _, writeErr := writer.WriteAt([]byte("mutate"), 0); writeErr != nil {
+			_ = writer.Close()
+			return writeErr
+		}
+		if syncErr := writer.Sync(); syncErr != nil {
+			_ = writer.Close()
+			return syncErr
+		}
+		if closeErr := writer.Close(); closeErr != nil {
+			return closeErr
+		}
+		return os.Chtimes(path, initial.ModTime(), initial.ModTime())
+	})
+	if err == nil || !strings.Contains(err.Error(), "changed while it was read") {
+		t.Fatalf("readRegularBoundedWithInterlock() error = %v, want byte-mutation refusal", err)
+	}
+}
+
 func TestCheckRejectsAnUnboundBuilderIdentity(t *testing.T) {
 	t.Parallel()
 	for name, mutate := range map[string]func(string) string{

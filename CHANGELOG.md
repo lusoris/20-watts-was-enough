@@ -24,6 +24,19 @@ the exact diff; this file records why the project changed.
   reference records carry versioned source-and-contract identities, remain
   separated, and must pass deterministic pairing validation before controller
   use. No dataset is generated or executed; every record remains `NO_RESULT`.
+- The CLRS generator-image foundation now binds a checksum-closed official
+  source archive, the newest reviewed CPython/TensorFlow/JAX wheel intersection,
+  pinned resolver and shared builder identities, finite runtime containment and
+  an offline Go validator. Pinned upstream licence material and finite SBOM
+  retention remain mandatory admission gates. The state remains `NO_RESULT`
+  and blocked: no exact dependency lock, Dockerfile, wheelhouse, image, SBOM,
+  runtime smoke or byte-compared fixture generation is claimed.
+  The same slice hardens the shared renderer-authority reader against ancestor
+  links, pathname replacement and same-size byte mutation without rejecting a
+  valid Windows path solely because its canonical drive spelling differs. The
+  CI impact map now routes the importer and all six contract-named specialist
+  packages through the Go lane instead of treating each new package as an
+  unknown path.
 - A versioned PDF semantic sentinel now binds the current source, book, A4 and
   tag metadata, Poppler tool identity, separate structure and text streams,
   exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps
@@ -87,6 +100,10 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- A failed two-builder PDF reproducibility check now retains both exact PDF and
+  manifest pairs beside its comparison receipt. CI uploads the bounded mismatch
+  bundle for 30 days, so a rare renderer disagreement can be byte-diffed without
+  rerunning or weakening the acceptance gate.
 - Documentation validation now treats byte-identical Mermaid bodies as staged
   source-ownership debt. The exact checked baseline may shrink through reviewed
   owner repairs, while unknown, changed, malformed, or stale groups fail closed.

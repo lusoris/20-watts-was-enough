@@ -589,7 +589,7 @@ test("CI runs the strict-JSON fuzzer with explicit time and process bounds", () 
 });
 
 test("real PDF reproducibility acceptance stays in the renderer-selected and tagged boundaries", () => {
-  const finding = ".github/workflows/ci.yml: CI must run the exact two-builder PDF reproducibility acceptance only in its renderer-selected gate and retain its receipt";
+  const finding = ".github/workflows/ci.yml: CI must run the exact two-builder PDF reproducibility acceptance only in its renderer-selected gate and retain its receipt plus mismatch bytes";
   const validCi = workflow("ci");
   assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
     validCi,
@@ -607,10 +607,19 @@ test("real PDF reproducibility acceptance stays in the renderer-selected and tag
 
   const unretained = structuredClone(validCi);
   unretained.jobs["pdf-renderer-reproducibility"].steps.find((step) => (
-    step.name === "Retain the PDF renderer reproducibility receipt"
+    step.name === "Retain the PDF renderer reproducibility evidence"
   )).with["retention-days"] = 1;
   assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
     unretained,
+    ".github/workflows/ci.yml",
+  ), [finding]);
+
+  const missingMismatchBytes = structuredClone(validCi);
+  missingMismatchBytes.jobs["pdf-renderer-reproducibility"].steps.find((step) => (
+    step.name === "Retain the PDF renderer reproducibility evidence"
+  )).with.path = "build/evidence/pdf-renderer-reproducibility.json";
+  assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
+    missingMismatchBytes,
     ".github/workflows/ci.yml",
   ), [finding]);
 
