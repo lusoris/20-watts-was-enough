@@ -556,6 +556,49 @@ const unambiguousNpmDependencyCommands = new Set(
   [...npmDependencyCommands].filter((command) => !["i", "in", "it"].includes(command)),
 );
 
+const shellAssignmentPrefix = /[A-Za-z_][A-Za-z0-9_]*=(?:"[^"\r\n]*"|'[^'\r\n]*'|[^\s]+)(?:\s+|$)/uy;
+const shellCommandWrapper = /(?:\/usr\/bin\/env|env|command|exec)(?=\s|$)/uy;
+const shellWrapperFlag = /--?[^\s]*/uy;
+const shellVariableCommand = /(?:"\$\{[^}\r\n]+\}"|"\$[A-Za-z_][A-Za-z0-9_]*"|\$\{[^}\r\n]+\}|\$[A-Za-z_][A-Za-z0-9_]*)(?=\s|$)/uy;
+
+function skipShellWhitespace(value, start) {
+  let index = start;
+  while (index < value.length && /\s/u.test(value[index])) index += 1;
+  return index;
+}
+
+function skipShellAssignments(value, start) {
+  let index = start;
+  while (index < value.length) {
+    shellAssignmentPrefix.lastIndex = index;
+    const match = shellAssignmentPrefix.exec(value);
+    if (!match) break;
+    index = match.index + match[0].length;
+  }
+  return index;
+}
+
+function variableShellCommandTail(segment) {
+  let index = skipShellAssignments(segment, 0);
+  shellCommandWrapper.lastIndex = index;
+  const wrapper = shellCommandWrapper.exec(segment);
+  if (wrapper) {
+    index = skipShellWhitespace(segment, wrapper.index + wrapper[0].length);
+    while (index < segment.length && segment[index] === "-") {
+      shellWrapperFlag.lastIndex = index;
+      const flag = shellWrapperFlag.exec(segment);
+      if (!flag) break;
+      index = skipShellWhitespace(segment, flag.index + flag[0].length);
+    }
+    index = skipShellAssignments(segment, index);
+  }
+
+  shellVariableCommand.lastIndex = index;
+  const variable = shellVariableCommand.exec(segment);
+  if (!variable) return undefined;
+  return segment.slice(skipShellWhitespace(segment, variable.index + variable[0].length));
+}
+
 function npmInvocations(step) {
   if (typeof step?.run !== "string") {
     return [];
@@ -587,12 +630,10 @@ function npmInvocations(step) {
         invocations.push({ command: "unsupported", line });
       }
     }
-    const variableCommand = /^(?:[A-Za-z_][A-Za-z0-9_]*=(?:"[^"]*"|'[^']*'|\S+)\s+)*(?:(?:env|command|exec)(?:\s+--?[^\s]+)*\s+)?(?:[A-Za-z_][A-Za-z0-9_]*=(?:"[^"]*"|'[^']*'|\S+)\s+)*(?:"\$\{[^}\r\n]+\}"|"\$[A-Za-z_][A-Za-z0-9_]*"|\$\{[^}\r\n]+\}|\$[A-Za-z_][A-Za-z0-9_]*)\s+/u;
     for (const segment of line.split(/[;&|]/u).map((part) => part.trim())) {
-      const match = segment.match(variableCommand);
-      if (match) {
-        const tokens = segment
-          .slice(match[0].length)
+      const commandTail = variableShellCommandTail(segment);
+      if (commandTail !== undefined) {
+        const tokens = commandTail
           .match(/"(?:[^"\\]|\\.)*"|'[^']*'|[^\s]+/gu)
           ?.map((token) => token
             .replace(/^[("'$[{]+/u, "")

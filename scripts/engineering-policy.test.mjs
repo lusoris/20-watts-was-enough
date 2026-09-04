@@ -553,6 +553,8 @@ test("dependency installation suppresses audit fan-out and one full gate enforce
     "workflow.yml: job shard contains an unsupported npm invocation outside version, run, exact install, or exact audit commands",
   ]);
 
+  const repeatedAssignments = `${'A="" '.repeat(4_096)}"$NPM_COMMAND" i`;
+  const repeatedWrapperFlags = `env ${"-! ".repeat(4_096)}"$NPM_COMMAND" in`;
   for (const run of [
     "node /usr/lib/node_modules/npm/bin/npm-cli.js ci",
     "npx --yes arbitrary-tool",
@@ -569,11 +571,20 @@ test("dependency installation suppresses audit fan-out and one full gate enforce
     "sh -c '\"$NPM_COMMAND\" ci'",
     'if "$NPM_COMMAND" ci; then :; fi',
     '{ "$NPM_COMMAND" ci; }',
+    'FOO="bar baz" "$NPM_COMMAND" it',
+    repeatedAssignments,
+    repeatedWrapperFlags,
   ]) {
     const wrappedInvocation = structuredClone(valid);
     wrappedInvocation.jobs.shard.steps.push({ run });
     assert.notDeepEqual(validateDependencyAuditWorkflowObject(wrappedInvocation, "full"), []);
   }
+
+  const argumentOnlyVariable = structuredClone(valid);
+  argumentOnlyVariable.jobs.shard.steps.push({
+    run: 'printf "%s\\n" "$NPM_COMMAND" it',
+  });
+  assert.deepEqual(validateDependencyAuditWorkflowObject(argumentOnlyVariable, "full"), []);
 
   const auditArgumentToRunScript = structuredClone(valid);
   auditArgumentToRunScript.jobs.shard.steps.push({

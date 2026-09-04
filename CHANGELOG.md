@@ -149,6 +149,10 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- Workflow-policy checks now parse dynamic npm command prefixes with bounded,
+  linear scans instead of one backtracking-prone expression. Long assignment
+  and wrapper-flag prefixes remain covered, while variable arguments outside
+  command position do not become false positives.
 - The pinned book renderer now retries exactly once, within its existing
   300-second print budget, only when Chrome returns the terminal `Printing
   failed` result. Other protocol failures still stop immediately, diagnostics
