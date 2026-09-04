@@ -2,7 +2,7 @@
 
 - **Status:** accepted
 - **Date:** 2026-09-04
-- **Related:** [0044](0044-shard-workstation-ci-without-splitting-test-authority.md), [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md), [0056](0056-move-ordinary-ci-to-office-arc-runners.md)
+- **Related:** [0044](0044-shard-workstation-ci-without-splitting-test-authority.md), [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md), [0056](0056-keep-public-workflows-off-self-hosted-runners.md)
 
 ## Context
 

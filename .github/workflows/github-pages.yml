@@ -17,7 +17,7 @@ jobs:
       contents: read
     env:
       PAGES_BASE_PATH: /
-    runs-on: arc-cauda-lusoris-20-watts
+    runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - name: Check out canonical source
@@ -56,7 +56,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: arc-cauda-lusoris-20-watts
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: build
     steps:

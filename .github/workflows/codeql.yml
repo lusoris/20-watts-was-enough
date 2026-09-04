@@ -19,7 +19,7 @@ concurrency:
 jobs:
   impact-plan:
     name: CI impact plan
-    runs-on: arc-cauda-lusoris-20-watts
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
@@ -84,7 +84,7 @@ jobs:
     name: JavaScript and TypeScript analysis
     needs: impact-plan
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.site == 'true' || needs.impact-plan.outputs.workstation_any == 'true'
-    runs-on: arc-cauda-lusoris-20-watts
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read
@@ -109,7 +109,7 @@ jobs:
     name: Go analysis
     needs: impact-plan
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.go == 'true'
-    runs-on: arc-cauda-lusoris-20-watts
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read

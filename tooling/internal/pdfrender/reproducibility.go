@@ -79,9 +79,7 @@ func verifyReproducibilityWithDependencies(
 		2*time.Duration(configuration.Lock.Limits.RenderSeconds)*time.Second + 5*time.Minute
 	acceptanceContext, cancel := context.WithTimeout(ctx, totalDuration)
 	defer cancel()
-	temporaryRoot, err := createDockerVisibleTemporaryRoot(
-		configuration.RepositoryRoot, "20w-pdf-reproducibility-",
-	)
+	temporaryRoot, err := os.MkdirTemp("", "20w-pdf-reproducibility-")
 	if err != nil {
 		return ReproducibilityReceipt{}, fmt.Errorf("create PDF reproducibility staging root: %w", err)
 	}

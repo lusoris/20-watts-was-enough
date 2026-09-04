@@ -19,7 +19,10 @@ the exact diff; this file records why the project changed.
   ambiguous references, confirms both records before targeted writes and
   verifies both records by bounded readback. The canonical label manifest now
   also closes the accepted Conventional Commit type set across CI and metadata;
-  a separate required title gate reruns on edits without restarting code tests.
+  a separate title gate will rerun on edits without restarting code tests after
+  bootstrap removal. The existing CI title dependency remains until that
+  standalone context is present
+  on `main` and required by the live ruleset.
 - A digest-pinned apko/Wolfi foundation now closes the Linux `amd64` Poppler
   26.08.0 PDF-tools graph at 45 APKs. Its offline Go validator binds the config,
   lock, exact APK retention metadata, upstream source identities, the pinned
@@ -155,12 +158,11 @@ the exact diff; this file records why the project changed.
   manifest pairs beside its comparison receipt. CI uploads the bounded mismatch
   bundle for 30 days, so a rare renderer disagreement can be byte-diffed without
   rerunning or weakening the acceptance gate.
-- Ordinary Linux CI, CodeQL, release, Scorecard, Pages and repository-metadata
-  jobs now run on office ARC. CodeQL uses the existing exact-diff plan to skip
-  unaffected language analyses; scheduled and manual runs, plus pushes without
-  comparable ancestry, remain full. The metadata-only labeler and the
-  post-deployment public-route check stay GitHub-hosted to preserve their
-  isolation and outside-cluster observation boundaries.
+- Public-repository workflows remain on ephemeral GitHub-hosted runners rather
+  than exposing fork-controlled code to the privileged office ARC boundary.
+  External-fork runs now require approval for every outside contributor.
+  Exact-diff CI and CodeQL selection reduce unaffected work; scheduled and
+  manual runs, plus pushes without comparable ancestry, remain full.
 - Documentation validation now treats byte-identical Mermaid bodies as staged
   source-ownership debt. The exact checked baseline may shrink through reviewed
   owner repairs, while unknown, changed, malformed, or stale groups fail closed.
@@ -212,9 +214,6 @@ the exact diff; this file records why the project changed.
   the two high-severity unbounded-memory advisories reported by Dependabot and
   OpenSSF Scorecard. The regenerated book manifest and semantic sentinel bind
   the dependency change without changing the rendered PDF bytes.
-- PDF rendering and reproducibility now stage every Docker bind source below
-  the checked-out repository, keeping the paths visible to ARC's sibling DinD
-  container while preserving per-run isolation and cleanup.
 - Continuous-book deep links now restore every chapter and heading below the
   responsive action bar on cold load and later hash navigation. Internal book
   links remain in the namespaced edition while preserving the current Pages

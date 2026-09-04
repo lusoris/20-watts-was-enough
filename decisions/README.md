@@ -61,6 +61,6 @@ than silently changing its outcome.
 | [0053](0053-lock-the-poppler-pdf-tools-image-foundation.md) | Lock the Poppler PDF-tools image foundation | accepted |
 | [0054](0054-classify-script-impact-by-executable-consumer.md) | Classify script impact by executable consumer | accepted |
 | [0055](0055-freeze-clrs-text-as-a-controller-shakedown.md) | Freeze CLRS-Text as a controller shakedown | accepted |
-| [0056](0056-move-ordinary-ci-to-office-arc-runners.md) | Move ordinary CI to office ARC runners | accepted |
+| [0056](0056-keep-public-workflows-off-self-hosted-runners.md) | Keep public workflows off self-hosted runners | accepted |
 | [0057](0057-project-pull-request-metadata-from-managed-issues.md) | Project pull-request metadata from managed issues | accepted |
 | [0059](0059-run-one-enforcing-dependency-audit-per-full-gate.md) | Run one enforcing dependency audit per full gate | accepted |

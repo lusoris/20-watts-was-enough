@@ -2,7 +2,7 @@
 
 - **Status:** accepted
 - **Date:** 2026-09-04
-- **Related:** [0046](0046-project-the-research-roadmap-into-github-milestones.md), [0049](0049-adopt-bounded-maintenance-automation.md), [0056](0056-move-ordinary-ci-to-office-arc-runners.md)
+- **Related:** [0046](0046-project-the-research-roadmap-into-github-milestones.md), [0049](0049-adopt-bounded-maintenance-automation.md), [0056](0056-keep-public-workflows-off-self-hosted-runners.md)
 
 ## Context
 

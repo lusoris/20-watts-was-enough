@@ -33,7 +33,7 @@ const (
 
 var (
 	repositoryPattern = regexp.MustCompile(`^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$`)
-	referencePattern  = regexp.MustCompile(`(?im)^\s*(?:refs|tracks|closes|fixes|resolves)\s+#([1-9][0-9]{0,9})\.?\s*$`)
+	referencePattern  = regexp.MustCompile(`(?im)^[\t ]*(?:refs|tracks|closes|fixes|resolves)[\t ]+#([1-9][0-9]{0,9})\.?[\t ]*\r?$`)
 	titlePattern      = regexp.MustCompile(`^([a-z][a-z0-9-]{0,31})(?:\([^()\r\n]{1,64}\))?!?:\s+\S`)
 )
 

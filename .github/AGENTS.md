@@ -9,11 +9,10 @@ files under `.github/`.
   only to the individual job that requires them.
 - Set explicit job timeouts and bounded concurrency. Pull-request validation
   may cancel stale runs; an in-progress Pages deployment must not be cancelled.
-- Run ordinary repository workflow jobs on the repository-scoped office ARC
-  label `arc-cauda-lusoris-20-watts`. Keep the two reviewed GitHub-hosted
-  exceptions on `ubuntu-latest`: trusted `pull_request_target` metadata stays
-  isolated from office runners, and the post-deployment Pages probe observes
-  the public network boundary.
+- Run every workflow job in this public repository on GitHub-hosted
+  `ubuntu-latest`. Do not request a self-hosted label or select a runner through
+  a dynamic expression. Local compute requires a separately reviewed,
+  infrastructure-enforced trust and isolation boundary under decision 0056.
 - Use `actions/checkout` with `persist-credentials: false` unless a reviewed
   step must push to the repository.
 - Run JavaScript workflows on the exact Node 26 pin. Install npm 12 only from

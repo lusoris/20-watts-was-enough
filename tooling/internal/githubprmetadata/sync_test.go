@@ -541,6 +541,20 @@ func TestReferenceParserAcceptsOneRepeatedExplicitReference(t *testing.T) {
 	}
 }
 
+func TestReferenceParserRejectsAReferenceSplitAcrossLines(t *testing.T) {
+	t.Parallel()
+	for _, body := range []string{
+		"Tracks\n#12",
+		"Tracks\r\n#12",
+		"Tracks\f#12",
+	} {
+		number, reason := referencedManagedIssue(body, map[int]string{12: "M1"})
+		if number != 0 || reason != "no explicit managed issue reference" {
+			t.Fatalf("referencedManagedIssue(%q) = %d/%q", body, number, reason)
+		}
+	}
+}
+
 func TestNewRequestEscapesLabelAsOnePathSegment(t *testing.T) {
 	t.Parallel()
 	base, err := url.Parse("https://api.example.invalid/base")

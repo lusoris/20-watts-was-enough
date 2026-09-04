@@ -30,7 +30,7 @@ import {
   validateJavaScriptRuntimeWorkflowObject,
   validateRepositoryMetadataSyncWorkflowObject,
   validateNpmRuntimeLock,
-  validateOfficeArcRunnerWorkflowObject,
+  validatePublicRepositoryRunnerWorkflowObject,
   validatePagesPublicTransportWorkflowObject,
   validatePDFRendererReproducibilityWorkflowObject,
   validatePullRequestTitleTypeAuthority,
@@ -44,6 +44,7 @@ import {
   validateToolingValidationScript,
   validateWorkstationShardScriptsObject,
   validateWorkflowObject,
+  validateWorkflowTree,
 } from "./validate-engineering-policy.mjs";
 
 const workflow = (name) => parse(readFileSync(new URL(`../.github/workflows/${name}.yml`, import.meta.url), "utf8"));
@@ -283,53 +284,39 @@ test("workflow validation rejects ambient writes, unbounded concurrency, and cre
   ]);
 });
 
-test("repository workflows cannot fall back to billed GitHub-hosted runners", () => {
+test("public-repository workflows cannot request self-hosted or dynamic runners", () => {
   const label = "arc-cauda-lusoris-20-watts";
-  assert.deepEqual(validateOfficeArcRunnerWorkflowObject({
+  assert.deepEqual(validatePublicRepositoryRunnerWorkflowObject({
     jobs: {
-      ci: { "runs-on": label },
-      release: { "runs-on": label },
+      ci: { "runs-on": "ubuntu-latest" },
+      release: { "runs-on": "ubuntu-latest" },
     },
   }), []);
 
-  assert.deepEqual(validateOfficeArcRunnerWorkflowObject({
+  assert.deepEqual(validatePublicRepositoryRunnerWorkflowObject({
     jobs: {
-      hosted: { "runs-on": "ubuntu-latest" },
+      selfHosted: { "runs-on": label },
       dynamic: { "runs-on": "${{ matrix.os }}" },
     },
   }), [
-    `workflow.yml: job hosted must run on the repository-scoped office ARC label ${label}`,
-    `workflow.yml: job dynamic must run on the repository-scoped office ARC label ${label}`,
+    "workflow.yml: public-repository job selfHosted must run on GitHub-hosted ubuntu-latest",
+    "workflow.yml: public-repository job dynamic must run on GitHub-hosted ubuntu-latest",
   ]);
 
   const labelerPath = ".github/workflows/labeler.yml";
   const labeler = workflow("labeler");
-  assert.deepEqual(validateOfficeArcRunnerWorkflowObject(labeler, labelerPath), []);
-  const internallyHostedLabeler = structuredClone(labeler);
-  internallyHostedLabeler.jobs.label["runs-on"] = label;
-  assert.deepEqual(validateOfficeArcRunnerWorkflowObject(
-    internallyHostedLabeler,
-    labelerPath,
-  ), [`${labelerPath}: job label requires a special hosted runner (ubuntu-latest)`]);
+  assert.deepEqual(validatePublicRepositoryRunnerWorkflowObject(labeler, labelerPath), []);
+  labeler.jobs.label["runs-on"] = label;
+  assert.deepEqual(validatePublicRepositoryRunnerWorkflowObject(labeler, labelerPath), [
+    `${labelerPath}: public-repository job label must run on GitHub-hosted ubuntu-latest`,
+  ]);
 
   const pagesPath = ".github/workflows/github-pages.yml";
   const pages = workflow("github-pages");
-  assert.deepEqual(validateOfficeArcRunnerWorkflowObject(pages, pagesPath), []);
-  const internallyObservedPages = structuredClone(pages);
-  internallyObservedPages.jobs["verify-public-transport"]["runs-on"] = label;
-  assert.deepEqual(validateOfficeArcRunnerWorkflowObject(
-    internallyObservedPages,
-    pagesPath,
-  ), [
-    `${pagesPath}: job verify-public-transport requires a special hosted runner (ubuntu-latest)`,
-  ]);
-
-  const titlePath = ".github/workflows/pr-title.yml";
-  const title = workflow("pr-title");
-  assert.deepEqual(validateOfficeArcRunnerWorkflowObject(title, titlePath), []);
-  title.jobs["pr-title"]["runs-on"] = label;
-  assert.deepEqual(validateOfficeArcRunnerWorkflowObject(title, titlePath), [
-    `${titlePath}: job pr-title requires a special hosted runner (ubuntu-latest)`,
+  assert.deepEqual(validatePublicRepositoryRunnerWorkflowObject(pages, pagesPath), []);
+  pages.jobs["verify-public-transport"]["runs-on"] = label;
+  assert.deepEqual(validatePublicRepositoryRunnerWorkflowObject(pages, pagesPath), [
+    `${pagesPath}: public-repository job verify-public-transport must run on GitHub-hosted ubuntu-latest`,
   ]);
 });
 
@@ -522,8 +509,77 @@ test("dependency installation suppresses audit fan-out and one full gate enforce
     ],
   };
   assert.deepEqual(validateDependencyAuditWorkflowObject(preCommandFlagBypass, "full"), [
-    "workflow.yml: job node must use one adjacent locked Node, npm, verification, and npm ci --no-audit sequence",
+    "workflow.yml: job node must suppress npm ci's implicit audit with the exact npm ci --no-audit command",
   ]);
+
+  const appendedPreCommandFlagInstall = structuredClone(valid);
+  appendedPreCommandFlagInstall.jobs.shard.steps.push({ run: "npm --silent ci" });
+  assert.deepEqual(validateDependencyAuditWorkflowObject(
+    appendedPreCommandFlagInstall,
+    "full",
+  ), [
+    "workflow.yml: job shard must suppress npm ci's implicit audit with the exact npm ci --no-audit command",
+  ]);
+
+  const appendedPreCommandFlagAudit = structuredClone(valid);
+  appendedPreCommandFlagAudit.jobs.shard.steps.push({
+    run: "npm --silent audit --audit-level=high",
+  });
+  assert.deepEqual(validateDependencyAuditWorkflowObject(
+    appendedPreCommandFlagAudit,
+    "full",
+  ), [
+    "workflow.yml: job full must be the only job to run the lockfile dependency audit",
+  ]);
+
+  const continuedPreCommandFlagInstall = structuredClone(valid);
+  continuedPreCommandFlagInstall.jobs.shard.steps.push({ run: "npm --silent \\\nci" });
+  assert.deepEqual(validateDependencyAuditWorkflowObject(
+    continuedPreCommandFlagInstall,
+    "full",
+  ), [
+    "workflow.yml: job shard must suppress npm ci's implicit audit with the exact npm ci --no-audit command",
+  ]);
+
+  const abbreviatedInstall = structuredClone(valid);
+  abbreviatedInstall.jobs.shard.steps.push({ run: "npm instal" });
+  assert.deepEqual(validateDependencyAuditWorkflowObject(abbreviatedInstall, "full"), [
+    "workflow.yml: job shard must suppress npm ci's implicit audit with the exact npm ci --no-audit command",
+  ]);
+
+  const unsupportedInvocation = structuredClone(valid);
+  unsupportedInvocation.jobs.shard.steps.push({ run: "npm exec arbitrary-tool" });
+  assert.deepEqual(validateDependencyAuditWorkflowObject(unsupportedInvocation, "full"), [
+    "workflow.yml: job shard contains an unsupported npm invocation outside version, run, exact install, or exact audit commands",
+  ]);
+
+  for (const run of [
+    "node /usr/lib/node_modules/npm/bin/npm-cli.js ci",
+    "npx --yes arbitrary-tool",
+    "corepack pnpm install",
+    '"${NPM_COMMAND}" ci',
+    'env "$NPM_COMMAND" ci',
+    'command "$NPM_COMMAND" ci',
+    'exec "$NPM_COMMAND" ci',
+    'FOO=bar "$NPM_COMMAND" ci',
+    '"${NPM_COMMAND:-npm}" ci',
+    '/usr/bin/env "$NPM_COMMAND" ci',
+    'builtin command "$NPM_COMMAND" ci',
+    'timeout 30 "$NPM_COMMAND" ci',
+    "sh -c '\"$NPM_COMMAND\" ci'",
+    'if "$NPM_COMMAND" ci; then :; fi',
+    '{ "$NPM_COMMAND" ci; }',
+  ]) {
+    const wrappedInvocation = structuredClone(valid);
+    wrappedInvocation.jobs.shard.steps.push({ run });
+    assert.notDeepEqual(validateDependencyAuditWorkflowObject(wrappedInvocation, "full"), []);
+  }
+
+  const auditArgumentToRunScript = structuredClone(valid);
+  auditArgumentToRunScript.jobs.shard.steps.push({
+    run: "npm run check -- --filter audit",
+  });
+  assert.deepEqual(validateDependencyAuditWorkflowObject(auditArgumentToRunScript, "full"), []);
 
   const duplicatedLockedInstall = structuredClone(preCommandFlagBypass);
   duplicatedLockedInstall.jobs.node.steps[3].run = "npm ci --no-audit";
@@ -531,6 +587,48 @@ test("dependency installation suppresses audit fan-out and one full gate enforce
   assert.deepEqual(validateDependencyAuditWorkflowObject(duplicatedLockedInstall, "full"), [
     "workflow.yml: job node must use one adjacent locked Node, npm, verification, and npm ci --no-audit sequence",
   ]);
+});
+
+test("every discovered workflow is inside the generic security policy", (t) => {
+  const root = mkdtempSync(path.join(tmpdir(), "20w-workflow-tree-"));
+  t.after(() => rmSync(root, { force: true, recursive: true }));
+  const workflowDirectory = path.join(root, ".github", "workflows");
+  mkdirSync(workflowDirectory, { recursive: true });
+  writeFileSync(path.join(workflowDirectory, "new-workflow.yaml"), [
+    "name: Extra",
+    "on:",
+    "  workflow_dispatch:",
+    "permissions: {}",
+    "concurrency:",
+    "  group: extra",
+    "  cancel-in-progress: true",
+    "jobs:",
+    "  unsafe:",
+    "    runs-on: self-hosted",
+    "    timeout-minutes: 5",
+    "    steps:",
+    "      - run: echo checked",
+    "",
+  ].join("\n"));
+  assert.ok(validateWorkflowTree(root).includes(
+    ".github/workflows/new-workflow.yaml: public-repository job unsafe must run on GitHub-hosted ubuntu-latest",
+  ));
+});
+
+test("one full gate enforces the only explicit dependency audit", () => {
+  const valid = {
+    jobs: {
+      full: {
+        steps: [
+          { run: "npm ci --no-audit" },
+          {
+            run: "npm audit --audit-level=high --package-lock-only --fetch-timeout=30000 --fetch-retries=1",
+          },
+        ],
+      },
+      shard: { steps: [{ run: "npm ci --no-audit" }] },
+    },
+  };
 
   const duplicateAudit = structuredClone(valid);
   duplicateAudit.jobs.shard.steps.push({
@@ -942,7 +1040,7 @@ test("CI impact selection is projected once and every job state fails closed", (
     assert.ok(validateCiImpactWorkflowObject(weakenedRouting).includes(planFinding));
   }
 
-  for (const eventType of ["opened", "synchronize", "reopened"]) {
+  for (const eventType of ["opened", "edited", "synchronize", "reopened"]) {
     const missingCodeUpdate = structuredClone(valid);
     missingCodeUpdate.on.pull_request.types = missingCodeUpdate.on.pull_request.types.filter(
       (type) => type !== eventType,
@@ -951,6 +1049,13 @@ test("CI impact selection is projected once and every job state fails closed", (
       ".github/workflows/ci.yml: CI must run on main pushes, manual dispatches, and every pull-request code update",
     ));
   }
+
+  const weakTitleScope = structuredClone(valid);
+  weakTitleScope.jobs["pr-title"].steps[0].run = weakTitleScope.jobs["pr-title"].steps[0].run
+    .replace("\\([^()]{1,64}\\)", "\\(.+\\)");
+  assert.ok(validateCiImpactWorkflowObject(weakTitleScope).includes(
+    ".github/workflows/ci.yml: bootstrap PR title gate must exactly enforce the managed Conventional Commit grammar",
+  ));
 
   const unselectedDependencyReview = structuredClone(valid);
   unselectedDependencyReview.jobs["dependency-review"].if = "github.event_name == 'pull_request'";

@@ -64,24 +64,7 @@ func TestVerifyReproducibilityUsesTwoFreshNoCacheBuildersAndRetainsAReceipt(t *t
 				t.Fatalf("build %d omits %q: %v", index+1, expected, build.arguments)
 			}
 		}
-		assertRepositoryTemporaryPath(
-			t, configuration.RepositoryRoot, argumentAfter(t, build.arguments, "--iidfile"),
-		)
-		assertRepositoryTemporaryPath(
-			t, configuration.RepositoryRoot, argumentAfter(t, build.arguments, "--metadata-file"),
-		)
-		assertRepositoryTemporaryPath(t, configuration.RepositoryRoot, build.arguments[len(build.arguments)-1])
 		imageTags = append(imageTags, argumentAfter(t, build.arguments, "--tag"))
-	}
-	for _, rendererRun := range requestsWithPrefix(executor.requests, "run") {
-		assertRepositoryTemporaryPath(
-			t, configuration.RepositoryRoot,
-			mountSource(rendererRun.arguments, "/workspace/public/downloads"),
-		)
-		assertRepositoryTemporaryPath(
-			t, configuration.RepositoryRoot,
-			mountSource(rendererRun.arguments, "/workspace/tmp"),
-		)
 	}
 	if imageTags[0] == imageTags[1] {
 		t.Fatalf("fresh builds reused owned image tag %q", imageTags[0])

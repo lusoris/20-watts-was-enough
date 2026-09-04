@@ -28,12 +28,10 @@ const runtimePolicy = Object.freeze({
   pythonVersion: "3.14.7",
 });
 
-const githubActionsRunner = "arc-cauda-lusoris-20-watts";
-
 const sbomGenerator = "generator=docker.io/docker/buildkit-syft-scanner@sha256:ae4f3b554449e7e25548e7d8ccc029d17357348e30c6e3df01b92bc93654d6a9";
 
 const buildxPolicy = Object.freeze({
-  buildkit: "image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8,network=host",
+  buildkit: "image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8",
   version: "v0.36.1",
 });
 
@@ -201,17 +199,6 @@ const forbiddenLegacyHostingPaths = [
   "worker/index.ts",
 ];
 
-const workflowFiles = [
-  ".github/workflows/ci.yml",
-  ".github/workflows/codeql.yml",
-  ".github/workflows/github-pages.yml",
-  ".github/workflows/labeler.yml",
-  ".github/workflows/pr-title.yml",
-  ".github/workflows/release.yml",
-  ".github/workflows/scorecard.yml",
-  ".github/workflows/sync-repository-metadata.yml",
-];
-
 const issueFormFiles = [
   ".github/ISSUE_TEMPLATE/evidence-correction.yml",
   ".github/ISSUE_TEMPLATE/experiment-protocol-problem.yml",
@@ -344,23 +331,15 @@ export function validateWorkflowObject(workflow, relativePath = "workflow.yml") 
   return findings;
 }
 
-export function validateOfficeArcRunnerWorkflowObject(
+export function validatePublicRepositoryRunnerWorkflowObject(
   workflow,
   relativePath = "workflow.yml",
 ) {
   const findings = [];
   for (const [jobName, job] of Object.entries(workflow?.jobs ?? {})) {
-    const isSpecialJob = (relativePath === ".github/workflows/labeler.yml" && jobName === "label")
-      || (relativePath === ".github/workflows/pr-title.yml" && jobName === "pr-title")
-      || (relativePath === ".github/workflows/github-pages.yml" && jobName === "verify-public-transport");
-
-    if (isSpecialJob) {
-      if (job?.["runs-on"] !== "ubuntu-latest") {
-        findings.push(`${relativePath}: job ${jobName} requires a special hosted runner (ubuntu-latest)`);
-      }
-    } else if (job?.["runs-on"] !== githubActionsRunner) {
+    if (job?.["runs-on"] !== "ubuntu-latest") {
       findings.push(
-        `${relativePath}: job ${jobName} must run on the repository-scoped office ARC label ${githubActionsRunner}`,
+        `${relativePath}: public-repository job ${jobName} must run on GitHub-hosted ubuntu-latest`,
       );
     }
   }
@@ -546,14 +525,104 @@ export function validateJavaScriptRuntimeWorkflowObject(
   return findings;
 }
 
-function npmCommandLines(step, pattern) {
+const npmDependencyCommands = new Set([
+  "add",
+  "audit",
+  "cit",
+  "ci",
+  "clean-install",
+  "clean-install-test",
+  "i",
+  "ic",
+  "in",
+  "ins",
+  "inst",
+  "insta",
+  "instal",
+  "install",
+  "install-ci-test",
+  "install-clean",
+  "install-scripts",
+  "install-test",
+  "isnt",
+  "isnta",
+  "isntal",
+  "isntall",
+  "isntall-clean",
+  "it",
+  "sit",
+]);
+const unambiguousNpmDependencyCommands = new Set(
+  [...npmDependencyCommands].filter((command) => !["i", "in", "it"].includes(command)),
+);
+
+function npmInvocations(step) {
   if (typeof step?.run !== "string") {
     return [];
   }
-  return step.run
+  const invocations = [];
+  const logicalLines = step.run
+    .replaceAll(/\\\r?\n/gu, " ")
     .split(/\r?\n/u)
-    .map((line) => line.trim())
-    .filter((line) => pattern.test(line));
+    .map((line) => line.trim());
+  for (const line of logicalLines) {
+    const npmPattern = /(?<![A-Za-z0-9_.-])(?:bun|bunx|npm|npm-cli\.js|npx|pnpm|yarn)(?=$|[\s;&|)])/gu;
+    for (const match of line.matchAll(npmPattern)) {
+      const commandSegment = line
+        .slice((match.index ?? 0) + match[0].length)
+        .split(/[;&|]/u, 1)[0];
+      const tokens = commandSegment
+        .match(/"(?:[^"\\]|\\.)*"|'[^']*'|[^\s]+/gu)
+        ?.map((token) => token
+          .replace(/^[("'$[{]+/u, "")
+          .replace(/[;)"'\]}]+$/u, "")) ?? [];
+      const firstToken = tokens[0] ?? "";
+      let command = firstToken;
+      if (firstToken.startsWith("-")) {
+        command = tokens.find((token) => npmDependencyCommands.has(token)) ?? "";
+      }
+      if (npmDependencyCommands.has(command)) {
+        invocations.push({ command, line });
+      } else if (firstToken !== "--version" && firstToken !== "run" && firstToken !== "run-script") {
+        invocations.push({ command: "unsupported", line });
+      }
+    }
+    const variableCommand = /^(?:[A-Za-z_][A-Za-z0-9_]*=(?:"[^"]*"|'[^']*'|\S+)\s+)*(?:(?:env|command|exec)(?:\s+--?[^\s]+)*\s+)?(?:[A-Za-z_][A-Za-z0-9_]*=(?:"[^"]*"|'[^']*'|\S+)\s+)*(?:"\$\{[^}\r\n]+\}"|"\$[A-Za-z_][A-Za-z0-9_]*"|\$\{[^}\r\n]+\}|\$[A-Za-z_][A-Za-z0-9_]*)\s+/u;
+    for (const segment of line.split(/[;&|]/u).map((part) => part.trim())) {
+      const match = segment.match(variableCommand);
+      if (match) {
+        const tokens = segment
+          .slice(match[0].length)
+          .match(/"(?:[^"\\]|\\.)*"|'[^']*'|[^\s]+/gu)
+          ?.map((token) => token
+            .replace(/^[("'$[{]+/u, "")
+            .replace(/[)"'\]}]+$/u, "")) ?? [];
+        const command = tokens[0]?.startsWith("-")
+          ? tokens.find((token) => npmDependencyCommands.has(token))
+          : tokens[0];
+        if (npmDependencyCommands.has(command)) {
+          invocations.push({ command: "unsupported", line });
+        }
+      }
+    }
+    const variableReference = /\$\{[^}\r\n]+\}|\$[A-Za-z_][A-Za-z0-9_]*/gu;
+    for (const match of line.matchAll(variableReference)) {
+      const tokens = line
+        .slice((match.index ?? 0) + match[0].length)
+        .replace(/^[\\'"}\])]+\s*/u, "")
+        .match(/"(?:[^"\\]|\\.)*"|'[^']*'|[^\s]+/gu)
+        ?.map((token) => token
+          .replace(/^[("'$[{]+/u, "")
+          .replace(/[;)"'\]}]+$/u, "")) ?? [];
+      const command = tokens[0]?.startsWith("-")
+        ? tokens.find((token) => unambiguousNpmDependencyCommands.has(token))
+        : tokens[0];
+      if (unambiguousNpmDependencyCommands.has(command)) {
+        invocations.push({ command: "unsupported", line });
+      }
+    }
+  }
+  return invocations;
 }
 
 function lockedNpmInstallSequenceIsExact(job) {
@@ -580,15 +649,20 @@ function inspectDependencyWorkflowJob(jobName, job, relativePath) {
   const findings = [];
   if (!Array.isArray(job?.steps)) return { auditSteps, findings };
   let unsafeInstallDetected = false;
+  let unsupportedNpmDetected = false;
   for (const [stepIndex, step] of job.steps.entries()) {
-    const installLines = npmCommandLines(
-      step,
-      /\bnpm\s+(?:ci|install|i|clean-install|ic)(?:\s|$)/u,
-    );
-    if (installLines.some((line) => line !== "npm ci --no-audit")) {
+    const dependencyCommands = npmInvocations(step);
+    const installCommands = dependencyCommands.filter(({ command }) => command !== "audit");
+    if (installCommands.some(({ command, line }) => (
+      command !== "unsupported" && (command !== "ci" || line !== "npm ci --no-audit")
+    ))) {
       unsafeInstallDetected = true;
     }
-    for (const line of npmCommandLines(step, /\bnpm\s+audit(?:\s|$)/u)) {
+    if (installCommands.some(({ command }) => command === "unsupported")) {
+      unsupportedNpmDetected = true;
+    }
+    for (const { command, line } of dependencyCommands) {
+      if (command !== "audit") continue;
       auditSteps.push({ jobName, stepIndex, step, line });
     }
   }
@@ -596,7 +670,13 @@ function inspectDependencyWorkflowJob(jobName, job, relativePath) {
     findings.push(
       `${relativePath}: job ${jobName} must suppress npm ci's implicit audit with the exact npm ci --no-audit command`,
     );
-  } else if (!lockedNpmInstallSequenceIsExact(job)) {
+  }
+  if (unsupportedNpmDetected) {
+    findings.push(
+      `${relativePath}: job ${jobName} contains an unsupported npm invocation outside version, run, exact install, or exact audit commands`,
+    );
+  }
+  if (!unsafeInstallDetected && !unsupportedNpmDetected && !lockedNpmInstallSequenceIsExact(job)) {
     findings.push(
       `${relativePath}: job ${jobName} must use one adjacent locked Node, npm, verification, and npm ci --no-audit sequence`,
     );
@@ -819,7 +899,7 @@ export function validateCiFuzzingWorkflowObject(
 }
 
 const pdfReproducibilitySetupAction = "docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e";
-const pdfReproducibilityBuildKit = "image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8,network=host";
+const pdfReproducibilityBuildKit = "image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8";
 const pdfReproducibilityCiCommand = [
   "go -C tooling run ./cmd/20w publication verify-pdf-reproducibility",
   "--root .. --ref main",
@@ -973,7 +1053,7 @@ function impactPlanJobBoundaryIsExact(workflow, plan) {
   return [
     workflow?.defaults === undefined,
     plan?.name === "CI impact plan",
-    plan?.["runs-on"] === githubActionsRunner,
+    plan?.["runs-on"] === "ubuntu-latest",
     plan?.["timeout-minutes"] === 10,
     Object.keys(plan?.permissions ?? {}).length === 1,
     plan?.permissions?.contents === "read",
@@ -1206,6 +1286,7 @@ function validateCiImpactWorkstationJobs(jobs, relativePath, findings) {
 function validateCiImpactSuccessJob(jobs, relativePath, findings) {
   const expectedNeeds = [
     "impact-plan",
+    "pr-title",
     "quality-full",
     "impact-common",
     "lane-go",
@@ -1235,6 +1316,7 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
     SELECT_SITE: "${{ needs.impact-plan.outputs.site }}",
     SELECT_WORKSTATION: "${{ needs.impact-plan.outputs.workstation_any }}",
     RESULT_PLAN: "${{ needs.impact-plan.result }}",
+    RESULT_PR_TITLE: "${{ needs.pr-title.result }}",
     RESULT_QUALITY_FULL: "${{ needs.quality-full.result }}",
     RESULT_IMPACT_COMMON: "${{ needs.impact-common.result }}",
     RESULT_GO: "${{ needs.lane-go.result }}",
@@ -1270,6 +1352,7 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
     findings,
     stringIncludesAll(successSource, [
       'require_state impact-plan "$RESULT_PLAN" success',
+      'require_state pr-title "$RESULT_PR_TITLE" success',
       'require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" success',
       'require_state quality-full "$RESULT_QUALITY_FULL" success',
       'require_state workstation-core "$RESULT_WORKSTATION_CORE" success',
@@ -1330,14 +1413,32 @@ export function validateCiImpactWorkflowObject(
       && pullRequest.branches.length === 1
       && pullRequest.branches[0] === "main"
       && Array.isArray(pullRequest?.types)
-      && pullRequest.types.length === 3
-      && ["opened", "synchronize", "reopened"]
+      && pullRequest.types.length === 4
+      && ["opened", "edited", "synchronize", "reopened"]
         .every((type) => pullRequest.types.includes(type))
       && Object.keys(pullRequest ?? {}).length === 2
       && Object.prototype.hasOwnProperty.call(trigger ?? {}, "workflow_dispatch"),
     `${relativePath}: CI must run on main pushes, manual dispatches, and every pull-request code update`,
   );
   const jobs = workflow?.jobs ?? {};
+  const titleTypes = [
+    "feat", "fix", "docs", "chore", "refactor", "test", "perf", "ci", "build", "revert",
+  ];
+  const titleJob = jobs["pr-title"];
+  recordExpectation(
+    findings,
+    pullRequestTitleJobIsExact(
+      titleJob,
+      "PR title bootstrap",
+      "github.event_name == 'pull_request'",
+    )
+      && pullRequestTitleStepIsExact(
+        titleJob?.steps?.[0],
+        pullRequestTitleRun(titleTypes),
+      ),
+    relativePath
+      + ": bootstrap PR title gate must exactly enforce the managed Conventional Commit grammar",
+  );
   validateCiImpactPlanJob(workflow, jobs, relativePath, findings);
   validateCiImpactLaneJobs(jobs, relativePath, findings);
   validateCiImpactWorkstationJobs(jobs, relativePath, findings);
@@ -1377,7 +1478,7 @@ function codeQlJobBoundaryIsExact(job, name, expectedStepCount) {
   return (
     job?.name === name
     && job?.needs === "impact-plan"
-    && job?.["runs-on"] === githubActionsRunner
+    && job?.["runs-on"] === "ubuntu-latest"
     && job?.["timeout-minutes"] === 30
     && Object.keys(job?.permissions ?? {}).length === 3
     && propertiesMatch(job?.permissions, {
@@ -3550,10 +3651,10 @@ function pullRequestTitleWorkflowIsExact(workflow) {
   );
 }
 
-function pullRequestTitleJobIsExact(titleJob) {
+function pullRequestTitleJobIsExact(titleJob, expectedName = "PR title", expectedIf) {
   return (
-    titleJob?.name === "PR title"
-    && titleJob?.if === undefined
+    titleJob?.name === expectedName
+    && titleJob?.if === expectedIf
     && titleJob?.["runs-on"] === "ubuntu-latest"
     && titleJob?.["timeout-minutes"] === 5
     && continueOnErrorIsDisabled(titleJob)
@@ -3562,10 +3663,21 @@ function pullRequestTitleJobIsExact(titleJob) {
     && titleJob?.services === undefined
     && Array.isArray(titleJob?.steps)
     && titleJob.steps.length === 1
-    && Object.keys(titleJob ?? {}).every((key) => [
-      "name", "runs-on", "timeout-minutes", "steps",
-    ].includes(key))
+    && Object.keys(titleJob ?? {}).every((key) => (
+      ["name", "runs-on", "timeout-minutes", "steps"].includes(key)
+      || (key === "if" && expectedIf !== undefined)
+    ))
   );
+}
+
+function pullRequestTitleRun(managedTypes) {
+  return [
+    `if ! printf '%s\\n' "$PR_TITLE" | grep -qE '^(${managedTypes.join("|")})(\\([^()]{1,64}\\))?(!)?:[[:space:]]+[^[:space:]]'; then`,
+    "  echo \"::error::PR title must use Conventional Commits: <type>(<scope>): <description>\"",
+    "  exit 1",
+    "fi",
+    "",
+  ].join("\n");
 }
 
 function pullRequestTitleStepIsExact(titleStep, expectedRun) {
@@ -3593,13 +3705,7 @@ export function validatePullRequestTitleTypeAuthority(
     .filter((name) => typeof name === "string" && name.startsWith("type:"))
     .map((name) => name.slice("type:".length));
   const uniqueManagedTypes = new Set(managedTypes);
-  const expectedRun = [
-    `if ! printf '%s\\n' "$PR_TITLE" | grep -qE '^(${managedTypes.join("|")})(\\([^()]{1,64}\\))?(!)?:[[:space:]]+[^[:space:]]'; then`,
-    "  echo \"::error::PR title must use Conventional Commits: <type>(<scope>): <description>\"",
-    "  exit 1",
-    "fi",
-    "",
-  ].join("\n");
+  const expectedRun = pullRequestTitleRun(managedTypes);
   if (
     managedTypes.length === 0
     || uniqueManagedTypes.size !== managedTypes.length
@@ -3738,7 +3844,7 @@ function validateCiWorkflowPolicy(workflow, relativePath, lock, findings) {
 
 function validateWorkflowPolicy(workflow, relativePath, lock, findings) {
   findings.push(...validateWorkflowObject(workflow, relativePath));
-  findings.push(...validateOfficeArcRunnerWorkflowObject(workflow, relativePath));
+  findings.push(...validatePublicRepositoryRunnerWorkflowObject(workflow, relativePath));
   const auditJobName = relativePath === ".github/workflows/ci.yml"
     ? "quality-full"
     : relativePath === ".github/workflows/release.yml"
@@ -3772,13 +3878,28 @@ function validateWorkflowPolicy(workflow, relativePath, lock, findings) {
   }
 }
 
-function validateWorkflowFiles(root, findings, scientificRuntimeLock) {
-  for (const relativePath of workflowFiles) {
+export function validateWorkflowTree(root, scientificRuntimeLock) {
+  const findings = [];
+  const directory = path.join(root, ".github", "workflows");
+  let entries;
+  try {
+    entries = fs.readdirSync(directory, { withFileTypes: true });
+  } catch (error) {
+    return [".github/workflows: cannot enumerate workflow policy surface: " + error.message];
+  }
+  for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+    if (!/\.ya?ml$/u.test(entry.name)) continue;
+    const relativePath = path.posix.join(".github/workflows", entry.name);
+    if (!entry.isFile()) {
+      findings.push(relativePath + ": workflow policy surface must be a regular file");
+      continue;
+    }
     const workflow = parseYaml(root, relativePath, findings);
     if (workflow) {
       validateWorkflowPolicy(workflow, relativePath, scientificRuntimeLock, findings);
     }
   }
+  return findings;
 }
 
 function validateIssuePolicy(root, findings) {
@@ -4015,7 +4136,7 @@ export function validateRepositoryPolicy(root = defaultRoot) {
     findings.push(...validateNpmRuntimeLock(npmRuntimeLock));
   }
   validateScientificRequirements(root, findings);
-  validateWorkflowFiles(root, findings, scientificRuntimeLock);
+  findings.push(...validateWorkflowTree(root, scientificRuntimeLock));
   validateIssuePolicy(root, findings);
   validateCitationAndOwnership(root, findings);
 
