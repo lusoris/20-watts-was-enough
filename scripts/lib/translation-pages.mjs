@@ -71,6 +71,14 @@ export function translatedSourceDocuments(repositoryRoot, { afterTargetRead } = 
   ));
 }
 
+export function translationAvailabilityRecords(documents) {
+  return Object.freeze(documents.map((document) => Object.freeze({
+    language: document.language,
+    sourceRoute: `/${withoutLeadingSlash(document.canonicalSourceRoute)}`,
+    route: `/${withoutLeadingSlash(document.route)}`,
+  })));
+}
+
 function withHtmlLanguage(template, language) {
   const matches = [...template.matchAll(englishHtmlLanguagePattern)];
   if (matches.length !== 1) {
@@ -79,11 +87,23 @@ function withHtmlLanguage(template, language) {
   return template.replace(englishHtmlLanguagePattern, `<html lang="${language}">`);
 }
 
-export function renderTranslationPage({ template, document, documents, basePath }) {
+export function renderTranslationPage({
+  template,
+  document,
+  documents,
+  availabilityDocuments = documents,
+  basePath,
+}) {
+  const availability = translationAvailabilityRecords(availabilityDocuments);
   return populateSeoTemplate(
     withHtmlLanguage(template, document.language),
-    renderSeoHead("document", document, basePath),
-    renderDocumentFallback(document, documents, basePath),
+    renderSeoHead("document", document, basePath, availability),
+    renderDocumentFallback(
+      document,
+      documents,
+      basePath,
+      availability,
+    ),
   );
 }
 
@@ -115,6 +135,7 @@ export function writeTranslationPages({
       template,
       document,
       documents: cohort,
+      availabilityDocuments: documents,
       basePath,
     }), "utf8");
     written.push(relative.replaceAll("\\", "/"));

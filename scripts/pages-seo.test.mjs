@@ -17,11 +17,13 @@ import {
   renderBookFallback,
   renderDocumentFallback,
   renderHelpFallback,
+  renderLanguageAvailability,
   renderPortalFallback,
   renderRobots,
   renderSeoHead,
   renderSitemap,
 } from "./lib/pages-seo.mjs";
+import { resolvePagesBase } from "./lib/pages-base.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const portalStylesheet = await readFile(path.join(repositoryRoot, "app/portal.css"), "utf8");
@@ -104,7 +106,7 @@ test("the local Pages server renders the canonical no-JavaScript help page", asy
   const handler = typeof transform === "function" ? transform : transform?.handler;
   assert.ok(handler);
   const rendered = await handler.call({}, template, {
-    path: "/help/",
+    path: `${resolvePagesBase(process.env.PAGES_BASE_PATH)}help/`,
     filename: path.join(repositoryRoot, "github-pages", "help", "index.html"),
     server: {},
   });
@@ -149,6 +151,25 @@ test("no-JS reading fallbacks expose help and source-bound issue routes", () => 
     assert.ok(fallback.includes('href="/research/help/">How to help</a>'));
     assert.ok(fallback.includes(`href="${issueHref}">${reportLabel}</a>`));
   }
+});
+
+test("no-JS language navigation separates published editions from contribution", () => {
+  const route = "/concept/00-thesis-and-principles/";
+  const translationDocuments = [{
+    language: "de",
+    sourceRoute: route,
+    route: `/de${route}`,
+  }];
+  const canonical = renderLanguageAvailability(route, translationDocuments, "/research/");
+  assert.match(canonical, /<strong>Read this page<\/strong>/u);
+  assert.match(canonical, /<span aria-current="page"><span lang="en">English<\/span> · current<\/span>/u);
+  assert.match(canonical, /lang="de" hreflang="de" href="\/research\/de\/concept\/00-thesis-and-principles\/">Deutsch<\/a>/u);
+  assert.match(canonical, />Help add or review a language<\/a>/u);
+  assert.doesNotMatch(canonical, />Français<\/a>/u);
+
+  const translated = renderLanguageAvailability(`/de${route}`, translationDocuments, "/research/");
+  assert.match(translated, /href="\/research\/concept\/00-thesis-and-principles\/">English<\/a>/u);
+  assert.match(translated, /<span aria-current="page"><span lang="de">Deutsch<\/span> · current<\/span>/u);
 });
 
 test("the no-JS book fallback carries the canonical manuscript and nested headings", () => {
@@ -249,6 +270,45 @@ test("document metadata carries a reviewed translation language", () => {
   );
 });
 
+test("canonical and translated document heads expose reciprocal language alternates", () => {
+  const source = documents[0];
+  const sourceRoute = `/${source.route}`;
+  const translatedRoute = `/de/${source.route}`;
+  const translationDocuments = [{
+    language: "de",
+    sourceRoute,
+    route: translatedRoute,
+  }];
+  const translated = {
+    ...source,
+    language: "de",
+    route: translatedRoute.slice(1),
+  };
+  const expected = [
+    `<link rel="alternate" hreflang="en" href="${canonicalSite}${source.route}" data-language-alternate="" />`,
+    `<link rel="alternate" hreflang="de" href="${canonicalSite}${translated.route}" data-language-alternate="" />`,
+  ];
+
+  for (const page of [source, translated]) {
+    const head = renderSeoHead("document", page, "/research/", translationDocuments);
+    for (const alternate of expected) assert.ok(head.includes(alternate));
+    assert.equal((head.match(/rel="alternate" hreflang=/gu) ?? []).length, 2);
+  }
+
+  assert.doesNotMatch(
+    renderSeoHead("document", source, "/research/"),
+    /rel="alternate" hreflang=/u,
+  );
+  assert.throws(
+    () => renderSeoHead("document", source, "/research/", [{
+      language: "de",
+      sourceRoute,
+      route: `/fr/${source.route}`,
+    }]),
+    /unsafe routes/u,
+  );
+});
+
 test("translated Markdown resolves media and links from its canonical source", () => {
   const source = documents[0];
   const peer = documents[1];
@@ -282,6 +342,11 @@ test("translated Markdown resolves media and links from its canonical source", (
     translated,
     [translated, translatedPeer],
     "/research/",
+    [{
+      language: "de",
+      sourceRoute: `/${source.route}`,
+      route: `/${translated.route}`,
+    }],
   );
 
   assert.ok(fallback.includes('href="#scope"'));
@@ -293,6 +358,8 @@ test("translated Markdown resolves media and links from its canonical source", (
   assert.match(fallback, /<p lang="en"><a href="\/research\/">Research portal<\/a><\/p>/);
   assert.match(fallback, /<nav lang="en" aria-label="Reader support">/);
   assert.match(fallback, /<nav lang="en" aria-label="Document sequence">/);
+  assert.match(fallback, /<nav class="seo-language-access" lang="en" aria-label="Language availability">/);
+  assert.match(fallback, /<span aria-current="page"><span lang="de">Deutsch<\/span> · current<\/span>/u);
   assert.match(fallback, /<span lang="de">/);
   const issue = new URL(
     fallback.match(/href="([^"]+)">Report this translation<\/a>/u)?.[1].replaceAll("&amp;", "&") ?? "",

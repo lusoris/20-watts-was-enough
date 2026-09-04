@@ -7,6 +7,7 @@ import test from "node:test";
 import { build } from "vite";
 
 import pagesConfig, { createSeoStaticPages } from "../vite.pages.config.ts";
+import { resolvePagesBase } from "./lib/pages-base.mjs";
 import { translatedSourceDocuments } from "./lib/translation-pages.mjs";
 
 async function nonemptyManifestFixture(root) {
@@ -68,9 +69,15 @@ test("a Vite Pages build publishes routes from a nonempty reviewed manifest", as
     readFile(path.join(outputRoot, "de", "concept", "build-fixture", "index.html"), "utf8"),
     readFile(path.join(outputRoot, "sitemap.xml"), "utf8"),
   ]);
+  const pagesBase = resolvePagesBase(process.env.PAGES_BASE_PATH);
   assert.match(html, /<html lang="de">/u);
   assert.match(html, /property="og:locale" content="de_DE"/u);
   assert.match(html, /<h1>Geprüfte Übersetzung<\/h1>/u);
+  assert.match(html, /<span aria-current="page"><span lang="de">Deutsch<\/span> · current<\/span>/u);
+  assert.ok(html.includes(`href="${pagesBase}concept/build-fixture/">English</a>`));
+  assert.match(html, /rel="alternate" hreflang="en" href="https:\/\/www\.cordana\.dev\/concept\/build-fixture\/"/u);
+  assert.match(html, /rel="alternate" hreflang="de" href="https:\/\/www\.cordana\.dev\/de\/concept\/build-fixture\/"/u);
+  assert.doesNotMatch(html, />Français<\/a>/u);
   assert.match(html, /template=translation-problem\.yml/u);
   assert.doesNotMatch(html, /<script\b[^>]*\bsrc=/u);
   assert.match(

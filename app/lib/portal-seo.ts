@@ -1,3 +1,4 @@
+import { languageAlternateLinksForRoute } from "./language-access.mjs";
 import { publication } from "./publication.mjs";
 
 const canonicalSite = publication.canonicalSite;
@@ -13,11 +14,18 @@ type PortalSeoDocument = {
   words: number;
 };
 
-export function portalSeoDescriptor(metadata: PortalSeoDocument | null) {
+export function portalSeoDescriptor(
+  metadata: PortalSeoDocument | null,
+  translationDocuments?: Parameters<typeof languageAlternateLinksForRoute>[1],
+) {
   if (metadata) {
     const canonical = `${canonicalSite}${metadata.route}`;
     return {
       canonical,
+      languageAlternates: languageAlternateLinksForRoute(
+        metadata.route,
+        translationDocuments,
+      ),
       title: `${metadata.title} — ${siteName}`,
       description: metadata.description,
       ogType: "article",
@@ -39,6 +47,7 @@ export function portalSeoDescriptor(metadata: PortalSeoDocument | null) {
   }
   return {
     canonical: canonicalSite,
+    languageAlternates: [],
     title: `${siteName} — Research Portal`,
     description: portalDescription,
     ogType: "website",
@@ -91,6 +100,25 @@ function upsertCanonical(href: string) {
   if (!existing) head.append(element);
 }
 
+function replaceLanguageAlternates(
+  alternatives: readonly { language: string; href: string }[],
+) {
+  const head = window.document.head;
+  for (const existing of head.querySelectorAll<HTMLLinkElement>(
+    'link[rel="alternate"][hreflang][data-language-alternate]',
+  )) {
+    existing.remove();
+  }
+  for (const alternative of alternatives) {
+    const element = window.document.createElement("link");
+    element.rel = "alternate";
+    element.hreflang = alternative.language;
+    element.href = alternative.href;
+    element.dataset.languageAlternate = "";
+    head.append(element);
+  }
+}
+
 function upsertStructuredData(value: object) {
   const head = window.document.head;
   const scripts = [...head.querySelectorAll<HTMLScriptElement>(
@@ -129,5 +157,6 @@ export function synchronizePortalSeo(metadata: PortalSeoDocument | null) {
     upsertMeta(attribute, key, content);
   }
   upsertCanonical(descriptor.canonical);
+  replaceLanguageAlternates(descriptor.languageAlternates);
   upsertStructuredData(descriptor.structuredData);
 }

@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { bookDocumentId } from "../app/lib/book-document-id.mjs";
 import { assertBookPdfIntegrity } from "./lib/book-pdf-integrity.mjs";
 import { assertBookManifestContract } from "./lib/book-manifest-contract.mjs";
+import { languageAlternateLinksForRoute } from "../app/lib/language-access.mjs";
 import {
   bookRendererLockPath,
   bookRendererLockSHA256,
@@ -21,7 +22,10 @@ import {
   renderRobots,
   renderSitemap,
 } from "./lib/pages-seo.mjs";
-import { translatedSourceDocuments } from "./lib/translation-pages.mjs";
+import {
+  translatedSourceDocuments,
+  translationAvailabilityRecords,
+} from "./lib/translation-pages.mjs";
 
 const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -119,7 +123,7 @@ function oneMatch(source, pattern, label) {
   return matches[0][1];
 }
 
-function validateSeoDocument(html, document) {
+function validateSeoDocument(html, document, translationAvailability = []) {
   const canonical = `${canonicalSite}${document.route}`;
   const language = document.language ?? "en";
   const title = oneMatch(html, /<title>([^<]+)<\/title>/g, `${document.route} title`);
@@ -153,6 +157,16 @@ function validateSeoDocument(html, document) {
     /<html\s+lang="([^"]+)">/g,
     `${document.route} HTML language`,
   );
+  const declaredLanguageAlternates = [...html.matchAll(
+    /<link\b(?=[^>]*\brel=["']alternate["'])(?=[^>]*\bhreflang=["'][^"']+["'])[^>]*>/gu,
+  )].map((match) => ({
+    language: oneMatch(match[0], /\bhreflang=["']([^"']+)["']/gu, `${document.route} alternate language`),
+    href: oneMatch(match[0], /\bhref=["']([^"']+)["']/gu, `${document.route} alternate URL`),
+  }));
+  const expectedLanguageAlternates = languageAlternateLinksForRoute(
+    document.route,
+    translationAvailability,
+  );
   invariant(declaredCanonical === canonical, `${document.route} canonical is not self-referential`);
   invariant(title === `${document.title} — 20 Watts Was Enough`, `${document.route} title is stale`);
   invariant(description === document.description.replaceAll("&", "&amp;").replaceAll('"', "&quot;"), `${document.route} description is stale`);
@@ -164,6 +178,10 @@ function validateSeoDocument(html, document) {
   invariant(jsonLd.inLanguage === language, `${document.route} JSON-LD language is stale`);
   invariant(citationLanguage === language, `${document.route} citation language is stale`);
   invariant(htmlLanguage === language, `${document.route} HTML language is stale`);
+  invariant(
+    JSON.stringify(declaredLanguageAlternates) === JSON.stringify(expectedLanguageAlternates),
+    `${document.route} language alternates are stale, incomplete, or not reciprocal`,
+  );
   invariant(html.includes('<main class="seo-static-page">'), `${document.route} lacks static fallback content`);
   invariant(html.includes(`<h1>${document.title.replaceAll("&", "&amp;")}</h1>`), `${document.route} static H1 is stale`);
   invariant(!html.includes("?doc="), `${document.route} contains a query-parameter document link`);
@@ -258,6 +276,7 @@ const sourceDocuments = [
 ].sort();
 const portalDocuments = portalSourceDocuments(repositoryRoot);
 const translatedDocuments = translatedSourceDocuments(repositoryRoot);
+const translationAvailability = translationAvailabilityRecords(translatedDocuments);
 invariant(portalDocuments.length === sourceDocuments.length, "SEO route registry does not cover the canonical portal corpus");
 const builtDocuments = (await recursiveInventory("documents"))
   .filter((relative) => relative.endsWith(".md"))
@@ -280,7 +299,7 @@ const seoDescriptions = new Set();
 for (const document of portalDocuments) {
   const relativeHtml = `${document.route}index.html`;
   const page = await validatePage(relativeHtml, "portal");
-  const metadata = validateSeoDocument(page.html, document);
+  const metadata = validateSeoDocument(page.html, document, translationAvailability);
   invariant(!seoTitles.has(metadata.title), `duplicate SEO title: ${metadata.title}`);
   invariant(!seoDescriptions.has(metadata.description), `duplicate SEO description: ${metadata.description}`);
   seoTitles.add(metadata.title);
@@ -294,7 +313,7 @@ for (const document of portalDocuments) {
 for (const document of translatedDocuments) {
   const relativeHtml = `${document.route}index.html`;
   const page = await validatePage(relativeHtml, null);
-  validateSeoDocument(page.html, document);
+  validateSeoDocument(page.html, document, translationAvailability);
 }
 
 const sitemap = await readFile(path.join(outputRoot, "sitemap.xml"), "utf8");

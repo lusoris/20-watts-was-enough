@@ -90,8 +90,15 @@ test("a reviewed non-English manifest entry produces a static locale route", asy
   const html = await readFile(path.join(outputRoot, "de", "concept", "00-source", "index.html"), "utf8");
   assert.match(html, /<html lang="de">/u);
   assert.match(html, /rel="canonical" href="https:\/\/www\.cordana\.dev\/de\/concept\/00-source\/"/u);
+  assert.match(html, /rel="alternate" hreflang="en" href="https:\/\/www\.cordana\.dev\/concept\/00-source\/"/u);
+  assert.match(html, /rel="alternate" hreflang="de" href="https:\/\/www\.cordana\.dev\/de\/concept\/00-source\/"/u);
   assert.match(html, /<h1>Deutscher Titel<\/h1>/u);
   assert.match(html, /Geprüfter deutscher Text\./u);
+  assert.match(html, /<strong>Read this page<\/strong>/u);
+  assert.match(html, /href="\/concept\/00-source\/">English<\/a>/u);
+  assert.match(html, /<span aria-current="page"><span lang="de">Deutsch<\/span> · current<\/span>/u);
+  assert.match(html, />Help add or review a language<\/a>/u);
+  assert.doesNotMatch(html, />Français<\/a>/u);
   assert.match(html, /href="#abschnitt"/u);
   assert.match(
     html,

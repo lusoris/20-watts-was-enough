@@ -22,6 +22,7 @@ import { resolvePagesBase } from "./scripts/lib/pages-base.mjs";
 import { renderThirdPartyNotices } from "./scripts/lib/third-party-notices.mjs";
 import { resolveViteCacheDirectory } from "./scripts/lib/vite-cache-directory.mjs";
 import {
+  translationAvailabilityRecords,
   translatedSourceDocuments,
   writeTranslationPages,
 } from "./scripts/lib/translation-pages.mjs";
@@ -191,6 +192,7 @@ export function createSeoStaticPages({
       const bookDocuments = bookSourceDocuments(repositoryRoot) as PortalSourceDocument[];
       const translations = translationDocuments
         ?? translatedSourceDocuments(repositoryRoot) as TranslationSourceDocument[];
+      const translationAvailability = translationAvailabilityRecords(translations);
       const portalPath = path.join(outputRoot, "index.html");
       const bookPath = path.join(outputRoot, "book", "index.html");
       const helpPath = path.join(outputRoot, "help", "index.html");
@@ -199,12 +201,12 @@ export function createSeoStaticPages({
       writeFileSync(portalPath, populateSeoTemplate(
         portalTemplate,
         renderSeoHead("portal", null, pagesBase),
-        renderPortalFallback(documents, pagesBase),
+        renderPortalFallback(documents, pagesBase, translationAvailability),
       ), "utf8");
       writeFileSync(bookPath, populateSeoTemplate(
         readFileSync(bookPath, "utf8"),
         renderSeoHead("book", null, pagesBase),
-        renderBookFallback(bookDocuments, pagesBase),
+        renderBookFallback(bookDocuments, pagesBase, translationAvailability),
       ), "utf8");
       writeFileSync(helpPath, renderCurrentHelpPage(readFileSync(helpPath, "utf8")), "utf8");
       for (const document of documents) {
@@ -212,8 +214,13 @@ export function createSeoStaticPages({
         mkdirSync(path.dirname(output), { recursive: true });
         writeFileSync(output, populateSeoTemplate(
           portalTemplate,
-          renderSeoHead("document", document, pagesBase),
-          renderDocumentFallback(document, documents, pagesBase),
+          renderSeoHead("document", document, pagesBase, translationAvailability),
+          renderDocumentFallback(
+            document,
+            documents,
+            pagesBase,
+            translationAvailability,
+          ),
         ), "utf8");
       }
       writeTranslationPages({
