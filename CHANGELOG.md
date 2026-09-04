@@ -345,7 +345,7 @@ the exact diff; this file records why the project changed.
   expose one Go command and test each admitted platform's containment contract.
 - Compatible direct dependencies, scientific runtimes and GitHub Actions were
   moved to their current stable releases: Node 26.8.1, npm 12.0.2, CPython
-  3.14.7, NumPy 2.5.2, TypeScript 6.0.3, Vite 8.2.2 and Go 1.27.0. ESLint 9 and
+  3.14.7, NumPy 2.5.2, TypeScript 6.0.3, Vite 8.2.2 and Go 1.27.1. ESLint 9 and
   TypeScript 6 remain at the newest versions accepted by their current plugin
   peer ranges; unsupported major upgrades are reported rather than forced.
   Because the locked Node distribution includes npm 11.19.0, workflows now

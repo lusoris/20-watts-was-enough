@@ -15,7 +15,7 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const defaultRoot = path.resolve(scriptDirectory, "..");
 
 const runtimePolicy = Object.freeze({
-  goVersion: "1.27.0",
+  goVersion: "1.27.1",
   nodeVersion: REQUIRED_NODE_VERSION,
   npmArchiveBytes: 3_045_132,
   npmArchiveSha256: "5dbb86c71d07a1957f2e90734092dd6a58bdcd9ebc2d8d41ca1c6e6a21d364e1",
@@ -3007,7 +3007,7 @@ function validateReleaseDigestAdmission(steps, relativePath, findings) {
       'ghcr.io/${GITHUB_REPOSITORY}-fixture-007@${FIXTURE_007_DIGEST}',
       'ghcr.io/${GITHUB_REPOSITORY}-fixture-019@${FIXTURE_019_DIGEST}',
       '"$tooling" version --json',
-      '"go_version":"go1.27.0"',
+      '"go_version":"go1.27.1"',
       '"os":"linux"',
       '"architecture":"amd64"',
       '"$RELEASE_TAG" "$RELEASE_COMMIT" "$RELEASE_TIMESTAMP"',

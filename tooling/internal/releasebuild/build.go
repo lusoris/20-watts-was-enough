@@ -26,7 +26,7 @@ const (
 	maximumCommandDuration    = 5 * time.Minute
 	maximumCommandWaitDelay   = 5 * time.Second
 	maximumBuildDuration      = 15 * time.Minute
-	releaseGoVersion          = "go1.27.0"
+	releaseGoVersion          = "go1.27.1"
 )
 
 const (
