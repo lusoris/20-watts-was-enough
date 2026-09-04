@@ -1,21 +1,21 @@
 # Locked PDF-tools image authority
 
-This directory fixes the inputs for the planned Linux `amd64` PDF-tools
-image. It does not publish an image and it does not make a scientific,
-PDF/UA, WCAG, or legal-compliance claim.
+This directory fixes the inputs for the Linux `amd64` PDF-tools image and its
+local construction check. It does not publish an image and it does not make a
+scientific, PDF/UA, WCAG, or legal-compliance claim.
 
 ## Maintained inputs
 
 - `apko.yaml` selects Wolfi and the exact Poppler `26.08.0-r0` packages.
 - `apko.lock.json` closes the 45-package transitive graph for `x86_64`.
 - `contract.json` binds the apko builder digest, timestamp, base-image
-  observations, runtime checks, source inputs, notice destinations and
-  resource limits.
+  observations, canonical SPDX graph identities, runtime checks, source
+  inputs, notice destinations and resource limits.
 - `apk-retention.json` records the exact URL, size, SHA-256 digest and declared
   licence for every locked APK. Licence declarations are package metadata, not
   a project legal conclusion.
 - `notices/` contains byte-checked files from the official Poppler 26.08.0
-  archive. The planned final image layer places them beneath
+  archive. The final image layer places them beneath
   `/usr/share/licenses/poppler/`.
 - `upstream/wolfi-poppler.yaml` is the byte-checked Wolfi recipe snapshot named
   by the contract.
@@ -41,6 +41,44 @@ records, incomplete APK byte ranges and a missing notice or recipe snapshot.
 It also checks the pinned recipe licence and the existing BuildKit lock selected
 for deterministic final-layer assembly.
 
+## Local final-image reproduction
+
+The Go command can reproduce the complete image twice through the local Docker
+daemon:
+
+```bash
+go -C tooling run ./cmd/20w publication reproduce-pdf-tools-image \
+  --root .. \
+  --receipt .workingdir2/evidence/publication/pdf-tools-local-reproduction.json
+```
+
+The receipt path must be a new repository-relative JSON file in an admitted
+evidence directory. The command runs the exact apko image twice under bounded
+resources after a bounded probe verifies its declared version, revision and Go
+version. The receipt labels the apko network and containment as requested
+settings because the short-lived build containers are not treated as observed
+runtime state. The command admits only the committed base image and canonical SPDX graphs, and
+projects each Docker archive into a private OCI layout without a host image
+converter. It then uses two fresh instances of the locked BuildKit 0.32.2 image
+to build the notice layer. Each local daemon has no Docker network, fixed
+memory, PID and CPU limits, and one worker; each final build also uses no cache,
+no build network and no requested entitlement. The pinned Buildx
+Docker-container driver admits `network.host` at the daemon gate, but the
+network-disabled daemon namespace and unentitled build cannot exercise it. The
+driver necessarily runs these temporary BuildKit daemons as privileged
+containers. The check
+compares both complete final OCI archives, manifests, configs, layers and diff
+IDs before it inspects the notices, man pages, forbidden paths, Poppler
+versions, configured UID/GID and runtime containment.
+
+Success writes an atomic bounded receipt with `authority: NO_RESULT`. The
+command creates no source bundle, retained tag, push, release or
+digest-admission record; it removes the builders, containers, state volumes and
+temporary image alias that it owns. Docker may retain the untagged,
+content-addressed image data in its local content store; the command does not
+claim exclusive ownership of shared digest content or delete it underneath a
+concurrent local reproduction.
+
 ## Reproduction boundary
 
 The pinned apko image is the only admitted package assembler. Set
@@ -54,9 +92,10 @@ Runtime probes observed Poppler 26.08.0, UID/GID 65532 and no `/bin/sh` or
 `/sbin/apk` while using no network, a read-only root, dropped capabilities and
 `no-new-privileges`.
 
-Those observations cover the apko base only. The deterministic notice layer,
-two-build final-image comparison, publication, anonymous digest pull and CI
-consumer lock remain required before the image is admitted.
+The local command now checks the deterministic notice layer and two-build final
+image as construction evidence. Publication, the source-delivery bundle,
+anonymous digest pull, release acceptance and exact-digest CI consumer lock
+remain separate admission gates.
 
 ## Notice and source route
 

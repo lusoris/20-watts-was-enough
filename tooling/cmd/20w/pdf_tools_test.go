@@ -28,3 +28,13 @@ func TestRunPublicationVerifyPDFToolsRejectsUnexpectedArguments(t *testing.T) {
 		t.Fatalf("run() exit = %d, want 2", exit)
 	}
 }
+
+func TestRunPublicationReproducePDFToolsImageRequiresNewReceipt(t *testing.T) {
+	t.Parallel()
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	exit := run([]string{"publication", "reproduce-pdf-tools-image"}, &stdout, &stderr)
+	if exit != 2 || !strings.Contains(stderr.String(), "requires --receipt") {
+		t.Fatalf("run() exit/stdout/stderr = %d/%q/%q", exit, stdout.String(), stderr.String())
+	}
+}
