@@ -19,6 +19,7 @@ func TestCanonicalizeSPDXAdmitsOnlyRelationshipOrdering(t *testing.T) {
 		t.Fatal(err)
 	}
 	if left.RawSHA256 == right.RawSHA256 || left.CanonicalSHA256 != right.CanonicalSHA256 ||
+		string(left.raw) != string(first) || string(right.raw) != string(second) ||
 		string(left.canonical) != string(right.canonical) || left.Packages != 3 || left.Relationships != 2 {
 		t.Fatalf("canonical identities = %#v / %#v", left, right)
 	}

@@ -167,10 +167,14 @@ snapshot and require the pinned-Chrome renderer-aware follow-up. The separate
 PDF-tools authority now locks apko, Poppler 26.08.0, the 45-package graph,
 runtime expectations, notices, the Wolfi recipe-licence snapshot and
 source-retention metadata. Its offline Go validator prevents repository drift.
-Required semantic CI enforcement still
-waits for deterministic notice-layer assembly, a two-build final-image match,
-publication and exact-digest admission; ambient host Poppler remains
-non-authoritative.
+Its local reproducer now requires two byte-identical final images and the
+bounded runtime observations. Given three explicit new output paths, the same
+successful run can retain one final OCI archive, the byte-identical apko SPDX document
+and a checksum-closed source bundle containing all 45 exact APKs and the pinned
+source and notice material. These files and their receipt remain `NO_RESULT`
+candidate inputs. Required semantic CI enforcement still waits for maintainer
+notice/source approval, publication, anonymous pull and exact-digest admission;
+ambient host Poppler remains non-authoritative.
 
 Container publication has a separate two-phase boundary. The build pushes a
 candidate under its canonical digest without a release tag. The workflow then

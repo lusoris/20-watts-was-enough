@@ -211,6 +211,14 @@ the exact diff; this file records why the project changed.
   only its random alias and leaves shared untagged digest content under Docker
   cache management, so concurrent local reproductions cannot delete each
   other's image.
+- The same reproducer can now prepare the issue-20 candidate at three explicit
+  new paths after the complete two-build and runtime checks pass. A bounded Go
+  downloader retains the 45 exact APKs and Poppler source archive by URL, size
+  and SHA-256; the deterministic source bundle adds the maintained authority,
+  notices, Wolfi recipe and licence, and byte-identical apko SPDX document under one
+  sorted `SHA256SUMS`. The atomic receipt binds that bundle and one final OCI
+  archive while keeping publication, digest admission, legal conclusions and
+  scientific use blocked under `NO_RESULT`.
 - Decision 0055 and a source-bound Go contract now freeze the CLRS-Text
   controller shakedown to six named task families, a bounded 48-example
   construction plan and explicit fixed-four-endpoint semantics for segment

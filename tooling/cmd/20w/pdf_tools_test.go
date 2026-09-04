@@ -38,3 +38,17 @@ func TestRunPublicationReproducePDFToolsImageRequiresNewReceipt(t *testing.T) {
 		t.Fatalf("run() exit/stdout/stderr = %d/%q/%q", exit, stdout.String(), stderr.String())
 	}
 }
+
+func TestRunPublicationReproducePDFToolsImageRequiresCompleteCandidatePaths(t *testing.T) {
+	t.Parallel()
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	exit := run([]string{
+		"publication", "reproduce-pdf-tools-image",
+		"--receipt", "build/evidence/receipt.json",
+		"--final-archive", "build/release-inputs/final.tar",
+	}, &stdout, &stderr)
+	if exit != 2 || !strings.Contains(stderr.String(), "requires all of --final-archive") {
+		t.Fatalf("run() exit/stdout/stderr = %d/%q/%q", exit, stdout.String(), stderr.String())
+	}
+}

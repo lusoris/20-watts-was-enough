@@ -60,7 +60,7 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w experiment verify-clrs-wheelhouse --wheelhouse <directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w publication render-pdf [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--revision <commit>] [--check]")
 	fmt.Fprintln(writer, "  20w publication verify-pdf-tools [--root <repository>]")
-	fmt.Fprintln(writer, "  20w publication reproduce-pdf-tools-image --receipt <new.json> [--root <repository>]")
+	fmt.Fprintln(writer, "  20w publication reproduce-pdf-tools-image --receipt <new.json> [--final-archive <new.tar> --spdx <new.spdx.json> --source-bundle <new.tar.gz>] [--root <repository>]")
 	fmt.Fprintln(writer, "  20w publication verify-pdf-reproducibility --receipt <new.json> [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--revision <commit>]")
 	fmt.Fprintln(writer, "  20w publication verify-public-transport [--root <repository>] [--check]")
 	fmt.Fprintln(writer, "  20w translation export-candidate --source <concept-or-math.md> --language <code> --output <new.json> [--root <repository>]")

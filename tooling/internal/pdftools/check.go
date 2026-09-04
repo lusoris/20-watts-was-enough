@@ -18,6 +18,7 @@ type checkedAuthority struct {
 	contractSHA256   string
 	lockSHA256       string
 	renderer         pdfrender.Configuration
+	retention        retentionManifest
 	packages         int
 	notices          int
 	retainedAPKBytes int64
@@ -89,6 +90,7 @@ func checkAuthority(repositoryRoot string) (checkedAuthority, error) {
 		contractSHA256:   rawDigest(contractBody),
 		lockSHA256:       contract.Apko.LockSHA256,
 		renderer:         renderer,
+		retention:        retention,
 		packages:         len(locked),
 		notices:          len(contract.NoticeLayer.Entries),
 		retainedAPKBytes: retention.TotalBytes,
