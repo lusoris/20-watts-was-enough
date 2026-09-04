@@ -292,6 +292,7 @@
     {
       "id": "script-site-tests",
       "paths": [
+        "scripts/github-pages.test.mjs",
         "scripts/mermaid-browser.test.mjs"
       ],
       "lanes": [

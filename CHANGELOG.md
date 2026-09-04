@@ -230,6 +230,10 @@ the exact diff; this file records why the project changed.
   the two high-severity unbounded-memory advisories reported by Dependabot and
   OpenSSF Scorecard. The regenerated book manifest and semantic sentinel bind
   the dependency change without changing the rendered PDF bytes.
+- Portal document changes now focus the destination heading and keep fragment,
+  back and forward navigation aligned with that focus. The document rail uses
+  native links, so new-tab, modifier-click and copied-route behaviour remain
+  available alongside same-tab client navigation.
 - Continuous-book deep links now restore every chapter and heading below the
   responsive action bar on cold load and later hash navigation. Internal book
   links remain in the namespaced edition while preserving the current Pages

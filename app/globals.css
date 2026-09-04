@@ -595,7 +595,11 @@ button {
 .portal-shell a:focus-visible,
 .portal-shell button:focus-visible,
 .portal-shell input:focus-visible,
-.portal-reader:focus-visible {
+#portal-reader-title:focus-visible,
+#portal-overview:focus-visible,
+#research-system:focus-visible,
+#library:focus-visible,
+.portal-prose :is(h2, h3, h4, h5, h6):focus-visible {
   outline: 3px solid var(--portal-blue);
   outline-offset: 3px;
 }
@@ -3715,7 +3719,7 @@ button {
     scrollbar-width: thin;
   }
 
-  .portal-library .portal-document-list button {
+  .portal-library .portal-document-list a {
     display: block;
     width: 100%;
     padding: 11px 9px;
@@ -3723,33 +3727,33 @@ button {
     border-left: 2px solid transparent;
     background: transparent;
     color: #344c3e;
-    cursor: pointer;
     text-align: left;
+    text-decoration: none;
   }
 
-  .portal-library .portal-document-list button:hover {
+  .portal-library .portal-document-list a:hover {
     background: #e7ece7;
     color: #183323;
   }
 
-  .portal-library .portal-document-list button.active {
+  .portal-library .portal-document-list a[aria-current="page"] {
     border-color: #276847;
     background: #dfeae2;
     color: #173624;
   }
 
-  .portal-library .portal-document-list button span,
-  .portal-library .portal-document-list button small {
+  .portal-library .portal-document-list a span,
+  .portal-library .portal-document-list a small {
     display: block;
   }
 
-  .portal-library .portal-document-list button span {
+  .portal-library .portal-document-list a span {
     font-size: 13px;
     font-weight: 700;
     line-height: 1.35;
   }
 
-  .portal-library .portal-document-list button small {
+  .portal-library .portal-document-list a small {
     margin-top: 5px;
     color: #6d7c73;
     font-family: var(--font-mono);

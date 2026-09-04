@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { spawn } from "node:child_process";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { createServer as createTcpServer } from "node:net";
+import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -8,6 +11,13 @@ import {
   encodePortalFragment,
 } from "../app/lib/portal-fragment.mjs";
 import { publication } from "../app/lib/publication.mjs";
+import {
+  connectCdp,
+  devtoolsPage,
+  firstExistingChromium,
+  stopProcess,
+  waitForUrl,
+} from "./lib/chromium-cdp.mjs";
 import {
   decodeBasicHtmlEntitiesOnce,
   stripHtmlTagSyntax,
@@ -22,6 +32,317 @@ const repositoryRoot = path.resolve(
 
 async function source(relative) {
   return readFile(path.join(repositoryRoot, relative), "utf8");
+}
+
+async function reserveLocalPort() {
+  const server = createTcpServer();
+  await new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", resolve);
+  });
+  const address = server.address();
+  assert.equal(typeof address, "object");
+  const port = address.port;
+  await new Promise((resolve, reject) => server.close((error) => (
+    error ? reject(error) : resolve()
+  )));
+  return port;
+}
+
+async function evaluateInBrowser(cdp, expression) {
+  const evaluation = await cdp.send("Runtime.evaluate", {
+    expression,
+    returnByValue: true,
+  });
+  if (evaluation.exceptionDetails) {
+    assert.fail(`Browser evaluation failed: ${JSON.stringify(evaluation.exceptionDetails)}`);
+  }
+  return evaluation.result?.value;
+}
+
+async function waitForBrowserState(cdp, expression, accepts, label, timeoutMs = 30_000) {
+  const deadline = Date.now() + timeoutMs;
+  let snapshot;
+  while (Date.now() < deadline) {
+    snapshot = await evaluateInBrowser(cdp, expression);
+    if (accepts(snapshot)) return snapshot;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  assert.fail(`${label}: ${JSON.stringify(snapshot)}`);
+}
+
+const portalStateExpression = `(() => {
+  const title = document.getElementById("portal-reader-title");
+  const hashTarget = location.hash
+    ? document.getElementById(decodeURIComponent(location.hash.slice(1)))
+    : null;
+  const hashBounds = hashTarget?.getBoundingClientRect();
+  const documentLinks = [...document.querySelectorAll(".portal-document-list > a")];
+  return {
+    activeId: document.activeElement?.id ?? "",
+    activeTag: document.activeElement?.tagName ?? "",
+    articleTabIndex: document.getElementById("portal-reader")?.getAttribute("tabindex") ?? null,
+    currentLinks: documentLinks.filter((link) => link.getAttribute("aria-current") === "page").length,
+    documentLinkCount: documentLinks.length,
+    documentLinkTags: [...new Set(documentLinks.map((link) => link.tagName))],
+    hash: location.hash,
+    hashTargetTop: hashBounds?.top ?? null,
+    hashTargetVisible: Boolean(hashBounds && hashBounds.bottom > 0 && hashBounds.top < innerHeight),
+    pathname: location.pathname,
+    readerPresent: Boolean(document.getElementById("portal-reader")),
+    titleTabIndex: title?.getAttribute("tabindex") ?? null,
+    titleText: title?.textContent?.trim() ?? "",
+  };
+})()`;
+
+const portalPagesBasePath = "/20-watts-was-enough/";
+
+async function withPortalBrowser(run) {
+  const browser = await firstExistingChromium();
+  const debugPort = await reserveLocalPort();
+  const serverPort = await reserveLocalPort();
+  const profile = await mkdtemp(path.join(os.tmpdir(), "20w-portal-routing-"));
+  let browserProcess;
+  let cdp;
+  let viteProcess;
+
+  try {
+    const portalUrl = `http://127.0.0.1:${serverPort}${portalPagesBasePath}`;
+    viteProcess = spawn(process.execPath, [
+      path.join(repositoryRoot, "node_modules", "vite", "bin", "vite.js"),
+      "--config",
+      path.join(repositoryRoot, "vite.pages.config.ts"),
+      "--host",
+      "127.0.0.1",
+      "--port",
+      String(serverPort),
+      "--strictPort",
+      "--force",
+      "--logLevel",
+      "silent",
+    ], {
+      cwd: repositoryRoot,
+      env: { ...process.env, PAGES_BASE_PATH: portalPagesBasePath },
+      stdio: "ignore",
+      windowsHide: true,
+    });
+    await waitForUrl(portalUrl, viteProcess);
+    browserProcess = spawn(browser, [
+      "--headless=new",
+      "--disable-gpu",
+      "--disable-extensions",
+      "--disable-background-networking",
+      "--disable-dev-shm-usage",
+      "--disable-features=NetworkServiceSandbox",
+      "--no-sandbox",
+      "--no-proxy-server",
+      "--allow-insecure-localhost",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--hide-scrollbars",
+      "--window-size=1440,900",
+      `--remote-debugging-port=${debugPort}`,
+      `--user-data-dir=${profile}`,
+      "about:blank",
+    ], { stdio: "ignore", windowsHide: true });
+
+    cdp = await connectCdp(await devtoolsPage(browserProcess, debugPort));
+    await cdp.send("Page.enable");
+    await cdp.send("Runtime.enable");
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+      width: 1440,
+      height: 900,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+    await run(cdp, portalUrl);
+  } finally {
+    cdp?.socket.close();
+    await stopProcess(browserProcess);
+    await stopProcess(viteProcess);
+    await rm(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+  }
+}
+
+async function openThesisRoute(cdp, portalUrl) {
+  const navigation = await cdp.send("Page.navigate", { url: portalUrl });
+  assert.equal(navigation.errorText, undefined);
+  await waitForBrowserState(
+    cdp,
+    `document.readyState === "complete" && Boolean(document.querySelector(".portal-action-primary"))`,
+    Boolean,
+    "portal overview did not render",
+  );
+  await cdp.send("Input.dispatchKeyEvent", {
+    type: "keyDown", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9,
+  });
+  await cdp.send("Input.dispatchKeyEvent", {
+    type: "keyUp", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9,
+  });
+  const focusRings = await evaluateInBrowser(cdp, `(() => (
+    ["portal-overview", "research-system", "library"].map((id) => {
+      const target = document.getElementById(id);
+      target.focus({ preventScroll: true });
+      const style = getComputedStyle(target);
+      return {
+        active: document.activeElement === target,
+        focusVisible: target.matches(":focus-visible"),
+        outlineOffset: style.outlineOffset,
+        outlineStyle: style.outlineStyle,
+        outlineWidth: style.outlineWidth,
+      };
+    })
+  ))()`);
+  assert.deepEqual(focusRings, Array.from({ length: 3 }, () => ({
+    active: true,
+    focusVisible: true,
+    outlineOffset: "3px",
+    outlineStyle: "solid",
+    outlineWidth: "3px",
+  })));
+  const thesis = await evaluateInBrowser(cdp, `(() => {
+    const link = document.querySelector(".portal-action-primary");
+    return { pathname: new URL(link.href).pathname };
+  })()`);
+  await evaluateInBrowser(cdp, `document.querySelector(".portal-action-primary").click()`);
+  const state = await waitForBrowserState(
+    cdp,
+    portalStateExpression,
+    (snapshot) => snapshot.pathname === thesis.pathname
+      && snapshot.activeId === "portal-reader-title"
+      && snapshot.documentLinkCount > 1,
+    "thesis route did not focus its title",
+  );
+  assert.equal(state.activeTag, "H1");
+  assert.equal(state.articleTabIndex, null);
+  assert.equal(state.titleTabIndex, "-1");
+  assert.deepEqual(state.documentLinkTags, ["A"]);
+  assert.equal(state.currentLinks, 1);
+  return { state, thesis };
+}
+
+async function openSidebarRoute(cdp) {
+  const route = await evaluateInBrowser(cdp, `(() => {
+    const link = [...document.querySelectorAll(".portal-document-list > a")]
+      .find((candidate) => candidate.getAttribute("aria-current") !== "page");
+    const probe = (options) => {
+      let preventedBeforeBrowserDefault = null;
+      window.addEventListener("click", (event) => {
+        preventedBeforeBrowserDefault = event.defaultPrevented;
+        event.preventDefault();
+      }, { once: true });
+      const event = new MouseEvent("click", {
+        bubbles: true, cancelable: true, ...options,
+      });
+      link.dispatchEvent(event);
+      return preventedBeforeBrowserDefault;
+    };
+    const modifierPrevented = ["altKey", "ctrlKey", "metaKey", "shiftKey"]
+      .map((modifier) => probe({ button: 0, [modifier]: true }));
+    return {
+      href: link.getAttribute("href"),
+      middlePrevented: probe({ button: 1 }),
+      modifierPrevented,
+      pathname: new URL(link.href).pathname,
+      title: link.querySelector("span").textContent.trim(),
+    };
+  })()`);
+  assert.equal(route.middlePrevented, false);
+  assert.deepEqual(route.modifierPrevented, [false, false, false, false]);
+  assert.ok(route.href);
+  const navigation = await evaluateInBrowser(cdp, `(() => {
+    const link = [...document.querySelectorAll(".portal-document-list > a")]
+      .find((candidate) => new URL(candidate.href).pathname === ${JSON.stringify(route.pathname)});
+    const event = new MouseEvent("click", { bubbles: true, button: 0, cancelable: true });
+    link.dispatchEvent(event);
+    return { prevented: event.defaultPrevented };
+  })()`);
+  assert.equal(navigation.prevented, true);
+  const state = await waitForBrowserState(
+    cdp,
+    portalStateExpression,
+    (snapshot) => snapshot.pathname === route.pathname
+      && snapshot.titleText === route.title
+      && snapshot.activeId === "portal-reader-title",
+    "sidebar route did not focus its title",
+  );
+  assert.equal(state.activeTag, "H1");
+  assert.equal(state.currentLinks, 1);
+  return route;
+}
+
+async function traverseDocumentHistory(cdp, thesis, thesisState, route) {
+  await evaluateInBrowser(cdp, "history.back()");
+  await waitForBrowserState(
+    cdp,
+    portalStateExpression,
+    (snapshot) => snapshot.pathname === thesis.pathname
+      && snapshot.titleText === thesisState.titleText
+      && snapshot.activeId === "portal-reader-title",
+    "back navigation did not restore and focus the thesis title",
+  );
+  await evaluateInBrowser(cdp, "history.forward()");
+  await waitForBrowserState(
+    cdp,
+    portalStateExpression,
+    (snapshot) => snapshot.pathname === route.pathname
+      && snapshot.titleText === route.title
+      && snapshot.activeId === "portal-reader-title",
+    "forward navigation did not restore and focus the document title",
+  );
+}
+
+async function openOutlineFragment(cdp) {
+  const target = await waitForBrowserState(
+    cdp,
+    `(() => {
+      const link = [...document.querySelectorAll(".portal-outline a")].find((candidate) => {
+        const heading = document.getElementById(candidate.hash.slice(1));
+        return heading && heading.getBoundingClientRect().height > 0;
+      });
+      return link ? { found: true, id: link.hash.slice(1) } : { found: false };
+    })()`,
+    (snapshot) => snapshot.found,
+    "document outline did not expose a visible heading target",
+  );
+  const navigation = await evaluateInBrowser(cdp, `(() => {
+    const link = [...document.querySelectorAll(".portal-outline a")]
+      .find((candidate) => candidate.hash === ${JSON.stringify(`#${target.id}`)});
+    const event = new MouseEvent("click", { bubbles: true, button: 0, cancelable: true });
+    link.dispatchEvent(event);
+    return { prevented: event.defaultPrevented };
+  })()`);
+  assert.equal(navigation.prevented, true);
+  const state = await waitForBrowserState(
+    cdp,
+    portalStateExpression,
+    (snapshot) => snapshot.hash === `#${target.id}`
+      && snapshot.activeId === target.id
+      && snapshot.hashTargetVisible,
+    "outline navigation did not preserve and focus its heading fragment",
+  );
+  assert.match(state.activeTag, /^H[2-6]$/u);
+  return target;
+}
+
+async function traverseFragmentHistory(cdp, thesis, route, target) {
+  for (const step of [
+    { direction: "back", hash: "", pathname: route.pathname, activeId: "portal-reader-title" },
+    { direction: "back", hash: "", pathname: thesis.pathname, activeId: "portal-reader-title" },
+    { direction: "forward", hash: "", pathname: route.pathname, activeId: "portal-reader-title" },
+    { direction: "forward", hash: `#${target.id}`, pathname: route.pathname, activeId: target.id },
+  ]) {
+    await evaluateInBrowser(cdp, `history.${step.direction}()`);
+    await waitForBrowserState(
+      cdp,
+      portalStateExpression,
+      (snapshot) => snapshot.pathname === step.pathname
+        && snapshot.hash === step.hash
+        && snapshot.activeId === step.activeId
+        && (!step.hash || snapshot.hashTargetVisible),
+      `${step.direction} navigation did not restore ${step.activeId}`,
+    );
+  }
 }
 
 function assertNoLegacyDeploymentHost(html, label) {
@@ -205,6 +526,9 @@ test("the portal keeps clean-route history and native Markdown links honest on t
   assert.doesNotMatch(portal, /ResizeObserver/);
   assert.match(portal, /readerLibraryRef/);
   assert.match(portal, /list\.scrollTop \+= activeRect\.top/);
+  assert.match(portal, /className="portal-document-list"[\s\S]*<a[\s\S]*href=\{portalDocumentLocation\(document\.path, assetBasePath\)\}/);
+  assert.match(portal, /aria-current=\{document\.path === selectedMetadata\.path \? "page" : undefined\}/);
+  assert.match(portal, /event\.button === 0[\s\S]*!event\.ctrlKey[\s\S]*!event\.metaKey/);
   assert.match(portal, /section heading match/);
   assert.match(portal, /Open \{step\.label\}/);
   assert.match(portal, /document\.getElementById\(targetId\)\?\.focus\(\)/);
@@ -249,6 +573,18 @@ test("the portal keeps clean-route history and native Markdown links honest on t
   }
 });
 
+test("portal document routes preserve native links and focus their destination headings", {
+  timeout: 120_000,
+}, async () => {
+  await withPortalBrowser(async (cdp, portalUrl) => {
+    const { state: thesisState, thesis } = await openThesisRoute(cdp, portalUrl);
+    const route = await openSidebarRoute(cdp);
+    await traverseDocumentHistory(cdp, thesis, thesisState, route);
+    const fragment = await openOutlineFragment(cdp);
+    await traverseFragmentHistory(cdp, thesis, route, fragment);
+  });
+});
+
 test("only genuinely overflowing Markdown tables become labelled keyboard regions", async () => {
   const markdown = await source("app/components/markdown-document.tsx");
 
@@ -268,7 +604,14 @@ test("focused portal documents have a coherent heading hierarchy", async () => {
     source("app/components/markdown-document.tsx"),
   ]);
 
-  assert.match(portal, /<h1 id="portal-reader-title">/);
+  assert.match(
+    portal,
+    /<h1 id="portal-reader-title" ref=\{readerTitleRef\} tabIndex=\{-1\}>/,
+  );
+  assert.doesNotMatch(
+    portal,
+    /<article[\s\S]{0,200}id="portal-reader"[\s\S]{0,200}tabIndex=\{-1\}/,
+  );
   assert.match(portal, /headingOffset=\{1\}/);
   assert.match(markdown, /headingOffset\?: number/);
   assert.match(markdown, /h1: shiftedHeading\(1, headingOffset\)/);
