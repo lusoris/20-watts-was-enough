@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"slices"
 	"strings"
@@ -82,6 +83,55 @@ func TestRenderPlanUsesTheExactImageAndHardenedContainer(t *testing.T) {
 	if strings.Contains(strings.Join(run, "\n"), "node_modules/.vite") {
 		t.Fatalf("run arguments depend on pre-existing Vite cache mountpoints: %v", run)
 	}
+}
+
+func TestSourceRevisionBindingRejectsMissingMalformedAndWrongCommits(t *testing.T) {
+	t.Parallel()
+	root := t.TempDir()
+	runRenderTestGit(t, root, "init", "--quiet")
+	if err := os.WriteFile(filepath.Join(root, "source.txt"), []byte("source\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	runRenderTestGit(t, root, "add", "source.txt")
+	runRenderTestGit(
+		t, root,
+		"-c", "user.name=PDF test", "-c", "user.email=pdf-test@example.invalid",
+		"commit", "--quiet", "-m", "source",
+	)
+	head := strings.TrimSpace(runRenderTestGit(t, root, "rev-parse", "HEAD"))
+	if err := verifySourceRevision(context.Background(), root, "v1.2.3", head); err != nil {
+		t.Fatalf("verifySourceRevision() valid error = %v", err)
+	}
+	for name, revision := range map[string]string{
+		"missing":   "",
+		"malformed": "HEAD",
+		"wrong":     strings.Repeat("f", 40),
+	} {
+		name, revision := name, revision
+		t.Run(name, func(t *testing.T) {
+			err := verifySourceRevision(context.Background(), root, "v1.2.3", revision)
+			if err == nil {
+				t.Fatal("verifySourceRevision() unexpectedly accepted an invalid binding")
+			}
+		})
+	}
+}
+
+func runRenderTestGit(t *testing.T, root string, arguments ...string) string {
+	t.Helper()
+	commandContext, cancel := context.WithTimeout(context.Background(), sourceRevisionTimeout)
+	defer cancel()
+	command := exec.CommandContext(commandContext, "git", append([]string{"-C", root}, arguments...)...)
+	command.Env = boundedGitEnvironment()
+	command.WaitDelay = maximumWaitDelay
+	output, err := command.CombinedOutput()
+	if commandContext.Err() != nil {
+		t.Fatalf("git %v timed out: %v", arguments, commandContext.Err())
+	}
+	if err != nil {
+		t.Fatalf("git %v: %v: %s", arguments, err, output)
+	}
+	return string(output)
 }
 
 func TestRenderRejectsTimestampRewriteWarnings(t *testing.T) {

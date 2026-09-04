@@ -125,8 +125,9 @@ jobs:
           driver-opts: image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8
       - name: Render the immutable tag-bound book
         env:
+          RELEASE_COMMIT: ${{ steps.release-ref.outputs.commit }}
           RELEASE_TAG: ${{ steps.release-ref.outputs.tag }}
-        run: npm run generate:book-pdf -- --ref "$RELEASE_TAG"
+        run: npm run generate:book-pdf -- --ref "$RELEASE_TAG" --revision "$RELEASE_COMMIT"
       - name: Build the native 20w convenience binary
         env:
           RELEASE_COMMIT: ${{ steps.release-ref.outputs.commit }}

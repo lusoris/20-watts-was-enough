@@ -214,6 +214,11 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Release PDF rendering now receives the exact commit produced by the tag
+  preflight and refuses a checkout at any other revision. Policy validation
+  requires the unique reviewed step, its exact tag-and-commit command and only
+  the two verified outputs; missing, ambient, reordered, conditional or
+  failure-tolerant variants fail closed.
 - The locked browser-targeting toolchain now uses Browserslist 4.28.8, closing
   the two high-severity unbounded-memory advisories reported by Dependabot and
   OpenSSF Scorecard. The regenerated book manifest and semantic sentinel bind

@@ -25,6 +25,7 @@ var (
 type Options struct {
 	RepositoryRoot string
 	SourceRef      string
+	SourceRevision string
 }
 
 // Result records the exact local image and checked-in lock used for rendering.
@@ -40,6 +41,9 @@ func Render(ctx context.Context, options Options) (Result, error) {
 	if err != nil {
 		return Result{}, err
 	}
+	if err := verifySourceRevision(ctx, configuration.RepositoryRoot, options.SourceRef, options.SourceRevision); err != nil {
+		return Result{}, err
+	}
 	return renderWithDependencies(
 		ctx,
 		configuration,
@@ -53,6 +57,21 @@ func Render(ctx context.Context, options Options) (Result, error) {
 func ValidateSourceRef(sourceRef string) error {
 	if !sourceRefPattern.MatchString(sourceRef) {
 		return errors.New("source ref must be main or vMAJOR.MINOR.PATCH")
+	}
+	return nil
+}
+
+// ValidateSourceRevision requires immutable tag renders to name the exact
+// lowercase Git commit already verified by the release preflight.
+func ValidateSourceRevision(sourceRef, sourceRevision string) error {
+	if err := ValidateSourceRef(sourceRef); err != nil {
+		return err
+	}
+	if sourceRef != "main" && sourceRevision == "" {
+		return errors.New("tag-bound rendering requires an exact source revision")
+	}
+	if sourceRevision != "" && !gitRevisionPattern.MatchString(sourceRevision) {
+		return errors.New("source revision must be a lowercase 40-character Git identity")
 	}
 	return nil
 }

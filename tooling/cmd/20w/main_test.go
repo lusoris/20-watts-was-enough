@@ -129,6 +129,25 @@ func TestRunPublicationRenderPDFRejectsAnUnboundedRefAsUsage(t *testing.T) {
 	}
 }
 
+func TestRunPublicationRenderPDFRequiresAnExactRevisionForATag(t *testing.T) {
+	t.Parallel()
+	for name, arguments := range map[string][]string{
+		"missing":   {"publication", "render-pdf", "--ref", "v1.2.3", "--check"},
+		"malformed": {"publication", "render-pdf", "--ref", "v1.2.3", "--revision", "HEAD", "--check"},
+	} {
+		name, arguments := name, arguments
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			var stdout bytes.Buffer
+			var stderr bytes.Buffer
+			exitCode := run(arguments, &stdout, &stderr)
+			if exitCode != 2 || !strings.Contains(stderr.String(), "source revision") {
+				t.Fatalf("run() exit/stderr = %d/%q, want source-revision usage failure", exitCode, stderr.String())
+			}
+		})
+	}
+}
+
 func TestRunPackageNodeImageRejectsUnsupportedArtifact(t *testing.T) {
 	t.Parallel()
 	var stdout bytes.Buffer
