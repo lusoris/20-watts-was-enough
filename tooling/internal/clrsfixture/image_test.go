@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	expectedGeneratorLockInputSHA256 = "d7ff2963aa2f11e3cf001fc095520780539c85e4923448939c9ef9ede41eb827"
-	expectedGeneratorImageSHA256     = "a0da021036c924a8528ddda232bb0fab8ec7545b0819d5ad8b0bd0fc7467d197"
+	expectedGeneratorLockInputSHA256  = "ea0e8f7d2d3ce347e82cbdd0e956dceca3da27ee499b52e18a6f6010526a5a19"
+	expectedGeneratorDependencySHA256 = "1aff6ff0e589539e07b3ee75579803ebd66636ab35568661680a703ed38ab640"
+	expectedGeneratorImageSHA256      = "75ee2897e844d9509a504c09d80a8ffbbc3ad424a18d0556ee281233d419c51f"
 )
 
 func TestTrackedGeneratorImageFoundationIsClosedAndBlocked(t *testing.T) {
@@ -28,8 +29,14 @@ func TestTrackedGeneratorImageFoundationIsClosedAndBlocked(t *testing.T) {
 		t.Fatalf("foundation source/contract = %s/%s", foundation.SourceID, foundation.GenerationContract)
 	}
 	if foundation.LockInputSHA256 != expectedGeneratorLockInputSHA256 ||
+		foundation.DependencyLockSHA256 != expectedGeneratorDependencySHA256 ||
 		foundation.ImageContractSHA256 != expectedGeneratorImageSHA256 {
-		t.Fatalf("foundation lock/image hashes = %s/%s", foundation.LockInputSHA256, foundation.ImageContractSHA256)
+		t.Fatalf(
+			"foundation input/dependency/image hashes = %s/%s/%s",
+			foundation.LockInputSHA256,
+			foundation.DependencyLockSHA256,
+			foundation.ImageContractSHA256,
+		)
 	}
 }
 
@@ -50,7 +57,8 @@ func TestParseGeneratorLockInputRejectsCandidateOrSourceDrift(t *testing.T) {
 		"archive size":       strings.Replace(valid, `"archive_size_bytes": 5347008`, `"archive_size_bytes": 1`, 1),
 		"newer Python":       strings.Replace(valid, `"version": "3.13.15"`, `"version": "3.14.7"`, 1),
 		"mutable base":       strings.Replace(valid, `@sha256:c45a22ea000adfd9cda29364bbe7edd23001ce5cc2ad15857cfbf7766943b9ca`, ``, 1),
-		"resolver drift":     strings.Replace(valid, `"version": "0.12.7"`, `"version": "0.12.8"`, 1),
+		"resolver drift":     strings.Replace(valid, `"version": "0.12.9"`, `"version": "0.12.8"`, 1),
+		"cutoff drift":       strings.Replace(valid, `"exclude_newer": "2026-08-31T13:22:50Z"`, `"exclude_newer": "2026-09-01T00:00:00Z"`, 1),
 		"constraint drift":   strings.Replace(valid, `jax>=0.4.31`, `jax>=0.4.30`, 1),
 		"candidate drift":    strings.Replace(valid, `"requirement": "jax==0.11.1"`, `"requirement": "jax==0.11.0"`, 1),
 		"wheel digest":       strings.Replace(valid, lockedWheelCandidates[0].SHA256, strings.Repeat("b", 64), 1),
@@ -71,6 +79,85 @@ func TestParseGeneratorLockInputRejectsCandidateOrSourceDrift(t *testing.T) {
 	}
 }
 
+func TestRenderedGeneratorProjectMatchesTrackedInput(t *testing.T) {
+	t.Parallel()
+	source := trackedSourceRecord(t)
+	input, err := ParseGeneratorLockInput(trackedGeneratorFile(t, "lock-input.json"), source)
+	if err != nil {
+		t.Fatal(err)
+	}
+	project, err := renderGeneratorProject(input)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(project, trackedGeneratorFile(t, "pyproject.toml")) {
+		t.Fatal("rendered generator pyproject differs from the tracked file")
+	}
+}
+
+func TestGeneratorDependencyValidationRejectsCoordinatedDrift(t *testing.T) {
+	t.Parallel()
+	source := trackedSourceRecord(t)
+	lockInputBody := trackedGeneratorFile(t, "lock-input.json")
+	input, err := ParseGeneratorLockInput(lockInputBody, source)
+	if err != nil {
+		t.Fatal(err)
+	}
+	generation := trackedGenerationContract(t, source)
+	contract, err := ParseGeneratorImageContract(
+		trackedGeneratorFile(t, "image-contract.json"),
+		lockInputBody,
+		source,
+		generation,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	projectBody := trackedGeneratorFile(t, "pyproject.toml")
+	lockBody := string(trackedGeneratorFile(t, "uv.lock"))
+	tests := map[string]string{
+		"schema revision": strings.Replace(lockBody, "revision = 3", "revision = 2", 1),
+		"late artifact": strings.Replace(
+			lockBody,
+			"2026-07-03T10:57:48.157Z",
+			"2026-09-01T10:57:48.157Z",
+			1,
+		),
+		"selected version": strings.Replace(lockBody, "name = \"jax\"\nversion = \"0.11.1\"", "name = \"jax\"\nversion = \"0.11.0\"", 1),
+		"artifact removed": removeFirstGeneratorArtifactLine(t, lockBody),
+	}
+	for name, body := range tests {
+		name, body := name, body
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			metadata := contract.DependencyLock
+			metadata.SHA256 = rawSHA256([]byte(body))
+			if err := validateGeneratorDependencyFiles(
+				metadata,
+				projectBody,
+				[]byte(body),
+				input,
+				contract.Limits,
+			); err == nil {
+				t.Fatalf("generator dependency validation accepted %s", name)
+			}
+		})
+	}
+
+	tamperedProject := []byte("[project]\nname = \"tampered\"\n")
+	metadata := contract.DependencyLock
+	metadata.ProjectSHA256 = rawSHA256(tamperedProject)
+	if err := validateGeneratorDependencyFiles(
+		metadata,
+		tamperedProject,
+		[]byte(lockBody),
+		input,
+		contract.Limits,
+	); err == nil {
+		t.Fatal("generator dependency validation accepted coordinated pyproject drift")
+	}
+}
+
 func TestParseGeneratorImageContractRejectsPretendedAcceptance(t *testing.T) {
 	t.Parallel()
 	source := trackedSourceRecord(t)
@@ -86,7 +173,7 @@ func TestParseGeneratorImageContractRejectsPretendedAcceptance(t *testing.T) {
 		"wrong source":         strings.Replace(valid, contractSourceIdentity(t), "sha256:"+strings.Repeat("a", 64), 1),
 		"wrong contract":       strings.Replace(valid, expectedContractIdentity, "sha256:"+strings.Repeat("b", 64), 1),
 		"wrong lock digest":    strings.Replace(valid, expectedGeneratorLockInputSHA256, strings.Repeat("c", 64), 1),
-		"dependency admitted":  strings.Replace(valid, `"state": "missing"`, `"state": "locked"`, 1),
+		"dependency missing":   strings.Replace(valid, `"state": "locked"`, `"state": "missing"`, 1),
 		"networked install":    strings.Replace(valid, `"install_network": "none"`, `"install_network": "default"`, 1),
 		"licence SPDX":         strings.Replace(valid, `"spdx": "Apache-2.0"`, `"spdx": "MIT"`, 1),
 		"licence digest":       strings.Replace(valid, `"source_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"`, `"source_sha256": "`+strings.Repeat("d", 64)+`"`, 1),
@@ -133,7 +220,7 @@ func TestParseGeneratorImageContractRejectsPretendedAcceptance(t *testing.T) {
 	}
 }
 
-func TestGeneratorImageFoundationRejectsSymlinkAndPrematureLock(t *testing.T) {
+func TestGeneratorImageFoundationRejectsSymlinkAndDependencyLockTamper(t *testing.T) {
 	t.Parallel()
 	root := copyGeneratorFoundation(t)
 	lockPath := filepath.Join(root, filepath.FromSlash(trackedLockInputPath))
@@ -157,8 +244,17 @@ func TestGeneratorImageFoundationRejectsSymlinkAndPrematureLock(t *testing.T) {
 	if err := os.WriteFile(uvLock, []byte("premature"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := CheckGeneratorImageFoundation(root); err == nil || !strings.Contains(err.Error(), "exists while its state is missing") {
-		t.Fatalf("CheckGeneratorImageFoundation premature-lock error = %v", err)
+	if _, err := CheckGeneratorImageFoundation(root); err == nil || !strings.Contains(err.Error(), "digest is invalid") {
+		t.Fatalf("CheckGeneratorImageFoundation dependency-lock error = %v", err)
+	}
+
+	root = copyGeneratorFoundation(t)
+	projectPath := filepath.Join(root, filepath.FromSlash(trackedGeneratorProjectPath))
+	if err := os.WriteFile(projectPath, []byte("[project]\nname = \"tampered\"\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := CheckGeneratorImageFoundation(root); err == nil || !strings.Contains(err.Error(), "digest is invalid") {
+		t.Fatalf("CheckGeneratorImageFoundation project error = %v", err)
 	}
 }
 
@@ -242,6 +338,8 @@ func copyGeneratorFoundation(t *testing.T) string {
 		trackedGenerationPath,
 		trackedLockInputPath,
 		trackedImageContractPath,
+		trackedGeneratorProjectPath,
+		trackedGeneratorDependencyLockPath,
 		"tooling/pdf-renderer/lock.json",
 	}
 	for _, relative := range paths {
@@ -258,4 +356,16 @@ func copyGeneratorFoundation(t *testing.T) string {
 		}
 	}
 	return root
+}
+
+func removeFirstGeneratorArtifactLine(t *testing.T, body string) string {
+	t.Helper()
+	lines := strings.SplitAfter(body, "\n")
+	for index, line := range lines {
+		if strings.HasPrefix(line, "sdist = { url = \"") || strings.HasPrefix(line, "    { url = \"") {
+			return strings.Join(append(lines[:index], lines[index+1:]...), "")
+		}
+	}
+	t.Fatal("tracked generator lock has no artifact line")
+	return ""
 }

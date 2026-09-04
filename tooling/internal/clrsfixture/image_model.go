@@ -36,12 +36,13 @@ type GeneratorPython struct {
 }
 
 type GeneratorResolver struct {
-	Name       string `json:"name"`
-	Version    string `json:"version"`
-	Image      string `json:"image"`
-	Revision   string `json:"revision"`
-	Resolution string `json:"resolution"`
-	Prerelease string `json:"prerelease"`
+	Name         string `json:"name"`
+	Version      string `json:"version"`
+	Image        string `json:"image"`
+	Revision     string `json:"revision"`
+	Resolution   string `json:"resolution"`
+	Prerelease   string `json:"prerelease"`
+	ExcludeNewer string `json:"exclude_newer"`
 }
 
 type GeneratorRequirements struct {
@@ -66,8 +67,8 @@ type SupplementalRequirement struct {
 	Reason      string `json:"reason"`
 }
 
-// GeneratorImageContract is the non-executable blocked image state. Empty
-// evidence identities are intentional until the named acceptance is run.
+// GeneratorImageContract records closed construction inputs and the remaining
+// blocked image evidence. It never grants scientific result authority.
 type GeneratorImageContract struct {
 	SchemaVersion        int                      `json:"schema_version"`
 	Contract             string                   `json:"contract"`
@@ -80,7 +81,7 @@ type GeneratorImageContract struct {
 	GenerationContractID string                   `json:"generation_contract_id"`
 	LockInput            GeneratorFileBinding     `json:"lock_input"`
 	Builder              GeneratorBuilder         `json:"builder"`
-	DependencyLock       MissingDependencyLock    `json:"dependency_lock"`
+	DependencyLock       GeneratorDependencyLock  `json:"dependency_lock"`
 	BuildContext         MissingBuildContext      `json:"build_context"`
 	LicenseMaterial      MissingLicenseMaterial   `json:"license_material"`
 	ImageIdentity        MissingImageIdentity     `json:"image_identity"`
@@ -109,8 +110,10 @@ type GeneratorBuilder struct {
 	SourceDateEpoch       int64  `json:"source_date_epoch"`
 }
 
-type MissingDependencyLock struct {
+type GeneratorDependencyLock struct {
 	State         string `json:"state"`
+	ProjectPath   string `json:"project_path"`
+	ProjectSHA256 string `json:"project_sha256"`
 	Path          string `json:"path"`
 	SHA256        string `json:"sha256"`
 	PackageCount  int    `json:"package_count"`
@@ -231,10 +234,11 @@ type GeneratorImageAcceptance struct {
 // GeneratorImageFoundation is the offline validation result. It records
 // construction closure only and never carries scientific result authority.
 type GeneratorImageFoundation struct {
-	Authority           string
-	State               string
-	SourceID            SourceID
-	GenerationContract  ContractID
-	LockInputSHA256     string
-	ImageContractSHA256 string
+	Authority            string
+	State                string
+	SourceID             SourceID
+	GenerationContract   ContractID
+	LockInputSHA256      string
+	DependencyLockSHA256 string
+	ImageContractSHA256  string
 }

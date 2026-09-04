@@ -141,10 +141,10 @@ func validateGeneratorPythonAndResolver(python GeneratorPython, resolver Generat
 		PythonSourceSHA256:     "1e66a7945a48390ee4c2a4268a0e4185884059a13c4aab6d148aa208deea4a76",
 	}
 	wantResolver := GeneratorResolver{
-		Name: "uv", Version: "0.12.7",
-		Image:      "ghcr.io/astral-sh/uv:0.12.7@sha256:95f2aa1fe59274951cfe9b0cbc7972e879ff1004bc8945d130a32eb0dbd85945",
-		Revision:   "61291a8ca5477a9ca653f14d2ac5665587c263fa",
-		Resolution: "highest-compatible", Prerelease: "if-necessary-or-explicit",
+		Name: "uv", Version: "0.12.9",
+		Image:      "ghcr.io/astral-sh/uv:0.12.9@sha256:8b940d3a9d65bed080436972241af2e21c84b5e8c9193f7014ed71479ee795ff",
+		Revision:   "9f928602938ac5cf1cd6b294a725833c16f5720e",
+		Resolution: "highest-compatible", Prerelease: "if-necessary", ExcludeNewer: "2026-08-31T13:22:50Z",
 	}
 	if python != wantPython || resolver != wantResolver {
 		return errors.New("generator Python or uv candidate differs from the reviewed Linux amd64 boundary")
