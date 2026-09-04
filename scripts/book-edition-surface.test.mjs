@@ -220,11 +220,11 @@ test("the biomimetic transfer figure uses a print-safe flow and caption", async 
 });
 
 test("portal utility text and card accents retain readable contrast", async () => {
-  const stylesheet = await source("app/globals.css");
-  const portalStart = stylesheet.indexOf("/* Public research portal");
-  const portalEnd = stylesheet.indexOf("/* Research readiness", portalStart);
-  assert.ok(portalStart >= 0 && portalEnd > portalStart);
-  const portal = stylesheet.slice(portalStart, portalEnd);
+  const [globalStylesheet, portal] = await Promise.all([
+    source("app/globals.css"),
+    source("app/portal.css"),
+  ]);
+  const stylesheet = `${globalStylesheet}\n${portal}`;
 
   assert.doesNotMatch(portal, /font-size:\s*(?:8|9|10)px/);
   assert.match(stylesheet, /\.portal-dashboard-funnel\s*\{[^}]*grid-column:\s*1 \/ -1/s);
@@ -232,6 +232,10 @@ test("portal utility text and card accents retain readable contrast", async () =
   assert.match(stylesheet, /\.prose table\s*\{[^}]*font-size:\s*14px/s);
   assert.match(stylesheet, /\.diagram-scroll-region\s*\{[^}]*overflow-x:\s*auto/s);
   assert.match(stylesheet, /\.portal-mobile-menu nav a\s*\{[^}]*min-height:\s*44px/s);
+  assert.match(
+    portal,
+    /\.portal-mobile-menu nav\s*\{[^}]*max-height:\s*calc\(100dvh - 72px\);[^}]*overflow-y:\s*auto;[^}]*overscroll-behavior-y:\s*contain;/s,
+  );
   assert.match(stylesheet, /\.prose th\s*\{[^}]*font-size:\s*14px;[^}]*line-height:\s*1\.35/s);
   assert.doesNotMatch(stylesheet, /\.portal-header nav a:(?:first-child|nth-child\()/);
   assert.match(
@@ -239,9 +243,7 @@ test("portal utility text and card accents retain readable contrast", async () =
     /#portal-overview:focus-visible,\s*#research-system:focus-visible,\s*#library:focus-visible,\s*\.portal-prose[^{]+\{[^}]*outline:\s*3px solid var\(--portal-blue\)/s,
   );
 
-  const publicationPass = stylesheet.slice(stylesheet.indexOf(
-    "/* Research-publication pass: manuscript first, evidence chrome second. */",
-  ));
+  const publicationPass = portal;
   const mobilePublicationStart = publicationPass.indexOf(
     "@media screen and (max-width: 700px)",
   );
@@ -275,17 +277,17 @@ test("portal utility text and card accents retain readable contrast", async () =
 });
 
 test("the focused reader has one outline rail and a bounded corpus drawer", async () => {
-  const [portalComponent, stylesheet] = await Promise.all([
+  const [portalComponent, stylesheet, globalStylesheet] = await Promise.all([
     source("app/components/public-research-portal.tsx"),
+    source("app/portal.css"),
     source("app/globals.css"),
   ]);
-  const ownerMarker = "/* Focused research reader: one publication layout owns every viewport. */";
+  const ownerMarker = "/* Public research publication: one selector and breakpoint authority. */";
   const ownerStart = stylesheet.indexOf(ownerMarker);
   assert.ok(ownerStart >= 0);
   assert.equal(stylesheet.split(ownerMarker).length - 1, 1);
   assert.doesNotMatch(stylesheet, /Screen reading pass/u);
 
-  const beforeOwner = stylesheet.slice(0, ownerStart);
   for (const selector of [
     "portal-reader-page",
     "portal-reader-toolbar",
@@ -307,9 +309,9 @@ test("the focused reader has one outline rail and a bounded corpus drawer", asyn
     "portal-mobile-outline",
   ]) {
     assert.doesNotMatch(
-      beforeOwner,
+      globalStylesheet,
       new RegExp(`^\\s*\\.${selector}\\s*\\{`, "mu"),
-      `${selector} must be owned by the focused reader section`,
+      `${selector} must be owned by app/portal.css`,
     );
   }
 
@@ -319,7 +321,7 @@ test("the focused reader has one outline rail and a bounded corpus drawer", asyn
   );
   assert.doesNotMatch(portalComponent, /portal-reader-stack-top|readerToolbarRef|ResizeObserver/u);
 
-  const reader = stylesheet.slice(ownerStart);
+  const reader = stylesheet;
   assert.match(reader, /\.portal-reader\s*\{[^}]*--reading-measure:\s*68ch/s);
   assert.match(reader, /\.portal-prose\s*\{[^}]*font-size:\s*18px;[^}]*line-height:\s*1\.66/s);
   assert.match(reader, /\.portal-prose > :is\([^)]*\)\s*\{[^}]*max-width:\s*var\(--reading-measure\)/s);

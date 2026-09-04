@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "katex/dist/katex.min.css";
 import "../app/globals.css";
+import "../app/portal.css";
 import { PublicResearchPortal } from "../app/components/public-research-portal";
 import {
   portalDocumentLocation,

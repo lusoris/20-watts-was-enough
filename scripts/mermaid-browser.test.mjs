@@ -586,6 +586,60 @@ async function assertMobilePortalSurface(cdp, address) {
   assert.ok(snapshot.scrollWidth <= snapshot.clientWidth, JSON.stringify(snapshot));
   assert.ok(snapshot.contrast.statusLabel >= 4.5, JSON.stringify(snapshot));
   assert.ok(snapshot.contrast.funnelIndex >= 4.5, JSON.stringify(snapshot));
+  await assertConstrainedMobileMenu(cdp);
+}
+
+async function assertConstrainedMobileMenu(cdp) {
+  // This is the 360 x 225 CSS-pixel reflow boundary produced by a 720 x 450
+  // device-pixel surface at DPR 2. It checks containment, not zoom conformance.
+  await cdp.send("Emulation.setDeviceMetricsOverride", {
+    width: 360,
+    height: 225,
+    deviceScaleFactor: 2,
+    mobile: false,
+  });
+  const snapshot = (await cdp.send("Runtime.evaluate", {
+    expression: `(() => {
+      document.querySelector(".language-access")?.removeAttribute("open");
+      const menu = document.querySelector(".portal-mobile-menu");
+      menu?.setAttribute("open", "");
+      const panel = menu?.querySelector("nav");
+      const lastLink = panel?.querySelector("a:last-child");
+      lastLink?.focus();
+      const root = document.documentElement;
+      const panelRect = panel?.getBoundingClientRect();
+      const lastLinkRect = lastLink?.getBoundingClientRect();
+      return {
+        activeIsLastLink: document.activeElement === lastLink,
+        clientWidth: root.clientWidth,
+        scrollWidth: root.scrollWidth,
+        viewportHeight: innerHeight,
+        panel: panel && panelRect && {
+          bottom: panelRect.bottom,
+          clientHeight: panel.clientHeight,
+          overflowY: getComputedStyle(panel).overflowY,
+          scrollHeight: panel.scrollHeight,
+          scrollTop: panel.scrollTop,
+          top: panelRect.top,
+        },
+        lastLink: lastLinkRect && {
+          bottom: lastLinkRect.bottom,
+          top: lastLinkRect.top,
+        },
+      };
+    })()`,
+    returnByValue: true,
+  })).result?.value;
+  assert.ok(snapshot.panel, JSON.stringify(snapshot));
+  assert.ok(snapshot.lastLink, JSON.stringify(snapshot));
+  assert.equal(snapshot.panel.overflowY, "auto", JSON.stringify(snapshot));
+  assert.ok(snapshot.panel.bottom <= snapshot.viewportHeight + 1, JSON.stringify(snapshot));
+  assert.ok(snapshot.panel.scrollHeight > snapshot.panel.clientHeight, JSON.stringify(snapshot));
+  assert.ok(snapshot.panel.scrollTop > 0, JSON.stringify(snapshot));
+  assert.equal(snapshot.activeIsLastLink, true, JSON.stringify(snapshot));
+  assert.ok(snapshot.lastLink.top >= snapshot.panel.top - 1, JSON.stringify(snapshot));
+  assert.ok(snapshot.lastLink.bottom <= snapshot.panel.bottom + 1, JSON.stringify(snapshot));
+  assert.ok(snapshot.scrollWidth <= snapshot.clientWidth, JSON.stringify(snapshot));
 }
 
 test("browser rendering keeps Mermaid stable and wide publication content keyboard operable", {
