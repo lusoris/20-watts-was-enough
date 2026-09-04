@@ -127,10 +127,10 @@ retains both exact PDF and manifest pairs beside that receipt; CI uploads the
 bounded mismatch bundle even if owned-image cleanup then fails. Pull requests
 and `main` pushes preserve their exact diff, so this expensive proof does not
 run for a known unrelated change;
-the pull request may remain impact-scoped while the `main` plan stays full.
-Manual, unavailable, invalid, unmapped and selector-authority diffs select it
-fail-closed; non-additive diffs inspect both retained paths. Tagged releases
-always run the proof and add its
+the pull request and a comparable `main` push may remain impact-scoped.
+Manual runs, unavailable, invalid or non-ancestral push comparisons, unmapped
+paths and selector-authority diffs select it fail-closed; non-additive diffs
+inspect both retained paths. Tagged releases always run the proof and add its
 receipt to the checksum-bound release assets. A mismatch blocks the boundary;
 the receipt remains engineering evidence and is not a scientific result.
 
