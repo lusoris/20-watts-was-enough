@@ -18,6 +18,7 @@ import (
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/ciplan"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/docscheck"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/experiment"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubapi"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubissuelifecycle"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubissuemilestones"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githublabels"
@@ -432,13 +433,13 @@ func runPublicationRenderPDF(arguments []string, stdout, stderr io.Writer) int {
 	return 0
 }
 
-func githubMetadataHTTPClient() *http.Client {
-	return &http.Client{
+func githubMetadataHTTPClient() githubapi.HTTPClient {
+	return githubapi.NewReadRetryClient(&http.Client{
 		Timeout: 20 * time.Second,
 		CheckRedirect: func(_ *http.Request, _ []*http.Request) error {
 			return errors.New("GitHub metadata API redirect refused")
 		},
-	}
+	})
 }
 
 func runGitHubSyncMetadata(arguments []string, stdout, stderr io.Writer) int {

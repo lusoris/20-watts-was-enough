@@ -1635,6 +1635,7 @@ function repositoryMetadataTriggerIsExact(trigger) {
     && arrayIncludes(push?.paths, ".github/issue-milestones.json")
     && arrayIncludes(push?.paths, "tooling/cmd/20w/github_issue_lifecycle.go")
     && arrayIncludes(push?.paths, "tooling/cmd/20w/github_pr_metadata.go")
+    && arrayIncludes(push?.paths, "tooling/internal/githubapi/**")
     && arrayIncludes(push?.paths, "tooling/internal/githubissuelifecycle/**")
     && arrayIncludes(push?.paths, "tooling/internal/githubprmetadata/**")
     && Object.prototype.hasOwnProperty.call(trigger ?? {}, "workflow_dispatch")
@@ -1644,7 +1645,7 @@ function repositoryMetadataTriggerIsExact(trigger) {
 function repositoryMetadataPermissionsAreExact(job) {
   return (
     propertiesMatch(job?.permissions, {
-      contents: "read", issues: "write", "pull-requests": "read",
+      contents: "read", issues: "write", "pull-requests": "write",
     })
     && Object.keys(job?.permissions ?? {}).length === 3
   );
@@ -1708,11 +1709,11 @@ export function validateRepositoryMetadataSyncWorkflowObject(
   const findings = validateGoRuntimeWorkflowObject(workflow, "sync", relativePath);
   const trigger = workflow?.on;
   if (!repositoryMetadataTriggerIsExact(trigger)) {
-    findings.push(`${relativePath}: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and both lifecycle sources on main, and manual repair`);
+    findings.push(`${relativePath}: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and every owned metadata source on main, and manual repair`);
   }
   const job = workflow?.jobs?.sync;
   if (!repositoryMetadataPermissionsAreExact(job)) {
-    findings.push(`${relativePath}: repository metadata synchronization needs only contents:read, issues:write, and pull-requests:read`);
+    findings.push(`${relativePath}: repository metadata synchronization needs only contents:read, issues:write, and pull-requests:write`);
   }
   if (!repositoryMetadataExecutionIsBounded(workflow, job)) {
     findings.push(`${relativePath}: repository metadata synchronization must use GitHub's maximum pending queue without cancellation or failure bypass`);
