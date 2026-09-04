@@ -293,6 +293,13 @@ the exact diff; this file records why the project changed.
   chapter fragments, heading levels and skip-link continuation to the canonical
   source corpus. This is a bounded semantic repair, not a WCAG or PDF/UA
   conformance claim.
+- In the hydrated reader, code blocks, display equations, tables and diagrams
+  now enter the keyboard sequence only when they actually overflow. Each active
+  region has a contextual accessible name, a visible scroll cue and a focus
+  ring; resize observation removes that extra navigation stop when the content
+  fits again. Generated no-JavaScript book and help surfaces retain their
+  explicit keyboard-scroll fallback because they cannot measure runtime
+  overflow.
 - Continuous-book deep links now restore every chapter and heading below the
   responsive action bar on cold load and later hash navigation. Internal book
   links remain in the namespaced edition while preserving the current Pages

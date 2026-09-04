@@ -216,6 +216,22 @@ test("workstation shard scripts retain their exact disjoint inventories", () => 
   ));
 });
 
+test("full-book browser probes stay in one serial site-test lane", () => {
+  const manifest = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+  const command = manifest.scripts?.["test:site"];
+  const tokens = command?.split(/\s+/u) ?? [];
+  assert.deepEqual(
+    tokens.filter((token) => token.startsWith("--test-concurrency=")),
+    ["--test-concurrency=1"],
+  );
+  for (const probe of [
+    "scripts/book-fragment-browser.test.mjs",
+    "scripts/mermaid-browser.test.mjs",
+  ]) {
+    assert.equal(tokens.filter((token) => token === probe).length, 1, `${probe} must run exactly once`);
+  }
+});
+
 test("the current package version requires a matching, structured research disclosure", (t) => {
   const root = mkdtempSync(path.join(tmpdir(), "current-disclosure-policy-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));

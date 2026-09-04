@@ -264,18 +264,32 @@ button {
   font-size: inherit;
 }
 
-.table-frame {
+.overflow-region-frame {
+  display: block;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-  margin: 28px 0 34px;
 }
 
-.table-scroll-cue {
-  display: none;
+.code-overflow-frame {
+  margin: 25px 0;
+}
+
+.equation-overflow-frame {
+  margin: 28px 0;
+}
+
+.prose .code-overflow-frame > pre,
+.prose .equation-overflow-frame > .katex-display {
+  margin: 0 !important;
+}
+
+.overflow-region-cue {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 4px 16px;
   margin-bottom: 7px;
   color: #496052;
   font-family: var(--font-mono);
@@ -285,8 +299,16 @@ button {
   text-transform: uppercase;
 }
 
-.table-frame.table-overflowing .table-scroll-cue {
-  display: flex;
+.prose [data-overflow-kind]:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+.table-frame {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 28px 0 34px;
 }
 
 .table-region {
@@ -306,7 +328,7 @@ button {
 }
 
 .table-region:focus-visible {
-  outline: 3px solid rgb(30 107 69 / 28%);
+  outline: 3px solid var(--blue);
   outline-offset: 3px;
 }
 
@@ -2639,8 +2661,8 @@ button {
     font-size: 1.12em;
   }
 
-  .prose pre,
-  .prose .katex-display,
+  .prose .code-overflow-frame,
+  .prose .equation-overflow-frame,
   .prose .diagram,
   .prose .table-frame {
     margin-block: 30px;
@@ -3953,7 +3975,14 @@ button {
     scroll-margin-top: 78px;
   }
 
-  .portal-prose :is(.diagram, .table-frame, .table-region, pre, .katex-display) {
+  .portal-prose :is(
+    .diagram,
+    .table-frame,
+    .table-region,
+    .overflow-region-frame,
+    pre,
+    .katex-display
+  ) {
     width: 100%;
     max-width: 100%;
   }
@@ -4586,6 +4615,14 @@ button {
     text-decoration-thickness: 0.3pt;
   }
 
+  .book-prose .overflow-region-frame {
+    margin: 5mm 0;
+  }
+
+  .book-prose .overflow-region-cue {
+    display: none;
+  }
+
   .book-prose pre {
     max-width: 100%;
     overflow: visible;
@@ -4599,10 +4636,6 @@ button {
   .book-prose .table-frame {
     max-width: 100%;
     margin: 5mm 0;
-  }
-
-  .book-prose .table-scroll-cue {
-    display: none !important;
   }
 
   .book-prose .table-region {
@@ -4645,7 +4678,7 @@ button {
   .book-prose .katex-display {
     max-width: 100%;
     overflow: visible;
-    margin: 5mm 0 !important;
+    margin: 0 !important;
     padding: 3mm;
     font-size: 0.76em;
   }

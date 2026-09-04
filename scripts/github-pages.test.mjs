@@ -587,16 +587,18 @@ test("portal document routes preserve native links and focus their destination h
 });
 
 test("only genuinely overflowing Markdown tables become labelled keyboard regions", async () => {
-  const markdown = await source("app/components/markdown-document.tsx");
+  const [markdown, overflowRegion] = await Promise.all([
+    source("app/components/markdown-document.tsx"),
+    source("app/components/overflow-region.tsx"),
+  ]);
 
-  assert.match(markdown, /role=\{overflows \? "region" : undefined\}/);
-  assert.match(
-    markdown,
-    /aria-label=\{overflows \? "Scrollable data table" : undefined\}/,
-  );
-  assert.match(markdown, /tabIndex=\{overflows \? 0 : undefined\}/);
+  assert.match(overflowRegion, /region\.scrollWidth > region\.clientWidth \+ 1/);
+  assert.match(overflowRegion, /"aria-label": label/);
+  assert.match(overflowRegion, /\.\.\.\(descriptionId \? \{ "aria-describedby": descriptionId \} : \{\}\)/);
+  assert.match(overflowRegion, /typeof ResizeObserver === "undefined"/);
+  assert.match(markdown, /`Scrollable table \$\{tableIndex\} in \$\{documentLabel\}`/);
+  assert.match(markdown, /overflowLabel \?\? "Scrollable table"/);
   assert.doesNotMatch(markdown, /tabIndex=\{0\}/);
-  assert.match(markdown, /typeof ResizeObserver === "undefined"/);
 });
 
 test("focused portal documents have a coherent heading hierarchy", async () => {
@@ -620,13 +622,39 @@ test("focused portal documents have a coherent heading hierarchy", async () => {
 });
 
 test("wide diagrams expose a keyboard region only when they really overflow", async () => {
-  const diagram = await source("app/components/mermaid-diagram.tsx");
+  const [diagram, overflowRegion] = await Promise.all([
+    source("app/components/mermaid-diagram.tsx"),
+    source("app/components/overflow-region.tsx"),
+  ]);
 
-  assert.match(diagram, /canvas\.scrollWidth > region\.clientWidth \+ 1/);
-  assert.match(diagram, /role=\{overflows \? "region" : undefined\}/);
-  assert.match(diagram, /aria-label=\{overflows \? "Scrollable diagram" : undefined\}/);
-  assert.match(diagram, /tabIndex=\{overflows \? 0 : undefined\}/);
+  assert.match(overflowRegion, /region\.scrollWidth > region\.clientWidth \+ 1/);
+  assert.match(
+    diagram,
+    /\{ descriptionId: captionId, refreshKey: rendered, role: "region" \}/,
+  );
+  assert.match(overflowRegion, /region\.removeAttribute\("aria-describedby"\)/);
+  assert.match(diagram, /\{\.\.\.regionProps\}/);
   assert.match(diagram, /\{overflows \? \(\s*<p className="diagram-layout-note">/);
+});
+
+test("code and display math share conditional overflow-region behavior", async () => {
+  const [markdown, overflowRegion, stylesheet] = await Promise.all([
+    source("app/components/markdown-document.tsx"),
+    source("app/components/overflow-region.tsx"),
+    source("app/globals.css"),
+  ]);
+
+  assert.match(markdown, /useHorizontalOverflowRegion<HTMLPreElement>\(label\)/);
+  assert.match(markdown, /useHorizontalOverflowRegion<HTMLSpanElement>\(label\)/);
+  assert.match(markdown, /data-overflow-kind="code"/);
+  assert.match(markdown, /data-overflow-kind="equation"/);
+  assert.match(markdown, /katex-display/);
+  assert.match(overflowRegion, /role = "group"/);
+  assert.match(overflowRegion, /document\.fonts\?\.ready\.then\(scheduleMeasure\)/);
+  assert.match(overflowRegion, /window\.matchMedia\("print"\)/);
+  assert.match(overflowRegion, /window\.addEventListener\("beforeprint", retireForPrint\)/);
+  assert.match(overflowRegion, /retireAttributes\(\)/);
+  assert.match(stylesheet, /\.prose \[data-overflow-kind\]:focus-visible/);
 });
 
 test("the portal loads canonical documents on demand and keeps book code off its initial path", async () => {
