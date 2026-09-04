@@ -7,6 +7,19 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Fixture 026's three ledger-semantic resume hostiles now run in an eighth
+  exact workstation shard. Two recent full-plan runs measured those tests at
+  162–172 seconds inside a 377–405-second shard-5 payload; the four retained
+  files accounted for 215–233 seconds. The planner, workflow and policy checks
+  keep every registered test in exactly one bounded shard, while the aggregate
+  local gate, assertions, seeds, horizons and `NO_RESULT` boundary remain
+  unchanged. The first live full-plan run measured both new shard jobs
+  successfully, while the separate PDF-renderer and full-quality bottlenecks
+  keep issue 7 open.
+  The first eight-shard run made the new shard green and exposed a contradictory
+  150-second outer bound around tighter browser phases whose combined budgets
+  are longer. The outer bound is now 240 seconds while every render, navigation,
+  reflow and cleanup phase keeps its existing tighter deadline and assertion.
 - Decision 0059 makes dependency advisory checking a single explicit security
   decision in each full CI or release gate. Every locked install now suppresses
   npm's implicit audit submission; the enforcing command audits the canonical
