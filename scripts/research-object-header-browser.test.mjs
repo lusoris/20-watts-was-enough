@@ -1,0 +1,420 @@
+import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
+import { readFile, mkdtemp, rm } from "node:fs/promises";
+import { createServer as createTcpServer } from "node:net";
+import os from "node:os";
+import path from "node:path";
+import test from "node:test";
+import { fileURLToPath } from "node:url";
+
+import {
+  connectCdp,
+  devtoolsPage,
+  firstExistingChromium,
+  stopProcess,
+  waitForUrl,
+} from "./lib/chromium-cdp.mjs";
+import { portalSourceDocuments } from "./lib/portal-documents.mjs";
+
+const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const pagesBasePath = "/research/";
+const sourceRevision = "89abcdef0123456789abcdef0123456789abcdef";
+const projectVersion = JSON.parse(
+  await readFile(path.join(repositoryRoot, "package.json"), "utf8"),
+).version;
+const launchpadDocument = portalSourceDocuments(repositoryRoot).find(
+  (document) => document.path === "concept/05-biology-is-a-launchpad.md",
+);
+assert.ok(launchpadDocument);
+const launchpadWords = launchpadDocument.words;
+
+async function reserveLocalPort() {
+  const server = createTcpServer();
+  await new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", resolve);
+  });
+  const address = server.address();
+  assert.equal(typeof address, "object");
+  await new Promise((resolve, reject) => server.close((error) => (
+    error ? reject(error) : resolve()
+  )));
+  return address.port;
+}
+
+async function navigate(cdp, url) {
+  const result = await cdp.send("Page.navigate", { url });
+  assert.equal(result.errorText, undefined);
+}
+
+async function waitForExpression(cdp, expression, timeoutMs = 30_000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const result = await cdp.send("Runtime.evaluate", {
+      expression,
+      returnByValue: true,
+    });
+    if (result.result?.value === true) return;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  assert.fail(`Browser condition timed out: ${expression}`);
+}
+
+async function assertHydratedResearchObject(cdp, origin) {
+  await navigate(
+    cdp,
+    `${origin}${pagesBasePath}concept/05-biology-is-a-launchpad/#scope`,
+  );
+  await waitForExpression(
+    cdp,
+    `document.readyState === "complete"
+      && document.querySelector('[data-research-object="focused-document"]')
+      && [...document.querySelectorAll('.research-object-evidence a')]
+        .some((link) => link.textContent.trim() === "C-018")`,
+  );
+  const snapshot = (await cdp.send("Runtime.evaluate", {
+    expression: `(() => {
+      const header = document.querySelector('[data-research-object="focused-document"]');
+      const value = (label) => [...header.querySelectorAll('dl > div')]
+        .find((row) => row.querySelector('dt')?.textContent.trim() === label)
+        ?.querySelector('dd')?.textContent.trim() ?? null;
+      const href = (label, root = header) => [...root.querySelectorAll('a')]
+        .find((link) => link.textContent.trim() === label)?.href ?? null;
+      const clarity = new URL(href('Report clarity'));
+      const correction = new URL(href('Correct evidence'));
+      const summary = header.querySelector('.research-object-evidence summary');
+      const root = document.documentElement;
+      const resourceUrls = performance.getEntriesByType('resource').map((entry) => new URL(entry.name));
+      return {
+        type: header.querySelector('.research-object-kicker')?.textContent.trim() ?? null,
+        title: header.querySelector('h1')?.textContent.trim() ?? null,
+        path: header.querySelector('.research-object-path code')?.textContent.trim() ?? null,
+        edition: value('Edition'),
+        revision: value('Source revision'),
+        extent: value('Extent'),
+        publicRoute: value('Public route'),
+        editionFields: [...header.querySelectorAll('dt')]
+          .filter((node) => node.textContent.trim() === 'Edition').length,
+        disclosureLinks: [...header.querySelectorAll('a')]
+          .filter((link) => link.textContent.trim() === 'Disclosure').length,
+        source: href('Source'),
+        history: href('History'),
+        book: href('Book'),
+        pdf: href('PDF'),
+        citation: href('Cite'),
+        licence: href('Licence'),
+        c018: href('C-018', header.querySelector('.research-object-evidence')),
+        clarityLocator: clarity.searchParams.get('location'),
+        correctionLocator: correction.searchParams.get('claims'),
+        summaryHeight: summary?.getBoundingClientRect().height ?? 0,
+        minimumEvidenceTargetHeight: Math.min(...[...header.querySelectorAll('.research-object-evidence a')]
+          .map((link) => link.getBoundingClientRect().height)),
+        documentRevision: resourceUrls.find((url) =>
+          url.pathname.endsWith('/documents/concept/05-biology-is-a-launchpad.md'))
+          ?.searchParams.get('revision') ?? null,
+        evidenceRevision: resourceUrls.find((url) =>
+          url.pathname.endsWith('/research-object-records/concept/05-biology-is-a-launchpad.md.json'))
+          ?.searchParams.get('revision') ?? null,
+        clientWidth: root.clientWidth,
+        scrollWidth: root.scrollWidth,
+      };
+    })()`,
+    returnByValue: true,
+  })).result?.value;
+
+  const edition = `Site v${projectVersion} · continuous main snapshot`;
+  assert.equal(snapshot.type, "Concept document");
+  assert.equal(snapshot.title, launchpadDocument.title);
+  assert.equal(snapshot.path, "concept/05-biology-is-a-launchpad.md");
+  assert.equal(snapshot.edition, edition);
+  assert.equal(snapshot.revision, sourceRevision);
+  assert.equal(snapshot.extent, `${launchpadWords.toLocaleString("en-GB")} words`);
+  assert.equal(
+    snapshot.publicRoute,
+    "https://www.cordana.dev/concept/05-biology-is-a-launchpad/",
+  );
+  assert.equal(snapshot.editionFields, 1);
+  assert.equal(snapshot.documentRevision, sourceRevision);
+  assert.equal(snapshot.evidenceRevision, sourceRevision);
+  assert.equal(snapshot.disclosureLinks, 0);
+  assert.equal(
+    snapshot.source,
+    `https://github.com/lusoris/20-watts-was-enough/blob/${sourceRevision}/concept/05-biology-is-a-launchpad.md#scope`,
+  );
+  assert.equal(
+    snapshot.history,
+    `https://github.com/lusoris/20-watts-was-enough/commits/${sourceRevision}/concept/05-biology-is-a-launchpad.md`,
+  );
+  assert.equal(snapshot.book, `${origin}${pagesBasePath}book/`);
+  assert.equal(
+    snapshot.pdf,
+    `${origin}${pagesBasePath}downloads/20-watts-was-enough-full-concept-book.pdf`,
+  );
+  assert.equal(
+    snapshot.citation,
+    `https://github.com/lusoris/20-watts-was-enough/blob/${sourceRevision}/CITATION.cff`,
+  );
+  assert.equal(
+    snapshot.licence,
+    `https://github.com/lusoris/20-watts-was-enough/blob/${sourceRevision}/LICENSING.md`,
+  );
+  assert.equal(
+    snapshot.c018,
+    `https://github.com/lusoris/20-watts-was-enough/blob/${sourceRevision}/research/claims.md#c-018`,
+  );
+  const expectedLocator = [
+    "Canonical path: concept/05-biology-is-a-launchpad.md",
+    "Public route: https://www.cordana.dev/concept/05-biology-is-a-launchpad/",
+    `Edition: ${edition}`,
+    `Source revision: ${sourceRevision}`,
+    "Current fragment: #scope",
+  ].join("; ");
+  for (const locator of [snapshot.clarityLocator, snapshot.correctionLocator]) {
+    assert.equal(locator, expectedLocator);
+    assert.doesNotMatch(locator, /[\r\n]/u);
+  }
+  assert.ok(snapshot.summaryHeight >= 44, JSON.stringify(snapshot));
+  assert.ok(snapshot.minimumEvidenceTargetHeight >= 24, JSON.stringify(snapshot));
+  assert.ok(snapshot.scrollWidth <= snapshot.clientWidth, JSON.stringify(snapshot));
+}
+
+async function assertDenseResearchObjectReflow(cdp, origin) {
+  await navigate(
+    cdp,
+    `${origin}${pagesBasePath}concept/90-research-roadmap/`,
+  );
+  await waitForExpression(
+    cdp,
+    `document.readyState === "complete"
+      && document.querySelector('[data-research-object="focused-document"]')
+      && document.querySelectorAll('.research-object-evidence a').length === 100`,
+  );
+
+  const collapsedCue = (await cdp.send("Runtime.evaluate", {
+    expression: `getComputedStyle(
+      document.querySelector('.research-object-evidence summary'),
+      '::after',
+    ).content`,
+    returnByValue: true,
+  })).result?.value;
+  assert.equal(collapsedCue, '"Show"');
+
+  await cdp.send("Runtime.evaluate", {
+    expression: `document.querySelector('.research-object-evidence summary').click()`,
+  });
+  for (const width of [320, 375]) {
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+      width,
+      height: 844,
+      deviceScaleFactor: 1,
+      mobile: true,
+    });
+    const snapshot = (await cdp.send("Runtime.evaluate", {
+      expression: `(() => {
+        const details = document.querySelector('.research-object-evidence');
+        const summary = details.querySelector('summary');
+        const links = [...details.querySelectorAll('a')];
+        const root = document.documentElement;
+        return {
+          width: ${width},
+          open: details.open,
+          cue: getComputedStyle(summary, '::after').content,
+          records: links.length,
+          minimumTargetHeight: Math.min(...links.map((link) => link.getBoundingClientRect().height)),
+          clientWidth: root.clientWidth,
+          scrollWidth: root.scrollWidth,
+        };
+      })()`,
+      returnByValue: true,
+    })).result?.value;
+    assert.equal(snapshot.width, width);
+    assert.equal(snapshot.open, true);
+    assert.equal(snapshot.cue, '"Hide"');
+    assert.equal(snapshot.records, 100);
+    assert.ok(snapshot.minimumTargetHeight >= 24, JSON.stringify(snapshot));
+    assert.ok(snapshot.clientWidth <= width && snapshot.clientWidth >= width - 20, JSON.stringify(snapshot));
+    assert.ok(snapshot.scrollWidth <= snapshot.clientWidth, JSON.stringify(snapshot));
+  }
+}
+
+async function bookSnapshot(cdp) {
+  return (await cdp.send("Runtime.evaluate", {
+    expression: `(() => {
+      const cover = document.querySelector('.book-cover');
+      const value = (label) => [...cover.querySelectorAll('dl > div')]
+        .find((row) => row.querySelector('dt')?.textContent.trim() === label)
+        ?.querySelector('dd')?.textContent.trim() ?? null;
+      return {
+        edition: value('Edition'),
+        source: value('Source'),
+        sourceHref: [...document.querySelectorAll('.book-actions a')]
+          .find((link) => link.textContent.trim() === 'View source on GitHub')?.href ?? null,
+        reportLocator: new URL([...document.querySelectorAll('.book-cover-support a')]
+          .find((link) => link.textContent.trim() === 'Report this edition')?.href)
+          .searchParams.get('location'),
+      };
+    })()`,
+    returnByValue: true,
+  })).result?.value;
+}
+
+async function assertContinuousBook(cdp, origin, edition) {
+  await navigate(cdp, `${origin}${pagesBasePath}book/`);
+  await waitForExpression(
+    cdp,
+    `document.readyState === "complete"
+      && document.querySelector('.book-cover code')?.textContent === ${JSON.stringify(sourceRevision)}`,
+  );
+  const snapshot = await bookSnapshot(cdp);
+  assert.equal(snapshot.edition, edition);
+  assert.equal(snapshot.source, `Git main snapshot · commit ${sourceRevision}`);
+  assert.equal(
+    snapshot.sourceHref,
+    `https://github.com/lusoris/20-watts-was-enough/tree/${sourceRevision}`,
+  );
+  assert.equal(
+    snapshot.reportLocator,
+    [
+      "Public route: https://www.cordana.dev/book/",
+      `Edition: ${edition}`,
+      `Source revision: ${sourceRevision}`,
+    ].join("; "),
+  );
+  assert.doesNotMatch(snapshot.reportLocator, /[\r\n]/u);
+}
+
+async function assertReleaseBook(cdp, origin) {
+  const releaseTag = `v${projectVersion}`;
+  await navigate(
+    cdp,
+    `${origin}${pagesBasePath}book/?pdf=1&ref=${releaseTag}&revision=${sourceRevision}`,
+  );
+  await waitForExpression(
+    cdp,
+    `document.readyState === "complete"
+      && [...document.querySelectorAll('.book-cover dt')]
+        .some((node) => node.textContent.trim() === "Edition"
+          && node.nextElementSibling?.textContent.trim() === ${JSON.stringify(`Release ${releaseTag} · immutable snapshot`)})`,
+  );
+  const releaseSnapshot = await bookSnapshot(cdp);
+  assert.equal(releaseSnapshot.edition, `Release ${releaseTag} · immutable snapshot`);
+  assert.equal(
+    releaseSnapshot.source,
+    `Immutable release tag ${releaseTag} · commit ${sourceRevision}`,
+  );
+  assert.equal(
+    releaseSnapshot.sourceHref,
+    `https://github.com/lusoris/20-watts-was-enough/tree/${sourceRevision}`,
+  );
+  assert.equal(
+    releaseSnapshot.reportLocator,
+    [
+      "Public route: https://www.cordana.dev/book/",
+      `Edition: Release ${releaseTag} · immutable snapshot`,
+      `Source revision: ${sourceRevision}`,
+    ].join("; "),
+  );
+  assert.doesNotMatch(releaseSnapshot.reportLocator, /[\r\n]/u);
+}
+
+async function assertPublicBookIgnoresRendererQuery(cdp, origin, edition) {
+  const releaseTag = `v${projectVersion}`;
+  const spoofedRevision = "f".repeat(40);
+  const spoofedOrigin = origin.replace("127.0.0.1", "spoofed.localhost");
+  await navigate(
+    cdp,
+    `${spoofedOrigin}${pagesBasePath}book/?pdf=1&ref=${releaseTag}&revision=${spoofedRevision}`,
+  );
+  await waitForExpression(
+    cdp,
+    `location.hostname === "spoofed.localhost"
+      && document.readyState === "complete"
+      && [...document.querySelectorAll('.book-cover dt')]
+        .some((node) => node.textContent.trim() === "Edition"
+          && node.nextElementSibling?.textContent.trim() === ${JSON.stringify(edition)})`,
+  );
+  const publicSnapshot = await bookSnapshot(cdp);
+  assert.equal(publicSnapshot.edition, edition);
+  assert.equal(publicSnapshot.source, `Git main snapshot · commit ${sourceRevision}`);
+  assert.equal(
+    publicSnapshot.sourceHref,
+    `https://github.com/lusoris/20-watts-was-enough/tree/${sourceRevision}`,
+  );
+}
+
+async function assertHydratedBook(cdp, origin) {
+  const edition = `Site v${projectVersion} · continuous main snapshot`;
+  await assertContinuousBook(cdp, origin, edition);
+  await assertReleaseBook(cdp, origin);
+  await assertPublicBookIgnoresRendererQuery(cdp, origin, edition);
+}
+
+test("hydrated research objects and the book preserve the static Pages identity", {
+  timeout: 120_000,
+}, async () => {
+  const browser = await firstExistingChromium();
+  const vitePort = await reserveLocalPort();
+  const debugPort = await reserveLocalPort();
+  const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "20w-object-parity-"));
+  const profile = path.join(temporaryRoot, "chrome-profile");
+  let viteProcess;
+  let browserProcess;
+  let cdp;
+
+  try {
+    viteProcess = spawn(process.execPath, [
+      path.join(repositoryRoot, "node_modules", "vite", "bin", "vite.js"),
+      "--config", path.join(repositoryRoot, "vite.pages.config.ts"),
+      "--host", "127.0.0.1",
+      "--port", String(vitePort),
+      "--strictPort",
+    ], {
+      cwd: repositoryRoot,
+      env: {
+        ...process.env,
+        GITHUB_SHA: sourceRevision,
+        PAGES_BASE_PATH: pagesBasePath,
+        TMPDIR: temporaryRoot,
+        VITE_CACHE_DIR: path.join(temporaryRoot, "vite-cache"),
+      },
+      stdio: "ignore",
+      windowsHide: true,
+    });
+    const origin = `http://127.0.0.1:${vitePort}`;
+    await waitForUrl(`${origin}${pagesBasePath}`, viteProcess);
+
+    browserProcess = spawn(browser, [
+      "--headless=new",
+      "--disable-gpu",
+      "--disable-extensions",
+      "--disable-background-networking",
+      "--disable-dev-shm-usage",
+      "--no-sandbox",
+      "--no-proxy-server",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=375,844",
+      `--remote-debugging-port=${debugPort}`,
+      `--user-data-dir=${profile}`,
+      "about:blank",
+    ], { stdio: "ignore", windowsHide: true });
+    cdp = await connectCdp(await devtoolsPage(browserProcess, debugPort));
+    await cdp.send("Page.enable");
+    await cdp.send("Runtime.enable");
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+      width: 375,
+      height: 844,
+      deviceScaleFactor: 1,
+      mobile: true,
+    });
+
+    await assertHydratedResearchObject(cdp, origin);
+    await assertDenseResearchObjectReflow(cdp, origin);
+    await assertHydratedBook(cdp, origin);
+  } finally {
+    cdp?.socket.close();
+    await stopProcess(browserProcess);
+    await stopProcess(viteProcess);
+    await rm(temporaryRoot, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+  }
+});

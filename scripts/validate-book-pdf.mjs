@@ -23,6 +23,7 @@ assertBookManifestContract({
   expectedVersion: packageManifest.version,
   expectedPdf: `public/downloads/${bookPdfName}`,
   expectedSourceRef: "main",
+  expectedSourceRevision: null,
   expectedRendererLockSHA256: rendererLockSHA256,
 });
 const current = await bookSourceDigest(projectRoot);

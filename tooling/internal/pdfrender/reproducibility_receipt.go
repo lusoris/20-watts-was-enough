@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	reproducibilityReceiptSchema       = 2
+	reproducibilityReceiptSchema       = 3
 	maximumBuildMetadataBytes    int64 = 2 * 1024 * 1024
 )
 
@@ -35,6 +35,7 @@ type ReproducibilityReceipt struct {
 	Authority        string                           `json:"authority"`
 	ScientificResult bool                             `json:"scientific_result"`
 	SourceRef        string                           `json:"source_ref"`
+	SourceRevision   string                           `json:"source_revision,omitempty"`
 	Renderer         ReproducibilityRenderer          `json:"renderer"`
 	Context          ReproducibilityContext           `json:"normalized_build_context"`
 	PublicationPair  ReproducibilityPublicationPair   `json:"publication_pair"`
@@ -449,7 +450,7 @@ func writeReproducibilityMismatchArtifact(file string, body []byte) (returnError
 
 func newReproducibilityReceipt(
 	configuration Configuration,
-	sourceRef string,
+	sourceRef, sourceRevision string,
 	contextIdentity ReproducibilityContext,
 	builds []ReproducibilityBuild,
 	comparison ReproducibilityComparison,
@@ -465,6 +466,7 @@ func newReproducibilityReceipt(
 		Authority:        "release/publication engineering acceptance",
 		ScientificResult: false,
 		SourceRef:        sourceRef,
+		SourceRevision:   sourceRevision,
 		Renderer: ReproducibilityRenderer{
 			LockSchema:                   configuration.Lock.Schema,
 			LockSHA256:                   "sha256:" + configuration.LockSHA256,

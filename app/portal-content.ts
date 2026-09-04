@@ -1,5 +1,8 @@
 import type { ResearchDocument } from "./research-document";
+import type { ResearchObjectEvidenceRecord } from "./research-object";
 import { encodePortalFragment } from "./lib/portal-fragment.mjs";
+import { publicationSourceRevisionQuery } from "./lib/publication-revision.mjs";
+import { normalizeResearchObjectEvidenceRecords } from "./lib/research-object.mjs";
 import documentIndex, { portalMetrics } from "virtual:portal-document-index";
 
 export { decodePortalFragment } from "./lib/portal-fragment.mjs";
@@ -26,12 +29,28 @@ function normalizedBasePath(basePath: string) {
   return parsed.pathname.endsWith("/") ? parsed.pathname : `${parsed.pathname}/`;
 }
 
-function portalDocumentAssetLocation(path: string, assetBasePath: string) {
+function portalDocumentAssetLocation(
+  path: string,
+  assetBasePath: string,
+  sourceRevision: string | null,
+) {
   if (!portalDocumentPathPattern.test(path)) {
     throw new Error(`Invalid portal document path: ${path}`);
   }
   const encodedPath = path.split("/").map((segment) => encodeURIComponent(segment)).join("/");
-  return `${normalizedBasePath(assetBasePath)}documents/${encodedPath}`;
+  return `${normalizedBasePath(assetBasePath)}documents/${encodedPath}${publicationSourceRevisionQuery(sourceRevision)}`;
+}
+
+function portalEvidenceAssetLocation(
+  path: string,
+  assetBasePath: string,
+  sourceRevision: string | null,
+) {
+  if (!portalDocumentPathPattern.test(path)) {
+    throw new Error(`Invalid portal document path: ${path}`);
+  }
+  const encodedPath = path.split("/").map((segment) => encodeURIComponent(segment)).join("/");
+  return `${normalizedBasePath(assetBasePath)}research-object-records/${encodedPath}.json${publicationSourceRevisionQuery(sourceRevision)}`;
 }
 
 export function portalDocumentLocation(
@@ -61,10 +80,15 @@ export function portalDocumentPathFromLocation(
 export async function loadPortalDocument(
   path: string,
   assetBasePath: string,
+  sourceRevision: string | null = null,
 ): Promise<ResearchDocument> {
   const metadata = portalDocuments.find((document) => document.path === path);
   if (!metadata) throw new Error(`Unknown portal document: ${path}`);
-  const response = await fetch(portalDocumentAssetLocation(metadata.path, assetBasePath));
+  const response = await fetch(portalDocumentAssetLocation(
+    metadata.path,
+    assetBasePath,
+    sourceRevision,
+  ));
   if (!response.ok) {
     throw new Error(`Document request failed (${response.status}): ${path}`);
   }
@@ -84,4 +108,36 @@ export async function loadPortalDocument(
     words: metadata.words,
     body,
   };
+}
+
+export async function loadPortalEvidenceRecords(
+  path: string,
+  assetBasePath: string,
+  sourceRevision: string | null = null,
+): Promise<ResearchObjectEvidenceRecord[]> {
+  const metadata = portalDocuments.find((document) => document.path === path);
+  if (!metadata) throw new Error(`Unknown portal document: ${path}`);
+  const response = await fetch(portalEvidenceAssetLocation(
+    metadata.path,
+    assetBasePath,
+    sourceRevision,
+  ));
+  if (!response.ok) {
+    throw new Error(`Research-object record request failed (${response.status}): ${path}`);
+  }
+  const body = await response.text();
+  if (body.length > 512 * 1024 || /^\s*(?:<!doctype\s+html|<html\b)/iu.test(body)) {
+    throw new Error(`Research-object record request returned invalid content: ${path}`);
+  }
+  let records;
+  try {
+    records = JSON.parse(body);
+  } catch {
+    throw new Error(`Research-object record request returned invalid JSON: ${path}`);
+  }
+  try {
+    return normalizeResearchObjectEvidenceRecords(records) as ResearchObjectEvidenceRecord[];
+  } catch {
+    throw new Error(`Research-object record request returned an invalid record shape: ${path}`);
+  }
 }

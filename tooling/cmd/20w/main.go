@@ -61,7 +61,7 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w publication render-pdf [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--revision <commit>] [--check]")
 	fmt.Fprintln(writer, "  20w publication verify-pdf-tools [--root <repository>]")
 	fmt.Fprintln(writer, "  20w publication reproduce-pdf-tools-image --receipt <new.json> [--root <repository>]")
-	fmt.Fprintln(writer, "  20w publication verify-pdf-reproducibility --receipt <new.json> [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH]")
+	fmt.Fprintln(writer, "  20w publication verify-pdf-reproducibility --receipt <new.json> [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--revision <commit>]")
 	fmt.Fprintln(writer, "  20w publication verify-public-transport [--root <repository>] [--check]")
 	fmt.Fprintln(writer, "  20w translation export-candidate --source <concept-or-math.md> --language <code> --output <new.json> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w translation validate-candidate --input <candidate.json> --source <concept-or-math.md> --language <code> [--root <repository>]")
@@ -419,10 +419,6 @@ func runPublicationRenderPDF(arguments []string, stdout, stderr io.Writer) int {
 	sourceRevision := flags.String("revision", "", "exact lowercase 40-character source commit")
 	check := flags.Bool("check", false, "validate the renderer lock without Docker or network access")
 	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
-		return 2
-	}
-	if err := pdfrender.ValidateSourceRef(*sourceRef); err != nil {
-		fmt.Fprintf(stderr, "publication render-pdf: %v\n", err)
 		return 2
 	}
 	if err := pdfrender.ValidateSourceRevision(*sourceRef, *sourceRevision); err != nil {

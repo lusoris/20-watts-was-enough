@@ -1,6 +1,7 @@
 package pdfrender
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -26,24 +27,33 @@ func TestVerifyReproducibilityUsesTwoFreshNoCacheBuildersAndRetainsAReceipt(t *t
 		manifestDigests: []string{testManifestDigest, testManifestDigest},
 		configDigests:   []string{testImageID, testImageID},
 	}
+	sourceRevision := strings.Repeat("a", 40)
 
 	receipt, err := verifyReproducibilityWithDependencies(
-		context.Background(), configuration, "main", receiptRelative,
+		context.Background(), configuration, "v1.2.3", sourceRevision, receiptRelative,
 		reproducibilityFixturePreparer{}, executor,
 	)
 	if err != nil {
 		t.Fatalf("verifyReproducibilityWithDependencies() error = %v", err)
 	}
-	if receipt.Schema != 2 || receipt.Status != "pass" || !receipt.Comparison.AllMatch ||
+	if receipt.Schema != 3 || receipt.Status != "pass" || !receipt.Comparison.AllMatch ||
 		receipt.ScientificResult || receipt.MismatchEvidence != nil {
 		t.Fatalf("reproducibility receipt = %+v", receipt)
+	}
+	if receipt.SourceRef != "v1.2.3" || receipt.SourceRevision != sourceRevision {
+		t.Fatalf("reproducibility receipt lost release identity: %+v", receipt)
 	}
 	if receipt.Renderer.LockSchema != 3 || !receipt.Renderer.NoCache ||
 		receipt.Renderer.FreshBuilderCount != 2 || !strings.HasPrefix(receipt.Context.SHA256, "sha256:") {
 		t.Fatalf("reproducibility authority is incomplete: %+v", receipt)
 	}
-	if _, err := os.Stat(filepath.Join(configuration.RepositoryRoot, filepath.FromSlash(receiptRelative))); err != nil {
+	receiptPath := filepath.Join(configuration.RepositoryRoot, filepath.FromSlash(receiptRelative))
+	if _, err := os.Stat(receiptPath); err != nil {
 		t.Fatalf("retained receipt: %v", err)
+	}
+	receiptBytes, err := os.ReadFile(receiptPath)
+	if err != nil || !bytes.Contains(receiptBytes, []byte(`"source_revision": "`+sourceRevision+`"`)) {
+		t.Fatalf("retained receipt source revision = %q, error = %v", receiptBytes, err)
 	}
 
 	creates := requestsWithPrefix(executor.requests, "buildx", "create")
@@ -101,7 +111,7 @@ func TestVerifyReproducibilityWritesMismatchReceiptAndFails(t *testing.T) {
 	}
 
 	receipt, err := verifyReproducibilityWithDependencies(
-		context.Background(), configuration, "main", receiptRelative,
+		context.Background(), configuration, "main", "", receiptRelative,
 		reproducibilityFixturePreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "comparison failed") {
@@ -160,7 +170,7 @@ func TestVerifyReproducibilityRetainsMismatchBeforeImageCleanupFailure(t *testin
 	}
 
 	receipt, err := verifyReproducibilityWithDependencies(
-		context.Background(), configuration, "main", receiptRelative,
+		context.Background(), configuration, "main", "", receiptRelative,
 		reproducibilityFixturePreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "comparison failed") ||
@@ -248,7 +258,7 @@ func TestVerifyReproducibilityRefusesExistingMismatchEvidence(t *testing.T) {
 	}
 
 	_, err := verifyReproducibilityWithDependencies(
-		context.Background(), configuration, "main", receiptRelative,
+		context.Background(), configuration, "main", "", receiptRelative,
 		reproducibilityFixturePreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "mismatch evidence already exists") {
@@ -275,7 +285,7 @@ func TestVerifyReproducibilityRejectsMalformedMetadataAndCleansOwnedResources(t 
 	}
 
 	_, err := verifyReproducibilityWithDependencies(
-		context.Background(), configuration, "main", "build/evidence/malformed.json",
+		context.Background(), configuration, "main", "", "build/evidence/malformed.json",
 		reproducibilityFixturePreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "containerimage.digest") {
@@ -301,7 +311,7 @@ func TestVerifyReproducibilityRefusesAnExistingReceiptBeforeDocker(t *testing.T)
 	executor := &reproducibilityExecutor{}
 
 	_, err := verifyReproducibilityWithDependencies(
-		context.Background(), configuration, "main", relative,
+		context.Background(), configuration, "main", "", relative,
 		reproducibilityFixturePreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "already exists") {

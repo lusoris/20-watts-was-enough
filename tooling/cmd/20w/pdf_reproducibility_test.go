@@ -34,3 +34,19 @@ func TestRunPublicationVerifyPDFReproducibilityRejectsAMutableRefBeforeDocker(t 
 		t.Fatalf("run() stderr = %q", stderr.String())
 	}
 }
+
+func TestRunPublicationVerifyPDFReproducibilityRequiresAnExactReleaseRevision(t *testing.T) {
+	t.Parallel()
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	if exitCode := run([]string{
+		"publication", "verify-pdf-reproducibility",
+		"--receipt", "build/evidence/test.json",
+		"--ref", "v1.2.3",
+	}, &stdout, &stderr); exitCode != 2 {
+		t.Fatalf("run() exit = %d, stderr = %q", exitCode, stderr.String())
+	}
+	if !strings.Contains(stderr.String(), "requires an exact source revision") {
+		t.Fatalf("run() stderr = %q", stderr.String())
+	}
+}

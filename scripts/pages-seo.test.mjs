@@ -4,7 +4,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { publication, repositoryIssueUrl } from "../app/lib/publication.mjs";
+import { publication } from "../app/lib/publication.mjs";
 import { createSeoStaticPages } from "../vite.pages.config.ts";
 import {
   bookSourceDocuments,
@@ -27,6 +27,9 @@ import { resolvePagesBase } from "./lib/pages-base.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const portalStylesheet = await readFile(path.join(repositoryRoot, "app/portal.css"), "utf8");
+const projectVersion = JSON.parse(
+  await readFile(path.join(repositoryRoot, "package.json"), "utf8"),
+).version;
 const documents = portalSourceDocuments(repositoryRoot);
 const bookDocuments = bookSourceDocuments(repositoryRoot);
 const helpDocument = markdownSourceDocument(
@@ -131,7 +134,9 @@ test("no-JS reading fallbacks expose help and source-bound issue routes", () => 
       reportLabel: "Report a portal problem",
     },
     {
-      fallback: renderBookFallback(documents, "/research/"),
+      fallback: renderBookFallback(documents, "/research/", {
+        editionVersion: projectVersion,
+      }),
       identity: "book/",
       reportLabel: "Report a book problem",
     },
@@ -143,13 +148,12 @@ test("no-JS reading fallbacks expose help and source-bound issue routes", () => 
   ];
 
   for (const { fallback, identity, reportLabel } of cases) {
-    const issueHref = repositoryIssueUrl(
-      "site-documentation-problem.yml",
-      `[Site/Docs] ${identity} @ main`,
-    ).replaceAll("&", "&amp;");
     assert.match(fallback, /<nav aria-label="Reader support">/);
     assert.ok(fallback.includes('href="/research/help/">How to help</a>'));
-    assert.ok(fallback.includes(`href="${issueHref}">${reportLabel}</a>`));
+    assert.ok(fallback.includes(`>${reportLabel}</a>`));
+    assert.match(fallback, /template=site-documentation-problem\.yml/u);
+    const title = encodeURIComponent(`[Site/Docs] ${identity} @ main`).replaceAll("%20", "+");
+    assert.ok(fallback.includes(title));
   }
 });
 
@@ -195,7 +199,9 @@ test("the no-JS book fallback carries the canonical manuscript and nested headin
       body: "# Second chapter\n\n## Answer\n\nCanonical second body.",
     },
   ];
-  const fallback = renderBookFallback(sample, "/research/");
+  const fallback = renderBookFallback(sample, "/research/", {
+    editionVersion: projectVersion,
+  });
 
   assert.match(fallback, /class="portal-skip-link" href="#book-concept-a-md"/u);
   assert.equal([...fallback.matchAll(/<h1>/gu)].length, 1);
@@ -217,7 +223,7 @@ test("the no-JS book fallback carries the canonical manuscript and nested headin
   );
   assert.match(fallback, /<article class="prose markdown-body">[\s\S]+<\/article>/u);
   assert.throws(
-    () => renderBookFallback([], "/research/"),
+    () => renderBookFallback([], "/research/", { editionVersion: projectVersion }),
     /requires at least one canonical document/u,
   );
 });

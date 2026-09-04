@@ -129,6 +129,20 @@ the exact diff; this file records why the project changed.
   `NO_RESULT`.
   Dataset membership, decision recording, independent exact verification and
   release admission remain outside this construction-only process boundary.
+- Decision 0067 and one shared research-object projection now bind each focused
+  English Pages document, its no-JavaScript fallback and the web-book cover to
+  the continuous-edition label and available exact build commit. A parsed,
+  non-inferred route index exposes only authored claim, principle, audit and
+  experiment links, including exact claim-ledger `Used by` backlinks. Book and
+  PDF routes stay adjacent; edition-specific disclosure is omitted without an
+  explicit mapping; typed feedback retains the path, route, edition, revision
+  and available fragment in a bounded one-line locator. Release PDF rendering
+  now requires, displays and records both the verified tag and commit in its
+  manifest and reproducibility receipt, while public hosts ignore query-
+  provided renderer identity. Bounded Markdown traversal, source-closure
+  mutation coverage, static mutants and rendered-browser checks through the
+  100-record narrow-screen case reject resource exhaustion, stale or duplicate
+  identity, hidden disclosure state, lost identity and Pages-base-path drift.
 - A digest-pinned apko/Wolfi foundation now closes the Linux `amd64` Poppler
   26.08.0 PDF-tools graph at 45 APKs. Its offline Go validator binds the config,
   lock, exact APK retention metadata, upstream source identities, the pinned

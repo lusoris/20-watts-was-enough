@@ -13,12 +13,45 @@ import (
 
 const testImageID = "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
+func TestValidateSourceRevisionRequiresExactReleaseIdentity(t *testing.T) {
+	t.Parallel()
+	revision := strings.Repeat("a", 40)
+	for _, testCase := range []struct {
+		name            string
+		ref             string
+		revision        string
+		expectedFailure string
+	}{
+		{name: "continuous-main", ref: "main"},
+		{name: "source-bound-main", ref: "main", revision: revision},
+		{name: "immutable-release", ref: "v1.2.3", revision: revision},
+		{name: "release-without-commit", ref: "v1.2.3", expectedFailure: "requires an exact source revision"},
+		{name: "uppercase-commit", ref: "v1.2.3", revision: strings.ToUpper(revision), expectedFailure: "lowercase 40-character"},
+		{name: "short-commit", ref: "v1.2.3", revision: revision[:39], expectedFailure: "lowercase 40-character"},
+	} {
+		testCase := testCase
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Parallel()
+			err := ValidateSourceRevision(testCase.ref, testCase.revision)
+			if testCase.expectedFailure == "" {
+				if err != nil {
+					t.Fatalf("ValidateSourceRevision() error = %v", err)
+				}
+				return
+			}
+			if err == nil || !strings.Contains(err.Error(), testCase.expectedFailure) {
+				t.Fatalf("ValidateSourceRevision() error = %v, want %q", err, testCase.expectedFailure)
+			}
+		})
+	}
+}
+
 func TestRenderPlanUsesTheExactImageAndHardenedContainer(t *testing.T) {
 	t.Parallel()
 	configuration := renderConfiguration(t)
 	executor := &recordingExecutor{imageID: testImageID}
 	result, err := renderWithDependencies(
-		context.Background(), configuration, "main", noOpPreparer{}, executor,
+		context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 	)
 	if err != nil {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -146,7 +179,7 @@ func TestRenderRejectsTimestampRewriteWarnings(t *testing.T) {
 			configuration := renderConfiguration(t)
 			executor := &recordingExecutor{imageID: testImageID, buildOutput: buildOutput}
 			_, err := renderWithDependencies(
-				context.Background(), configuration, "main", noOpPreparer{}, executor,
+				context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 			)
 			if err == nil || !strings.Contains(err.Error(), "did not apply") {
 				t.Fatalf("renderWithDependencies() error = %v", err)
@@ -163,7 +196,7 @@ func TestRenderRejectsMalformedImageIDBeforeStartingAContainer(t *testing.T) {
 	configuration := renderConfiguration(t)
 	executor := &recordingExecutor{imageID: testImageID + " "}
 	_, err := renderWithDependencies(
-		context.Background(), configuration, "main", noOpPreparer{}, executor,
+		context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "trailing") {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -210,7 +243,7 @@ func TestRenderRejectsAuthorityDriftDuringTheImageBuild(t *testing.T) {
 		},
 	}
 	_, err := renderWithDependencies(
-		context.Background(), configuration, "main", noOpPreparer{}, executor,
+		context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "changed during") {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -224,8 +257,9 @@ func TestRenderFailureForcesCleanupOfTheNamedContainer(t *testing.T) {
 	t.Parallel()
 	configuration := renderConfiguration(t)
 	executor := &recordingExecutor{imageID: testImageID, failRun: true}
+	sourceRevision := strings.Repeat("b", 40)
 	_, err := renderWithDependencies(
-		context.Background(), configuration, "v1.2.3", noOpPreparer{}, executor,
+		context.Background(), configuration, "v1.2.3", sourceRevision, noOpPreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "injected run failure") {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -242,6 +276,9 @@ func TestRenderFailureForcesCleanupOfTheNamedContainer(t *testing.T) {
 	if !slices.Contains(runRequest.arguments, "v1.2.3") {
 		t.Fatalf("release ref is absent from run arguments: %v", runRequest.arguments)
 	}
+	if !slices.Contains(runRequest.arguments, sourceRevision) {
+		t.Fatalf("release revision is absent from run arguments: %v", runRequest.arguments)
+	}
 }
 
 func TestRenderRejectsDifferentFreshOutputsWithoutReplacingPublication(t *testing.T) {
@@ -252,7 +289,7 @@ func TestRenderRejectsDifferentFreshOutputsWithoutReplacingPublication(t *testin
 	writePublicationFixture(t, configuration.RepositoryRoot, oldPDF, oldManifest)
 	executor := &recordingExecutor{imageID: testImageID, differentSecondRender: true}
 	_, err := renderWithDependencies(
-		context.Background(), configuration, "main", noOpPreparer{}, executor,
+		context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "fresh PDF renders differ") {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -265,7 +302,7 @@ func TestRenderRejectsAnUnreviewedBuildxBinaryBeforeCreatingABuilder(t *testing.
 	configuration := renderConfiguration(t)
 	executor := &recordingExecutor{imageID: testImageID, buildxOutput: "github.com/docker/buildx 0.0.0 bad"}
 	_, err := renderWithDependencies(
-		context.Background(), configuration, "main", noOpPreparer{}, executor,
+		context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "does not match the renderer lock") {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -289,7 +326,7 @@ func TestRenderRejectsAConcurrentPublicationBeforeDocker(t *testing.T) {
 	})
 	executor := &recordingExecutor{imageID: testImageID}
 	_, err = renderWithDependencies(
-		context.Background(), configuration, "main", noOpPreparer{}, executor,
+		context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "already locked") {
 		t.Fatalf("renderWithDependencies() error = %v", err)

@@ -11,6 +11,7 @@ import {
   type MouseEvent,
 } from "react";
 import type { ResearchDocument } from "../research-document";
+import type { ResearchObjectEvidenceRecord } from "../research-object";
 import { outlineFromMarkdown } from "../lib/heading-outline";
 import { synchronizePortalSeo } from "../lib/portal-seo";
 import { readinessSummary } from "../lib/readiness";
@@ -22,6 +23,7 @@ import { ResearchObjectHeader } from "./research-object-header";
 import {
   decodePortalFragment,
   loadPortalDocument,
+  loadPortalEvidenceRecords,
   portalDocumentLocation,
   portalDocumentPathFromLocation,
   portalDocuments,
@@ -46,6 +48,23 @@ type PortalNavigationRequest = {
   fragment: string;
 };
 type ElementRef<T extends HTMLElement> = { current: T | null };
+
+type PortalDocumentState = {
+  path: string;
+  document?: ResearchDocument;
+  evidenceRecords?: ResearchObjectEvidenceRecord[];
+  error?: string;
+};
+
+function cachedOrLoad<T>(cache: Map<string, T>, path: string, load: () => Promise<T>) {
+  const cached = cache.get(path);
+  return cached ? Promise.resolve(cached) : load();
+}
+
+function evidenceForSelection(state: PortalDocumentState | null, selectedPath: string | null) {
+  if (!selectedPath || state?.path !== selectedPath) return [];
+  return state.evidenceRecords ?? [];
+}
 
 function withBase(basePath: string, path = "") {
   const base = basePath.endsWith("/") ? basePath : `${basePath}/`;
@@ -554,11 +573,7 @@ export function PublicResearchPortal({
     focusDestination: false,
     fragment: initialPortalFragment(),
   }));
-  const [documentState, setDocumentState] = useState<{
-    path: string;
-    document?: ResearchDocument;
-    error?: string;
-  } | null>(null);
+  const [documentState, setDocumentState] = useState<PortalDocumentState | null>(null);
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<LibraryGroup>("All");
   const [catalogLimit, setCatalogLimit] = useState(catalogPageSize);
@@ -570,6 +585,7 @@ export function PublicResearchPortal({
   const mobileMenuRef = useRef<HTMLDetailsElement>(null);
   const mobileOutlineRef = useRef<HTMLDetailsElement>(null);
   const documentCache = useRef(new Map<string, ResearchDocument>());
+  const evidenceCache = useRef(new Map<string, ResearchObjectEvidenceRecord[]>());
 
   const documentsByPath = useMemo(
     () => new Map(portalDocuments.map((document) => [document.path, document])),
@@ -581,6 +597,7 @@ export function PublicResearchPortal({
   const selectedDocument = selectedPath && documentState?.path === selectedPath
     ? documentState.document ?? null
     : null;
+  const selectedEvidenceRecords = evidenceForSelection(documentState, selectedPath);
   const documentError = selectedPath && documentState?.path === selectedPath
     ? documentState.error ?? ""
     : "";
@@ -643,14 +660,29 @@ export function PublicResearchPortal({
     if (!selectedPath) return;
 
     let cancelled = false;
-    const cached = documentCache.current.get(selectedPath);
-    const pendingDocument = cached
-      ? Promise.resolve(cached)
-      : loadPortalDocument(selectedPath, assetBasePath);
-    pendingDocument.then((document) => {
+    const pendingDocument = cachedOrLoad(
+      documentCache.current,
+      selectedPath,
+      () => loadPortalDocument(
+        selectedPath,
+        assetBasePath,
+        __PUBLICATION_SOURCE_REVISION__,
+      ),
+    );
+    const pendingEvidence = cachedOrLoad(
+      evidenceCache.current,
+      selectedPath,
+      () => loadPortalEvidenceRecords(
+        selectedPath,
+        assetBasePath,
+        __PUBLICATION_SOURCE_REVISION__,
+      ),
+    );
+    Promise.all([pendingDocument, pendingEvidence]).then(([document, evidenceRecords]) => {
       if (cancelled) return;
       documentCache.current.set(selectedPath, document);
-      setDocumentState({ path: selectedPath, document });
+      evidenceCache.current.set(selectedPath, evidenceRecords);
+      setDocumentState({ path: selectedPath, document, evidenceRecords });
     }).catch((error: unknown) => {
       if (cancelled) return;
       setDocumentState({
@@ -996,10 +1028,11 @@ export function PublicResearchPortal({
                   group={selectedMetadata.group}
                   editionVersion={projectVersion}
                   sourceRevision={__PUBLICATION_SOURCE_REVISION__}
+                  evidenceRecords={selectedEvidenceRecords}
+                  assetBasePath={assetBasePath}
                   fragment={selectedFragment}
                   headingId="portal-reader-title"
                   words={selectedMetadata.words}
-                  sections={outline.length}
                 />
                 <div className="prose portal-prose">
                   {selectedDocument ? (

@@ -96,6 +96,7 @@ function semanticFixture(outcome = "known-debt") {
     pdf_sha256: pdfSha256,
     size_bytes: pdfBytes.length,
     source_ref: "main",
+    source_revision: null,
     source_digest: sourceDigest,
     version: "0.0.0",
   };

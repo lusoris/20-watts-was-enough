@@ -16,9 +16,9 @@ import (
 )
 
 var (
-	imageIDPattern   = regexp.MustCompile(`^sha256:[0-9a-f]{64}$`)
-	sourceRefPattern = regexp.MustCompile(`^(?:main|v(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*))$`)
-	numericIDPattern = regexp.MustCompile(`^[0-9]+$`)
+	imageIDPattern        = regexp.MustCompile(`^sha256:[0-9a-f]{64}$`)
+	sourceRefPattern      = regexp.MustCompile(`^(?:main|v(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*))$`)
+	numericIDPattern      = regexp.MustCompile(`^[0-9]+$`)
 )
 
 // Options selects the repository and source identity rendered into the book.
@@ -48,6 +48,7 @@ func Render(ctx context.Context, options Options) (Result, error) {
 		ctx,
 		configuration,
 		options.SourceRef,
+		options.SourceRevision,
 		remoteBuildContextPreparer{},
 		localCommandExecutor{},
 	)
@@ -79,11 +80,11 @@ func ValidateSourceRevision(sourceRef, sourceRevision string) error {
 func renderWithDependencies(
 	ctx context.Context,
 	configuration Configuration,
-	sourceRef string,
+	sourceRef, sourceRevision string,
 	preparer buildContextPreparer,
 	executor commandExecutor,
 ) (result Result, returnError error) {
-	if err := ValidateSourceRef(sourceRef); err != nil {
+	if err := ValidateSourceRevision(sourceRef, sourceRevision); err != nil {
 		return Result{}, err
 	}
 	if err := prepareWritableRenderPaths(configuration.RepositoryRoot); err != nil {
@@ -173,7 +174,7 @@ func renderWithDependencies(
 		if err := os.MkdirAll(temporaryDirectory, 0o755); err != nil {
 			return Result{}, fmt.Errorf("create isolated PDF temporary directory: %w", err)
 		}
-		if err := runRendererOnce(ctx, configuration, executor, imageID, sourceRef, outputDirectory, temporaryDirectory); err != nil {
+		if err := runRendererOnce(ctx, configuration, executor, imageID, sourceRef, sourceRevision, outputDirectory, temporaryDirectory); err != nil {
 			return Result{}, err
 		}
 		if err := checkAuthorityUnchanged(configuration); err != nil {
@@ -241,7 +242,7 @@ func runRendererOnce(
 	ctx context.Context,
 	configuration Configuration,
 	executor commandExecutor,
-	imageID, sourceRef, outputDirectory, temporaryDirectory string,
+	imageID, sourceRef, sourceRevision, outputDirectory, temporaryDirectory string,
 ) error {
 	containerName, err := randomContainerName()
 	if err != nil {
@@ -253,7 +254,7 @@ func runRendererOnce(
 		timeout:    time.Duration(configuration.Lock.Limits.RenderSeconds) * time.Second,
 		outputSize: configuration.Lock.Limits.OutputBytes,
 		arguments: runArguments(
-			configuration, imageID, containerName, sourceRef, outputDirectory, temporaryDirectory,
+			configuration, imageID, containerName, sourceRef, sourceRevision, outputDirectory, temporaryDirectory,
 		),
 	})
 	if err != nil {
@@ -305,7 +306,7 @@ func rejectTimestampRewriteWarnings(output []byte) error {
 
 func runArguments(
 	configuration Configuration,
-	imageID, containerName, sourceRef, outputDirectory, temporaryDirectory string,
+	imageID, containerName, sourceRef, sourceRevision, outputDirectory, temporaryDirectory string,
 ) []string {
 	root := configuration.RepositoryRoot
 	limits := configuration.Lock.Limits
@@ -337,6 +338,9 @@ func runArguments(
 	arguments = append(arguments, imageID)
 	if sourceRef != "main" {
 		arguments = append(arguments, "--ref", sourceRef)
+	}
+	if sourceRevision != "" {
+		arguments = append(arguments, "--revision", sourceRevision)
 	}
 	return arguments
 }

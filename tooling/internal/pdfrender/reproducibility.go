@@ -15,6 +15,7 @@ const reproducibilityBuildCount = 2
 type ReproducibilityOptions struct {
 	RepositoryRoot string
 	SourceRef      string
+	SourceRevision string
 	ReceiptPath    string
 }
 
@@ -29,6 +30,7 @@ func VerifyReproducibility(ctx context.Context, options ReproducibilityOptions) 
 		ctx,
 		configuration,
 		options.SourceRef,
+		options.SourceRevision,
 		options.ReceiptPath,
 		remoteBuildContextPreparer{},
 		localCommandExecutor{},
@@ -38,11 +40,11 @@ func VerifyReproducibility(ctx context.Context, options ReproducibilityOptions) 
 func verifyReproducibilityWithDependencies(
 	ctx context.Context,
 	configuration Configuration,
-	sourceRef, receiptRelativePath string,
+	sourceRef, sourceRevision, receiptRelativePath string,
 	preparer buildContextPreparer,
 	executor commandExecutor,
 ) (_ ReproducibilityReceipt, returnError error) {
-	if err := ValidateSourceRef(sourceRef); err != nil {
+	if err := ValidateSourceRevision(sourceRef, sourceRevision); err != nil {
 		return ReproducibilityReceipt{}, err
 	}
 	receiptPath, err := prepareReproducibilityReceiptPath(configuration.RepositoryRoot, receiptRelativePath)
@@ -125,7 +127,7 @@ func verifyReproducibilityWithDependencies(
 		imageTag := fmt.Sprintf("20w-pdf-reproducibility:%s-%d", runIdentity, index+1)
 		ownedImageTags[imageTag] = struct{}{}
 		build, buildError := reproducibilityBuild(
-			acceptanceContext, configuration, executor, contextRoot, temporaryRoot, sourceRef, imageTag, index,
+			acceptanceContext, configuration, executor, contextRoot, temporaryRoot, sourceRef, sourceRevision, imageTag, index,
 		)
 		if buildError != nil {
 			return ReproducibilityReceipt{}, buildError
@@ -133,7 +135,9 @@ func verifyReproducibilityWithDependencies(
 		builds = append(builds, build)
 	}
 	comparison := compareReproducibilityBuilds(builds[0], builds[1])
-	receipt := newReproducibilityReceipt(configuration, sourceRef, contextIdentity, builds, comparison)
+	receipt := newReproducibilityReceipt(
+		configuration, sourceRef, sourceRevision, contextIdentity, builds, comparison,
+	)
 	if receipt.Status != "pass" {
 		evidence, err := retainReproducibilityMismatch(
 			configuration.RepositoryRoot, receiptPath, builds, os.RemoveAll,
@@ -168,7 +172,7 @@ func reproducibilityBuild(
 	ctx context.Context,
 	configuration Configuration,
 	executor commandExecutor,
-	contextRoot, temporaryRoot, sourceRef, imageTag string,
+	contextRoot, temporaryRoot, sourceRef, sourceRevision, imageTag string,
 	index int,
 ) (result ReproducibilityBuild, returnError error) {
 	label := fmt.Sprintf("build-%d", index+1)
@@ -228,7 +232,7 @@ func reproducibilityBuild(
 			return result, fmt.Errorf("create isolated PDF reproducibility directory: %w", err)
 		}
 	}
-	if err := runRendererOnce(ctx, configuration, executor, imageID, sourceRef, outputDirectory, workspaceDirectory); err != nil {
+	if err := runRendererOnce(ctx, configuration, executor, imageID, sourceRef, sourceRevision, outputDirectory, workspaceDirectory); err != nil {
 		return result, err
 	}
 	pair, err := inspectReproducibilityPair(outputDirectory)

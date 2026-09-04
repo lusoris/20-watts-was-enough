@@ -9,7 +9,11 @@ import {
   bookDocumentHeadingId,
   bookDocumentId,
 } from "../../app/lib/book-document-id.mjs";
-import { repositoryDocumentHref } from "../../app/lib/book-release-identity.mjs";
+import {
+  bookEditionIdentity,
+  repositoryDocumentHref,
+  repositoryTreeHref,
+} from "../../app/lib/book-release-identity.mjs";
 import { openGraphLocaleForEuLanguage } from "../../app/lib/eu-languages.mjs";
 import {
   languageAlternateLinksForRoute,
@@ -17,6 +21,7 @@ import {
   translationContributionUrl,
 } from "../../app/lib/language-access.mjs";
 import {
+  issueFormLocator,
   publication,
   repositoryIssueUrl,
 } from "../../app/lib/publication.mjs";
@@ -382,10 +387,33 @@ export function renderPortalFallback(documents, basePath, translationDocuments =
   return `<main class="seo-static-page"><p class="portal-eyebrow">Open research programme</p><h1>20 Watts Was Enough</h1><p>Can an artificial system learn and adapt while activating less computation and moving less data? This programme turns mechanisms from living and engineered systems into scoped claims, explicit principles and equal-budget tests.</p>${languages}${renderReaderSupport(basePath, "research portal", "Report a portal problem")}<nav aria-label="Research library">${groups}</nav><p><a href="${withBase(basePath, "book/")}">Read the full concept book</a></p></main>`;
 }
 
-export function renderBookFallback(documents, basePath, translationDocuments = []) {
+export function renderBookFallback(documents, basePath, options = {}) {
   if (!Array.isArray(documents) || documents.length === 0) {
     throw new Error("The static book fallback requires at least one canonical document.");
   }
+  const normalizedOptions = Array.isArray(options)
+    ? { translationDocuments: options }
+    : options;
+  const translationDocuments = normalizedOptions.translationDocuments ?? [];
+  const identity = bookEditionIdentity({
+    surface: "github-pages",
+    sourceRef: "main",
+    editionVersion: normalizedOptions.editionVersion,
+    sourceRevision: normalizedOptions.sourceRevision,
+  });
+  const locator = issueFormLocator([
+    `Public route: ${new URL(publication.bookPath, canonicalSite).toString()}`,
+    `Edition: ${identity.edition}`,
+    ...(identity.sourceRevision ? [`Source revision: ${identity.sourceRevision}`] : []),
+  ]);
+  const issueUrl = repositoryIssueUrl(
+    "site-documentation-problem.yml",
+    `[Site/Docs] book/ @ ${identity.sourceRevision?.slice(0, 12) ?? identity.repositoryRef}`,
+    { location: locator },
+  );
+  const revision = identity.sourceRevision
+    ? `<div><dt>Source revision</dt><dd><code>${identity.sourceRevision}</code></dd></div>`
+    : "";
   const links = documents.map((document) => (
     `<li><a href="#${bookDocumentId(document.path)}">${escapeAttribute(document.title)}</a></li>`
   )).join("");
@@ -393,12 +421,39 @@ export function renderBookFallback(documents, basePath, translationDocuments = [
     `<section id="${bookDocumentId(document.path)}"><header><p>${escapeAttribute(document.group)} · ${document.words.toLocaleString(publication.locale)} words</p><h2>${escapeAttribute(document.title)}</h2></header><article class="prose markdown-body">${renderMarkdown(document, documents, basePath, { bookFragments: true, headingOffset: 1, mathOutput: "mathml" })}</article></section>`
   )).join("");
   const languages = renderLanguageAvailability("/book/", translationDocuments, basePath);
-  return `<main class="seo-static-page"><a class="portal-skip-link" href="#${bookDocumentId(documents[0].path)}">Skip to first chapter</a><p><a href="${withBase(basePath)}">Research portal</a></p><h1>20 Watts Was Enough — Full Concept Book</h1><p>The complete public reading edition generated from canonical Git source.</p>${languages}${renderReaderSupport(basePath, "book/", "Report a book problem")}<nav aria-label="Book contents"><ol>${links}</ol></nav>${manuscript}</main>`;
+  return `<main class="seo-static-page"><a class="portal-skip-link" href="#${bookDocumentId(documents[0].path)}">Skip to first chapter</a><p><a href="${withBase(basePath)}">Research portal</a></p><h1>20 Watts Was Enough — Full Concept Book</h1><p>The complete public reading edition generated from canonical Git source.</p>${languages}<dl aria-label="Book edition identity"><div><dt>Edition</dt><dd>${escapeAttribute(identity.edition)}</dd></div>${revision}<div><dt>Source</dt><dd><a href="${escapeAttribute(repositoryTreeHref(identity.repositoryLinkRef))}">${escapeAttribute(identity.sourceLabel)}</a></dd></div></dl><nav aria-label="Book publication routes"><a href="${withBase(basePath, publication.bookPath)}">Book</a><a href="${withBase(basePath, publication.bookPdfPath)}">PDF</a></nav>${renderReaderSupport(basePath, "book/", "Report a book problem", { issueUrl })}<nav aria-label="Book contents"><ol>${links}</ol></nav>${manuscript}</main>`;
 }
 
 function renderResearchObjectHeader(identity, words) {
   const revision = identity.sourceRevision
     ? `<div><dt>Source revision</dt><dd><code>${escapeAttribute(identity.sourceRevision)}</code></dd></div>`
+    : "";
+  const evidence = identity.evidenceRoutes.length
+    ? [
+        '<details class="research-object-evidence">',
+        `<summary><span>Mapped records</span><b>${escapeAttribute(identity.evidenceSummary)}</b></summary>`,
+        `<p>${escapeAttribute(identity.evidenceCaveat)}</p>`,
+        "<div>",
+        ...[
+          ["claim", "Claims"],
+          ["principle", "Principles"],
+          ["audit", "Audits"],
+          ["experiment", "Experiments"],
+        ].flatMap(([kind, label]) => {
+          const routes = identity.evidenceRoutes.filter((route) => route.kind === kind);
+          if (!routes.length) return [];
+          const links = routes.map((route) => {
+            const locator = `${route.sourcePath}${route.fragment ? `#${route.fragment}` : ""}`;
+            return `<a href="${escapeAttribute(route.href)}" aria-label="Mapped ${route.kind}: ${escapeAttribute(locator)}" title="${escapeAttribute(locator)}">${escapeAttribute(route.label)}</a>`;
+          }).join("");
+          return `<nav aria-label="Mapped ${label.toLowerCase()}"><strong>${label}</strong><span>${links}</span></nav>`;
+        }),
+        "</div>",
+        "</details>",
+      ].join("")
+    : "";
+  const disclosure = identity.disclosureHref
+    ? `<a href="${escapeAttribute(identity.disclosureHref)}">Disclosure</a>`
     : "";
   return [
     '<header class="research-object-header" data-research-object="focused-document">',
@@ -411,13 +466,16 @@ function renderResearchObjectHeader(identity, words) {
     `<div><dt>Extent</dt><dd>${words.toLocaleString(publication.locale)} words</dd></div>`,
     `<div><dt>Public route</dt><dd><a href="${escapeAttribute(identity.publicUrl)}">${escapeAttribute(identity.publicUrl)}</a></dd></div>`,
     "</dl>",
+    evidence,
     '<div class="research-object-routes">',
     '<nav aria-label="Research object records">',
     `<a href="${escapeAttribute(identity.sourceHref)}">Source</a>`,
     `<a href="${escapeAttribute(identity.historyHref)}">History</a>`,
+    `<a href="${escapeAttribute(identity.bookHref)}">Book</a>`,
+    `<a href="${escapeAttribute(identity.pdfHref)}">PDF</a>`,
     `<a href="${escapeAttribute(identity.citationHref)}">Cite</a>`,
-    `<a href="${escapeAttribute(identity.disclosureHref)}">Disclosure</a>`,
     `<a href="${escapeAttribute(identity.licenceHref)}">Licence</a>`,
+    disclosure,
     "</nav>",
     '<nav aria-label="Research object feedback">',
     `<a href="${escapeAttribute(identity.clarityReportHref)}">Report clarity</a>`,
@@ -477,6 +535,8 @@ export function renderDocumentFallback(document, documents, basePath, options = 
         group: document.group,
         editionVersion: normalizedOptions.editionVersion,
         sourceRevision: normalizedOptions.sourceRevision,
+        evidenceRecords: document.evidenceRecords,
+        basePath,
       })
     : null;
   const header = researchObject

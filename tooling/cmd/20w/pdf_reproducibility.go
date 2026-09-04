@@ -14,17 +14,19 @@ func runPublicationVerifyPDFReproducibility(arguments []string, stdout, stderr i
 	flags.SetOutput(stderr)
 	root := flags.String("root", ".", "repository root")
 	sourceRef := flags.String("ref", "main", "book source ref")
+	sourceRevision := flags.String("revision", "", "exact lowercase 40-character book source commit")
 	receiptPath := flags.String("receipt", "", "new repository-relative JSON receipt path")
 	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 || *receiptPath == "" {
 		return 2
 	}
-	if err := pdfrender.ValidateSourceRef(*sourceRef); err != nil {
+	if err := pdfrender.ValidateSourceRevision(*sourceRef, *sourceRevision); err != nil {
 		fmt.Fprintf(stderr, "publication verify-pdf-reproducibility: %v\n", err)
 		return 2
 	}
 	receipt, err := pdfrender.VerifyReproducibility(context.Background(), pdfrender.ReproducibilityOptions{
 		RepositoryRoot: *root,
 		SourceRef:      *sourceRef,
+		SourceRevision: *sourceRevision,
 		ReceiptPath:    *receiptPath,
 	})
 	if err != nil {
