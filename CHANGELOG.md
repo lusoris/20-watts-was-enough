@@ -141,6 +141,11 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- The pinned book renderer now retries exactly once, within its existing
+  300-second print budget, only when Chrome returns the terminal `Printing
+  failed` result. Other protocol failures still stop immediately, diagnostics
+  retain the CDP method and code, and the two-render byte comparison remains
+  the publication gate.
 - A failed two-builder PDF reproducibility check now retains both exact PDF and
   manifest pairs beside its comparison receipt. CI uploads the bounded mismatch
   bundle for 30 days, so a rare renderer disagreement can be byte-diffed without

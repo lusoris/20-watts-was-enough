@@ -11,6 +11,7 @@ import {
   connectCdp,
   devtoolsPage,
   firstExistingChromium,
+  printPageToPdf,
   stopProcess,
   waitForUrl,
 } from "./lib/chromium-cdp.mjs";
@@ -281,14 +282,19 @@ try {
   }
   observedRenderedDiagrams = readinessValue.renderedDiagrams;
 
-  const printed = await cdp.send(
-    "Page.printToPDF",
+  const printed = await printPageToPdf(
+    cdp,
     {
       printBackground: true,
       preferCSSPageSize: true,
       displayHeaderFooter: false,
     },
-    300_000,
+    {
+      onRetry: ({ delayMs, remainingMs }) => console.warn(
+        `Headless Chrome returned "Printing failed"; retrying Page.printToPDF once after `
+          + `${delayMs} ms with ${remainingMs} ms left in the original print budget.`,
+      ),
+    },
   );
   const normalizedPdf = normalizeChromiumPdfMetadata(
     Buffer.from(printed.data, "base64"),

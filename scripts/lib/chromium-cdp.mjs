@@ -1,4 +1,112 @@
 import { access } from "node:fs/promises";
+import { performance } from "node:perf_hooks";
+
+const maximumPdfPrintTimeoutMs = 300_000;
+const maximumPdfPrintRetryDelayMs = 10_000;
+const pdfPrintAttemptLimit = 2;
+
+const defaultClock = Object.freeze({
+  now: () => performance.now(),
+  wait: (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds)),
+});
+
+export class ChromeDevToolsProtocolError extends Error {
+  constructor(method, protocolError) {
+    const code = Number.isSafeInteger(protocolError?.code) ? protocolError.code : null;
+    const protocolMessage = typeof protocolError?.message === "string"
+      ? protocolError.message.slice(0, 512)
+      : "unknown protocol error";
+    const codeSuffix = code === null ? "" : ` (${code})`;
+    super(`Chrome DevTools ${method} failed${codeSuffix}: ${protocolMessage}`);
+    this.name = "ChromeDevToolsProtocolError";
+    this.method = method;
+    this.code = code;
+    this.protocolMessage = protocolMessage;
+  }
+}
+
+export class PdfPrintRetryExhaustedError extends Error {
+  constructor({ attempts, cause, totalTimeoutMs }) {
+    super(
+      `Chrome DevTools Page.printToPDF returned "Printing failed" after ${attempts} `
+        + `${attempts === 1 ? "attempt" : "attempts"} within its ${totalTimeoutMs} ms budget.`,
+      { cause },
+    );
+    this.name = "PdfPrintRetryExhaustedError";
+    this.attempts = attempts;
+    this.totalTimeoutMs = totalTimeoutMs;
+  }
+}
+
+function boundedMilliseconds(value, label, maximum) {
+  if (!Number.isSafeInteger(value) || value < 1 || value > maximum) {
+    throw new Error(`${label} must be an integer from 1 through ${maximum} milliseconds.`);
+  }
+  return value;
+}
+
+function retryablePdfPrintFailure(error) {
+  return error instanceof ChromeDevToolsProtocolError
+    && error.method === "Page.printToPDF"
+    && error.protocolMessage === "Printing failed";
+}
+
+export async function printPageToPdf(cdp, params, {
+  clock = defaultClock,
+  onRetry,
+  retryDelayMs = 1_000,
+  totalTimeoutMs = maximumPdfPrintTimeoutMs,
+} = {}) {
+  if (!cdp || typeof cdp.send !== "function") {
+    throw new Error("A Chrome DevTools client is required for PDF printing.");
+  }
+  if (!clock || typeof clock.now !== "function" || typeof clock.wait !== "function") {
+    throw new Error("The PDF print clock must provide now and wait functions.");
+  }
+  if (onRetry !== undefined && typeof onRetry !== "function") {
+    throw new Error("The PDF print retry observer must be a function.");
+  }
+  const timeout = boundedMilliseconds(
+    totalTimeoutMs, "PDF print timeout", maximumPdfPrintTimeoutMs,
+  );
+  const retryDelay = boundedMilliseconds(
+    retryDelayMs, "PDF print retry delay", maximumPdfPrintRetryDelayMs,
+  );
+  const deadline = clock.now() + timeout;
+  let attempts = 0;
+
+  while (attempts < pdfPrintAttemptLimit) {
+    const remainingMs = Math.floor(deadline - clock.now());
+    if (remainingMs < 1) {
+      throw new PdfPrintRetryExhaustedError({ attempts, cause: undefined, totalTimeoutMs: timeout });
+    }
+    attempts += 1;
+    try {
+      const result = await cdp.send("Page.printToPDF", params, remainingMs);
+      if (typeof result?.data !== "string" || result.data.length === 0) {
+        throw new Error("Chrome DevTools Page.printToPDF returned no PDF data.");
+      }
+      return result;
+    } catch (error) {
+      if (!retryablePdfPrintFailure(error)) throw error;
+      if (attempts === pdfPrintAttemptLimit) {
+        throw new PdfPrintRetryExhaustedError({ attempts, cause: error, totalTimeoutMs: timeout });
+      }
+      const remainingBeforeDelay = Math.floor(deadline - clock.now());
+      if (remainingBeforeDelay <= retryDelay) {
+        throw new PdfPrintRetryExhaustedError({ attempts, cause: error, totalTimeoutMs: timeout });
+      }
+      onRetry?.({
+        attempt: attempts,
+        delayMs: retryDelay,
+        nextAttempt: attempts + 1,
+        remainingMs: remainingBeforeDelay,
+      });
+      await clock.wait(retryDelay);
+    }
+  }
+  throw new Error("PDF print attempt bound was exhausted unexpectedly.");
+}
 
 export const chromiumCandidates = Object.freeze([
   process.env.CHROME_PATH,
@@ -63,10 +171,10 @@ export async function connectCdp(webSocketUrl) {
   socket.addEventListener("message", (event) => {
     const message = JSON.parse(String(event.data));
     if (!message.id || !pending.has(message.id)) return;
-    const { resolve, reject, timeout } = pending.get(message.id);
+    const { method, resolve, reject, timeout } = pending.get(message.id);
     clearTimeout(timeout);
     pending.delete(message.id);
-    if (message.error) reject(new Error(message.error.message));
+    if (message.error) reject(new ChromeDevToolsProtocolError(method, message.error));
     else resolve(message.result);
   });
 
@@ -77,7 +185,7 @@ export async function connectCdp(webSocketUrl) {
         pending.delete(id);
         reject(new Error(`Chrome DevTools command timed out: ${method}`));
       }, timeoutMs);
-      pending.set(id, { resolve, reject, timeout });
+      pending.set(id, { method, resolve, reject, timeout });
       socket.send(JSON.stringify({ id, method, params }));
     });
   }
