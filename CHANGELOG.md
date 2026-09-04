@@ -58,6 +58,11 @@ the exact diff; this file records why the project changed.
   checks each held predecessor forest against the same bounded non-negative
   graph without calling the specialist solver; source-bound requests remain
   isolated from held answers, and all construction output remains `NO_RESULT`.
+- The KMP construction vertical now parses the pinned categorical string split
+  and returns the first haystack match, or the haystack length when none exists.
+  A separate naive matcher validates held references without calling the KMP
+  solver; source-bound requests retain no answer bytes, and all construction
+  output remains `NO_RESULT`.
 - A versioned PDF semantic sentinel now binds the current source, book, A4 and
   tag metadata, Poppler tool identity, separate structure and text streams,
   exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps
