@@ -1210,7 +1210,8 @@ button {
   color: #95efb5;
 }
 
-.readiness-intro h1 {
+.readiness-intro h1,
+.readiness-overview-book .readiness-intro h2 {
   max-width: 800px;
   margin: 14px 0 20px;
   color: #fffdf7;
@@ -1689,8 +1690,25 @@ button {
   padding: clamp(28px, 5vw, 54px);
 }
 
-.readiness-overview-book .readiness-intro h1 {
+.readiness-overview-book .readiness-intro h2 {
   font-size: clamp(38px, 5vw, 58px);
+}
+
+.readiness-overview-book .readiness-section-heading h3,
+.readiness-overview-book .readiness-ledger-card h3,
+.readiness-overview-book .readiness-smoke-card h3 {
+  margin: 6px 0 0;
+  color: #102d1d;
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 3.2vw, 38px);
+  font-weight: 560;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+.readiness-overview-book .readiness-claim-card h4 {
+  margin: 12px 0 15px;
+  font-size: 16px;
 }
 
 .readiness-book-link {
@@ -2018,6 +2036,55 @@ button {
 
 .book-prose li {
   overflow-wrap: anywhere;
+}
+
+/* Markdown headings keep their visual book role after the assembled edition
+   moves them one semantic level below the single book title. */
+.book-prose > h2:first-child {
+  max-width: 760px;
+  margin: 0 0 28px;
+  padding-top: 0;
+  border-top: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(36px, 4.2vw, 52px);
+  font-weight: 550;
+  letter-spacing: -0.035em;
+}
+
+.book-prose > h2:first-child::after {
+  display: block;
+  width: 58px;
+  height: 3px;
+  margin-top: 24px;
+  background: var(--green);
+  content: "";
+}
+
+.book-prose h3 {
+  margin: 48px 0 16px;
+  padding-top: 16px;
+  border-top: 2px solid #afbdaf;
+  color: #102e1d;
+  font-size: 23px;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+}
+
+.book-prose h4 {
+  margin: 34px 0 12px;
+  color: var(--green-strong);
+  font-size: 18px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+.book-prose h5,
+.book-prose h6 {
+  margin: 28px 0 10px;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .book-shell-web .book-document,
@@ -4482,26 +4549,27 @@ button {
     line-height: 1.45;
   }
 
-  .book-prose h1 {
+  .book-prose > h2:first-child {
     margin-bottom: 8mm;
     font-size: 30pt;
     break-after: avoid;
   }
 
-  .book-prose h2 {
+  .book-prose h3 {
     margin: 9mm 0 4mm;
     padding-top: 3mm;
     font-size: 17pt;
     break-after: avoid;
   }
 
-  .book-prose h3 {
+  .book-prose h4 {
     margin: 6mm 0 2.5mm;
     font-size: 13pt;
     break-after: avoid;
   }
 
-  .book-prose h4 {
+  .book-prose h5,
+  .book-prose h6 {
     margin: 5mm 0 2mm;
     font-size: 9pt;
     break-after: avoid;
@@ -4646,7 +4714,7 @@ button {
     break-inside: avoid;
   }
 
-  .readiness-overview-book .readiness-intro h1 {
+  .readiness-overview-book .readiness-intro h2 {
     margin: 3mm 0 4mm;
     font-size: 27pt;
   }
@@ -4668,9 +4736,9 @@ button {
     margin-bottom: 4mm;
   }
 
-  .readiness-overview-book .readiness-section-heading h2,
-  .readiness-overview-book .readiness-ledger-card h2,
-  .readiness-overview-book .readiness-smoke-card h2 {
+  .readiness-overview-book .readiness-section-heading h3,
+  .readiness-overview-book .readiness-ledger-card h3,
+  .readiness-overview-book .readiness-smoke-card h3 {
     font-size: 16pt;
   }
 

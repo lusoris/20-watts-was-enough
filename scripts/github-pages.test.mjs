@@ -438,7 +438,8 @@ test("Pages builds portal, book, and source-bound help routes with a configurabl
   assert.match(bookHtml, /https:\/\/www\.cordana\.dev\/book\//);
   assert.match(bookHtml, /pages-seo:head/);
   assert.match(bookHtml, /rel=["']canonical["'] href=["']https:\/\/www\.cordana\.dev\/book\/["']/);
-  assert.match(bookHtml, /source-linked contents below remain available/);
+  assert.match(bookHtml, /complete manuscript above remains readable without JavaScript/);
+  assert.match(bookHtml, /Interactive diagrams and edition controls need JavaScript/);
   assertNoLegacyDeploymentHost(bookHtml, "book HTML must not reference the legacy Pages host");
   assert.doesNotMatch(bookEntry, /vinext|next\/headers|next\/server/);
 

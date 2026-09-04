@@ -95,3 +95,11 @@ export function portalSourceDocuments(repositoryRoot) {
     return groupDelta || left.path.localeCompare(right.path, undefined, { numeric: true });
   });
 }
+
+export function bookSourceDocuments(repositoryRoot) {
+  return [
+    markdownSourceDocument(repositoryRoot, "README.md", "Project"),
+    ...portalSourceDocuments(repositoryRoot),
+    markdownSourceDocument(repositoryRoot, "research/field-coverage.md", "Research"),
+  ];
+}

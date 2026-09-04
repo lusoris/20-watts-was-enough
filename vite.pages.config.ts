@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 import {
+  bookSourceDocuments,
   markdownSourceDocument,
   portalSourceDocuments,
 } from "./scripts/lib/portal-documents.mjs";
@@ -45,7 +46,7 @@ type PortalSourceDocument = {
   route: string;
   title: string;
   description: string;
-  group: "Concept" | "Mathematics";
+  group: "Concept" | "Mathematics" | "Project" | "Research";
   kind: "markdown";
   words: number;
   searchText: string;
@@ -187,6 +188,7 @@ export function createSeoStaticPages({
     },
     writeBundle() {
       const documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
+      const bookDocuments = bookSourceDocuments(repositoryRoot) as PortalSourceDocument[];
       const translations = translationDocuments
         ?? translatedSourceDocuments(repositoryRoot) as TranslationSourceDocument[];
       const portalPath = path.join(outputRoot, "index.html");
@@ -202,7 +204,7 @@ export function createSeoStaticPages({
       writeFileSync(bookPath, populateSeoTemplate(
         readFileSync(bookPath, "utf8"),
         renderSeoHead("book", null, pagesBase),
-        renderBookFallback(documents, pagesBase),
+        renderBookFallback(bookDocuments, pagesBase),
       ), "utf8");
       writeFileSync(helpPath, renderCurrentHelpPage(readFileSync(helpPath, "utf8")), "utf8");
       for (const document of documents) {

@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { publication, repositoryIssueUrl } from "../app/lib/publication.mjs";
 import { createSeoStaticPages } from "../vite.pages.config.ts";
 import {
+  bookSourceDocuments,
   markdownSourceDocument,
   portalSourceDocuments,
 } from "./lib/portal-documents.mjs";
@@ -25,6 +26,7 @@ import {
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const stylesheet = await readFile(path.join(repositoryRoot, "app/globals.css"), "utf8");
 const documents = portalSourceDocuments(repositoryRoot);
+const bookDocuments = bookSourceDocuments(repositoryRoot);
 const helpDocument = markdownSourceDocument(
   repositoryRoot,
   "docs/how-to-help.md",
@@ -41,6 +43,15 @@ test("portal documents have unique descriptive routes and search metadata", () =
     assert.match(document.route, /^(?:concept|math)\/[a-z0-9-]+\/$/);
     assert.ok(document.description.length >= 45 && document.description.length <= 221);
   }
+});
+
+test("the canonical book source inventory wraps the exact portal corpus", () => {
+  assert.equal(bookDocuments.length, 51);
+  assert.deepEqual(bookDocuments.map((document) => document.path), [
+    "README.md",
+    ...documents.map((document) => document.path),
+    "research/field-coverage.md",
+  ]);
 });
 
 test("sitemap contains exactly the canonical public HTML routes", () => {
@@ -135,6 +146,56 @@ test("no-JS reading fallbacks expose help and source-bound issue routes", () => 
     assert.ok(fallback.includes('href="/research/help/">How to help</a>'));
     assert.ok(fallback.includes(`href="${issueHref}">${reportLabel}</a>`));
   }
+});
+
+test("the no-JS book fallback carries the canonical manuscript and nested headings", () => {
+  const sample = [
+    {
+      path: "concept/a.md",
+      route: "concept/a/",
+      title: "First chapter",
+      description: "First chapter summary",
+      group: "Concept",
+      kind: "markdown",
+      words: 8,
+      body: "# First chapter\n\n## Scope\n\n[Peer answer](./b.md#answer)\n\nCanonical first body with $x^2$.\n\n| Metric | Value |\n| --- | --- |\n| Energy | 20 W |",
+    },
+    {
+      path: "concept/b.md",
+      route: "concept/b/",
+      title: "Second chapter",
+      description: "Second chapter summary",
+      group: "Concept",
+      kind: "markdown",
+      words: 6,
+      body: "# Second chapter\n\n## Answer\n\nCanonical second body.",
+    },
+  ];
+  const fallback = renderBookFallback(sample, "/research/");
+
+  assert.match(fallback, /class="portal-skip-link" href="#book-concept-a-md"/u);
+  assert.equal([...fallback.matchAll(/<h1>/gu)].length, 1);
+  assert.equal([...fallback.matchAll(/<section id="book-/gu)].length, sample.length);
+  assert.ok(fallback.includes("<h2>First chapter</h2>"));
+  assert.match(fallback, /<h3 id="book-concept-a-md--scope">Scope<\/h3>/u);
+  assert.match(fallback, /href="#book-concept-b-md--answer"/u);
+  assert.match(fallback, /Canonical first body with/u);
+  assert.match(fallback, /Canonical second body\./u);
+  assert.match(fallback, /<math/u);
+  assert.doesNotMatch(fallback, /class="katex-html"/u);
+  assert.match(
+    fallback,
+    /class="table-region" role="region" aria-label="Data table in First chapter; use arrow keys to scroll when needed" tabindex="0"/u,
+  );
+  assert.doesNotMatch(
+    renderDocumentFallback(sample[0], sample, "/research/"),
+    /class="table-region"[^>]*tabindex/u,
+  );
+  assert.match(fallback, /<article class="prose markdown-body">[\s\S]+<\/article>/u);
+  assert.throws(
+    () => renderBookFallback([], "/research/"),
+    /requires at least one canonical document/u,
+  );
 });
 
 test("robots allows rendering and identifies the canonical sitemap", () => {

@@ -44,6 +44,7 @@ export async function bookSourceFiles(projectRoot) {
     "app/components/readiness-overview.tsx",
     "app/globals.css",
     "app/lib/book-release-identity.mjs",
+    "app/lib/book-document-id.mjs",
     "app/lib/eu-languages.mjs",
     "app/lib/language-access.mjs",
     "app/lib/publication.mjs",

@@ -2,6 +2,7 @@ import { lstat, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { bookDocumentId } from "../app/lib/book-document-id.mjs";
 import { assertBookPdfIntegrity } from "./lib/book-pdf-integrity.mjs";
 import { assertBookManifestContract } from "./lib/book-manifest-contract.mjs";
 import {
@@ -9,10 +10,14 @@ import {
   bookRendererLockSHA256,
 } from "./lib/book-renderer-identity.mjs";
 import { resolvePagesBase } from "./lib/pages-base.mjs";
-import { portalSourceDocuments } from "./lib/portal-documents.mjs";
+import {
+  bookSourceDocuments,
+  portalSourceDocuments,
+} from "./lib/portal-documents.mjs";
 import { assertExactPublicationCopy } from "./lib/publication-copy-integrity.mjs";
 import {
   canonicalSite,
+  renderBookFallback,
   renderRobots,
   renderSitemap,
 } from "./lib/pages-seo.mjs";
@@ -181,6 +186,41 @@ invariant(
   ) === `${canonicalSite}book/`,
   "book/index.html must declare the canonical public book route",
 );
+const bookDocuments = bookSourceDocuments(repositoryRoot);
+const expectedBookFallback = renderBookFallback(bookDocuments, pagesBase);
+invariant(
+  bookPage.html.includes(expectedBookFallback),
+  "book/index.html fallback does not exactly match the canonical book corpus",
+);
+const expectedBookIds = bookDocuments.map((document) => bookDocumentId(document.path));
+const renderedBookIds = [...bookPage.html.matchAll(
+  /<section id="(book-[^"]+)"><header>/gu,
+)].map((match) => match[1]);
+invariant(
+  JSON.stringify(renderedBookIds) === JSON.stringify(expectedBookIds),
+  "book/index.html chapter order or fragment inventory differs from the canonical book corpus",
+);
+invariant(
+  [...bookPage.html.matchAll(/<h1(?:\s[^>]*)?>/gu)].length === 1,
+  "book/index.html fallback must contain exactly one H1",
+);
+invariant(
+  [...bookPage.html.matchAll(/<h2(?:\s[^>]*)?>/gu)].length === bookDocuments.length,
+  "book/index.html fallback must contain exactly one H2 chapter title per canonical document",
+);
+const bookIds = [...bookPage.html.matchAll(/\sid="([^"]+)"/gu)]
+  .map((match) => match[1]);
+invariant(
+  new Set(bookIds).size === bookIds.length,
+  "book/index.html fallback contains duplicate fragment identifiers",
+);
+const bookIdSet = new Set(bookIds);
+for (const match of bookPage.html.matchAll(/\shref="#([^"]+)"/gu)) {
+  invariant(
+    bookIdSet.has(match[1]),
+    `book/index.html fallback points to a missing fragment: #${match[1]}`,
+  );
+}
 invariant(
   oneMatch(
     helpPage.html,

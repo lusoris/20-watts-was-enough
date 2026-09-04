@@ -267,6 +267,16 @@ the exact diff; this file records why the project changed.
   back and forward navigation aligned with that focus. The document rail uses
   native links, so new-tab, modifier-click and copied-route behaviour remain
   available alongside same-tab client navigation.
+- The assembled web book now exposes one title-level heading, nests chapter
+  headings beneath it without shrinking their visual role, and offers a
+  keyboard skip path to the first chapter. Its generated no-JavaScript surface
+  now contains the same canonical manuscript instead of only a link index and
+  gives every table an explicit keyboard-scroll fallback where runtime overflow
+  measurement is unavailable. Hydrated tables remain focusable only when they
+  actually overflow. Shared inventory and real-browser checks bind all 51
+  chapter fragments, heading levels and skip-link continuation to the canonical
+  source corpus. This is a bounded semantic repair, not a WCAG or PDF/UA
+  conformance claim.
 - Continuous-book deep links now restore every chapter and heading below the
   responsive action bar on cold load and later hash navigation. Internal book
   links remain in the namespaced edition while preserving the current Pages
