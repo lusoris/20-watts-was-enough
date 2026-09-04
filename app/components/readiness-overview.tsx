@@ -80,6 +80,9 @@ export function ReadinessOverview({
   mode = "page",
   documentHref,
 }: ReadinessOverviewProps) {
+  const PrimaryHeading = mode === "book" ? "h2" : "h1";
+  const SectionHeading = mode === "book" ? "h3" : "h2";
+  const CardHeading = mode === "book" ? "h4" : "h3";
   const { claims, artifacts, ledgerOnly } = readinessSummary;
   const smokeArtifact = artifacts.items.find(
     (artifact) => artifact.executionReadiness === "smoke-ready",
@@ -95,7 +98,7 @@ export function ReadinessOverview({
     <div className={`readiness-overview readiness-overview-${mode}`}>
       <header className="readiness-intro">
         <span className="readiness-kicker">Generated research status</span>
-        <h1>Scientific claims are not runnable tests</h1>
+        <PrimaryHeading>Scientific claims are not runnable tests</PrimaryHeading>
         <p>
           Evidence status describes support for a source-domain claim. Test readiness describes
           whether this project can execute a frozen experiment. The two axes are deliberately
@@ -106,7 +109,7 @@ export function ReadinessOverview({
       <section className="readiness-balance" aria-labelledby={`readiness-balance-${mode}`}>
         <div className="readiness-section-heading">
           <span>Claim denominator: {formatNumber(claims.total)}</span>
-          <h2 id={`readiness-balance-${mode}`}>Written protocols versus executable evidence</h2>
+          <SectionHeading id={`readiness-balance-${mode}`}>Written protocols versus executable evidence</SectionHeading>
         </div>
         <div className="readiness-claim-grid">
           <article className="readiness-claim-card readiness-claim-protocol">
@@ -114,7 +117,7 @@ export function ReadinessOverview({
               <strong>{formatNumber(claims.protocolCovered)}</strong>
               <span>of {formatNumber(claims.total)}</span>
             </div>
-            <h3>Protocol-covered claims</h3>
+            <CardHeading>Protocol-covered claims</CardHeading>
             {coverageBar({ value: claims.protocolCovered, total: claims.total, tone: "protocol" })}
             <p>
               At least one linked candidate or fixture contains all eight required written
@@ -126,7 +129,7 @@ export function ReadinessOverview({
               <strong>{formatNumber(claims.executionReady)}</strong>
               <span>of {formatNumber(claims.total)}</span>
             </div>
-            <h3>Workstation-executable claims</h3>
+            <CardHeading>Workstation-executable claims</CardHeading>
             {coverageBar({ value: claims.executionReady, total: claims.total, tone: "ready" })}
             <p>
               A linked artifact must have a checked workstation-ready manifest and a runnable
@@ -139,7 +142,7 @@ export function ReadinessOverview({
       <section className="readiness-artifact-lane" aria-labelledby={`artifact-lane-${mode}`}>
         <div className="readiness-section-heading">
           <span>Artifact denominator: {artifacts.total}</span>
-          <h2 id={`artifact-lane-${mode}`}>Experiment implementation lane</h2>
+          <SectionHeading id={`artifact-lane-${mode}`}>Experiment implementation lane</SectionHeading>
         </div>
         <ol className="readiness-stage-list">
           <li className="readiness-stage readiness-stage-protocol">
@@ -160,7 +163,7 @@ export function ReadinessOverview({
       <section className="readiness-matrix-section" aria-labelledby={`evidence-matrix-${mode}`}>
         <div className="readiness-section-heading">
           <span>Independent axes</span>
-          <h2 id={`evidence-matrix-${mode}`}>Evidence status by highest test tier</h2>
+          <SectionHeading id={`evidence-matrix-${mode}`}>Evidence status by highest test tier</SectionHeading>
         </div>
         <div className="readiness-table-wrap" role="region" aria-label="Evidence status by test readiness" tabIndex={0}>
           <table className="readiness-matrix">
@@ -195,7 +198,7 @@ export function ReadinessOverview({
       <div className="readiness-detail-grid">
         <section className="readiness-ledger-card" aria-labelledby={`ledger-only-${mode}`}>
           <span className="readiness-card-kicker">Not missing at random</span>
-          <h2 id={`ledger-only-${mode}`}>{ledgerOnly.total} ledger-only claims</h2>
+          <SectionHeading id={`ledger-only-${mode}`}>{ledgerOnly.total} ledger-only claims</SectionHeading>
           <dl>
             <div>
               <dt>Evidence inputs</dt>
@@ -234,7 +237,7 @@ export function ReadinessOverview({
         {smokeArtifact ? (
           <section className="readiness-smoke-card" aria-labelledby={`smoke-target-${mode}`}>
             <span className="readiness-card-kicker">Nearest executable target</span>
-            <h2 id={`smoke-target-${mode}`}>{smokeArtifact.id}: smoke-ready</h2>
+            <SectionHeading id={`smoke-target-${mode}`}>{smokeArtifact.id}: smoke-ready</SectionHeading>
             <p>{smokeArtifact.title}</p>
             <div className="readiness-gate-score">
               <strong>{passedPromotionGates}/{smokeArtifact.promotionChecks.length}</strong>
@@ -263,7 +266,7 @@ export function ReadinessOverview({
         <section className="readiness-artifact-section" aria-labelledby="artifact-table-heading">
           <div className="readiness-section-heading">
             <span>Traceable inventory</span>
-            <h2 id="artifact-table-heading">All experiment artifacts</h2>
+            <SectionHeading id="artifact-table-heading">All experiment artifacts</SectionHeading>
           </div>
           <div className="readiness-table-wrap" role="region" aria-label="All experiment artifacts" tabIndex={0}>
             <table className="readiness-artifact-table">

@@ -5,6 +5,10 @@ import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import {
+  bookDocumentHeadingId,
+  bookDocumentId,
+} from "../../app/lib/book-document-id.mjs";
 import { openGraphLocaleForEuLanguage } from "../../app/lib/eu-languages.mjs";
 import {
   publication,
@@ -197,19 +201,54 @@ function markdownSourcePath(document) {
   return document.canonicalSourcePath ?? document.path;
 }
 
-function staticMarkdownComponents(document, documents, basePath) {
+function shiftedStaticHeading(level, offset, documentPath = null) {
+  const shiftedLevel = Math.min(6, Math.max(1, level + offset));
+  const tag = `h${shiftedLevel}`;
+  // ReactMarkdown owns this server-only component contract; it is not a public React prop surface.
+  // eslint-disable-next-line react/prop-types
+  return function ShiftedStaticHeading({ node, id, ...props }) {
+    void node;
+    return createElement(tag, {
+      ...props,
+      id: documentPath && id ? bookDocumentHeadingId(documentPath, id) : id,
+    });
+  };
+}
+
+function staticMarkdownComponents(
+  document,
+  documents,
+  basePath,
+  { bookFragments = false, headingOffset = 0 } = {},
+) {
   const currentSourcePath = markdownSourcePath(document);
   const documentByPath = new Map(documents.map((entry) => [
     markdownSourcePath(entry),
     entry,
   ]));
+  const headingComponents = headingOffset === 0
+    ? {}
+    : {
+        h2: shiftedStaticHeading(2, headingOffset, bookFragments ? currentSourcePath : null),
+        h3: shiftedStaticHeading(3, headingOffset, bookFragments ? currentSourcePath : null),
+        h4: shiftedStaticHeading(4, headingOffset, bookFragments ? currentSourcePath : null),
+        h5: shiftedStaticHeading(5, headingOffset, bookFragments ? currentSourcePath : null),
+        h6: shiftedStaticHeading(6, headingOffset, bookFragments ? currentSourcePath : null),
+      };
   return {
+    ...headingComponents,
     h1() { return null; },
     a({ node, href = "", children, ...props }) {
       void node;
       const internal = resolveInternal(href, currentSourcePath);
       if (!internal) return createElement("a", { href, ...props }, children);
       const target = documentByPath.get(internal.path);
+      if (bookFragments && target) {
+        const resolved = internal.hash
+          ? `#${bookDocumentHeadingId(internal.path, internal.hash)}`
+          : `#${bookDocumentId(internal.path)}`;
+        return createElement("a", { href: resolved, ...props }, children);
+      }
       const fragment = internal.hash ? `#${encodeURIComponent(internal.hash)}` : "";
       const resolved = internal.path === currentSourcePath
         ? fragment || withBase(basePath, document.route)
@@ -233,28 +272,37 @@ function staticMarkdownComponents(document, documents, basePath) {
     },
     table({ node, ...props }) {
       void node;
-      const projectTable = document.group === "Project"
+      const keyboardTable = bookFragments
         ? {
             role: "region",
-            "aria-label": "Scrollable contribution table",
+            "aria-label": `Data table in ${document.title}; use arrow keys to scroll when needed`,
             tabIndex: 0,
           }
-        : {};
+        : document.group === "Project"
+          ? {
+              role: "region",
+              "aria-label": "Scrollable contribution table",
+              tabIndex: 0,
+            }
+          : {};
       return createElement(
         "div",
-        { className: "table-region", ...projectTable },
+        { className: "table-region", ...keyboardTable },
         createElement("table", props),
       );
     },
   };
 }
 
-function renderMarkdown(document, documents, basePath) {
+function renderMarkdown(document, documents, basePath, options = {}) {
+  const katexPlugin = options.mathOutput
+    ? [rehypeKatex, { output: options.mathOutput }]
+    : rehypeKatex;
   return renderToStaticMarkup(createElement(ReactMarkdown, {
     skipHtml: true,
     remarkPlugins: [remarkGfm, remarkMath],
-    rehypePlugins: [rehypeSlug, rehypeKatex],
-    components: staticMarkdownComponents(document, documents, basePath),
+    rehypePlugins: [rehypeSlug, katexPlugin],
+    components: staticMarkdownComponents(document, documents, basePath, options),
   }, document.body));
 }
 
@@ -287,8 +335,16 @@ export function renderPortalFallback(documents, basePath) {
 }
 
 export function renderBookFallback(documents, basePath) {
-  const links = documents.map((document) => `<li>${documentLink(document, basePath)}</li>`).join("");
-  return `<main class="seo-static-page"><p><a href="${withBase(basePath)}">Research portal</a></p><h1>20 Watts Was Enough — Full Concept Book</h1><p>The complete public reading edition generated from canonical Git source.</p>${renderReaderSupport(basePath, "book/", "Report a book problem")}<nav aria-label="Book contents"><ol>${links}</ol></nav></main>`;
+  if (!Array.isArray(documents) || documents.length === 0) {
+    throw new Error("The static book fallback requires at least one canonical document.");
+  }
+  const links = documents.map((document) => (
+    `<li><a href="#${bookDocumentId(document.path)}">${escapeAttribute(document.title)}</a></li>`
+  )).join("");
+  const manuscript = documents.map((document) => (
+    `<section id="${bookDocumentId(document.path)}"><header><p>${escapeAttribute(document.group)} · ${document.words.toLocaleString(publication.locale)} words</p><h2>${escapeAttribute(document.title)}</h2></header><article class="prose markdown-body">${renderMarkdown(document, documents, basePath, { bookFragments: true, headingOffset: 1, mathOutput: "mathml" })}</article></section>`
+  )).join("");
+  return `<main class="seo-static-page"><a class="portal-skip-link" href="#${bookDocumentId(documents[0].path)}">Skip to first chapter</a><p><a href="${withBase(basePath)}">Research portal</a></p><h1>20 Watts Was Enough — Full Concept Book</h1><p>The complete public reading edition generated from canonical Git source.</p>${renderReaderSupport(basePath, "book/", "Report a book problem")}<nav aria-label="Book contents"><ol>${links}</ol></nav>${manuscript}</main>`;
 }
 
 export function renderDocumentFallback(document, documents, basePath) {

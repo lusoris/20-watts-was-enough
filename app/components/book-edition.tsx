@@ -9,6 +9,10 @@ import {
   repositoryTreeHref,
 } from "../lib/book-release-identity.mjs";
 import {
+  bookDocumentHeadingId,
+  bookDocumentId,
+} from "../lib/book-document-id.mjs";
+import {
   isPublicRepositoryArtifact,
   isRepositoryArtifact,
   repositoryArtifactHref,
@@ -31,14 +35,6 @@ type BookEditionProps = {
 function joinBasePath(basePath: string, path: string) {
   const base = basePath.endsWith("/") ? basePath : `${basePath}/`;
   return `${base}${path.replace(/^\/+/, "")}`;
-}
-
-function bookId(path: string) {
-  return `book-${path.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
-}
-
-function documentHeadingId(path: string, headingId: string) {
-  return `${bookId(path)}--${headingId}`;
 }
 
 function useBookFragmentRestoration() {
@@ -69,7 +65,7 @@ function navigateFromBook(
 ) {
   if (bookDocumentPaths.has(path)) {
     window.location.assign(
-      hash ? `#${documentHeadingId(path, hash)}` : `#${bookId(path)}`,
+      hash ? `#${bookDocumentHeadingId(path, hash)}` : `#${bookDocumentId(path)}`,
     );
     return;
   }
@@ -99,7 +95,7 @@ function BookDocumentArticle({
     for (const heading of article.querySelectorAll<HTMLElement>("h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]")) {
       const legacyId = heading.dataset.bookLegacyHeadingId ?? heading.id;
       heading.dataset.bookLegacyHeadingId = legacyId;
-      heading.id = documentHeadingId(researchDocument.path, legacyId);
+      heading.id = bookDocumentHeadingId(researchDocument.path, legacyId);
     }
   }, [researchDocument.body, researchDocument.path]);
 
@@ -113,6 +109,7 @@ function BookDocumentArticle({
         imageLoading={imageLoading}
         renderExternalImages={renderExternalImages}
         assetBasePath={assetBasePath}
+        headingOffset={1}
       />
     </article>
   );
@@ -136,6 +133,14 @@ function documentLabel(path: string) {
   if (appendixPaths.includes(path)) return "Appendix";
   if (path.startsWith("math/")) return "Mathematical note";
   return "Chapter";
+}
+
+function BookSkipLink({ path }: { path: string }) {
+  return (
+    <a className="portal-skip-link" href={`#${bookDocumentId(path)}`}>
+      Skip to first chapter
+    </a>
+  );
 }
 
 export function BookEdition({
@@ -183,7 +188,7 @@ export function BookEdition({
     navigateFromBook(path, hash, bookDocumentPaths, surfaceDocumentHref);
   const bookHref = (path: string, hash: string) => {
     if (bookDocumentPaths.has(path)) {
-      return hash ? `#${documentHeadingId(path, hash)}` : `#${bookId(path)}`;
+      return hash ? `#${bookDocumentHeadingId(path, hash)}` : `#${bookDocumentId(path)}`;
     }
     if (isRepositoryArtifact(path)) {
       if (isPublicPdf || !isPublicRepositoryArtifact(path)) {
@@ -196,6 +201,7 @@ export function BookEdition({
 
   return (
     <main className={`book-shell ${isGitHubPages ? "book-shell-web" : "book-shell-print"}`}>
+      {isGitHubPages && bookDocuments[0] ? <BookSkipLink path={bookDocuments[0].path} /> : null}
       <nav className="book-actions" aria-label="Book actions">
         <a href={repositoryTreeHref(repositoryRef)}>View source on GitHub</a>
         <a
@@ -268,7 +274,7 @@ export function BookEdition({
               <li className="book-toc-section">{label as string}</li>
               {(sectionDocuments as ResearchDocument[]).map((document) => (
                 <li key={document.path}>
-                  <a href={`#${bookId(document.path)}`}>
+                  <a href={`#${bookDocumentId(document.path)}`}>
                     <span>
                       {documentNumber(
                         document.path,
@@ -305,7 +311,7 @@ export function BookEdition({
       {bookDocuments.map((document) => (
         <section
           className="book-document"
-          id={bookId(document.path)}
+          id={bookDocumentId(document.path)}
           key={document.path}
         >
           <div className="book-document-meta">
