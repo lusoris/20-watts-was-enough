@@ -145,15 +145,93 @@ function semanticFixture(outcome = "known-debt") {
   };
 }
 
-function fixture(timestamp, firstNode = "node00000384", secondNode = "node00000392") {
-  return Buffer.concat([
-    Buffer.from("%PDF-1.4\n<< /CreationDate ("),
-    Buffer.from(timestamp),
-    Buffer.from(") /ModDate ("),
-    Buffer.from(timestamp),
-    Buffer.from(`) /ID (${firstNode}) /Headers [(${secondNode}) (${firstNode})] >>\n`),
+function fixture(
+  timestamp,
+  firstNode = "node00000384",
+  secondNode = "node00000392",
+  options = {},
+) {
+  const chunks = [];
+  const offsets = Array(8).fill(0);
+  let length = 0;
+  const append = (value) => {
+    const bytes = Buffer.isBuffer(value) ? value : Buffer.from(value, "latin1");
+    chunks.push(bytes);
+    length += bytes.length;
+  };
+  const object = (number, body) => {
+    offsets[number] = length;
+    append(`${number} 0 obj\n`);
+    append(body);
+    append("\nendobj\n");
+  };
+
+  append(Buffer.from("%PDF-1.4\n%\x80\x81\x82\x83\n", "latin1"));
+  object(1, `<< /CreationDate (${timestamp}) /ModDate (${timestamp}) `
+    + `/ID (${firstNode}) /Headers [(${secondNode}) (${firstNode})] >>`);
+  object(2, `<< /${options.catalogTypeKey ?? "Type"} /Catalog /Pages 6 0 R `
+    + `/${options.structureRootKey ?? "StructTreeRoot"} 3 0 R ${options.catalogEntry ?? ""}>>`);
+  object(3, `<< /${options.rootTypeKey ?? "Type"} /StructTreeRoot `
+    + `/K [4 0 R 5 0 R] ${options.roleMap ?? ""}${options.rootEntry ?? ""}>>`);
+  object(4, `<< /${options.elementTypeKey ?? "Type"} /StructElem `
+    + `/${options.structureKey ?? "S"} /${options.firstStructureType ?? "Strong"} `
+    + `/P 3 0 R ${options.elementEntry ?? ""}>>`);
+  object(5, "<< /Type /StructElem /S /Em /P 3 0 R >>");
+  object(6, "<< /Type /Pages /Count 0 /Kids [] >>");
+  object(7, Buffer.concat([
+    Buffer.from("<< /Length 4 >>\nstream\n", "latin1"),
     Buffer.from([0x00, 0x7f, 0x80, 0xff]),
-  ]);
+    Buffer.from("\nendstream", "latin1"),
+  ]));
+
+  const xrefOffset = length;
+  append("xref\n0 8\n0000000000 65535 f \n");
+  for (let number = 1; number < offsets.length; number += 1) {
+    append(`${String(offsets[number]).padStart(10, "0")} 00000 n \n`);
+  }
+  append("trailer\n");
+  append(`<< /${options.sizeKey ?? "Size"} 8 /${options.trailerRootKey ?? "Root"} 2 0 R `
+    + `/Info 1 0 R ${options.trailerEntry ?? ""}>>\n`);
+  append(`startxref\n${xrefOffset}\n%%EOF\n`);
+  return Buffer.concat(chunks);
+}
+
+function withStartXref(bytes, offset) {
+  return Buffer.from(
+    bytes.toString("latin1").replace(/startxref\s+\d+\s+%%EOF\s*$/u,
+      `startxref\n${offset}\n%%EOF\n`),
+    "latin1",
+  );
+}
+
+function withUnrecognizedIncrementalRevision(bytes) {
+  const source = bytes.toString("latin1");
+  const previousXref = Number(/startxref\s+(\d+)\s+%%EOF\s*$/u.exec(source)[1]);
+  const separator = source.endsWith("\n") || source.endsWith("\r") ? "" : "\n";
+  const objectOffset = bytes.length + Buffer.byteLength(separator, "latin1");
+  const object = "1 0 obj\n<< /Producer (unrecognized revision) >>\nendobj\n";
+  const xrefOffset = objectOffset + Buffer.byteLength(object, "latin1");
+  const revision = separator + object + "xref\n1 1\n"
+    + `${String(objectOffset).padStart(10, "0")} 00000 n \n`
+    + "trailer\n"
+    + `<< /Size 8 /Root 2 0 R /Info 1 0 R /Prev ${previousXref}>>\n`
+    + `startxref\n${xrefOffset}\n%%EOF\n`;
+  return Buffer.concat([bytes, Buffer.from(revision, "latin1")]);
+}
+
+function withUnindexedObjectBeforeFinalXref(bytes) {
+  const source = bytes.toString("latin1");
+  const match = /startxref\s+(\d+)\s+%%EOF\s*$/u.exec(source);
+  const xrefOffset = Number(match[1]);
+  const insertion = "99999 0 obj\n(null)\nendobj\n";
+  const tampered = Buffer.from(
+    source.slice(0, xrefOffset) + insertion + source.slice(xrefOffset),
+    "latin1",
+  );
+  return withStartXref(
+    tampered,
+    xrefOffset + Buffer.byteLength(insertion, "latin1"),
+  );
 }
 
 function fakePopplerSource(logPath, behavior = "normal") {
@@ -207,8 +285,10 @@ async function fakePopplerTools(root, behavior = "normal") {
 }
 
 test("Chromium PDF wall-clock metadata normalizes to the release date", () => {
+  const original = fixture("D:20260828111111+00'00'");
+  const originalHash = sha256(original);
   const first = normalizeChromiumPdfMetadata(
-    fixture("D:20260828111111+00'00'"),
+    original,
     "2026-08-28",
   );
   const second = normalizeChromiumPdfMetadata(
@@ -217,11 +297,18 @@ test("Chromium PDF wall-clock metadata normalizes to the release date", () => {
   );
 
   assert.deepEqual(first, second);
+  assert.deepEqual(normalizeChromiumPdfMetadata(first, "2026-08-28"), first);
+  assert.equal(sha256(original), originalHash);
   assert.match(first.toString("latin1"), /CreationDate \(D:20260828000000\+00'00'\)/u);
   assert.match(first.toString("latin1"), /ModDate \(D:20260828000000\+00'00'\)/u);
   assert.match(first.toString("latin1"), /\/ID \(node00000000\)/u);
   assert.match(first.toString("latin1"), /\/Headers \[\(node00000001\) \(node00000000\)\]/u);
-  assert.deepEqual(first.subarray(-4), Buffer.from([0x00, 0x7f, 0x80, 0xff]));
+  assert.notEqual(first.indexOf(Buffer.from([0x00, 0x7f, 0x80, 0xff])), -1);
+  assert.equal([...first.toString("latin1").matchAll(/\/RoleMap\b/gu)].length, 1);
+  assert.match(first.toString("latin1"), /\/RoleMap <<\/Strong \/Span \/Em \/Span>>/u);
+  const startXref = Number(/startxref\s+(\d+)\s+%%EOF\s*$/u.exec(first.toString("latin1"))[1]);
+  assert.equal(first.subarray(startXref, startXref + 4).toString("ascii"), "xref");
+  assert.equal([...first.toString("latin1").matchAll(/%%EOF/gu)].length, 2);
 });
 
 test("PDF metadata normalization fails closed on invalid dates or renderer drift", () => {
@@ -235,6 +322,205 @@ test("PDF metadata normalization fails closed on invalid dates or renderer drift
   );
 });
 
+test("PDF structure finalization rejects unsafe renderer shapes", () => {
+  const timestamp = "D:20260828111111+00'00'";
+  assert.throws(
+    () => normalizeChromiumPdfMetadata(
+      fixture(timestamp, undefined, undefined, { firstStructureType: "Aside" }),
+      "2026-08-28",
+    ),
+    /unsupported Aside/u,
+  );
+  assert.throws(
+    () => normalizeChromiumPdfMetadata(
+      fixture(timestamp, undefined, undefined, {
+        roleMap: "/RoleMap <</Strong /P /Em /Span>> ",
+      }),
+      "2026-08-28",
+    ),
+    /competing or non-canonical RoleMap/u,
+  );
+  for (const trailerEntry of ["/Encrypt 7 0 R ", "/XRefStm 99 "]) {
+    assert.throws(
+      () => normalizeChromiumPdfMetadata(
+        fixture(timestamp, undefined, undefined, { trailerEntry }),
+        "2026-08-28",
+      ),
+      /not supported/u,
+    );
+  }
+  for (const trailerEntry of ["/Encr#7 7 0 R ", "/Encr#zzpt 7 0 R "]) {
+    assert.throws(
+      () => normalizeChromiumPdfMetadata(
+        fixture(timestamp, undefined, undefined, { trailerEntry }),
+        "2026-08-28",
+      ),
+      /malformed name escape/u,
+    );
+  }
+
+  const tagged = fixture(timestamp);
+  const source = tagged.toString("latin1");
+  assert.throws(
+    () => normalizeChromiumPdfMetadata(
+      withStartXref(tagged, source.indexOf("2 0 obj")),
+      "2026-08-28",
+    ),
+    /classic xref tables only/u,
+  );
+  assert.throws(
+    () => normalizeChromiumPdfMetadata(
+      Buffer.from(source.replace("3 0 obj\n", "3 1 obj\n"), "latin1"),
+      "2026-08-28",
+    ),
+    /does not address its declared object/u,
+  );
+  assert.throws(
+    () => normalizeChromiumPdfMetadata(
+      Buffer.from(source.replace("xref\n0 8\n", "xref\n0 100001\n"), "latin1"),
+      "2026-08-28",
+    ),
+    /entry bound was exceeded/u,
+  );
+});
+
+test("PDF structure finalization enforces its canonical revision and byte bounds", () => {
+  const timestamp = "D:20260828111111+00'00'";
+  const tagged = fixture(timestamp);
+  const finalized = normalizeChromiumPdfMetadata(tagged, "2026-08-28");
+  assert.deepEqual(
+    normalizeChromiumPdfMetadata(tagged, "2026-08-28", {
+      maximumBytes: finalized.length,
+    }),
+    finalized,
+  );
+  assert.throws(
+    () => normalizeChromiumPdfMetadata(tagged, "2026-08-28", {
+      maximumBytes: finalized.length - 1,
+    }),
+    /Finalized PDF byte length exceeds/u,
+  );
+  assert.throws(
+    () => normalizeChromiumPdfMetadata(
+      Buffer.from(finalized.toString("latin1").replace("/RoleMap", "/RolxMap"), "latin1"),
+      "2026-08-28",
+    ),
+    /pre-existing incremental PDF/u,
+  );
+
+  assert.throws(
+    () => normalizeChromiumPdfMetadata(
+      fixture(timestamp, undefined, undefined, {
+        roleMap: "/RoleMap <</Strong /Span /Em /Span>> ",
+      }),
+      "2026-08-28",
+    ),
+    /exactly one finaliser-owned incremental revision/u,
+  );
+  assert.throws(
+    () => normalizeChromiumPdfMetadata(
+      withUnrecognizedIncrementalRevision(finalized),
+      "2026-08-28",
+    ),
+    /exactly one finaliser-owned incremental revision/u,
+  );
+  assert.throws(
+    () => normalizeChromiumPdfMetadata(
+      withUnindexedObjectBeforeFinalXref(finalized),
+      "2026-08-28",
+    ),
+    /exact finaliser-owned serialization/u,
+  );
+});
+
+test("PDF structure finalization is limited to the pinned PDF 1.4 shape", () => {
+  const timestamp = "D:20260828111111+00'00'";
+  const tagged = fixture(timestamp);
+  const source = tagged.toString("latin1");
+  assert.throws(
+    () => normalizeChromiumPdfMetadata(
+      fixture(timestamp, undefined, undefined, { catalogEntry: "/Version /2.0 " }),
+      "2026-08-28",
+    ),
+    /catalog Version overrides/u,
+  );
+  assert.throws(
+    () => normalizeChromiumPdfMetadata(
+      Buffer.from(source.replace("xref\n0 8\n", "xref\n0\xa08\n"), "latin1"),
+      "2026-08-28",
+    ),
+    /xref subsection header is malformed/u,
+  );
+  for (const version of ["1.3", "1.7", "1.9", "2.0"]) {
+    assert.throws(
+      () => normalizeChromiumPdfMetadata(
+        Buffer.from(source.replace("%PDF-1.4", `%PDF-${version}`), "latin1"),
+        "2026-08-28",
+      ),
+      /limited to the pinned PDF 1\.4 artifact/u,
+    );
+  }
+});
+
+test("consumed PDF dictionary keys reject escaped aliases and duplicates", () => {
+  const timestamp = "D:20260828111111+00'00'";
+  const escapedOnly = [
+    { sizeKey: "Si#7Ae" },
+    { trailerRootKey: "Ro#6Ft" },
+    { trailerEntry: "/Pr#65v 1 " },
+    { structureRootKey: "StructTree#52oot" },
+    { catalogTypeKey: "Ty#70e" },
+    { rootTypeKey: "Ty#70e" },
+    { elementTypeKey: "Ty#70e" },
+    { firstStructureType: "As#69de", structureKey: "#53" },
+    { roleMap: "/Role#4Dap <</Strong /Span /Em /Span>> " },
+    { trailerEntry: "/Encr#79pt 7 0 R " },
+    { trailerEntry: "/XRef#53tm 99 " },
+  ];
+  for (const options of escapedOnly) {
+    assert.throws(
+      () => normalizeChromiumPdfMetadata(
+        fixture(timestamp, undefined, undefined, options),
+        "2026-08-28",
+      ),
+      /canonical unescaped names/u,
+    );
+  }
+
+  const rawAndEscapedDuplicates = [
+    { trailerEntry: "/Si#7Ae 8 " },
+    { trailerEntry: "/Ro#6Ft 2 0 R " },
+    { trailerEntry: "/Prev 1 /Pr#65v 1 " },
+    { catalogEntry: "/StructTree#52oot 3 0 R " },
+    { catalogEntry: "/Ty#70e /Catalog " },
+    { rootEntry: "/Ty#70e /StructTreeRoot " },
+    { elementEntry: "/Ty#70e /StructElem " },
+    {
+      roleMap: "/RoleMap <</Strong /Span /Em /Span>> ",
+      rootEntry: "/Role#4Dap <</Strong /Span /Em /Span>> ",
+    },
+  ];
+  for (const options of rawAndEscapedDuplicates) {
+    assert.throws(
+      () => normalizeChromiumPdfMetadata(
+        fixture(timestamp, undefined, undefined, options),
+        "2026-08-28",
+      ),
+      /canonical unescaped names/u,
+    );
+  }
+
+  for (const trailerEntry of ["/Size 8 ", "/Root 2 0 R ", "/Prev 1 /Prev 1 "]) {
+    assert.throws(
+      () => normalizeChromiumPdfMetadata(
+        fixture(timestamp, undefined, undefined, { trailerEntry }),
+        "2026-08-28",
+      ),
+      /entry must be unique/u,
+    );
+  }
+});
+
 test("the tracked semantic baseline is closed and records failing debt", async () => {
   const baseline = parseBookPdfSemanticBaseline(await readFile(
     new URL("../book-pdf-semantic-baseline.json", import.meta.url),
@@ -245,10 +531,8 @@ test("the tracked semantic baseline is closed and records failing debt", async (
     baseline.sentinels.some(({ id }) => id === "biomimetic-figure-caption-late"),
     false,
   );
-  assert.deepEqual(
-    baseline.diagnostics.structure.map(({ count }) => count),
-    [14, 613],
-  );
+  assert.deepEqual(baseline.diagnostics.structure, []);
+  assert.deepEqual(baseline.diagnostics.structure_text, []);
   const [pdfBytes, manifestBytes, source] = await Promise.all([
     readStableOpenedFile(path.join(repositoryRoot, baseline.artifact.pdf), {
       containedBy: repositoryRoot,
