@@ -129,6 +129,7 @@ const requiredFiles = [
   ".github/workflows/codeql.yml",
   ".github/workflows/github-pages.yml",
   ".github/workflows/labeler.yml",
+  ".github/workflows/pr-title.yml",
   ".github/workflows/release.yml",
   ".github/workflows/scorecard.yml",
   ".github/workflows/sync-repository-metadata.yml",
@@ -171,6 +172,7 @@ const requiredFiles = [
   "tooling/AGENTS.md",
   "tooling/Dockerfile",
   "tooling/cmd/20w/github_metadata.go",
+  "tooling/cmd/20w/github_pr_metadata.go",
   "tooling/cmd/20w/main.go",
   "tooling/cmd/build-release/main.go",
   "tooling/go.mod",
@@ -180,6 +182,7 @@ const requiredFiles = [
   "tooling/internal/githubissuemilestones/sync.go",
   "tooling/internal/githubmilestones/manifest.go",
   "tooling/internal/githubmilestones/sync.go",
+  "tooling/internal/githubprmetadata/sync.go",
   "tooling/internal/repositorymanifest/read.go",
 ];
 
@@ -203,6 +206,7 @@ const workflowFiles = [
   ".github/workflows/codeql.yml",
   ".github/workflows/github-pages.yml",
   ".github/workflows/labeler.yml",
+  ".github/workflows/pr-title.yml",
   ".github/workflows/release.yml",
   ".github/workflows/scorecard.yml",
   ".github/workflows/sync-repository-metadata.yml",
@@ -346,8 +350,9 @@ export function validateOfficeArcRunnerWorkflowObject(
 ) {
   const findings = [];
   for (const [jobName, job] of Object.entries(workflow?.jobs ?? {})) {
-    const isSpecialJob = (relativePath === ".github/workflows/labeler.yml" && jobName === "label") ||
-                         (relativePath === ".github/workflows/github-pages.yml" && jobName === "verify-public-transport");
+    const isSpecialJob = (relativePath === ".github/workflows/labeler.yml" && jobName === "label")
+      || (relativePath === ".github/workflows/pr-title.yml" && jobName === "pr-title")
+      || (relativePath === ".github/workflows/github-pages.yml" && jobName === "verify-public-transport");
 
     if (isSpecialJob) {
       if (job?.["runs-on"] !== "ubuntu-latest") {
@@ -849,12 +854,22 @@ const ciImpactPlanSource = [
   '  < build/ci-impact-plan.json >> "$GITHUB_OUTPUT"',
 ].join("\n");
 
-function impactPlanJobBoundaryIsExact(plan) {
+function impactPlanJobBoundaryIsExact(workflow, plan) {
   return [
+    workflow?.defaults === undefined,
+    plan?.name === "CI impact plan",
+    plan?.["runs-on"] === githubActionsRunner,
     plan?.["timeout-minutes"] === 10,
     Object.keys(plan?.permissions ?? {}).length === 1,
     plan?.permissions?.contents === "read",
+    plan?.if === undefined,
     continueOnErrorIsDisabled(plan),
+    plan?.defaults === undefined,
+    plan?.container === undefined,
+    plan?.services === undefined,
+    Object.keys(plan ?? {}).every((key) => [
+      "name", "runs-on", "timeout-minutes", "permissions", "outputs", "steps",
+    ].includes(key)),
   ].every(Boolean);
 }
 
@@ -863,7 +878,10 @@ function impactPlanCheckoutIsExact(checkout) {
     actionUses(checkout, "actions/checkout"),
     checkout?.with?.["fetch-depth"] === 0,
     checkout?.with?.["persist-credentials"] === false,
+    checkout?.if === undefined,
+    checkout?.shell === undefined,
     continueOnErrorIsDisabled(checkout),
+    Object.keys(checkout ?? {}).every((key) => ["name", "uses", "with"].includes(key)),
   ].every(Boolean);
 }
 
@@ -872,7 +890,10 @@ function impactPlanGoSetupIsExact(setup) {
     actionUses(setup, "actions/setup-go"),
     setup?.with?.["go-version-file"] === "tooling/go.mod",
     setup?.with?.["cache-dependency-path"] === "tooling/go.sum",
+    setup?.if === undefined,
+    setup?.shell === undefined,
     continueOnErrorIsDisabled(setup),
+    Object.keys(setup ?? {}).every((key) => ["name", "uses", "with"].includes(key)),
   ].every(Boolean);
 }
 
@@ -882,14 +903,17 @@ function impactPlanProjectionStepIsExact(planStep) {
     Object.keys(planStep?.env ?? {}).length === Object.keys(ciImpactPlanEnvironment).length,
     propertiesMatch(planStep?.env, ciImpactPlanEnvironment),
     String(planStep?.run ?? "").trim() === ciImpactPlanSource,
+    planStep?.if === undefined,
+    planStep?.shell === undefined,
     continueOnErrorIsDisabled(planStep),
+    Object.keys(planStep ?? {}).every((key) => ["name", "id", "env", "run"].includes(key)),
   ].every(Boolean);
 }
 
-function impactPlanJobRunsExactProjection(plan) {
+function impactPlanJobRunsExactProjection(workflow, plan) {
   const steps = plan?.steps ?? [];
   return [
-    impactPlanJobBoundaryIsExact(plan),
+    impactPlanJobBoundaryIsExact(workflow, plan),
     steps.length === 3,
     impactPlanCheckoutIsExact(steps[0]),
     impactPlanGoSetupIsExact(steps[1]),
@@ -897,7 +921,7 @@ function impactPlanJobRunsExactProjection(plan) {
   ].every(Boolean);
 }
 
-function validateCiImpactPlanJob(jobs, relativePath, findings) {
+function validateCiImpactPlanJob(workflow, jobs, relativePath, findings) {
   const plan = jobs["impact-plan"];
   const expectedOutputs = {
     mode: "${{ steps.plan.outputs.mode }}",
@@ -920,7 +944,7 @@ function validateCiImpactPlanJob(jobs, relativePath, findings) {
   );
   recordExpectation(
     findings,
-    impactPlanJobRunsExactProjection(plan),
+    impactPlanJobRunsExactProjection(workflow, plan),
     `${relativePath}: pull requests and comparable main pushes must use exact impact diffs, while unavailable push ancestry and manual runs must fail closed`,
   );
 }
@@ -1067,7 +1091,6 @@ function validateCiImpactWorkstationJobs(jobs, relativePath, findings) {
 function validateCiImpactSuccessJob(jobs, relativePath, findings) {
   const expectedNeeds = [
     "impact-plan",
-    "pr-title",
     "quality-full",
     "impact-common",
     "lane-go",
@@ -1097,7 +1120,6 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
     SELECT_SITE: "${{ needs.impact-plan.outputs.site }}",
     SELECT_WORKSTATION: "${{ needs.impact-plan.outputs.workstation_any }}",
     RESULT_PLAN: "${{ needs.impact-plan.result }}",
-    RESULT_PR_TITLE: "${{ needs.pr-title.result }}",
     RESULT_QUALITY_FULL: "${{ needs.quality-full.result }}",
     RESULT_IMPACT_COMMON: "${{ needs.impact-common.result }}",
     RESULT_GO: "${{ needs.lane-go.result }}",
@@ -1133,7 +1155,6 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
     findings,
     stringIncludesAll(successSource, [
       'require_state impact-plan "$RESULT_PLAN" success',
-      'require_state pr-title "$RESULT_PR_TITLE" success',
       'require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" success',
       'require_state quality-full "$RESULT_QUALITY_FULL" success',
       'require_state workstation-core "$RESULT_WORKSTATION_CORE" success',
@@ -1202,25 +1223,101 @@ export function validateCiImpactWorkflowObject(
     `${relativePath}: CI must run on main pushes, manual dispatches, and every pull-request code update`,
   );
   const jobs = workflow?.jobs ?? {};
-  validateCiImpactPlanJob(jobs, relativePath, findings);
+  validateCiImpactPlanJob(workflow, jobs, relativePath, findings);
   validateCiImpactLaneJobs(jobs, relativePath, findings);
   validateCiImpactWorkstationJobs(jobs, relativePath, findings);
   validateCiImpactSuccessJob(jobs, relativePath, findings);
   return findings;
 }
 
-function codeQlImpactLaneIsExact(job, selector) {
+function codeQlImpactLaneIsExact(job, selectors) {
   const fullOrSelected = [
     "github.event_name == 'schedule'",
     "github.event_name == 'workflow_dispatch'",
     "needs.impact-plan.outputs.mode == 'full'",
-    `needs.impact-plan.outputs.${selector} == 'true'`,
+    ...selectors.map((selector) => `needs.impact-plan.outputs.${selector} == 'true'`),
   ].join(" || ");
   return (
     job?.needs === "impact-plan"
     && job?.if === fullOrSelected
     && continueOnErrorIsDisabled(job)
     && (job?.steps ?? []).every(continueOnErrorIsDisabled)
+  );
+}
+
+function codeQlStepIsExact(step, name, action, expectedWith) {
+  return (
+    step?.name === name
+    && actionUses(step, action)
+    && Object.keys(step ?? {}).every((key) => ["name", "uses", "with"].includes(key))
+    && Object.keys(step?.with ?? {}).length === Object.keys(expectedWith).length
+    && propertiesMatch(step?.with, expectedWith)
+    && step?.if === undefined
+    && step?.shell === undefined
+    && continueOnErrorIsDisabled(step)
+  );
+}
+
+function codeQlJobBoundaryIsExact(job, name, expectedStepCount) {
+  return (
+    job?.name === name
+    && job?.needs === "impact-plan"
+    && job?.["runs-on"] === githubActionsRunner
+    && job?.["timeout-minutes"] === 30
+    && Object.keys(job?.permissions ?? {}).length === 3
+    && propertiesMatch(job?.permissions, {
+      contents: "read",
+      "security-events": "write",
+      actions: "read",
+    })
+    && continueOnErrorIsDisabled(job)
+    && job?.defaults === undefined
+    && job?.container === undefined
+    && job?.services === undefined
+    && Array.isArray(job?.steps)
+    && job.steps.length === expectedStepCount
+    && Object.keys(job ?? {}).every((key) => [
+      "name", "needs", "if", "runs-on", "timeout-minutes", "permissions", "steps",
+    ].includes(key))
+  );
+}
+
+function javaScriptCodeQlJobIsExact(job) {
+  const steps = job?.steps ?? [];
+  return (
+    codeQlJobBoundaryIsExact(job, "JavaScript and TypeScript analysis", 3)
+    && codeQlStepIsExact(steps[0], "Check out canonical source", "actions/checkout", {
+      "persist-credentials": false,
+    })
+    && codeQlStepIsExact(steps[1], "Initialize CodeQL", "github/codeql-action/init", {
+      languages: "javascript-typescript",
+      queries: "security-extended,security-and-quality",
+    })
+    && codeQlStepIsExact(steps[2], "Analyze", "github/codeql-action/analyze", {
+      category: "/language:javascript-typescript",
+    })
+  );
+}
+
+function goCodeQlJobIsExact(job) {
+  const steps = job?.steps ?? [];
+  return (
+    codeQlJobBoundaryIsExact(job, "Go analysis", 4)
+    && codeQlStepIsExact(steps[0], "Check out canonical source", "actions/checkout", {
+      "persist-credentials": false,
+    })
+    && codeQlStepIsExact(steps[1], "Use Go 1.27", "actions/setup-go", {
+      "go-version-file": "tooling/go.mod",
+      "cache-dependency-path": "tooling/go.sum",
+    })
+    && codeQlStepIsExact(steps[2], "Initialize CodeQL", "github/codeql-action/init", {
+      languages: "go",
+      "build-mode": "autobuild",
+      queries: "security-extended,security-and-quality",
+    })
+    && codeQlStepIsExact(steps[3], "Analyze", "github/codeql-action/analyze", {
+      category: "/language:go",
+    })
   );
 }
 
@@ -1235,22 +1332,28 @@ export function validateCodeQlImpactWorkflowObject(
     mode: "${{ steps.plan.outputs.mode }}",
     go: "${{ steps.plan.outputs.go }}",
     site: "${{ steps.plan.outputs.site }}",
+    workstation_any: "${{ steps.plan.outputs.workstation_any }}",
   };
   recordExpectation(
     findings,
     Object.keys(plan?.outputs ?? {}).length === Object.keys(expectedOutputs).length
       && propertiesMatch(plan?.outputs, expectedOutputs)
-      && impactPlanJobRunsExactProjection(plan),
+      && impactPlanJobRunsExactProjection(workflow, plan),
     `${relativePath}: CodeQL must use the exact bounded Go impact projection`,
   );
   recordExpectation(
     findings,
-    codeQlImpactLaneIsExact(jobs.analyze, "site"),
-    `${relativePath}: JavaScript and TypeScript analysis must use only the full-plan or site selector`,
+    codeQlImpactLaneIsExact(jobs.analyze, ["site", "workstation_any"]),
+    `${relativePath}: JavaScript and TypeScript analysis must use only the full-plan, site, or workstation selector`,
   );
   recordExpectation(
     findings,
-    codeQlImpactLaneIsExact(jobs["analyze-go"], "go"),
+    javaScriptCodeQlJobIsExact(jobs.analyze),
+    `${relativePath}: JavaScript and TypeScript CodeQL must keep its exact fail-closed initialization and analysis boundary`,
+  );
+  recordExpectation(
+    findings,
+    codeQlImpactLaneIsExact(jobs["analyze-go"], ["go"]),
     `${relativePath}: Go analysis must use only the full-plan or Go selector`,
   );
   return findings;
@@ -1269,6 +1372,9 @@ export function validateGoCodeQlWorkflowObject(
   }
   if (analyze?.with?.category !== "/language:go") {
     findings.push(`${relativePath}: analyze-go must publish the /language:go category`);
+  }
+  if (!goCodeQlJobIsExact(workflow?.jobs?.["analyze-go"])) {
+    findings.push(`${relativePath}: Go CodeQL must keep its exact fail-closed initialization and analysis boundary`);
   }
   return findings;
 }
@@ -1321,6 +1427,98 @@ export function validateRepositoryMetadataSyncWorkflowObject(
   );
   if (!repositoryMetadataCommandIsExact(synchronization)) {
     findings.push(`${relativePath}: the trusted Go command must apply canonical labels, milestones, and mapped issue assignments with the job token`);
+  }
+  return findings;
+}
+
+function pullRequestMetadataTriggerIsExact(trigger) {
+  const pullRequestTarget = trigger?.pull_request_target;
+  const expectedTypes = ["opened", "edited", "synchronize", "reopened"];
+  return (
+    Object.keys(trigger ?? {}).length === 1
+    && Object.keys(pullRequestTarget ?? {}).length === 1
+    && Array.isArray(pullRequestTarget?.types)
+    && pullRequestTarget.types.length === expectedTypes.length
+    && expectedTypes.every((type) => pullRequestTarget.types.includes(type))
+  );
+}
+
+function pullRequestMetadataStepsAreExact(steps) {
+  if (!Array.isArray(steps) || steps.length !== 4) return false;
+  const [labeler, checkout, setup, synchronization] = steps;
+  const expectedCommand = [
+    "go -C tooling run ./cmd/20w github sync-pr-metadata",
+    '--root .. --repository "$GITHUB_REPOSITORY"',
+    '--pull-request "$PULL_REQUEST"',
+  ].join(" ");
+  return (
+    actionUses(labeler, "actions/labeler")
+    && propertiesMatch(labeler?.with, { "sync-labels": true })
+    && Object.keys(labeler?.with ?? {}).length === 1
+    && actionUses(checkout, "actions/checkout")
+    && propertiesMatch(checkout?.with, {
+      ref: "refs/heads/main",
+      "persist-credentials": false,
+      "allow-unsafe-pr-checkout": false,
+    })
+    && Object.keys(checkout?.with ?? {}).length === 3
+    && actionUses(setup, "actions/setup-go")
+    && propertiesMatch(setup?.with, {
+      "go-version-file": "tooling/go.mod",
+      "cache-dependency-path": "tooling/go.sum",
+    })
+    && Object.keys(setup?.with ?? {}).length === 2
+    && synchronization?.run === expectedCommand
+    && propertiesMatch(synchronization?.env, {
+      GH_TOKEN: "${{ github.token }}",
+      PULL_REQUEST: "${{ github.event.pull_request.number }}",
+    })
+    && Object.keys(synchronization?.env ?? {}).length === 2
+    && [labeler, checkout, setup, synchronization].every((step) => (
+      step?.if === undefined && continueOnErrorIsDisabled(step)
+    ))
+  );
+}
+
+function pullRequestMetadataPermissionsAreExact(workflow, job) {
+  return (
+    Object.keys(workflow?.permissions ?? {}).length === 1
+    && workflow?.permissions?.contents === "read"
+    && Object.keys(job?.permissions ?? {}).length === 3
+    && propertiesMatch(job?.permissions, {
+      contents: "read", issues: "write", "pull-requests": "write",
+    })
+  );
+}
+
+function pullRequestMetadataBoundaryIsExact(workflow, job) {
+  return (
+    job?.["runs-on"] === "ubuntu-latest"
+    && job?.["timeout-minutes"] === 10
+    && job?.if === undefined
+    && continueOnErrorIsDisabled(job)
+    && workflow?.concurrency?.group === "${{ github.workflow }}-${{ github.event.pull_request.number }}"
+    && workflow?.concurrency?.["cancel-in-progress"] === false
+  );
+}
+
+export function validatePullRequestMetadataWorkflowObject(
+  workflow,
+  relativePath = ".github/workflows/labeler.yml",
+) {
+  const findings = [];
+  if (!pullRequestMetadataTriggerIsExact(workflow?.on)) {
+    findings.push(`${relativePath}: trusted metadata projection must run on opened, edited, synchronized, and reopened pull requests`);
+  }
+  const job = workflow?.jobs?.label;
+  if (!pullRequestMetadataPermissionsAreExact(workflow, job)) {
+    findings.push(`${relativePath}: pull-request metadata needs only contents:read, issues:write, and pull-requests:write at job scope`);
+  }
+  if (!pullRequestMetadataBoundaryIsExact(workflow, job)) {
+    findings.push(`${relativePath}: pull-request metadata must keep its bounded hosted-runner and per-pull-request concurrency boundary`);
+  }
+  if (!pullRequestMetadataStepsAreExact(job?.steps)) {
+    findings.push(`${relativePath}: pull-request metadata must sync path labels, check out only trusted main, and run the exact bounded Go projection`);
   }
   return findings;
 }
@@ -3209,6 +3407,97 @@ function validateRenovate(root, findings) {
   }
 }
 
+function pullRequestTitleTriggerIsExact(trigger) {
+  const expectedEvents = ["opened", "edited", "synchronize", "reopened"];
+  return (
+    Object.keys(trigger ?? {}).every((key) => ["branches", "types"].includes(key))
+    && trigger?.branches?.length === 1
+    && trigger.branches[0] === "main"
+    && trigger?.types?.length === expectedEvents.length
+    && expectedEvents.every((event) => trigger.types.includes(event))
+  );
+}
+
+function pullRequestTitleWorkflowIsExact(workflow) {
+  return (
+    workflow?.name === "PR title"
+    && Object.keys(workflow ?? {}).every((key) => [
+      "name", "on", "permissions", "concurrency", "jobs",
+    ].includes(key))
+    && Object.keys(workflow?.on ?? {}).length === 1
+    && pullRequestTitleTriggerIsExact(workflow?.on?.pull_request_target)
+    && Object.keys(workflow?.permissions ?? {}).length === 0
+    && workflow?.concurrency?.group === "${{ github.workflow }}-${{ github.event.pull_request.number }}"
+    && workflow?.concurrency?.["cancel-in-progress"] === true
+    && Object.keys(workflow?.concurrency ?? {}).length === 2
+    && workflow?.defaults === undefined
+    && Object.keys(workflow?.jobs ?? {}).length === 1
+  );
+}
+
+function pullRequestTitleJobIsExact(titleJob) {
+  return (
+    titleJob?.name === "PR title"
+    && titleJob?.if === undefined
+    && titleJob?.["runs-on"] === "ubuntu-latest"
+    && titleJob?.["timeout-minutes"] === 5
+    && continueOnErrorIsDisabled(titleJob)
+    && titleJob?.defaults === undefined
+    && titleJob?.container === undefined
+    && titleJob?.services === undefined
+    && Array.isArray(titleJob?.steps)
+    && titleJob.steps.length === 1
+    && Object.keys(titleJob ?? {}).every((key) => [
+      "name", "runs-on", "timeout-minutes", "steps",
+    ].includes(key))
+  );
+}
+
+function pullRequestTitleStepIsExact(titleStep, expectedRun) {
+  return (
+    titleStep?.name === "Require a Conventional Commit title"
+    && titleStep?.run === expectedRun
+    && titleStep?.env?.PR_TITLE === "${{ github.event.pull_request.title }}"
+    && Object.keys(titleStep?.env ?? {}).length === 1
+    && titleStep?.if === undefined
+    && continueOnErrorIsDisabled(titleStep)
+    && titleStep?.shell === undefined
+    && Object.keys(titleStep ?? {}).every((key) => ["name", "env", "run"].includes(key))
+  );
+}
+
+export function validatePullRequestTitleTypeAuthority(
+  workflow,
+  manifest,
+  workflowPath = ".github/workflows/pr-title.yml",
+  manifestPath = ".github/labels.json",
+) {
+  const finding = `${workflowPath}: PR title types must exactly match managed type:* labels in ${manifestPath}`;
+  const managedTypes = (manifest?.labels ?? [])
+    .map((label) => label?.name)
+    .filter((name) => typeof name === "string" && name.startsWith("type:"))
+    .map((name) => name.slice("type:".length));
+  const uniqueManagedTypes = new Set(managedTypes);
+  const expectedRun = [
+    `if ! printf '%s\\n' "$PR_TITLE" | grep -qE '^(${managedTypes.join("|")})(\\([^()]{1,64}\\))?(!)?:[[:space:]]+[^[:space:]]'; then`,
+    "  echo \"::error::PR title must use Conventional Commits: <type>(<scope>): <description>\"",
+    "  exit 1",
+    "fi",
+    "",
+  ].join("\n");
+  if (
+    managedTypes.length === 0
+    || uniqueManagedTypes.size !== managedTypes.length
+    || managedTypes.some((type) => !/^[a-z][a-z0-9-]{0,31}$/u.test(type))
+    || !pullRequestTitleWorkflowIsExact(workflow)
+    || !pullRequestTitleJobIsExact(workflow?.jobs?.["pr-title"])
+    || !pullRequestTitleStepIsExact(workflow?.jobs?.["pr-title"]?.steps?.[0], expectedRun)
+  ) {
+    return [finding];
+  }
+  return [];
+}
+
 function validateLabels(root, findings, issueForms) {
   const manifestPath = ".github/labels.json";
   const manifest = parseYaml(root, manifestPath, findings);
@@ -3269,6 +3558,17 @@ function validateLabels(root, findings, issueForms) {
         findings.push(`${relativePath}: issue form references undefined label ${label}`);
       }
     }
+  }
+
+  const titleWorkflowPath = ".github/workflows/pr-title.yml";
+  const titleWorkflow = parseYaml(root, titleWorkflowPath, findings);
+  if (titleWorkflow) {
+    findings.push(...validatePullRequestTitleTypeAuthority(
+      titleWorkflow,
+      manifest,
+      titleWorkflowPath,
+      manifestPath,
+    ));
   }
 }
 
@@ -3345,6 +3645,9 @@ function validateWorkflowPolicy(workflow, relativePath, lock, findings) {
   }
   if (relativePath === ".github/workflows/sync-repository-metadata.yml") {
     findings.push(...validateRepositoryMetadataSyncWorkflowObject(workflow, relativePath));
+  }
+  if (relativePath === ".github/workflows/labeler.yml") {
+    findings.push(...validatePullRequestMetadataWorkflowObject(workflow, relativePath));
   }
 }
 

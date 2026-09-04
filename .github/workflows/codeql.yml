@@ -27,6 +27,7 @@ jobs:
       mode: ${{ steps.plan.outputs.mode }}
       go: ${{ steps.plan.outputs.go }}
       site: ${{ steps.plan.outputs.site }}
+      workstation_any: ${{ steps.plan.outputs.workstation_any }}
     steps:
       - name: Check out the complete comparison history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -82,7 +83,7 @@ jobs:
   analyze:
     name: JavaScript and TypeScript analysis
     needs: impact-plan
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.site == 'true'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.site == 'true' || needs.impact-plan.outputs.workstation_any == 'true'
     runs-on: arc-cauda-lusoris-20-watts
     timeout-minutes: 30
     permissions:

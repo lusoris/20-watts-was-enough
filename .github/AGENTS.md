@@ -9,10 +9,11 @@ files under `.github/`.
   only to the individual job that requires them.
 - Set explicit job timeouts and bounded concurrency. Pull-request validation
   may cancel stale runs; an in-progress Pages deployment must not be cancelled.
-- Run every repository workflow job on the repository-scoped office ARC label
-  `arc-cauda-lusoris-20-watts`. Do not fall back to billed GitHub-hosted
-  `ubuntu-*` labels; add an explicitly reviewed runner pool if a future job
-  genuinely needs a different operating system or hardware class.
+- Run ordinary repository workflow jobs on the repository-scoped office ARC
+  label `arc-cauda-lusoris-20-watts`. Keep the two reviewed GitHub-hosted
+  exceptions on `ubuntu-latest`: trusted `pull_request_target` metadata stays
+  isolated from office runners, and the post-deployment Pages probe observes
+  the public network boundary.
 - Use `actions/checkout` with `persist-credentials: false` unless a reviewed
   step must push to the repository.
 - Run JavaScript workflows on the exact Node 26 pin. Install npm 12 only from
@@ -22,7 +23,8 @@ files under `.github/`.
 - Required CI and security gates fail closed. Do not add `continue-on-error` to
   a required check or weaken an existing validator to make a workflow green.
 - Never execute or check out pull-request code from a `pull_request_target`
-  workflow. Automation using that event may operate only on trusted metadata.
+  workflow. Automation using that event may operate only on trusted metadata
+  and tools checked out from `refs/heads/main`.
 - Preserve the Pages build/deploy separation: the build job stays read-only;
   only the deploy job receives `pages: write` and `id-token: write`.
 - Release workflows validate and package an existing exact tag in a read-only
@@ -42,6 +44,7 @@ files under `.github/`.
   `.github/issue-milestones.json` are the canonical operational metadata
   manifests. The trusted main-branch workflow may create or repair their
   marked objects and mapped issue assignments, but it does not delete unmanaged
-  labels or milestones or infer a pull-request assignment. Milestone progress
-  reflects associated issues and pull requests; it never promotes scientific
-  evidence.
+  labels or milestones. Pull-request metadata may project only from one
+  explicit managed issue reference under decision 0057; missing or ambiguous
+  references remain unchanged. Milestone progress reflects associated issues
+  and pull requests; it never promotes scientific evidence.

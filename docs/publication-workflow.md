@@ -258,8 +258,19 @@ workflow ref cannot become a second metadata authority. Milestones project the
 stage identities and links from the canonical
 [research roadmap](../concept/90-research-roadmap.md); their completion
 percentages count associated issues and pull requests, not scientific evidence.
-The mapping names its repository and stable issue numbers. It does not infer a
-pull-request assignment.
+The mapping names its repository and stable issue numbers.
+
+The trusted `pull_request_target` workflow runs the related
+`20w github sync-pr-metadata` command after path labelling. A pull request opts
+in with one explicit stand-alone reference such as `Tracks #12`. The referenced
+number must identify one mapped, open issue whose remote milestone and managed
+type, severity, status and area labels are complete. The issue map supplies the
+milestone, the Conventional Commit title supplies the pull-request type, and
+the issue supplies severity, status and additional areas. The command preserves
+path-derived areas and labels outside those namespaces. Missing, unmanaged or
+ambiguous references produce no issue-derived write. The job checks out only
+`refs/heads/main`, never pull-request code, and confirms both metadata snapshots
+before mutation and after readback.
 
 Cloudflare remains the public TLS authority for `www.cordana.dev`; GitHub Pages
 builds and serves the origin artifact. The authenticated dashboard observation

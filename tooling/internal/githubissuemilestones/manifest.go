@@ -31,9 +31,9 @@ type Assignment struct {
 	Milestone string `json:"milestone"`
 }
 
-// Manifest is the closed Git authority for managed issue assignments. Pull
-// requests are deliberately excluded because they lack a stable committed
-// identity before creation.
+// Manifest is the closed Git authority for managed issue assignments. It does
+// not store pull-request numbers; trusted automation may project metadata from
+// one explicit reference to a mapped issue.
 type Manifest struct {
 	Schema      int          `json:"schema"`
 	Repository  string       `json:"repository"`

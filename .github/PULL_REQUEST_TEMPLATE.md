@@ -3,6 +3,7 @@
 ## Summary
 
 <!-- What changed, why, and which issue or decision it addresses. -->
+<!-- Put exactly one managed issue reference on its own line, for example: Tracks #12 -->
 
 -
 

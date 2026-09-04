@@ -32,6 +32,8 @@ import {
   validateOfficeArcRunnerWorkflowObject,
   validatePagesPublicTransportWorkflowObject,
   validatePDFRendererReproducibilityWorkflowObject,
+  validatePullRequestTitleTypeAuthority,
+  validatePullRequestMetadataWorkflowObject,
   validateReleaseExperimentImageWorkflowObject,
   validateReleaseWorkflowObject,
   validateRetiredHostingPaths,
@@ -320,6 +322,14 @@ test("repository workflows cannot fall back to billed GitHub-hosted runners", ()
   ), [
     `${pagesPath}: job verify-public-transport requires a special hosted runner (ubuntu-latest)`,
   ]);
+
+  const titlePath = ".github/workflows/pr-title.yml";
+  const title = workflow("pr-title");
+  assert.deepEqual(validateOfficeArcRunnerWorkflowObject(title, titlePath), []);
+  title.jobs["pr-title"]["runs-on"] = label;
+  assert.deepEqual(validateOfficeArcRunnerWorkflowObject(title, titlePath), [
+    `${titlePath}: job pr-title requires a special hosted runner (ubuntu-latest)`,
+  ]);
 });
 
 test("portable operations reject host-specific scripts without rejecting Go portability", () => {
@@ -491,39 +501,32 @@ test("the npm runtime lock binds the exact reviewed registry archive", () => {
 });
 
 test("Go workflows use tooling/go.mod and the Go CodeQL lane", () => {
-  const valid = {
-    jobs: {
-      "analyze-go": {
-        steps: [
-          {
-            uses: "actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e",
-            with: {
-              "go-version-file": "tooling/go.mod",
-              "cache-dependency-path": "tooling/go.sum",
-            },
-          },
-          {
-            uses: "github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938",
-            with: { languages: "go", "build-mode": "autobuild" },
-          },
-          {
-            uses: "github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938",
-            with: { category: "/language:go" },
-          },
-        ],
-      },
-    },
-  };
+  const valid = workflow("codeql");
   assert.deepEqual(validateGoRuntimeWorkflowObject(valid, "analyze-go"), []);
   assert.deepEqual(validateGoCodeQlWorkflowObject(valid), []);
 
   const tampered = structuredClone(valid);
-  delete tampered.jobs["analyze-go"].steps[0].with["cache-dependency-path"];
-  tampered.jobs["analyze-go"].steps[1].with.languages = "javascript-typescript";
+  delete tampered.jobs["analyze-go"].steps.find(
+    (step) => step.uses?.startsWith("actions/setup-go@"),
+  ).with["cache-dependency-path"];
+  tampered.jobs["analyze-go"].steps.find(
+    (step) => step.uses?.startsWith("github/codeql-action/init@"),
+  ).with.languages = "javascript-typescript";
   assert.deepEqual(validateGoCodeQlWorkflowObject(tampered), [
     ".github/workflows/codeql.yml: job analyze-go must use Go 1.27.0 from tooling/go.mod with tooling/go.sum caching",
     ".github/workflows/codeql.yml: analyze-go must initialize CodeQL autobuild for Go",
+    ".github/workflows/codeql.yml: Go CodeQL must keep its exact fail-closed initialization and analysis boundary",
   ]);
+
+  const skipped = structuredClone(valid);
+  for (const action of ["init", "analyze"]) {
+    skipped.jobs["analyze-go"].steps.find(
+      (step) => step.uses?.startsWith(`github/codeql-action/${action}@`),
+    ).if = "${{ false }}";
+  }
+  assert.ok(validateGoCodeQlWorkflowObject(skipped).includes(
+    ".github/workflows/codeql.yml: Go CodeQL must keep its exact fail-closed initialization and analysis boundary",
+  ));
 });
 
 test("CodeQL uses the bounded impact projection and exact language selectors", () => {
@@ -543,11 +546,54 @@ test("CodeQL uses the bounded impact projection and exact language selectors", (
   );
   assert.ok(validateCodeQlImpactWorkflowObject(forcedPullRequestFull).includes(planFinding));
 
+  for (const mutate of [
+    (subject) => { subject.defaults = { run: { shell: "true {0}" } }; },
+    (subject) => { subject.jobs["impact-plan"].if = "${{ false }}"; },
+    (subject) => { subject.jobs["impact-plan"].defaults = { run: { shell: "true {0}" } }; },
+    (subject) => {
+      subject.jobs["impact-plan"].steps.find((step) => step.id === "plan").shell = "true {0}";
+    },
+  ]) {
+    const bypassedPlan = structuredClone(valid);
+    mutate(bypassedPlan);
+    assert.ok(validateCodeQlImpactWorkflowObject(bypassedPlan).includes(planFinding));
+  }
+
   const broadJavaScript = structuredClone(valid);
   broadJavaScript.jobs.analyze.if = "always()";
   assert.ok(validateCodeQlImpactWorkflowObject(broadJavaScript).includes(
-    ".github/workflows/codeql.yml: JavaScript and TypeScript analysis must use only the full-plan or site selector",
+    ".github/workflows/codeql.yml: JavaScript and TypeScript analysis must use only the full-plan, site, or workstation selector",
   ));
+
+  const missingWorkstationJavaScript = structuredClone(valid);
+  missingWorkstationJavaScript.jobs.analyze.if = missingWorkstationJavaScript.jobs.analyze.if.replace(
+    " || needs.impact-plan.outputs.workstation_any == 'true'",
+    "",
+  );
+  assert.ok(validateCodeQlImpactWorkflowObject(missingWorkstationJavaScript).includes(
+    ".github/workflows/codeql.yml: JavaScript and TypeScript analysis must use only the full-plan, site, or workstation selector",
+  ));
+
+  const javascriptFinding = ".github/workflows/codeql.yml: JavaScript and TypeScript CodeQL must keep its exact fail-closed initialization and analysis boundary";
+  for (const mutate of [
+    (subject) => { subject.jobs.analyze.steps = []; },
+    (subject) => {
+      subject.jobs.analyze.steps.find(
+        (step) => step.uses?.startsWith("github/codeql-action/init@"),
+      ).with.languages = "go";
+    },
+    (subject) => {
+      for (const action of ["init", "analyze"]) {
+        subject.jobs.analyze.steps.find(
+          (step) => step.uses?.startsWith(`github/codeql-action/${action}@`),
+        ).if = "${{ false }}";
+      }
+    },
+  ]) {
+    const bypassedJavaScript = structuredClone(valid);
+    mutate(bypassedJavaScript);
+    assert.ok(validateCodeQlImpactWorkflowObject(bypassedJavaScript).includes(javascriptFinding));
+  }
 
   const crossedGoSelector = structuredClone(valid);
   crossedGoSelector.jobs["analyze-go"].if = crossedGoSelector.jobs["analyze-go"].if.replace(
@@ -1092,6 +1138,107 @@ test("repository metadata synchronization is manifest-triggered and least-privil
   assert.ok(validateRepositoryMetadataSyncWorkflowObject(incompleteTrigger).includes(
     ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for all three canonical manifests on main and allow manual repair",
   ));
+});
+
+test("pull-request metadata uses only trusted main and explicit bounded authority", () => {
+  const relativePath = ".github/workflows/labeler.yml";
+  const valid = workflow("labeler");
+  const triggerFinding = `${relativePath}: trusted metadata projection must run on opened, edited, synchronized, and reopened pull requests`;
+  const permissionFinding = `${relativePath}: pull-request metadata needs only contents:read, issues:write, and pull-requests:write at job scope`;
+  const stepsFinding = `${relativePath}: pull-request metadata must sync path labels, check out only trusted main, and run the exact bounded Go projection`;
+  const boundaryFinding = `${relativePath}: pull-request metadata must keep its bounded hosted-runner and per-pull-request concurrency boundary`;
+  assert.deepEqual(validatePullRequestMetadataWorkflowObject(valid), []);
+
+  const missingEdited = structuredClone(valid);
+  missingEdited.on.pull_request_target.types = missingEdited.on.pull_request_target.types.filter(
+    (type) => type !== "edited",
+  );
+  assert.ok(validatePullRequestMetadataWorkflowObject(missingEdited).includes(triggerFinding));
+
+  const broadPermission = structuredClone(valid);
+  broadPermission.jobs.label.permissions.contents = "write";
+  assert.ok(validatePullRequestMetadataWorkflowObject(broadPermission).includes(permissionFinding));
+
+  const untrustedCheckout = structuredClone(valid);
+  untrustedCheckout.jobs.label.steps.find(
+    (step) => step.uses?.startsWith("actions/checkout@"),
+  ).with.ref = "${{ github.event.pull_request.head.sha }}";
+  assert.ok(validatePullRequestMetadataWorkflowObject(untrustedCheckout).includes(stepsFinding));
+
+  const stalePathLabels = structuredClone(valid);
+  stalePathLabels.jobs.label.steps.find(
+    (step) => step.uses?.startsWith("actions/labeler@"),
+  ).with["sync-labels"] = false;
+  assert.ok(validatePullRequestMetadataWorkflowObject(stalePathLabels).includes(stepsFinding));
+
+  const commandDrift = structuredClone(valid);
+  commandDrift.jobs.label.steps.find(
+    (step) => step.run?.includes("sync-pr-metadata"),
+  ).run = "go run ./untrusted-command";
+  assert.ok(validatePullRequestMetadataWorkflowObject(commandDrift).includes(stepsFinding));
+
+  const cancellableRepair = structuredClone(valid);
+  cancellableRepair.concurrency["cancel-in-progress"] = true;
+  assert.ok(validatePullRequestMetadataWorkflowObject(cancellableRepair).includes(boundaryFinding));
+});
+
+test("the label manifest closes the accepted pull-request title types", () => {
+  const manifest = JSON.parse(readFileSync(
+    new URL("../.github/labels.json", import.meta.url),
+    "utf8",
+  ));
+  const valid = workflow("pr-title");
+  const finding = ".github/workflows/pr-title.yml: PR title types must exactly match managed type:* labels in .github/labels.json";
+  assert.deepEqual(validatePullRequestTitleTypeAuthority(valid, manifest), []);
+
+  const staleOnEdit = structuredClone(valid);
+  staleOnEdit.on.pull_request_target.types = staleOnEdit.on.pull_request_target.types.filter(
+    (event) => event !== "edited",
+  );
+  assert.deepEqual(validatePullRequestTitleTypeAuthority(staleOnEdit, manifest), [finding]);
+
+  const missingType = structuredClone(valid);
+  const titleStep = missingType.jobs["pr-title"].steps.find(
+    (step) => step.run?.includes("PR title must use Conventional Commits"),
+  );
+  titleStep.run = titleStep.run.replace("|perf", "");
+  assert.deepEqual(validatePullRequestTitleTypeAuthority(missingType, manifest), [finding]);
+
+  const unmanagedType = structuredClone(valid);
+  const unmanagedStep = unmanagedType.jobs["pr-title"].steps.find(
+    (step) => step.run?.includes("PR title must use Conventional Commits"),
+  );
+  unmanagedStep.run = unmanagedStep.run.replace("|revert)", "|revert|unknown)");
+  assert.deepEqual(validatePullRequestTitleTypeAuthority(unmanagedType, manifest), [finding]);
+
+  const appendedAlternative = structuredClone(valid);
+  const appendedStep = appendedAlternative.jobs["pr-title"].steps.find(
+    (step) => step.run?.includes("PR title must use Conventional Commits"),
+  );
+  appendedStep.run = appendedStep.run.replace("(!)?:", "(!)?:|^unknown:");
+  assert.deepEqual(validatePullRequestTitleTypeAuthority(appendedAlternative, manifest), [finding]);
+
+  for (const field of ["if", "continue-on-error", "shell"]) {
+    const bypassed = structuredClone(valid);
+    const bypassedStep = bypassed.jobs["pr-title"].steps.find(
+      (step) => step.run?.includes("PR title must use Conventional Commits"),
+    );
+    bypassedStep[field] = field === "if" ? "${{ false }}" : field === "shell" ? "true {0}" : true;
+    assert.deepEqual(validatePullRequestTitleTypeAuthority(bypassed, manifest), [finding]);
+  }
+
+  for (const [field, value] of [
+    ["continue-on-error", true],
+    ["defaults", { run: { shell: "true {0}" } }],
+  ]) {
+    const bypassed = structuredClone(valid);
+    bypassed.jobs["pr-title"][field] = value;
+    assert.deepEqual(validatePullRequestTitleTypeAuthority(bypassed, manifest), [finding]);
+  }
+
+  const workflowShellBypass = structuredClone(valid);
+  workflowShellBypass.defaults = { run: { shell: "true {0}" } };
+  assert.deepEqual(validatePullRequestTitleTypeAuthority(workflowShellBypass, manifest), [finding]);
 });
 
 test("retired ChatGPT Site paths remain forbidden", (t) => {

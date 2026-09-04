@@ -85,21 +85,6 @@ jobs:
           go -C tooling run ./cmd/20w ci project \
             < build/ci-impact-plan.json >> "$GITHUB_OUTPUT"
 
-  pr-title:
-    name: PR title
-    if: github.event_name == 'pull_request'
-    runs-on: arc-cauda-lusoris-20-watts
-    timeout-minutes: 5
-    steps:
-      - name: Require a Conventional Commit title
-        env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-        run: |
-          if ! printf '%s\n' "$PR_TITLE" | grep -qE '^(feat|fix|docs|chore|refactor|test|perf|ci|build|revert)(\(.+\))?(!)?: .+'; then
-            echo "::error::PR title must use Conventional Commits: <type>(<scope>): <description>"
-            exit 1
-          fi
-
   quality-full:
     name: Full quality
     needs: impact-plan
@@ -594,7 +579,6 @@ jobs:
     if: always()
     needs:
       - impact-plan
-      - pr-title
       - quality-full
       - impact-common
       - lane-go
@@ -622,7 +606,6 @@ jobs:
           SELECT_SITE: ${{ needs.impact-plan.outputs.site }}
           SELECT_WORKSTATION: ${{ needs.impact-plan.outputs.workstation_any }}
           RESULT_PLAN: ${{ needs.impact-plan.result }}
-          RESULT_PR_TITLE: ${{ needs.pr-title.result }}
           RESULT_QUALITY_FULL: ${{ needs.quality-full.result }}
           RESULT_IMPACT_COMMON: ${{ needs.impact-common.result }}
           RESULT_GO: ${{ needs.lane-go.result }}
@@ -659,12 +642,6 @@ jobs:
           }
 
           require_state impact-plan "$RESULT_PLAN" success
-          if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            require_state pr-title "$RESULT_PR_TITLE" success
-          else
-            require_state pr-title "$RESULT_PR_TITLE" skipped
-          fi
-
           case "$MODE" in
             full)
               for selector in "$SELECT_CONTAINER" "$SELECT_DEPENDENCY" "$SELECT_GO" "$SELECT_RELEASE" \

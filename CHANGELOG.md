@@ -7,6 +7,14 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Decision 0057 and a trusted-main Go projection now derive pull-request
+  milestones and complete managed classifications from one explicit mapped
+  issue reference. The bounded workflow refreshes path labels, never checks out
+  pull-request code, preserves concurrent unrelated-label edits, refuses
+  ambiguous references, confirms both records before targeted writes and
+  verifies both records by bounded readback. The canonical label manifest now
+  also closes the accepted Conventional Commit type set across CI and metadata;
+  a separate required title gate reruns on edits without restarting code tests.
 - A digest-pinned apko/Wolfi foundation now closes the Linux `amd64` Poppler
   26.08.0 PDF-tools graph at 45 APKs. Its offline Go validator binds the config,
   lock, exact APK retention metadata, upstream source identities, the pinned

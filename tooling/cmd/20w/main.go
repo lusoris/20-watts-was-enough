@@ -21,6 +21,7 @@ import (
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubissuemilestones"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githublabels"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubmilestones"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubprmetadata"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/nodeimage"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/ocimanifest"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/pdfrender"
@@ -56,6 +57,7 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w translation validate-candidate --input <candidate.json> --source <concept-or-math.md> --language <code> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w translation import-candidate --input <candidate.json> --source <concept-or-math.md> --language <code> --output <new-directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w github sync-metadata [--root <repository>] [--check | --repository <owner/name>]")
+	fmt.Fprintln(writer, "  20w github sync-pr-metadata [--root <repository>] [--check | --repository <owner/name> --pull-request <number>]")
 	fmt.Fprintln(writer, "  20w github sync-labels [--root <repository>] [--check | --repository <owner/name>]")
 	fmt.Fprintln(writer, "  20w release inspect-image --image <registry path> --tag <vX.Y.Z> --revision <commit> --platform <os/arch> --expected-label <key=value>")
 	fmt.Fprintln(writer, "  20w release asset-inventory --assets <directory> --phase source|publication")
@@ -149,6 +151,9 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 	case "github":
 		if len(arguments) >= 2 && arguments[1] == "sync-metadata" {
 			return runGitHubSyncMetadata(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "sync-pr-metadata" {
+			return runGitHubSyncPullRequestMetadata(arguments[2:], stdout, stderr)
 		}
 		if len(arguments) >= 2 && arguments[1] == "sync-labels" {
 			return runGitHubSyncLabels(arguments[2:], stdout, stderr)
@@ -445,6 +450,12 @@ func runGitHubSyncMetadata(arguments []string, stdout, stderr io.Writer) int {
 		fmt.Fprintf(stderr, "Load GitHub issue-assignment manifest: %v\n", err)
 		return 1
 	}
+	if err := githubprmetadata.ValidateAuthorities(githubprmetadata.Authorities{
+		Labels: labels, Milestones: milestones, Issues: issues,
+	}); err != nil {
+		fmt.Fprintf(stderr, "Validate pull-request metadata authorities: %v\n", err)
+		return 1
+	}
 	if *check {
 		if *repository != "" {
 			fmt.Fprintln(stderr, "github sync-metadata --check does not accept --repository")
@@ -480,6 +491,59 @@ func runGitHubSyncMetadata(arguments []string, stdout, stderr io.Writer) int {
 		result.milestones.Unchanged,
 		result.issues.Updated,
 		result.issues.Unchanged,
+	)
+	return 0
+}
+
+func runGitHubSyncPullRequestMetadata(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("github sync-pr-metadata", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	root := flags.String("root", ".", "repository root")
+	repository := flags.String("repository", "", "GitHub owner/repository to synchronize")
+	pullRequest := flags.Int("pull-request", 0, "GitHub pull-request number to synchronize")
+	check := flags.Bool("check", false, "validate local authorities without network access")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
+		return 2
+	}
+	authorities, err := loadGitHubPullRequestAuthorities(*root)
+	if err != nil {
+		fmt.Fprintf(stderr, "Load pull-request metadata authorities: %v\n", err)
+		return 1
+	}
+	if *check {
+		if *repository != "" || *pullRequest != 0 {
+			fmt.Fprintln(stderr, "github sync-pr-metadata --check does not accept --repository or --pull-request")
+			return 2
+		}
+		fmt.Fprintln(stdout, "GitHub pull-request metadata authority validation passed.")
+		return 0
+	}
+	if *repository == "" || *pullRequest < 1 {
+		fmt.Fprintln(stderr, "github sync-pr-metadata requires --repository and --pull-request")
+		return 2
+	}
+	client := githubMetadataHTTPClient()
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	result, err := syncGitHubPullRequestMetadata(ctx, client, authorities, githubprmetadata.Options{
+		Repository: *repository, Token: os.Getenv("GH_TOKEN"), PullRequest: *pullRequest,
+	})
+	if err != nil {
+		fmt.Fprintf(stderr, "Synchronize GitHub pull-request metadata: %v\n", err)
+		return 1
+	}
+	if result.Skipped {
+		fmt.Fprintf(stdout, "GitHub pull-request metadata synchronization skipped: %s.\n", result.Reason)
+		return 0
+	}
+	state := "unchanged"
+	if result.Updated {
+		state = "updated"
+	}
+	fmt.Fprintf(
+		stdout,
+		"GitHub pull-request metadata synchronization passed: %s from managed issue #%d with milestone %d and %d labels.\n",
+		state, result.Issue, result.Milestone, len(result.Labels),
 	)
 	return 0
 }
