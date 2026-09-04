@@ -71,13 +71,13 @@ func Project(plan Plan) (Projection, error) {
 		WorkstationMatrix: "[]",
 	}
 	if plan.Mode == "full" {
-		jobs := make([]string, 0, maximumWorkstationJobs)
+		jobs := make([]workstationJobDefinition, 0, maximumWorkstationJobs)
 		for _, definition := range allowedLanes {
 			jobs = append(jobs, definition.WorkstationJobs...)
 		}
 		return projectWorkstationJobs(projection, jobs)
 	}
-	jobs := make([]string, 0)
+	jobs := make([]workstationJobDefinition, 0)
 	for _, lane := range plan.Lanes {
 		switch lane {
 		case "common":
@@ -107,7 +107,7 @@ func Project(plan Plan) (Projection, error) {
 	return projectWorkstationJobs(projection, jobs)
 }
 
-func projectWorkstationJobs(projection Projection, jobs []string) (Projection, error) {
+func projectWorkstationJobs(projection Projection, jobs []workstationJobDefinition) (Projection, error) {
 	if len(jobs) > maximumWorkstationJobs {
 		return Projection{}, fmt.Errorf(
 			"workstation projection contains %d jobs, limit is %d",
@@ -115,14 +115,36 @@ func projectWorkstationJobs(projection Projection, jobs []string) (Projection, e
 			maximumWorkstationJobs,
 		)
 	}
-	sort.Strings(jobs)
+	sort.Slice(jobs, func(left, right int) bool {
+		return jobs[left].CreationRank < jobs[right].CreationRank
+	})
+	names := make([]string, len(jobs))
+	seenNames := make(map[string]struct{}, len(jobs))
 	for index, job := range jobs {
-		if !lanePattern.MatchString(job) || (index > 0 && job == jobs[index-1]) {
-			return Projection{}, fmt.Errorf("workstation projection job is invalid or repeated: %q", job)
+		if !lanePattern.MatchString(job.Name) {
+			return Projection{}, fmt.Errorf("workstation projection job is invalid: %q", job.Name)
 		}
+		if job.CreationRank < 1 || job.CreationRank > maximumWorkstationJobs {
+			return Projection{}, fmt.Errorf(
+				"workstation projection job %q has invalid creation rank %d",
+				job.Name,
+				job.CreationRank,
+			)
+		}
+		if _, duplicate := seenNames[job.Name]; duplicate {
+			return Projection{}, fmt.Errorf("workstation projection job is repeated: %q", job.Name)
+		}
+		if index > 0 && job.CreationRank == jobs[index-1].CreationRank {
+			return Projection{}, fmt.Errorf(
+				"workstation projection creation rank is repeated: %d",
+				job.CreationRank,
+			)
+		}
+		seenNames[job.Name] = struct{}{}
+		names[index] = job.Name
 	}
 	projection.WorkstationAny = len(jobs) > 0
-	matrix, err := json.Marshal(jobs)
+	matrix, err := json.Marshal(names)
 	if err != nil {
 		return Projection{}, fmt.Errorf("encode workstation matrix: %w", err)
 	}
