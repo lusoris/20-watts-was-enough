@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	reproductionReceiptSchema        = 1
+	reproductionReceiptSchema        = 2
 	maximumComparatorExecutableBytes = int64(256 * 1024 * 1024)
 	maximumComparatorSourceEntries   = 16_384
 	maximumComparatorSourceDepth     = 32
@@ -46,6 +46,7 @@ type ReproductionReceipt struct {
 	Notices          []NoticeObservation    `json:"notices"`
 	ManPages         []string               `json:"man_pages"`
 	Runtime          *RuntimeObservation    `json:"runtime,omitempty"`
+	Candidate        *ReproductionCandidate `json:"candidate,omitempty"`
 	Comparison       ReproductionComparison `json:"comparison"`
 }
 
@@ -141,6 +142,36 @@ type ReproductionSPDX struct {
 	Relationships   int    `json:"relationships"`
 }
 
+// ReproductionCandidate records local release inputs without granting remote
+// publication, digest admission, legal, or scientific authority.
+type ReproductionCandidate struct {
+	State           string                     `json:"state"`
+	SPDXBuildsMatch bool                       `json:"spdx_builds_match"`
+	FinalArchive    ReproductionArtifact       `json:"final_oci_archive"`
+	SPDX            ReproductionArtifact       `json:"apko_spdx"`
+	SourceBundle    ReproductionBundleArtifact `json:"source_bundle"`
+	RetainedAPKs    int                        `json:"retained_apks"`
+	RetainedBytes   int64                      `json:"retained_apk_bytes"`
+}
+
+type ReproductionArtifact struct {
+	Path   string `json:"path"`
+	SHA256 string `json:"sha256"`
+	Bytes  int64  `json:"bytes"`
+}
+
+type ReproductionBundleArtifact struct {
+	ReproductionArtifact
+	Root                  string `json:"root"`
+	ChecksumManifest      string `json:"checksum_manifest"`
+	ChecksumSHA256        string `json:"checksum_sha256"`
+	ChecksumBytes         int64  `json:"checksum_bytes"`
+	PayloadFiles          int    `json:"payload_files"`
+	ArchiveFiles          int    `json:"archive_files"`
+	UncompressedFileBytes int64  `json:"uncompressed_file_bytes"`
+	Deterministic         bool   `json:"deterministic"`
+}
+
 type ReproductionComparison struct {
 	BaseArchiveBytes     bool `json:"base_archive_bytes"`
 	BaseManifest         bool `json:"base_manifest"`
@@ -172,10 +203,14 @@ func newReproductionReceipt(
 	finals []finalBuild,
 	inspection layerInspection,
 	comparison ReproductionComparison,
+	candidate *ReproductionCandidate,
 ) ReproductionReceipt {
 	status := "construction-mismatch"
 	if comparison.AllMatch {
 		status = "local-construction-pass"
+	}
+	if candidate != nil {
+		status = "local-candidate-preparation-pass"
 	}
 	baseReceipts := make([]ReproductionBuild, len(bases))
 	for index, build := range bases {
@@ -186,7 +221,7 @@ func newReproductionReceipt(
 		finalReceipts[index] = reproductionBuildReceipt(build.Sequence, build.Image.Identity, nil, nil)
 	}
 	builder := authority.renderer.Lock.Builder
-	return ReproductionReceipt{
+	receipt := ReproductionReceipt{
 		Schema:           reproductionReceiptSchema,
 		Status:           status,
 		Scope:            "local-pdf-tools-final-image-reproduction",
@@ -251,6 +286,12 @@ func newReproductionReceipt(
 		ManPages:    slices.Clone(inspection.ManPages),
 		Comparison:  comparison,
 	}
+	if candidate != nil {
+		receipt.Scope = "local-pdf-tools-candidate-preparation"
+		receipt.BlockState.SourceBundle = "candidate-prepared"
+		receipt.Candidate = candidate
+	}
+	return receipt
 }
 
 func currentComparatorIdentity(root string) (ReproductionComparator, error) {
@@ -445,7 +486,8 @@ func reproductionSPDXReceipt(identity spdxIdentity) *ReproductionSPDX {
 }
 
 func prepareReproductionReceiptPath(root, relative string) (string, error) {
-	if relative == "" || filepath.IsAbs(relative) || strings.ContainsAny(relative, "\\\n\r\x00") {
+	if relative == "" || filepath.IsAbs(relative) || strings.Contains(relative, "\\") ||
+		containsConfusingPathControl(relative) {
 		return "", errors.New("PDF-tools reproduction receipt must be a safe repository-relative JSON path")
 	}
 	clean := filepath.Clean(relative)
@@ -499,7 +541,16 @@ func requireReproductionDirectory(root, relative string) error {
 	return nil
 }
 
-func writeReproductionReceipt(path string, receipt ReproductionReceipt, maximum int64) (returnError error) {
+func writeReproductionReceipt(path string, receipt ReproductionReceipt, maximum int64) error {
+	return writeReproductionReceiptChecked(path, receipt, maximum, nil)
+}
+
+func writeReproductionReceiptChecked(
+	path string,
+	receipt ReproductionReceipt,
+	maximum int64,
+	beforePublish func() error,
+) (returnError error) {
 	body, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
 		return fmt.Errorf("encode PDF-tools reproduction receipt: %w", err)
@@ -545,6 +596,11 @@ func writeReproductionReceipt(path string, receipt ReproductionReceipt, maximum 
 		return fmt.Errorf("close temporary PDF-tools reproduction receipt: %w", err)
 	}
 	closed = true
+	if beforePublish != nil {
+		if err := beforePublish(); err != nil {
+			return fmt.Errorf("verify PDF-tools candidate outputs before receipt publication: %w", err)
+		}
+	}
 	if err := os.Link(temporaryPath, path); err != nil {
 		return fmt.Errorf("atomically publish new PDF-tools reproduction receipt: %w", err)
 	}

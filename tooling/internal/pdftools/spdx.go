@@ -41,6 +41,7 @@ type spdxIdentity struct {
 	CanonicalSize   int64
 	Packages        int
 	Relationships   int
+	raw             []byte
 	canonical       []byte
 }
 
@@ -82,6 +83,7 @@ func canonicalizeSPDX(body []byte, maximumBytes int64, maximumPackages, maximumR
 		CanonicalSize:   int64(len(canonical)),
 		Packages:        packages,
 		Relationships:   len(relationships),
+		raw:             slices.Clone(body),
 		canonical:       canonical,
 	}, nil
 }

@@ -207,11 +207,22 @@ func validateDeliveryAndLimits(delivery SourceDelivery, apko Apko, limits Limits
 		"Wolfi root Apache-2.0 recipe licence",
 		"Poppler notices",
 		"generated SPDX SBOM",
+		"deterministic SHA256SUMS",
 	}
 	if delivery.APKManifest != "apk-retention.json" || !rawDigestPattern.MatchString(delivery.APKManifestSHA256) ||
 		delivery.CandidateBundle != "20w-pdf-tools-26.08.0-r0-linux-amd64-sources.tar.gz" ||
 		delivery.CandidateRetentionDays != 30 || delivery.ReleaseRoute != "checksum-bound GitHub Release asset" {
 		return errors.New("source-delivery route or manifest is invalid")
+	}
+	wantLayout := BundleLayout{
+		Root:             "20w-pdf-tools-26.08.0-r0-linux-amd64-sources",
+		ChecksumManifest: "SHA256SUMS",
+		APKDirectory:     "packages",
+		PopplerArchive:   "upstream/poppler-26.08.0.tar.xz",
+		SPDX:             "sbom/sbom-x86_64.spdx.json",
+	}
+	if delivery.BundleLayout != wantLayout || delivery.CandidateBundle != delivery.BundleLayout.Root+".tar.gz" {
+		return errors.New("source-delivery bundle layout is invalid")
 	}
 	if delivery.APKCount != apko.LockedPackageCount {
 		return errors.New("source-delivery APK count does not match the locked package count")

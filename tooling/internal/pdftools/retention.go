@@ -60,6 +60,7 @@ func validateRetention(value retentionManifest, contract Contract, locked map[st
 	}
 	var total int64
 	seen := make(map[string]struct{}, len(value.Packages))
+	seenFilenames := make(map[string]struct{}, len(value.Packages))
 	for _, retained := range value.Packages {
 		lockedPackage, exists := locked[retained.Name]
 		if !exists {
@@ -71,7 +72,11 @@ func validateRetention(value retentionManifest, contract Contract, locked map[st
 		if _, duplicate := seen[retained.Name]; duplicate {
 			return fmt.Errorf("APK retention repeats package %s", retained.Name)
 		}
+		if _, duplicate := seenFilenames[retained.Filename]; duplicate {
+			return fmt.Errorf("APK retention repeats filename %s", retained.Filename)
+		}
 		seen[retained.Name] = struct{}{}
+		seenFilenames[retained.Filename] = struct{}{}
 		total += retained.Size
 	}
 	if total != value.TotalBytes || total <= 0 || total >= contract.Limits.SourceBundleBytes {

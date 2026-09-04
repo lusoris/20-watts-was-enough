@@ -11,6 +11,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/strictjson"
 )
@@ -90,6 +92,16 @@ func validRelativePath(value string) bool {
 	}
 	cleaned := filepath.ToSlash(filepath.Clean(filepath.FromSlash(value)))
 	return cleaned == value && value != "." && !strings.HasPrefix(value, "../")
+}
+
+func containsConfusingPathControl(value string) bool {
+	if !utf8.ValidString(value) {
+		return true
+	}
+	return strings.ContainsFunc(value, func(character rune) bool {
+		return unicode.IsControl(character) || unicode.Is(unicode.Cf, character) ||
+			character == '\u2028' || character == '\u2029'
+	})
 }
 
 func decodeCanonical[T any](body []byte, depth int, label string) (T, error) {

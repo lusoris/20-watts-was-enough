@@ -259,7 +259,14 @@ func TestReproductionReceiptIsBoundedAtomicAndNoReplace(t *testing.T) {
 func TestPrepareReproductionReceiptPathRejectsEscapeAndExisting(t *testing.T) {
 	t.Parallel()
 	root := t.TempDir()
-	for _, path := range []string{"../escape.json", "receipt.json", "build/evidence/not-json"} {
+	for _, path := range []string{
+		"../escape.json",
+		"receipt.json",
+		"build/evidence/not-json",
+		"build/evidence/line\nbreak.json",
+		"build/evidence/tab\tname.json",
+		"build/evidence/bidi\u202e.json",
+	} {
 		if _, err := prepareReproductionReceiptPath(root, path); err == nil {
 			t.Fatalf("prepareReproductionReceiptPath() accepted %q", path)
 		}

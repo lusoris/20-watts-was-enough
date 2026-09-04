@@ -77,6 +77,12 @@ func TestValidateContractClosesPackageAndDeliveryCounts(t *testing.T) {
 	}
 
 	contract.SourceDelivery.Contents[0] = "45 exact APK files"
+	contract.SourceDelivery.BundleLayout.SPDX = "../sbom.spdx.json"
+	if err := validateContract(contract); err == nil || !strings.Contains(err.Error(), "bundle layout") {
+		t.Fatalf("validateContract() error = %v, want bundle-layout rejection", err)
+	}
+
+	contract.SourceDelivery.BundleLayout.SPDX = "sbom/sbom-x86_64.spdx.json"
 	contract.Limits.Packages = 44
 	if err := validateContract(contract); err == nil || !strings.Contains(err.Error(), "resource limits") {
 		t.Fatalf("validateContract() error = %v, want package-bound rejection", err)

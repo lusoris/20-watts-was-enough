@@ -16,11 +16,14 @@ import (
 type ReproductionOptions struct {
 	RepositoryRoot string
 	ReceiptPath    string
+	Candidate      *CandidateOutputOptions
 }
 
 // ReproduceFinalImage builds and compares two complete local PDF-tools images.
-// It never pushes, publishes, assembles source-delivery material, or grants
-// scientific or release admission authority.
+// When three explicit candidate paths are supplied, it also retains one exact
+// final archive, the byte-identical apko SPDX output, and a checksum-closed
+// source bundle. It never pushes, publishes, or grants scientific or release
+// authority.
 func ReproduceFinalImage(
 	ctx context.Context,
 	options ReproductionOptions,
@@ -30,6 +33,10 @@ func ReproduceFinalImage(
 		return ReproductionReceipt{}, err
 	}
 	receiptPath, err := prepareReproductionReceiptPath(authority.root, options.ReceiptPath)
+	if err != nil {
+		return ReproductionReceipt{}, err
+	}
+	candidatePlan, err := prepareCandidateOutputPlan(authority, options.Candidate, options.ReceiptPath)
 	if err != nil {
 		return ReproductionReceipt{}, err
 	}
@@ -119,7 +126,7 @@ func ReproduceFinalImage(
 	comparison := compareReproduction(
 		bases, finals, inspections, baseArchiveEqual, finalArchiveEqual, contextStable,
 	)
-	receipt := newReproductionReceipt(authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspections[0], comparison)
+	receipt := newReproductionReceipt(authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspections[0], comparison, nil)
 	if !comparison.ConstructionMatch {
 		if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
 			return ReproductionReceipt{}, err
@@ -135,14 +142,77 @@ func ReproduceFinalImage(
 	}
 	comparison.Runtime = true
 	comparison.AllMatch = comparison.ConstructionMatch && comparison.Runtime
-	receipt = newReproductionReceipt(authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspections[0], comparison)
-	receipt.Runtime = &runtimeObservation
+	return finishSuccessfulReproduction(
+		reproductionContext, authority, receiptPath, candidatePlan, apkoBuilder, comparator,
+		contextIdentity, bases, finals, inspections[0], comparison, runtimeObservation,
+	)
+}
+
+func finishSuccessfulReproduction(
+	ctx context.Context,
+	authority checkedAuthority,
+	receiptPath string,
+	plan *candidateOutputPlan,
+	apkoBuilder apkoBuilderIdentity,
+	comparator ReproductionComparator,
+	contextIdentity noticeContextIdentity,
+	bases []baseBuild,
+	finals []finalBuild,
+	inspection layerInspection,
+	comparison ReproductionComparison,
+	runtimeObservation RuntimeObservation,
+) (_ ReproductionReceipt, returnError error) {
 	if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
 		return ReproductionReceipt{}, err
 	}
-	if err := writeReproductionReceipt(receiptPath, receipt, authority.contract.Limits.ReceiptBytes); err != nil {
+	if plan == nil {
+		receipt := newReproductionReceipt(
+			authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspection, comparison, nil,
+		)
+		receipt.Runtime = &runtimeObservation
+		if err := writeReproductionReceipt(receiptPath, receipt, authority.contract.Limits.ReceiptBytes); err != nil {
+			return ReproductionReceipt{}, err
+		}
+		return receipt, nil
+	}
+	downloader, err := newCandidateDownloader(time.Duration(authority.contract.Limits.BuildSeconds) * time.Second)
+	if err != nil {
 		return ReproductionReceipt{}, err
 	}
+	defer downloader.close()
+	staged, err := stageCandidateOutputs(ctx, authority, plan, bases, finals, downloader.fetch)
+	if err != nil {
+		return ReproductionReceipt{}, err
+	}
+	defer func() { returnError = errors.Join(returnError, staged.cleanup()) }()
+	if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
+		return ReproductionReceipt{}, err
+	}
+	receipt := newReproductionReceipt(
+		authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspection, comparison, staged.receipt(authority),
+	)
+	receipt.Runtime = &runtimeObservation
+	if err := staged.install(authority.root); err != nil {
+		return ReproductionReceipt{}, err
+	}
+	installed := true
+	defer func() {
+		if returnError != nil && installed {
+			returnError = errors.Join(returnError, removeInstalledCandidateArtifacts(staged.artifacts))
+		}
+	}()
+	if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
+		return ReproductionReceipt{}, err
+	}
+	if err := writeReproductionReceiptChecked(
+		receiptPath,
+		receipt,
+		authority.contract.Limits.ReceiptBytes,
+		func() error { return staged.verifyInstalled(authority.root, receipt.Candidate) },
+	); err != nil {
+		return ReproductionReceipt{}, err
+	}
+	installed = false
 	return receipt, nil
 }
 

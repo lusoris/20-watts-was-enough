@@ -49,7 +49,10 @@ daemon:
 ```bash
 go -C tooling run ./cmd/20w publication reproduce-pdf-tools-image \
   --root .. \
-  --receipt .workingdir2/evidence/publication/pdf-tools-local-reproduction.json
+  --receipt build/evidence/pdf-tools-candidate.json \
+  --final-archive build/release-inputs/pdf-tools-final-linux-amd64.tar \
+  --spdx build/release-inputs/pdf-tools-apko-linux-amd64.spdx.json \
+  --source-bundle build/release-inputs/20w-pdf-tools-26.08.0-r0-linux-amd64-sources.tar.gz
 ```
 
 The receipt path must be a new repository-relative JSON file in an admitted
@@ -71,13 +74,25 @@ compares both complete final OCI archives, manifests, configs, layers and diff
 IDs before it inspects the notices, man pages, forbidden paths, Poppler
 versions, configured UID/GID and runtime containment.
 
-Success writes an atomic bounded receipt with `authority: NO_RESULT`. The
-command creates no source bundle, retained tag, push, release or
-digest-admission record; it removes the builders, containers, state volumes and
-temporary image alias that it owns. Docker may retain the untagged,
-content-addressed image data in its local content store; the command does not
-claim exclusive ownership of shared digest content or delete it underneath a
-concurrent local reproduction.
+The three candidate-output flags are optional as a set. When present, the
+command downloads each of the 45 APKs and the Poppler archive from the exact
+URL in the authority, refuses redirects or transformed response bytes, and
+checks every size and SHA-256 digest. It retains one reproduced final OCI
+archive, the exact apko SPDX document after requiring both build outputs to
+match byte for byte, and the source bundle. The bundle contains that same SPDX
+document and the maintained config, lock, contract,
+retention manifest, notices, Wolfi recipe and recipe licence alongside those
+downloaded bytes. Its sorted `SHA256SUMS` covers every other bundle file; the
+receipt binds the checksum file and complete compressed archive.
+
+Success places only the explicitly named new files and writes an atomic
+`authority: NO_RESULT` receipt. Existing paths, symlinked parents, path escape,
+partial candidate sets, and output races fail closed. The command does not
+create a tag, push, release, digest-admission record, or legal conclusion. It
+removes the builders, containers, state volumes and temporary image alias that
+it owns. Docker may retain the untagged, content-addressed image data in its
+local content store; the command does not claim exclusive ownership of shared
+digest content or delete it underneath a concurrent local reproduction.
 
 ## Reproduction boundary
 
@@ -92,19 +107,20 @@ Runtime probes observed Poppler 26.08.0, UID/GID 65532 and no `/bin/sh` or
 `/sbin/apk` while using no network, a read-only root, dropped capabilities and
 `no-new-privileges`.
 
-The local command now checks the deterministic notice layer and two-build final
-image as construction evidence. Publication, the source-delivery bundle,
-anonymous digest pull, release acceptance and exact-digest CI consumer lock
-remain separate admission gates.
+The local command checks the deterministic notice layer and two-build final
+image as construction evidence. With explicit output paths, it can also prepare
+the bounded candidate files for maintainer review. Publication, anonymous
+digest pull, release acceptance and the exact-digest CI consumer lock remain
+separate admission gates.
 
 ## Notice and source route
 
 Before any candidate is pushed, its bounded source bundle must contain the 45
 exact APK files, apko config, lock, contract, APK-retention manifest, official
 Poppler archive, pinned Wolfi recipe, its root Apache-2.0 recipe licence, five
-notices and apko's SPDX SBOM. The candidate bundle is retained for 30 days; an
-accepted release carries the same inventory as a checksum-bound GitHub Release
-asset.
+notices, apko's SPDX graph and the internal checksum inventory. The candidate
+bundle is retained for 30 days; an accepted release carries the same inventory
+as a checksum-bound GitHub Release asset.
 
 The SPDX SBOM records the build-recipe and upstream-source locators emitted for
 the complete APK graph. The committed contract independently binds the Poppler
