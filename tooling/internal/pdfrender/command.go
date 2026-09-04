@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 	"sync"
@@ -14,6 +15,7 @@ import (
 const (
 	maximumDiagnosticBytes = 8 * 1024
 	maximumWaitDelay       = 5 * time.Second
+	sourceRevisionTimeout  = 15 * time.Second
 )
 
 type commandRequest struct {
@@ -29,6 +31,71 @@ type commandExecutor interface {
 }
 
 type localCommandExecutor struct{}
+
+// verifySourceRevision rejects a tag-bound render unless the checked-out
+// repository HEAD is the exact commit already verified by release preflight.
+func verifySourceRevision(ctx context.Context, root, sourceRef, expected string) error {
+	if err := ValidateSourceRevision(sourceRef, expected); err != nil {
+		return err
+	}
+	if expected == "" {
+		return nil
+	}
+	gitExecutable, err := exec.LookPath("git")
+	if err != nil {
+		return errors.New("locate Git executable for PDF source revision")
+	}
+	commandContext, cancel := context.WithTimeout(ctx, sourceRevisionTimeout)
+	defer cancel()
+	standardOutput := &boundedOutput{limit: 128}
+	standardError := &boundedOutput{limit: maximumDiagnosticBytes}
+	command := exec.CommandContext(
+		commandContext,
+		gitExecutable,
+		"-C", root,
+		"rev-parse", "--verify", "HEAD^{commit}",
+	)
+	command.Env = boundedGitEnvironment()
+	command.Stdout = standardOutput
+	command.Stderr = standardError
+	command.WaitDelay = maximumWaitDelay
+	runError := command.Run()
+	resolvedBytes, outputExceeded := standardOutput.result()
+	diagnostic, diagnosticExceeded := standardError.result()
+	if commandContext.Err() != nil {
+		return fmt.Errorf("resolve PDF source revision: %w", commandContext.Err())
+	}
+	if outputExceeded || diagnosticExceeded {
+		return errors.New("resolve PDF source revision: subprocess output exceeded its bound")
+	}
+	if runError != nil {
+		return commandFailure("resolve PDF source revision", runError, diagnostic)
+	}
+	resolved := strings.TrimSpace(string(resolvedBytes))
+	if !gitRevisionPattern.MatchString(resolved) {
+		return errors.New("resolved PDF source revision is not a lowercase 40-character Git identity")
+	}
+	if resolved != expected {
+		return fmt.Errorf("PDF source revision is %s, not verified commit %s", resolved, expected)
+	}
+	return nil
+}
+
+func boundedGitEnvironment() []string {
+	environment := []string{
+		"GIT_CONFIG_GLOBAL=" + os.DevNull,
+		"GIT_CONFIG_NOSYSTEM=1",
+		"GIT_OPTIONAL_LOCKS=0",
+		"LANG=C",
+		"LC_ALL=C",
+	}
+	for _, name := range []string{"PATH", "PATHEXT", "SYSTEMROOT", "TEMP", "TMP", "TMPDIR", "WINDIR"} {
+		if value, present := os.LookupEnv(name); present {
+			environment = append(environment, name+"="+value)
+		}
+	}
+	return environment
+}
 
 type boundedOutput struct {
 	mutex    sync.Mutex

@@ -1814,6 +1814,25 @@ function findRunStepIndex(steps, fragments) {
   ));
 }
 
+const releasePDFRenderStepName = "Render the immutable tag-bound book";
+const releasePDFRenderCommand = 'npm run generate:book-pdf -- --ref "$RELEASE_TAG" --revision "$RELEASE_COMMIT"';
+
+function releasePDFRenderStepIndex(steps) {
+  const named = steps
+    .map((step, index) => ({ index, step }))
+    .filter(({ step }) => step?.name === releasePDFRenderStepName);
+  if (named.length !== 1) return -1;
+  const { index, step } = named[0];
+  return step?.run?.trim() === releasePDFRenderCommand
+    && step?.if === undefined
+    && continueOnErrorIsDisabled(step)
+    && Object.keys(step?.env ?? {}).length === 2
+    && step.env.RELEASE_COMMIT === "${{ steps.release-ref.outputs.commit }}"
+    && step.env.RELEASE_TAG === "${{ steps.release-ref.outputs.tag }}"
+    ? index
+    : -1;
+}
+
 function releaseVerificationStepIndices(steps) {
   return {
     binary: findRunStepIndex(steps, ["go -C tooling run ./cmd/build-release"]),
@@ -1822,7 +1841,7 @@ function releaseVerificationStepIndices(steps) {
       "experiment release-plan --root .. --json",
     ]),
     prepare: findRunStepIndex(steps, ['npm run prepare:release -- --tag "$RELEASE_TAG"']),
-    render: findRunStepIndex(steps, ['npm run generate:book-pdf -- --ref "$RELEASE_TAG"']),
+    render: releasePDFRenderStepIndex(steps),
   };
 }
 
@@ -1831,6 +1850,11 @@ function validateReleasePDFBuilder(steps, indices, relativePath) {
   const setup = findStepByName(steps, "Set up the locked PDF Docker Buildx client");
   const setupPosition = stepPosition(steps, "Set up the locked PDF Docker Buildx client");
   const gatePosition = stepPosition(steps, "Run the full repository gate");
+  recordExpectation(
+    findings,
+    indices.render >= 0,
+    `${relativePath}: release PDF render must use its exact reviewed step, verified tag and commit outputs, and bounded command without a failure bypass`,
+  );
   recordExpectation(
     findings,
     actionUses(setup, "docker/setup-buildx-action")

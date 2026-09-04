@@ -1626,6 +1626,58 @@ test("release policy binds native binaries and ingests them after the PDF render
   ));
 });
 
+test("release PDF rendering binds only the exact verified tag and commit", async (t) => {
+  const diagnostic = ".github/workflows/release.yml: release PDF render must use its exact reviewed step, verified tag and commit outputs, and bounded command without a failure bypass";
+  const renderStep = (subject) => subject.jobs.verify.steps.find((step) => (
+    step.name === "Render the immutable tag-bound book"
+  ));
+  const cases = {
+    "missing revision": (subject) => {
+      renderStep(subject).run = 'npm run generate:book-pdf -- --ref "$RELEASE_TAG"';
+    },
+    "ambient commit": (subject) => {
+      renderStep(subject).env.RELEASE_COMMIT = "${{ github.sha }}";
+    },
+    "additional ambient input": (subject) => {
+      renderStep(subject).env.GITHUB_SHA = "${{ github.sha }}";
+    },
+    "reordered command": (subject) => {
+      renderStep(subject).run = 'npm run generate:book-pdf -- --revision "$RELEASE_COMMIT" --ref "$RELEASE_TAG"';
+    },
+    "renamed step": (subject) => {
+      renderStep(subject).name = "Render release PDF";
+    },
+    "continue-on-error bypass": (subject) => {
+      renderStep(subject)["continue-on-error"] = true;
+    },
+    "conditional bypass": (subject) => {
+      renderStep(subject).if = "${{ always() }}";
+    },
+    "render before Buildx": (subject) => {
+      const steps = subject.jobs.verify.steps;
+      const renderIndex = steps.findIndex((step) => step.name === "Render the immutable tag-bound book");
+      const [render] = steps.splice(renderIndex, 1);
+      const setupIndex = steps.findIndex((step) => step.name === "Set up the locked PDF Docker Buildx client");
+      steps.splice(setupIndex, 0, render);
+    },
+  };
+
+  for (const [name, mutate] of Object.entries(cases)) {
+    await t.test(name, () => {
+      const subject = structuredClone(workflow("release"));
+      mutate(subject);
+      const findings = validateReleaseWorkflowObject(subject);
+      if (name === "render before Buildx") {
+        assert.ok(findings.includes(
+          ".github/workflows/release.yml: tag-bound PDF rendering must provision the locked Buildx client and BuildKit image after the source gate",
+        ));
+      } else {
+        assert.ok(findings.includes(diagnostic), JSON.stringify(findings));
+      }
+    });
+  }
+});
+
 test("release publication preserves generated notes before appending image identities", () => {
   assertWorkflowTamper(
     "release",
