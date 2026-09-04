@@ -17,6 +17,7 @@ import {
   validateCiExperimentImageWorkflowObject,
   validateCiFuzzingWorkflowObject,
   validateCiImpactWorkflowObject,
+  validateCodeQlImpactWorkflowObject,
   validateCurrentResearchDisclosure,
   validateExperimentReportIdentity,
   validateExperimentRunFailureForm,
@@ -297,6 +298,28 @@ test("repository workflows cannot fall back to billed GitHub-hosted runners", ()
     `workflow.yml: job hosted must run on the repository-scoped office ARC label ${label}`,
     `workflow.yml: job dynamic must run on the repository-scoped office ARC label ${label}`,
   ]);
+
+  const labelerPath = ".github/workflows/labeler.yml";
+  const labeler = workflow("labeler");
+  assert.deepEqual(validateOfficeArcRunnerWorkflowObject(labeler, labelerPath), []);
+  const internallyHostedLabeler = structuredClone(labeler);
+  internallyHostedLabeler.jobs.label["runs-on"] = label;
+  assert.deepEqual(validateOfficeArcRunnerWorkflowObject(
+    internallyHostedLabeler,
+    labelerPath,
+  ), [`${labelerPath}: job label requires a special hosted runner (ubuntu-latest)`]);
+
+  const pagesPath = ".github/workflows/github-pages.yml";
+  const pages = workflow("github-pages");
+  assert.deepEqual(validateOfficeArcRunnerWorkflowObject(pages, pagesPath), []);
+  const internallyObservedPages = structuredClone(pages);
+  internallyObservedPages.jobs["verify-public-transport"]["runs-on"] = label;
+  assert.deepEqual(validateOfficeArcRunnerWorkflowObject(
+    internallyObservedPages,
+    pagesPath,
+  ), [
+    `${pagesPath}: job verify-public-transport requires a special hosted runner (ubuntu-latest)`,
+  ]);
 });
 
 test("portable operations reject host-specific scripts without rejecting Go portability", () => {
@@ -501,6 +524,39 @@ test("Go workflows use tooling/go.mod and the Go CodeQL lane", () => {
     ".github/workflows/codeql.yml: job analyze-go must use Go 1.27.0 from tooling/go.mod with tooling/go.sum caching",
     ".github/workflows/codeql.yml: analyze-go must initialize CodeQL autobuild for Go",
   ]);
+});
+
+test("CodeQL uses the bounded impact projection and exact language selectors", () => {
+  const valid = workflow("codeql");
+  assert.deepEqual(validateCodeQlImpactWorkflowObject(valid), []);
+
+  const planFinding = ".github/workflows/codeql.yml: CodeQL must use the exact bounded Go impact projection";
+  const shallowHistory = structuredClone(valid);
+  shallowHistory.jobs["impact-plan"].steps[0].with["fetch-depth"] = 1;
+  assert.ok(validateCodeQlImpactWorkflowObject(shallowHistory).includes(planFinding));
+
+  const forcedPullRequestFull = structuredClone(valid);
+  const plan = forcedPullRequestFull.jobs["impact-plan"].steps.find((step) => step.id === "plan");
+  plan.run = plan.run.replace(
+    "go -C tooling run ./cmd/20w ci plan --root .. \\",
+    "go -C tooling run ./cmd/20w ci plan --root .. --full \\",
+  );
+  assert.ok(validateCodeQlImpactWorkflowObject(forcedPullRequestFull).includes(planFinding));
+
+  const broadJavaScript = structuredClone(valid);
+  broadJavaScript.jobs.analyze.if = "always()";
+  assert.ok(validateCodeQlImpactWorkflowObject(broadJavaScript).includes(
+    ".github/workflows/codeql.yml: JavaScript and TypeScript analysis must use only the full-plan or site selector",
+  ));
+
+  const crossedGoSelector = structuredClone(valid);
+  crossedGoSelector.jobs["analyze-go"].if = crossedGoSelector.jobs["analyze-go"].if.replace(
+    "outputs.go",
+    "outputs.site",
+  );
+  assert.ok(validateCodeQlImpactWorkflowObject(crossedGoSelector).includes(
+    ".github/workflows/codeql.yml: Go analysis must use only the full-plan or Go selector",
+  ));
 });
 
 test("Pages verifies the Cloudflare public transport boundary after deployment", () => {

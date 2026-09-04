@@ -137,6 +137,12 @@ the exact diff; this file records why the project changed.
   manifest pairs beside its comparison receipt. CI uploads the bounded mismatch
   bundle for 30 days, so a rare renderer disagreement can be byte-diffed without
   rerunning or weakening the acceptance gate.
+- Ordinary Linux CI, CodeQL, release, Scorecard, Pages and repository-metadata
+  jobs now run on office ARC. CodeQL uses the existing exact-diff plan to skip
+  unaffected language analyses; scheduled and manual runs, plus pushes without
+  comparable ancestry, remain full. The metadata-only labeler and the
+  post-deployment public-route check stay GitHub-hosted to preserve their
+  isolation and outside-cluster observation boundaries.
 - Documentation validation now treats byte-identical Mermaid bodies as staged
   source-ownership debt. The exact checked baseline may shrink through reviewed
   owner repairs, while unknown, changed, malformed, or stale groups fail closed.
