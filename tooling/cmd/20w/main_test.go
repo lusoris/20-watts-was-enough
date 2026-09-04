@@ -185,7 +185,19 @@ func TestRunGitHubSyncMetadataChecksAllLocalAuthorities(t *testing.T) {
 	if err := os.MkdirAll(filepath.Join(root, ".github"), 0o755); err != nil {
 		t.Fatal(err)
 	}
-	labels := `{"schema":1,"labels":[{"name":"area:test","color":"0e8a16","description":"Test label"}]}`
+	labels := `{"schema":1,"labels":[
+  {"name":"type:feat","color":"0e8a16","description":"Feature"},
+  {"name":"type:fix","color":"0e8a16","description":"Fix"},
+  {"name":"type:docs","color":"0e8a16","description":"Docs"},
+  {"name":"type:chore","color":"0e8a16","description":"Chore"},
+  {"name":"type:refactor","color":"0e8a16","description":"Refactor"},
+  {"name":"type:test","color":"0e8a16","description":"Test"},
+  {"name":"type:ci","color":"0e8a16","description":"CI"},
+  {"name":"type:build","color":"0e8a16","description":"Build"},
+  {"name":"severity:p2","color":"0e8a16","description":"Priority"},
+  {"name":"status:in-progress","color":"0e8a16","description":"Active"},
+  {"name":"area:test","color":"0e8a16","description":"Test area"}
+]}`
 	milestones := `{
   "schema": 1,
   "milestones": [{
@@ -207,7 +219,20 @@ func TestRunGitHubSyncMetadataChecksAllLocalAuthorities(t *testing.T) {
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	exitCode := run([]string{"github", "sync-metadata", "--root", root, "--check"}, &stdout, &stderr)
-	if exitCode != 0 || !strings.Contains(stdout.String(), "1 managed labels, 1 managed milestones, and 1 managed issue assignments") {
+	if exitCode != 0 || !strings.Contains(stdout.String(), "11 managed labels, 1 managed milestones, and 1 managed issue assignments") {
+		t.Fatalf("run() exit/stdout/stderr = %d/%q/%q", exitCode, stdout.String(), stderr.String())
+	}
+}
+
+func TestRunGitHubSyncPullRequestMetadataChecksLocalAuthorities(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	exitCode := run([]string{
+		"github", "sync-pr-metadata", "--root", root, "--check",
+	}, &stdout, &stderr)
+	if exitCode != 0 || !strings.Contains(stdout.String(), "authority validation passed") {
 		t.Fatalf("run() exit/stdout/stderr = %d/%q/%q", exitCode, stdout.String(), stderr.String())
 	}
 }

@@ -3,6 +3,7 @@ package ciplan
 import (
 	"bytes"
 	"encoding/json"
+	"path/filepath"
 	"reflect"
 	"strings"
 	"testing"
@@ -117,6 +118,21 @@ func TestProjectExpandsOnlySelectedShardedArtifacts(t *testing.T) {
 	}
 	if !projection.WorkstationAny || !reflect.DeepEqual(jobs, want) {
 		t.Fatalf("sharded projection = %#v / %v, want %v", projection, jobs, want)
+	}
+}
+
+func TestWorkstationJavaScriptChangeActivatesTheCodeQLSelector(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	plan := selectTestPaths(t, root, testOptions(root), []string{
+		"experiments/workstation/fixture-026/runner.mjs",
+	})
+	projection, err := Project(plan)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if projection.Site || !projection.WorkstationAny {
+		t.Fatalf("Project(workstation JavaScript) = %#v, want workstation_any without site", projection)
 	}
 }
 

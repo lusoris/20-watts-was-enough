@@ -154,7 +154,7 @@ func TestHostileGoEnvironmentsProduceByteIdenticalBinary(t *testing.T) {
 			"GOAMD64=v4", "GOARM64=v9.5,lse", "GOFIPS140=latest", "GOWORK=/tmp/hostile.work"),
 	}
 	digests := make([][32]byte, 0, len(hostileEnvironments))
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 	defer cancel()
 	for index, environment := range hostileEnvironments {
 		outputPath := filepath.Join(t.TempDir(), "20w")

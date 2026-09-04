@@ -34,7 +34,7 @@
     "validate:policy": "node scripts/validate-engineering-policy.mjs",
     "test:policy": "node --test --experimental-test-isolation=none scripts/engineering-policy.test.mjs scripts/install-locked-npm.test.mjs",
     "prepare:release": "node scripts/prepare-release-assets.mjs",
-    "test:release": "node --test --experimental-test-isolation=none scripts/prepare-release-assets.test.mjs scripts/lib/atomic-file-pair.test.mjs scripts/lib/opened-file.test.mjs scripts/lib/pdf-metadata.test.mjs",
+    "test:release": "node --test --experimental-test-isolation=none scripts/prepare-release-assets.test.mjs scripts/lib/atomic-file-pair.test.mjs scripts/lib/chromium-cdp.test.mjs scripts/lib/opened-file.test.mjs scripts/lib/pdf-metadata.test.mjs",
     "check:code-shape": "node scripts/audit-code-shape.mjs --check",
     "test:code-shape": "node --test --experimental-test-isolation=none scripts/audit-code-shape.test.mjs",
     "check:prose": "node scripts/audit-prose-style.mjs",

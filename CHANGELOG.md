@@ -7,6 +7,22 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Decision 0059 makes dependency advisory checking a single explicit security
+  decision in each full CI or release gate. Every locked install now suppresses
+  npm's implicit audit submission; the enforcing command audits the canonical
+  lock rather than the mutable installed tree. Policy tests reject audit
+  fan-out, duplicate or reordered audit commands and failure bypasses.
+- Decision 0057 and a trusted-main Go projection now derive pull-request
+  milestones and complete managed classifications from one explicit mapped
+  issue reference. The bounded workflow refreshes path labels, never checks out
+  pull-request code, preserves concurrent unrelated-label edits, refuses
+  ambiguous references, confirms both records before targeted writes and
+  verifies both records by bounded readback. The canonical label manifest now
+  also closes the accepted Conventional Commit type set across CI and metadata;
+  a separate title gate will rerun on edits without restarting code tests after
+  bootstrap removal. The existing CI title dependency remains until that
+  standalone context is present
+  on `main` and required by the live ruleset.
 - A digest-pinned apko/Wolfi foundation now closes the Linux `amd64` Poppler
   26.08.0 PDF-tools graph at 45 APKs. Its offline Go validator binds the config,
   lock, exact APK retention metadata, upstream source identities, the pinned
@@ -133,10 +149,24 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- Workflow-policy checks now parse dynamic npm command prefixes with bounded,
+  linear scans instead of one backtracking-prone expression. Long assignment
+  and wrapper-flag prefixes remain covered, while variable arguments outside
+  command position do not become false positives.
+- The pinned book renderer now retries exactly once, within its existing
+  300-second print budget, only when Chrome returns the terminal `Printing
+  failed` result. Other protocol failures still stop immediately, diagnostics
+  retain the CDP method and code, and the two-render byte comparison remains
+  the publication gate.
 - A failed two-builder PDF reproducibility check now retains both exact PDF and
   manifest pairs beside its comparison receipt. CI uploads the bounded mismatch
   bundle for 30 days, so a rare renderer disagreement can be byte-diffed without
   rerunning or weakening the acceptance gate.
+- Public-repository workflows remain on ephemeral GitHub-hosted runners rather
+  than exposing fork-controlled code to the privileged office ARC boundary.
+  External-fork runs now require approval for every outside contributor.
+  Exact-diff CI and CodeQL selection reduce unaffected work; scheduled and
+  manual runs, plus pushes without comparable ancestry, remain full.
 - Documentation validation now treats byte-identical Mermaid bodies as staged
   source-ownership debt. The exact checked baseline may shrink through reviewed
   owner repairs, while unknown, changed, malformed, or stale groups fail closed.

@@ -5,7 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened]
+    types: [opened, edited, synchronize, reopened]
   workflow_dispatch:
 
 permissions: {}
@@ -60,9 +60,23 @@ jobs:
               --base "$BASE_SHA" --head "$HEAD_SHA" --json \
               > build/ci-impact-plan.json
           elif [[ "$EVENT_NAME" == "push" ]]; then
-            go -C tooling run ./cmd/20w ci plan --root .. --full \
-              --base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \
-              > build/ci-impact-plan.json
+            zero_sha=0000000000000000000000000000000000000000
+            valid_commit() {
+              local sha="$1"
+              [[ "$sha" =~ ^[0-9a-f]{40}$ ]] && git cat-file -e "${sha}^{commit}" 2>/dev/null
+            }
+            if [[ "$BEFORE_SHA" != "$zero_sha" ]] \
+              && valid_commit "$BEFORE_SHA" \
+              && valid_commit "$CURRENT_SHA" \
+              && git merge-base --is-ancestor "$BEFORE_SHA" "$CURRENT_SHA"; then
+              go -C tooling run ./cmd/20w ci plan --root .. \
+                --base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \
+                > build/ci-impact-plan.json
+            else
+              echo "::notice::Main-push comparison is unavailable; running the fail-closed full plan."
+              go -C tooling run ./cmd/20w ci plan --root .. --full --json \
+                > build/ci-impact-plan.json
+            fi
           else
             go -C tooling run ./cmd/20w ci plan --root .. --full --json \
               > build/ci-impact-plan.json
@@ -72,7 +86,7 @@ jobs:
             < build/ci-impact-plan.json >> "$GITHUB_OUTPUT"
 
   pr-title:
-    name: PR title
+    name: PR title bootstrap
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -81,7 +95,7 @@ jobs:
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          if ! printf '%s\n' "$PR_TITLE" | grep -qE '^(feat|fix|docs|chore|refactor|test|perf|ci|build|revert)(\(.+\))?(!)?: .+'; then
+          if ! printf '%s\n' "$PR_TITLE" | grep -qE '^(feat|fix|docs|chore|refactor|test|perf|ci|build|revert)(\([^()]{1,64}\))?(!)?:[[:space:]]+[^[:space:]]'; then
             echo "::error::PR title must use Conventional Commits: <type>(<scope>): <description>"
             exit 1
           fi
@@ -121,9 +135,9 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Reject high-severity dependency advisories
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=high --package-lock-only --fetch-timeout=30000 --fetch-retries=1
       - name: Reject a code-shape baseline reset
         if: github.event_name != 'workflow_dispatch'
         env:
@@ -164,7 +178,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Run common impact checks
         run: npm run check:impact-common
 
@@ -218,7 +232,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Run release checks
         run: npm run check:lane-release
 
@@ -250,7 +264,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Set up the locked PDF Docker Buildx client
         uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
         with:
@@ -300,7 +314,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Run research checks
         run: npm run check:lane-research
 
@@ -327,7 +341,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Run site checks
         run: npm run check:lane-site
 
@@ -354,7 +368,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Validate the workstation inventory and core
         run: npm run validate:workstation && npm run test:workstation:core
 
@@ -395,7 +409,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Run the allowlisted artifact test script
         env:
           ARTIFACT: ${{ matrix.artifact }}
@@ -681,8 +695,8 @@ jobs:
               fi
               ;;
             impact)
-              if [[ "$EVENT_NAME" != "pull_request" ]]; then
-                echo "::error::impact mode is allowed only for pull requests"
+              if [[ "$EVENT_NAME" != "pull_request" && "$EVENT_NAME" != "push" ]]; then
+                echo "::error::impact mode is allowed only for pull requests and pushes"
                 exit 1
               fi
               require_state quality-full "$RESULT_QUALITY_FULL" skipped
@@ -695,7 +709,11 @@ jobs:
               require_selection workstation-core "$RESULT_WORKSTATION_CORE" "$SELECT_WORKSTATION"
               require_selection workstation-artifacts "$RESULT_WORKSTATION_ARTIFACTS" "$SELECT_WORKSTATION"
               require_selection container-smoke "$RESULT_CONTAINER" "$SELECT_CONTAINER"
-              require_selection dependency-review "$RESULT_DEPENDENCY_REVIEW" "$SELECT_DEPENDENCY"
+              if [[ "$EVENT_NAME" == "pull_request" ]]; then
+                require_selection dependency-review "$RESULT_DEPENDENCY_REVIEW" "$SELECT_DEPENDENCY"
+              else
+                require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" skipped
+              fi
               ;;
             *)
               echo "::error::impact plan mode is malformed: $MODE"

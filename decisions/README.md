@@ -51,7 +51,7 @@ than silently changing its outcome.
 | [0043](0043-impact-scope-pull-request-ci.md) | Impact-scope pull-request CI | accepted; workstation matrix and full-plan execution shape partly superseded by [0044](0044-shard-workstation-ci-without-splitting-test-authority.md), ready-PR and GitHub-path semantics partly superseded by [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md) |
 | [0044](0044-shard-workstation-ci-without-splitting-test-authority.md) | Shard workstation CI without splitting test authority | accepted; ready-PR gate extended by [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md), six-Fixture-026-shard clauses partly superseded by [0051](0051-add-a-seventh-fixture-026-shard-after-live-timing.md) |
 | [0045](0045-rewrite-renderer-layer-timestamps-before-recording-image-identity.md) | Rewrite renderer layer timestamps before recording image identity | accepted |
-| [0046](0046-project-the-research-roadmap-into-github-milestones.md) | Project the research roadmap into GitHub milestones | accepted |
+| [0046](0046-project-the-research-roadmap-into-github-milestones.md) | Project the research roadmap into GitHub milestones | accepted; pull-request exclusion clauses 3 and 6 partly superseded by [0057](0057-project-pull-request-metadata-from-managed-issues.md) |
 | [0047](0047-keep-cloudflare-as-the-public-pages-tls-authority.md) | Keep Cloudflare as the public Pages TLS authority | accepted |
 | [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md) | Gate ready pull requests with the full CI matrix | accepted; readiness-based full-matrix rule partly superseded by [0052](0052-impact-scope-every-pull-request.md) |
 | [0049](0049-adopt-bounded-maintenance-automation.md) | Adopt bounded maintenance automation | accepted |
@@ -61,3 +61,6 @@ than silently changing its outcome.
 | [0053](0053-lock-the-poppler-pdf-tools-image-foundation.md) | Lock the Poppler PDF-tools image foundation | accepted |
 | [0054](0054-classify-script-impact-by-executable-consumer.md) | Classify script impact by executable consumer | accepted |
 | [0055](0055-freeze-clrs-text-as-a-controller-shakedown.md) | Freeze CLRS-Text as a controller shakedown | accepted |
+| [0056](0056-keep-public-workflows-off-self-hosted-runners.md) | Keep public workflows off self-hosted runners | accepted |
+| [0057](0057-project-pull-request-metadata-from-managed-issues.md) | Project pull-request metadata from managed issues | accepted |
+| [0059](0059-run-one-enforcing-dependency-audit-per-full-gate.md) | Run one enforcing dependency audit per full gate | accepted |

@@ -127,6 +127,7 @@ const requiredFiles = [
   ".github/workflows/codeql.yml",
   ".github/workflows/github-pages.yml",
   ".github/workflows/labeler.yml",
+  ".github/workflows/pr-title.yml",
   ".github/workflows/release.yml",
   ".github/workflows/scorecard.yml",
   ".github/workflows/sync-repository-metadata.yml",
@@ -169,6 +170,7 @@ const requiredFiles = [
   "tooling/AGENTS.md",
   "tooling/Dockerfile",
   "tooling/cmd/20w/github_metadata.go",
+  "tooling/cmd/20w/github_pr_metadata.go",
   "tooling/cmd/20w/main.go",
   "tooling/cmd/build-release/main.go",
   "tooling/go.mod",
@@ -178,6 +180,7 @@ const requiredFiles = [
   "tooling/internal/githubissuemilestones/sync.go",
   "tooling/internal/githubmilestones/manifest.go",
   "tooling/internal/githubmilestones/sync.go",
+  "tooling/internal/githubprmetadata/sync.go",
   "tooling/internal/repositorymanifest/read.go",
 ];
 
@@ -194,16 +197,6 @@ const forbiddenLegacyHostingPaths = [
   "scripts/validate-book-route-build.mjs",
   "vite.config.ts",
   "worker/index.ts",
-];
-
-const workflowFiles = [
-  ".github/workflows/ci.yml",
-  ".github/workflows/codeql.yml",
-  ".github/workflows/github-pages.yml",
-  ".github/workflows/labeler.yml",
-  ".github/workflows/release.yml",
-  ".github/workflows/scorecard.yml",
-  ".github/workflows/sync-repository-metadata.yml",
 ];
 
 const issueFormFiles = [
@@ -335,6 +328,21 @@ export function validateWorkflowObject(workflow, relativePath = "workflow.yml") 
 
   findings.push(...validatePortableWorkflowObject(workflow, relativePath));
 
+  return findings;
+}
+
+export function validatePublicRepositoryRunnerWorkflowObject(
+  workflow,
+  relativePath = "workflow.yml",
+) {
+  const findings = [];
+  for (const [jobName, job] of Object.entries(workflow?.jobs ?? {})) {
+    if (job?.["runs-on"] !== "ubuntu-latest") {
+      findings.push(
+        `${relativePath}: public-repository job ${jobName} must run on GitHub-hosted ubuntu-latest`,
+      );
+    }
+  }
   return findings;
 }
 
@@ -491,7 +499,7 @@ export function validateJavaScriptRuntimeWorkflowObject(
   const npmIndex = steps.findIndex((step) => step?.run?.trim() === (
     `test "$(npm --version)" = "${runtimePolicy.npmVersion}"`
   ));
-  const installIndex = steps.findIndex((step) => step?.run?.trim() === "npm ci");
+  const installIndex = steps.findIndex((step) => step?.run?.trim() === "npm ci --no-audit");
   const setup = setupIndex >= 0 ? steps[setupIndex] : undefined;
   if (
     setup?.with?.["node-version"] !== runtimePolicy.nodeVersion
@@ -512,7 +520,264 @@ export function validateJavaScriptRuntimeWorkflowObject(
     );
   }
   if (installIndex < 0 || npmIndex < 0 || installIndex <= npmIndex) {
-    findings.push(`${relativePath}: job ${jobName} must run npm ci after verifying the locked npm version`);
+    findings.push(`${relativePath}: job ${jobName} must run npm ci --no-audit after verifying the locked npm version`);
+  }
+  return findings;
+}
+
+const npmDependencyCommands = new Set([
+  "add",
+  "audit",
+  "cit",
+  "ci",
+  "clean-install",
+  "clean-install-test",
+  "i",
+  "ic",
+  "in",
+  "ins",
+  "inst",
+  "insta",
+  "instal",
+  "install",
+  "install-ci-test",
+  "install-clean",
+  "install-scripts",
+  "install-test",
+  "isnt",
+  "isnta",
+  "isntal",
+  "isntall",
+  "isntall-clean",
+  "it",
+  "sit",
+]);
+const unambiguousNpmDependencyCommands = new Set(
+  [...npmDependencyCommands].filter((command) => !["i", "in", "it"].includes(command)),
+);
+
+const shellAssignmentPrefix = /[A-Za-z_][A-Za-z0-9_]*=(?:"[^"\r\n]*"|'[^'\r\n]*'|[^\s]+)(?:\s+|$)/uy;
+const shellCommandWrapper = /(?:\/usr\/bin\/env|env|command|exec)(?=\s|$)/uy;
+const shellWrapperFlag = /--?[^\s]*/uy;
+const shellVariableCommand = /(?:"\$\{[^}\r\n]+\}"|"\$[A-Za-z_][A-Za-z0-9_]*"|\$\{[^}\r\n]+\}|\$[A-Za-z_][A-Za-z0-9_]*)(?=\s|$)/uy;
+
+function skipShellWhitespace(value, start) {
+  let index = start;
+  while (index < value.length && /\s/u.test(value[index])) index += 1;
+  return index;
+}
+
+function skipShellAssignments(value, start) {
+  let index = start;
+  while (index < value.length) {
+    shellAssignmentPrefix.lastIndex = index;
+    const match = shellAssignmentPrefix.exec(value);
+    if (!match) break;
+    index = match.index + match[0].length;
+  }
+  return index;
+}
+
+function variableShellCommandTail(segment) {
+  let index = skipShellAssignments(segment, 0);
+  shellCommandWrapper.lastIndex = index;
+  const wrapper = shellCommandWrapper.exec(segment);
+  if (wrapper) {
+    index = skipShellWhitespace(segment, wrapper.index + wrapper[0].length);
+    while (index < segment.length && segment[index] === "-") {
+      shellWrapperFlag.lastIndex = index;
+      const flag = shellWrapperFlag.exec(segment);
+      if (!flag) break;
+      index = skipShellWhitespace(segment, flag.index + flag[0].length);
+    }
+    index = skipShellAssignments(segment, index);
+  }
+
+  shellVariableCommand.lastIndex = index;
+  const variable = shellVariableCommand.exec(segment);
+  if (!variable) return undefined;
+  return segment.slice(skipShellWhitespace(segment, variable.index + variable[0].length));
+}
+
+function npmInvocations(step) {
+  if (typeof step?.run !== "string") {
+    return [];
+  }
+  const invocations = [];
+  const logicalLines = step.run
+    .replaceAll(/\\\r?\n/gu, " ")
+    .split(/\r?\n/u)
+    .map((line) => line.trim());
+  for (const line of logicalLines) {
+    const npmPattern = /(?<![A-Za-z0-9_.-])(?:bun|bunx|npm|npm-cli\.js|npx|pnpm|yarn)(?=$|[\s;&|)])/gu;
+    for (const match of line.matchAll(npmPattern)) {
+      const commandSegment = line
+        .slice((match.index ?? 0) + match[0].length)
+        .split(/[;&|]/u, 1)[0];
+      const tokens = commandSegment
+        .match(/"(?:[^"\\]|\\.)*"|'[^']*'|[^\s]+/gu)
+        ?.map((token) => token
+          .replace(/^[("'$[{]+/u, "")
+          .replace(/[;)"'\]}]+$/u, "")) ?? [];
+      const firstToken = tokens[0] ?? "";
+      let command = firstToken;
+      if (firstToken.startsWith("-")) {
+        command = tokens.find((token) => npmDependencyCommands.has(token)) ?? "";
+      }
+      if (npmDependencyCommands.has(command)) {
+        invocations.push({ command, line });
+      } else if (firstToken !== "--version" && firstToken !== "run" && firstToken !== "run-script") {
+        invocations.push({ command: "unsupported", line });
+      }
+    }
+    for (const segment of line.split(/[;&|]/u).map((part) => part.trim())) {
+      const commandTail = variableShellCommandTail(segment);
+      if (commandTail !== undefined) {
+        const tokens = commandTail
+          .match(/"(?:[^"\\]|\\.)*"|'[^']*'|[^\s]+/gu)
+          ?.map((token) => token
+            .replace(/^[("'$[{]+/u, "")
+            .replace(/[)"'\]}]+$/u, "")) ?? [];
+        const command = tokens[0]?.startsWith("-")
+          ? tokens.find((token) => npmDependencyCommands.has(token))
+          : tokens[0];
+        if (npmDependencyCommands.has(command)) {
+          invocations.push({ command: "unsupported", line });
+        }
+      }
+    }
+    const variableReference = /\$\{[^}\r\n]+\}|\$[A-Za-z_][A-Za-z0-9_]*/gu;
+    for (const match of line.matchAll(variableReference)) {
+      const tokens = line
+        .slice((match.index ?? 0) + match[0].length)
+        .replace(/^[\\'"}\])]+\s*/u, "")
+        .match(/"(?:[^"\\]|\\.)*"|'[^']*'|[^\s]+/gu)
+        ?.map((token) => token
+          .replace(/^[("'$[{]+/u, "")
+          .replace(/[;)"'\]}]+$/u, "")) ?? [];
+      const command = tokens[0]?.startsWith("-")
+        ? tokens.find((token) => unambiguousNpmDependencyCommands.has(token))
+        : tokens[0];
+      if (unambiguousNpmDependencyCommands.has(command)) {
+        invocations.push({ command: "unsupported", line });
+      }
+    }
+  }
+  return invocations;
+}
+
+function lockedNpmInstallSequenceIsExact(job) {
+  const steps = job?.steps;
+  if (!Array.isArray(steps)) return true;
+  const sequenceMatchers = [
+    (step) => actionUses(step, "actions/setup-node"),
+    (step) => step?.run?.trim() === "node scripts/install-locked-npm.mjs",
+    (step) => step?.run?.trim() === `test "$(npm --version)" = "${runtimePolicy.npmVersion}"`,
+    (step) => step?.run?.trim() === "npm ci --no-audit",
+  ];
+  const sequenceIndices = sequenceMatchers.map((matches) => steps.flatMap(
+    (step, stepIndex) => (matches(step) ? [stepIndex] : []),
+  ));
+  if (sequenceIndices[0].length === 0) return true;
+  const firstIndex = sequenceIndices[0][0];
+  return sequenceIndices.every((indices, offset) => (
+    indices.length === 1 && indices[0] === firstIndex + offset
+  ));
+}
+
+function inspectDependencyWorkflowJob(jobName, job, relativePath) {
+  const auditSteps = [];
+  const findings = [];
+  if (!Array.isArray(job?.steps)) return { auditSteps, findings };
+  let unsafeInstallDetected = false;
+  let unsupportedNpmDetected = false;
+  for (const [stepIndex, step] of job.steps.entries()) {
+    const dependencyCommands = npmInvocations(step);
+    const installCommands = dependencyCommands.filter(({ command }) => command !== "audit");
+    if (installCommands.some(({ command, line }) => (
+      command !== "unsupported" && (command !== "ci" || line !== "npm ci --no-audit")
+    ))) {
+      unsafeInstallDetected = true;
+    }
+    if (installCommands.some(({ command }) => command === "unsupported")) {
+      unsupportedNpmDetected = true;
+    }
+    for (const { command, line } of dependencyCommands) {
+      if (command !== "audit") continue;
+      auditSteps.push({ jobName, stepIndex, step, line });
+    }
+  }
+  if (unsafeInstallDetected) {
+    findings.push(
+      `${relativePath}: job ${jobName} must suppress npm ci's implicit audit with the exact npm ci --no-audit command`,
+    );
+  }
+  if (unsupportedNpmDetected) {
+    findings.push(
+      `${relativePath}: job ${jobName} contains an unsupported npm invocation outside version, run, exact install, or exact audit commands`,
+    );
+  }
+  if (!unsafeInstallDetected && !unsupportedNpmDetected && !lockedNpmInstallSequenceIsExact(job)) {
+    findings.push(
+      `${relativePath}: job ${jobName} must use one adjacent locked Node, npm, verification, and npm ci --no-audit sequence`,
+    );
+  }
+  return { auditSteps, findings };
+}
+
+export function validateDependencyAuditWorkflowObject(
+  workflow,
+  auditJobName,
+  relativePath = "workflow.yml",
+) {
+  const findings = [];
+  const jobs = workflow?.jobs;
+  if (!jobs || typeof jobs !== "object" || Array.isArray(jobs)) {
+    return [`${relativePath}: workflow must declare jobs for dependency-audit validation`];
+  }
+
+  const auditSteps = [];
+  for (const [jobName, job] of Object.entries(jobs)) {
+    const inspected = inspectDependencyWorkflowJob(jobName, job, relativePath);
+    findings.push(...inspected.findings);
+    auditSteps.push(...inspected.auditSteps);
+  }
+
+  if (auditJobName === undefined) {
+    if (auditSteps.length > 0) {
+      findings.push(
+        `${relativePath}: workflows without a full audit gate must not run an explicit dependency audit`,
+      );
+    }
+    return findings;
+  }
+
+  if (auditSteps.length !== 1) {
+    findings.push(
+      `${relativePath}: job ${auditJobName} must be the only job to run the lockfile dependency audit`,
+    );
+    return findings;
+  }
+
+  const audit = auditSteps[0];
+  const auditJob = jobs[auditJobName];
+  const installIndex = auditJob?.steps?.findIndex((step) => (
+    step?.run?.trim() === "npm ci --no-audit"
+  ));
+  if (
+    audit.jobName !== auditJobName
+    || audit.line !== "npm audit --audit-level=high --package-lock-only --fetch-timeout=30000 --fetch-retries=1"
+    || audit.step?.run?.trim() !== audit.line
+    || !Number.isInteger(installIndex)
+    || installIndex < 0
+    || audit.stepIndex !== installIndex + 1
+    || !continueOnErrorIsDisabled(auditJob)
+    || audit.step?.if !== undefined
+    || !continueOnErrorIsDisabled(audit.step)
+  ) {
+    findings.push(
+      `${relativePath}: job ${auditJobName} must run the exact enforcing dependency audit after its no-audit install`,
+    );
   }
   return findings;
 }
@@ -783,7 +1048,116 @@ export function validatePDFRendererReproducibilityWorkflowObject(workflow, relat
   return [`${relativePath}: PDF reproducibility validator received an unsupported workflow`];
 }
 
-function validateCiImpactPlanJob(jobs, relativePath, findings) {
+const ciImpactPlanEnvironment = Object.freeze({
+  BASE_SHA: "${{ github.event.pull_request.base.sha }}",
+  BEFORE_SHA: "${{ github.event.before }}",
+  CURRENT_SHA: "${{ github.sha }}",
+  EVENT_NAME: "${{ github.event_name }}",
+  HEAD_SHA: "${{ github.event.pull_request.head.sha }}",
+});
+
+const ciImpactPlanSource = [
+  "set -euo pipefail",
+  "mkdir -p build",
+  'if [[ "$EVENT_NAME" == "pull_request" ]]; then',
+  "  go -C tooling run ./cmd/20w ci plan --root .. \\",
+  '    --base "$BASE_SHA" --head "$HEAD_SHA" --json \\',
+  "    > build/ci-impact-plan.json",
+  'elif [[ "$EVENT_NAME" == "push" ]]; then',
+  "  zero_sha=0000000000000000000000000000000000000000",
+  "  valid_commit() {",
+  '    local sha="$1"',
+  '    [[ "$sha" =~ ^[0-9a-f]{40}$ ]] && git cat-file -e "${sha}^{commit}" 2>/dev/null',
+  "  }",
+  '  if [[ "$BEFORE_SHA" != "$zero_sha" ]] \\',
+  '    && valid_commit "$BEFORE_SHA" \\',
+  '    && valid_commit "$CURRENT_SHA" \\',
+  '    && git merge-base --is-ancestor "$BEFORE_SHA" "$CURRENT_SHA"; then',
+  "    go -C tooling run ./cmd/20w ci plan --root .. \\",
+  '      --base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \\',
+  "      > build/ci-impact-plan.json",
+  "  else",
+  '    echo "::notice::Main-push comparison is unavailable; running the fail-closed full plan."',
+  "    go -C tooling run ./cmd/20w ci plan --root .. --full --json \\",
+  "      > build/ci-impact-plan.json",
+  "  fi",
+  "else",
+  "  go -C tooling run ./cmd/20w ci plan --root .. --full --json \\",
+  "    > build/ci-impact-plan.json",
+  "fi",
+  "test -s build/ci-impact-plan.json",
+  "go -C tooling run ./cmd/20w ci project \\",
+  '  < build/ci-impact-plan.json >> "$GITHUB_OUTPUT"',
+].join("\n");
+
+function impactPlanJobBoundaryIsExact(workflow, plan) {
+  return [
+    workflow?.defaults === undefined,
+    plan?.name === "CI impact plan",
+    plan?.["runs-on"] === "ubuntu-latest",
+    plan?.["timeout-minutes"] === 10,
+    Object.keys(plan?.permissions ?? {}).length === 1,
+    plan?.permissions?.contents === "read",
+    plan?.if === undefined,
+    continueOnErrorIsDisabled(plan),
+    plan?.defaults === undefined,
+    plan?.container === undefined,
+    plan?.services === undefined,
+    Object.keys(plan ?? {}).every((key) => [
+      "name", "runs-on", "timeout-minutes", "permissions", "outputs", "steps",
+    ].includes(key)),
+  ].every(Boolean);
+}
+
+function impactPlanCheckoutIsExact(checkout) {
+  return [
+    actionUses(checkout, "actions/checkout"),
+    checkout?.with?.["fetch-depth"] === 0,
+    checkout?.with?.["persist-credentials"] === false,
+    checkout?.if === undefined,
+    checkout?.shell === undefined,
+    continueOnErrorIsDisabled(checkout),
+    Object.keys(checkout ?? {}).every((key) => ["name", "uses", "with"].includes(key)),
+  ].every(Boolean);
+}
+
+function impactPlanGoSetupIsExact(setup) {
+  return [
+    actionUses(setup, "actions/setup-go"),
+    setup?.with?.["go-version-file"] === "tooling/go.mod",
+    setup?.with?.["cache-dependency-path"] === "tooling/go.sum",
+    setup?.if === undefined,
+    setup?.shell === undefined,
+    continueOnErrorIsDisabled(setup),
+    Object.keys(setup ?? {}).every((key) => ["name", "uses", "with"].includes(key)),
+  ].every(Boolean);
+}
+
+function impactPlanProjectionStepIsExact(planStep) {
+  return [
+    planStep?.id === "plan",
+    Object.keys(planStep?.env ?? {}).length === Object.keys(ciImpactPlanEnvironment).length,
+    propertiesMatch(planStep?.env, ciImpactPlanEnvironment),
+    String(planStep?.run ?? "").trim() === ciImpactPlanSource,
+    planStep?.if === undefined,
+    planStep?.shell === undefined,
+    continueOnErrorIsDisabled(planStep),
+    Object.keys(planStep ?? {}).every((key) => ["name", "id", "env", "run"].includes(key)),
+  ].every(Boolean);
+}
+
+function impactPlanJobRunsExactProjection(workflow, plan) {
+  const steps = plan?.steps ?? [];
+  return [
+    impactPlanJobBoundaryIsExact(workflow, plan),
+    steps.length === 3,
+    impactPlanCheckoutIsExact(steps[0]),
+    impactPlanGoSetupIsExact(steps[1]),
+    impactPlanProjectionStepIsExact(steps[2]),
+  ].every(Boolean);
+}
+
+function validateCiImpactPlanJob(workflow, jobs, relativePath, findings) {
   const plan = jobs["impact-plan"];
   const expectedOutputs = {
     mode: "${{ steps.plan.outputs.mode }}",
@@ -804,39 +1178,10 @@ function validateCiImpactPlanJob(jobs, relativePath, findings) {
       && propertiesMatch(plan?.outputs, expectedOutputs),
     `${relativePath}: impact-plan must expose only the fixed validated Go projection`,
   );
-  const planStep = (plan?.steps ?? []).find((step) => step?.id === "plan");
-  const expectedEnvironment = {
-    BASE_SHA: "${{ github.event.pull_request.base.sha }}",
-    BEFORE_SHA: "${{ github.event.before }}",
-    CURRENT_SHA: "${{ github.sha }}",
-    EVENT_NAME: "${{ github.event_name }}",
-    HEAD_SHA: "${{ github.event.pull_request.head.sha }}",
-  };
-  const expectedPlanSource = [
-    "set -euo pipefail",
-    "mkdir -p build",
-    'if [[ "$EVENT_NAME" == "pull_request" ]]; then',
-    "  go -C tooling run ./cmd/20w ci plan --root .. \\",
-    '    --base "$BASE_SHA" --head "$HEAD_SHA" --json \\',
-    "    > build/ci-impact-plan.json",
-    'elif [[ "$EVENT_NAME" == "push" ]]; then',
-    "  go -C tooling run ./cmd/20w ci plan --root .. --full \\",
-    '    --base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \\',
-    "    > build/ci-impact-plan.json",
-    "else",
-    "  go -C tooling run ./cmd/20w ci plan --root .. --full --json \\",
-    "    > build/ci-impact-plan.json",
-    "fi",
-    "test -s build/ci-impact-plan.json",
-    "go -C tooling run ./cmd/20w ci project \\",
-    '  < build/ci-impact-plan.json >> "$GITHUB_OUTPUT"',
-  ].join("\n");
   recordExpectation(
     findings,
-    Object.keys(planStep?.env ?? {}).length === Object.keys(expectedEnvironment).length
-      && propertiesMatch(planStep?.env, expectedEnvironment)
-      && String(planStep?.run ?? "").trim() === expectedPlanSource,
-    `${relativePath}: pull requests must use an exact impact diff, main pushes must preserve an exact diff in full mode, and manual runs must fail closed`,
+    impactPlanJobRunsExactProjection(workflow, plan),
+    `${relativePath}: pull requests and comparable main pushes must use exact impact diffs, while unavailable push ancestry and manual runs must fail closed`,
   );
 }
 
@@ -1063,7 +1408,8 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
       'require_selection workstation-artifacts "$RESULT_WORKSTATION_ARTIFACTS" "$SELECT_WORKSTATION"',
       'require_selection container-smoke "$RESULT_CONTAINER" "$SELECT_CONTAINER"',
       'require_selection dependency-review "$RESULT_DEPENDENCY_REVIEW" "$SELECT_DEPENDENCY"',
-      'impact mode is allowed only for pull requests',
+      'if [[ "$EVENT_NAME" != "pull_request" && "$EVENT_NAME" != "push" ]]; then\n      echo "::error::impact mode is allowed only for pull requests and pushes"\n      exit 1\n    fi',
+      'if [[ "$EVENT_NAME" == "pull_request" ]]; then\n      require_selection dependency-review "$RESULT_DEPENDENCY_REVIEW" "$SELECT_DEPENDENCY"\n    else\n      require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" skipped\n    fi',
       '"$SELECT_CONTAINER" "$SELECT_DEPENDENCY" "$SELECT_GO"',
       'full plan exposed a non-false semantic selector: $selector',
       "full plan did not expose its closed workstation matrix",
@@ -1073,6 +1419,14 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
       && countOccurrences(
         successSource,
         'require_selection pdf-renderer-reproducibility "$RESULT_RENDERER" "$SELECT_RENDERER"',
+      ) === 2
+      && countOccurrences(
+        successSource,
+        'require_selection dependency-review "$RESULT_DEPENDENCY_REVIEW" "$SELECT_DEPENDENCY"',
+      ) === 1
+      && countOccurrences(
+        successSource,
+        'require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" skipped',
       ) === 2
       && String(successSource ?? "").includes([
         'for selector in "$SELECT_CONTAINER" "$SELECT_DEPENDENCY" "$SELECT_GO" "$SELECT_RELEASE" \\',
@@ -1100,18 +1454,165 @@ export function validateCiImpactWorkflowObject(
       && pullRequest.branches.length === 1
       && pullRequest.branches[0] === "main"
       && Array.isArray(pullRequest?.types)
-      && pullRequest.types.length === 3
-      && ["opened", "synchronize", "reopened"]
+      && pullRequest.types.length === 4
+      && ["opened", "edited", "synchronize", "reopened"]
         .every((type) => pullRequest.types.includes(type))
       && Object.keys(pullRequest ?? {}).length === 2
       && Object.prototype.hasOwnProperty.call(trigger ?? {}, "workflow_dispatch"),
     `${relativePath}: CI must run on main pushes, manual dispatches, and every pull-request code update`,
   );
   const jobs = workflow?.jobs ?? {};
-  validateCiImpactPlanJob(jobs, relativePath, findings);
+  const titleTypes = [
+    "feat", "fix", "docs", "chore", "refactor", "test", "perf", "ci", "build", "revert",
+  ];
+  const titleJob = jobs["pr-title"];
+  recordExpectation(
+    findings,
+    pullRequestTitleJobIsExact(
+      titleJob,
+      "PR title bootstrap",
+      "github.event_name == 'pull_request'",
+    )
+      && pullRequestTitleStepIsExact(
+        titleJob?.steps?.[0],
+        pullRequestTitleRun(titleTypes),
+      ),
+    relativePath
+      + ": bootstrap PR title gate must exactly enforce the managed Conventional Commit grammar",
+  );
+  validateCiImpactPlanJob(workflow, jobs, relativePath, findings);
   validateCiImpactLaneJobs(jobs, relativePath, findings);
   validateCiImpactWorkstationJobs(jobs, relativePath, findings);
   validateCiImpactSuccessJob(jobs, relativePath, findings);
+  return findings;
+}
+
+function codeQlImpactLaneIsExact(job, selectors) {
+  const fullOrSelected = [
+    "github.event_name == 'schedule'",
+    "github.event_name == 'workflow_dispatch'",
+    "needs.impact-plan.outputs.mode == 'full'",
+    ...selectors.map((selector) => `needs.impact-plan.outputs.${selector} == 'true'`),
+  ].join(" || ");
+  return (
+    job?.needs === "impact-plan"
+    && job?.if === fullOrSelected
+    && continueOnErrorIsDisabled(job)
+    && (job?.steps ?? []).every(continueOnErrorIsDisabled)
+  );
+}
+
+function codeQlStepIsExact(step, name, action, expectedWith) {
+  return (
+    step?.name === name
+    && actionUses(step, action)
+    && Object.keys(step ?? {}).every((key) => ["name", "uses", "with"].includes(key))
+    && Object.keys(step?.with ?? {}).length === Object.keys(expectedWith).length
+    && propertiesMatch(step?.with, expectedWith)
+    && step?.if === undefined
+    && step?.shell === undefined
+    && continueOnErrorIsDisabled(step)
+  );
+}
+
+function codeQlJobBoundaryIsExact(job, name, expectedStepCount) {
+  return (
+    job?.name === name
+    && job?.needs === "impact-plan"
+    && job?.["runs-on"] === "ubuntu-latest"
+    && job?.["timeout-minutes"] === 30
+    && Object.keys(job?.permissions ?? {}).length === 3
+    && propertiesMatch(job?.permissions, {
+      contents: "read",
+      "security-events": "write",
+      actions: "read",
+    })
+    && continueOnErrorIsDisabled(job)
+    && job?.defaults === undefined
+    && job?.container === undefined
+    && job?.services === undefined
+    && Array.isArray(job?.steps)
+    && job.steps.length === expectedStepCount
+    && Object.keys(job ?? {}).every((key) => [
+      "name", "needs", "if", "runs-on", "timeout-minutes", "permissions", "steps",
+    ].includes(key))
+  );
+}
+
+function javaScriptCodeQlJobIsExact(job) {
+  const steps = job?.steps ?? [];
+  return (
+    codeQlJobBoundaryIsExact(job, "JavaScript and TypeScript analysis", 3)
+    && codeQlStepIsExact(steps[0], "Check out canonical source", "actions/checkout", {
+      "persist-credentials": false,
+    })
+    && codeQlStepIsExact(steps[1], "Initialize CodeQL", "github/codeql-action/init", {
+      languages: "javascript-typescript",
+      queries: "security-extended,security-and-quality",
+    })
+    && codeQlStepIsExact(steps[2], "Analyze", "github/codeql-action/analyze", {
+      category: "/language:javascript-typescript",
+    })
+  );
+}
+
+function goCodeQlJobIsExact(job) {
+  const steps = job?.steps ?? [];
+  return (
+    codeQlJobBoundaryIsExact(job, "Go analysis", 4)
+    && codeQlStepIsExact(steps[0], "Check out canonical source", "actions/checkout", {
+      "persist-credentials": false,
+    })
+    && codeQlStepIsExact(steps[1], "Use Go 1.27", "actions/setup-go", {
+      "go-version-file": "tooling/go.mod",
+      "cache-dependency-path": "tooling/go.sum",
+    })
+    && codeQlStepIsExact(steps[2], "Initialize CodeQL", "github/codeql-action/init", {
+      languages: "go",
+      "build-mode": "autobuild",
+      queries: "security-extended,security-and-quality",
+    })
+    && codeQlStepIsExact(steps[3], "Analyze", "github/codeql-action/analyze", {
+      category: "/language:go",
+    })
+  );
+}
+
+export function validateCodeQlImpactWorkflowObject(
+  workflow,
+  relativePath = ".github/workflows/codeql.yml",
+) {
+  const findings = [];
+  const jobs = workflow?.jobs ?? {};
+  const plan = jobs["impact-plan"];
+  const expectedOutputs = {
+    mode: "${{ steps.plan.outputs.mode }}",
+    go: "${{ steps.plan.outputs.go }}",
+    site: "${{ steps.plan.outputs.site }}",
+    workstation_any: "${{ steps.plan.outputs.workstation_any }}",
+  };
+  recordExpectation(
+    findings,
+    Object.keys(plan?.outputs ?? {}).length === Object.keys(expectedOutputs).length
+      && propertiesMatch(plan?.outputs, expectedOutputs)
+      && impactPlanJobRunsExactProjection(workflow, plan),
+    `${relativePath}: CodeQL must use the exact bounded Go impact projection`,
+  );
+  recordExpectation(
+    findings,
+    codeQlImpactLaneIsExact(jobs.analyze, ["site", "workstation_any"]),
+    `${relativePath}: JavaScript and TypeScript analysis must use only the full-plan, site, or workstation selector`,
+  );
+  recordExpectation(
+    findings,
+    javaScriptCodeQlJobIsExact(jobs.analyze),
+    `${relativePath}: JavaScript and TypeScript CodeQL must keep its exact fail-closed initialization and analysis boundary`,
+  );
+  recordExpectation(
+    findings,
+    codeQlImpactLaneIsExact(jobs["analyze-go"], ["go"]),
+    `${relativePath}: Go analysis must use only the full-plan or Go selector`,
+  );
   return findings;
 }
 
@@ -1128,6 +1629,9 @@ export function validateGoCodeQlWorkflowObject(
   }
   if (analyze?.with?.category !== "/language:go") {
     findings.push(`${relativePath}: analyze-go must publish the /language:go category`);
+  }
+  if (!goCodeQlJobIsExact(workflow?.jobs?.["analyze-go"])) {
+    findings.push(`${relativePath}: Go CodeQL must keep its exact fail-closed initialization and analysis boundary`);
   }
   return findings;
 }
@@ -1180,6 +1684,98 @@ export function validateRepositoryMetadataSyncWorkflowObject(
   );
   if (!repositoryMetadataCommandIsExact(synchronization)) {
     findings.push(`${relativePath}: the trusted Go command must apply canonical labels, milestones, and mapped issue assignments with the job token`);
+  }
+  return findings;
+}
+
+function pullRequestMetadataTriggerIsExact(trigger) {
+  const pullRequestTarget = trigger?.pull_request_target;
+  const expectedTypes = ["opened", "edited", "synchronize", "reopened"];
+  return (
+    Object.keys(trigger ?? {}).length === 1
+    && Object.keys(pullRequestTarget ?? {}).length === 1
+    && Array.isArray(pullRequestTarget?.types)
+    && pullRequestTarget.types.length === expectedTypes.length
+    && expectedTypes.every((type) => pullRequestTarget.types.includes(type))
+  );
+}
+
+function pullRequestMetadataStepsAreExact(steps) {
+  if (!Array.isArray(steps) || steps.length !== 4) return false;
+  const [labeler, checkout, setup, synchronization] = steps;
+  const expectedCommand = [
+    "go -C tooling run ./cmd/20w github sync-pr-metadata",
+    '--root .. --repository "$GITHUB_REPOSITORY"',
+    '--pull-request "$PULL_REQUEST"',
+  ].join(" ");
+  return (
+    actionUses(labeler, "actions/labeler")
+    && propertiesMatch(labeler?.with, { "sync-labels": true })
+    && Object.keys(labeler?.with ?? {}).length === 1
+    && actionUses(checkout, "actions/checkout")
+    && propertiesMatch(checkout?.with, {
+      ref: "refs/heads/main",
+      "persist-credentials": false,
+      "allow-unsafe-pr-checkout": false,
+    })
+    && Object.keys(checkout?.with ?? {}).length === 3
+    && actionUses(setup, "actions/setup-go")
+    && propertiesMatch(setup?.with, {
+      "go-version-file": "tooling/go.mod",
+      "cache-dependency-path": "tooling/go.sum",
+    })
+    && Object.keys(setup?.with ?? {}).length === 2
+    && synchronization?.run === expectedCommand
+    && propertiesMatch(synchronization?.env, {
+      GH_TOKEN: "${{ github.token }}",
+      PULL_REQUEST: "${{ github.event.pull_request.number }}",
+    })
+    && Object.keys(synchronization?.env ?? {}).length === 2
+    && [labeler, checkout, setup, synchronization].every((step) => (
+      step?.if === undefined && continueOnErrorIsDisabled(step)
+    ))
+  );
+}
+
+function pullRequestMetadataPermissionsAreExact(workflow, job) {
+  return (
+    Object.keys(workflow?.permissions ?? {}).length === 1
+    && workflow?.permissions?.contents === "read"
+    && Object.keys(job?.permissions ?? {}).length === 3
+    && propertiesMatch(job?.permissions, {
+      contents: "read", issues: "write", "pull-requests": "write",
+    })
+  );
+}
+
+function pullRequestMetadataBoundaryIsExact(workflow, job) {
+  return (
+    job?.["runs-on"] === "ubuntu-latest"
+    && job?.["timeout-minutes"] === 10
+    && job?.if === undefined
+    && continueOnErrorIsDisabled(job)
+    && workflow?.concurrency?.group === "${{ github.workflow }}-${{ github.event.pull_request.number }}"
+    && workflow?.concurrency?.["cancel-in-progress"] === false
+  );
+}
+
+export function validatePullRequestMetadataWorkflowObject(
+  workflow,
+  relativePath = ".github/workflows/labeler.yml",
+) {
+  const findings = [];
+  if (!pullRequestMetadataTriggerIsExact(workflow?.on)) {
+    findings.push(`${relativePath}: trusted metadata projection must run on opened, edited, synchronized, and reopened pull requests`);
+  }
+  const job = workflow?.jobs?.label;
+  if (!pullRequestMetadataPermissionsAreExact(workflow, job)) {
+    findings.push(`${relativePath}: pull-request metadata needs only contents:read, issues:write, and pull-requests:write at job scope`);
+  }
+  if (!pullRequestMetadataBoundaryIsExact(workflow, job)) {
+    findings.push(`${relativePath}: pull-request metadata must keep its bounded hosted-runner and per-pull-request concurrency boundary`);
+  }
+  if (!pullRequestMetadataStepsAreExact(job?.steps)) {
+    findings.push(`${relativePath}: pull-request metadata must sync path labels, check out only trusted main, and run the exact bounded Go projection`);
   }
   return findings;
 }
@@ -3068,6 +3664,102 @@ function validateRenovate(root, findings) {
   }
 }
 
+function pullRequestTitleTriggerIsExact(trigger) {
+  const expectedEvents = ["opened", "edited", "synchronize", "reopened"];
+  return (
+    Object.keys(trigger ?? {}).every((key) => ["branches", "types"].includes(key))
+    && trigger?.branches?.length === 1
+    && trigger.branches[0] === "main"
+    && trigger?.types?.length === expectedEvents.length
+    && expectedEvents.every((event) => trigger.types.includes(event))
+  );
+}
+
+function pullRequestTitleWorkflowIsExact(workflow) {
+  return (
+    workflow?.name === "PR title"
+    && Object.keys(workflow ?? {}).every((key) => [
+      "name", "on", "permissions", "concurrency", "jobs",
+    ].includes(key))
+    && Object.keys(workflow?.on ?? {}).length === 1
+    && pullRequestTitleTriggerIsExact(workflow?.on?.pull_request_target)
+    && Object.keys(workflow?.permissions ?? {}).length === 0
+    && workflow?.concurrency?.group === "${{ github.workflow }}-${{ github.event.pull_request.number }}"
+    && workflow?.concurrency?.["cancel-in-progress"] === true
+    && Object.keys(workflow?.concurrency ?? {}).length === 2
+    && workflow?.defaults === undefined
+    && Object.keys(workflow?.jobs ?? {}).length === 1
+  );
+}
+
+function pullRequestTitleJobIsExact(titleJob, expectedName = "PR title", expectedIf) {
+  return (
+    titleJob?.name === expectedName
+    && titleJob?.if === expectedIf
+    && titleJob?.["runs-on"] === "ubuntu-latest"
+    && titleJob?.["timeout-minutes"] === 5
+    && continueOnErrorIsDisabled(titleJob)
+    && titleJob?.defaults === undefined
+    && titleJob?.container === undefined
+    && titleJob?.services === undefined
+    && Array.isArray(titleJob?.steps)
+    && titleJob.steps.length === 1
+    && Object.keys(titleJob ?? {}).every((key) => (
+      ["name", "runs-on", "timeout-minutes", "steps"].includes(key)
+      || (key === "if" && expectedIf !== undefined)
+    ))
+  );
+}
+
+function pullRequestTitleRun(managedTypes) {
+  return [
+    `if ! printf '%s\\n' "$PR_TITLE" | grep -qE '^(${managedTypes.join("|")})(\\([^()]{1,64}\\))?(!)?:[[:space:]]+[^[:space:]]'; then`,
+    "  echo \"::error::PR title must use Conventional Commits: <type>(<scope>): <description>\"",
+    "  exit 1",
+    "fi",
+    "",
+  ].join("\n");
+}
+
+function pullRequestTitleStepIsExact(titleStep, expectedRun) {
+  return (
+    titleStep?.name === "Require a Conventional Commit title"
+    && titleStep?.run === expectedRun
+    && titleStep?.env?.PR_TITLE === "${{ github.event.pull_request.title }}"
+    && Object.keys(titleStep?.env ?? {}).length === 1
+    && titleStep?.if === undefined
+    && continueOnErrorIsDisabled(titleStep)
+    && titleStep?.shell === undefined
+    && Object.keys(titleStep ?? {}).every((key) => ["name", "env", "run"].includes(key))
+  );
+}
+
+export function validatePullRequestTitleTypeAuthority(
+  workflow,
+  manifest,
+  workflowPath = ".github/workflows/pr-title.yml",
+  manifestPath = ".github/labels.json",
+) {
+  const finding = `${workflowPath}: PR title types must exactly match managed type:* labels in ${manifestPath}`;
+  const managedTypes = (manifest?.labels ?? [])
+    .map((label) => label?.name)
+    .filter((name) => typeof name === "string" && name.startsWith("type:"))
+    .map((name) => name.slice("type:".length));
+  const uniqueManagedTypes = new Set(managedTypes);
+  const expectedRun = pullRequestTitleRun(managedTypes);
+  if (
+    managedTypes.length === 0
+    || uniqueManagedTypes.size !== managedTypes.length
+    || managedTypes.some((type) => !/^[a-z][a-z0-9-]{0,31}$/u.test(type))
+    || !pullRequestTitleWorkflowIsExact(workflow)
+    || !pullRequestTitleJobIsExact(workflow?.jobs?.["pr-title"])
+    || !pullRequestTitleStepIsExact(workflow?.jobs?.["pr-title"]?.steps?.[0], expectedRun)
+  ) {
+    return [finding];
+  }
+  return [];
+}
+
 function validateLabels(root, findings, issueForms) {
   const manifestPath = ".github/labels.json";
   const manifest = parseYaml(root, manifestPath, findings);
@@ -3129,6 +3821,17 @@ function validateLabels(root, findings, issueForms) {
       }
     }
   }
+
+  const titleWorkflowPath = ".github/workflows/pr-title.yml";
+  const titleWorkflow = parseYaml(root, titleWorkflowPath, findings);
+  if (titleWorkflow) {
+    findings.push(...validatePullRequestTitleTypeAuthority(
+      titleWorkflow,
+      manifest,
+      titleWorkflowPath,
+      manifestPath,
+    ));
+  }
 }
 
 function loadScientificRuntimeLock(root, findings) {
@@ -3182,6 +3885,13 @@ function validateCiWorkflowPolicy(workflow, relativePath, lock, findings) {
 
 function validateWorkflowPolicy(workflow, relativePath, lock, findings) {
   findings.push(...validateWorkflowObject(workflow, relativePath));
+  findings.push(...validatePublicRepositoryRunnerWorkflowObject(workflow, relativePath));
+  const auditJobName = relativePath === ".github/workflows/ci.yml"
+    ? "quality-full"
+    : relativePath === ".github/workflows/release.yml"
+      ? "verify"
+      : undefined;
+  findings.push(...validateDependencyAuditWorkflowObject(workflow, auditJobName, relativePath));
   if (relativePath === ".github/workflows/release.yml") {
     validateReleaseWorkflowPolicy(workflow, relativePath, lock, findings);
   }
@@ -3198,20 +3908,39 @@ function validateWorkflowPolicy(workflow, relativePath, lock, findings) {
     findings.push(...validatePagesPublicTransportWorkflowObject(workflow, relativePath));
   }
   if (relativePath === ".github/workflows/codeql.yml") {
+    findings.push(...validateCodeQlImpactWorkflowObject(workflow, relativePath));
     findings.push(...validateGoCodeQlWorkflowObject(workflow, relativePath));
   }
   if (relativePath === ".github/workflows/sync-repository-metadata.yml") {
     findings.push(...validateRepositoryMetadataSyncWorkflowObject(workflow, relativePath));
   }
+  if (relativePath === ".github/workflows/labeler.yml") {
+    findings.push(...validatePullRequestMetadataWorkflowObject(workflow, relativePath));
+  }
 }
 
-function validateWorkflowFiles(root, findings, scientificRuntimeLock) {
-  for (const relativePath of workflowFiles) {
+export function validateWorkflowTree(root, scientificRuntimeLock) {
+  const findings = [];
+  const directory = path.join(root, ".github", "workflows");
+  let entries;
+  try {
+    entries = fs.readdirSync(directory, { withFileTypes: true });
+  } catch (error) {
+    return [".github/workflows: cannot enumerate workflow policy surface: " + error.message];
+  }
+  for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+    if (!/\.ya?ml$/u.test(entry.name)) continue;
+    const relativePath = path.posix.join(".github/workflows", entry.name);
+    if (!entry.isFile()) {
+      findings.push(relativePath + ": workflow policy surface must be a regular file");
+      continue;
+    }
     const workflow = parseYaml(root, relativePath, findings);
     if (workflow) {
       validateWorkflowPolicy(workflow, relativePath, scientificRuntimeLock, findings);
     }
   }
+  return findings;
 }
 
 function validateIssuePolicy(root, findings) {
@@ -3448,7 +4177,7 @@ export function validateRepositoryPolicy(root = defaultRoot) {
     findings.push(...validateNpmRuntimeLock(npmRuntimeLock));
   }
   validateScientificRequirements(root, findings);
-  validateWorkflowFiles(root, findings, scientificRuntimeLock);
+  findings.push(...validateWorkflowTree(root, scientificRuntimeLock));
   validateIssuePolicy(root, findings);
   validateCitationAndOwnership(root, findings);
 
