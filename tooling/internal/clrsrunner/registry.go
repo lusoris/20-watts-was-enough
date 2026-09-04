@@ -81,6 +81,37 @@ func newRegistry(now func() time.Time) (Registry, error) {
 	return Registry{routes: routes, now: now}, nil
 }
 
+// AdmissionSnapshot projects the closed registry into the existing controller's
+// route and readiness types. A successful local adapter construction is only a
+// timestamped development readiness observation; it is not result authority.
+func (registry Registry) AdmissionSnapshot(
+	observedAt time.Time,
+	validFor time.Duration,
+) ([]specialistcontrol.Route, []specialistcontrol.ReadinessObservation, error) {
+	if observedAt.IsZero() || validFor <= 0 {
+		return nil, nil, errors.New("CLRS admission observation time and validity are required")
+	}
+	routes := make([]specialistcontrol.Route, 0, len(registry.routes))
+	observations := make([]specialistcontrol.ReadinessObservation, 0, len(registry.routes))
+	for _, task := range specialistcontrol.Tasks() {
+		selected, present := registry.routes[task]
+		if !present || selected.specialist == nil || selected.specialistID == "" {
+			return nil, nil, fmt.Errorf("CLRS admission route unavailable for %s", task)
+		}
+		routes = append(routes, specialistcontrol.Route{Task: task, SpecialistID: selected.specialistID})
+		observations = append(observations, specialistcontrol.ReadinessObservation{
+			SpecialistID: selected.specialistID,
+			State:        specialistcontrol.ReadinessReady,
+			ObservedAt:   observedAt,
+			ValidFor:     validFor,
+			Fits: []specialistcontrol.RequestFit{{
+				Task: task, State: specialistcontrol.FitTaskCompatible,
+			}},
+		})
+	}
+	return routes, observations, nil
+}
+
 // Invoke runs one task through its existing specialist adapter and returns a
 // candidate response. It never loads held references or verifies the answer.
 func (registry Registry) Invoke(ctx context.Context, request Request) (Response, error) {

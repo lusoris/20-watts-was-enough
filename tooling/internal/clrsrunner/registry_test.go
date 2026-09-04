@@ -61,6 +61,60 @@ var specialistCases = []specialistCase{
 	},
 }
 
+func TestRegistryProjectsOneTypedAdmissionObservationPerClosedRoute(t *testing.T) {
+	t.Parallel()
+	registry, err := NewRegistry()
+	if err != nil {
+		t.Fatal(err)
+	}
+	observedAt := time.Date(2026, time.September, 4, 12, 0, 0, 0, time.UTC)
+	validFor := 5 * time.Second
+	routes, observations, err := registry.AdmissionSnapshot(observedAt, validFor)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(routes) != len(specialistCases) || len(observations) != len(routes) {
+		t.Fatalf("AdmissionSnapshot() counts = %d/%d, want %d/%d", len(routes), len(observations), len(specialistCases), len(specialistCases))
+	}
+	for index, task := range specialistcontrol.Tasks() {
+		route, observation := routes[index], observations[index]
+		if route.Task != task || observation.SpecialistID != route.SpecialistID ||
+			observation.State != specialistcontrol.ReadinessReady || !observation.ObservedAt.Equal(observedAt) ||
+			observation.ValidFor != validFor || observation.DeclaredCost != 0 || len(observation.Fits) != 1 ||
+			observation.Fits[0].Task != task || observation.Fits[0].State != specialistcontrol.FitTaskCompatible {
+			t.Fatalf("AdmissionSnapshot()[%d] = %#v/%#v", index, route, observation)
+		}
+	}
+	policy, err := specialistcontrol.NewPolicy(specialistcontrol.Limits{
+		MaxRequestBytes: MaximumEnvelopeBytes, MaxResultBytes: MaximumResultBytes,
+		MaxRequestAge: time.Second, MaxExecution: time.Second, MaxDecisionRecord: 100 * time.Millisecond,
+	}, routes)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := specialistcontrol.NewAdmission(policy, specialistcontrol.AdmissionLimits{
+		MaxObservationValidity: validFor, MaxQueueDepth: 6, MaxWait: time.Second,
+		MaxRetries: 1, MaxConcurrencyPerSpecialist: 1, MaxTotalPending: 36, MaxTotalActive: 6,
+	}, observations, observedAt); err != nil {
+		t.Fatalf("CLRS snapshot does not close specialist admission: %v", err)
+	}
+	for name, boundary := range map[string]struct {
+		at       time.Time
+		validity time.Duration
+	}{
+		"zero time":     {},
+		"zero validity": {at: observedAt},
+	} {
+		name, boundary := name, boundary
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			if _, _, err := registry.AdmissionSnapshot(boundary.at, boundary.validity); err == nil {
+				t.Fatal("AdmissionSnapshot() error = nil, want invalid boundary rejection")
+			}
+		})
+	}
+}
+
 func TestRegistryCompletesAllFrozenSpecialistsDeterministically(t *testing.T) {
 	t.Parallel()
 	registry, err := newRegistry(func() time.Time { return time.Date(2099, 1, 1, 0, 0, 0, 0, time.UTC) })

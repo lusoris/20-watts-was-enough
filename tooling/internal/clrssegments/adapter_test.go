@@ -23,7 +23,7 @@ const (
 	testSpecialistID = "exact-segment-intersection-v1"
 )
 
-var verticalNow = time.Date(2026, time.August, 31, 12, 0, 0, 0, time.UTC)
+var verticalNow = time.Date(2099, time.August, 31, 12, 0, 0, 0, time.UTC)
 
 type recorderFunc func(context.Context, specialistcontrol.Decision) error
 
@@ -660,6 +660,7 @@ func newVerticalRunner(
 ) specialistcontrol.Runner {
 	t.Helper()
 	routes := make([]specialistcontrol.Route, 0, len(specialistcontrol.Tasks()))
+	observations := make([]specialistcontrol.ReadinessObservation, 0, len(specialistcontrol.Tasks()))
 	specialists := make(map[string]specialistcontrol.Specialist, len(specialistcontrol.Tasks()))
 	for _, task := range specialistcontrol.Tasks() {
 		id := "unavailable-" + string(task)
@@ -678,17 +679,30 @@ func newVerticalRunner(
 			})
 		}
 		routes = append(routes, specialistcontrol.Route{Task: task, SpecialistID: id})
+		observations = append(observations, specialistcontrol.ReadinessObservation{
+			SpecialistID: id, State: specialistcontrol.ReadinessReady,
+			ObservedAt: verticalNow.Add(-time.Second), ValidFor: 2 * time.Second,
+			Fits: []specialistcontrol.RequestFit{{Task: task, State: specialistcontrol.FitTaskCompatible}},
+		})
 	}
 	policy, err := specialistcontrol.NewPolicy(specialistcontrol.Limits{
-		MaxRequestBytes: 64 << 10,
-		MaxResultBytes:  8 << 10,
-		MaxRequestAge:   2 * time.Second,
-		MaxExecution:    2 * time.Second,
+		MaxRequestBytes:   64 << 10,
+		MaxResultBytes:    8 << 10,
+		MaxRequestAge:     2 * time.Second,
+		MaxExecution:      2 * time.Second,
+		MaxDecisionRecord: 100 * time.Millisecond,
 	}, routes)
 	if err != nil {
 		t.Fatal(err)
 	}
-	runner, err := specialistcontrol.NewRunner(policy, recorder, specialists, verifier, clock)
+	admission, err := specialistcontrol.NewAdmission(policy, specialistcontrol.AdmissionLimits{
+		MaxObservationValidity: 2 * time.Second, MaxQueueDepth: 2, MaxWait: time.Second,
+		MaxRetries: 1, MaxConcurrencyPerSpecialist: 1, MaxTotalPending: 12, MaxTotalActive: 6,
+	}, observations, verticalNow)
+	if err != nil {
+		t.Fatal(err)
+	}
+	runner, err := specialistcontrol.NewRunner(policy, admission, recorder, specialists, verifier, clock)
 	if err != nil {
 		t.Fatal(err)
 	}

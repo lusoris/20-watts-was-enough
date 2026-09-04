@@ -33,15 +33,18 @@ type ExactVerifier interface {
 	Verify(context.Context, Invocation, Candidate) (Verification, error)
 }
 
-// RunResult retains both the pre-effect decision and terminal construction state.
+// RunResult retains the latest durably recorded pre-effect decision and terminal
+// construction state.
 type RunResult struct {
-	Decision Decision
-	Outcome  Outcome
+	Decision  Decision
+	Admission AdmissionDecision
+	Outcome   Outcome
 }
 
 // Runner owns the deliberately thin decision-record-effect-verification seam.
 type Runner struct {
 	policy      Policy
+	admission   *Admission
 	recorder    DecisionRecorder
 	specialists map[string]Specialist
 	verifier    ExactVerifier
@@ -51,13 +54,17 @@ type Runner struct {
 // NewRunner closes the configured route/executor set before any request runs.
 func NewRunner(
 	policy Policy,
+	admission *Admission,
 	recorder DecisionRecorder,
 	specialists map[string]Specialist,
 	verifier ExactVerifier,
 	now func() time.Time,
 ) (Runner, error) {
-	if recorder == nil || verifier == nil || now == nil {
+	if admission == nil || recorder == nil || verifier == nil || now == nil {
 		return Runner{}, errors.New("specialist-control runner dependencies must be present")
+	}
+	if !admission.matchesPolicy(policy) {
+		return Runner{}, errors.New("specialist-control admission does not match policy routes")
 	}
 	identities := policy.specialistIDs()
 	if len(specialists) != len(identities) {
@@ -71,27 +78,73 @@ func NewRunner(
 		}
 		validated[specialistID] = specialist
 	}
-	return Runner{policy: policy, recorder: recorder, specialists: validated, verifier: verifier, now: now}, nil
+	return Runner{
+		policy: policy, admission: admission, recorder: recorder,
+		specialists: validated, verifier: verifier, now: now,
+	}, nil
 }
 
 // Run records the pure policy decision before invoking any specialist effect.
 func (runner Runner) Run(ctx context.Context, request Request) (RunResult, error) {
 	request.Payload = append([]byte(nil), request.Payload...)
-	decision := runner.policy.Decide(runner.now(), request)
-	run := RunResult{Decision: decision, Outcome: outcomeFromDecision(decision)}
-	if err := runner.recorder.RecordDecision(ctx, decision); err != nil {
+	preflight, terminal := runner.policy.preflight(runner.now(), request)
+	if terminal {
+		run := RunResult{Decision: preflight, Outcome: outcomeFromDecision(preflight)}
+		if err := runner.recordDecision(ctx, preflight, true); err != nil {
+			return run, fmt.Errorf("record specialist-control decision: %w", err)
+		}
+		return run, nil
+	}
+	admission, lease := runner.admission.Acquire(ctx, request, runner.now)
+	if lease != nil {
+		defer lease.Release()
+	}
+	decision := runner.policy.Decide(admission.DecidedAt, request, admission)
+	run := RunResult{Decision: decision, Admission: admission, Outcome: outcomeFromDecision(decision)}
+	if err := runner.recordDecision(ctx, decision, decision.State != DecisionInvoke); err != nil {
 		return run, fmt.Errorf("record specialist-control decision: %w", err)
 	}
 	if decision.State != DecisionInvoke {
+		if ctx != nil {
+			if err := ctx.Err(); err != nil {
+				return run, fmt.Errorf("specialist-control context ended before invocation: %w", err)
+			}
+		}
 		return run, nil
 	}
-	if err := ctx.Err(); err != nil {
-		run.Outcome = terminalOutcome(OutcomeAbstained, specialistFailureReason(err), decision.Binding, nil)
-		return run, fmt.Errorf("specialist-control context ended before invocation: %w", err)
+	revalidated := lease.Revalidate(ctx, request, runner.now)
+	invocationAt := revalidated.DecidedAt
+	invalidClock := invocationAt.IsZero() || invocationAt.Before(decision.DecidedAt)
+	if invalidClock {
+		revalidated = admissionTerminal(AdmissionRejected, AdmissionReasonMalformed, invocationAt, admission.Attempts)
 	}
-	invocationAt := runner.now()
-	if invocationAt.IsZero() || invocationAt.Before(decision.DecidedAt) {
-		run.Outcome = terminalOutcome(OutcomeRefused, ReasonMalformedRequest, decision.Binding, nil)
+	invocationPreflight, requestTerminal := runner.policy.preflight(invocationAt, request)
+	run.Admission = revalidated
+	if revalidated.State != AdmissionAdmitted || requestTerminal {
+		terminalDecision := runner.policy.Decide(invocationAt, request, revalidated)
+		if requestTerminal {
+			terminalDecision = invocationPreflight
+			terminalDecision.Admission = revalidated
+		}
+		if invalidClock {
+			terminalDecision = decision
+			terminalDecision.State = DecisionRefuse
+			terminalDecision.Reason = ReasonMalformedRequest
+			terminalDecision.Admission = revalidated
+			terminalDecision.SpecialistID = ""
+			terminalDecision.Binding = Binding{}
+			terminalDecision.DecidedAt = invocationAt
+		}
+		run.Decision = terminalDecision
+		run.Outcome = outcomeFromDecision(terminalDecision)
+		contextEnded := ctx != nil && ctx.Err() != nil
+		if err := runner.recordDecision(ctx, terminalDecision, true); err != nil {
+			return run, fmt.Errorf("record terminal specialist-control decision: %w", err)
+		}
+		if contextEnded {
+			err := ctx.Err()
+			return run, fmt.Errorf("specialist-control context ended before invocation: %w", err)
+		}
 		return run, nil
 	}
 	remaining := decision.Deadline.Sub(invocationAt)
@@ -105,7 +158,7 @@ func (runner Runner) Run(ctx context.Context, request Request) (RunResult, error
 	}
 
 	invocation := invocationFor(request, decision)
-	invokeContext, cancel := context.WithTimeout(ctx, remaining)
+	invokeContext, cancel := context.WithDeadline(ctx, decision.Deadline)
 	defer cancel()
 	if err := invokeContext.Err(); err != nil {
 		run.Outcome = terminalOutcome(OutcomeAbstained, specialistFailureReason(err), decision.Binding, nil)
@@ -155,6 +208,33 @@ func (runner Runner) Run(ctx context.Context, request Request) (RunResult, error
 	}
 	run.Outcome = runner.policy.Finalise(finalisedAt, request, decision, resultDecision, verification)
 	return run, nil
+}
+
+func (runner Runner) recordDecision(ctx context.Context, decision Decision, detached bool) error {
+	parent := ctx
+	budget := runner.decisionRecordBudget(decision)
+	if parent == nil {
+		parent = context.Background()
+	}
+	if detached {
+		parent = context.WithoutCancel(parent)
+		budget = runner.policy.limits.MaxDecisionRecord
+	}
+	recordContext, cancel := context.WithTimeout(parent, budget)
+	defer cancel()
+	return runner.recorder.RecordDecision(recordContext, decision)
+}
+
+func (runner Runner) decisionRecordBudget(decision Decision) time.Duration {
+	budget := runner.policy.limits.MaxDecisionRecord
+	if decision.Deadline.IsZero() || decision.DecidedAt.IsZero() {
+		return budget
+	}
+	remaining := decision.Deadline.Sub(decision.DecidedAt)
+	if remaining > 0 && remaining < budget {
+		return remaining
+	}
+	return budget
 }
 
 func invocationFor(request Request, decision Decision) Invocation {

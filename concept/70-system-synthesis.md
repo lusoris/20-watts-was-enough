@@ -151,6 +151,24 @@ establish a neural or artificial module boundary. The
 preserves the proposal, contrary evidence, measurement dispute, and exact
 limits of that analogy.
 
+The development controller now makes this boundary executable for the frozen
+CLRS shakedown. Every registered specialist needs a timestamped observation
+with a finite validity window and explicit task compatibility; `unknown` is
+not a match. This coarse compatibility state does not claim a per-request
+resource measurement: policy and adapter limits still validate each packet.
+Each frozen task accepts at most two route candidates. Route selection and a
+one-shot, request-bound capacity reservation occur together. Per-specialist and
+aggregate queue and active-work limits bound the controller alongside its wait
+and readiness-retry limits. Eligible waiters are capacity-matched in FIFO order
+across overlapping routes, so later work can use spare capacity without taking
+a slot an older waiter can use. It records typed fallback or rejection, rechecks
+readiness, cancellation and the request deadline inside the serialised state
+immediately before invocation, and uses specialist identity as the stable
+tie-break when declared cost and readiness are equal. This is a construction
+check of controller mechanics. It neither measures an efficiency gain nor
+grants the resulting candidate scientific authority; every path remains
+`NO_RESULT` pending the matched comparisons described below.
+
 The arm must face a capacity-matched general model and a tuned sparse mixture
 of experts with the same tools, state, training opportunity, routing
 information, hardware, and outcome access. Count controller work,
