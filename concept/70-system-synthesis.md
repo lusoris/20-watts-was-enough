@@ -459,9 +459,6 @@ flowchart LR
     M -.-> S
 ```
 
-Editable source:
-[material-commitment-service.mmd](../assets/diagrams/material-commitment-service.mmd).
-
 This distinction applies when modules allocate physical devices, accelerators,
 network paths, robot/tool capacity, spares, storage media, human attention, or
 external services with lead time. Every decision-bearing record preserves:
