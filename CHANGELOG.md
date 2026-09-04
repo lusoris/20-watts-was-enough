@@ -119,6 +119,12 @@ the exact diff; this file records why the project changed.
   overlap and degenerate point-segments without calling the specialist solver.
   The sole task size remains a fixed four-endpoint geometry control, not a
   length-extrapolation probe, and all construction output remains `NO_RESULT`.
+- A source-bound breadth-first-search catalogue candidate now reproduces the
+  pinned unweighted-graph grammar, synchronous reachability waves and
+  row-major predecessor tie rule in Go. An independently arranged shortest-hop
+  verifier cross-checks deterministic synthetic graphs. BFS is not admitted to
+  Decision 0055's frozen six-task fixture or controller contract, and every
+  output remains `NO_RESULT`.
 - A versioned PDF semantic sentinel now binds the current source, book, A4 and
   tag metadata, Poppler tool identity, separate structure and text streams,
   exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps
