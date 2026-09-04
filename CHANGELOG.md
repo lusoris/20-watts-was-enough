@@ -63,6 +63,12 @@ the exact diff; this file records why the project changed.
   A separate naive matcher validates held references without calling the KMP
   solver; source-bound requests retain no answer bytes, and all construction
   output remains `NO_RESULT`.
+- The segment-intersection construction vertical now reproduces the pinned
+  closed-segment operation and exact no-hint scalar-mask grammar in Go. A
+  separately held orientation verifier covers endpoint contact, collinear
+  overlap and degenerate point-segments without calling the specialist solver.
+  The sole task size remains a fixed four-endpoint geometry control, not a
+  length-extrapolation probe, and all construction output remains `NO_RESULT`.
 - A versioned PDF semantic sentinel now binds the current source, book, A4 and
   tag metadata, Poppler tool identity, separate structure and text streams,
   exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps
