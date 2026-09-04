@@ -43,6 +43,7 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		{path: "tooling/internal/buildinfo/buildinfo.go", mode: "impact", lanes: []string{"container", "go", "release"}},
 		{path: "tooling/internal/pdfrender/render.go", mode: "impact", lanes: []string{"container", "go", "release", "renderer", "site"}},
 		{path: "tooling/internal/pdfrenderlock/lock.go", mode: "impact", lanes: []string{"container", "go", "release", "renderer", "site"}},
+		{path: "tooling/internal/workstationrunner/runner.go", mode: "full", lanes: []string{"full"}, reason: "full-authority-changed"},
 		{path: "tooling/pdf-tools/apko.yaml", mode: "impact", lanes: []string{"go", "release"}},
 		{path: "tooling/clrs-specialist/Dockerfile", mode: "impact", lanes: []string{"container", "go"}},
 		{path: "tooling/cmd/clrs-specialist/main.go", mode: "impact", lanes: []string{"container", "go"}},

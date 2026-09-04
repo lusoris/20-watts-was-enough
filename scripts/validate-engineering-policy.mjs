@@ -1230,7 +1230,7 @@ function workstationJobsUseBoundedMatrix(core, artifacts, workstationCondition) 
     artifacts?.strategy?.["fail-fast"] === false,
     artifacts?.strategy?.["max-parallel"] === 8,
     Object.keys(matrix ?? {}).length === 1,
-    matrix?.artifact
+    matrix?.include
       === "${{ fromJSON(needs.impact-plan.outputs.workstation_matrix) }}",
   ].every(Boolean);
 }
@@ -1244,12 +1244,12 @@ function workstationJobsFailClosed(core, artifacts) {
   ].every(Boolean);
 }
 
-function workstationDispatchIsExact(step, expectedDispatch) {
+function workstationDispatchIsExact(step) {
   return [
     step?.if === undefined,
     Object.keys(step?.env ?? {}).length === 1,
-    step?.env?.ARTIFACT === "${{ matrix.artifact }}",
-    String(step?.run ?? "").trim() === expectedDispatch,
+    step?.env?.SCRIPT === "${{ matrix.script }}",
+    String(step?.run ?? "").trim() === "npm run \"$SCRIPT\"",
   ].every(Boolean);
 }
 
@@ -1280,38 +1280,10 @@ function validateCiImpactWorkstationJobs(jobs, relativePath, findings) {
         === "npm run validate:workstation && npm run test:workstation:core",
     `${relativePath}: workstation core must run its complete authority step unconditionally`,
   );
-  const artifactScripts = [
-    ["candidate-010", "test:workstation:candidate-010"],
-    ["fixture-007", "test:workstation:fixture-007"],
-    ["fixture-012", "test:workstation:fixture-012"],
-    ["fixture-019", "test:workstation:fixture-019"],
-    ["fixture-022", "test:workstation:fixture-022"],
-    ["fixture-023", "test:workstation:fixture-023"],
-    ["fixture-024", "test:workstation:fixture-024"],
-    ["fixture-025", "test:workstation:fixture-025"],
-    ["fixture-026-shard-1", "test:workstation:fixture-026:shard-1"],
-    ["fixture-026-shard-2", "test:workstation:fixture-026:shard-2"],
-    ["fixture-026-shard-3", "test:workstation:fixture-026:shard-3"],
-    ["fixture-026-shard-4", "test:workstation:fixture-026:shard-4"],
-    ["fixture-026-shard-5", "test:workstation:fixture-026:shard-5"],
-    ["fixture-026-shard-6", "test:workstation:fixture-026:shard-6"],
-    ["fixture-026-shard-7", "test:workstation:fixture-026:shard-7"],
-    ["fixture-026-shard-8", "test:workstation:fixture-026:shard-8"],
-    ["fixture-027", "test:workstation:fixture-027"],
-    ["fixture-029-shard-1", "test:workstation:fixture-029:shard-1"],
-    ["fixture-029-shard-2", "test:workstation:fixture-029:shard-2"],
-  ].map(([job, script]) => `${job}) npm run ${script} ;;`);
-  const expectedDispatch = [
-    "set -euo pipefail",
-    "case \"$ARTIFACT\" in",
-    ...artifactScripts.map((line) => `  ${line}`),
-    "  *) echo \"::error::unallowlisted workstation artifact: $ARTIFACT\"; exit 1 ;;",
-    "esac",
-  ].join("\n");
   recordExpectation(
     findings,
-    workstationDispatchIsExact(artifactStep, expectedDispatch),
-    `${relativePath}: workstation matrix execution must dispatch only the nineteen static test scripts`,
+    workstationDispatchIsExact(artifactStep),
+    `${relativePath}: workstation matrix execution must quote the Go-projected script without a second dispatch table`,
   );
   const pythonSteps = (artifacts?.steps ?? []).filter((step) => (
     step?.uses?.startsWith("actions/setup-python@")
@@ -3466,6 +3438,9 @@ export function validateWorkstationShardScriptsObject(
 ) {
   const scripts = manifest?.scripts ?? {};
   const findings = [];
+  if (scripts["test:workstation"] !== "go -C tooling run ./cmd/20w ci run-workstation --root ..") {
+    findings.push(`${relativePath}: test:workstation must use the bounded Go catalogue runner`);
+  }
   const fullWithoutWorkstation = npmRunChain([
     "validate:runtime",
     ...aggregateTestScripts.filter((script) => ![

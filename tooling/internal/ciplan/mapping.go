@@ -25,69 +25,20 @@ const (
 )
 
 var (
-	ruleIDPattern = regexp.MustCompile(`^[a-z][a-z0-9-]{0,63}$`)
-	lanePattern   = regexp.MustCompile(`^[a-z][a-z0-9-]{0,63}$`)
-	allowedLanes  = map[string]laneDefinition{
-		"common":     {},
-		"container":  {},
-		"dependency": {},
-		"full":       {},
-		"go":         {},
-		"release":    {},
-		"renderer":   {},
-		"research":   {},
-		"site":       {},
-		"workstation-candidate-010": {WorkstationJobs: []workstationJobDefinition{
-			{Name: "candidate-010", CreationRank: 10},
-		}},
-		"workstation-fixture-007": {WorkstationJobs: []workstationJobDefinition{
-			{Name: "fixture-007", CreationRank: 18},
-		}},
-		"workstation-fixture-012": {WorkstationJobs: []workstationJobDefinition{
-			{Name: "fixture-012", CreationRank: 14},
-		}},
-		"workstation-fixture-019": {WorkstationJobs: []workstationJobDefinition{
-			{Name: "fixture-019", CreationRank: 12},
-		}},
-		"workstation-fixture-022": {WorkstationJobs: []workstationJobDefinition{
-			{Name: "fixture-022", CreationRank: 15},
-		}},
-		"workstation-fixture-023": {WorkstationJobs: []workstationJobDefinition{
-			{Name: "fixture-023", CreationRank: 17},
-		}},
-		"workstation-fixture-024": {WorkstationJobs: []workstationJobDefinition{
-			{Name: "fixture-024", CreationRank: 13},
-		}},
-		"workstation-fixture-025": {WorkstationJobs: []workstationJobDefinition{
-			{Name: "fixture-025", CreationRank: 19},
-		}},
-		"workstation-fixture-026": {WorkstationJobs: []workstationJobDefinition{
-			{Name: "fixture-026-shard-1", CreationRank: 4},
-			{Name: "fixture-026-shard-2", CreationRank: 2},
-			{Name: "fixture-026-shard-3", CreationRank: 5},
-			{Name: "fixture-026-shard-4", CreationRank: 3},
-			{Name: "fixture-026-shard-5", CreationRank: 6},
-			{Name: "fixture-026-shard-6", CreationRank: 1},
-			{Name: "fixture-026-shard-7", CreationRank: 11},
-			{Name: "fixture-026-shard-8", CreationRank: 9},
-		}},
-		"workstation-fixture-027": {WorkstationJobs: []workstationJobDefinition{
-			{Name: "fixture-027", CreationRank: 16},
-		}},
-		"workstation-fixture-029": {WorkstationJobs: []workstationJobDefinition{
-			{Name: "fixture-029-shard-1", CreationRank: 8},
-			{Name: "fixture-029-shard-2", CreationRank: 7},
-		}},
-	}
+	ruleIDPattern            = regexp.MustCompile(`^[a-z][a-z0-9-]{0,63}$`)
+	lanePattern              = regexp.MustCompile(`^[a-z][a-z0-9-]{0,63}$`)
+	workstationScriptPattern = regexp.MustCompile(`^test:workstation:[a-z][a-z0-9-]*(?::[a-z][a-z0-9-]*)?$`)
 )
 
-type workstationJobDefinition struct {
-	Name         string
+// WorkstationJob is one closed artifact-to-script mapping and its creation rank.
+type WorkstationJob struct {
+	Artifact     string
+	Script       string
 	CreationRank int
 }
 
 type laneDefinition struct {
-	WorkstationJobs []workstationJobDefinition
+	WorkstationJobs []WorkstationJob
 }
 
 // Mapping is the closed path-to-lane authority.
@@ -131,6 +82,9 @@ func loadMapping(root string) (Mapping, error) {
 }
 
 func validateMapping(mapping Mapping) error {
+	if embeddedWorkstationCatalogueError != nil {
+		return fmt.Errorf("load embedded workstation catalogue: %w", embeddedWorkstationCatalogueError)
+	}
 	if mapping.Schema != 1 {
 		return fmt.Errorf("impact mapping schema is %d, want 1", mapping.Schema)
 	}

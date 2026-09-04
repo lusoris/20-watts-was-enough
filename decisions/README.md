@@ -49,7 +49,7 @@ than silently changing its outcome.
 | [0041](0041-attest-only-current-run-build-outputs.md) | Attest only current-run build outputs | accepted |
 | [0042](0042-retire-the-host-specific-fixture-012-acquisition-lane.md) | Retire the host-specific Fixture 012 acquisition lane | accepted |
 | [0043](0043-impact-scope-pull-request-ci.md) | Impact-scope pull-request CI | accepted; workstation matrix and full-plan execution shape partly superseded by [0044](0044-shard-workstation-ci-without-splitting-test-authority.md), ready-PR and GitHub-path semantics partly superseded by [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md), `main`-push full-gate rule partly superseded by [0062](0062-impact-scope-comparable-main-pushes.md) |
-| [0044](0044-shard-workstation-ci-without-splitting-test-authority.md) | Shard workstation CI without splitting test authority | accepted; ready-PR gate extended by [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md), six-Fixture-026-shard clauses partly superseded by [0051](0051-add-a-seventh-fixture-026-shard-after-live-timing.md) |
+| [0044](0044-shard-workstation-ci-without-splitting-test-authority.md) | Shard workstation CI without splitting test authority | accepted; ready-PR gate extended by [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md), six-Fixture-026-shard clauses partly superseded by [0051](0051-add-a-seventh-fixture-026-shard-after-live-timing.md), local-serial aggregate partly superseded by [0068](0068-run-workstation-tests-through-the-bounded-go-catalogue.md) |
 | [0045](0045-rewrite-renderer-layer-timestamps-before-recording-image-identity.md) | Rewrite renderer layer timestamps before recording image identity | accepted |
 | [0046](0046-project-the-research-roadmap-into-github-milestones.md) | Project the research roadmap into GitHub milestones | accepted; pull-request exclusion clauses 3 and 6 partly superseded by [0057](0057-project-pull-request-metadata-from-managed-issues.md) |
 | [0047](0047-keep-cloudflare-as-the-public-pages-tls-authority.md) | Keep Cloudflare as the public Pages TLS authority | accepted |
@@ -69,3 +69,4 @@ than silently changing its outcome.
 | [0064](0064-map-chromium-emphasis-tags-for-pdf-1x.md) | Map Chromium emphasis tags for PDF 1.x | accepted |
 | [0065](0065-isolate-fixture-026-ledger-semantics.md) | Isolate Fixture 026 ledger semantics from shard 5 | accepted |
 | [0066](0066-create-longer-workstation-matrix-jobs-first.md) | Create longer workstation matrix jobs first | accepted |
+| [0068](0068-run-workstation-tests-through-the-bounded-go-catalogue.md) | Run workstation tests through the bounded Go catalogue | accepted |

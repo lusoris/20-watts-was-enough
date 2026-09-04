@@ -198,6 +198,12 @@ test("workstation shard scripts retain their exact disjoint inventories", () => 
     "package.json: check:full-without-workstation must retain the complete non-workstation aggregate gate",
   ));
 
+  const bypassedRunner = structuredClone(manifest);
+  bypassedRunner.scripts["test:workstation"] = bypassedRunner.scripts["test:workstation:core"];
+  assert.ok(validate(bypassedRunner).includes(
+    "package.json: test:workstation must use the bounded Go catalogue runner",
+  ));
+
   const weakenedLocalGate = structuredClone(manifest);
   weakenedLocalGate.scripts.test = weakenedLocalGate.scripts.test.replace(
     "npm run validate:workstation && npm run test:workstation",
@@ -1145,19 +1151,16 @@ test("CI selected-lane aggregation and artifact dispatch fail closed", () => {
   ));
   artifactStep.run = 'eval "$PLAN_COMMAND"';
   assert.ok(validateCiImpactWorkflowObject(dynamicCommand).includes(
-    ".github/workflows/ci.yml: workstation matrix execution must dispatch only the nineteen static test scripts",
+    ".github/workflows/ci.yml: workstation matrix execution must quote the Go-projected script without a second dispatch table",
   ));
 
-  const extraDispatch = structuredClone(valid);
-  const extraArtifactStep = extraDispatch.jobs["workstation-artifacts"].steps.find((step) => (
+  const unquotedDispatch = structuredClone(valid);
+  const unquotedArtifactStep = unquotedDispatch.jobs["workstation-artifacts"].steps.find((step) => (
     step.name === "Run the allowlisted artifact test script"
   ));
-  extraArtifactStep.run = extraArtifactStep.run.replace(
-    "  fixture-026-shard-1) npm run test:workstation:fixture-026:shard-1 ;;",
-    "  fixture-026-shard-1) true ;;\n  fixture-026-shard-1) npm run test:workstation:fixture-026:shard-1 ;;",
-  );
-  assert.ok(validateCiImpactWorkflowObject(extraDispatch).includes(
-    ".github/workflows/ci.yml: workstation matrix execution must dispatch only the nineteen static test scripts",
+  unquotedArtifactStep.run = "npm run $SCRIPT";
+  assert.ok(validateCiImpactWorkflowObject(unquotedDispatch).includes(
+    ".github/workflows/ci.yml: workstation matrix execution must quote the Go-projected script without a second dispatch table",
   ));
 
   const ignoredShardFailure = structuredClone(valid);
@@ -1169,11 +1172,12 @@ test("CI selected-lane aggregation and artifact dispatch fail closed", () => {
   ));
 
   const constantArtifact = structuredClone(valid);
-  constantArtifact.jobs["workstation-artifacts"].steps.find((step) => (
+  const constantArtifactStep = constantArtifact.jobs["workstation-artifacts"].steps.find((step) => (
     step.name === "Run the allowlisted artifact test script"
-  )).env.ARTIFACT = "fixture-026-shard-1";
+  ));
+  constantArtifactStep.env.SCRIPT = "test:workstation:fixture-026:shard-1";
   assert.ok(validateCiImpactWorkflowObject(constantArtifact).includes(
-    ".github/workflows/ci.yml: workstation matrix execution must dispatch only the nineteen static test scripts",
+    ".github/workflows/ci.yml: workstation matrix execution must quote the Go-projected script without a second dispatch table",
   ));
 });
 
@@ -1181,7 +1185,7 @@ test("CI workstation and success authority cannot be conditionally skipped", () 
   const valid = workflow("ci");
   const matrixFinding = ".github/workflows/ci.yml: an empty workstation matrix must skip both workstation jobs and selected tests must use the bounded eight-concurrent-job matrix";
   const coreFinding = ".github/workflows/ci.yml: workstation core must run its complete authority step unconditionally";
-  const dispatchFinding = ".github/workflows/ci.yml: workstation matrix execution must dispatch only the nineteen static test scripts";
+  const dispatchFinding = ".github/workflows/ci.yml: workstation matrix execution must quote the Go-projected script without a second dispatch table";
   const successFinding = ".github/workflows/ci.yml: ci-success must unconditionally inspect the exact fail-closed state vector";
 
   const excludedShard = structuredClone(valid);
@@ -1189,6 +1193,12 @@ test("CI workstation and success authority cannot be conditionally skipped", () 
     { artifact: "fixture-026-shard-1" },
   ];
   assert.ok(validateCiImpactWorkflowObject(excludedShard).includes(matrixFinding));
+
+  const artifactOnlyMatrix = structuredClone(valid);
+  const artifactOnlyStrategy = artifactOnlyMatrix.jobs["workstation-artifacts"].strategy.matrix;
+  artifactOnlyStrategy.artifact = artifactOnlyStrategy.include;
+  delete artifactOnlyStrategy.include;
+  assert.ok(validateCiImpactWorkflowObject(artifactOnlyMatrix).includes(matrixFinding));
 
   const skippedCore = structuredClone(valid);
   skippedCore.jobs["workstation-core"].steps.find((step) => (
@@ -1201,6 +1211,12 @@ test("CI workstation and success authority cannot be conditionally skipped", () 
     step.name === "Run the allowlisted artifact test script"
   )).if = "matrix.artifact != 'fixture-026-shard-1'";
   assert.ok(validateCiImpactWorkflowObject(skippedShard).includes(dispatchFinding));
+
+  const ambientArtifact = structuredClone(valid);
+  ambientArtifact.jobs["workstation-artifacts"].steps.find((step) => (
+    step.name === "Run the allowlisted artifact test script"
+  )).env.ARTIFACT = "${{ matrix.artifact }}";
+  assert.ok(validateCiImpactWorkflowObject(ambientArtifact).includes(dispatchFinding));
 
   const skippedSuccess = structuredClone(valid);
   delete skippedSuccess.jobs["ci-success"].if;

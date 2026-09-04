@@ -45,7 +45,7 @@
     "validate:math": "node scripts/validate-math.mjs",
     "format:math": "node scripts/normalize-math-delimiters.mjs --write",
     "validate:workstation": "node scripts/validate-workstation.mjs",
-    "test:workstation": "node --test --experimental-test-isolation=none --test-concurrency=1 experiments/workstation/*.test.mjs experiments/workstation/**/*.test.mjs",
+    "test:workstation": "go -C tooling run ./cmd/20w ci run-workstation --root ..",
     "test:workstation:core": "node --test --experimental-test-isolation=none --test-concurrency=1 experiments/workstation/*.test.mjs experiments/workstation/lib/*.test.mjs",
     "test:readiness": "node --test --experimental-test-isolation=none scripts/readiness-summary.test.mjs",
     "test:site": "node --test --test-concurrency=1 --experimental-test-isolation=none scripts/book-route.test.mjs scripts/book-edition-surface.test.mjs scripts/book-fragment-browser.test.mjs scripts/github-pages.test.mjs scripts/language-access.test.mjs scripts/mermaid-browser.test.mjs scripts/pages-base.test.mjs scripts/pages-seo.test.mjs scripts/prepare-reader-artifacts.test.mjs scripts/publication-unification.test.mjs",
