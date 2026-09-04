@@ -225,6 +225,7 @@
       "paths": [
         "tooling/clrs-generator/**",
         "tooling/internal/clrsbellmanford/**",
+        "tooling/internal/clrsbfs/**",
         "tooling/internal/clrsbinary/**",
         "tooling/internal/clrsfixture/**",
         "tooling/internal/clrsinsertion/**",

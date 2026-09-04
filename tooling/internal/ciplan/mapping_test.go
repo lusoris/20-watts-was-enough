@@ -47,6 +47,7 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		{path: "tooling/internal/clrsbinary/adapter.go", mode: "impact", lanes: []string{"go"}},
 		{path: "tooling/internal/clrsmatrixchain/adapter.go", mode: "impact", lanes: []string{"go"}},
 		{path: "tooling/internal/clrsbellmanford/adapter.go", mode: "impact", lanes: []string{"go"}},
+		{path: "tooling/internal/clrsbfs/bfs.go", mode: "impact", lanes: []string{"go"}},
 		{path: "tooling/internal/clrskmp/adapter.go", mode: "impact", lanes: []string{"go"}},
 		{path: "tooling/internal/clrssegments/adapter.go", mode: "impact", lanes: []string{"go"}},
 		{path: "experiments/workstation/lib/execution-receipt.mjs", mode: "full", lanes: []string{"full"}, reason: "full-authority-changed"},
