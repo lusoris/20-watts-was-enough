@@ -211,10 +211,13 @@ the exact diff; this file records why the project changed.
 - Public-repository workflows remain on ephemeral GitHub-hosted runners rather
   than exposing fork-controlled code to the privileged office ARC boundary.
   External-fork runs now require approval for every outside contributor.
-  Exact-diff CI and CodeQL selection reduce unaffected work; scheduled and
-  manual runs, plus pushes without comparable ancestry, remain full. Decision
-  0062 records that comparable `main` pushes use this same bounded,
-  fail-closed impact plan without becoming aggregate or release evidence.
+  Exact-diff CI selection reduces unaffected test work; scheduled and manual
+  runs, plus pushes without comparable ancestry, remain full. Decision 0062
+  records that comparable `main` pushes use this same bounded, fail-closed
+  impact plan without becoming aggregate or release evidence. Required CodeQL
+  remains outside impact scoping and now emits both configured language results
+  on every protected pull request and `main` commit, so code-scanning merge
+  protection never waits for a skipped language.
 - Documentation validation now treats byte-identical Mermaid bodies as staged
   source-ownership debt. The exact checked baseline may shrink through reviewed
   owner repairs, while unknown, changed, malformed, or stale groups fail closed.

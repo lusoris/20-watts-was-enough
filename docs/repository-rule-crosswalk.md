@@ -103,8 +103,8 @@ Host controls verified through the GitHub API on 2026-08-28 are:
 - active immutable release-tag ruleset `21727474` for `refs/tags/v*`, with tag
   update and deletion blocked and no bypass actor.
 
-The `main` ruleset was strengthened and read back through the API on
-2026-08-30. Active ruleset `21746706` now has no bypass actor, requires a pull
+The `main` ruleset was read back through the API on 2026-09-04. Active ruleset
+`21746706` has no bypass actor, requires a pull
 request, strict `CI success`, resolved review threads, linear history, and
 CodeQL with no high-or-higher security alert or analysis error. Squash and
 rebase are the admitted merge methods. The approval count remains zero because
@@ -112,6 +112,12 @@ the repository has one human maintainer; GitHub's [ruleset
 guidance](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets)
 confirms that zero is a supported setting. A second-human approval gate should
 be added only when a second reviewer can actually serve it.
+
+The advanced CodeQL workflow publishes separate JavaScript/TypeScript and Go
+results for every protected pull-request and `main` commit. Test lanes remain
+impact-scoped, but required code-scanning evidence is not skipped by file type;
+otherwise the ruleset correctly treats the missing language result as a merge
+blocker.
 
 The `cordana.dev` Cloudflare zone has **Always Use HTTPS** enabled. A live check
 on 2026-08-30 verified the exact root redirect and successful HTTPS response;

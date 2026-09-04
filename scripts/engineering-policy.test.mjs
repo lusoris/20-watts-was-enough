@@ -742,50 +742,22 @@ test("Go workflows use tooling/go.mod and the Go CodeQL lane", () => {
   ));
 });
 
-test("CodeQL uses the bounded impact projection and exact language selectors", () => {
+test("CodeQL publishes both configured language results for every protected commit", () => {
   const valid = workflow("codeql");
   assert.deepEqual(validateCodeQlImpactWorkflowObject(valid), []);
 
-  const planFinding = ".github/workflows/codeql.yml: CodeQL must use the exact bounded Go impact projection";
-  const shallowHistory = structuredClone(valid);
-  shallowHistory.jobs["impact-plan"].steps[0].with["fetch-depth"] = 1;
-  assert.ok(validateCodeQlImpactWorkflowObject(shallowHistory).includes(planFinding));
-
-  const forcedPullRequestFull = structuredClone(valid);
-  const plan = forcedPullRequestFull.jobs["impact-plan"].steps.find((step) => step.id === "plan");
-  plan.run = plan.run.replace(
-    "go -C tooling run ./cmd/20w ci plan --root .. \\",
-    "go -C tooling run ./cmd/20w ci plan --root .. --full \\",
-  );
-  assert.ok(validateCodeQlImpactWorkflowObject(forcedPullRequestFull).includes(planFinding));
-
+  const requiredResultFinding = ".github/workflows/codeql.yml: both configured CodeQL languages must run on every protected commit";
   for (const mutate of [
-    (subject) => { subject.defaults = { run: { shell: "true {0}" } }; },
-    (subject) => { subject.jobs["impact-plan"].if = "${{ false }}"; },
-    (subject) => { subject.jobs["impact-plan"].defaults = { run: { shell: "true {0}" } }; },
-    (subject) => {
-      subject.jobs["impact-plan"].steps.find((step) => step.id === "plan").shell = "true {0}";
-    },
+    (subject) => { subject.jobs.analyze.if = "${{ false }}"; },
+    (subject) => { subject.jobs["analyze-go"].if = "${{ false }}"; },
+    (subject) => { subject.jobs.analyze.needs = "impact-plan"; },
+    (subject) => { subject.jobs["analyze-go"]["continue-on-error"] = true; },
+    (subject) => { subject.jobs["impact-plan"] = {}; },
   ]) {
-    const bypassedPlan = structuredClone(valid);
-    mutate(bypassedPlan);
-    assert.ok(validateCodeQlImpactWorkflowObject(bypassedPlan).includes(planFinding));
+    const missingResult = structuredClone(valid);
+    mutate(missingResult);
+    assert.ok(validateCodeQlImpactWorkflowObject(missingResult).includes(requiredResultFinding));
   }
-
-  const broadJavaScript = structuredClone(valid);
-  broadJavaScript.jobs.analyze.if = "always()";
-  assert.ok(validateCodeQlImpactWorkflowObject(broadJavaScript).includes(
-    ".github/workflows/codeql.yml: JavaScript and TypeScript analysis must use only the full-plan, site, or workstation selector",
-  ));
-
-  const missingWorkstationJavaScript = structuredClone(valid);
-  missingWorkstationJavaScript.jobs.analyze.if = missingWorkstationJavaScript.jobs.analyze.if.replace(
-    " || needs.impact-plan.outputs.workstation_any == 'true'",
-    "",
-  );
-  assert.ok(validateCodeQlImpactWorkflowObject(missingWorkstationJavaScript).includes(
-    ".github/workflows/codeql.yml: JavaScript and TypeScript analysis must use only the full-plan, site, or workstation selector",
-  ));
 
   const javascriptFinding = ".github/workflows/codeql.yml: JavaScript and TypeScript CodeQL must keep its exact fail-closed initialization and analysis boundary";
   for (const mutate of [
@@ -807,15 +779,6 @@ test("CodeQL uses the bounded impact projection and exact language selectors", (
     mutate(bypassedJavaScript);
     assert.ok(validateCodeQlImpactWorkflowObject(bypassedJavaScript).includes(javascriptFinding));
   }
-
-  const crossedGoSelector = structuredClone(valid);
-  crossedGoSelector.jobs["analyze-go"].if = crossedGoSelector.jobs["analyze-go"].if.replace(
-    "outputs.go",
-    "outputs.site",
-  );
-  assert.ok(validateCodeQlImpactWorkflowObject(crossedGoSelector).includes(
-    ".github/workflows/codeql.yml: Go analysis must use only the full-plan or Go selector",
-  ));
 });
 
 test("Pages verifies the Cloudflare public transport boundary after deployment", () => {
