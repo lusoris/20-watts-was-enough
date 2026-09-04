@@ -204,7 +204,7 @@ func TestVerifyBuildSettingsRequiresExactOfficialToolchain(t *testing.T) {
 		t.Fatal("verifyBuildSettings() accepted an extra experiment")
 	}
 	wrongVersion := *valid
-	wrongVersion.GoVersion = "go1.27.1"
+	wrongVersion.GoVersion = "go1.27.0"
 	if err := verifyBuildSettings(&wrongVersion, artifact); err == nil {
 		t.Fatal("verifyBuildSettings() accepted a different Go toolchain")
 	}
