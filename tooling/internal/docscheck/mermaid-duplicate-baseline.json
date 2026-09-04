@@ -62,19 +62,6 @@
       ]
     },
     {
-      "sha256": "13d956c33dff575b5599734f34cdf17f6874b38e9ad389fc00b0e0cf0da0305c",
-      "occurrences": [
-        {
-          "path": "assets/diagrams/material-commitment-service.mmd",
-          "count": 1
-        },
-        {
-          "path": "concept/70-system-synthesis.md",
-          "count": 1
-        }
-      ]
-    },
-    {
       "sha256": "2605941d01fd8f70455b42ca1a399c7f374e9b0bde7f1bd813539dad43a58267",
       "occurrences": [
         {
