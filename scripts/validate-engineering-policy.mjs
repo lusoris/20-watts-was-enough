@@ -1327,7 +1327,6 @@ function validateCiImpactWorkstationJobs(jobs, relativePath, findings) {
 function validateCiImpactSuccessJob(jobs, relativePath, findings) {
   const expectedNeeds = [
     "impact-plan",
-    "pr-title",
     "quality-full",
     "impact-common",
     "lane-go",
@@ -1357,7 +1356,6 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
     SELECT_SITE: "${{ needs.impact-plan.outputs.site }}",
     SELECT_WORKSTATION: "${{ needs.impact-plan.outputs.workstation_any }}",
     RESULT_PLAN: "${{ needs.impact-plan.result }}",
-    RESULT_PR_TITLE: "${{ needs.pr-title.result }}",
     RESULT_QUALITY_FULL: "${{ needs.quality-full.result }}",
     RESULT_IMPACT_COMMON: "${{ needs.impact-common.result }}",
     RESULT_GO: "${{ needs.lane-go.result }}",
@@ -1393,7 +1391,6 @@ function validateCiImpactSuccessJob(jobs, relativePath, findings) {
     findings,
     stringIncludesAll(successSource, [
       'require_state impact-plan "$RESULT_PLAN" success',
-      'require_state pr-title "$RESULT_PR_TITLE" success',
       'require_state dependency-review "$RESULT_DEPENDENCY_REVIEW" success',
       'require_state quality-full "$RESULT_QUALITY_FULL" success',
       'require_state workstation-core "$RESULT_WORKSTATION_CORE" success',
@@ -1454,31 +1451,18 @@ export function validateCiImpactWorkflowObject(
       && pullRequest.branches.length === 1
       && pullRequest.branches[0] === "main"
       && Array.isArray(pullRequest?.types)
-      && pullRequest.types.length === 4
-      && ["opened", "edited", "synchronize", "reopened"]
+      && pullRequest.types.length === 3
+      && ["opened", "synchronize", "reopened"]
         .every((type) => pullRequest.types.includes(type))
       && Object.keys(pullRequest ?? {}).length === 2
       && Object.prototype.hasOwnProperty.call(trigger ?? {}, "workflow_dispatch"),
     `${relativePath}: CI must run on main pushes, manual dispatches, and every pull-request code update`,
   );
   const jobs = workflow?.jobs ?? {};
-  const titleTypes = [
-    "feat", "fix", "docs", "chore", "refactor", "test", "perf", "ci", "build", "revert",
-  ];
-  const titleJob = jobs["pr-title"];
   recordExpectation(
     findings,
-    pullRequestTitleJobIsExact(
-      titleJob,
-      "PR title bootstrap",
-      "github.event_name == 'pull_request'",
-    )
-      && pullRequestTitleStepIsExact(
-        titleJob?.steps?.[0],
-        pullRequestTitleRun(titleTypes),
-      ),
-    relativePath
-      + ": bootstrap PR title gate must exactly enforce the managed Conventional Commit grammar",
+    !Object.prototype.hasOwnProperty.call(jobs, "pr-title"),
+    `${relativePath}: CI must delegate PR title validation to the standalone required workflow`,
   );
   validateCiImpactPlanJob(workflow, jobs, relativePath, findings);
   validateCiImpactLaneJobs(jobs, relativePath, findings);
@@ -1638,26 +1622,82 @@ export function validateGoCodeQlWorkflowObject(
 
 function repositoryMetadataTriggerIsExact(trigger) {
   const push = trigger?.push;
+  const issues = trigger?.issues;
   return (
-    arrayIncludes(push?.branches, "main")
+    Object.keys(trigger ?? {}).length === 3
+    && Array.isArray(issues?.types)
+    && issues.types.length === 2
+    && ["closed", "reopened"].every((type) => issues.types.includes(type))
+    && Object.keys(issues ?? {}).length === 1
+    && arrayIncludes(push?.branches, "main")
     && arrayIncludes(push?.paths, ".github/labels.json")
     && arrayIncludes(push?.paths, ".github/milestones.json")
     && arrayIncludes(push?.paths, ".github/issue-milestones.json")
+    && arrayIncludes(push?.paths, "tooling/cmd/20w/github_issue_lifecycle.go")
+    && arrayIncludes(push?.paths, "tooling/cmd/20w/github_pr_metadata.go")
+    && arrayIncludes(push?.paths, "tooling/internal/githubissuelifecycle/**")
+    && arrayIncludes(push?.paths, "tooling/internal/githubprmetadata/**")
     && Object.prototype.hasOwnProperty.call(trigger ?? {}, "workflow_dispatch")
   );
 }
 
 function repositoryMetadataPermissionsAreExact(job) {
   return (
-    propertiesMatch(job?.permissions, { contents: "read", issues: "write" })
-    && Object.keys(job?.permissions ?? {}).length === 2
+    propertiesMatch(job?.permissions, {
+      contents: "read", issues: "write", "pull-requests": "read",
+    })
+    && Object.keys(job?.permissions ?? {}).length === 3
+  );
+}
+
+function repositoryMetadataExecutionIsBounded(workflow, job) {
+  const steps = job?.steps ?? [];
+  const checkout = steps.find((step) => actionUses(step, "actions/checkout"));
+  const setup = steps.find((step) => actionUses(step, "actions/setup-go"));
+  return (
+    workflow?.concurrency?.group === "repository-metadata-sync"
+    && workflow?.concurrency?.["cancel-in-progress"] === false
+    && workflow?.concurrency?.queue === "max"
+    && Object.keys(workflow?.concurrency ?? {}).length === 3
+    && job?.if === undefined
+    && job?.defaults === undefined
+    && job?.container === undefined
+    && job?.services === undefined
+    && continueOnErrorIsDisabled(job)
+    && steps.length === 4
+    && steps.every(continueOnErrorIsDisabled)
+    && steps.every((step) => step?.shell === undefined)
+    && checkout?.if === undefined
+    && setup?.if === undefined
   );
 }
 
 function repositoryMetadataCommandIsExact(synchronization) {
   return (
     synchronization?.run === 'go -C tooling run ./cmd/20w github sync-metadata --root .. --repository "$GITHUB_REPOSITORY"'
+    && synchronization?.if === "github.event_name != 'issues'"
+    && synchronization?.shell === undefined
     && synchronization?.env?.GH_TOKEN === "${{ github.token }}"
+    && Object.keys(synchronization?.env ?? {}).length === 1
+  );
+}
+
+function repositoryLifecycleCommandIsExact(synchronization) {
+  const expected = [
+    "go -C tooling run ./cmd/20w github sync-issue-lifecycle",
+    '--root .. --repository "$GITHUB_REPOSITORY"',
+    '--issue "$ISSUE_NUMBER" --issue-action "$ISSUE_ACTION"',
+  ].join(" ");
+  return (
+    synchronization?.run === expected
+    && synchronization?.if === "github.event_name == 'issues'"
+    && synchronization?.shell === undefined
+    && propertiesMatch(synchronization?.env, {
+      GH_TOKEN: "${{ github.token }}",
+      ISSUE_ACTION: "${{ github.event.action }}",
+      ISSUE_NUMBER: "${{ github.event.issue.number }}",
+    })
+    && Object.keys(synchronization?.env ?? {}).length === 3
   );
 }
 
@@ -1668,11 +1708,14 @@ export function validateRepositoryMetadataSyncWorkflowObject(
   const findings = validateGoRuntimeWorkflowObject(workflow, "sync", relativePath);
   const trigger = workflow?.on;
   if (!repositoryMetadataTriggerIsExact(trigger)) {
-    findings.push(`${relativePath}: repository metadata synchronization must run for all three canonical manifests on main and allow manual repair`);
+    findings.push(`${relativePath}: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and both lifecycle sources on main, and manual repair`);
   }
   const job = workflow?.jobs?.sync;
   if (!repositoryMetadataPermissionsAreExact(job)) {
-    findings.push(`${relativePath}: repository metadata synchronization needs only contents:read and issues:write`);
+    findings.push(`${relativePath}: repository metadata synchronization needs only contents:read, issues:write, and pull-requests:read`);
+  }
+  if (!repositoryMetadataExecutionIsBounded(workflow, job)) {
+    findings.push(`${relativePath}: repository metadata synchronization must use GitHub's maximum pending queue without cancellation or failure bypass`);
   }
   const checkout = (job?.steps ?? []).find((step) => actionUses(step, "actions/checkout"));
   if (checkout?.with?.ref !== "refs/heads/main") {
@@ -1685,18 +1728,70 @@ export function validateRepositoryMetadataSyncWorkflowObject(
   if (!repositoryMetadataCommandIsExact(synchronization)) {
     findings.push(`${relativePath}: the trusted Go command must apply canonical labels, milestones, and mapped issue assignments with the job token`);
   }
+  const lifecycle = findStepByRunFragment(
+    job?.steps ?? [],
+    '--issue "$ISSUE_NUMBER" --issue-action "$ISSUE_ACTION"',
+  );
+  if (!repositoryLifecycleCommandIsExact(lifecycle)) {
+    findings.push(`${relativePath}: closed and reopened issues must pass trusted event identity to the bounded Go lifecycle repair`);
+  }
   return findings;
 }
 
 function pullRequestMetadataTriggerIsExact(trigger) {
   const pullRequestTarget = trigger?.pull_request_target;
-  const expectedTypes = ["opened", "edited", "synchronize", "reopened"];
+  const expectedTypes = ["opened", "edited", "synchronize", "reopened", "closed"];
   return (
     Object.keys(trigger ?? {}).length === 1
     && Object.keys(pullRequestTarget ?? {}).length === 1
     && Array.isArray(pullRequestTarget?.types)
     && pullRequestTarget.types.length === expectedTypes.length
     && expectedTypes.every((type) => pullRequestTarget.types.includes(type))
+  );
+}
+
+function pullRequestLabelerStepIsExact(labeler) {
+  return (
+    actionUses(labeler, "actions/labeler")
+    && labeler?.if === "github.event.action != 'closed'"
+    && propertiesMatch(labeler?.with, { "sync-labels": true })
+    && Object.keys(labeler?.with ?? {}).length === 1
+  );
+}
+
+function pullRequestTrustedCheckoutIsExact(checkout) {
+  return (
+    actionUses(checkout, "actions/checkout")
+    && propertiesMatch(checkout?.with, {
+      ref: "refs/heads/main",
+      "persist-credentials": false,
+      "allow-unsafe-pr-checkout": false,
+    })
+    && Object.keys(checkout?.with ?? {}).length === 3
+  );
+}
+
+function pullRequestGoSetupIsExact(setup) {
+  return (
+    actionUses(setup, "actions/setup-go")
+    && propertiesMatch(setup?.with, {
+      "go-version-file": "tooling/go.mod",
+      "cache-dependency-path": "tooling/go.sum",
+    })
+    && Object.keys(setup?.with ?? {}).length === 2
+  );
+}
+
+function pullRequestSynchronizationIsExact(synchronization, expectedCommand) {
+  return (
+    synchronization?.run === expectedCommand
+    && propertiesMatch(synchronization?.env, {
+      GH_TOKEN: "${{ github.token }}",
+      PULL_REQUEST: "${{ github.event.pull_request.number }}",
+      PULL_REQUEST_ACTION: "${{ github.event.action }}",
+      PULL_REQUEST_MERGED: "${{ github.event.pull_request.merged }}",
+    })
+    && Object.keys(synchronization?.env ?? {}).length === 4
   );
 }
 
@@ -1707,33 +1802,17 @@ function pullRequestMetadataStepsAreExact(steps) {
     "go -C tooling run ./cmd/20w github sync-pr-metadata",
     '--root .. --repository "$GITHUB_REPOSITORY"',
     '--pull-request "$PULL_REQUEST"',
+    '--event-action "$PULL_REQUEST_ACTION"',
+    '--merged "$PULL_REQUEST_MERGED"',
   ].join(" ");
   return (
-    actionUses(labeler, "actions/labeler")
-    && propertiesMatch(labeler?.with, { "sync-labels": true })
-    && Object.keys(labeler?.with ?? {}).length === 1
-    && actionUses(checkout, "actions/checkout")
-    && propertiesMatch(checkout?.with, {
-      ref: "refs/heads/main",
-      "persist-credentials": false,
-      "allow-unsafe-pr-checkout": false,
-    })
-    && Object.keys(checkout?.with ?? {}).length === 3
-    && actionUses(setup, "actions/setup-go")
-    && propertiesMatch(setup?.with, {
-      "go-version-file": "tooling/go.mod",
-      "cache-dependency-path": "tooling/go.sum",
-    })
-    && Object.keys(setup?.with ?? {}).length === 2
-    && synchronization?.run === expectedCommand
-    && propertiesMatch(synchronization?.env, {
-      GH_TOKEN: "${{ github.token }}",
-      PULL_REQUEST: "${{ github.event.pull_request.number }}",
-    })
-    && Object.keys(synchronization?.env ?? {}).length === 2
-    && [labeler, checkout, setup, synchronization].every((step) => (
-      step?.if === undefined && continueOnErrorIsDisabled(step)
-    ))
+    pullRequestLabelerStepIsExact(labeler)
+    && pullRequestTrustedCheckoutIsExact(checkout)
+    && pullRequestGoSetupIsExact(setup)
+    && pullRequestSynchronizationIsExact(synchronization, expectedCommand)
+    && [labeler, checkout, setup, synchronization].every(continueOnErrorIsDisabled)
+    && [labeler, checkout, setup, synchronization].every((step) => step?.shell === undefined)
+    && [checkout, setup, synchronization].every((step) => step?.if === undefined)
   );
 }
 
@@ -1756,6 +1835,8 @@ function pullRequestMetadataBoundaryIsExact(workflow, job) {
     && continueOnErrorIsDisabled(job)
     && workflow?.concurrency?.group === "${{ github.workflow }}-${{ github.event.pull_request.number }}"
     && workflow?.concurrency?.["cancel-in-progress"] === false
+    && workflow?.concurrency?.queue === "max"
+    && Object.keys(workflow?.concurrency ?? {}).length === 3
   );
 }
 
@@ -1765,17 +1846,17 @@ export function validatePullRequestMetadataWorkflowObject(
 ) {
   const findings = [];
   if (!pullRequestMetadataTriggerIsExact(workflow?.on)) {
-    findings.push(`${relativePath}: trusted metadata projection must run on opened, edited, synchronized, and reopened pull requests`);
+    findings.push(`${relativePath}: trusted metadata projection and lifecycle cleanup must run on opened, edited, synchronized, reopened, and closed pull requests`);
   }
   const job = workflow?.jobs?.label;
   if (!pullRequestMetadataPermissionsAreExact(workflow, job)) {
     findings.push(`${relativePath}: pull-request metadata needs only contents:read, issues:write, and pull-requests:write at job scope`);
   }
   if (!pullRequestMetadataBoundaryIsExact(workflow, job)) {
-    findings.push(`${relativePath}: pull-request metadata must keep its bounded hosted-runner and per-pull-request concurrency boundary`);
+    findings.push(`${relativePath}: pull-request metadata must keep its bounded hosted runner and maximum per-pull-request pending queue`);
   }
   if (!pullRequestMetadataStepsAreExact(job?.steps)) {
-    findings.push(`${relativePath}: pull-request metadata must sync path labels, check out only trusted main, and run the exact bounded Go projection`);
+    findings.push(`${relativePath}: pull-request metadata must skip path labeling on close, check out only trusted main, and run the exact bounded Go projection and lifecycle cleanup`);
   }
   return findings;
 }

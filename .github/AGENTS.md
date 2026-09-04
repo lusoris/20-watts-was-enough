@@ -49,3 +49,25 @@ files under `.github/`.
   explicit managed issue reference under decision 0057; missing or ambiguous
   references remain unchanged. Milestone progress reflects associated issues
   and pull requests; it never promotes scientific evidence.
+- A mapped open issue carries exactly one active managed status. Closing it
+  removes `status:needs-triage`, `status:blocked`, `status:in-progress`, and
+  `status:waiting-on-author`; an existing `status:wontfix` remains as an
+  explicit maintainer decision. Reopening replaces every managed status with
+  `status:needs-triage`. Ordinary drift repair also restores
+  `status:needs-triage` when an open mapped issue has no active status, and
+  removes stale `status:wontfix` while retaining one existing active status.
+  Multiple active statuses remain an ambiguity and fail closed. Preserve all
+  non-status labels and never infer `status:wontfix` from the close event
+  itself.
+- Pull-request merge removes every managed status. An unmerged close removes
+  active statuses but preserves an existing `status:wontfix`; neither path
+  invents it or changes another label or the milestone. Reopen reruns the one
+  linked issue's full projection. Closed-event cleanup verifies GitHub's merge
+  state directly, skips path labeling and refuses ambiguous issue references or
+  unknown and duplicate `status:*` identities.
+- Full metadata repair uses separately bounded queries for the five managed
+  status labels and for open pull requests. The open scan admits only one
+  explicit mapped-issue reference, so it can recover a missed reopen with no
+  managed status while reusing the same projection. A closed pull request with
+  only an unknown status or an open pull request without one mapped reference
+  still needs its trusted event or explicit command.

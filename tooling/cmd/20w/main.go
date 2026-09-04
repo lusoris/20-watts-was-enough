@@ -18,6 +18,7 @@ import (
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/ciplan"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/docscheck"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/experiment"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubissuelifecycle"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubissuemilestones"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githublabels"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubmilestones"
@@ -57,7 +58,8 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w translation validate-candidate --input <candidate.json> --source <concept-or-math.md> --language <code> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w translation import-candidate --input <candidate.json> --source <concept-or-math.md> --language <code> --output <new-directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w github sync-metadata [--root <repository>] [--check | --repository <owner/name>]")
-	fmt.Fprintln(writer, "  20w github sync-pr-metadata [--root <repository>] [--check | --repository <owner/name> --pull-request <number>]")
+	fmt.Fprintln(writer, "  20w github sync-pr-metadata [--root <repository>] [--check | --repository <owner/name> --pull-request <number> --event-action <action> --merged <true|false>]")
+	fmt.Fprintln(writer, "  20w github sync-issue-lifecycle --root <repository> --repository <owner/name> --issue <number> --issue-action closed|reopened")
 	fmt.Fprintln(writer, "  20w github sync-labels [--root <repository>] [--check | --repository <owner/name>]")
 	fmt.Fprintln(writer, "  20w release inspect-image --image <registry path> --tag <vX.Y.Z> --revision <commit> --platform <os/arch> --expected-label <key=value>")
 	fmt.Fprintln(writer, "  20w release asset-inventory --assets <directory> --phase source|publication")
@@ -154,6 +156,9 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 		}
 		if len(arguments) >= 2 && arguments[1] == "sync-pr-metadata" {
 			return runGitHubSyncPullRequestMetadata(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "sync-issue-lifecycle" {
+			return runGitHubSyncIssueLifecycle(arguments[2:], stdout, stderr)
 		}
 		if len(arguments) >= 2 && arguments[1] == "sync-labels" {
 			return runGitHubSyncLabels(arguments[2:], stdout, stderr)
@@ -462,6 +467,10 @@ func runGitHubSyncMetadata(arguments []string, stdout, stderr io.Writer) int {
 		fmt.Fprintf(stderr, "Validate pull-request metadata authorities: %v\n", err)
 		return 1
 	}
+	if _, err := githubissuelifecycle.NewPolicy(labels); err != nil {
+		fmt.Fprintf(stderr, "Validate GitHub issue lifecycle policy: %v\n", err)
+		return 1
+	}
 	if *check {
 		if *repository != "" {
 			fmt.Fprintln(stderr, "github sync-metadata --check does not accept --repository")
@@ -481,14 +490,16 @@ func runGitHubSyncMetadata(arguments []string, stdout, stderr io.Writer) int {
 	defer cancel()
 	result, err := syncGitHubMetadata(ctx, client, githubMetadataManifests{
 		labels: labels, milestones: milestones, issues: issues,
-	}, githubMetadataOptions{Repository: *repository, Token: os.Getenv("GH_TOKEN")})
+	}, githubMetadataOptions{
+		Repository: *repository, Token: os.Getenv("GH_TOKEN"),
+	})
 	if err != nil {
 		fmt.Fprintf(stderr, "Synchronize GitHub repository metadata: %v\n", err)
 		return 1
 	}
 	fmt.Fprintf(
 		stdout,
-		"GitHub repository metadata synchronization passed: labels %d created/%d updated/%d unchanged; milestones %d created/%d updated/%d unchanged; issues %d updated/%d unchanged.\n",
+		"GitHub repository metadata synchronization passed: labels %d created/%d updated/%d unchanged; milestones %d created/%d updated/%d unchanged; issues %d assignments updated/%d unchanged; issue lifecycle %d updated/%d unchanged; pull-request lifecycle %d candidates/%d updated/%d unchanged/%d skipped.\n",
 		result.labels.Created,
 		result.labels.Updated,
 		result.labels.Unchanged,
@@ -497,6 +508,65 @@ func runGitHubSyncMetadata(arguments []string, stdout, stderr io.Writer) int {
 		result.milestones.Unchanged,
 		result.issues.Updated,
 		result.issues.Unchanged,
+		result.lifecycle.Updated,
+		result.lifecycle.Unchanged,
+		result.pullRequests.Candidates,
+		result.pullRequests.Updated,
+		result.pullRequests.Unchanged,
+		result.pullRequests.Skipped,
+	)
+	return 0
+}
+
+func runGitHubSyncIssueLifecycle(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("github sync-issue-lifecycle", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	root := flags.String("root", ".", "repository root")
+	repository := flags.String("repository", "", "GitHub owner/repository to synchronize")
+	issue := flags.Int("issue", 0, "issue number from a closed or reopened event")
+	issueAction := flags.String("issue-action", "", "closed or reopened issue event action")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
+		return 2
+	}
+	event, err := githubissuelifecycle.NewEvent(*issue, *issueAction)
+	if err != nil || event.Issue == 0 || *repository == "" {
+		fmt.Fprintln(stderr, "github sync-issue-lifecycle requires --repository, --issue, and --issue-action closed or reopened")
+		return 2
+	}
+	labels, err := githublabels.Load(*root)
+	if err != nil {
+		fmt.Fprintf(stderr, "Load GitHub label manifest: %v\n", err)
+		return 1
+	}
+	issues, err := githubissuemilestones.Load(*root)
+	if err != nil {
+		fmt.Fprintf(stderr, "Load GitHub issue-assignment manifest: %v\n", err)
+		return 1
+	}
+	client := githubMetadataHTTPClient()
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	defer cancel()
+	result, err := syncGitHubIssueLifecycle(ctx, client, labels, issues, githubMetadataOptions{
+		Repository: *repository, Token: os.Getenv("GH_TOKEN"), IssueEvent: event,
+	})
+	if err != nil {
+		fmt.Fprintf(stderr, "Synchronize GitHub issue lifecycle: %v\n", err)
+		return 1
+	}
+	if result.EventSkipped {
+		fmt.Fprintf(
+			stdout,
+			"GitHub issue lifecycle event target skipped because it is not managed; canonical mapped-issue repair completed: %d updated and %d unchanged.\n",
+			result.Updated,
+			result.Unchanged,
+		)
+		return 0
+	}
+	fmt.Fprintf(
+		stdout,
+		"GitHub issue lifecycle synchronization passed: %d updated and %d unchanged mapped issues.\n",
+		result.Updated,
+		result.Unchanged,
 	)
 	return 0
 }
@@ -507,6 +577,8 @@ func runGitHubSyncPullRequestMetadata(arguments []string, stdout, stderr io.Writ
 	root := flags.String("root", ".", "repository root")
 	repository := flags.String("repository", "", "GitHub owner/repository to synchronize")
 	pullRequest := flags.Int("pull-request", 0, "GitHub pull-request number to synchronize")
+	eventAction := flags.String("event-action", "", "GitHub pull-request event action")
+	merged := flags.String("merged", "", "GitHub pull-request merged flag (true or false)")
 	check := flags.Bool("check", false, "validate local authorities without network access")
 	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
 		return 2
@@ -517,22 +589,26 @@ func runGitHubSyncPullRequestMetadata(arguments []string, stdout, stderr io.Writ
 		return 1
 	}
 	if *check {
-		if *repository != "" || *pullRequest != 0 {
-			fmt.Fprintln(stderr, "github sync-pr-metadata --check does not accept --repository or --pull-request")
+		if *repository != "" || *pullRequest != 0 || *eventAction != "" || *merged != "" {
+			fmt.Fprintln(stderr, "github sync-pr-metadata --check does not accept remote or event fields")
 			return 2
 		}
 		fmt.Fprintln(stdout, "GitHub pull-request metadata authority validation passed.")
 		return 0
 	}
-	if *repository == "" || *pullRequest < 1 {
-		fmt.Fprintln(stderr, "github sync-pr-metadata requires --repository and --pull-request")
+	event, err := githubprmetadata.NewEvent(*eventAction, *merged)
+	if *repository == "" || *pullRequest < 1 || err != nil {
+		fmt.Fprintln(stderr, "github sync-pr-metadata requires --repository, --pull-request, --event-action, and --merged=true|false")
+		if err != nil {
+			fmt.Fprintf(stderr, "Invalid pull-request event: %v\n", err)
+		}
 		return 2
 	}
 	client := githubMetadataHTTPClient()
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 	result, err := syncGitHubPullRequestMetadata(ctx, client, authorities, githubprmetadata.Options{
-		Repository: *repository, Token: os.Getenv("GH_TOKEN"), PullRequest: *pullRequest,
+		Repository: *repository, Token: os.Getenv("GH_TOKEN"), PullRequest: *pullRequest, Event: event,
 	})
 	if err != nil {
 		fmt.Fprintf(stderr, "Synchronize GitHub pull-request metadata: %v\n", err)
@@ -540,6 +616,18 @@ func runGitHubSyncPullRequestMetadata(arguments []string, stdout, stderr io.Writ
 	}
 	if result.Skipped {
 		fmt.Fprintf(stdout, "GitHub pull-request metadata synchronization skipped: %s.\n", result.Reason)
+		return 0
+	}
+	if event.Action == githubprmetadata.Closed {
+		state := "unchanged"
+		if result.Updated {
+			state = "updated"
+		}
+		fmt.Fprintf(
+			stdout,
+			"GitHub pull-request lifecycle synchronization passed: %s for managed issue #%d with milestone %d preserved and %d labels.\n",
+			state, result.Issue, result.Milestone, len(result.Labels),
+		)
 		return 0
 	}
 	state := "unchanged"

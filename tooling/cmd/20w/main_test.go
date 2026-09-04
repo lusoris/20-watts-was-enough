@@ -214,7 +214,11 @@ func TestRunGitHubSyncMetadataChecksAllLocalAuthorities(t *testing.T) {
   {"name":"type:ci","color":"0e8a16","description":"CI"},
   {"name":"type:build","color":"0e8a16","description":"Build"},
   {"name":"severity:p2","color":"0e8a16","description":"Priority"},
-  {"name":"status:in-progress","color":"0e8a16","description":"Active"},
+  {"name":"status:needs-triage","color":"ededed","description":"Needs triage"},
+  {"name":"status:blocked","color":"e99695","description":"Blocked"},
+  {"name":"status:in-progress","color":"1d76db","description":"In progress"},
+  {"name":"status:waiting-on-author","color":"fbca04","description":"Waiting"},
+  {"name":"status:wontfix","color":"555555","description":"Closed deliberately"},
   {"name":"area:test","color":"0e8a16","description":"Test area"}
 ]}`
 	milestones := `{
@@ -238,7 +242,7 @@ func TestRunGitHubSyncMetadataChecksAllLocalAuthorities(t *testing.T) {
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	exitCode := run([]string{"github", "sync-metadata", "--root", root, "--check"}, &stdout, &stderr)
-	if exitCode != 0 || !strings.Contains(stdout.String(), "11 managed labels, 1 managed milestones, and 1 managed issue assignments") {
+	if exitCode != 0 || !strings.Contains(stdout.String(), "15 managed labels, 1 managed milestones, and 1 managed issue assignments") {
 		t.Fatalf("run() exit/stdout/stderr = %d/%q/%q", exitCode, stdout.String(), stderr.String())
 	}
 }
@@ -253,6 +257,39 @@ func TestRunGitHubSyncPullRequestMetadataChecksLocalAuthorities(t *testing.T) {
 	}, &stdout, &stderr)
 	if exitCode != 0 || !strings.Contains(stdout.String(), "authority validation passed") {
 		t.Fatalf("run() exit/stdout/stderr = %d/%q/%q", exitCode, stdout.String(), stderr.String())
+	}
+}
+
+func TestRunGitHubSyncPullRequestMetadataRejectsIncompleteEventAsUsage(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	for _, arguments := range [][]string{
+		{"github", "sync-pr-metadata", "--root", root, "--repository", "lusoris/20-watts-was-enough", "--pull-request", "40"},
+		{"github", "sync-pr-metadata", "--root", root, "--repository", "lusoris/20-watts-was-enough", "--pull-request", "40", "--event-action", "closed"},
+		{"github", "sync-pr-metadata", "--root", root, "--repository", "lusoris/20-watts-was-enough", "--pull-request", "40", "--event-action", "reopened", "--merged", "true"},
+	} {
+		var stdout bytes.Buffer
+		var stderr bytes.Buffer
+		if exitCode := run(arguments, &stdout, &stderr); exitCode != 2 ||
+			!strings.Contains(stderr.String(), "requires --repository, --pull-request, --event-action, and --merged") {
+			t.Fatalf("run(%v) exit/stderr = %d/%q", arguments, exitCode, stderr.String())
+		}
+	}
+}
+
+func TestRunGitHubSyncIssueLifecycleRejectsIncompleteEventAsUsage(t *testing.T) {
+	t.Parallel()
+	for _, arguments := range [][]string{
+		{"github", "sync-issue-lifecycle", "--issue", "54"},
+		{"github", "sync-issue-lifecycle", "--issue-action", "reopened"},
+		{"github", "sync-issue-lifecycle", "--issue", "54", "--issue-action", "merged"},
+	} {
+		var stdout bytes.Buffer
+		var stderr bytes.Buffer
+		if exitCode := run(arguments, &stdout, &stderr); exitCode != 2 ||
+			!strings.Contains(stderr.String(), "requires --repository, --issue, and --issue-action") {
+			t.Fatalf("run(%v) exit/stderr = %d/%q", arguments, exitCode, stderr.String())
+		}
 	}
 }
 

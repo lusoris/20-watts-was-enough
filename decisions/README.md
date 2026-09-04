@@ -64,3 +64,4 @@ than silently changing its outcome.
 | [0056](0056-keep-public-workflows-off-self-hosted-runners.md) | Keep public workflows off self-hosted runners | accepted |
 | [0057](0057-project-pull-request-metadata-from-managed-issues.md) | Project pull-request metadata from managed issues | accepted |
 | [0059](0059-run-one-enforcing-dependency-audit-per-full-gate.md) | Run one enforcing dependency audit per full gate | accepted |
+| [0061](0061-reconcile-managed-status-with-item-lifecycle.md) | Reconcile managed status with item lifecycle | accepted |

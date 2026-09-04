@@ -55,6 +55,16 @@ func syncGitHubPullRequestMetadata(
 	if err := labelPlan.Verify(ctx, client, labelOptions); err != nil {
 		return githubprmetadata.Result{}, fmt.Errorf("verify managed labels: %w", err)
 	}
+	if options.Event.Action == githubprmetadata.Closed {
+		result, syncErr := githubprmetadata.Sync(ctx, client, authorities, nil, options)
+		if syncErr != nil {
+			return githubprmetadata.Result{}, syncErr
+		}
+		if err := labelPlan.Verify(ctx, client, labelOptions); err != nil {
+			return githubprmetadata.Result{}, fmt.Errorf("read back managed labels: %w", err)
+		}
+		return result, nil
+	}
 	milestonePlan, err := githubmilestones.Preflight(ctx, client, authorities.Milestones, milestoneOptions)
 	if err != nil {
 		return githubprmetadata.Result{}, fmt.Errorf("preflight managed milestones: %w", err)

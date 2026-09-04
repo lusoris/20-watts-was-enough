@@ -162,6 +162,7 @@
     {
       "id": "go-operations",
       "paths": [
+        "tooling/internal/githubissuelifecycle/**",
         "tooling/internal/githubissuemilestones/**",
         "tooling/internal/githublabels/**",
         "tooling/internal/githubmilestones/**",

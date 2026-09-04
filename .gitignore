@@ -10,6 +10,7 @@ Desktop.ini
 # Local validation and build output
 .cache/
 .workingdir2/cache/
+.workingdir2/worktrees/
 tmp/
 /build/
 assets/rendered/*.tmp
