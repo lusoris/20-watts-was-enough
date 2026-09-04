@@ -16,9 +16,9 @@ import (
 )
 
 var (
-	imageIDPattern        = regexp.MustCompile(`^sha256:[0-9a-f]{64}$`)
-	sourceRefPattern      = regexp.MustCompile(`^(?:main|v(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*))$`)
-	numericIDPattern      = regexp.MustCompile(`^[0-9]+$`)
+	imageIDPattern   = regexp.MustCompile(`^sha256:[0-9a-f]{64}$`)
+	sourceRefPattern = regexp.MustCompile(`^(?:main|v(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*))$`)
+	numericIDPattern = regexp.MustCompile(`^[0-9]+$`)
 )
 
 // Options selects the repository and source identity rendered into the book.
@@ -41,7 +41,12 @@ func Render(ctx context.Context, options Options) (Result, error) {
 	if err != nil {
 		return Result{}, err
 	}
-	if err := verifySourceRevision(ctx, configuration.RepositoryRoot, options.SourceRef, options.SourceRevision); err != nil {
+	if err := verifySourceRevision(
+		ctx,
+		configuration.RepositoryRoot,
+		options.SourceRef,
+		options.SourceRevision,
+	); err != nil {
 		return Result{}, err
 	}
 	return renderWithDependencies(

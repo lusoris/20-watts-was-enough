@@ -18,6 +18,25 @@ const (
 	testSecondManifest = "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
 )
 
+func TestVerifyReproducibilityRejectsAWellFormedRevisionOtherThanRepositoryHEAD(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	head := commitRenderTestRepository(t, configuration.RepositoryRoot)
+	wrongRevision := strings.Repeat("f", 40)
+	if wrongRevision == head {
+		wrongRevision = strings.Repeat("e", 40)
+	}
+	_, err := VerifyReproducibility(context.Background(), ReproducibilityOptions{
+		RepositoryRoot: configuration.RepositoryRoot,
+		SourceRef:      "v1.2.3",
+		SourceRevision: wrongRevision,
+		ReceiptPath:    "build/evidence/pdf-reproducibility.json",
+	})
+	if err == nil || !strings.Contains(err.Error(), "not verified commit") {
+		t.Fatalf("VerifyReproducibility() error = %v, want repository HEAD mismatch", err)
+	}
+}
+
 func TestVerifyReproducibilityUsesTwoFreshNoCacheBuildersAndRetainsAReceipt(t *testing.T) {
 	t.Parallel()
 	configuration := renderConfiguration(t)

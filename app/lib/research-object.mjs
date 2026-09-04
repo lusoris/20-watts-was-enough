@@ -4,6 +4,7 @@ import {
   publication,
   repositoryIssueUrl,
 } from "./publication.mjs";
+import { repositoryDocumentHref } from "./book-release-identity.mjs";
 import { normalizePublicationSourceRevision } from "./publication-revision.mjs";
 
 const semanticVersionPattern = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/u;
@@ -92,11 +93,6 @@ export function normalizeResearchObjectFragment(value) {
   }
   const fragment = value.replace(/^#+/u, "");
   return fragment.trim() === fragment ? fragment : "";
-}
-
-function repositoryDocumentHref(ref, path, fragment = "") {
-  const hash = fragment ? `#${encodeURIComponent(fragment)}` : "";
-  return `${publication.repository}/blob/${encodeURIComponent(ref)}/${encodedRepositoryPath(path)}${hash}`;
 }
 
 function repositoryHistoryHref(ref, path) {

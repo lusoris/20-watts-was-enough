@@ -32,7 +32,7 @@ type commandExecutor interface {
 
 type localCommandExecutor struct{}
 
-// verifySourceRevision rejects a tag-bound render unless the checked-out
+// verifySourceRevision rejects a revision-bound render unless the checked-out
 // repository HEAD is the exact commit already verified by release preflight.
 func verifySourceRevision(ctx context.Context, root, sourceRef, expected string) error {
 	if err := ValidateSourceRevision(sourceRef, expected); err != nil {

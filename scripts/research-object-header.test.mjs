@@ -414,6 +414,26 @@ test("the no-JavaScript document uses the generated research-object projection",
   }
 });
 
+test("the no-JavaScript research header owns visible color and focus tokens", async () => {
+  const stylesheet = await readFile("app/globals.css", "utf8");
+  const headerRuleStart = stylesheet.indexOf("  .research-object-header {");
+  const headerRuleEnd = stylesheet.indexOf("\n  }", headerRuleStart);
+  assert.ok(headerRuleStart >= 0 && headerRuleEnd > headerRuleStart);
+  const headerRule = stylesheet.slice(headerRuleStart, headerRuleEnd);
+
+  assert.match(headerRule, /--research-object-kicker-color: #00663c;/u);
+  assert.match(headerRule, /--research-object-link-color: #17633f;/u);
+  assert.match(headerRule, /--research-object-focus-color: #2f7df4;/u);
+  assert.match(
+    stylesheet,
+    /\.research-object-header a:focus-visible,\s*\.research-object-header summary:focus-visible \{\s*outline: 3px solid var\(--research-object-focus-color\);\s*outline-offset: 3px;/u,
+  );
+  assert.match(
+    stylesheet,
+    /\.research-object-header a \{\s*color: var\(--research-object-link-color\);/u,
+  );
+});
+
 test("static identity validation rejects stale, duplicate, and locator-loss mutations", () => {
   const options = {
     document,

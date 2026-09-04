@@ -26,6 +26,14 @@ func VerifyReproducibility(ctx context.Context, options ReproducibilityOptions) 
 	if err != nil {
 		return ReproducibilityReceipt{}, err
 	}
+	if err := verifySourceRevision(
+		ctx,
+		configuration.RepositoryRoot,
+		options.SourceRef,
+		options.SourceRevision,
+	); err != nil {
+		return ReproducibilityReceipt{}, err
+	}
 	return verifyReproducibilityWithDependencies(
 		ctx,
 		configuration,

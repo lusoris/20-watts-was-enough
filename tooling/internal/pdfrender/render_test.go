@@ -46,6 +46,50 @@ func TestValidateSourceRevisionRequiresExactReleaseIdentity(t *testing.T) {
 	}
 }
 
+func TestSourceRevisionBindingRejectsMissingMalformedAndWrongCommits(t *testing.T) {
+	t.Parallel()
+	root := t.TempDir()
+	head := commitRenderTestRepository(t, root)
+	if err := verifySourceRevision(context.Background(), root, "v1.2.3", head); err != nil {
+		t.Fatalf("verifySourceRevision() valid error = %v", err)
+	}
+	wrongRevision := strings.Repeat("f", 40)
+	if wrongRevision == head {
+		wrongRevision = strings.Repeat("e", 40)
+	}
+	for name, revision := range map[string]string{
+		"missing":   "",
+		"malformed": "HEAD",
+		"wrong":     wrongRevision,
+	} {
+		name, revision := name, revision
+		t.Run(name, func(t *testing.T) {
+			err := verifySourceRevision(context.Background(), root, "v1.2.3", revision)
+			if err == nil {
+				t.Fatal("verifySourceRevision() unexpectedly accepted an invalid binding")
+			}
+		})
+	}
+}
+
+func TestRenderRejectsAWellFormedRevisionOtherThanRepositoryHEAD(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	head := commitRenderTestRepository(t, configuration.RepositoryRoot)
+	wrongRevision := strings.Repeat("f", 40)
+	if wrongRevision == head {
+		wrongRevision = strings.Repeat("e", 40)
+	}
+	_, err := Render(context.Background(), Options{
+		RepositoryRoot: configuration.RepositoryRoot,
+		SourceRef:      "v1.2.3",
+		SourceRevision: wrongRevision,
+	})
+	if err == nil || !strings.Contains(err.Error(), "not verified commit") {
+		t.Fatalf("Render() error = %v, want repository HEAD mismatch", err)
+	}
+}
+
 func TestRenderPlanUsesTheExactImageAndHardenedContainer(t *testing.T) {
 	t.Parallel()
 	configuration := renderConfiguration(t)
@@ -421,6 +465,38 @@ func renderConfiguration(t *testing.T) Configuration {
 		t.Fatal(err)
 	}
 	return configuration
+}
+
+func commitRenderTestRepository(t *testing.T, root string) string {
+	t.Helper()
+	runRenderTestGit(t, root, "init", "--quiet")
+	if err := os.WriteFile(filepath.Join(root, "source.txt"), []byte("source\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	runRenderTestGit(t, root, "add", "source.txt")
+	runRenderTestGit(
+		t, root,
+		"-c", "user.name=PDF test", "-c", "user.email=pdf-test@example.invalid",
+		"commit", "--quiet", "-m", "source",
+	)
+	return strings.TrimSpace(runRenderTestGit(t, root, "rev-parse", "HEAD"))
+}
+
+func runRenderTestGit(t *testing.T, root string, arguments ...string) string {
+	t.Helper()
+	commandContext, cancel := context.WithTimeout(context.Background(), sourceRevisionTimeout)
+	defer cancel()
+	command := exec.CommandContext(commandContext, "git", append([]string{"-C", root}, arguments...)...)
+	command.Env = boundedGitEnvironment()
+	command.WaitDelay = maximumWaitDelay
+	output, err := command.CombinedOutput()
+	if commandContext.Err() != nil {
+		t.Fatalf("git %v timed out: %v", arguments, commandContext.Err())
+	}
+	if err != nil {
+		t.Fatalf("git %v: %v: %s", arguments, err, output)
+	}
+	return string(output)
 }
 
 func argumentAfter(t *testing.T, arguments []string, flag string) string {
