@@ -17,73 +17,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  impact-plan:
-    name: CI impact plan
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-    outputs:
-      mode: ${{ steps.plan.outputs.mode }}
-      go: ${{ steps.plan.outputs.go }}
-      site: ${{ steps.plan.outputs.site }}
-      workstation_any: ${{ steps.plan.outputs.workstation_any }}
-    steps:
-      - name: Check out the complete comparison history
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Use Go 1.27
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
-        with:
-          go-version-file: tooling/go.mod
-          cache-dependency-path: tooling/go.sum
-      - name: Validate and project the bounded CI plan
-        id: plan
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          BEFORE_SHA: ${{ github.event.before }}
-          CURRENT_SHA: ${{ github.sha }}
-          EVENT_NAME: ${{ github.event_name }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: |
-          set -euo pipefail
-          mkdir -p build
-          if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            go -C tooling run ./cmd/20w ci plan --root .. \
-              --base "$BASE_SHA" --head "$HEAD_SHA" --json \
-              > build/ci-impact-plan.json
-          elif [[ "$EVENT_NAME" == "push" ]]; then
-            zero_sha=0000000000000000000000000000000000000000
-            valid_commit() {
-              local sha="$1"
-              [[ "$sha" =~ ^[0-9a-f]{40}$ ]] && git cat-file -e "${sha}^{commit}" 2>/dev/null
-            }
-            if [[ "$BEFORE_SHA" != "$zero_sha" ]] \
-              && valid_commit "$BEFORE_SHA" \
-              && valid_commit "$CURRENT_SHA" \
-              && git merge-base --is-ancestor "$BEFORE_SHA" "$CURRENT_SHA"; then
-              go -C tooling run ./cmd/20w ci plan --root .. \
-                --base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \
-                > build/ci-impact-plan.json
-            else
-              echo "::notice::Main-push comparison is unavailable; running the fail-closed full plan."
-              go -C tooling run ./cmd/20w ci plan --root .. --full --json \
-                > build/ci-impact-plan.json
-            fi
-          else
-            go -C tooling run ./cmd/20w ci plan --root .. --full --json \
-              > build/ci-impact-plan.json
-          fi
-          test -s build/ci-impact-plan.json
-          go -C tooling run ./cmd/20w ci project \
-            < build/ci-impact-plan.json >> "$GITHUB_OUTPUT"
-
   analyze:
     name: JavaScript and TypeScript analysis
-    needs: impact-plan
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.site == 'true' || needs.impact-plan.outputs.workstation_any == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -107,8 +42,6 @@ jobs:
 
   analyze-go:
     name: Go analysis
-    needs: impact-plan
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || needs.impact-plan.outputs.mode == 'full' || needs.impact-plan.outputs.go == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:

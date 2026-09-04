@@ -1471,16 +1471,10 @@ export function validateCiImpactWorkflowObject(
   return findings;
 }
 
-function codeQlImpactLaneIsExact(job, selectors) {
-  const fullOrSelected = [
-    "github.event_name == 'schedule'",
-    "github.event_name == 'workflow_dispatch'",
-    "needs.impact-plan.outputs.mode == 'full'",
-    ...selectors.map((selector) => `needs.impact-plan.outputs.${selector} == 'true'`),
-  ].join(" || ");
+function codeQlRequiredLaneIsExact(job) {
   return (
-    job?.needs === "impact-plan"
-    && job?.if === fullOrSelected
+    job?.needs === undefined
+    && job?.if === undefined
     && continueOnErrorIsDisabled(job)
     && (job?.steps ?? []).every(continueOnErrorIsDisabled)
   );
@@ -1502,7 +1496,8 @@ function codeQlStepIsExact(step, name, action, expectedWith) {
 function codeQlJobBoundaryIsExact(job, name, expectedStepCount) {
   return (
     job?.name === name
-    && job?.needs === "impact-plan"
+    && job?.needs === undefined
+    && job?.if === undefined
     && job?.["runs-on"] === "ubuntu-latest"
     && job?.["timeout-minutes"] === 30
     && Object.keys(job?.permissions ?? {}).length === 3
@@ -1518,7 +1513,7 @@ function codeQlJobBoundaryIsExact(job, name, expectedStepCount) {
     && Array.isArray(job?.steps)
     && job.steps.length === expectedStepCount
     && Object.keys(job ?? {}).every((key) => [
-      "name", "needs", "if", "runs-on", "timeout-minutes", "permissions", "steps",
+      "name", "runs-on", "timeout-minutes", "permissions", "steps",
     ].includes(key))
   );
 }
@@ -1568,34 +1563,17 @@ export function validateCodeQlImpactWorkflowObject(
 ) {
   const findings = [];
   const jobs = workflow?.jobs ?? {};
-  const plan = jobs["impact-plan"];
-  const expectedOutputs = {
-    mode: "${{ steps.plan.outputs.mode }}",
-    go: "${{ steps.plan.outputs.go }}",
-    site: "${{ steps.plan.outputs.site }}",
-    workstation_any: "${{ steps.plan.outputs.workstation_any }}",
-  };
   recordExpectation(
     findings,
-    Object.keys(plan?.outputs ?? {}).length === Object.keys(expectedOutputs).length
-      && propertiesMatch(plan?.outputs, expectedOutputs)
-      && impactPlanJobRunsExactProjection(workflow, plan),
-    `${relativePath}: CodeQL must use the exact bounded Go impact projection`,
-  );
-  recordExpectation(
-    findings,
-    codeQlImpactLaneIsExact(jobs.analyze, ["site", "workstation_any"]),
-    `${relativePath}: JavaScript and TypeScript analysis must use only the full-plan, site, or workstation selector`,
+    jobs["impact-plan"] === undefined
+      && codeQlRequiredLaneIsExact(jobs.analyze)
+      && codeQlRequiredLaneIsExact(jobs["analyze-go"]),
+    `${relativePath}: both configured CodeQL languages must run on every protected commit`,
   );
   recordExpectation(
     findings,
     javaScriptCodeQlJobIsExact(jobs.analyze),
     `${relativePath}: JavaScript and TypeScript CodeQL must keep its exact fail-closed initialization and analysis boundary`,
-  );
-  recordExpectation(
-    findings,
-    codeQlImpactLaneIsExact(jobs["analyze-go"], ["go"]),
-    `${relativePath}: Go analysis must use only the full-plan or Go selector`,
   );
   return findings;
 }
