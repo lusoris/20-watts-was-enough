@@ -19,10 +19,30 @@ the exact diff; this file records why the project changed.
   ambiguous references, confirms both records before targeted writes and
   verifies both records by bounded readback. The canonical label manifest now
   also closes the accepted Conventional Commit type set across CI and metadata;
-  a separate title gate will rerun on edits without restarting code tests after
-  bootstrap removal. The existing CI title dependency remains until that
-  standalone context is present
-  on `main` and required by the live ruleset.
+  the live ruleset now requires the separate title gate, so title edits rerun
+  that small check without retaining the transitional CI bootstrap or
+  restarting code tests.
+- Managed issue status now follows the issue lifecycle from trusted `main`.
+  Close events and the canonical metadata repair remove active status labels,
+  an existing `status:wontfix` remains explicit, and reopen events reset the
+  mapped issue to `status:needs-triage`. Canonical repair also restores triage
+  when an open issue has no active status and removes stale `status:wontfix`
+  beside one active status; multiple active states still fail closed. The
+  bounded Go path preflights every mapped issue, preserves non-status labels,
+  validates each mutation response and reads the result back. GitHub's maximum
+  pending queues avoid the default single-slot replacement of non-coalescible
+  issue and pull-request lifecycle events. Issues 54 and 55 are bound to M0 as
+  tracked work items.
+- Managed pull requests now use the same closed status vocabulary. Merge
+  removes every status; an unmerged close removes active statuses while
+  retaining an existing `status:wontfix`; reopen reruns the linked issue
+  projection. The trusted workflow verifies merge state, skips path labeling
+  and preserves every other label and the existing milestone on close, and
+  refuses ambiguous or unknown status identities. Full metadata repair now
+  discovers candidates through separately bounded managed-status and open-PR
+  queries and reuses the same reconciler. The exact-reference open scan repairs
+  missed reopen drift even when no managed status remains; irreducibly
+  unreferenced or closed unknown-status items still require an event or number.
 - A digest-pinned apko/Wolfi foundation now closes the Linux `amd64` Poppler
   26.08.0 PDF-tools graph at 45 APKs. Its offline Go validator binds the config,
   lock, exact APK retention metadata, upstream source identities, the pinned

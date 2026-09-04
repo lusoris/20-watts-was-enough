@@ -1,6 +1,8 @@
 name: Synchronize repository metadata
 
 on:
+  issues:
+    types: [closed, reopened]
   push:
     branches: [main]
     paths:
@@ -8,11 +10,15 @@ on:
       - .github/milestones.json
       - .github/issue-milestones.json
       - .github/workflows/sync-repository-metadata.yml
+      - tooling/cmd/20w/github_issue_lifecycle.go
       - tooling/cmd/20w/github_metadata.go
+      - tooling/cmd/20w/github_pr_metadata.go
       - tooling/cmd/20w/main.go
       - tooling/internal/githublabels/**
       - tooling/internal/githubissuemilestones/**
+      - tooling/internal/githubissuelifecycle/**
       - tooling/internal/githubmilestones/**
+      - tooling/internal/githubprmetadata/**
       - tooling/internal/repositorymanifest/**
   workflow_dispatch:
 
@@ -22,6 +28,7 @@ permissions:
 concurrency:
   group: repository-metadata-sync
   cancel-in-progress: false
+  queue: max
 
 jobs:
   sync:
@@ -31,6 +38,7 @@ jobs:
     permissions:
       contents: read
       issues: write
+      pull-requests: read
     steps:
       - name: Check out canonical main
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -43,6 +51,17 @@ jobs:
           go-version-file: tooling/go.mod
           cache-dependency-path: tooling/go.sum
       - name: Create or repair managed metadata
+        if: github.event_name != 'issues'
         env:
           GH_TOKEN: ${{ github.token }}
         run: go -C tooling run ./cmd/20w github sync-metadata --root .. --repository "$GITHUB_REPOSITORY"
+      - name: Reconcile the managed issue lifecycle
+        if: github.event_name == 'issues'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_ACTION: ${{ github.event.action }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: >-
+          go -C tooling run ./cmd/20w github sync-issue-lifecycle
+          --root .. --repository "$GITHUB_REPOSITORY"
+          --issue "$ISSUE_NUMBER" --issue-action "$ISSUE_ACTION"

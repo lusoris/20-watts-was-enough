@@ -2,7 +2,7 @@ name: Labeler
 
 on:
   pull_request_target:
-    types: [opened, edited, synchronize, reopened]
+    types: [opened, edited, synchronize, reopened, closed]
 
 permissions:
   contents: read
@@ -10,6 +10,7 @@ permissions:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: false
+  queue: max
 
 jobs:
   label:
@@ -23,6 +24,7 @@ jobs:
     steps:
       # Metadata-only: never check out or execute pull-request code here.
       - name: Apply path labels
+        if: github.event.action != 'closed'
         uses: actions/labeler@bf12e9b00b37c5c0ca2b87b79b2daf7891dbda13 # v7.0.0
         with:
           sync-labels: true
@@ -41,7 +43,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PULL_REQUEST: ${{ github.event.pull_request.number }}
+          PULL_REQUEST_ACTION: ${{ github.event.action }}
+          PULL_REQUEST_MERGED: ${{ github.event.pull_request.merged }}
         run: >-
           go -C tooling run ./cmd/20w github sync-pr-metadata
           --root .. --repository "$GITHUB_REPOSITORY"
           --pull-request "$PULL_REQUEST"
+          --event-action "$PULL_REQUEST_ACTION"
+          --merged "$PULL_REQUEST_MERGED"

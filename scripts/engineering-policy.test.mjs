@@ -127,7 +127,6 @@ function runCiSuccessGate(source, overrides = {}) {
     SELECT_SITE: "false",
     SELECT_WORKSTATION: "true",
     RESULT_PLAN: "success",
-    RESULT_PR_TITLE: "skipped",
     RESULT_QUALITY_FULL: "success",
     RESULT_IMPACT_COMMON: "skipped",
     RESULT_GO: "skipped",
@@ -1051,7 +1050,7 @@ test("CI impact selection is projected once and every job state fails closed", (
     assert.ok(validateCiImpactWorkflowObject(weakenedRouting).includes(planFinding));
   }
 
-  for (const eventType of ["opened", "edited", "synchronize", "reopened"]) {
+  for (const eventType of ["opened", "synchronize", "reopened"]) {
     const missingCodeUpdate = structuredClone(valid);
     missingCodeUpdate.on.pull_request.types = missingCodeUpdate.on.pull_request.types.filter(
       (type) => type !== eventType,
@@ -1061,11 +1060,16 @@ test("CI impact selection is projected once and every job state fails closed", (
     ));
   }
 
-  const weakTitleScope = structuredClone(valid);
-  weakTitleScope.jobs["pr-title"].steps[0].run = weakTitleScope.jobs["pr-title"].steps[0].run
-    .replace("\\([^()]{1,64}\\)", "\\(.+\\)");
-  assert.ok(validateCiImpactWorkflowObject(weakTitleScope).includes(
-    ".github/workflows/ci.yml: bootstrap PR title gate must exactly enforce the managed Conventional Commit grammar",
+  const duplicateTitleGate = structuredClone(valid);
+  duplicateTitleGate.jobs["pr-title"] = { "runs-on": "ubuntu-latest", steps: [] };
+  assert.ok(validateCiImpactWorkflowObject(duplicateTitleGate).includes(
+    ".github/workflows/ci.yml: CI must delegate PR title validation to the standalone required workflow",
+  ));
+
+  const titleOnlyTrigger = structuredClone(valid);
+  titleOnlyTrigger.on.pull_request.types.push("edited");
+  assert.ok(validateCiImpactWorkflowObject(titleOnlyTrigger).includes(
+    ".github/workflows/ci.yml: CI must run on main pushes, manual dispatches, and every pull-request code update",
   ));
 
   const unselectedDependencyReview = structuredClone(valid);
@@ -1247,7 +1251,6 @@ test("CI success accepts only the exact full or selected impact state vector", (
     SELECT_DEPENDENCY: "true",
     SELECT_SITE: "true",
     SELECT_WORKSTATION: "true",
-    RESULT_PR_TITLE: "success",
     RESULT_QUALITY_FULL: "skipped",
     RESULT_IMPACT_COMMON: "success",
     RESULT_SITE: "success",
@@ -1260,7 +1263,6 @@ test("CI success accepts only the exact full or selected impact state vector", (
   const pushImpact = {
     ...impact,
     EVENT_NAME: "push",
-    RESULT_PR_TITLE: "skipped",
     RESULT_DEPENDENCY_REVIEW: "skipped",
   };
   assert.equal(
@@ -1280,7 +1282,6 @@ test("CI success accepts only the exact full or selected impact state vector", (
   }).status, 0);
   assert.equal(runCiSuccessGate(source, {
     EVENT_NAME: "pull_request",
-    RESULT_PR_TITLE: "success",
     RESULT_DEPENDENCY_REVIEW: "success",
   }).status, 0, "a full pull request must require dependency review");
   assert.notEqual(runCiSuccessGate(source, {
@@ -1316,7 +1317,6 @@ test("CI success accepts only the exact full or selected impact state vector", (
   assert.notEqual(runCiSuccessGate(source, {
     ...impact,
     EVENT_NAME: "workflow_dispatch",
-    RESULT_PR_TITLE: "skipped",
     RESULT_DEPENDENCY_REVIEW: "skipped",
   }).status, 0, "manual dispatch may not enter impact mode");
   assert.notEqual(runCiSuccessGate(source, {
@@ -1340,8 +1340,33 @@ test("repository metadata synchronization is manifest-triggered and least-privil
   const tampered = structuredClone(valid);
   tampered.jobs.sync.permissions.contents = "write";
   assert.ok(validateRepositoryMetadataSyncWorkflowObject(tampered).includes(
-    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization needs only contents:read and issues:write",
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization needs only contents:read, issues:write, and pull-requests:read",
   ));
+
+  const unreadablePullRequests = structuredClone(valid);
+  delete unreadablePullRequests.jobs.sync.permissions["pull-requests"];
+  assert.ok(validateRepositoryMetadataSyncWorkflowObject(unreadablePullRequests).includes(
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization needs only contents:read, issues:write, and pull-requests:read",
+  ));
+
+  for (const mutate of [
+    (candidate) => { candidate.concurrency.group = "mutable"; },
+    (candidate) => { candidate.concurrency["cancel-in-progress"] = true; },
+    (candidate) => { delete candidate.concurrency.queue; },
+    (candidate) => { candidate.concurrency.queue = "single"; },
+    (candidate) => { candidate.jobs.sync["continue-on-error"] = true; },
+    (candidate) => { candidate.jobs.sync.steps.at(-1)["continue-on-error"] = true; },
+    (candidate) => { candidate.jobs.sync.if = "${{ false }}"; },
+    (candidate) => { candidate.jobs.sync.defaults = { run: { shell: "true {0}" } }; },
+    (candidate) => { candidate.jobs.sync.steps.at(-1).shell = "true {0}"; },
+    (candidate) => { candidate.jobs.sync.steps.find((step) => step.uses?.startsWith("actions/setup-go@")).if = "${{ false }}"; },
+  ]) {
+    const bypassed = structuredClone(valid);
+    mutate(bypassed);
+    assert.ok(validateRepositoryMetadataSyncWorkflowObject(bypassed).includes(
+      ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must use GitHub's maximum pending queue without cancellation or failure bypass",
+    ));
+  }
 
   const untrustedCheckout = structuredClone(valid);
   const checkout = untrustedCheckout.jobs.sync.steps.find(
@@ -1357,17 +1382,56 @@ test("repository metadata synchronization is manifest-triggered and least-privil
     (entry) => entry !== ".github/issue-milestones.json",
   );
   assert.ok(validateRepositoryMetadataSyncWorkflowObject(incompleteTrigger).includes(
-    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for all three canonical manifests on main and allow manual repair",
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and both lifecycle sources on main, and manual repair",
+  ));
+
+  const missingLifecycleSource = structuredClone(valid);
+  missingLifecycleSource.on.push.paths = missingLifecycleSource.on.push.paths.filter(
+    (entry) => entry !== "tooling/internal/githubissuelifecycle/**",
+  );
+  assert.ok(validateRepositoryMetadataSyncWorkflowObject(missingLifecycleSource).includes(
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and both lifecycle sources on main, and manual repair",
+  ));
+
+  const missingPullRequestLifecycleSource = structuredClone(valid);
+  missingPullRequestLifecycleSource.on.push.paths = missingPullRequestLifecycleSource.on.push.paths.filter(
+    (entry) => entry !== "tooling/internal/githubprmetadata/**",
+  );
+  assert.ok(validateRepositoryMetadataSyncWorkflowObject(missingPullRequestLifecycleSource).includes(
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and both lifecycle sources on main, and manual repair",
+  ));
+
+  const missingLifecycleTrigger = structuredClone(valid);
+  delete missingLifecycleTrigger.on.issues;
+  assert.ok(validateRepositoryMetadataSyncWorkflowObject(missingLifecycleTrigger).includes(
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and both lifecycle sources on main, and manual repair",
+  ));
+
+  const unboundLifecycle = structuredClone(valid);
+  const lifecycle = unboundLifecycle.jobs.sync.steps.find(
+    (step) => step.name === "Reconcile the managed issue lifecycle",
+  );
+  lifecycle.env.ISSUE_ACTION = "reopened";
+  assert.ok(validateRepositoryMetadataSyncWorkflowObject(unboundLifecycle).includes(
+    ".github/workflows/sync-repository-metadata.yml: closed and reopened issues must pass trusted event identity to the bounded Go lifecycle repair",
+  ));
+
+  const eventRunsFullSync = structuredClone(valid);
+  eventRunsFullSync.jobs.sync.steps.find(
+    (step) => step.name === "Create or repair managed metadata",
+  ).if = undefined;
+  assert.ok(validateRepositoryMetadataSyncWorkflowObject(eventRunsFullSync).includes(
+    ".github/workflows/sync-repository-metadata.yml: the trusted Go command must apply canonical labels, milestones, and mapped issue assignments with the job token",
   ));
 });
 
 test("pull-request metadata uses only trusted main and explicit bounded authority", () => {
   const relativePath = ".github/workflows/labeler.yml";
   const valid = workflow("labeler");
-  const triggerFinding = `${relativePath}: trusted metadata projection must run on opened, edited, synchronized, and reopened pull requests`;
+  const triggerFinding = `${relativePath}: trusted metadata projection and lifecycle cleanup must run on opened, edited, synchronized, reopened, and closed pull requests`;
   const permissionFinding = `${relativePath}: pull-request metadata needs only contents:read, issues:write, and pull-requests:write at job scope`;
-  const stepsFinding = `${relativePath}: pull-request metadata must sync path labels, check out only trusted main, and run the exact bounded Go projection`;
-  const boundaryFinding = `${relativePath}: pull-request metadata must keep its bounded hosted-runner and per-pull-request concurrency boundary`;
+  const stepsFinding = `${relativePath}: pull-request metadata must skip path labeling on close, check out only trusted main, and run the exact bounded Go projection and lifecycle cleanup`;
+  const boundaryFinding = `${relativePath}: pull-request metadata must keep its bounded hosted runner and maximum per-pull-request pending queue`;
   assert.deepEqual(validatePullRequestMetadataWorkflowObject(valid), []);
 
   const missingEdited = structuredClone(valid);
@@ -1392,15 +1456,53 @@ test("pull-request metadata uses only trusted main and explicit bounded authorit
   ).with["sync-labels"] = false;
   assert.ok(validatePullRequestMetadataWorkflowObject(stalePathLabels).includes(stepsFinding));
 
+  const pathLabelerRunsOnClosed = structuredClone(valid);
+  delete pathLabelerRunsOnClosed.jobs.label.steps.find(
+    (step) => step.uses?.startsWith("actions/labeler@"),
+  ).if;
+  assert.ok(validatePullRequestMetadataWorkflowObject(pathLabelerRunsOnClosed).includes(stepsFinding));
+
   const commandDrift = structuredClone(valid);
   commandDrift.jobs.label.steps.find(
     (step) => step.run?.includes("sync-pr-metadata"),
   ).run = "go run ./untrusted-command";
   assert.ok(validatePullRequestMetadataWorkflowObject(commandDrift).includes(stepsFinding));
 
+  const missingMergedIdentity = structuredClone(valid);
+  delete missingMergedIdentity.jobs.label.steps.find(
+    (step) => step.run?.includes("sync-pr-metadata"),
+  ).env.PULL_REQUEST_MERGED;
+  assert.ok(validatePullRequestMetadataWorkflowObject(missingMergedIdentity).includes(stepsFinding));
+
+  const bypassedCleanup = structuredClone(valid);
+  bypassedCleanup.jobs.label.steps.find(
+    (step) => step.run?.includes("sync-pr-metadata"),
+  ).if = "github.event.action != 'closed'";
+  assert.ok(validatePullRequestMetadataWorkflowObject(bypassedCleanup).includes(stepsFinding));
+
+  const ignoredCleanupFailure = structuredClone(valid);
+  ignoredCleanupFailure.jobs.label.steps.find(
+    (step) => step.run?.includes("sync-pr-metadata"),
+  )["continue-on-error"] = true;
+  assert.ok(validatePullRequestMetadataWorkflowObject(ignoredCleanupFailure).includes(stepsFinding));
+
+  const bypassShell = structuredClone(valid);
+  bypassShell.jobs.label.steps.find(
+    (step) => step.run?.includes("sync-pr-metadata"),
+  ).shell = "true {0}";
+  assert.ok(validatePullRequestMetadataWorkflowObject(bypassShell).includes(stepsFinding));
+
   const cancellableRepair = structuredClone(valid);
   cancellableRepair.concurrency["cancel-in-progress"] = true;
   assert.ok(validatePullRequestMetadataWorkflowObject(cancellableRepair).includes(boundaryFinding));
+
+  const defaultPendingSlot = structuredClone(valid);
+  delete defaultPendingSlot.concurrency.queue;
+  assert.ok(validatePullRequestMetadataWorkflowObject(defaultPendingSlot).includes(boundaryFinding));
+
+  const replaceablePendingSlot = structuredClone(valid);
+  replaceablePendingSlot.concurrency.queue = "single";
+  assert.ok(validatePullRequestMetadataWorkflowObject(replaceablePendingSlot).includes(boundaryFinding));
 });
 
 test("the label manifest closes the accepted pull-request title types", () => {

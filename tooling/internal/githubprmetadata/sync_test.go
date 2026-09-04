@@ -28,7 +28,8 @@ func (inventory testInventory) Number(id string) (int, bool) {
 func testAuthorities() Authorities {
 	names := []string{
 		"type:feat", "type:fix", "type:docs", "type:chore", "type:refactor", "type:test", "type:perf", "type:ci", "type:build", "type:revert",
-		"severity:p1", "severity:p2", "status:blocked", "status:in-progress", "area:research", "area:experiment",
+		"severity:p1", "severity:p2", "status:needs-triage", "status:blocked", "status:in-progress", "status:waiting-on-author", "status:wontfix",
+		"area:research", "area:experiment",
 		"dependencies",
 	}
 	labels := make([]githublabels.Label, 0, len(names))
@@ -93,8 +94,12 @@ func TestDesiredMetadataUsesTheManifestManagedTitleTypes(t *testing.T) {
 }
 
 func testItem(number int, pull bool, title, body string, labels []string, milestone int) map[string]any {
+	return testItemState(number, pull, "open", title, body, labels, milestone)
+}
+
+func testItemState(number int, pull bool, state, title, body string, labels []string, milestone int) map[string]any {
 	item := map[string]any{
-		"number": number, "node_id": "ITEM_" + title, "state": "open", "title": title,
+		"number": number, "node_id": "ITEM_" + title, "state": state, "title": title,
 		"body": body, "labels": labelObjects(labels), "milestone": nil,
 	}
 	if milestone != 0 {
@@ -219,7 +224,10 @@ func TestSyncConvergesAndRetryIsIdempotent(t *testing.T) {
 		}
 	}))
 	defer server.Close()
-	options := Options{APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40}
+	options := Options{
+		APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+		Event: Event{Action: Synchronize},
+	}
 	wantLabels := []string{
 		"area:experiment", "area:research", "dependencies", "external", "severity:p2", "status:in-progress", "type:feat",
 	}
@@ -278,6 +286,7 @@ func TestSyncPreservesConcurrentUnrelatedLabelAddition(t *testing.T) {
 
 	result, err := Sync(context.Background(), server.Client(), testAuthorities(), testInventory{"M1": 9}, Options{
 		APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+		Event: Event{Action: Synchronize},
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -337,6 +346,7 @@ func TestSyncReconcilesSourceIssueChangeAfterMutation(t *testing.T) {
 
 	result, err := Sync(context.Background(), server.Client(), testAuthorities(), testInventory{"M1": 9}, Options{
 		APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+		Event: Event{Action: Synchronize},
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -388,6 +398,7 @@ func TestSyncRecoversFromAppliedLabelWriteWithFailedResponse(t *testing.T) {
 
 	result, err := Sync(context.Background(), server.Client(), testAuthorities(), testInventory{"M1": 9}, Options{
 		APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+		Event: Event{Action: Synchronize},
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -427,6 +438,7 @@ func TestSyncSkipsWithoutOneManagedReferenceAndNeverWrites(t *testing.T) {
 			defer server.Close()
 			result, err := Sync(context.Background(), server.Client(), testAuthorities(), testInventory{"M1": 9}, Options{
 				APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+				Event: Event{Action: Synchronize},
 			})
 			if err != nil || !result.Skipped || result.Reason != test.reason || writes != 0 {
 				t.Fatalf("Sync() result/error/writes = %#v/%v/%d", result, err, writes)
@@ -445,6 +457,8 @@ func TestSyncRejectsIncompleteOrInconsistentManagedIssueBeforeWrite(t *testing.T
 	}{
 		{name: "missing-area", labels: []string{"type:feat", "severity:p2", "status:in-progress"}, milestone: 9, want: "at least one managed area"},
 		{name: "duplicate-severity", labels: []string{"type:feat", "severity:p1", "severity:p2", "status:in-progress", "area:research"}, milestone: 9, want: "exactly one managed"},
+		{name: "closed-status", labels: []string{"type:feat", "severity:p2", "status:wontfix", "area:research"}, milestone: 9, want: "active managed status"},
+		{name: "unknown-status", labels: []string{"type:feat", "severity:p2", "status:finished", "area:research"}, milestone: 9, want: "unknown status-prefixed"},
 		{name: "wrong-milestone", labels: []string{"type:feat", "severity:p2", "status:in-progress", "area:research"}, milestone: 8, want: "does not carry milestone M1"},
 	} {
 		test := test
@@ -464,6 +478,7 @@ func TestSyncRejectsIncompleteOrInconsistentManagedIssueBeforeWrite(t *testing.T
 			defer server.Close()
 			_, err := Sync(context.Background(), server.Client(), testAuthorities(), testInventory{"M1": 9}, Options{
 				APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+				Event: Event{Action: Synchronize},
 			})
 			if err == nil || !strings.Contains(err.Error(), test.want) || writes != 0 {
 				t.Fatalf("Sync() error/writes = %v/%d", err, writes)
@@ -496,6 +511,7 @@ func TestSyncRejectsSnapshotRaceBeforeWrite(t *testing.T) {
 	defer server.Close()
 	_, err := Sync(context.Background(), server.Client(), testAuthorities(), testInventory{"M1": 9}, Options{
 		APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+		Event: Event{Action: Synchronize},
 	})
 	if err == nil || !strings.Contains(err.Error(), "did not converge after 3 attempts") ||
 		!strings.Contains(err.Error(), "changed after metadata preflight") || writes != 0 || pullReads != 6 {
@@ -526,10 +542,365 @@ func TestSyncRejectsTamperedMilestoneMutationResponse(t *testing.T) {
 	defer server.Close()
 	_, err := Sync(context.Background(), server.Client(), testAuthorities(), testInventory{"M1": 9}, Options{
 		APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+		Event: Event{Action: Synchronize},
 	})
 	if err == nil || !strings.Contains(err.Error(), "did not converge after 3 attempts") ||
 		!strings.Contains(err.Error(), "response identity changed") || patches != 3 {
 		t.Fatalf("Sync() error/patches = %v/%d", err, patches)
+	}
+}
+
+func TestSyncClosedReconcilesOnlyLifecycleStatusAndIsIdempotent(t *testing.T) {
+	t.Parallel()
+	for _, test := range []struct {
+		name         string
+		merged       bool
+		statuses     []string
+		wantStatuses []string
+		wantWrites   int
+	}{
+		{
+			name: "merged-removes-active-and-wontfix", merged: true,
+			statuses: []string{"status:in-progress", "status:wontfix"}, wantWrites: 2,
+		},
+		{
+			name: "closed-unmerged-preserves-existing-wontfix", merged: false,
+			statuses: []string{"status:blocked", "status:wontfix"}, wantStatuses: []string{"status:wontfix"}, wantWrites: 1,
+		},
+		{
+			name: "closed-unmerged-never-infers-wontfix", merged: false,
+			statuses: []string{"status:waiting-on-author"}, wantWrites: 1,
+		},
+	} {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			var mutex sync.Mutex
+			labels := append([]string{
+				"type:fix", "severity:p2", "area:research", "dependencies", "external",
+			}, test.statuses...)
+			writes := 0
+			sourceReads := 0
+			server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+				mutex.Lock()
+				defer mutex.Unlock()
+				switch {
+				case request.URL.Path == "/repos/owner/repository/issues/40" && request.Method == http.MethodGet:
+					_ = json.NewEncoder(writer).Encode(testItemState(
+						40, true, "closed", "not a conventional title", "Tracks #12", labels, 9,
+					))
+				case request.URL.Path == "/repos/owner/repository/pulls/40/merge" && request.Method == http.MethodGet:
+					if test.merged {
+						writer.WriteHeader(http.StatusNoContent)
+					} else {
+						writer.WriteHeader(http.StatusNotFound)
+					}
+				case strings.HasPrefix(request.URL.Path, "/repos/owner/repository/issues/40/labels/") && request.Method == http.MethodDelete:
+					writes++
+					labels = removeTestLabel(labels, deletedTestLabel(t, request))
+					_ = json.NewEncoder(writer).Encode(labelObjects(labels))
+				case request.URL.Path == "/repos/owner/repository/issues/12":
+					sourceReads++
+					http.Error(writer, "closed lifecycle must not read the source issue", http.StatusInternalServerError)
+				default:
+					http.Error(writer, "unexpected request", http.StatusBadRequest)
+				}
+			}))
+			defer server.Close()
+			options := Options{
+				APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+				Event: Event{Action: Closed, Merged: test.merged},
+			}
+
+			result, err := Sync(context.Background(), server.Client(), testAuthorities(), nil, options)
+			if err != nil {
+				t.Fatal(err)
+			}
+			want := append([]string{"area:research", "dependencies", "external", "severity:p2", "type:fix"}, test.wantStatuses...)
+			sort.Strings(want)
+			if !result.Updated || result.Skipped || result.Issue != 12 || result.Milestone != 9 ||
+				!reflect.DeepEqual(result.Labels, want) {
+				t.Fatalf("Sync() result = %#v, want labels %#v", result, want)
+			}
+			retry, err := Sync(context.Background(), server.Client(), testAuthorities(), nil, options)
+			if err != nil {
+				t.Fatal(err)
+			}
+			mutex.Lock()
+			defer mutex.Unlock()
+			if retry.Updated || !reflect.DeepEqual(retry.Labels, want) || writes != test.wantWrites || sourceReads != 0 {
+				t.Fatalf("retry/writes/source reads = %#v/%d/%d", retry, writes, sourceReads)
+			}
+		})
+	}
+}
+
+func TestSyncReopenedDelegatesToIssueProjectionAndRemovesWontfix(t *testing.T) {
+	t.Parallel()
+	var mutex sync.Mutex
+	pullLabels := []string{
+		"type:fix", "severity:p1", "status:in-progress", "status:wontfix", "area:experiment", "external",
+	}
+	writes := 0
+	mergeReads := 0
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		mutex.Lock()
+		defer mutex.Unlock()
+		switch {
+		case request.URL.Path == "/repos/owner/repository/issues/40" && request.Method == http.MethodGet:
+			_ = json.NewEncoder(writer).Encode(testItem(40, true, "feat: reopen projection", "Tracks #12", pullLabels, 9))
+		case request.URL.Path == "/repos/owner/repository/issues/12" && request.Method == http.MethodGet:
+			_ = json.NewEncoder(writer).Encode(testItem(12, false, "Managed issue", "", []string{
+				"type:feat", "severity:p2", "status:blocked", "area:research",
+			}, 9))
+		case request.URL.Path == "/repos/owner/repository/issues/40/labels" && request.Method == http.MethodPost:
+			writes++
+			var payload labelsPayload
+			if err := json.NewDecoder(request.Body).Decode(&payload); err != nil {
+				t.Fatal(err)
+			}
+			pullLabels = addTestLabels(pullLabels, payload.Labels...)
+			_ = json.NewEncoder(writer).Encode(labelObjects(pullLabels))
+		case strings.HasPrefix(request.URL.Path, "/repos/owner/repository/issues/40/labels/") && request.Method == http.MethodDelete:
+			writes++
+			pullLabels = removeTestLabel(pullLabels, deletedTestLabel(t, request))
+			_ = json.NewEncoder(writer).Encode(labelObjects(pullLabels))
+		case request.URL.Path == "/repos/owner/repository/pulls/40/merge":
+			mergeReads++
+			http.Error(writer, "open events must not query merge state", http.StatusInternalServerError)
+		default:
+			http.Error(writer, "unexpected request", http.StatusBadRequest)
+		}
+	}))
+	defer server.Close()
+
+	result, err := Sync(context.Background(), server.Client(), testAuthorities(), testInventory{"M1": 9}, Options{
+		APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+		Event: Event{Action: Reopened},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{
+		"area:experiment", "area:research", "external", "severity:p2", "status:blocked", "type:feat",
+	}
+	mutex.Lock()
+	defer mutex.Unlock()
+	if !result.Updated || !reflect.DeepEqual(result.Labels, want) || writes != 5 || mergeReads != 0 ||
+		slices.Contains(pullLabels, "status:wontfix") {
+		t.Fatalf("result/writes/merge reads/labels = %#v/%d/%d/%#v", result, writes, mergeReads, pullLabels)
+	}
+}
+
+func TestSyncClosedRequiresEventAndRemoteMergeStateAgreement(t *testing.T) {
+	t.Parallel()
+	requests := 0
+	writes := 0
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		requests++
+		if request.Method != http.MethodGet {
+			writes++
+		}
+		switch request.URL.Path {
+		case "/repos/owner/repository/issues/40":
+			_ = json.NewEncoder(writer).Encode(testItemState(
+				40, true, "closed", "fix: closed", "Tracks #12", []string{"status:in-progress"}, 9,
+			))
+		case "/repos/owner/repository/pulls/40/merge":
+			writer.WriteHeader(http.StatusNotFound)
+		default:
+			http.Error(writer, "unexpected request", http.StatusBadRequest)
+		}
+	}))
+	defer server.Close()
+
+	_, err := Sync(context.Background(), server.Client(), testAuthorities(), nil, Options{
+		APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+		Event: Event{Action: Closed, Merged: true},
+	})
+	if err == nil || !strings.Contains(err.Error(), "merge flag disagrees") ||
+		!strings.Contains(err.Error(), "did not converge after 3 attempts") || requests != 6 || writes != 0 {
+		t.Fatalf("Sync() error/requests/writes = %v/%d/%d", err, requests, writes)
+	}
+}
+
+func TestSyncRejectsStaleEventStateBeforeWrite(t *testing.T) {
+	t.Parallel()
+	reads := 0
+	writes := 0
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if request.Method != http.MethodGet {
+			writes++
+		}
+		reads++
+		_ = json.NewEncoder(writer).Encode(testItemState(
+			40, true, "closed", "fix: closed", "Tracks #12", []string{"status:in-progress"}, 9,
+		))
+	}))
+	defer server.Close()
+
+	_, err := Sync(context.Background(), server.Client(), testAuthorities(), testInventory{"M1": 9}, Options{
+		APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+		Event: Event{Action: Reopened},
+	})
+	if err == nil || !strings.Contains(err.Error(), "unexpected state") ||
+		!strings.Contains(err.Error(), "did not converge after 3 attempts") || reads != 3 || writes != 0 {
+		t.Fatalf("Sync() error/reads/writes = %v/%d/%d", err, reads, writes)
+	}
+}
+
+func TestSyncClosedSkipsAmbiguousReferenceWithoutWriting(t *testing.T) {
+	t.Parallel()
+	writes := 0
+	sourceReads := 0
+	mergeReads := 0
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if request.Method != http.MethodGet {
+			writes++
+		}
+		switch request.URL.Path {
+		case "/repos/owner/repository/issues/40":
+			_ = json.NewEncoder(writer).Encode(testItemState(
+				40, true, "closed", "fix: closed", "Tracks #12\n\nRefs #13", []string{"status:in-progress"}, 9,
+			))
+		case "/repos/owner/repository/pulls/40/merge":
+			mergeReads++
+			writer.WriteHeader(http.StatusNotFound)
+		case "/repos/owner/repository/issues/12", "/repos/owner/repository/issues/13":
+			sourceReads++
+			http.Error(writer, "must not query source issues", http.StatusInternalServerError)
+		default:
+			http.Error(writer, "unexpected request", http.StatusBadRequest)
+		}
+	}))
+	defer server.Close()
+
+	result, err := Sync(context.Background(), server.Client(), testAuthorities(), nil, Options{
+		APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+		Event: Event{Action: Closed},
+	})
+	if err != nil || !result.Skipped || result.Reason != "multiple explicit managed issue references" ||
+		writes != 0 || sourceReads != 0 || mergeReads != 2 {
+		t.Fatalf("result/error/writes/source/merge = %#v/%v/%d/%d/%d", result, err, writes, sourceReads, mergeReads)
+	}
+}
+
+func TestSyncRejectsUnknownOrDuplicateStatusBeforeWrite(t *testing.T) {
+	t.Parallel()
+	for _, test := range []struct {
+		name   string
+		labels []string
+		want   string
+	}{
+		{name: "unknown", labels: []string{"status:finished"}, want: "unknown status-prefixed"},
+		{name: "duplicate", labels: []string{"status:blocked", "status:blocked"}, want: "repeated"},
+	} {
+		test := test
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			writes := 0
+			server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+				if request.Method != http.MethodGet {
+					writes++
+				}
+				_ = json.NewEncoder(writer).Encode(testItemState(
+					40, true, "closed", "fix: closed", "Tracks #12", test.labels, 9,
+				))
+			}))
+			defer server.Close()
+			_, err := Sync(context.Background(), server.Client(), testAuthorities(), nil, Options{
+				APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+				Event: Event{Action: Closed},
+			})
+			if err == nil || !strings.Contains(err.Error(), test.want) || writes != 0 {
+				t.Fatalf("Sync() error/writes = %v/%d", err, writes)
+			}
+		})
+	}
+}
+
+func TestSyncClosedRecoversAfterAppliedWriteResponseLoss(t *testing.T) {
+	t.Parallel()
+	labels := []string{"type:fix", "status:in-progress", "external"}
+	deletes := 0
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		switch {
+		case request.URL.Path == "/repos/owner/repository/issues/40" && request.Method == http.MethodGet:
+			_ = json.NewEncoder(writer).Encode(testItemState(40, true, "closed", "fix: closed", "Tracks #12", labels, 9))
+		case request.URL.Path == "/repos/owner/repository/pulls/40/merge":
+			writer.WriteHeader(http.StatusNotFound)
+		case strings.HasPrefix(request.URL.Path, "/repos/owner/repository/issues/40/labels/") && request.Method == http.MethodDelete:
+			deletes++
+			labels = removeTestLabel(labels, deletedTestLabel(t, request))
+			http.Error(writer, "response lost after apply", http.StatusInternalServerError)
+		default:
+			http.Error(writer, "unexpected request", http.StatusBadRequest)
+		}
+	}))
+	defer server.Close()
+
+	result, err := Sync(context.Background(), server.Client(), testAuthorities(), nil, Options{
+		APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+		Event: Event{Action: Closed},
+	})
+	if err != nil || !result.Updated || deletes != 1 || !reflect.DeepEqual(result.Labels, []string{"external", "type:fix"}) {
+		t.Fatalf("result/error/deletes = %#v/%v/%d", result, err, deletes)
+	}
+}
+
+func TestSyncClosedFailsIfMutationDropsRetainedMetadata(t *testing.T) {
+	t.Parallel()
+	labels := []string{"type:fix", "severity:p2", "area:research", "status:in-progress", "external"}
+	deletes := 0
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		switch {
+		case request.URL.Path == "/repos/owner/repository/issues/40" && request.Method == http.MethodGet:
+			_ = json.NewEncoder(writer).Encode(testItemState(40, true, "closed", "fix: closed", "Tracks #12", labels, 9))
+		case request.URL.Path == "/repos/owner/repository/pulls/40/merge":
+			writer.WriteHeader(http.StatusNotFound)
+		case strings.HasPrefix(request.URL.Path, "/repos/owner/repository/issues/40/labels/") && request.Method == http.MethodDelete:
+			deletes++
+			labels = removeTestLabel(labels, deletedTestLabel(t, request))
+			labels = removeTestLabel(labels, "external")
+			_ = json.NewEncoder(writer).Encode(labelObjects(labels))
+		default:
+			http.Error(writer, "unexpected request", http.StatusBadRequest)
+		}
+	}))
+	defer server.Close()
+
+	_, err := Sync(context.Background(), server.Client(), testAuthorities(), nil, Options{
+		APIBase: server.URL, Repository: "owner/repository", Token: "token", PullRequest: 40,
+		Event: Event{Action: Closed},
+	})
+	if err == nil || !strings.Contains(err.Error(), "retained label \"external\" was lost") ||
+		!strings.Contains(err.Error(), "did not converge after 3 attempts") || deletes != 1 {
+		t.Fatalf("Sync() error/deletes = %v/%d", err, deletes)
+	}
+}
+
+func TestNewEventRejectsMissingOrContradictoryInputs(t *testing.T) {
+	t.Parallel()
+	for _, test := range []struct {
+		action string
+		merged string
+	}{
+		{action: "", merged: "false"},
+		{action: "closed", merged: "yes"},
+		{action: "reopened", merged: "true"},
+		{action: "unknown", merged: "false"},
+	} {
+		if event, err := NewEvent(test.action, test.merged); err == nil {
+			t.Fatalf("NewEvent(%q, %q) = %#v, want error", test.action, test.merged, event)
+		}
+	}
+	for _, action := range []string{"opened", "edited", "synchronize", "reopened"} {
+		if event, err := NewEvent(action, "false"); err != nil || event.Action != Action(action) || event.Merged {
+			t.Fatalf("NewEvent(%q, false) = %#v/%v", action, event, err)
+		}
+	}
+	if event, err := NewEvent("closed", "true"); err != nil || event != (Event{Action: Closed, Merged: true}) {
+		t.Fatalf("NewEvent(closed, true) = %#v/%v", event, err)
 	}
 }
 
@@ -583,7 +954,7 @@ func TestValidateAuthoritiesRejectsIncompleteClassificationAndUnknownStage(t *te
 		}
 	}
 	incomplete.Labels.Labels = filtered
-	if err := ValidateAuthorities(incomplete); err == nil || !strings.Contains(err.Error(), "no status:") {
+	if err := ValidateAuthorities(incomplete); err == nil || !strings.Contains(err.Error(), "exactly the five") {
 		t.Fatalf("ValidateAuthorities() incomplete error = %v", err)
 	}
 

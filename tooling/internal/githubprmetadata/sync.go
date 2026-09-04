@@ -16,6 +16,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubissuelifecycle"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubissuemilestones"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githublabels"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubmilestones"
@@ -56,12 +57,46 @@ type HTTPClient interface {
 	Do(*http.Request) (*http.Response, error)
 }
 
+// Action is one admitted pull-request lifecycle event from the trusted
+// pull_request_target workflow.
+type Action string
+
+const (
+	Opened      Action = "opened"
+	Edited      Action = "edited"
+	Synchronize Action = "synchronize"
+	Reopened    Action = "reopened"
+	Closed      Action = "closed"
+)
+
+// Event binds synchronization to the exact webhook action and merge flag.
+// Merged is authoritative only after it agrees with GitHub's merge endpoint.
+type Event struct {
+	Action Action
+	Merged bool
+}
+
+// NewEvent parses the exact strings supplied by the trusted workflow. Keeping
+// this conversion at the CLI boundary prevents absent or truthy values from
+// silently selecting a lifecycle path.
+func NewEvent(action, merged string) (Event, error) {
+	if merged != "true" && merged != "false" {
+		return Event{}, errors.New("pull-request metadata event requires merged to be exactly true or false")
+	}
+	event := Event{Action: Action(action), Merged: merged == "true"}
+	if err := validateEvent(event); err != nil {
+		return Event{}, err
+	}
+	return event, nil
+}
+
 // Options binds one synchronization to one repository pull request.
 type Options struct {
 	APIBase     string
 	Repository  string
 	Token       string
 	PullRequest int
+	Event       Event
 }
 
 // Result reports either one converged pull request or a typed no-write skip.
@@ -113,6 +148,40 @@ type milestonePayload struct {
 type authorityIndex struct {
 	managed     map[string]string
 	assignments map[int]string
+	statuses    githubissuelifecycle.Policy
+}
+
+type retentionGuard struct {
+	closed bool
+	policy githubissuelifecycle.Policy
+	set    bool
+	labels []string
+}
+
+func (guard *retentionGuard) observe(labels []remoteLabel) error {
+	retained := unownedClassificationLabels(labels)
+	if guard.closed {
+		var err error
+		_, retained, err = classifyStatusLabels(labels, guard.policy)
+		if err != nil {
+			return err
+		}
+	}
+	if guard.set {
+		if err := retainLabels(labels, guard.labels); err != nil {
+			return err
+		}
+	}
+	combined := foldedSet(guard.labels)
+	for _, label := range retained {
+		if _, exists := combined[strings.ToLower(label)]; !exists {
+			guard.labels = append(guard.labels, label)
+			combined[strings.ToLower(label)] = struct{}{}
+		}
+	}
+	sort.Strings(guard.labels)
+	guard.set = true
+	return nil
 }
 
 // ValidateAuthorities checks that every issue assignment resolves to a
@@ -124,10 +193,12 @@ func ValidateAuthorities(authorities Authorities) error {
 }
 
 // Sync reads one pull request and its one unambiguous managed issue reference,
-// confirms both snapshots, then converges only the owned classification labels
-// and milestone. It retries a bounded number of times so a partial remote write
-// or concurrent source edit either converges from fresh state or fails visibly.
-// Missing or ambiguous managed references are successful no-write skips.
+// confirms the event-specific snapshots, then converges the owned metadata.
+// Open and reopened events project the linked issue. Closed events only clean
+// lifecycle status, retaining every non-status label and the exact milestone.
+// It retries a bounded number of times so a partial remote write or concurrent
+// change either converges from fresh state or fails visibly. Missing or
+// ambiguous managed references are successful no-write skips.
 func Sync(
 	ctx context.Context,
 	client HTTPClient,
@@ -143,14 +214,15 @@ func Sync(
 	if err != nil {
 		return Result{}, err
 	}
-	if milestones == nil {
+	if options.Event.Action != Closed && milestones == nil {
 		return Result{}, errors.New("pull-request metadata requires a verified milestone inventory")
 	}
 
 	updated := false
+	retained := retentionGuard{closed: options.Event.Action == Closed, policy: index.statuses}
 	var lastErr error
 	for attempt := 1; attempt <= maximumSyncAttempts; attempt++ {
-		result, attempted, retry, err := syncAttempt(ctx, client, base, options, index, milestones)
+		result, attempted, retry, err := syncAttempt(ctx, client, base, options, index, milestones, &retained)
 		updated = updated || attempted
 		if err == nil {
 			if result.Skipped && updated {
@@ -174,24 +246,49 @@ func syncAttempt(
 	options Options,
 	index authorityIndex,
 	milestones MilestoneInventory,
+	retained *retentionGuard,
 ) (Result, bool, bool, error) {
-	pull, err := inspectItem(ctx, client, base, options, options.PullRequest, true)
+	wantState := "open"
+	if options.Event.Action == Closed {
+		wantState = "closed"
+	}
+	pull, err := inspectItem(ctx, client, base, options, options.PullRequest, true, wantState)
 	if err != nil {
 		return Result{}, false, true, err
+	}
+	if _, _, err := classifyStatusLabels(pull.Labels, index.statuses); err != nil {
+		return Result{}, false, false, fmt.Errorf("pull request %d: %w", options.PullRequest, err)
+	}
+	if err := retained.observe(pull.Labels); err != nil {
+		return Result{}, false, true, fmt.Errorf("pull request %d retention preflight: %w", options.PullRequest, err)
 	}
 	issueNumber, reason := referencedManagedIssue(bodyText(pull), index.assignments)
+	var merged *bool
+	if options.Event.Action == Closed {
+		remoteMerged, mergeErr := inspectMergeState(ctx, client, base, options)
+		if mergeErr != nil {
+			return Result{}, false, true, mergeErr
+		}
+		if remoteMerged != options.Event.Merged {
+			return Result{}, false, true, errors.New("pull-request event merge flag disagrees with GitHub merge state")
+		}
+		merged = &remoteMerged
+	}
 	if issueNumber == 0 {
-		return confirmSkipped(ctx, client, base, options, pull, reason)
+		return confirmSkipped(ctx, client, base, options, pull, merged, reason, retained)
 	}
-	issue, err := inspectItem(ctx, client, base, options, issueNumber, false)
+	if options.Event.Action == Closed {
+		return syncClosedAttempt(ctx, client, base, options, index, pull, issueNumber, *merged, retained)
+	}
+	issue, err := inspectItem(ctx, client, base, options, issueNumber, false, "open")
 	if err != nil {
 		return Result{}, false, true, err
 	}
-	confirmedPull, err := inspectItem(ctx, client, base, options, options.PullRequest, true)
+	confirmedPull, err := inspectItem(ctx, client, base, options, options.PullRequest, true, "open")
 	if err != nil {
 		return Result{}, false, true, err
 	}
-	confirmedIssue, err := inspectItem(ctx, client, base, options, issueNumber, false)
+	confirmedIssue, err := inspectItem(ctx, client, base, options, issueNumber, false, "open")
 	if err != nil {
 		return Result{}, false, true, err
 	}
@@ -203,18 +300,21 @@ func syncAttempt(
 		return Result{}, false, false, err
 	}
 	result := Result{Issue: issueNumber, Milestone: milestone, Labels: displayLabels(confirmedPull.Labels)}
+	if err := retained.observe(confirmedPull.Labels); err != nil {
+		return Result{}, false, true, fmt.Errorf("pull-request metadata confirmation: %w", err)
+	}
 	if equalOwnedMetadata(confirmedPull, desired, milestone) {
 		return result, false, false, nil
 	}
-	attempted, err := convergePull(ctx, client, base, options, confirmedPull, desired, milestone)
+	attempted, err := convergePull(ctx, client, base, options, confirmedPull, desired, milestone, retained)
 	if err != nil {
 		return Result{}, attempted, true, err
 	}
-	readbackPull, err := inspectItem(ctx, client, base, options, options.PullRequest, true)
+	readbackPull, err := inspectItem(ctx, client, base, options, options.PullRequest, true, "open")
 	if err != nil {
 		return Result{}, attempted, true, err
 	}
-	readbackIssue, err := inspectItem(ctx, client, base, options, issueNumber, false)
+	readbackIssue, err := inspectItem(ctx, client, base, options, issueNumber, false, "open")
 	if err != nil {
 		return Result{}, attempted, true, err
 	}
@@ -224,7 +324,76 @@ func syncAttempt(
 	if !equalOwnedMetadata(readbackPull, desired, milestone) {
 		return Result{}, attempted, true, errors.New("owned pull-request metadata does not match the requested state after synchronization")
 	}
+	if err := retained.observe(readbackPull.Labels); err != nil {
+		return Result{}, attempted, true, fmt.Errorf("pull-request metadata readback: %w", err)
+	}
 	result.Labels = displayLabels(readbackPull.Labels)
+	return result, attempted, false, nil
+}
+
+func syncClosedAttempt(
+	ctx context.Context,
+	client HTTPClient,
+	base *url.URL,
+	options Options,
+	index authorityIndex,
+	pull remoteItem,
+	issueNumber int,
+	merged bool,
+	retained *retentionGuard,
+) (Result, bool, bool, error) {
+	confirmedPull, err := inspectItem(ctx, client, base, options, options.PullRequest, true, "closed")
+	if err != nil {
+		return Result{}, false, true, err
+	}
+	confirmedMerged, err := inspectMergeState(ctx, client, base, options)
+	if err != nil {
+		return Result{}, false, true, err
+	}
+	if confirmedMerged != merged || confirmedMerged != options.Event.Merged || observe(confirmedPull) != observe(pull) {
+		return Result{}, false, true, errors.New("pull request or merge state changed after lifecycle preflight")
+	}
+	if err := retained.observe(confirmedPull.Labels); err != nil {
+		return Result{}, false, true, fmt.Errorf("pull-request lifecycle confirmation: %w", err)
+	}
+	statuses, _, err := classifyStatusLabels(confirmedPull.Labels, index.statuses)
+	if err != nil {
+		return Result{}, false, false, fmt.Errorf("pull request %d: %w", options.PullRequest, err)
+	}
+	desired := closedStatuses(statuses, index.statuses, merged)
+	result := Result{
+		Issue: issueNumber, Milestone: milestoneNumber(confirmedPull), Labels: displayLabels(confirmedPull.Labels),
+	}
+	if equalFolded(statuses, desired) {
+		return result, false, false, nil
+	}
+	attempted, err := convergeClosedStatuses(ctx, client, base, options, index.statuses, confirmedPull, desired, retained)
+	if err != nil {
+		return Result{}, attempted, true, err
+	}
+	readback, err := inspectItem(ctx, client, base, options, options.PullRequest, true, "closed")
+	if err != nil {
+		return Result{}, attempted, true, err
+	}
+	readbackMerged, err := inspectMergeState(ctx, client, base, options)
+	if err != nil {
+		return Result{}, attempted, true, err
+	}
+	if observeIdentity(readback) != observeIdentity(confirmedPull) ||
+		milestoneNumber(readback) != milestoneNumber(confirmedPull) || readbackMerged != merged {
+		return Result{}, attempted, true, errors.New("pull request identity, milestone, or merge state changed during lifecycle synchronization")
+	}
+	readbackStatuses, _, err := classifyStatusLabels(readback.Labels, index.statuses)
+	if err != nil {
+		return Result{}, attempted, false, fmt.Errorf("pull request %d lifecycle readback: %w", options.PullRequest, err)
+	}
+	if !equalFolded(readbackStatuses, desired) {
+		return Result{}, attempted, true, errors.New("pull-request lifecycle status does not match the requested closed state")
+	}
+	if err := retained.observe(readback.Labels); err != nil {
+		return Result{}, attempted, true, fmt.Errorf("pull-request lifecycle readback: %w", err)
+	}
+	result.Labels = displayLabels(readback.Labels)
 	return result, attempted, false, nil
 }
 
@@ -234,14 +403,32 @@ func confirmSkipped(
 	base *url.URL,
 	options Options,
 	pull remoteItem,
+	merged *bool,
 	reason string,
+	retained *retentionGuard,
 ) (Result, bool, bool, error) {
-	confirmed, err := inspectItem(ctx, client, base, options, options.PullRequest, true)
+	wantState := "open"
+	if options.Event.Action == Closed {
+		wantState = "closed"
+	}
+	confirmed, err := inspectItem(ctx, client, base, options, options.PullRequest, true, wantState)
 	if err != nil {
 		return Result{}, false, true, err
 	}
 	if observe(confirmed) != observe(pull) {
 		return Result{}, false, true, errors.New("pull request changed while confirming the metadata no-write decision")
+	}
+	if err := retained.observe(confirmed.Labels); err != nil {
+		return Result{}, false, true, fmt.Errorf("pull-request metadata skip confirmation: %w", err)
+	}
+	if merged != nil {
+		confirmedMerged, mergeErr := inspectMergeState(ctx, client, base, options)
+		if mergeErr != nil {
+			return Result{}, false, true, mergeErr
+		}
+		if confirmedMerged != *merged || confirmedMerged != options.Event.Merged {
+			return Result{}, false, true, errors.New("pull-request merge state changed while confirming the metadata no-write decision")
+		}
 	}
 	return Result{Skipped: true, Reason: reason}, false, false, nil
 }
@@ -249,6 +436,10 @@ func confirmSkipped(
 func indexAuthorities(authorities Authorities) (authorityIndex, error) {
 	if authorities.Labels.Schema != 1 || authorities.Milestones.Schema != 1 || authorities.Issues.Schema != 1 {
 		return authorityIndex{}, errors.New("pull-request metadata authorities require schema 1")
+	}
+	statusPolicy, err := githubissuelifecycle.NewPolicy(authorities.Labels)
+	if err != nil {
+		return authorityIndex{}, fmt.Errorf("pull-request lifecycle status policy: %w", err)
 	}
 	managed := make(map[string]string, len(authorities.Labels.Labels))
 	classes := map[string]int{"type:": 0, "severity:": 0, "status:": 0, "area:": 0}
@@ -295,7 +486,7 @@ func indexAuthorities(authorities Authorities) (authorityIndex, error) {
 	if len(assignments) == 0 {
 		return authorityIndex{}, errors.New("issue assignment authority is empty")
 	}
-	return authorityIndex{managed: managed, assignments: assignments}, nil
+	return authorityIndex{managed: managed, assignments: assignments, statuses: statusPolicy}, nil
 }
 
 func referencedManagedIssue(body string, assignments map[int]string) (int, string) {
@@ -340,7 +531,7 @@ func desiredMetadata(
 	if !exists {
 		return nil, 0, fmt.Errorf("pull-request title type %q has no managed label", title[1])
 	}
-	issueClasses, err := classify(issue.Labels, index.managed)
+	issueClasses, err := classify(issue.Labels, index.managed, index.statuses)
 	if err != nil {
 		return nil, 0, fmt.Errorf("referenced managed issue %d: %w", issueNumber, err)
 	}
@@ -389,7 +580,11 @@ type classifications struct {
 	areas    []string
 }
 
-func classify(labels []remoteLabel, managed map[string]string) (classifications, error) {
+func classify(
+	labels []remoteLabel,
+	managed map[string]string,
+	statusPolicy githubissuelifecycle.Policy,
+) (classifications, error) {
 	counts := map[string]int{"type:": 0, "severity:": 0, "status:": 0, "area:": 0}
 	result := classifications{}
 	seen := make(map[string]struct{}, len(labels))
@@ -400,6 +595,9 @@ func classify(labels []remoteLabel, managed map[string]string) (classifications,
 			return classifications{}, fmt.Errorf("label %q is invalid or repeated", label.Name)
 		}
 		seen[name] = struct{}{}
+		if strings.HasPrefix(name, "status:") && !isManaged {
+			return classifications{}, fmt.Errorf("unknown status-prefixed label %q", label.Name)
+		}
 		if !isManaged {
 			continue
 		}
@@ -420,6 +618,9 @@ func classify(labels []remoteLabel, managed map[string]string) (classifications,
 	if counts["type:"] != 1 || counts["severity:"] != 1 || counts["status:"] != 1 || counts["area:"] < 1 {
 		return classifications{}, errors.New("requires exactly one managed type, severity, and status label plus at least one managed area")
 	}
+	if !statusPolicy.IsActiveStatus(result.status) {
+		return classifications{}, errors.New("requires one active managed status; status:wontfix cannot drive an open pull request")
+	}
 	return result, nil
 }
 
@@ -427,6 +628,9 @@ func validateOptions(client HTTPClient, options Options, repository string) (*ur
 	if client == nil || options.Token == "" || !repositoryPattern.MatchString(options.Repository) ||
 		options.Repository != repository || options.PullRequest < 1 || options.PullRequest > maximumNumber {
 		return nil, errors.New("pull-request metadata requires a client, matching owner/repository, token, and pull-request number")
+	}
+	if err := validateEvent(options.Event); err != nil {
+		return nil, err
 	}
 	apiBase := strings.TrimSuffix(options.APIBase, "/")
 	if apiBase == "" {
@@ -439,6 +643,19 @@ func validateOptions(client HTTPClient, options Options, repository string) (*ur
 	return base, nil
 }
 
+func validateEvent(event Event) error {
+	switch event.Action {
+	case Opened, Edited, Synchronize, Reopened:
+		if event.Merged {
+			return errors.New("open pull-request metadata events cannot carry merged=true")
+		}
+	case Closed:
+	default:
+		return fmt.Errorf("unsupported pull-request metadata event action %q", event.Action)
+	}
+	return nil
+}
+
 func inspectItem(
 	ctx context.Context,
 	client HTTPClient,
@@ -446,6 +663,7 @@ func inspectItem(
 	options Options,
 	number int,
 	wantPull bool,
+	wantState string,
 ) (remoteItem, error) {
 	request, err := newRequest(ctx, base, options, http.MethodGet, number, nil)
 	if err != nil {
@@ -455,7 +673,46 @@ func inspectItem(
 	if err != nil {
 		return remoteItem{}, fmt.Errorf("inspect GitHub item %d: %w", number, err)
 	}
-	return decodeItem(response, number, wantPull, "inspect")
+	return decodeItem(response, number, wantPull, wantState, "inspect")
+}
+
+func inspectMergeState(
+	ctx context.Context,
+	client HTTPClient,
+	base *url.URL,
+	options Options,
+) (bool, error) {
+	target := *base
+	target.Path = strings.TrimSuffix(base.Path, "/") + "/repos/" + options.Repository +
+		"/pulls/" + strconv.Itoa(options.PullRequest) + "/merge"
+	target.RawPath = ""
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, target.String(), nil)
+	if err != nil {
+		return false, fmt.Errorf("construct GitHub pull-request merge-state request: %w", err)
+	}
+	request.Header.Set("Accept", "application/vnd.github+json")
+	request.Header.Set("Authorization", "Bearer "+options.Token)
+	request.Header.Set("X-GitHub-Api-Version", apiVersion)
+	request.Header.Set("User-Agent", "20w-github-pr-metadata")
+	response, err := client.Do(request)
+	if err != nil {
+		return false, fmt.Errorf("inspect GitHub pull-request merge state: %w", err)
+	}
+	if response == nil || response.Body == nil {
+		return false, errors.New("inspect GitHub pull-request merge state: empty HTTP response")
+	}
+	defer response.Body.Close()
+	if err := drainBounded(response.Body); err != nil {
+		return false, fmt.Errorf("inspect GitHub pull-request merge state: %w", err)
+	}
+	switch response.StatusCode {
+	case http.StatusNoContent:
+		return true, nil
+	case http.StatusNotFound:
+		return false, nil
+	default:
+		return false, fmt.Errorf("inspect GitHub pull-request merge state: unexpected HTTP status %d", response.StatusCode)
+	}
 }
 
 func convergePull(
@@ -466,24 +723,41 @@ func convergePull(
 	current remoteItem,
 	desired []string,
 	milestone int,
+	retained *retentionGuard,
 ) (bool, error) {
 	add, remove := classificationDelta(current.Labels, desired)
 	attempted := false
 	if len(add) > 0 {
 		attempted = true
-		if err := addLabels(ctx, client, base, options, add); err != nil {
+		labels, err := addLabels(ctx, client, base, options, add)
+		if err != nil {
 			return attempted, err
+		}
+		if err := retained.observe(labels); err != nil {
+			return attempted, fmt.Errorf("add GitHub pull-request labels: %w", err)
+		}
+		for _, label := range add {
+			if !containsRemoteLabel(labels, label) {
+				return attempted, fmt.Errorf("add GitHub pull-request labels: mutation response omitted %q", label)
+			}
 		}
 	}
 	for _, label := range remove {
 		attempted = true
-		if err := removeLabel(ctx, client, base, options, label); err != nil {
+		labels, err := removeLabel(ctx, client, base, options, label)
+		if err != nil {
 			return attempted, err
+		}
+		if containsRemoteLabel(labels, label) {
+			return attempted, fmt.Errorf("remove GitHub pull-request label %q: mutation response retained the label", label)
+		}
+		if err := retained.observe(labels); err != nil {
+			return attempted, fmt.Errorf("remove GitHub pull-request label %q: %w", label, err)
 		}
 	}
 	if milestoneNumber(current) != milestone {
 		attempted = true
-		if err := updateMilestone(ctx, client, base, options, milestone, observeIdentity(current)); err != nil {
+		if err := updateMilestone(ctx, client, base, options, milestone, observeIdentity(current), retained); err != nil {
 			return attempted, err
 		}
 	}
@@ -519,24 +793,179 @@ func classificationDelta(current []remoteLabel, desired []string) ([]string, []s
 	return add, remove
 }
 
+func classifyStatusLabels(
+	labels []remoteLabel,
+	policy githubissuelifecycle.Policy,
+) ([]string, []string, error) {
+	normalized, err := normalizedLabels(labels)
+	if err != nil {
+		return nil, nil, err
+	}
+	statuses := make([]string, 0, len(normalized))
+	nonStatus := make([]string, 0, len(normalized))
+	for _, name := range normalized {
+		if !strings.HasPrefix(name, "status:") {
+			nonStatus = append(nonStatus, name)
+			continue
+		}
+		canonical, managed := policy.ManagedStatus(name)
+		if !managed {
+			return nil, nil, fmt.Errorf("unknown status-prefixed label %q", name)
+		}
+		statuses = append(statuses, canonical)
+	}
+	sort.Slice(statuses, func(left, right int) bool {
+		return strings.ToLower(statuses[left]) < strings.ToLower(statuses[right])
+	})
+	return statuses, nonStatus, nil
+}
+
+func closedStatuses(statuses []string, policy githubissuelifecycle.Policy, merged bool) []string {
+	if merged {
+		return nil
+	}
+	wontfix := policy.WontfixStatus()
+	for _, status := range statuses {
+		if strings.EqualFold(status, wontfix) {
+			return []string{wontfix}
+		}
+	}
+	return nil
+}
+
+func convergeClosedStatuses(
+	ctx context.Context,
+	client HTTPClient,
+	base *url.URL,
+	options Options,
+	policy githubissuelifecycle.Policy,
+	current remoteItem,
+	desired []string,
+	retained *retentionGuard,
+) (bool, error) {
+	statuses, _, err := classifyStatusLabels(current.Labels, policy)
+	if err != nil {
+		return false, err
+	}
+	desiredSet := foldedSet(desired)
+	remove := make([]string, 0, len(statuses))
+	for _, status := range statuses {
+		if _, keep := desiredSet[strings.ToLower(status)]; !keep {
+			remove = append(remove, status)
+		}
+	}
+	sort.Slice(remove, func(left, right int) bool {
+		return strings.ToLower(remove[left]) < strings.ToLower(remove[right])
+	})
+	attempted := false
+	for _, status := range remove {
+		attempted = true
+		labels, removeErr := removeLabel(ctx, client, base, options, status)
+		if removeErr != nil {
+			return attempted, removeErr
+		}
+		if containsRemoteLabel(labels, status) {
+			return attempted, fmt.Errorf("remove GitHub pull-request lifecycle status %q: mutation response retained the label", status)
+		}
+		if err := retained.observe(labels); err != nil {
+			return attempted, fmt.Errorf("remove GitHub pull-request lifecycle status %q: %w", status, err)
+		}
+		responseStatuses, _, classifyErr := classifyStatusLabels(labels, policy)
+		if classifyErr != nil {
+			return attempted, fmt.Errorf("remove GitHub pull-request lifecycle status %q: %w", status, classifyErr)
+		}
+		for _, wanted := range desired {
+			if !containsFolded(responseStatuses, wanted) {
+				return attempted, fmt.Errorf("remove GitHub pull-request lifecycle status %q: mutation response lost retained status %q", status, wanted)
+			}
+		}
+	}
+	return attempted, nil
+}
+
+func unownedClassificationLabels(labels []remoteLabel) []string {
+	normalized, _ := normalizedLabels(labels)
+	retained := make([]string, 0, len(normalized))
+	for _, name := range normalized {
+		if !isClassification(name) {
+			retained = append(retained, name)
+		}
+	}
+	return retained
+}
+
+func retainLabels(labels []remoteLabel, retained []string) error {
+	normalized, err := normalizedLabels(labels)
+	if err != nil {
+		return err
+	}
+	current := foldedSet(normalized)
+	for _, label := range retained {
+		if _, exists := current[strings.ToLower(label)]; !exists {
+			return fmt.Errorf("retained label %q was lost", label)
+		}
+	}
+	return nil
+}
+
+func foldedSet(values []string) map[string]struct{} {
+	result := make(map[string]struct{}, len(values))
+	for _, value := range values {
+		result[strings.ToLower(value)] = struct{}{}
+	}
+	return result
+}
+
+func equalFolded(left, right []string) bool {
+	leftSet := foldedSet(left)
+	rightSet := foldedSet(right)
+	if len(leftSet) != len(rightSet) {
+		return false
+	}
+	for name := range leftSet {
+		if _, exists := rightSet[name]; !exists {
+			return false
+		}
+	}
+	return true
+}
+
+func containsFolded(values []string, wanted string) bool {
+	for _, value := range values {
+		if strings.EqualFold(value, wanted) {
+			return true
+		}
+	}
+	return false
+}
+
+func containsRemoteLabel(labels []remoteLabel, wanted string) bool {
+	for _, label := range labels {
+		if strings.EqualFold(label.Name, wanted) {
+			return true
+		}
+	}
+	return false
+}
+
 func addLabels(
 	ctx context.Context,
 	client HTTPClient,
 	base *url.URL,
 	options Options,
 	labels []string,
-) error {
+) ([]remoteLabel, error) {
 	body, err := json.Marshal(labelsPayload{Labels: labels})
 	if err != nil {
-		return fmt.Errorf("encode pull-request label additions: %w", err)
+		return nil, fmt.Errorf("encode pull-request label additions: %w", err)
 	}
 	request, err := newRequest(ctx, base, options, http.MethodPost, options.PullRequest, body, "labels")
 	if err != nil {
-		return err
+		return nil, err
 	}
 	response, err := client.Do(request)
 	if err != nil {
-		return fmt.Errorf("add GitHub pull-request labels: %w", err)
+		return nil, fmt.Errorf("add GitHub pull-request labels: %w", err)
 	}
 	return decodeLabelMutation(response, options.PullRequest, "add")
 }
@@ -547,14 +976,14 @@ func removeLabel(
 	base *url.URL,
 	options Options,
 	label string,
-) error {
+) ([]remoteLabel, error) {
 	request, err := newRequest(ctx, base, options, http.MethodDelete, options.PullRequest, nil, "labels", label)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	response, err := client.Do(request)
 	if err != nil {
-		return fmt.Errorf("remove GitHub pull-request label %q: %w", label, err)
+		return nil, fmt.Errorf("remove GitHub pull-request label %q: %w", label, err)
 	}
 	return decodeLabelMutation(response, options.PullRequest, "remove")
 }
@@ -566,6 +995,7 @@ func updateMilestone(
 	options Options,
 	milestone int,
 	expected itemIdentity,
+	retained *retentionGuard,
 ) error {
 	body, err := json.Marshal(milestonePayload{Milestone: milestone})
 	if err != nil {
@@ -579,12 +1009,15 @@ func updateMilestone(
 	if err != nil {
 		return fmt.Errorf("update GitHub pull-request milestone: %w", err)
 	}
-	item, err := decodeItem(response, options.PullRequest, true, "update milestone on")
+	item, err := decodeItem(response, options.PullRequest, true, "open", "update milestone on")
 	if err != nil {
 		return err
 	}
 	if observeIdentity(item) != expected {
 		return errors.New("update GitHub pull-request milestone: response identity changed")
+	}
+	if err := retained.observe(item.Labels); err != nil {
+		return fmt.Errorf("update GitHub pull-request milestone: %w", err)
 	}
 	return nil
 }
@@ -631,33 +1064,33 @@ func escapedPath(path string) string {
 	return strings.Join(segments, "/")
 }
 
-func decodeLabelMutation(response *http.Response, number int, operation string) error {
+func decodeLabelMutation(response *http.Response, number int, operation string) ([]remoteLabel, error) {
 	if response == nil || response.Body == nil {
-		return fmt.Errorf("%s GitHub pull-request labels %d: empty HTTP response", operation, number)
+		return nil, fmt.Errorf("%s GitHub pull-request labels %d: empty HTTP response", operation, number)
 	}
 	defer response.Body.Close()
 	if response.StatusCode != http.StatusOK {
 		_, err := io.Copy(io.Discard, io.LimitReader(response.Body, maximumResponseBytes+1))
 		if err != nil {
-			return fmt.Errorf("%s GitHub pull-request labels %d: drain response: %w", operation, number, err)
+			return nil, fmt.Errorf("%s GitHub pull-request labels %d: drain response: %w", operation, number, err)
 		}
-		return fmt.Errorf("%s GitHub pull-request labels %d: unexpected HTTP status %d", operation, number, response.StatusCode)
+		return nil, fmt.Errorf("%s GitHub pull-request labels %d: unexpected HTTP status %d", operation, number, response.StatusCode)
 	}
 	body, err := io.ReadAll(io.LimitReader(response.Body, maximumResponseBytes+1))
 	if err != nil || len(body) > maximumResponseBytes {
-		return fmt.Errorf("%s GitHub pull-request labels %d: response exceeds its bounded readable form", operation, number)
+		return nil, fmt.Errorf("%s GitHub pull-request labels %d: response exceeds its bounded readable form", operation, number)
 	}
 	var labels []remoteLabel
-	if err := json.Unmarshal(body, &labels); err != nil || len(labels) > maximumLabels {
-		return fmt.Errorf("%s GitHub pull-request labels %d: malformed response", operation, number)
+	if err := json.Unmarshal(body, &labels); err != nil || labels == nil || len(labels) > maximumLabels {
+		return nil, fmt.Errorf("%s GitHub pull-request labels %d: malformed response", operation, number)
 	}
 	if _, err := normalizedLabels(labels); err != nil {
-		return fmt.Errorf("%s GitHub pull-request labels %d: %w", operation, number, err)
+		return nil, fmt.Errorf("%s GitHub pull-request labels %d: %w", operation, number, err)
 	}
-	return nil
+	return labels, nil
 }
 
-func decodeItem(response *http.Response, number int, wantPull bool, operation string) (remoteItem, error) {
+func decodeItem(response *http.Response, number int, wantPull bool, wantState, operation string) (remoteItem, error) {
 	if response == nil || response.Body == nil {
 		return remoteItem{}, fmt.Errorf("%s GitHub item %d: empty HTTP response", operation, number)
 	}
@@ -678,10 +1111,10 @@ func decodeItem(response *http.Response, number int, wantPull bool, operation st
 		return remoteItem{}, fmt.Errorf("%s GitHub item %d: decode response: %w", operation, number, err)
 	}
 	bodyLength := len(bodyText(item))
-	if item.Number != number || item.NodeID == "" || item.State != "open" || item.Title == "" ||
-		bodyLength > maximumBodyBytes || len(item.Labels) > maximumLabels ||
+	if item.Number != number || item.NodeID == "" || item.State != wantState || item.Title == "" ||
+		bodyLength > maximumBodyBytes || item.Labels == nil || len(item.Labels) > maximumLabels ||
 		(item.Milestone != nil && item.Milestone.Number < 1) || (item.PullRequest != nil) != wantPull {
-		return remoteItem{}, fmt.Errorf("%s GitHub item %d: malformed, closed, or wrong item kind", operation, number)
+		return remoteItem{}, fmt.Errorf("%s GitHub item %d: malformed, unexpected state, or wrong item kind", operation, number)
 	}
 	if _, err := normalizedLabels(item.Labels); err != nil {
 		return remoteItem{}, fmt.Errorf("%s GitHub item %d: %w", operation, number, err)
@@ -713,7 +1146,8 @@ func normalizedLabels(labels []remoteLabel) ([]string, error) {
 	seen := make(map[string]struct{}, len(labels))
 	for _, label := range labels {
 		name := strings.ToLower(label.Name)
-		if name == "" || strings.TrimSpace(label.Name) != label.Name {
+		if name == "" || len(label.Name) > 256 || strings.TrimSpace(label.Name) != label.Name ||
+			strings.ContainsRune(label.Name, '\x00') {
 			return nil, fmt.Errorf("label %q is invalid", label.Name)
 		}
 		if _, duplicate := seen[name]; duplicate {
@@ -770,4 +1204,15 @@ type itemIdentity struct {
 
 func observeIdentity(item remoteItem) itemIdentity {
 	return itemIdentity{nodeID: item.NodeID, state: item.State, title: item.Title, body: bodyText(item)}
+}
+
+func drainBounded(reader io.Reader) error {
+	written, err := io.Copy(io.Discard, io.LimitReader(reader, maximumResponseBytes+1))
+	if err != nil {
+		return err
+	}
+	if written > maximumResponseBytes {
+		return errors.New("GitHub pull-request response exceeds its byte limit")
+	}
+	return nil
 }
