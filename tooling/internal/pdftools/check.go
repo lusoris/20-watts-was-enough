@@ -12,58 +12,86 @@ import (
 
 const contractRelativePath = "tooling/pdf-tools/contract.json"
 
+type checkedAuthority struct {
+	root             string
+	contract         Contract
+	contractSHA256   string
+	lockSHA256       string
+	renderer         pdfrender.Configuration
+	packages         int
+	notices          int
+	retainedAPKBytes int64
+}
+
 // Check validates the complete committed PDF-tools authority without network or containers.
 func Check(repositoryRoot string) (Result, error) {
-	root, err := cleanRoot(repositoryRoot)
+	authority, err := checkAuthority(repositoryRoot)
 	if err != nil {
 		return Result{}, err
+	}
+	return Result{
+		ContractSHA256: authority.contractSHA256,
+		LockSHA256:     authority.lockSHA256,
+		Packages:       authority.packages,
+		Notices:        authority.notices,
+		RetainedBytes:  authority.retainedAPKBytes,
+	}, nil
+}
+
+func checkAuthority(repositoryRoot string) (checkedAuthority, error) {
+	root, err := cleanRoot(repositoryRoot)
+	if err != nil {
+		return checkedAuthority{}, err
 	}
 	contractBody, err := readRelative(root, contractRelativePath, "PDF-tools contract", 64*1024)
 	if err != nil {
-		return Result{}, err
+		return checkedAuthority{}, err
 	}
 	contract, err := decodeCanonical[Contract](contractBody, 8, "PDF-tools contract")
 	if err != nil {
-		return Result{}, err
+		return checkedAuthority{}, err
 	}
 	if err := validateContract(contract); err != nil {
-		return Result{}, fmt.Errorf("validate PDF-tools contract: %w", err)
+		return checkedAuthority{}, fmt.Errorf("validate PDF-tools contract: %w", err)
 	}
 	configBody, err := checkConfig(root, contract)
 	if err != nil {
-		return Result{}, err
+		return checkedAuthority{}, err
 	}
 	locked, err := loadLock(root, contract, configBody)
 	if err != nil {
-		return Result{}, err
+		return checkedAuthority{}, err
 	}
 	retention, err := loadRetention(root, contract, locked)
 	if err != nil {
-		return Result{}, err
+		return checkedAuthority{}, err
 	}
 	if err := checkNoticesAndRecipe(root, contract); err != nil {
-		return Result{}, err
+		return checkedAuthority{}, err
 	}
 	renderer, err := pdfrender.Check(root)
 	if err != nil {
-		return Result{}, fmt.Errorf("validate notice-layer BuildKit authority: %w", err)
+		return checkedAuthority{}, fmt.Errorf("validate notice-layer BuildKit authority: %w", err)
 	}
 	buildKitAuthority, err := json.Marshal(struct {
 		Builder  pdfrender.Builder  `json:"builder"`
 		Exporter pdfrender.Exporter `json:"exporter"`
 	}{Builder: renderer.Lock.Builder, Exporter: renderer.Lock.Exporter})
 	if err != nil {
-		return Result{}, fmt.Errorf("encode notice-layer BuildKit authority: %w", err)
+		return checkedAuthority{}, fmt.Errorf("encode notice-layer BuildKit authority: %w", err)
 	}
 	if rawDigest(buildKitAuthority) != contract.NoticeLayer.BuildKitAuthoritySHA256 {
-		return Result{}, errors.New("notice-layer BuildKit authority digest does not match contract.json")
+		return checkedAuthority{}, errors.New("notice-layer BuildKit authority digest does not match contract.json")
 	}
-	return Result{
-		ContractSHA256: rawDigest(contractBody),
-		LockSHA256:     contract.Apko.LockSHA256,
-		Packages:       len(locked),
-		Notices:        len(contract.NoticeLayer.Entries),
-		RetainedBytes:  retention.TotalBytes,
+	return checkedAuthority{
+		root:             root,
+		contract:         contract,
+		contractSHA256:   rawDigest(contractBody),
+		lockSHA256:       contract.Apko.LockSHA256,
+		renderer:         renderer,
+		packages:         len(locked),
+		notices:          len(contract.NoticeLayer.Entries),
+		retainedAPKBytes: retention.TotalBytes,
 	}, nil
 }
 

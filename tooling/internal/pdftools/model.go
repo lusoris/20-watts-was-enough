@@ -39,14 +39,19 @@ type Apko struct {
 }
 
 type BaseImage struct {
-	ArchiveSHA256  string `json:"archive_sha256"`
-	ArchiveSize    int64  `json:"archive_size_bytes"`
-	ManifestDigest string `json:"manifest_digest"`
-	ConfigDigest   string `json:"config_digest"`
-	LayerDigest    string `json:"layer_digest"`
-	LayerDiffID    string `json:"layer_diff_id"`
-	SPDXSHA256     string `json:"spdx_sha256"`
-	SPDXSize       int64  `json:"spdx_size_bytes"`
+	ArchiveSHA256            string `json:"archive_sha256"`
+	ArchiveSize              int64  `json:"archive_size_bytes"`
+	ManifestDigest           string `json:"manifest_digest"`
+	ConfigDigest             string `json:"config_digest"`
+	LayerDigest              string `json:"layer_digest"`
+	LayerDiffID              string `json:"layer_diff_id"`
+	SPDXSize                 int64  `json:"spdx_size_bytes"`
+	SPDXCanonicalSHA256      string `json:"spdx_canonical_sha256"`
+	SPDXCanonicalSize        int64  `json:"spdx_canonical_size_bytes"`
+	SPDXPackages             int    `json:"spdx_packages"`
+	SPDXRelationships        int    `json:"spdx_relationships"`
+	SPDXIndexCanonicalSHA256 string `json:"spdx_index_canonical_sha256"`
+	SPDXIndexCanonicalSize   int64  `json:"spdx_index_canonical_size_bytes"`
 }
 
 type Runtime struct {
@@ -124,14 +129,34 @@ type SourceDelivery struct {
 }
 
 type Limits struct {
-	LockBytes           int64 `json:"lock_bytes"`
-	Packages            int   `json:"packages"`
-	NoticeBytes         int64 `json:"notice_bytes"`
-	BaseArchiveBytes    int64 `json:"base_archive_bytes"`
-	SourceBundleBytes   int64 `json:"source_bundle_bytes"`
-	LockSeconds         int   `json:"lock_seconds"`
-	BuildSeconds        int   `json:"build_seconds"`
-	CapturedOutputBytes int64 `json:"captured_output_bytes"`
+	LockBytes             int64 `json:"lock_bytes"`
+	Packages              int   `json:"packages"`
+	NoticeBytes           int64 `json:"notice_bytes"`
+	BaseArchiveBytes      int64 `json:"base_archive_bytes"`
+	FinalArchiveBytes     int64 `json:"final_archive_bytes"`
+	SourceBundleBytes     int64 `json:"source_bundle_bytes"`
+	SPDXBytes             int64 `json:"spdx_bytes"`
+	SPDXPackages          int   `json:"spdx_packages"`
+	SPDXRelationships     int   `json:"spdx_relationships"`
+	APKControlBytes       int64 `json:"apk_control_bytes"`
+	APKDataBytes          int64 `json:"apk_data_bytes"`
+	APKIndexBytes         int64 `json:"apk_index_bytes"`
+	HTTPResponseBytes     int64 `json:"http_response_bytes"`
+	LockSeconds           int   `json:"lock_seconds"`
+	BuildSeconds          int   `json:"build_seconds"`
+	RuntimeSeconds        int   `json:"runtime_seconds"`
+	CapturedOutputBytes   int64 `json:"captured_output_bytes"`
+	ReceiptBytes          int64 `json:"receipt_bytes"`
+	ApkoMemoryBytes       int64 `json:"apko_memory_bytes"`
+	ApkoPIDs              int   `json:"apko_pids"`
+	ApkoTemporaryBytes    int64 `json:"apko_temporary_bytes"`
+	BuildKitMemoryBytes   int64 `json:"buildkit_memory_bytes"`
+	BuildKitPIDs          int   `json:"buildkit_pids"`
+	BuildKitCPUPeriod     int64 `json:"buildkit_cpu_period"`
+	BuildKitCPUQuota      int64 `json:"buildkit_cpu_quota"`
+	RuntimeMemoryBytes    int64 `json:"runtime_memory_bytes"`
+	RuntimePIDs           int   `json:"runtime_pids"`
+	RuntimeTemporaryBytes int64 `json:"runtime_temporary_bytes"`
 }
 
 // Result is the bounded offline observation returned by Check.

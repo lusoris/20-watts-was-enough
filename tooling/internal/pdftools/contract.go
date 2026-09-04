@@ -84,7 +84,11 @@ func validateApko(value Apko) error {
 }
 
 func validateBase(value BaseImage, limits Limits) error {
-	for _, digest := range []string{value.ArchiveSHA256, value.SPDXSHA256} {
+	for _, digest := range []string{
+		value.ArchiveSHA256,
+		value.SPDXCanonicalSHA256,
+		value.SPDXIndexCanonicalSHA256,
+	} {
 		if !rawDigestPattern.MatchString(digest) {
 			return errors.New("base archive or SPDX digest is invalid")
 		}
@@ -95,8 +99,14 @@ func validateBase(value BaseImage, limits Limits) error {
 		}
 	}
 	if value.ArchiveSize < 1_000_000 || value.ArchiveSize > limits.BaseArchiveBytes ||
-		value.SPDXSize < 10_000 || value.SPDXSize > 4*1024*1024 {
+		value.SPDXSize < 10_000 || value.SPDXSize > limits.SPDXBytes ||
+		value.SPDXCanonicalSize < 10_000 || value.SPDXCanonicalSize > limits.SPDXBytes ||
+		value.SPDXIndexCanonicalSize <= 0 || value.SPDXIndexCanonicalSize > limits.SPDXBytes {
 		return errors.New("base archive or SPDX size is outside its bound")
+	}
+	if value.SPDXPackages != 209 || value.SPDXPackages > limits.SPDXPackages ||
+		value.SPDXRelationships != 225 || value.SPDXRelationships > limits.SPDXRelationships {
+		return errors.New("base SPDX graph count is invalid")
 	}
 	return nil
 }
@@ -214,10 +224,30 @@ func validateDeliveryAndLimits(delivery SourceDelivery, apko Apko, limits Limits
 		limits.Packages >= delivery.APKCount && limits.Packages <= 256,
 		limits.NoticeBytes >= 64*1024 && limits.NoticeBytes <= 4*1024*1024,
 		limits.BaseArchiveBytes >= 32*1024*1024 && limits.BaseArchiveBytes <= 512*1024*1024,
+		limits.FinalArchiveBytes >= limits.BaseArchiveBytes && limits.FinalArchiveBytes <= 512*1024*1024,
 		limits.SourceBundleBytes >= 32*1024*1024 && limits.SourceBundleBytes <= 512*1024*1024,
+		limits.SPDXBytes >= 256*1024 && limits.SPDXBytes <= 16*1024*1024,
+		limits.SPDXPackages >= 209 && limits.SPDXPackages <= 4_096,
+		limits.SPDXRelationships >= 225 && limits.SPDXRelationships <= 16_384,
+		limits.APKControlBytes >= 1024*1024 && limits.APKControlBytes <= 64*1024*1024,
+		limits.APKDataBytes >= 64*1024*1024 && limits.APKDataBytes <= limits.SourceBundleBytes,
+		limits.APKIndexBytes >= 16*1024*1024 && limits.APKIndexBytes <= 512*1024*1024,
+		limits.HTTPResponseBytes >= 64*1024*1024 && limits.HTTPResponseBytes <= limits.SourceBundleBytes,
 		limits.LockSeconds >= 30 && limits.LockSeconds <= 600,
 		limits.BuildSeconds >= 60 && limits.BuildSeconds <= 1800,
+		limits.RuntimeSeconds >= 5 && limits.RuntimeSeconds <= 120,
 		limits.CapturedOutputBytes >= 64*1024 && limits.CapturedOutputBytes <= 16*1024*1024,
+		limits.ReceiptBytes >= 64*1024 && limits.ReceiptBytes <= 4*1024*1024,
+		limits.ApkoMemoryBytes >= 512*1024*1024 && limits.ApkoMemoryBytes <= 16*1024*1024*1024,
+		limits.ApkoPIDs >= 64 && limits.ApkoPIDs <= 2_048,
+		limits.ApkoTemporaryBytes >= 128*1024*1024 && limits.ApkoTemporaryBytes <= 8*1024*1024*1024,
+		limits.BuildKitMemoryBytes >= 512*1024*1024 && limits.BuildKitMemoryBytes <= 8*1024*1024*1024,
+		limits.BuildKitPIDs >= 64 && limits.BuildKitPIDs <= 1_024,
+		limits.BuildKitCPUPeriod >= 10_000 && limits.BuildKitCPUPeriod <= 1_000_000,
+		limits.BuildKitCPUQuota >= limits.BuildKitCPUPeriod && limits.BuildKitCPUQuota <= 8*limits.BuildKitCPUPeriod,
+		limits.RuntimeMemoryBytes >= 64*1024*1024 && limits.RuntimeMemoryBytes <= 2*1024*1024*1024,
+		limits.RuntimePIDs >= 16 && limits.RuntimePIDs <= 256,
+		limits.RuntimeTemporaryBytes >= 1024*1024 && limits.RuntimeTemporaryBytes <= 256*1024*1024,
 	}
 	if slices.Contains(checks, false) {
 		return errors.New("one or more PDF-tools resource limits are invalid")

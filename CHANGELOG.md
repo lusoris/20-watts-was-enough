@@ -48,8 +48,21 @@ the exact diff; this file records why the project changed.
   lock, exact APK retention metadata, upstream source identities, the pinned
   Wolfi root recipe licence, five missing notice files, runtime containment and
   the deterministic final-layer design.
-  Recorded base-image checks remain `NO_RESULT`; final assembly, publication
+  Recorded construction checks remain `NO_RESULT`; source delivery, publication
   and exact-digest CI consumption stay open behind issue 20.
+- A local-only Go reproducer now runs the exact pinned apko assembler twice,
+  canonicalises the two SPDX relationship graphs, projects the base archives
+  into private OCI layouts and builds the final notice layer in two fresh
+  pinned BuildKit 0.32.2 instances. Their daemon networks, memory, PID, CPU,
+  parallelism and exact daemon-side entitlement are checked explicitly; the
+  final builds request no entitlement and use no cache or build network. It compares complete archives
+  and image identities, checks licence bytes, Poppler versions, configured
+  UID/GID, forbidden paths and runtime containment, then writes a bounded
+  atomic `NO_RESULT` receipt. It does not create a source
+  bundle, publish an image or admit a release digest. Runtime cleanup removes
+  only its random alias and leaves shared untagged digest content under Docker
+  cache management, so concurrent local reproductions cannot delete each
+  other's image.
 - Decision 0055 and a source-bound Go contract now freeze the CLRS-Text
   controller shakedown to six named task families, a bounded 48-example
   construction plan and explicit fixed-four-endpoint semantics for segment
