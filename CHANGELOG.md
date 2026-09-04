@@ -158,6 +158,13 @@ the exact diff; this file records why the project changed.
   failed` result. Other protocol failures still stop immediately, diagnostics
   retain the CDP method and code, and the two-render byte comparison remains
   the publication gate.
+- The reviewed patch set now uses Goldmark 2.0.1, KaTeX 0.18.5,
+  `@types/node` 26.4.1, `@types/react-dom` 19.2.7, `globals` 17.12.0 and
+  `typescript-eslint` 8.69.0. TypeScript remains at 6.0.3 because
+  `typescript-eslint` requires a version below 6.1.0; ESLint remains at 9.39.5
+  because the React and JSX accessibility plugins do not yet declare ESLint 10
+  support. The exact package graphs and source-bound book provenance are
+  regenerated without changing experiment or result status.
 - A failed two-builder PDF reproducibility check now retains both exact PDF and
   manifest pairs beside its comparison receipt. CI uploads the bounded mismatch
   bundle for 30 days, so a rare renderer disagreement can be byte-diffed without
