@@ -254,6 +254,11 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Trusted repository-metadata repair now has the pull-request write permission
+  required to remove stale lifecycle labels from merged pull requests. Shared
+  GitHub API reads retry only bounded transport failures and 500/502/503/504
+  responses; writes remain single-attempt so an uncertain mutation is never
+  replayed blindly.
 - Release PDF rendering now receives the exact commit produced by the tag
   preflight and refuses a checkout at any other revision. Policy validation
   requires the unique reviewed step, its exact tag-and-commit command and only

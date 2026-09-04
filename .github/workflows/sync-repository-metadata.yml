@@ -15,6 +15,7 @@ on:
       - tooling/cmd/20w/github_pr_metadata.go
       - tooling/cmd/20w/main.go
       - tooling/internal/githublabels/**
+      - tooling/internal/githubapi/**
       - tooling/internal/githubissuemilestones/**
       - tooling/internal/githubissuelifecycle/**
       - tooling/internal/githubmilestones/**
@@ -38,7 +39,7 @@ jobs:
     permissions:
       contents: read
       issues: write
-      pull-requests: read
+      pull-requests: write
     steps:
       - name: Check out canonical main
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

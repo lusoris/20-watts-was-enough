@@ -1340,13 +1340,13 @@ test("repository metadata synchronization is manifest-triggered and least-privil
   const tampered = structuredClone(valid);
   tampered.jobs.sync.permissions.contents = "write";
   assert.ok(validateRepositoryMetadataSyncWorkflowObject(tampered).includes(
-    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization needs only contents:read, issues:write, and pull-requests:read",
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization needs only contents:read, issues:write, and pull-requests:write",
   ));
 
-  const unreadablePullRequests = structuredClone(valid);
-  delete unreadablePullRequests.jobs.sync.permissions["pull-requests"];
-  assert.ok(validateRepositoryMetadataSyncWorkflowObject(unreadablePullRequests).includes(
-    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization needs only contents:read, issues:write, and pull-requests:read",
+  const readOnlyPullRequests = structuredClone(valid);
+  readOnlyPullRequests.jobs.sync.permissions["pull-requests"] = "read";
+  assert.ok(validateRepositoryMetadataSyncWorkflowObject(readOnlyPullRequests).includes(
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization needs only contents:read, issues:write, and pull-requests:write",
   ));
 
   for (const mutate of [
@@ -1382,7 +1382,7 @@ test("repository metadata synchronization is manifest-triggered and least-privil
     (entry) => entry !== ".github/issue-milestones.json",
   );
   assert.ok(validateRepositoryMetadataSyncWorkflowObject(incompleteTrigger).includes(
-    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and both lifecycle sources on main, and manual repair",
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and every owned metadata source on main, and manual repair",
   ));
 
   const missingLifecycleSource = structuredClone(valid);
@@ -1390,7 +1390,7 @@ test("repository metadata synchronization is manifest-triggered and least-privil
     (entry) => entry !== "tooling/internal/githubissuelifecycle/**",
   );
   assert.ok(validateRepositoryMetadataSyncWorkflowObject(missingLifecycleSource).includes(
-    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and both lifecycle sources on main, and manual repair",
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and every owned metadata source on main, and manual repair",
   ));
 
   const missingPullRequestLifecycleSource = structuredClone(valid);
@@ -1398,13 +1398,21 @@ test("repository metadata synchronization is manifest-triggered and least-privil
     (entry) => entry !== "tooling/internal/githubprmetadata/**",
   );
   assert.ok(validateRepositoryMetadataSyncWorkflowObject(missingPullRequestLifecycleSource).includes(
-    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and both lifecycle sources on main, and manual repair",
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and every owned metadata source on main, and manual repair",
+  ));
+
+  const missingRetrySource = structuredClone(valid);
+  missingRetrySource.on.push.paths = missingRetrySource.on.push.paths.filter(
+    (entry) => entry !== "tooling/internal/githubapi/**",
+  );
+  assert.ok(validateRepositoryMetadataSyncWorkflowObject(missingRetrySource).includes(
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and every owned metadata source on main, and manual repair",
   ));
 
   const missingLifecycleTrigger = structuredClone(valid);
   delete missingLifecycleTrigger.on.issues;
   assert.ok(validateRepositoryMetadataSyncWorkflowObject(missingLifecycleTrigger).includes(
-    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and both lifecycle sources on main, and manual repair",
+    ".github/workflows/sync-repository-metadata.yml: repository metadata synchronization must run for issue close/reopen events, all three canonical manifests and every owned metadata source on main, and manual repair",
   ));
 
   const unboundLifecycle = structuredClone(valid);
