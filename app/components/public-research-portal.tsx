@@ -8,6 +8,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type MouseEvent,
 } from "react";
 import type { ResearchDocument } from "../research-document";
 import { outlineFromMarkdown } from "../lib/heading-outline";
@@ -34,8 +35,14 @@ const defaultDocumentPath = "concept/00-thesis-and-principles.md";
 const libraryGroups = ["All", "Concept", "Mathematics"] as const;
 const catalogPageSize = 8;
 const documentGroups = ["Concept", "Mathematics"] as const;
+const portalDestinationFrameLimit = 180;
 
 type LibraryGroup = (typeof libraryGroups)[number];
+type PortalNavigationRequest = {
+  focusDestination: boolean;
+  fragment: string;
+};
+type ElementRef<T extends HTMLElement> = { current: T | null };
 
 function withBase(basePath: string, path = "") {
   const base = basePath.endsWith("/") ? basePath : `${basePath}/`;
@@ -64,6 +71,101 @@ function overviewLocation(basePath: string, hash = "") {
 function initialDocumentPath(basePath: string): string | null {
   if (typeof window === "undefined") return null;
   return portalDocumentPathFromLocation(window.location, basePath);
+}
+
+function initialPortalFragment(): string {
+  if (typeof window === "undefined") return "";
+  return window.location.hash.slice(1);
+}
+
+function shouldHandleClientNavigation(event: MouseEvent<HTMLAnchorElement>) {
+  return event.button === 0
+    && !event.altKey
+    && !event.ctrlKey
+    && !event.metaKey
+    && !event.shiftKey
+    && event.currentTarget.target !== "_blank";
+}
+
+function handleClientNavigation(
+  event: MouseEvent<HTMLAnchorElement>,
+  navigate: () => void,
+) {
+  if (!shouldHandleClientNavigation(event)) return;
+  event.preventDefault();
+  navigate();
+}
+
+function makeProgrammaticallyFocusable(target: HTMLElement) {
+  if (!target.matches("a[href], button, input, select, textarea, summary, [tabindex]")) {
+    target.tabIndex = -1;
+  }
+}
+
+function usePortalDestination({
+  navigationRequest,
+  overviewRef,
+  readerPageRef,
+  readerTitleRef,
+  renderedDocumentPath,
+  selectedPath,
+}: {
+  navigationRequest: PortalNavigationRequest;
+  overviewRef: ElementRef<HTMLElement>;
+  readerPageRef: ElementRef<HTMLElement>;
+  readerTitleRef: ElementRef<HTMLHeadingElement>;
+  renderedDocumentPath: string | null | undefined;
+  selectedPath: string | null;
+}) {
+  useEffect(() => {
+    if (!navigationRequest.focusDestination && !navigationRequest.fragment) return;
+
+    let cancelled = false;
+    let frame = 0;
+    let attempts = 0;
+    const reachDestination = () => {
+      if (cancelled) return;
+      const fragmentReady = !selectedPath || renderedDocumentPath === selectedPath;
+      let target: HTMLElement | null = null;
+      if (navigationRequest.fragment && fragmentReady) {
+        target = document.getElementById(
+          decodePortalFragment(navigationRequest.fragment),
+        );
+      } else if (!navigationRequest.fragment) {
+        target = selectedPath ? readerTitleRef.current : overviewRef.current;
+      }
+      if (!target && attempts < portalDestinationFrameLimit) {
+        attempts += 1;
+        frame = window.requestAnimationFrame(reachDestination);
+        return;
+      }
+
+      const resolvedTarget = target
+        ?? (selectedPath ? readerTitleRef.current : overviewRef.current);
+      if (!resolvedTarget) return;
+      if (selectedPath && !navigationRequest.fragment) {
+        readerPageRef.current?.scrollIntoView({ block: "start" });
+      } else {
+        resolvedTarget.scrollIntoView({ block: "start" });
+      }
+      if (navigationRequest.focusDestination) {
+        makeProgrammaticallyFocusable(resolvedTarget);
+        resolvedTarget.focus({ preventScroll: true });
+      }
+    };
+    frame = window.requestAnimationFrame(reachDestination);
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+    };
+  }, [
+    navigationRequest,
+    overviewRef,
+    readerPageRef,
+    readerTitleRef,
+    renderedDocumentPath,
+    selectedPath,
+  ]);
 }
 
 function formatNumber(value: number) {
@@ -211,6 +313,10 @@ export function PublicResearchPortal({
   assetBasePath: string;
 }) {
   const [selectedPath, setSelectedPath] = useState<string | null>(() => initialDocumentPath(assetBasePath));
+  const [navigationRequest, setNavigationRequest] = useState(() => ({
+    focusDestination: false,
+    fragment: initialPortalFragment(),
+  }));
   const [documentState, setDocumentState] = useState<{
     path: string;
     document?: ResearchDocument;
@@ -221,7 +327,7 @@ export function PublicResearchPortal({
   const [catalogLimit, setCatalogLimit] = useState(catalogPageSize);
   const deferredQuery = useDeferredValue(query.trim().toLowerCase());
   const overviewRef = useRef<HTMLElement>(null);
-  const readerRef = useRef<HTMLElement>(null);
+  const readerTitleRef = useRef<HTMLHeadingElement>(null);
   const readerPageRef = useRef<HTMLElement>(null);
   const readerLibraryRef = useRef<HTMLElement>(null);
   const mobileMenuRef = useRef<HTMLDetailsElement>(null);
@@ -333,19 +439,23 @@ export function PublicResearchPortal({
   useEffect(() => {
     const handleHistory = () => {
       setSelectedPath(portalDocumentPathFromLocation(window.location, assetBasePath));
+      setNavigationRequest({
+        focusDestination: true,
+        fragment: window.location.hash.slice(1),
+      });
     };
     window.addEventListener("popstate", handleHistory);
     return () => window.removeEventListener("popstate", handleHistory);
   }, [assetBasePath]);
 
-  useEffect(() => {
-    const hash = window.location.hash.slice(1);
-    if (!hash) return;
-    const frame = window.requestAnimationFrame(() => {
-      document.getElementById(decodePortalFragment(hash))?.scrollIntoView();
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [selectedDocument, selectedPath]);
+  usePortalDestination({
+    navigationRequest,
+    overviewRef,
+    readerPageRef,
+    readerTitleRef,
+    renderedDocumentPath: selectedDocument?.path,
+    selectedPath,
+  });
 
   useEffect(() => {
     if (!selectedPath) return;
@@ -363,7 +473,7 @@ export function PublicResearchPortal({
     return () => window.cancelAnimationFrame(frame);
   }, [readerLibraryDocuments, selectedPath]);
 
-  const selectDocument = (path: string, hash = "", focusReader = true) => {
+  const selectDocument = (path: string, hash = "") => {
     if (!documentsByPath.has(path)) {
       window.open(
         repositoryDocumentHref(path, hash),
@@ -378,9 +488,9 @@ export function PublicResearchPortal({
       "",
       portalDocumentLocation(path, assetBasePath, hash),
     );
-    window.requestAnimationFrame(() => {
-      if (!hash) readerPageRef.current?.scrollIntoView({ block: "start" });
-      if (focusReader) readerRef.current?.focus({ preventScroll: true });
+    setNavigationRequest({
+      focusDestination: true,
+      fragment: hash,
     });
   };
 
@@ -407,10 +517,9 @@ export function PublicResearchPortal({
       "",
       overviewLocation(assetBasePath, hash),
     );
-    window.requestAnimationFrame(() => {
-      const target = hash ? document.getElementById(hash) : overviewRef.current;
-      target?.scrollIntoView({ block: "start" });
-      target?.focus({ preventScroll: true });
+    setNavigationRequest({
+      focusDestination: true,
+      fragment: hash,
     });
   };
 
@@ -423,10 +532,9 @@ export function PublicResearchPortal({
       "",
       `${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`,
     );
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        document.getElementById(headingId)?.scrollIntoView({ block: "start" });
-      });
+    setNavigationRequest({
+      focusDestination: true,
+      fragment: headingId,
     });
   };
 
@@ -481,8 +589,7 @@ export function PublicResearchPortal({
         className="portal-wordmark"
         href={overviewLocation(assetBasePath)}
         onClick={(event) => {
-          event.preventDefault();
-          showOverview();
+          handleClientNavigation(event, () => showOverview());
         }}
       >
         <span aria-hidden="true">20W</span>
@@ -492,15 +599,19 @@ export function PublicResearchPortal({
         <a
           href={portalDocumentLocation(defaultDocumentPath, assetBasePath)}
           onClick={(event) => {
-            event.preventDefault();
-            selectDocument(defaultDocumentPath);
+            handleClientNavigation(
+              event,
+              () => selectDocument(defaultDocumentPath),
+            );
           }}
         >Read</a>
         <a
           href={overviewLocation(assetBasePath, "research-system")}
           onClick={(event) => {
-            event.preventDefault();
-            showOverview("research-system");
+            handleClientNavigation(
+              event,
+              () => showOverview("research-system"),
+            );
           }}
         >Evidence</a>
         <a
@@ -520,15 +631,19 @@ export function PublicResearchPortal({
           <a
             href={portalDocumentLocation(defaultDocumentPath, assetBasePath)}
             onClick={(event) => {
-              event.preventDefault();
-              selectDocument(defaultDocumentPath);
+              handleClientNavigation(
+                event,
+                () => selectDocument(defaultDocumentPath),
+              );
             }}
           >Read the thesis</a>
           <a
             href={overviewLocation(assetBasePath, "research-system")}
             onClick={(event) => {
-              event.preventDefault();
-              showOverview("research-system");
+              handleClientNavigation(
+                event,
+                () => showOverview("research-system"),
+              );
             }}
           >Evidence path</a>
           <a
@@ -550,9 +665,9 @@ export function PublicResearchPortal({
     <div className="portal-shell">
       <a
         className="portal-skip-link"
-        href={selectedPath ? "#portal-reader" : "#portal-overview"}
+        href={selectedPath ? "#portal-reader-title" : "#portal-overview"}
         onClick={() => {
-          const targetId = selectedPath ? "portal-reader" : "portal-overview";
+          const targetId = selectedPath ? "portal-reader-title" : "portal-overview";
           window.requestAnimationFrame(() => document.getElementById(targetId)?.focus());
         }}
       >
@@ -571,23 +686,26 @@ export function PublicResearchPortal({
               className="portal-reader-back"
               href={overviewLocation(assetBasePath, "library")}
               onClick={(event) => {
-                event.preventDefault();
-                showOverview("library");
+                handleClientNavigation(event, () => showOverview("library"));
               }}
             >
               <span aria-hidden="true">←</span> Research overview
             </a>
             <div className="portal-reader-toolbar-copy">
               <p>{selectedMetadata.group} · {formatNumber(selectedMetadata.words)} words</p>
-              <h1 id="portal-reader-title">{selectedMetadata.title}</h1>
+              <h1 id="portal-reader-title" ref={readerTitleRef} tabIndex={-1}>
+                {selectedMetadata.title}
+              </h1>
             </div>
             <nav className="portal-reader-sequence" aria-label="Document sequence">
               {previousDocument ? (
                 <a
                   href={portalDocumentLocation(previousDocument.path, assetBasePath)}
                   onClick={(event) => {
-                    event.preventDefault();
-                    selectDocument(previousDocument.path);
+                    handleClientNavigation(
+                      event,
+                      () => selectDocument(previousDocument.path),
+                    );
                   }}
                   rel="prev"
                 >← Previous</a>
@@ -599,8 +717,10 @@ export function PublicResearchPortal({
                 <a
                   href={portalDocumentLocation(nextDocument.path, assetBasePath)}
                   onClick={(event) => {
-                    event.preventDefault();
-                    selectDocument(nextDocument.path);
+                    handleClientNavigation(
+                      event,
+                      () => selectDocument(nextDocument.path),
+                    );
                   }}
                   rel="next"
                 >Next →</a>
@@ -643,8 +763,7 @@ export function PublicResearchPortal({
                       href={`#${heading.id}`}
                       key={heading.id}
                       onClick={(event) => {
-                        event.preventDefault();
-                        selectHeading(heading.id);
+                        handleClientNavigation(event, () => selectHeading(heading.id));
                       }}
                     >{heading.title}</a>
                   ))}
@@ -693,12 +812,16 @@ export function PublicResearchPortal({
                   aria-label="Research documents"
                 >
                   {readerLibraryDocuments.map((document) => (
-                    <button
-                      type="button"
+                    <a
+                      href={portalDocumentLocation(document.path, assetBasePath)}
                       key={document.path}
-                      className={document.path === selectedMetadata.path ? "active" : ""}
                       aria-current={document.path === selectedMetadata.path ? "page" : undefined}
-                      onClick={() => selectDocument(document.path)}
+                      onClick={(event) => {
+                        handleClientNavigation(
+                          event,
+                          () => selectDocument(document.path),
+                        );
+                      }}
                     >
                       <span>{document.title}</span>
                       <small>
@@ -707,7 +830,7 @@ export function PublicResearchPortal({
                           ? " · section heading match"
                           : ""}
                       </small>
-                    </button>
+                    </a>
                   ))}
                   {libraryDocuments.length === 0 ? (
                     <p className="portal-empty-state">
@@ -720,8 +843,6 @@ export function PublicResearchPortal({
               <article
                 className="portal-reader"
                 id="portal-reader"
-                ref={readerRef}
-                tabIndex={-1}
                 aria-labelledby="portal-reader-title"
               >
                 <header className="portal-reader-header">
@@ -782,6 +903,9 @@ export function PublicResearchPortal({
                         className={heading.depth === 3 ? "portal-outline-child" : ""}
                         href={`#${heading.id}`}
                         key={heading.id}
+                        onClick={(event) => {
+                          handleClientNavigation(event, () => selectHeading(heading.id));
+                        }}
                       >{heading.title}</a>
                     ))}
                   </nav>
@@ -820,8 +944,10 @@ export function PublicResearchPortal({
                   className="portal-action portal-action-primary"
                   href={portalDocumentLocation(defaultDocumentPath, assetBasePath)}
                   onClick={(event) => {
-                    event.preventDefault();
-                    selectDocument(defaultDocumentPath);
+                    handleClientNavigation(
+                      event,
+                      () => selectDocument(defaultDocumentPath),
+                    );
                   }}
                 >Read the thesis</a>
                 <a className="portal-action portal-action-secondary" href={withBase(assetBasePath, "book/")}>
@@ -920,8 +1046,10 @@ export function PublicResearchPortal({
                   href={portalDocumentLocation(entry.document.path, assetBasePath)}
                   key={entry.document.path}
                   onClick={(event) => {
-                    event.preventDefault();
-                    selectDocument(entry.document.path);
+                    handleClientNavigation(
+                      event,
+                      () => selectDocument(entry.document.path),
+                    );
                   }}
                 >
                   <span>{entry.label}</span>
@@ -1008,8 +1136,10 @@ export function PublicResearchPortal({
                           <a
                             href={portalDocumentLocation(document.path, assetBasePath)}
                             onClick={(event) => {
-                              event.preventDefault();
-                              selectDocument(document.path);
+                              handleClientNavigation(
+                                event,
+                                () => selectDocument(document.path),
+                              );
                             }}
                           >
                             <span>{documentSequence(document.path, document.group)}</span>

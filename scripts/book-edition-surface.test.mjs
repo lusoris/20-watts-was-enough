@@ -221,6 +221,10 @@ test("portal utility text and card accents retain readable contrast", async () =
   assert.match(stylesheet, /\.portal-mobile-menu nav a\s*\{[^}]*min-height:\s*44px/s);
   assert.match(stylesheet, /\.prose th\s*\{[^}]*font-size:\s*14px;[^}]*line-height:\s*1\.35/s);
   assert.doesNotMatch(stylesheet, /\.portal-header nav a:(?:first-child|nth-child\()/);
+  assert.match(
+    portal,
+    /#portal-overview:focus-visible,\s*#research-system:focus-visible,\s*#library:focus-visible,\s*\.portal-prose[^{]+\{[^}]*outline:\s*3px solid var\(--portal-blue\)/s,
+  );
 
   const publicationPass = stylesheet.slice(stylesheet.indexOf(
     "/* Research-publication pass: manuscript first, evidence chrome second. */",
