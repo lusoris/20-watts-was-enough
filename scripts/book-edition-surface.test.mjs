@@ -269,12 +269,12 @@ test("portal utility text and card accents retain readable contrast", async () =
   assert.match(publicationPass, /\.portal-dashboard\s*\{[^}]*grid-template-columns:\s*minmax\(0, 650px\) minmax\(380px, 520px\)[^}]*background:\s*var\(--portal-cream\)/s);
   assert.match(publicationPass, /\.portal-status-outcome\s*\{[^}]*border-left:\s*3px solid #b37b1c[^}]*background:\s*transparent/s);
   assert.match(publicationPass, /\.portal-funnel\s*\{[^}]*grid-template-columns:\s*1fr[^}]*border:\s*0/s);
-  assert.match(publicationPass, /\.portal-reader-grid\s*\{[^}]*grid-template-columns:\s*235px minmax\(0, 900px\) 195px[^}]*border:\s*0/s);
+  assert.match(publicationPass, /\.portal-reader-grid\s*\{[^}]*grid-template-columns:\s*minmax\(0, 900px\) 195px[^}]*border:\s*0/s);
   assert.match(publicationPass, /\.portal-prose\s*\{[^}]*font-size:\s*18px[^}]*line-height:\s*1\.66/s);
   assert.match(publicationPass, /@media screen and \(max-width: 460px\)[\s\S]*\.portal-wordmark strong\s*\{[^}]*display:\s*block/s);
 });
 
-test("the focused reader has one publication owner and a non-clipping rail", async () => {
+test("the focused reader has one outline rail and a bounded corpus drawer", async () => {
   const [portalComponent, stylesheet] = await Promise.all([
     source("app/components/public-research-portal.tsx"),
     source("app/globals.css"),
@@ -291,6 +291,11 @@ test("the focused reader has one publication owner and a non-clipping rail", asy
     "portal-reader-toolbar",
     "portal-reader-workspace",
     "portal-reader-grid",
+    "portal-reader-context",
+    "portal-reader-browse",
+    "portal-corpus-drawer",
+    "portal-corpus-header",
+    "portal-corpus-current",
     "portal-library",
     "portal-document-list",
     "portal-reader",
@@ -320,9 +325,23 @@ test("the focused reader has one publication owner and a non-clipping rail", asy
   assert.match(reader, /\.portal-prose > :is\([^)]*\)\s*\{[^}]*max-width:\s*var\(--reading-measure\)/s);
   assert.match(reader, /\.portal-library \.portal-filter-tabs\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/s);
   assert.match(reader, /\.portal-library \.portal-filter-tabs button:last-child\s*\{[^}]*grid-column:\s*1 \/ -1/s);
-  assert.match(reader, /@media screen and \(max-width: 1080px\)[\s\S]*\.portal-reader-grid\s*\{[^}]*grid-template-columns:\s*225px minmax\(0, 820px\)/s);
-  assert.match(reader, /@media screen and \(max-width: 880px\)[\s\S]*\.portal-reader-page \.portal-library\s*\{[^}]*display:\s*none/s);
+  assert.match(reader, /\.portal-reader-grid\s*\{[^}]*grid-template-columns:\s*minmax\(0, 900px\) 195px/s);
+  assert.match(reader, /\.portal-corpus-drawer\s*\{[^}]*position:\s*fixed;[^}]*width:\s*min\(440px, 100%\);[^}]*height:\s*100dvh/s);
+  assert.match(reader, /\.portal-corpus-drawer\[open\]\s*\{[^}]*display:\s*grid/s);
+  assert.match(reader, /\.portal-corpus-drawer::backdrop\s*\{[^}]*background:/s);
+  assert.match(reader, /\.portal-library\s*\{[^}]*overflow:\s*hidden auto/s);
+  assert.match(reader, /\.portal-library \.portal-document-list\s*\{[^}]*flex:\s*0 0 auto;[^}]*overflow:\s*visible/s);
+  assert.match(reader, /@media screen and \(max-width: 1180px\)[\s\S]*\.portal-reader-grid\s*\{[^}]*grid-template-columns:\s*minmax\(0, 900px\)/s);
+  assert.match(reader, /@media screen and \(max-width: 1180px\)[\s\S]*\.portal-outline\s*\{[^}]*display:\s*none/s);
+  assert.doesNotMatch(reader, /\.portal-reader-page \.portal-library\s*\{[^}]*display:\s*none/s);
   assert.match(reader, /\.portal-mobile-outline summary\s*\{[^}]*min-height:\s*44px/s);
   assert.match(reader, /\.portal-document-state\s*\{[^}]*font-size:\s*14px/s);
   assert.match(reader, /\.portal-document-state\[role="alert"\]\s*\{[^}]*border-left-color:\s*#a92d31/s);
+
+  assert.match(portalComponent, /aria-controls="portal-corpus-drawer"[\s\S]*aria-haspopup="dialog"/s);
+  assert.match(portalComponent, /<dialog[\s\S]*aria-labelledby="portal-corpus-title"/s);
+  assert.match(portalComponent, /dialog\.showModal\(\)/);
+  assert.match(portalComponent, /invokerRef\.current\?\.focus\(\)/);
+  assert.match(portalComponent, /<span>Currently reading<\/span>/);
+  assert.doesNotMatch(portalComponent, /<aside className="portal-library"/);
 });

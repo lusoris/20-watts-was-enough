@@ -24,6 +24,7 @@ import {
   portalDocumentPathFromLocation,
   portalDocuments,
   portalMetrics,
+  type PortalDocumentMetadata,
 } from "../portal-content";
 
 const MarkdownDocument = lazy(() => import("./markdown-document").then(
@@ -189,6 +190,26 @@ function isSectionHeadingMatch(
     .includes(normalizedQuery);
 }
 
+function revealFocusedElement(
+  scroller: HTMLElement | null,
+  target: HTMLElement,
+) {
+  if (!scroller || !target.isConnected) return;
+  const style = window.getComputedStyle(target);
+  const outlineWidth = Number.parseFloat(style.outlineWidth) || 0;
+  const outlineOffset = Math.max(Number.parseFloat(style.outlineOffset) || 0, 0);
+  const clearance = outlineWidth + outlineOffset + 1;
+  const scrollerRect = scroller.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  const topDelta = targetRect.top - clearance - scrollerRect.top;
+  if (topDelta < 0) {
+    scroller.scrollTop += topDelta;
+    return;
+  }
+  const bottomDelta = targetRect.bottom + clearance - scrollerRect.bottom;
+  if (bottomDelta > 0) scroller.scrollTop += bottomDelta;
+}
+
 function usePortalSeo(metadata: Parameters<typeof synchronizePortalSeo>[0]) {
   useEffect(() => synchronizePortalSeo(metadata), [metadata]);
 }
@@ -307,6 +328,222 @@ function ResearchStatus({
   );
 }
 
+type CorpusDrawerProps = {
+  assetBasePath: string;
+  documents: PortalDocumentMetadata[];
+  group: LibraryGroup;
+  normalizedQuery: string;
+  onGroupChange: (group: LibraryGroup) => void;
+  onNavigate: (path: string) => void;
+  onQueryChange: (query: string) => void;
+  query: string;
+  selectedDocument: PortalDocumentMetadata;
+};
+
+function CorpusLibrary({
+  assetBasePath,
+  documents,
+  group,
+  libraryRef,
+  normalizedQuery,
+  onGroupChange,
+  onNavigate,
+  onQueryChange,
+  query,
+  searchRef,
+  selectedDocument,
+}: Omit<CorpusDrawerProps, "onNavigate"> & {
+  libraryRef: ElementRef<HTMLElement>;
+  onNavigate: (event: MouseEvent<HTMLAnchorElement>, path: string) => void;
+  searchRef: ElementRef<HTMLInputElement>;
+}) {
+  return (
+    <section
+      aria-label="Document library"
+      className="portal-library"
+      ref={libraryRef}
+    >
+      <label htmlFor="portal-library-search">Find another document</label>
+      <div className="portal-search-control">
+        <span aria-hidden="true">⌕</span>
+        <input
+          aria-controls="portal-corpus-results"
+          id="portal-library-search"
+          onChange={(event) => onQueryChange(event.target.value)}
+          placeholder="routing, memory, energy…"
+          ref={searchRef}
+          type="search"
+          value={query}
+        />
+      </div>
+      <div className="portal-filter-tabs" role="group" aria-label="Document group">
+        {libraryGroups.map((candidate) => (
+          <button
+            type="button"
+            key={candidate}
+            aria-pressed={group === candidate}
+            onClick={() => onGroupChange(candidate)}
+          >{candidate}</button>
+        ))}
+      </div>
+      <p className="portal-result-count" aria-live="polite">
+        {documents.length} matching document{documents.length === 1 ? "" : "s"}
+        {!documents.some((document) => document.path === selectedDocument.path) ? (
+          <span className="portal-filter-context">
+            Current document is outside this filter.
+          </span>
+        ) : null}
+      </p>
+      <nav
+        className="portal-document-list"
+        id="portal-corpus-results"
+        aria-label="Research documents"
+      >
+        {documents.map((document) => (
+          <a
+            href={portalDocumentLocation(document.path, assetBasePath)}
+            key={document.path}
+            aria-current={document.path === selectedDocument.path ? "page" : undefined}
+            onClick={(event) => onNavigate(event, document.path)}
+            onFocus={(event) => {
+              const target = event.currentTarget;
+              window.requestAnimationFrame(() => {
+                revealFocusedElement(libraryRef.current, target);
+              });
+            }}
+          >
+            <span>{document.title}</span>
+            <small>
+              {documentSequence(document.path, document.group)} · {formatNumber(document.words)} words
+              {isSectionHeadingMatch(document, normalizedQuery)
+                ? " · section heading match"
+                : ""}
+            </small>
+          </a>
+        ))}
+        {documents.length === 0 ? (
+          <p className="portal-empty-state">
+            No matching title, file path or section heading.
+          </p>
+        ) : null}
+      </nav>
+    </section>
+  );
+}
+
+function CorpusDrawer({
+  assetBasePath,
+  documents,
+  group,
+  normalizedQuery,
+  onGroupChange,
+  onNavigate,
+  onQueryChange,
+  query,
+  selectedDocument,
+}: CorpusDrawerProps) {
+  const [open, setOpen] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const invokerRef = useRef<HTMLButtonElement>(null);
+  const libraryRef = useRef<HTMLElement>(null);
+  const restoreInvokerFocus = useRef(true);
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!open || !dialog || dialog.open) return;
+    dialog.showModal();
+    const frame = window.requestAnimationFrame(() => searchRef.current?.focus());
+    return () => window.cancelAnimationFrame(frame);
+  }, [open]);
+
+  const closeDrawer = (restoreFocus = true) => {
+    restoreInvokerFocus.current = restoreFocus;
+    const dialog = dialogRef.current;
+    if (dialog?.open) dialog.close();
+    else setOpen(false);
+  };
+
+  const navigateToDocument = (
+    event: MouseEvent<HTMLAnchorElement>,
+    path: string,
+  ) => {
+    if (!shouldHandleClientNavigation(event)) return;
+    event.preventDefault();
+    closeDrawer(false);
+    onNavigate(path);
+  };
+
+  return (
+    <>
+      <button
+        aria-controls="portal-corpus-drawer"
+        aria-expanded={open}
+        aria-haspopup="dialog"
+        className="portal-reader-browse"
+        id="portal-corpus-trigger"
+        onClick={() => {
+          restoreInvokerFocus.current = true;
+          setOpen(true);
+        }}
+        ref={invokerRef}
+        type="button"
+      >Browse documents</button>
+      <dialog
+        aria-labelledby="portal-corpus-title"
+        className="portal-corpus-drawer"
+        id="portal-corpus-drawer"
+        onCancel={() => { restoreInvokerFocus.current = true; }}
+        onClose={() => {
+          setOpen(false);
+          if (!restoreInvokerFocus.current) {
+            restoreInvokerFocus.current = true;
+            return;
+          }
+          window.requestAnimationFrame(() => invokerRef.current?.focus());
+        }}
+        onKeyDown={(event) => {
+          const search = searchRef.current;
+          if (
+            event.key !== "Escape"
+            || event.target !== search
+            || !search.value
+          ) return;
+          event.preventDefault();
+          closeDrawer();
+        }}
+        ref={dialogRef}
+      >
+        <header className="portal-corpus-header">
+          <div>
+            <p>Research library</p>
+            <h2 id="portal-corpus-title">Browse documents</h2>
+          </div>
+          <button type="button" onClick={() => closeDrawer()}>Close</button>
+        </header>
+        <p className="portal-corpus-current">
+          <span>Currently reading</span>
+          <strong>{selectedDocument.title}</strong>
+          <code>{selectedDocument.path}</code>
+        </p>
+        <CorpusLibrary
+          assetBasePath={assetBasePath}
+          documents={documents}
+          group={group}
+          libraryRef={libraryRef}
+          normalizedQuery={normalizedQuery}
+          onGroupChange={onGroupChange}
+          onNavigate={navigateToDocument}
+          onQueryChange={onQueryChange}
+          query={query}
+          searchRef={searchRef}
+          selectedDocument={selectedDocument}
+        />
+      </dialog>
+    </>
+  );
+}
+
 export function PublicResearchPortal({
   assetBasePath,
 }: {
@@ -329,7 +566,6 @@ export function PublicResearchPortal({
   const overviewRef = useRef<HTMLElement>(null);
   const readerTitleRef = useRef<HTMLHeadingElement>(null);
   const readerPageRef = useRef<HTMLElement>(null);
-  const readerLibraryRef = useRef<HTMLElement>(null);
   const mobileMenuRef = useRef<HTMLDetailsElement>(null);
   const mobileOutlineRef = useRef<HTMLDetailsElement>(null);
   const documentCache = useRef(new Map<string, ResearchDocument>());
@@ -385,18 +621,6 @@ export function PublicResearchPortal({
     && selectedDocumentIndex < portalDocuments.length - 1
     ? portalDocuments[selectedDocumentIndex + 1]
     : null;
-  const readerLibraryDocuments = useMemo(() => {
-    if (libraryDocuments.length <= 15) return libraryDocuments;
-    const activeIndex = selectedPath
-      ? libraryDocuments.findIndex((document) => document.path === selectedPath)
-      : 0;
-    const start = Math.max(0, Math.min(
-      activeIndex < 0 ? 0 : activeIndex - 7,
-      libraryDocuments.length - 15,
-    ));
-    return libraryDocuments.slice(start, start + 15);
-  }, [libraryDocuments, selectedPath]);
-
   const conceptCount = portalDocuments.filter(
     (document) => document.group === "Concept",
   ).length;
@@ -457,22 +681,6 @@ export function PublicResearchPortal({
     selectedPath,
   });
 
-  useEffect(() => {
-    if (!selectedPath) return;
-    const frame = window.requestAnimationFrame(() => {
-      const list = readerLibraryRef.current;
-      const active = list?.querySelector<HTMLElement>('[aria-current="page"]');
-      if (!list || !active) return;
-      const listRect = list.getBoundingClientRect();
-      const activeRect = active.getBoundingClientRect();
-      if (activeRect.top >= listRect.top && activeRect.bottom <= listRect.bottom) return;
-      list.scrollTop += activeRect.top
-        - listRect.top
-        - ((listRect.height - activeRect.height) / 2);
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [readerLibraryDocuments, selectedPath]);
-
   const selectDocument = (path: string, hash = "") => {
     if (!documentsByPath.has(path)) {
       window.open(
@@ -497,16 +705,6 @@ export function PublicResearchPortal({
   const selectGroup = (candidate: LibraryGroup) => {
     setGroup(candidate);
     setCatalogLimit(catalogPageSize);
-    if (
-      selectedPath
-      && candidate !== "All"
-      && selectedMetadata?.group !== candidate
-    ) {
-      const firstDocument = portalDocuments.find(
-        (document) => document.group === candidate,
-      );
-      if (firstDocument) selectDocument(firstDocument.path);
-    }
   };
 
   const showOverview = (hash = "") => {
@@ -682,15 +880,31 @@ export function PublicResearchPortal({
             className="portal-reader-toolbar"
             aria-labelledby="portal-reader-title"
           >
-            <a
-              className="portal-reader-back"
-              href={overviewLocation(assetBasePath, "library")}
-              onClick={(event) => {
-                handleClientNavigation(event, () => showOverview("library"));
-              }}
-            >
-              <span aria-hidden="true">←</span> Research overview
-            </a>
+            <div className="portal-reader-context">
+              <a
+                className="portal-reader-back"
+                href={overviewLocation(assetBasePath, "library")}
+                onClick={(event) => {
+                  handleClientNavigation(event, () => showOverview("library"));
+                }}
+              >
+                <span aria-hidden="true">←</span> Research overview
+              </a>
+              <CorpusDrawer
+                assetBasePath={assetBasePath}
+                documents={libraryDocuments}
+                group={group}
+                normalizedQuery={deferredQuery}
+                onGroupChange={selectGroup}
+                onNavigate={selectDocument}
+                onQueryChange={(value) => {
+                  setQuery(value);
+                  setCatalogLimit(catalogPageSize);
+                }}
+                query={query}
+                selectedDocument={selectedMetadata}
+              />
+            </div>
             <div className="portal-reader-toolbar-copy">
               <p>{selectedMetadata.group} · {formatNumber(selectedMetadata.words)} words</p>
               <h1 id="portal-reader-title" ref={readerTitleRef} tabIndex={-1}>
@@ -771,75 +985,6 @@ export function PublicResearchPortal({
               </details>
             ) : null}
             <div className="portal-reader-grid">
-              <aside className="portal-library" aria-label="Document library">
-                <label htmlFor="portal-library-search">Find another document</label>
-                <div className="portal-search-control">
-                  <span aria-hidden="true">⌕</span>
-                  <input
-                    id="portal-library-search"
-                    type="search"
-                    value={query}
-                    onChange={(event) => {
-                      setQuery(event.target.value);
-                      setCatalogLimit(catalogPageSize);
-                    }}
-                    placeholder="routing, memory, energy…"
-                  />
-                </div>
-                <div className="portal-filter-tabs" role="group" aria-label="Document group">
-                  {libraryGroups.map((candidate) => (
-                    <button
-                      type="button"
-                      key={candidate}
-                      aria-pressed={group === candidate}
-                      onClick={() => selectGroup(candidate)}
-                    >{candidate}</button>
-                  ))}
-                </div>
-                <p className="portal-result-count" aria-live="polite">
-                  Showing {readerLibraryDocuments.length} of {libraryDocuments.length} matching documents
-                  {!libraryDocuments.some(
-                    (document) => document.path === selectedMetadata.path,
-                  ) ? (
-                    <span className="portal-filter-context">
-                      Current document is outside this filter.
-                    </span>
-                  ) : null}
-                </p>
-                <nav
-                  className="portal-document-list"
-                  ref={readerLibraryRef}
-                  aria-label="Research documents"
-                >
-                  {readerLibraryDocuments.map((document) => (
-                    <a
-                      href={portalDocumentLocation(document.path, assetBasePath)}
-                      key={document.path}
-                      aria-current={document.path === selectedMetadata.path ? "page" : undefined}
-                      onClick={(event) => {
-                        handleClientNavigation(
-                          event,
-                          () => selectDocument(document.path),
-                        );
-                      }}
-                    >
-                      <span>{document.title}</span>
-                      <small>
-                        {documentSequence(document.path, document.group)} · {formatNumber(document.words)} words
-                        {isSectionHeadingMatch(document, deferredQuery)
-                          ? " · section heading match"
-                          : ""}
-                      </small>
-                    </a>
-                  ))}
-                  {libraryDocuments.length === 0 ? (
-                    <p className="portal-empty-state">
-                      No matching title, file path or section heading.
-                    </p>
-                  ) : null}
-                </nav>
-              </aside>
-
               <article
                 className="portal-reader"
                 id="portal-reader"
