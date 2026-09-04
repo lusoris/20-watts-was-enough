@@ -56,7 +56,7 @@ than silently changing its outcome.
 | [0048](0048-gate-ready-pull-requests-with-the-full-ci-matrix.md) | Gate ready pull requests with the full CI matrix | accepted; readiness-based full-matrix rule partly superseded by [0052](0052-impact-scope-every-pull-request.md), `main`-push and pull-request-only impact clauses partly superseded by [0062](0062-impact-scope-comparable-main-pushes.md) |
 | [0049](0049-adopt-bounded-maintenance-automation.md) | Adopt bounded maintenance automation | accepted |
 | [0050](0050-review-the-book-and-pdf-as-one-publication.md) | Review the book and PDF as one publication | accepted |
-| [0051](0051-add-a-seventh-fixture-026-shard-after-live-timing.md) | Add a seventh Fixture 026 shard after live timing | accepted |
+| [0051](0051-add-a-seventh-fixture-026-shard-after-live-timing.md) | Add a seventh Fixture 026 shard after live timing | accepted; seven-shard inventory and shard-5 composition partly superseded by [0065](0065-isolate-fixture-026-ledger-semantics.md) |
 | [0052](0052-impact-scope-every-pull-request.md) | Impact-scope every pull request | accepted; `main`-push full-gate and pull-request-only impact clauses partly superseded by [0062](0062-impact-scope-comparable-main-pushes.md) |
 | [0053](0053-lock-the-poppler-pdf-tools-image-foundation.md) | Lock the Poppler PDF-tools image foundation | accepted |
 | [0054](0054-classify-script-impact-by-executable-consumer.md) | Classify script impact by executable consumer | accepted |
@@ -66,3 +66,4 @@ than silently changing its outcome.
 | [0059](0059-run-one-enforcing-dependency-audit-per-full-gate.md) | Run one enforcing dependency audit per full gate | accepted |
 | [0061](0061-reconcile-managed-status-with-item-lifecycle.md) | Reconcile managed status with item lifecycle | accepted |
 | [0062](0062-impact-scope-comparable-main-pushes.md) | Impact-scope comparable main pushes | accepted |
+| [0065](0065-isolate-fixture-026-ledger-semantics.md) | Isolate Fixture 026 ledger semantics from shard 5 | accepted |

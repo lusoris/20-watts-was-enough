@@ -1296,6 +1296,7 @@ function validateCiImpactWorkstationJobs(jobs, relativePath, findings) {
     ["fixture-026-shard-5", "test:workstation:fixture-026:shard-5"],
     ["fixture-026-shard-6", "test:workstation:fixture-026:shard-6"],
     ["fixture-026-shard-7", "test:workstation:fixture-026:shard-7"],
+    ["fixture-026-shard-8", "test:workstation:fixture-026:shard-8"],
     ["fixture-027", "test:workstation:fixture-027"],
     ["fixture-029-shard-1", "test:workstation:fixture-029:shard-1"],
     ["fixture-029-shard-2", "test:workstation:fixture-029:shard-2"],
@@ -1310,7 +1311,7 @@ function validateCiImpactWorkstationJobs(jobs, relativePath, findings) {
   recordExpectation(
     findings,
     workstationDispatchIsExact(artifactStep, expectedDispatch),
-    `${relativePath}: workstation matrix execution must dispatch only the eighteen static test scripts`,
+    `${relativePath}: workstation matrix execution must dispatch only the nineteen static test scripts`,
   );
   const pythonSteps = (artifacts?.steps ?? []).filter((step) => (
     step?.uses?.startsWith("actions/setup-python@")
@@ -3517,7 +3518,6 @@ export function validateWorkstationShardScriptsObject(
       "experiments/workstation/fixture-026/rsd-t02-contract.test.mjs",
     ])],
     ["test:workstation:fixture-026:shard-5", workstationShardCommand([
-      "experiments/workstation/fixture-026/rsd-t02-runner-ledger-semantics.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-pulse.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-public-development-population-runner.test.mjs",
       "experiments/workstation/fixture-026/rsd-t02-fixed-instance-runner.test.mjs",
@@ -3534,6 +3534,9 @@ export function validateWorkstationShardScriptsObject(
     ])],
     ["test:workstation:fixture-026:shard-7", workstationShardCommand([
       "experiments/workstation/fixture-026/rsd-t02-fixed-instance-isolated-durable-runner.test.mjs",
+    ])],
+    ["test:workstation:fixture-026:shard-8", workstationShardCommand([
+      "experiments/workstation/fixture-026/rsd-t02-runner-ledger-semantics.test.mjs",
     ])],
     ["test:workstation:fixture-029:shard-1", workstationShardCommand([
       "experiments/workstation/fixture-029/suite-runner.test.mjs",
@@ -3554,7 +3557,7 @@ export function validateWorkstationShardScriptsObject(
     actualShardNames.length !== expectedShardNames.length
     || actualShardNames.some((name, index) => name !== expectedShardNames[index])
   ) {
-    findings.push(`${relativePath}: workstation shard script identities must be exactly the nine allowlisted names`);
+    findings.push(`${relativePath}: workstation shard script identities must be exactly the ten allowlisted names`);
   }
   for (const [name, command] of expected) {
     if (scripts[name] !== command) {

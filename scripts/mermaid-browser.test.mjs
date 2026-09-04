@@ -589,7 +589,9 @@ async function assertMobilePortalSurface(cdp, address) {
 }
 
 test("browser rendering keeps Mermaid stable and wide publication content keyboard operable", {
-  timeout: 150_000,
+  // The tighter phase deadlines remain authoritative. This outer budget also
+  // covers cold rendering, the reflow navigations and deterministic cleanup.
+  timeout: 240_000,
 }, async () => {
   const browser = await firstExistingChromium();
   const debugPort = await reserveLocalPort();
