@@ -876,7 +876,8 @@ test("focused portal documents have a coherent heading hierarchy", async () => {
     /<article[\s\S]{0,200}id="portal-reader"[\s\S]{0,200}tabIndex=\{-1\}/,
   );
   assert.match(portal, /headingId="portal-reader-title"/);
-  assert.match(researchObjectHeader, /<h1 id=\{headingId\}>/);
+  assert.match(researchObjectHeader, /aria-labelledby=\{headingId\}/);
+  assert.doesNotMatch(researchObjectHeader, /<h1/u);
   assert.match(portal, /headingOffset=\{1\}/);
   assert.match(markdown, /headingOffset\?: number/);
   assert.match(markdown, /h1: shiftedHeading\(1, headingOffset\)/);

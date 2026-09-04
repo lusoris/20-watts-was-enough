@@ -18,6 +18,9 @@ import { bookSourceDocuments } from "./lib/portal-documents.mjs";
 import { renderBookFallback } from "./lib/pages-seo.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const projectVersion = JSON.parse(
+  await readFile(path.join(repositoryRoot, "package.json"), "utf8"),
+).version;
 const bookDocuments = bookSourceDocuments(repositoryRoot);
 const bookDocumentIds = bookDocuments.map((document) => bookDocumentId(document.path));
 const bookStylesheet = (await readFile(
@@ -332,7 +335,7 @@ async function installStaticBook(cdp) {
   const frameTree = await cdp.send("Page.getFrameTree");
   await cdp.send("Page.setDocumentContent", {
     frameId: frameTree.frameTree.frame.id,
-    html: `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${bookStylesheet}</style></head><body>${renderBookFallback(bookDocuments, pagesBasePath)}</body></html>`,
+    html: `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${bookStylesheet}</style></head><body>${renderBookFallback(bookDocuments, pagesBasePath, { editionVersion: projectVersion })}</body></html>`,
   });
 }
 

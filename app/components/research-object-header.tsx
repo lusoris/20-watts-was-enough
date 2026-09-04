@@ -48,9 +48,12 @@ export function ResearchObjectHeader({
   });
 
   return (
-    <header className="research-object-header" data-research-object="focused-document">
+    <header
+      className="research-object-header"
+      data-research-object="focused-document"
+      aria-labelledby={headingId}
+    >
       <p className="research-object-kicker">{identity.type}</p>
-      <h1 id={headingId}>{identity.title}</h1>
       <p className="research-object-path"><code>{identity.sourcePath}</code></p>
       <dl aria-label="Research object identity">
         <div>

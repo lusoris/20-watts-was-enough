@@ -85,9 +85,12 @@ async function assertHydratedResearchObject(cdp, origin) {
       const summary = header.querySelector('.research-object-evidence summary');
       const root = document.documentElement;
       const resourceUrls = performance.getEntriesByType('resource').map((entry) => new URL(entry.name));
+      const headingId = header.getAttribute('aria-labelledby');
       return {
         type: header.querySelector('.research-object-kicker')?.textContent.trim() ?? null,
-        title: header.querySelector('h1')?.textContent.trim() ?? null,
+        title: headingId ? document.getElementById(headingId)?.textContent.trim() ?? null : null,
+        h1Count: document.querySelectorAll('h1').length,
+        headerH1Count: header.querySelectorAll('h1').length,
         path: header.querySelector('.research-object-path code')?.textContent.trim() ?? null,
         edition: value('Edition'),
         revision: value('Source revision'),
@@ -125,6 +128,8 @@ async function assertHydratedResearchObject(cdp, origin) {
   const edition = `Site v${projectVersion} · continuous main snapshot`;
   assert.equal(snapshot.type, "Concept document");
   assert.equal(snapshot.title, launchpadDocument.title);
+  assert.equal(snapshot.h1Count, 1);
+  assert.equal(snapshot.headerH1Count, 0);
   assert.equal(snapshot.path, "concept/05-biology-is-a-launchpad.md");
   assert.equal(snapshot.edition, edition);
   assert.equal(snapshot.revision, sourceRevision);

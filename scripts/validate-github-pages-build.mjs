@@ -255,7 +255,10 @@ invariant(
   "book/index.html must declare the canonical public book route",
 );
 const bookDocuments = bookSourceDocuments(repositoryRoot);
-const expectedBookFallback = renderBookFallback(bookDocuments, pagesBase);
+const expectedBookFallback = renderBookFallback(bookDocuments, pagesBase, {
+  editionVersion: projectVersion,
+  sourceRevision: publicationSourceRevision,
+});
 invariant(
   bookPage.html.includes(expectedBookFallback),
   "book/index.html fallback does not exactly match the canonical book corpus",
