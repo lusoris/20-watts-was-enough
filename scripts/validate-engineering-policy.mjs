@@ -3627,7 +3627,7 @@ function validateGoModule(root, findings) {
     "",
     `go ${runtimePolicy.goVersion}`,
     "",
-    "require github.com/yuin/goldmark/v2 v2.0.0",
+    "require github.com/yuin/goldmark/v2 v2.0.1",
     "",
   ].join("\n");
   if (readText(root, relativePath).replaceAll("\r\n", "\n") !== expected) {
@@ -3636,8 +3636,8 @@ function validateGoModule(root, findings) {
     );
   }
   const expectedSums = [
-    "github.com/yuin/goldmark/v2 v2.0.0 h1:P6JP1Px30eqo339He8dDFE8D0BSM21eQcbozLWH+E6g=",
-    "github.com/yuin/goldmark/v2 v2.0.0/go.mod h1:G6M4/qOFtfn01/o14BU1UR2Lo5N3S9Qo7xCuz/sHjGQ=",
+    "github.com/yuin/goldmark/v2 v2.0.1 h1:Os0APQLbfXBzA7pc8qF8HBSTO8LOIvhQHX6pEA5/0CY=",
+    "github.com/yuin/goldmark/v2 v2.0.1/go.mod h1:G6M4/qOFtfn01/o14BU1UR2Lo5N3S9Qo7xCuz/sHjGQ=",
     "",
   ].join("\n");
   if (readText(root, "tooling/go.sum").replaceAll("\r\n", "\n") !== expectedSums) {
