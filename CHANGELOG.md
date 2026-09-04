@@ -184,6 +184,10 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- The locked browser-targeting toolchain now uses Browserslist 4.28.8, closing
+  the two high-severity unbounded-memory advisories reported by Dependabot and
+  OpenSSF Scorecard. The regenerated book manifest and semantic sentinel bind
+  the dependency change without changing the rendered PDF bytes.
 - Continuous-book deep links now restore every chapter and heading below the
   responsive action bar on cold load and later hash navigation. Internal book
   links remain in the namespaced edition while preserving the current Pages
