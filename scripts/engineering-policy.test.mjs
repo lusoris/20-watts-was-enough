@@ -19,6 +19,7 @@ import {
   validateCiImpactWorkflowObject,
   validateCodeQlImpactWorkflowObject,
   validateCurrentResearchDisclosure,
+  validateDependencyAuditWorkflowObject,
   validateExperimentReportIdentity,
   validateExperimentRunFailureForm,
   validateFundingConfig,
@@ -458,7 +459,7 @@ test("JavaScript workflows use the exact Node and npm toolchain in order", () =>
     },
     { run: "node scripts/install-locked-npm.mjs" },
     { run: "test \"$(npm --version)\" = \"12.0.2\"" },
-    { run: "npm ci" },
+    { run: "npm ci --no-audit" },
   ];
   assert.deepEqual(validateJavaScriptRuntimeWorkflowObject(
     { jobs: { quality: { steps: validSteps } } },
@@ -476,7 +477,111 @@ test("JavaScript workflows use the exact Node and npm toolchain in order", () =>
     "workflow.yml: job quality must use Node 26.8.1 with the npm cache",
     "workflow.yml: job quality must install hash-locked npm 12.0.2 after Node setup",
     "workflow.yml: job quality must verify locked npm 12.0.2 after installation",
-    "workflow.yml: job quality must run npm ci after verifying the locked npm version",
+    "workflow.yml: job quality must run npm ci --no-audit after verifying the locked npm version",
+  ]);
+});
+
+test("dependency installation suppresses audit fan-out and one full gate enforces advisories", () => {
+  const valid = {
+    jobs: {
+      full: {
+        steps: [
+          { run: "npm ci --no-audit" },
+          {
+            run: "npm audit --audit-level=high --package-lock-only --fetch-timeout=30000 --fetch-retries=1",
+          },
+        ],
+      },
+      shard: { steps: [{ run: "npm ci --no-audit" }] },
+    },
+  };
+  assert.deepEqual(validateDependencyAuditWorkflowObject(valid, "full"), []);
+
+  const implicitFanOut = structuredClone(valid);
+  implicitFanOut.jobs.shard.steps[0].run = "npm ci";
+  assert.deepEqual(validateDependencyAuditWorkflowObject(implicitFanOut, "full"), [
+    "workflow.yml: job shard must suppress npm ci's implicit audit with the exact npm ci --no-audit command",
+  ]);
+
+  const unlockedInstall = structuredClone(valid);
+  unlockedInstall.jobs.shard.steps[0].run = "npm install";
+  assert.deepEqual(validateDependencyAuditWorkflowObject(unlockedInstall, "full"), [
+    "workflow.yml: job shard must suppress npm ci's implicit audit with the exact npm ci --no-audit command",
+  ]);
+
+  const preCommandFlagBypass = structuredClone(valid);
+  preCommandFlagBypass.jobs.node = {
+    steps: [
+      {
+        uses: "actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+        with: { "node-version": "26.8.1", cache: "npm" },
+      },
+      { run: "node scripts/install-locked-npm.mjs" },
+      { run: "test \"$(npm --version)\" = \"12.0.2\"" },
+      { run: "npm --silent ci" },
+    ],
+  };
+  assert.deepEqual(validateDependencyAuditWorkflowObject(preCommandFlagBypass, "full"), [
+    "workflow.yml: job node must use one adjacent locked Node, npm, verification, and npm ci --no-audit sequence",
+  ]);
+
+  const duplicatedLockedInstall = structuredClone(preCommandFlagBypass);
+  duplicatedLockedInstall.jobs.node.steps[3].run = "npm ci --no-audit";
+  duplicatedLockedInstall.jobs.node.steps.push({ run: "npm ci --no-audit" });
+  assert.deepEqual(validateDependencyAuditWorkflowObject(duplicatedLockedInstall, "full"), [
+    "workflow.yml: job node must use one adjacent locked Node, npm, verification, and npm ci --no-audit sequence",
+  ]);
+
+  const duplicateAudit = structuredClone(valid);
+  duplicateAudit.jobs.shard.steps.push({
+    run: "npm audit --audit-level=high --package-lock-only --fetch-timeout=30000 --fetch-retries=1",
+  });
+  assert.deepEqual(validateDependencyAuditWorkflowObject(duplicateAudit, "full"), [
+    "workflow.yml: job full must be the only job to run the lockfile dependency audit",
+  ]);
+
+  const bypassedAudit = structuredClone(valid);
+  bypassedAudit.jobs.full.steps[1]["continue-on-error"] = true;
+  assert.deepEqual(validateDependencyAuditWorkflowObject(bypassedAudit, "full"), [
+    "workflow.yml: job full must run the exact enforcing dependency audit after its no-audit install",
+  ]);
+
+  const bypassedAuditJob = structuredClone(valid);
+  bypassedAuditJob.jobs.full["continue-on-error"] = true;
+  assert.deepEqual(validateDependencyAuditWorkflowObject(bypassedAuditJob, "full"), [
+    "workflow.yml: job full must run the exact enforcing dependency audit after its no-audit install",
+  ]);
+
+  const delayedAudit = structuredClone(valid);
+  delayedAudit.jobs.full.steps.splice(1, 0, { run: "echo delayed" });
+  assert.deepEqual(validateDependencyAuditWorkflowObject(delayedAudit, "full"), [
+    "workflow.yml: job full must run the exact enforcing dependency audit after its no-audit install",
+  ]);
+
+  const reorderedAudit = structuredClone(valid);
+  reorderedAudit.jobs.full.steps.reverse();
+  assert.deepEqual(validateDependencyAuditWorkflowObject(reorderedAudit, "full"), [
+    "workflow.yml: job full must run the exact enforcing dependency audit after its no-audit install",
+  ]);
+
+  assert.deepEqual(validateDependencyAuditWorkflowObject(
+    { jobs: { pages: { steps: [{ run: "npm ci --no-audit" }] } } },
+    undefined,
+  ), []);
+
+  assert.deepEqual(validateDependencyAuditWorkflowObject(
+    {
+      jobs: {
+        pages: {
+          steps: [{
+            run: "npm audit --audit-level=high --package-lock-only --fetch-timeout=30000 --fetch-retries=1",
+          }],
+        },
+      },
+    },
+    undefined,
+  ), [
+    "workflow.yml: workflows without a full audit gate must not run an explicit dependency audit",
   ]);
 });
 

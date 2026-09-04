@@ -120,9 +120,9 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Reject high-severity dependency advisories
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=high --package-lock-only --fetch-timeout=30000 --fetch-retries=1
       - name: Reject a code-shape baseline reset
         if: github.event_name != 'workflow_dispatch'
         env:
@@ -163,7 +163,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Run common impact checks
         run: npm run check:impact-common
 
@@ -217,7 +217,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Run release checks
         run: npm run check:lane-release
 
@@ -249,7 +249,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Set up the locked PDF Docker Buildx client
         uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
         with:
@@ -299,7 +299,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Run research checks
         run: npm run check:lane-research
 
@@ -326,7 +326,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Run site checks
         run: npm run check:lane-site
 
@@ -353,7 +353,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Validate the workstation inventory and core
         run: npm run validate:workstation && npm run test:workstation:core
 
@@ -394,7 +394,7 @@ jobs:
       - name: Verify locked npm 12.0.2
         run: test "$(npm --version)" = "12.0.2"
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --no-audit
       - name: Run the allowlisted artifact test script
         env:
           ARTIFACT: ${{ matrix.artifact }}

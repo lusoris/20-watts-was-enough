@@ -7,6 +7,11 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Decision 0059 makes dependency advisory checking a single explicit security
+  decision in each full CI or release gate. Every locked install now suppresses
+  npm's implicit audit submission; the enforcing command audits the canonical
+  lock rather than the mutable installed tree. Policy tests reject audit
+  fan-out, duplicate or reordered audit commands and failure bypasses.
 - Decision 0057 and a trusted-main Go projection now derive pull-request
   milestones and complete managed classifications from one explicit mapped
   issue reference. The bounded workflow refreshes path labels, never checks out

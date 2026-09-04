@@ -18,7 +18,9 @@ files under `.github/`.
   step must push to the repository.
 - Run JavaScript workflows on the exact Node 26 pin. Install npm 12 only from
   the repository's URL-, size- and SHA-256-bound archive before checking its
-  version, then use `npm ci` with `package-lock.json` as authority. Run Go
+  version, then use `npm ci --no-audit` with `package-lock.json` as authority.
+  Run one explicit, enforcing lockfile audit in each full CI or release gate;
+  matrix and publication jobs must not multiply registry audit traffic. Run Go
   tooling with the exact version declared by `tooling/go.mod`.
 - Required CI and security gates fail closed. Do not add `continue-on-error` to
   a required check or weaken an existing validator to make a workflow green.

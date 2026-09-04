@@ -520,7 +520,7 @@ export function validateJavaScriptRuntimeWorkflowObject(
   const npmIndex = steps.findIndex((step) => step?.run?.trim() === (
     `test "$(npm --version)" = "${runtimePolicy.npmVersion}"`
   ));
-  const installIndex = steps.findIndex((step) => step?.run?.trim() === "npm ci");
+  const installIndex = steps.findIndex((step) => step?.run?.trim() === "npm ci --no-audit");
   const setup = setupIndex >= 0 ? steps[setupIndex] : undefined;
   if (
     setup?.with?.["node-version"] !== runtimePolicy.nodeVersion
@@ -541,7 +541,122 @@ export function validateJavaScriptRuntimeWorkflowObject(
     );
   }
   if (installIndex < 0 || npmIndex < 0 || installIndex <= npmIndex) {
-    findings.push(`${relativePath}: job ${jobName} must run npm ci after verifying the locked npm version`);
+    findings.push(`${relativePath}: job ${jobName} must run npm ci --no-audit after verifying the locked npm version`);
+  }
+  return findings;
+}
+
+function npmCommandLines(step, pattern) {
+  if (typeof step?.run !== "string") {
+    return [];
+  }
+  return step.run
+    .split(/\r?\n/u)
+    .map((line) => line.trim())
+    .filter((line) => pattern.test(line));
+}
+
+function lockedNpmInstallSequenceIsExact(job) {
+  const steps = job?.steps;
+  if (!Array.isArray(steps)) return true;
+  const sequenceMatchers = [
+    (step) => actionUses(step, "actions/setup-node"),
+    (step) => step?.run?.trim() === "node scripts/install-locked-npm.mjs",
+    (step) => step?.run?.trim() === `test "$(npm --version)" = "${runtimePolicy.npmVersion}"`,
+    (step) => step?.run?.trim() === "npm ci --no-audit",
+  ];
+  const sequenceIndices = sequenceMatchers.map((matches) => steps.flatMap(
+    (step, stepIndex) => (matches(step) ? [stepIndex] : []),
+  ));
+  if (sequenceIndices[0].length === 0) return true;
+  const firstIndex = sequenceIndices[0][0];
+  return sequenceIndices.every((indices, offset) => (
+    indices.length === 1 && indices[0] === firstIndex + offset
+  ));
+}
+
+function inspectDependencyWorkflowJob(jobName, job, relativePath) {
+  const auditSteps = [];
+  const findings = [];
+  if (!Array.isArray(job?.steps)) return { auditSteps, findings };
+  let unsafeInstallDetected = false;
+  for (const [stepIndex, step] of job.steps.entries()) {
+    const installLines = npmCommandLines(
+      step,
+      /\bnpm\s+(?:ci|install|i|clean-install|ic)(?:\s|$)/u,
+    );
+    if (installLines.some((line) => line !== "npm ci --no-audit")) {
+      unsafeInstallDetected = true;
+    }
+    for (const line of npmCommandLines(step, /\bnpm\s+audit(?:\s|$)/u)) {
+      auditSteps.push({ jobName, stepIndex, step, line });
+    }
+  }
+  if (unsafeInstallDetected) {
+    findings.push(
+      `${relativePath}: job ${jobName} must suppress npm ci's implicit audit with the exact npm ci --no-audit command`,
+    );
+  } else if (!lockedNpmInstallSequenceIsExact(job)) {
+    findings.push(
+      `${relativePath}: job ${jobName} must use one adjacent locked Node, npm, verification, and npm ci --no-audit sequence`,
+    );
+  }
+  return { auditSteps, findings };
+}
+
+export function validateDependencyAuditWorkflowObject(
+  workflow,
+  auditJobName,
+  relativePath = "workflow.yml",
+) {
+  const findings = [];
+  const jobs = workflow?.jobs;
+  if (!jobs || typeof jobs !== "object" || Array.isArray(jobs)) {
+    return [`${relativePath}: workflow must declare jobs for dependency-audit validation`];
+  }
+
+  const auditSteps = [];
+  for (const [jobName, job] of Object.entries(jobs)) {
+    const inspected = inspectDependencyWorkflowJob(jobName, job, relativePath);
+    findings.push(...inspected.findings);
+    auditSteps.push(...inspected.auditSteps);
+  }
+
+  if (auditJobName === undefined) {
+    if (auditSteps.length > 0) {
+      findings.push(
+        `${relativePath}: workflows without a full audit gate must not run an explicit dependency audit`,
+      );
+    }
+    return findings;
+  }
+
+  if (auditSteps.length !== 1) {
+    findings.push(
+      `${relativePath}: job ${auditJobName} must be the only job to run the lockfile dependency audit`,
+    );
+    return findings;
+  }
+
+  const audit = auditSteps[0];
+  const auditJob = jobs[auditJobName];
+  const installIndex = auditJob?.steps?.findIndex((step) => (
+    step?.run?.trim() === "npm ci --no-audit"
+  ));
+  if (
+    audit.jobName !== auditJobName
+    || audit.line !== "npm audit --audit-level=high --package-lock-only --fetch-timeout=30000 --fetch-retries=1"
+    || audit.step?.run?.trim() !== audit.line
+    || !Number.isInteger(installIndex)
+    || installIndex < 0
+    || audit.stepIndex !== installIndex + 1
+    || !continueOnErrorIsDisabled(auditJob)
+    || audit.step?.if !== undefined
+    || !continueOnErrorIsDisabled(audit.step)
+  ) {
+    findings.push(
+      `${relativePath}: job ${auditJobName} must run the exact enforcing dependency audit after its no-audit install`,
+    );
   }
   return findings;
 }
@@ -3624,6 +3739,12 @@ function validateCiWorkflowPolicy(workflow, relativePath, lock, findings) {
 function validateWorkflowPolicy(workflow, relativePath, lock, findings) {
   findings.push(...validateWorkflowObject(workflow, relativePath));
   findings.push(...validateOfficeArcRunnerWorkflowObject(workflow, relativePath));
+  const auditJobName = relativePath === ".github/workflows/ci.yml"
+    ? "quality-full"
+    : relativePath === ".github/workflows/release.yml"
+      ? "verify"
+      : undefined;
+  findings.push(...validateDependencyAuditWorkflowObject(workflow, auditJobName, relativePath));
   if (relativePath === ".github/workflows/release.yml") {
     validateReleaseWorkflowPolicy(workflow, relativePath, lock, findings);
   }
