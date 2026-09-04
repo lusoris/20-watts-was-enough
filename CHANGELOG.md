@@ -71,6 +71,13 @@ the exact diff; this file records why the project changed.
   queries and reuses the same reconciler. The exact-reference open scan repairs
   missed reopen drift even when no managed status remains; irreducibly
   unreferenced or closed unknown-status items still require an event or number.
+- A static Linux `amd64` CLRS shakedown image definition now exposes all six
+  frozen exact-program specialists through one bounded stdin/stdout JSON
+  contract. Its scratch runtime is exercised without network, mounts, a
+  writable root or elevated privileges, and every candidate response remains
+  `NO_RESULT`.
+  Dataset membership, decision recording, independent exact verification and
+  release admission remain outside this construction-only process boundary.
 - A digest-pinned apko/Wolfi foundation now closes the Linux `amd64` Poppler
   26.08.0 PDF-tools graph at 45 APKs. Its offline Go validator binds the config,
   lock, exact APK retention metadata, upstream source identities, the pinned

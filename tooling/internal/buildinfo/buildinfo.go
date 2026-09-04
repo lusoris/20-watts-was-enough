@@ -9,7 +9,7 @@ var (
 	builtAt  = "unknown"
 )
 
-// Info describes the exact 20w binary build.
+// Info describes the exact repository Go binary build.
 type Info struct {
 	Version      string `json:"version"`
 	Revision     string `json:"revision"`

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "authority": "NO_RESULT",
+  "source_id": "sha256:7ec3b6b7528d04f517c4e9b7c3e0cd0f7034a775d225d469d1aca5c00fec10d1",
+  "generation_contract_id": "sha256:cc14fce405e8fa7d4719f1fc906e28d5e4b73235085c8f0722795efded2891a8",
+  "run_id": "public-development-smoke",
+  "request_id": "insertion-sort-1",
+  "task": "insertion_sort",
+  "specialist_id": "clrs-exact-insertion-sort-v1",
+  "binding": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "timeout_milliseconds": 1000,
+  "max_result_bytes": 1048576,
+  "payload": "insertion_sort:\nkey: [0.549 0.715 0.603 0.545 0.424]\npred:\n"
+}
