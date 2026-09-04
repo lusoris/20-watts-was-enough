@@ -53,6 +53,11 @@ the exact diff; this file records why the project changed.
   Go. A separate interval-order verifier proves each held split is cost-minimal
   without calling the specialist solver; source-bound requests remain isolated
   from held answers, and all construction output remains `NO_RESULT`.
+- The Bellman-Ford construction vertical now reproduces the pinned synchronous
+  relaxation and predecessor-vector grammar in Go. A separate Dijkstra verifier
+  checks each held predecessor forest against the same bounded non-negative
+  graph without calling the specialist solver; source-bound requests remain
+  isolated from held answers, and all construction output remains `NO_RESULT`.
 - A versioned PDF semantic sentinel now binds the current source, book, A4 and
   tag metadata, Poppler tool identity, separate structure and text streams,
   exact diagnostics, and six nonlinear content anchors. Atomic evidence keeps
