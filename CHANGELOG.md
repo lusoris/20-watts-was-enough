@@ -26,11 +26,12 @@ the exact diff; this file records why the project changed.
   use. No dataset is generated or executed; every record remains `NO_RESULT`.
 - The CLRS generator-image foundation now binds a checksum-closed official
   source archive, the newest reviewed CPython/TensorFlow/JAX wheel intersection,
-  pinned resolver and shared builder identities, finite runtime containment and
-  an offline Go validator. Pinned upstream licence material and finite SBOM
-  retention remain mandatory admission gates. The state remains `NO_RESULT`
-  and blocked: no exact dependency lock, Dockerfile, wheelhouse, image, SBOM,
-  runtime smoke or byte-compared fixture generation is claimed.
+  pinned resolver, exact 62-package dependency graph, shared builder identities,
+  finite runtime containment and an offline Go validator. Pinned upstream
+  licence material and finite SBOM retention remain mandatory admission gates.
+  The state remains `NO_RESULT` and blocked: dependency resolution is closed,
+  but no Dockerfile, wheelhouse, image, SBOM, runtime smoke or byte-compared
+  fixture generation is claimed.
   The same slice hardens the shared renderer-authority reader against ancestor
   links, pathname replacement and same-size byte mutation without rejecting a
   valid Windows path solely because its canonical drive spelling differs. The

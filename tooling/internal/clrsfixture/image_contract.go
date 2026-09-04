@@ -22,7 +22,6 @@ var (
 	}
 	lockedGeneratorBlockers = []string{
 		"checksum_closed_build_context",
-		"exact_dependency_lock",
 		"pinned_upstream_license_material",
 		"image_bound_spdx_sbom",
 		"no_network_runtime_smoke",
@@ -71,7 +70,7 @@ func (contract GeneratorImageContract) Validate(
 	if err := validateGeneratorBuilder(contract.Builder); err != nil {
 		return err
 	}
-	if err := validateMissingGeneratorBuildEvidence(contract, source.License); err != nil {
+	if err := validateGeneratorBuildEvidence(contract, source.License); err != nil {
 		return err
 	}
 	if err := validateGeneratorRuntime(contract.Runtime, generation.Output); err != nil {
@@ -121,11 +120,14 @@ func validateGeneratorBuilder(builder GeneratorBuilder) error {
 	return nil
 }
 
-func validateMissingGeneratorBuildEvidence(contract GeneratorImageContract, sourceLicense LicenseIdentity) error {
+func validateGeneratorBuildEvidence(contract GeneratorImageContract, sourceLicense LicenseIdentity) error {
 	lock := contract.DependencyLock
-	if lock.State != "missing" || lock.Path != "tooling/clrs-generator/uv.lock" || lock.SHA256 != "" ||
-		lock.PackageCount != 0 || lock.ArtifactCount != 0 {
-		return errors.New("generator dependency lock must remain explicitly missing")
+	if lock.State != "locked" || lock.ProjectPath != trackedGeneratorProjectPath ||
+		!lowerHex(lock.ProjectSHA256, 64) || lock.Path != trackedGeneratorDependencyLockPath ||
+		!lowerHex(lock.SHA256, 64) || lock.PackageCount <= 0 ||
+		lock.PackageCount > contract.Limits.DependencyPackageCount || lock.ArtifactCount <= 0 ||
+		lock.ArtifactCount > contract.Limits.DependencyArtifactCount {
+		return errors.New("generator dependency lock metadata is invalid")
 	}
 	context := contract.BuildContext
 	if context.State != "missing" || context.DockerfilePath != "tooling/clrs-generator/Dockerfile" ||

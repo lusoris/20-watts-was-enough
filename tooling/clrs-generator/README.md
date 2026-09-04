@@ -1,11 +1,9 @@
 # CLRS generator image foundation
 
-No generator image is admitted yet. This directory records candidate inputs
-and blocked admission rules for a future Linux `amd64` image. Registry absence
-has not been checked; the repository state remains `blocked` and `NO_RESULT`.
-This is not yet a closed acceptance implementation: the exact dependency
-graph, build context and retained receipts still require bounded construction
-and review.
+No generator image is admitted yet. This directory now records the exact
+Linux `amd64` dependency graph, but the build context and retained acceptance
+receipts are still absent. Registry absence has not been checked; the state
+remains `blocked` and `NO_RESULT`.
 
 The Python image is a narrow exception to the Go-first tooling rule. The pinned
 official CLRS-Text generator imports TensorFlow and JAX; rewriting that path
@@ -19,14 +17,18 @@ the controller, validator and fixture-import boundary.
 - [`contract.json`](contract.json) fixes the six task families, seeds, sizes,
   output counts and byte limits from [Decision 0055](../../decisions/0055-freeze-clrs-text-as-a-controller-shakedown.md).
 - [`lock-input.json`](lock-input.json) binds the checksum-closed source archive,
-  CPython 3.13.15 base, uv 0.12.7 and the reviewed Linux `amd64` TensorFlow,
-  JAX, JAXlib, NumPy and tqdm wheel candidates. These are resolver inputs, not
-  an admitted transitive lock or proof that the pinned source runs with them.
+  CPython 3.13.15 base, uv 0.12.9, resolution cutoff and reviewed Linux `amd64`
+  TensorFlow, JAX, JAXlib, NumPy and tqdm wheel candidates.
+- [`pyproject.toml`](pyproject.toml) is derived from those inputs. Its
+  [`uv.lock`](uv.lock) resolves 62 packages and records 135 checksum-closed
+  artifacts. Two isolated runs of the pinned resolver produced identical lock
+  bytes. This closes dependency resolution only; it does not prove that the
+  source imports or runs.
 - [`image-contract.json`](image-contract.json) reuses the repository's pinned
   Buildx, BuildKit and timestamp-rewrite authority; fixes resource and runtime
   containment; binds the upstream licence's final image path; caps retained
-  SBOM bytes and packages; and records every absent acceptance identity as
-  `missing`.
+  SBOM bytes and packages; binds the exact dependency files; and records each
+  remaining acceptance identity as `missing`.
 
 Python 3.13 is the newest candidate interpreter because TensorFlow 2.21.0 has no
 CPython 3.14 wheel, while current JAX and JAXlib require Python 3.12 or newer.
@@ -44,20 +46,21 @@ go -C tooling test -race ./internal/clrsfixture
 go -C tooling vet ./internal/clrsfixture
 ```
 
-`CheckGeneratorImageFoundation` rejects ambiguous JSON throughout and
-non-canonical encoding in `lock-input.json` and `image-contract.json`. It also
-rejects symlinked authority files, changed source or generation identities,
-drift in the reviewed high-impact wheel candidates, stale shared-builder
-metadata and a lock, Dockerfile or wheelhouse manifest that appears while the
-contract still says it is missing. The upstream lower bounds and remaining
-transitive Python graph are still unresolved candidate inputs.
+`CheckGeneratorImageFoundation` rejects ambiguous JSON, non-canonical authority
+files, symlinks and unstable reads. It derives the project requirements from
+the reviewed inputs, binds the complete lock digest, checks its resolver
+header, cutoff, selected high-impact wheels, package count, artifact count and
+total recorded bytes, and rejects artifacts uploaded after the cutoff. A
+Dockerfile or wheelhouse manifest still fails while the contract marks it
+missing.
 
 ## Admission sequence
 
 The image stays blocked until one later, bounded change provides all of the
 following:
 
-1. an exact uv lock and hash-complete wheelhouse for Linux `amd64`;
+1. a hash-complete Linux `amd64` wheelhouse and manifest selected from the
+   exact uv lock;
 2. a checksum-closed Dockerfile and complete build context whose dependency
    install runs without network access;
 3. the 11,358-byte Apache-2.0 `LICENSE`, with its pinned source digest, at
@@ -84,6 +87,6 @@ seconds of wall time. The external runner must stop and remove the complete
 container after a five-second grace period. These are construction limits, not
 performance results.
 
-There is deliberately no `Dockerfile`, `uv.lock`, wheelhouse, generated fixture,
-admitted image digest or publication step in this foundation. [Issue 12](https://github.com/lusoris/20-watts-was-enough/issues/12)
+There is deliberately no `Dockerfile`, wheelhouse, generated fixture, admitted
+image digest or publication step in this foundation. [Issue 12](https://github.com/lusoris/20-watts-was-enough/issues/12)
 tracks the remaining acceptance work.

@@ -16,10 +16,12 @@ import (
 )
 
 const (
-	trackedSourcePath        = "tooling/clrs-generator/upstream.json"
-	trackedGenerationPath    = "tooling/clrs-generator/contract.json"
-	trackedLockInputPath     = "tooling/clrs-generator/lock-input.json"
-	trackedImageContractPath = "tooling/clrs-generator/image-contract.json"
+	trackedSourcePath                  = "tooling/clrs-generator/upstream.json"
+	trackedGenerationPath              = "tooling/clrs-generator/contract.json"
+	trackedLockInputPath               = "tooling/clrs-generator/lock-input.json"
+	trackedImageContractPath           = "tooling/clrs-generator/image-contract.json"
+	trackedGeneratorProjectPath        = "tooling/clrs-generator/pyproject.toml"
+	trackedGeneratorDependencyLockPath = "tooling/clrs-generator/uv.lock"
 )
 
 // CheckGeneratorImageFoundation validates the complete committed foundation
@@ -49,7 +51,8 @@ func CheckGeneratorImageFoundation(repositoryRoot string) (GeneratorImageFoundat
 	if err != nil {
 		return GeneratorImageFoundation{}, err
 	}
-	if _, err := ParseGeneratorLockInput(lockBody, source); err != nil {
+	lockInput, err := ParseGeneratorLockInput(lockBody, source)
+	if err != nil {
 		return GeneratorImageFoundation{}, err
 	}
 	imageBody, err := readGeneratorFile(root, trackedImageContractPath, maximumGeneratorImageContractBytes)
@@ -63,8 +66,28 @@ func CheckGeneratorImageFoundation(repositoryRoot string) (GeneratorImageFoundat
 	if err := checkGeneratorBuilderAuthority(root, imageContract.Builder); err != nil {
 		return GeneratorImageFoundation{}, err
 	}
-	for _, missing := range []string{
+	projectBody, err := readGeneratorFile(root, imageContract.DependencyLock.ProjectPath, maximumGeneratorProjectBytes)
+	if err != nil {
+		return GeneratorImageFoundation{}, err
+	}
+	dependencyLockBody, err := readGeneratorFile(
+		root,
 		imageContract.DependencyLock.Path,
+		maximumGeneratorDependencyLockBytes,
+	)
+	if err != nil {
+		return GeneratorImageFoundation{}, err
+	}
+	if err := validateGeneratorDependencyFiles(
+		imageContract.DependencyLock,
+		projectBody,
+		dependencyLockBody,
+		lockInput,
+		imageContract.Limits,
+	); err != nil {
+		return GeneratorImageFoundation{}, err
+	}
+	for _, missing := range []string{
 		imageContract.BuildContext.DockerfilePath,
 		imageContract.BuildContext.WheelhouseManifestPath,
 	} {
@@ -75,12 +98,13 @@ func CheckGeneratorImageFoundation(repositoryRoot string) (GeneratorImageFoundat
 	sourceID, _ := source.Identity()
 	generationID, _ := generation.Identity(source)
 	return GeneratorImageFoundation{
-		Authority:           ResultAuthority,
-		State:               imageContract.State,
-		SourceID:            sourceID,
-		GenerationContract:  generationID,
-		LockInputSHA256:     rawSHA256(lockBody),
-		ImageContractSHA256: rawSHA256(imageBody),
+		Authority:            ResultAuthority,
+		State:                imageContract.State,
+		SourceID:             sourceID,
+		GenerationContract:   generationID,
+		LockInputSHA256:      rawSHA256(lockBody),
+		DependencyLockSHA256: rawSHA256(dependencyLockBody),
+		ImageContractSHA256:  rawSHA256(imageBody),
 	}, nil
 }
 

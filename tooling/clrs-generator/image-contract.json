@@ -10,7 +10,7 @@
   "generation_contract_id": "sha256:cc14fce405e8fa7d4719f1fc906e28d5e4b73235085c8f0722795efded2891a8",
   "lock_input": {
     "path": "tooling/clrs-generator/lock-input.json",
-    "sha256": "d7ff2963aa2f11e3cf001fc095520780539c85e4923448939c9ef9ede41eb827"
+    "sha256": "ea0e8f7d2d3ce347e82cbdd0e956dceca3da27ee499b52e18a6f6010526a5a19"
   },
   "builder": {
     "authority_path": "tooling/pdf-renderer/lock.json",
@@ -24,11 +24,13 @@
     "source_date_epoch": 1787658740
   },
   "dependency_lock": {
-    "state": "missing",
+    "state": "locked",
+    "project_path": "tooling/clrs-generator/pyproject.toml",
+    "project_sha256": "531aad8cccd8aeee8edaf1b5e07fb73ad93c8d0c7e3c309b1b69105fb34eddcb",
     "path": "tooling/clrs-generator/uv.lock",
-    "sha256": "",
-    "package_count": 0,
-    "artifact_count": 0
+    "sha256": "1aff6ff0e589539e07b3ee75579803ebd66636ab35568661680a703ed38ab640",
+    "package_count": 62,
+    "artifact_count": 135
   },
   "build_context": {
     "state": "missing",
@@ -146,7 +148,6 @@
     "source_context": "locked",
     "blocked_on": [
       "checksum_closed_build_context",
-      "exact_dependency_lock",
       "pinned_upstream_license_material",
       "image_bound_spdx_sbom",
       "no_network_runtime_smoke",
