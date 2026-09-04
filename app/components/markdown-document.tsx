@@ -5,12 +5,10 @@ import {
   cloneElement,
   createElement,
   isValidElement,
-  useEffect,
-  useRef,
-  useState,
   type ComponentPropsWithoutRef,
   type MouseEvent,
 } from "react";
+import type { Element, Root, RootContent } from "hast";
 import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeKatex from "rehype-katex";
 import rehypeSlug from "rehype-slug";
@@ -22,6 +20,10 @@ import {
   repositoryArtifactHref,
 } from "../lib/repository-artifacts";
 import { MermaidDiagram } from "./mermaid-diagram";
+import {
+  OverflowRegionCue,
+  useHorizontalOverflowRegion,
+} from "./overflow-region";
 
 type MarkdownDocumentProps = {
   body: string;
@@ -178,24 +180,127 @@ function markdownImageComponents({
   return { ImageComponent, ParagraphComponent };
 }
 
+function cleanMarkdownHeading(value: string): string | undefined {
+  const heading = value
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/[*_`~]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return heading || undefined;
+}
+
 function headingBeforeLine(body: string, line?: number): string | undefined {
   if (!line || line < 1) return undefined;
   const lines = body.split(/\r?\n/);
   for (let index = Math.min(line - 2, lines.length - 1); index >= 0; index -= 1) {
     const match = lines[index].match(/^#{1,6}\s+(.+?)\s*#*\s*$/);
-    if (!match) continue;
-    const heading = match[1]
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-      .replace(/<[^>]+>/g, " ")
-      .replace(/[*_`~]/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
-    return heading || undefined;
+    if (match) return cleanMarkdownHeading(match[1]);
   }
   return undefined;
 }
 
-function DiagramAwarePre({ children, ...props }: ComponentPropsWithoutRef<"pre">) {
+function markdownDocumentLabel(body: string, currentPath: string): string {
+  const heading = body.match(/^#{1,6}\s+(.+?)\s*#*\s*$/m)?.[1];
+  const label = heading ? cleanMarkdownHeading(heading) : undefined;
+  if (!label) return currentPath;
+  return label.length <= 64 ? label : `${label.slice(0, 61).trimEnd()}...`;
+}
+
+function hastClassNames(element: Element): string[] {
+  const value: unknown = element.properties.className;
+  if (typeof value === "string") return value.split(/\s+/);
+  if (!Array.isArray(value)) return [];
+  return value.filter((entry): entry is string => typeof entry === "string");
+}
+
+function hastOverflowLabel(element?: Element): string | undefined {
+  const value = element?.properties.dataOverflowLabel;
+  return typeof value === "string" ? value : undefined;
+}
+
+function codeLanguage(element: Element): string | undefined {
+  const value = hastClassNames(element)
+    .find((className) => className.startsWith("language-"))
+    ?.slice("language-".length);
+  if (!value || value === "text") return undefined;
+  return value === "json" ? "JSON" : value;
+}
+
+function rehypeOverflowLabels({ documentLabel }: { documentLabel: string }) {
+  return (tree: Root) => {
+    let codeIndex = 0;
+    let diagramIndex = 0;
+    let equationIndex = 0;
+    let tableIndex = 0;
+    const pending: Array<Root | RootContent> = [tree];
+    while (pending.length > 0) {
+      const node = pending.pop();
+      if (!node) continue;
+      if (node.type === "element" && node.tagName === "span"
+          && hastClassNames(node).includes("katex-display")) {
+        equationIndex += 1;
+        node.properties.dataOverflowLabel =
+          `Scrollable equation ${equationIndex} in ${documentLabel}`;
+      }
+      if (node.type === "element" && node.tagName === "pre") {
+        const code = node.children.find(
+          (child): child is Element => child.type === "element" && child.tagName === "code",
+        );
+        if (code && hastClassNames(code).includes("language-mermaid")) {
+          diagramIndex += 1;
+          code.properties.dataOverflowLabel =
+            `Scrollable diagram ${diagramIndex} in ${documentLabel}`;
+        } else if (code) {
+          codeIndex += 1;
+          const language = codeLanguage(code);
+          node.properties.dataOverflowLabel =
+            `Scrollable ${language ? `${language} ` : ""}code ${codeIndex} in ${documentLabel}`;
+        }
+      }
+      if (node.type === "element" && node.tagName === "table") {
+        tableIndex += 1;
+        node.properties.dataOverflowLabel =
+          `Scrollable table ${tableIndex} in ${documentLabel}`;
+      }
+      if ("children" in node) {
+        for (let index = node.children.length - 1; index >= 0; index -= 1) {
+          pending.push(node.children[index]);
+        }
+      }
+    }
+  };
+}
+
+type OverflowLabelProps = {
+  "data-overflow-label"?: string;
+  node?: unknown;
+};
+
+function ResponsiveCodeBlock({
+  children,
+  label,
+  ...props
+}: ComponentPropsWithoutRef<"pre"> & { label: string }) {
+  const { overflows, regionProps, regionRef } =
+    useHorizontalOverflowRegion<HTMLPreElement>(label);
+  return (
+    <div className="overflow-region-frame code-overflow-frame">
+      {overflows ? <OverflowRegionCue subject="code" /> : null}
+      <pre {...props} {...regionProps} data-overflow-kind="code" ref={regionRef}>
+        {children}
+      </pre>
+    </div>
+  );
+}
+
+function DiagramAwarePre({
+  children,
+  node,
+  "data-overflow-label": overflowLabel,
+  ...props
+}: ComponentPropsWithoutRef<"pre"> & OverflowLabelProps) {
+  void node;
   const onlyChild = Children.count(children) === 1 ? Children.only(children) : null;
   if (
     isValidElement<{ className?: string }>(onlyChild) &&
@@ -204,51 +309,78 @@ function DiagramAwarePre({ children, ...props }: ComponentPropsWithoutRef<"pre">
   ) {
     return onlyChild;
   }
-  return <pre {...props}>{children}</pre>;
+  return (
+    <ResponsiveCodeBlock label={overflowLabel ?? "Scrollable code"} {...props}>
+      {children}
+    </ResponsiveCodeBlock>
+  );
 }
 
 // Only an actual overflow region receives keyboard focus so arrow-key users can scroll it.
-function ResponsiveTable(props: ComponentPropsWithoutRef<"table">) {
-  const regionRef = useRef<HTMLDivElement>(null);
-  const tableRef = useRef<HTMLTableElement>(null);
-  const [overflows, setOverflows] = useState(false);
-
-  useEffect(() => {
-    const region = regionRef.current;
-    const table = tableRef.current;
-    if (!region || !table) return;
-
-    const measure = () => {
-      setOverflows(table.scrollWidth > region.clientWidth + 1);
-    };
-    measure();
-    if (typeof ResizeObserver === "undefined") {
-      window.addEventListener("resize", measure);
-      return () => window.removeEventListener("resize", measure);
-    }
-    const observer = new ResizeObserver(measure);
-    observer.observe(region);
-    observer.observe(table);
-    return () => observer.disconnect();
-  }, []);
+function ResponsiveTable({
+  node,
+  "data-overflow-label": overflowLabel,
+  ...props
+}: ComponentPropsWithoutRef<"table"> & OverflowLabelProps) {
+  void node;
+  const { overflows, regionProps, regionRef } =
+    useHorizontalOverflowRegion<HTMLDivElement>(
+      overflowLabel ?? "Scrollable table",
+      { role: "region" },
+    );
 
   return (
-    <div className={`table-frame ${overflows ? "table-overflowing" : ""}`}>
-      <div className="table-scroll-cue" aria-hidden="true">
-        <span>Wide table</span>
-        <span>Scroll horizontally ↔</span>
-      </div>
+    <div className="table-frame">
+      {overflows ? <OverflowRegionCue subject="table" /> : null}
       <div
         className="table-region"
-        role={overflows ? "region" : undefined}
-        aria-label={overflows ? "Scrollable data table" : undefined}
-        tabIndex={overflows ? 0 : undefined}
+        {...regionProps}
+        data-overflow-kind="table"
         ref={regionRef}
       >
-        <table ref={tableRef} {...props} />
+        <table {...props} />
       </div>
     </div>
   );
+}
+
+function ResponsiveMathDisplay({
+  children,
+  label,
+  ...props
+}: ComponentPropsWithoutRef<"span"> & { label: string }) {
+  const { overflows, regionProps, regionRef } =
+    useHorizontalOverflowRegion<HTMLSpanElement>(label);
+  return (
+    <span className="overflow-region-frame equation-overflow-frame">
+      {overflows ? <OverflowRegionCue subject="equation" /> : null}
+      <span {...props} {...regionProps} data-overflow-kind="equation" ref={regionRef}>
+        {children}
+      </span>
+    </span>
+  );
+}
+
+function MarkdownSpan({
+  children,
+  className,
+  node,
+  "data-overflow-label": overflowLabel,
+  ...props
+}: ComponentPropsWithoutRef<"span"> & OverflowLabelProps) {
+  void node;
+  if (className?.split(/\s+/).includes("katex-display")) {
+    return (
+      <ResponsiveMathDisplay
+        className={className}
+        label={overflowLabel ?? "Scrollable equation"}
+        {...props}
+      >
+        {children}
+      </ResponsiveMathDisplay>
+    );
+  }
+  return <span className={className} {...props}>{children}</span>;
 }
 
 export function MarkdownDocument({
@@ -346,6 +478,7 @@ export function MarkdownDocument({
           <MermaidDiagram
             chart={String(children)}
             contextHeading={headingBeforeLine(body, node?.position?.start.line)}
+            overflowLabel={hastOverflowLabel(node)}
           />
         );
       }
@@ -356,14 +489,21 @@ export function MarkdownDocument({
       );
     },
     pre: DiagramAwarePre,
+    span: MarkdownSpan,
     table: ResponsiveTable,
   };
+
+  const documentLabel = markdownDocumentLabel(body, currentPath);
 
   return (
     <ReactMarkdown
       skipHtml
       remarkPlugins={[remarkGfm, remarkMath]}
-      rehypePlugins={[rehypeSlug, rehypeKatex]}
+      rehypePlugins={[
+        rehypeSlug,
+        rehypeKatex,
+        [rehypeOverflowLabels, { documentLabel }],
+      ]}
       components={components}
     >
       {body}

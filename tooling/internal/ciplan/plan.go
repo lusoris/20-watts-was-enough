@@ -208,6 +208,7 @@ func isRendererAuthority(changedPath string) bool {
 		"app/components/language-access.tsx",
 		"app/components/markdown-document.tsx",
 		"app/components/mermaid-diagram.tsx",
+		"app/components/overflow-region.tsx",
 		"app/components/readiness-overview.tsx",
 		"app/globals.css",
 		"app/lib/book-release-identity.mjs",

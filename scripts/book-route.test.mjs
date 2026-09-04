@@ -170,6 +170,7 @@ test("the full-book source identity includes the locked renderer dependency grap
   const requiredClosure = [
     "CITATION.cff",
     "app/components/language-access.tsx",
+    "app/components/overflow-region.tsx",
     "app/lib/book-release-identity.mjs",
     "app/lib/eu-languages.mjs",
     "app/lib/language-access.mjs",

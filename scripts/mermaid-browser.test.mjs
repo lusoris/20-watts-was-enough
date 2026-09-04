@@ -115,6 +115,295 @@ const diagramSnapshotExpression = `(() => {
   };
 })()`;
 
+async function overflowRegionSnapshot(cdp) {
+  return (await cdp.send("Runtime.evaluate", {
+    expression: `(() => ({
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+      regions: [...document.querySelectorAll('.book-prose [data-overflow-kind]')].map((region) => {
+        const kind = region.getAttribute('data-overflow-kind');
+        const cue = region.parentElement?.querySelector(
+          kind === 'diagram'
+            ? ':scope > .diagram-layout-note'
+            : ':scope > .overflow-region-cue',
+        );
+        return {
+          kind,
+          overflows: region.scrollWidth > region.clientWidth + 1,
+          role: region.getAttribute('role'),
+          label: region.getAttribute('aria-label'),
+          describedBy: region.getAttribute('aria-describedby'),
+          tabIndex: region.getAttribute('tabindex'),
+          tabIndexProperty: region.tabIndex,
+          cue: cue
+            ? (cue.matches('.overflow-region-cue')
+                ? [...cue.children].map((part) => part.textContent?.trim() ?? '').join(' ')
+                : cue.textContent?.replace(/\\s+/gu, ' ').trim())
+            : null,
+          cueHidden: cue?.getAttribute('aria-hidden') ?? null,
+        };
+      }),
+    }))()`,
+    returnByValue: true,
+  })).result?.value;
+}
+
+function assertConditionalOverflowSemantics(snapshot) {
+  assert.ok(snapshot.regions.length > 0, JSON.stringify(snapshot));
+  for (const region of snapshot.regions) {
+    if (region.overflows) {
+      const expectedRole = ["code", "equation"].includes(region.kind)
+        ? "group"
+        : "region";
+      assert.equal(region.role, expectedRole, JSON.stringify(region));
+      assert.equal(region.tabIndex, "0", JSON.stringify(region));
+      assert.equal(region.tabIndexProperty, 0, JSON.stringify(region));
+      if (region.kind === "code") {
+        assert.match(region.label, /^Scrollable (?:\S+ )?code \d+ in /u);
+        assert.equal(region.cue, "Wide code Scroll horizontally ↔");
+      } else if (region.kind === "equation") {
+        assert.match(region.label, /^Scrollable equation \d+ in /u);
+        assert.equal(region.cue, "Wide equation Scroll horizontally ↔");
+      } else if (region.kind === "table") {
+        assert.match(region.label, /^Scrollable table \d+ in /u);
+        assert.equal(region.cue, "Wide table Scroll horizontally ↔");
+      } else {
+        assert.equal(region.kind, "diagram", JSON.stringify(region));
+        assert.match(region.label, /^Scrollable diagram \d+ in /u);
+        assert.ok(region.describedBy, JSON.stringify(region));
+        assert.equal(
+          region.cue,
+          "Wide diagram · scroll horizontally on narrow screens",
+        );
+      }
+      if (region.kind !== "diagram") {
+        assert.equal(region.describedBy, null, JSON.stringify(region));
+      }
+      assert.equal(
+        region.cueHidden,
+        region.kind === "diagram" ? null : "true",
+        JSON.stringify(region),
+      );
+    } else {
+      assert.equal(region.role, null, JSON.stringify(region));
+      assert.equal(region.label, null, JSON.stringify(region));
+      assert.equal(region.describedBy, null, JSON.stringify(region));
+      assert.equal(region.tabIndex, null, JSON.stringify(region));
+      assert.equal(region.tabIndexProperty, -1, JSON.stringify(region));
+      assert.equal(region.cue, null, JSON.stringify(region));
+    }
+  }
+  const labels = snapshot.regions
+    .filter((region) => region.overflows)
+    .map((region) => region.label);
+  assert.equal(new Set(labels).size, labels.length, "Overflow-region labels must be unique");
+}
+
+async function assertArrowKeyScrollsRegion(cdp, kind) {
+  const selector = `.book-prose [data-overflow-kind="${kind}"][tabindex="0"]`;
+  const prepared = (await cdp.send("Runtime.evaluate", {
+    expression: `(() => {
+      const region = document.querySelector(${JSON.stringify(selector)});
+      if (!region) return null;
+      region.scrollLeft = 0;
+      const sentinel = document.createElement('button');
+      sentinel.id = 'overflow-focus-sentinel';
+      sentinel.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0';
+      region.before(sentinel);
+      sentinel.focus();
+      return document.activeElement === sentinel;
+    })()`,
+    returnByValue: true,
+  })).result?.value;
+  assert.equal(prepared, true, `${kind} focus sentinel was not ready`);
+  await cdp.send("Input.dispatchKeyEvent", {
+    type: "rawKeyDown",
+    key: "Tab",
+    code: "Tab",
+    windowsVirtualKeyCode: 9,
+    nativeVirtualKeyCode: 9,
+  });
+  await cdp.send("Input.dispatchKeyEvent", {
+    type: "keyUp",
+    key: "Tab",
+    code: "Tab",
+    windowsVirtualKeyCode: 9,
+    nativeVirtualKeyCode: 9,
+  });
+  const focused = (await cdp.send("Runtime.evaluate", {
+    expression: `(() => {
+      const region = document.activeElement;
+      const style = getComputedStyle(region);
+      document.querySelector('#overflow-focus-sentinel')?.remove();
+      return {
+        active: region?.getAttribute('data-overflow-kind') === ${JSON.stringify(kind)},
+        outlineStyle: style.outlineStyle,
+        outlineWidth: style.outlineWidth,
+      };
+    })()`,
+    returnByValue: true,
+  })).result?.value;
+  assert.ok(focused?.active, `${kind} overflow region was not focusable`);
+  assert.notEqual(focused.outlineStyle, "none", JSON.stringify(focused));
+  assert.ok(Number.parseFloat(focused.outlineWidth) > 0, JSON.stringify(focused));
+
+  await cdp.send("Input.dispatchKeyEvent", {
+    type: "rawKeyDown",
+    key: "ArrowRight",
+    code: "ArrowRight",
+    windowsVirtualKeyCode: 39,
+    nativeVirtualKeyCode: 39,
+  });
+  await cdp.send("Input.dispatchKeyEvent", {
+    type: "keyUp",
+    key: "ArrowRight",
+    code: "ArrowRight",
+    windowsVirtualKeyCode: 39,
+    nativeVirtualKeyCode: 39,
+  });
+  await new Promise((resolve) => setTimeout(resolve, 150));
+  const scrollLeft = (await cdp.send("Runtime.evaluate", {
+    expression: `document.querySelector(${JSON.stringify(selector)})?.scrollLeft ?? 0`,
+    returnByValue: true,
+  })).result?.value;
+  assert.ok(scrollLeft > 0, `${kind} overflow region did not respond to ArrowRight`);
+}
+
+async function assertPrintRetiresOverflowSemantics(cdp, expectedRegionCount) {
+  await cdp.send("Runtime.evaluate", {
+    expression: `(() => {
+      window.__overflowPrintBoundary = null;
+      window.addEventListener('beforeprint', () => {
+        const regions = [...document.querySelectorAll('.book-prose [data-overflow-kind]')];
+        window.__overflowPrintBoundary = {
+          count: regions.length,
+          labels: regions.filter((region) => region.hasAttribute('aria-label')).length,
+          descriptions: regions.filter((region) => region.hasAttribute('aria-describedby')).length,
+          roles: regions.filter((region) => region.hasAttribute('role')).length,
+          tabStops: regions.filter((region) => region.getAttribute('tabindex') === '0').length,
+        };
+      }, { once: true });
+    })()`,
+  });
+  // One page triggers the lifecycle boundary without rendering the 400-page book.
+  const printed = await cdp.send("Page.printToPDF", {
+    pageRanges: "1",
+    preferCSSPageSize: true,
+    printBackground: true,
+  });
+  assert.ok(printed.data?.length > 1_000, "Chrome did not return PDF bytes");
+  const printBoundary = (await cdp.send("Runtime.evaluate", {
+    expression: "window.__overflowPrintBoundary",
+    returnByValue: true,
+  })).result?.value;
+  assert.deepEqual(printBoundary, {
+    count: expectedRegionCount,
+    labels: 0,
+    descriptions: 0,
+    roles: 0,
+    tabStops: 0,
+  });
+
+  const restoreDeadline = Date.now() + 5_000;
+  let restored;
+  while (Date.now() < restoreDeadline) {
+    restored = await overflowRegionSnapshot(cdp);
+    if (
+      restored.regions.some((region) => region.role === "group")
+      && restored.regions.every((region) => region.overflows === (region.role !== null))
+    ) break;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  assertConditionalOverflowSemantics(restored);
+
+  await cdp.send("Emulation.setEmulatedMedia", { media: "print" });
+  let print;
+  const printDeadline = Date.now() + 5_000;
+  while (Date.now() < printDeadline) {
+    print = await overflowRegionSnapshot(cdp);
+    if (
+      print.regions.length === expectedRegionCount
+      && print.regions.every((region) => !region.overflows && region.role === null)
+    ) break;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  assertConditionalOverflowSemantics(print);
+  assert.equal(
+    print.regions.every((region) => !region.overflows),
+    true,
+    `Print content retained horizontal overflow: ${JSON.stringify(print)}`,
+  );
+  await cdp.send("Emulation.setEmulatedMedia", { media: "screen" });
+}
+
+async function assertBookOverflowRegions(cdp) {
+  const requiredKinds = ["code", "equation", "table", "diagram"];
+  let narrow;
+  const narrowDeadline = Date.now() + 5_000;
+  while (Date.now() < narrowDeadline) {
+    narrow = await overflowRegionSnapshot(cdp);
+    if (
+      requiredKinds.every((kind) => (
+        narrow.regions.some((region) => region.kind === kind && region.overflows)
+      ))
+      && narrow.regions.every((region) => region.overflows === (region.role !== null))
+    ) break;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  assertConditionalOverflowSemantics(narrow);
+  for (const kind of requiredKinds) {
+    assert.equal(
+      narrow.regions.some((region) => region.kind === kind && region.overflows),
+      true,
+      `No overflowing ${kind} region was exercised: ${JSON.stringify(narrow)}`,
+    );
+  }
+  const accessibilityTree = await cdp.send("Accessibility.getFullAXTree");
+  for (const kind of requiredKinds) {
+    const label = narrow.regions.find(
+      (region) => region.kind === kind && region.overflows,
+    )?.label;
+    assert.ok(label, `No overflowing ${kind} label was available`);
+    const role = ["code", "equation"].includes(kind) ? "group" : "region";
+    assert.equal(
+      accessibilityTree.nodes.some((node) => (
+        !node.ignored && node.role?.value === role && node.name?.value === label
+      )),
+      true,
+      `${kind} overflow ${role} was absent from the accessibility tree`,
+    );
+  }
+  assert.ok(narrow.scrollWidth <= narrow.clientWidth, JSON.stringify(narrow));
+  for (const kind of requiredKinds) await assertArrowKeyScrollsRegion(cdp, kind);
+
+  const narrowOverflowCount = narrow.regions.filter((region) => region.overflows).length;
+  await cdp.send("Emulation.setDeviceMetricsOverride", {
+    width: 1440,
+    height: 1200,
+    deviceScaleFactor: 1,
+    mobile: false,
+  });
+  let wide;
+  const wideDeadline = Date.now() + 5_000;
+  while (Date.now() < wideDeadline) {
+    wide = await overflowRegionSnapshot(cdp);
+    const wideOverflowCount = wide.regions.filter((region) => region.overflows).length;
+    if (
+      wide.regions.length === narrow.regions.length
+      && wide.regions.every((region) => region.overflows === (region.role !== null))
+      && wideOverflowCount < narrowOverflowCount
+    ) break;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  assertConditionalOverflowSemantics(wide);
+  assert.ok(
+    wide.regions.filter((region) => region.overflows).length < narrowOverflowCount,
+    `Resize did not retire any overflow regions: ${JSON.stringify({ narrow, wide })}`,
+  );
+  assert.ok(wide.scrollWidth <= wide.clientWidth, JSON.stringify(wide));
+  await assertPrintRetiresOverflowSemantics(cdp, wide.regions.length);
+}
+
 async function assertBookReflowSurface(cdp, address) {
   await cdp.send("Emulation.setDeviceMetricsOverride", {
     width: 320,
@@ -148,6 +437,7 @@ async function assertBookReflowSurface(cdp, address) {
   assert.equal(reflow.locallyOverflowing, reflow.wideRegions, JSON.stringify(reflow));
   assert.ok(reflow.fieldCoverage.scrollWidth <= reflow.fieldCoverage.clientWidth, JSON.stringify(reflow));
   assert.ok(reflow.scrollWidth <= reflow.clientWidth, JSON.stringify(reflow));
+  await assertBookOverflowRegions(cdp);
 
   // This layout models a 1,440-device-pixel surface at DPR 2.
   // DPR emulation alone is not a browser-zoom or text-zoom assertion.
@@ -298,7 +588,7 @@ async function assertMobilePortalSurface(cdp, address) {
   assert.ok(snapshot.contrast.funnelIndex >= 4.5, JSON.stringify(snapshot));
 }
 
-test("browser rendering keeps Mermaid stable and publication controls reflowing", {
+test("browser rendering keeps Mermaid stable and wide publication content keyboard operable", {
   timeout: 150_000,
 }, async () => {
   const browser = await firstExistingChromium();

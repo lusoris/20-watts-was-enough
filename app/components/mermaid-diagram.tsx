@@ -5,6 +5,7 @@ import {
   decodeBasicHtmlEntitiesOnce,
   stripHtmlTagSyntax,
 } from "../../scripts/lib/plain-text.mjs";
+import { useHorizontalOverflowRegion } from "./overflow-region";
 
 type RenderedDiagram = {
   svg: string;
@@ -111,18 +112,22 @@ function diagramRenderId(reactId: string, attempt: number): string {
 export function MermaidDiagram({
   chart,
   contextHeading,
+  overflowLabel = "Scrollable diagram",
 }: {
   chart: string;
   contextHeading?: string;
+  overflowLabel?: string;
 }) {
   const reactId = useId();
   const [rendered, setRendered] = useState<RenderedDiagram | null>(null);
   const [error, setError] = useState("");
-  const [overflows, setOverflows] = useState(false);
   const renderAttemptRef = useRef(0);
-  const scrollRegionRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLDivElement>(null);
   const captionId = `caption-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const { overflows, regionProps, regionRef: scrollRegionRef } =
+    useHorizontalOverflowRegion<HTMLDivElement>(
+      overflowLabel,
+      { descriptionId: captionId, refreshKey: rendered, role: "region" },
+    );
 
   useEffect(() => {
     let active = true;
@@ -181,28 +186,6 @@ export function MermaidDiagram({
     };
   }, [chart, reactId]);
 
-  useEffect(() => {
-    const region = scrollRegionRef.current;
-    const canvas = canvasRef.current;
-    if (!rendered || !region || !canvas) {
-      setOverflows(false);
-      return;
-    }
-
-    const measure = () => {
-      setOverflows(canvas.scrollWidth > region.clientWidth + 1);
-    };
-    measure();
-    if (typeof ResizeObserver === "undefined") {
-      window.addEventListener("resize", measure);
-      return () => window.removeEventListener("resize", measure);
-    }
-    const observer = new ResizeObserver(measure);
-    observer.observe(region);
-    observer.observe(canvas);
-    return () => observer.disconnect();
-  }, [rendered]);
-
   if (error) {
     return (
       <figure className="diagram diagram-error">
@@ -233,16 +216,13 @@ export function MermaidDiagram({
       ) : null}
       <div
         className={`diagram-scroll-region ${overflows ? "diagram-overflowing" : ""}`}
-        role={overflows ? "region" : undefined}
-        aria-label={overflows ? "Scrollable diagram" : undefined}
-        aria-describedby={overflows ? captionId : undefined}
-        tabIndex={overflows ? 0 : undefined}
+        {...regionProps}
+        data-overflow-kind="diagram"
         ref={scrollRegionRef}
       >
         <div
           className="diagram-canvas"
           aria-hidden="true"
-          ref={canvasRef}
           style={canvasStyle}
           dangerouslySetInnerHTML={{ __html: rendered.svg }}
         />
