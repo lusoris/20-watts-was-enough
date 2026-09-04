@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { bookDocumentId } from "../app/lib/book-document-id.mjs";
 import { assertBookPdfIntegrity } from "./lib/book-pdf-integrity.mjs";
+import { normalizePublicationSourceRevision } from "../app/lib/research-object.mjs";
 import { assertBookManifestContract } from "./lib/book-manifest-contract.mjs";
 import { languageAlternateLinksForRoute } from "../app/lib/language-access.mjs";
 import {
@@ -34,6 +35,7 @@ const repositoryRoot = path.resolve(
 );
 const outputRoot = path.join(repositoryRoot, "dist-github-pages");
 const pagesBase = resolvePagesBase(process.env.PAGES_BASE_PATH);
+const publicationSourceRevision = normalizePublicationSourceRevision(process.env.GITHUB_SHA);
 const maximumPortalInitialJavaScriptBytes = 400_000;
 const legacyDeploymentReference = /\/20-watts-was-enough\/(?:assets|book|documents|downloads|plots|repository-files)(?:\/|["'?#)]|$)/u;
 
@@ -196,6 +198,38 @@ function validateSeoDocument(html, document, translationAvailability = []) {
   );
   invariant(html.includes('<main class="seo-static-page">'), `${document.route} lacks static fallback content`);
   invariant(html.includes(`<h1>${document.title.replaceAll("&", "&amp;")}</h1>`), `${document.route} static H1 is stale`);
+  if (language === "en") {
+    invariant(
+      html.includes('data-research-object="focused-document"'),
+      `${document.route} lacks its generated research-object header`,
+    );
+    for (const required of [
+      'aria-label="Research object identity"',
+      'aria-label="Research object records"',
+      'aria-label="Research object feedback"',
+      "template=site-documentation-problem.yml",
+      "template=evidence-correction.yml",
+      "/CITATION.cff",
+      "/LICENSING.md",
+    ]) {
+      invariant(html.includes(required), `${document.route} research-object header lacks ${required}`);
+    }
+    if (publicationSourceRevision) {
+      invariant(
+        html.includes(`<dt>Source revision</dt><dd><code>${publicationSourceRevision}</code></dd>`),
+        `${document.route} does not expose the exact Pages source revision`,
+      );
+      invariant(
+        html.includes(`/blob/${publicationSourceRevision}/${document.path}`),
+        `${document.route} source record is not bound to the Pages revision`,
+      );
+    } else {
+      invariant(
+        !html.includes("<dt>Source revision</dt>"),
+        `${document.route} invents a source revision when none was supplied`,
+      );
+    }
+  }
   invariant(!html.includes("?doc="), `${document.route} contains a query-parameter document link`);
   return { title, description };
 }

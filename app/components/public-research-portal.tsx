@@ -14,9 +14,11 @@ import type { ResearchDocument } from "../research-document";
 import { outlineFromMarkdown } from "../lib/heading-outline";
 import { synchronizePortalSeo } from "../lib/portal-seo";
 import { readinessSummary } from "../lib/readiness";
-import { publication, repositoryIssueUrl } from "../lib/publication.mjs";
+import { publication } from "../lib/publication.mjs";
+import { projectVersion } from "../project-metadata";
 import { LanguageAccess } from "./language-access";
 import { PortalFooter } from "./portal-footer";
+import { ResearchObjectHeader } from "./research-object-header";
 import {
   decodePortalFragment,
   loadPortalDocument,
@@ -56,13 +58,6 @@ function repositoryPath(path: string, kind: "blob" | "tree" = "blob") {
 
 function repositoryDocumentHref(path: string, hash = "") {
   return `${repositoryPath(path)}${hash ? `#${encodeURIComponent(hash)}` : ""}`;
-}
-
-function documentIssueHref(path: string) {
-  return repositoryIssueUrl(
-    "site-documentation-problem.yml",
-    `[Site/Docs] ${path}`,
-  );
 }
 
 function overviewLocation(basePath: string, hash = "") {
@@ -167,6 +162,11 @@ function usePortalDestination({
     renderedDocumentPath,
     selectedPath,
   ]);
+}
+
+function initialDocumentFragment(): string {
+  if (typeof window === "undefined") return "";
+  return decodePortalFragment(window.location.hash.slice(1));
 }
 
 function formatNumber(value: number) {
@@ -562,6 +562,7 @@ export function PublicResearchPortal({
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<LibraryGroup>("All");
   const [catalogLimit, setCatalogLimit] = useState(catalogPageSize);
+  const [selectedFragment, setSelectedFragment] = useState(initialDocumentFragment);
   const deferredQuery = useDeferredValue(query.trim().toLowerCase());
   const overviewRef = useRef<HTMLElement>(null);
   const readerTitleRef = useRef<HTMLHeadingElement>(null);
@@ -667,9 +668,14 @@ export function PublicResearchPortal({
         focusDestination: true,
         fragment: window.location.hash.slice(1),
       });
+      setSelectedFragment(decodePortalFragment(window.location.hash.slice(1)));
     };
     window.addEventListener("popstate", handleHistory);
-    return () => window.removeEventListener("popstate", handleHistory);
+    window.addEventListener("hashchange", handleHistory);
+    return () => {
+      window.removeEventListener("popstate", handleHistory);
+      window.removeEventListener("hashchange", handleHistory);
+    };
   }, [assetBasePath]);
 
   usePortalDestination({
@@ -691,6 +697,7 @@ export function PublicResearchPortal({
       return;
     }
     setSelectedPath(path);
+    setSelectedFragment(hash);
     window.history.pushState(
       { document: path },
       "",
@@ -710,6 +717,7 @@ export function PublicResearchPortal({
   const showOverview = (hash = "") => {
     mobileMenuRef.current?.removeAttribute("open");
     setSelectedPath(null);
+    setSelectedFragment("");
     window.history.pushState(
       { document: null },
       "",
@@ -723,6 +731,7 @@ export function PublicResearchPortal({
 
   const selectHeading = (headingId: string) => {
     mobileOutlineRef.current?.removeAttribute("open");
+    setSelectedFragment(headingId);
     const targetUrl = new URL(window.location.href);
     targetUrl.hash = headingId;
     window.history.pushState(
@@ -943,16 +952,6 @@ export function PublicResearchPortal({
               )}
             </nav>
             <nav aria-label="Document actions">
-              <a
-                href={repositoryPath(selectedMetadata.path)}
-                target="_blank"
-                rel="noreferrer"
-              >Source <span aria-hidden="true">↗</span></a>
-              <a
-                href={documentIssueHref(selectedMetadata.path)}
-                target="_blank"
-                rel="noreferrer"
-              >Report issue <span aria-hidden="true">↗</span></a>
               <a href={withBase(assetBasePath, "book/")}>Full book</a>
               <a
                 href={withBase(
@@ -990,21 +989,18 @@ export function PublicResearchPortal({
                 id="portal-reader"
                 aria-labelledby="portal-reader-title"
               >
-                <header className="portal-reader-header">
-                  <div>
-                    <p>Canonical Markdown</p>
-                    <code>{selectedMetadata.path}</code>
-                  </div>
-                  <a
-                    href={repositoryPath(selectedMetadata.path)}
-                    target="_blank"
-                    rel="noreferrer"
-                  >View source <span aria-hidden="true">↗</span></a>
-                </header>
-                <div className="portal-reader-meta">
-                  <span>{formatNumber(selectedMetadata.words)} words</span>
-                  <span>{outline.length} section{outline.length === 1 ? "" : "s"}</span>
-                </div>
+                <ResearchObjectHeader
+                  title={selectedMetadata.title}
+                  path={selectedMetadata.path}
+                  route={selectedMetadata.route}
+                  group={selectedMetadata.group}
+                  editionVersion={projectVersion}
+                  sourceRevision={__PUBLICATION_SOURCE_REVISION__}
+                  fragment={selectedFragment}
+                  headingId="portal-reader-title"
+                  words={selectedMetadata.words}
+                  sections={outline.length}
+                />
                 <div className="prose portal-prose">
                   {selectedDocument ? (
                     <Suspense

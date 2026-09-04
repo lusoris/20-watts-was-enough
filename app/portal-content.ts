@@ -4,7 +4,8 @@ import documentIndex, { portalMetrics } from "virtual:portal-document-index";
 
 export { decodePortalFragment } from "./lib/portal-fragment.mjs";
 
-export type PortalDocumentMetadata = Omit<ResearchDocument, "body"> & {
+export type PortalDocumentMetadata = Omit<ResearchDocument, "body" | "group"> & {
+  group: "Concept" | "Mathematics";
   route: string;
   description: string;
   searchText: string;

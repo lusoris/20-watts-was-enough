@@ -20,6 +20,7 @@ import {
   publication,
   repositoryIssueUrl,
 } from "../../app/lib/publication.mjs";
+import { researchObjectIdentity } from "../../app/lib/research-object.mjs";
 import { validateTranslationReviewMetadata } from "./translation-manifest.mjs";
 
 export const canonicalSite = publication.canonicalSite;
@@ -395,12 +396,43 @@ export function renderBookFallback(documents, basePath, translationDocuments = [
   return `<main class="seo-static-page"><a class="portal-skip-link" href="#${bookDocumentId(documents[0].path)}">Skip to first chapter</a><p><a href="${withBase(basePath)}">Research portal</a></p><h1>20 Watts Was Enough — Full Concept Book</h1><p>The complete public reading edition generated from canonical Git source.</p>${languages}${renderReaderSupport(basePath, "book/", "Report a book problem")}<nav aria-label="Book contents"><ol>${links}</ol></nav>${manuscript}</main>`;
 }
 
-export function renderDocumentFallback(
-  document,
-  documents,
-  basePath,
-  translationDocuments = [],
-) {
+function renderResearchObjectHeader(identity, words) {
+  const revision = identity.sourceRevision
+    ? `<div><dt>Source revision</dt><dd><code>${escapeAttribute(identity.sourceRevision)}</code></dd></div>`
+    : "";
+  return [
+    '<header class="research-object-header" data-research-object="focused-document">',
+    `<p class="research-object-kicker">${escapeAttribute(identity.type)}</p>`,
+    `<h1>${escapeAttribute(identity.title)}</h1>`,
+    `<p class="research-object-path"><code>${escapeAttribute(identity.sourcePath)}</code></p>`,
+    '<dl aria-label="Research object identity">',
+    `<div><dt>Edition</dt><dd>${escapeAttribute(identity.edition)}</dd></div>`,
+    revision,
+    `<div><dt>Extent</dt><dd>${words.toLocaleString(publication.locale)} words</dd></div>`,
+    `<div><dt>Public route</dt><dd><a href="${escapeAttribute(identity.publicUrl)}">${escapeAttribute(identity.publicUrl)}</a></dd></div>`,
+    "</dl>",
+    '<div class="research-object-routes">',
+    '<nav aria-label="Research object records">',
+    `<a href="${escapeAttribute(identity.sourceHref)}">Source</a>`,
+    `<a href="${escapeAttribute(identity.historyHref)}">History</a>`,
+    `<a href="${escapeAttribute(identity.citationHref)}">Cite</a>`,
+    `<a href="${escapeAttribute(identity.disclosureHref)}">Disclosure</a>`,
+    `<a href="${escapeAttribute(identity.licenceHref)}">Licence</a>`,
+    "</nav>",
+    '<nav aria-label="Research object feedback">',
+    `<a href="${escapeAttribute(identity.clarityReportHref)}">Report clarity</a>`,
+    `<a href="${escapeAttribute(identity.evidenceCorrectionHref)}">Correct evidence</a>`,
+    "</nav>",
+    "</div>",
+    "</header>",
+  ].join("");
+}
+
+export function renderDocumentFallback(document, documents, basePath, options = {}) {
+  const normalizedOptions = Array.isArray(options)
+    ? { translationDocuments: options }
+    : options;
+  const translationDocuments = normalizedOptions.translationDocuments ?? [];
   const index = documents.findIndex((candidate) => candidate.path === document.path);
   const previous = index > 0 ? documents[index - 1] : null;
   const next = index < documents.length - 1 ? documents[index + 1] : null;
@@ -437,7 +469,21 @@ export function renderDocumentFallback(
     basePath,
   );
   const reviewContext = translated ? renderTranslationReviewContext(document) : "";
-  return `<main class="seo-static-page"><p${shellLanguage}><a href="${withBase(basePath)}">Research portal</a></p><header><p${shellLanguage}>${document.group} · ${document.words.toLocaleString(publication.locale)} words</p><h1>${escapeAttribute(document.title)}</h1><p>${escapeAttribute(document.description)}</p></header>${reviewContext}${languages}${support}<article class="prose markdown-body">${renderMarkdown(document, documents, basePath)}</article><nav${shellLanguage} aria-label="Document sequence">${sequence}</nav></main>`;
+  const researchObject = !translated && normalizedOptions.editionVersion
+    ? researchObjectIdentity({
+        title: document.title,
+        path: document.path,
+        route: document.route,
+        group: document.group,
+        editionVersion: normalizedOptions.editionVersion,
+        sourceRevision: normalizedOptions.sourceRevision,
+      })
+    : null;
+  const header = researchObject
+    ? renderResearchObjectHeader(researchObject, document.words)
+    : `<header><p${shellLanguage}>${document.group} · ${document.words.toLocaleString(publication.locale)} words</p><h1>${escapeAttribute(document.title)}</h1><p>${escapeAttribute(document.description)}</p></header>`;
+  const readerSupport = researchObject ? "" : support;
+  return `<main class="seo-static-page"><p${shellLanguage}><a href="${withBase(basePath)}">Research portal</a></p>${header}${reviewContext}${languages}${readerSupport}<article class="prose markdown-body">${renderMarkdown(document, documents, basePath)}</article><nav${shellLanguage} aria-label="Document sequence">${sequence}</nav></main>`;
 }
 
 export function renderHelpFallback(document, documents, basePath) {

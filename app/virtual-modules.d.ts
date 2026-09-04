@@ -16,3 +16,5 @@ declare module "virtual:portal-document-index" {
   }>;
   export default index;
 }
+
+declare const __PUBLICATION_SOURCE_REVISION__: string | null;

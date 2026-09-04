@@ -3,6 +3,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
+import { normalizePublicationSourceRevision } from "./app/lib/research-object.mjs";
 import {
   bookSourceDocuments,
   markdownSourceDocument,
@@ -28,12 +29,16 @@ import {
 } from "./scripts/lib/translation-pages.mjs";
 
 const repositoryRoot = path.dirname(fileURLToPath(import.meta.url));
+const projectVersion = JSON.parse(
+  readFileSync(path.join(repositoryRoot, "package.json"), "utf8"),
+).version as string;
 const pagesOutputRoot = path.join(repositoryRoot, "dist-github-pages");
 const pagesBase = resolvePagesBase(process.env.PAGES_BASE_PATH);
 const pagesCacheDirectory = resolveViteCacheDirectory({
   override: process.env.VITE_CACHE_DIR,
   repositoryRoot,
 });
+const publicationSourceRevision = normalizePublicationSourceRevision(process.env.GITHUB_SHA);
 const portalDocumentPrefixes = [...new Set([
   "/documents/",
   `${pagesBase}documents/`,
@@ -161,9 +166,11 @@ function portalDocumentAssets(): Plugin {
 export function createSeoStaticPages({
   outputRoot = pagesOutputRoot,
   translationDocuments = null,
+  sourceRevision = publicationSourceRevision,
 }: {
   outputRoot?: string;
   translationDocuments?: readonly TranslationSourceDocument[] | null;
+  sourceRevision?: string | null;
 } = {}): Plugin {
   const renderCurrentHelpPage = (template: string) => {
     const documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
@@ -221,7 +228,11 @@ export function createSeoStaticPages({
             document,
             documents,
             pagesBase,
-            translationAvailability,
+            {
+              translationDocuments: translationAvailability,
+              editionVersion: projectVersion,
+              sourceRevision,
+            },
           ),
         ), "utf8");
       }
@@ -277,6 +288,9 @@ export default defineConfig({
   publicDir: path.join(repositoryRoot, "public"),
   assetsInclude: ["**/*.md", "**/*.mmd", "**/*.bib"],
   plugins: [react(), portalDocumentAssets(), legalReleaseAssets(), createSeoStaticPages()],
+  define: {
+    __PUBLICATION_SOURCE_REVISION__: JSON.stringify(publicationSourceRevision),
+  },
   build: {
     outDir: pagesOutputRoot,
     emptyOutDir: true,

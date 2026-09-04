@@ -850,8 +850,9 @@ test("only genuinely overflowing Markdown tables become labelled keyboard region
 });
 
 test("focused portal documents have a coherent heading hierarchy", async () => {
-  const [portal, markdown] = await Promise.all([
+  const [portal, researchObjectHeader, markdown] = await Promise.all([
     source("app/components/public-research-portal.tsx"),
+    source("app/components/research-object-header.tsx"),
     source("app/components/markdown-document.tsx"),
   ]);
 
@@ -863,6 +864,8 @@ test("focused portal documents have a coherent heading hierarchy", async () => {
     portal,
     /<article[\s\S]{0,200}id="portal-reader"[\s\S]{0,200}tabIndex=\{-1\}/,
   );
+  assert.match(portal, /headingId="portal-reader-title"/);
+  assert.match(researchObjectHeader, /<h1 id=\{headingId\}>/);
   assert.match(portal, /headingOffset=\{1\}/);
   assert.match(markdown, /headingOffset\?: number/);
   assert.match(markdown, /h1: shiftedHeading\(1, headingOffset\)/);

@@ -304,6 +304,12 @@ the exact diff; this file records why the project changed.
   maintained values instead of inferring them from the build. This does not
   publish or assess a German translation; that pilot still requires the human
   language/domain review recorded in issue 51.
+- Focused Pages documents now present one generated research-object header
+  derived from the canonical document index, publication identity and package
+  version. A Pages build records its exact `GITHUB_SHA` when available; local
+  builds do not invent a revision. Source history, citation, disclosure and
+  licence records remain adjacent to separate clarity and evidence-correction
+  routes, with the same locator context in the no-JavaScript document.
 - A failed two-builder PDF reproducibility check now retains both exact PDF and
   manifest pairs beside its comparison receipt. CI uploads the bounded mismatch
   bundle for 30 days, so a rare renderer disagreement can be byte-diffed without
