@@ -212,7 +212,9 @@ the exact diff; this file records why the project changed.
   than exposing fork-controlled code to the privileged office ARC boundary.
   External-fork runs now require approval for every outside contributor.
   Exact-diff CI and CodeQL selection reduce unaffected work; scheduled and
-  manual runs, plus pushes without comparable ancestry, remain full.
+  manual runs, plus pushes without comparable ancestry, remain full. Decision
+  0062 records that comparable `main` pushes use this same bounded,
+  fail-closed impact plan without becoming aggregate or release evidence.
 - Documentation validation now treats byte-identical Mermaid bodies as staged
   source-ownership debt. The exact checked baseline may shrink through reviewed
   owner repairs, while unknown, changed, malformed, or stale groups fail closed.
