@@ -6,9 +6,9 @@
   "artifact": {
     "pdf": "public/downloads/20-watts-was-enough-full-concept-book.pdf",
     "manifest": "public/downloads/book-manifest.json",
-    "pdf_sha256": "1747f739c3a96313aa46dd60a54daa2a4082e17f9203d0dee78dc3dc07fa6d07",
-    "manifest_sha256": "2cf46d132d77da2be9d7a818f0a58e32cb575c96abfbb003f36b1e692f707356",
-    "size_bytes": 12778310,
+    "pdf_sha256": "e94ca0c9bc668f90cea769a3e67e8662d0ca674a6254bf74f9ee42f1ef20b548",
+    "manifest_sha256": "efbb4dc78c13fa08ac5a73b509c82ef51f87923df052014a0c7cfdb561dbfbdd",
+    "size_bytes": 12778591,
     "pages": 412,
     "page_size_name": "A4",
     "page_size_points": {
@@ -18,7 +18,7 @@
     "pdf_version": "1.4",
     "tagged": true,
     "source_ref": "main",
-    "source_digest": "f24ce6a67c160277dc893885c86f7f72593a635ddc86a7518c42adb964cd069c",
+    "source_digest": "01b282333ef5565cb2008fe917aa829de183f80928f6a2c8bee652f07626362d",
     "version": "0.3.0"
   },
   "tools": {
@@ -36,7 +36,7 @@
       "exit_status": 0,
       "stdout": {
         "bytes": 627,
-        "sha256": "9f74fdf5972e85cb3dcf2dd630822c8544ac8a9c0e0901b846ee26d3c9e5d74f"
+        "sha256": "28bd99176bfbbe9d71e12f14ecb26e59a349e40c6f74298de7e3293c6642a55a"
       },
       "stderr": {
         "bytes": 0,
@@ -46,23 +46,23 @@
     "structure": {
       "exit_status": 0,
       "stdout": {
-        "bytes": 1056006,
-        "sha256": "2b521d5f4e395eca3f848560fda62b64c1ae707b55195523aed9a7db631828ef"
+        "bytes": 1090092,
+        "sha256": "318f6dc2ab3f43ae88b028dadfb40e3182c49809c64d4d32022e057c4e510297"
       },
       "stderr": {
-        "bytes": 34429,
-        "sha256": "201819c4b6f29ad9af0f8dc72e1bbb8db5aae7c9345a5c1f343f428648f4e254"
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
     },
     "structure_text": {
       "exit_status": 0,
       "stdout": {
-        "bytes": 2389309,
-        "sha256": "7b1ff52a33a1db5f418eb87cec0796124ae5fe1cccda53b8fabe6603e2fe34db"
+        "bytes": 2455039,
+        "sha256": "e5fe50a7f5c61cf4d186b73a8035078adae8a3153b73204b809145e420bfed68"
       },
       "stderr": {
-        "bytes": 34429,
-        "sha256": "201819c4b6f29ad9af0f8dc72e1bbb8db5aae7c9345a5c1f343f428648f4e254"
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
     },
     "default_text": {
@@ -89,26 +89,8 @@
     }
   },
   "diagnostics": {
-    "structure": [
-      {
-        "message": "Syntax Error: StructElem object is wrong type (Em)",
-        "count": 14
-      },
-      {
-        "message": "Syntax Error: StructElem object is wrong type (Strong)",
-        "count": 613
-      }
-    ],
-    "structure_text": [
-      {
-        "message": "Syntax Error: StructElem object is wrong type (Em)",
-        "count": 14
-      },
-      {
-        "message": "Syntax Error: StructElem object is wrong type (Strong)",
-        "count": 613
-      }
-    ]
+    "structure": [],
+    "structure_text": []
   },
   "sentinels": [
     {

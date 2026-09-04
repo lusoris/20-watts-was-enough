@@ -5,6 +5,14 @@ the exact diff; this file records why the project changed.
 
 ## [Unreleased]
 
+### Fixed
+
+- The deterministic PDF finaliser now gives Chromium's `Strong` and `Em`
+  structure types an explicit PDF 1.x compatibility mapping. Poppler's 627
+  unknown-type diagnostics are removed without changing the page content or
+  canonical HTML. Five nonlinear reading-order sentinels remain `known-debt`;
+  this is not a PDF/UA or WCAG conformance claim.
+
 ### Added
 
 - The Go CI projection now lists the longer recently measured workstation jobs

@@ -66,5 +66,6 @@ than silently changing its outcome.
 | [0059](0059-run-one-enforcing-dependency-audit-per-full-gate.md) | Run one enforcing dependency audit per full gate | accepted |
 | [0061](0061-reconcile-managed-status-with-item-lifecycle.md) | Reconcile managed status with item lifecycle | accepted |
 | [0062](0062-impact-scope-comparable-main-pushes.md) | Impact-scope comparable main pushes | accepted |
+| [0064](0064-map-chromium-emphasis-tags-for-pdf-1x.md) | Map Chromium emphasis tags for PDF 1.x | accepted |
 | [0065](0065-isolate-fixture-026-ledger-semantics.md) | Isolate Fixture 026 ledger semantics from shard 5 | accepted |
 | [0066](0066-create-longer-workstation-matrix-jobs-first.md) | Create longer workstation matrix jobs first | accepted |
