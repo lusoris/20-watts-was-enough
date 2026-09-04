@@ -30,25 +30,25 @@ func TestProjectEmitsClosedFullSemanticsAndEveryWorkstationJob(t *testing.T) {
 		t.Fatal(err)
 	}
 	wantJobs := []string{
-		"candidate-010",
-		"fixture-007",
-		"fixture-012",
-		"fixture-019",
-		"fixture-022",
-		"fixture-023",
-		"fixture-024",
-		"fixture-025",
-		"fixture-026-shard-1",
-		"fixture-026-shard-2",
-		"fixture-026-shard-3",
-		"fixture-026-shard-4",
-		"fixture-026-shard-5",
 		"fixture-026-shard-6",
-		"fixture-026-shard-7",
-		"fixture-026-shard-8",
-		"fixture-027",
-		"fixture-029-shard-1",
+		"fixture-026-shard-2",
+		"fixture-026-shard-4",
+		"fixture-026-shard-1",
+		"fixture-026-shard-3",
+		"fixture-026-shard-5",
 		"fixture-029-shard-2",
+		"fixture-029-shard-1",
+		"fixture-026-shard-8",
+		"candidate-010",
+		"fixture-026-shard-7",
+		"fixture-019",
+		"fixture-024",
+		"fixture-012",
+		"fixture-022",
+		"fixture-027",
+		"fixture-023",
+		"fixture-007",
+		"fixture-025",
 	}
 	if !reflect.DeepEqual(jobs, wantJobs) {
 		t.Fatalf("full workstation matrix = %v, want %v", jobs, wantJobs)
@@ -60,7 +60,7 @@ func TestProjectEmitsClosedFullSemanticsAndEveryWorkstationJob(t *testing.T) {
 	for _, expected := range []string{
 		"container=false\n", "dependency=false\n", "go=false\n", "release=false\n", "renderer=false\n", "research=false\n",
 		"site=false\n", "workstation_any=true\n",
-		"workstation_matrix=[\"candidate-010\",\"fixture-007\"",
+		"workstation_matrix=[\"fixture-026-shard-6\",\"fixture-026-shard-2\"",
 	} {
 		if !strings.Contains(output.String(), expected) {
 			t.Fatalf("full GitHub outputs = %q, missing %q", output.String(), expected)
@@ -107,16 +107,16 @@ func TestProjectExpandsOnlySelectedShardedArtifacts(t *testing.T) {
 		t.Fatal(err)
 	}
 	want := []string{
-		"fixture-026-shard-1",
-		"fixture-026-shard-2",
-		"fixture-026-shard-3",
-		"fixture-026-shard-4",
-		"fixture-026-shard-5",
 		"fixture-026-shard-6",
-		"fixture-026-shard-7",
-		"fixture-026-shard-8",
-		"fixture-029-shard-1",
+		"fixture-026-shard-2",
+		"fixture-026-shard-4",
+		"fixture-026-shard-1",
+		"fixture-026-shard-3",
+		"fixture-026-shard-5",
 		"fixture-029-shard-2",
+		"fixture-029-shard-1",
+		"fixture-026-shard-8",
+		"fixture-026-shard-7",
 	}
 	if !projection.WorkstationAny || !reflect.DeepEqual(jobs, want) {
 		t.Fatalf("sharded projection = %#v / %v, want %v", projection, jobs, want)
@@ -215,11 +215,27 @@ func TestProjectRejectsMalformedPlanCombinations(t *testing.T) {
 	}
 }
 
-func TestProjectWorkstationJobsRejectsDuplicateAndExcessiveMatrices(t *testing.T) {
+func TestProjectWorkstationJobsRejectsInvalidMatrices(t *testing.T) {
 	t.Parallel()
-	for name, jobs := range map[string][]string{
-		"duplicate": {"fixture-026-shard-1", "fixture-026-shard-1"},
-		"excessive": make([]string, maximumWorkstationJobs+1),
+	for name, jobs := range map[string][]workstationJobDefinition{
+		"duplicate name": {
+			{Name: "fixture-026-shard-1", CreationRank: 1},
+			{Name: "fixture-026-shard-1", CreationRank: 2},
+		},
+		"duplicate creation rank": {
+			{Name: "fixture-026-shard-1", CreationRank: 1},
+			{Name: "fixture-026-shard-2", CreationRank: 1},
+		},
+		"invalid creation rank": {
+			{Name: "fixture-026-shard-1", CreationRank: 0},
+		},
+		"excessive creation rank": {
+			{Name: "fixture-026-shard-1", CreationRank: maximumWorkstationJobs + 1},
+		},
+		"malformed name": {
+			{Name: "fixture/026", CreationRank: 1},
+		},
+		"excessive": make([]workstationJobDefinition, maximumWorkstationJobs+1),
 	} {
 		t.Run(name, func(t *testing.T) {
 			if _, err := projectWorkstationJobs(Projection{}, jobs); err == nil {

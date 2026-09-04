@@ -7,6 +7,13 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- The Go CI projection now lists the longer recently measured workstation jobs
+  first inside the unchanged eight-job concurrency bound. The exact
+  nineteen jobs, static commands, tests and fail-closed success authority stay
+  intact. Replaying two completed runs with unchanged durations and ideal slot
+  availability projects 78–87-second shorter matrix spans. Separate renderer
+  and full-quality bottlenecks remain, so issue 7 stays open until a live full
+  run measures the new order and complete workflow.
 - Fixture 026's three ledger-semantic resume hostiles now run in an eighth
   exact workstation shard. Two recent full-plan runs measured those tests at
   162–172 seconds inside a 377–405-second shard-5 payload; the four retained

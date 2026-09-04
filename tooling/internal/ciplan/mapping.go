@@ -28,43 +28,66 @@ var (
 	ruleIDPattern = regexp.MustCompile(`^[a-z][a-z0-9-]{0,63}$`)
 	lanePattern   = regexp.MustCompile(`^[a-z][a-z0-9-]{0,63}$`)
 	allowedLanes  = map[string]laneDefinition{
-		"common":                    {},
-		"container":                 {},
-		"dependency":                {},
-		"full":                      {},
-		"go":                        {},
-		"release":                   {},
-		"renderer":                  {},
-		"research":                  {},
-		"site":                      {},
-		"workstation-candidate-010": {WorkstationJobs: []string{"candidate-010"}},
-		"workstation-fixture-007":   {WorkstationJobs: []string{"fixture-007"}},
-		"workstation-fixture-012":   {WorkstationJobs: []string{"fixture-012"}},
-		"workstation-fixture-019":   {WorkstationJobs: []string{"fixture-019"}},
-		"workstation-fixture-022":   {WorkstationJobs: []string{"fixture-022"}},
-		"workstation-fixture-023":   {WorkstationJobs: []string{"fixture-023"}},
-		"workstation-fixture-024":   {WorkstationJobs: []string{"fixture-024"}},
-		"workstation-fixture-025":   {WorkstationJobs: []string{"fixture-025"}},
-		"workstation-fixture-026": {WorkstationJobs: []string{
-			"fixture-026-shard-1",
-			"fixture-026-shard-2",
-			"fixture-026-shard-3",
-			"fixture-026-shard-4",
-			"fixture-026-shard-5",
-			"fixture-026-shard-6",
-			"fixture-026-shard-7",
-			"fixture-026-shard-8",
+		"common":     {},
+		"container":  {},
+		"dependency": {},
+		"full":       {},
+		"go":         {},
+		"release":    {},
+		"renderer":   {},
+		"research":   {},
+		"site":       {},
+		"workstation-candidate-010": {WorkstationJobs: []workstationJobDefinition{
+			{Name: "candidate-010", CreationRank: 10},
 		}},
-		"workstation-fixture-027": {WorkstationJobs: []string{"fixture-027"}},
-		"workstation-fixture-029": {WorkstationJobs: []string{
-			"fixture-029-shard-1",
-			"fixture-029-shard-2",
+		"workstation-fixture-007": {WorkstationJobs: []workstationJobDefinition{
+			{Name: "fixture-007", CreationRank: 18},
+		}},
+		"workstation-fixture-012": {WorkstationJobs: []workstationJobDefinition{
+			{Name: "fixture-012", CreationRank: 14},
+		}},
+		"workstation-fixture-019": {WorkstationJobs: []workstationJobDefinition{
+			{Name: "fixture-019", CreationRank: 12},
+		}},
+		"workstation-fixture-022": {WorkstationJobs: []workstationJobDefinition{
+			{Name: "fixture-022", CreationRank: 15},
+		}},
+		"workstation-fixture-023": {WorkstationJobs: []workstationJobDefinition{
+			{Name: "fixture-023", CreationRank: 17},
+		}},
+		"workstation-fixture-024": {WorkstationJobs: []workstationJobDefinition{
+			{Name: "fixture-024", CreationRank: 13},
+		}},
+		"workstation-fixture-025": {WorkstationJobs: []workstationJobDefinition{
+			{Name: "fixture-025", CreationRank: 19},
+		}},
+		"workstation-fixture-026": {WorkstationJobs: []workstationJobDefinition{
+			{Name: "fixture-026-shard-1", CreationRank: 4},
+			{Name: "fixture-026-shard-2", CreationRank: 2},
+			{Name: "fixture-026-shard-3", CreationRank: 5},
+			{Name: "fixture-026-shard-4", CreationRank: 3},
+			{Name: "fixture-026-shard-5", CreationRank: 6},
+			{Name: "fixture-026-shard-6", CreationRank: 1},
+			{Name: "fixture-026-shard-7", CreationRank: 11},
+			{Name: "fixture-026-shard-8", CreationRank: 9},
+		}},
+		"workstation-fixture-027": {WorkstationJobs: []workstationJobDefinition{
+			{Name: "fixture-027", CreationRank: 16},
+		}},
+		"workstation-fixture-029": {WorkstationJobs: []workstationJobDefinition{
+			{Name: "fixture-029-shard-1", CreationRank: 8},
+			{Name: "fixture-029-shard-2", CreationRank: 7},
 		}},
 	}
 )
 
+type workstationJobDefinition struct {
+	Name         string
+	CreationRank int
+}
+
 type laneDefinition struct {
-	WorkstationJobs []string
+	WorkstationJobs []workstationJobDefinition
 }
 
 // Mapping is the closed path-to-lane authority.
