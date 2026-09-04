@@ -474,6 +474,48 @@ jobs:
             --cap-drop ALL --security-opt no-new-privileges \
             --mount "type=bind,src=$GITHUB_WORKSPACE,dst=/repo,readonly" \
             20w-tooling:test experiment list --root /repo --json
+      - name: Build the CLRS shakedown specialist image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          context: .
+          file: tooling/clrs-specialist/Dockerfile
+          load: true
+          push: false
+          platforms: linux/amd64
+          network: none
+          tags: 20w-clrs-shakedown:test
+          build-args: |
+            IMAGE_NAME=ghcr.io/${{ github.repository }}-clrs-shakedown
+            IMAGE_VERSION=development
+            SOURCE_REVISION=${{ github.sha }}
+            SOURCE_TIMESTAMP=unknown
+          cache-from: type=gha,scope=clrs-shakedown-image
+          cache-to: type=gha,mode=max,scope=clrs-shakedown-image
+      - name: Execute the bounded CLRS specialist smoke path
+        run: |
+          set -euo pipefail
+          response="$(timeout --signal=TERM --kill-after=2s 15s \
+            docker run --rm --interactive --pull never \
+            --network none --read-only --user 65532:65532 \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --cpus 1 --memory 64m --memory-swap 64m --pids-limit 32 --stop-timeout 5 \
+            20w-clrs-shakedown:test \
+            < tooling/clrs-specialist/smoke-request.json)"
+          jq --exit-status --arg revision "$GITHUB_SHA" '
+            .schema_version == 1 and
+            .authority == "NO_RESULT" and
+            .source_id == "sha256:7ec3b6b7528d04f517c4e9b7c3e0cd0f7034a775d225d469d1aca5c00fec10d1" and
+            .generation_contract_id == "sha256:cc14fce405e8fa7d4719f1fc906e28d5e4b73235085c8f0722795efded2891a8" and
+            .task == "insertion_sort" and
+            .specialist_id == "clrs-exact-insertion-sort-v1" and
+            .binding == "sha256:1111111111111111111111111111111111111111111111111111111111111111" and
+            .timeout_milliseconds == 1000 and .max_result_bytes == 1048576 and
+            .state == "completed" and .reason == "ready" and
+            .payload == "[0.424 0.545 0.549 0.603 0.715]\n\n" and
+            .build.version == "development" and .build.revision == $revision and
+            .build.go_version == "go1.27.1" and .build.os == "linux" and
+            .build.architecture == "amd64"
+          ' <<<"$response" >/dev/null
       - name: Package the closed Fixture 007 runtime context
         run: go -C tooling run ./cmd/20w experiment package-node-image --root .. --artifact fixture-007 --output ../build/container-contexts/fixture-007
       - name: Build the Fixture 007 image

@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lusoris/20-watts-was-enough/tooling/internal/pdfrender"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/pdfrenderlock"
 )
 
 const (
@@ -298,11 +298,14 @@ func unchangedGeneratorFile(before, after os.FileInfo) bool {
 }
 
 func checkGeneratorBuilderAuthority(root string, builder GeneratorBuilder) error {
-	configuration, err := pdfrender.Check(root)
+	lockBody, err := readGeneratorFile(root, pdfrenderlock.RelativePath, pdfrenderlock.MaximumBytes)
 	if err != nil {
 		return fmt.Errorf("validate generator BuildKit authority: %w", err)
 	}
-	locked := configuration.Lock
+	locked, err := pdfrenderlock.Parse(lockBody)
+	if err != nil {
+		return fmt.Errorf("validate generator BuildKit authority: %w", err)
+	}
 	if builder.BuildxVersion != locked.Builder.BuildxVersion || builder.BuildxRevision != locked.Builder.BuildxRevision ||
 		builder.BuildKitVersion != locked.Builder.BuildKitVersion || builder.BuildKitImage != locked.Builder.BuildKitImage ||
 		builder.RewriteTimestamp != locked.Exporter.RewriteTimestamp ||
@@ -310,8 +313,8 @@ func checkGeneratorBuilderAuthority(root string, builder GeneratorBuilder) error
 		return errors.New("generator builder does not match the shared BuildKit authority")
 	}
 	subset, err := json.Marshal(struct {
-		Builder  pdfrender.Builder  `json:"builder"`
-		Exporter pdfrender.Exporter `json:"exporter"`
+		Builder  pdfrenderlock.Builder  `json:"builder"`
+		Exporter pdfrenderlock.Exporter `json:"exporter"`
 	}{Builder: locked.Builder, Exporter: locked.Exporter})
 	if err != nil {
 		return fmt.Errorf("encode generator BuildKit authority: %w", err)

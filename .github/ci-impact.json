@@ -129,12 +129,51 @@
     {
       "id": "go-build",
       "paths": [
-        "tooling/cmd/build-release/**",
-        "tooling/internal/buildinfo/**"
+        "tooling/cmd/build-release/**"
       ],
       "lanes": [
         "go",
         "release"
+      ]
+    },
+    {
+      "id": "go-build-identity",
+      "paths": [
+        "tooling/internal/buildinfo/**"
+      ],
+      "lanes": [
+        "container",
+        "go",
+        "release"
+      ]
+    },
+    {
+      "id": "go-clrs-research",
+      "paths": [
+        "tooling/internal/clrsbellmanford/**",
+        "tooling/internal/clrsbinary/**",
+        "tooling/internal/clrsfixture/**",
+        "tooling/internal/clrsinsertion/**",
+        "tooling/internal/clrskmp/**",
+        "tooling/internal/clrsmatrixchain/**",
+        "tooling/internal/clrssegments/**",
+        "tooling/internal/specialistcontrol/**"
+      ],
+      "lanes": [
+        "container",
+        "go"
+      ]
+    },
+    {
+      "id": "go-clrs-specialist-runtime",
+      "paths": [
+        "tooling/clrs-specialist/**",
+        "tooling/cmd/clrs-specialist/**",
+        "tooling/internal/clrsrunner/**"
+      ],
+      "lanes": [
+        "container",
+        "go"
       ]
     },
     {
@@ -177,6 +216,19 @@
       "id": "go-pdf",
       "paths": [
         "tooling/internal/pdfrender/**",
+        "tooling/internal/pdfrenderlock/**"
+      ],
+      "lanes": [
+        "container",
+        "go",
+        "release",
+        "renderer",
+        "site"
+      ]
+    },
+    {
+      "id": "go-pdf-renderer-image",
+      "paths": [
         "tooling/pdf-renderer/**"
       ],
       "lanes": [
@@ -224,15 +276,7 @@
       "id": "go-research-operations",
       "paths": [
         "tooling/clrs-generator/**",
-        "tooling/internal/clrsbellmanford/**",
         "tooling/internal/clrsbfs/**",
-        "tooling/internal/clrsbinary/**",
-        "tooling/internal/clrsfixture/**",
-        "tooling/internal/clrsinsertion/**",
-        "tooling/internal/clrskmp/**",
-        "tooling/internal/clrsmatrixchain/**",
-        "tooling/internal/clrssegments/**",
-        "tooling/internal/specialistcontrol/**",
         "tooling/internal/translationbundle/**"
       ],
       "lanes": [
