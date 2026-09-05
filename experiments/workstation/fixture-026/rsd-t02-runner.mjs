@@ -1277,29 +1277,33 @@ async function readValidatedRecords(directory, identity = null, profile = null) 
 }
 
 async function ensurePreEvaluatorArmCommitment({ directory, inputs, units, policyTimeoutMs }) {
-  const isolated = await expectedArmCommitment(inputs, units, policyTimeoutMs);
-  const expected = isolated.commitment;
   const commitmentPath = path.join(directory, ARM_COMMITMENT_FILE);
   await assertSafeRepositoryPath(commitmentPath, {
     allowMissing: true,
     finalType: "file",
     label: "Fixture 026 RSD-T02 pre-evaluator arm commitment",
   });
-  if (await exists(commitmentPath)) {
-    const stored = assertFixture026RsdT02ArmCommitment(await loadJson(commitmentPath));
-    if (canonicalize(stored) !== canonicalize(expected)) {
-      throw new Error("Fixture 026 RSD-T02 stored arm commitment differs from the frozen policies and packet grid.");
-    }
-  } else {
+  const hasCommitment = await exists(commitmentPath);
+  if (!hasCommitment) {
     const rawPath = path.join(directory, RAW_FILE);
     const rawHasEvaluatorRecords = await exists(rawPath) && (await stat(rawPath)).size > 0;
     if (
       rawHasEvaluatorRecords
       || await exists(path.join(directory, CHECKPOINT_FILE))
       || await exists(path.join(directory, RUN_FILE))
+      || await exists(path.join(directory, SUMMARY_FILE))
     ) {
       throw new Error("Fixture 026 RSD-T02 refuses to create an arm commitment after evaluator-bearing run state exists.");
     }
+  }
+  const isolated = await expectedArmCommitment(inputs, units, policyTimeoutMs);
+  const expected = isolated.commitment;
+  if (hasCommitment) {
+    const stored = assertFixture026RsdT02ArmCommitment(await loadJson(commitmentPath));
+    if (canonicalize(stored) !== canonicalize(expected)) {
+      throw new Error("Fixture 026 RSD-T02 stored arm commitment differs from the frozen policies and packet grid.");
+    }
+  } else {
     await writeJsonStable(commitmentPath, expected, { durable: true });
   }
   await assertSafeRepositoryPath(commitmentPath, {

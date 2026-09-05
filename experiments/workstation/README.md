@@ -55,14 +55,16 @@ energy comparison, or claim-promotion evidence.
 ## CI scheduling
 
 `npm run check` remains the complete local merge floor and runs the workstation
-inventory as one serial suite. GitHub full CI separates the non-workstation
-quality gate from workstation core and a closed test matrix. Under
-[decision 0051](../../decisions/0051-add-a-seventh-fixture-026-shard-after-live-timing.md),
-Fixture 026 uses seven fixed file-level jobs and Fixture 029 uses two; the other
+inventory through one bounded Go aggregate with four active commands by
+default and a hard ceiling of eight. GitHub full CI separately runs the
+non-workstation quality gate, workstation core, and a closed test matrix. Under
+[decision 0065](../../decisions/0065-isolate-fixture-026-ledger-semantics.md),
+Fixture 026 uses eight fixed file-level jobs and Fixture 029 uses two; the other
 nine artifacts retain one job each. Impact plans expand only the selected
 artifact, while a
-full plan requires all 18 matrix entries. The eight-job concurrency cap is a
-scheduling bound, not experiment parallelism or scientific evidence.
+full plan requires all 19 matrix entries. The GitHub matrix retains its
+eight-job concurrency cap; that remote scheduling bound is not experiment
+parallelism or scientific evidence.
 
 With eight GitHub runners available, the workstation matrix is initially
 expected to finish in roughly five to seven minutes because its two longest

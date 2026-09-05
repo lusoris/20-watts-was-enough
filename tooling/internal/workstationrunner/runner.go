@@ -21,6 +21,7 @@ import (
 const (
 	expectedArtifactJobs         = 19
 	maximumSuiteJobs             = 32
+	defaultConcurrency           = 4
 	maximumConcurrency           = 8
 	maximumJobDuration           = 30 * time.Minute
 	maximumJobOutputBytes        = 2 << 20
@@ -141,7 +142,7 @@ func Run(ctx context.Context, repositoryRoot string, summary io.Writer) error {
 		return fmt.Errorf("resolve Node executable: %w", err)
 	}
 	return runSuite(ctx, root, jobs, runOptions{
-		concurrency: maximumConcurrency,
+		concurrency: defaultConcurrency,
 		jobDuration: maximumJobDuration,
 		outputBytes: maximumJobOutputBytes,
 		waitDelay:   maximumCommandWaitDelay,

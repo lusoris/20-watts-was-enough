@@ -190,7 +190,11 @@ test("whole-system arm responses are committed before any evaluator-bearing raw 
     await rm(armPath);
     await assert.rejects(
       () => executeFixture026RsdT02({
-        profile: "smoke", output: fixture.output, resume: true, maxWorkUnits: 1,
+        profile: "smoke",
+        output: fixture.output,
+        resume: true,
+        maxWorkUnits: 1,
+        policyTimeoutMs: 1,
       }),
       /refuses to create an arm commitment after evaluator-bearing run state exists/u,
     );
@@ -215,6 +219,34 @@ test("whole-system arm responses are committed before any evaluator-bearing raw 
     );
   } finally {
     await cleanup(fixture);
+  }
+});
+
+test("every evaluator-bearing artifact blocks a missing arm commitment before policy execution", async () => {
+  for (const stateFile of [RAW_FILE, CHECKPOINT_FILE, RUN_FILE, SUMMARY_FILE]) {
+    const fixture = await temporaryOutput("fixture-026-rsd-t02-missing-arm-preflight-");
+    try {
+      const statePath = path.join(fixture.output, stateFile);
+      await mkdir(path.dirname(statePath), { recursive: true });
+      await writeFile(statePath, "occupied\n", "utf8");
+      await assert.rejects(
+        () => executeFixture026RsdT02({
+          profile: "smoke",
+          output: fixture.output,
+          resume: true,
+          policyTimeoutMs: 1,
+        }),
+        /refuses to create an arm commitment after evaluator-bearing run state exists/u,
+      );
+      for (const absentFile of [ARM_COMMITMENT_FILE, ARM_ABSTENTION_FILE]) {
+        await assert.rejects(
+          () => readFile(path.join(fixture.output, absentFile)),
+          (error) => error.code === "ENOENT",
+        );
+      }
+    } finally {
+      await cleanup(fixture);
+    }
   }
 });
 
