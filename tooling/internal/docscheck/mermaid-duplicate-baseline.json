@@ -2,19 +2,6 @@
   "schemaVersion": 1,
   "groups": [
     {
-      "sha256": "054d07a5b4a046922f4905bbde001984a87d2ca5acb8a4806c5f0ac48554db18",
-      "occurrences": [
-        {
-          "path": "assets/diagrams/endogenous-observation-loop.mmd",
-          "count": 1
-        },
-        {
-          "path": "experiments/candidates/007-endogenous-observation-surveillance.md",
-          "count": 1
-        }
-      ]
-    },
-    {
       "sha256": "0a6e3c8c2d7b3e61f3623e37cc24ca2f7f3accb5c32508b9bb2b5110283ce451",
       "occurrences": [
         {
