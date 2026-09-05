@@ -29,6 +29,7 @@ type Projection struct {
 	Go                bool
 	Release           bool
 	Renderer          bool
+	RendererProof     string
 	Research          bool
 	Site              bool
 	WorkstationAny    bool
@@ -71,6 +72,7 @@ func Project(plan Plan) (Projection, error) {
 		Mode:              plan.Mode,
 		Reason:            plan.Reason,
 		Renderer:          planSelectsLane(plan, "renderer"),
+		RendererProof:     rendererProof(plan),
 		WorkstationMatrix: "[]",
 	}
 	if plan.Mode == "full" {
@@ -202,6 +204,7 @@ func WriteGitHubOutputs(writer io.Writer, projection Projection) error {
 		{name: "go", value: strconv.FormatBool(projection.Go)},
 		{name: "release", value: strconv.FormatBool(projection.Release)},
 		{name: "renderer", value: strconv.FormatBool(projection.Renderer)},
+		{name: "renderer_proof", value: projection.RendererProof},
 		{name: "research", value: strconv.FormatBool(projection.Research)},
 		{name: "site", value: strconv.FormatBool(projection.Site)},
 		{name: "workstation_any", value: strconv.FormatBool(projection.WorkstationAny)},

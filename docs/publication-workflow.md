@@ -151,10 +151,22 @@ paths and loadable selector-authority diffs select it fail-closed. A missing or
 invalid mapping blocks planning. Git-classified renames and copies retain both
 paths and expand to full. Type changes and other non-regular-mode records also
 expand to full. A mapped regular-file deletion instead selects consumers from
-its former path.
+its former path, except that deleting presentation authority expands to full
+under [decision 0077](../decisions/0077-separate-render-pair-and-image-build-proofs.md).
 Tagged releases always run the proof and add its receipt to the checksum-bound
 release assets. A mismatch blocks the boundary; the receipt remains engineering
 evidence and is not a scientific result.
+
+Presentation-only impact changes keep this renderer gate but select
+`--proof render-pair`. The exact Go allowlist includes book presentation sources
+and their accompanying changelog, generated pair, semantic baseline and the
+two regression-test files exercised by PR #111. Any unrecognised companion
+path retains `image-build`. The lighter mode builds one locked image without
+cache and compares two isolated renders from it. Its schema-5 receipt records
+one actual build and both render observations under
+`pdf-render-pair-reproducibility`; it does not establish independent image-build
+reproducibility. Default and tagged-release invocations retain schema 4 and two
+builds. Cross-run image reuse remains pending a verified acquisition path.
 
 Script impact is classified by an exact executable consumer, not by the
 `scripts/` directory name. The browser reader regression therefore selects the

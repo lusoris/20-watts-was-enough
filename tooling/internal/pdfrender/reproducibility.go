@@ -17,11 +17,16 @@ type ReproducibilityOptions struct {
 	SourceRef      string
 	SourceRevision string
 	ReceiptPath    string
+	RenderPairOnly bool
 }
 
-// VerifyReproducibility rebuilds and executes the final renderer authority in
-// two fresh, cache-free BuildKit builders and records the exact comparison.
+// VerifyReproducibility records a non-publishing comparison. By default it
+// uses two fresh, cache-free builders; RenderPairOnly builds once and compares
+// two isolated renders without claiming independent image-build agreement.
 func VerifyReproducibility(ctx context.Context, options ReproducibilityOptions) (_ ReproducibilityReceipt, returnError error) {
+	if options.RenderPairOnly && options.SourceRef != "main" {
+		return ReproducibilityReceipt{}, errors.New("render-pair proof is restricted to main; releases require independent image builds")
+	}
 	configuration, err := Check(options.RepositoryRoot)
 	if err != nil {
 		return ReproducibilityReceipt{}, err
@@ -34,7 +39,7 @@ func VerifyReproducibility(ctx context.Context, options ReproducibilityOptions) 
 	); err != nil {
 		return ReproducibilityReceipt{}, err
 	}
-	return verifyReproducibilityWithDependencies(
+	return verifyProofWithDependencies(
 		ctx,
 		configuration,
 		options.SourceRef,
@@ -42,6 +47,7 @@ func VerifyReproducibility(ctx context.Context, options ReproducibilityOptions) 
 		options.ReceiptPath,
 		remoteBuildContextPreparer{},
 		localReproducibilityExecutor{},
+		options.RenderPairOnly,
 	)
 }
 
@@ -52,6 +58,20 @@ func verifyReproducibilityWithDependencies(
 	preparer buildContextPreparer,
 	executor commandExecutor,
 ) (_ ReproducibilityReceipt, returnError error) {
+	return verifyProofWithDependencies(ctx, configuration, sourceRef, sourceRevision, receiptRelativePath, preparer, executor, false)
+}
+
+func verifyProofWithDependencies(
+	ctx context.Context,
+	configuration Configuration,
+	sourceRef, sourceRevision, receiptRelativePath string,
+	preparer buildContextPreparer,
+	executor commandExecutor,
+	renderPairOnly bool,
+) (_ ReproducibilityReceipt, returnError error) {
+	if renderPairOnly && sourceRef != "main" {
+		return ReproducibilityReceipt{}, errors.New("render-pair proof is restricted to main; releases require independent image builds")
+	}
 	if err := ValidateSourceRevision(sourceRef, sourceRevision); err != nil {
 		return ReproducibilityReceipt{}, err
 	}
@@ -136,6 +156,14 @@ func verifyReproducibilityWithDependencies(
 	}()
 	builds := make([]ReproducibilityBuild, 0, reproducibilityBuildCount)
 	for index := 0; index < reproducibilityBuildCount; index++ {
+		if renderPairOnly && index == 1 {
+			render, err := reproducibilityRender(acceptanceContext, configuration, executor, temporaryRoot, sourceRef, sourceRevision, builds[0], index)
+			if err != nil {
+				return ReproducibilityReceipt{}, err
+			}
+			builds = append(builds, render)
+			continue
+		}
 		imageTag := fmt.Sprintf("20w-pdf-reproducibility:%s-%d", runIdentity, index+1)
 		ownedImageTags[imageTag] = struct{}{}
 		build, buildError := reproducibilityBuild(
@@ -150,6 +178,15 @@ func verifyReproducibilityWithDependencies(
 	receipt := newReproducibilityReceipt(
 		configuration, sourceRef, sourceRevision, contextIdentity, builds, comparison,
 	)
+	if renderPairOnly {
+		// Schema 4 continues to mean two independent image builds. A pair-only
+		// receipt records the single actual build and both render observations.
+		receipt.Schema = 5
+		receipt.Scope = "pdf-render-pair-reproducibility"
+		receipt.Renderer.FreshBuilderCount = 1
+		receipt.Builds = builds[:1]
+		receipt.Renders = []ReproducibilityPair{builds[0].Pair, builds[1].Pair}
+	}
 	if receipt.Status != "pass" {
 		evidence, err := retainReproducibilityMismatch(
 			configuration.RepositoryRoot, receiptPath, builds, os.RemoveAll,
@@ -236,10 +273,26 @@ func reproducibilityBuild(
 		return result, err
 	}
 	builderActive = false
+	result.ManifestDigest = metadata.ManifestDigest
+	result.ConfigDigest = digestBytes(proof.Config)
+	result.ConfigProof = proof
+	return reproducibilityRender(ctx, configuration, executor, temporaryRoot, sourceRef, sourceRevision, result, index)
+}
+
+func reproducibilityRender(
+	ctx context.Context,
+	configuration Configuration,
+	executor commandExecutor,
+	temporaryRoot, sourceRef, sourceRevision string,
+	result ReproducibilityBuild,
+	index int,
+) (ReproducibilityBuild, error) {
+	result.Sequence = index + 1
 	if err := checkAuthorityUnchanged(ctx, configuration); err != nil {
 		return result, err
 	}
 
+	label := fmt.Sprintf("render-%d", index+1)
 	outputDirectory := filepath.Join(temporaryRoot, label, "downloads")
 	workspaceDirectory := filepath.Join(temporaryRoot, label, "workspace-tmp")
 	for _, directory := range []string{outputDirectory, workspaceDirectory} {
@@ -247,16 +300,13 @@ func reproducibilityBuild(
 			return result, fmt.Errorf("create isolated PDF reproducibility directory: %w", err)
 		}
 	}
-	if err := runRendererOnce(ctx, configuration, executor, imageID, sourceRef, sourceRevision, outputDirectory, workspaceDirectory); err != nil {
+	if err := runRendererOnce(ctx, configuration, executor, result.ImageID, sourceRef, sourceRevision, outputDirectory, workspaceDirectory); err != nil {
 		return result, err
 	}
 	pair, err := inspectReproducibilityPair(outputDirectory)
 	if err != nil {
 		return result, err
 	}
-	result.ManifestDigest = metadata.ManifestDigest
-	result.ConfigDigest = digestBytes(proof.Config)
-	result.ConfigProof = proof
 	result.Pair = pair
 	return result, checkAuthorityUnchanged(ctx, configuration)
 }

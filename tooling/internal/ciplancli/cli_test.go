@@ -91,7 +91,7 @@ func TestPlanRejectsMissingOrMalformedMappingEvenWithFull(t *testing.T) {
 func TestProjectWritesOnlyFixedOutputs(t *testing.T) {
 	var stdout, stderr bytes.Buffer
 	code := Run([]string{"project"}, strings.NewReader(impactJSON), &stdout, &stderr)
-	want := "mode=impact\nreason=mapped-change-set\ncontainer=false\ndependency=false\ngo=false\nrelease=false\nrenderer=false\nresearch=false\nsite=true\nworkstation_any=false\nworkstation_matrix=[]\n"
+	want := "mode=impact\nreason=mapped-change-set\ncontainer=false\ndependency=false\ngo=false\nrelease=false\nrenderer=false\nrenderer_proof=none\nresearch=false\nsite=true\nworkstation_any=false\nworkstation_matrix=[]\n"
 	if code != 0 || stdout.String() != want || stderr.Len() != 0 {
 		t.Fatalf("exit=%d stdout=%q stderr=%q", code, stdout.String(), stderr.String())
 	}

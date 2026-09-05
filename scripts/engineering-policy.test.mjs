@@ -939,7 +939,7 @@ test("CI runs the strict-JSON fuzzer with explicit time and process bounds", () 
 });
 
 test("real PDF reproducibility acceptance stays in the renderer-selected and tagged boundaries", () => {
-  const finding = ".github/workflows/ci.yml: CI must run the exact two-builder PDF reproducibility acceptance only in its renderer-selected gate and retain its receipt plus mismatch bytes";
+  const finding = ".github/workflows/ci.yml: CI must run the exact selected PDF reproducibility proof only in its renderer-selected gate and retain its receipt plus mismatch bytes";
   const validCi = workflow("ci");
   assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
     validCi,
@@ -948,7 +948,7 @@ test("real PDF reproducibility acceptance stays in the renderer-selected and tag
 
   const bypassed = structuredClone(validCi);
   bypassed.jobs["pdf-renderer-reproducibility"].steps.find((step) => (
-    step.name === "Rebuild the final PDF renderer twice without cache"
+    step.name === "Verify the selected PDF reproducibility proof"
   )).run += " || true";
   assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
     bypassed,
@@ -956,6 +956,15 @@ test("real PDF reproducibility acceptance stays in the renderer-selected and tag
   ), [finding]);
 
   const unretained = structuredClone(validCi);
+  for (const selection of [undefined, "render-pair", "image-build", "${{ inputs.renderer_proof }}"]) {
+    const tampered = structuredClone(validCi);
+    tampered.jobs["pdf-renderer-reproducibility"].steps.find((step) => (
+      step.name === "Verify the selected PDF reproducibility proof"
+    )).env.RENDERER_PROOF = selection;
+    assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
+      tampered, ".github/workflows/ci.yml",
+    ), [finding]);
+  }
   unretained.jobs["pdf-renderer-reproducibility"].steps.find((step) => (
     step.name === "Retain the PDF renderer reproducibility evidence"
   )).with["retention-days"] = 1;
@@ -1035,7 +1044,7 @@ test("private CI executables retain their tested Go build configuration", () => 
     const locate = (subject) => kind === "plan"
       ? subject.jobs["impact-plan"].steps.find((step) => step.id === "plan")
       : subject.jobs["pdf-renderer-reproducibility"].steps.find((step) => (
-        step.name === "Rebuild the final PDF renderer twice without cache"
+        step.name === "Verify the selected PDF reproducibility proof"
       ));
     const validate = (subject) => kind === "plan"
       ? validateCiImpactWorkflowObject(subject)

@@ -26,8 +26,8 @@ const (
 	maximumBuildMetadataBytes    int64 = 2 * 1024 * 1024
 )
 
-// ReproducibilityReceipt is the retained, deterministic evidence from one
-// non-scientific renderer build acceptance run.
+// ReproducibilityReceipt retains either a schema-4 two-builder comparison or
+// a schema-5 render-pair comparison with one actual build and two Renders.
 type ReproducibilityReceipt struct {
 	Schema           int                              `json:"schema"`
 	Status           string                           `json:"status"`
@@ -40,6 +40,7 @@ type ReproducibilityReceipt struct {
 	Context          ReproducibilityContext           `json:"normalized_build_context"`
 	PublicationPair  ReproducibilityPublicationPair   `json:"publication_pair"`
 	Builds           []ReproducibilityBuild           `json:"builds"`
+	Renders          []ReproducibilityPair            `json:"renders,omitempty"`
 	Comparison       ReproducibilityComparison        `json:"comparison"`
 	MismatchEvidence *ReproducibilityMismatchEvidence `json:"mismatch_evidence,omitempty"`
 }

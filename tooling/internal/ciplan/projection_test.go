@@ -172,7 +172,7 @@ func TestProjectDerivesOnlyFixedAllowlistedOutputs(t *testing.T) {
 		t.Fatal(err)
 	}
 	want := "mode=impact\nreason=mapped-change-set\ncontainer=true\ndependency=true\ngo=false\n" +
-		"release=false\nrenderer=true\nresearch=true\nsite=true\nworkstation_any=true\n" +
+		"release=false\nrenderer=true\nrenderer_proof=image-build\nresearch=true\nsite=true\nworkstation_any=true\n" +
 		"workstation_matrix=[{\"artifact\":\"candidate-010\",\"script\":\"test:workstation:candidate-010\"},{\"artifact\":\"fixture-019\",\"script\":\"test:workstation:fixture-019\"}]\n"
 	if output.String() != want {
 		t.Fatalf("GitHub outputs = %q, want %q", output.String(), want)
