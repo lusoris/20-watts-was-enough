@@ -89,6 +89,41 @@ To reproduce the reviewed manifest into a new file for comparison, use
 `experiment render-clrs-wheelhouse-manifest`; it refuses to overwrite an
 existing output. Rendering a candidate does not change repository authority.
 
+## Compare supplied fixture trees
+
+Once two separately retained runs exist, compare their complete datasets with
+the current source record and frozen generation contract:
+
+```bash
+go -C tooling run ./cmd/20w experiment compare-clrs-fixtures \
+  --root .. --first /path/to/run-1/dataset --second /path/to/run-2/dataset --json
+```
+
+The command always checks without writing, generating fixtures or invoking
+Docker. Relative dataset paths resolve against `--root`; absolute paths declare
+separate dataset roots. Each must contain only the planned split directory and
+its six regular task files. Symlinks, extra entries, missing files and identical
+root directories fail. The existing importer validates each task's complete
+seed/size/sample grid and separates candidate inputs from verifier answers.
+Equal bytes alone do not pass an invalid import.
+
+Schema-1 JSON contains sorted per-file byte counts, SHA-256 digests, equality
+and imported-example counts, plus raw source/contract hashes and typed source
+identities. A domain-separated, length-framed SHA-256 digest binds each complete
+tree's sorted relative paths and contents; the report states its exact framing.
+No prompts or reference answers are emitted. Each file is capped at 4 MiB,
+each tree at 24 MiB and the report at 64 KiB. A 30-second context checks
+cancellation between bounded local-file operations; it is not a kernel I/O
+deadline. Final inventory, file-identity/hash and authority-byte checks reject
+inputs that changed during comparison.
+
+Exit codes are zero for a complete match with valid imports, one for validation
+or operational failure and two for invalid arguments. `--json` emits a failed
+report on validation failure; argument errors do not emit JSON. Without it,
+success is a short summary and failures go to standard error. These checks do
+not establish fresh execution or runtime containment: retain the separate
+generation receipts. `NO_RESULT` and blocked image admission remain unchanged.
+
 ## Candidate Promise wheel reproduction
 
 The Go command below tests the sole source-built dependency from

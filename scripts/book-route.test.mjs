@@ -184,6 +184,9 @@ test("the full-book source identity includes the locked renderer dependency grap
     path.relative(repositoryRoot, file).replaceAll("\\", "/")
   ));
   const requiredClosure = [
+    "tooling/cmd/20w/clrs_compare.go",
+    "tooling/internal/clrsfixture/compare.go",
+    "tooling/internal/clrsfixture/compare_files.go",
     "tooling/cmd/20w/clrs_context.go",
     "tooling/internal/clrscontext/context.go",
     "tooling/internal/clrscontext/dockerfile.go",

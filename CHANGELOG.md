@@ -86,6 +86,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A read-only Go command compares two complete CLRS fixture directories and
+  checks both through the existing source-bound importer. Its bounded JSON
+  report records exact file and tree identities, byte differences and imported
+  counts without treating matching construction fixtures as a research result
+  or admitting the generator image.
+
 - A Go candidate-context command packages the pinned CLRS source, selected
   wheels and verified historical Promise evidence into a deterministic tar.
   Its read-only checker uses the same explicit inputs; offline-install

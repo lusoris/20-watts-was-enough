@@ -60,6 +60,7 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w experiment verify-clrs-wheelhouse --wheelhouse <directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w experiment reproduce-clrs-promise-wheel --output <directory> (--inputs <directory> | --check) [--root <repository>]")
 	fmt.Fprintln(writer, "  20w experiment materialize-clrs-context --wheelhouse <directory> --source-archive <tar.gz> --promise-source-root <frozen-repository> --promise-evidence <directory> --output <context.tar> [--root <repository>] [--check]")
+	fmt.Fprintln(writer, "  20w experiment compare-clrs-fixtures --first <dataset-root> --second <dataset-root> [--root <repository>] [--json]")
 	fmt.Fprintln(writer, "  20w publication render-pdf [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--revision <commit>] [--check]")
 	fmt.Fprintln(writer, "  20w publication verify-pdf-tools [--root <repository>]")
 	fmt.Fprintln(writer, "  20w publication reproduce-pdf-tools-image --receipt <new.json> [--candidate-bundle <new.tar> --final-archive <new.tar> --spdx <new.spdx.json> --source-bundle <new.tar.gz>] [--root <repository>]")
@@ -128,6 +129,9 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 		}
 		if len(arguments) >= 2 && arguments[1] == "materialize-clrs-context" {
 			return runExperimentCLRSContext(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "compare-clrs-fixtures" {
+			return runExperimentCompareCLRSFixtures(arguments[2:], stdout, stderr)
 		}
 	case "release":
 		if len(arguments) >= 2 && arguments[1] == "inspect-image" {

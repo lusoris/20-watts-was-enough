@@ -17,6 +17,11 @@
   - changed-files:
       - any-glob-to-any-file:
           - "experiments/**"
+          - "tooling/cmd/20w/clrs_compare.go"
+          - "tooling/cmd/20w/clrs_compare_test.go"
+          - "tooling/internal/clrsfixture/compare.go"
+          - "tooling/internal/clrsfixture/compare_files.go"
+          - "tooling/internal/clrsfixture/compare_test.go"
           - "tooling/cmd/20w/clrs_context.go"
           - "tooling/cmd/20w/clrs_context_test.go"
           - "tooling/internal/clrscontext/**"

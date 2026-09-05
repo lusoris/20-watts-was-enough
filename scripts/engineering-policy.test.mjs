@@ -1479,6 +1479,13 @@ test("Go renderer and CI owners retain their path-derived pull-request labels", 
     "tooling/cmd/20w/clrs_context_test.go",
   ]) assert.deepEqual(labelsFor(file), ["area:ci", "area:experiment"], file);
   for (const file of [
+    "tooling/cmd/20w/clrs_compare.go",
+    "tooling/cmd/20w/clrs_compare_test.go",
+    "tooling/internal/clrsfixture/compare.go",
+    "tooling/internal/clrsfixture/compare_files.go",
+    "tooling/internal/clrsfixture/compare_test.go",
+  ]) assert.deepEqual(labelsFor(file), ["area:experiment"], file);
+  for (const file of [
     "tooling/internal/pdftools/candidate_output.go",
     "tooling/pdf-tools/contract.json",
     "tooling/cmd/20w/pdf_tools_test.go",
@@ -1487,6 +1494,8 @@ test("Go renderer and CI owners retain their path-derived pull-request labels", 
     "tooling/internal/pdfrender-unrelated/example.go",
     "tooling/internal/clrscontext-unrelated/example.go",
     "tooling/cmd/20w/clrs_context_other.go",
+    "tooling/cmd/20w/clrs_compare_other.go",
+    "tooling/internal/clrsfixture/compare_other.go",
     "tooling/internal/clrsfixture/image.go",
     "tooling/cmd/20w/main.go",
   ]) assert.deepEqual(labelsFor(file), [], file);
