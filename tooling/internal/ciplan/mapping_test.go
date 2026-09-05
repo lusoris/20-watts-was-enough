@@ -34,6 +34,10 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		{path: "renovate.json", mode: "impact", lanes: []string{"dependency"}},
 		{path: "package-lock.json", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
 		{path: "scripts/book-pdf-semantic-baseline.json", mode: "impact", lanes: []string{"release"}},
+		{path: "scripts/lib/book-pdf-semantic-audit.mjs", mode: "impact", lanes: []string{"release"}},
+		{path: "scripts/lib/pdf-metadata.test.mjs", mode: "impact", lanes: []string{"release"}},
+		{path: "scripts/lib/pdf-metadata.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
+		{path: "scripts/audit-book-pdf-semantics.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:scripts/audit-book-pdf-semantics.mjs"},
 		{path: "scripts/generate-book-pdf.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
 		{path: "scripts/audit-prose-style.mjs", mode: "full", lanes: []string{"full"}, reason: "full-authority-changed"},
 		{path: "scripts/book-edition-surface.test.mjs", mode: "impact", lanes: []string{"site"}},
@@ -67,6 +71,21 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 			(test.reason != "" && plan.Reason != test.reason) {
 			t.Fatalf("path %s produced %#v, want %s/%v", test.path, plan, test.mode, test.lanes)
 		}
+	}
+}
+
+func TestPdfSemanticSentinelDiffSelectsOnlyItsPublicationConsumers(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	plan := selectTestPaths(t, root, testOptions(root), []string{
+		"CHANGELOG.md",
+		"scripts/book-pdf-semantic-baseline.json",
+		"scripts/lib/pdf-metadata.test.mjs",
+	})
+	want := []string{"release", "research", "site"}
+	if plan.Mode != "impact" || plan.Reason != "mapped-change-set" ||
+		!reflect.DeepEqual(plan.Lanes, want) {
+		t.Fatalf("PDF semantic sentinel plan = %#v, want impact/%v", plan, want)
 	}
 }
 
