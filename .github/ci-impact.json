@@ -336,6 +336,21 @@
       ]
     },
     {
+      "id": "script-math",
+      "paths": [
+        "scripts/lib/math-markdown.mjs",
+        "scripts/lib/math-normalization.mjs",
+        "scripts/lib/math-validation.mjs",
+        "scripts/math-validation.test.mjs",
+        "scripts/normalize-math-delimiters.mjs",
+        "scripts/validate-math.mjs"
+      ],
+      "lanes": [
+        "research",
+        "site"
+      ]
+    },
+    {
       "id": "script-publication-semantic-baseline",
       "paths": [
         "scripts/book-pdf-semantic-baseline.json",
