@@ -6,6 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { runInNewContext } from "node:vm";
 import {
   decodePortalFragment,
   encodePortalFragment,
@@ -88,13 +89,15 @@ async function waitForBrowserState(cdp, expression, accepts, label, timeoutMs = 
   let snapshot;
   while (Date.now() < deadline) {
     snapshot = await evaluateInBrowser(cdp, expression);
-    if (accepts(snapshot)) return snapshot;
+    if (snapshot?.documentReady !== false && accepts(snapshot)) return snapshot;
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
   assert.fail(`${label}: ${JSON.stringify(snapshot)}`);
 }
 
 const portalStateExpression = `(() => {
+  const documentElement = document.documentElement;
+  if (!documentElement) return { documentReady: false };
   const active = document.activeElement;
   const title = document.getElementById("portal-reader-title");
   const header = document.querySelector(".portal-header");
@@ -118,6 +121,7 @@ const portalStateExpression = `(() => {
       + Math.max(Number.parseFloat(activeStyle.outlineOffset) || 0, 0)
     : 0;
   return {
+    documentReady: true,
     activeFocusPaintFullyVisible: Boolean(
       activeBounds
       && drawerScrollerBounds
@@ -143,8 +147,8 @@ const portalStateExpression = `(() => {
     hashTargetVisible: Boolean(hashBounds && hashBounds.bottom > 0 && hashBounds.top < innerHeight),
     headerBottom: headerBounds?.bottom ?? null,
     pathname: location.pathname,
-    pageClientWidth: document.documentElement.clientWidth,
-    pageScrollWidth: document.documentElement.scrollWidth,
+    pageClientWidth: documentElement.clientWidth,
+    pageScrollWidth: documentElement.scrollWidth,
     readerPresent: Boolean(document.getElementById("portal-reader")),
     searchValue: document.getElementById("portal-library-search")?.value ?? null,
     mobileOutlineDisplay: mobileOutline ? getComputedStyle(mobileOutline).display : "missing",
@@ -831,6 +835,59 @@ test("the portal keeps clean-route history and native Markdown links honest on t
   ]) {
     assert.ok(portalSeo.includes(requiredMetadata), `portal SEO sync lacks ${requiredMetadata}`);
   }
+});
+
+test("portal snapshots stay pending while navigation has no document root", () => {
+  const context = {
+    document: {
+      activeElement: null,
+      documentElement: null,
+      getElementById: () => null,
+      querySelector: () => null,
+      querySelectorAll: () => [],
+    },
+    location: { hash: "", pathname: "/concept/80-energy-model/" },
+    innerHeight: 720,
+    innerWidth: 320,
+  };
+  const pending = runInNewContext(portalStateExpression, context, { timeout: 1000 });
+  assert.equal(pending.documentReady, false);
+  assert.equal(pending.pageClientWidth, undefined);
+
+  context.document.documentElement = { clientWidth: 320, scrollWidth: 320 };
+  const ready = runInNewContext(portalStateExpression, context, { timeout: 1000 });
+  assert.equal(ready.documentReady, true);
+  assert.equal(ready.readerPresent, false);
+  assert.equal(ready.pageClientWidth, 320);
+  assert.equal(ready.pageScrollWidth, 320);
+});
+
+test("portal polling skips only explicit pending snapshots and propagates evaluation errors", async () => {
+  let requests = 0;
+  let acceptedSnapshots = 0;
+  const ready = { documentReady: true, readerPresent: true };
+  const cdp = {
+    async send(method, { expression }) {
+      assert.equal(method, "Runtime.evaluate");
+      assert.equal(expression, portalStateExpression);
+      requests += 1;
+      return { result: { value: requests === 1 ? { documentReady: false } : ready } };
+    },
+  };
+  const observed = await waitForBrowserState(cdp, portalStateExpression, (snapshot) => {
+    acceptedSnapshots += 1;
+    assert.equal(snapshot.documentReady, true);
+    return snapshot.readerPresent;
+  }, "pending portal snapshot did not become ready");
+  assert.equal(observed, ready);
+  assert.equal(requests, 2);
+  assert.equal(acceptedSnapshots, 1);
+
+  await assert.rejects(waitForBrowserState({
+    async send() {
+      return { exceptionDetails: { text: "unexpected evaluation error" } };
+    },
+  }, portalStateExpression, () => true, "unexpected evaluation failure"), /Browser evaluation failed/);
 });
 
 test("portal document routes preserve native links and focus their destination headings", {
