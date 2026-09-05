@@ -63,6 +63,11 @@ inventory. The reviewed Goldmark MIT text is retained verbatim in
 fails if that text or the compiled module graph differs from the reviewed
 identity.
 
+The CLRS generator wheelhouse foundation retains the reviewed Promise 2.3 MIT
+text verbatim in [`LICENSES/promise-MIT.txt`](LICENSES/promise-MIT.txt). Its
+source distribution and candidate wheel keep their own MIT terms; the
+foundation fails if the retained text differs from the recorded identity.
+
 ## Material not relicensed by this repository
 
 The licences above apply only to rights that the project contributors are

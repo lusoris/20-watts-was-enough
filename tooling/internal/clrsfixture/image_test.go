@@ -12,7 +12,8 @@ import (
 const (
 	expectedGeneratorLockInputSHA256  = "ea0e8f7d2d3ce347e82cbdd0e956dceca3da27ee499b52e18a6f6010526a5a19"
 	expectedGeneratorDependencySHA256 = "1aff6ff0e589539e07b3ee75579803ebd66636ab35568661680a703ed38ab640"
-	expectedGeneratorImageSHA256      = "75ee2897e844d9509a504c09d80a8ffbbc3ad424a18d0556ee281233d419c51f"
+	expectedGeneratorWheelhouseSHA256 = "06f86574c8457337919bc2380b1fca899215bacd3c040cb127ea2d27ff9dcd06"
+	expectedGeneratorImageSHA256      = "01c7572913795e3a930e73224b2c63f6a9361fd3542a956dad2d181db91c46a5"
 )
 
 func TestTrackedGeneratorImageFoundationIsClosedAndBlocked(t *testing.T) {
@@ -30,11 +31,13 @@ func TestTrackedGeneratorImageFoundationIsClosedAndBlocked(t *testing.T) {
 	}
 	if foundation.LockInputSHA256 != expectedGeneratorLockInputSHA256 ||
 		foundation.DependencyLockSHA256 != expectedGeneratorDependencySHA256 ||
+		foundation.WheelhouseSHA256 != expectedGeneratorWheelhouseSHA256 ||
 		foundation.ImageContractSHA256 != expectedGeneratorImageSHA256 {
 		t.Fatalf(
-			"foundation input/dependency/image hashes = %s/%s/%s",
+			"foundation input/dependency/wheelhouse/image hashes = %s/%s/%s/%s",
 			foundation.LockInputSHA256,
 			foundation.DependencyLockSHA256,
+			foundation.WheelhouseSHA256,
 			foundation.ImageContractSHA256,
 		)
 	}
@@ -165,15 +168,34 @@ func TestParseGeneratorImageContractRejectsPretendedAcceptance(t *testing.T) {
 	lockBody := trackedGeneratorFile(t, "lock-input.json")
 	valid := string(trackedGeneratorFile(t, "image-contract.json"))
 	tests := map[string]string{
-		"duplicate":            strings.Replace(valid, `"state": "blocked"`, `"state": "blocked", "state": "blocked"`, 1),
-		"unknown":              strings.Replace(valid, `"schema_version": 1`, `"schema_version": 1, "extra": true`, 1),
-		"trailing":             valid + `{}`,
-		"ready header":         strings.Replace(valid, `"state": "blocked"`, `"state": "ready"`, 1),
-		"result authority":     strings.Replace(valid, `"NO_RESULT"`, `"RESULT"`, 1),
-		"wrong source":         strings.Replace(valid, contractSourceIdentity(t), "sha256:"+strings.Repeat("a", 64), 1),
-		"wrong contract":       strings.Replace(valid, expectedContractIdentity, "sha256:"+strings.Repeat("b", 64), 1),
-		"wrong lock digest":    strings.Replace(valid, expectedGeneratorLockInputSHA256, strings.Repeat("c", 64), 1),
-		"dependency missing":   strings.Replace(valid, `"state": "locked"`, `"state": "missing"`, 1),
+		"duplicate":          strings.Replace(valid, `"state": "blocked"`, `"state": "blocked", "state": "blocked"`, 1),
+		"unknown":            strings.Replace(valid, `"schema_version": 1`, `"schema_version": 1, "extra": true`, 1),
+		"trailing":           valid + `{}`,
+		"ready header":       strings.Replace(valid, `"state": "blocked"`, `"state": "ready"`, 1),
+		"result authority":   strings.Replace(valid, `"NO_RESULT"`, `"RESULT"`, 1),
+		"wrong source":       strings.Replace(valid, contractSourceIdentity(t), "sha256:"+strings.Repeat("a", 64), 1),
+		"wrong contract":     strings.Replace(valid, expectedContractIdentity, "sha256:"+strings.Repeat("b", 64), 1),
+		"wrong lock digest":  strings.Replace(valid, expectedGeneratorLockInputSHA256, strings.Repeat("c", 64), 1),
+		"dependency missing": strings.Replace(valid, `"state": "locked"`, `"state": "missing"`, 1),
+		"wheelhouse missing": strings.Replace(
+			valid,
+			`"state": "wheelhouse-manifest-locked"`,
+			`"state": "missing"`,
+			1,
+		),
+		"wheelhouse path": strings.Replace(
+			valid,
+			`"wheelhouse_manifest_path": "tooling/clrs-generator/wheelhouse.json"`,
+			`"wheelhouse_manifest_path": "wheelhouse.json"`,
+			1,
+		),
+		"invalid wheelhouse digest": strings.Replace(valid, expectedGeneratorWheelhouseSHA256, strings.Repeat("f", 63), 1),
+		"dockerfile pretence": strings.Replace(
+			valid,
+			`"dockerfile_sha256": ""`,
+			`"dockerfile_sha256": "`+strings.Repeat("e", 64)+`"`,
+			1,
+		),
 		"networked install":    strings.Replace(valid, `"install_network": "none"`, `"install_network": "default"`, 1),
 		"licence SPDX":         strings.Replace(valid, `"spdx": "Apache-2.0"`, `"spdx": "MIT"`, 1),
 		"licence digest":       strings.Replace(valid, `"source_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"`, `"source_sha256": "`+strings.Repeat("d", 64)+`"`, 1),
@@ -205,6 +227,13 @@ func TestParseGeneratorImageContractRejectsPretendedAcceptance(t *testing.T) {
 		"ready acceptance":     strings.Replace(valid, `"source_context": "locked"`, `"source_context": "ready"`, 1),
 		"dropped blocker":      strings.Replace(valid, `"pinned_source_import_smoke",`, ``, 1),
 		"dropped licence gate": strings.Replace(valid, `"pinned_upstream_license_material",`, ``, 1),
+		"procedure gate":       strings.Replace(valid, `"promise_source_build_procedure",`, ``, 1),
+		"source receipt gate": strings.Replace(
+			valid,
+			`"promise_source_build_reproduction_receipt",`,
+			``,
+			1,
+		),
 	}
 	for name, body := range tests {
 		name, body := name, body
@@ -255,6 +284,24 @@ func TestGeneratorImageFoundationRejectsSymlinkAndDependencyLockTamper(t *testin
 	}
 	if _, err := CheckGeneratorImageFoundation(root); err == nil || !strings.Contains(err.Error(), "digest is invalid") {
 		t.Fatalf("CheckGeneratorImageFoundation project error = %v", err)
+	}
+
+	root = copyGeneratorFoundation(t)
+	wheelhousePath := filepath.Join(root, filepath.FromSlash(trackedGeneratorWheelhousePath))
+	if err := os.WriteFile(wheelhousePath, []byte("{}\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := CheckGeneratorImageFoundation(root); err == nil || !strings.Contains(err.Error(), "manifest digest is invalid") {
+		t.Fatalf("CheckGeneratorImageFoundation wheelhouse-manifest error = %v", err)
+	}
+
+	root = copyGeneratorFoundation(t)
+	promiseLicense := filepath.Join(root, filepath.FromSlash(promiseLicensePath))
+	if err := os.WriteFile(promiseLicense, []byte("not the MIT licence\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := CheckGeneratorImageFoundation(root); err == nil || !strings.Contains(err.Error(), "licence identity is invalid") {
+		t.Fatalf("CheckGeneratorImageFoundation promise-licence error = %v", err)
 	}
 }
 
@@ -340,6 +387,8 @@ func copyGeneratorFoundation(t *testing.T) string {
 		trackedImageContractPath,
 		trackedGeneratorProjectPath,
 		trackedGeneratorDependencyLockPath,
+		trackedGeneratorWheelhousePath,
+		promiseLicensePath,
 		"tooling/pdf-renderer/lock.json",
 	}
 	for _, relative := range paths {

@@ -1,7 +1,8 @@
 # CLRS generator image foundation
 
-No generator image is admitted yet. This directory now records the exact
-Linux `amd64` dependency graph, but the build context and retained acceptance
+No generator image is admitted yet. This directory records the exact Linux
+`amd64` dependency graph and the selected 61-file wheelhouse manifest. The
+wheel bytes, Dockerfile, complete build context and retained acceptance
 receipts are still absent. Registry absence has not been checked; the state
 remains `blocked` and `NO_RESULT`.
 
@@ -24,11 +25,26 @@ the controller, validator and fixture-import boundary.
   artifacts. Two isolated runs of the pinned resolver produced identical lock
   bytes. This closes dependency resolution only; it does not prove that the
   source imports or runs.
+- [`wheelhouse.json`](wheelhouse.json) selects one exact Python 3.13 Linux
+  `amd64` wheel for each of the 61 runtime packages and binds the pinned
+  Bookworm image's glibc 2.36 boundary. Sixty wheels map directly to compatible
+  artifacts in `uv.lock`; the Go validator rejects musl, WebAssembly,
+  free-threaded CPython, other architectures and glibc versions newer than the
+  base. `promise==2.3` has no upstream wheel, so the manifest fixes its
+  19,534-byte sdist, the three locked build-tool wheels, candidate step
+  arguments and the output identity seen in two local reconnaissance builds.
+  The complete executable container procedure and reproduction receipt remain
+  explicitly missing. The Promise MIT text is retained at
+  [`LICENSES/promise-MIT.txt`](../../LICENSES/promise-MIT.txt); the manifest
+  binds its source and built-wheel paths, hash and size. The complete selected
+  set is 823,932,066 bytes; those bytes remain ignored build inputs rather than
+  Git content.
 - [`image-contract.json`](image-contract.json) reuses the repository's pinned
   Buildx, BuildKit and timestamp-rewrite authority; fixes resource and runtime
   containment; binds the upstream licence's final image path; caps retained
-  SBOM bytes and packages; binds the exact dependency files; and records each
-  remaining acceptance identity as `missing`.
+  SBOM bytes and packages; binds the exact dependency files and selected
+  wheelhouse manifest; and keeps the Dockerfile and every execution-derived
+  acceptance identity missing.
 
 Python 3.13 is the newest candidate interpreter because TensorFlow 2.21.0 has no
 CPython 3.14 wheel, while current JAX and JAXlib require Python 3.12 or newer.
@@ -48,23 +64,43 @@ go -C tooling vet ./internal/clrsfixture
 
 `CheckGeneratorImageFoundation` rejects ambiguous JSON, non-canonical authority
 files, symlinks and unstable reads. It derives the project requirements from
-the reviewed inputs, binds the complete lock digest, checks its resolver
-header, cutoff, selected high-impact wheels, package count, artifact count and
-total recorded bytes, and rejects artifacts uploaded after the cutoff. A
-Dockerfile or wheelhouse manifest still fails while the contract marks it
-missing.
+the reviewed inputs, binds the complete lock and wheelhouse-manifest digests,
+checks the resolver header and cutoff, and requires exactly one selected wheel
+per runtime package. Every downloaded wheel must be an exact, platform-
+compatible `uv.lock` artifact. The sole source-built wheel must match its
+frozen source, build tools, candidate arguments, environment subset and output
+identity. This does not turn those partial fields into a build procedure.
+Directory enumeration and expected sizes bound verification before hashing; a
+final name-and-file-identity pass rejects files added or replaced during the
+read.
+
+Once the ignored wheel bytes have been materialised, verify their exact names,
+sizes, hashes and complete set without Python, a resolver or network access:
+
+```bash
+go -C tooling run ./cmd/20w experiment verify-clrs-wheelhouse \
+  --root .. \
+  --wheelhouse /path/to/wheelhouse
+```
+
+To reproduce the reviewed manifest into a new file for comparison, use
+`experiment render-clrs-wheelhouse-manifest`; it refuses to overwrite an
+existing output. Rendering a candidate does not change repository authority.
 
 ## Admission sequence
 
 The image stays blocked until one later, bounded change provides all of the
 following:
 
-1. a hash-complete Linux `amd64` wheelhouse and manifest selected from the
-   exact uv lock;
+1. materialisation of the 60 locked upstream wheels plus one complete,
+   retained container procedure and receipt for two clean, byte-identical
+   builds of the locked `promise` wheel;
 2. a checksum-closed Dockerfile and complete build context whose dependency
    install runs without network access;
 3. the 11,358-byte Apache-2.0 `LICENSE`, with its pinned source digest, at
-   `/usr/share/licenses/clrs/LICENSE`, bound to the final image and receipt;
+   `/usr/share/licenses/clrs/LICENSE`, plus verification that Promise's pinned
+   1,079-byte MIT text survives installation in its wheel metadata; both must
+   be represented in final-image evidence;
 4. a successful import smoke for the pinned CLRS source;
 5. identical manifest, config and layer identities from two isolated,
    no-cache builds;
@@ -87,6 +123,7 @@ seconds of wall time. The external runner must stop and remove the complete
 container after a five-second grace period. These are construction limits, not
 performance results.
 
-There is deliberately no `Dockerfile`, wheelhouse, generated fixture, admitted
-image digest or publication step in this foundation. [Issue 12](https://github.com/lusoris/20-watts-was-enough/issues/12)
-tracks the remaining acceptance work.
+There is deliberately no `Dockerfile`, committed wheel payload, generated
+fixture, admitted image digest or publication step in this foundation.
+[Issue 12](https://github.com/lusoris/20-watts-was-enough/issues/12) tracks the
+remaining acceptance work.

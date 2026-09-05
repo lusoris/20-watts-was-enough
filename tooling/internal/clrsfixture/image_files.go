@@ -22,6 +22,8 @@ const (
 	trackedImageContractPath           = "tooling/clrs-generator/image-contract.json"
 	trackedGeneratorProjectPath        = "tooling/clrs-generator/pyproject.toml"
 	trackedGeneratorDependencyLockPath = "tooling/clrs-generator/uv.lock"
+	trackedGeneratorWheelhousePath     = "tooling/clrs-generator/wheelhouse.json"
+	maximumGeneratorWheelLicenseBytes  = 4 << 10
 )
 
 // CheckGeneratorImageFoundation validates the complete committed foundation
@@ -87,13 +89,41 @@ func CheckGeneratorImageFoundation(repositoryRoot string) (GeneratorImageFoundat
 	); err != nil {
 		return GeneratorImageFoundation{}, err
 	}
-	for _, missing := range []string{
-		imageContract.BuildContext.DockerfilePath,
+	wheelhouseBody, err := readGeneratorFile(
+		root,
 		imageContract.BuildContext.WheelhouseManifestPath,
-	} {
-		if err := requireMissingGeneratorFile(root, missing); err != nil {
-			return GeneratorImageFoundation{}, err
-		}
+		imageContract.Limits.WheelhouseManifestBytes,
+	)
+	if err != nil {
+		return GeneratorImageFoundation{}, err
+	}
+	if rawSHA256(wheelhouseBody) != imageContract.BuildContext.WheelhouseManifestSHA256 {
+		return GeneratorImageFoundation{}, errors.New("CLRS generator wheelhouse manifest digest is invalid")
+	}
+	wheelhouseManifest, err := ParseGeneratorWheelhouseManifest(
+		wheelhouseBody,
+		dependencyLockBody,
+		lockInput,
+		imageContract,
+	)
+	if err != nil {
+		return GeneratorImageFoundation{}, err
+	}
+	promiseProvenance := wheelhouseManifest.SourceBuild.Provenance
+	promiseLicenseBody, err := readGeneratorFile(
+		root,
+		promiseProvenance.RepositoryLicensePath,
+		maximumGeneratorWheelLicenseBytes,
+	)
+	if err != nil {
+		return GeneratorImageFoundation{}, err
+	}
+	if rawSHA256(promiseLicenseBody) != promiseProvenance.LicenseSHA256 ||
+		int64(len(promiseLicenseBody)) != promiseProvenance.LicenseSizeBytes {
+		return GeneratorImageFoundation{}, errors.New("CLRS generator promise licence identity is invalid")
+	}
+	if err := requireMissingGeneratorFile(root, imageContract.BuildContext.DockerfilePath); err != nil {
+		return GeneratorImageFoundation{}, err
 	}
 	sourceID, _ := source.Identity()
 	generationID, _ := generation.Identity(source)
@@ -104,6 +134,7 @@ func CheckGeneratorImageFoundation(repositoryRoot string) (GeneratorImageFoundat
 		GenerationContract:   generationID,
 		LockInputSHA256:      rawSHA256(lockBody),
 		DependencyLockSHA256: rawSHA256(dependencyLockBody),
+		WheelhouseSHA256:     rawSHA256(wheelhouseBody),
 		ImageContractSHA256:  rawSHA256(imageBody),
 	}, nil
 }
