@@ -7,6 +7,9 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Printed readiness-stage values remain with their labels before the following
+  evidence table, without changing the card layout or screen positioning.
+
 - Printed chapter titles preserve word separation without changing font size
   or screen typography. Semantic audit failures
   distinguish remaining debt from the full retained sentinel inventory.

@@ -292,6 +292,32 @@ test("printed chapter headings preserve natural word separation and wrapping", a
   assert.equal(appendix.split(/\r?\n/u)[0], "# Global field coverage");
 });
 
+test("printed readiness stages preserve paint order without changing screen positioning", async () => {
+  const stylesheet = postcss.parse(await source("app/globals.css"));
+  const bookOwners = [];
+  const screenOwners = [];
+  stylesheet.walkRules((rule) => {
+    if (rule.selectors.includes(".readiness-overview-book .readiness-stage")) bookOwners.push(rule);
+    if (rule.selectors.includes(".readiness-stage") && rule.parent.type === "root") screenOwners.push(rule);
+  });
+  assert.equal(bookOwners.length, 1, "one book-stage owner avoids a competing screen override");
+  const owner = bookOwners[0];
+  assert.equal(owner.parent.type, "atrule");
+  assert.equal(owner.parent.name, "media");
+  assert.equal(owner.parent.params, "print", "the paint-order correction is print-only");
+  const positions = owner.nodes.filter((node) => node.type === "decl" && node.prop === "position");
+  assert.equal(positions.length, 1, "print positioning has one explicit declaration");
+  assert.equal(positions[0].value, "static");
+  assert.ok(!positions[0].important, "the owning rule needs no cascade escalation");
+  assert.equal(screenOwners.length, 1);
+  assert.deepEqual(
+    screenOwners[0].nodes.filter((node) => node.type === "decl" && node.prop === "position")
+      .map((node) => node.value),
+    ["relative"],
+    "screen stage arrows retain their existing positioning context",
+  );
+});
+
 test("the web book defers media work while PDF rendering stays eager", async () => {
   const [edition, stylesheet] = await Promise.all([
     source("app/components/book-edition.tsx"),

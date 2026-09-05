@@ -2258,6 +2258,7 @@ button {
   }
 
   .readiness-overview-book .readiness-stage {
+    position: static;
     min-height: 25mm;
     padding: 4mm;
   }
