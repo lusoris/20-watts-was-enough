@@ -2963,6 +2963,7 @@ button {
 /* Research-publication pass: manuscript first, evidence chrome second. */
 @media screen {
   .portal-shell {
+    --portal-sticky-header-height: 62px;
     --portal-night: #10271b;
     --portal-night-raised: #183426;
     --portal-ink: #18271f;
@@ -2975,7 +2976,7 @@ button {
   }
 
   .portal-header {
-    min-height: 62px;
+    min-height: var(--portal-sticky-header-height);
     gap: 24px;
     padding-inline: max(20px, calc((100vw - 1260px) / 2));
     border-bottom: 1px solid #355243;
@@ -3643,8 +3644,8 @@ button {
   }
 
   .portal-reader-page {
-    min-height: calc(100dvh - 62px);
-    scroll-margin-top: 62px;
+    min-height: calc(100dvh - var(--portal-sticky-header-height));
+    scroll-margin-top: var(--portal-sticky-header-height);
     background: #f1f1eb;
   }
 
@@ -4090,10 +4091,11 @@ button {
     text-transform: none;
   }
 
+  #portal-reader-title,
   .portal-prose h2,
   .portal-prose h3,
   .portal-prose h4 {
-    scroll-margin-top: 78px;
+    scroll-margin-top: calc(var(--portal-sticky-header-height) + 16px);
   }
 
   .portal-prose :is(
@@ -4203,7 +4205,7 @@ button {
 
   .portal-mobile-outline {
     position: sticky;
-    top: 62px;
+    top: var(--portal-sticky-header-height);
     z-index: 32;
     display: block;
     width: min(100%, 1400px);

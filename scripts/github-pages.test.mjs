@@ -97,6 +97,7 @@ async function waitForBrowserState(cdp, expression, accepts, label, timeoutMs = 
 const portalStateExpression = `(() => {
   const active = document.activeElement;
   const title = document.getElementById("portal-reader-title");
+  const header = document.querySelector(".portal-header");
   const drawer = document.getElementById("portal-corpus-drawer");
   const drawerScroller = drawer?.querySelector(".portal-library");
   const documentList = drawer?.querySelector(".portal-document-list");
@@ -108,6 +109,8 @@ const portalStateExpression = `(() => {
   const hashBounds = hashTarget?.getBoundingClientRect();
   const documentLinks = [...document.querySelectorAll(".portal-document-list > a")];
   const activeBounds = active?.getBoundingClientRect();
+  const headerBounds = header?.getBoundingClientRect();
+  const titleBounds = title?.getBoundingClientRect();
   const drawerScrollerBounds = drawerScroller?.getBoundingClientRect();
   const activeStyle = active ? getComputedStyle(active) : null;
   const focusPaintExtent = activeStyle
@@ -138,6 +141,7 @@ const portalStateExpression = `(() => {
     hash: location.hash,
     hashTargetTop: hashBounds?.top ?? null,
     hashTargetVisible: Boolean(hashBounds && hashBounds.bottom > 0 && hashBounds.top < innerHeight),
+    headerBottom: headerBounds?.bottom ?? null,
     pathname: location.pathname,
     pageClientWidth: document.documentElement.clientWidth,
     pageScrollWidth: document.documentElement.scrollWidth,
@@ -148,6 +152,10 @@ const portalStateExpression = `(() => {
     triggerExpanded: document.getElementById("portal-corpus-trigger")?.getAttribute("aria-expanded"),
     titleTabIndex: title?.getAttribute("tabindex") ?? null,
     titleText: title?.textContent?.trim() ?? "",
+    titleFocusTop: titleBounds && active === title
+      ? titleBounds.top - focusPaintExtent
+      : null,
+    titleScrollMarginTop: title ? getComputedStyle(title).scrollMarginTop : null,
     viewportWidth: innerWidth,
   };
 })()`;
@@ -417,6 +425,54 @@ async function exerciseResponsiveCorpusDrawer(cdp) {
     deviceScaleFactor: 1,
     mobile: false,
   });
+}
+
+async function exerciseSkipToDocumentClearance(cdp, portalUrl) {
+  const route = new URL("concept/80-energy-model/", portalUrl);
+  const layouts = [
+    { width: 720, height: 600 },
+    { width: 320, height: 720 },
+  ];
+
+  for (const layout of layouts) {
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+      width: layout.width,
+      height: layout.height,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+    await cdp.send("Page.navigate", { url: route.href });
+    await waitForBrowserState(
+      cdp,
+      portalStateExpression,
+      (snapshot) => snapshot.pathname === route.pathname && snapshot.readerPresent,
+      `energy-model route did not render at ${layout.width}px`,
+    );
+    await evaluateInBrowser(cdp, `(() => {
+      window.scrollTo(0, document.scrollingElement.scrollHeight);
+      document.querySelector(".portal-skip-link").focus({ preventScroll: true });
+    })()`);
+    await waitForBrowserState(
+      cdp,
+      `({ activeClass: document.activeElement?.className ?? "", scrollY })`,
+      (snapshot) => snapshot.activeClass === "portal-skip-link" && snapshot.scrollY > 0,
+      `skip link was not keyboard-ready at ${layout.width}px`,
+    );
+    await dispatchKeyboardKey(cdp, "Enter", "Enter", 13);
+    const state = await waitForBrowserState(
+      cdp,
+      portalStateExpression,
+      (snapshot) => snapshot.hash === "#portal-reader-title"
+        && snapshot.activeId === "portal-reader-title"
+        && snapshot.activeFocusVisible,
+      `skip link did not focus the document title at ${layout.width}px`,
+    );
+    assert.ok(
+      state.titleFocusTop >= state.headerBottom,
+      `focused title starts at ${state.titleFocusTop}px behind a header ending at ${state.headerBottom}px at ${layout.width}px`,
+    );
+    assert.ok(Number.parseFloat(state.titleScrollMarginTop) > state.headerBottom);
+  }
 }
 
 async function openSidebarRoute(cdp) {
@@ -773,6 +829,7 @@ test("portal document routes preserve native links and focus their destination h
     await traverseDocumentHistory(cdp, thesis, thesisState, route);
     const fragment = await openOutlineFragment(cdp);
     await traverseFragmentHistory(cdp, thesis, route, fragment);
+    await exerciseSkipToDocumentClearance(cdp, portalUrl);
   });
 });
 
