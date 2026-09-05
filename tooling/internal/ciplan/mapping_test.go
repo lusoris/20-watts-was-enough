@@ -36,6 +36,7 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		{path: "scripts/book-pdf-semantic-baseline.json", mode: "impact", lanes: []string{"release"}},
 		{path: "scripts/generate-book-pdf.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
 		{path: "scripts/audit-prose-style.mjs", mode: "full", lanes: []string{"full"}, reason: "full-authority-changed"},
+		{path: "scripts/book-edition-surface.test.mjs", mode: "impact", lanes: []string{"site"}},
 		{path: "scripts/mermaid-browser.test.mjs", mode: "impact", lanes: []string{"site"}},
 		{path: "scripts/unclassified-future-check.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:scripts/unclassified-future-check.mjs"},
 		{path: "experiments/workstation/fixture-026/runner.mjs", mode: "impact", lanes: []string{"workstation-fixture-026"}},
@@ -75,12 +76,47 @@ func TestReaderLikeDiffSelectsOnlyItsPublicationConsumers(t *testing.T) {
 	plan := selectTestPaths(t, root, testOptions(root), []string{
 		"CHANGELOG.md",
 		"app/globals.css",
+		"scripts/book-edition-surface.test.mjs",
 		"scripts/mermaid-browser.test.mjs",
 	})
 	want := []string{"release", "renderer", "research", "site"}
 	if plan.Mode != "impact" || plan.Reason != "mapped-change-set" ||
 		!reflect.DeepEqual(plan.Lanes, want) {
 		t.Fatalf("reader-like plan = %#v, want impact/%v", plan, want)
+	}
+}
+
+func TestEverySiteLaneEntrypointIsMappedToTheSiteLane(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	mapping, err := loadMapping(root)
+	if err != nil {
+		t.Fatalf("loadMapping(repository) error = %v", err)
+	}
+	paths := []string{
+		"scripts/book-edition-surface.test.mjs",
+		"scripts/book-fragment-browser.test.mjs",
+		"scripts/book-route.test.mjs",
+		"scripts/github-pages.test.mjs",
+		"scripts/language-access.test.mjs",
+		"scripts/mermaid-browser.test.mjs",
+		"scripts/pages-base.test.mjs",
+		"scripts/pages-seo.test.mjs",
+		"scripts/prepare-reader-artifacts.mjs",
+		"scripts/prepare-reader-artifacts.test.mjs",
+		"scripts/publication-unification.test.mjs",
+		"scripts/translation-manifest.test.mjs",
+		"scripts/translation-pages.test.mjs",
+		"scripts/translation-vite-build.test.mjs",
+		"scripts/validate-github-pages-build.mjs",
+		"scripts/validate-translations.mjs",
+	}
+	for _, path := range paths {
+		plan := selectChangedPaths(mapping, testOptions(root), []string{path})
+		if plan.Mode != "impact" || plan.Reason != "mapped-change-set" ||
+			!reflect.DeepEqual(plan.Lanes, []string{"site"}) {
+			t.Fatalf("site entrypoint %s produced %#v, want mapped site impact plan", path, plan)
+		}
 	}
 }
 
