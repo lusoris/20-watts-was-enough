@@ -707,7 +707,7 @@ test("the no-JavaScript document uses the generated research-object projection",
 });
 
 test("the no-JavaScript research header owns visible color and focus tokens", async () => {
-  const stylesheet = await readFile("app/globals.css", "utf8");
+  const stylesheet = await readFile("app/portal.css", "utf8");
   const headerRuleStart = stylesheet.indexOf("  .research-object-header {");
   const headerRuleEnd = stylesheet.indexOf("\n  }", headerRuleStart);
   assert.ok(headerRuleStart >= 0 && headerRuleEnd > headerRuleStart);

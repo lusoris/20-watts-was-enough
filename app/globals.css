@@ -1410,6 +1410,11 @@ button {
   font-weight: 700;
 }
 
+.book-legal span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .book-cover,
 .book-toc,
 .book-document {
