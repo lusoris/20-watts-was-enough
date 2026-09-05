@@ -33,11 +33,11 @@
     "artifact_count": 135
   },
   "build_context": {
-    "state": "missing",
+    "state": "wheelhouse-manifest-locked",
     "dockerfile_path": "tooling/clrs-generator/Dockerfile",
     "dockerfile_sha256": "",
     "wheelhouse_manifest_path": "tooling/clrs-generator/wheelhouse.json",
-    "wheelhouse_manifest_sha256": "",
+    "wheelhouse_manifest_sha256": "06f86574c8457337919bc2380b1fca899215bacd3c040cb127ea2d27ff9dcd06",
     "context_sha256": "",
     "install_network": "none"
   },
@@ -149,6 +149,8 @@
     "blocked_on": [
       "checksum_closed_build_context",
       "pinned_upstream_license_material",
+      "promise_source_build_procedure",
+      "promise_source_build_reproduction_receipt",
       "image_bound_spdx_sbom",
       "no_network_runtime_smoke",
       "pinned_source_import_smoke",

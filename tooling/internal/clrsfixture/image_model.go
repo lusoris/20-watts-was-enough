@@ -82,7 +82,7 @@ type GeneratorImageContract struct {
 	LockInput            GeneratorFileBinding     `json:"lock_input"`
 	Builder              GeneratorBuilder         `json:"builder"`
 	DependencyLock       GeneratorDependencyLock  `json:"dependency_lock"`
-	BuildContext         MissingBuildContext      `json:"build_context"`
+	BuildContext         GeneratorBuildContext    `json:"build_context"`
 	LicenseMaterial      MissingLicenseMaterial   `json:"license_material"`
 	ImageIdentity        MissingImageIdentity     `json:"image_identity"`
 	SBOM                 MissingSBOM              `json:"sbom"`
@@ -120,7 +120,7 @@ type GeneratorDependencyLock struct {
 	ArtifactCount int    `json:"artifact_count"`
 }
 
-type MissingBuildContext struct {
+type GeneratorBuildContext struct {
 	State                    string `json:"state"`
 	DockerfilePath           string `json:"dockerfile_path"`
 	DockerfileSHA256         string `json:"dockerfile_sha256"`
@@ -240,5 +240,69 @@ type GeneratorImageFoundation struct {
 	GenerationContract   ContractID
 	LockInputSHA256      string
 	DependencyLockSHA256 string
+	WheelhouseSHA256     string
 	ImageContractSHA256  string
+}
+
+// GeneratorWheelhouseManifest binds the one Linux amd64 artifact selected for
+// every locked runtime package. It is a construction input, not an admitted
+// image or scientific result.
+type GeneratorWheelhouseManifest struct {
+	SchemaVersion         int                        `json:"schema_version"`
+	Authority             string                     `json:"authority"`
+	State                 string                     `json:"state"`
+	Platform              string                     `json:"platform"`
+	PythonVersion         string                     `json:"python_version"`
+	BaseImage             string                     `json:"base_image"`
+	GlibcVersion          string                     `json:"glibc_version"`
+	DependencyLockSHA256  string                     `json:"dependency_lock_sha256"`
+	SourceDateEpoch       int64                      `json:"source_date_epoch"`
+	PackageCount          int                        `json:"package_count"`
+	ArtifactCount         int                        `json:"artifact_count"`
+	DownloadedWheelCount  int                        `json:"downloaded_wheel_count"`
+	SourceBuiltWheelCount int                        `json:"source_built_wheel_count"`
+	TotalSizeBytes        int64                      `json:"total_size_bytes"`
+	Artifacts             []GeneratorWheelhouseEntry `json:"artifacts"`
+	SourceBuild           GeneratorWheelSourceBuild  `json:"source_build"`
+}
+
+type GeneratorWheelhouseEntry struct {
+	Package   string `json:"package"`
+	Version   string `json:"version"`
+	Kind      string `json:"kind"`
+	Filename  string `json:"filename"`
+	URL       string `json:"url"`
+	SHA256    string `json:"sha256"`
+	SizeBytes int64  `json:"size_bytes"`
+}
+
+type GeneratorWheelSourceBuild struct {
+	ProcedureState            string                         `json:"procedure_state"`
+	ReproductionReceiptState  string                         `json:"reproduction_receipt_state"`
+	Package                   string                         `json:"package"`
+	Version                   string                         `json:"version"`
+	Provenance                GeneratorWheelSourceProvenance `json:"provenance"`
+	SourceURL                 string                         `json:"source_url"`
+	SourceSHA256              string                         `json:"source_sha256"`
+	SourceSizeBytes           int64                          `json:"source_size_bytes"`
+	BuilderImage              string                         `json:"builder_image"`
+	BuildRequirements         []GeneratorWheelhouseEntry     `json:"build_requirements"`
+	CandidateWorkingDirectory string                         `json:"candidate_working_directory"`
+	CandidateBootstrapCommand []string                       `json:"candidate_bootstrap_argv"`
+	CandidateInstallCommand   []string                       `json:"candidate_install_argv"`
+	CandidateBuildCommand     []string                       `json:"candidate_build_argv"`
+	CandidateEnvironment      []string                       `json:"candidate_environment"`
+	RequiredReproductions     int                            `json:"required_reproductions"`
+}
+
+type GeneratorWheelSourceProvenance struct {
+	AcquiredOn            string `json:"acquired_on"`
+	AccessRoute           string `json:"access_route"`
+	UploadTime            string `json:"upload_time"`
+	SPDX                  string `json:"spdx"`
+	RepositoryLicensePath string `json:"repository_license_path"`
+	SourceLicensePath     string `json:"source_license_path"`
+	BuiltWheelLicensePath string `json:"built_wheel_license_path"`
+	LicenseSHA256         string `json:"license_sha256"`
+	LicenseSizeBytes      int64  `json:"license_size_bytes"`
 }

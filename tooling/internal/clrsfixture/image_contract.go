@@ -23,6 +23,8 @@ var (
 	lockedGeneratorBlockers = []string{
 		"checksum_closed_build_context",
 		"pinned_upstream_license_material",
+		"promise_source_build_procedure",
+		"promise_source_build_reproduction_receipt",
 		"image_bound_spdx_sbom",
 		"no_network_runtime_smoke",
 		"pinned_source_import_smoke",
@@ -130,10 +132,10 @@ func validateGeneratorBuildEvidence(contract GeneratorImageContract, sourceLicen
 		return errors.New("generator dependency lock metadata is invalid")
 	}
 	context := contract.BuildContext
-	if context.State != "missing" || context.DockerfilePath != "tooling/clrs-generator/Dockerfile" ||
-		context.DockerfileSHA256 != "" || context.WheelhouseManifestPath != "tooling/clrs-generator/wheelhouse.json" ||
-		context.WheelhouseManifestSHA256 != "" || context.ContextSHA256 != "" || context.InstallNetwork != "none" {
-		return errors.New("generator checksum-closed build context must remain explicitly missing")
+	if context.State != "wheelhouse-manifest-locked" || context.DockerfilePath != "tooling/clrs-generator/Dockerfile" ||
+		context.DockerfileSHA256 != "" || context.WheelhouseManifestPath != trackedGeneratorWheelhousePath ||
+		!lowerHex(context.WheelhouseManifestSHA256, 64) || context.ContextSHA256 != "" || context.InstallNetwork != "none" {
+		return errors.New("generator build context must bind the locked wheelhouse manifest and keep the Dockerfile explicitly missing")
 	}
 	license := contract.LicenseMaterial
 	if license.State != "missing" || license.SPDX != sourceLicense.SPDX || license.SourcePath != sourceLicense.Path ||

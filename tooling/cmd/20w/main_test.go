@@ -123,6 +123,39 @@ func TestRunPackageNodeImageRequiresClosedArguments(t *testing.T) {
 	}
 }
 
+func TestRunCLRSWheelhouseCommandsAreVisibleAndRequireClosedArguments(t *testing.T) {
+	t.Parallel()
+	var help bytes.Buffer
+	var helpErrors bytes.Buffer
+	if exitCode := run([]string{"--help"}, &help, &helpErrors); exitCode != 0 || helpErrors.Len() != 0 {
+		t.Fatalf("help exit/stderr = %d/%q", exitCode, helpErrors.String())
+	}
+	for _, command := range []string{
+		"experiment render-clrs-wheelhouse-manifest",
+		"experiment verify-clrs-wheelhouse",
+	} {
+		if !strings.Contains(help.String(), command) {
+			t.Fatalf("help omits %q", command)
+		}
+	}
+
+	for name, arguments := range map[string][]string{
+		"render without wheelhouse": {"experiment", "render-clrs-wheelhouse-manifest", "--output", "candidate.json"},
+		"render without output":     {"experiment", "render-clrs-wheelhouse-manifest", "--wheelhouse", "wheels"},
+		"verify without wheelhouse": {"experiment", "verify-clrs-wheelhouse"},
+	} {
+		name, arguments := name, arguments
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			var stdout bytes.Buffer
+			var stderr bytes.Buffer
+			if exitCode := run(arguments, &stdout, &stderr); exitCode != 2 || !strings.Contains(stderr.String(), "requires") {
+				t.Fatalf("run() exit/stdout/stderr = %d/%q/%q, want usage failure", exitCode, stdout.String(), stderr.String())
+			}
+		})
+	}
+}
+
 func TestRunPublicationRenderPDFCheckIsOfflineAndReportsThePin(t *testing.T) {
 	t.Parallel()
 	var stdout bytes.Buffer

@@ -30,6 +30,18 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Decision 0071 locks one 61-file, 823,932,066-byte Linux `amd64` wheel
+  selection for the pinned CLRS generator graph. Sixty files map directly to
+  `uv.lock`; the sole `promise==2.3` source build binds its sdist, three build
+  tools, candidate step arguments, twice-observed local byte identity and MIT
+  licence provenance while the complete build procedure and reproduction
+  receipt remain explicitly missing. Go now renders a candidate manifest to a
+  new path and verifies a materialised directory without Python, resolution or
+  network access. Compatibility is bound to CPython 3.13, Linux `amd64` and
+  glibc 2.36 from the pinned Bookworm base; verification bounds enumeration and
+  bytes before hashing and rejects concurrent directory drift. No wheel payload
+  enters Git, the generator image remains blocked, and all construction state
+  remains `NO_RESULT`.
 - Decision 0068 makes the Go workstation catalogue own each artifact's exact
   package script as well as its creation rank in one embedded machine-readable
   authority. CI consumes the projected, validated `{artifact, script}` objects

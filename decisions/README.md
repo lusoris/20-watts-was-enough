@@ -74,3 +74,4 @@ than silently changing its outcome.
 | [0068](0068-run-workstation-tests-through-the-bounded-go-catalogue.md) | Run workstation tests through the bounded Go catalogue | accepted; clause 2's eight-command local default partly superseded by [0070](0070-default-the-local-workstation-aggregate-to-four-commands.md) |
 | [0069](0069-map-ci-deletions-through-their-owning-lanes.md) | Map CI deletions through their owning lanes | accepted |
 | [0070](0070-default-the-local-workstation-aggregate-to-four-commands.md) | Default the local workstation aggregate to four commands | accepted |
+| [0071](0071-lock-the-clrs-generator-wheel-selection.md) | Lock the CLRS generator wheel selection | accepted |
