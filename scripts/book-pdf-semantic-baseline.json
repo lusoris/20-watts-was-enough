@@ -178,6 +178,34 @@
       "defect": "The lifecycle equation moves behind the beginning of Evidence status in raw content-stream extraction and is absent from tagged structure text."
     },
     {
+      "id": "admissible-action-equation-late",
+      "class": "table-displayed-equation",
+      "recorded_page": 129,
+      "default_anchor": "The held translation assigns controller i an admissible action set",
+      "default_fragments": [
+        "The held translation assigns controller i an admissible action set",
+        "Ui (t) = Ei",
+        "ui (t) ∈ Ui (t),",
+        "where τi is observation age in seconds",
+        "the notation does not make them interchangeable."
+      ],
+      "struct_text_fragments": [
+        "Authority follows information and remaining capability",
+        "The held translation assigns controller ",
+        " an admissible action set",
+        " is observation age in seconds",
+        "the notation does not make them interchangeable."
+      ],
+      "raw_fragments": [
+        "The held translation assigns controller an admissible action set",
+        "where is observation age in seconds",
+        "the notation does not make them interchangeable.\ni\nU",
+        "(t) ∈ U"
+      ],
+      "state": "known-debt",
+      "defect": "The admissible-action equation moves behind its explanation in raw content-stream extraction and is absent from tagged structure text."
+    },
+    {
       "id": "adiabatic-equation-fragmented",
       "class": "diagram-figure",
       "recorded_page": 377,

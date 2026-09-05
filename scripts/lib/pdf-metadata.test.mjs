@@ -527,7 +527,24 @@ test("the tracked semantic baseline is closed and records failing debt", async (
     new URL("../book-pdf-semantic-baseline.json", import.meta.url),
   ));
   assert.equal(baseline.expected_outcome, "known-debt");
-  assert.equal(baseline.sentinels.length, 5);
+  assert.equal(baseline.sentinels.length, 6);
+  const addedSentinel = baseline.sentinels.find(
+    ({ id }) => id === "admissible-action-equation-late",
+  );
+  assert.deepEqual(
+    addedSentinel && {
+      id: addedSentinel.id,
+      class: addedSentinel.class,
+      recorded_page: addedSentinel.recorded_page,
+      state: addedSentinel.state,
+    },
+    {
+      id: "admissible-action-equation-late",
+      class: "table-displayed-equation",
+      recorded_page: 129,
+      state: "known-debt",
+    },
+  );
   assert.equal(
     baseline.sentinels.some(({ id }) => id === "biomimetic-figure-caption-late"),
     false,
