@@ -72,22 +72,18 @@ func visitGenerationTar(ctx context.Context, body []byte, inputs generationRunIn
 	paths := inputs.invocation.ExpectedPaths
 	runtime, output := inputs.authority.image.Runtime, inputs.authority.plan.Output
 	var total int64
-	for index := 0; index <= len(paths); index++ {
+	for _, expectedPath := range paths {
 		if err := ctx.Err(); err != nil {
 			return err
 		}
-		before := stream.Len()
 		header, err := reader.Next()
 		if errors.Is(err, io.EOF) {
-			if index != len(paths) || before-stream.Len() < 1024 {
-				return errors.New("generation tar lacks its exact file set and two-block terminator")
-			}
-			break
+			return errors.New("generation tar lacks its exact file set and two-block terminator")
 		}
 		if err != nil {
 			return err
 		}
-		if index >= len(paths) || header.Name != paths[index] || header.Typeflag != tar.TypeReg || header.Format != tar.FormatUSTAR ||
+		if header.Name != expectedPath || header.Typeflag != tar.TypeReg || header.Format != tar.FormatUSTAR ||
 			header.Size < 1 || header.Size > output.MaxDatasetBytes || header.Mode != 0o644 || header.Uid != runtime.UID || header.Gid != runtime.GID ||
 			header.ModTime.Unix() != inputs.authority.image.Builder.SourceDateEpoch || header.Linkname != "" || len(header.PAXRecords)+len(header.Xattrs) != 0 {
 			return errors.New("generation tar member differs from the fixed USTAR contract")
@@ -103,6 +99,20 @@ func visitGenerationTar(ctx context.Context, body []byte, inputs generationRunIn
 		if err := visit(header.Name, content); err != nil {
 			return err
 		}
+	}
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	before := stream.Len()
+	_, err := reader.Next()
+	if err == nil {
+		return errors.New("generation tar member differs from the fixed USTAR contract")
+	}
+	if !errors.Is(err, io.EOF) {
+		return err
+	}
+	if before-stream.Len() < 1024 {
+		return errors.New("generation tar lacks its exact file set and two-block terminator")
 	}
 	trailing := body[len(body)-stream.Len():]
 	if len(trailing) > 10240 || len(trailing)%512 != 0 || slices.ContainsFunc(trailing, func(value byte) bool { return value != 0 }) {
