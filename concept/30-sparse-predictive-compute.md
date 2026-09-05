@@ -491,9 +491,6 @@ flowchart TB
     prices -.-> work
 ```
 
-Editable source:
-[`../assets/diagrams/adaptive-compute-control.mmd`](../assets/diagrams/adaptive-compute-control.mmd).
-
 ### Authority follows information and remaining capability
 
 Power-grid protection supplies a hard engineering version of local reflex and
