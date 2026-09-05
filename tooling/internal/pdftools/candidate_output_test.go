@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestStageCandidateOutputsRetainsCanonicalSPDXAcrossRelationshipOrder(t *testing.T) {
@@ -64,11 +65,11 @@ func TestStageCandidateOutputsRetainsCanonicalSPDXAcrossRelationshipOrder(t *tes
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = staged.cleanup() })
-	retainedSPDX, err := os.ReadFile(staged.artifacts[1].temporary)
+	retainedSPDX, err := staged.artifacts[1].parentRoot.ReadFile(staged.artifacts[1].temporaryName)
 	if err != nil || !bytes.Equal(retainedSPDX, first.canonical) || bytes.Equal(retainedSPDX, first.raw) {
 		t.Fatalf("retained SPDX is not the common canonical document: %v", err)
 	}
-	bundleBytes, err := os.ReadFile(staged.artifacts[2].temporary)
+	bundleBytes, err := staged.artifacts[2].parentRoot.ReadFile(staged.artifacts[2].temporaryName)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -321,7 +322,7 @@ func installedCandidateFixture(t *testing.T) (string, string, *stagedCandidate, 
 	staged := &stagedCandidate{artifacts: make([]*stagedCandidateArtifact, 0, len(paths))}
 	t.Cleanup(func() { _ = staged.cleanup() })
 	for index, path := range paths {
-		artifact, err := stageCandidateBytes(bodies[index], path, 64, digestRaw(bodies[index]), 1)
+		artifact, err := stageCandidateBytes(root, bodies[index], path, 64, digestRaw(bodies[index]))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -372,6 +373,88 @@ func TestPrepareCandidateOutputPlanRejectsSymlinkAndExistingOutput(t *testing.T)
 	}
 }
 
+func TestCandidateOutputPinnedParentRejectsReplacementWithoutOutsideWrite(t *testing.T) {
+	t.Parallel()
+	root := t.TempDir()
+	parent := filepath.Join(root, "build", "release-inputs")
+	if err := os.MkdirAll(parent, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	destination := candidateOutputPath{
+		relative: "build/release-inputs/final.spdx.json",
+		absolute: filepath.Join(parent, "final.spdx.json"),
+	}
+	artifact, output, err := newStagedCandidateArtifact(root, destination)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cleaned := false
+	t.Cleanup(func() {
+		if !cleaned {
+			_ = output.Close()
+			_ = artifact.cleanup()
+		}
+	})
+	body := []byte("candidate")
+	if _, err := output.Write(body); err != nil {
+		t.Fatal(err)
+	}
+
+	parked := parent + ".parked"
+	outside := t.TempDir()
+	if err := os.Rename(parent, parked); err != nil {
+		t.Skipf("rename candidate parent fixture: %v", err)
+	}
+	if err := os.Symlink(outside, parent); err != nil {
+		t.Skipf("replace candidate parent with symlink fixture: %v", err)
+	}
+	outsideTemporary := filepath.Join(outside, artifact.temporaryName)
+	outsideBody := []byte("unrelated outside file")
+	if err := os.WriteFile(outsideTemporary, outsideBody, 0o640); err != nil {
+		t.Fatal(err)
+	}
+	outsideInstant := time.Unix(946_684_800, 0)
+	if err := os.Chtimes(outsideTemporary, outsideInstant, outsideInstant); err != nil {
+		t.Fatal(err)
+	}
+	outsideBefore, err := os.Lstat(outsideTemporary)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := finishStagedCandidateArtifact(artifact, output, int64(len(body)), digestRaw(body)); err != nil {
+		t.Fatalf("finish through pinned parent: %v", err)
+	}
+	staged := &stagedCandidate{artifacts: []*stagedCandidateArtifact{artifact}}
+	if err := staged.install(root); err == nil {
+		t.Fatal("candidate install accepted a replaced named parent")
+	}
+	if _, err := os.Lstat(filepath.Join(outside, artifact.destinationName)); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("candidate install wrote through the outside parent: %v", err)
+	}
+	outsideAfter, err := os.Lstat(outsideTemporary)
+	if err != nil || !os.SameFile(outsideBefore, outsideAfter) ||
+		outsideAfter.Mode() != outsideBefore.Mode() || !outsideAfter.ModTime().Equal(outsideBefore.ModTime()) {
+		t.Fatalf("candidate staging mutated the outside file: %#v, %v", outsideAfter, err)
+	}
+	retainedOutside, err := os.ReadFile(outsideTemporary)
+	if err != nil || !bytes.Equal(retainedOutside, outsideBody) {
+		t.Fatalf("outside staging-name file changed: %q, %v", retainedOutside, err)
+	}
+	temporaryName := artifact.temporaryName
+	if err := artifact.cleanup(); err != nil {
+		t.Fatal(err)
+	}
+	cleaned = true
+	if _, err := os.Lstat(filepath.Join(parked, temporaryName)); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("owned staging file remained in the pinned directory: %v", err)
+	}
+	retainedOutside, err = os.ReadFile(outsideTemporary)
+	if err != nil || !bytes.Equal(retainedOutside, outsideBody) {
+		t.Fatalf("cleanup removed or changed the outside file: %q, %v", retainedOutside, err)
+	}
+}
+
 func TestCandidateOutputInstallRollsBackOnlyOwnedFiles(t *testing.T) {
 	t.Parallel()
 	root := t.TempDir()
@@ -388,7 +471,7 @@ func TestCandidateOutputInstallRollsBackOnlyOwnedFiles(t *testing.T) {
 	defer staged.cleanup()
 	for index, path := range paths {
 		body := []byte{byte('a' + index)}
-		artifact, err := stageCandidateBytes(body, path, 16, digestRaw(body), 1)
+		artifact, err := stageCandidateBytes(root, body, path, 16, digestRaw(body))
 		if err != nil {
 			t.Fatal(err)
 		}
