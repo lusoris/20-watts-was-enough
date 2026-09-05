@@ -2,9 +2,10 @@
 
 No generator image is admitted yet. This directory records the exact Linux
 `amd64` dependency graph and the selected 61-file wheelhouse manifest. The
-wheel bytes, Dockerfile, complete build context and retained acceptance
-receipts are still absent. Registry absence has not been checked; the state
-remains `blocked` and `NO_RESULT`.
+committed foundation contains no wheel payload, Dockerfile, complete build
+context or admitted acceptance receipt. Ignored local candidate inputs and
+receipts do not change that status. Registry absence has not been checked;
+the state remains `blocked` and `NO_RESULT`.
 
 The Python image is a narrow exception to the Go-first tooling rule. The pinned
 official CLRS-Text generator imports TensorFlow and JAX; rewriting that path
@@ -135,16 +136,16 @@ the encoded log is capped at 2 MiB. Private staged inputs are removed after
 the run. Failure leaves bounded diagnostics and no success receipt.
 
 A schema-1 `NO_RESULT` receipt for procedure version 2 requires two exact wheel
-hashes, independent embedded MIT checks and complete cleanup evidence. The read-only `--check`
-path verifies both retained wheel files and command logs, reconstructs the
-fixed requested arguments, and rejects changed repository authority or
-procedure source files. It does not need Docker. The receipt records the
-executable hash and build identity separately from workspace source hashes:
-those observations alone do not prove that the executable was compiled from
-the recorded source. Retain the clean commit and build command for a reviewed
-run. Requested flags are not an independent inspection of Docker's runtime
-state. No receipt from this command admits the CLRS image or establishes a
-scientific result; the existing image blockers remain unchanged.
+hashes, independent embedded MIT checks and complete cleanup evidence. The
+read-only `--check` path verifies both retained wheel files and command logs,
+reconstructs the fixed requested arguments, and rejects changed repository
+authority or procedure source files. It does not need Docker. The receipt
+records the executable hash and build identity separately from workspace
+source hashes: those observations alone do not prove that the executable was
+compiled from the recorded source. Retain the clean commit and build command
+for a reviewed run. Requested flags are not an independent inspection of
+Docker's runtime state. No receipt from this command admits the CLRS image or
+establishes a scientific result; the existing image blockers remain unchanged.
 
 ## Admission sequence
 
