@@ -56,6 +56,61 @@ function requireLocator(url, parameter, identity) {
   }
 }
 
+function requireExactLinkInventory(header, expectedHrefs) {
+  const observed = [...header.matchAll(/<a\b[^>]*>/gu)].map((anchor) => {
+    const hrefs = [...anchor[0].matchAll(/\shref="([^"]+)"/gu)];
+    if (hrefs.length !== 1) {
+      fail("each link must carry exactly one quoted href");
+    }
+    return decodedAttribute(hrefs[0][1]);
+  }).sort();
+  const expected = [...expectedHrefs].sort();
+  if (JSON.stringify(observed) !== JSON.stringify(expected)) {
+    fail("link inventory differs from the exact research-object identity");
+  }
+}
+
+function requireExactIdentityFields(header, identity) {
+  const expected = [
+    "Edition",
+    ...(identity.sourceRevision ? ["Source revision"] : []),
+    "Extent",
+    "Public route",
+  ];
+  const observed = [...header.matchAll(/<dt>([^<]+)<\/dt>/gu)]
+    .map((match) => decodedAttribute(match[1]));
+  if (JSON.stringify(observed) !== JSON.stringify(expected)) {
+    fail("identity field inventory is stale or contains an unknown field");
+  }
+}
+
+function requireExactEvidenceProjection(header, identity) {
+  if (identity.evidenceRoutes.length === 0) {
+    if (header.includes('class="research-object-evidence"')) {
+      fail("mapped-record disclosure is present without maintained routes");
+    }
+    return;
+  }
+  requireOnce(
+    header,
+    `<summary><span>Mapped records</span><b>${escapeAttribute(identity.evidenceSummary)}</b></summary>`,
+    "mapped-record summary",
+  );
+  requireOnce(
+    header,
+    `<p>${escapeAttribute(identity.evidenceCaveat)}</p>`,
+    "mapped-record caveat",
+  );
+  for (const route of identity.evidenceRoutes) {
+    const locator = `${route.sourcePath}${route.fragment ? `#${route.fragment}` : ""}`;
+    requireOnce(
+      header,
+      `<a href="${escapeAttribute(route.href)}" aria-label="Mapped ${route.kind}: ${escapeAttribute(locator)}" title="${escapeAttribute(locator)}">${escapeAttribute(route.label)}</a>`,
+      `exact mapped ${route.label}`,
+    );
+  }
+}
+
 function focusedHeader(html) {
   const marker = 'data-research-object="focused-document"';
   requireOnce(html, marker, "focused-document marker");
@@ -126,6 +181,7 @@ export function assertStaticResearchObjectHeader(html, {
     `<dt>Public route</dt><dd><a href="${escapeAttribute(identity.publicUrl)}">${escapeAttribute(identity.publicUrl)}</a></dd>`,
     "exact public route",
   );
+  requireExactIdentityFields(header, identity);
 
   for (const [label, href] of [
     ["source route", identity.sourceHref],
@@ -138,6 +194,7 @@ export function assertStaticResearchObjectHeader(html, {
   ]) {
     requireOnce(header, `href="${escapeAttribute(href)}"`, label);
   }
+  requireExactEvidenceProjection(header, identity);
   if (identity.disclosureHref) {
     requireOnce(header, `href="${escapeAttribute(identity.disclosureHref)}"`, "disclosure route");
   } else if (header.includes(">Disclosure</a>")) {
@@ -154,6 +211,19 @@ export function assertStaticResearchObjectHeader(html, {
   }
   requireLocator(clarity, "location", identity);
   requireLocator(evidence, "claims", identity);
+  requireExactLinkInventory(header, [
+    identity.publicUrl,
+    ...identity.evidenceRoutes.map((route) => route.href),
+    identity.sourceHref,
+    identity.historyHref,
+    identity.bookHref,
+    identity.pdfHref,
+    identity.citationHref,
+    identity.licenceHref,
+    ...(identity.disclosureHref ? [identity.disclosureHref] : []),
+    identity.clarityReportHref,
+    identity.evidenceCorrectionHref,
+  ]);
   return identity;
 }
 

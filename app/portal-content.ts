@@ -32,6 +32,7 @@ type PortalTextAssetOptions = Readonly<{
   maximumBytes: number;
   path: string;
   requestLabel: "Document" | "Research-object record";
+  signal?: AbortSignal;
 }>;
 
 function normalizedBasePath(basePath: string) {
@@ -69,11 +70,12 @@ function portalEvidenceAssetLocation(
 
 async function loadPortalTextAsset(
   location: string,
-  { maximumBytes, path, requestLabel }: PortalTextAssetOptions,
+  { maximumBytes, path, requestLabel, signal }: PortalTextAssetOptions,
 ) {
   return withResponseDeadline({
     label: `${requestLabel} request for ${path}`,
     maximumMilliseconds: maximumPortalResponseMilliseconds,
+    signal,
   }, async (signal) => {
     const response = await fetch(location, { signal });
     if (!response.ok) {
@@ -117,6 +119,7 @@ export async function loadPortalDocument(
   path: string,
   assetBasePath: string,
   sourceRevision: string | null = null,
+  signal?: AbortSignal,
 ): Promise<ResearchDocument> {
   const metadata = portalDocuments.find((document) => document.path === path);
   if (!metadata) throw new Error(`Unknown portal document: ${path}`);
@@ -128,6 +131,7 @@ export async function loadPortalDocument(
     maximumBytes: maximumPortalDocumentBytes,
     path,
     requestLabel: "Document",
+    signal,
   });
   const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
   if (
@@ -150,6 +154,7 @@ export async function loadPortalEvidenceRecords(
   path: string,
   assetBasePath: string,
   sourceRevision: string | null = null,
+  signal?: AbortSignal,
 ): Promise<ResearchObjectEvidenceRecord[]> {
   const metadata = portalDocuments.find((document) => document.path === path);
   if (!metadata) throw new Error(`Unknown portal document: ${path}`);
@@ -161,6 +166,7 @@ export async function loadPortalEvidenceRecords(
     maximumBytes: maximumPortalEvidenceBytes,
     path,
     requestLabel: "Research-object record",
+    signal,
   });
   if (/^\s*(?:<!doctype\s+html|<html\b)/iu.test(body)) {
     throw new Error(`Research-object record request returned invalid content: ${path}`);

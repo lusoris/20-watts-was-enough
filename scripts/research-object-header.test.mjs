@@ -504,6 +504,25 @@ test("response deadline propagates its abort signal through a stalled request", 
   assert.equal(abortReason, observedSignal?.reason);
 });
 
+test("response deadline propagates a caller abort and clears the longer deadline", async () => {
+  const controller = new AbortController();
+  const reason = new Error("selection changed");
+  let operationSignal;
+  const pending = withResponseDeadline({
+    label: "superseded request",
+    maximumMilliseconds: 10_000,
+    signal: controller.signal,
+  }, (signal) => {
+    operationSignal = signal;
+    return new Promise(() => undefined);
+  });
+
+  controller.abort(reason);
+  await assert.rejects(pending, (error) => error === reason);
+  assert.equal(operationSignal?.aborted, true);
+  assert.equal(operationSignal?.reason, reason);
+});
+
 test("response deadline aborts a stalled read with one stable error", async () => {
   let cancelled = false;
   let observedSignal;
@@ -537,7 +556,10 @@ test("response deadline aborts a stalled read with one stable error", async () =
 });
 
 test("portal content applies byte-counted stream limits to both fetched assets", async () => {
-  const content = await readFile("app/portal-content.ts", "utf8");
+  const [content, component] = await Promise.all([
+    readFile("app/portal-content.ts", "utf8"),
+    readFile("app/components/public-research-portal.tsx", "utf8"),
+  ]);
   assert.equal([...content.matchAll(/readBoundedResponseText\(response,/gu)].length, 1);
   assert.equal([...content.matchAll(/loadPortalTextAsset\(portal(?:Document|Evidence)AssetLocation/gu)].length, 2);
   assert.match(content, /maximumPortalDocumentBytes = 16 \* 1024 \* 1024/u);
@@ -546,6 +568,8 @@ test("portal content applies byte-counted stream limits to both fetched assets",
   assert.match(content, /maximumPortalResponseMilliseconds = 30_000/u);
   assert.match(content, /fetch\(location, \{ signal \}\)/u);
   assert.match(content, /maximumChunks: maximumPortalResponseChunks,[\s\S]*signal,/u);
+  assert.match(component, /requestController\.abort\(/u);
+  assert.equal([...content.matchAll(/signal\?: AbortSignal/gu)].length, 3);
   assert.doesNotMatch(content, /response\.text\(\)/u);
 });
 
@@ -817,6 +841,37 @@ test("static identity validation rejects stale, duplicate, and locator-loss muta
       { editionVersion: projectVersion, sourceRevision, basePath: "/research/" },
     ),
     /exact book edition identity/u,
+  );
+});
+
+test("static identity validation rejects fabricated and mislabelled mapped routes", () => {
+  const options = {
+    document,
+    editionVersion: projectVersion,
+    sourceRevision,
+    basePath: "/research/",
+  };
+  const fallback = renderDocumentFallback(document, documents, "/research/", {
+    editionVersion: projectVersion,
+    sourceRevision,
+  });
+
+  assert.throws(
+    () => assertStaticResearchObjectHeader(
+      fallback.replace(
+        '<nav aria-label="Research object records">',
+        '<nav aria-label="Research object records"><a class="fabricated" href="https://example.invalid/fabricated">Fabricated record</a>',
+      ),
+      options,
+    ),
+    /link inventory differs from the exact research-object identity/u,
+  );
+  assert.throws(
+    () => assertStaticResearchObjectHeader(
+      fallback.replace(">C-001</a>", ">C-999</a>"),
+      options,
+    ),
+    /exact mapped C-001/u,
   );
 });
 

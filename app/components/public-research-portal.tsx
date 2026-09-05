@@ -660,6 +660,7 @@ export function PublicResearchPortal({
     if (!selectedPath) return;
 
     let cancelled = false;
+    const requestController = new AbortController();
     const pendingDocument = cachedOrLoad(
       documentCache.current,
       selectedPath,
@@ -667,6 +668,7 @@ export function PublicResearchPortal({
         selectedPath,
         assetBasePath,
         __PUBLICATION_SOURCE_REVISION__,
+        requestController.signal,
       ),
     );
     const pendingEvidence = cachedOrLoad(
@@ -676,6 +678,7 @@ export function PublicResearchPortal({
         selectedPath,
         assetBasePath,
         __PUBLICATION_SOURCE_REVISION__,
+        requestController.signal,
       ),
     );
     Promise.all([pendingDocument, pendingEvidence]).then(([document, evidenceRecords]) => {
@@ -685,12 +688,17 @@ export function PublicResearchPortal({
       setDocumentState({ path: selectedPath, document, evidenceRecords });
     }).catch((error: unknown) => {
       if (cancelled) return;
+      const failure = error instanceof Error ? error : new Error("Document loading failed.");
+      requestController.abort(failure);
       setDocumentState({
         path: selectedPath,
-        error: error instanceof Error ? error.message : "Document loading failed.",
+        error: failure.message,
       });
     });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      requestController.abort(new Error(`Document selection changed: ${selectedPath}`));
+    };
   }, [assetBasePath, selectedPath]);
 
   useEffect(() => {

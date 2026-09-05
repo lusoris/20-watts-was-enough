@@ -8,6 +8,7 @@ type BoundedResponseTextOptions = Readonly<{
 type ResponseDeadlineOptions = Readonly<{
   label: string;
   maximumMilliseconds: number;
+  signal?: AbortSignal;
 }>;
 
 function declaredContentLength(response: Pick<Response, "headers">) {
@@ -24,29 +25,40 @@ function abortReason(signal: AbortSignal, label: string) {
 }
 
 export async function withResponseDeadline<T>(
-  { label, maximumMilliseconds }: ResponseDeadlineOptions,
+  { label, maximumMilliseconds, signal: callerSignal }: ResponseDeadlineOptions,
   operation: (signal: AbortSignal) => Promise<T>,
 ): Promise<T> {
   if (!Number.isSafeInteger(maximumMilliseconds) || maximumMilliseconds < 1) {
     throw new Error(`${label} has an invalid deadline`);
   }
-  const signal = AbortSignal.timeout(maximumMilliseconds);
+  const controller = new AbortController();
   const deadlineError = new Error(
     `${label} exceeds the ${maximumMilliseconds}-millisecond deadline`,
   );
-  let rejectDeadline: (reason: Error) => void = () => undefined;
-  const deadline = new Promise<never>((_resolve, reject) => {
-    rejectDeadline = reject;
+  const abortFromCaller = () => {
+    if (callerSignal) controller.abort(abortReason(callerSignal, label));
+  };
+  if (callerSignal?.aborted) abortFromCaller();
+  else callerSignal?.addEventListener("abort", abortFromCaller, { once: true });
+  const timeout = controller.signal.aborted
+    ? undefined
+    : setTimeout(() => controller.abort(deadlineError), maximumMilliseconds);
+  let rejectAbort: (reason: Error) => void = () => undefined;
+  const aborted = new Promise<never>((_resolve, reject) => {
+    rejectAbort = reject;
   });
-  const handleAbort = () => rejectDeadline(deadlineError);
-  signal.addEventListener("abort", handleAbort, { once: true });
+  const handleAbort = () => rejectAbort(abortReason(controller.signal, label));
+  if (controller.signal.aborted) handleAbort();
+  else controller.signal.addEventListener("abort", handleAbort, { once: true });
   try {
     return await Promise.race([
-      Promise.resolve().then(() => operation(signal)),
-      deadline,
+      Promise.resolve().then(() => operation(controller.signal)),
+      aborted,
     ]);
   } finally {
-    signal.removeEventListener("abort", handleAbort);
+    if (timeout !== undefined) clearTimeout(timeout);
+    callerSignal?.removeEventListener("abort", abortFromCaller);
+    controller.signal.removeEventListener("abort", handleAbort);
   }
 }
 
