@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { bookSourceFiles } from "./book-source.mjs";
+import { bookSourceDigest, bookSourceFiles } from "./book-source.mjs";
 import { publication } from "../app/lib/publication.mjs";
 import {
   isPublicRepositoryArtifact,
@@ -22,6 +22,10 @@ const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url))
 const page = await readFile(new URL("../github-pages/book.tsx", import.meta.url), "utf8");
 const edition = await readFile(
   new URL("../app/components/book-edition.tsx", import.meta.url),
+  "utf8",
+);
+const editionIdentity = await readFile(
+  new URL("../app/lib/book-release-identity.mjs", import.meta.url),
   "utf8",
 );
 const content = await readFile(new URL("../app/portal-content.ts", import.meta.url), "utf8");
@@ -50,7 +54,11 @@ const generator = await readFile(
 test("the Pages book route selects web and PDF identities without a server runtime", () => {
   assert.match(page, /import \{ BookEdition \}/);
   assert.match(page, /const parameters = new URLSearchParams\(window\.location\.search\)/);
-  assert.match(page, /parameters\.get\("pdf"\) === "1" \? "public-pdf" : "github-pages"/);
+  assert.match(page, /const surface = bookSurfaceFromLocation\(window\.location\)/);
+  assert.match(
+    editionIdentity,
+    /pdfRendererHostnames = new Set\(\["127\.0\.0\.1", "\[::1\]", "localhost"\]\)/,
+  );
   assert.match(page, /parameters\.get\("ref"\) \?\? "main"/);
   assert.match(page, /<BookEdition/);
   assert.match(page, /surface=\{surface\}/);
@@ -91,24 +99,32 @@ test("the renderer Vite cache accepts only its canonical temporary directory", a
 
 test("the generated PDF uses public links and zero-state readiness copy", () => {
   assert.match(edition, /"github-pages" \| "public-pdf"/);
-  assert.match(edition, /const repositoryRef = repositoryRefForSurface\(surface, sourceRef, editionVersion\)/);
-  assert.match(edition, /const surfaceDocumentHref = repositoryDocumentHrefFor\(repositoryRef\)/);
+  assert.match(edition, /const identity = currentBookIdentity\(surface, sourceRef, editionVersion, sourceRevision\)/);
+  assert.match(editionIdentity, /export function bookEditionIdentity\(input\)/);
+  assert.match(edition, /const surfaceDocumentHref = repositoryDocumentHrefFor\(identity\.repositoryLinkRef\)/);
   assert.equal(publication.canonicalSite, "https://www.cordana.dev/");
-  assert.match(edition, /const canonicalPublicBook = publication\.canonicalSite/);
-  assert.match(edition, /isPublicPdf \? canonicalPublicBook : assetBasePath/);
+  assert.match(edition, /const canonicalPublicSite = publication\.canonicalSite/);
+  assert.match(edition, /publication\.bookPath,[\s\S]*publication\.canonicalSite/u);
+  assert.match(edition, /isPublicPdf \? canonicalPublicSite : assetBasePath/);
+  assert.match(edition, /publication\.bookPdfPath/u);
   assert.match(edition, />View source on GitHub<\/a>/);
-  assert.match(edition, /const helpHref = joinBasePath\(supportBasePath, "help\/"\)/);
-  assert.match(edition, /`\[Site\/Docs\] book\/ @ \$\{repositoryRef\}`/);
+  assert.match(edition, /helpHref: joinBasePath\(supportBasePath, "help\/"\)/);
+  assert.match(
+    edition,
+    /`\[Site\/Docs\] book\/ @ \$\{identity\.sourceRevision\?\.slice\(0, 12\) \?\? identity\.repositoryRef\}`/,
+  );
   assert.match(edition, /className="book-cover-support" aria-label="Edition support"/);
-  assert.match(edition, /<a href=\{helpHref\}>How to help<\/a>/);
-  assert.match(edition, /<a href=\{bookIssueHref\}>Report this edition<\/a>/);
+  assert.match(edition, /<a href=\{support\.helpHref\}>How to help<\/a>/);
+  assert.match(edition, /<a href=\{support\.issueHref\}>Report this edition<\/a>/);
   assert.doesNotMatch(edition, /issues\/new\/choose/);
   assert.match(readiness, /ledgerOnly\.proposedArtifactFamilies === 0/);
   assert.match(readiness, /No ledger-only record currently requires a new experiment family/);
   assert.match(readiness, /The public Git repository contains the complete artifact table/);
   assert.match(generator, /parseBookPdfGenerationOptions\(process\.argv\.slice\(2\)\)/);
   assert.match(generator, /ref=\$\{encodeURIComponent\(sourceRef\)\}/);
+  assert.match(generator, /revision=\$\{encodeURIComponent\(sourceRevision\)\}/);
   assert.match(generator, /source_ref: sourceRef/);
+  assert.match(generator, /source_revision: sourceRevision/);
   assert.match(generator, /schema_version: 3/);
   assert.match(generator, /renderer: rendererIdentity/);
   assert.match(generator, /"--configLoader",\s*"runner"/s);
@@ -175,10 +191,15 @@ test("the full-book source identity includes the locked renderer dependency grap
     "app/lib/eu-languages.mjs",
     "app/lib/language-access.mjs",
     "app/lib/publication.mjs",
+    "experiments/candidates/001-adaptive-topology.md",
+    "experiments/fixtures/001-shared-clock-free-coadaptation.md",
     "github-pages/public-artifacts.json",
     "app/project-metadata.ts",
     "package-lock.json",
     "public/og-v2.jpg",
+    "research/audits/2026-08-06-biomimetics-transfer-methodology.md",
+    "research/claims.md",
+    "research/principle-registry.md",
     "scripts/lib/book-pdf-generation-options.mjs",
     "scripts/lib/book-pdf-integrity.mjs",
     "scripts/lib/book-renderer-identity.mjs",
@@ -228,6 +249,26 @@ test("the full-book source identity includes the locked renderer dependency grap
     "translations/manifest.json",
   ];
   for (const source of requiredClosure) assert.equal(sources.includes(source), true, source);
+});
+
+test("the PDF source digest changes with portal evidence authority", async (t) => {
+  const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "20w-book-source-closure-"));
+  t.after(() => rm(temporaryRoot, { recursive: true, force: true }));
+  const sources = await bookSourceFiles(repositoryRoot);
+  for (const source of sources) {
+    const relative = path.relative(repositoryRoot, source);
+    const destination = path.join(temporaryRoot, relative);
+    await mkdir(path.dirname(destination), { recursive: true });
+    await copyFile(source, destination);
+  }
+
+  const before = await bookSourceDigest(temporaryRoot);
+  const claimsPath = path.join(temporaryRoot, "research", "claims.md");
+  await writeFile(claimsPath, `${await readFile(claimsPath, "utf8")}\n`);
+  const after = await bookSourceDigest(temporaryRoot);
+
+  assert.notEqual(after.digest, before.digest);
+  assert.deepEqual(after.files, before.files);
 });
 
 test("the book manifest rejects a same-size PDF byte replacement", async () => {

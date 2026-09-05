@@ -129,6 +129,20 @@ the exact diff; this file records why the project changed.
   `NO_RESULT`.
   Dataset membership, decision recording, independent exact verification and
   release admission remain outside this construction-only process boundary.
+- Decision 0067 and one shared research-object projection now bind each focused
+  English Pages document, its no-JavaScript fallback and the web-book cover to
+  the continuous-edition label and available exact build commit. A parsed,
+  non-inferred route index exposes only authored claim, principle, audit and
+  experiment links, including exact claim-ledger `Used by` backlinks. Book and
+  PDF routes stay adjacent; edition-specific disclosure is omitted without an
+  explicit mapping; typed feedback retains the path, route, edition, revision
+  and available fragment in a bounded one-line locator. Release PDF rendering
+  now requires, displays and records both the verified tag and commit in its
+  manifest and reproducibility receipt, while public hosts ignore query-
+  provided renderer identity. Bounded Markdown traversal, source-closure
+  mutation coverage, static mutants and rendered-browser checks through the
+  100-record narrow-screen case reject resource exhaustion, stale or duplicate
+  identity, hidden disclosure state, lost identity and Pages-base-path drift.
 - A digest-pinned apko/Wolfi foundation now closes the Linux `amd64` Poppler
   26.08.0 PDF-tools graph at 45 APKs. Its offline Go validator binds the config,
   lock, exact APK retention metadata, upstream source identities, the pinned
@@ -304,6 +318,12 @@ the exact diff; this file records why the project changed.
   maintained values instead of inferring them from the build. This does not
   publish or assess a German translation; that pilot still requires the human
   language/domain review recorded in issue 51.
+- Focused Pages documents now present one generated research-object header
+  derived from the canonical document index, publication identity and package
+  version. A Pages build records its exact `GITHUB_SHA` when available; local
+  builds do not invent a revision. Source history, citation, disclosure and
+  licence records remain adjacent to separate clarity and evidence-correction
+  routes, with the same locator context in the no-JavaScript document.
 - A failed two-builder PDF reproducibility check now retains both exact PDF and
   manifest pairs beside its comparison receipt. CI uploads the bounded mismatch
   bundle for 30 days, so a rare renderer disagreement can be byte-diffed without

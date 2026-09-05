@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { bookDocumentId } from "../app/lib/book-document-id.mjs";
 import { assertBookPdfIntegrity } from "./lib/book-pdf-integrity.mjs";
+import { normalizePublicationSourceRevision } from "../app/lib/research-object.mjs";
 import { assertBookManifestContract } from "./lib/book-manifest-contract.mjs";
 import { languageAlternateLinksForRoute } from "../app/lib/language-access.mjs";
 import {
@@ -16,6 +17,11 @@ import {
   portalSourceDocuments,
 } from "./lib/portal-documents.mjs";
 import { assertExactPublicationCopy } from "./lib/publication-copy-integrity.mjs";
+import { attachResearchObjectEvidence } from "./lib/research-object-evidence.mjs";
+import {
+  assertStaticBookIdentity,
+  assertStaticResearchObjectHeader,
+} from "./lib/research-object-header-validation.mjs";
 import {
   canonicalSite,
   renderBookFallback,
@@ -34,6 +40,10 @@ const repositoryRoot = path.resolve(
 );
 const outputRoot = path.join(repositoryRoot, "dist-github-pages");
 const pagesBase = resolvePagesBase(process.env.PAGES_BASE_PATH);
+const publicationSourceRevision = normalizePublicationSourceRevision(process.env.GITHUB_SHA);
+const projectVersion = JSON.parse(
+  await readFile(path.join(repositoryRoot, "package.json"), "utf8"),
+).version;
 const maximumPortalInitialJavaScriptBytes = 400_000;
 const legacyDeploymentReference = /\/20-watts-was-enough\/(?:assets|book|documents|downloads|plots|repository-files)(?:\/|["'?#)]|$)/u;
 
@@ -196,6 +206,29 @@ function validateSeoDocument(html, document, translationAvailability = []) {
   );
   invariant(html.includes('<main class="seo-static-page">'), `${document.route} lacks static fallback content`);
   invariant(html.includes(`<h1>${document.title.replaceAll("&", "&amp;")}</h1>`), `${document.route} static H1 is stale`);
+  if (language === "en") {
+    invariant(
+      html.includes('data-research-object="focused-document"'),
+      `${document.route} lacks its generated research-object header`,
+    );
+    for (const required of [
+      'aria-label="Research object identity"',
+      'aria-label="Research object records"',
+      'aria-label="Research object feedback"',
+      "template=site-documentation-problem.yml",
+      "template=evidence-correction.yml",
+      "/CITATION.cff",
+      "/LICENSING.md",
+    ]) {
+      invariant(html.includes(required), `${document.route} research-object header lacks ${required}`);
+    }
+    assertStaticResearchObjectHeader(html, {
+      document,
+      editionVersion: projectVersion,
+      sourceRevision: publicationSourceRevision,
+      basePath: pagesBase,
+    });
+  }
   invariant(!html.includes("?doc="), `${document.route} contains a query-parameter document link`);
   return { title, description };
 }
@@ -207,6 +240,11 @@ invariant(
   portalPage.clientEntry !== bookPage.clientEntry,
   "portal and book must have distinct client entries",
 );
+assertStaticBookIdentity(bookPage.html, {
+  editionVersion: projectVersion,
+  sourceRevision: publicationSourceRevision,
+  basePath: pagesBase,
+});
 invariant(helpPage.clientEntry === null, "the static help page must not load client JavaScript");
 invariant(
   oneMatch(
@@ -217,7 +255,10 @@ invariant(
   "book/index.html must declare the canonical public book route",
 );
 const bookDocuments = bookSourceDocuments(repositoryRoot);
-const expectedBookFallback = renderBookFallback(bookDocuments, pagesBase);
+const expectedBookFallback = renderBookFallback(bookDocuments, pagesBase, {
+  editionVersion: projectVersion,
+  sourceRevision: publicationSourceRevision,
+});
 invariant(
   bookPage.html.includes(expectedBookFallback),
   "book/index.html fallback does not exactly match the canonical book corpus",
@@ -286,7 +327,10 @@ const sourceDocuments = [
   ...await sourceMarkdownInventory("concept"),
   ...await sourceMarkdownInventory("math"),
 ].sort();
-const portalDocuments = portalSourceDocuments(repositoryRoot);
+const portalDocuments = attachResearchObjectEvidence(
+  repositoryRoot,
+  portalSourceDocuments(repositoryRoot),
+);
 const translatedDocuments = translatedSourceDocuments(repositoryRoot);
 const translationAvailability = translationAvailabilityRecords(translatedDocuments);
 invariant(portalDocuments.length === sourceDocuments.length, "SEO route registry does not cover the canonical portal corpus");
@@ -298,12 +342,31 @@ invariant(
   JSON.stringify(builtDocuments) === JSON.stringify(sourceDocuments),
   "portal document assets do not exactly match the canonical concept/math corpus",
 );
+const builtEvidence = (await recursiveInventory("research-object-records"))
+  .filter((relative) => relative.endsWith(".md.json"))
+  .map((relative) => relative.slice("research-object-records/".length, -".json".length))
+  .sort();
+invariant(
+  JSON.stringify(builtEvidence) === JSON.stringify(sourceDocuments),
+  "research-object record assets do not exactly match the canonical concept/math corpus",
+);
 for (const relative of sourceDocuments) {
   const [source, built] = await Promise.all([
     readFile(path.join(repositoryRoot, ...relative.split("/"))),
     readFile(path.join(outputRoot, "documents", ...relative.split("/"))),
   ]);
   invariant(source.equals(built), `portal document asset differs from canonical source: ${relative}`);
+}
+for (const document of portalDocuments) {
+  const body = await readFile(path.join(
+    outputRoot,
+    "research-object-records",
+    `${document.path}.json`,
+  ), "utf8");
+  invariant(
+    body === `${JSON.stringify(document.evidenceRecords)}\n`,
+    `research-object record asset is stale: ${document.path}`,
+  );
 }
 
 const seoTitles = new Set();
@@ -386,6 +449,7 @@ assertBookManifestContract({
   expectedVersion: packageManifest.version,
   expectedPdf: "public/downloads/20-watts-was-enough-full-concept-book.pdf",
   expectedSourceRef: "main",
+  expectedSourceRevision: null,
   expectedRendererLockSHA256: bookRendererLockSHA256(
     await readFile(path.join(repositoryRoot, bookRendererLockPath)),
   ),

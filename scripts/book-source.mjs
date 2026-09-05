@@ -6,18 +6,39 @@ import { readStableOpenedFile } from "./lib/opened-file.mjs";
 
 export const bookPdfName = "20-watts-was-enough-full-concept-book.pdf";
 const maximumBookSourceBytes = 256 * 1024 * 1024;
+const maximumMarkdownInventoryDepth = 16;
+const maximumMarkdownInventoryEntries = 8_192;
 
 function relativeSourcePaths(projectRoot, files) {
   return files.map((file) => path.relative(projectRoot, file).replaceAll("\\", "/"));
 }
 
 async function markdownFiles(directory) {
-  const entries = await readdir(directory, { withFileTypes: true });
   const files = [];
-  for (const entry of entries) {
-    const entryPath = path.join(directory, entry.name);
-    if (entry.isDirectory()) files.push(...(await markdownFiles(entryPath)));
-    else if (entry.isFile() && entry.name.endsWith(".md")) files.push(entryPath);
+  const pending = [{ directory, depth: 0 }];
+  let entriesVisited = 0;
+  while (pending.length > 0) {
+    const current = pending.pop();
+    const entries = await readdir(current.directory, { withFileTypes: true });
+    entriesVisited += entries.length;
+    if (entriesVisited > maximumMarkdownInventoryEntries) {
+      throw new Error(
+        `Book Markdown inventory exceeds ${maximumMarkdownInventoryEntries} entries under ${directory}.`,
+      );
+    }
+    for (const entry of entries) {
+      const entryPath = path.join(current.directory, entry.name);
+      if (entry.isDirectory()) {
+        if (current.depth >= maximumMarkdownInventoryDepth) {
+          throw new Error(
+            `Book Markdown inventory exceeds depth ${maximumMarkdownInventoryDepth} under ${directory}.`,
+          );
+        }
+        pending.push({ directory: entryPath, depth: current.depth + 1 });
+      } else if (entry.isFile() && entry.name.endsWith(".md")) {
+        files.push(entryPath);
+      }
+    }
   }
   return files;
 }
@@ -27,6 +48,13 @@ export async function bookSourceFiles(projectRoot) {
     .filter((file) => path.basename(file) !== "README.md");
   const mathFiles = (await markdownFiles(path.join(projectRoot, "math")))
     .filter((file) => path.basename(file) !== "README.md");
+  const evidenceAuthorityFiles = [
+    path.join(projectRoot, "research", "claims.md"),
+    path.join(projectRoot, "research", "principle-registry.md"),
+    ...await markdownFiles(path.join(projectRoot, "research", "audits")),
+    ...await markdownFiles(path.join(projectRoot, "experiments", "candidates")),
+    ...await markdownFiles(path.join(projectRoot, "experiments", "fixtures")),
+  ];
   const supportFiles = [
     "LICENSE",
     "LICENSING.md",
@@ -49,10 +77,13 @@ export async function bookSourceFiles(projectRoot) {
     "app/lib/eu-languages.mjs",
     "app/lib/language-access.mjs",
     "app/lib/publication.mjs",
+    "app/lib/publication-revision.mjs",
     "app/lib/readiness.ts",
+    "app/lib/research-object.mjs",
     "app/lib/repository-artifacts.ts",
     "app/project-metadata.ts",
     "app/research-document.ts",
+    "app/research-object.ts",
     "experiments/test-readiness-summary.json",
     "github-pages/book.tsx",
     "github-pages/public-artifacts.json",
@@ -76,6 +107,7 @@ export async function bookSourceFiles(projectRoot) {
     "scripts/lib/plain-text.mjs",
     "scripts/lib/portal-documents.mjs",
     "scripts/lib/portal-metrics.mjs",
+    "scripts/lib/research-object-evidence.mjs",
     "scripts/lib/source-boundary.mjs",
     "scripts/lib/strict-json.mjs",
     "scripts/lib/third-party-notices.mjs",
@@ -124,7 +156,7 @@ export async function bookSourceFiles(projectRoot) {
   const plotFiles = await readdir(path.join(projectRoot, "public", "plots"), {
     withFileTypes: true,
   });
-  return [...supportFiles, ...conceptFiles, ...mathFiles, ...plotFiles
+  return [...supportFiles, ...conceptFiles, ...mathFiles, ...evidenceAuthorityFiles, ...plotFiles
     .filter((entry) => entry.isFile())
     .map((entry) => path.join(projectRoot, "public", "plots", entry.name))]
     .sort((left, right) => left.localeCompare(right));

@@ -11,15 +11,19 @@ import {
   type MouseEvent,
 } from "react";
 import type { ResearchDocument } from "../research-document";
+import type { ResearchObjectEvidenceRecord } from "../research-object";
 import { outlineFromMarkdown } from "../lib/heading-outline";
 import { synchronizePortalSeo } from "../lib/portal-seo";
 import { readinessSummary } from "../lib/readiness";
-import { publication, repositoryIssueUrl } from "../lib/publication.mjs";
+import { publication } from "../lib/publication.mjs";
+import { projectVersion } from "../project-metadata";
 import { LanguageAccess } from "./language-access";
 import { PortalFooter } from "./portal-footer";
+import { ResearchObjectHeader } from "./research-object-header";
 import {
   decodePortalFragment,
   loadPortalDocument,
+  loadPortalEvidenceRecords,
   portalDocumentLocation,
   portalDocumentPathFromLocation,
   portalDocuments,
@@ -45,6 +49,23 @@ type PortalNavigationRequest = {
 };
 type ElementRef<T extends HTMLElement> = { current: T | null };
 
+type PortalDocumentState = {
+  path: string;
+  document?: ResearchDocument;
+  evidenceRecords?: ResearchObjectEvidenceRecord[];
+  error?: string;
+};
+
+function cachedOrLoad<T>(cache: Map<string, T>, path: string, load: () => Promise<T>) {
+  const cached = cache.get(path);
+  return cached ? Promise.resolve(cached) : load();
+}
+
+function evidenceForSelection(state: PortalDocumentState | null, selectedPath: string | null) {
+  if (!selectedPath || state?.path !== selectedPath) return [];
+  return state.evidenceRecords ?? [];
+}
+
 function withBase(basePath: string, path = "") {
   const base = basePath.endsWith("/") ? basePath : `${basePath}/`;
   return `${base}${path.replace(/^\/+/, "")}`;
@@ -56,13 +77,6 @@ function repositoryPath(path: string, kind: "blob" | "tree" = "blob") {
 
 function repositoryDocumentHref(path: string, hash = "") {
   return `${repositoryPath(path)}${hash ? `#${encodeURIComponent(hash)}` : ""}`;
-}
-
-function documentIssueHref(path: string) {
-  return repositoryIssueUrl(
-    "site-documentation-problem.yml",
-    `[Site/Docs] ${path}`,
-  );
 }
 
 function overviewLocation(basePath: string, hash = "") {
@@ -167,6 +181,11 @@ function usePortalDestination({
     renderedDocumentPath,
     selectedPath,
   ]);
+}
+
+function initialDocumentFragment(): string {
+  if (typeof window === "undefined") return "";
+  return decodePortalFragment(window.location.hash.slice(1));
 }
 
 function formatNumber(value: number) {
@@ -554,14 +573,11 @@ export function PublicResearchPortal({
     focusDestination: false,
     fragment: initialPortalFragment(),
   }));
-  const [documentState, setDocumentState] = useState<{
-    path: string;
-    document?: ResearchDocument;
-    error?: string;
-  } | null>(null);
+  const [documentState, setDocumentState] = useState<PortalDocumentState | null>(null);
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<LibraryGroup>("All");
   const [catalogLimit, setCatalogLimit] = useState(catalogPageSize);
+  const [selectedFragment, setSelectedFragment] = useState(initialDocumentFragment);
   const deferredQuery = useDeferredValue(query.trim().toLowerCase());
   const overviewRef = useRef<HTMLElement>(null);
   const readerTitleRef = useRef<HTMLHeadingElement>(null);
@@ -569,6 +585,7 @@ export function PublicResearchPortal({
   const mobileMenuRef = useRef<HTMLDetailsElement>(null);
   const mobileOutlineRef = useRef<HTMLDetailsElement>(null);
   const documentCache = useRef(new Map<string, ResearchDocument>());
+  const evidenceCache = useRef(new Map<string, ResearchObjectEvidenceRecord[]>());
 
   const documentsByPath = useMemo(
     () => new Map(portalDocuments.map((document) => [document.path, document])),
@@ -580,6 +597,7 @@ export function PublicResearchPortal({
   const selectedDocument = selectedPath && documentState?.path === selectedPath
     ? documentState.document ?? null
     : null;
+  const selectedEvidenceRecords = evidenceForSelection(documentState, selectedPath);
   const documentError = selectedPath && documentState?.path === selectedPath
     ? documentState.error ?? ""
     : "";
@@ -642,22 +660,45 @@ export function PublicResearchPortal({
     if (!selectedPath) return;
 
     let cancelled = false;
-    const cached = documentCache.current.get(selectedPath);
-    const pendingDocument = cached
-      ? Promise.resolve(cached)
-      : loadPortalDocument(selectedPath, assetBasePath);
-    pendingDocument.then((document) => {
+    const requestController = new AbortController();
+    const pendingDocument = cachedOrLoad(
+      documentCache.current,
+      selectedPath,
+      () => loadPortalDocument(
+        selectedPath,
+        assetBasePath,
+        __PUBLICATION_SOURCE_REVISION__,
+        requestController.signal,
+      ),
+    );
+    const pendingEvidence = cachedOrLoad(
+      evidenceCache.current,
+      selectedPath,
+      () => loadPortalEvidenceRecords(
+        selectedPath,
+        assetBasePath,
+        __PUBLICATION_SOURCE_REVISION__,
+        requestController.signal,
+      ),
+    );
+    Promise.all([pendingDocument, pendingEvidence]).then(([document, evidenceRecords]) => {
       if (cancelled) return;
       documentCache.current.set(selectedPath, document);
-      setDocumentState({ path: selectedPath, document });
+      evidenceCache.current.set(selectedPath, evidenceRecords);
+      setDocumentState({ path: selectedPath, document, evidenceRecords });
     }).catch((error: unknown) => {
       if (cancelled) return;
+      const failure = error instanceof Error ? error : new Error("Document loading failed.");
+      requestController.abort(failure);
       setDocumentState({
         path: selectedPath,
-        error: error instanceof Error ? error.message : "Document loading failed.",
+        error: failure.message,
       });
     });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      requestController.abort(new Error(`Document selection changed: ${selectedPath}`));
+    };
   }, [assetBasePath, selectedPath]);
 
   useEffect(() => {
@@ -667,9 +708,14 @@ export function PublicResearchPortal({
         focusDestination: true,
         fragment: window.location.hash.slice(1),
       });
+      setSelectedFragment(decodePortalFragment(window.location.hash.slice(1)));
     };
     window.addEventListener("popstate", handleHistory);
-    return () => window.removeEventListener("popstate", handleHistory);
+    window.addEventListener("hashchange", handleHistory);
+    return () => {
+      window.removeEventListener("popstate", handleHistory);
+      window.removeEventListener("hashchange", handleHistory);
+    };
   }, [assetBasePath]);
 
   usePortalDestination({
@@ -691,6 +737,7 @@ export function PublicResearchPortal({
       return;
     }
     setSelectedPath(path);
+    setSelectedFragment(hash);
     window.history.pushState(
       { document: path },
       "",
@@ -710,6 +757,7 @@ export function PublicResearchPortal({
   const showOverview = (hash = "") => {
     mobileMenuRef.current?.removeAttribute("open");
     setSelectedPath(null);
+    setSelectedFragment("");
     window.history.pushState(
       { document: null },
       "",
@@ -723,6 +771,7 @@ export function PublicResearchPortal({
 
   const selectHeading = (headingId: string) => {
     mobileOutlineRef.current?.removeAttribute("open");
+    setSelectedFragment(headingId);
     const targetUrl = new URL(window.location.href);
     targetUrl.hash = headingId;
     window.history.pushState(
@@ -943,16 +992,6 @@ export function PublicResearchPortal({
               )}
             </nav>
             <nav aria-label="Document actions">
-              <a
-                href={repositoryPath(selectedMetadata.path)}
-                target="_blank"
-                rel="noreferrer"
-              >Source <span aria-hidden="true">↗</span></a>
-              <a
-                href={documentIssueHref(selectedMetadata.path)}
-                target="_blank"
-                rel="noreferrer"
-              >Report issue <span aria-hidden="true">↗</span></a>
               <a href={withBase(assetBasePath, "book/")}>Full book</a>
               <a
                 href={withBase(
@@ -990,21 +1029,19 @@ export function PublicResearchPortal({
                 id="portal-reader"
                 aria-labelledby="portal-reader-title"
               >
-                <header className="portal-reader-header">
-                  <div>
-                    <p>Canonical Markdown</p>
-                    <code>{selectedMetadata.path}</code>
-                  </div>
-                  <a
-                    href={repositoryPath(selectedMetadata.path)}
-                    target="_blank"
-                    rel="noreferrer"
-                  >View source <span aria-hidden="true">↗</span></a>
-                </header>
-                <div className="portal-reader-meta">
-                  <span>{formatNumber(selectedMetadata.words)} words</span>
-                  <span>{outline.length} section{outline.length === 1 ? "" : "s"}</span>
-                </div>
+                <ResearchObjectHeader
+                  title={selectedMetadata.title}
+                  path={selectedMetadata.path}
+                  route={selectedMetadata.route}
+                  group={selectedMetadata.group}
+                  editionVersion={projectVersion}
+                  sourceRevision={__PUBLICATION_SOURCE_REVISION__}
+                  evidenceRecords={selectedEvidenceRecords}
+                  assetBasePath={assetBasePath}
+                  fragment={selectedFragment}
+                  headingId="portal-reader-title"
+                  words={selectedMetadata.words}
+                />
                 <div className="prose portal-prose">
                   {selectedDocument ? (
                     <Suspense

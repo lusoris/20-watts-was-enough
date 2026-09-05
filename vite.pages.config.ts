@@ -3,12 +3,14 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
+import { normalizePublicationSourceRevision } from "./app/lib/publication-revision.mjs";
 import {
   bookSourceDocuments,
   markdownSourceDocument,
   portalSourceDocuments,
 } from "./scripts/lib/portal-documents.mjs";
 import { portalSourceMetrics } from "./scripts/lib/portal-metrics.mjs";
+import { attachResearchObjectEvidence } from "./scripts/lib/research-object-evidence.mjs";
 import {
   populateSeoTemplate,
   renderBookFallback,
@@ -28,15 +30,23 @@ import {
 } from "./scripts/lib/translation-pages.mjs";
 
 const repositoryRoot = path.dirname(fileURLToPath(import.meta.url));
+const projectVersion = JSON.parse(
+  readFileSync(path.join(repositoryRoot, "package.json"), "utf8"),
+).version as string;
 const pagesOutputRoot = path.join(repositoryRoot, "dist-github-pages");
 const pagesBase = resolvePagesBase(process.env.PAGES_BASE_PATH);
 const pagesCacheDirectory = resolveViteCacheDirectory({
   override: process.env.VITE_CACHE_DIR,
   repositoryRoot,
 });
+const publicationSourceRevision = normalizePublicationSourceRevision(process.env.GITHUB_SHA);
 const portalDocumentPrefixes = [...new Set([
   "/documents/",
   `${pagesBase}documents/`,
+])];
+const portalEvidencePrefixes = [...new Set([
+  "/research-object-records/",
+  `${pagesBase}research-object-records/`,
 ])];
 const trackedNoticesPath = path.join(repositoryRoot, "THIRD_PARTY_NOTICES.txt");
 const portalIndexModuleId = "virtual:portal-document-index";
@@ -52,6 +62,12 @@ type PortalSourceDocument = {
   words: number;
   searchText: string;
   body: string;
+  evidenceRecords: Array<{
+    kind: "claim" | "principle" | "audit" | "experiment";
+    label: string;
+    sourcePath: string;
+    fragment: string;
+  }>;
 };
 
 type TranslationSourceDocument = PortalSourceDocument & {
@@ -65,10 +81,31 @@ type TranslationSourceDocument = PortalSourceDocument & {
   reviewers: readonly string[];
 };
 
+function requestedPortalAsset(requestPath: string) {
+  const documentPrefix = portalDocumentPrefixes.find(
+    (candidate) => requestPath.startsWith(candidate),
+  );
+  if (documentPrefix) {
+    return { kind: "document", path: requestPath.slice(documentPrefix.length) } as const;
+  }
+  const evidencePrefix = portalEvidencePrefixes.find(
+    (candidate) => requestPath.startsWith(candidate),
+  );
+  if (!evidencePrefix || !requestPath.endsWith(".json")) return null;
+  return {
+    kind: "evidence",
+    path: requestPath.slice(evidencePrefix.length, -".json".length),
+  } as const;
+}
+
 function portalDocumentAssets(): Plugin {
-  let documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
+  const currentDocuments = () => attachResearchObjectEvidence(
+    repositoryRoot,
+    portalSourceDocuments(repositoryRoot),
+  ) as PortalSourceDocument[];
+  let documents = currentDocuments();
   const refreshDocuments = () => {
-    documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
+    documents = currentDocuments();
     return documents;
   };
   return {
@@ -96,11 +133,15 @@ function portalDocumentAssets(): Plugin {
         path.join(repositoryRoot, "concept"),
         path.join(repositoryRoot, "math"),
         path.join(repositoryRoot, "research", "principle-registry.md"),
+        path.join(repositoryRoot, "research", "claims.md"),
+        path.join(repositoryRoot, "research", "audits"),
+        path.join(repositoryRoot, "experiments", "candidates"),
+        path.join(repositoryRoot, "experiments", "fixtures"),
         path.join(repositoryRoot, "sources"),
       ];
       const reloadPortal = (file: string) => {
         const relative = path.relative(repositoryRoot, file).replaceAll("\\", "/");
-        if (!/^(?:(?:concept|math)\/.+\.md|research\/principle-registry\.md|sources\/.+)$/i.test(relative)) return;
+        if (!/^(?:(?:concept|math)\/.+\.md|research\/(?:claims|principle-registry)\.md|research\/audits\/.+\.md|experiments\/(?:candidates|fixtures)\/.+\.md|sources\/.+)$/i.test(relative)) return;
         refreshDocuments();
         const indexModule = server.moduleGraph.getModuleById(resolvedPortalIndexModuleId);
         if (indexModule) server.moduleGraph.invalidateModule(indexModule);
@@ -125,25 +166,30 @@ function portalDocumentAssets(): Plugin {
           next();
           return;
         }
-        const prefix = portalDocumentPrefixes.find(
-          (candidate) => requestPath.startsWith(candidate),
-        );
-        if (!prefix) {
+        const requested = requestedPortalAsset(requestPath);
+        if (!requested) {
           next();
           return;
         }
-        const documentPath = requestPath.slice(prefix.length);
-        const document = refreshDocuments().find(
-          (candidate) => candidate.path === documentPath,
+        const document = documents.find(
+          (candidate) => candidate.path === requested.path,
         );
         if (!document) {
           next();
           return;
         }
         response.statusCode = 200;
-        response.setHeader("Content-Type", "text/markdown; charset=utf-8");
+        response.setHeader(
+          "Content-Type",
+          requested.kind === "evidence"
+            ? "application/json; charset=utf-8"
+            : "text/markdown; charset=utf-8",
+        );
         response.setHeader("Cache-Control", "no-store");
-        response.end(request.method === "HEAD" ? undefined : document.body);
+        const body = requested.kind === "evidence"
+          ? `${JSON.stringify(document.evidenceRecords)}\n`
+          : document.body;
+        response.end(request.method === "HEAD" ? undefined : body);
       });
     },
     generateBundle() {
@@ -153,6 +199,11 @@ function portalDocumentAssets(): Plugin {
           fileName: `documents/${document.path}`,
           source: document.body,
         });
+        this.emitFile({
+          type: "asset",
+          fileName: `research-object-records/${document.path}.json`,
+          source: `${JSON.stringify(document.evidenceRecords)}\n`,
+        });
       }
     },
   };
@@ -161,9 +212,11 @@ function portalDocumentAssets(): Plugin {
 export function createSeoStaticPages({
   outputRoot = pagesOutputRoot,
   translationDocuments = null,
+  sourceRevision = publicationSourceRevision,
 }: {
   outputRoot?: string;
   translationDocuments?: readonly TranslationSourceDocument[] | null;
+  sourceRevision?: string | null;
 } = {}): Plugin {
   const renderCurrentHelpPage = (template: string) => {
     const documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
@@ -190,7 +243,10 @@ export function createSeoStaticPages({
       },
     },
     writeBundle() {
-      const documents = portalSourceDocuments(repositoryRoot) as PortalSourceDocument[];
+      const documents = attachResearchObjectEvidence(
+        repositoryRoot,
+        portalSourceDocuments(repositoryRoot),
+      ) as PortalSourceDocument[];
       const bookDocuments = bookSourceDocuments(repositoryRoot) as PortalSourceDocument[];
       const translations = translationDocuments
         ?? translatedSourceDocuments(repositoryRoot) as TranslationSourceDocument[];
@@ -208,7 +264,11 @@ export function createSeoStaticPages({
       writeFileSync(bookPath, populateSeoTemplate(
         readFileSync(bookPath, "utf8"),
         renderSeoHead("book", null, pagesBase),
-        renderBookFallback(bookDocuments, pagesBase, translationAvailability),
+        renderBookFallback(bookDocuments, pagesBase, {
+          translationDocuments: translationAvailability,
+          editionVersion: projectVersion,
+          sourceRevision,
+        }),
       ), "utf8");
       writeFileSync(helpPath, renderCurrentHelpPage(readFileSync(helpPath, "utf8")), "utf8");
       for (const document of documents) {
@@ -221,7 +281,11 @@ export function createSeoStaticPages({
             document,
             documents,
             pagesBase,
-            translationAvailability,
+            {
+              translationDocuments: translationAvailability,
+              editionVersion: projectVersion,
+              sourceRevision,
+            },
           ),
         ), "utf8");
       }
@@ -277,6 +341,9 @@ export default defineConfig({
   publicDir: path.join(repositoryRoot, "public"),
   assetsInclude: ["**/*.md", "**/*.mmd", "**/*.bib"],
   plugins: [react(), portalDocumentAssets(), legalReleaseAssets(), createSeoStaticPages()],
+  define: {
+    __PUBLICATION_SOURCE_REVISION__: JSON.stringify(publicationSourceRevision),
+  },
   build: {
     outDir: pagesOutputRoot,
     emptyOutDir: true,

@@ -38,8 +38,11 @@ const tempRoot = path.join(projectRoot, "tmp", "pdfs");
 const renderLockPath = path.join(projectRoot, "tmp", "pdf-renderer-book.lock");
 const sitePort = 3137;
 const debugPort = 3138;
-const { sourceRef } = parseBookPdfGenerationOptions(process.argv.slice(2));
-const bookUrl = `http://127.0.0.1:${sitePort}/book/?pdf=1&ref=${encodeURIComponent(sourceRef)}`;
+const { sourceRef, sourceRevision } = parseBookPdfGenerationOptions(process.argv.slice(2));
+const revisionQuery = sourceRevision
+  ? `&revision=${encodeURIComponent(sourceRevision)}`
+  : "";
+const bookUrl = `http://127.0.0.1:${sitePort}/book/?pdf=1&ref=${encodeURIComponent(sourceRef)}${revisionQuery}`;
 const cli = path.join(projectRoot, "node_modules", "vite", "bin", "vite.js");
 const packageManifest = JSON.parse(await readFile(path.join(projectRoot, "package.json"), "utf8"));
 assertBookSourceRefForVersion(sourceRef, packageManifest.version);
@@ -330,6 +333,7 @@ try {
     title: "20 Watts Was Enough — Full Concept Book",
     version: packageManifest.version,
     source_ref: sourceRef,
+    source_revision: sourceRevision,
     pdf: `public/downloads/${bookPdfName}`,
     source_digest: sourceSnapshot.digest,
     source_files: sourceSnapshot.files,

@@ -954,6 +954,7 @@ const pdfReproducibilityReleaseCommand = [
   "./build/release-inputs/20w-linux-amd64",
   "publication verify-pdf-reproducibility",
   '--root . --ref "$RELEASE_TAG"',
+  '--revision "$RELEASE_COMMIT"',
   "--receipt build/release-inputs/pdf-renderer-reproducibility.json",
 ].join(" ");
 
@@ -1026,7 +1027,8 @@ export function validatePDFRendererReproducibilityWorkflowObject(workflow, relat
       && step?.run?.trim() === pdfReproducibilityReleaseCommand
       && step?.if === undefined
       && continueOnErrorIsDisabled(step)
-      && Object.keys(step?.env ?? {}).length === 1
+      && Object.keys(step?.env ?? {}).length === 2
+      && step.env.RELEASE_COMMIT === "${{ steps.release-ref.outputs.commit }}"
       && step.env.RELEASE_TAG === "${{ steps.release-ref.outputs.tag }}"
     ));
     const prepareIndex = steps.findIndex((step) => (

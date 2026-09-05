@@ -148,11 +148,13 @@ jobs:
           go -C tooling run ./cmd/20w experiment release-plan --root .. --json > build/release-inputs/experiment-release-plan.json
       - name: Rebuild the final PDF renderer twice without cache
         env:
+          RELEASE_COMMIT: ${{ steps.release-ref.outputs.commit }}
           RELEASE_TAG: ${{ steps.release-ref.outputs.tag }}
         run: >-
           ./build/release-inputs/20w-linux-amd64
           publication verify-pdf-reproducibility
           --root . --ref "$RELEASE_TAG"
+          --revision "$RELEASE_COMMIT"
           --receipt build/release-inputs/pdf-renderer-reproducibility.json
       - name: Prepare version-bound release assets
         env:

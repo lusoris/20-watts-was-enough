@@ -4,6 +4,8 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import {
+  bookEditionIdentity,
+  bookSurfaceFromLocation,
   repositoryDocumentHref,
   repositoryRefForSurface,
   repositoryTreeHref,
@@ -22,7 +24,7 @@ async function source(relative) {
   return readFile(path.join(repositoryRoot, relative), "utf8");
 }
 
-test("PDF source links use their explicit ref while Pages follows main", () => {
+test("book editions retain their ref while source links bind an available exact commit", () => {
   const releasePdfRef = repositoryRefForSurface("public-pdf", "v0.2.0", "0.2.0");
   const currentPdfRef = repositoryRefForSurface("public-pdf", "main", "0.2.0");
   const pagesRef = repositoryRefForSurface("github-pages", "main", "0.2.0");
@@ -46,16 +48,91 @@ test("PDF source links use their explicit ref while Pages follows main", () => {
     () => repositoryRefForSurface("public-pdf", "v0.3.0", "0.2.0"),
     /does not match edition version/u,
   );
+  const revision = "b".repeat(40);
+  assert.deepEqual(bookEditionIdentity({
+    surface: "github-pages",
+    sourceRef: "main",
+    editionVersion: "0.2.0",
+    sourceRevision: revision,
+  }), {
+    repositoryRef: "main",
+    repositoryLinkRef: revision,
+    sourceRevision: revision,
+    edition: "Site v0.2.0 · continuous main snapshot",
+    sourceLabel: "Git main snapshot",
+    isReleaseSnapshot: false,
+  });
+  assert.deepEqual(bookEditionIdentity({
+    surface: "public-pdf",
+    sourceRef: "v0.2.0",
+    editionVersion: "0.2.0",
+    sourceRevision: revision,
+  }), {
+    repositoryRef: "v0.2.0",
+    repositoryLinkRef: revision,
+    sourceRevision: revision,
+    edition: "Release v0.2.0 · immutable snapshot",
+    sourceLabel: "Immutable release tag v0.2.0",
+    isReleaseSnapshot: true,
+  });
+  assert.throws(
+    () => bookEditionIdentity({
+      surface: "public-pdf",
+      sourceRef: "v0.2.0",
+      editionVersion: "0.2.0",
+    }),
+    /requires the exact source commit/u,
+  );
 });
 
-test("PDF generation accepts only one bounded source-ref option", () => {
-  assert.deepEqual(parseBookPdfGenerationOptions([]), { sourceRef: "main" });
+test("only the loopback renderer may select a query-defined release identity", () => {
+  const releaseQuery = "?pdf=1&ref=v0.2.0&revision=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+  for (const hostname of ["127.0.0.1", "[::1]", "localhost"]) {
+    assert.equal(
+      bookSurfaceFromLocation({ hostname, search: releaseQuery }),
+      "public-pdf",
+    );
+  }
+  for (const hostname of ["www.cordana.dev", "lusoris.github.io", "127.0.0.1.example"]) {
+    assert.equal(
+      bookSurfaceFromLocation({ hostname, search: releaseQuery }),
+      "github-pages",
+    );
+  }
+  assert.equal(
+    bookSurfaceFromLocation({ hostname: "127.0.0.1", search: "?pdf=0" }),
+    "github-pages",
+  );
+});
+
+test("PDF generation accepts only bounded source identity options", () => {
+  const revision = "c".repeat(40);
+  assert.deepEqual(parseBookPdfGenerationOptions([]), {
+    sourceRef: "main",
+    sourceRevision: null,
+  });
   assert.deepEqual(
-    parseBookPdfGenerationOptions(["--ref", "v0.2.0"]),
-    { sourceRef: "v0.2.0" },
+    parseBookPdfGenerationOptions(["--ref", "v0.2.0", "--revision", revision]),
+    { sourceRef: "v0.2.0", sourceRevision: revision },
+  );
+  assert.deepEqual(
+    parseBookPdfGenerationOptions(["--revision", revision, "--ref", "v0.2.0"]),
+    { sourceRef: "v0.2.0", sourceRevision: revision },
   );
   assert.throws(() => parseBookPdfGenerationOptions(["--ref"]), /Usage:/u);
   assert.throws(() => parseBookPdfGenerationOptions(["--other", "main"]), /Usage:/u);
+  assert.throws(
+    () => parseBookPdfGenerationOptions(["--ref", "v0.2.0"]),
+    /requires --revision/u,
+  );
+  assert.throws(
+    () => parseBookPdfGenerationOptions(["--revision", "ABC"]),
+    /exact lowercase 40-character Git commit SHA/u,
+  );
+  assert.throws(
+    () => parseBookPdfGenerationOptions(["--revision", revision, "--revision", revision]),
+    /Usage:/u,
+  );
   assert.throws(
     () => parseBookPdfGenerationOptions(["--ref", "release/latest"]),
     /main or vMAJOR\.MINOR\.PATCH/u,
@@ -97,6 +174,7 @@ test("the book manifest must carry the package version and explicit source ref",
     schema_version: 3,
     version: "0.2.0",
     source_ref: "main",
+    source_revision: null,
     pdf: "public/downloads/20-watts-was-enough-full-concept-book.pdf",
     renderer: {
       lock: "tooling/pdf-renderer/lock.json",
@@ -109,6 +187,7 @@ test("the book manifest must carry the package version and explicit source ref",
     expectedVersion: "0.2.0",
     expectedPdf: manifest.pdf,
     expectedSourceRef: "main",
+    expectedSourceRevision: null,
     expectedRendererLockSHA256: rendererLockSHA256,
   };
 
@@ -135,6 +214,22 @@ test("the book manifest must carry the package version and explicit source ref",
       expectedRendererLockSHA256: "c".repeat(64),
     }),
     /renderer lock SHA-256 does not match/u,
+  );
+  assert.throws(
+    () => assertBookManifestContract({
+      manifest: { ...manifest, source_ref: "v0.2.0", source_revision: null },
+      ...contract,
+      expectedSourceRef: "v0.2.0",
+      expectedSourceRevision: undefined,
+    }),
+    /release manifest requires the exact source commit/u,
+  );
+  assert.throws(
+    () => assertBookManifestContract({
+      manifest: { ...manifest, source_revision: "A".repeat(40) },
+      ...contract,
+    }),
+    /exact lowercase 40-character Git commit SHA/u,
   );
 });
 

@@ -119,6 +119,7 @@ async function createFixture(t) {
     schema_version: 3,
     version,
     source_ref: tag,
+    source_revision: "c".repeat(40),
     pdf: pdfRelativePath,
     size_bytes: pdf.length,
     pdf_sha256: digest(pdf),
@@ -431,6 +432,19 @@ test("release preparation rejects a PDF generated from main", async (t) => {
   await assert.rejects(
     prepareReleaseAssets({ root: fixture.root, tag }),
     /does not match expected ref "v0\.1\.0"/u,
+  );
+});
+
+test("release preparation rejects a manifest that drops the tag commit", async (t) => {
+  const fixture = await createFixture(t);
+  const manifestPath = path.join(fixture.root, "public", "downloads", "book-manifest.json");
+  const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+  delete manifest.source_revision;
+  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+  await assert.rejects(
+    prepareReleaseAssets({ root: fixture.root, tag }),
+    /must carry its source revision/u,
   );
 });
 

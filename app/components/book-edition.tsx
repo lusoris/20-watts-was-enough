@@ -4,8 +4,8 @@ import { Fragment, useEffect, useRef } from "react";
 import { bookDocuments as documents } from "../book-content";
 import type { ResearchDocument } from "../research-document";
 import {
+  bookEditionIdentity,
   repositoryDocumentHrefFor,
-  repositoryRefForSurface,
   repositoryTreeHref,
 } from "../lib/book-release-identity.mjs";
 import {
@@ -17,19 +17,28 @@ import {
   isRepositoryArtifact,
   repositoryArtifactHref,
 } from "../lib/repository-artifacts";
-import { publication, repositoryIssueUrl } from "../lib/publication.mjs";
+import {
+  issueFormLocator,
+  publication,
+  repositoryIssueUrl,
+} from "../lib/publication.mjs";
 import { MarkdownDocument } from "./markdown-document";
 import { LanguageAccess } from "./language-access";
 import { ReadinessOverview } from "./readiness-overview";
 
 const appendixPaths = ["research/field-coverage.md"];
-const canonicalPublicBook = publication.canonicalSite;
+const canonicalPublicSite = publication.canonicalSite;
+const canonicalBookRoute = new URL(
+  publication.bookPath,
+  publication.canonicalSite,
+).toString();
 
 type BookEditionProps = {
   surface?: "github-pages" | "public-pdf";
   assetBasePath?: string;
   editionVersion: string;
   sourceRef: string;
+  sourceRevision?: string | null;
 };
 
 function joinBasePath(basePath: string, path: string) {
@@ -143,22 +152,46 @@ function BookSkipLink({ path }: { path: string }) {
   );
 }
 
+function currentBookIdentity(
+  surface: NonNullable<BookEditionProps["surface"]>,
+  sourceRef: string,
+  editionVersion: string,
+  sourceRevision: string | null,
+) {
+  return bookEditionIdentity({ surface, sourceRef, editionVersion, sourceRevision });
+}
+
+function editionSupport(
+  identity: ReturnType<typeof bookEditionIdentity>,
+  isPublicPdf: boolean,
+  assetBasePath: string,
+) {
+  const supportBasePath = isPublicPdf ? canonicalPublicSite : assetBasePath;
+  const locator = issueFormLocator([
+    `Public route: ${canonicalBookRoute}`,
+    `Edition: ${identity.edition}`,
+    ...(identity.sourceRevision ? [`Source revision: ${identity.sourceRevision}`] : []),
+  ]);
+  return {
+    helpHref: joinBasePath(supportBasePath, "help/"),
+    issueHref: repositoryIssueUrl(
+      "site-documentation-problem.yml",
+      `[Site/Docs] book/ @ ${identity.sourceRevision?.slice(0, 12) ?? identity.repositoryRef}`,
+      { location: locator },
+    ),
+  };
+}
+
 export function BookEdition({
   surface = "github-pages",
   assetBasePath = "/",
-  editionVersion, sourceRef,
+  editionVersion, sourceRef, sourceRevision = null,
 }: BookEditionProps) {
   const isGitHubPages = surface === "github-pages";
   const isPublicPdf = surface === "public-pdf";
-  const repositoryRef = repositoryRefForSurface(surface, sourceRef, editionVersion);
-  const isReleaseSnapshot = repositoryRef !== "main";
-  const surfaceDocumentHref = repositoryDocumentHrefFor(repositoryRef);
-  const supportBasePath = isPublicPdf ? canonicalPublicBook : assetBasePath;
-  const helpHref = joinBasePath(supportBasePath, "help/");
-  const bookIssueHref = repositoryIssueUrl(
-    "site-documentation-problem.yml",
-    `[Site/Docs] book/ @ ${repositoryRef}`,
-  );
+  const identity = currentBookIdentity(surface, sourceRef, editionVersion, sourceRevision);
+  const surfaceDocumentHref = repositoryDocumentHrefFor(identity.repositoryLinkRef);
+  const support = editionSupport(identity, isPublicPdf, assetBasePath);
   const conceptDocuments = documents.filter(
     (document) =>
       document.kind === "markdown" &&
@@ -203,12 +236,12 @@ export function BookEdition({
     <main className={`book-shell ${isGitHubPages ? "book-shell-web" : "book-shell-print"}`}>
       {isGitHubPages && bookDocuments[0] ? <BookSkipLink path={bookDocuments[0].path} /> : null}
       <nav className="book-actions" aria-label="Book actions">
-        <a href={repositoryTreeHref(repositoryRef)}>View source on GitHub</a>
+        <a href={repositoryTreeHref(identity.repositoryLinkRef)}>View source on GitHub</a>
         <a
           className="book-download-primary"
           href={joinBasePath(
-            isPublicPdf ? canonicalPublicBook : assetBasePath,
-            "downloads/20-watts-was-enough-full-concept-book.pdf",
+            isPublicPdf ? canonicalPublicSite : assetBasePath,
+            publication.bookPdfPath,
           )}
           download
         >
@@ -230,7 +263,7 @@ export function BookEdition({
         <dl>
           <div>
             <dt>Edition</dt>
-            <dd>{isReleaseSnapshot ? repositoryRef : "main snapshot"} · Full concept book</dd>
+            <dd>{identity.edition}</dd>
           </div>
           <div>
             <dt>Contents</dt>
@@ -244,13 +277,16 @@ export function BookEdition({
           </div>
           <div>
             <dt>Source</dt>
-            <dd>{isReleaseSnapshot ? `Immutable release tag ${repositoryRef}` : "Git main snapshot"}</dd>
+            <dd>
+              {identity.sourceLabel}
+              {identity.sourceRevision ? <> · commit <code>{identity.sourceRevision}</code></> : null}
+            </dd>
           </div>
         </dl>
         <nav className="book-cover-support" aria-label="Edition support">
-          <span>Support for {repositoryRef}</span>
-          <a href={helpHref}>How to help</a>
-          <a href={bookIssueHref}>Report this edition</a>
+          <span>Support for {identity.repositoryRef}</span>
+          <a href={support.helpHref}>How to help</a>
+          <a href={support.issueHref}>Report this edition</a>
         </nav>
       </header>
 
@@ -300,7 +336,7 @@ export function BookEdition({
         <div className="book-document-meta">
           <span>Generated front matter</span>
           <code>experiments/test-readiness-summary.json</code>
-          <span>{isReleaseSnapshot ? `Release ${repositoryRef}` : "main snapshot"}</span>
+          <span>{identity.isReleaseSnapshot ? `Release ${identity.repositoryRef}` : "main snapshot"}</span>
         </div>
         <ReadinessOverview
           mode="book"
@@ -339,7 +375,10 @@ export function BookEdition({
       ))}
       <footer className="book-legal" aria-label="Legal information">
         <strong>Licences and notices</strong>
-        <span>Source: github.com/lusoris/20-watts-was-enough @ {repositoryRef}</span>
+        <span>
+          Source: github.com/lusoris/20-watts-was-enough @ {identity.repositoryRef}
+          {identity.sourceRevision ? ` · commit ${identity.sourceRevision}` : ""}
+        </span>
         {[
           ["EUPL 1.2", "LICENSE"],
           ["CC BY-SA 4.0", "LICENSES/CC-BY-SA-4.0.txt"],

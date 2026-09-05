@@ -24,6 +24,7 @@
 .portal-shell a:focus-visible,
 .portal-shell button:focus-visible,
 .portal-shell input:focus-visible,
+.portal-shell summary:focus-visible,
 #portal-reader-title:focus-visible,
 #portal-overview:focus-visible,
 #research-system:focus-visible,
@@ -1687,30 +1688,29 @@
     background: #fffefa;
   }
 
-  .portal-reader-header {
+  .research-object-header {
+    --research-object-kicker-color: #00663c;
+    --research-object-link-color: #17633f;
+    --research-object-focus-color: #2f7df4;
     width: min(100%, var(--reading-measure));
     margin-inline: auto;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 24px;
-    padding-bottom: 18px;
+    padding-bottom: 20px;
     border-bottom: 1px solid #879d90;
   }
 
-  .portal-reader-header p {
+  .research-object-kicker {
     margin: 0;
-    color: var(--portal-green-dark);
     font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 900;
     letter-spacing: 0.13em;
     text-transform: uppercase;
+    color: var(--research-object-kicker-color);
   }
 
-  .portal-reader-header h2 {
-    max-width: 24ch;
-    margin: 10px 0 0;
+  .research-object-header h1 {
+    max-width: 25ch;
+    margin: 10px 0 8px;
     font-family: var(--font-serif);
     font-size: clamp(30px, 3vw, 44px);
     font-weight: 550;
@@ -1718,39 +1718,175 @@
     line-height: 1.08;
   }
 
-  .portal-reader-header > a {
-    flex: 0 0 auto;
-    padding: 9px 11px;
-    border: 1px solid var(--portal-green-dark);
-    color: var(--portal-green-dark);
-    font-size: 11px;
-    font-weight: 850;
-    letter-spacing: 0.055em;
-    text-decoration: none;
-    text-transform: uppercase;
-  }
-
-  .portal-reader-header > a:hover {
-    background: var(--portal-green-dark);
-    color: #fff;
-  }
-
-  .portal-reader-meta {
-    width: min(100%, var(--reading-measure));
-    margin-inline: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 10px 20px;
-    padding-block: 11px;
-    border-bottom: 1px solid #c4d0c7;
+  .research-object-path {
+    margin: 0;
     color: #53675a;
-    font-family: var(--font-mono);
     font-size: 12px;
   }
 
-  .portal-reader-meta code {
+  .research-object-path code {
     overflow-wrap: anywhere;
+  }
+
+  .research-object-header dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px 24px;
+    margin: 22px 0 0;
+    padding: 14px 0;
+    border-top: 1px solid #c4d0c7;
+    border-bottom: 1px solid #c4d0c7;
+  }
+
+  .research-object-header dl div {
+    min-width: 0;
+  }
+
+  .research-object-header dt {
+    color: #65766b;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .research-object-header dd {
+    margin: 4px 0 0;
+    color: #354a3e;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .research-object-header dd code,
+  .research-object-header dd a {
+    overflow-wrap: anywhere;
+  }
+
+  .research-object-header a {
+    color: var(--research-object-link-color);
+    text-underline-offset: 3px;
+  }
+
+  .research-object-header a:focus-visible,
+  .research-object-header summary:focus-visible {
+    outline: 3px solid var(--research-object-focus-color);
+    outline-offset: 3px;
+  }
+
+  .research-object-evidence {
+    margin-top: 14px;
+    border: 1px solid #c4d0c7;
+    background: #f8faf7;
+  }
+
+  .research-object-evidence summary {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 12px;
+    color: #354a3e;
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .research-object-evidence summary::after {
+    content: "Show";
+    flex: 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 850;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .research-object-evidence[open] summary::after {
+    content: "Hide";
+  }
+
+  .research-object-evidence summary b {
+    margin-left: auto;
+  }
+
+  .research-object-evidence summary span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .research-object-evidence > p {
+    margin: 0;
+    padding: 0 12px 10px;
+    color: #53675a;
+    font-size: 12px;
+  }
+
+  .research-object-evidence > div {
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+    border-top: 1px solid #c4d0c7;
+  }
+
+  .research-object-evidence nav {
+    display: grid;
+    grid-template-columns: minmax(82px, auto) 1fr;
+    align-items: start;
+    gap: 8px 12px;
+  }
+
+  .research-object-evidence nav strong {
+    color: #53675a;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .research-object-evidence nav span {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 12px;
+  }
+
+  .research-object-evidence nav a {
+    display: inline-flex;
+    min-height: 24px;
+    align-items: center;
+    overflow-wrap: anywhere;
+    font-size: 12px;
+  }
+
+  .research-object-routes {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px 24px;
+    margin-top: 16px;
+  }
+
+  .research-object-routes nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 15px;
+  }
+
+  .research-object-routes a {
+    display: inline-flex;
+    min-height: 24px;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 750;
+  }
+
+  .research-object-routes nav:last-child a {
+    padding-left: 10px;
+    border-left: 2px solid #b66a22;
+    color: #76420d;
   }
 
   .portal-prose {
@@ -2352,12 +2488,17 @@
     flex-wrap: wrap;
   }
 
-  .portal-reader-header {
+  .research-object-header dl {
+    grid-template-columns: 1fr;
+  }
+
+  .research-object-routes {
+    align-items: flex-start;
     flex-direction: column;
   }
 
-  .portal-reader-header h2 {
-    font-size: 32px;
+  .research-object-evidence nav {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -655,11 +655,12 @@ test("Pages publication copies reject stale PDF and manifest bytes", async () =>
 });
 
 test("Pages builds portal, book, and source-bound help routes with a configurable safe base", async () => {
-  const [config, portalEntry, portalHtml, bookEntry, bookHtml, helpCss, helpHtml] = await Promise.all([
+  const [config, portalEntry, portalHtml, bookEntry, bookIdentity, bookHtml, helpCss, helpHtml] = await Promise.all([
     source("vite.pages.config.ts"),
     source("github-pages/main.tsx"),
     source("github-pages/index.html"),
     source("github-pages/book.tsx"),
+    source("app/lib/book-release-identity.mjs"),
     source("github-pages/book/index.html"),
     source("github-pages/help.css"),
     source("github-pages/help/index.html"),
@@ -686,7 +687,8 @@ test("Pages builds portal, book, and source-bound help routes with a configurabl
   assert.doesNotMatch(portalEntry, /vinext|next\/headers|next\/server/);
 
   assert.match(bookEntry, /<BookEdition/);
-  assert.match(bookEntry, /parameters\.get\(["']pdf["']\) === ["']1["']/);
+  assert.match(bookEntry, /bookSurfaceFromLocation\(window\.location\)/u);
+  assert.match(bookIdentity, /parameters\.get\("pdf"\) === "1" && pdfRendererHostnames\.has\(location\.hostname\)/u);
   assert.match(bookEntry, /surface=\{surface\}/);
   assert.match(bookEntry, /assetBasePath=\{import\.meta\.env\.BASE_URL\}/);
   assert.match(bookEntry, /sourceRef=\{sourceRef\}/);
@@ -758,7 +760,10 @@ test("the portal keeps clean-route history and native Markdown links honest on t
 
   assert.match(portal, /function initialDocumentPath\(basePath: string\): string \| null/);
   assert.match(portal, /portalDocumentPathFromLocation\(window\.location, basePath\)/);
-  assert.match(portal, /if \(!selectedPath\) return;[\s\S]*loadPortalDocument\(selectedPath, assetBasePath\)/);
+  assert.match(
+    portal,
+    /if \(!selectedPath\) return;[\s\S]*loadPortalDocument\([\s\S]*selectedPath,[\s\S]*assetBasePath,[\s\S]*__PUBLICATION_SOURCE_REVISION__/u,
+  );
   assert.match(portal, /\{selectedPath && selectedMetadata \? \(/);
   assert.match(portal, /className="portal-dashboard"/);
   assert.match(portal, /NO_RESULT/);
@@ -786,7 +791,16 @@ test("the portal keeps clean-route history and native Markdown links honest on t
   assert.doesNotMatch(portal, /`\?doc=\$\{encodeURIComponent\(path\)\}`/);
   assert.match(content, /document\.route === route/);
   assert.match(content, /encodePortalFragment\(hash\)/);
-  assert.match(content, /fetch\(portalDocumentAssetLocation\(metadata\.path, assetBasePath\)\)/);
+  assert.match(content, /publicationSourceRevisionQuery\(sourceRevision\)/u);
+  assert.match(
+    content,
+    /loadPortalTextAsset\(portalDocumentAssetLocation\(\s*metadata\.path,\s*assetBasePath,\s*sourceRevision,\s*\), \{/u,
+  );
+  assert.match(
+    content,
+    /`\$\{normalizedBasePath\(assetBasePath\)\}research-object-records\/\$\{encodedPath\}\.json\$\{publicationSourceRevisionQuery\(sourceRevision\)\}`/u,
+  );
+  assert.doesNotMatch(content, /documentLocation\.replace\("\/documents\/"/u);
   assert.match(content, /\^\(\?:concept\|math\).*\\\.md\$/);
   assert.match(entry, /new URLSearchParams\(window\.location\.search\)\.get\("doc"\)/);
   assert.match(entry, /window\.location\.replace\(portalDocumentLocation\(/);
@@ -850,8 +864,9 @@ test("only genuinely overflowing Markdown tables become labelled keyboard region
 });
 
 test("focused portal documents have a coherent heading hierarchy", async () => {
-  const [portal, markdown] = await Promise.all([
+  const [portal, researchObjectHeader, markdown] = await Promise.all([
     source("app/components/public-research-portal.tsx"),
+    source("app/components/research-object-header.tsx"),
     source("app/components/markdown-document.tsx"),
   ]);
 
@@ -863,6 +878,9 @@ test("focused portal documents have a coherent heading hierarchy", async () => {
     portal,
     /<article[\s\S]{0,200}id="portal-reader"[\s\S]{0,200}tabIndex=\{-1\}/,
   );
+  assert.match(portal, /headingId="portal-reader-title"/);
+  assert.match(researchObjectHeader, /aria-labelledby=\{headingId\}/);
+  assert.doesNotMatch(researchObjectHeader, /<h1/u);
   assert.match(portal, /headingOffset=\{1\}/);
   assert.match(markdown, /headingOffset\?: number/);
   assert.match(markdown, /h1: shiftedHeading\(1, headingOffset\)/);
@@ -916,7 +934,10 @@ test("the portal loads canonical documents on demand and keeps book code off its
   assert.doesNotMatch(portal, /from ["']\.\.\/book-content["']/);
   assert.match(portal, /from ["']\.\.\/portal-content["']/);
   assert.match(portal, /lazy\(\(\) => import\(["']\.\/markdown-document["']\)/);
-  assert.match(content, /fetch\(portalDocumentAssetLocation\(metadata\.path, assetBasePath\)\)/);
+  assert.match(
+    content,
+    /loadPortalTextAsset\(portalDocumentAssetLocation\(\s*metadata\.path,\s*assetBasePath,\s*sourceRevision,\s*\), \{/u,
+  );
   assert.match(content, /contentType\.includes\("text\/html"\)/);
   assert.match(content, /Document request returned HTML instead of Markdown/);
   assert.match(config, /virtual:portal-document-index/);
@@ -939,8 +960,17 @@ test("the Pages development server live-reloads canonical Markdown without an HT
   assert.match(config, /configureServer\(server: ViteDevServer\)/);
   assert.match(config, /server\.watcher\.on\("change", reloadPortal\)/);
   assert.match(config, /server\.ws\.send\(\{ type: "full-reload" \}\)/);
-  assert.match(config, /"Content-Type", "text\/markdown; charset=utf-8"/);
+  assert.match(
+    config,
+    /"application\/json; charset=utf-8"[\s\S]*"text\/markdown; charset=utf-8"/u,
+  );
   assert.match(config, /const portalDocumentPrefixes = \[\.\.\.new Set\(/);
+  assert.match(config, /const portalEvidencePrefixes = \[\.\.\.new Set\(/);
+  assert.match(config, /fileName: `research-object-records\/\$\{document\.path\}\.json`/u);
+  assert.match(config, /path\.join\(repositoryRoot, "research", "audits"\)/u);
+  assert.match(config, /path\.join\(repositoryRoot, "experiments", "candidates"\)/u);
+  assert.match(config, /path\.join\(repositoryRoot, "experiments", "fixtures"\)/u);
+  assert.match(config, /const document = documents\.find\(/u);
   assert.match(config, /`\$\{pagesBase\}documents\/`/);
   assert.doesNotMatch(config, /["']\/20-watts-was-enough\/documents\/["']/);
 });
@@ -951,16 +981,17 @@ test("generated Pages Markdown cannot inflate canonical math validation", async 
 });
 
 test("the sole public reader names its Git source and release identity", async () => {
-  const [portal, book] = await Promise.all([
+  const [portal, book, identity] = await Promise.all([
     source("app/components/public-research-portal.tsx"),
     source("app/components/book-edition.tsx"),
+    source("app/lib/book-release-identity.mjs"),
   ]);
 
   assert.equal(publication.repository, "https://github.com/lusoris/20-watts-was-enough");
   assert.match(portal, /const repositoryUrl = publication\.repository/);
   assert.doesNotMatch(portal, /Owner-only|private Git source/);
-  assert.match(book, /Git main snapshot/);
-  assert.match(book, /Immutable release tag \$\{repositoryRef\}/);
+  assert.match(identity, /Git main snapshot/);
+  assert.match(identity, /Immutable release tag \$\{repositoryRef\}/);
   assert.doesNotMatch(book, /Owner-only|chatgpt\.site/);
 });
 

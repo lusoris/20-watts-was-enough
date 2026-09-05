@@ -13,12 +13,89 @@ import (
 
 const testImageID = "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
+func TestValidateSourceRevisionRequiresExactReleaseIdentity(t *testing.T) {
+	t.Parallel()
+	revision := strings.Repeat("a", 40)
+	for _, testCase := range []struct {
+		name            string
+		ref             string
+		revision        string
+		expectedFailure string
+	}{
+		{name: "continuous-main", ref: "main"},
+		{name: "source-bound-main", ref: "main", revision: revision},
+		{name: "immutable-release", ref: "v1.2.3", revision: revision},
+		{name: "release-without-commit", ref: "v1.2.3", expectedFailure: "requires an exact source revision"},
+		{name: "uppercase-commit", ref: "v1.2.3", revision: strings.ToUpper(revision), expectedFailure: "lowercase 40-character"},
+		{name: "short-commit", ref: "v1.2.3", revision: revision[:39], expectedFailure: "lowercase 40-character"},
+	} {
+		testCase := testCase
+		t.Run(testCase.name, func(t *testing.T) {
+			t.Parallel()
+			err := ValidateSourceRevision(testCase.ref, testCase.revision)
+			if testCase.expectedFailure == "" {
+				if err != nil {
+					t.Fatalf("ValidateSourceRevision() error = %v", err)
+				}
+				return
+			}
+			if err == nil || !strings.Contains(err.Error(), testCase.expectedFailure) {
+				t.Fatalf("ValidateSourceRevision() error = %v, want %q", err, testCase.expectedFailure)
+			}
+		})
+	}
+}
+
+func TestSourceRevisionBindingRejectsMissingMalformedAndWrongCommits(t *testing.T) {
+	t.Parallel()
+	root := t.TempDir()
+	head := commitRenderTestRepository(t, root)
+	if err := verifySourceRevision(context.Background(), root, "v1.2.3", head); err != nil {
+		t.Fatalf("verifySourceRevision() valid error = %v", err)
+	}
+	wrongRevision := strings.Repeat("f", 40)
+	if wrongRevision == head {
+		wrongRevision = strings.Repeat("e", 40)
+	}
+	for name, revision := range map[string]string{
+		"missing":   "",
+		"malformed": "HEAD",
+		"wrong":     wrongRevision,
+	} {
+		name, revision := name, revision
+		t.Run(name, func(t *testing.T) {
+			err := verifySourceRevision(context.Background(), root, "v1.2.3", revision)
+			if err == nil {
+				t.Fatal("verifySourceRevision() unexpectedly accepted an invalid binding")
+			}
+		})
+	}
+}
+
+func TestRenderRejectsAWellFormedRevisionOtherThanRepositoryHEAD(t *testing.T) {
+	t.Parallel()
+	configuration := renderConfiguration(t)
+	head := commitRenderTestRepository(t, configuration.RepositoryRoot)
+	wrongRevision := strings.Repeat("f", 40)
+	if wrongRevision == head {
+		wrongRevision = strings.Repeat("e", 40)
+	}
+	_, err := Render(context.Background(), Options{
+		RepositoryRoot: configuration.RepositoryRoot,
+		SourceRef:      "v1.2.3",
+		SourceRevision: wrongRevision,
+	})
+	if err == nil || !strings.Contains(err.Error(), "not verified commit") {
+		t.Fatalf("Render() error = %v, want repository HEAD mismatch", err)
+	}
+}
+
 func TestRenderPlanUsesTheExactImageAndHardenedContainer(t *testing.T) {
 	t.Parallel()
 	configuration := renderConfiguration(t)
 	executor := &recordingExecutor{imageID: testImageID}
 	result, err := renderWithDependencies(
-		context.Background(), configuration, "main", noOpPreparer{}, executor,
+		context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 	)
 	if err != nil {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -85,55 +162,6 @@ func TestRenderPlanUsesTheExactImageAndHardenedContainer(t *testing.T) {
 	}
 }
 
-func TestSourceRevisionBindingRejectsMissingMalformedAndWrongCommits(t *testing.T) {
-	t.Parallel()
-	root := t.TempDir()
-	runRenderTestGit(t, root, "init", "--quiet")
-	if err := os.WriteFile(filepath.Join(root, "source.txt"), []byte("source\n"), 0o600); err != nil {
-		t.Fatal(err)
-	}
-	runRenderTestGit(t, root, "add", "source.txt")
-	runRenderTestGit(
-		t, root,
-		"-c", "user.name=PDF test", "-c", "user.email=pdf-test@example.invalid",
-		"commit", "--quiet", "-m", "source",
-	)
-	head := strings.TrimSpace(runRenderTestGit(t, root, "rev-parse", "HEAD"))
-	if err := verifySourceRevision(context.Background(), root, "v1.2.3", head); err != nil {
-		t.Fatalf("verifySourceRevision() valid error = %v", err)
-	}
-	for name, revision := range map[string]string{
-		"missing":   "",
-		"malformed": "HEAD",
-		"wrong":     strings.Repeat("f", 40),
-	} {
-		name, revision := name, revision
-		t.Run(name, func(t *testing.T) {
-			err := verifySourceRevision(context.Background(), root, "v1.2.3", revision)
-			if err == nil {
-				t.Fatal("verifySourceRevision() unexpectedly accepted an invalid binding")
-			}
-		})
-	}
-}
-
-func runRenderTestGit(t *testing.T, root string, arguments ...string) string {
-	t.Helper()
-	commandContext, cancel := context.WithTimeout(context.Background(), sourceRevisionTimeout)
-	defer cancel()
-	command := exec.CommandContext(commandContext, "git", append([]string{"-C", root}, arguments...)...)
-	command.Env = boundedGitEnvironment()
-	command.WaitDelay = maximumWaitDelay
-	output, err := command.CombinedOutput()
-	if commandContext.Err() != nil {
-		t.Fatalf("git %v timed out: %v", arguments, commandContext.Err())
-	}
-	if err != nil {
-		t.Fatalf("git %v: %v: %s", arguments, err, output)
-	}
-	return string(output)
-}
-
 func TestRenderRejectsTimestampRewriteWarnings(t *testing.T) {
 	t.Parallel()
 	for name, buildOutput := range map[string]string{
@@ -146,7 +174,7 @@ func TestRenderRejectsTimestampRewriteWarnings(t *testing.T) {
 			configuration := renderConfiguration(t)
 			executor := &recordingExecutor{imageID: testImageID, buildOutput: buildOutput}
 			_, err := renderWithDependencies(
-				context.Background(), configuration, "main", noOpPreparer{}, executor,
+				context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 			)
 			if err == nil || !strings.Contains(err.Error(), "did not apply") {
 				t.Fatalf("renderWithDependencies() error = %v", err)
@@ -163,7 +191,7 @@ func TestRenderRejectsMalformedImageIDBeforeStartingAContainer(t *testing.T) {
 	configuration := renderConfiguration(t)
 	executor := &recordingExecutor{imageID: testImageID + " "}
 	_, err := renderWithDependencies(
-		context.Background(), configuration, "main", noOpPreparer{}, executor,
+		context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "trailing") {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -210,7 +238,7 @@ func TestRenderRejectsAuthorityDriftDuringTheImageBuild(t *testing.T) {
 		},
 	}
 	_, err := renderWithDependencies(
-		context.Background(), configuration, "main", noOpPreparer{}, executor,
+		context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "changed during") {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -224,8 +252,9 @@ func TestRenderFailureForcesCleanupOfTheNamedContainer(t *testing.T) {
 	t.Parallel()
 	configuration := renderConfiguration(t)
 	executor := &recordingExecutor{imageID: testImageID, failRun: true}
+	sourceRevision := strings.Repeat("b", 40)
 	_, err := renderWithDependencies(
-		context.Background(), configuration, "v1.2.3", noOpPreparer{}, executor,
+		context.Background(), configuration, "v1.2.3", sourceRevision, noOpPreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "injected run failure") {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -242,6 +271,9 @@ func TestRenderFailureForcesCleanupOfTheNamedContainer(t *testing.T) {
 	if !slices.Contains(runRequest.arguments, "v1.2.3") {
 		t.Fatalf("release ref is absent from run arguments: %v", runRequest.arguments)
 	}
+	if !slices.Contains(runRequest.arguments, sourceRevision) {
+		t.Fatalf("release revision is absent from run arguments: %v", runRequest.arguments)
+	}
 }
 
 func TestRenderRejectsDifferentFreshOutputsWithoutReplacingPublication(t *testing.T) {
@@ -252,7 +284,7 @@ func TestRenderRejectsDifferentFreshOutputsWithoutReplacingPublication(t *testin
 	writePublicationFixture(t, configuration.RepositoryRoot, oldPDF, oldManifest)
 	executor := &recordingExecutor{imageID: testImageID, differentSecondRender: true}
 	_, err := renderWithDependencies(
-		context.Background(), configuration, "main", noOpPreparer{}, executor,
+		context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "fresh PDF renders differ") {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -265,7 +297,7 @@ func TestRenderRejectsAnUnreviewedBuildxBinaryBeforeCreatingABuilder(t *testing.
 	configuration := renderConfiguration(t)
 	executor := &recordingExecutor{imageID: testImageID, buildxOutput: "github.com/docker/buildx 0.0.0 bad"}
 	_, err := renderWithDependencies(
-		context.Background(), configuration, "main", noOpPreparer{}, executor,
+		context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "does not match the renderer lock") {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -289,7 +321,7 @@ func TestRenderRejectsAConcurrentPublicationBeforeDocker(t *testing.T) {
 	})
 	executor := &recordingExecutor{imageID: testImageID}
 	_, err = renderWithDependencies(
-		context.Background(), configuration, "main", noOpPreparer{}, executor,
+		context.Background(), configuration, "main", "", noOpPreparer{}, executor,
 	)
 	if err == nil || !strings.Contains(err.Error(), "already locked") {
 		t.Fatalf("renderWithDependencies() error = %v", err)
@@ -384,6 +416,38 @@ func renderConfiguration(t *testing.T) Configuration {
 		t.Fatal(err)
 	}
 	return configuration
+}
+
+func commitRenderTestRepository(t *testing.T, root string) string {
+	t.Helper()
+	runRenderTestGit(t, root, "init", "--quiet")
+	if err := os.WriteFile(filepath.Join(root, "source.txt"), []byte("source\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	runRenderTestGit(t, root, "add", "source.txt")
+	runRenderTestGit(
+		t, root,
+		"-c", "user.name=PDF test", "-c", "user.email=pdf-test@example.invalid",
+		"commit", "--quiet", "-m", "source",
+	)
+	return strings.TrimSpace(runRenderTestGit(t, root, "rev-parse", "HEAD"))
+}
+
+func runRenderTestGit(t *testing.T, root string, arguments ...string) string {
+	t.Helper()
+	commandContext, cancel := context.WithTimeout(context.Background(), sourceRevisionTimeout)
+	defer cancel()
+	command := exec.CommandContext(commandContext, "git", append([]string{"-C", root}, arguments...)...)
+	command.Env = boundedGitEnvironment()
+	command.WaitDelay = maximumWaitDelay
+	output, err := command.CombinedOutput()
+	if commandContext.Err() != nil {
+		t.Fatalf("git %v timed out: %v", arguments, commandContext.Err())
+	}
+	if err != nil {
+		t.Fatalf("git %v: %v: %s", arguments, err, output)
+	}
+	return string(output)
 }
 
 func argumentAfter(t *testing.T, arguments []string, flag string) string {

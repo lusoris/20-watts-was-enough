@@ -71,6 +71,7 @@ than silently changing its outcome.
 | [0064](0064-map-chromium-emphasis-tags-for-pdf-1x.md) | Map Chromium emphasis tags for PDF 1.x | accepted |
 | [0065](0065-isolate-fixture-026-ledger-semantics.md) | Isolate Fixture 026 ledger semantics from shard 5 | accepted |
 | [0066](0066-create-longer-workstation-matrix-jobs-first.md) | Create longer workstation matrix jobs first | accepted |
+| [0067](0067-bind-public-research-objects-to-exact-maintained-identity.md) | Bind public research objects to exact maintained identity | accepted |
 | [0068](0068-run-workstation-tests-through-the-bounded-go-catalogue.md) | Run workstation tests through the bounded Go catalogue | accepted; clause 2's eight-command local default partly superseded by [0070](0070-default-the-local-workstation-aggregate-to-four-commands.md) |
 | [0069](0069-map-ci-deletions-through-their-owning-lanes.md) | Map CI deletions through their owning lanes | accepted |
 | [0070](0070-default-the-local-workstation-aggregate-to-four-commands.md) | Default the local workstation aggregate to four commands | accepted |

@@ -1,4 +1,5 @@
 import { assertBookSourceRefForVersion } from "../../app/lib/book-release-identity.mjs";
+import { normalizePublicationSourceRevision } from "../../app/lib/publication-revision.mjs";
 import { bookRendererLockPath } from "./book-renderer-identity.mjs";
 
 const expectedSchemaVersion = 3;
@@ -14,6 +15,7 @@ export function assertBookManifestContract({
   expectedVersion,
   expectedPdf,
   expectedSourceRef,
+  expectedSourceRevision,
   expectedRendererLockSHA256,
 }) {
   invariant(
@@ -37,6 +39,21 @@ export function assertBookManifestContract({
     sourceRef === assertBookSourceRefForVersion(expectedSourceRef, expectedVersion),
     `Full-book manifest source ref ${JSON.stringify(sourceRef)} does not match expected ref ${JSON.stringify(expectedSourceRef)}.`,
   );
+  invariant(
+    Object.hasOwn(manifest, "source_revision"),
+    "Full-book manifest must carry its source revision, using null only when no exact continuous-main commit is available.",
+  );
+  const sourceRevision = normalizePublicationSourceRevision(manifest.source_revision);
+  invariant(
+    sourceRef === "main" || sourceRevision !== null,
+    "Full-book release manifest requires the exact source commit.",
+  );
+  if (expectedSourceRevision !== undefined) {
+    invariant(
+      sourceRevision === normalizePublicationSourceRevision(expectedSourceRevision),
+      "Full-book manifest source revision does not match the expected commit.",
+    );
+  }
   invariant(
     sha256Pattern.test(expectedRendererLockSHA256 ?? ""),
     "Expected PDF renderer lock SHA-256 is invalid.",
