@@ -7,6 +7,9 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Pages browser checks wait for the document root during navigation before
+  reading layout dimensions. Unexpected browser errors still fail the check.
+
 - Pull-request path labels now cover the Go PDF renderer, PDF-tools and CI
   planner owners. Renderer-only changes retain their publication and CI labels
   when the existing labeler synchronizes metadata.
