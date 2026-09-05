@@ -339,8 +339,22 @@
     {
       "id": "script-site-tests",
       "paths": [
+        "scripts/book-edition-surface.test.mjs",
+        "scripts/book-fragment-browser.test.mjs",
+        "scripts/book-route.test.mjs",
         "scripts/github-pages.test.mjs",
-        "scripts/mermaid-browser.test.mjs"
+        "scripts/language-access.test.mjs",
+        "scripts/mermaid-browser.test.mjs",
+        "scripts/pages-base.test.mjs",
+        "scripts/pages-seo.test.mjs",
+        "scripts/prepare-reader-artifacts.mjs",
+        "scripts/prepare-reader-artifacts.test.mjs",
+        "scripts/publication-unification.test.mjs",
+        "scripts/translation-manifest.test.mjs",
+        "scripts/translation-pages.test.mjs",
+        "scripts/translation-vite-build.test.mjs",
+        "scripts/validate-github-pages-build.mjs",
+        "scripts/validate-translations.mjs"
       ],
       "lanes": [
         "site"
