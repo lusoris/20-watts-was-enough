@@ -991,15 +991,6 @@ export function PublicResearchPortal({
                 <span aria-disabled="true">Next →</span>
               )}
             </nav>
-            <nav aria-label="Document actions">
-              <a href={withBase(assetBasePath, "book/")}>Full book</a>
-              <a
-                href={withBase(
-                  assetBasePath,
-                  "downloads/20-watts-was-enough-full-concept-book.pdf",
-                )}
-              >PDF</a>
-            </nav>
           </section>
 
           <section className="portal-reader-workspace" aria-label="Research document workspace">

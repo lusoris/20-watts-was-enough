@@ -7,6 +7,15 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- The browser print regression now waits for Chrome's matching media-change
+  event before inspecting overflow semantics, including the return to screen.
+  Full-book pagination has its own bounded transition stage; the existing
+  five-second semantic checks and their assertions remain unchanged.
+- Focused research documents now expose the book and PDF routes once, compact
+  exact identity pairs into labelled rows on narrow screens, and show at least
+  one complete line of canonical prose in the initial `390 x 844` viewport.
+  The 320-pixel reflow boundary still keeps long revisions and routes inside
+  the document width.
 - Decision 0072 runs the three independent site-browser contracts in
   process-isolated Node workers with a concurrency ceiling of two instead of
   one serial process. The first live three-worker run exhausted its unchanged

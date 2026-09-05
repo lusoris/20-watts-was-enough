@@ -271,6 +271,59 @@ async function assertArrowKeyScrollsRegion(cdp, kind) {
   );
 }
 
+async function setEmulatedMediaAfterTransition(cdp, media) {
+  assert.ok(["print", "screen"].includes(media));
+  // Applying print media can paginate the full book before its change event.
+  // Keep that driver transition separate from the five-second semantic wait.
+  const transitionTimeoutMs = 20_000;
+  const deadline = Date.now() + transitionTimeoutMs;
+  const remainingMs = () => Math.max(1, deadline - Date.now());
+  try {
+    const registered = await cdp.send("Runtime.evaluate", {
+      expression: `(() => {
+        const query = matchMedia('print');
+        const expected = ${media === "print"};
+        const previous = query.matches;
+        let timer;
+        let finish;
+        const changed = (event) => {
+          if (event.matches === expected) finish(true);
+        };
+        const promise = new Promise((resolve) => {
+          finish = (observed) => {
+            clearTimeout(timer);
+            query.removeEventListener('change', changed);
+            resolve({ observed, matches: query.matches });
+          };
+          query.addEventListener('change', changed);
+          timer = setTimeout(() => finish(false), ${transitionTimeoutMs});
+        });
+        window.__overflowMediaTransition = { promise, cancel: () => finish(false) };
+        return previous;
+      })()`,
+      returnByValue: true,
+    }, remainingMs());
+    assert.equal(registered.result?.value, media !== "print");
+    await cdp.send("Emulation.setEmulatedMedia", { media }, remainingMs());
+    const transitioned = await cdp.send("Runtime.evaluate", {
+      expression: "window.__overflowMediaTransition.promise",
+      awaitPromise: true,
+      returnByValue: true,
+    }, remainingMs());
+    assert.deepEqual(transitioned.result?.value, {
+      observed: true,
+      matches: media === "print",
+    }, `${media} media-change event did not complete before semantic inspection`);
+  } finally {
+    await cdp.send("Runtime.evaluate", {
+      expression: `(() => {
+        window.__overflowMediaTransition?.cancel();
+        delete window.__overflowMediaTransition;
+      })()`,
+    }, 5_000);
+  }
+}
+
 async function assertPrintRetiresOverflowSemantics(cdp, expectedRegionCount) {
   await cdp.send("Runtime.evaluate", {
     expression: `(() => {
@@ -318,7 +371,7 @@ async function assertPrintRetiresOverflowSemantics(cdp, expectedRegionCount) {
   }
   assertConditionalOverflowSemantics(restored);
 
-  await cdp.send("Emulation.setEmulatedMedia", { media: "print" });
+  await setEmulatedMediaAfterTransition(cdp, "print");
   let print;
   const printDeadline = Date.now() + 5_000;
   while (Date.now() < printDeadline) {
@@ -335,7 +388,7 @@ async function assertPrintRetiresOverflowSemantics(cdp, expectedRegionCount) {
     true,
     `Print content retained horizontal overflow: ${JSON.stringify(print)}`,
   );
-  await cdp.send("Emulation.setEmulatedMedia", { media: "screen" });
+  await setEmulatedMediaAfterTransition(cdp, "screen");
 }
 
 async function assertBookOverflowRegions(cdp) {
