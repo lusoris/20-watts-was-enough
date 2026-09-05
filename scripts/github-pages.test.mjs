@@ -355,6 +355,7 @@ async function exerciseSearchEscape(cdp) {
     cdp,
     portalStateExpression,
     (snapshot) => !snapshot.drawerOpen
+      && snapshot.triggerExpanded === "false"
       && snapshot.activeId === "portal-corpus-trigger",
     "native empty-search Escape did not close the corpus drawer",
   );
