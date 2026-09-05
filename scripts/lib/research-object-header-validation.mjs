@@ -25,13 +25,15 @@ function escapeAttribute(value) {
     .replaceAll(">", "&gt;");
 }
 
-function decodedAttribute(value) {
+// Reverse escapeAttribute exactly once. Decode the ampersand last so a literal
+// entity-looking value such as "&quot;" remains data instead of becoming markup.
+export function decodedAttribute(value) {
   return value
-    .replaceAll("&amp;", "&")
     .replaceAll("&quot;", '"')
     .replaceAll("&#x27;", "'")
     .replaceAll("&lt;", "<")
-    .replaceAll("&gt;", ">");
+    .replaceAll("&gt;", ">")
+    .replaceAll("&amp;", "&");
 }
 
 function feedbackUrl(header, label) {

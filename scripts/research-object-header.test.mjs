@@ -28,6 +28,7 @@ import { renderBookFallback, renderDocumentFallback } from "./lib/pages-seo.mjs"
 import {
   assertStaticBookIdentity,
   assertStaticResearchObjectHeader,
+  decodedAttribute,
 } from "./lib/research-object-header-validation.mjs";
 
 const sourceRevision = "0123456789abcdef0123456789abcdef01234567";
@@ -37,6 +38,11 @@ const documents = attachResearchObjectEvidence(
   portalSourceDocuments(process.cwd()),
 );
 const document = documents[0];
+
+test("static attribute decoding reverses the renderer exactly once", () => {
+  assert.equal(decodedAttribute("&quot;&#x27;&lt;&gt;&amp;"), `"'<>&`);
+  assert.equal(decodedAttribute("&amp;quot;&amp;#x27;&amp;lt;&amp;gt;&amp;amp;"), "&quot;&#x27;&lt;&gt;&amp;");
+});
 
 test("research-object identity binds one exact source revision to every route", () => {
   const identity = researchObjectIdentity({
