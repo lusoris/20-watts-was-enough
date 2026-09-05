@@ -60,6 +60,11 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- The fungal-network audit now separates global hyphal abundance, seedling
+  relatedness effects and parasite-conditioned flow from evidence for connected
+  paths, kin-selected benefit or a shared controller. Three primary studies
+  refine the existing Candidates 001/013 test boundaries and lifecycle costs;
+  no stable claim, principle or candidate is promoted.
 - Decision 0071 locks one 61-file, 823,932,066-byte Linux `amd64` wheel
   selection for the pinned CLRS generator graph. Sixty files map directly to
   `uv.lock`; the sole `promise==2.3` source build binds its sdist, three build
