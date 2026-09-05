@@ -449,7 +449,8 @@ func (policy Policy) allows(task TaskKind, specialistID string) bool {
 func (policy Policy) validAdmission(now time.Time, request Request, admission AdmissionDecision) bool {
 	return admission.State == AdmissionAdmitted && admission.Reason == AdmissionReasonReady &&
 		admission.Authority == ResultAuthority && policy.allows(request.Task, admission.SpecialistID) &&
-		admission.Fit == FitTaskCompatible && admission.Readiness == ReadinessReady && admission.Attempts > 0 &&
+		admissibleFit(admission.Fit) && validAdmissionFitEvidence(now, admission) &&
+		admission.Readiness == ReadinessReady && admission.Attempts > 0 &&
 		!admission.ObservedAt.IsZero() && !admission.ObservedAt.After(now) &&
 		admission.ValidUntil.After(admission.ObservedAt) && now.Before(admission.ValidUntil) &&
 		(admission.QueuedAt.IsZero() || !admission.QueuedAt.After(now)) && admission.DecidedAt.Equal(now)
@@ -465,7 +466,7 @@ func (policy Policy) validTerminalAdmission(now time.Time, request Request, admi
 		case AdmissionReasonFitUnknown, AdmissionReasonKnownNoFit, AdmissionReasonAbsent,
 			AdmissionReasonLoading, AdmissionReasonSaturated, AdmissionReasonStale,
 			AdmissionReasonFailed, AdmissionReasonQueueFull, AdmissionReasonWaitExpired,
-			AdmissionReasonRetryExhausted:
+			AdmissionReasonRetryExhausted, AdmissionReasonObservationChanged:
 		default:
 			return false
 		}
@@ -479,12 +480,30 @@ func (policy Policy) validTerminalAdmission(now time.Time, request Request, admi
 	}
 	if admission.SpecialistID == "" {
 		return admission.State == AdmissionRejected && admission.Fit == "" && admission.Readiness == "" &&
-			admission.ObservedAt.IsZero() && admission.ValidUntil.IsZero()
+			admission.FitMeasurementBasis == "" && admission.FitMeasuredAt.IsZero() &&
+			admission.FitValidUntil.IsZero() && admission.ObservedAt.IsZero() && admission.ValidUntil.IsZero()
 	}
 	return policy.allows(request.Task, admission.SpecialistID) && validFit(admission.Fit) &&
+		validAdmissionFitEvidence(now, admission) &&
 		validReadiness(admission.Readiness) && !admission.ObservedAt.IsZero() && !admission.ObservedAt.After(now) &&
 		admission.ValidUntil.After(admission.ObservedAt) &&
 		(admission.QueuedAt.IsZero() || !admission.QueuedAt.After(now))
+}
+
+func validAdmissionFitEvidence(now time.Time, admission AdmissionDecision) bool {
+	if admission.Fit != FitMeasured {
+		return admission.FitMeasurementBasis == "" && admission.FitMeasuredAt.IsZero() &&
+			admission.FitValidUntil.IsZero()
+	}
+	// The Admission constructor owns the configured absolute cap. The pure
+	// policy also closes the recorded fit window inside its enclosing readiness
+	// observation so a forged fit cannot outlive that record.
+	fitValidity := admission.FitValidUntil.Sub(admission.FitMeasuredAt)
+	observationValidity := admission.ValidUntil.Sub(admission.ObservedAt)
+	return validIdentity(admission.FitMeasurementBasis) && !admission.FitMeasuredAt.IsZero() &&
+		!admission.FitMeasuredAt.After(admission.ObservedAt) &&
+		fitValidity > 0 && observationValidity > 0 && fitValidity <= observationValidity &&
+		!admission.FitValidUntil.After(admission.ValidUntil) && now.Before(admission.FitValidUntil)
 }
 
 func (policy Policy) validDecision(request Request, decision Decision) bool {
@@ -536,14 +555,15 @@ func bindRequest(request Request, specialistID string, decidedAt time.Time, admi
 	_, _ = hash.Write(request.Payload)
 	for _, value := range []string{
 		string(admission.State), string(admission.Reason), admission.Authority, admission.SpecialistID,
-		string(admission.Fit), string(admission.Readiness),
+		string(admission.Fit), admission.FitMeasurementBasis, string(admission.Readiness),
 	} {
 		_ = binary.Write(hash, binary.BigEndian, uint64(len(value)))
 		_, _ = hash.Write([]byte(value))
 	}
 	for _, value := range []int64{
-		admission.ObservedAt.UnixNano(), admission.ValidUntil.UnixNano(), admission.QueuedAt.UnixNano(),
-		admission.DecidedAt.UnixNano(), int64(admission.Attempts),
+		admission.FitMeasuredAt.UnixNano(), admission.FitValidUntil.UnixNano(), admission.ObservedAt.UnixNano(),
+		admission.ValidUntil.UnixNano(), admission.QueuedAt.UnixNano(), admission.DecidedAt.UnixNano(),
+		int64(admission.Attempts),
 	} {
 		_ = binary.Write(hash, binary.BigEndian, value)
 	}

@@ -153,9 +153,13 @@ limits of that analogy.
 
 The development controller now makes this boundary executable for the frozen
 CLRS shakedown. Every registered specialist needs a timestamped observation
-with a finite validity window and explicit task compatibility; `unknown` is
-not a match. This coarse compatibility state does not claim a per-request
-resource measurement: policy and adapter limits still validate each packet.
+with a finite validity window. Fit distinguishes `measured-fit`,
+`known-no-fit`, and `unknown`; `unknown` is not a match. A `measured-fit`
+observation must bind a caller-owned basis identifier, measurement time, and
+bounded expiry, after which the controller treats it as `unknown`. The local
+CLRS adapters use an additional construction-only `task-compatible` state
+rather than claim a per-request resource measurement. Policy and adapter limits
+still validate each packet.
 Each frozen task accepts at most two route candidates. Route selection and a
 one-shot, request-bound capacity reservation occur together. Per-specialist and
 aggregate queue and active-work limits bound the controller alongside its wait
@@ -164,10 +168,13 @@ across overlapping routes, so later work can use spare capacity without taking
 a slot an older waiter can use. It records typed fallback or rejection, rechecks
 readiness, cancellation and the request deadline inside the serialised state
 immediately before invocation, and uses specialist identity as the stable
-tie-break when declared cost and readiness are equal. This is a construction
-check of controller mechanics. It neither measures an efficiency gain nor
-grants the resulting candidate scientific authority; every path remains
-`NO_RESULT` pending the matched comparisons described below.
+tie-break when declared cost and readiness are equal. An otherwise positive
+recheck must match the recorded readiness and fit evidence; a newer observation
+produces an explicit fallback instead of authorising an effect under the older
+binding. This is a construction check of controller mechanics. It neither
+measures an efficiency gain nor grants the resulting candidate scientific
+authority; every path remains `NO_RESULT` pending the matched comparisons
+described below.
 
 The arm must face a capacity-matched general model and a tuned sparse mixture
 of experts with the same tools, state, training opportunity, routing

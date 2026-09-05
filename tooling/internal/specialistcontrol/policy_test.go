@@ -34,11 +34,63 @@ func TestPolicyRoutesTheAcceptedSixTaskSubsetDeterministically(t *testing.T) {
 		if first.Authority != ResultAuthority || first.SpecialistID != "exact-"+string(task) || first.Binding == (Binding{}) {
 			t.Fatalf("Decide(%s) identity = %#v, want bound NO_RESULT route", task, first)
 		}
+		measuredAdmission := testAdmissionDecision(policy, task, testNow)
+		measuredAdmission.Fit = FitMeasured
+		measuredAdmission.FitMeasurementBasis = "fit-probe:v1"
+		measuredAdmission.FitMeasuredAt = measuredAdmission.ObservedAt.Add(-time.Second)
+		measuredAdmission.FitValidUntil = measuredAdmission.FitMeasuredAt.Add(time.Minute)
+		measured := policy.Decide(testNow, request, measuredAdmission)
+		if measured.State != DecisionInvoke || measured.Reason != ReasonReady || measured.Admission.Fit != FitMeasured {
+			t.Fatalf("Decide(%s measured fit) = %#v, want invoke", task, measured)
+		}
+		changedBasis := measuredAdmission
+		changedBasis.FitMeasurementBasis = "fit-probe:v2"
+		if changed := policy.Decide(testNow, request, changedBasis); changed.State != DecisionInvoke ||
+			changed.Binding == measured.Binding {
+			t.Fatalf("Decide(%s changed measured basis) = %#v, want a distinct invoke binding", task, changed)
+		}
 		laterAt := testNow.Add(time.Nanosecond)
 		later := policy.Decide(laterAt, request, testAdmissionDecision(policy, task, laterAt))
 		if first.DecidedAt != testNow || later.DecidedAt == first.DecidedAt || later.Binding == first.Binding {
 			t.Fatalf("Decide(%s) decision-time binding = %s/%x then %s/%x", task, first.DecidedAt, first.Binding, later.DecidedAt, later.Binding)
 		}
+	}
+}
+
+func TestPolicyRejectsUnboundedOrMismatchedMeasuredFitEvidence(t *testing.T) {
+	t.Parallel()
+	policy := testPolicy(t)
+	request := testRequest(TaskInsertionSort)
+	valid := testAdmissionDecision(policy, request.Task, testNow)
+	valid.Fit = FitMeasured
+	valid.FitMeasurementBasis = "fit-probe:v1"
+	valid.FitMeasuredAt = valid.ObservedAt.Add(-time.Second)
+	valid.FitValidUntil = valid.FitMeasuredAt.Add(time.Minute)
+	tests := map[string]func(*AdmissionDecision){
+		"missing basis": func(admission *AdmissionDecision) { admission.FitMeasurementBasis = "" },
+		"measurement after view": func(admission *AdmissionDecision) {
+			admission.FitMeasuredAt = admission.ObservedAt.Add(time.Nanosecond)
+		},
+		"expired measurement": func(admission *AdmissionDecision) { admission.FitValidUntil = testNow },
+		"measurement outlives observation": func(admission *AdmissionDecision) {
+			admission.FitValidUntil = admission.ValidUntil.Add(time.Nanosecond)
+		},
+		"stray construction metadata": func(admission *AdmissionDecision) {
+			admission.Fit = FitTaskCompatible
+		},
+	}
+	for name, mutate := range tests {
+		name, mutate := name, mutate
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			admission := valid
+			mutate(&admission)
+			decision := policy.Decide(testNow, request, admission)
+			if decision.State != DecisionRefuse || decision.Reason != ReasonAdmissionRejected ||
+				decision.Binding != (Binding{}) {
+				t.Fatalf("Decide(%s) = %#v, want admission rejection", name, decision)
+			}
+		})
 	}
 }
 

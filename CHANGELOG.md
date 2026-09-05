@@ -148,17 +148,23 @@ the exact diff; this file records why the project changed.
   100-record narrow-screen case reject resource exhaustion, stale or duplicate
   identity, hidden disclosure state, lost identity and Pages-base-path drift.
 - The existing specialist controller now admits a route only from an explicit,
-  time-bounded task-compatibility and ready observation. Per-request resource
-  limits remain at the policy and adapter boundaries. Each frozen task accepts
-  at most two route candidates. Selection and a token-backed, one-shot capacity
+  time-bounded positive-fit and ready observation. It distinguishes
+  `measured-fit`, `known-no-fit`, and `unknown`. Measured fit binds a caller-owned
+  basis identifier, measurement time, and bounded expiry, after which it becomes
+  unknown; the local CLRS adapters retain a separate construction-only
+  `task-compatible` state. Per-request resource limits remain at the policy and
+  adapter boundaries. Each frozen task accepts at most two route candidates.
+  Selection and a token-backed, one-shot capacity
   reservation are atomic; per-specialist and aggregate queue and active-work
   limits, wait and readiness retries are bounded; FIFO capacity matching keeps
   overlapping routes from starving older eligible work; equal ranks break by
   specialist identity; and cancellation, deadlines and freshness are checked
   inside serialised state before invocation and after timer wakes. Typed
   rejection and fallback remain empty `NO_RESULT` construction outcomes. The
-  CLRS registry projects its six closed adapters into this same admission
-  surface without adding another controller or operational constants.
+  pre-effect recheck also falls back when its positive evidence differs from
+  the already recorded binding. The CLRS registry projects its six closed
+  adapters into this same admission surface without adding another controller
+  or operational constants.
 - A digest-pinned apko/Wolfi foundation now closes the Linux `amd64` Poppler
   26.08.0 PDF-tools graph at 45 APKs. Its offline Go validator binds the config,
   lock, exact APK retention metadata, upstream source identities, the pinned

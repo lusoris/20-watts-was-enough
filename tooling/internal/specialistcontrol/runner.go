@@ -118,6 +118,10 @@ func (runner Runner) Run(ctx context.Context, request Request) (RunResult, error
 	if invalidClock {
 		revalidated = admissionTerminal(AdmissionRejected, AdmissionReasonMalformed, invocationAt, admission.Attempts)
 	}
+	if revalidated.State == AdmissionAdmitted && !sameAdmissionEvidence(admission, revalidated) {
+		revalidated.State = AdmissionFallback
+		revalidated.Reason = AdmissionReasonObservationChanged
+	}
 	invocationPreflight, requestTerminal := runner.policy.preflight(invocationAt, request)
 	run.Admission = revalidated
 	if revalidated.State != AdmissionAdmitted || requestTerminal {
@@ -208,6 +212,15 @@ func (runner Runner) Run(ctx context.Context, request Request) (RunResult, error
 	}
 	run.Outcome = runner.policy.Finalise(finalisedAt, request, decision, resultDecision, verification)
 	return run, nil
+}
+
+func sameAdmissionEvidence(recorded, current AdmissionDecision) bool {
+	return recorded.State == current.State && recorded.Reason == current.Reason &&
+		recorded.Authority == current.Authority && recorded.SpecialistID == current.SpecialistID &&
+		recorded.Fit == current.Fit && recorded.FitMeasurementBasis == current.FitMeasurementBasis &&
+		recorded.FitMeasuredAt.Equal(current.FitMeasuredAt) && recorded.FitValidUntil.Equal(current.FitValidUntil) &&
+		recorded.Readiness == current.Readiness && recorded.ObservedAt.Equal(current.ObservedAt) &&
+		recorded.ValidUntil.Equal(current.ValidUntil) && recorded.DeclaredCost == current.DeclaredCost
 }
 
 func (runner Runner) recordDecision(ctx context.Context, decision Decision, detached bool) error {

@@ -46,6 +46,60 @@ func TestAdmissionRequiresOneBoundedObservationPerRegisteredSpecialist(t *testin
 	}
 }
 
+func TestAdmissionRequiresBoundedMeasuredFitEvidence(t *testing.T) {
+	t.Parallel()
+	tests := map[string]func(*RequestFit, *ReadinessObservation){
+		"missing basis": func(fit *RequestFit, _ *ReadinessObservation) {
+			fit.MeasurementBasis = ""
+		},
+		"invalid basis": func(fit *RequestFit, _ *ReadinessObservation) {
+			fit.MeasurementBasis = "fit probe v1"
+		},
+		"missing measurement time": func(fit *RequestFit, _ *ReadinessObservation) {
+			fit.MeasuredAt = time.Time{}
+		},
+		"measurement after observation": func(fit *RequestFit, observation *ReadinessObservation) {
+			fit.MeasuredAt = observation.ObservedAt.Add(time.Nanosecond)
+		},
+		"missing measurement validity": func(fit *RequestFit, _ *ReadinessObservation) {
+			fit.MeasurementValidFor = 0
+		},
+		"measurement validity above bound": func(fit *RequestFit, _ *ReadinessObservation) {
+			fit.MeasurementValidFor = 2 * time.Minute
+		},
+		"measurement outlives observation window": func(fit *RequestFit, observation *ReadinessObservation) {
+			observation.ValidFor = 30 * time.Second
+			fit.MeasurementValidFor = 45 * time.Second
+		},
+		"expired measurement": func(fit *RequestFit, _ *ReadinessObservation) {
+			fit.MeasuredAt = testNow.Add(-2 * time.Minute)
+			fit.MeasurementValidFor = time.Minute
+		},
+		"measurement metadata on construction fit": func(fit *RequestFit, _ *ReadinessObservation) {
+			fit.State = FitTaskCompatible
+		},
+	}
+	for name, mutate := range tests {
+		name, mutate := name, mutate
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			policy := testPolicy(t)
+			observations := testReadiness(policy, testNow, time.Minute)
+			index := readinessIndex(t, observations, "exact-"+string(TaskInsertionSort))
+			observation := &observations[index]
+			fit := &observation.Fits[0]
+			fit.State = FitMeasured
+			fit.MeasurementBasis = "fit-probe:v1"
+			fit.MeasuredAt = observation.ObservedAt.Add(-time.Second)
+			fit.MeasurementValidFor = time.Minute
+			mutate(fit, observation)
+			if _, err := NewAdmission(policy, testAdmissionLimits(), observations, testNow); err == nil {
+				t.Fatal("NewAdmission() error = nil, want bounded measured-fit evidence rejection")
+			}
+		})
+	}
+}
+
 func TestAdmissionRejectsMissingOrOverflowingAggregateBounds(t *testing.T) {
 	t.Parallel()
 	policy := testPolicy(t)
@@ -82,6 +136,7 @@ func TestAdmissionTypesFitAndEveryReadinessState(t *testing.T) {
 		wantReady  ReadinessState
 	}{
 		{name: "ready", fit: FitTaskCompatible, readiness: ReadinessReady, observedAt: testNow.Add(-time.Second), validFor: time.Minute, wantState: AdmissionAdmitted, wantReason: AdmissionReasonReady, wantReady: ReadinessReady},
+		{name: "measured fit ready", fit: FitMeasured, readiness: ReadinessReady, observedAt: testNow.Add(-time.Second), validFor: time.Minute, wantState: AdmissionAdmitted, wantReason: AdmissionReasonReady, wantReady: ReadinessReady},
 		{name: "absent", fit: FitTaskCompatible, readiness: ReadinessAbsent, observedAt: testNow.Add(-time.Second), validFor: time.Minute, wantState: AdmissionFallback, wantReason: AdmissionReasonAbsent, wantReady: ReadinessAbsent},
 		{name: "loading", fit: FitTaskCompatible, readiness: ReadinessLoading, observedAt: testNow.Add(-time.Second), validFor: time.Minute, wantState: AdmissionFallback, wantReason: AdmissionReasonRetryExhausted, wantReady: ReadinessLoading},
 		{name: "saturated", fit: FitTaskCompatible, readiness: ReadinessSaturated, observedAt: testNow.Add(-time.Second), validFor: time.Minute, wantState: AdmissionFallback, wantReason: AdmissionReasonRetryExhausted, wantReady: ReadinessSaturated},
@@ -107,6 +162,11 @@ func TestAdmissionTypesFitAndEveryReadinessState(t *testing.T) {
 				observations[index].ObservedAt = test.observedAt
 				observations[index].ValidFor = test.validFor
 				observations[index].Fits[0].State = test.fit
+				if test.fit == FitMeasured {
+					observations[index].Fits[0].MeasurementBasis = "fit-probe:v1"
+					observations[index].Fits[0].MeasuredAt = test.observedAt
+					observations[index].Fits[0].MeasurementValidFor = time.Minute
+				}
 			}
 			limits := testAdmissionLimits()
 			limits.MaxRetries = 0
@@ -115,12 +175,17 @@ func TestAdmissionTypesFitAndEveryReadinessState(t *testing.T) {
 			if lease != nil {
 				defer lease.Release()
 			}
-			if decision.State != test.wantState || decision.Reason != test.wantReason ||
+			if decision.State != test.wantState || decision.Reason != test.wantReason || decision.Fit != test.fit ||
 				decision.Readiness != test.wantReady || decision.Authority != ResultAuthority {
 				t.Fatalf("Acquire() = %#v, want %s/%s readiness %s", decision, test.wantState, test.wantReason, test.wantReady)
 			}
-			if test.fit != FitTaskCompatible && lease != nil {
+			if !admissibleFit(test.fit) && lease != nil {
 				t.Fatal("non-matching fit acquired a specialist slot")
+			}
+			if test.fit == FitMeasured && (decision.FitMeasurementBasis != "fit-probe:v1" ||
+				!decision.FitMeasuredAt.Equal(test.observedAt) ||
+				!decision.FitValidUntil.Equal(test.observedAt.Add(time.Minute))) {
+				t.Fatalf("Acquire(measured fit) evidence = %#v, want bound basis and validity", decision)
 			}
 		})
 	}
@@ -310,6 +375,32 @@ func TestAdmissionRevalidationChecksFreshnessAfterAcquiringItsMutex(t *testing.T
 	decision := <-result
 	if decision.State != AdmissionFallback || decision.Reason != AdmissionReasonStale || !decision.DecidedAt.Equal(validUntil) {
 		t.Fatalf("Revalidate(expired behind mutex) = %#v, want stale fallback", decision)
+	}
+}
+
+func TestAdmissionRevalidationFailsClosedAfterMeasuredFitExpires(t *testing.T) {
+	t.Parallel()
+	policy := testPolicy(t)
+	observations := testReadiness(policy, testNow, time.Minute)
+	target := &observations[readinessIndex(t, observations, "exact-"+string(TaskInsertionSort))]
+	target.Fits[0] = RequestFit{
+		Task: TaskInsertionSort, State: FitMeasured, MeasurementBasis: "fit-probe:v1",
+		MeasuredAt: target.ObservedAt, MeasurementValidFor: 25 * time.Millisecond,
+	}
+	fitValidUntil := target.Fits[0].MeasuredAt.Add(target.Fits[0].MeasurementValidFor)
+	admission := mustAdmission(t, policy, testAdmissionLimits(), observations, testNow)
+	request := testRequest(TaskInsertionSort)
+	_, lease := admission.Acquire(context.Background(), request, fixedClock(testNow))
+	if lease == nil {
+		t.Fatal("Acquire(measured fit) lease = nil")
+	}
+	defer lease.Release()
+
+	decision := lease.Revalidate(context.Background(), request, fixedClock(fitValidUntil))
+	if decision.State != AdmissionFallback || decision.Reason != AdmissionReasonFitUnknown ||
+		decision.Fit != FitUnknown || decision.FitMeasurementBasis != "" ||
+		!decision.FitMeasuredAt.IsZero() || !decision.FitValidUntil.IsZero() {
+		t.Fatalf("Revalidate(expired measured fit) = %#v, want evidence-free fit-unknown fallback", decision)
 	}
 }
 
@@ -719,6 +810,49 @@ func TestAdmissionWakesWhenAWaitableObservationExpires(t *testing.T) {
 	}
 }
 
+func TestAdmissionWakesAtMeasuredFitExpiryAndFailsClosed(t *testing.T) {
+	policy := testPolicy(t)
+	at := time.Now()
+	observations := testReadiness(policy, at, 2*time.Second)
+	targetID := "exact-" + string(TaskInsertionSort)
+	target := &observations[readinessIndex(t, observations, targetID)]
+	target.State = ReadinessLoading
+	target.Fits[0] = RequestFit{
+		Task: TaskInsertionSort, State: FitMeasured, MeasurementBasis: "fit-probe:v1",
+		MeasuredAt: target.ObservedAt, MeasurementValidFor: 250 * time.Millisecond,
+	}
+	fitValidUntil := target.Fits[0].MeasuredAt.Add(target.Fits[0].MeasurementValidFor)
+	limits := testAdmissionLimits()
+	limits.MaxObservationValidity = 2 * time.Second
+	limits.MaxWait = 2 * time.Second
+	admission := mustAdmission(t, policy, limits, observations, at)
+	request := testRequest(TaskInsertionSort)
+	request.IssuedAt = at.Add(-time.Millisecond)
+	request.Deadline = at.Add(3 * time.Second)
+	result := make(chan admissionResult, 1)
+
+	startedAt := time.Now()
+	go acquireInto(result, admission, context.Background(), request, time.Now)
+	waitForPending(t, admission, 1)
+	got := <-result
+	elapsed := time.Since(startedAt)
+
+	if got.lease != nil || got.decision.State != AdmissionFallback ||
+		got.decision.Reason != AdmissionReasonFitUnknown || got.decision.Fit != FitUnknown ||
+		got.decision.FitMeasurementBasis != "" || !got.decision.FitMeasuredAt.IsZero() ||
+		!got.decision.FitValidUntil.IsZero() || got.decision.DecidedAt.Before(fitValidUntil) {
+		t.Fatalf("Acquire(expired measured fit) = %#v/%#v, want evidence-free fit-unknown fallback", got.decision, got.lease)
+	}
+	if elapsed >= limits.MaxWait/2 {
+		t.Fatalf("measured-fit expiry returned after %s, MaxWait = %s", elapsed, limits.MaxWait)
+	}
+	admission.mu.Lock()
+	defer admission.mu.Unlock()
+	if len(admission.pending) != 0 {
+		t.Fatalf("measured-fit expiry leaked %d queue ticket(s)", len(admission.pending))
+	}
+}
+
 func TestAdmissionRechecksCancellationAfterTimerWake(t *testing.T) {
 	policy := testPolicy(t)
 	at := time.Now()
@@ -811,10 +945,10 @@ func TestAdmissionReservesSharedCapacityForOldestEligibleTickets(t *testing.T) {
 
 		admission.mu.Lock()
 		older := admission.enqueueLocked(
-			olderRequest, admission.queueCandidatesLocked(olderRequest.Task), testNow, AdmissionDecision{},
+			olderRequest, admission.queueCandidatesLocked(olderRequest.Task, testNow), testNow, AdmissionDecision{},
 		)
 		later := admission.enqueueLocked(
-			laterRequest, admission.queueCandidatesLocked(laterRequest.Task), testNow, AdmissionDecision{},
+			laterRequest, admission.queueCandidatesLocked(laterRequest.Task, testNow), testNow, AdmissionDecision{},
 		)
 		for name, ticket := range map[string]*admissionTicket{"later waiter": later, "new request": nil} {
 			decision, waitable, lease := admission.attemptLocked(laterRequest, ticket, testNow)
@@ -843,7 +977,7 @@ func TestAdmissionReservesSharedCapacityForOldestEligibleTickets(t *testing.T) {
 		olderRequest := testRequest(TaskInsertionSort)
 		admission.mu.Lock()
 		older := admission.enqueueLocked(
-			olderRequest, admission.queueCandidatesLocked(olderRequest.Task), testNow, AdmissionDecision{},
+			olderRequest, admission.queueCandidatesLocked(olderRequest.Task, testNow), testNow, AdmissionDecision{},
 		)
 		admission.mu.Unlock()
 
@@ -870,10 +1004,10 @@ func TestAdmissionSharedCapacityCountsUsableOlderSlotsOnly(t *testing.T) {
 		request := testRequest(TaskInsertionSort)
 		admission.mu.Lock()
 		first := admission.enqueueLocked(
-			request, admission.queueCandidatesLocked(request.Task), testNow, AdmissionDecision{},
+			request, admission.queueCandidatesLocked(request.Task, testNow), testNow, AdmissionDecision{},
 		)
 		second := admission.enqueueLocked(
-			request, admission.queueCandidatesLocked(request.Task), testNow, AdmissionDecision{},
+			request, admission.queueCandidatesLocked(request.Task, testNow), testNow, AdmissionDecision{},
 		)
 		decision, waitable, lease := admission.attemptLocked(testRequest(TaskBinarySearch), nil, testNow)
 		admission.removeTicketLocked(first)
@@ -893,7 +1027,7 @@ func TestAdmissionSharedCapacityCountsUsableOlderSlotsOnly(t *testing.T) {
 		expired.Deadline = testNow
 		admission.mu.Lock()
 		ticket := admission.enqueueLocked(
-			expired, admission.queueCandidatesLocked(expired.Task), testNow.Add(-time.Millisecond), AdmissionDecision{},
+			expired, admission.queueCandidatesLocked(expired.Task, testNow.Add(-time.Millisecond)), testNow.Add(-time.Millisecond), AdmissionDecision{},
 		)
 		decision, _, lease := admission.attemptLocked(testRequest(TaskBinarySearch), nil, testNow)
 		admission.removeTicketLocked(ticket)
@@ -919,10 +1053,10 @@ func TestAdmissionMatchesOverlappingOlderCandidatesBeforeUsingSharedCapacity(t *
 
 	admission.mu.Lock()
 	first := admission.enqueueLocked(
-		insertion, admission.queueCandidatesLocked(insertion.Task), testNow, AdmissionDecision{},
+		insertion, admission.queueCandidatesLocked(insertion.Task, testNow), testNow, AdmissionDecision{},
 	)
 	second := admission.enqueueLocked(
-		insertion, admission.queueCandidatesLocked(insertion.Task), testNow, AdmissionDecision{},
+		insertion, admission.queueCandidatesLocked(insertion.Task, testNow), testNow, AdmissionDecision{},
 	)
 	blocked, waitable, crossed := admission.attemptLocked(binary, nil, testNow)
 	firstDecision, firstWaitable, firstLease := admission.attemptLocked(insertion, first, testNow)
@@ -967,10 +1101,10 @@ func TestAdmissionReassignsAnOlderFlexibleTicketToProtectAConstrainedTicket(t *t
 
 	admission.mu.Lock()
 	first := admission.enqueueLocked(
-		insertion, admission.queueCandidatesLocked(insertion.Task), testNow, AdmissionDecision{},
+		insertion, admission.queueCandidatesLocked(insertion.Task, testNow), testNow, AdmissionDecision{},
 	)
 	second := admission.enqueueLocked(
-		insertion, admission.queueCandidatesLocked(insertion.Task), testNow, AdmissionDecision{},
+		insertion, admission.queueCandidatesLocked(insertion.Task, testNow), testNow, AdmissionDecision{},
 	)
 	second.exhausted[primaryID] = true
 	blocked, waitable, lease := admission.attemptLocked(testRequest(TaskBinarySearch), nil, testNow)
@@ -1147,6 +1281,61 @@ func TestRunnerRevalidatesReadinessImmediatelyBeforeSpecialistEffect(t *testing.
 		len(recorded) != 2 || recorded[1] != run.Decision || recorded[1].State != DecisionAbstain ||
 		recorded[1].Admission.Reason != AdmissionReasonFailed {
 		t.Fatalf("Run(revalidated failure) = %#v, %v, recorded=%#v invoked=%t", run, runErr, recorded, invoked)
+	}
+}
+
+func TestRunnerDoesNotInvokeAcrossMeasuredFitObservationChange(t *testing.T) {
+	t.Parallel()
+	policy := testPolicy(t)
+	observations := testReadiness(policy, testNow, time.Minute)
+	targetID := "exact-" + string(TaskInsertionSort)
+	targetIndex := readinessIndex(t, observations, targetID)
+	target := &observations[targetIndex]
+	target.Fits[0] = RequestFit{
+		Task: TaskInsertionSort, State: FitMeasured, MeasurementBasis: "fit-probe:v1",
+		MeasuredAt: target.ObservedAt, MeasurementValidFor: time.Minute,
+	}
+	admission := mustAdmission(t, policy, testAdmissionLimits(), observations, testNow)
+	invoked := false
+	specialists := testSpecialists(policy)
+	specialists[targetID] = specialistFunc(func(context.Context, Invocation) (SpecialistResult, error) {
+		invoked = true
+		return SpecialistResult{}, nil
+	})
+	var recorded []Decision
+	runner, err := NewRunner(
+		policy,
+		admission,
+		recorderFunc(func(_ context.Context, decision Decision) error {
+			recorded = append(recorded, decision)
+			if len(recorded) != 1 {
+				return nil
+			}
+			updated := observations[targetIndex]
+			updated.ObservedAt = testNow
+			updated.Fits = []RequestFit{{
+				Task: TaskInsertionSort, State: FitMeasured, MeasurementBasis: "fit-probe:v2",
+				MeasuredAt: testNow, MeasurementValidFor: time.Minute,
+			}}
+			return admission.Observe(testNow, updated)
+		}),
+		specialists,
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
+			t.Fatal("verifier ran after measured-fit evidence changed")
+			return Verification{}, nil
+		}),
+		fixedClock(testNow),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	run, runErr := runner.Run(context.Background(), testRequest(TaskInsertionSort))
+	if runErr != nil || invoked || run.Admission.State != AdmissionFallback ||
+		run.Admission.Reason != AdmissionReasonObservationChanged ||
+		run.Admission.FitMeasurementBasis != "fit-probe:v2" || run.Outcome.Reason != ReasonFallback ||
+		len(recorded) != 2 || recorded[0].Admission.FitMeasurementBasis != "fit-probe:v1" ||
+		recorded[1] != run.Decision || recorded[1].State != DecisionAbstain {
+		t.Fatalf("Run(changed measured fit) = %#v, %v, recorded=%#v invoked=%t", run, runErr, recorded, invoked)
 	}
 }
 

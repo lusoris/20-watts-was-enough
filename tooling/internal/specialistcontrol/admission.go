@@ -10,11 +10,13 @@ import (
 	"time"
 )
 
-// FitState records task compatibility without treating an unknown as a match.
-// Per-request resource demand remains a separate policy and adapter boundary.
+// FitState records measured or construction-only task fit without treating an
+// unknown as a match. Per-request resource demand remains a separate policy and
+// adapter boundary.
 type FitState string
 
 const (
+	FitMeasured       FitState = "measured-fit"
 	FitTaskCompatible FitState = "task-compatible"
 	FitKnownNoFit     FitState = "known-no-fit"
 	FitUnknown        FitState = "unknown"
@@ -32,10 +34,15 @@ const (
 	ReadinessFailed    ReadinessState = "failed"
 )
 
-// RequestFit binds one registered task to its compatibility state.
+// RequestFit binds one registered task to its observed fit state. Measured fit
+// requires a caller-owned basis, measurement time, and bounded validity; the
+// other states carry no measurement metadata.
 type RequestFit struct {
-	Task  TaskKind
-	State FitState
+	Task                TaskKind
+	State               FitState
+	MeasurementBasis    string
+	MeasuredAt          time.Time
+	MeasurementValidFor time.Duration
 }
 
 // ReadinessObservation is one bounded, timestamped specialist snapshot.
@@ -79,36 +86,47 @@ const (
 type AdmissionReason string
 
 const (
-	AdmissionReasonReady           AdmissionReason = "ready"
-	AdmissionReasonMalformed       AdmissionReason = "malformed"
-	AdmissionReasonFitUnknown      AdmissionReason = "fit-unknown"
-	AdmissionReasonKnownNoFit      AdmissionReason = "known-no-fit"
-	AdmissionReasonAbsent          AdmissionReason = "absent"
-	AdmissionReasonLoading         AdmissionReason = "loading"
-	AdmissionReasonSaturated       AdmissionReason = "saturated"
-	AdmissionReasonStale           AdmissionReason = "stale"
-	AdmissionReasonFailed          AdmissionReason = "failed"
-	AdmissionReasonQueueFull       AdmissionReason = "queue-full"
-	AdmissionReasonWaitExpired     AdmissionReason = "wait-expired"
-	AdmissionReasonRetryExhausted  AdmissionReason = "retry-exhausted"
-	AdmissionReasonDeadlineElapsed AdmissionReason = "deadline-elapsed"
-	AdmissionReasonCancelled       AdmissionReason = "cancelled"
+	AdmissionReasonReady              AdmissionReason = "ready"
+	AdmissionReasonMalformed          AdmissionReason = "malformed"
+	AdmissionReasonFitUnknown         AdmissionReason = "fit-unknown"
+	AdmissionReasonKnownNoFit         AdmissionReason = "known-no-fit"
+	AdmissionReasonAbsent             AdmissionReason = "absent"
+	AdmissionReasonLoading            AdmissionReason = "loading"
+	AdmissionReasonSaturated          AdmissionReason = "saturated"
+	AdmissionReasonStale              AdmissionReason = "stale"
+	AdmissionReasonFailed             AdmissionReason = "failed"
+	AdmissionReasonQueueFull          AdmissionReason = "queue-full"
+	AdmissionReasonWaitExpired        AdmissionReason = "wait-expired"
+	AdmissionReasonRetryExhausted     AdmissionReason = "retry-exhausted"
+	AdmissionReasonObservationChanged AdmissionReason = "observation-changed"
+	AdmissionReasonDeadlineElapsed    AdmissionReason = "deadline-elapsed"
+	AdmissionReasonCancelled          AdmissionReason = "cancelled"
 )
 
 // AdmissionDecision is recorded separately from route and result states.
 type AdmissionDecision struct {
-	State        AdmissionState
-	Reason       AdmissionReason
-	Authority    string
-	SpecialistID string
-	Fit          FitState
-	Readiness    ReadinessState
-	ObservedAt   time.Time
-	ValidUntil   time.Time
-	QueuedAt     time.Time
-	DecidedAt    time.Time
-	DeclaredCost uint64
-	Attempts     int
+	State               AdmissionState
+	Reason              AdmissionReason
+	Authority           string
+	SpecialistID        string
+	Fit                 FitState
+	FitMeasurementBasis string
+	FitMeasuredAt       time.Time
+	FitValidUntil       time.Time
+	Readiness           ReadinessState
+	ObservedAt          time.Time
+	ValidUntil          time.Time
+	QueuedAt            time.Time
+	DecidedAt           time.Time
+	DeclaredCost        uint64
+	Attempts            int
+}
+
+type observedFit struct {
+	state            FitState
+	measurementBasis string
+	measuredAt       time.Time
+	validUntil       time.Time
 }
 
 type observedSpecialist struct {
@@ -116,7 +134,7 @@ type observedSpecialist struct {
 	observedAt   time.Time
 	validUntil   time.Time
 	declaredCost uint64
-	fits         map[TaskKind]FitState
+	fits         map[TaskKind]observedFit
 }
 
 type admissionTicket struct {
@@ -250,7 +268,7 @@ func (admission *Admission) Observe(at time.Time, observation ReadinessObservati
 	return nil
 }
 
-// Acquire waits only while a task-compatible route has a transient readiness or
+// Acquire waits only while a positive-fit route has a transient readiness or
 // capacity obstruction. Eligibility and slot reservation share one lock.
 func (admission *Admission) Acquire(
 	ctx context.Context,
@@ -281,7 +299,7 @@ func (admission *Admission) Acquire(
 		decision.Reason = AdmissionReasonRetryExhausted
 		return decision, nil
 	}
-	candidates := admission.queueCandidatesLocked(request.Task)
+	candidates := admission.queueCandidatesLocked(request.Task, at)
 	if !admission.queueHasCapacityLocked(candidates) {
 		admission.mu.Unlock()
 		decision.Reason = AdmissionReasonQueueFull
@@ -390,7 +408,9 @@ func (admission *Admission) attemptLocked(
 	observation := admission.observations[selected]
 	lease := admission.reserveLocked(selected, request)
 	if lease == nil {
-		decision := decisionFromUnavailable(selected, observation, FitTaskCompatible, AdmissionReasonSaturated).at(at)
+		decision := decisionFromUnavailable(
+			selected, observation, observation.fits[request.Task], at, AdmissionReasonSaturated,
+		).at(at)
 		decision.Readiness = ReadinessSaturated
 		decision.QueuedAt = queuedAt
 		decision.Attempts = attempts
@@ -418,18 +438,19 @@ func (admission *Admission) selectLocked(
 			continue
 		}
 		observation := admission.observations[specialistID]
-		fit := observation.fits[task]
+		observedFit := observation.fits[task]
+		fit := effectiveFit(observedFit, at)
 		state := effectiveReadiness(observation, at)
 		if state == ReadinessStale {
-			candidate := decisionFromUnavailable(specialistID, observation, fit, AdmissionReasonStale)
+			candidate := decisionFromUnavailable(specialistID, observation, observedFit, at, AdmissionReasonStale)
 			candidate.Readiness = state
 			if representative.Reason == "" || readinessPriority(candidate.Reason) < readinessPriority(representative.Reason) {
 				representative = candidate
 			}
 			continue
 		}
-		if fit != FitTaskCompatible {
-			candidate := decisionFromUnavailable(specialistID, observation, fit, fitReason(fit))
+		if !admissibleFit(fit) {
+			candidate := decisionFromUnavailable(specialistID, observation, observedFit, at, fitReason(fit))
 			if representative.Reason == "" || readinessPriority(candidate.Reason) < readinessPriority(representative.Reason) {
 				representative = candidate
 			}
@@ -444,7 +465,7 @@ func (admission *Admission) selectLocked(
 		if blocked {
 			state = ReadinessSaturated
 		}
-		candidate := decisionFromUnavailable(specialistID, observation, fit, readinessReason(state))
+		candidate := decisionFromUnavailable(specialistID, observation, observedFit, at, readinessReason(state))
 		candidate.Readiness = state
 		if representative.Reason == "" || readinessPriority(candidate.Reason) < readinessPriority(representative.Reason) {
 			representative = candidate
@@ -525,18 +546,25 @@ func (lease *AdmissionLease) Revalidate(ctx context.Context, request Request, no
 	if !present || admission.active[leaseState.specialistID] <= 0 || admission.activeTotal <= 0 {
 		return admissionTerminal(AdmissionRejected, AdmissionReasonMalformed, at, 1)
 	}
-	fit := observation.fits[request.Task]
+	observedFit := observation.fits[request.Task]
+	fit := effectiveFit(observedFit, at)
 	state := effectiveReadiness(observation, at)
 	if state == ReadinessStale {
-		decision := decisionFromUnavailable(activeState.specialistID, observation, fit, AdmissionReasonStale).at(at)
+		decision := decisionFromUnavailable(
+			activeState.specialistID, observation, observedFit, at, AdmissionReasonStale,
+		).at(at)
 		decision.Readiness = state
 		return decision
 	}
-	if fit != FitTaskCompatible {
-		return decisionFromUnavailable(activeState.specialistID, observation, fit, fitReason(fit)).at(at)
+	if !admissibleFit(fit) {
+		return decisionFromUnavailable(
+			activeState.specialistID, observation, observedFit, at, fitReason(fit),
+		).at(at)
 	}
 	if state != ReadinessReady {
-		decision := decisionFromUnavailable(activeState.specialistID, observation, fit, readinessReason(state)).at(at)
+		decision := decisionFromUnavailable(
+			activeState.specialistID, observation, observedFit, at, readinessReason(state),
+		).at(at)
 		decision.Readiness = state
 		return decision
 	}
@@ -591,7 +619,7 @@ func (admission *Admission) parseObservation(at time.Time, input ReadinessObserv
 	if len(required) == 0 || len(input.Fits) != len(required) {
 		return observedSpecialist{}, fmt.Errorf("readiness fit count for %q = %d, want %d", input.SpecialistID, len(input.Fits), len(required))
 	}
-	fits := make(map[TaskKind]FitState, len(input.Fits))
+	fits := make(map[TaskKind]observedFit, len(input.Fits))
 	for _, fit := range input.Fits {
 		if !required[fit.Task] || !validFit(fit.State) {
 			return observedSpecialist{}, fmt.Errorf("invalid readiness fit for %q/%q", input.SpecialistID, fit.Task)
@@ -599,7 +627,11 @@ func (admission *Admission) parseObservation(at time.Time, input ReadinessObserv
 		if _, duplicate := fits[fit.Task]; duplicate {
 			return observedSpecialist{}, fmt.Errorf("duplicate readiness fit for %q/%q", input.SpecialistID, fit.Task)
 		}
-		fits[fit.Task] = fit.State
+		parsedFit, err := admission.parseFit(at, input.ObservedAt, input.ValidFor, fit)
+		if err != nil {
+			return observedSpecialist{}, fmt.Errorf("invalid readiness fit for %q/%q: %w", input.SpecialistID, fit.Task, err)
+		}
+		fits[fit.Task] = parsedFit
 	}
 	validUntil := input.ObservedAt.Add(input.ValidFor)
 	if !validUntil.After(input.ObservedAt) {
@@ -608,6 +640,32 @@ func (admission *Admission) parseObservation(at time.Time, input ReadinessObserv
 	return observedSpecialist{
 		state: input.State, observedAt: input.ObservedAt, validUntil: validUntil,
 		declaredCost: input.DeclaredCost, fits: fits,
+	}, nil
+}
+
+func (admission *Admission) parseFit(
+	at, observedAt time.Time,
+	observationValidFor time.Duration,
+	input RequestFit,
+) (observedFit, error) {
+	if input.State != FitMeasured {
+		if input.MeasurementBasis != "" || !input.MeasuredAt.IsZero() || input.MeasurementValidFor != 0 {
+			return observedFit{}, errors.New("measurement metadata requires measured-fit")
+		}
+		return observedFit{state: input.State}, nil
+	}
+	if !validIdentity(input.MeasurementBasis) || input.MeasuredAt.IsZero() || input.MeasuredAt.After(observedAt) ||
+		input.MeasurementValidFor <= 0 || input.MeasurementValidFor > admission.limits.MaxObservationValidity ||
+		input.MeasurementValidFor > observationValidFor {
+		return observedFit{}, errors.New("measured-fit basis or time bound is invalid")
+	}
+	validUntil := input.MeasuredAt.Add(input.MeasurementValidFor)
+	if !validUntil.After(input.MeasuredAt) || !at.Before(validUntil) {
+		return observedFit{}, errors.New("measured-fit validity is expired or overflows")
+	}
+	return observedFit{
+		state: FitMeasured, measurementBasis: input.MeasurementBasis,
+		measuredAt: input.MeasuredAt, validUntil: validUntil,
 	}, nil
 }
 
@@ -769,7 +827,7 @@ func (admission *Admission) matchingCandidatesLocked(
 			continue
 		}
 		observation := admission.observations[specialistID]
-		if observation.fits[ticket.task] != FitTaskCompatible ||
+		if !admissibleFit(effectiveFit(observation.fits[ticket.task], at)) ||
 			effectiveReadiness(observation, at) != ReadinessReady {
 			continue
 		}
@@ -861,7 +919,7 @@ func (admission *Admission) ticketCandidateStateLocked(
 	readiness := effectiveReadiness(observation, at)
 	return ticketCandidateState{
 		observationVersion: admission.observationVersions[specialistID],
-		fit:                observation.fits[ticket.task],
+		fit:                effectiveFit(observation.fits[ticket.task], at),
 		readiness:          readiness,
 		declaredCost:       observation.declaredCost,
 		capacityBlocked:    readiness == ReadinessReady && plannedSpecialist != specialistID,
@@ -869,7 +927,7 @@ func (admission *Admission) ticketCandidateStateLocked(
 }
 
 func retryableReadiness(state ticketCandidateState) bool {
-	return state.fit == FitTaskCompatible &&
+	return admissibleFit(state.fit) &&
 		(state.readiness == ReadinessLoading || state.readiness == ReadinessSaturated)
 }
 
@@ -891,7 +949,7 @@ func (admission *Admission) ticketWaitableLocked(ticket *admissionTicket, at tim
 			continue
 		}
 		observation := admission.observations[specialistID]
-		if observation.fits[ticket.task] != FitTaskCompatible {
+		if !admissibleFit(effectiveFit(observation.fits[ticket.task], at)) {
 			continue
 		}
 		state := effectiveReadiness(observation, at)
@@ -902,10 +960,10 @@ func (admission *Admission) ticketWaitableLocked(ticket *admissionTicket, at tim
 	return false
 }
 
-func (admission *Admission) queueCandidatesLocked(task TaskKind) []string {
+func (admission *Admission) queueCandidatesLocked(task TaskKind, at time.Time) []string {
 	var candidates []string
 	for _, specialistID := range admission.routes[task] {
-		if admission.observations[specialistID].fits[task] == FitTaskCompatible {
+		if admissibleFit(effectiveFit(admission.observations[specialistID].fits[task], at)) {
 			candidates = append(candidates, specialistID)
 		}
 	}
@@ -1030,7 +1088,8 @@ func (admission *Admission) nextWakeLocked(request Request, ticket *admissionTic
 			continue
 		}
 		observation := admission.observations[specialistID]
-		if observation.fits[ticket.task] != FitTaskCompatible {
+		fit := observation.fits[ticket.task]
+		if !admissibleFit(effectiveFit(fit, at)) {
 			continue
 		}
 		readiness := effectiveReadiness(observation, at)
@@ -1039,6 +1098,9 @@ func (admission *Admission) nextWakeLocked(request Request, ticket *admissionTic
 		}
 		if observation.validUntil.After(at) && observation.validUntil.Before(wakeAt) {
 			wakeAt = observation.validUntil
+		}
+		if fit.state == FitMeasured && fit.validUntil.After(at) && fit.validUntil.Before(wakeAt) {
+			wakeAt = fit.validUntil
 		}
 	}
 	return wakeAt
@@ -1079,26 +1141,39 @@ func decisionFromObservation(
 	queuedAt, at time.Time,
 	attempts int,
 ) AdmissionDecision {
-	return AdmissionDecision{
+	decision := AdmissionDecision{
 		State: AdmissionAdmitted, Reason: AdmissionReasonReady, Authority: ResultAuthority,
-		SpecialistID: specialistID, Fit: observation.fits[task], Readiness: ReadinessReady,
+		SpecialistID: specialistID, Readiness: ReadinessReady,
 		ObservedAt: observation.observedAt, ValidUntil: observation.validUntil,
 		QueuedAt: queuedAt, DecidedAt: at, DeclaredCost: observation.declaredCost, Attempts: attempts,
 	}
+	return decision.withFit(observation.fits[task], at)
 }
 
 func decisionFromUnavailable(
 	specialistID string,
 	observation observedSpecialist,
-	fit FitState,
+	fit observedFit,
+	at time.Time,
 	reason AdmissionReason,
 ) AdmissionDecision {
-	return AdmissionDecision{
+	decision := AdmissionDecision{
 		State: AdmissionFallback, Reason: reason, Authority: ResultAuthority,
-		SpecialistID: specialistID, Fit: fit, Readiness: observation.state,
+		SpecialistID: specialistID, Readiness: observation.state,
 		ObservedAt: observation.observedAt, ValidUntil: observation.validUntil,
 		DeclaredCost: observation.declaredCost, Attempts: 1,
 	}
+	return decision.withFit(fit, at)
+}
+
+func (decision AdmissionDecision) withFit(fit observedFit, at time.Time) AdmissionDecision {
+	decision.Fit = effectiveFit(fit, at)
+	if decision.Fit == FitMeasured {
+		decision.FitMeasurementBasis = fit.measurementBasis
+		decision.FitMeasuredAt = fit.measuredAt
+		decision.FitValidUntil = fit.validUntil
+	}
+	return decision
 }
 
 func (decision AdmissionDecision) at(at time.Time) AdmissionDecision {
@@ -1115,6 +1190,13 @@ func effectiveReadiness(observation observedSpecialist, at time.Time) ReadinessS
 		return ReadinessStale
 	}
 	return observation.state
+}
+
+func effectiveFit(fit observedFit, at time.Time) FitState {
+	if fit.state == FitMeasured && (at.Before(fit.measuredAt) || !at.Before(fit.validUntil)) {
+		return FitUnknown
+	}
+	return fit.state
 }
 
 func fitReason(state FitState) AdmissionReason {
@@ -1182,7 +1264,11 @@ func boundedProduct(perSpecialist, specialists int) (int, bool) {
 }
 
 func validFit(state FitState) bool {
-	return state == FitTaskCompatible || state == FitKnownNoFit || state == FitUnknown
+	return admissibleFit(state) || state == FitKnownNoFit || state == FitUnknown
+}
+
+func admissibleFit(state FitState) bool {
+	return state == FitMeasured || state == FitTaskCompatible
 }
 
 func validReadiness(state ReadinessState) bool {
