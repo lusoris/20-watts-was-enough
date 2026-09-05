@@ -23,7 +23,12 @@ func runVerifyReproducibility(arguments []string, stdout, stderr io.Writer, veri
 	sourceRef := flags.String("ref", "main", "book source ref")
 	sourceRevision := flags.String("revision", "", "exact lowercase 40-character book source commit")
 	receiptPath := flags.String("receipt", "", "new repository-relative JSON receipt path")
+	proof := flags.String("proof", "image-build", "image-build (two builds) or render-pair (one build, two renders; main only)")
 	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 || *receiptPath == "" {
+		return 2
+	}
+	if (*proof != "image-build" && *proof != "render-pair") || (*proof == "render-pair" && *sourceRef != "main") {
+		fmt.Fprintln(stderr, "publication verify-pdf-reproducibility: proof must be image-build, or render-pair with --ref main")
 		return 2
 	}
 	if err := pdfrender.ValidateSourceRevision(*sourceRef, *sourceRevision); err != nil {
@@ -35,13 +40,19 @@ func runVerifyReproducibility(arguments []string, stdout, stderr io.Writer, veri
 		SourceRef:      *sourceRef,
 		SourceRevision: *sourceRevision,
 		ReceiptPath:    *receiptPath,
+		RenderPairOnly: *proof == "render-pair",
 	})
 	if err != nil {
 		fmt.Fprintf(stderr, "Verify PDF renderer reproducibility: %v\n", err)
 		return 1
 	}
+	label := "PDF renderer reproducibility"
+	if *proof == "render-pair" {
+		label = "PDF render-pair reproducibility (one image build)"
+	}
 	body := fmt.Sprintf(
-		"PDF renderer reproducibility passed for %s: %s, %s, complete PDF/manifest pair %s; receipt %s.\n",
+		"%s passed for %s: %s, %s, complete PDF/manifest pair %s; receipt %s.\n",
+		label,
 		*sourceRef,
 		receipt.Builds[0].ImageID,
 		receipt.Builds[0].ManifestDigest,

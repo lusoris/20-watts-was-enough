@@ -87,7 +87,7 @@ func TestRunCIProjectWritesOnlyFixedValidatedOutputs(t *testing.T) {
 		t.Fatalf("runCIProject() exit/stderr = %d/%q", exitCode, stderr.String())
 	}
 	if stdout.String() != "mode=impact\nreason=mapped-change-set\ncontainer=false\ndependency=false\ngo=false\n"+
-		"release=false\nrenderer=false\nresearch=false\nsite=true\nworkstation_any=false\nworkstation_matrix=[]\n" {
+		"release=false\nrenderer=false\nrenderer_proof=none\nresearch=false\nsite=true\nworkstation_any=false\nworkstation_matrix=[]\n" {
 		t.Fatalf("runCIProject() output = %q", stdout.String())
 	}
 }

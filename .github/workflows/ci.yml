@@ -29,6 +29,7 @@ jobs:
       go: ${{ steps.plan.outputs.go }}
       release: ${{ steps.plan.outputs.release }}
       renderer: ${{ steps.plan.outputs.renderer }}
+      renderer_proof: ${{ steps.plan.outputs.renderer_proof }}
       research: ${{ steps.plan.outputs.research }}
       site: ${{ steps.plan.outputs.site }}
       workstation_any: ${{ steps.plan.outputs.workstation_any }}
@@ -264,7 +265,7 @@ jobs:
         with:
           version: v0.36.1
           driver-opts: image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8
-      - name: Rebuild the final PDF renderer twice without cache
+      - name: Verify the selected PDF reproducibility proof
         env:
           CGO_ENABLED: "0"
           GOOS: "linux"
@@ -275,9 +276,10 @@ jobs:
           GOFLAGS: "-mod=readonly"
           GOPROXY: "off"
           GOSUMDB: "off"
+          RENDERER_PROOF: ${{ needs.impact-plan.outputs.renderer_proof }}
         run: >-
           go -C tooling run ./cmd/pdf-proof
-          --root .. --ref main
+          --root .. --ref main --proof "$RENDERER_PROOF"
           --receipt build/evidence/pdf-renderer-reproducibility.json
       - name: Retain the PDF renderer reproducibility evidence
         if: ${{ always() && !cancelled() }}

@@ -52,6 +52,9 @@ func TestProofRejectsArgumentsBeforeVerification(t *testing.T) {
 		{"--receipt", "proof.json", "--ref", "release/latest"},
 		{"--receipt", "proof.json", "--ref", "v1.2.3"},
 		{"--receipt", "proof.json", "--ref", "v1.2.3", "--revision", strings.Repeat("A", 40)},
+		{"--receipt", "proof.json", "--proof", ""},
+		{"--receipt", "proof.json", "--proof", "none"},
+		{"--receipt", "proof.json", "--proof", "render-pair", "--ref", "v1.2.3", "--revision", strings.Repeat("a", 40)},
 	} {
 		var stdout, stderr bytes.Buffer
 		code := runVerifyReproducibility(args, &stdout, &stderr, func(context.Context, pdfrender.ReproducibilityOptions) (pdfrender.ReproducibilityReceipt, error) {
@@ -61,6 +64,19 @@ func TestProofRejectsArgumentsBeforeVerification(t *testing.T) {
 		if code != 2 || stdout.Len() != 0 {
 			t.Fatalf("args=%q exit=%d stdout=%q stderr=%q", args, code, stdout.String(), stderr.String())
 		}
+	}
+}
+
+func TestRenderPairProofPreservesSelectionAndNamesItsBoundary(t *testing.T) {
+	var stdout, stderr bytes.Buffer
+	code := runVerifyReproducibility([]string{"--receipt", "proof.json", "--proof", "render-pair"}, &stdout, &stderr, func(_ context.Context, got pdfrender.ReproducibilityOptions) (pdfrender.ReproducibilityReceipt, error) {
+		if !got.RenderPairOnly || got.SourceRef != "main" {
+			t.Fatalf("options=%+v", got)
+		}
+		return proofReceipt(), nil
+	})
+	if code != 0 || stderr.Len() != 0 || !strings.HasPrefix(stdout.String(), "PDF render-pair reproducibility (one image build) passed") {
+		t.Fatalf("exit=%d stdout=%q stderr=%q", code, stdout.String(), stderr.String())
 	}
 }
 

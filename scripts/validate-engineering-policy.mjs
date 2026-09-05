@@ -959,7 +959,7 @@ function privateGoJobHasNoInheritedEnvironment(workflow, job) {
 
 const pdfReproducibilityCiCommand = [
   "go -C tooling run ./cmd/pdf-proof",
-  "--root .. --ref main",
+  '--root .. --ref main --proof "$RENDERER_PROOF"',
   "--receipt build/evidence/pdf-renderer-reproducibility.json",
 ].join(" ");
 const pdfReproducibilityCiEvidence = [
@@ -988,10 +988,11 @@ function pdfReproducibilityCiJobIsExact(job) {
   const steps = job?.steps ?? [];
   const setupIndex = steps.findIndex(pdfReproducibilitySetupIsExact);
   const verifyIndex = steps.findIndex((step) => (
-    step?.name === "Rebuild the final PDF renderer twice without cache"
+    step?.name === "Verify the selected PDF reproducibility proof"
     && step?.run?.trim() === pdfReproducibilityCiCommand
-    && Object.keys(step?.env ?? {}).length === Object.keys(privateGoCommandEnvironment).length
+    && Object.keys(step?.env ?? {}).length === Object.keys(privateGoCommandEnvironment).length + 1
     && propertiesMatch(step?.env, privateGoCommandEnvironment)
+    && step?.env?.RENDERER_PROOF === "${{ needs.impact-plan.outputs.renderer_proof }}"
     && step?.if === undefined
     && continueOnErrorIsDisabled(step)
   ));
@@ -1033,7 +1034,7 @@ export function validatePDFRendererReproducibilityWorkflowObject(workflow, relat
       && !broadJobsContainHeavyProof
       && pdfReproducibilityCiJobIsExact(jobs["pdf-renderer-reproducibility"])
       ? []
-      : [`${relativePath}: CI must run the exact two-builder PDF reproducibility acceptance only in its renderer-selected gate and retain its receipt plus mismatch bytes`];
+      : [`${relativePath}: CI must run the exact selected PDF reproducibility proof only in its renderer-selected gate and retain its receipt plus mismatch bytes`];
   }
   if (relativePath === ".github/workflows/release.yml") {
     const job = workflow?.jobs?.verify;
@@ -1191,6 +1192,7 @@ function validateCiImpactPlanJob(workflow, jobs, relativePath, findings) {
     go: "${{ steps.plan.outputs.go }}",
     release: "${{ steps.plan.outputs.release }}",
     renderer: "${{ steps.plan.outputs.renderer }}",
+    renderer_proof: "${{ steps.plan.outputs.renderer_proof }}",
     research: "${{ steps.plan.outputs.research }}",
     site: "${{ steps.plan.outputs.site }}",
     workstation_any: "${{ steps.plan.outputs.workstation_any }}",

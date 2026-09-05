@@ -7,6 +7,11 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Presentation-only PDF checks build the locked renderer once and still
+  compare two isolated PDF/manifest pairs. Toolchain changes, full plans,
+  unknown companion paths and tagged releases retain independent two-builder
+  proofs. Receipts distinguish these scopes; cross-run image reuse is pending.
+
 - Printed readiness-stage values remain with their labels before the following
   evidence table, without changing the card layout or screen positioning.
 

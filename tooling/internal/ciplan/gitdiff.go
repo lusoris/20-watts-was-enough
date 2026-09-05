@@ -99,6 +99,8 @@ func parseRawDiff(body []byte) ([]string, bool, error) {
 				return nil, false, errors.New("Git diff contains an unsafe path")
 			}
 			paths[changedPath] = struct{}{}
+			// Removing renderer authority is not a presentation-only edit.
+			requiresFull = requiresFull || (status == "D" && isRendererPresentation(changedPath))
 			if len(paths) > maximumChanges {
 				return nil, false, errors.New("Git diff exceeds the changed-path limit")
 			}

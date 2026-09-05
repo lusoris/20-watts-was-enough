@@ -81,3 +81,4 @@ than silently changing its outcome.
 | [0074](0074-verify-renderer-config-bytes-for-both-docker-stores.md) | Verify renderer config bytes for both Docker stores | accepted |
 | [0075](0075-isolate-ci-driver-dependency-closures.md) | Isolate CI driver dependency closures | accepted |
 | [0076](0076-separate-book-support-provenance-inventory.md) | Separate book support provenance from executable authority | accepted |
+| [0077](0077-separate-render-pair-and-image-build-proofs.md) | Separate render-pair and image-build proofs | accepted |

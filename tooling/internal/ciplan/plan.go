@@ -199,29 +199,13 @@ func rendererRequiredForUnsafeChange(mapping Mapping, changedPaths []string) boo
 }
 
 func isRendererAuthority(changedPath string) bool {
+	if isRendererPresentation(changedPath) {
+		return true
+	}
 	for _, exact := range []string{
 		".github/ci-impact.json",
 		".github/workflows/ci.yml",
 		".github/workflows/release.yml",
-		"app/book-content.ts",
-		"app/components/book-edition.tsx",
-		"app/components/language-access.tsx",
-		"app/components/markdown-document.tsx",
-		"app/components/mermaid-diagram.tsx",
-		"app/components/overflow-region.tsx",
-		"app/components/readiness-overview.tsx",
-		"app/globals.css",
-		"app/lib/book-release-identity.mjs",
-		"app/lib/eu-languages.mjs",
-		"app/lib/language-access.mjs",
-		"app/lib/publication.mjs",
-		"app/lib/readiness.ts",
-		"app/lib/repository-artifacts.ts",
-		"app/project-metadata.ts",
-		"app/research-document.ts",
-		"experiments/test-readiness-summary.json",
-		"github-pages/book.tsx",
-		"github-pages/book/index.html",
 		"package-lock.json",
 		"package.json",
 		"scripts/book-source.mjs",
