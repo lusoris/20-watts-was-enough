@@ -147,6 +147,62 @@ for a reviewed run. Requested flags are not an independent inspection of
 Docker's runtime state. No receipt from this command admits the CLRS image or
 establishes a scientific result; the existing image blockers remain unchanged.
 
+## Candidate offline build context
+
+`materialize-clrs-context` packages the complete pinned upstream source, all
+61 selected wheels, an offline-install Dockerfile and the original Promise
+receipt and command logs into one deterministic tar. It derives requirements
+and file identities from the existing authority; it does not create another
+dependency lock or admit the generated Dockerfile.
+
+```bash
+go -C tooling run ./cmd/20w experiment materialize-clrs-context \
+  --root .. --wheelhouse /path/to/verified-wheelhouse \
+  --source-archive /path/to/pinned-clrs.tar.gz \
+  --promise-source-root /path/to/frozen-promise-source \
+  --promise-evidence /path/to/two-run-promise-evidence \
+  --output /path/to/new-context.tar
+```
+
+Repeat the same command with `--check` to verify an existing context without
+writes or Docker. The checker needs the same retained inputs: it regenerates
+the expected tar stream and compares its exact hash and size with the output.
+The Promise source root is the independently retained checkout used for that
+execution, not a modified current checkout. The existing Promise verifier
+checks its complete procedure-source binding, while the context command also
+requires its foundation and wheelhouse identities to match current authority.
+The original receipt, including its producer and procedure-source identities,
+is retained verbatim and hash-bound in `context-manifest.json`.
+
+The command verifies the upstream archive's pinned compressed hash before
+decoding. It accepts one gzip stream, at most 64 MiB of decoded source and
+2,048 archive entries, regular files and directories only, and the exact Git
+commit comment in the initial global PAX header. Links, alternate extended
+headers, duplicate or unsafe paths, unexpected metadata and changed inputs
+fail closed. The complete source includes upstream's 50,178,045-byte accuracy
+CSV; no data or notebook subtree is silently omitted. Tar member ownership,
+modes and timestamps are normalised. Wheels stream through size, hash and
+stable-file checks rather than being loaded together into memory.
+The generated context uses USTAR headers where possible and deterministic PAX
+path records for wheel filenames that exceed USTAR's 100-byte basename limit.
+
+The final context is capped at 2 GiB and 4,096 regular files. Streaming work
+uses a five-minute cooperative deadline. A private staging directory holds
+partial bytes; publication uses a no-replace hard link only after verification.
+An existing output is never overwritten, and cleanup removes only owned
+staging entries. A readback checks the published bytes. These local checks do
+not authenticate unsigned execution history or prevent later modification by
+another process with the same filesystem authority.
+
+The generated Dockerfile uses the pinned Python base and the pinned BuildKit's
+bundled frontend. Its dependency install uses `RUN --network=none`, read-only
+wheel mounts and pip's `--no-index`, `--no-deps`, `--require-hashes` and
+`--only-binary=:all:` restrictions. It declares the existing runtime entrypoint,
+environment and non-root identity, and copies the upstream licence to the
+contracted path. Context verification does not prove that an image builds,
+imports, contains installed licence material or obeys external runtime limits.
+Those remain the separate admission gates below.
+
 ## Admission sequence
 
 The image stays blocked until one later, bounded change provides all of the

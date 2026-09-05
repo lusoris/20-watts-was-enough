@@ -17,6 +17,9 @@
   - changed-files:
       - any-glob-to-any-file:
           - "experiments/**"
+          - "tooling/cmd/20w/clrs_context.go"
+          - "tooling/cmd/20w/clrs_context_test.go"
+          - "tooling/internal/clrscontext/**"
 
 "area:math":
   - changed-files:
@@ -99,7 +102,10 @@
           - ".github/public-transport.json"
           - "renovate.json"
           - "scripts/*policy*"
+          - "tooling/cmd/20w/clrs_context.go"
+          - "tooling/cmd/20w/clrs_context_test.go"
           - "tooling/internal/ciplan/**"
+          - "tooling/internal/clrscontext/**"
           - "tooling/internal/pdfrender/**"
           - "tooling/internal/pdfrenderlock/**"
           - "tooling/pdf-renderer/**"
