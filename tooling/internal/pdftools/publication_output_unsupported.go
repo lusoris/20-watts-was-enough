@@ -8,7 +8,7 @@ import (
 )
 
 var errUnsupportedAtomicPublication = errors.New(
-	"claim-eligible PDF-tools publication requires Linux amd64 O_TMPFILE and linkat",
+	"PDF-tools candidate publication and NO_RESULT receipt output require Linux amd64 O_TMPFILE, linkat and /proc/self/fd",
 )
 
 func openPinnedPublicationDirectory(

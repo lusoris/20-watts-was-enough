@@ -13,12 +13,14 @@ import (
 	"strings"
 )
 
-// CandidateOutputOptions selects three new, repository-relative local release
-// inputs. The set is all-or-none and never performs a remote publication.
+// CandidateOutputOptions selects one authoritative local publication bundle
+// and three non-authoritative convenience copies. The set is all-or-none and
+// never performs a remote publication.
 type CandidateOutputOptions struct {
-	FinalArchivePath string
-	SPDXPath         string
-	SourceBundlePath string
+	PublicationBundlePath string
+	FinalArchivePath      string
+	SPDXPath              string
+	SourceBundlePath      string
 }
 
 type candidateOutputPath struct {
@@ -27,10 +29,11 @@ type candidateOutputPath struct {
 }
 
 type candidateOutputPlan struct {
-	repository   publicationRootIdentity
-	finalArchive candidateOutputPath
-	spdx         candidateOutputPath
-	sourceBundle candidateOutputPath
+	repository        publicationRootIdentity
+	publicationBundle candidateOutputPath
+	finalArchive      candidateOutputPath
+	spdx              candidateOutputPath
+	sourceBundle      candidateOutputPath
 }
 
 type stagedCandidateArtifact struct {
@@ -58,11 +61,22 @@ func prepareCandidateOutputPlan(
 	if options == nil {
 		return nil, nil
 	}
-	values := []string{options.FinalArchivePath, options.SPDXPath, options.SourceBundlePath}
+	values := []string{
+		options.PublicationBundlePath,
+		options.FinalArchivePath,
+		options.SPDXPath,
+		options.SourceBundlePath,
+	}
 	if slices.Contains(values, "") {
 		return nil, errors.New("PDF-tools candidate output paths are an all-or-none set")
 	}
 	repository, err := publicationRoot(authority.root, authority.rootInformation)
+	if err != nil {
+		return nil, err
+	}
+	publicationBundle, err := prepareCandidateOutputPath(
+		authority.root, options.PublicationBundlePath, ".tar", "candidate publication bundle",
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +95,10 @@ func prepareCandidateOutputPlan(
 	if filepath.Base(bundle.relative) != authority.contract.SourceDelivery.CandidateBundle {
 		return nil, errors.New("PDF-tools source-bundle filename differs from contract.json")
 	}
-	paths := []string{filepath.Clean(receiptPath), finalArchive.relative, spdx.relative, bundle.relative}
+	paths := []string{
+		filepath.Clean(receiptPath), publicationBundle.relative,
+		finalArchive.relative, spdx.relative, bundle.relative,
+	}
 	for left, value := range paths {
 		for right := left + 1; right < len(paths); right++ {
 			if outputPathsConflict(value, paths[right]) {
@@ -89,14 +106,14 @@ func prepareCandidateOutputPlan(
 			}
 		}
 	}
-	outputs := []candidateOutputPath{finalArchive, spdx, bundle}
+	outputs := []candidateOutputPath{publicationBundle, finalArchive, spdx, bundle}
 	for _, output := range outputs {
 		if err := prepareCandidateOutputDirectory(repository, output); err != nil {
 			return nil, err
 		}
 	}
 	return &candidateOutputPlan{
-		repository:   repository,
+		repository: repository, publicationBundle: publicationBundle,
 		finalArchive: finalArchive, spdx: spdx, sourceBundle: bundle,
 	}, nil
 }
@@ -425,39 +442,6 @@ func (staged *stagedCandidate) installWithPublicationHooks(
 	return nil
 }
 
-func (staged *stagedCandidate) verifyInstalled(root string, receipt *ReproductionCandidate) error {
-	if staged == nil || receipt == nil || len(staged.artifacts) != 3 {
-		return errors.New("candidate receipt requires exactly three installed outputs")
-	}
-	expected := []ReproductionArtifact{
-		receipt.FinalArchive,
-		receipt.CanonicalSPDX,
-		receipt.SourceBundle.ReproductionArtifact,
-	}
-	for index, artifact := range staged.artifacts {
-		if artifact == nil || artifact.identity != expected[index] ||
-			artifact.identity.Path != artifact.destination.relative ||
-			!validRelativePath(artifact.identity.Path) || containsConfusingPathControl(artifact.identity.Path) ||
-			filepath.Clean(artifact.destination.absolute) != filepath.Join(root, filepath.FromSlash(artifact.identity.Path)) {
-			return errors.New("installed candidate output identity differs from the receipt")
-		}
-		if err := verifyInstalledCandidateArtifact(root, artifact); err != nil {
-			return err
-		}
-	}
-	for _, artifact := range staged.artifacts {
-		label := "installed PDF-tools candidate output " + artifact.identity.Path
-		if err := verifyCandidateOutputParent(root, artifact); err != nil {
-			return err
-		}
-		current, err := artifact.parent.root.Lstat(artifact.destinationName)
-		if err != nil || !sameCandidatePublication(current, artifact.publishedInformation, artifact.identity.Bytes) {
-			return fmt.Errorf("%s changed before receipt publication", label)
-		}
-	}
-	return nil
-}
-
 func verifyInstalledCandidateArtifact(root string, artifact *stagedCandidateArtifact) error {
 	label := "installed PDF-tools candidate output " + artifact.identity.Path
 	if artifact.parent == nil || artifact.parent.root == nil || artifact.destinationName == "" || artifact.publishedInformation == nil ||
@@ -542,13 +526,21 @@ func (artifact *stagedCandidateArtifact) cleanup() error {
 }
 
 func (staged *stagedCandidate) receipt(authority checkedAuthority) *ReproductionCandidate {
+	finalArchive := staged.artifacts[0].identity
+	finalArchive.Path = candidateBundleFinalArchiveMember
+	canonicalSPDX := staged.artifacts[1].identity
+	canonicalSPDX.Path = candidateBundleSPDXMember
+	sourceBundle := staged.artifacts[2].identity
+	sourceBundle.Path = candidateBundleSourceBundleMember
 	return &ReproductionCandidate{
-		State:                    "prepared-not-published",
+		BundleFormat:             candidatePublicationBundleFormat,
+		StandaloneFilesAuthority: "non-authoritative-convenience",
+		State:                    "local-bundle-prepared",
 		SPDXCanonicalBuildsMatch: true,
-		FinalArchive:             staged.artifacts[0].identity,
-		CanonicalSPDX:            staged.artifacts[1].identity,
+		FinalArchive:             finalArchive,
+		CanonicalSPDX:            canonicalSPDX,
 		SourceBundle: ReproductionBundleArtifact{
-			ReproductionArtifact: staged.artifacts[2].identity,
+			ReproductionArtifact: sourceBundle,
 			Root:                 authority.contract.SourceDelivery.BundleLayout.Root,
 			ChecksumManifest:     authority.contract.SourceDelivery.BundleLayout.ChecksumManifest,
 			ChecksumSHA256:       staged.bundle.ChecksumSHA256, ChecksumBytes: staged.bundle.ChecksumBytes,

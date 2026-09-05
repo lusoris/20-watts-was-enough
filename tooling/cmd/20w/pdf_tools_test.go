@@ -48,7 +48,21 @@ func TestRunPublicationReproducePDFToolsImageRequiresCompleteCandidatePaths(t *t
 		"--receipt", "build/evidence/receipt.json",
 		"--final-archive", "build/release-inputs/final.tar",
 	}, &stdout, &stderr)
-	if exit != 2 || !strings.Contains(stderr.String(), "requires all of --final-archive") {
+	if exit != 2 || !strings.Contains(stderr.String(), "requires all of --candidate-bundle") {
+		t.Fatalf("run() exit/stdout/stderr = %d/%q/%q", exit, stdout.String(), stderr.String())
+	}
+}
+
+func TestRunPublicationVerifyPDFToolsCandidateBundleRequiresIndependentIdentity(t *testing.T) {
+	t.Parallel()
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	exit := run([]string{
+		"publication", "verify-pdf-tools-candidate-bundle",
+		"--bundle", "build/release-inputs/candidate.tar",
+	}, &stdout, &stderr)
+	if exit != 2 || !strings.Contains(stderr.String(), "requires --bundle") ||
+		!strings.Contains(stderr.String(), "--sha256") {
 		t.Fatalf("run() exit/stdout/stderr = %d/%q/%q", exit, stdout.String(), stderr.String())
 	}
 }

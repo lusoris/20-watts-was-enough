@@ -11,8 +11,9 @@ import (
 	"time"
 )
 
-// ReproductionOptions selects one local, non-publishing final-image
-// reproduction. ReceiptPath is a new repository-relative JSON file.
+// ReproductionOptions selects one local final-image reproduction. ReceiptPath
+// receives an ordinary success receipt or candidate-run mismatch evidence; a
+// successful candidate receipt is embedded only in its publication bundle.
 type ReproductionOptions struct {
 	RepositoryRoot string
 	ReceiptPath    string
@@ -20,10 +21,10 @@ type ReproductionOptions struct {
 }
 
 // ReproduceFinalImage builds and compares two complete local PDF-tools images.
-// When three explicit candidate paths are supplied, it also retains one exact
-// final archive, the byte-identical canonical apko SPDX output, and a checksum-closed
-// source bundle. It never pushes, publishes, or grants scientific or release
-// authority.
+// When one bundle path and three convenience paths are supplied, it also
+// retains one exact final archive, the byte-identical canonical apko SPDX
+// output, and a checksum-closed source bundle inside one authoritative local
+// bundle. It never pushes or grants scientific or release authority.
 func ReproduceFinalImage(
 	ctx context.Context,
 	options ReproductionOptions,
@@ -198,21 +199,33 @@ func finishSuccessfulReproduction(
 		authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspection, comparison, staged.receipt(authority),
 	)
 	receipt.Runtime = &runtimeObservation
+	publicationBundle, err := stageCandidatePublicationBundle(authority, plan, staged, receipt)
+	if err != nil {
+		return ReproductionReceipt{}, err
+	}
+	defer func() { returnError = errors.Join(returnError, publicationBundle.cleanup()) }()
+	// These three named files preserve the pre-bundle operator workflow, but
+	// they are convenience copies only. The independently hash-bound bundle is
+	// the sole complete candidate publication unit.
 	if err := staged.install(authority.root); err != nil {
 		return ReproductionReceipt{}, err
 	}
 	if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
 		return ReproductionReceipt{}, err
 	}
-	if err := writeReproductionReceiptCheckedAtRoot(
-		publicationRootIdentity{path: authority.root, information: authority.rootInformation},
-		receiptPath,
-		receipt,
-		authority.contract.Limits.ReceiptBytes,
-		func() error { return staged.verifyInstalled(authority.root, receipt.Candidate) },
-		nil,
-	); err != nil {
+	bundle := &stagedCandidate{artifacts: []*stagedCandidateArtifact{publicationBundle}}
+	if err := bundle.install(authority.root); err != nil {
 		return ReproductionReceipt{}, err
+	}
+	verification, err := verifyPublishedCandidatePublicationBundle(authority, publicationBundle)
+	if err != nil {
+		return ReproductionReceipt{}, err
+	}
+	if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
+		return ReproductionReceipt{}, err
+	}
+	receipt.Candidate.PublicationBundle = &ReproductionArtifact{
+		Path: plan.publicationBundle.relative, SHA256: verification.SHA256, Bytes: verification.Bytes,
 	}
 	return receipt, nil
 }

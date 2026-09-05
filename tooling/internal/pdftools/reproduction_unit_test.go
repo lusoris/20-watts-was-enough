@@ -220,6 +220,7 @@ func TestBoundedDockerDirectoryCapsEmptyEntriesAndDepth(t *testing.T) {
 }
 
 func TestReproductionReceiptIsBoundedAtomicAndNoReplace(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
 	t.Parallel()
 	root := t.TempDir()
 	path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
@@ -268,6 +269,7 @@ func TestReproductionReceiptIsBoundedAtomicAndNoReplace(t *testing.T) {
 }
 
 func TestReproductionReceiptAtomicLinkDoesNotOverwriteConcurrentDestination(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
 	t.Parallel()
 	root := t.TempDir()
 	path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
@@ -292,6 +294,7 @@ func TestReproductionReceiptAtomicLinkDoesNotOverwriteConcurrentDestination(t *t
 }
 
 func TestReproductionReceiptRejectsPrewriteSymlinkSwapsWithoutOutsideWrite(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
 	t.Parallel()
 	for _, swap := range []string{"receipt parent", "intermediate parent"} {
 		swap := swap
@@ -346,6 +349,7 @@ func TestReproductionReceiptRejectsPrewriteSymlinkSwapsWithoutOutsideWrite(t *te
 }
 
 func TestReproductionReceiptRejectsLateParentSwapWithoutOutsideWrite(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
 	t.Parallel()
 	base := t.TempDir()
 	root := filepath.Join(base, "repository")
@@ -383,6 +387,7 @@ func TestReproductionReceiptRejectsLateParentSwapWithoutOutsideWrite(t *testing.
 }
 
 func TestReproductionReceiptDoesNotUseOrReplaceLegacyStagingNames(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
 	t.Parallel()
 	root := t.TempDir()
 	path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
@@ -408,6 +413,7 @@ func TestReproductionReceiptDoesNotUseOrReplaceLegacyStagingNames(t *testing.T) 
 }
 
 func TestReproductionReceiptRetainsPublishedPathAfterPostLinkFailure(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
 	t.Parallel()
 	tests := map[string]struct {
 		afterLink func(*pinnedPublicationDirectory, string) error
@@ -465,6 +471,7 @@ func TestReproductionReceiptRetainsPublishedPathAfterPostLinkFailure(t *testing.
 }
 
 func TestPinnedPublicationDirectoryCreationCannotFollowSwappedRepositoryRoot(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
 	t.Parallel()
 	base := t.TempDir()
 	root := filepath.Join(base, "repository")
@@ -527,6 +534,7 @@ func assertNoReceiptFiles(t *testing.T, path string, directories ...string) {
 }
 
 func TestPrepareReproductionReceiptPathRejectsEscapeAndExisting(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
 	t.Parallel()
 	root := t.TempDir()
 	for _, path := range []string{

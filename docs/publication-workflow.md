@@ -168,19 +168,29 @@ PDF-tools authority now locks apko, Poppler 26.08.0, the 45-package graph,
 runtime expectations, notices, the Wolfi recipe-licence snapshot and
 source-retention metadata. Its offline Go validator prevents repository drift.
 Its local reproducer now requires two byte-identical final images and the
-bounded runtime observations. Given three explicit new output paths, the same
+bounded runtime observations. Given four explicit new output paths, the same
 successful run can retain one final OCI archive, one byte-identical canonical
-apko SPDX document and a checksum-closed source bundle containing all 45 exact
-APKs and the pinned source and notice material. The receipt keeps the two raw
-SPDX identities separate; only their validated canonical documents must match.
-These files and their receipt remain `NO_RESULT` candidate inputs. Required
-semantic CI enforcement still waits for maintainer notice/source approval,
-publication, anonymous pull and exact-digest admission; ambient host Poppler
-remains non-authoritative. Local candidate and receipt placement is Linux
-`amd64`-only: no-follow descriptor traversal pins each repository parent,
-unnamed `O_TMPFILE` staging avoids cleanup pathnames, and atomic `linkat`
-publication refuses replacement. A failure retains any name already published
-for inspection, while an incomplete three-file candidate has no receipt.
+apko SPDX document and a checksum-closed source archive containing all 45 exact
+APKs and the pinned source and notice material. It places those three
+non-authoritative convenience files first, then publishes one deterministic
+USTAR containing the same streams and their canonical `NO_RESULT` receipt with
+one no-replace link. That outer bundle is the only candidate publication and
+consumer authority. The requested standalone receipt path remains absent on
+success and is used only if construction mismatches before candidate
+preparation.
+
+The receipt keeps the two raw SPDX identities separate; only their validated
+canonical documents must match. Semantic CI enforcement still waits for
+maintainer notice/source approval, remote publication, anonymous pull and
+exact-digest admission; ambient host Poppler remains non-authoritative. Local
+candidate and receipt output is Linux `amd64`-only: no-follow descriptor
+traversal pins each repository parent, unnamed `O_TMPFILE` staging avoids
+cleanup pathnames, and atomic `linkat` placement refuses replacement. The
+producer protects cooperating invocations and name competition. Arbitrary
+same-UID mutation or directory rename is outside that boundary, so consumers
+must check an independently recorded outer digest and rehash every bundle
+member immediately before use. Detected drift fails closed and retains already
+linked evidence for inspection.
 
 Container publication has a separate two-phase boundary. The build pushes a
 candidate under its canonical digest without a release tag. The workflow then

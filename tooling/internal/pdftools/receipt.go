@@ -146,6 +146,12 @@ type ReproductionSPDX struct {
 // is the retained deterministic projection; BaseBuilds preserve both raw SPDX
 // identities separately for audit.
 type ReproductionCandidate struct {
+	// PublicationBundle is populated only in the in-process return value after
+	// successful placement. It cannot be embedded because a bundle cannot
+	// contain its own digest.
+	PublicationBundle        *ReproductionArtifact      `json:"-"`
+	BundleFormat             string                     `json:"bundle_format"`
+	StandaloneFilesAuthority string                     `json:"standalone_files_authority"`
 	State                    string                     `json:"state"`
 	SPDXCanonicalBuildsMatch bool                       `json:"spdx_canonical_builds_match"`
 	FinalArchive             ReproductionArtifact       `json:"final_oci_archive"`
