@@ -17,7 +17,7 @@ the exact diff; this file records why the project changed.
 - The deterministic PDF finaliser now gives Chromium's `Strong` and `Em`
   structure types an explicit PDF 1.x compatibility mapping. Poppler's 627
   unknown-type diagnostics are removed without changing the page content or
-  canonical HTML. Five nonlinear reading-order sentinels remain `known-debt`;
+  canonical HTML. Six nonlinear reading-order sentinels remain `known-debt`;
   this is not a PDF/UA or WCAG conformance claim.
 - Decision 0069 makes the CI impact planner map a deleted file through its
   former repository path instead of sending every deletion through the complete
