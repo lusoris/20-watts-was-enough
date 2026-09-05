@@ -50,9 +50,6 @@ scientific evidence.
 - `diagrams/graded-assurance-envelope.mmd` keeps static guarantees, capability
   authority, canary evidence, runtime verdicts, rollback or compensation, and
   dependency invalidation distinct for Candidate 009.
-- `diagrams/reset-coupled-verification.mmd` keeps reversible execution,
-  selective verification, reset, commitment, and outcome accounting distinct
-  for Candidate 010.
 - `diagrams/dual-loop-operational-assurance.mmd` connects a scoped live
   containment loop to a separate versioned learning and retirement loop for
   Candidate 011.
