@@ -7,6 +7,13 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Decision 0070 makes Fixture 026 check a missing arm commitment against
+  existing evaluator state before invoking the isolated policy bank, so a
+  bounded policy timeout cannot mask deterministic resume corruption. The
+  policy regexes and frozen VM deadlines do not change. The complete local Go
+  workstation aggregate now defaults to four active process trees inside its
+  hard ceiling of eight; the separate GitHub matrix keeps its eight-job bound.
+  All paths remain development validation with `NO_RESULT`.
 - The deterministic PDF finaliser now gives Chromium's `Strong` and `Em`
   structure types an explicit PDF 1.x compatibility mapping. Poppler's 627
   unknown-type diagnostics are removed without changing the page content or

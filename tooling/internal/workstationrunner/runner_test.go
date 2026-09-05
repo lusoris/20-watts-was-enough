@@ -246,6 +246,23 @@ func TestRunSuiteRejectsConcurrencyAboveEight(t *testing.T) {
 	}
 }
 
+func TestLocalAggregateDefaultsToFourWithinEightHardLimit(t *testing.T) {
+	t.Parallel()
+	if defaultConcurrency != 4 {
+		t.Fatalf("defaultConcurrency = %d, want 4", defaultConcurrency)
+	}
+	if maximumConcurrency != 8 {
+		t.Fatalf("maximumConcurrency = %d, want 8", maximumConcurrency)
+	}
+	if defaultConcurrency >= maximumConcurrency {
+		t.Fatalf(
+			"default concurrency %d must stay below hard limit %d",
+			defaultConcurrency,
+			maximumConcurrency,
+		)
+	}
+}
+
 func TestRunSuiteRejectsInvalidBoundsAndDuplicateJobs(t *testing.T) {
 	t.Parallel()
 	valid := helperOptions(t, 1)
