@@ -164,6 +164,16 @@ policy, runtime and renderer scripts remain explicit full-gate authority.
 Every other script path is deliberately unmatched and therefore expands to the
 full gate; a new file cannot inherit a narrow lane from its directory alone.
 
+The exact `scripts/book-support-sources.json` inventory selects experimental
+provenance files without changing executable renderer or selector code.
+[Decision 0076](../decisions/0076-separate-book-support-provenance-inventory.md)
+defines its bounded parser and unchanged source-binding contract. The inventory
+and every selected file remain part of the book digest. Inventory-only changes
+select release and site checks, unioned with other changed-path owners; current
+PDF and semantic source bindings are still required. The parser and its strict
+JSON helper remain protected executable authority, so the initial split and
+later parser changes retain the full gate and renderer proof.
+
 The two render containers use disjoint output, work and browser-cache
 directories, but currently share that one read-only installed JavaScript
 dependency tree. Their byte comparison therefore tests deterministic rendering

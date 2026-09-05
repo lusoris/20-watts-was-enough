@@ -12,8 +12,7 @@ the exact diff; this file records why the project changed.
   command and reject failed or short output writes. Experiment help, dispatch
   and handlers now have one package owner, selecting container, Go and release
   checks without scheduling unrelated workstation or renderer work. Tagged
-  release proofs and full-gate authority remain unchanged; adding a book-bound
-  source still changes the shared inventory and selects the broad gate.
+  release proofs and full-gate authority remain unchanged.
 
 - PDF reproducibility receipts now hash the actual image config bytes instead
   of assuming Docker's loaded image ID always names a config. Schema 4 retains
@@ -415,6 +414,12 @@ the exact diff; this file records why the project changed.
   selecting tasks, sizes, seeds or a generator image.
 
 ### Changed
+
+- Selected experiment-source provenance now has one bounded book inventory.
+  Its exact CI owner selects release and site checks alongside other changed
+  sources, while the parser, strict JSON helper and renderer dependencies stay
+  protected. Source bytes and PDF freshness remain bound; no timing gain is
+  claimed. Decision 0076 extends the private-driver split.
 
 - Candidate 010's inline staged-verification diagram is now its sole editable
   owner; the unused standalone copy and its exact-duplicate allowance are gone

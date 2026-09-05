@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { writeFileSync } from "node:fs";
+import filesystem from "node:fs/promises";
 import { copyFile, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { syncBuiltinESMExports } from "node:module";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -316,6 +320,225 @@ test("the PDF source digest changes with portal evidence authority", async (t) =
 
   assert.notEqual(after.digest, before.digest);
   assert.deepEqual(after.files, before.files);
+});
+
+const supportInventory = "scripts/book-support-sources.json";
+const supportPrefix = "tooling/internal/clrsfixture/";
+
+async function bookSourceFixture(t) {
+  const root = await mkdtemp(path.join(os.tmpdir(), "20w-support-inventory-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const files = await bookSourceFiles(repositoryRoot);
+  for (const source of files) {
+    const relative = path.relative(repositoryRoot, source);
+    const destination = path.join(root, relative);
+    await mkdir(path.dirname(destination), { recursive: true });
+    await writeFile(destination, `source: ${relative}\n`);
+  }
+  await copyFile(path.join(repositoryRoot, supportInventory), path.join(root, supportInventory));
+  return root;
+}
+
+async function writeSupportPaths(root, paths) {
+  await writeFile(path.join(root, supportInventory), JSON.stringify({ schema_version: 1, paths }));
+}
+
+function mutateOnSourceHash(t, mutate) {
+  const prototype = Object.getPrototypeOf(createHash("sha256"));
+  const update = prototype.update;
+  t.mock.method(prototype, "update", function (value, ...arguments_) {
+    if (typeof value === "string") mutate(value);
+    return update.call(this, value, ...arguments_);
+  });
+}
+
+test("support inventory binds its original bytes, selected source bytes and new entries", async (t) => {
+  const root = await bookSourceFixture(t);
+  const inventoryFile = path.join(root, supportInventory);
+  const original = await readFile(inventoryFile);
+  const inventory = JSON.parse(original);
+  const before = await bookSourceDigest(root);
+  assert(before.files.includes(supportInventory));
+  assert.equal(new Set(before.files).size, before.files.length);
+  for (const source of inventory.paths) assert(before.files.includes(source), source);
+
+  await writeFile(inventoryFile, Buffer.concat([original, Buffer.from("\n")]));
+  const formatting = await bookSourceDigest(root);
+  assert.notEqual(formatting.digest, before.digest);
+  assert.deepEqual(formatting.files, before.files);
+  await writeFile(inventoryFile, original);
+  await writeFile(path.join(root, inventory.paths[0]), "changed source\n");
+  const sourceChange = await bookSourceDigest(root);
+  assert.notEqual(sourceChange.digest, before.digest);
+  assert.deepEqual(sourceChange.files, before.files);
+
+  const added = `${supportPrefix}new_production_source.go`;
+  await writeFile(path.join(root, added), "new source\n");
+  await writeSupportPaths(root, [...inventory.paths, added].sort());
+  const addition = await bookSourceDigest(root);
+  assert.notEqual(addition.digest, sourceChange.digest);
+  assert.deepEqual(addition.files.filter((file) => file !== added), sourceChange.files);
+  assert.equal(addition.files.filter((file) => file === added).length, 1);
+});
+
+test("support inventory rejects malformed schema and unsafe source names", async (t) => {
+  const root = await bookSourceFixture(t);
+  const good = `${supportPrefix}compare.go`;
+  const documents = [
+    "null", "[]", "true", '"text"', "{}", '{"schema_version":1}',
+    '{"schema_version":null,"paths":[]}', '{"schema_version":2,"paths":[]}',
+    '{"schema_version":1,"paths":null}', '{"schema_version":1,"paths":[]}',
+    '{"schema_version":1,"paths":[1]}', '{"schema_version":1,"paths":[{}]}',
+    '{"schema_version":1,"paths":[[[[]]]]}',
+    `{"schema_version":1,"paths":["${good}"],"extra":true}`,
+    `{"schema_version":1,"paths":["${good}"],"Paths":[]}`,
+    `{"schema_version":1,"schema_version":1,"paths":["${good}"]}`,
+    `{"schema_version":1,"paths":["${good}"],"p\\u0061ths":[]}`,
+    `{"schema_version":1,"paths":["${good}"]} false`,
+    '{"schema_version":1,"paths":[}', Buffer.from([0xff]),
+  ];
+  for (const document of documents) {
+    await writeFile(path.join(root, supportInventory), document);
+    await assert.rejects(bookSourceFiles(root), /book-support-sources\.json/u);
+  }
+  const invalidNames = [
+    "", "/tmp/escape.go", "../escape.go", "tooling/internal/pdfrender/render.go",
+    "scripts/book-source.mjs", `${supportPrefix}../escape.go`, `${supportPrefix}/compare.go`,
+    `${supportPrefix}nested/compare.go`, `${supportPrefix}*.go`, `${supportPrefix}.go`,
+    `${supportPrefix}_ignored.go`, `${supportPrefix}compare_test.go`, `${supportPrefix}Compare.go`,
+    `${supportPrefix}é.go`, `${supportPrefix}compare.go\n`, `${supportPrefix}compare.go\0`,
+    `${supportPrefix}compare.go/`, good.replaceAll("/", "\\"), `${supportPrefix}%2e%2e.go`,
+  ];
+  for (const name of invalidNames) {
+    await writeSupportPaths(root, [name]);
+    await assert.rejects(bookSourceFiles(root), /paths must be bounded, allowed, sorted and unique/u);
+  }
+  for (const paths of [[good, good], [`${supportPrefix}z.go`, good]]) {
+    await writeSupportPaths(root, paths);
+    await assert.rejects(bookSourceFiles(root), /sorted and unique/u);
+  }
+});
+
+test("support inventory enforces exact byte, path-count and path-length limits", async (t) => {
+  const root = await bookSourceFixture(t);
+  const good = `${supportPrefix}compare.go`;
+  const small = JSON.stringify({ schema_version: 1, paths: [good] });
+  const exact = small.padEnd(32 * 1024, " ");
+  await writeFile(path.join(root, supportInventory), exact);
+  assert((await bookSourceFiles(root)).includes(path.join(root, good)));
+  await writeFile(path.join(root, supportInventory), `${exact} `);
+  await assert.rejects(bookSourceFiles(root), /32768-byte limit/u);
+
+  const paths = Array.from({ length: 256 }, (_, index) => (
+    `${supportPrefix}source_${String(index).padStart(3, "0")}.go`
+  ));
+  await writeSupportPaths(root, paths);
+  const files = await bookSourceFiles(root);
+  assert(paths.every((source) => files.includes(path.join(root, source))));
+  await writeSupportPaths(root, [...paths, `${supportPrefix}source_256.go`]);
+  await assert.rejects(bookSourceFiles(root), /array exceeds its item limit/u);
+
+  // The listing API preserves its path-only contract; actual byte reads below
+  // independently require regular files. A 512-byte path can exceed host NAME_MAX.
+  const longest = `${supportPrefix}${"a".repeat(512 - supportPrefix.length - 3)}.go`;
+  await writeSupportPaths(root, [longest]);
+  assert.equal(Buffer.byteLength(longest), 512);
+  assert((await bookSourceFiles(root)).includes(path.join(root, longest)));
+  await writeSupportPaths(root, [longest.replace(/\.go$/u, "a.go")]);
+  await assert.rejects(bookSourceFiles(root), /paths must be bounded/u);
+});
+
+test("support inventory and selected bytes reject absent, linked and nonregular files", async (t) => {
+  for (const targetKind of ["inventory", "source"]) {
+    for (const mutation of ["missing", "symlink", "directory"]) {
+      await t.test(`${targetKind}: ${mutation}`, async (child) => {
+        const root = await bookSourceFixture(child);
+        const target = path.join(root, targetKind === "inventory"
+          ? supportInventory : `${supportPrefix}compare.go`);
+        const original = await readFile(target);
+        await rm(target);
+        if (mutation === "symlink") {
+          const preserved = path.join(root, "preserved-original");
+          await writeFile(preserved, original);
+          await symlink(preserved, target);
+        } else if (mutation === "directory") {
+          await mkdir(target);
+        }
+        await assert.rejects(bookSourceDigest(root), /ENOENT|not a regular file|linked, invalid/u);
+        assert.equal((await filesystem.lstat(root)).isDirectory(), true);
+      });
+    }
+  }
+});
+
+test("support inventory cannot route selected source bytes through an escaping parent", async (t) => {
+  const root = await bookSourceFixture(t);
+  const outside = await mkdtemp(path.join(os.tmpdir(), "20w-support-escape-"));
+  t.after(() => rm(outside, { recursive: true, force: true }));
+  const packagePath = path.join(root, "tooling/internal/clrscontext");
+  await filesystem.rename(packagePath, path.join(outside, "clrscontext"));
+  await symlink(path.join(outside, "clrscontext"), packagePath);
+  await assert.rejects(bookSourceDigest(root), /resolves outside its containment root/u);
+  assert.equal((await filesystem.lstat(packagePath)).isSymbolicLink(), true);
+});
+
+test("book inventory rejects colliding discovered paths rather than deduplicating", async (t) => {
+  const root = await bookSourceFixture(t);
+  const readdir = filesystem.readdir;
+  const mock = t.mock.method(filesystem, "readdir", async (directory, options) => {
+    const entries = await readdir(directory, options);
+    return directory === path.join(root, "public", "plots") ? [...entries, entries[0]] : entries;
+  });
+  syncBuiltinESMExports();
+  t.after(() => { mock.mock.restore(); syncBuiltinESMExports(); });
+  await assert.rejects(bookSourceFiles(root), /contains colliding paths/u);
+  assert(mock.mock.callCount() > 0);
+});
+
+test("book digest uses captured inventory bytes, never a separate mid-loop reread", async (t) => {
+  const root = await bookSourceFixture(t);
+  const target = path.join(root, supportInventory);
+  const original = await readFile(target);
+  const expected = await bookSourceDigest(root);
+  let mutations = 0;
+  mutateOnSourceHash(t, (source) => {
+    if (source === "README.md") {
+      writeFileSync(target, Buffer.concat([original, Buffer.from("\n")]));
+      mutations += 1;
+    } else if (source === "tooling/go.mod") {
+      writeFileSync(target, original);
+      mutations += 1;
+    }
+  });
+  assert.deepEqual(await bookSourceDigest(root), expected);
+  assert.equal(mutations, 2);
+  assert.deepEqual(await readFile(target), original);
+});
+
+test("book digest rejects final raw inventory drift, source omission and discovered-path drift", async (t) => {
+  for (const mutation of ["inventory bytes", "source omission", "discovered path"]) {
+    await t.test(mutation, async (child) => {
+      const root = await bookSourceFixture(child);
+      const target = path.join(root, supportInventory);
+      const original = await readFile(target);
+      let mutations = 0;
+      mutateOnSourceHash(child, (source) => {
+        if (source !== "vite.pages.config.ts") return;
+        if (mutation === "inventory bytes") {
+          writeFileSync(target, Buffer.concat([original, Buffer.from("\n")]));
+        } else if (mutation === "source omission") {
+          const inventory = JSON.parse(original);
+          inventory.paths.shift();
+          writeFileSync(target, JSON.stringify(inventory));
+        } else {
+          writeFileSync(path.join(root, "public/plots/new.svg"), "new plot\n");
+        }
+        mutations += 1;
+      });
+      await assert.rejects(bookSourceDigest(root), /inventory changed while its digest was computed/u);
+      assert.equal(mutations, 1);
+    });
+  }
 });
 
 test("the book manifest rejects a same-size PDF byte replacement", async () => {

@@ -1587,6 +1587,7 @@ test("Go renderer and CI owners retain their path-derived pull-request labels", 
     "tooling/internal/pdftools/candidate_output.go",
     "tooling/pdf-tools/contract.json",
     "tooling/cmd/20w/pdf_tools_test.go",
+    "scripts/book-support-sources.json",
   ]) assert.deepEqual(labelsFor(file), ["area:publication"], file);
   for (const file of [
     "tooling/internal/experimentcli-unrelated/example.go",

@@ -40,6 +40,10 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		{path: "tooling/internal/experimentcli-other/cli.go", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:tooling/internal/experimentcli-other/cli.go"},
 		{path: "package-lock.json", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
 		{path: "scripts/book-pdf-semantic-baseline.json", mode: "impact", lanes: []string{"release"}},
+		{path: "scripts/book-support-sources.json", mode: "impact", lanes: []string{"release", "site"}},
+		{path: "scripts/book-support-source.json", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:scripts/book-support-source.json"},
+		{path: "scripts/book-support-sources.json.old", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:scripts/book-support-sources.json.old"},
+		{path: "scripts/lib/strict-json.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
 		{path: "scripts/lib/book-pdf-semantic-audit.mjs", mode: "impact", lanes: []string{"release"}},
 		{path: "scripts/lib/chromium-cdp.test.mjs", mode: "impact", lanes: []string{"release"}},
 		{path: "scripts/lib/pdf-metadata.test.mjs", mode: "impact", lanes: []string{"release"}},
@@ -113,6 +117,71 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 			(test.reason != "" && plan.Reason != test.reason) {
 			t.Fatalf("path %s produced %#v, want %s/%v", test.path, plan, test.mode, test.lanes)
 		}
+	}
+}
+
+func TestBookSupportInventoryRetainsPublicationAndProtectedAuthorityLanes(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	const inventory = "scripts/book-support-sources.json"
+	for _, test := range []struct {
+		name, other, mode, reason string
+		lanes                     []string
+	}{
+		{"inventory only", "", "impact", "mapped-change-set", []string{"release", "site"}},
+		{"context source", "tooling/internal/clrscontext/context.go", "impact", "mapped-change-set", []string{"container", "go", "release", "site"}},
+		{"fixture source", "tooling/internal/clrsfixture/generation_run.go", "impact", "mapped-change-set", []string{"container", "go", "release", "site"}},
+		{"experiment CLI source", "tooling/internal/experimentcli/clrs_generation.go", "impact", "mapped-change-set", []string{"container", "go", "release", "site"}},
+		{"inventory parser", "scripts/book-source.mjs", "full", "full-authority-changed", []string{"full", "renderer"}},
+		{"strict JSON parser", "scripts/lib/strict-json.mjs", "full", "full-authority-changed", []string{"full", "renderer"}},
+		{"stable file reader", "scripts/lib/opened-file.mjs", "full", "full-authority-changed", []string{"full", "renderer"}},
+		{"renderer leaf", "tooling/internal/pdfrender/render.go", "impact", "mapped-change-set", []string{"container", "go", "release", "renderer", "site"}},
+		{"renderer styles", "app/globals.css", "impact", "mapped-change-set", []string{"release", "renderer", "site"}},
+		{"selector", "tooling/internal/ciplan/plan.go", "full", "selector-authority-changed", []string{"full", "renderer"}},
+		{"mapping authority", ".github/ci-impact.json", "full", "selector-authority-changed", []string{"full", "renderer"}},
+		{"public command", "tooling/cmd/20w/main.go", "full", "selector-authority-changed", []string{"full", "renderer"}},
+		{"unknown source", "tooling/internal/unknown/new.go", "full", "unmapped-path:tooling/internal/unknown/new.go", []string{"full", "renderer"}},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			paths := []string{inventory}
+			if test.other != "" {
+				paths = append(paths, test.other)
+			}
+			plan := selectTestPaths(t, root, testOptions(root), paths)
+			if plan.Mode != test.mode || plan.Reason != test.reason || !reflect.DeepEqual(plan.Lanes, test.lanes) {
+				t.Fatalf("inventory with %s produced %#v, want %s/%v/%s", test.other, plan, test.mode, test.lanes, test.reason)
+			}
+		})
+	}
+}
+
+func TestBookSupportInventoryRetainsDeletionAndUnsafeShapeHandling(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	const inventory = "scripts/book-support-sources.json"
+	for _, test := range []struct {
+		name, oldMode, newMode, status string
+		paths                          []string
+		unsafe                         bool
+	}{
+		{"regular deletion", "100644", "000000", "D", []string{inventory}, false},
+		{"symlink replacement", "100644", "120000", "T", []string{inventory}, true},
+		{"symlink deletion", "120000", "000000", "D", []string{inventory}, true},
+		{"rename", "100644", "100644", "R100", []string{inventory, inventory + ".old"}, true},
+		{"copy", "100644", "100644", "C100", []string{inventory, inventory + ".old"}, true},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			paths, unsafe, err := parseRawDiff(rawRecord(test.oldMode, test.newMode, test.status, test.paths...))
+			if err != nil || unsafe != test.unsafe || !reflect.DeepEqual(paths, test.paths) {
+				t.Fatalf("inventory change shape: paths=%v unsafe=%t error=%v", paths, unsafe, err)
+			}
+			if !unsafe {
+				plan := selectTestPaths(t, root, testOptions(root), paths)
+				if plan.Mode != "impact" || !reflect.DeepEqual(plan.Lanes, []string{"release", "site"}) {
+					t.Fatalf("regular inventory deletion lost its consuming lanes: %#v", plan)
+				}
+			}
+		})
 	}
 }
 

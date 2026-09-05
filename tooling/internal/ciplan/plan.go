@@ -234,6 +234,7 @@ func isRendererAuthority(changedPath string) bool {
 		"scripts/lib/chromium-cdp.mjs",
 		"scripts/lib/opened-file.mjs",
 		"scripts/lib/pdf-metadata.mjs",
+		"scripts/lib/strict-json.mjs",
 		"scripts/npm-runtime-lock.json",
 		"tooling/cmd/20w/main.go",
 		"tooling/cmd/20w/pdf_reproducibility.go",
