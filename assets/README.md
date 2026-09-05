@@ -193,8 +193,6 @@ scientific evidence.
   protection, merging, and retirement.
 - `diagrams/grounded-learning-loop.mmd` connects aligned multimodal events,
   predictive state, language, uncertainty, action, and the observed world.
-- `diagrams/adaptive-compute-control.mmd` separates event-level acquisition,
-  rate-limited context, and slower physical resource control.
 - `diagrams/memory-lifecycle.mmd` follows an attributable episode through
   replay, branching, promotion, externalization, weakening, or deletion.
 - `diagrams/maturity-fragility-cycle.mmd` tracks reversible protection,
