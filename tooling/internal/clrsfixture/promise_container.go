@@ -236,7 +236,7 @@ func promiseEndpointArguments() []string {
 }
 
 func promiseImageArguments(inputs promiseInputs) []string {
-	format := `{"id":{{json .Id}},"os":{{json .Os}},"architecture":{{json .Architecture}},"digests":{{json .RepoDigests}},"volumes":{{json .Config.Volumes}}}`
+	format := `{"id":{{json .Id}},"os":{{json .Os}},"architecture":{{json .Architecture}},"digests":{{json .RepoDigests}},"volumes":{{json (index .Config "Volumes")}}}`
 	return []string{"image", "inspect", "--platform", inputs.manifest.Platform, "--format", format, inputs.manifest.SourceBuild.BuilderImage}
 }
 

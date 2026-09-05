@@ -3,11 +3,13 @@ package clrsfixture
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"slices"
 	"strings"
 	"testing"
+	"text/template"
 
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/buildinfo"
 )
@@ -265,6 +267,39 @@ func TestPromiseRetainedFourInputsFailBeforeEffectsWhenTampered(t *testing.T) {
 			}
 			if _, err := os.Stat(output); !os.IsNotExist(err) {
 				t.Fatalf("output created before preflight: %v", err)
+			}
+		})
+	}
+}
+
+func TestPromiseRuntimeTemplateHandlesOmittedEmptyVolumes(t *testing.T) {
+	inputs := promiseLifecycleInputs(t)
+	arguments := promiseImageArguments(inputs)
+	format := arguments[slices.Index(arguments, "--format")+1]
+	formatter, err := template.New("inspect").Option("missingkey=error").Funcs(template.FuncMap{
+		"json": func(value any) (string, error) {
+			body, err := json.Marshal(value)
+			return string(body), err
+		},
+	}).Parse(format)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, digest, _ := strings.Cut(inputs.manifest.SourceBuild.BuilderImage, "@")
+	for name, config := range map[string]map[string]any{
+		"omitted":  {},
+		"empty":    {"Volumes": map[string]any{}},
+		"nonempty": {"Volumes": map[string]any{"/data": map[string]any{}}},
+	} {
+		t.Run(name, func(t *testing.T) {
+			identity := map[string]any{"Id": "sha256:" + strings.Repeat("a", 64), "Os": "linux", "Architecture": "amd64", "RepoDigests": []string{"python@" + digest}, "Config": config}
+			var output bytes.Buffer
+			if err := formatter.Execute(&output, identity); err != nil {
+				t.Fatal(err)
+			}
+			_, err := parsePromiseRuntime(promiseDockerResult{stdout: output.Bytes()}, inputs.manifest.SourceBuild.BuilderImage)
+			if (err != nil) != (name == "nonempty") {
+				t.Fatalf("runtime volumes %s: %v", name, err)
 			}
 		})
 	}
