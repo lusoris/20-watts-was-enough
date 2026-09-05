@@ -41,7 +41,7 @@ func VerifyReproducibility(ctx context.Context, options ReproducibilityOptions) 
 		options.SourceRevision,
 		options.ReceiptPath,
 		remoteBuildContextPreparer{},
-		localCommandExecutor{},
+		localReproducibilityExecutor{},
 	)
 }
 
@@ -228,7 +228,7 @@ func reproducibilityBuild(
 	if err != nil {
 		return result, err
 	}
-	configDigest, err := inspectLoadedImageConfig(ctx, configuration, executor, imageTag, imageID)
+	proof, err := inspectLoadedImageProof(ctx, configuration, executor, imageTag, imageID, metadata.ManifestDigest)
 	if err != nil {
 		return result, err
 	}
@@ -255,7 +255,8 @@ func reproducibilityBuild(
 		return result, err
 	}
 	result.ManifestDigest = metadata.ManifestDigest
-	result.ConfigDigest = configDigest
+	result.ConfigDigest = digestBytes(proof.Config)
+	result.ConfigProof = proof
 	result.Pair = pair
 	return result, checkAuthorityUnchanged(ctx, configuration)
 }

@@ -85,7 +85,7 @@ func TestInstalledDependencyDriftNeverWritesAPassingReproducibilityReceipt(t *te
 	t.Parallel()
 	configuration := renderConfiguration(t)
 	delegate := &reproducibilityExecutor{
-		imageIDs: []string{testImageID, testImageID}, manifestDigests: []string{testManifestDigest, testManifestDigest}, configDigests: []string{testImageID, testImageID},
+		imageIDs: []string{testProofConfigDigest, testProofConfigDigest}, manifestDigests: []string{testManifestDigest, testManifestDigest},
 	}
 	executor := &installedDriftExecutor{t: t, root: configuration.RepositoryRoot, delegate: delegate, trigger: "render-2"}
 	relative := ".workingdir2/evidence/publication/dependency-drift.json"
@@ -99,6 +99,10 @@ func TestInstalledDependencyDriftNeverWritesAPassingReproducibilityReceipt(t *te
 	if len(requestsWithPrefix(delegate.requests, "buildx", "rm")) != 2 || len(requestsWithPrefix(delegate.requests, "image", "rm", "--force")) != 2 {
 		t.Fatal("reproducibility failure did not clean both owned builders/images")
 	}
+}
+
+func (executor *installedDriftExecutor) inspectImageArchive(ctx context.Context, configuration Configuration, imageID, manifestDigest string) (ImageConfigProof, error) {
+	return executor.delegate.(imageArchiveExecutor).inspectImageArchive(ctx, configuration, imageID, manifestDigest)
 }
 
 func TestInstalledDependencyInventoryRejectsInvalidEmptyScopesAndAuxiliaries(t *testing.T) {

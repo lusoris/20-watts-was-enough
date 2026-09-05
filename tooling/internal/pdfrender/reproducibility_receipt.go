@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	reproducibilityReceiptSchema       = 3
+	reproducibilityReceiptSchema       = 4
 	maximumBuildMetadataBytes    int64 = 2 * 1024 * 1024
 )
 
@@ -96,6 +96,7 @@ type ReproducibilityBuild struct {
 	ImageID        string              `json:"image_id"`
 	ManifestDigest string              `json:"image_manifest_digest"`
 	ConfigDigest   string              `json:"image_config_digest"`
+	ConfigProof    ImageConfigProof    `json:"config_proof"`
 	Pair           ReproducibilityPair `json:"generated_pair"`
 }
 
@@ -274,14 +275,14 @@ func exactDigestMetadataValue(values map[string]json.RawMessage, name string) (s
 	return value, nil
 }
 
-func inspectLoadedImageConfig(
+func inspectLoadedImageID(
 	ctx context.Context,
 	configuration Configuration,
 	executor commandExecutor,
 	imageTag, imageID string,
 ) (string, error) {
 	output, err := executor.run(ctx, commandRequest{
-		operation:  "inspect loaded PDF reproducibility image config",
+		operation:  "inspect loaded PDF reproducibility execution identity",
 		directory:  configuration.RepositoryRoot,
 		timeout:    30 * time.Second,
 		outputSize: configuration.Lock.Limits.OutputBytes,
@@ -290,14 +291,14 @@ func inspectLoadedImageConfig(
 	if err != nil {
 		return "", err
 	}
-	configDigest := strings.TrimSpace(string(output))
-	if strings.Contains(configDigest, "\n") || !imageIDPattern.MatchString(configDigest) {
-		return "", errors.New("loaded PDF reproducibility image config is not an exact sha256 digest")
+	loadedID := strings.TrimSpace(string(output))
+	if strings.Contains(loadedID, "\n") || !imageIDPattern.MatchString(loadedID) {
+		return "", errors.New("loaded PDF reproducibility execution identity is not an exact sha256 digest")
 	}
-	if configDigest != imageID {
-		return "", errors.New("PDF reproducibility IID file and loaded image config digest disagree")
+	if loadedID != imageID {
+		return "", errors.New("PDF reproducibility IID file and loaded execution identity disagree")
 	}
-	return configDigest, nil
+	return loadedID, nil
 }
 
 func inspectReproducibilityPair(directory string) (ReproducibilityPair, error) {
