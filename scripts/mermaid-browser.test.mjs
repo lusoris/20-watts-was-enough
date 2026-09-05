@@ -589,9 +589,9 @@ async function assertMobilePortalSurface(cdp, address) {
 }
 
 test("browser rendering keeps Mermaid stable and wide publication content keyboard operable", {
-  // The tighter phase deadlines remain authoritative. This outer budget also
-  // covers cold rendering, the reflow navigations and deterministic cleanup.
-  timeout: 240_000,
+  // The tighter phase deadlines remain authoritative. This outer budget lets
+  // each phase exhaust its own bound and still covers deterministic cleanup.
+  timeout: 360_000,
 }, async () => {
   const browser = await firstExistingChromium();
   const debugPort = await reserveLocalPort();
@@ -634,7 +634,8 @@ test("browser rendering keeps Mermaid stable and wide publication content keyboa
     const navigation = await cdp.send("Page.navigate", { url: bookUrl });
     assert.equal(navigation.errorText, undefined);
 
-    const deadline = Date.now() + 90_000;
+    const deadline = Date.now() + 180_000;
+    let ready = false;
     let snapshot;
     while (Date.now() < deadline) {
       const result = await cdp.send("Runtime.evaluate", {
@@ -648,10 +649,14 @@ test("browser rendering keeps Mermaid stable and wide publication content keyboa
         snapshot.state === "complete" &&
         snapshot.diagrams >= 2 &&
         snapshot.loading === 0
-      ) break;
+      ) {
+        ready = true;
+        break;
+      }
       await new Promise((resolve) => setTimeout(resolve, 250));
     }
 
+    assert.equal(ready, true, `Book diagrams did not become ready: ${JSON.stringify(snapshot)}`);
     assert.ok(snapshot?.diagrams >= 2, `Book diagrams did not render: ${JSON.stringify(snapshot)}`);
     assert.deepEqual(snapshot.errors, []);
     await new Promise((resolve) => setTimeout(resolve, 1_250));

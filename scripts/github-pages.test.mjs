@@ -34,6 +34,29 @@ async function source(relative) {
   return readFile(path.join(repositoryRoot, relative), "utf8");
 }
 
+function assertCorpusDrawerSource(portal) {
+  assert.match(portal, /const selectGroup = \(candidate: LibraryGroup\)/);
+  assert.match(portal, /setGroup\(candidate\);[\s\S]*setCatalogLimit\(catalogPageSize\);/);
+  assert.match(portal, /className="portal-mobile-menu"/);
+  assert.match(portal, /className="portal-mobile-outline"/);
+  assert.match(portal, /id="portal-corpus-trigger"/);
+  assert.match(portal, /id="portal-corpus-drawer"/);
+  assert.match(portal, /aria-controls="portal-corpus-results"/);
+  assert.match(portal, /closeDrawer\(false\);[\s\S]*onNavigate\(path\);/);
+  assert.match(portal, /mobileMenuRef\.current\?\.removeAttribute\("open"\)/);
+  assert.match(portal, /mobileOutlineRef\.current\?\.removeAttribute\("open"\)/);
+  assert.match(portal, /selectHeading\(heading\.id\)/);
+  assert.doesNotMatch(portal, /--portal-reader-stack-top/);
+  assert.doesNotMatch(portal, /ResizeObserver/);
+  assert.match(portal, /function revealFocusedElement\(/);
+  assert.match(portal, /const clearance = outlineWidth \+ outlineOffset \+ 1/);
+  assert.match(portal, /revealFocusedElement\(libraryRef\.current, target\)/);
+  assert.doesNotMatch(portal, /listRef/);
+  assert.doesNotMatch(portal, /list\.scrollTop/);
+  assert.match(portal, /className="portal-document-list"[\s\S]*<a[\s\S]*href=\{portalDocumentLocation\(document\.path, assetBasePath\)\}/);
+  assert.match(portal, /aria-current=\{document\.path === selectedDocument\.path \? "page" : undefined\}/);
+}
+
 async function reserveLocalPort() {
   const server = createTcpServer();
   await new Promise((resolve, reject) => {
@@ -72,26 +95,68 @@ async function waitForBrowserState(cdp, expression, accepts, label, timeoutMs = 
 }
 
 const portalStateExpression = `(() => {
+  const active = document.activeElement;
   const title = document.getElementById("portal-reader-title");
+  const header = document.querySelector(".portal-header");
+  const drawer = document.getElementById("portal-corpus-drawer");
+  const drawerScroller = drawer?.querySelector(".portal-library");
+  const documentList = drawer?.querySelector(".portal-document-list");
+  const mobileOutline = document.querySelector(".portal-mobile-outline");
+  const outline = document.querySelector(".portal-outline");
   const hashTarget = location.hash
     ? document.getElementById(decodeURIComponent(location.hash.slice(1)))
     : null;
   const hashBounds = hashTarget?.getBoundingClientRect();
   const documentLinks = [...document.querySelectorAll(".portal-document-list > a")];
+  const activeBounds = active?.getBoundingClientRect();
+  const headerBounds = header?.getBoundingClientRect();
+  const titleBounds = title?.getBoundingClientRect();
+  const drawerScrollerBounds = drawerScroller?.getBoundingClientRect();
+  const activeStyle = active ? getComputedStyle(active) : null;
+  const focusPaintExtent = activeStyle
+    ? (Number.parseFloat(activeStyle.outlineWidth) || 0)
+      + Math.max(Number.parseFloat(activeStyle.outlineOffset) || 0, 0)
+    : 0;
   return {
-    activeId: document.activeElement?.id ?? "",
-    activeTag: document.activeElement?.tagName ?? "",
+    activeFocusPaintFullyVisible: Boolean(
+      activeBounds
+      && drawerScrollerBounds
+      && activeBounds.top - focusPaintExtent >= drawerScrollerBounds.top
+      && activeBounds.bottom + focusPaintExtent <= drawerScrollerBounds.bottom
+    ),
+    activeId: active?.id ?? "",
+    activeIsFirstDocumentLink: active === documentLinks[0],
+    activeTag: active?.tagName ?? "",
+    activeWithinDrawer: Boolean(drawer?.contains(document.activeElement)),
+    activeFocusVisible: Boolean(active?.matches?.(":focus-visible")),
     articleTabIndex: document.getElementById("portal-reader")?.getAttribute("tabindex") ?? null,
     currentLinks: documentLinks.filter((link) => link.getAttribute("aria-current") === "page").length,
     documentLinkCount: documentLinks.length,
     documentLinkTags: [...new Set(documentLinks.map((link) => link.tagName))],
+    documentListOverflowY: documentList ? getComputedStyle(documentList).overflowY : "missing",
+    drawerOpen: Boolean(drawer?.open),
+    drawerScrollerClientHeight: drawerScroller?.clientHeight ?? null,
+    drawerScrollerOverflowY: drawerScroller ? getComputedStyle(drawerScroller).overflowY : "missing",
+    drawerScrollerScrollHeight: drawerScroller?.scrollHeight ?? null,
     hash: location.hash,
     hashTargetTop: hashBounds?.top ?? null,
     hashTargetVisible: Boolean(hashBounds && hashBounds.bottom > 0 && hashBounds.top < innerHeight),
+    headerBottom: headerBounds?.bottom ?? null,
     pathname: location.pathname,
+    pageClientWidth: document.documentElement.clientWidth,
+    pageScrollWidth: document.documentElement.scrollWidth,
     readerPresent: Boolean(document.getElementById("portal-reader")),
+    searchValue: document.getElementById("portal-library-search")?.value ?? null,
+    mobileOutlineDisplay: mobileOutline ? getComputedStyle(mobileOutline).display : "missing",
+    outlineDisplay: outline ? getComputedStyle(outline).display : "missing",
+    triggerExpanded: document.getElementById("portal-corpus-trigger")?.getAttribute("aria-expanded"),
     titleTabIndex: title?.getAttribute("tabindex") ?? null,
     titleText: title?.textContent?.trim() ?? "",
+    titleFocusTop: titleBounds && active === title
+      ? titleBounds.top - focusPaintExtent
+      : null,
+    titleScrollMarginTop: title ? getComputedStyle(title).scrollMarginTop : null,
+    viewportWidth: innerWidth,
   };
 })()`;
 
@@ -221,7 +286,197 @@ async function openThesisRoute(cdp, portalUrl) {
   return { state, thesis };
 }
 
+async function dispatchKeyboardKey(cdp, key, code, virtualKeyCode, modifiers = 0) {
+  await cdp.send("Input.dispatchKeyEvent", {
+    type: "rawKeyDown",
+    key,
+    code,
+    modifiers,
+    windowsVirtualKeyCode: virtualKeyCode,
+    nativeVirtualKeyCode: virtualKeyCode,
+  });
+  await cdp.send("Input.dispatchKeyEvent", {
+    type: "keyUp",
+    key,
+    code,
+    modifiers,
+    windowsVirtualKeyCode: virtualKeyCode,
+    nativeVirtualKeyCode: virtualKeyCode,
+  });
+}
+
+async function openCorpusDrawer(cdp) {
+  await evaluateInBrowser(cdp, `document.getElementById("portal-corpus-trigger").click()`);
+  return waitForBrowserState(
+    cdp,
+    portalStateExpression,
+    (snapshot) => snapshot.drawerOpen
+      && snapshot.triggerExpanded === "true"
+      && snapshot.activeId === "portal-library-search"
+      && snapshot.activeWithinDrawer,
+    "corpus drawer did not open and focus its search",
+  );
+}
+
+async function exerciseSearchEscape(cdp) {
+  const query = "concept/";
+  await openCorpusDrawer(cdp);
+  await cdp.send("Input.insertText", { text: query });
+  await waitForBrowserState(
+    cdp,
+    portalStateExpression,
+    (snapshot) => snapshot.searchValue === query,
+    "corpus search did not receive the keyboard query",
+  );
+  await dispatchKeyboardKey(cdp, "Escape", "Escape", 27);
+  await waitForBrowserState(
+    cdp,
+    portalStateExpression,
+    (snapshot) => !snapshot.drawerOpen
+      && snapshot.triggerExpanded === "false"
+      && snapshot.searchValue === query
+      && snapshot.activeId === "portal-corpus-trigger"
+      && snapshot.activeFocusVisible,
+    "Escape from a populated corpus search did not close once and restore its invoker",
+  );
+
+  const reopened = await openCorpusDrawer(cdp);
+  assert.equal(reopened.searchValue, query);
+  await dispatchKeyboardKey(cdp, "a", "KeyA", 65, 2);
+  await dispatchKeyboardKey(cdp, "Backspace", "Backspace", 8);
+  await waitForBrowserState(
+    cdp,
+    portalStateExpression,
+    (snapshot) => snapshot.searchValue === "",
+    "corpus search did not clear after the Escape-state regression",
+  );
+  await dispatchKeyboardKey(cdp, "Escape", "Escape", 27);
+  await waitForBrowserState(
+    cdp,
+    portalStateExpression,
+    (snapshot) => !snapshot.drawerOpen
+      && snapshot.activeId === "portal-corpus-trigger",
+    "native empty-search Escape did not close the corpus drawer",
+  );
+}
+
+async function exerciseResponsiveCorpusDrawer(cdp) {
+  const layouts = [
+    { width: 1440, height: 900, outline: "block", mobileOutline: "none" },
+    { width: 768, height: 1024, outline: "none", mobileOutline: "block" },
+    { width: 720, height: 760, outline: "none", mobileOutline: "block" },
+    { width: 375, height: 844, outline: "none", mobileOutline: "block" },
+    { width: 320, height: 720, outline: "none", mobileOutline: "block" },
+    // Equivalent CSS viewport for a 1440 x 900 browser at 200% page zoom.
+    { width: 720, height: 450, outline: "none", mobileOutline: "block", zoomed: true },
+  ];
+  for (const layout of layouts) {
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+      width: layout.width,
+      height: layout.height,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+    await waitForBrowserState(
+      cdp,
+      portalStateExpression,
+      (snapshot) => snapshot.viewportWidth === layout.width
+        && snapshot.outlineDisplay === layout.outline
+        && snapshot.mobileOutlineDisplay === layout.mobileOutline
+        && snapshot.pageScrollWidth <= snapshot.pageClientWidth,
+      `reader layout did not reflow at ${layout.width}px`,
+    );
+    await openCorpusDrawer(cdp);
+    const tabCount = layout.zoomed ? 4 : 1;
+    for (let index = 0; index < tabCount; index += 1) {
+      await dispatchKeyboardKey(cdp, "Tab", "Tab", 9);
+    }
+    await waitForBrowserState(
+      cdp,
+      portalStateExpression,
+      (snapshot) => snapshot.drawerOpen
+        && snapshot.activeWithinDrawer
+        && snapshot.activeFocusVisible
+        && (!layout.zoomed || (
+          snapshot.activeIsFirstDocumentLink
+          && snapshot.activeFocusPaintFullyVisible
+          && snapshot.drawerScrollerOverflowY === "auto"
+          && snapshot.documentListOverflowY === "visible"
+          && snapshot.drawerScrollerScrollHeight > snapshot.drawerScrollerClientHeight
+        )),
+      layout.zoomed
+        ? "200% zoom clipped the focused corpus result"
+        : `keyboard focus escaped the drawer at ${layout.width}px`,
+    );
+    await dispatchKeyboardKey(cdp, "Escape", "Escape", 27);
+    await waitForBrowserState(
+      cdp,
+      portalStateExpression,
+      (snapshot) => !snapshot.drawerOpen
+        && snapshot.triggerExpanded === "false"
+        && snapshot.activeId === "portal-corpus-trigger"
+        && snapshot.activeFocusVisible,
+      `closing the drawer did not restore visible focus at ${layout.width}px`,
+    );
+  }
+  await cdp.send("Emulation.setDeviceMetricsOverride", {
+    width: 1440,
+    height: 900,
+    deviceScaleFactor: 1,
+    mobile: false,
+  });
+}
+
+async function exerciseSkipToDocumentClearance(cdp, portalUrl) {
+  const route = new URL("concept/80-energy-model/", portalUrl);
+  const layouts = [
+    { width: 720, height: 600 },
+    { width: 320, height: 720 },
+  ];
+
+  for (const layout of layouts) {
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+      width: layout.width,
+      height: layout.height,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+    await cdp.send("Page.navigate", { url: route.href });
+    await waitForBrowserState(
+      cdp,
+      portalStateExpression,
+      (snapshot) => snapshot.pathname === route.pathname && snapshot.readerPresent,
+      `energy-model route did not render at ${layout.width}px`,
+    );
+    await evaluateInBrowser(cdp, `(() => {
+      window.scrollTo(0, document.scrollingElement.scrollHeight);
+      document.querySelector(".portal-skip-link").focus({ preventScroll: true });
+    })()`);
+    await waitForBrowserState(
+      cdp,
+      `({ activeClass: document.activeElement?.className ?? "", scrollY })`,
+      (snapshot) => snapshot.activeClass === "portal-skip-link" && snapshot.scrollY > 0,
+      `skip link was not keyboard-ready at ${layout.width}px`,
+    );
+    await dispatchKeyboardKey(cdp, "Enter", "Enter", 13);
+    const state = await waitForBrowserState(
+      cdp,
+      portalStateExpression,
+      (snapshot) => snapshot.hash === "#portal-reader-title"
+        && snapshot.activeId === "portal-reader-title"
+        && snapshot.activeFocusVisible,
+      `skip link did not focus the document title at ${layout.width}px`,
+    );
+    assert.ok(
+      state.titleFocusTop >= state.headerBottom,
+      `focused title starts at ${state.titleFocusTop}px behind a header ending at ${state.headerBottom}px at ${layout.width}px`,
+    );
+    assert.ok(Number.parseFloat(state.titleScrollMarginTop) > state.headerBottom);
+  }
+}
+
 async function openSidebarRoute(cdp) {
+  await openCorpusDrawer(cdp);
   const route = await evaluateInBrowser(cdp, `(() => {
     const link = [...document.querySelectorAll(".portal-document-list > a")]
       .find((candidate) => candidate.getAttribute("aria-current") !== "page");
@@ -263,8 +518,9 @@ async function openSidebarRoute(cdp) {
     portalStateExpression,
     (snapshot) => snapshot.pathname === route.pathname
       && snapshot.titleText === route.title
-      && snapshot.activeId === "portal-reader-title",
-    "sidebar route did not focus its title",
+      && snapshot.activeId === "portal-reader-title"
+      && !snapshot.drawerOpen,
+    "drawer route did not close and focus its title",
   );
   assert.equal(state.activeTag, "H1");
   assert.equal(state.currentLinks, 1);
@@ -516,19 +772,7 @@ test("the portal keeps clean-route history and native Markdown links honest on t
   assert.match(portal, />Evidence<\/a>/);
   assert.match(portal, />Experiments /);
   assert.match(portal, />Contribute<\/a>/);
-  assert.match(portal, /const selectGroup = \(candidate: LibraryGroup\)/);
-  assert.match(portal, /selectedMetadata\?\.group !== candidate/);
-  assert.match(portal, /className="portal-mobile-menu"/);
-  assert.match(portal, /className="portal-mobile-outline"/);
-  assert.match(portal, /mobileMenuRef\.current\?\.removeAttribute\("open"\)/);
-  assert.match(portal, /mobileOutlineRef\.current\?\.removeAttribute\("open"\)/);
-  assert.match(portal, /selectHeading\(heading\.id\)/);
-  assert.doesNotMatch(portal, /--portal-reader-stack-top/);
-  assert.doesNotMatch(portal, /ResizeObserver/);
-  assert.match(portal, /readerLibraryRef/);
-  assert.match(portal, /list\.scrollTop \+= activeRect\.top/);
-  assert.match(portal, /className="portal-document-list"[\s\S]*<a[\s\S]*href=\{portalDocumentLocation\(document\.path, assetBasePath\)\}/);
-  assert.match(portal, /aria-current=\{document\.path === selectedMetadata\.path \? "page" : undefined\}/);
+  assertCorpusDrawerSource(portal);
   assert.match(portal, /event\.button === 0[\s\S]*!event\.ctrlKey[\s\S]*!event\.metaKey/);
   assert.match(portal, /section heading match/);
   assert.match(portal, /Open \{step\.label\}/);
@@ -579,10 +823,13 @@ test("portal document routes preserve native links and focus their destination h
 }, async () => {
   await withPortalBrowser(async (cdp, portalUrl) => {
     const { state: thesisState, thesis } = await openThesisRoute(cdp, portalUrl);
+    await exerciseResponsiveCorpusDrawer(cdp);
+    await exerciseSearchEscape(cdp);
     const route = await openSidebarRoute(cdp);
     await traverseDocumentHistory(cdp, thesis, thesisState, route);
     const fragment = await openOutlineFragment(cdp);
     await traverseFragmentHistory(cdp, thesis, route, fragment);
+    await exerciseSkipToDocumentClearance(cdp, portalUrl);
   });
 });
 

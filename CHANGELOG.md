@@ -254,6 +254,9 @@ the exact diff; this file records why the project changed.
   because the React and JSX accessibility plugins do not yet declare ESLint 10
   support. The exact package graphs and source-bound book provenance are
   regenerated without changing experiment or result status.
+- The document reader now keeps only its section outline beside the article.
+  Corpus search, filters, current-document context and native document links
+  move into a keyboard-operable drawer that returns focus when it closes.
 - A failed two-builder PDF reproducibility check now retains both exact PDF and
   manifest pairs beside its comparison receipt. CI uploads the bounded mismatch
   bundle for 30 days, so a rare renderer disagreement can be byte-diffed without
