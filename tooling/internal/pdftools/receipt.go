@@ -541,11 +541,12 @@ func requireReproductionDirectory(root, relative string) error {
 	return nil
 }
 
-func writeReproductionReceipt(path string, receipt ReproductionReceipt, maximum int64) error {
-	return writeReproductionReceiptChecked(path, receipt, maximum, nil)
+func writeReproductionReceipt(root, path string, receipt ReproductionReceipt, maximum int64) error {
+	return writeReproductionReceiptChecked(root, path, receipt, maximum, nil)
 }
 
 func writeReproductionReceiptChecked(
+	root string,
 	path string,
 	receipt ReproductionReceipt,
 	maximum int64,
@@ -559,35 +560,65 @@ func writeReproductionReceiptChecked(
 	if maximum <= 0 || int64(len(body)) > maximum {
 		return errors.New("PDF-tools reproduction receipt exceeds its byte boundary")
 	}
+	repositoryRoot, err := cleanRoot(root)
+	if err != nil {
+		return err
+	}
+	path = filepath.Clean(path)
 	parent := filepath.Dir(path)
-	temporary, err := os.CreateTemp(parent, ".20w-pdf-tools-receipt-*.tmp")
+	relative, err := filepath.Rel(repositoryRoot, path)
+	if err != nil || relative == ".." || strings.HasPrefix(relative, ".."+string(filepath.Separator)) {
+		return errors.New("PDF-tools reproduction receipt escapes the repository root")
+	}
+	if err := rejectLinkedPath(repositoryRoot, parent, "PDF-tools reproduction receipt directory"); err != nil {
+		return err
+	}
+	namedParentInformation, err := os.Lstat(parent)
+	if err != nil || !namedParentInformation.IsDir() || namedParentInformation.Mode()&os.ModeSymlink != 0 {
+		return errors.New("PDF-tools reproduction receipt directory must be a real directory")
+	}
+	parentRoot, err := os.OpenRoot(parent)
+	if err != nil {
+		return fmt.Errorf("open PDF-tools reproduction receipt directory: %w", err)
+	}
+	defer parentRoot.Close()
+	parentInformation, err := parentRoot.Stat(".")
+	if err != nil || !parentInformation.IsDir() || !os.SameFile(namedParentInformation, parentInformation) {
+		return errors.New("PDF-tools reproduction receipt directory changed while it was opened")
+	}
+	name := filepath.Base(path)
+	temporaryName := reproductionReceiptTemporaryName(name, body)
+	temporary, err := parentRoot.OpenFile(temporaryName, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o600)
 	if err != nil {
 		return fmt.Errorf("create temporary PDF-tools reproduction receipt: %w", err)
 	}
-	temporaryPath := temporary.Name()
+	temporaryInformation, err := temporary.Stat()
+	if err != nil || !temporaryInformation.Mode().IsRegular() {
+		_ = temporary.Close()
+		return errors.New("temporary PDF-tools reproduction receipt is not a regular file")
+	}
 	published := false
-	var publishedInformation os.FileInfo
 	closed := false
 	defer func() {
 		if !closed {
-			if closeError := temporary.Close(); returnError == nil && closeError != nil {
-				returnError = fmt.Errorf("close temporary PDF-tools reproduction receipt: %w", closeError)
+			if closeError := temporary.Close(); closeError != nil {
+				returnError = errors.Join(returnError, fmt.Errorf("close temporary PDF-tools reproduction receipt: %w", closeError))
 			}
 		}
-		_ = os.Remove(temporaryPath)
+		if cleanupError := removeOwnedReceiptFile(parentRoot, temporaryName, temporaryInformation); cleanupError != nil {
+			returnError = errors.Join(returnError, fmt.Errorf("remove temporary PDF-tools reproduction receipt: %w", cleanupError))
+		}
 		if returnError != nil && published {
-			if current, err := os.Lstat(path); err == nil && publishedInformation != nil &&
-				current.Mode().IsRegular() && current.Mode()&os.ModeSymlink == 0 &&
-				os.SameFile(publishedInformation, current) {
-				_ = os.Remove(path)
+			if cleanupError := removeOwnedReceiptFile(parentRoot, name, temporaryInformation); cleanupError != nil {
+				returnError = errors.Join(returnError, fmt.Errorf("remove failed PDF-tools reproduction receipt: %w", cleanupError))
 			}
 		}
 	}()
-	if err := temporary.Chmod(0o644); err != nil {
-		return fmt.Errorf("normalize temporary PDF-tools reproduction receipt: %w", err)
-	}
 	if _, err := temporary.Write(body); err != nil {
 		return fmt.Errorf("write temporary PDF-tools reproduction receipt: %w", err)
+	}
+	if err := temporary.Chmod(0o644); err != nil {
+		return fmt.Errorf("normalize temporary PDF-tools reproduction receipt: %w", err)
 	}
 	if err := temporary.Sync(); err != nil {
 		return fmt.Errorf("sync temporary PDF-tools reproduction receipt: %w", err)
@@ -601,26 +632,29 @@ func writeReproductionReceiptChecked(
 			return fmt.Errorf("verify PDF-tools candidate outputs before receipt publication: %w", err)
 		}
 	}
-	if err := os.Link(temporaryPath, path); err != nil {
+	if err := parentRoot.Link(temporaryName, name); err != nil {
 		return fmt.Errorf("atomically publish new PDF-tools reproduction receipt: %w", err)
 	}
 	published = true
-	temporaryInfo, temporaryError := os.Lstat(temporaryPath)
-	finalInfo, finalError := os.Lstat(path)
-	if finalError == nil {
-		publishedInformation = finalInfo
-	}
+	temporaryInfo, temporaryError := parentRoot.Lstat(temporaryName)
+	finalInfo, finalError := parentRoot.Lstat(name)
 	if temporaryError != nil || finalError != nil || !finalInfo.Mode().IsRegular() ||
-		finalInfo.Mode()&os.ModeSymlink != 0 || !os.SameFile(temporaryInfo, finalInfo) || finalInfo.Size() != int64(len(body)) {
+		finalInfo.Mode()&os.ModeSymlink != 0 || !os.SameFile(temporaryInformation, temporaryInfo) ||
+		!os.SameFile(temporaryInformation, finalInfo) || finalInfo.Size() != int64(len(body)) {
 		return errors.New("published PDF-tools reproduction receipt changed during atomic placement")
 	}
-	if err := os.Remove(temporaryPath); err != nil {
+	if err := removeOwnedReceiptFile(parentRoot, temporaryName, temporaryInformation); err != nil {
 		return fmt.Errorf("remove temporary PDF-tools reproduction receipt link: %w", err)
 	}
 	if runtime.GOOS != "windows" {
-		directory, err := os.Open(parent)
+		directory, err := parentRoot.Open(".")
 		if err != nil {
 			return fmt.Errorf("open PDF-tools receipt directory for sync: %w", err)
+		}
+		directoryInformation, informationError := directory.Stat()
+		if informationError != nil || !os.SameFile(parentInformation, directoryInformation) {
+			_ = directory.Close()
+			return errors.New("PDF-tools reproduction receipt directory changed before sync")
 		}
 		if err := directory.Sync(); err != nil {
 			_ = directory.Close()
@@ -630,6 +664,42 @@ func writeReproductionReceiptChecked(
 			return fmt.Errorf("close PDF-tools receipt directory: %w", err)
 		}
 	}
+	if err := rejectLinkedPath(repositoryRoot, parent, "PDF-tools reproduction receipt directory"); err != nil {
+		return errors.New("PDF-tools reproduction receipt directory changed during publication")
+	}
+	currentParentInformation, err := os.Lstat(parent)
+	if err != nil || !currentParentInformation.IsDir() ||
+		!os.SameFile(parentInformation, currentParentInformation) {
+		return errors.New("PDF-tools reproduction receipt directory changed during publication")
+	}
+	currentInformation, err := os.Lstat(path)
+	if err != nil || !currentInformation.Mode().IsRegular() || currentInformation.Mode()&os.ModeSymlink != 0 ||
+		!os.SameFile(finalInfo, currentInformation) || currentInformation.Size() != int64(len(body)) {
+		return errors.New("published PDF-tools reproduction receipt path changed during confirmation")
+	}
 	published = false
 	return nil
+}
+
+func reproductionReceiptTemporaryName(name string, body []byte) string {
+	temporaryIdentity := make([]byte, 0, len(name)+1+len(body))
+	temporaryIdentity = append(temporaryIdentity, name...)
+	temporaryIdentity = append(temporaryIdentity, 0)
+	temporaryIdentity = append(temporaryIdentity, body...)
+	return ".20w-pdf-tools-receipt-" + rawDigest(temporaryIdentity) + ".tmp"
+}
+
+func removeOwnedReceiptFile(root *os.Root, name string, information os.FileInfo) error {
+	current, err := root.Lstat(name)
+	if errors.Is(err, os.ErrNotExist) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	if information == nil || !current.Mode().IsRegular() || current.Mode()&os.ModeSymlink != 0 ||
+		!os.SameFile(information, current) {
+		return errors.New("PDF-tools reproduction receipt path no longer refers to the owned file")
+	}
+	return root.Remove(name)
 }

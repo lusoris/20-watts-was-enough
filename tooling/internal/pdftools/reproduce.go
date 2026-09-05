@@ -131,7 +131,7 @@ func ReproduceFinalImage(
 		if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
 			return ReproductionReceipt{}, err
 		}
-		if err := writeReproductionReceipt(receiptPath, receipt, authority.contract.Limits.ReceiptBytes); err != nil {
+		if err := writeReproductionReceipt(authority.root, receiptPath, receipt, authority.contract.Limits.ReceiptBytes); err != nil {
 			return ReproductionReceipt{}, err
 		}
 		return receipt, errors.New("PDF-tools final-image reproduction mismatch; inspect the retained NO_RESULT receipt")
@@ -170,7 +170,7 @@ func finishSuccessfulReproduction(
 			authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspection, comparison, nil,
 		)
 		receipt.Runtime = &runtimeObservation
-		if err := writeReproductionReceipt(receiptPath, receipt, authority.contract.Limits.ReceiptBytes); err != nil {
+		if err := writeReproductionReceipt(authority.root, receiptPath, receipt, authority.contract.Limits.ReceiptBytes); err != nil {
 			return ReproductionReceipt{}, err
 		}
 		return receipt, nil
@@ -205,6 +205,7 @@ func finishSuccessfulReproduction(
 		return ReproductionReceipt{}, err
 	}
 	if err := writeReproductionReceiptChecked(
+		authority.root,
 		receiptPath,
 		receipt,
 		authority.contract.Limits.ReceiptBytes,

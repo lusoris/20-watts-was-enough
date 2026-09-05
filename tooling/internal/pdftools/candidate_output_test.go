@@ -176,7 +176,7 @@ func TestCandidateReceiptPublicationRejectsChangedInstalledOutput(t *testing.T) 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 			root, receiptPath, staged, receipt := installedCandidateFixture(t)
-			err := writeReproductionReceiptChecked(receiptPath, receipt, 1<<20, func() error {
+			err := writeReproductionReceiptChecked(root, receiptPath, receipt, 1<<20, func() error {
 				mutate(t, staged)
 				return staged.verifyInstalled(root, receipt.Candidate)
 			})
@@ -193,7 +193,7 @@ func TestCandidateReceiptPublicationRejectsChangedInstalledOutput(t *testing.T) 
 func TestCandidateReceiptPublicationVerifiesStableInstalledOutputs(t *testing.T) {
 	t.Parallel()
 	root, receiptPath, staged, receipt := installedCandidateFixture(t)
-	if err := writeReproductionReceiptChecked(receiptPath, receipt, 1<<20, func() error {
+	if err := writeReproductionReceiptChecked(root, receiptPath, receipt, 1<<20, func() error {
 		return staged.verifyInstalled(root, receipt.Candidate)
 	}); err != nil {
 		t.Fatal(err)

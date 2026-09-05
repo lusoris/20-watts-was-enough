@@ -229,14 +229,14 @@ func TestReproductionReceiptIsBoundedAtomicAndNoReplace(t *testing.T) {
 		Authority: "NO_RESULT", BaseBuilds: []ReproductionBuild{}, FinalBuilds: []ReproductionBuild{},
 		Notices: []NoticeObservation{}, ManPages: []string{},
 	}
-	if err := writeReproductionReceipt(path, receipt, 64*1024); err != nil {
+	if err := writeReproductionReceipt(root, path, receipt, 64*1024); err != nil {
 		t.Fatal(err)
 	}
 	body, err := os.ReadFile(path)
 	if err != nil || !strings.Contains(string(body), `"authority": "NO_RESULT"`) {
 		t.Fatalf("receipt = %q, error = %v", body, err)
 	}
-	if err := writeReproductionReceipt(path, receipt, 64*1024); err == nil {
+	if err := writeReproductionReceipt(root, path, receipt, 64*1024); err == nil {
 		t.Fatal("receipt replacement was accepted")
 	}
 	after, err := os.ReadFile(path)
@@ -244,7 +244,7 @@ func TestReproductionReceiptIsBoundedAtomicAndNoReplace(t *testing.T) {
 		t.Fatal("existing receipt changed after replacement attempt")
 	}
 	bounded := filepath.Join(filepath.Dir(path), "too-small.json")
-	if err := writeReproductionReceipt(bounded, receipt, 1); err == nil {
+	if err := writeReproductionReceipt(root, bounded, receipt, 1); err == nil {
 		t.Fatal("oversized receipt was accepted")
 	}
 	if _, err := os.Lstat(bounded); !errors.Is(err, os.ErrNotExist) {
@@ -253,6 +253,154 @@ func TestReproductionReceiptIsBoundedAtomicAndNoReplace(t *testing.T) {
 	temporary, err := filepath.Glob(filepath.Join(filepath.Dir(path), ".20w-pdf-tools-receipt-*.tmp"))
 	if err != nil || len(temporary) != 0 {
 		t.Fatalf("temporary receipt links = %v, error = %v", temporary, err)
+	}
+}
+
+func TestReproductionReceiptRejectsPrewriteSymlinkSwapsWithoutOutsideWrite(t *testing.T) {
+	t.Parallel()
+	for _, swap := range []string{"receipt parent", "intermediate parent"} {
+		swap := swap
+		t.Run(swap, func(t *testing.T) {
+			t.Parallel()
+			base := t.TempDir()
+			root := filepath.Join(base, "repository")
+			outside := filepath.Join(base, "outside")
+			if err := os.Mkdir(root, 0o755); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.Mkdir(outside, 0o755); err != nil {
+				t.Fatal(err)
+			}
+			path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
+			if err != nil {
+				t.Fatal(err)
+			}
+			parked := filepath.Join(base, "parked")
+			link := filepath.Dir(path)
+			outsideReceiptDirectory := outside
+			parkedReceiptDirectory := parked
+			if swap == "intermediate parent" {
+				link = filepath.Join(root, "build")
+				outsideReceiptDirectory = filepath.Join(outside, "evidence")
+				parkedReceiptDirectory = filepath.Join(parked, "evidence")
+				if err := os.Mkdir(outsideReceiptDirectory, 0o755); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if err := os.Rename(link, parked); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.Symlink(outside, link); err != nil {
+				t.Skipf("create hostile receipt-parent symlink: %v", err)
+			}
+			sentinel := filepath.Join(outside, "sentinel")
+			if err := os.WriteFile(sentinel, []byte("outside-owned"), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			receipt := reproductionReceiptTestValue()
+			if err := writeReproductionReceipt(root, path, receipt, 64*1024); err == nil {
+				t.Fatal("writeReproductionReceipt() accepted a pre-write parent symlink swap")
+			}
+			assertNoReceiptFiles(t, path, outsideReceiptDirectory, parkedReceiptDirectory)
+			body, err := os.ReadFile(sentinel)
+			if err != nil || string(body) != "outside-owned" {
+				t.Fatalf("outside sentinel changed: %q, %v", body, err)
+			}
+		})
+	}
+}
+
+func TestReproductionReceiptCleansPinnedParentAfterLateSwap(t *testing.T) {
+	t.Parallel()
+	base := t.TempDir()
+	root := filepath.Join(base, "repository")
+	outside := filepath.Join(base, "outside")
+	if err := os.Mkdir(root, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Mkdir(outside, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	parent := filepath.Dir(path)
+	parked := filepath.Join(base, "parked-evidence")
+	sentinel := filepath.Join(outside, "sentinel")
+	if err := os.WriteFile(sentinel, []byte("outside-owned"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	err = writeReproductionReceiptChecked(root, path, reproductionReceiptTestValue(), 64*1024, func() error {
+		if err := os.Rename(parent, parked); err != nil {
+			return err
+		}
+		return os.Symlink(outside, parent)
+	})
+	if err == nil || !strings.Contains(err.Error(), "directory changed during publication") {
+		t.Fatalf("write after receipt parent swap error = %v", err)
+	}
+	assertNoReceiptFiles(t, path, outside, parked)
+	body, err := os.ReadFile(sentinel)
+	if err != nil || string(body) != "outside-owned" {
+		t.Fatalf("outside sentinel changed: %q, %v", body, err)
+	}
+}
+
+func TestReproductionReceiptPreservesPreexistingStagingName(t *testing.T) {
+	t.Parallel()
+	root := t.TempDir()
+	path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	receipt := reproductionReceiptTestValue()
+	body, err := json.MarshalIndent(receipt, "", "  ")
+	if err != nil {
+		t.Fatal(err)
+	}
+	body = append(body, '\n')
+	temporaryPath := filepath.Join(
+		filepath.Dir(path),
+		reproductionReceiptTemporaryName(filepath.Base(path), body),
+	)
+	foreign := []byte("foreign staging file")
+	if err := os.WriteFile(temporaryPath, foreign, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := writeReproductionReceipt(root, path, receipt, 64*1024); err == nil {
+		t.Fatal("writeReproductionReceipt() accepted an occupied staging name")
+	}
+	current, err := os.ReadFile(temporaryPath)
+	if err != nil || string(current) != string(foreign) {
+		t.Fatalf("pre-existing staging file changed: %q, %v", current, err)
+	}
+	if _, err := os.Lstat(path); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("staging collision left a receipt: %v", err)
+	}
+}
+
+func reproductionReceiptTestValue() ReproductionReceipt {
+	return ReproductionReceipt{
+		Schema: 1, Status: "local-construction-pass", Scope: "local-pdf-tools-final-image-reproduction",
+		Authority: "NO_RESULT", BaseBuilds: []ReproductionBuild{}, FinalBuilds: []ReproductionBuild{},
+		Notices: []NoticeObservation{}, ManPages: []string{},
+	}
+}
+
+func assertNoReceiptFiles(t *testing.T, path string, directories ...string) {
+	t.Helper()
+	if _, err := os.Lstat(path); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("failed receipt publication left %s: %v", path, err)
+	}
+	for _, directory := range directories {
+		if _, err := os.Lstat(filepath.Join(directory, filepath.Base(path))); !errors.Is(err, os.ErrNotExist) {
+			t.Fatalf("failed receipt publication left a receipt in %s: %v", directory, err)
+		}
+		temporary, err := filepath.Glob(filepath.Join(directory, ".20w-pdf-tools-receipt-*.tmp"))
+		if err != nil || len(temporary) != 0 {
+			t.Fatalf("failed receipt publication left temporary files in %s: %v, %v", directory, temporary, err)
+		}
 	}
 }
 

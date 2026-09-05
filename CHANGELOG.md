@@ -218,7 +218,10 @@ the exact diff; this file records why the project changed.
   notices, Wolfi recipe and licence, and byte-identical apko SPDX document under one
   sorted `SHA256SUMS`. The atomic receipt binds that bundle and one final OCI
   archive while keeping publication, digest admission, legal conclusions and
-  scientific use blocked under `NO_RESULT`.
+  scientific use blocked under `NO_RESULT`. Receipt publication now pins the
+  validated real parent directory with Go's `os.Root`, publishes by hard link,
+  and removes only the inode it created. A parent replaced with an outside
+  symlink during the write cannot redirect receipt bytes to that target.
 - Decision 0055 and a source-bound Go contract now freeze the CLRS-Text
   controller shakedown to six named task families, a bounded 48-example
   construction plan and explicit fixed-four-endpoint semantics for segment
