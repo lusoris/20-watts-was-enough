@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/pdfrender"
@@ -14,6 +15,7 @@ const contractRelativePath = "tooling/pdf-tools/contract.json"
 
 type checkedAuthority struct {
 	root             string
+	rootInformation  os.FileInfo
 	contract         Contract
 	contractSHA256   string
 	lockSHA256       string
@@ -40,7 +42,7 @@ func Check(repositoryRoot string) (Result, error) {
 }
 
 func checkAuthority(repositoryRoot string) (checkedAuthority, error) {
-	root, err := cleanRoot(repositoryRoot)
+	root, rootInformation, err := cleanRoot(repositoryRoot)
 	if err != nil {
 		return checkedAuthority{}, err
 	}
@@ -86,6 +88,7 @@ func checkAuthority(repositoryRoot string) (checkedAuthority, error) {
 	}
 	return checkedAuthority{
 		root:             root,
+		rootInformation:  rootInformation,
 		contract:         contract,
 		contractSHA256:   rawDigest(contractBody),
 		lockSHA256:       contract.Apko.LockSHA256,

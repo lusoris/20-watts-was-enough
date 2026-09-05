@@ -11,7 +11,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
 	"runtime/debug"
 	"slices"
 	"strings"
@@ -488,8 +487,44 @@ func reproductionSPDXReceipt(identity spdxIdentity) *ReproductionSPDX {
 }
 
 func prepareReproductionReceiptPath(root, relative string) (string, error) {
+	repository, err := publicationRoot(root, nil)
+	if err != nil {
+		return "", err
+	}
+	return prepareReproductionReceiptPathAtRoot(repository, relative, nil)
+}
+
+func prepareReproductionReceiptPathAtRoot(
+	repository publicationRootIdentity,
+	relative string,
+	beforeComponent func(string) error,
+) (string, error) {
+	clean, err := validateReproductionReceiptRelative(relative)
+	if err != nil {
+		return "", err
+	}
+	parent, err := openPinnedPublicationDirectory(
+		repository, filepath.Dir(clean), true, beforeComponent,
+	)
+	if err != nil {
+		return "", err
+	}
+	defer parent.close()
+	name, err := publicationFilename(clean)
+	if err != nil {
+		return "", errors.New("PDF-tools reproduction receipt filename is invalid")
+	}
+	if _, err := parent.root.Lstat(name); err == nil {
+		return "", errors.New("PDF-tools reproduction receipt already exists")
+	} else if !errors.Is(err, os.ErrNotExist) {
+		return "", fmt.Errorf("inspect PDF-tools reproduction receipt: %w", err)
+	}
+	return filepath.Join(repository.path, clean), nil
+}
+
+func validateReproductionReceiptRelative(relative string) (string, error) {
 	if relative == "" || filepath.IsAbs(relative) || strings.Contains(relative, "\\") ||
-		containsConfusingPathControl(relative) {
+		containsConfusingPathControl(relative) || !validRelativePath(filepath.ToSlash(relative)) {
 		return "", errors.New("PDF-tools reproduction receipt must be a safe repository-relative JSON path")
 	}
 	clean := filepath.Clean(relative)
@@ -506,41 +541,7 @@ func prepareReproductionReceiptPath(root, relative string) (string, error) {
 	if !allowed {
 		return "", errors.New("PDF-tools reproduction receipt must be under publication or release evidence")
 	}
-	parent := filepath.Dir(clean)
-	if err := requireReproductionDirectory(root, parent); err != nil {
-		return "", err
-	}
-	destination := filepath.Join(root, clean)
-	if _, err := os.Lstat(destination); err == nil {
-		return "", errors.New("PDF-tools reproduction receipt already exists")
-	} else if !errors.Is(err, os.ErrNotExist) {
-		return "", fmt.Errorf("inspect PDF-tools reproduction receipt: %w", err)
-	}
-	return destination, nil
-}
-
-func requireReproductionDirectory(root, relative string) error {
-	current := root
-	for _, component := range strings.Split(filepath.Clean(relative), string(filepath.Separator)) {
-		if component == "." || component == "" {
-			continue
-		}
-		current = filepath.Join(current, component)
-		information, err := os.Lstat(current)
-		if errors.Is(err, os.ErrNotExist) {
-			if err := os.Mkdir(current, 0o755); err != nil {
-				return fmt.Errorf("create PDF-tools receipt directory: %w", err)
-			}
-			continue
-		}
-		if err != nil {
-			return fmt.Errorf("inspect PDF-tools receipt directory: %w", err)
-		}
-		if !information.IsDir() || information.Mode()&os.ModeSymlink != 0 {
-			return errors.New("PDF-tools receipt directory must contain only real directories")
-		}
-	}
-	return nil
+	return clean, nil
 }
 
 func writeReproductionReceipt(root, path string, receipt ReproductionReceipt, maximum int64) error {
@@ -553,6 +554,23 @@ func writeReproductionReceiptChecked(
 	receipt ReproductionReceipt,
 	maximum int64,
 	beforePublish func() error,
+) error {
+	repository, err := publicationRoot(root, nil)
+	if err != nil {
+		return err
+	}
+	return writeReproductionReceiptCheckedAtRoot(
+		repository, path, receipt, maximum, beforePublish, nil,
+	)
+}
+
+func writeReproductionReceiptCheckedAtRoot(
+	repository publicationRootIdentity,
+	path string,
+	receipt ReproductionReceipt,
+	maximum int64,
+	beforePublish func() error,
+	afterLink func(*pinnedPublicationDirectory, string) error,
 ) (returnError error) {
 	body, err := json.MarshalIndent(receipt, "", "  ")
 	if err != nil {
@@ -562,146 +580,106 @@ func writeReproductionReceiptChecked(
 	if maximum <= 0 || int64(len(body)) > maximum {
 		return errors.New("PDF-tools reproduction receipt exceeds its byte boundary")
 	}
-	repositoryRoot, err := cleanRoot(root)
-	if err != nil {
-		return err
-	}
 	path = filepath.Clean(path)
-	parent := filepath.Dir(path)
-	relative, err := filepath.Rel(repositoryRoot, path)
+	relative, err := filepath.Rel(repository.path, path)
 	if err != nil || relative == ".." || strings.HasPrefix(relative, ".."+string(filepath.Separator)) {
 		return errors.New("PDF-tools reproduction receipt escapes the repository root")
 	}
-	if err := rejectLinkedPath(repositoryRoot, parent, "PDF-tools reproduction receipt directory"); err != nil {
+	cleanRelative, err := validateReproductionReceiptRelative(filepath.ToSlash(relative))
+	if err != nil || cleanRelative != relative {
+		return errors.New("PDF-tools reproduction receipt path is not an admitted repository-relative JSON path")
+	}
+	parent, err := openPinnedPublicationDirectory(repository, filepath.Dir(relative), false, nil)
+	if err != nil {
 		return err
 	}
-	namedParentInformation, err := os.Lstat(parent)
-	if err != nil || !namedParentInformation.IsDir() || namedParentInformation.Mode()&os.ModeSymlink != 0 {
-		return errors.New("PDF-tools reproduction receipt directory must be a real directory")
-	}
-	parentRoot, err := os.OpenRoot(parent)
+	defer func() { returnError = errors.Join(returnError, parent.close()) }()
+	name, err := publicationFilename(path)
 	if err != nil {
-		return fmt.Errorf("open PDF-tools reproduction receipt directory: %w", err)
+		return errors.New("PDF-tools reproduction receipt filename is invalid")
 	}
-	defer parentRoot.Close()
-	parentInformation, err := parentRoot.Stat(".")
-	if err != nil || !parentInformation.IsDir() || !os.SameFile(namedParentInformation, parentInformation) {
-		return errors.New("PDF-tools reproduction receipt directory changed while it was opened")
+	if _, err := parent.root.Lstat(name); err == nil {
+		return errors.New("PDF-tools reproduction receipt already exists")
+	} else if !errors.Is(err, os.ErrNotExist) {
+		return fmt.Errorf("inspect PDF-tools reproduction receipt before publication: %w", err)
 	}
-	name := filepath.Base(path)
-	temporaryName := reproductionReceiptTemporaryName(name, body)
-	temporary, err := parentRoot.OpenFile(temporaryName, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o600)
+	temporary, temporaryInformation, err := createUnnamedPublicationFile(parent, "PDF-tools reproduction receipt")
 	if err != nil {
-		return fmt.Errorf("create temporary PDF-tools reproduction receipt: %w", err)
+		return err
 	}
-	temporaryInformation, err := temporary.Stat()
-	if err != nil || !temporaryInformation.Mode().IsRegular() {
-		_ = temporary.Close()
-		return errors.New("temporary PDF-tools reproduction receipt is not a regular file")
-	}
-	published := false
-	closed := false
 	defer func() {
-		if !closed {
-			if closeError := temporary.Close(); closeError != nil {
-				returnError = errors.Join(returnError, fmt.Errorf("close temporary PDF-tools reproduction receipt: %w", closeError))
-			}
-		}
-		if cleanupError := removeOwnedReceiptFile(parentRoot, temporaryName, temporaryInformation); cleanupError != nil {
-			returnError = errors.Join(returnError, fmt.Errorf("remove temporary PDF-tools reproduction receipt: %w", cleanupError))
-		}
-		if returnError != nil && published {
-			if cleanupError := removeOwnedReceiptFile(parentRoot, name, temporaryInformation); cleanupError != nil {
-				returnError = errors.Join(returnError, fmt.Errorf("remove failed PDF-tools reproduction receipt: %w", cleanupError))
-			}
+		if closeError := temporary.Close(); closeError != nil {
+			returnError = errors.Join(returnError, fmt.Errorf("close unnamed PDF-tools reproduction receipt: %w", closeError))
 		}
 	}()
 	if _, err := temporary.Write(body); err != nil {
-		return fmt.Errorf("write temporary PDF-tools reproduction receipt: %w", err)
+		return fmt.Errorf("write unnamed PDF-tools reproduction receipt: %w", err)
 	}
 	if err := temporary.Chmod(0o644); err != nil {
-		return fmt.Errorf("normalize temporary PDF-tools reproduction receipt: %w", err)
+		return fmt.Errorf("normalise unnamed PDF-tools reproduction receipt: %w", err)
 	}
 	if err := temporary.Sync(); err != nil {
-		return fmt.Errorf("sync temporary PDF-tools reproduction receipt: %w", err)
+		return fmt.Errorf("sync unnamed PDF-tools reproduction receipt: %w", err)
 	}
-	if err := temporary.Close(); err != nil {
-		return fmt.Errorf("close temporary PDF-tools reproduction receipt: %w", err)
+	writtenInformation, err := temporary.Stat()
+	if err != nil || !writtenInformation.Mode().IsRegular() || writtenInformation.Mode().Perm() != 0o644 ||
+		!os.SameFile(temporaryInformation, writtenInformation) || writtenInformation.Size() != int64(len(body)) {
+		return errors.New("unnamed PDF-tools reproduction receipt changed before publication")
 	}
-	closed = true
 	if beforePublish != nil {
 		if err := beforePublish(); err != nil {
 			return fmt.Errorf("verify PDF-tools candidate outputs before receipt publication: %w", err)
 		}
 	}
-	if err := parentRoot.Link(temporaryName, name); err != nil {
+	if err := parent.verify(); err != nil {
+		return errors.New("PDF-tools reproduction receipt directory changed before publication")
+	}
+	if err := linkUnnamedPublicationFile(temporary, parent.descriptor, name); err != nil {
 		return fmt.Errorf("atomically publish new PDF-tools reproduction receipt: %w", err)
 	}
-	published = true
-	temporaryInfo, temporaryError := parentRoot.Lstat(temporaryName)
-	finalInfo, finalError := parentRoot.Lstat(name)
-	if temporaryError != nil || finalError != nil || !finalInfo.Mode().IsRegular() ||
-		finalInfo.Mode()&os.ModeSymlink != 0 || !os.SameFile(temporaryInformation, temporaryInfo) ||
-		!os.SameFile(temporaryInformation, finalInfo) || finalInfo.Size() != int64(len(body)) {
+	if afterLink != nil {
+		if err := afterLink(parent, name); err != nil {
+			return fmt.Errorf("validate PDF-tools reproduction receipt after atomic publication: %w", err)
+		}
+	}
+	finalInfo, finalError := parent.root.Lstat(name)
+	if finalError != nil || !finalInfo.Mode().IsRegular() || finalInfo.Mode()&os.ModeSymlink != 0 ||
+		!os.SameFile(writtenInformation, finalInfo) || finalInfo.Size() != int64(len(body)) {
 		return errors.New("published PDF-tools reproduction receipt changed during atomic placement")
 	}
-	if err := removeOwnedReceiptFile(parentRoot, temporaryName, temporaryInformation); err != nil {
-		return fmt.Errorf("remove temporary PDF-tools reproduction receipt link: %w", err)
+	if err := verifyPublishedReceiptBytes(parent.root, name, finalInfo, body); err != nil {
+		return err
 	}
-	if runtime.GOOS != "windows" {
-		directory, err := parentRoot.Open(".")
-		if err != nil {
-			return fmt.Errorf("open PDF-tools receipt directory for sync: %w", err)
-		}
-		directoryInformation, informationError := directory.Stat()
-		if informationError != nil || !os.SameFile(parentInformation, directoryInformation) {
-			_ = directory.Close()
-			return errors.New("PDF-tools reproduction receipt directory changed before sync")
-		}
-		if err := directory.Sync(); err != nil {
-			_ = directory.Close()
-			return fmt.Errorf("sync PDF-tools receipt directory: %w", err)
-		}
-		if err := directory.Close(); err != nil {
-			return fmt.Errorf("close PDF-tools receipt directory: %w", err)
-		}
+	if err := parent.sync(); err != nil {
+		return fmt.Errorf("sync published PDF-tools reproduction receipt: %w", err)
 	}
-	if err := rejectLinkedPath(repositoryRoot, parent, "PDF-tools reproduction receipt directory"); err != nil {
-		return errors.New("PDF-tools reproduction receipt directory changed during publication")
-	}
-	currentParentInformation, err := os.Lstat(parent)
-	if err != nil || !currentParentInformation.IsDir() ||
-		!os.SameFile(parentInformation, currentParentInformation) {
-		return errors.New("PDF-tools reproduction receipt directory changed during publication")
-	}
-	currentInformation, err := os.Lstat(path)
+	currentInformation, err := parent.root.Lstat(name)
 	if err != nil || !currentInformation.Mode().IsRegular() || currentInformation.Mode()&os.ModeSymlink != 0 ||
 		!os.SameFile(finalInfo, currentInformation) || currentInformation.Size() != int64(len(body)) {
 		return errors.New("published PDF-tools reproduction receipt path changed during confirmation")
 	}
-	published = false
 	return nil
 }
 
-func reproductionReceiptTemporaryName(name string, body []byte) string {
-	temporaryIdentity := make([]byte, 0, len(name)+1+len(body))
-	temporaryIdentity = append(temporaryIdentity, name...)
-	temporaryIdentity = append(temporaryIdentity, 0)
-	temporaryIdentity = append(temporaryIdentity, body...)
-	return ".20w-pdf-tools-receipt-" + rawDigest(temporaryIdentity) + ".tmp"
-}
-
-func removeOwnedReceiptFile(root *os.Root, name string, information os.FileInfo) error {
-	current, err := root.Lstat(name)
-	if errors.Is(err, os.ErrNotExist) {
-		return nil
-	}
+func verifyPublishedReceiptBytes(root *os.Root, name string, expected os.FileInfo, body []byte) error {
+	file, err := root.Open(name)
 	if err != nil {
-		return err
+		return fmt.Errorf("open published PDF-tools reproduction receipt: %w", err)
 	}
-	if information == nil || !current.Mode().IsRegular() || current.Mode()&os.ModeSymlink != 0 ||
-		!os.SameFile(information, current) {
-		return errors.New("PDF-tools reproduction receipt path no longer refers to the owned file")
+	defer file.Close()
+	opened, err := file.Stat()
+	if err != nil || !os.SameFile(expected, opened) || opened.Size() != int64(len(body)) {
+		return errors.New("published PDF-tools reproduction receipt changed while it was opened")
 	}
-	return root.Remove(name)
+	hasher := sha256.New()
+	written, copyError := io.Copy(hasher, io.LimitReader(file, int64(len(body))+1))
+	if copyError != nil || written != int64(len(body)) ||
+		hex.EncodeToString(hasher.Sum(nil)) != rawDigest(body) {
+		return errors.New("published PDF-tools reproduction receipt bytes changed")
+	}
+	current, err := root.Lstat(name)
+	if err != nil || !os.SameFile(opened, current) {
+		return errors.New("published PDF-tools reproduction receipt path changed while it was read")
+	}
+	return nil
 }

@@ -2,7 +2,6 @@ package pdftools
 
 import (
 	"context"
-	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
@@ -10,7 +9,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"runtime"
 	"slices"
 	"strings"
 )
@@ -29,17 +27,16 @@ type candidateOutputPath struct {
 }
 
 type candidateOutputPlan struct {
+	repository   publicationRootIdentity
 	finalArchive candidateOutputPath
 	spdx         candidateOutputPath
 	sourceBundle candidateOutputPath
 }
 
 type stagedCandidateArtifact struct {
-	parentRoot           *os.Root
-	parentPath           string
-	parentInformation    os.FileInfo
-	temporaryName        string
-	temporaryInformation os.FileInfo
+	parent               *pinnedPublicationDirectory
+	unnamed              *os.File
+	unnamedInformation   os.FileInfo
 	destination          candidateOutputPath
 	destinationName      string
 	identity             ReproductionArtifact
@@ -64,6 +61,10 @@ func prepareCandidateOutputPlan(
 	values := []string{options.FinalArchivePath, options.SPDXPath, options.SourceBundlePath}
 	if slices.Contains(values, "") {
 		return nil, errors.New("PDF-tools candidate output paths are an all-or-none set")
+	}
+	repository, err := publicationRoot(authority.root, authority.rootInformation)
+	if err != nil {
+		return nil, err
 	}
 	finalArchive, err := prepareCandidateOutputPath(authority.root, options.FinalArchivePath, ".tar", "final OCI archive")
 	if err != nil {
@@ -90,11 +91,12 @@ func prepareCandidateOutputPlan(
 	}
 	outputs := []candidateOutputPath{finalArchive, spdx, bundle}
 	for _, output := range outputs {
-		if err := prepareCandidateOutputDirectory(authority.root, output); err != nil {
+		if err := prepareCandidateOutputDirectory(repository, output); err != nil {
 			return nil, err
 		}
 	}
 	return &candidateOutputPlan{
+		repository:   repository,
 		finalArchive: finalArchive, spdx: spdx, sourceBundle: bundle,
 	}, nil
 }
@@ -118,12 +120,17 @@ func prepareCandidateOutputPath(root, relative, suffix, label string) (candidate
 	return candidateOutputPath{relative: filepath.ToSlash(clean), absolute: destination}, nil
 }
 
-func prepareCandidateOutputDirectory(root string, output candidateOutputPath) error {
-	if err := requireReproductionDirectory(root, filepath.Dir(output.relative)); err != nil {
+func prepareCandidateOutputDirectory(repository publicationRootIdentity, output candidateOutputPath) error {
+	parent, err := openPinnedPublicationDirectory(repository, filepath.Dir(output.relative), true, nil)
+	if err != nil {
 		return err
 	}
-	destination := output.absolute
-	if _, err := os.Lstat(destination); err == nil {
+	defer parent.close()
+	name, err := publicationFilename(output.absolute)
+	if err != nil || filepath.Base(output.relative) != name {
+		return errors.New("PDF-tools candidate output filename is invalid")
+	}
+	if _, err := parent.root.Lstat(name); err == nil {
 		return fmt.Errorf("PDF-tools candidate output %s already exists", output.relative)
 	} else if !errors.Is(err, os.ErrNotExist) {
 		return fmt.Errorf("inspect PDF-tools candidate output %s: %w", output.relative, err)
@@ -153,6 +160,12 @@ func stageCandidateOutputs(
 	if !slices.Equal(bases[0].SPDX.canonical, bases[1].SPDX.canonical) {
 		return nil, errors.New("candidate preparation requires byte-identical canonical apko SPDX outputs")
 	}
+	repository, err := publicationRoot(authority.root, authority.rootInformation)
+	if err != nil || plan.repository.path != repository.path ||
+		plan.repository.information == nil || repository.information == nil ||
+		!os.SameFile(plan.repository.information, repository.information) {
+		return nil, errors.New("candidate output plan differs from the checked repository root")
+	}
 	entries, err := candidateSourceEntries(ctx, authority, bases[0].SPDX, fetch)
 	if err != nil {
 		return nil, err
@@ -167,7 +180,7 @@ func stageCandidateOutputs(
 		}
 	}()
 	finalArtifact, err := stageCandidateRegular(
-		authority.root, finals[0].Archive, plan.finalArchive, authority.contract.Limits.FinalArchiveBytes,
+		plan.repository, finals[0].Archive, plan.finalArchive, authority.contract.Limits.FinalArchiveBytes,
 		finals[0].Image.Identity.ArchiveSHA256,
 	)
 	if err != nil {
@@ -175,14 +188,14 @@ func stageCandidateOutputs(
 	}
 	staged.artifacts = append(staged.artifacts, finalArtifact)
 	spdxArtifact, err := stageCandidateBytes(
-		authority.root, bases[0].SPDX.canonical, plan.spdx, authority.contract.Limits.SPDXBytes,
+		plan.repository, bases[0].SPDX.canonical, plan.spdx, authority.contract.Limits.SPDXBytes,
 		bases[0].SPDX.CanonicalSHA256,
 	)
 	if err != nil {
 		return nil, err
 	}
 	staged.artifacts = append(staged.artifacts, spdxArtifact)
-	bundleArtifact, bundle, err := stageCandidateBundle(authority, plan.sourceBundle, entries)
+	bundleArtifact, bundle, err := stageCandidateBundle(authority, plan.repository, plan.sourceBundle, entries)
 	if err != nil {
 		return nil, err
 	}
@@ -192,7 +205,7 @@ func stageCandidateOutputs(
 }
 
 func stageCandidateRegular(
-	root string,
+	repository publicationRootIdentity,
 	source string,
 	destination candidateOutputPath,
 	maximum int64,
@@ -203,13 +216,12 @@ func stageCandidateRegular(
 		return nil, err
 	}
 	defer input.Close()
-	staged, output, err := newStagedCandidateArtifact(root, destination)
+	staged, output, err := newStagedCandidateArtifact(repository, destination)
 	if err != nil {
 		return nil, err
 	}
 	defer func() {
 		if returnError != nil {
-			_ = output.Close()
 			returnError = errors.Join(returnError, staged.cleanup())
 		}
 	}()
@@ -228,7 +240,7 @@ func stageCandidateRegular(
 }
 
 func stageCandidateBytes(
-	root string,
+	repository publicationRootIdentity,
 	body []byte,
 	destination candidateOutputPath,
 	maximum int64,
@@ -237,13 +249,12 @@ func stageCandidateBytes(
 	if len(body) == 0 || int64(len(body)) > maximum || digestRaw(body) != expectedSHA256 {
 		return nil, errors.New("retained candidate bytes differ from their authority")
 	}
-	staged, output, err := newStagedCandidateArtifact(root, destination)
+	staged, output, err := newStagedCandidateArtifact(repository, destination)
 	if err != nil {
 		return nil, err
 	}
 	defer func() {
 		if returnError != nil {
-			_ = output.Close()
 			returnError = errors.Join(returnError, staged.cleanup())
 		}
 	}()
@@ -258,16 +269,16 @@ func stageCandidateBytes(
 
 func stageCandidateBundle(
 	authority checkedAuthority,
+	repository publicationRootIdentity,
 	destination candidateOutputPath,
 	entries []sourceBundleEntry,
 ) (_ *stagedCandidateArtifact, _ sourceBundleIdentity, returnError error) {
-	staged, output, err := newStagedCandidateArtifact(authority.root, destination)
+	staged, output, err := newStagedCandidateArtifact(repository, destination)
 	if err != nil {
 		return nil, sourceBundleIdentity{}, err
 	}
 	defer func() {
 		if returnError != nil {
-			_ = output.Close()
 			returnError = errors.Join(returnError, staged.cleanup())
 		}
 	}()
@@ -292,71 +303,39 @@ func stageCandidateBundle(
 	return staged, identity, nil
 }
 
-const candidateStagingAttempts = 8
-
 func newStagedCandidateArtifact(
-	root string,
+	repository publicationRootIdentity,
 	destination candidateOutputPath,
 ) (_ *stagedCandidateArtifact, _ *os.File, returnError error) {
-	parentPath := filepath.Dir(destination.absolute)
-	if err := rejectLinkedPath(root, parentPath, "candidate output directory"); err != nil {
-		return nil, nil, err
+	if filepath.Clean(destination.absolute) != filepath.Join(repository.path, filepath.FromSlash(destination.relative)) {
+		return nil, nil, errors.New("candidate output path differs from its checked repository identity")
 	}
-	namedParentInformation, err := os.Lstat(parentPath)
-	if err != nil || !namedParentInformation.IsDir() || namedParentInformation.Mode()&os.ModeSymlink != 0 {
-		return nil, nil, errors.New("candidate output directory must be a real directory")
-	}
-	parentRoot, err := os.OpenRoot(parentPath)
+	parent, err := openPinnedPublicationDirectory(repository, filepath.Dir(destination.relative), false, nil)
 	if err != nil {
-		return nil, nil, fmt.Errorf("open candidate output directory: %w", err)
+		return nil, nil, err
 	}
 	defer func() {
 		if returnError != nil {
-			returnError = errors.Join(returnError, parentRoot.Close())
+			returnError = errors.Join(returnError, parent.close())
 		}
 	}()
-	parentInformation, err := parentRoot.Stat(".")
-	if err != nil || !parentInformation.IsDir() || !os.SameFile(namedParentInformation, parentInformation) {
-		return nil, nil, errors.New("candidate output directory changed while it was opened")
-	}
-	destinationName := filepath.Base(destination.absolute)
-	if destinationName == "." || destinationName == string(filepath.Separator) ||
-		filepath.Base(destination.relative) != destinationName {
+	destinationName, err := publicationFilename(destination.absolute)
+	if err != nil || filepath.Base(destination.relative) != destinationName {
 		return nil, nil, errors.New("candidate output filename is invalid")
 	}
-	if _, err := parentRoot.Lstat(destinationName); err == nil {
+	if _, err := parent.root.Lstat(destinationName); err == nil {
 		return nil, nil, errors.New("candidate output appeared before staging")
 	} else if !errors.Is(err, os.ErrNotExist) {
 		return nil, nil, fmt.Errorf("inspect candidate output before staging: %w", err)
 	}
-	for attempt := 0; attempt < candidateStagingAttempts; attempt++ {
-		token := make([]byte, 16)
-		if _, err := rand.Read(token); err != nil {
-			return nil, nil, fmt.Errorf("generate candidate output staging name: %w", err)
-		}
-		temporaryName := ".20w-pdf-tools-candidate-" + hex.EncodeToString(token) + ".tmp"
-		file, err := parentRoot.OpenFile(temporaryName, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o600)
-		if errors.Is(err, os.ErrExist) {
-			continue
-		}
-		if err != nil {
-			return nil, nil, fmt.Errorf("create candidate output staging file: %w", err)
-		}
-		information, err := file.Stat()
-		if err != nil || !information.Mode().IsRegular() || information.Mode()&os.ModeSymlink != 0 {
-			_ = file.Close()
-			if information != nil {
-				_ = removeOwnedCandidateFile(parentRoot, temporaryName, information)
-			}
-			return nil, nil, errors.New("candidate output staging file is not a regular file")
-		}
-		return &stagedCandidateArtifact{
-			parentRoot: parentRoot, parentPath: parentPath, parentInformation: parentInformation,
-			temporaryName: temporaryName, temporaryInformation: information,
-			destination: destination, destinationName: destinationName,
-		}, file, nil
+	file, information, err := createUnnamedPublicationFile(parent, "candidate output")
+	if err != nil {
+		return nil, nil, err
 	}
-	return nil, nil, errors.New("candidate output staging-name attempts were exhausted")
+	return &stagedCandidateArtifact{
+		parent: parent, unnamed: file, unnamedInformation: information,
+		destination: destination, destinationName: destinationName,
+	}, file, nil
 }
 
 func finishStagedCandidateArtifact(
@@ -365,7 +344,8 @@ func finishStagedCandidateArtifact(
 	size int64,
 	sha256 string,
 ) error {
-	if staged == nil || staged.parentRoot == nil || staged.temporaryName == "" ||
+	if staged == nil || staged.parent == nil || staged.unnamed == nil || staged.unnamed != file ||
+		staged.unnamedInformation == nil ||
 		size <= 0 || !rawDigestPattern.MatchString(sha256) {
 		return errors.New("candidate output identity is invalid")
 	}
@@ -375,72 +355,72 @@ func finishStagedCandidateArtifact(
 	if err := file.Sync(); err != nil {
 		return fmt.Errorf("sync candidate output staging file: %w", err)
 	}
-	if err := file.Close(); err != nil {
-		return fmt.Errorf("close candidate output staging file: %w", err)
-	}
-	information, err := staged.parentRoot.Lstat(staged.temporaryName)
-	if err != nil || !information.Mode().IsRegular() || information.Mode()&os.ModeSymlink != 0 ||
-		!os.SameFile(staged.temporaryInformation, information) || information.Size() != size {
+	information, err := file.Stat()
+	if err != nil || !information.Mode().IsRegular() || information.Mode().Perm() != 0o644 ||
+		!os.SameFile(staged.unnamedInformation, information) || information.Size() != size {
 		return errors.New("candidate output staging file changed before local placement")
 	}
+	staged.unnamedInformation = information
 	staged.identity = ReproductionArtifact{Path: staged.destination.relative, SHA256: sha256, Bytes: size}
 	return nil
 }
 
 func (staged *stagedCandidate) install(root string) error {
-	return staged.installWithPostLinkHook(root, nil)
+	return staged.installWithPublicationHooks(root, nil, nil)
 }
 
 func (staged *stagedCandidate) installWithPostLinkHook(
 	root string,
 	afterLink func(*stagedCandidateArtifact) error,
 ) (returnError error) {
-	installed := make([]*stagedCandidateArtifact, 0, len(staged.artifacts))
-	defer func() {
-		if returnError != nil {
-			returnError = errors.Join(returnError, removeInstalledCandidateArtifacts(installed))
-		}
-	}()
+	return staged.installWithPublicationHooks(root, nil, afterLink)
+}
+
+func (staged *stagedCandidate) installWithPublicationHooks(
+	root string,
+	beforeLink func(*stagedCandidateArtifact) error,
+	afterLink func(*stagedCandidateArtifact) error,
+) (returnError error) {
 	for _, artifact := range staged.artifacts {
 		if err := verifyCandidateOutputParent(root, artifact); err != nil {
 			return err
 		}
-		if _, err := artifact.parentRoot.Lstat(artifact.destinationName); !errors.Is(err, os.ErrNotExist) {
+		if _, err := artifact.parent.root.Lstat(artifact.destinationName); err == nil {
 			return errors.New("candidate output appeared before atomic placement")
+		} else if !errors.Is(err, os.ErrNotExist) {
+			return fmt.Errorf("inspect candidate output before atomic placement: %w", err)
 		}
-		if err := artifact.parentRoot.Link(artifact.temporaryName, artifact.destinationName); err != nil {
+		if beforeLink != nil {
+			if err := beforeLink(artifact); err != nil {
+				return fmt.Errorf("candidate output pre-link test boundary: %w", err)
+			}
+		}
+		if err := linkUnnamedPublicationFile(
+			artifact.unnamed, artifact.parent.descriptor, artifact.destinationName,
+		); err != nil {
 			return fmt.Errorf("atomically place candidate output: %w", err)
 		}
-		// Link publishes the same owned inode as the staging name. Record that
-		// identity before any fallible validation so rollback can remove this
-		// exact link while still refusing an attacker-provided replacement.
-		artifact.publishedInformation = artifact.temporaryInformation
-		installed = append(installed, artifact)
+		artifact.publishedInformation = artifact.unnamedInformation
 		if afterLink != nil {
 			if err := afterLink(artifact); err != nil {
 				return fmt.Errorf("validate candidate output after atomic placement: %w", err)
 			}
 		}
-		temporaryInfo, temporaryError := artifact.parentRoot.Lstat(artifact.temporaryName)
-		finalInfo, finalError := artifact.parentRoot.Lstat(artifact.destinationName)
-		if temporaryError != nil || finalError != nil || !finalInfo.Mode().IsRegular() ||
-			finalInfo.Mode()&os.ModeSymlink != 0 || !os.SameFile(artifact.temporaryInformation, temporaryInfo) ||
-			!os.SameFile(temporaryInfo, finalInfo) ||
+		unnamedInfo, unnamedError := artifact.unnamed.Stat()
+		finalInfo, finalError := artifact.parent.root.Lstat(artifact.destinationName)
+		if unnamedError != nil || finalError != nil || !finalInfo.Mode().IsRegular() ||
+			finalInfo.Mode()&os.ModeSymlink != 0 || !os.SameFile(artifact.unnamedInformation, unnamedInfo) ||
+			!os.SameFile(unnamedInfo, finalInfo) ||
 			finalInfo.Size() != artifact.identity.Bytes {
 			return errors.New("candidate output changed during atomic placement")
 		}
 		artifact.publishedInformation = finalInfo
-	}
-	for _, artifact := range staged.artifacts {
-		if err := removeOwnedCandidateFile(
-			artifact.parentRoot, artifact.temporaryName, artifact.temporaryInformation,
-		); err != nil {
-			return fmt.Errorf("remove candidate output staging link: %w", err)
+		if err := verifyInstalledCandidateArtifact(root, artifact); err != nil {
+			return err
 		}
-		artifact.temporaryName = ""
-	}
-	if err := syncCandidateOutputDirectories(staged.artifacts); err != nil {
-		return err
+		if err := artifact.parent.sync(); err != nil {
+			return fmt.Errorf("sync atomically placed candidate output: %w", err)
+		}
 	}
 	return nil
 }
@@ -470,7 +450,7 @@ func (staged *stagedCandidate) verifyInstalled(root string, receipt *Reproductio
 		if err := verifyCandidateOutputParent(root, artifact); err != nil {
 			return err
 		}
-		current, err := artifact.parentRoot.Lstat(artifact.destinationName)
+		current, err := artifact.parent.root.Lstat(artifact.destinationName)
 		if err != nil || !sameCandidatePublication(current, artifact.publishedInformation, artifact.identity.Bytes) {
 			return fmt.Errorf("%s changed before receipt publication", label)
 		}
@@ -480,7 +460,7 @@ func (staged *stagedCandidate) verifyInstalled(root string, receipt *Reproductio
 
 func verifyInstalledCandidateArtifact(root string, artifact *stagedCandidateArtifact) error {
 	label := "installed PDF-tools candidate output " + artifact.identity.Path
-	if artifact.parentRoot == nil || artifact.destinationName == "" || artifact.publishedInformation == nil ||
+	if artifact.parent == nil || artifact.parent.root == nil || artifact.destinationName == "" || artifact.publishedInformation == nil ||
 		artifact.identity.Bytes <= 0 ||
 		!rawDigestPattern.MatchString(artifact.identity.SHA256) {
 		return fmt.Errorf("%s has no stable publication identity", label)
@@ -488,11 +468,11 @@ func verifyInstalledCandidateArtifact(root string, artifact *stagedCandidateArti
 	if err := verifyCandidateOutputParent(root, artifact); err != nil {
 		return err
 	}
-	current, err := artifact.parentRoot.Lstat(artifact.destinationName)
+	current, err := artifact.parent.root.Lstat(artifact.destinationName)
 	if err != nil || !sameCandidatePublication(current, artifact.publishedInformation, artifact.identity.Bytes) {
 		return fmt.Errorf("%s changed after atomic placement", label)
 	}
-	file, err := artifact.parentRoot.Open(artifact.destinationName)
+	file, err := artifact.parent.root.Open(artifact.destinationName)
 	if err != nil {
 		return fmt.Errorf("open %s for receipt verification: %w", label, err)
 	}
@@ -515,7 +495,7 @@ func verifyInstalledCandidateArtifact(root string, artifact *stagedCandidateArti
 		_ = file.Close()
 		return fmt.Errorf("%s changed while it was read", label)
 	}
-	current, err = artifact.parentRoot.Lstat(artifact.destinationName)
+	current, err = artifact.parent.root.Lstat(artifact.destinationName)
 	if err != nil || !sameCandidatePublication(current, artifact.publishedInformation, artifact.identity.Bytes) ||
 		!os.SameFile(opened, current) {
 		_ = file.Close()
@@ -550,15 +530,13 @@ func (artifact *stagedCandidateArtifact) cleanup() error {
 		return nil
 	}
 	var result error
-	if artifact.temporaryName != "" {
-		result = errors.Join(result, removeOwnedCandidateFile(
-			artifact.parentRoot, artifact.temporaryName, artifact.temporaryInformation,
-		))
-		artifact.temporaryName = ""
+	if artifact.unnamed != nil {
+		result = errors.Join(result, artifact.unnamed.Close())
+		artifact.unnamed = nil
 	}
-	if artifact.parentRoot != nil {
-		result = errors.Join(result, artifact.parentRoot.Close())
-		artifact.parentRoot = nil
+	if artifact.parent != nil {
+		result = errors.Join(result, artifact.parent.close())
+		artifact.parent = nil
 	}
 	return result
 }
@@ -581,92 +559,11 @@ func (staged *stagedCandidate) receipt(authority checkedAuthority) *Reproduction
 	}
 }
 
-func removeInstalledCandidateArtifacts(artifacts []*stagedCandidateArtifact) error {
-	var result error
-	for _, artifact := range artifacts {
-		if artifact == nil || artifact.parentRoot == nil {
-			result = errors.Join(result, errors.New("cannot safely remove candidate output without its pinned parent"))
-			continue
-		}
-		current, err := artifact.parentRoot.Lstat(artifact.destinationName)
-		if errors.Is(err, os.ErrNotExist) {
-			continue
-		}
-		if err != nil || artifact.publishedInformation == nil || !current.Mode().IsRegular() ||
-			!os.SameFile(current, artifact.publishedInformation) {
-			result = errors.Join(result, errors.New("cannot safely remove changed candidate output"))
-			continue
-		}
-		if err := artifact.parentRoot.Remove(artifact.destinationName); err != nil {
-			result = errors.Join(result, err)
-		}
-	}
-	return result
-}
-
-func syncCandidateOutputDirectories(artifacts []*stagedCandidateArtifact) error {
-	if runtime.GOOS == "windows" {
-		return nil
-	}
-	for _, artifact := range artifacts {
-		if artifact == nil || artifact.parentRoot == nil {
-			return errors.New("candidate output has no pinned directory for sync")
-		}
-		directory, err := artifact.parentRoot.Open(".")
-		if err != nil {
-			return fmt.Errorf("open candidate output directory for sync: %w", err)
-		}
-		information, informationError := directory.Stat()
-		if informationError != nil || !os.SameFile(artifact.parentInformation, information) {
-			_ = directory.Close()
-			return errors.New("candidate output directory changed before sync")
-		}
-		if err := directory.Sync(); err != nil {
-			_ = directory.Close()
-			return fmt.Errorf("sync candidate output directory: %w", err)
-		}
-		if err := directory.Close(); err != nil {
-			return fmt.Errorf("close candidate output directory: %w", err)
-		}
-	}
-	return nil
-}
-
 func verifyCandidateOutputParent(repositoryRoot string, artifact *stagedCandidateArtifact) error {
-	if artifact == nil || artifact.parentRoot == nil || artifact.parentInformation == nil ||
-		artifact.parentPath == "" || filepath.Dir(artifact.destination.absolute) != artifact.parentPath {
+	if artifact == nil || artifact.parent == nil || artifact.parent.repository.path != repositoryRoot ||
+		filepath.Dir(artifact.destination.relative) != artifact.parent.relative ||
+		filepath.Dir(artifact.destination.absolute) != filepath.Join(repositoryRoot, artifact.parent.relative) {
 		return errors.New("candidate output has no stable pinned directory")
 	}
-	if err := rejectLinkedPath(repositoryRoot, artifact.parentPath, "candidate output directory"); err != nil {
-		return err
-	}
-	named, err := os.Lstat(artifact.parentPath)
-	if err != nil || !named.IsDir() || named.Mode()&os.ModeSymlink != 0 ||
-		!os.SameFile(artifact.parentInformation, named) {
-		return errors.New("candidate output directory changed after it was pinned")
-	}
-	pinned, err := artifact.parentRoot.Stat(".")
-	if err != nil || !pinned.IsDir() || !os.SameFile(artifact.parentInformation, pinned) ||
-		!os.SameFile(named, pinned) {
-		return errors.New("pinned candidate output directory changed")
-	}
-	return nil
-}
-
-func removeOwnedCandidateFile(root *os.Root, name string, information os.FileInfo) error {
-	if root == nil || name == "" || filepath.Base(name) != name || information == nil {
-		return errors.New("candidate output cleanup has no stable owned file")
-	}
-	current, err := root.Lstat(name)
-	if errors.Is(err, os.ErrNotExist) {
-		return nil
-	}
-	if err != nil {
-		return err
-	}
-	if !current.Mode().IsRegular() || current.Mode()&os.ModeSymlink != 0 ||
-		!os.SameFile(information, current) {
-		return errors.New("candidate output path no longer refers to the owned file")
-	}
-	return root.Remove(name)
+	return artifact.parent.verify()
 }

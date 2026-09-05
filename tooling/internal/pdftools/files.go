@@ -17,19 +17,19 @@ import (
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/strictjson"
 )
 
-func cleanRoot(value string) (string, error) {
+func cleanRoot(value string) (string, os.FileInfo, error) {
 	if value == "" {
-		return "", errors.New("repository root is required")
+		return "", nil, errors.New("repository root is required")
 	}
 	root, err := filepath.Abs(value)
 	if err != nil {
-		return "", fmt.Errorf("resolve repository root: %w", err)
+		return "", nil, fmt.Errorf("resolve repository root: %w", err)
 	}
 	info, err := os.Lstat(root)
 	if err != nil || !info.IsDir() || info.Mode()&os.ModeSymlink != 0 {
-		return "", errors.New("repository root must be a real non-symlink directory")
+		return "", nil, errors.New("repository root must be a real non-symlink directory")
 	}
-	return filepath.Clean(root), nil
+	return filepath.Clean(root), info, nil
 }
 
 func readRelative(root, relative, label string, maximum int64) ([]byte, error) {

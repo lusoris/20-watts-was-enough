@@ -37,6 +37,14 @@ the exact diff; this file records why the project changed.
   release lane rather than expanding to full CI plus renderer reproducibility.
   Production PDF finalisation, the manual Poppler audit, unknown scripts and
   selector changes remain fail-closed.
+- Decision 0073 makes PDF-tools candidate and receipt publication traverse
+  output directories through pinned Linux `amd64` descriptors and stage bytes
+  in unnamed `O_TMPFILE` inodes. Atomic `linkat` publication never replaces an
+  existing name, and cleanup now closes descriptors without unlinking a path
+  that a concurrent writer could replace. A later failure retains any exact
+  output already linked for inspection; an incomplete candidate set receives
+  no receipt, and all retained state remains `NO_RESULT`. Unsupported platforms,
+  filesystems, or `/proc/self/fd` configurations fail closed before publication.
 - Decision 0070 makes Fixture 026 check a missing arm commitment against
   existing evaluator state before invoking the isolated policy bank, so a
   bounded policy timeout cannot mask deterministic resume corruption. The

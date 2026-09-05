@@ -176,7 +176,11 @@ SPDX identities separate; only their validated canonical documents must match.
 These files and their receipt remain `NO_RESULT` candidate inputs. Required
 semantic CI enforcement still waits for maintainer notice/source approval,
 publication, anonymous pull and exact-digest admission; ambient host Poppler
-remains non-authoritative.
+remains non-authoritative. Local candidate and receipt placement is Linux
+`amd64`-only: no-follow descriptor traversal pins each repository parent,
+unnamed `O_TMPFILE` staging avoids cleanup pathnames, and atomic `linkat`
+publication refuses replacement. A failure retains any name already published
+for inspection, while an incomplete three-file candidate has no receipt.
 
 Container publication has a separate two-phase boundary. The build pushes a
 candidate under its canonical digest without a release tag. The workflow then

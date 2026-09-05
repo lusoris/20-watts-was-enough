@@ -1,9 +1,11 @@
 package pdftools
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"slices"
@@ -229,7 +231,16 @@ func TestReproductionReceiptIsBoundedAtomicAndNoReplace(t *testing.T) {
 		Authority: "NO_RESULT", BaseBuilds: []ReproductionBuild{}, FinalBuilds: []ReproductionBuild{},
 		Notices: []NoticeObservation{}, ManPages: []string{},
 	}
-	if err := writeReproductionReceipt(root, path, receipt, 64*1024); err != nil {
+	if err := writeReproductionReceiptChecked(root, path, receipt, 64*1024, func() error {
+		entries, err := os.ReadDir(filepath.Dir(path))
+		if err != nil {
+			return err
+		}
+		if len(entries) != 0 {
+			return fmt.Errorf("unnamed receipt staging created path entries: %v", entries)
+		}
+		return nil
+	}); err != nil {
 		t.Fatal(err)
 	}
 	body, err := os.ReadFile(path)
@@ -253,6 +264,30 @@ func TestReproductionReceiptIsBoundedAtomicAndNoReplace(t *testing.T) {
 	temporary, err := filepath.Glob(filepath.Join(filepath.Dir(path), ".20w-pdf-tools-receipt-*.tmp"))
 	if err != nil || len(temporary) != 0 {
 		t.Fatalf("temporary receipt links = %v, error = %v", temporary, err)
+	}
+}
+
+func TestReproductionReceiptAtomicLinkDoesNotOverwriteConcurrentDestination(t *testing.T) {
+	t.Parallel()
+	root := t.TempDir()
+	path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	foreign := []byte("concurrent destination")
+	err = writeReproductionReceiptChecked(
+		root,
+		path,
+		reproductionReceiptTestValue(),
+		64*1024,
+		func() error { return os.WriteFile(path, foreign, 0o640) },
+	)
+	if err == nil {
+		t.Fatal("atomic receipt publication overwrote a concurrent destination")
+	}
+	retained, readError := os.ReadFile(path)
+	if readError != nil || !bytes.Equal(retained, foreign) {
+		t.Fatalf("concurrent receipt destination changed: %q, %v", retained, readError)
 	}
 }
 
@@ -310,7 +345,7 @@ func TestReproductionReceiptRejectsPrewriteSymlinkSwapsWithoutOutsideWrite(t *te
 	}
 }
 
-func TestReproductionReceiptCleansPinnedParentAfterLateSwap(t *testing.T) {
+func TestReproductionReceiptRejectsLateParentSwapWithoutOutsideWrite(t *testing.T) {
 	t.Parallel()
 	base := t.TempDir()
 	root := filepath.Join(base, "repository")
@@ -337,7 +372,7 @@ func TestReproductionReceiptCleansPinnedParentAfterLateSwap(t *testing.T) {
 		}
 		return os.Symlink(outside, parent)
 	})
-	if err == nil || !strings.Contains(err.Error(), "directory changed during publication") {
+	if err == nil || !strings.Contains(err.Error(), "directory changed before publication") {
 		t.Fatalf("write after receipt parent swap error = %v", err)
 	}
 	assertNoReceiptFiles(t, path, outside, parked)
@@ -347,7 +382,7 @@ func TestReproductionReceiptCleansPinnedParentAfterLateSwap(t *testing.T) {
 	}
 }
 
-func TestReproductionReceiptPreservesPreexistingStagingName(t *testing.T) {
+func TestReproductionReceiptDoesNotUseOrReplaceLegacyStagingNames(t *testing.T) {
 	t.Parallel()
 	root := t.TempDir()
 	path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
@@ -355,28 +390,115 @@ func TestReproductionReceiptPreservesPreexistingStagingName(t *testing.T) {
 		t.Fatal(err)
 	}
 	receipt := reproductionReceiptTestValue()
-	body, err := json.MarshalIndent(receipt, "", "  ")
-	if err != nil {
-		t.Fatal(err)
-	}
-	body = append(body, '\n')
-	temporaryPath := filepath.Join(
-		filepath.Dir(path),
-		reproductionReceiptTemporaryName(filepath.Base(path), body),
-	)
+	temporaryPath := filepath.Join(filepath.Dir(path), ".20w-pdf-tools-receipt-foreign.tmp")
 	foreign := []byte("foreign staging file")
 	if err := os.WriteFile(temporaryPath, foreign, 0o600); err != nil {
 		t.Fatal(err)
 	}
-	if err := writeReproductionReceipt(root, path, receipt, 64*1024); err == nil {
-		t.Fatal("writeReproductionReceipt() accepted an occupied staging name")
+	if err := writeReproductionReceipt(root, path, receipt, 64*1024); err != nil {
+		t.Fatalf("legacy staging-shaped file blocked unnamed publication: %v", err)
 	}
 	current, err := os.ReadFile(temporaryPath)
 	if err != nil || string(current) != string(foreign) {
 		t.Fatalf("pre-existing staging file changed: %q, %v", current, err)
 	}
-	if _, err := os.Lstat(path); !errors.Is(err, os.ErrNotExist) {
-		t.Fatalf("staging collision left a receipt: %v", err)
+	if information, err := os.Lstat(path); err != nil || !information.Mode().IsRegular() {
+		t.Fatalf("unnamed receipt was not published: %v", err)
+	}
+}
+
+func TestReproductionReceiptRetainsPublishedPathAfterPostLinkFailure(t *testing.T) {
+	t.Parallel()
+	tests := map[string]struct {
+		afterLink func(*pinnedPublicationDirectory, string) error
+		want      []byte
+	}{
+		"exact published receipt": {
+			afterLink: func(*pinnedPublicationDirectory, string) error {
+				return errors.New("injected post-link failure")
+			},
+		},
+		"hostile replacement": {
+			afterLink: func(parent *pinnedPublicationDirectory, name string) error {
+				if err := parent.root.Remove(name); err != nil {
+					return err
+				}
+				return parent.root.WriteFile(name, []byte("foreign"), 0o640)
+			},
+			want: []byte("foreign"),
+		},
+	}
+	for name, test := range tests {
+		name, test := name, test
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			root := t.TempDir()
+			path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
+			if err != nil {
+				t.Fatal(err)
+			}
+			receipt := reproductionReceiptTestValue()
+			body, err := json.MarshalIndent(receipt, "", "  ")
+			if err != nil {
+				t.Fatal(err)
+			}
+			body = append(body, '\n')
+			if test.want == nil {
+				test.want = body
+			}
+			err = writeReproductionReceiptCheckedAtRoot(
+				testPublicationRoot(t, root), path, receipt, 64*1024, nil, test.afterLink,
+			)
+			if err == nil {
+				t.Fatal("receipt publication accepted the injected post-link failure")
+			}
+			retained, readError := os.ReadFile(path)
+			if readError != nil || !bytes.Equal(retained, test.want) {
+				t.Fatalf("published receipt path was removed or changed: %q, %v", retained, readError)
+			}
+			temporary, globError := filepath.Glob(filepath.Join(filepath.Dir(path), ".20w-pdf-tools-receipt-*.tmp"))
+			if globError != nil || len(temporary) != 0 {
+				t.Fatalf("receipt publication created a staging pathname: %v, %v", temporary, globError)
+			}
+		})
+	}
+}
+
+func TestPinnedPublicationDirectoryCreationCannotFollowSwappedRepositoryRoot(t *testing.T) {
+	t.Parallel()
+	base := t.TempDir()
+	root := filepath.Join(base, "repository")
+	parked := filepath.Join(base, "parked")
+	outside := filepath.Join(base, "outside")
+	for _, directory := range []string{root, outside} {
+		if err := os.Mkdir(directory, 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	repository := testPublicationRoot(t, root)
+	swapped := false
+	_, err := prepareReproductionReceiptPathAtRoot(
+		repository,
+		"build/evidence/pdf-tools.json",
+		func(string) error {
+			if swapped {
+				return nil
+			}
+			swapped = true
+			if err := os.Rename(root, parked); err != nil {
+				return err
+			}
+			return os.Symlink(outside, root)
+		},
+	)
+	if err == nil || !swapped {
+		t.Fatalf("pinned directory creation accepted a swapped repository root: %v", err)
+	}
+	if _, err := os.Lstat(filepath.Join(outside, "build")); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("directory creation escaped to the swapped root: %v", err)
+	}
+	if information, err := os.Lstat(filepath.Join(parked, "build", "evidence")); err != nil || !information.IsDir() {
+		t.Fatalf("pinned creation did not remain under the original root: %v", err)
 	}
 }
 

@@ -92,7 +92,15 @@ and complete compressed archive.
 
 Success places only the explicitly named new files and writes an atomic
 `authority: NO_RESULT` receipt. Existing paths, symlinked parents, path escape,
-partial candidate sets, and output races fail closed. The command does not
+partial candidate sets, and output races fail closed. On Linux `amd64`, the
+command reaches each output directory through no-follow descriptor traversal,
+stages candidate and receipt bytes in unnamed `O_TMPFILE` inodes, and links
+each completed inode to an absent name through its pinned parent. This route
+requires `O_TMPFILE`, `linkat`, and `/proc/self/fd`; an unavailable primitive
+stops publication. Cleanup closes descriptors and never unlinks a published
+name. If a later candidate or receipt check fails, any file already linked is
+retained for inspection, but an incomplete candidate set has no receipt and a
+rerun still rejects every existing output path. The command does not
 create a tag, push, release, digest-admission record, or legal conclusion. It
 removes the builders, containers, state volumes and temporary image alias that
 it owns. Docker may retain the untagged, content-addressed image data in its

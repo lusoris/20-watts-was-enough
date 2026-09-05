@@ -670,7 +670,9 @@ func verifyBuildxIdentity(ctx context.Context, executor dockerExecutor, authorit
 func ensureAuthorityUnchanged(authority checkedAuthority) error {
 	current, err := checkAuthority(authority.root)
 	if err != nil || current.contractSHA256 != authority.contractSHA256 ||
-		current.renderer.LockSHA256 != authority.renderer.LockSHA256 {
+		current.renderer.LockSHA256 != authority.renderer.LockSHA256 ||
+		authority.rootInformation == nil || current.rootInformation == nil ||
+		!os.SameFile(authority.rootInformation, current.rootInformation) {
 		return errors.New("PDF-tools or BuildKit authority changed during local reproduction")
 	}
 	return nil

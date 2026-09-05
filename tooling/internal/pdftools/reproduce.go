@@ -32,7 +32,8 @@ func ReproduceFinalImage(
 	if err != nil {
 		return ReproductionReceipt{}, err
 	}
-	receiptPath, err := prepareReproductionReceiptPath(authority.root, options.ReceiptPath)
+	repository := publicationRootIdentity{path: authority.root, information: authority.rootInformation}
+	receiptPath, err := prepareReproductionReceiptPathAtRoot(repository, options.ReceiptPath, nil)
 	if err != nil {
 		return ReproductionReceipt{}, err
 	}
@@ -131,7 +132,9 @@ func ReproduceFinalImage(
 		if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
 			return ReproductionReceipt{}, err
 		}
-		if err := writeReproductionReceipt(authority.root, receiptPath, receipt, authority.contract.Limits.ReceiptBytes); err != nil {
+		if err := writeReproductionReceiptCheckedAtRoot(
+			repository, receiptPath, receipt, authority.contract.Limits.ReceiptBytes, nil, nil,
+		); err != nil {
 			return ReproductionReceipt{}, err
 		}
 		return receipt, errors.New("PDF-tools final-image reproduction mismatch; inspect the retained NO_RESULT receipt")
@@ -170,7 +173,10 @@ func finishSuccessfulReproduction(
 			authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspection, comparison, nil,
 		)
 		receipt.Runtime = &runtimeObservation
-		if err := writeReproductionReceipt(authority.root, receiptPath, receipt, authority.contract.Limits.ReceiptBytes); err != nil {
+		if err := writeReproductionReceiptCheckedAtRoot(
+			publicationRootIdentity{path: authority.root, information: authority.rootInformation},
+			receiptPath, receipt, authority.contract.Limits.ReceiptBytes, nil, nil,
+		); err != nil {
 			return ReproductionReceipt{}, err
 		}
 		return receipt, nil
@@ -195,25 +201,19 @@ func finishSuccessfulReproduction(
 	if err := staged.install(authority.root); err != nil {
 		return ReproductionReceipt{}, err
 	}
-	installed := true
-	defer func() {
-		if returnError != nil && installed {
-			returnError = errors.Join(returnError, removeInstalledCandidateArtifacts(staged.artifacts))
-		}
-	}()
 	if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
 		return ReproductionReceipt{}, err
 	}
-	if err := writeReproductionReceiptChecked(
-		authority.root,
+	if err := writeReproductionReceiptCheckedAtRoot(
+		publicationRootIdentity{path: authority.root, information: authority.rootInformation},
 		receiptPath,
 		receipt,
 		authority.contract.Limits.ReceiptBytes,
 		func() error { return staged.verifyInstalled(authority.root, receipt.Candidate) },
+		nil,
 	); err != nil {
 		return ReproductionReceipt{}, err
 	}
-	installed = false
 	return receipt, nil
 }
 
