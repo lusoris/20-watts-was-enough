@@ -266,6 +266,16 @@ the exact diff; this file records why the project changed.
 - The document reader now keeps only its section outline beside the article.
   Corpus search, filters, current-document context and native document links
   move into a keyboard-operable drawer that returns focus when it closes.
+- The shared language control and no-JavaScript reading fallback now list only
+  English and reviewed translations published for the current source route.
+  Other EU languages use a separate source-bound contribution route instead of
+  appearing as readable editions. Canonical and translated routes expose the
+  same self-and-peer language metadata, and hydrated navigation retains an
+  explicit Pages subpath. Schema-2 entries now also require an exact source
+  commit and canonical UTC review instant, and translated pages expose those
+  maintained values instead of inferring them from the build. This does not
+  publish or assess a German translation; that pilot still requires the human
+  language/domain review recorded in issue 51.
 - A failed two-builder PDF reproducibility check now retains both exact PDF and
   manifest pairs beside its comparison receipt. CI uploads the bounded mismatch
   bundle for 30 days, so a rare renderer disagreement can be byte-diffed without

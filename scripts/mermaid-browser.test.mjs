@@ -539,11 +539,12 @@ async function assertMobilePortalSurface(cdp, address) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
   assert.equal(ready, true, "Portal language control did not render");
+  await openLanguageControlWithKeyboard(cdp);
   const snapshot = (await cdp.send("Runtime.evaluate", {
     expression: `(() => {
-      document.querySelector(".language-access > summary").click();
       const panel = document.querySelector(".language-access-panel");
       const select = panel?.querySelector("select");
+      const help = panel?.querySelector(".language-access-help");
       const panelRect = panel?.getBoundingClientRect();
       const selectRect = select?.getBoundingClientRect();
       const parseColour = (value) => {
@@ -588,6 +589,12 @@ async function assertMobilePortalSurface(cdp, address) {
           statusLabel: contrastFor(".portal-overview-metrics dt"),
         },
         scrollWidth: document.documentElement.scrollWidth,
+        expandedByKeyboard: document.querySelector(".language-access")?.open === true,
+        focusedOutline: getComputedStyle(document.activeElement).outlineStyle,
+        focusedOutlineWidth: getComputedStyle(document.activeElement).outlineWidth,
+        label: panel?.querySelector('label[for="site-language"]')?.textContent,
+        optionCodes: [...(select?.options ?? [])].map((option) => option.value),
+        help: help && { href: help.href, text: help.textContent.trim() },
         panel: panelRect && { left: panelRect.left, right: panelRect.right, width: panelRect.width },
         select: selectRect && { left: selectRect.left, right: selectRect.right, width: selectRect.width },
       };
@@ -596,6 +603,13 @@ async function assertMobilePortalSurface(cdp, address) {
   })).result?.value;
   assert.ok(snapshot.panel, JSON.stringify(snapshot));
   assert.ok(snapshot.select, JSON.stringify(snapshot));
+  assert.equal(snapshot.expandedByKeyboard, true, JSON.stringify(snapshot));
+  assert.equal(snapshot.focusedOutline, "solid", JSON.stringify(snapshot));
+  assert.equal(snapshot.focusedOutlineWidth, "3px", JSON.stringify(snapshot));
+  assert.equal(snapshot.label, "Read this page", JSON.stringify(snapshot));
+  assert.deepEqual(snapshot.optionCodes, ["en"], JSON.stringify(snapshot));
+  assert.equal(snapshot.help?.text, "Help add or review a language", JSON.stringify(snapshot));
+  assert.match(snapshot.help?.href ?? "", /template=translation-problem\.yml/u);
   assert.ok(snapshot.panel.left >= 0, JSON.stringify(snapshot));
   assert.ok(snapshot.panel.right <= snapshot.clientWidth, JSON.stringify(snapshot));
   assert.ok(snapshot.select.left >= 0, JSON.stringify(snapshot));
@@ -657,6 +671,34 @@ async function assertConstrainedMobileMenu(cdp) {
   assert.ok(snapshot.lastLink.top >= snapshot.panel.top - 1, JSON.stringify(snapshot));
   assert.ok(snapshot.lastLink.bottom <= snapshot.panel.bottom + 1, JSON.stringify(snapshot));
   assert.ok(snapshot.scrollWidth <= snapshot.clientWidth, JSON.stringify(snapshot));
+}
+
+async function openLanguageControlWithKeyboard(cdp) {
+  await cdp.send("Runtime.evaluate", {
+    expression: `document.querySelector(".language-access > summary").focus()`,
+  });
+  await cdp.send("Input.dispatchKeyEvent", {
+    type: "rawKeyDown",
+    key: " ",
+    code: "Space",
+    windowsVirtualKeyCode: 32,
+    nativeVirtualKeyCode: 32,
+  });
+  await cdp.send("Input.dispatchKeyEvent", {
+    type: "char",
+    text: " ",
+    key: " ",
+    code: "Space",
+    windowsVirtualKeyCode: 32,
+    nativeVirtualKeyCode: 32,
+  });
+  await cdp.send("Input.dispatchKeyEvent", {
+    type: "keyUp",
+    key: " ",
+    code: "Space",
+    windowsVirtualKeyCode: 32,
+    nativeVirtualKeyCode: 32,
+  });
 }
 
 test("browser rendering keeps Mermaid stable and wide publication content keyboard operable", {

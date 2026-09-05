@@ -2,49 +2,65 @@
 
 import { useState } from "react";
 import {
-  officialEuLanguages,
-  reviewedTranslationUrl,
+  languageAvailability,
+  languageDestinationUrl,
   translationContributionUrl,
 } from "../lib/language-access.mjs";
 
-export function LanguageAccess() {
+export function LanguageAccess({ basePath = "/" }: { basePath?: string }) {
   const [language, setLanguage] = useState("en");
-  const translationHref = typeof window === "undefined"
+  const location = typeof window === "undefined"
+    ? { pathname: "/", hash: "" }
+    : window.location;
+  const availability = languageAvailability(location, { basePath });
+  const selectedLanguage = availability.available.some(
+    (entry) => entry.code === language,
+  ) ? language : availability.currentLanguage;
+  const destinationHref = typeof window === "undefined"
     ? null
-    : reviewedTranslationUrl(language, window.location);
-  const contributionHref = typeof window === "undefined"
-    ? null
-    : translationContributionUrl(language, window.location);
+    : languageDestinationUrl(selectedLanguage, location, { basePath });
+  const contributionHref = translationContributionUrl(location, { basePath });
+  const current = availability.available.find((entry) => entry.current);
 
   return (
     <details className="language-access">
       <summary>Language</summary>
       <div className="language-access-panel">
-        <label htmlFor="site-language">Read in another EU language</label>
+        <label htmlFor="site-language">Read this page</label>
         <select
           id="site-language"
-          value={language}
+          value={selectedLanguage}
           onChange={(event) => setLanguage(event.target.value)}
         >
-          {officialEuLanguages.map(([code, label]) => (
-            <option key={code} value={code}>{label}</option>
+          {availability.available.map(({ code, label }) => (
+            <option key={code} lang={code} value={code}>{label}</option>
           ))}
         </select>
-        {translationHref ? (
-          <a href={translationHref}>
-            Open reviewed translation
-          </a>
-        ) : contributionHref ? (
-          <a href={contributionHref} target="_blank" rel="noreferrer">
-            Help translate or review this page
+        {destinationHref ? (
+          <a href={destinationHref}>
+            {selectedLanguage === "en"
+              ? "Open canonical English"
+              : "Open reviewed translation"}
           </a>
         ) : (
-          <span className="language-access-current">English is the canonical text.</span>
+          <span className="language-access-current">
+            {current?.code === "en"
+              ? "English is the canonical text."
+              : `${current?.label ?? "This language"} is the current reviewed edition.`}
+          </span>
         )}
         <small>
-          Translations are published from Git only after source-version checks
-          and human review. No automatic translation is presented as project text.
+          Only translations tied to this source version and recorded after
+          human review appear as reading options.
         </small>
+        <a
+          className="language-access-help"
+          href={contributionHref}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Help add or review a language
+        </a>
       </div>
     </details>
   );

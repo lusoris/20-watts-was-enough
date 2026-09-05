@@ -381,6 +381,54 @@
 
 @media screen {
 
+  .seo-language-access {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px 18px;
+    padding: 16px 18px;
+    border: 1px solid var(--line, #c5cec5);
+    background: var(--paper-raised, #fffdf7);
+  }
+
+  .seo-language-access ul {
+    display: flex;
+    flex: 1 1 220px;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .seo-language-access li {
+    margin: 0;
+  }
+
+  .seo-language-access > a {
+    font-weight: 700;
+  }
+
+  .language-access > summary:focus-visible,
+  .language-access-panel select:focus-visible,
+  .language-access-panel a:focus-visible {
+    outline: 3px solid #2f7df4;
+    outline-offset: 3px;
+  }
+
+  .language-access-panel .language-access-help {
+    border-color: #668174;
+    background: transparent;
+    color: #f8fff9;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .language-access-panel .language-access-help:hover {
+    border-color: #24d17e;
+  }
+
   .portal-result-count,
   .portal-footer nav a {
     font-size: 12px;

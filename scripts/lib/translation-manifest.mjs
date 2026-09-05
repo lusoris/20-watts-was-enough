@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import path from "node:path";
 
@@ -8,12 +9,16 @@ import { parseStrictJson } from "./strict-json.mjs";
 
 const SOURCE = /^(?:concept|math)\/(?:[a-z0-9][a-z0-9-]*\/)*[a-z0-9][a-z0-9-]*\.md$/u;
 const SHA256 = /^[a-f0-9]{64}$/u;
+const SOURCE_REVISION = /^(?!0{40}$)[a-f0-9]{40}$/u;
+const REVIEWED_AT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/u;
 const topLevelFields = Object.freeze(["documents", "schema", "sourceLanguage"]);
 const documentFields = Object.freeze([
   "language",
+  "reviewedAt",
   "reviewers",
   "route",
   "source",
+  "sourceRevision",
   "sourceRoute",
   "sourceSha256",
   "target",
@@ -26,6 +31,11 @@ export const translationManifestLimits = Object.freeze({
   documents: 4096,
   reviewersPerDocument: 16,
   reviewerCharacters: 160,
+});
+
+const gitValidationLimits = Object.freeze({
+  outputBytes: 2 * translationManifestLimits.manifestBytes,
+  timeoutMilliseconds: 10_000,
 });
 
 function inside(root, candidate) {
@@ -59,6 +69,110 @@ function readTranslationFile(root, file, label, maximumBytes) {
   });
 }
 
+function gitCommand(root, arguments_, input, label) {
+  const result = spawnSync("git", ["-C", root, ...arguments_], {
+    encoding: null,
+    env: {
+      GIT_NO_REPLACE_OBJECTS: "1",
+      GIT_OPTIONAL_LOCKS: "0",
+      LANG: "C",
+      LC_ALL: "C",
+      PATH: process.env.PATH ?? "",
+    },
+    input,
+    killSignal: "SIGKILL",
+    maxBuffer: gitValidationLimits.outputBytes,
+    timeout: gitValidationLimits.timeoutMilliseconds,
+    windowsHide: true,
+  });
+  if (result.error || result.signal !== null || result.status !== 0) {
+    throw new Error(`${label} could not be verified in the local Git history.`);
+  }
+  return Buffer.from(result.stdout ?? []);
+}
+
+function gitObjectRecords(root, specifications) {
+  const output = gitCommand(
+    root,
+    ["cat-file", "--batch-check=%(objectname)|%(objecttype)|%(objectsize)|%(objectmode)"],
+    Buffer.from(`${specifications.join("\n")}\n`),
+    "Translation source revisions",
+  ).toString("utf8");
+  const lines = output.endsWith("\n") ? output.slice(0, -1).split("\n") : [];
+  if (lines.length !== specifications.length) {
+    throw new Error("Translation source revision object inventory is incomplete.");
+  }
+  return lines.map((line) => {
+    const match = /^([a-f0-9]{40})\|([a-z]+)\|([0-9]+)\|([0-9]{6})?$/u.exec(line);
+    return match === null ? null : Object.freeze({
+      mode: match[4] ?? null,
+      oid: match[1],
+      type: match[2],
+    });
+  });
+}
+
+function validateSourceRevisionBindings(root, bindings) {
+  if (bindings.length === 0) return;
+  const sourceObjectOutput = gitCommand(
+    root,
+    ["hash-object", "--no-filters", "--stdin-paths"],
+    Buffer.from(`${bindings.map(({ source }) => source).join("\n")}\n`),
+    "Current translation sources",
+  ).toString("utf8");
+  const sourceObjectIds = sourceObjectOutput.endsWith("\n")
+    ? sourceObjectOutput.slice(0, -1).split("\n")
+    : [];
+  if (
+    sourceObjectIds.length !== bindings.length
+    || sourceObjectIds.some((oid) => !/^[a-f0-9]{40}$/u.test(oid))
+  ) {
+    throw new Error("Current translation source object inventory is incomplete.");
+  }
+  const specifications = bindings.flatMap(({ source, sourceRevision }) => [
+    sourceRevision,
+    `${sourceRevision}:${source}`,
+  ]);
+  const objects = gitObjectRecords(root, specifications);
+  for (const [index, binding] of bindings.entries()) {
+    const commit = objects[index * 2];
+    const source = objects[(index * 2) + 1];
+    if (
+      commit?.oid !== binding.sourceRevision
+      || commit.type !== "commit"
+    ) {
+      throw new Error(
+        `Translation source revision is not an available exact commit: ${binding.target}`,
+      );
+    }
+    if (source?.type !== "blob") {
+      throw new Error(
+        `Translation source does not exist at its reviewed commit: ${binding.source}`,
+      );
+    }
+    if (source.mode !== "100644" && source.mode !== "100755") {
+      throw new Error(
+        `Translation source at its reviewed commit is not a regular file: ${binding.source}`,
+      );
+    }
+    if (source.oid !== sourceObjectIds[index]) {
+      throw new Error(
+        `Translation source revision does not bind its recorded source: ${binding.source}`,
+      );
+    }
+  }
+  const revisions = [...new Set(bindings.map(({ sourceRevision }) => sourceRevision))];
+  const unreachable = gitCommand(
+    root,
+    ["rev-list", "--max-count=1", "--stdin"],
+    Buffer.from(`${revisions.join("\n")}\n^HEAD\n`),
+    "Translation source revision ancestry",
+  );
+  if (unreachable.length !== 0) {
+    throw new Error("Translation source revision is not an ancestor of the publication checkout.");
+  }
+}
+
 function validatedReviewers(reviewers, target) {
   if (
     !Array.isArray(reviewers)
@@ -85,6 +199,30 @@ function validatedReviewers(reviewers, target) {
     names.add(reviewer);
   }
   return Object.freeze([...reviewers]);
+}
+
+export function validateTranslationReviewMetadata(entry, target) {
+  if (
+    typeof entry.sourceRevision !== "string"
+    || !SOURCE_REVISION.test(entry.sourceRevision)
+  ) {
+    throw new Error(`Translation source revision is not an exact Git commit: ${target}`);
+  }
+  const reviewInstant = typeof entry.reviewedAt === "string"
+    ? Date.parse(entry.reviewedAt)
+    : Number.NaN;
+  if (
+    typeof entry.reviewedAt !== "string"
+    || !REVIEWED_AT.test(entry.reviewedAt)
+    || !Number.isFinite(reviewInstant)
+    || new Date(reviewInstant).toISOString() !== `${entry.reviewedAt.slice(0, -1)}.000Z`
+  ) {
+    throw new Error(`Translation review time is not canonical UTC: ${target}`);
+  }
+  return Object.freeze({
+    sourceRevision: entry.sourceRevision,
+    reviewedAt: entry.reviewedAt,
+  });
 }
 
 function validateEntryShape(entry, index) {
@@ -118,7 +256,10 @@ function validateEntryShape(entry, index) {
   if (typeof entry.targetSha256 !== "string" || !SHA256.test(entry.targetSha256)) {
     throw new Error(`Translation target digest is not SHA-256: ${entry.target}`);
   }
-  return validatedReviewers(entry.reviewers, entry.target);
+  return Object.freeze({
+    ...validateTranslationReviewMetadata(entry, entry.target),
+    reviewers: validatedReviewers(entry.reviewers, entry.target),
+  });
 }
 
 function validateEntryFiles(root, entry) {
@@ -154,8 +295,9 @@ function validatedDocuments(root, documents) {
   }
   const identities = new Set();
   const routes = new Set();
-  return Object.freeze(documents.map((entry, index) => {
-    const reviewers = validateEntryShape(entry, index);
+  const bindings = [];
+  const validated = documents.map((entry, index) => {
+    const review = validateEntryShape(entry, index);
     const identity = `${entry.language}:${entry.source}`;
     if (identities.has(identity) || routes.has(entry.route)) {
       throw new Error(`Duplicate translation identity or route: ${identity}`);
@@ -163,6 +305,11 @@ function validatedDocuments(root, documents) {
     identities.add(identity);
     routes.add(entry.route);
     validateEntryFiles(root, entry);
+    bindings.push({
+      source: entry.source,
+      sourceRevision: review.sourceRevision,
+      target: entry.target,
+    });
     return Object.freeze({
       language: entry.language,
       source: entry.source,
@@ -171,9 +318,13 @@ function validatedDocuments(root, documents) {
       route: entry.route,
       sourceSha256: entry.sourceSha256,
       targetSha256: entry.targetSha256,
-      reviewers,
+      sourceRevision: review.sourceRevision,
+      reviewedAt: review.reviewedAt,
+      reviewers: review.reviewers,
     });
-  }));
+  });
+  validateSourceRevisionBindings(root, bindings);
+  return Object.freeze(validated);
 }
 
 export function validateTranslationManifest(repositoryRoot) {

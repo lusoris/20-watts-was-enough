@@ -9,11 +9,18 @@ import {
   bookDocumentHeadingId,
   bookDocumentId,
 } from "../../app/lib/book-document-id.mjs";
+import { repositoryDocumentHref } from "../../app/lib/book-release-identity.mjs";
 import { openGraphLocaleForEuLanguage } from "../../app/lib/eu-languages.mjs";
+import {
+  languageAlternateLinksForRoute,
+  languageAvailabilityForRoute,
+  translationContributionUrl,
+} from "../../app/lib/language-access.mjs";
 import {
   publication,
   repositoryIssueUrl,
 } from "../../app/lib/publication.mjs";
+import { validateTranslationReviewMetadata } from "./translation-manifest.mjs";
 
 export const canonicalSite = publication.canonicalSite;
 const siteName = publication.siteName;
@@ -139,7 +146,7 @@ function structuredData(kind, document) {
   };
 }
 
-export function renderSeoHead(kind, document, basePath) {
+export function renderSeoHead(kind, document, basePath, translationDocuments = []) {
   const canonical = canonicalFor(kind, document);
   const language = pageLanguage(kind, document);
   const openGraphLocale = openGraphLocaleForEuLanguage(language);
@@ -148,6 +155,13 @@ export function renderSeoHead(kind, document, basePath) {
   }
   const metadata = pageMetadata(kind, document);
   const jsonLd = JSON.stringify(structuredData(kind, document)).replaceAll("<", "\\u003c");
+  const languageAlternates = kind === "document"
+    ? languageAlternateLinksForRoute(document.route, translationDocuments).map(
+        (alternative) => (
+          `<link rel="alternate" hreflang="${escapeAttribute(alternative.language)}" href="${escapeAttribute(alternative.href)}" data-language-alternate="" />`
+        ),
+      )
+    : [];
   return [
     `<meta name="description" content="${escapeAttribute(metadata.description)}" />`,
     '<meta name="robots" content="index,follow,max-image-preview:large" />',
@@ -169,6 +183,7 @@ export function renderSeoHead(kind, document, basePath) {
     `<meta name="citation_public_url" content="${canonical}" />`,
     `<meta name="citation_language" content="${escapeAttribute(language)}" />`,
     `<link rel="canonical" href="${canonical}" />`,
+    ...languageAlternates,
     `<link rel="icon" href="${withBase(basePath, "favicon.svg")}" />`,
     `<script type="application/ld+json">${jsonLd}</script>`,
     `<title>${escapeAttribute(metadata.title)}</title>`,
@@ -324,17 +339,49 @@ function renderPrimaryNavigation(basePath, label) {
   return `<nav aria-label="${label}"><a href="${withBase(basePath)}">Overview</a><a href="${withBase(basePath, "#research-system")}">Research system</a><a href="${withBase(basePath, "#library")}">Library</a><a href="${withBase(basePath, "book/")}">Book</a><a href="${repository}">GitHub <span aria-hidden="true">↗</span></a></nav>`;
 }
 
-export function renderPortalFallback(documents, basePath) {
+export function renderTranslationReviewContext(document) {
+  const review = validateTranslationReviewMetadata(
+    document,
+    document.path ?? document.route ?? "translated document",
+  );
+  const source = repositoryDocumentHref(
+    review.sourceRevision,
+    document.canonicalSourcePath,
+  );
+  const revision = review.sourceRevision.match(/.{1,8}/gu)?.join("<wbr>")
+    ?? review.sourceRevision;
+  return `<section class="translation-review-context" lang="en" aria-labelledby="translation-review-context-heading"><h2 id="translation-review-context-heading">Translation review</h2><dl><div><dt>Canonical source</dt><dd><a href="${escapeAttribute(source)}">Open the bound source</a></dd></div><div><dt>Source revision</dt><dd><code>${revision}</code></dd></div><div><dt>Reviewed at</dt><dd><time datetime="${escapeAttribute(review.reviewedAt)}">${escapeAttribute(review.reviewedAt)}</time></dd></div></dl></section>`;
+}
+
+export function renderLanguageAvailability(route, translationDocuments, basePath) {
+  const availability = languageAvailabilityForRoute(route, translationDocuments);
+  const destinations = availability.available.map((destination) => {
+    const language = escapeAttribute(destination.code);
+    const label = escapeAttribute(destination.label);
+    if (destination.current) {
+      return `<li><span aria-current="page"><span lang="${language}">${label}</span> · current</span></li>`;
+    }
+    return `<li><a lang="${language}" hreflang="${language}" href="${withBase(basePath, destination.route)}">${label}</a></li>`;
+  }).join("");
+  const contribution = translationContributionUrl(
+    { pathname: route, hash: "" },
+    { documents: translationDocuments },
+  );
+  return `<nav class="seo-language-access" lang="en" aria-label="Language availability"><strong>Read this page</strong><ul>${destinations}</ul><a href="${escapeAttribute(contribution)}">Help add or review a language</a></nav>`;
+}
+
+export function renderPortalFallback(documents, basePath, translationDocuments = []) {
   const groups = ["Concept", "Mathematics"].map((group) => {
     const links = documents.filter((document) => document.group === group)
       .map((document) => `<li>${documentLink(document, basePath)}</li>`)
       .join("");
     return `<section><h2>${group}</h2><ol>${links}</ol></section>`;
   }).join("");
-  return `<main class="seo-static-page"><p class="portal-eyebrow">Open research programme</p><h1>20 Watts Was Enough</h1><p>Can an artificial system learn and adapt while activating less computation and moving less data? This programme turns mechanisms from living and engineered systems into scoped claims, explicit principles and equal-budget tests.</p>${renderReaderSupport(basePath, "research portal", "Report a portal problem")}<nav aria-label="Research library">${groups}</nav><p><a href="${withBase(basePath, "book/")}">Read the full concept book</a></p></main>`;
+  const languages = renderLanguageAvailability("/", translationDocuments, basePath);
+  return `<main class="seo-static-page"><p class="portal-eyebrow">Open research programme</p><h1>20 Watts Was Enough</h1><p>Can an artificial system learn and adapt while activating less computation and moving less data? This programme turns mechanisms from living and engineered systems into scoped claims, explicit principles and equal-budget tests.</p>${languages}${renderReaderSupport(basePath, "research portal", "Report a portal problem")}<nav aria-label="Research library">${groups}</nav><p><a href="${withBase(basePath, "book/")}">Read the full concept book</a></p></main>`;
 }
 
-export function renderBookFallback(documents, basePath) {
+export function renderBookFallback(documents, basePath, translationDocuments = []) {
   if (!Array.isArray(documents) || documents.length === 0) {
     throw new Error("The static book fallback requires at least one canonical document.");
   }
@@ -344,10 +391,16 @@ export function renderBookFallback(documents, basePath) {
   const manuscript = documents.map((document) => (
     `<section id="${bookDocumentId(document.path)}"><header><p>${escapeAttribute(document.group)} · ${document.words.toLocaleString(publication.locale)} words</p><h2>${escapeAttribute(document.title)}</h2></header><article class="prose markdown-body">${renderMarkdown(document, documents, basePath, { bookFragments: true, headingOffset: 1, mathOutput: "mathml" })}</article></section>`
   )).join("");
-  return `<main class="seo-static-page"><a class="portal-skip-link" href="#${bookDocumentId(documents[0].path)}">Skip to first chapter</a><p><a href="${withBase(basePath)}">Research portal</a></p><h1>20 Watts Was Enough — Full Concept Book</h1><p>The complete public reading edition generated from canonical Git source.</p>${renderReaderSupport(basePath, "book/", "Report a book problem")}<nav aria-label="Book contents"><ol>${links}</ol></nav>${manuscript}</main>`;
+  const languages = renderLanguageAvailability("/book/", translationDocuments, basePath);
+  return `<main class="seo-static-page"><a class="portal-skip-link" href="#${bookDocumentId(documents[0].path)}">Skip to first chapter</a><p><a href="${withBase(basePath)}">Research portal</a></p><h1>20 Watts Was Enough — Full Concept Book</h1><p>The complete public reading edition generated from canonical Git source.</p>${languages}${renderReaderSupport(basePath, "book/", "Report a book problem")}<nav aria-label="Book contents"><ol>${links}</ol></nav>${manuscript}</main>`;
 }
 
-export function renderDocumentFallback(document, documents, basePath) {
+export function renderDocumentFallback(
+  document,
+  documents,
+  basePath,
+  translationDocuments = [],
+) {
   const index = documents.findIndex((candidate) => candidate.path === document.path);
   const previous = index > 0 ? documents[index - 1] : null;
   const next = index < documents.length - 1 ? documents[index + 1] : null;
@@ -366,8 +419,8 @@ export function renderDocumentFallback(document, documents, basePath) {
         `[Translation] ${document.language}: ${document.canonicalSourcePath}`,
         {
           language: document.language,
-          source: `${document.canonicalSourcePath} at source SHA-256 ${document.sourceSha256}`,
-          detail: `Published route: ${canonicalSite}${document.route}\nReviewed target SHA-256: ${document.targetSha256}`,
+          source: `${document.canonicalSourcePath} at commit ${document.sourceRevision} (source SHA-256 ${document.sourceSha256})`,
+          detail: `Published route: ${canonicalSite}${document.route}\nReviewed at: ${document.reviewedAt}\nReviewed target SHA-256: ${document.targetSha256}`,
           competence: `Recorded reviewer(s): ${document.reviewers.join(", ")}`,
         },
       )
@@ -378,7 +431,13 @@ export function renderDocumentFallback(document, documents, basePath) {
     translated ? "Report this translation" : "Report this document",
     translated ? { issueUrl: report, language: publication.htmlLanguage } : {},
   );
-  return `<main class="seo-static-page"><p${shellLanguage}><a href="${withBase(basePath)}">Research portal</a></p><header><p${shellLanguage}>${document.group} · ${document.words.toLocaleString(publication.locale)} words</p><h1>${escapeAttribute(document.title)}</h1><p>${escapeAttribute(document.description)}</p></header>${support}<article class="prose markdown-body">${renderMarkdown(document, documents, basePath)}</article><nav${shellLanguage} aria-label="Document sequence">${sequence}</nav></main>`;
+  const languages = renderLanguageAvailability(
+    document.route.startsWith("/") ? document.route : `/${document.route}`,
+    translationDocuments,
+    basePath,
+  );
+  const reviewContext = translated ? renderTranslationReviewContext(document) : "";
+  return `<main class="seo-static-page"><p${shellLanguage}><a href="${withBase(basePath)}">Research portal</a></p><header><p${shellLanguage}>${document.group} · ${document.words.toLocaleString(publication.locale)} words</p><h1>${escapeAttribute(document.title)}</h1><p>${escapeAttribute(document.description)}</p></header>${reviewContext}${languages}${support}<article class="prose markdown-body">${renderMarkdown(document, documents, basePath)}</article><nav${shellLanguage} aria-label="Document sequence">${sequence}</nav></main>`;
 }
 
 export function renderHelpFallback(document, documents, basePath) {

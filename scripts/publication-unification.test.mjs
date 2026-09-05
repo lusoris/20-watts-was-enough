@@ -17,11 +17,14 @@ import { portalSourceMetrics } from "./lib/portal-metrics.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-function staticDescriptor(kind, document) {
-  const head = renderSeoHead(kind, document, "/");
+function staticDescriptor(kind, document, translationDocuments = []) {
+  const head = renderSeoHead(kind, document, "/", translationDocuments);
   const value = (pattern) => decodeBasicHtmlEntitiesOnce(head.match(pattern)?.[1] ?? "");
   return {
     canonical: value(/<link rel="canonical" href="([^"]+)" \/>/u),
+    languageAlternates: [...head.matchAll(
+      /<link rel="alternate" hreflang="([^"]+)" href="([^"]+)" data-language-alternate="" \/>/gu,
+    )].map((match) => ({ language: match[1], href: decodeBasicHtmlEntitiesOnce(match[2]) })),
     title: value(/<title>([^<]+)<\/title>/u),
     description: value(/<meta name="description" content="([^"]+)" \/>/u),
     ogType: value(/<meta property="og:type" content="([^"]+)" \/>/u),
@@ -44,6 +47,19 @@ test("dynamic portal SEO stays equal to the generated static descriptor", () => 
   const document = portalSourceDocuments(repositoryRoot)[0];
   assert.deepEqual(portalSeoDescriptor(null), staticDescriptor("portal", null));
   assert.deepEqual(portalSeoDescriptor(document), staticDescriptor("document", document));
+});
+
+test("dynamic and static document SEO share reciprocal reviewed-language alternates", () => {
+  const document = portalSourceDocuments(repositoryRoot)[0];
+  const translationDocuments = [{
+    language: "de",
+    sourceRoute: `/${document.route}`,
+    route: `/de/${document.route}`,
+  }];
+  assert.deepEqual(
+    portalSeoDescriptor(document, translationDocuments),
+    staticDescriptor("document", document, translationDocuments),
+  );
 });
 
 test("source HTML identity placeholders stay equal to the shared publication authority", async () => {

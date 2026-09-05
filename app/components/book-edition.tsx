@@ -216,7 +216,7 @@ export function BookEdition({
         </a>
         <button type="button" onClick={() => window.print()}>
           Print this edition
-        </button>{!isPublicPdf && <LanguageAccess />}
+        </button>{!isPublicPdf && <LanguageAccess basePath={assetBasePath} />}
       </nav>
 
       <header className="book-cover">

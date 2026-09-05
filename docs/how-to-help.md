@@ -72,7 +72,7 @@ and [engineering and research contract](principles.md).
 | Contribution | Minimum review evidence | Focused checks before a pull request |
 | --- | --- | --- |
 | Readability or documentation | Exact path or URL, intended reader, shortest affected passage and the interpretation that failed | `npm run check:prose`; `npm run validate:docs` |
-| Translation | Language, exact canonical and translated paths, exact source digest, exact reviewed target digest, named language/domain reviewer, and disclosed drafting tools | `npm run validate:translations`; `npm run check:prose` for any changed English source |
+| Translation | Language, exact canonical and translated paths, exact source commit and digest, exact reviewed target digest, canonical UTC review instant, named language/domain reviewer, and disclosed drafting tools | `npm run validate:translations`; `npm run check:prose` for any changed English source |
 | Container report | Per-experiment image digest, tag, source revision, `linux/amd64`, exact command, output mount and `NO_RESULT` receipt | Run the image's smoke, analysis and validation actions with networking disabled |
 | Experiment change | Fixture/track and claim IDs, frozen inputs, bounds, controls, failure state, output identity and authority impact | `npm run validate:workstation`; the affected fixture tests |
 | Evidence or mechanism change | Primary locators, proposition actually supported, scope, uncertainty, nearest claim and principle IDs, strongest null | Documentation, coverage and taxonomy validators relevant to the changed authority |

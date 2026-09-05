@@ -822,7 +822,7 @@ export function PublicResearchPortal({
       <a className="portal-source-link" href={repositoryUrl} target="_blank" rel="noreferrer">
         Source <span aria-hidden="true">↗</span>
       </a>
-      <LanguageAccess />
+      <LanguageAccess basePath={assetBasePath} />
       <details className="portal-mobile-menu" ref={mobileMenuRef}>
         <summary>Menu</summary>
         <nav aria-label="Mobile navigation">
