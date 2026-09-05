@@ -7,6 +7,15 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Math validation and delimiter formatting use parsed Markdown code boundaries,
+  so literal shell examples are not treated as equations. Both commands share
+  a bounded inventory that excludes worktrees, evidence and generated copies
+  while retaining nested canonical documentation. Formatting preflights the
+  complete change plan and replaces files atomically one at a time, reporting
+  any completed replacements if a later write fails. Equation checks remain
+  strict; exact math-script edits select research and site checks, with full
+  fallback for unknown paths or shared validation authority.
+
 - Local pre-commit checks follow changed contracts and downstream consumers,
   with a full-gate fallback for unknown, unsafe or shared-authority scope.
   Complete integration, merge, release and publication checks remain required.

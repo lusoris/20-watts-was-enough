@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { createServer as createTcpServer } from "node:net";
 import os from "node:os";
 import path from "node:path";
@@ -25,6 +25,7 @@ import {
 } from "./lib/plain-text.mjs";
 import { assertExactPublicationCopy } from "./lib/publication-copy-integrity.mjs";
 import { renderThirdPartyNotices } from "./lib/third-party-notices.mjs";
+import { collectMathMarkdown } from "./lib/math-markdown.mjs";
 
 const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -1032,9 +1033,16 @@ test("the Pages development server live-reloads canonical Markdown without an HT
   assert.doesNotMatch(config, /["']\/20-watts-was-enough\/documents\/["']/);
 });
 
-test("generated Pages Markdown cannot inflate canonical math validation", async () => {
-  const validator = await source("scripts/validate-math.mjs");
-  assert.match(validator, /["']dist-github-pages["']/);
+test("generated Pages Markdown cannot inflate canonical math validation", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "20w-pages-math-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await writeFile(path.join(root, "README.md"), "$x$\n");
+  for (const directory of ["dist-github-pages/documents", "public/repository-files"]) {
+    await mkdir(path.join(root, directory), { recursive: true });
+    await writeFile(path.join(root, directory, "generated.md"), "$broken\n");
+  }
+  const inventory = await collectMathMarkdown(root);
+  assert.deepEqual(inventory.files, [path.join(root, "README.md")]);
 });
 
 test("the sole public reader names its Git source and release identity", async () => {
