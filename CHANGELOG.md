@@ -26,6 +26,7 @@ the exact diff; this file records why the project changed.
   Complete integration, merge, release and publication checks remain required.
   Reusing earlier test evidence requires unchanged tested inputs and fresh
   checks of the affected scope; it cannot establish an exact-tree full pass.
+  The README and contribution guide link to this same validation sequence.
 
 - Frozen CLRS runner leaves select the existing container, Go and release
   checks. Publication-inventory changes add site checks; shared or unknown

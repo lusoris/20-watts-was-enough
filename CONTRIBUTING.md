@@ -30,7 +30,7 @@ not promote a research claim by itself.
 
 An issue report or reader review needs no development environment. A pull
 request still needs the focused checks while you work and the aggregate gate
-before submission.
+before marking it ready for review.
 
 ## Prerequisites and bootstrap
 
@@ -90,8 +90,13 @@ an authority boundary, expected evidence, focused checks and exact issue route.
 6. Define every symbol and system boundary used in a calculation.
 7. Update [`CHANGELOG.md`](CHANGELOG.md) and, for a durable choice, add a
    decision record under [`decisions/`](decisions/README.md).
-8. Run the focused validator while working and `npm run check` before
-   committing or opening a pull request.
+8. Follow the [local validation sequence](AGENTS.md#working-sequence) before
+   committing: cover changed contracts and downstream consumers, combining
+   mixed scopes. Unknown, unsafe or shared-authority scope requires the full
+   gate.
+9. Run the [complete npm and Go gates](decisions/0080-impact-scope-local-validation.md#preserve-the-complete-gates)
+   before marking a pull request ready, integrating into `main`, merging or
+   releasing.
 
 Use Conventional Commits for commit and pull-request titles:
 `type(scope): concise change`. Supported types are `feat`, `fix`, `docs`,
