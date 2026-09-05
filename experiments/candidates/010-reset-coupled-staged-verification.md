@@ -102,9 +102,6 @@ flowchart TD
     O --> I
 ```
 
-Editable source:
-[reset-coupled-verification.mmd](../../assets/diagrams/reset-coupled-verification.mmd).
-
 ## What must be distinct
 
 The experiment treats these as separate operations:

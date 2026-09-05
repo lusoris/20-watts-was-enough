@@ -308,19 +308,6 @@
       ]
     },
     {
-      "sha256": "7d7bb8be38b9347193e9146469f36abda05b3958f7186b28dec30a54495135e9",
-      "occurrences": [
-        {
-          "path": "assets/diagrams/reset-coupled-verification.mmd",
-          "count": 1
-        },
-        {
-          "path": "experiments/candidates/010-reset-coupled-staged-verification.md",
-          "count": 1
-        }
-      ]
-    },
-    {
       "sha256": "88f1f5e11e34e2c12a179d68ec670c078a5bbfd282836ac5a34a9456b0be886b",
       "occurrences": [
         {

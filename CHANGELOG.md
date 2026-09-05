@@ -328,6 +328,9 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- Candidate 010's inline staged-verification diagram is now its sole editable
+  owner; the unused standalone copy and its exact-duplicate allowance are gone
+  without changing the diagram body or experiment contract.
 - Candidate 014's inline observation-chain diagram is now its sole editable
   owner; the unused standalone copy and its exact-duplicate allowance are gone
   without changing either candidate diagram or the experiment contract.
