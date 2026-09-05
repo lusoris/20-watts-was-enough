@@ -77,3 +77,4 @@ than silently changing its outcome.
 | [0070](0070-default-the-local-workstation-aggregate-to-four-commands.md) | Default the local workstation aggregate to four commands | accepted |
 | [0071](0071-lock-the-clrs-generator-wheel-selection.md) | Lock the CLRS generator wheel selection | accepted |
 | [0072](0072-run-browser-contracts-in-isolated-processes.md) | Run browser contracts in isolated processes | accepted |
+| [0073](0073-publish-pdf-tools-evidence-from-unnamed-pinned-files.md) | Publish each PDF-tools candidate as one atomic bundle | accepted |

@@ -41,6 +41,7 @@ type spdxIdentity struct {
 	CanonicalSize   int64
 	Packages        int
 	Relationships   int
+	raw             []byte
 	canonical       []byte
 }
 
@@ -59,6 +60,9 @@ func canonicalizeSPDX(body []byte, maximumBytes int64, maximumPackages, maximumR
 	if err != nil {
 		return spdxIdentity{}, err
 	}
+	// Relationship-array order is the only semantic normalisation. Deterministic
+	// JSON encoding also fixes object-member order and whitespace; every field
+	// value and every other array retains the validated input value and order.
 	sort.Slice(relationships, func(left, right int) bool {
 		return bytes.Compare(relationships[left].canonical, relationships[right].canonical) < 0
 	})
@@ -82,6 +86,7 @@ func canonicalizeSPDX(body []byte, maximumBytes int64, maximumPackages, maximumR
 		CanonicalSize:   int64(len(canonical)),
 		Packages:        packages,
 		Relationships:   len(relationships),
+		raw:             slices.Clone(body),
 		canonical:       canonical,
 	}, nil
 }

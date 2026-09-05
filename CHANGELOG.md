@@ -37,6 +37,16 @@ the exact diff; this file records why the project changed.
   release lane rather than expanding to full CI plus renderer reproducibility.
   Production PDF finalisation, the manual Poppler audit, unknown scripts and
   selector changes remain fail-closed.
+- Decision 0073 makes one deterministic USTAR the only PDF-tools candidate
+  publication and consumer authority. It contains the canonical `NO_RESULT`
+  receipt and all three hash-bound candidate streams, is reproduced twice from
+  unnamed staged descriptors, and becomes visible through one no-replace
+  `linkat`. Separately named files remain non-authoritative convenience copies;
+  successful candidate preparation leaves no standalone receipt. The consumer
+  verifier requires an independently recorded outer SHA-256 and rehashes every
+  member. Descriptor traversal closes ancestor-symlink and cleanup races while
+  retaining exact partial evidence; arbitrary same-UID mutation remains outside
+  the producer boundary. Unsupported platforms and filesystems fail closed.
 - Decision 0070 makes Fixture 026 check a missing arm commitment against
   existing evaluator state before invoking the isolated policy bank, so a
   bounded policy timeout cannot mask deterministic resume corruption. The
@@ -211,6 +221,18 @@ the exact diff; this file records why the project changed.
   only its random alias and leaves shared untagged digest content under Docker
   cache management, so concurrent local reproductions cannot delete each
   other's image.
+- The same reproducer can now prepare the issue-20 candidate at four explicit
+  new paths after the complete two-build and runtime checks pass. A bounded Go
+  downloader retains the 45 exact APKs and Poppler source archive by URL, size
+  and SHA-256; the deterministic source bundle adds the maintained authority,
+  notices, Wolfi recipe and licence, and one canonical apko SPDX document under
+  a sorted `SHA256SUMS`. Relationship order is the only admitted semantic
+  normalisation; the receipt preserves both raw build identities and binds the
+  canonical document, source bundle and one final OCI archive inside one
+  deterministic publication bundle while keeping remote publication, digest
+  admission, legal conclusions and scientific use blocked under `NO_RESULT`.
+  The three separately named files are convenience
+  copies; the independently hash-bound outer bundle is the consumer authority.
 - Decision 0055 and a source-bound Go contract now freeze the CLRS-Text
   controller shakedown to six named task families, a bounded 48-example
   construction plan and explicit fixed-four-endpoint semantics for segment

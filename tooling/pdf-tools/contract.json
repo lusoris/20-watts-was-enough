@@ -151,6 +151,13 @@
     "apk_manifest_sha256": "367368e7e075f20f30604b81497e65befe6987eaf526ed28da9f1506029ad1df",
     "apk_count": 45,
     "candidate_bundle": "20w-pdf-tools-26.08.0-r0-linux-amd64-sources.tar.gz",
+    "bundle_layout": {
+      "root": "20w-pdf-tools-26.08.0-r0-linux-amd64-sources",
+      "checksum_manifest": "SHA256SUMS",
+      "apk_directory": "packages",
+      "poppler_archive": "upstream/poppler-26.08.0.tar.xz",
+      "spdx": "sbom/sbom-x86_64.spdx.json"
+    },
     "candidate_retention_days": 30,
     "release_route": "checksum-bound GitHub Release asset",
     "contents": [
@@ -163,7 +170,8 @@
       "pinned Wolfi recipe",
       "Wolfi root Apache-2.0 recipe licence",
       "Poppler notices",
-      "generated SPDX SBOM"
+      "generated SPDX SBOM",
+      "deterministic SHA256SUMS"
     ]
   },
   "limits": {

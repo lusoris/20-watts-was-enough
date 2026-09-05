@@ -1,9 +1,11 @@
 package pdftools
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"slices"
@@ -218,6 +220,7 @@ func TestBoundedDockerDirectoryCapsEmptyEntriesAndDepth(t *testing.T) {
 }
 
 func TestReproductionReceiptIsBoundedAtomicAndNoReplace(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
 	t.Parallel()
 	root := t.TempDir()
 	path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
@@ -229,14 +232,23 @@ func TestReproductionReceiptIsBoundedAtomicAndNoReplace(t *testing.T) {
 		Authority: "NO_RESULT", BaseBuilds: []ReproductionBuild{}, FinalBuilds: []ReproductionBuild{},
 		Notices: []NoticeObservation{}, ManPages: []string{},
 	}
-	if err := writeReproductionReceipt(path, receipt, 64*1024); err != nil {
+	if err := writeReproductionReceiptChecked(root, path, receipt, 64*1024, func() error {
+		entries, err := os.ReadDir(filepath.Dir(path))
+		if err != nil {
+			return err
+		}
+		if len(entries) != 0 {
+			return fmt.Errorf("unnamed receipt staging created path entries: %v", entries)
+		}
+		return nil
+	}); err != nil {
 		t.Fatal(err)
 	}
 	body, err := os.ReadFile(path)
 	if err != nil || !strings.Contains(string(body), `"authority": "NO_RESULT"`) {
 		t.Fatalf("receipt = %q, error = %v", body, err)
 	}
-	if err := writeReproductionReceipt(path, receipt, 64*1024); err == nil {
+	if err := writeReproductionReceipt(root, path, receipt, 64*1024); err == nil {
 		t.Fatal("receipt replacement was accepted")
 	}
 	after, err := os.ReadFile(path)
@@ -244,7 +256,7 @@ func TestReproductionReceiptIsBoundedAtomicAndNoReplace(t *testing.T) {
 		t.Fatal("existing receipt changed after replacement attempt")
 	}
 	bounded := filepath.Join(filepath.Dir(path), "too-small.json")
-	if err := writeReproductionReceipt(bounded, receipt, 1); err == nil {
+	if err := writeReproductionReceipt(root, bounded, receipt, 1); err == nil {
 		t.Fatal("oversized receipt was accepted")
 	}
 	if _, err := os.Lstat(bounded); !errors.Is(err, os.ErrNotExist) {
@@ -256,10 +268,283 @@ func TestReproductionReceiptIsBoundedAtomicAndNoReplace(t *testing.T) {
 	}
 }
 
-func TestPrepareReproductionReceiptPathRejectsEscapeAndExisting(t *testing.T) {
+func TestReproductionReceiptAtomicLinkDoesNotOverwriteConcurrentDestination(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
 	t.Parallel()
 	root := t.TempDir()
-	for _, path := range []string{"../escape.json", "receipt.json", "build/evidence/not-json"} {
+	path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	foreign := []byte("concurrent destination")
+	err = writeReproductionReceiptChecked(
+		root,
+		path,
+		reproductionReceiptTestValue(),
+		64*1024,
+		func() error { return os.WriteFile(path, foreign, 0o640) },
+	)
+	if err == nil {
+		t.Fatal("atomic receipt publication overwrote a concurrent destination")
+	}
+	retained, readError := os.ReadFile(path)
+	if readError != nil || !bytes.Equal(retained, foreign) {
+		t.Fatalf("concurrent receipt destination changed: %q, %v", retained, readError)
+	}
+}
+
+func TestReproductionReceiptRejectsPrewriteSymlinkSwapsWithoutOutsideWrite(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
+	t.Parallel()
+	for _, swap := range []string{"receipt parent", "intermediate parent"} {
+		swap := swap
+		t.Run(swap, func(t *testing.T) {
+			t.Parallel()
+			base := t.TempDir()
+			root := filepath.Join(base, "repository")
+			outside := filepath.Join(base, "outside")
+			if err := os.Mkdir(root, 0o755); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.Mkdir(outside, 0o755); err != nil {
+				t.Fatal(err)
+			}
+			path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
+			if err != nil {
+				t.Fatal(err)
+			}
+			parked := filepath.Join(base, "parked")
+			link := filepath.Dir(path)
+			outsideReceiptDirectory := outside
+			parkedReceiptDirectory := parked
+			if swap == "intermediate parent" {
+				link = filepath.Join(root, "build")
+				outsideReceiptDirectory = filepath.Join(outside, "evidence")
+				parkedReceiptDirectory = filepath.Join(parked, "evidence")
+				if err := os.Mkdir(outsideReceiptDirectory, 0o755); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if err := os.Rename(link, parked); err != nil {
+				t.Fatal(err)
+			}
+			if err := os.Symlink(outside, link); err != nil {
+				t.Skipf("create hostile receipt-parent symlink: %v", err)
+			}
+			sentinel := filepath.Join(outside, "sentinel")
+			if err := os.WriteFile(sentinel, []byte("outside-owned"), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			receipt := reproductionReceiptTestValue()
+			if err := writeReproductionReceipt(root, path, receipt, 64*1024); err == nil {
+				t.Fatal("writeReproductionReceipt() accepted a pre-write parent symlink swap")
+			}
+			assertNoReceiptFiles(t, path, outsideReceiptDirectory, parkedReceiptDirectory)
+			body, err := os.ReadFile(sentinel)
+			if err != nil || string(body) != "outside-owned" {
+				t.Fatalf("outside sentinel changed: %q, %v", body, err)
+			}
+		})
+	}
+}
+
+func TestReproductionReceiptRejectsLateParentSwapWithoutOutsideWrite(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
+	t.Parallel()
+	base := t.TempDir()
+	root := filepath.Join(base, "repository")
+	outside := filepath.Join(base, "outside")
+	if err := os.Mkdir(root, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Mkdir(outside, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	parent := filepath.Dir(path)
+	parked := filepath.Join(base, "parked-evidence")
+	sentinel := filepath.Join(outside, "sentinel")
+	if err := os.WriteFile(sentinel, []byte("outside-owned"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	err = writeReproductionReceiptChecked(root, path, reproductionReceiptTestValue(), 64*1024, func() error {
+		if err := os.Rename(parent, parked); err != nil {
+			return err
+		}
+		return os.Symlink(outside, parent)
+	})
+	if err == nil || !strings.Contains(err.Error(), "directory changed before publication") {
+		t.Fatalf("write after receipt parent swap error = %v", err)
+	}
+	assertNoReceiptFiles(t, path, outside, parked)
+	body, err := os.ReadFile(sentinel)
+	if err != nil || string(body) != "outside-owned" {
+		t.Fatalf("outside sentinel changed: %q, %v", body, err)
+	}
+}
+
+func TestReproductionReceiptDoesNotUseOrReplaceLegacyStagingNames(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
+	t.Parallel()
+	root := t.TempDir()
+	path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	receipt := reproductionReceiptTestValue()
+	temporaryPath := filepath.Join(filepath.Dir(path), ".20w-pdf-tools-receipt-foreign.tmp")
+	foreign := []byte("foreign staging file")
+	if err := os.WriteFile(temporaryPath, foreign, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := writeReproductionReceipt(root, path, receipt, 64*1024); err != nil {
+		t.Fatalf("legacy staging-shaped file blocked unnamed publication: %v", err)
+	}
+	current, err := os.ReadFile(temporaryPath)
+	if err != nil || string(current) != string(foreign) {
+		t.Fatalf("pre-existing staging file changed: %q, %v", current, err)
+	}
+	if information, err := os.Lstat(path); err != nil || !information.Mode().IsRegular() {
+		t.Fatalf("unnamed receipt was not published: %v", err)
+	}
+}
+
+func TestReproductionReceiptRetainsPublishedPathAfterPostLinkFailure(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
+	t.Parallel()
+	tests := map[string]struct {
+		afterLink func(*pinnedPublicationDirectory, string) error
+		want      []byte
+	}{
+		"exact published receipt": {
+			afterLink: func(*pinnedPublicationDirectory, string) error {
+				return errors.New("injected post-link failure")
+			},
+		},
+		"hostile replacement": {
+			afterLink: func(parent *pinnedPublicationDirectory, name string) error {
+				if err := parent.root.Remove(name); err != nil {
+					return err
+				}
+				return parent.root.WriteFile(name, []byte("foreign"), 0o640)
+			},
+			want: []byte("foreign"),
+		},
+	}
+	for name, test := range tests {
+		name, test := name, test
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			root := t.TempDir()
+			path, err := prepareReproductionReceiptPath(root, "build/evidence/pdf-tools.json")
+			if err != nil {
+				t.Fatal(err)
+			}
+			receipt := reproductionReceiptTestValue()
+			body, err := json.MarshalIndent(receipt, "", "  ")
+			if err != nil {
+				t.Fatal(err)
+			}
+			body = append(body, '\n')
+			if test.want == nil {
+				test.want = body
+			}
+			err = writeReproductionReceiptCheckedAtRoot(
+				testPublicationRoot(t, root), path, receipt, 64*1024, nil, test.afterLink,
+			)
+			if err == nil {
+				t.Fatal("receipt publication accepted the injected post-link failure")
+			}
+			retained, readError := os.ReadFile(path)
+			if readError != nil || !bytes.Equal(retained, test.want) {
+				t.Fatalf("published receipt path was removed or changed: %q, %v", retained, readError)
+			}
+			temporary, globError := filepath.Glob(filepath.Join(filepath.Dir(path), ".20w-pdf-tools-receipt-*.tmp"))
+			if globError != nil || len(temporary) != 0 {
+				t.Fatalf("receipt publication created a staging pathname: %v, %v", temporary, globError)
+			}
+		})
+	}
+}
+
+func TestPinnedPublicationDirectoryCreationCannotFollowSwappedRepositoryRoot(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
+	t.Parallel()
+	base := t.TempDir()
+	root := filepath.Join(base, "repository")
+	parked := filepath.Join(base, "parked")
+	outside := filepath.Join(base, "outside")
+	for _, directory := range []string{root, outside} {
+		if err := os.Mkdir(directory, 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	repository := testPublicationRoot(t, root)
+	swapped := false
+	_, err := prepareReproductionReceiptPathAtRoot(
+		repository,
+		"build/evidence/pdf-tools.json",
+		func(string) error {
+			if swapped {
+				return nil
+			}
+			swapped = true
+			if err := os.Rename(root, parked); err != nil {
+				return err
+			}
+			return os.Symlink(outside, root)
+		},
+	)
+	if err == nil || !swapped {
+		t.Fatalf("pinned directory creation accepted a swapped repository root: %v", err)
+	}
+	if _, err := os.Lstat(filepath.Join(outside, "build")); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("directory creation escaped to the swapped root: %v", err)
+	}
+	if information, err := os.Lstat(filepath.Join(parked, "build", "evidence")); err != nil || !information.IsDir() {
+		t.Fatalf("pinned creation did not remain under the original root: %v", err)
+	}
+}
+
+func reproductionReceiptTestValue() ReproductionReceipt {
+	return ReproductionReceipt{
+		Schema: 1, Status: "local-construction-pass", Scope: "local-pdf-tools-final-image-reproduction",
+		Authority: "NO_RESULT", BaseBuilds: []ReproductionBuild{}, FinalBuilds: []ReproductionBuild{},
+		Notices: []NoticeObservation{}, ManPages: []string{},
+	}
+}
+
+func assertNoReceiptFiles(t *testing.T, path string, directories ...string) {
+	t.Helper()
+	if _, err := os.Lstat(path); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("failed receipt publication left %s: %v", path, err)
+	}
+	for _, directory := range directories {
+		if _, err := os.Lstat(filepath.Join(directory, filepath.Base(path))); !errors.Is(err, os.ErrNotExist) {
+			t.Fatalf("failed receipt publication left a receipt in %s: %v", directory, err)
+		}
+		temporary, err := filepath.Glob(filepath.Join(directory, ".20w-pdf-tools-receipt-*.tmp"))
+		if err != nil || len(temporary) != 0 {
+			t.Fatalf("failed receipt publication left temporary files in %s: %v, %v", directory, temporary, err)
+		}
+	}
+}
+
+func TestPrepareReproductionReceiptPathRejectsEscapeAndExisting(t *testing.T) {
+	requireAtomicPublicationTestPlatform(t)
+	t.Parallel()
+	root := t.TempDir()
+	for _, path := range []string{
+		"../escape.json",
+		"receipt.json",
+		"build/evidence/not-json",
+		"build/evidence/line\nbreak.json",
+		"build/evidence/tab\tname.json",
+		"build/evidence/bidi\u202e.json",
+	} {
 		if _, err := prepareReproductionReceiptPath(root, path); err == nil {
 			t.Fatalf("prepareReproductionReceiptPath() accepted %q", path)
 		}

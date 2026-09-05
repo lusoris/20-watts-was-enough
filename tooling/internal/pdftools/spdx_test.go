@@ -2,6 +2,7 @@ package pdftools
 
 import (
 	"encoding/json"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -19,8 +20,21 @@ func TestCanonicalizeSPDXAdmitsOnlyRelationshipOrdering(t *testing.T) {
 		t.Fatal(err)
 	}
 	if left.RawSHA256 == right.RawSHA256 || left.CanonicalSHA256 != right.CanonicalSHA256 ||
+		string(left.raw) != string(first) || string(right.raw) != string(second) ||
 		string(left.canonical) != string(right.canonical) || left.Packages != 3 || left.Relationships != 2 {
 		t.Fatalf("canonical identities = %#v / %#v", left, right)
+	}
+	originalDocument, err := decodeSPDXDocument(first)
+	if err != nil {
+		t.Fatal(err)
+	}
+	canonicalDocument, err := decodeSPDXDocument(left.canonical)
+	if err != nil {
+		t.Fatal(err)
+	}
+	originalDocument["relationships"] = canonicalDocument["relationships"]
+	if !reflect.DeepEqual(originalDocument, canonicalDocument) {
+		t.Fatal("SPDX canonicalisation changed content outside relationship-array order")
 	}
 	base := BaseImage{
 		SPDXSize: len64(first), SPDXCanonicalSHA256: left.CanonicalSHA256,

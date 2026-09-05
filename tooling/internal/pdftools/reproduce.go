@@ -11,16 +11,20 @@ import (
 	"time"
 )
 
-// ReproductionOptions selects one local, non-publishing final-image
-// reproduction. ReceiptPath is a new repository-relative JSON file.
+// ReproductionOptions selects one local final-image reproduction. ReceiptPath
+// receives an ordinary success receipt or candidate-run mismatch evidence; a
+// successful candidate receipt is embedded only in its publication bundle.
 type ReproductionOptions struct {
 	RepositoryRoot string
 	ReceiptPath    string
+	Candidate      *CandidateOutputOptions
 }
 
 // ReproduceFinalImage builds and compares two complete local PDF-tools images.
-// It never pushes, publishes, assembles source-delivery material, or grants
-// scientific or release admission authority.
+// When one bundle path and three convenience paths are supplied, it also
+// retains one exact final archive, the byte-identical canonical apko SPDX
+// output, and a checksum-closed source bundle inside one authoritative local
+// bundle. It never pushes or grants scientific or release authority.
 func ReproduceFinalImage(
 	ctx context.Context,
 	options ReproductionOptions,
@@ -29,7 +33,12 @@ func ReproduceFinalImage(
 	if err != nil {
 		return ReproductionReceipt{}, err
 	}
-	receiptPath, err := prepareReproductionReceiptPath(authority.root, options.ReceiptPath)
+	repository := publicationRootIdentity{path: authority.root, information: authority.rootInformation}
+	receiptPath, err := prepareReproductionReceiptPathAtRoot(repository, options.ReceiptPath, nil)
+	if err != nil {
+		return ReproductionReceipt{}, err
+	}
+	candidatePlan, err := prepareCandidateOutputPlan(authority, options.Candidate, options.ReceiptPath)
 	if err != nil {
 		return ReproductionReceipt{}, err
 	}
@@ -119,12 +128,14 @@ func ReproduceFinalImage(
 	comparison := compareReproduction(
 		bases, finals, inspections, baseArchiveEqual, finalArchiveEqual, contextStable,
 	)
-	receipt := newReproductionReceipt(authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspections[0], comparison)
+	receipt := newReproductionReceipt(authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspections[0], comparison, nil)
 	if !comparison.ConstructionMatch {
 		if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
 			return ReproductionReceipt{}, err
 		}
-		if err := writeReproductionReceipt(receiptPath, receipt, authority.contract.Limits.ReceiptBytes); err != nil {
+		if err := writeReproductionReceiptCheckedAtRoot(
+			repository, receiptPath, receipt, authority.contract.Limits.ReceiptBytes, nil, nil,
+		); err != nil {
 			return ReproductionReceipt{}, err
 		}
 		return receipt, errors.New("PDF-tools final-image reproduction mismatch; inspect the retained NO_RESULT receipt")
@@ -135,13 +146,86 @@ func ReproduceFinalImage(
 	}
 	comparison.Runtime = true
 	comparison.AllMatch = comparison.ConstructionMatch && comparison.Runtime
-	receipt = newReproductionReceipt(authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspections[0], comparison)
-	receipt.Runtime = &runtimeObservation
+	return finishSuccessfulReproduction(
+		reproductionContext, authority, receiptPath, candidatePlan, apkoBuilder, comparator,
+		contextIdentity, bases, finals, inspections[0], comparison, runtimeObservation,
+	)
+}
+
+func finishSuccessfulReproduction(
+	ctx context.Context,
+	authority checkedAuthority,
+	receiptPath string,
+	plan *candidateOutputPlan,
+	apkoBuilder apkoBuilderIdentity,
+	comparator ReproductionComparator,
+	contextIdentity noticeContextIdentity,
+	bases []baseBuild,
+	finals []finalBuild,
+	inspection layerInspection,
+	comparison ReproductionComparison,
+	runtimeObservation RuntimeObservation,
+) (_ ReproductionReceipt, returnError error) {
 	if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
 		return ReproductionReceipt{}, err
 	}
-	if err := writeReproductionReceipt(receiptPath, receipt, authority.contract.Limits.ReceiptBytes); err != nil {
+	if plan == nil {
+		receipt := newReproductionReceipt(
+			authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspection, comparison, nil,
+		)
+		receipt.Runtime = &runtimeObservation
+		if err := writeReproductionReceiptCheckedAtRoot(
+			publicationRootIdentity{path: authority.root, information: authority.rootInformation},
+			receiptPath, receipt, authority.contract.Limits.ReceiptBytes, nil, nil,
+		); err != nil {
+			return ReproductionReceipt{}, err
+		}
+		return receipt, nil
+	}
+	downloader, err := newCandidateDownloader(time.Duration(authority.contract.Limits.BuildSeconds) * time.Second)
+	if err != nil {
 		return ReproductionReceipt{}, err
+	}
+	defer downloader.close()
+	staged, err := stageCandidateOutputs(ctx, authority, plan, bases, finals, downloader.fetch)
+	if err != nil {
+		return ReproductionReceipt{}, err
+	}
+	defer func() { returnError = errors.Join(returnError, staged.cleanup()) }()
+	if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
+		return ReproductionReceipt{}, err
+	}
+	receipt := newReproductionReceipt(
+		authority, apkoBuilder, comparator, contextIdentity, bases, finals, inspection, comparison, staged.receipt(authority),
+	)
+	receipt.Runtime = &runtimeObservation
+	publicationBundle, err := stageCandidatePublicationBundle(authority, plan, staged, receipt)
+	if err != nil {
+		return ReproductionReceipt{}, err
+	}
+	defer func() { returnError = errors.Join(returnError, publicationBundle.cleanup()) }()
+	// These three named files preserve the pre-bundle operator workflow, but
+	// they are convenience copies only. The independently hash-bound bundle is
+	// the sole complete candidate publication unit.
+	if err := staged.install(authority.root); err != nil {
+		return ReproductionReceipt{}, err
+	}
+	if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
+		return ReproductionReceipt{}, err
+	}
+	bundle := &stagedCandidate{artifacts: []*stagedCandidateArtifact{publicationBundle}}
+	if err := bundle.install(authority.root); err != nil {
+		return ReproductionReceipt{}, err
+	}
+	verification, err := verifyPublishedCandidatePublicationBundle(authority, publicationBundle)
+	if err != nil {
+		return ReproductionReceipt{}, err
+	}
+	if err := ensureReproductionInputsUnchanged(authority, comparator); err != nil {
+		return ReproductionReceipt{}, err
+	}
+	receipt.Candidate.PublicationBundle = &ReproductionArtifact{
+		Path: plan.publicationBundle.relative, SHA256: verification.SHA256, Bytes: verification.Bytes,
 	}
 	return receipt, nil
 }

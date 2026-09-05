@@ -119,13 +119,24 @@ type NoticeEntry struct {
 }
 
 type SourceDelivery struct {
-	APKManifest            string   `json:"apk_manifest"`
-	APKManifestSHA256      string   `json:"apk_manifest_sha256"`
-	APKCount               int      `json:"apk_count"`
-	CandidateBundle        string   `json:"candidate_bundle"`
-	CandidateRetentionDays int      `json:"candidate_retention_days"`
-	ReleaseRoute           string   `json:"release_route"`
-	Contents               []string `json:"contents"`
+	APKManifest            string       `json:"apk_manifest"`
+	APKManifestSHA256      string       `json:"apk_manifest_sha256"`
+	APKCount               int          `json:"apk_count"`
+	CandidateBundle        string       `json:"candidate_bundle"`
+	BundleLayout           BundleLayout `json:"bundle_layout"`
+	CandidateRetentionDays int          `json:"candidate_retention_days"`
+	ReleaseRoute           string       `json:"release_route"`
+	Contents               []string     `json:"contents"`
+}
+
+// BundleLayout fixes the paths inside the deterministic corresponding-source
+// candidate. SHA256SUMS covers every other regular file in the bundle.
+type BundleLayout struct {
+	Root             string `json:"root"`
+	ChecksumManifest string `json:"checksum_manifest"`
+	APKDirectory     string `json:"apk_directory"`
+	PopplerArchive   string `json:"poppler_archive"`
+	SPDX             string `json:"spdx"`
 }
 
 type Limits struct {
