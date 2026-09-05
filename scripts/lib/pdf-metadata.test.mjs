@@ -529,7 +529,23 @@ test("the tracked semantic baseline is closed and records failing debt", async (
   ));
   assert.equal(baseline.expected_outcome, "known-debt");
   assert.equal(baseline.sentinels.length, 6);
-  assert.equal(baseline.sentinels.filter(({ state }) => state === "known-debt").length, 5);
+  assert.equal(baseline.sentinels.filter(({ state }) => state === "known-debt").length, 4);
+  const readinessSentinel = baseline.sentinels.find(
+    ({ id }) => id === "readiness-dashboard-late-values",
+  );
+  assert.equal(readinessSentinel?.state, "clean", "the readiness paint order remains a positive sentinel");
+  assert.equal(readinessSentinel.recorded_page, 4);
+  assert.deepEqual(readinessSentinel.raw_fragments, [
+    "Experimentimplementationlane",
+    "49",
+    "COMPLETE WRITTEN",
+    "11",
+    "VALIDATED SMOKE HARNESS",
+    "0",
+    "WORKSTATION-READY",
+    "Evidencestatusbyhighesttesttier",
+    "project's experiment.",
+  ]);
   const headingSentinel = baseline.sentinels.find(
     ({ id }) => id === "field-coverage-heading-merged",
   );
