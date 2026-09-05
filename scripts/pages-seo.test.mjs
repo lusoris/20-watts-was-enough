@@ -24,7 +24,7 @@ import {
 } from "./lib/pages-seo.mjs";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const stylesheet = await readFile(path.join(repositoryRoot, "app/globals.css"), "utf8");
+const portalStylesheet = await readFile(path.join(repositoryRoot, "app/portal.css"), "utf8");
 const documents = portalSourceDocuments(repositoryRoot);
 const bookDocuments = bookSourceDocuments(repositoryRoot);
 const helpDocument = markdownSourceDocument(
@@ -90,7 +90,7 @@ test("help metadata and fallback come from the canonical contribution map", () =
   );
   assert.doesNotMatch(fallback, /<script\b/);
   assert.match(
-    stylesheet,
+    portalStylesheet,
     /\.help-page \.help-prose table\s*\{[^}]*min-width:\s*960px;/s,
   );
 });

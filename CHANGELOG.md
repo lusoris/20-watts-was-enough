@@ -50,6 +50,15 @@ the exact diff; this file records why the project changed.
   150-second outer bound around tighter browser phases whose combined budgets
   are longer. The outer bound is now 240 seconds while every render, navigation,
   reflow and cleanup phase keeps its existing tighter deadline and assertion.
+- Decision 0063 gives the public overview, document reader, and help route one
+  parsed CSS authority with one ordered responsive family. A deterministic
+  PostCSS guard now rejects same-scope selector duplication, ownership leaks,
+  breakpoint drift, global CSS growth beyond its reduced ceiling, and loss of
+  the publication measure or leading bounds. Book, shared-control, and print
+  rules remain in the global owner; the 12-route viewport comparison stayed
+  pixel-identical while `app/globals.css` fell from 4,973 to 2,302 lines. At the
+  360-by-225-pixel reflow boundary, the shared mobile navigation now scrolls
+  locally so every destination and its keyboard focus remain in the viewport.
 - Decision 0059 makes dependency advisory checking a single explicit security
   decision in each full CI or release gate. Every locked install now suppresses
   npm's implicit audit submission; the enforcing command audits the canonical

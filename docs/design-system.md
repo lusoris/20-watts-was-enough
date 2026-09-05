@@ -62,11 +62,13 @@ as semantic tokens in the owning stylesheet. Components consume those roles.
 A route must not restate the palette or copy a component merely to obtain a
 slightly different appearance.
 
-The current token values in [`app/globals.css`](../app/globals.css) are the
-implementation authority. This document defines their roles, not duplicate
-hex values. New work should converge primitive tokens and portal aliases into
-a smaller semantic set as components are touched; a redesign does not justify
-an unrelated whole-file rewrite.
+Shared, book, and print tokens in
+[`app/globals.css`](../app/globals.css) and public-reader tokens in
+[`app/portal.css`](../app/portal.css) are the implementation authorities. This
+document defines their roles, not duplicate hex values. New work should
+converge primitive tokens and portal aliases into a smaller semantic set as
+components are touched; a redesign does not justify an unrelated whole-file
+rewrite.
 
 ### Typography carries structure
 
@@ -138,6 +140,17 @@ consolidated:
 Before changing a selector, search every definition under the same media or
 container condition. Move the touched rule to its owner instead of adding a
 later override. Existing cascade debt is not permission to increase it.
+
+The public portal, document reader, and help route have one selector and
+breakpoint owner in [`app/portal.css`](../app/portal.css). Its screen family is
+ordered from the base screen rules through 1180, 1080, 880, 760, 700, 620, and
+460 pixel maximum-width boundaries. Global reset, book, shared language and
+skip-link controls, and print rules remain in
+[`app/globals.css`](../app/globals.css). Run `npm run
+validate:css-authority` after touching either file. The validator parses CSS,
+rejects a public-reader selector outside its owner, rejects duplicate selectors
+inside an equivalent media scope, and keeps the prose measure and leading
+bounds explicit.
 
 The design system prefers a few components with named jobs:
 
