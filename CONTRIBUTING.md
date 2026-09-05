@@ -30,7 +30,7 @@ not promote a research claim by itself.
 
 An issue report or reader review needs no development environment. A pull
 request still needs the focused checks while you work and the aggregate gate
-before submission.
+before marking it ready for review.
 
 ## Prerequisites and bootstrap
 
