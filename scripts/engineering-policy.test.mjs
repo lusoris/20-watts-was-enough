@@ -230,7 +230,7 @@ test("full-book browser probes stay in one bounded process-isolated site-test gr
   assert.deepEqual(tokens.slice(0, 2), ["node", "--test"]);
   assert.deepEqual(
     tokens.filter((token) => token.startsWith("--test-concurrency=")),
-    ["--test-concurrency=3"],
+    ["--test-concurrency=2"],
   );
   assert.deepEqual(
     tokens.filter((token) => token.startsWith("--experimental-test-isolation=")),

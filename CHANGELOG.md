@@ -7,8 +7,13 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
-- Decision 0072 runs the three independent site-browser contracts in three
-  process-isolated Node workers instead of one serial process. Every assertion,
+- Decision 0072 runs the three independent site-browser contracts in
+  process-isolated Node workers with a concurrency ceiling of two instead of
+  one serial process. The first live three-worker run exhausted its unchanged
+  fragment-stability deadline under contention despite ending on a visible
+  target, so two workers retain overlap without repeating that level of
+  contention.
+  Every assertion,
   viewport, route, source identity and deadline stays exact. Vite now binds all
   three ephemeral listeners in-process with private caches and in-memory config
   loading; Chrome owns each ephemeral debug port until shutdown. Test

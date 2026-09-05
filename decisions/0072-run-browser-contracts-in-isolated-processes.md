@@ -2,7 +2,7 @@
 
 - **Status:** accepted
 - **Date:** 2026-09-05
-- **Related:** [issue #7](https://github.com/lusoris/20-watts-was-enough/issues/7), [full-plan run 33950189857](https://github.com/lusoris/20-watts-was-enough/actions/runs/33950189857)
+- **Related:** [issue #7](https://github.com/lusoris/20-watts-was-enough/issues/7), [serial full-plan run 33950189857](https://github.com/lusoris/20-watts-was-enough/actions/runs/33950189857), [three-worker run 33954330013](https://github.com/lusoris/20-watts-was-enough/actions/runs/33954330013)
 
 ## Context
 
@@ -21,8 +21,11 @@ temporary cache; this change brings that server into its isolated test process.
 ## Decision
 
 1. Run the three exact browser files with Node's process-isolation mode and an
-   explicit concurrency ceiling of three. Keep the non-browser site tests in
-   their existing no-isolation process.
+   explicit concurrency ceiling of two. Keep the non-browser site tests in
+   their existing no-isolation process. The first live three-worker run
+   overloaded the shared runner long enough for the book fragment probe to
+   miss its unchanged stability deadline, even though its final snapshot was
+   visible. Two workers retain overlap while bounding that contention.
 2. Give the book-fragment and Mermaid Vite servers caches beneath their
    already unique temporary browser profiles. Retain the research-object
    test's existing temporary root and cache. Load all three TypeScript configs
@@ -44,7 +47,7 @@ temporary cache; this change brings that server into its isolated test process.
 
 - The browser group can approach the duration of its longest file instead of
   the sum of all three when runner capacity permits.
-- Three browser/Vite process trees may contend for runner CPU and memory. Their
+- Two browser/Vite process trees may contend for runner CPU and memory. Their
   existing deadlines remain fail-closed, so a live run must prove that the
   bounded concurrency is stable enough to retain.
 - Chrome-assigned debugging ports remove the close-before-bind race, and a
