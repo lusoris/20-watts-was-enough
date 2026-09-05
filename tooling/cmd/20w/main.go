@@ -58,6 +58,7 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w experiment package-node-image --artifact <id> --output <directory> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w experiment render-clrs-wheelhouse-manifest --wheelhouse <directory> --output <new.json> [--root <repository>]")
 	fmt.Fprintln(writer, "  20w experiment verify-clrs-wheelhouse --wheelhouse <directory> [--root <repository>]")
+	fmt.Fprintln(writer, "  20w experiment reproduce-clrs-promise-wheel --output <directory> (--inputs <directory> | --check) [--root <repository>]")
 	fmt.Fprintln(writer, "  20w publication render-pdf [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--revision <commit>] [--check]")
 	fmt.Fprintln(writer, "  20w publication verify-pdf-tools [--root <repository>]")
 	fmt.Fprintln(writer, "  20w publication reproduce-pdf-tools-image --receipt <new.json> [--candidate-bundle <new.tar> --final-archive <new.tar> --spdx <new.spdx.json> --source-bundle <new.tar.gz>] [--root <repository>]")
@@ -120,6 +121,9 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 		}
 		if len(arguments) >= 2 && arguments[1] == "verify-clrs-wheelhouse" {
 			return runExperimentVerifyCLRSWheelhouse(arguments[2:], stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "reproduce-clrs-promise-wheel" {
+			return runExperimentReproducePromise(arguments[2:], stdout, stderr)
 		}
 	case "release":
 		if len(arguments) >= 2 && arguments[1] == "inspect-image" {

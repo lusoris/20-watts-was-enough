@@ -80,6 +80,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A Go-owned candidate command reproduces the locked Promise 2.3 wheel in two
+  bounded, offline containers, checks the exact wheel and embedded MIT bytes,
+  and retains a source-bound receipt with a read-only consumer. Input
+  verification precedes effects; cleanup verifies ownership and removal.
+  The CLRS generator image remains blocked and all output has `NO_RESULT`
+  authority.
 - Decision 0071 locks one 61-file, 823,932,066-byte Linux `amd64` wheel
   selection for the pinned CLRS generator graph. Sixty files map directly to
   `uv.lock`; the sole `promise==2.3` source build binds its sdist, three build
