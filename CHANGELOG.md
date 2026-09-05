@@ -100,6 +100,11 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- `prepare-clrs-loaded-image` connects a checked CLRS archive to an
+  already-loaded local image and writes the original metadata and bounded
+  receipt for managed generation. Docker checks are read-only; preparation
+  neither acquires an image nor changes `NO_RESULT` or admission.
+
 - The read-only Go command `inspect-clrs-image-archive` verifies a supplied
   candidate archive, preserves original image metadata and checks ordered
   layer identities within fixed byte and time limits. It needs no Docker or

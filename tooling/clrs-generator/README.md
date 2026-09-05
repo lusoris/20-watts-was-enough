@@ -260,9 +260,11 @@ go -C tooling run ./cmd/20w experiment inspect-clrs-image-archive \
 Replace both placeholders before running. Relative archive paths resolve
 against `--root`. The schema-1 report binds the whole archive, manifest, config
 and ordered layer/diff-ID bytes. `manifest_base64` and `config_base64` preserve
-the original metadata bytes; decode those fields directly when preparing the
-existing managed generation inputs. Reformatting their JSON changes their
-digests. The report does not supply or verify a Docker loaded-image ID.
+the original metadata bytes; reformatting their JSON changes their digests.
+The report does not supply or verify a Docker loaded-image ID. To connect an
+already-loaded image to managed generation, use the
+[preparation command](#prepare-an-already-loaded-candidate-for-generation)
+below instead of decoding and assembling those inputs manually.
 
 This closed single-image profile accepts OCI layout version 1.0.0, one Linux
 amd64 image manifest and uncompressed or gzip layers. It rejects extra blobs,
@@ -388,6 +390,71 @@ There is deliberately no `Dockerfile`, committed wheel payload, generated
 fixture, admitted image digest or publication step in this foundation.
 [Issue 12](https://github.com/lusoris/20-watts-was-enough/issues/12) tracks the
 remaining acceptance work.
+
+## Prepare an already-loaded candidate for generation
+
+`prepare-clrs-loaded-image` checks the supplied archive and its matching image
+in the local Docker store, then writes the original metadata into a new local
+directory. Docker operations are read-only. An absent image causes failure;
+the command cannot download, import, tag or run it.
+
+```bash
+go -C tooling run ./cmd/20w experiment prepare-clrs-loaded-image \
+  --root .. --archive /path/to/candidate.oci.tar \
+  --sha256 '<64-lowercase-hex-characters>' --bytes '<exact-byte-count>' \
+  --output /path/to/new-image-inputs --json
+```
+
+Replace the hash and size placeholders with values from a separate retained
+build record. Relative paths resolve against `--root`. The output parent must
+exist and the child must be new. Preparation writes that directory directly;
+it has no `--execute` or `--check` switch. It requires Linux `amd64`, Docker
+client and server 29.7.2, cgroup v2 and the generation profile's resource
+capabilities and `runc` runtime. Calls use `unix:///var/run/docker.sock`, not an
+ambient Docker context.
+
+Use these schema-1 report fields with the managed generation command below:
+
+| Preparation report field | Generation flag |
+| --- | --- |
+| `loaded_image_id` | `--image-id` |
+| `manifest_digest` | `--image-manifest` |
+| `config_digest` | `--image-config` |
+| `manifest_file` | `--manifest-file` |
+| `config_file` | `--config-file` |
+
+The two file paths are absolute. The execution ID stays separate from the
+config digest because Docker stores use different ID conventions. Preparation
+compares the consumed runtime configuration and ordered rootfs diff IDs with
+the archive; it never reconstructs original JSON from Docker inspection output.
+Generation rechecks the supplied image before running it.
+
+A successful directory contains exactly six files: `run-start.json`,
+`archive-inspection.json`, `manifest.json`, `config.json`, `commands.json` and
+`receipt.json`. The receipt's `files` list hashes the other five. Each original
+metadata file, run-start record and preparation report is capped at 64 KiB;
+the archive report at 256 KiB and the command log at 8 MiB. The archive
+inspector's byte, layer and time limits still apply. Preparation has a
+300-second cooperative work deadline and at most four 15-second Docker calls;
+each may need two further seconds for pipes to settle. Each call permits at
+most 64 KiB stdout and 1 MiB combined stdout/stderr. Producer and Docker
+executable reads are capped at 128 MiB each; filesystem calls are not hard
+real-time.
+
+Exit codes are zero for completed preparation, one for validation, operation
+or output failure, and two for invalid arguments. `--json` includes operational
+failures; argument errors do not emit a report. Failures after output creation
+retain partial files and a failure receipt when possible. Keep that directory
+for diagnosis and use a new one for another attempt. Require the external
+exit status as well as the receipt: later output or I/O failure can follow
+completed observations.
+
+The successful state is `loaded-image-bound-unadmitted`, with `NO_RESULT`,
+`image_admitted: false` and `docker_mutated: false`. Preparation does not reserve
+the image, prove a fresh import, inspect installed licences or admit an
+experiment. A later Docker-store change can invalidate the handoff. The
+producer record identifies this command's executable bytes; it does not
+authenticate their compilation or someone else's execution.
 
 ## Run or check one fixture generation
 
