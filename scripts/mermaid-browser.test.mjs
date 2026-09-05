@@ -261,12 +261,29 @@ async function assertArrowKeyScrollsRegion(cdp, kind) {
     windowsVirtualKeyCode: 39,
     nativeVirtualKeyCode: 39,
   });
-  await new Promise((resolve) => setTimeout(resolve, 150));
-  const scrollLeft = (await cdp.send("Runtime.evaluate", {
-    expression: `document.querySelector(${JSON.stringify(selector)})?.scrollLeft ?? 0`,
-    returnByValue: true,
-  })).result?.value;
-  assert.ok(scrollLeft > 0, `${kind} overflow region did not respond to ArrowRight`);
+  const scrollDeadline = Date.now() + 5_000;
+  let scrollState;
+  do {
+    scrollState = (await cdp.send("Runtime.evaluate", {
+      expression: `(() => {
+        const region = document.querySelector(${JSON.stringify(selector)});
+        return region ? {
+          active: document.activeElement === region,
+          clientWidth: region.clientWidth,
+          scrollLeft: region.scrollLeft,
+          scrollWidth: region.scrollWidth,
+        } : null;
+      })()`,
+      returnByValue: true,
+    })).result?.value;
+    if (scrollState?.scrollLeft > 0) break;
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  } while (Date.now() < scrollDeadline);
+  assert.equal(scrollState?.active, true, JSON.stringify(scrollState));
+  assert.ok(
+    scrollState?.scrollLeft > 0,
+    `${kind} overflow region did not respond to ArrowRight: ${JSON.stringify(scrollState)}`,
+  );
 }
 
 async function assertPrintRetiresOverflowSemantics(cdp, expectedRegionCount) {
