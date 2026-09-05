@@ -279,6 +279,32 @@ provenance. The checker does not read the image, archive, scanner executable
 or command-log payloads, enforce container limits, approve licences or prove
 inventory completeness. Image admission remains blocked and `NO_RESULT`.
 
+## Render the fixed generation program
+
+The Go command derives the Python invocation from the existing source, task
+grid and image contracts. It emits source only; it does not start Docker,
+generate fixtures or change image admission.
+
+```bash
+go -C tooling run ./cmd/20w experiment render-clrs-generation-program --root ..
+```
+
+Add `--json` to inspect the program hash, source and contract identities,
+Python executable and argument array, expected output paths and example
+count. The JSON state is `prepared-unexecuted` with `NO_RESULT`. The program
+appears once in that array, so consumers do not need a second editable copy.
+Output is capped at 64 KiB. Exit codes are zero for successful rendering,
+one for validation or output failure, and two for invalid arguments.
+
+The generated program belongs inside the pinned candidate image, not a host
+Python environment. It preserves the tested `ConfigDict` default binding,
+task order, seeds and generator options, checks the upstream source hash
+before and after generation, and requires a fresh `/output/dataset` child.
+That child matters because the upstream generator removes its output path.
+The image's default module entrypoint remains unchanged. A managed execution
+and extraction command is still needed before this preparation becomes a
+complete contributor-facing fixture run.
+
 ## Admission sequence
 
 The image stays blocked until one later, bounded change provides all of the

@@ -86,6 +86,11 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A Go command renders the fixed CLRS generation program directly from the
+  existing source, grid and image contracts. It preserves the tested upstream
+  configuration binding without maintaining a separate task or seed list;
+  rendering a program does not execute it or admit the generator image.
+
 - A read-only Go command compares two complete CLRS fixture directories and
   checks both through the existing source-bound importer. Its bounded JSON
   report records exact file and tree identities, byte differences and imported
