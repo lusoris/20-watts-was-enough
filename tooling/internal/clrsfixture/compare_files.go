@@ -168,25 +168,36 @@ func readComparisonFile(ctx context.Context, root, path string, maximum int64) (
 
 func recheckComparisonInputs(ctx context.Context, inputs comparisonInputs, snapshots [2]*comparisonSnapshot) error {
 	for side, snapshot := range snapshots {
-		for _, initial := range snapshot.files {
-			_, current, err := readComparisonFile(ctx, snapshot.root, initial.path, inputs.plan.Output.MaxDatasetBytes)
-			if err != nil {
-				return err
-			}
-			if initial.sha256 != current.sha256 || !unchangedGeneratorFile(initial.info, current.info) {
-				return fmt.Errorf("fixture tree %d file %s changed after comparison", side+1, initial.path)
-			}
+		if err := recheckFixtureSnapshot(ctx, inputs.plan, snapshot); err != nil {
+			return fmt.Errorf("fixture tree %d: %w", side+1, err)
 		}
-		directories, err := comparisonInventory(ctx, snapshot.root, inputs.plan)
+	}
+	return recheckFixtureAuthorities(ctx, inputs)
+}
+
+func recheckFixtureSnapshot(ctx context.Context, plan GenerationPlan, snapshot *comparisonSnapshot) error {
+	for _, initial := range snapshot.files {
+		_, current, err := readComparisonFile(ctx, snapshot.root, initial.path, plan.Output.MaxDatasetBytes)
 		if err != nil {
 			return err
 		}
-		for index, initial := range snapshot.directories {
-			if !sameComparisonDirectory(initial, directories[index]) {
-				return fmt.Errorf("fixture tree %d directory changed after comparison", side+1)
-			}
+		if initial.sha256 != current.sha256 || !unchangedGeneratorFile(initial.info, current.info) {
+			return fmt.Errorf("fixture file %s changed after comparison", initial.path)
 		}
 	}
+	directories, err := comparisonInventory(ctx, snapshot.root, plan)
+	if err != nil {
+		return err
+	}
+	for index, initial := range snapshot.directories {
+		if !sameComparisonDirectory(initial, directories[index]) {
+			return errors.New("fixture directory changed after comparison")
+		}
+	}
+	return ctx.Err()
+}
+
+func recheckFixtureAuthorities(ctx context.Context, inputs comparisonInputs) error {
 	for _, authority := range []struct {
 		path string
 		body []byte

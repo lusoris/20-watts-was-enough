@@ -35,6 +35,15 @@
     "tooling/internal/clrsfixture/sbom_files.go",
     "tooling/internal/clrsfixture/sbom_inventory.go",
     "tooling/internal/clrsfixture/sbom_receipt.go",
+    "tooling/internal/clrsfixture/tree.go",
+    "tooling/internal/clrsshakedown/bind.go",
+    "tooling/internal/clrsshakedown/check.go",
+    "tooling/internal/clrsshakedown/check_admission.go",
+    "tooling/internal/clrsshakedown/check_events.go",
+    "tooling/internal/clrsshakedown/contract.go",
+    "tooling/internal/clrsshakedown/files.go",
+    "tooling/internal/clrsshakedown/journal.go",
+    "tooling/internal/clrsshakedown/run.go",
     "tooling/internal/experimentcli/catalog.go",
     "tooling/internal/experimentcli/cli.go",
     "tooling/internal/experimentcli/clrs_compare.go",
@@ -45,6 +54,7 @@
     "tooling/internal/experimentcli/clrs_oci.go",
     "tooling/internal/experimentcli/clrs_promise.go",
     "tooling/internal/experimentcli/clrs_sbom.go",
+    "tooling/internal/experimentcli/clrs_shakedown.go",
     "tooling/internal/experimentcli/clrs_wheelhouse.go",
     "tooling/internal/experimentcli/node_image.go"
   ]
