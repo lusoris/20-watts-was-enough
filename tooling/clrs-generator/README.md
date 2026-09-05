@@ -2,9 +2,10 @@
 
 No generator image is admitted yet. This directory records the exact Linux
 `amd64` dependency graph and the selected 61-file wheelhouse manifest. The
-wheel bytes, Dockerfile, complete build context and retained acceptance
-receipts are still absent. Registry absence has not been checked; the state
-remains `blocked` and `NO_RESULT`.
+committed foundation contains no wheel payload, Dockerfile, complete build
+context or admitted acceptance receipt. Ignored local candidate inputs and
+receipts do not change that status. Registry absence has not been checked;
+the state remains `blocked` and `NO_RESULT`.
 
 The Python image is a narrow exception to the Go-first tooling rule. The pinned
 official CLRS-Text generator imports TensorFlow and JAX; rewriting that path
@@ -33,8 +34,9 @@ the controller, validator and fixture-import boundary.
   base. `promise==2.3` has no upstream wheel, so the manifest fixes its
   19,534-byte sdist, the three locked build-tool wheels, candidate step
   arguments and the output identity seen in two local reconnaissance builds.
-  The complete executable container procedure and reproduction receipt remain
-  explicitly missing. The Promise MIT text is retained at
+  The reviewed executable procedure and admitted reproduction receipt remain
+  explicitly missing; the candidate command below does not change those
+  authority fields. The Promise MIT text is retained at
   [`LICENSES/promise-MIT.txt`](../../LICENSES/promise-MIT.txt); the manifest
   binds its source and built-wheel paths, hash and size. The complete selected
   set is 823,932,066 bytes; those bytes remain ignored build inputs rather than
@@ -86,6 +88,64 @@ go -C tooling run ./cmd/20w experiment verify-clrs-wheelhouse \
 To reproduce the reviewed manifest into a new file for comparison, use
 `experiment render-clrs-wheelhouse-manifest`; it refuses to overwrite an
 existing output. Rendering a candidate does not change repository authority.
+
+## Candidate Promise wheel reproduction
+
+The Go command below tests the sole source-built dependency from
+[Decision 0071](../../decisions/0071-lock-the-clrs-generator-wheel-selection.md).
+It needs a Unix host with the default local Docker socket and the pinned Python
+image already present. It never pulls an image or resolves dependencies.
+Place the locked sdist in `source-build-inputs/` and the three locked build
+wheels in `build-tools/` beneath the supplied input directory. The output
+parent must already exist; the command creates a new evidence directory.
+
+```bash
+go -C tooling run ./cmd/20w experiment reproduce-clrs-promise-wheel \
+  --root .. --inputs /path/to/retained-inputs --output /path/to/new-evidence
+
+go -C tooling run ./cmd/20w experiment reproduce-clrs-promise-wheel \
+  --root .. --check --output /path/to/new-evidence
+```
+
+Before writing or invoking Docker, Go verifies all four input hashes and
+sizes, checks the source MIT text, and prepares a bounded canonical source
+archive. Each of two sequential runs gets a fresh container and private
+staging directory. Only the three read-only build wheels are host-mounted;
+Go streams the source archive to a fixed Python materializer through direct
+`docker exec -i`. The materializer checks its exact size and SHA-256 before
+extraction into `/work`, then checks the fixed modes, timestamps and ownership.
+A fixed Python reader runs inside the same container, inspects at most two
+output directory entries, opens only the named regular wheel without following
+symlinks, and returns one bounded USTAR member. This accesses the running
+container's tmpfs; Docker's archive-copy API uses a
+[separate filesystem view](https://github.com/moby/moby/blob/6a43e3d5af/daemon/containerfs_linux.go#L26).
+The requested container
+configuration fixes UID/GID 65532, no network, a read-only root, one CPU,
+1 GiB memory without extra swap, 64 processes, and temporary filesystems of
+16 MiB at `/work`, 128 MiB at `/opt/build`, 1 MiB at `/output` and 16 MiB at
+`/tmp`. A cleared environment precedes each frozen build step.
+
+One 120-second deadline covers the whole run, not each command. The container
+also has a finite 120-second lease. Cleanup gets a separate 30-second
+deadline, checks the unique ownership label, forcibly removes the container
+and verifies its absence. Host command cancellation kills its process group.
+The wheel returns through a tar stream capped at 128 KiB; regular-file and
+archive checks reject unexpected names, links, duplicates and extra data.
+Each run retains at most 768 KiB of command output plus 64 KiB for cleanup;
+the encoded log is capped at 2 MiB. Private staged inputs are removed after
+the run. Failure leaves bounded diagnostics and no success receipt.
+
+A schema-1 `NO_RESULT` receipt for procedure version 2 requires two exact wheel
+hashes, independent embedded MIT checks and complete cleanup evidence. The
+read-only `--check` path verifies both retained wheel files and command logs,
+reconstructs the fixed requested arguments, and rejects changed repository
+authority or procedure source files. It does not need Docker. The receipt
+records the executable hash and build identity separately from workspace
+source hashes: those observations alone do not prove that the executable was
+compiled from the recorded source. Retain the clean commit and build command
+for a reviewed run. Requested flags are not an independent inspection of
+Docker's runtime state. No receipt from this command admits the CLRS image or
+establishes a scientific result; the existing image blockers remain unchanged.
 
 ## Admission sequence
 
