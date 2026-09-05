@@ -129,10 +129,14 @@ and `main` pushes preserve their exact diff, so this expensive proof does not
 run for a known unrelated change;
 the pull request and a comparable `main` push may remain impact-scoped.
 Manual runs, unavailable, invalid or non-ancestral push comparisons, unmapped
-paths and selector-authority diffs select it fail-closed; non-additive diffs
-inspect both retained paths. Tagged releases always run the proof and add its
-receipt to the checksum-bound release assets. A mismatch blocks the boundary;
-the receipt remains engineering evidence and is not a scientific result.
+paths and loadable selector-authority diffs select it fail-closed. A missing or
+invalid mapping blocks planning. Git-classified renames and copies retain both
+paths and expand to full. Type changes and other non-regular-mode records also
+expand to full. A mapped regular-file deletion instead selects consumers from
+its former path.
+Tagged releases always run the proof and add its receipt to the checksum-bound
+release assets. A mismatch blocks the boundary; the receipt remains engineering
+evidence and is not a scientific result.
 
 Script impact is classified by an exact executable consumer, not by the
 `scripts/` directory name. The browser reader regression therefore selects the

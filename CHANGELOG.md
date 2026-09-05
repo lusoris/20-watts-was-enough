@@ -12,6 +12,14 @@ the exact diff; this file records why the project changed.
   unknown-type diagnostics are removed without changing the page content or
   canonical HTML. Five nonlinear reading-order sentinels remain `known-debt`;
   this is not a PDF/UA or WCAG conformance claim.
+- Decision 0069 makes the CI impact planner map a deleted file through its
+  former repository path instead of sending every deletion through the complete
+  workstation and container gate. Loadable selector and full-authority changes,
+  plus unknown paths, still select full; a missing or invalid mapping blocks
+  planning. Git-classified renames and copies, type changes, and non-regular
+  object modes remain full-plan boundaries. The projected plan schema is now 2
+  so the changed reason and mode contract cannot be mistaken for schema-1
+  output.
 
 ### Added
 
@@ -229,9 +237,10 @@ the exact diff; this file records why the project changed.
   head commits, then runs a common gate plus only the selected Go, release,
   research, site, container, and workstation lanes. Workstation artifacts use
   an allowlisted matrix; selector changes,
-  unknown paths, renames, deletions, and invalid plans fail closed to the full
-  gate. Pushes to `main`, manual runs, and release verification retain the
-  complete repository gate.
+  unknown paths, Git-classified renames and copies, type changes, non-regular
+  object modes, and invalid plans fail closed to the full gate. Mapped regular
+  file deletions select their owning lanes. Pushes to `main`, manual runs, and
+  release verification retain the complete repository gate.
 - A standard-library-only Go scaffold encodes the six-task CLRS-Text
   development slice as a pure typed policy and a decision-record-before-effect
   runner seam. It bounds request and result bytes, requires a separate exact
@@ -295,11 +304,13 @@ the exact diff; this file records why the project changed.
   owner repairs, while unknown, changed, malformed, or stale groups fail closed.
 - Every pull-request code update now uses the exact Go impact plan regardless
   of draft state, so mapped site, prose and isolated experiment changes do not
-  execute unrelated workstation shards. Unknown, non-additive, shared and
-  selector-authority changes still expand to full CI; `main`, manual and
-  exact-tag release validation remain complete. Workstation manifests retain
-  their coverage, readiness and reader consumers, and dependency review runs
-  only for full pull requests or an explicit dependency lane.
+  execute unrelated workstation shards. Unknown, unsafe-shape, shared and
+  loadable selector-authority changes still expand to full CI; missing or
+  invalid mapping authority blocks planning, and mapped regular-file deletions
+  use their former path owner. `main`, manual and exact-tag release validation
+  remain complete. Workstation manifests retain their coverage, readiness and
+  reader consumers, and dependency review runs only for full pull requests or
+  an explicit dependency lane.
 - Script impact now follows exact executable consumers instead of a blanket
   `scripts/**` full-gate rule. The browser reader regression selects the site
   lane and the checked PDF semantic baseline selects its release validation;

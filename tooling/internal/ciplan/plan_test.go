@@ -91,7 +91,7 @@ func TestRendererAuthorityPredicateCoversTheClosedExecutionBoundary(t *testing.T
 	}
 }
 
-func TestNonAdditiveRendererSignalUsesBothRetainedPathsAndFailsClosedOnUnknowns(t *testing.T) {
+func TestUnsafeChangeRendererSignalUsesBothPathsAndFailsClosedOnUnknowns(t *testing.T) {
 	t.Parallel()
 	root := writePlanRepository(t, testMapping)
 	mapping, err := loadMapping(root)
@@ -105,7 +105,7 @@ func TestNonAdditiveRendererSignalUsesBothRetainedPathsAndFailsClosedOnUnknowns(
 		"known unrelated rename": {
 			paths: []string{"app/new.tsx", "app/old.tsx"},
 		},
-		"renderer source deleted": {
+		"renderer authority involved": {
 			paths: []string{"app/globals.css"},
 			want:  true,
 		},
@@ -115,8 +115,8 @@ func TestNonAdditiveRendererSignalUsesBothRetainedPathsAndFailsClosedOnUnknowns(
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
-			if observed := rendererRequiredForNonAdditive(mapping, test.paths); observed != test.want {
-				t.Fatalf("rendererRequiredForNonAdditive(%v) = %t, want %t", test.paths, observed, test.want)
+			if observed := rendererRequiredForUnsafeChange(mapping, test.paths); observed != test.want {
+				t.Fatalf("rendererRequiredForUnsafeChange(%v) = %t, want %t", test.paths, observed, test.want)
 			}
 		})
 	}
