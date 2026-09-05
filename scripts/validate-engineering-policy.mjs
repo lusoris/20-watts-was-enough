@@ -941,8 +941,24 @@ export function validateCiFuzzingWorkflowObject(
 
 const pdfReproducibilitySetupAction = "docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e";
 const pdfReproducibilityBuildKit = "image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8";
+const privateGoCommandEnvironment = Object.freeze({
+  CGO_ENABLED: "0",
+  GOOS: "linux",
+  GOARCH: "amd64",
+  GOENV: "off",
+  GOWORK: "off",
+  GOTOOLCHAIN: "local",
+  GOFLAGS: "-mod=readonly",
+  GOPROXY: "off",
+  GOSUMDB: "off",
+});
+
+function privateGoJobHasNoInheritedEnvironment(workflow, job) {
+  return workflow?.env === undefined && job?.env === undefined;
+}
+
 const pdfReproducibilityCiCommand = [
-  "go -C tooling run ./cmd/20w publication verify-pdf-reproducibility",
+  "go -C tooling run ./cmd/pdf-proof",
   "--root .. --ref main",
   "--receipt build/evidence/pdf-renderer-reproducibility.json",
 ].join(" ");
@@ -974,6 +990,8 @@ function pdfReproducibilityCiJobIsExact(job) {
   const verifyIndex = steps.findIndex((step) => (
     step?.name === "Rebuild the final PDF renderer twice without cache"
     && step?.run?.trim() === pdfReproducibilityCiCommand
+    && Object.keys(step?.env ?? {}).length === Object.keys(privateGoCommandEnvironment).length
+    && propertiesMatch(step?.env, privateGoCommandEnvironment)
     && step?.if === undefined
     && continueOnErrorIsDisabled(step)
   ));
@@ -1008,9 +1026,11 @@ export function validatePDFRendererReproducibilityWorkflowObject(workflow, relat
     const broadJobsContainHeavyProof = ["quality-full", "lane-release"].some((jobName) => (
       (jobs[jobName]?.steps ?? []).some((step) => (
         String(step?.run ?? "").includes("publication verify-pdf-reproducibility")
+        || String(step?.run ?? "").includes("./cmd/pdf-proof")
       ))
     ));
-    return !broadJobsContainHeavyProof
+    return privateGoJobHasNoInheritedEnvironment(workflow, jobs["pdf-renderer-reproducibility"])
+      && !broadJobsContainHeavyProof
       && pdfReproducibilityCiJobIsExact(jobs["pdf-renderer-reproducibility"])
       ? []
       : [`${relativePath}: CI must run the exact two-builder PDF reproducibility acceptance only in its renderer-selected gate and retain its receipt plus mismatch bytes`];
@@ -1051,6 +1071,7 @@ export function validatePDFRendererReproducibilityWorkflowObject(workflow, relat
 }
 
 const ciImpactPlanEnvironment = Object.freeze({
+  ...privateGoCommandEnvironment,
   BASE_SHA: "${{ github.event.pull_request.base.sha }}",
   BEFORE_SHA: "${{ github.event.before }}",
   CURRENT_SHA: "${{ github.sha }}",
@@ -1062,7 +1083,7 @@ const ciImpactPlanSource = [
   "set -euo pipefail",
   "mkdir -p build",
   'if [[ "$EVENT_NAME" == "pull_request" ]]; then',
-  "  go -C tooling run ./cmd/20w ci plan --root .. \\",
+  "  go -C tooling run ./cmd/ci-plan plan --root .. \\",
   '    --base "$BASE_SHA" --head "$HEAD_SHA" --json \\',
   "    > build/ci-impact-plan.json",
   'elif [[ "$EVENT_NAME" == "push" ]]; then',
@@ -1075,26 +1096,27 @@ const ciImpactPlanSource = [
   '    && valid_commit "$BEFORE_SHA" \\',
   '    && valid_commit "$CURRENT_SHA" \\',
   '    && git merge-base --is-ancestor "$BEFORE_SHA" "$CURRENT_SHA"; then',
-  "    go -C tooling run ./cmd/20w ci plan --root .. \\",
+  "    go -C tooling run ./cmd/ci-plan plan --root .. \\",
   '      --base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \\',
   "      > build/ci-impact-plan.json",
   "  else",
   '    echo "::notice::Main-push comparison is unavailable; running the fail-closed full plan."',
-  "    go -C tooling run ./cmd/20w ci plan --root .. --full --json \\",
+  "    go -C tooling run ./cmd/ci-plan plan --root .. --full --json \\",
   "      > build/ci-impact-plan.json",
   "  fi",
   "else",
-  "  go -C tooling run ./cmd/20w ci plan --root .. --full --json \\",
+  "  go -C tooling run ./cmd/ci-plan plan --root .. --full --json \\",
   "    > build/ci-impact-plan.json",
   "fi",
   "test -s build/ci-impact-plan.json",
-  "go -C tooling run ./cmd/20w ci project \\",
+  "go -C tooling run ./cmd/ci-plan project \\",
   '  < build/ci-impact-plan.json >> "$GITHUB_OUTPUT"',
 ].join("\n");
 
 function impactPlanJobBoundaryIsExact(workflow, plan) {
   return [
     workflow?.defaults === undefined,
+    privateGoJobHasNoInheritedEnvironment(workflow, plan),
     plan?.name === "CI impact plan",
     plan?.["runs-on"] === "ubuntu-latest",
     plan?.["timeout-minutes"] === 10,

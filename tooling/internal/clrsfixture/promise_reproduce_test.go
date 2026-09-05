@@ -262,10 +262,14 @@ func TestPromiseReceiptSourceClosureCoversExistingHelpers(t *testing.T) {
 	for _, source := range procedure.Sources {
 		paths = append(paths, source.Path)
 	}
-	for _, path := range []string{"tooling/cmd/20w/main.go", "tooling/internal/clrsfixture/image_files.go", "tooling/internal/clrsfixture/image_wheelhouse.go", "tooling/internal/strictjson/validate.go", "tooling/internal/pdfrenderlock/lock.go", "tooling/internal/buildinfo/buildinfo.go"} {
+	for _, path := range []string{"tooling/cmd/20w/main.go", "tooling/internal/clrsfixture/image_files.go", "tooling/internal/clrsfixture/image_wheelhouse.go", "tooling/internal/strictjson/validate.go", "tooling/internal/pdfrenderlock/lock.go", "tooling/internal/buildinfo/buildinfo.go",
+		"tooling/internal/experimentcli/catalog.go", "tooling/internal/experimentcli/cli.go", "tooling/internal/experimentcli/clrs_compare.go", "tooling/internal/experimentcli/clrs_context.go", "tooling/internal/experimentcli/clrs_invocation.go", "tooling/internal/experimentcli/clrs_promise.go", "tooling/internal/experimentcli/clrs_sbom.go", "tooling/internal/experimentcli/clrs_wheelhouse.go", "tooling/internal/experimentcli/node_image.go"} {
 		if !slices.Contains(paths, path) {
 			t.Fatalf("missing procedure dependency %s", path)
 		}
+	}
+	if slices.Contains(paths, "tooling/cmd/20w/clrs_promise.go") || !slices.IsSorted(paths) {
+		t.Fatal("current procedure includes the retired CLI path or unsorted sources")
 	}
 	second, err := currentPromiseProcedure(trackedRepositoryRoot(t), inputs)
 	if err != nil || !reflect.DeepEqual(procedure, second) {

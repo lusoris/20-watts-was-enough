@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"slices"
 	"strings"
 	"testing"
@@ -13,6 +15,187 @@ import (
 
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/buildinfo"
 )
+
+func copyPromiseProcedureRoot(t *testing.T, version string) string {
+	t.Helper()
+	root := copyGeneratorFoundation(t)
+	paths, err := promiseSourcePathsForVersion(trackedRepositoryRoot(t), version)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, path := range paths {
+		var body []byte
+		if path == "tooling/cmd/20w/clrs_promise.go" {
+			body = []byte("package main\n// Isolated legacy layout fixture, not historical evidence.\n")
+		} else {
+			body, err = os.ReadFile(filepath.Join(trackedRepositoryRoot(t), path))
+			if err != nil {
+				t.Fatal(err)
+			}
+		}
+		target := filepath.Join(root, path)
+		if err := os.MkdirAll(filepath.Dir(target), 0o700); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(target, body, 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	return root
+}
+
+func writePromiseReceiptFixture(t *testing.T, receipt promiseReceipt) string {
+	t.Helper()
+	body, err := marshalPromiseJSON(receipt)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if int64(len(body)) > promiseMaximumReceiptBytes {
+		t.Fatal("test receipt exceeds production byte bound")
+	}
+	directory := t.TempDir()
+	if err := os.WriteFile(filepath.Join(directory, "receipt.json"), body, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	return directory
+}
+
+func TestPromiseProcedureVersionsRequireTheirExplicitLayout(t *testing.T) {
+	inputs, receipt := promiseReceiptFixture(t)
+	roots := map[string]string{
+		promiseLegacyProcedureVersion: copyPromiseProcedureRoot(t, promiseLegacyProcedureVersion),
+		promiseProcedureVersion:       copyPromiseProcedureRoot(t, promiseProcedureVersion),
+	}
+	for version, root := range roots {
+		t.Run(version, func(t *testing.T) {
+			procedure, err := promiseProcedureForVersion(root, inputs, version)
+			if err != nil || procedure.Version != version {
+				t.Fatalf("explicit procedure profile: %+v %v", procedure, err)
+			}
+			candidate := receipt
+			candidate.Procedure = procedure
+			if err := validatePromiseReceipt(candidate, inputs, procedure); err != nil {
+				t.Fatal(err)
+			}
+			for otherVersion, otherRoot := range roots {
+				if otherVersion == version {
+					continue
+				}
+				if err := CheckPromiseWheelReproduction(otherRoot, writePromiseReceiptFixture(t, candidate)); err == nil || strings.Contains(err.Error(), "bundle") {
+					t.Fatalf("wrong source layout did not fail before bundle consumption: %v", err)
+				}
+			}
+		})
+	}
+	if _, err := currentPromiseProcedure(roots[promiseLegacyProcedureVersion], inputs); err == nil {
+		t.Fatal("current producer fell back to the legacy source layout")
+	}
+	if receipt.Procedure.Version != "promise-wheel-reproduction-v3" {
+		t.Fatalf("current producer version %q", receipt.Procedure.Version)
+	}
+	downgraded := receipt
+	downgraded.Procedure.Version = promiseLegacyProcedureVersion
+	err := CheckPromiseWheelReproduction(roots[promiseLegacyProcedureVersion], writePromiseReceiptFixture(t, downgraded))
+	if err == nil || !strings.Contains(err.Error(), "procedure sources") {
+		t.Fatalf("version-only downgrade was not rejected by exact procedure comparison: %v", err)
+	}
+}
+
+func TestPromiseReceiptRejectsUnknownProcedureBeforeRepositoryReads(t *testing.T) {
+	_, receipt := promiseReceiptFixture(t)
+	for _, version := range []string{"", "promise-wheel-reproduction-v1", "promise-wheel-reproduction-v4"} {
+		receipt.Procedure.Version = version
+		err := CheckPromiseWheelReproduction(filepath.Join(t.TempDir(), "absent"), writePromiseReceiptFixture(t, receipt))
+		if err == nil || !strings.Contains(err.Error(), "unsupported Promise procedure version") {
+			t.Fatalf("unknown procedure %q: %v", version, err)
+		}
+	}
+}
+
+func TestPromiseCurrentProcedureBindsAllExperimentCLIProductionSources(t *testing.T) {
+	inputs, receipt := promiseReceiptFixture(t)
+	for name, mutate := range map[string]func(string) error{
+		"added": func(root string) error {
+			return os.WriteFile(filepath.Join(root, "tooling/internal/experimentcli/future.go"), []byte("package experimentcli\n"), 0o600)
+		},
+		"deleted": func(root string) error {
+			return os.Remove(filepath.Join(root, "tooling/internal/experimentcli/catalog.go"))
+		},
+		"modified": func(root string) error {
+			return os.WriteFile(filepath.Join(root, "tooling/internal/experimentcli/node_image.go"), []byte("package experimentcli\n"), 0o600)
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			root := copyPromiseProcedureRoot(t, promiseProcedureVersion)
+			before, err := currentPromiseProcedure(root, inputs)
+			if err != nil || !reflect.DeepEqual(before, receipt.Procedure) {
+				t.Fatalf("copied source identity: %v", err)
+			}
+			if err := mutate(root); err != nil {
+				t.Fatal(err)
+			}
+			err = CheckPromiseWheelReproduction(root, writePromiseReceiptFixture(t, receipt))
+			if err == nil || !strings.Contains(err.Error(), "procedure sources") {
+				t.Fatalf("accepted %s experiment CLI source or wrong failure: %v", name, err)
+			}
+			if err := recheckPromiseAuthority(root, inputs); err == nil {
+				t.Fatal("run source recheck accepted changed experiment CLI inventory")
+			}
+		})
+	}
+}
+
+func TestPromiseExperimentCLISourceInventoryIsBounded(t *testing.T) {
+	root := t.TempDir()
+	directory := filepath.Join(root, "tooling/internal/experimentcli")
+	if err := os.MkdirAll(directory, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"cli.go", "clrs_promise.go"} {
+		if err := os.WriteFile(filepath.Join(directory, name), []byte("package experimentcli\n"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for index := range 127 {
+		if err := os.WriteFile(filepath.Join(directory, fmt.Sprintf("entry-%03d_test.go", index)), nil, 0o600); err != nil {
+			t.Fatal(err)
+		}
+		if index == 125 {
+			paths, err := promiseExperimentCLISources(root)
+			if err != nil || !reflect.DeepEqual(paths, []string{"tooling/internal/experimentcli/cli.go", "tooling/internal/experimentcli/clrs_promise.go"}) {
+				t.Fatalf("two required sources and 126 test entries: %v %v", paths, err)
+			}
+		}
+	}
+	if _, err := promiseExperimentCLISources(root); err == nil || !strings.Contains(err.Error(), "entry limit") {
+		t.Fatalf("accepted 129 directory entries: %v", err)
+	}
+}
+
+func TestPromiseExperimentCLISourceInventoryRequiresInvokedSources(t *testing.T) {
+	for name, files := range map[string][]string{
+		"empty":            nil,
+		"test-only":        {"cli_test.go", "clrs_promise_test.go"},
+		"missing dispatch": {"clrs_promise.go"},
+		"missing handler":  {"cli.go"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			root := t.TempDir()
+			directory := filepath.Join(root, "tooling/internal/experimentcli")
+			if err := os.MkdirAll(directory, 0o700); err != nil {
+				t.Fatal(err)
+			}
+			for _, file := range files {
+				if err := os.WriteFile(filepath.Join(directory, file), []byte("package experimentcli\n"), 0o600); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if paths, err := promiseExperimentCLISources(root); err == nil || paths != nil || !strings.Contains(err.Error(), "requires cli.go and clrs_promise.go") {
+				t.Fatalf("accepted missing invoked production source: %v %v", paths, err)
+			}
+		})
+	}
+}
 
 func promiseReceiptFixture(t *testing.T) (promiseInputs, promiseReceipt) {
 	t.Helper()

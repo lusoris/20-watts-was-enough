@@ -47,6 +47,15 @@ jobs:
       - name: Validate and project the bounded CI plan
         id: plan
         env:
+          CGO_ENABLED: "0"
+          GOOS: "linux"
+          GOARCH: "amd64"
+          GOENV: "off"
+          GOWORK: "off"
+          GOTOOLCHAIN: "local"
+          GOFLAGS: "-mod=readonly"
+          GOPROXY: "off"
+          GOSUMDB: "off"
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           BEFORE_SHA: ${{ github.event.before }}
           CURRENT_SHA: ${{ github.sha }}
@@ -56,7 +65,7 @@ jobs:
           set -euo pipefail
           mkdir -p build
           if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            go -C tooling run ./cmd/20w ci plan --root .. \
+            go -C tooling run ./cmd/ci-plan plan --root .. \
               --base "$BASE_SHA" --head "$HEAD_SHA" --json \
               > build/ci-impact-plan.json
           elif [[ "$EVENT_NAME" == "push" ]]; then
@@ -69,20 +78,20 @@ jobs:
               && valid_commit "$BEFORE_SHA" \
               && valid_commit "$CURRENT_SHA" \
               && git merge-base --is-ancestor "$BEFORE_SHA" "$CURRENT_SHA"; then
-              go -C tooling run ./cmd/20w ci plan --root .. \
+              go -C tooling run ./cmd/ci-plan plan --root .. \
                 --base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \
                 > build/ci-impact-plan.json
             else
               echo "::notice::Main-push comparison is unavailable; running the fail-closed full plan."
-              go -C tooling run ./cmd/20w ci plan --root .. --full --json \
+              go -C tooling run ./cmd/ci-plan plan --root .. --full --json \
                 > build/ci-impact-plan.json
             fi
           else
-            go -C tooling run ./cmd/20w ci plan --root .. --full --json \
+            go -C tooling run ./cmd/ci-plan plan --root .. --full --json \
               > build/ci-impact-plan.json
           fi
           test -s build/ci-impact-plan.json
-          go -C tooling run ./cmd/20w ci project \
+          go -C tooling run ./cmd/ci-plan project \
             < build/ci-impact-plan.json >> "$GITHUB_OUTPUT"
 
   quality-full:
@@ -256,8 +265,18 @@ jobs:
           version: v0.36.1
           driver-opts: image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8
       - name: Rebuild the final PDF renderer twice without cache
+        env:
+          CGO_ENABLED: "0"
+          GOOS: "linux"
+          GOARCH: "amd64"
+          GOENV: "off"
+          GOWORK: "off"
+          GOTOOLCHAIN: "local"
+          GOFLAGS: "-mod=readonly"
+          GOPROXY: "off"
+          GOSUMDB: "off"
         run: >-
-          go -C tooling run ./cmd/20w publication verify-pdf-reproducibility
+          go -C tooling run ./cmd/pdf-proof
           --root .. --ref main
           --receipt build/evidence/pdf-renderer-reproducibility.json
       - name: Retain the PDF renderer reproducibility evidence

@@ -170,7 +170,7 @@ Each run retains at most 768 KiB of command output plus 64 KiB for cleanup;
 the encoded log is capped at 2 MiB. Private staged inputs are removed after
 the run. Failure leaves bounded diagnostics and no success receipt.
 
-A schema-1 `NO_RESULT` receipt for procedure version 2 requires two exact wheel
+A schema-1 `NO_RESULT` receipt for procedure version 3 requires two exact wheel
 hashes, independent embedded MIT checks and complete cleanup evidence. The
 read-only `--check` path verifies both retained wheel files and command logs,
 reconstructs the fixed requested arguments, and rejects changed repository
@@ -181,6 +181,12 @@ compiled from the recorded source. Retain the clean commit and build command
 for a reviewed run. Requested flags are not an independent inspection of
 Docker's runtime state. No receipt from this command admits the CLRS image or
 establishes a scientific result; the existing image blockers remain unchanged.
+
+Version 3 binds the experiment CLI package after its move out of the public
+dispatcher. The read-only checker also accepts version-2 receipts against their
+explicitly supplied frozen source root, retaining the old source-path set.
+It never falls back to the old version when new sources are missing. New runs
+emit version 3; a retained version-2 receipt is not rewritten or relabelled.
 
 ## Candidate offline build context
 

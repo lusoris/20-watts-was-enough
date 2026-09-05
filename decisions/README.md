@@ -79,3 +79,4 @@ than silently changing its outcome.
 | [0072](0072-run-browser-contracts-in-isolated-processes.md) | Run browser contracts in isolated processes | accepted |
 | [0073](0073-publish-pdf-tools-evidence-from-unnamed-pinned-files.md) | Publish each PDF-tools candidate as one atomic bundle | accepted |
 | [0074](0074-verify-renderer-config-bytes-for-both-docker-stores.md) | Verify renderer config bytes for both Docker stores | accepted |
+| [0075](0075-isolate-ci-driver-dependency-closures.md) | Isolate CI driver dependency closures | accepted |

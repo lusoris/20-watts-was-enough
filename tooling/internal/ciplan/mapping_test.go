@@ -32,6 +32,10 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		{path: ".github/labels.json", mode: "impact", lanes: []string{"go"}},
 		{path: ".github/public-transport.json", mode: "impact", lanes: []string{"go", "site"}},
 		{path: "renovate.json", mode: "impact", lanes: []string{"dependency"}},
+		{path: "tooling/internal/experimentcli/cli.go", mode: "impact", lanes: []string{"container", "go", "release"}},
+		{path: "tooling/internal/experimentcli/clrs_invocation.go", mode: "impact", lanes: []string{"container", "go", "release"}},
+		{path: "tooling/internal/experimentcli/future_command_test.go", mode: "impact", lanes: []string{"container", "go", "release"}},
+		{path: "tooling/internal/experimentcli-other/cli.go", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:tooling/internal/experimentcli-other/cli.go"},
 		{path: "package-lock.json", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
 		{path: "scripts/book-pdf-semantic-baseline.json", mode: "impact", lanes: []string{"release"}},
 		{path: "scripts/lib/book-pdf-semantic-audit.mjs", mode: "impact", lanes: []string{"release"}},
@@ -74,6 +78,16 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		{path: "tooling/cmd/20w/clrs_context.go", mode: "full", lanes: []string{"full", "renderer"}, reason: "selector-authority-changed"},
 		{path: "tooling/cmd/20w/clrs_context_test.go", mode: "full", lanes: []string{"full", "renderer"}, reason: "selector-authority-changed"},
 		{path: "tooling/internal/ciplan/mapping_test.go", mode: "full", lanes: []string{"full", "renderer"}, reason: "selector-authority-changed"},
+		{path: "tooling/cmd/ci-plan/main.go", mode: "full", lanes: []string{"full", "renderer"}, reason: "selector-authority-changed"},
+		{path: "tooling/internal/ciplancli/cli.go", mode: "full", lanes: []string{"full", "renderer"}, reason: "selector-authority-changed"},
+		{path: "tooling/internal/ciplancli/dependencies_test.go", mode: "full", lanes: []string{"full", "renderer"}, reason: "selector-authority-changed"},
+		{path: "tooling/cmd/pdf-proof/main.go", mode: "impact", lanes: []string{"container", "go", "release", "renderer", "site"}},
+		{path: "tooling/internal/pdfrendercli/cli.go", mode: "impact", lanes: []string{"container", "go", "release", "renderer", "site"}},
+		{path: "tooling/internal/pdfrendercli/cli_test.go", mode: "impact", lanes: []string{"container", "go", "release", "renderer", "site"}},
+		{path: "tooling/cmd/ci-plan-unrelated/main.go", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:tooling/cmd/ci-plan-unrelated/main.go"},
+		{path: "tooling/cmd/pdf-proof-unrelated/main.go", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:tooling/cmd/pdf-proof-unrelated/main.go"},
+		{path: "tooling/internal/ciplancli-unrelated/cli.go", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:tooling/internal/ciplancli-unrelated/cli.go"},
+		{path: "tooling/internal/pdfrendercli-unrelated/cli.go", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:tooling/internal/pdfrendercli-unrelated/cli.go"},
 		{path: "scripts/book-source.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
 		{path: ".github/ci-impact.json", mode: "full", lanes: []string{"full", "renderer"}, reason: "selector-authority-changed"},
 		{path: "tooling/internal/clrsinsertion/adapter.go", mode: "impact", lanes: []string{"container", "go"}},
@@ -92,6 +106,23 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		if plan.Mode != test.mode || !reflect.DeepEqual(plan.Lanes, test.lanes) ||
 			(test.reason != "" && plan.Reason != test.reason) {
 			t.Fatalf("path %s produced %#v, want %s/%v", test.path, plan, test.mode, test.lanes)
+		}
+	}
+}
+
+func TestPrivateCommandChangesDoNotHideCombinedAuthorityChanges(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	for _, authority := range []string{
+		"tooling/cmd/ci-plan/main.go", "tooling/internal/ciplancli/cli.go",
+		"tooling/internal/ciplan/plan.go", "tooling/cmd/20w/main.go",
+		"scripts/book-source.mjs", "unknown-root/new-source.go",
+	} {
+		plan := selectTestPaths(t, root, testOptions(root), []string{
+			"tooling/internal/clrsfixture/compare.go", "tooling/cmd/pdf-proof/main.go", authority,
+		})
+		if plan.Mode != "full" || !reflect.DeepEqual(plan.Lanes, []string{"full", "renderer"}) {
+			t.Fatalf("combined authority %s produced %#v", authority, plan)
 		}
 	}
 }
@@ -161,6 +192,27 @@ func TestEverySiteLaneEntrypointIsMappedToTheSiteLane(t *testing.T) {
 		if plan.Mode != "impact" || plan.Reason != "mapped-change-set" ||
 			!reflect.DeepEqual(plan.Lanes, []string{"site"}) {
 			t.Fatalf("site entrypoint %s produced %#v, want mapped site impact plan", path, plan)
+		}
+	}
+}
+
+func TestExperimentCLIChangesRetainCombinedAuthorityGates(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	for _, test := range []struct {
+		other string
+		mode  string
+		lanes []string
+	}{
+		{"tooling/internal/experimentcli/clrs_sbom_test.go", "impact", []string{"container", "go", "release"}},
+		{"tooling/cmd/20w/main.go", "full", []string{"full", "renderer"}},
+		{"tooling/internal/ciplancli/cli.go", "full", []string{"full", "renderer"}},
+		{"scripts/book-source.mjs", "full", []string{"full", "renderer"}},
+		{"tooling/internal/pdfrendercli/cli.go", "impact", []string{"container", "go", "release", "renderer", "site"}},
+	} {
+		plan := selectTestPaths(t, root, testOptions(root), []string{"tooling/internal/experimentcli/cli.go", test.other})
+		if plan.Mode != test.mode || !reflect.DeepEqual(plan.Lanes, test.lanes) {
+			t.Fatalf("experiment CLI with %s produced %#v, want %s/%v", test.other, plan, test.mode, test.lanes)
 		}
 	}
 }

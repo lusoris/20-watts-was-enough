@@ -111,51 +111,6 @@ func TestRunCIWorkstationRejectsAnInvalidRepositoryBeforeExecution(t *testing.T)
 	}
 }
 
-func TestRunPackageNodeImageRequiresClosedArguments(t *testing.T) {
-	t.Parallel()
-	var stdout bytes.Buffer
-	var stderr bytes.Buffer
-	if exitCode := run([]string{"experiment", "package-node-image", "--artifact", "fixture-007"}, &stdout, &stderr); exitCode != 2 {
-		t.Fatalf("run() exit code = %d, want 2", exitCode)
-	}
-	if !strings.Contains(stderr.String(), "requires --artifact and --output") {
-		t.Fatalf("stderr = %q, want missing argument diagnostic", stderr.String())
-	}
-}
-
-func TestRunCLRSWheelhouseCommandsAreVisibleAndRequireClosedArguments(t *testing.T) {
-	t.Parallel()
-	var help bytes.Buffer
-	var helpErrors bytes.Buffer
-	if exitCode := run([]string{"--help"}, &help, &helpErrors); exitCode != 0 || helpErrors.Len() != 0 {
-		t.Fatalf("help exit/stderr = %d/%q", exitCode, helpErrors.String())
-	}
-	for _, command := range []string{
-		"experiment render-clrs-wheelhouse-manifest",
-		"experiment verify-clrs-wheelhouse",
-	} {
-		if !strings.Contains(help.String(), command) {
-			t.Fatalf("help omits %q", command)
-		}
-	}
-
-	for name, arguments := range map[string][]string{
-		"render without wheelhouse": {"experiment", "render-clrs-wheelhouse-manifest", "--output", "candidate.json"},
-		"render without output":     {"experiment", "render-clrs-wheelhouse-manifest", "--wheelhouse", "wheels"},
-		"verify without wheelhouse": {"experiment", "verify-clrs-wheelhouse"},
-	} {
-		name, arguments := name, arguments
-		t.Run(name, func(t *testing.T) {
-			t.Parallel()
-			var stdout bytes.Buffer
-			var stderr bytes.Buffer
-			if exitCode := run(arguments, &stdout, &stderr); exitCode != 2 || !strings.Contains(stderr.String(), "requires") {
-				t.Fatalf("run() exit/stdout/stderr = %d/%q/%q, want usage failure", exitCode, stdout.String(), stderr.String())
-			}
-		})
-	}
-}
-
 func TestRunPublicationRenderPDFCheckIsOfflineAndReportsThePin(t *testing.T) {
 	t.Parallel()
 	var stdout bytes.Buffer
@@ -197,38 +152,6 @@ func TestRunPublicationRenderPDFRequiresAnExactRevisionForATag(t *testing.T) {
 				t.Fatalf("run() exit/stderr = %d/%q, want source-revision usage failure", exitCode, stderr.String())
 			}
 		})
-	}
-}
-
-func TestRunPackageNodeImageRejectsUnsupportedArtifact(t *testing.T) {
-	t.Parallel()
-	var stdout bytes.Buffer
-	var stderr bytes.Buffer
-	root := t.TempDir()
-	output := filepath.Join(t.TempDir(), "context")
-	if exitCode := run([]string{
-		"experiment", "package-node-image",
-		"--root", root,
-		"--artifact", "fixture-029",
-		"--output", output,
-	}, &stdout, &stderr); exitCode != 1 {
-		t.Fatalf("run() exit code = %d, stderr = %s, want 1", exitCode, stderr.String())
-	}
-	if !strings.Contains(stderr.String(), "not supported") {
-		t.Fatalf("stderr = %q, want unsupported artifact diagnostic", stderr.String())
-	}
-	if _, err := os.Lstat(output); !os.IsNotExist(err) {
-		t.Fatalf("unsupported artifact created output: %v", err)
-	}
-}
-
-func TestRunExperimentValidateFailsClosedWithoutManifestAuthority(t *testing.T) {
-	t.Parallel()
-	var stdout bytes.Buffer
-	var stderr bytes.Buffer
-	exitCode := run([]string{"experiment", "validate", "--root", t.TempDir()}, &stdout, &stderr)
-	if exitCode != 1 || !strings.Contains(stderr.String(), "Validate experiment catalogue") {
-		t.Fatalf("run() exit/stderr = %d/%q, want closed catalogue failure", exitCode, stderr.String())
 	}
 }
 

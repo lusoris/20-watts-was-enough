@@ -82,8 +82,12 @@ var promiseProcedurePaths = []string{
 }
 
 func currentPromiseProcedure(root string, inputs promiseInputs) (promiseProcedure, error) {
+	return promiseProcedureForVersion(root, inputs, promiseProcedureVersion)
+}
+
+func promiseProcedureForVersion(root string, inputs promiseInputs, version string) (promiseProcedure, error) {
 	procedure := promiseProcedure{
-		Version: promiseProcedureVersion, Platform: inputs.manifest.Platform,
+		Version: version, Platform: inputs.manifest.Platform,
 		Image: inputs.manifest.SourceBuild.BuilderImage, User: "65532:65532",
 		RunTimeoutSeconds: 120, CleanupTimeoutSeconds: 30, CPUs: 1, MemoryBytes: 1 << 30, PIDs: 64,
 		CapturedOutputBytes: promiseMaximumRunOutputBytes, OutputTarBytes: promiseMaximumOutputTarBytes,
@@ -94,7 +98,7 @@ func currentPromiseProcedure(root string, inputs promiseInputs) (promiseProcedur
 	if err != nil {
 		return promiseProcedure{}, err
 	}
-	paths, err := promiseSourcePaths(root)
+	paths, err := promiseSourcePathsForVersion(root, version)
 	if err != nil {
 		return promiseProcedure{}, err
 	}
@@ -136,6 +140,70 @@ func promiseSourcePaths(root string) ([]string, error) {
 	return paths, nil
 }
 
+func promiseSourcePathsForVersion(root, version string) ([]string, error) {
+	switch version {
+	case promiseLegacyProcedureVersion:
+		return promiseSourcePaths(root)
+	case promiseProcedureVersion:
+	default:
+		return nil, fmt.Errorf("unsupported Promise procedure version %q", version)
+	}
+	paths, err := promiseSourcePaths(root)
+	if err != nil {
+		return nil, err
+	}
+	current := make([]string, 0, len(paths))
+	for _, path := range paths {
+		if path != "tooling/cmd/20w/clrs_promise.go" {
+			current = append(current, path)
+		}
+	}
+	cli, err := promiseExperimentCLISources(root)
+	if err != nil {
+		return nil, err
+	}
+	current = append(current, cli...)
+	sort.Strings(current)
+	return current, nil
+}
+
+func promiseExperimentCLISources(root string) ([]string, error) {
+	const relative = "tooling/internal/experimentcli"
+	directory := filepath.Join(root, relative)
+	if err := rejectGeneratorSymlink(root, directory); err != nil {
+		return nil, err
+	}
+	file, err := os.Open(directory)
+	if err != nil {
+		return nil, err
+	}
+	entries, readErr := file.ReadDir(129)
+	closeErr := file.Close()
+	if readErr != nil && !errors.Is(readErr, io.EOF) {
+		return nil, errors.Join(readErr, closeErr)
+	}
+	if closeErr != nil {
+		return nil, closeErr
+	}
+	if len(entries) > 128 {
+		return nil, errors.New("Promise experiment CLI source directory exceeds its entry limit")
+	}
+	paths := make([]string, 0, len(entries))
+	hasDispatch, hasPromise := false, false
+	for _, entry := range entries {
+		if strings.HasSuffix(entry.Name(), ".go") && !strings.HasSuffix(entry.Name(), "_test.go") {
+			paths = append(paths, relative+"/"+entry.Name())
+			hasDispatch = hasDispatch || entry.Name() == "cli.go"
+			hasPromise = hasPromise || entry.Name() == "clrs_promise.go"
+		}
+	}
+	if !hasDispatch || !hasPromise {
+		return nil, errors.New("Promise experiment CLI source directory requires cli.go and clrs_promise.go")
+	}
+	sort.Strings(paths)
+	return paths, nil
+}
+
 func currentPromiseProducer() (promiseProducer, error) {
 	path, err := os.Executable()
 	if err != nil {
@@ -170,15 +238,7 @@ func marshalPromiseJSON(value any) ([]byte, error) {
 // CheckPromiseWheelReproduction consumes the actual two-wheel evidence bundle
 // without subprocesses or writes. This is not an image-admission check.
 func CheckPromiseWheelReproduction(repositoryRoot, directory string) error {
-	inputs, err := loadPromiseAuthority(repositoryRoot)
-	if err != nil {
-		return err
-	}
-	procedure, err := currentPromiseProcedure(repositoryRoot, inputs)
-	if err != nil {
-		return err
-	}
-	directory, err = cleanGeneratorRoot(directory)
+	directory, err := cleanGeneratorRoot(directory)
 	if err != nil {
 		return err
 	}
@@ -189,6 +249,19 @@ func CheckPromiseWheelReproduction(repositoryRoot, directory string) error {
 	var receipt promiseReceipt
 	if err := decodeCanonicalGeneratorJSON(body, 12, &receipt); err != nil {
 		return fmt.Errorf("parse Promise reproduction receipt: %w", err)
+	}
+	switch receipt.Procedure.Version {
+	case promiseLegacyProcedureVersion, promiseProcedureVersion:
+	default:
+		return fmt.Errorf("unsupported Promise procedure version %q", receipt.Procedure.Version)
+	}
+	inputs, err := loadPromiseAuthority(repositoryRoot)
+	if err != nil {
+		return err
+	}
+	procedure, err := promiseProcedureForVersion(repositoryRoot, inputs, receipt.Procedure.Version)
+	if err != nil {
+		return err
 	}
 	if err := validatePromiseReceipt(receipt, inputs, procedure); err != nil {
 		return err

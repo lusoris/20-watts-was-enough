@@ -981,15 +981,22 @@ test("real PDF reproducibility acceptance stays in the renderer-selected and tag
     ".github/workflows/ci.yml",
   ), [finding]);
 
-  const duplicatedIntoFull = structuredClone(validCi);
-  duplicatedIntoFull.jobs["quality-full"].steps.push({
-    name: "Rebuild the final PDF renderer twice without cache",
-    run: "go -C tooling run ./cmd/20w publication verify-pdf-reproducibility",
-  });
-  assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
-    duplicatedIntoFull,
-    ".github/workflows/ci.yml",
-  ), [finding]);
+  for (const jobName of ["quality-full", "lane-release"]) {
+    for (const run of [
+      "go -C tooling run ./cmd/20w publication verify-pdf-reproducibility",
+      "go -C tooling run ./cmd/pdf-proof",
+    ]) {
+      const duplicatedProof = structuredClone(validCi);
+      duplicatedProof.jobs[jobName].steps.push({
+        name: "Rebuild the final PDF renderer twice without cache",
+        run,
+      });
+      assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
+        duplicatedProof,
+        ".github/workflows/ci.yml",
+      ), [finding]);
+    }
+  }
 
   const releaseFinding = ".github/workflows/release.yml: tagged releases must run the exact two-builder PDF reproducibility acceptance and checksum its receipt as a release input";
   const validRelease = workflow("release");
@@ -1008,6 +1015,71 @@ test("real PDF reproducibility acceptance stays in the renderer-selected and tag
     unbound,
     ".github/workflows/release.yml",
   ), [releaseFinding]);
+
+  const unreleasedProofCommand = structuredClone(validRelease);
+  unreleasedProofCommand.jobs.verify.steps.find((step) => (
+    step.name === "Rebuild the final PDF renderer twice without cache"
+  )).run = "go -C tooling run ./cmd/pdf-proof --root . --receipt proof.json";
+  assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(
+    unreleasedProofCommand,
+    ".github/workflows/release.yml",
+  ), [releaseFinding]);
+});
+
+test("private CI executables retain their tested Go build configuration", () => {
+  const expected = {
+    CGO_ENABLED: "0", GOOS: "linux", GOARCH: "amd64", GOENV: "off", GOWORK: "off",
+    GOTOOLCHAIN: "local", GOFLAGS: "-mod=readonly", GOPROXY: "off", GOSUMDB: "off",
+  };
+  for (const kind of ["plan", "proof"]) {
+    const locate = (subject) => kind === "plan"
+      ? subject.jobs["impact-plan"].steps.find((step) => step.id === "plan")
+      : subject.jobs["pdf-renderer-reproducibility"].steps.find((step) => (
+        step.name === "Rebuild the final PDF renderer twice without cache"
+      ));
+    const validate = (subject) => kind === "plan"
+      ? validateCiImpactWorkflowObject(subject)
+      : validatePDFRendererReproducibilityWorkflowObject(subject, ".github/workflows/ci.yml");
+    const valid = workflow("ci");
+    assert.deepEqual(validate(valid), []);
+    for (const [key, value] of Object.entries(expected)) {
+      assert.equal(locate(valid).env[key], value, `${kind} ${key}`);
+      for (const missing of [false, true]) {
+        const tampered = structuredClone(valid);
+        if (missing) delete locate(tampered).env[key];
+        else locate(tampered).env[key] = "unreviewed";
+        assert.ok(validate(tampered).length > 0, `${kind} ${key} missing=${missing}`);
+      }
+    }
+    const extra = structuredClone(valid);
+    locate(extra).env.GOEXPERIMENT = "unreviewed";
+    assert.ok(validate(extra).length > 0, `${kind} extra Go configuration`);
+    const recoupled = structuredClone(valid);
+    locate(recoupled).run = locate(recoupled).run
+      .replaceAll("./cmd/ci-plan", "./cmd/20w ci")
+      .replace("./cmd/pdf-proof", "./cmd/20w publication verify-pdf-reproducibility");
+    assert.ok(validate(recoupled).length > 0, `${kind} shared executable reintroduced`);
+  }
+});
+
+test("private CI build configuration rejects inherited workflow and job environment", () => {
+  for (const jobName of ["impact-plan", "pdf-renderer-reproducibility"]) {
+    const validate = (subject) => jobName === "impact-plan"
+      ? validateCiImpactWorkflowObject(subject)
+      : validatePDFRendererReproducibilityWorkflowObject(subject, ".github/workflows/ci.yml");
+    const valid = workflow("ci");
+    assert.equal(valid.env, undefined);
+    assert.equal(valid.jobs[jobName].env, undefined);
+    assert.deepEqual(validate(valid), []);
+    for (const key of ["GOEXPERIMENT", "GOFLAGS"]) {
+      for (const level of ["workflow", "job"]) {
+        const tampered = structuredClone(valid);
+        const owner = level === "workflow" ? tampered : tampered.jobs[jobName];
+        owner.env = { [key]: "unreviewed" };
+        assert.ok(validate(tampered).length > 0, `${jobName} inherited ${level} ${key}`);
+      }
+    }
+  }
 });
 
 test("CI impact selection is projected once and every job state fails closed", () => {
@@ -1018,8 +1090,8 @@ test("CI impact selection is projected once and every job state fails closed", (
   const forcedPullRequestFull = structuredClone(valid);
   const plan = forcedPullRequestFull.jobs["impact-plan"].steps.find((step) => step.id === "plan");
   plan.run = plan.run.replace(
-    "go -C tooling run ./cmd/20w ci plan --root .. \\",
-    "go -C tooling run ./cmd/20w ci plan --root .. --full \\",
+    "go -C tooling run ./cmd/ci-plan plan --root .. \\",
+    "go -C tooling run ./cmd/ci-plan plan --root .. --full \\",
   );
   assert.ok(validateCiImpactWorkflowObject(forcedPullRequestFull).includes(planFinding));
 
@@ -1042,20 +1114,20 @@ test("CI impact selection is projected once and every job state fails closed", (
       "true",
     ),
     (source) => source.replace(
-      "    go -C tooling run ./cmd/20w ci plan --root .. \\",
-      "    go -C tooling run ./cmd/20w ci plan --root .. --full \\",
+      "    go -C tooling run ./cmd/ci-plan plan --root .. \\",
+      "    go -C tooling run ./cmd/ci-plan plan --root .. --full \\",
     ),
     (source) => source.replace(
       '--base "$BEFORE_SHA" --head "$CURRENT_SHA" --json \\',
       "--json \\",
     ),
     (source) => source.replace(
-      "    go -C tooling run ./cmd/20w ci plan --root .. --full --json \\",
-      "    go -C tooling run ./cmd/20w ci plan --root .. --json \\",
+      "    go -C tooling run ./cmd/ci-plan plan --root .. --full --json \\",
+      "    go -C tooling run ./cmd/ci-plan plan --root .. --json \\",
     ),
     (source) => source.replace(
-      "  go -C tooling run ./cmd/20w ci plan --root .. --full --json \\",
-      "  go -C tooling run ./cmd/20w ci plan --root .. --json \\",
+      "  go -C tooling run ./cmd/ci-plan plan --root .. --full --json \\",
+      "  go -C tooling run ./cmd/ci-plan plan --root .. --json \\",
     ),
   ]) {
     const weakenedRouting = structuredClone(valid);
@@ -1466,6 +1538,8 @@ test("Go renderer and CI owners retain their path-derived pull-request labels", 
   )).map(([label]) => label).sort();
   const rendererLabels = ["area:ci", "area:publication"];
   for (const file of [
+    "tooling/cmd/pdf-proof/main.go",
+    "tooling/internal/pdfrendercli/cli_test.go",
     "tooling/internal/pdfrender/installed_dependencies.go",
     "tooling/internal/pdfrender/installed_boundaries_test.go",
     "tooling/internal/pdfrenderlock/lock.go",
@@ -1475,17 +1549,20 @@ test("Go renderer and CI owners retain their path-derived pull-request labels", 
   for (const file of [
     "tooling/internal/clrscontext/context.go",
     "tooling/internal/clrscontext/source_test.go",
-    "tooling/cmd/20w/clrs_context.go",
-    "tooling/cmd/20w/clrs_context_test.go",
   ]) assert.deepEqual(labelsFor(file), ["area:ci", "area:experiment"], file);
   for (const file of [
-    "tooling/cmd/20w/clrs_compare.go",
-    "tooling/cmd/20w/clrs_compare_test.go",
+    "tooling/internal/experimentcli/clrs_context.go",
+    "tooling/internal/experimentcli/clrs_context_test.go",
+    "tooling/internal/experimentcli/catalog.go",
+    "tooling/internal/experimentcli/cli.go",
+    "tooling/internal/experimentcli/future_command_test.go",
+    "tooling/internal/experimentcli/clrs_compare.go",
+    "tooling/internal/experimentcli/clrs_compare_test.go",
     "tooling/internal/clrsfixture/compare.go",
     "tooling/internal/clrsfixture/compare_files.go",
     "tooling/internal/clrsfixture/compare_test.go",
-    "tooling/cmd/20w/clrs_sbom.go",
-    "tooling/cmd/20w/clrs_sbom_test.go",
+    "tooling/internal/experimentcli/clrs_sbom.go",
+    "tooling/internal/experimentcli/clrs_sbom_test.go",
     "tooling/internal/clrsfixture/sbom.go",
     "tooling/internal/clrsfixture/sbom_execution.go",
     "tooling/internal/clrsfixture/sbom_files.go",
@@ -1494,8 +1571,8 @@ test("Go renderer and CI owners retain their path-derived pull-request labels", 
     "tooling/internal/clrsfixture/sbom_test.go",
     "tooling/internal/clrsfixture/sbom_test_fixture_test.go",
     "tooling/internal/clrsfixture/sbom_validation_test.go",
-    "tooling/cmd/20w/clrs_invocation.go",
-    "tooling/cmd/20w/clrs_invocation_test.go",
+    "tooling/internal/experimentcli/clrs_invocation.go",
+    "tooling/internal/experimentcli/clrs_invocation_test.go",
     "tooling/internal/clrsfixture/invocation.go",
     "tooling/internal/clrsfixture/invocation_payload.go",
     "tooling/internal/clrsfixture/invocation_test.go",
@@ -1506,6 +1583,7 @@ test("Go renderer and CI owners retain their path-derived pull-request labels", 
     "tooling/cmd/20w/pdf_tools_test.go",
   ]) assert.deepEqual(labelsFor(file), ["area:publication"], file);
   for (const file of [
+    "tooling/internal/experimentcli-unrelated/example.go",
     "tooling/internal/pdfrender-unrelated/example.go",
     "tooling/internal/clrscontext-unrelated/example.go",
     "tooling/cmd/20w/clrs_context_other.go",

@@ -11,12 +11,13 @@ import (
 )
 
 const (
-	promiseProcedureVersion      = "promise-wheel-reproduction-v2"
-	promiseMaximumReceiptBytes   = int64(64 << 10)
-	promiseMaximumRunOutputBytes = int64(1 << 20)
-	promiseMaximumOutputTarBytes = int64(128 << 10)
-	promiseCanonicalTarSHA256    = "460b0ce320c4da18784e97b99839a0ba74fa19e26e11320fc44037c791e38fe4"
-	promiseCanonicalTarSize      = int64(108032)
+	promiseLegacyProcedureVersion = "promise-wheel-reproduction-v2"
+	promiseProcedureVersion       = "promise-wheel-reproduction-v3"
+	promiseMaximumReceiptBytes    = int64(64 << 10)
+	promiseMaximumRunOutputBytes  = int64(1 << 20)
+	promiseMaximumOutputTarBytes  = int64(128 << 10)
+	promiseCanonicalTarSHA256     = "460b0ce320c4da18784e97b99839a0ba74fa19e26e11320fc44037c791e38fe4"
+	promiseCanonicalTarSize       = int64(108032)
 )
 
 type promiseInputs struct {
