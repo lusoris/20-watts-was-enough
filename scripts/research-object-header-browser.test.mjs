@@ -60,19 +60,8 @@ async function waitForExpression(cdp, expression, timeoutMs = 30_000) {
   assert.fail(`Browser condition timed out: ${expression}`);
 }
 
-async function assertHydratedResearchObject(cdp, origin) {
-  await navigate(
-    cdp,
-    `${origin}${pagesBasePath}concept/05-biology-is-a-launchpad/#scope`,
-  );
-  await waitForExpression(
-    cdp,
-    `document.readyState === "complete"
-      && document.querySelector('[data-research-object="focused-document"]')
-      && [...document.querySelectorAll('.research-object-evidence a')]
-        .some((link) => link.textContent.trim() === "C-018")`,
-  );
-  const snapshot = (await cdp.send("Runtime.evaluate", {
+async function hydratedResearchObjectSnapshot(cdp) {
+  return (await cdp.send("Runtime.evaluate", {
     expression: `(() => {
       const header = document.querySelector('[data-research-object="focused-document"]');
       const value = (label) => [...header.querySelectorAll('dl > div')]
@@ -124,6 +113,21 @@ async function assertHydratedResearchObject(cdp, origin) {
     })()`,
     returnByValue: true,
   })).result?.value;
+}
+
+async function assertHydratedResearchObject(cdp, origin) {
+  await navigate(
+    cdp,
+    `${origin}${pagesBasePath}concept/05-biology-is-a-launchpad/#scope`,
+  );
+  await waitForExpression(
+    cdp,
+    `document.readyState === "complete"
+      && document.querySelector('[data-research-object="focused-document"]')
+      && [...document.querySelectorAll('.research-object-evidence a')]
+        .some((link) => link.textContent.trim() === "C-018")`,
+  );
+  const snapshot = await hydratedResearchObjectSnapshot(cdp);
 
   const edition = `Site v${projectVersion} · continuous main snapshot`;
   assert.equal(snapshot.type, "Concept document");
