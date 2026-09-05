@@ -10,6 +10,7 @@ import (
 	"math"
 	"strings"
 	"testing"
+	"time"
 )
 
 type imageProofTarFixture struct {
@@ -220,6 +221,59 @@ func TestImageProofStreamEnforcesExactByteBoundary(t *testing.T) {
 	stream := &imageProofStream{ctx: context.Background(), source: bytes.NewReader(make([]byte, 2*imageProofTarBlockBytes)), remaining: imageProofTarBlockBytes}
 	if err := finishImageProofArchive(stream); err == nil || !strings.Contains(err.Error(), "byte bound") {
 		t.Fatalf("trailing padding bypassed total byte bound: %v", err)
+	}
+}
+
+type imageProofZeroReader struct {
+	maximumRead int
+}
+
+func (reader *imageProofZeroReader) Read(body []byte) (int, error) {
+	reader.maximumRead = max(reader.maximumRead, len(body))
+	clear(body)
+	return len(body), nil
+}
+
+func TestImageProofArchiveStreamsExpandedLayersBeyondTwoGiB(t *testing.T) {
+	for _, test := range []struct {
+		name       string
+		layerBytes int64
+		extraBytes int64
+		pass       bool
+	}{
+		{"three GiB layer", 3 * 1024 * 1024 * 1024, 0, true},
+		{"exact archive bound", maximumImageProofArchiveBytes - 3*imageProofTarBlockBytes, 0, true},
+		{"archive bound plus one", maximumImageProofArchiveBytes - 3*imageProofTarBlockBytes, 1, false},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			header := imageProofPhysicalHeader(t, test.layerBytes)
+			name := "blobs/sha256/" + strings.Repeat("a", 64)
+			clear(header[:100])
+			copy(header[:100], name)
+			imageProofRepairChecksum(header)
+			zeros := &imageProofZeroReader{}
+			// Generate discarded layer bytes lazily; retain only one physical
+			// header and two terminator blocks, never a multi-GiB fixture.
+			input := io.MultiReader(
+				bytes.NewReader(header),
+				io.LimitReader(zeros, test.layerBytes),
+				bytes.NewReader(make([]byte, 2*imageProofTarBlockBytes)),
+				io.LimitReader(zeros, test.extraBytes),
+			)
+			archive, err := readImageProofArchive(ctx, input)
+			if (err == nil) != test.pass || (!test.pass && !strings.Contains(err.Error(), "byte bound")) {
+				t.Fatalf("expanded archive error = %v", err)
+			}
+			wantBytes := test.layerBytes + 3*imageProofTarBlockBytes + test.extraBytes
+			if archive.streamBytes != wantBytes || len(archive.small) != 0 || archive.sizes[name] != test.layerBytes {
+				t.Fatalf("streamed archive = %+v, want %d physical bytes", archive, wantBytes)
+			}
+			if zeros.maximumRead > int(maximumImageProofBlobBytes) {
+				t.Fatalf("large layer requested an oversized buffer: %d", zeros.maximumRead)
+			}
+		})
 	}
 }
 

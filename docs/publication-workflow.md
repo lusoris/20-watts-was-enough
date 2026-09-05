@@ -130,7 +130,7 @@ a separate Buildx-metadata observation.
 This acceptance command pins every Docker operation to the local Linux
 `unix:///var/run/docker.sock` endpoint, clearing inherited Docker and Buildx
 routing overrides. Ordinary `render-pdf` behaviour does not change. Each
-read-only image export has a 120-second deadline, 2-GiB stream cap, 128 physical
+read-only image export has a 120-second deadline, 4-GiB stream cap, 128 physical
 tar-header cap, 64-KiB small-blob cap and 1-MiB aggregate small-blob buffer. It
 extracts no layers. Receipt proof covers config bytes and, for manifest-ID
 execution, their original descriptor link; it is not an independent layer-byte

@@ -11,7 +11,9 @@ import (
 )
 
 const (
-	maximumImageProofArchiveBytes int64 = 2 * 1024 * 1024 * 1024
+	// Classic Docker exports the locked image's 2,622,233,088 bytes of
+	// uncompressed layer tar, unlike containerd's compressed blob export.
+	maximumImageProofArchiveBytes int64 = 4 * 1024 * 1024 * 1024
 	maximumImageProofEntries            = 128
 	maximumImageProofBlobBytes    int64 = 64 * 1024
 	maximumImageProofSmallBytes   int64 = 1024 * 1024

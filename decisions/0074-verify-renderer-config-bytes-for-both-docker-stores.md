@@ -46,7 +46,10 @@ supported path.
 5. Every acceptance Docker operation uses the local Linux
    `unix:///var/run/docker.sock` endpoint with inherited Docker and Buildx
    routing overrides removed. The ordinary rendering command is unchanged.
-6. Bound each read-only archive stream to 120 seconds and 2 GiB. Count at most
+6. Bound each read-only archive stream to 120 seconds and 4 GiB. The locked
+   image's unique layers contain 2,622,233,088 uncompressed tar bytes; a 2-GiB
+   cap rejected the classic Docker export. The 4-GiB cap leaves room for those
+   bytes and the separately bounded archive metadata and framing. Count at most
    128 physical tar headers, reject extension headers before their hidden
    processing, and retain at most 1 MiB of small blobs, each at most 64 KiB.
    Require complete framing, unique admitted paths and strict JSON. No layers

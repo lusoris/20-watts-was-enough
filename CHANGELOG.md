@@ -10,7 +10,8 @@ the exact diff; this file records why the project changed.
 - PDF reproducibility receipts now hash the actual image config bytes instead
   of assuming Docker's loaded image ID always names a config. Schema 4 retains
   exact proof bytes for both config-ID and manifest-ID Docker stores, while
-  keeping their different manifest-evidence boundaries explicit.
+  keeping their different manifest-evidence boundaries explicit. The bounded
+  export admits the locked image's larger uncompressed classic-store layers.
 
 - Pages browser checks wait for the document root during navigation before
   reading layout dimensions. Unexpected browser errors still fail the check.
