@@ -318,6 +318,56 @@ test("printed readiness stages preserve paint order without changing screen posi
   );
 });
 
+test("printed document canvas keeps white on html without a body background", async () => {
+  const stylesheet = postcss.parse(await source("app/globals.css"));
+  const declarationsFor = (selector, scope, property) => {
+    const declarations = [];
+    stylesheet.walkRules((rule) => {
+      const print = rule.parent.type === "atrule"
+        && rule.parent.name === "media" && rule.parent.params === "print";
+      if (scope === "print" ? !print : rule.parent.type !== "root") return;
+      if (!rule.selectors.includes(selector)) return;
+      for (const node of rule.nodes) {
+        if (node.type !== "decl") continue;
+        if (node.prop !== property && !(property === "background" && node.prop.startsWith("background-"))) continue;
+        declarations.push({ property: node.prop, value: node.value, important: Boolean(node.important) });
+      }
+    });
+    return declarations;
+  };
+  const declaration = (property, value) => [{ property, value, important: false }];
+
+  assert.deepEqual(declarationsFor("html", "print", "background"), declaration("background", "#fff"));
+  assert.deepEqual(
+    declarationsFor("body", "print", "background"),
+    declaration("background", "transparent"),
+    "the print body must not add a white fragment background over the html canvas",
+  );
+  for (const selector of [".book-shell", ".book-cover", ".book-toc", ".book-document"]) {
+    assert.deepEqual(
+      declarationsFor(selector, "print", "background"),
+      declaration("background", "#fff"),
+      `${selector} retains its white print background`,
+    );
+  }
+  for (const selector of ["html", "body"]) {
+    for (const property of ["height", "min-height"]) {
+      assert.deepEqual(declarationsFor(selector, "print", property), declaration(property, "auto"));
+    }
+  }
+  for (const [selector, background] of [["html", "var(--shell)"], ["body", "var(--paper)"]]) {
+    assert.deepEqual(
+      declarationsFor(selector, "root", "background"),
+      declaration("background", background),
+      `${selector} retains its screen background`,
+    );
+  }
+  for (const [property, value] of [["background", "#10251d"], ["color", "#f6f1df"]]) {
+    assert.deepEqual(declarationsFor(".book-legal", "root", property), declaration(property, value));
+    assert.deepEqual(declarationsFor(".book-legal", "print", property), []);
+  }
+});
+
 test("the web book defers media work while PDF rendering stays eager", async () => {
   const [edition, stylesheet] = await Promise.all([
     source("app/components/book-edition.tsx"),

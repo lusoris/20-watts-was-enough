@@ -7,6 +7,11 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- The printed book uses its white page canvas without a redundant body fill.
+  That fill's final-page extent differed between two otherwise identical PDF
+  renders. Content surfaces and screen styles retain their existing owners;
+  publication checks still require byte-identical independently rendered pairs.
+
 - Math validation and delimiter formatting use parsed Markdown code boundaries,
   so literal shell examples are not treated as equations. Both commands share
   a bounded inventory that excludes worktrees, evidence and generated copies
