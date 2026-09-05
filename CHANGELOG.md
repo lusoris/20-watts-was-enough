@@ -97,6 +97,11 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- The read-only Go command `inspect-clrs-image-archive` verifies a supplied
+  candidate archive, preserves original image metadata and checks ordered
+  layer identities within fixed byte and time limits. It needs no Docker or
+  network access; a match does not admit or publish an image.
+
 - One explicit `generate-clrs-fixtures --execute` command runs the fixed CLRS
   generator in an already-loaded local image, validates six files and 48
   examples, and preserves bounded execution and cleanup evidence. Its portable
