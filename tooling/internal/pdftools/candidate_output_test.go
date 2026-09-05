@@ -494,3 +494,62 @@ func TestCandidateOutputInstallRollsBackOnlyOwnedFiles(t *testing.T) {
 		t.Fatalf("third output unexpectedly exists: %v", err)
 	}
 }
+
+func TestCandidateOutputInstallRollsBackPostLinkValidationFailure(t *testing.T) {
+	t.Parallel()
+	tests := map[string]struct {
+		afterLink func(*stagedCandidateArtifact) error
+		wantBody  string
+	}{
+		"owned link": {
+			afterLink: func(artifact *stagedCandidateArtifact) error {
+				return artifact.parentRoot.Remove(artifact.temporaryName)
+			},
+		},
+		"unowned replacement": {
+			afterLink: func(artifact *stagedCandidateArtifact) error {
+				if err := artifact.parentRoot.Remove(artifact.destinationName); err != nil {
+					return err
+				}
+				return artifact.parentRoot.WriteFile(artifact.destinationName, []byte("unowned"), 0o640)
+			},
+			wantBody: "unowned",
+		},
+	}
+	for name, test := range tests {
+		name, test := name, test
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			root := t.TempDir()
+			parent := filepath.Join(root, "build", "release-inputs")
+			if err := os.MkdirAll(parent, 0o755); err != nil {
+				t.Fatal(err)
+			}
+			path := candidateOutputPath{
+				relative: "build/release-inputs/final",
+				absolute: filepath.Join(parent, "final"),
+			}
+			body := []byte("candidate")
+			artifact, err := stageCandidateBytes(root, body, path, 64, digestRaw(body))
+			if err != nil {
+				t.Fatal(err)
+			}
+			staged := &stagedCandidate{artifacts: []*stagedCandidateArtifact{artifact}}
+			t.Cleanup(func() { _ = staged.cleanup() })
+
+			if err := staged.installWithPostLinkHook(root, test.afterLink); err == nil {
+				t.Fatal("candidate install accepted post-link validation drift")
+			}
+			retained, err := os.ReadFile(path.absolute)
+			if test.wantBody == "" {
+				if !errors.Is(err, os.ErrNotExist) {
+					t.Fatalf("owned candidate output was not rolled back: %v", err)
+				}
+				return
+			}
+			if err != nil || string(retained) != test.wantBody {
+				t.Fatalf("unowned replacement changed: %q, %v", retained, err)
+			}
+		})
+	}
+}

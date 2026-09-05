@@ -387,7 +387,14 @@ func finishStagedCandidateArtifact(
 	return nil
 }
 
-func (staged *stagedCandidate) install(root string) (returnError error) {
+func (staged *stagedCandidate) install(root string) error {
+	return staged.installWithPostLinkHook(root, nil)
+}
+
+func (staged *stagedCandidate) installWithPostLinkHook(
+	root string,
+	afterLink func(*stagedCandidateArtifact) error,
+) (returnError error) {
 	installed := make([]*stagedCandidateArtifact, 0, len(staged.artifacts))
 	defer func() {
 		if returnError != nil {
@@ -404,7 +411,16 @@ func (staged *stagedCandidate) install(root string) (returnError error) {
 		if err := artifact.parentRoot.Link(artifact.temporaryName, artifact.destinationName); err != nil {
 			return fmt.Errorf("atomically place candidate output: %w", err)
 		}
+		// Link publishes the same owned inode as the staging name. Record that
+		// identity before any fallible validation so rollback can remove this
+		// exact link while still refusing an attacker-provided replacement.
+		artifact.publishedInformation = artifact.temporaryInformation
 		installed = append(installed, artifact)
+		if afterLink != nil {
+			if err := afterLink(artifact); err != nil {
+				return fmt.Errorf("validate candidate output after atomic placement: %w", err)
+			}
+		}
 		temporaryInfo, temporaryError := artifact.parentRoot.Lstat(artifact.temporaryName)
 		finalInfo, finalError := artifact.parentRoot.Lstat(artifact.destinationName)
 		if temporaryError != nil || finalError != nil || !finalInfo.Mode().IsRegular() ||
