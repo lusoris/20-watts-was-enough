@@ -35,6 +35,7 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		{path: "package-lock.json", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
 		{path: "scripts/book-pdf-semantic-baseline.json", mode: "impact", lanes: []string{"release"}},
 		{path: "scripts/lib/book-pdf-semantic-audit.mjs", mode: "impact", lanes: []string{"release"}},
+		{path: "scripts/lib/chromium-cdp.test.mjs", mode: "impact", lanes: []string{"release"}},
 		{path: "scripts/lib/pdf-metadata.test.mjs", mode: "impact", lanes: []string{"release"}},
 		{path: "scripts/lib/pdf-metadata.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "full-authority-changed"},
 		{path: "scripts/audit-book-pdf-semantics.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:scripts/audit-book-pdf-semantics.mjs"},
@@ -42,6 +43,7 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 		{path: "scripts/audit-prose-style.mjs", mode: "full", lanes: []string{"full"}, reason: "full-authority-changed"},
 		{path: "scripts/book-edition-surface.test.mjs", mode: "impact", lanes: []string{"site"}},
 		{path: "scripts/mermaid-browser.test.mjs", mode: "impact", lanes: []string{"site"}},
+		{path: "scripts/research-object-header-browser.test.mjs", mode: "impact", lanes: []string{"site"}},
 		{path: "scripts/unclassified-future-check.mjs", mode: "full", lanes: []string{"full", "renderer"}, reason: "unmapped-path:scripts/unclassified-future-check.mjs"},
 		{path: "experiments/workstation/fixture-026/runner.mjs", mode: "impact", lanes: []string{"workstation-fixture-026"}},
 		{path: "experiments/workstation/fixture-007/runner.mjs", mode: "impact", lanes: []string{"container", "workstation-fixture-007"}},
@@ -116,6 +118,7 @@ func TestEverySiteLaneEntrypointIsMappedToTheSiteLane(t *testing.T) {
 		"scripts/book-edition-surface.test.mjs",
 		"scripts/book-fragment-browser.test.mjs",
 		"scripts/book-route.test.mjs",
+		"scripts/css-authority.test.mjs",
 		"scripts/github-pages.test.mjs",
 		"scripts/language-access.test.mjs",
 		"scripts/mermaid-browser.test.mjs",
@@ -124,9 +127,12 @@ func TestEverySiteLaneEntrypointIsMappedToTheSiteLane(t *testing.T) {
 		"scripts/prepare-reader-artifacts.mjs",
 		"scripts/prepare-reader-artifacts.test.mjs",
 		"scripts/publication-unification.test.mjs",
+		"scripts/research-object-header-browser.test.mjs",
+		"scripts/research-object-header.test.mjs",
 		"scripts/translation-manifest.test.mjs",
 		"scripts/translation-pages.test.mjs",
 		"scripts/translation-vite-build.test.mjs",
+		"scripts/validate-css-authority.mjs",
 		"scripts/validate-github-pages-build.mjs",
 		"scripts/validate-translations.mjs",
 	}
@@ -136,6 +142,23 @@ func TestEverySiteLaneEntrypointIsMappedToTheSiteLane(t *testing.T) {
 			!reflect.DeepEqual(plan.Lanes, []string{"site"}) {
 			t.Fatalf("site entrypoint %s produced %#v, want mapped site impact plan", path, plan)
 		}
+	}
+}
+
+func TestBrowserValidationLeavesSelectOnlyTheirExecutableConsumers(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	plan := selectTestPaths(t, root, testOptions(root), []string{
+		"scripts/css-authority.test.mjs",
+		"scripts/lib/chromium-cdp.test.mjs",
+		"scripts/research-object-header-browser.test.mjs",
+		"scripts/research-object-header.test.mjs",
+		"scripts/validate-css-authority.mjs",
+	})
+	want := []string{"release", "site"}
+	if plan.Mode != "impact" || plan.Reason != "mapped-change-set" ||
+		!reflect.DeepEqual(plan.Lanes, want) {
+		t.Fatalf("browser validation leaf plan = %#v, want impact/%v", plan, want)
 	}
 }
 

@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { access, mkdtemp, rm } from "node:fs/promises";
-import { createServer as createTcpServer } from "node:net";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -11,8 +10,9 @@ import { createServer as createViteServer } from "vite";
 
 import {
   connectCdp,
-  devtoolsPage,
+  devtoolsPageFromProfile,
   firstExistingChromium,
+  settleCleanupSteps,
   stopProcess,
 } from "./lib/chromium-cdp.mjs";
 
@@ -66,21 +66,6 @@ test("browser process shutdown is a no-op after exit", async () => {
   await stopProcess(child, { terminationGraceMs: 1, forcedExitWaitMs: 1 });
   assert.deepEqual({ exitCode: child.exitCode, signalCode: child.signalCode }, state);
 });
-
-async function reserveLocalPort() {
-  const server = createTcpServer();
-  await new Promise((resolve, reject) => {
-    server.once("error", reject);
-    server.listen(0, "127.0.0.1", resolve);
-  });
-  const address = server.address();
-  assert.equal(typeof address, "object");
-  const port = address.port;
-  await new Promise((resolve, reject) => server.close((error) => (
-    error ? reject(error) : resolve()
-  )));
-  return port;
-}
 
 const diagramSnapshotExpression = `(() => {
   const nodes = [...document.querySelectorAll('.diagram')];
@@ -705,19 +690,21 @@ test("browser rendering keeps Mermaid stable and wide publication content keyboa
   // The tighter phase deadlines remain authoritative. This outer budget lets
   // each phase exhaust its own bound and still covers deterministic cleanup.
   timeout: 360_000,
-}, async () => {
+}, async (t) => {
   const browser = await firstExistingChromium();
-  const debugPort = await reserveLocalPort();
   const profile = await mkdtemp(path.join(os.tmpdir(), "20w-mermaid-browser-"));
-  const vite = await createViteServer({
-    configFile: path.join(repositoryRoot, "vite.pages.config.ts"),
-    logLevel: "silent",
-    server: { host: "127.0.0.1", port: 0 },
-  });
+  let vite;
   let browserProcess;
   let cdp;
 
   try {
+    vite = await createViteServer({
+      configFile: path.join(repositoryRoot, "vite.pages.config.ts"),
+      configLoader: "runner",
+      cacheDir: path.join(profile, "vite-cache"),
+      logLevel: "silent",
+      server: { host: "127.0.0.1", port: 0 },
+    });
     await vite.listen();
     const address = vite.httpServer?.address();
     assert.equal(typeof address, "object");
@@ -736,12 +723,15 @@ test("browser rendering keeps Mermaid stable and wide publication content keyboa
       "--no-default-browser-check",
       "--hide-scrollbars",
       "--window-size=1440,1200",
-      `--remote-debugging-port=${debugPort}`,
+      "--remote-debugging-port=0",
       `--user-data-dir=${profile}`,
       "about:blank",
     ], { stdio: "ignore", windowsHide: true });
 
-    cdp = await connectCdp(await devtoolsPage(browserProcess, debugPort));
+    cdp = await connectCdp(
+      await devtoolsPageFromProfile(browserProcess, profile, { signal: t.signal }),
+      { signal: t.signal },
+    );
     await cdp.send("Page.enable");
     await cdp.send("Runtime.enable");
     const navigation = await cdp.send("Page.navigate", { url: bookUrl });
@@ -795,9 +785,11 @@ test("browser rendering keeps Mermaid stable and wide publication content keyboa
     await assertBookReflowSurface(cdp, address);
     await assertMobilePortalSurface(cdp, address);
   } finally {
-    cdp?.socket.close();
-    await stopProcess(browserProcess);
-    await vite.close();
-    await rm(profile, profileRemovalOptions);
+    await settleCleanupSteps([
+      async () => cdp?.socket.close(),
+      async () => stopProcess(browserProcess),
+      async () => vite?.close(),
+      async () => rm(profile, profileRemovalOptions),
+    ]);
   }
 });

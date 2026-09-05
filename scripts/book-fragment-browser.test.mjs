@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
-import { createServer as createTcpServer } from "node:net";
 import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
@@ -10,8 +9,9 @@ import { createServer as createViteServer } from "vite";
 import { bookDocumentId } from "../app/lib/book-document-id.mjs";
 import {
   connectCdp,
-  devtoolsPage,
+  devtoolsPageFromProfile,
   firstExistingChromium,
+  settleCleanupSteps,
   stopProcess,
 } from "./lib/chromium-cdp.mjs";
 import { bookSourceDocuments } from "./lib/portal-documents.mjs";
@@ -37,21 +37,6 @@ const viewports = Object.freeze([
   { label: "desktop", width: 1440, height: 900, minimumClearance: 8 },
   { label: "mobile", width: 375, height: 844, minimumClearance: 20 },
 ]);
-
-async function reserveLocalPort() {
-  const server = createTcpServer();
-  await new Promise((resolve, reject) => {
-    server.once("error", reject);
-    server.listen(0, "127.0.0.1", resolve);
-  });
-  const address = server.address();
-  assert.equal(typeof address, "object");
-  const port = address.port;
-  await new Promise((resolve, reject) => server.close((error) => (
-    error ? reject(error) : resolve()
-  )));
-  return port;
-}
 
 async function fragmentSnapshot(cdp, targetId) {
   return (await cdp.send("Runtime.evaluate", {
@@ -462,9 +447,8 @@ async function exerciseStaticBook(cdp) {
 
 test("the full book preserves fragment, semantic, and keyboard contracts", {
   timeout: 120_000,
-}, async () => {
+}, async (t) => {
   const browser = await firstExistingChromium();
-  const debugPort = await reserveLocalPort();
   const profile = await mkdtemp(path.join(os.tmpdir(), "20w-book-fragment-"));
   const previousPagesBasePath = process.env.PAGES_BASE_PATH;
   process.env.PAGES_BASE_PATH = pagesBasePath;
@@ -475,6 +459,8 @@ test("the full book preserves fragment, semantic, and keyboard contracts", {
   try {
     vite = await createViteServer({
       configFile: path.join(repositoryRoot, "vite.pages.config.ts"),
+      configLoader: "runner",
+      cacheDir: path.join(profile, "vite-cache"),
       logLevel: "silent",
       server: { host: "127.0.0.1", port: 0 },
     });
@@ -495,12 +481,15 @@ test("the full book preserves fragment, semantic, and keyboard contracts", {
       "--no-default-browser-check",
       "--hide-scrollbars",
       "--window-size=1440,900",
-      `--remote-debugging-port=${debugPort}`,
+      "--remote-debugging-port=0",
       `--user-data-dir=${profile}`,
       "about:blank",
     ], { stdio: "ignore", windowsHide: true });
 
-    cdp = await connectCdp(await devtoolsPage(browserProcess, debugPort));
+    cdp = await connectCdp(
+      await devtoolsPageFromProfile(browserProcess, profile, { signal: t.signal }),
+      { signal: t.signal },
+    );
     await cdp.send("Page.enable");
     await cdp.send("Runtime.enable");
 
@@ -509,11 +498,15 @@ test("the full book preserves fragment, semantic, and keyboard contracts", {
     }
     await exerciseStaticBook(cdp);
   } finally {
-    cdp?.socket.close();
-    await stopProcess(browserProcess);
-    await vite?.close();
-    await rm(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
-    if (previousPagesBasePath === undefined) delete process.env.PAGES_BASE_PATH;
-    else process.env.PAGES_BASE_PATH = previousPagesBasePath;
+    await settleCleanupSteps([
+      async () => cdp?.socket.close(),
+      async () => stopProcess(browserProcess),
+      async () => vite?.close(),
+      async () => rm(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 }),
+      async () => {
+        if (previousPagesBasePath === undefined) delete process.env.PAGES_BASE_PATH;
+        else process.env.PAGES_BASE_PATH = previousPagesBasePath;
+      },
+    ]);
   }
 });

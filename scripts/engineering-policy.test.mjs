@@ -222,19 +222,48 @@ test("workstation shard scripts retain their exact disjoint inventories", () => 
   ));
 });
 
-test("full-book browser probes stay in one serial site-test lane", () => {
+test("full-book browser probes stay in one bounded process-isolated site-test group", () => {
   const manifest = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
   const command = manifest.scripts?.["test:site"];
-  const tokens = command?.split(/\s+/u) ?? [];
+  const browserCommand = command?.split("&&").at(-1)?.trim() ?? "";
+  const tokens = browserCommand.split(/\s+/u);
+  assert.deepEqual(tokens.slice(0, 2), ["node", "--test"]);
   assert.deepEqual(
     tokens.filter((token) => token.startsWith("--test-concurrency=")),
-    ["--test-concurrency=1"],
+    ["--test-concurrency=2"],
+  );
+  assert.deepEqual(
+    tokens.filter((token) => token.startsWith("--experimental-test-isolation=")),
+    ["--experimental-test-isolation=process"],
   );
   for (const probe of [
     "scripts/book-fragment-browser.test.mjs",
     "scripts/mermaid-browser.test.mjs",
+    "scripts/research-object-header-browser.test.mjs",
   ]) {
     assert.equal(tokens.filter((token) => token === probe).length, 1, `${probe} must run exactly once`);
+  }
+
+  const isolatedCaches = new Map([
+    ["book fragment", ["book-fragment-browser.test.mjs", 'cacheDir: path.join(profile, "vite-cache")']],
+    ["Mermaid", ["mermaid-browser.test.mjs", 'cacheDir: path.join(profile, "vite-cache")']],
+    ["research object", ["research-object-header-browser.test.mjs", 'cacheDir: path.join(temporaryRoot, "vite-cache")']],
+  ]);
+  for (const [label, [file, cacheBinding]] of isolatedCaches) {
+    const source = readFileSync(new URL(file, import.meta.url), "utf8");
+    assert.ok(source.includes(cacheBinding), `${label} browser probe needs a private Vite cache`);
+    assert.ok(
+      source.includes('configLoader: "runner"'),
+      `${label} browser probe must not emit shared temporary config modules`,
+    );
+    assert.ok(
+      source.includes('"--remote-debugging-port=0"')
+        && source.includes("devtoolsPageFromProfile(")
+        && source.includes("signal: t.signal")
+        && source.includes("settleCleanupSteps(["),
+      `${label} browser probe needs held ports, cancellation, and settled cleanup`,
+    );
+    assert.equal(source.includes("reserveLocalPort"), false, `${label} retained a port handoff race`);
   }
 });
 

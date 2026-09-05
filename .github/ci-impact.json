@@ -339,11 +339,21 @@
       ]
     },
     {
+      "id": "script-release-tests",
+      "paths": [
+        "scripts/lib/chromium-cdp.test.mjs"
+      ],
+      "lanes": [
+        "release"
+      ]
+    },
+    {
       "id": "script-site-tests",
       "paths": [
         "scripts/book-edition-surface.test.mjs",
         "scripts/book-fragment-browser.test.mjs",
         "scripts/book-route.test.mjs",
+        "scripts/css-authority.test.mjs",
         "scripts/github-pages.test.mjs",
         "scripts/language-access.test.mjs",
         "scripts/mermaid-browser.test.mjs",
@@ -352,9 +362,12 @@
         "scripts/prepare-reader-artifacts.mjs",
         "scripts/prepare-reader-artifacts.test.mjs",
         "scripts/publication-unification.test.mjs",
+        "scripts/research-object-header-browser.test.mjs",
+        "scripts/research-object-header.test.mjs",
         "scripts/translation-manifest.test.mjs",
         "scripts/translation-pages.test.mjs",
         "scripts/translation-vite-build.test.mjs",
+        "scripts/validate-css-authority.mjs",
         "scripts/validate-github-pages-build.mjs",
         "scripts/validate-translations.mjs"
       ],
