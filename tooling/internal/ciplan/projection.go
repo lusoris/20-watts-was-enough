@@ -61,6 +61,9 @@ func ReadProjection(reader io.Reader) (Projection, error) {
 
 // Project validates a plan before deriving fixed semantic lane outputs.
 func Project(plan Plan) (Projection, error) {
+	if embeddedWorkstationCatalogueError != nil {
+		return Projection{}, fmt.Errorf("load embedded workstation catalogue: %w", embeddedWorkstationCatalogueError)
+	}
 	if err := validatePlan(plan); err != nil {
 		return Projection{}, err
 	}
@@ -71,13 +74,13 @@ func Project(plan Plan) (Projection, error) {
 		WorkstationMatrix: "[]",
 	}
 	if plan.Mode == "full" {
-		jobs := make([]workstationJobDefinition, 0, maximumWorkstationJobs)
+		jobs := make([]WorkstationJob, 0, maximumWorkstationJobs)
 		for _, definition := range allowedLanes {
 			jobs = append(jobs, definition.WorkstationJobs...)
 		}
 		return projectWorkstationJobs(projection, jobs)
 	}
-	jobs := make([]workstationJobDefinition, 0)
+	jobs := make([]WorkstationJob, 0)
 	for _, lane := range plan.Lanes {
 		switch lane {
 		case "common":
@@ -107,49 +110,83 @@ func Project(plan Plan) (Projection, error) {
 	return projectWorkstationJobs(projection, jobs)
 }
 
-func projectWorkstationJobs(projection Projection, jobs []workstationJobDefinition) (Projection, error) {
-	if len(jobs) > maximumWorkstationJobs {
-		return Projection{}, fmt.Errorf(
-			"workstation projection contains %d jobs, limit is %d",
-			len(jobs),
-			maximumWorkstationJobs,
-		)
+type workstationMatrixEntry struct {
+	Artifact string `json:"artifact"`
+	Script   string `json:"script"`
+}
+
+// WorkstationJobs returns an isolated, validated, creation-ordered copy of the
+// complete artifact job catalogue.
+func WorkstationJobs() ([]WorkstationJob, error) {
+	_, jobs, err := WorkstationCatalogue()
+	if err != nil {
+		return nil, err
 	}
-	sort.Slice(jobs, func(left, right int) bool {
-		return jobs[left].CreationRank < jobs[right].CreationRank
-	})
-	names := make([]string, len(jobs))
-	seenNames := make(map[string]struct{}, len(jobs))
-	for index, job := range jobs {
-		if !lanePattern.MatchString(job.Name) {
-			return Projection{}, fmt.Errorf("workstation projection job is invalid: %q", job.Name)
-		}
-		if job.CreationRank < 1 || job.CreationRank > maximumWorkstationJobs {
-			return Projection{}, fmt.Errorf(
-				"workstation projection job %q has invalid creation rank %d",
-				job.Name,
-				job.CreationRank,
-			)
-		}
-		if _, duplicate := seenNames[job.Name]; duplicate {
-			return Projection{}, fmt.Errorf("workstation projection job is repeated: %q", job.Name)
-		}
-		if index > 0 && job.CreationRank == jobs[index-1].CreationRank {
-			return Projection{}, fmt.Errorf(
-				"workstation projection creation rank is repeated: %d",
-				job.CreationRank,
-			)
-		}
-		seenNames[job.Name] = struct{}{}
-		names[index] = job.Name
+	return orderAndValidateWorkstationJobs(jobs)
+}
+
+func projectWorkstationJobs(projection Projection, jobs []WorkstationJob) (Projection, error) {
+	ordered, err := orderAndValidateWorkstationJobs(jobs)
+	if err != nil {
+		return Projection{}, err
 	}
-	projection.WorkstationAny = len(jobs) > 0
-	matrix, err := json.Marshal(names)
+	entries := make([]workstationMatrixEntry, len(ordered))
+	for index, job := range ordered {
+		entries[index] = workstationMatrixEntry{Artifact: job.Artifact, Script: job.Script}
+	}
+	projection.WorkstationAny = len(entries) > 0
+	matrix, err := json.Marshal(entries)
 	if err != nil {
 		return Projection{}, fmt.Errorf("encode workstation matrix: %w", err)
 	}
 	projection.WorkstationMatrix = string(matrix)
 	return projection, nil
+}
+
+func orderAndValidateWorkstationJobs(jobs []WorkstationJob) ([]WorkstationJob, error) {
+	if len(jobs) > maximumWorkstationJobs {
+		return nil, fmt.Errorf(
+			"workstation projection contains %d jobs, limit is %d",
+			len(jobs),
+			maximumWorkstationJobs,
+		)
+	}
+	ordered := append([]WorkstationJob(nil), jobs...)
+	sort.Slice(ordered, func(left, right int) bool {
+		return ordered[left].CreationRank < ordered[right].CreationRank
+	})
+	seenArtifacts := make(map[string]struct{}, len(ordered))
+	seenScripts := make(map[string]struct{}, len(ordered))
+	for index, job := range ordered {
+		if !lanePattern.MatchString(job.Artifact) {
+			return nil, fmt.Errorf("workstation projection artifact is invalid: %q", job.Artifact)
+		}
+		if !workstationScriptPattern.MatchString(job.Script) {
+			return nil, fmt.Errorf("workstation projection script is invalid: %q", job.Script)
+		}
+		if job.CreationRank < 1 || job.CreationRank > maximumWorkstationJobs {
+			return nil, fmt.Errorf(
+				"workstation projection job %q has invalid creation rank %d",
+				job.Artifact,
+				job.CreationRank,
+			)
+		}
+		if _, duplicate := seenArtifacts[job.Artifact]; duplicate {
+			return nil, fmt.Errorf("workstation projection artifact is repeated: %q", job.Artifact)
+		}
+		if _, duplicate := seenScripts[job.Script]; duplicate {
+			return nil, fmt.Errorf("workstation projection script is repeated: %q", job.Script)
+		}
+		if index > 0 && job.CreationRank == ordered[index-1].CreationRank {
+			return nil, fmt.Errorf(
+				"workstation projection creation rank is repeated: %d",
+				job.CreationRank,
+			)
+		}
+		seenArtifacts[job.Artifact] = struct{}{}
+		seenScripts[job.Script] = struct{}{}
+	}
+	return ordered, nil
 }
 
 // WriteGitHubOutputs emits the complete fixed set of GitHub job outputs.

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "core_script": "test:workstation:core",
+  "jobs": [
+    { "lane": "workstation-fixture-026", "artifact": "fixture-026-shard-6", "script": "test:workstation:fixture-026:shard-6", "creation_rank": 1 },
+    { "lane": "workstation-fixture-026", "artifact": "fixture-026-shard-2", "script": "test:workstation:fixture-026:shard-2", "creation_rank": 2 },
+    { "lane": "workstation-fixture-026", "artifact": "fixture-026-shard-4", "script": "test:workstation:fixture-026:shard-4", "creation_rank": 3 },
+    { "lane": "workstation-fixture-026", "artifact": "fixture-026-shard-1", "script": "test:workstation:fixture-026:shard-1", "creation_rank": 4 },
+    { "lane": "workstation-fixture-026", "artifact": "fixture-026-shard-3", "script": "test:workstation:fixture-026:shard-3", "creation_rank": 5 },
+    { "lane": "workstation-fixture-026", "artifact": "fixture-026-shard-5", "script": "test:workstation:fixture-026:shard-5", "creation_rank": 6 },
+    { "lane": "workstation-fixture-029", "artifact": "fixture-029-shard-2", "script": "test:workstation:fixture-029:shard-2", "creation_rank": 7 },
+    { "lane": "workstation-fixture-029", "artifact": "fixture-029-shard-1", "script": "test:workstation:fixture-029:shard-1", "creation_rank": 8 },
+    { "lane": "workstation-fixture-026", "artifact": "fixture-026-shard-8", "script": "test:workstation:fixture-026:shard-8", "creation_rank": 9 },
+    { "lane": "workstation-candidate-010", "artifact": "candidate-010", "script": "test:workstation:candidate-010", "creation_rank": 10 },
+    { "lane": "workstation-fixture-026", "artifact": "fixture-026-shard-7", "script": "test:workstation:fixture-026:shard-7", "creation_rank": 11 },
+    { "lane": "workstation-fixture-019", "artifact": "fixture-019", "script": "test:workstation:fixture-019", "creation_rank": 12 },
+    { "lane": "workstation-fixture-024", "artifact": "fixture-024", "script": "test:workstation:fixture-024", "creation_rank": 13 },
+    { "lane": "workstation-fixture-012", "artifact": "fixture-012", "script": "test:workstation:fixture-012", "creation_rank": 14 },
+    { "lane": "workstation-fixture-022", "artifact": "fixture-022", "script": "test:workstation:fixture-022", "creation_rank": 15 },
+    { "lane": "workstation-fixture-027", "artifact": "fixture-027", "script": "test:workstation:fixture-027", "creation_rank": 16 },
+    { "lane": "workstation-fixture-023", "artifact": "fixture-023", "script": "test:workstation:fixture-023", "creation_rank": 17 },
+    { "lane": "workstation-fixture-007", "artifact": "fixture-007", "script": "test:workstation:fixture-007", "creation_rank": 18 },
+    { "lane": "workstation-fixture-025", "artifact": "fixture-025", "script": "test:workstation:fixture-025", "creation_rank": 19 }
+  ]
+}

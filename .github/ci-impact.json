@@ -76,7 +76,8 @@
         "tooling/go.mod",
         "tooling/go.sum",
         "tooling/internal/ciplan/**",
-        "tooling/internal/strictjson/**"
+        "tooling/internal/strictjson/**",
+        "tooling/internal/workstationrunner/**"
       ],
       "lanes": [
         "full"

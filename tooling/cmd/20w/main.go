@@ -10,8 +10,10 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/signal"
 	"regexp"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/buildinfo"
@@ -29,6 +31,7 @@ import (
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/pdfrender"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/releasecheck"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/releaseimage"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/workstationrunner"
 )
 
 var githubOutputPrefixPattern = regexp.MustCompile(`^[a-z][a-z0-9_]{0,31}$`)
@@ -46,6 +49,7 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "Usage:")
 	fmt.Fprintln(writer, "  20w ci plan [--root <repository>] [--base <commit> --head <commit> | --full] [--json]")
 	fmt.Fprintln(writer, "  20w ci project")
+	fmt.Fprintln(writer, "  20w ci run-workstation [--root <repository>]")
 	fmt.Fprintln(writer, "  20w validate docs [--root <repository>]")
 	fmt.Fprintln(writer, "  20w experiment list [--root <repository>] [--json]")
 	fmt.Fprintln(writer, "  20w experiment validate [--root <repository>]")
@@ -86,6 +90,9 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 		}
 		if len(arguments) >= 2 && arguments[1] == "project" {
 			return runCIProject(arguments[2:], os.Stdin, stdout, stderr)
+		}
+		if len(arguments) >= 2 && arguments[1] == "run-workstation" {
+			return runCIWorkstation(arguments[2:], stdout, stderr)
 		}
 	case "validate":
 		if len(arguments) >= 2 && arguments[1] == "docs" {
@@ -227,6 +234,22 @@ func runCIPlan(arguments []string, stdout, stderr io.Writer) int {
 	}
 	fmt.Fprintf(stdout, "CI plan: %s (%s)\n", plan.Mode, plan.Reason)
 	fmt.Fprintf(stdout, "CI lanes: %s\n", strings.Join(plan.Lanes, ","))
+	return 0
+}
+
+func runCIWorkstation(arguments []string, stdout, stderr io.Writer) int {
+	flags := flag.NewFlagSet("ci run-workstation", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	root := flags.String("root", ".", "repository root")
+	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
+		return 2
+	}
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	if err := workstationrunner.Run(ctx, *root, stdout); err != nil {
+		fmt.Fprintf(stderr, "Run bounded workstation suite: %v\n", err)
+		return 1
+	}
 	return 0
 }
 

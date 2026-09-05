@@ -15,6 +15,21 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- Decision 0068 makes the Go workstation catalogue own each artifact's exact
+  package script as well as its creation rank in one embedded machine-readable
+  authority. CI consumes the projected, validated `{artifact, script}` objects
+  without repeating a nineteen-arm shell dispatch. The local aggregate now
+  runs core and all nineteen unchanged scripts through the same creation-ordered
+  catalogue with at most eight active process trees, a 30-minute and 2 MiB
+  combined-output bound per job, a closed environment, cancellation and
+  post-wait tree cleanup, and a deterministic complete-failure summary. The
+  strict preflight freezes exact Node argument vectors before concurrency, so a
+  later package-file rewrite and npm lifecycle hooks cannot change execution.
+  It also proves that the catalogue covers every discovered workstation test
+  exactly once and each manifest `full_tests` path exactly once through its own
+  artifact jobs. The test files, assertions, seeds, horizons and `NO_RESULT`
+  boundaries do not change; issue 7 remains open for a measured complete live
+  workflow.
 - The Go CI projection now lists the longer recently measured workstation jobs
   first inside the unchanged eight-job concurrency bound. The exact
   nineteen jobs, static commands, tests and fail-closed success authority stay

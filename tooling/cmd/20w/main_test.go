@@ -92,6 +92,25 @@ func TestRunCIProjectWritesOnlyFixedValidatedOutputs(t *testing.T) {
 	}
 }
 
+func TestRunCIWorkstationHasAClosedCommandLine(t *testing.T) {
+	t.Parallel()
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	if exitCode := run([]string{"ci", "run-workstation", "unexpected"}, &stdout, &stderr); exitCode != 2 {
+		t.Fatalf("run() exit/stderr = %d/%q, want usage failure", exitCode, stderr.String())
+	}
+}
+
+func TestRunCIWorkstationRejectsAnInvalidRepositoryBeforeExecution(t *testing.T) {
+	t.Parallel()
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	exitCode := run([]string{"ci", "run-workstation", "--root", t.TempDir()}, &stdout, &stderr)
+	if exitCode != 1 || !strings.Contains(stderr.String(), "inspect package.json") {
+		t.Fatalf("run() exit/stderr = %d/%q, want repository failure", exitCode, stderr.String())
+	}
+}
+
 func TestRunPackageNodeImageRequiresClosedArguments(t *testing.T) {
 	t.Parallel()
 	var stdout bytes.Buffer

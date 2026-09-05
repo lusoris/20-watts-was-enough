@@ -369,7 +369,7 @@ jobs:
       fail-fast: false
       max-parallel: 8
       matrix:
-        artifact: ${{ fromJSON(needs.impact-plan.outputs.workstation_matrix) }}
+        include: ${{ fromJSON(needs.impact-plan.outputs.workstation_matrix) }}
     steps:
       - name: Check out canonical source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -397,31 +397,8 @@ jobs:
         run: npm ci --no-audit
       - name: Run the allowlisted artifact test script
         env:
-          ARTIFACT: ${{ matrix.artifact }}
-        run: |
-          set -euo pipefail
-          case "$ARTIFACT" in
-            candidate-010) npm run test:workstation:candidate-010 ;;
-            fixture-007) npm run test:workstation:fixture-007 ;;
-            fixture-012) npm run test:workstation:fixture-012 ;;
-            fixture-019) npm run test:workstation:fixture-019 ;;
-            fixture-022) npm run test:workstation:fixture-022 ;;
-            fixture-023) npm run test:workstation:fixture-023 ;;
-            fixture-024) npm run test:workstation:fixture-024 ;;
-            fixture-025) npm run test:workstation:fixture-025 ;;
-            fixture-026-shard-1) npm run test:workstation:fixture-026:shard-1 ;;
-            fixture-026-shard-2) npm run test:workstation:fixture-026:shard-2 ;;
-            fixture-026-shard-3) npm run test:workstation:fixture-026:shard-3 ;;
-            fixture-026-shard-4) npm run test:workstation:fixture-026:shard-4 ;;
-            fixture-026-shard-5) npm run test:workstation:fixture-026:shard-5 ;;
-            fixture-026-shard-6) npm run test:workstation:fixture-026:shard-6 ;;
-            fixture-026-shard-7) npm run test:workstation:fixture-026:shard-7 ;;
-            fixture-026-shard-8) npm run test:workstation:fixture-026:shard-8 ;;
-            fixture-027) npm run test:workstation:fixture-027 ;;
-            fixture-029-shard-1) npm run test:workstation:fixture-029:shard-1 ;;
-            fixture-029-shard-2) npm run test:workstation:fixture-029:shard-2 ;;
-            *) echo "::error::unallowlisted workstation artifact: $ARTIFACT"; exit 1 ;;
-          esac
+          SCRIPT: ${{ matrix.script }}
+        run: npm run "$SCRIPT"
 
   container-smoke:
     name: Container smoke paths

@@ -846,11 +846,12 @@ async function artifactProtocolEligibility(root, manifest) {
   }
 }
 
-function coversCompleteWorkstationTestInventory(command) {
-  return typeof command === "string" && [
-    "experiments/workstation/*.test.mjs",
-    "experiments/workstation/**/*.test.mjs",
-  ].every((pattern) => command.includes(pattern));
+async function workstationTestPipelineCovers(root) {
+  const packagePath = await repositoryRegularFile(root, "package.json", "package.json");
+  const packageDocument = JSON.parse(await readFile(packagePath, "utf8"));
+  return packageDocument.scripts?.test?.includes("npm run test:workstation") === true
+    && packageDocument.scripts?.["test:workstation"]
+      === "go -C tooling run ./cmd/20w ci run-workstation --root ..";
 }
 
 export async function workstationPromotionChecks(root, manifest) {
@@ -887,11 +888,7 @@ export async function workstationPromotionChecks(root, manifest) {
   const fullTestPaths = fullTests.map((value) => localPath(root, value));
   let workstationTestPipeline = false;
   try {
-    const packagePath = await repositoryRegularFile(root, "package.json", "package.json");
-    const packageDocument = JSON.parse(await readFile(packagePath, "utf8"));
-    workstationTestPipeline = packageDocument.scripts?.test?.includes("npm run test:workstation") === true
-      && packageDocument.scripts?.["test:workstation"]?.includes("node --test") === true
-      && coversCompleteWorkstationTestInventory(packageDocument.scripts["test:workstation"]);
+    workstationTestPipeline = await workstationTestPipelineCovers(root);
   } catch {
     workstationTestPipeline = false;
   }
