@@ -7,6 +7,10 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- PDF semantic baseline tests and their dedicated audit helper now select the
+  release lane rather than expanding to full CI plus renderer reproducibility.
+  Production PDF finalisation, the manual Poppler audit, unknown scripts and
+  selector changes remain fail-closed.
 - Decision 0070 makes Fixture 026 check a missing arm commitment against
   existing evaluator state before invoking the isolated policy bank, so a
   bounded policy timeout cannot mask deterministic resume corruption. The

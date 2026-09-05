@@ -330,7 +330,9 @@
     {
       "id": "script-publication-semantic-baseline",
       "paths": [
-        "scripts/book-pdf-semantic-baseline.json"
+        "scripts/book-pdf-semantic-baseline.json",
+        "scripts/lib/book-pdf-semantic-audit.mjs",
+        "scripts/lib/pdf-metadata.test.mjs"
       ],
       "lanes": [
         "release"
