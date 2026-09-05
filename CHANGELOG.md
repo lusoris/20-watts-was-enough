@@ -7,6 +7,11 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Browser startup waits now report process termination signals and the last
+  HTTP status or recognised fetch failure on timeout. Diagnostics omit URL
+  credentials, queries, fragments and response bodies; the existing deadlines
+  remain unchanged.
+
 - Presentation-only PDF checks build the locked renderer once and still
   compare two isolated PDF/manifest pairs. Toolchain changes, full plans,
   unknown companion paths and tagged releases retain independent two-builder
