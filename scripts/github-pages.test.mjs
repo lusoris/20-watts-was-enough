@@ -792,7 +792,10 @@ test("the portal keeps clean-route history and native Markdown links honest on t
   assert.match(content, /document\.route === route/);
   assert.match(content, /encodePortalFragment\(hash\)/);
   assert.match(content, /publicationSourceRevisionQuery\(sourceRevision\)/u);
-  assert.match(content, /fetch\(portalDocumentAssetLocation\([\s\S]*sourceRevision,[\s\S]*\)\)/u);
+  assert.match(
+    content,
+    /loadPortalTextAsset\(portalDocumentAssetLocation\(\s*metadata\.path,\s*assetBasePath,\s*sourceRevision,\s*\), \{/u,
+  );
   assert.match(
     content,
     /`\$\{normalizedBasePath\(assetBasePath\)\}research-object-records\/\$\{encodedPath\}\.json\$\{publicationSourceRevisionQuery\(sourceRevision\)\}`/u,
@@ -931,7 +934,10 @@ test("the portal loads canonical documents on demand and keeps book code off its
   assert.doesNotMatch(portal, /from ["']\.\.\/book-content["']/);
   assert.match(portal, /from ["']\.\.\/portal-content["']/);
   assert.match(portal, /lazy\(\(\) => import\(["']\.\/markdown-document["']\)/);
-  assert.match(content, /fetch\(portalDocumentAssetLocation\([\s\S]*sourceRevision,[\s\S]*\)\)/u);
+  assert.match(
+    content,
+    /loadPortalTextAsset\(portalDocumentAssetLocation\(\s*metadata\.path,\s*assetBasePath,\s*sourceRevision,\s*\), \{/u,
+  );
   assert.match(content, /contentType\.includes\("text\/html"\)/);
   assert.match(content, /Document request returned HTML instead of Markdown/);
   assert.match(config, /virtual:portal-document-index/);

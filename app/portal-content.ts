@@ -1,5 +1,9 @@
 import type { ResearchDocument } from "./research-document";
 import type { ResearchObjectEvidenceRecord } from "./research-object";
+import {
+  readBoundedResponseText,
+  withResponseDeadline,
+} from "./lib/bounded-response-text";
 import { encodePortalFragment } from "./lib/portal-fragment.mjs";
 import { publicationSourceRevisionQuery } from "./lib/publication-revision.mjs";
 import { normalizeResearchObjectEvidenceRecords } from "./lib/research-object.mjs";
@@ -19,6 +23,16 @@ export { portalMetrics };
 
 const portalDocumentPathPattern = /^(?:concept|math)\/[a-z0-9]+(?:-[a-z0-9]+)*\.md$/u;
 const relativeBaseOrigin = "https://portal.invalid";
+const maximumPortalDocumentBytes = 16 * 1024 * 1024;
+const maximumPortalEvidenceBytes = 512 * 1024;
+const maximumPortalResponseChunks = 16_384;
+const maximumPortalResponseMilliseconds = 30_000;
+
+type PortalTextAssetOptions = Readonly<{
+  maximumBytes: number;
+  path: string;
+  requestLabel: "Document" | "Research-object record";
+}>;
 
 function normalizedBasePath(basePath: string) {
   const candidate = basePath.startsWith("/") ? basePath : `/${basePath}`;
@@ -53,6 +67,28 @@ function portalEvidenceAssetLocation(
   return `${normalizedBasePath(assetBasePath)}research-object-records/${encodedPath}.json${publicationSourceRevisionQuery(sourceRevision)}`;
 }
 
+async function loadPortalTextAsset(
+  location: string,
+  { maximumBytes, path, requestLabel }: PortalTextAssetOptions,
+) {
+  return withResponseDeadline({
+    label: `${requestLabel} request for ${path}`,
+    maximumMilliseconds: maximumPortalResponseMilliseconds,
+  }, async (signal) => {
+    const response = await fetch(location, { signal });
+    if (!response.ok) {
+      throw new Error(`${requestLabel} request failed (${response.status}): ${path}`);
+    }
+    const body = await readBoundedResponseText(response, {
+      label: `${requestLabel} response for ${path}`,
+      maximumBytes,
+      maximumChunks: maximumPortalResponseChunks,
+      signal,
+    });
+    return { body, response };
+  });
+}
+
 export function portalDocumentLocation(
   path: string,
   assetBasePath: string,
@@ -84,15 +120,15 @@ export async function loadPortalDocument(
 ): Promise<ResearchDocument> {
   const metadata = portalDocuments.find((document) => document.path === path);
   if (!metadata) throw new Error(`Unknown portal document: ${path}`);
-  const response = await fetch(portalDocumentAssetLocation(
+  const { body, response } = await loadPortalTextAsset(portalDocumentAssetLocation(
     metadata.path,
     assetBasePath,
     sourceRevision,
-  ));
-  if (!response.ok) {
-    throw new Error(`Document request failed (${response.status}): ${path}`);
-  }
-  const body = await response.text();
+  ), {
+    maximumBytes: maximumPortalDocumentBytes,
+    path,
+    requestLabel: "Document",
+  });
   const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
   if (
     contentType.includes("text/html")
@@ -117,16 +153,16 @@ export async function loadPortalEvidenceRecords(
 ): Promise<ResearchObjectEvidenceRecord[]> {
   const metadata = portalDocuments.find((document) => document.path === path);
   if (!metadata) throw new Error(`Unknown portal document: ${path}`);
-  const response = await fetch(portalEvidenceAssetLocation(
+  const { body } = await loadPortalTextAsset(portalEvidenceAssetLocation(
     metadata.path,
     assetBasePath,
     sourceRevision,
-  ));
-  if (!response.ok) {
-    throw new Error(`Research-object record request failed (${response.status}): ${path}`);
-  }
-  const body = await response.text();
-  if (body.length > 512 * 1024 || /^\s*(?:<!doctype\s+html|<html\b)/iu.test(body)) {
+  ), {
+    maximumBytes: maximumPortalEvidenceBytes,
+    path,
+    requestLabel: "Research-object record",
+  });
+  if (/^\s*(?:<!doctype\s+html|<html\b)/iu.test(body)) {
     throw new Error(`Research-object record request returned invalid content: ${path}`);
   }
   let records;

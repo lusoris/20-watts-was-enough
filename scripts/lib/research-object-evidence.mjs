@@ -57,19 +57,25 @@ function nodeText(node, sourcePath) {
   return values.join("");
 }
 
-function linksFromTree(tree, sourcePath, inheritedDefinitions = new Map()) {
+function firstDefinitionsFromTree(tree, sourcePath, inheritedDefinitions = new Map()) {
   const definitions = new Map(inheritedDefinitions);
   walk(tree, sourcePath, (node) => {
     if (node?.type === "definition" && typeof node.identifier === "string") {
-      definitions.set(node.identifier.toLowerCase(), node.url);
+      const identifier = node.identifier.toUpperCase();
+      if (!definitions.has(identifier)) definitions.set(identifier, node.url);
     }
   });
+  return definitions;
+}
+
+function linksFromTree(tree, sourcePath, inheritedDefinitions = new Map()) {
+  const definitions = firstDefinitionsFromTree(tree, sourcePath, inheritedDefinitions);
   const links = [];
   walk(tree, sourcePath, (node) => {
     let url;
     if (node?.type === "link") url = node.url;
     if (node?.type === "linkReference" && typeof node.identifier === "string") {
-      url = definitions.get(node.identifier.toLowerCase());
+      url = definitions.get(node.identifier.toUpperCase());
     }
     if (typeof url === "string") links.push({ label: nodeText(node, sourcePath).trim(), url });
   });
@@ -211,12 +217,7 @@ function claimBacklinks(repositoryRoot, documentPaths) {
   });
   const tree = markdownParser.parse(claims.toString("utf8"));
   const records = new Map([...documentPaths].map((documentPath) => [documentPath, []]));
-  const definitions = new Map();
-  walk(tree, claimsPath, (node) => {
-    if (node?.type === "definition" && typeof node.identifier === "string") {
-      definitions.set(node.identifier.toLowerCase(), node.url);
-    }
-  });
+  const definitions = firstDefinitionsFromTree(tree, claimsPath);
   let claimId = "";
   for (const node of tree.children) {
     if (node.type === "heading") {

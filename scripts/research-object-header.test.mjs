@@ -11,6 +11,10 @@ import {
   researchObjectIdentity,
 } from "../app/lib/research-object.mjs";
 import {
+  readBoundedResponseText,
+  withResponseDeadline,
+} from "../app/lib/bounded-response-text.ts";
+import {
   issueFormLocator,
   maximumIssueFormLocatorLength,
 } from "../app/lib/publication.mjs";
@@ -226,6 +230,78 @@ test("evidence projection does not infer records from identifiers, filenames, or
   }
 });
 
+test("direct-link evidence preserves the renderer's first reference definition", async () => {
+  const repositoryRoot = await mkdtemp(path.join(tmpdir(), "20w-object-first-direct-"));
+  try {
+    await mkdir(path.join(repositoryRoot, "research"), { recursive: true });
+    await writeFile(
+      path.join(repositoryRoot, "research", "claims.md"),
+      "### C-001\n\n- **Used by:** none\n",
+    );
+    const projectedDocument = {
+      path: "concept/projected.md",
+      body: [
+        "[exact claim][Evidence Route]",
+        "",
+        "[evidence route]: ../research/claims.md#c-001",
+        "[EVIDENCE ROUTE]: ../research/claims.md#c-999",
+        "",
+      ].join("\n"),
+    };
+
+    assert.deepEqual(
+      researchObjectEvidenceByDocument(repositoryRoot, [projectedDocument]).get(
+        projectedDocument.path,
+      ),
+      [{
+        kind: "claim",
+        label: "C-001",
+        sourcePath: "research/claims.md",
+        fragment: "c-001",
+      }],
+    );
+  } finally {
+    await rm(repositoryRoot, { recursive: true, force: true });
+  }
+});
+
+test("claim-ledger backlinks preserve the renderer's first reference definition", async () => {
+  const repositoryRoot = await mkdtemp(path.join(tmpdir(), "20w-object-first-backlink-"));
+  try {
+    await mkdir(path.join(repositoryRoot, "research"), { recursive: true });
+    await writeFile(
+      path.join(repositoryRoot, "research", "claims.md"),
+      [
+        "### C-001",
+        "",
+        "- **Used by:** [projected document][Owner]",
+        "",
+        "[owner]: ../concept/projected.md",
+        "[OWNER]: ../../outside.md",
+        "",
+      ].join("\n"),
+    );
+    const projectedDocument = {
+      path: "concept/projected.md",
+      body: "# Projected document\n",
+    };
+
+    assert.deepEqual(
+      researchObjectEvidenceByDocument(repositoryRoot, [projectedDocument]).get(
+        projectedDocument.path,
+      ),
+      [{
+        kind: "claim",
+        label: "C-001",
+        sourcePath: "research/claims.md",
+        fragment: "c-001",
+      }],
+    );
+  } finally {
+    await rm(repositoryRoot, { recursive: true, force: true });
+  }
+});
+
 test("evidence projection bounds hostile Markdown AST traversal", async () => {
   const repositoryRoot = await mkdtemp(path.join(tmpdir(), "20w-object-ast-bound-"));
   try {
@@ -279,6 +355,198 @@ test("fetched evidence records reject unknown, missing, and hostile fields", () 
       /Research-object (?:evidence|audit)/u,
     );
   }
+});
+
+test("bounded response text decodes split UTF-8 at the exact byte boundary", async () => {
+  const response = new Response(new ReadableStream({
+    start(controller) {
+      controller.enqueue(Uint8Array.of(0xe2));
+      controller.enqueue(Uint8Array.of(0x82, 0xac));
+      controller.close();
+    },
+  }), { headers: { "content-length": "3" } });
+
+  assert.equal(await readBoundedResponseText(response, {
+    label: "split response",
+    maximumBytes: 3,
+    maximumChunks: 2,
+  }), "€");
+});
+
+test("bounded response text rejects an oversized declared length before reading", async () => {
+  let cancelled = false;
+  let pulls = 0;
+  const response = new Response(new ReadableStream({
+    cancel() {
+      cancelled = true;
+    },
+    pull(controller) {
+      pulls += 1;
+      controller.enqueue(Uint8Array.of(0x61));
+    },
+  }, { highWaterMark: 0 }), { headers: { "content-length": "9" } });
+
+  await assert.rejects(
+    readBoundedResponseText(response, {
+      label: "declared response",
+      maximumBytes: 8,
+      maximumChunks: 1,
+    }),
+    /declared response exceeds the 8-byte limit/u,
+  );
+  await Promise.resolve();
+  assert.equal(pulls, 0);
+  assert.equal(cancelled, true);
+});
+
+test("bounded response text rejects underreported and lengthless oversized streams", async () => {
+  for (const declaredLength of ["2", null]) {
+    let cancelled = false;
+    let pulls = 0;
+    const chunks = [new TextEncoder().encode("é"), new TextEncoder().encode("é")];
+    const response = new Response(new ReadableStream({
+      cancel() {
+        cancelled = true;
+      },
+      pull(controller) {
+        controller.enqueue(chunks[pulls]);
+        pulls += 1;
+      },
+    }, { highWaterMark: 0 }), {
+      headers: declaredLength === null ? undefined : { "content-length": declaredLength },
+    });
+
+    await assert.rejects(
+      readBoundedResponseText(response, {
+        label: "streamed response",
+        maximumBytes: 3,
+        maximumChunks: 2,
+      }),
+      /streamed response exceeds the 3-byte limit/u,
+    );
+    await Promise.resolve();
+    assert.equal(pulls, 2);
+    assert.equal(cancelled, true);
+  }
+});
+
+test("bounded response text rejects an endless zero-byte stream at its chunk limit", async () => {
+  let cancelled = false;
+  let pulls = 0;
+  const response = new Response(new ReadableStream({
+    cancel() {
+      cancelled = true;
+    },
+    pull(controller) {
+      pulls += 1;
+      controller.enqueue(new Uint8Array());
+    },
+  }, { highWaterMark: 0 }));
+
+  await assert.rejects(
+    readBoundedResponseText(response, {
+      label: "zero-byte response",
+      maximumBytes: 0,
+      maximumChunks: 4,
+    }),
+    /zero-byte response exceeds the 4-chunk limit/u,
+  );
+  await Promise.resolve();
+  assert.equal(pulls, 5);
+  assert.equal(cancelled, true);
+});
+
+test("bounded response text propagates caller abort and cancels a stalled reader", async () => {
+  const controller = new AbortController();
+  const reason = new Error("caller stopped the response");
+  let cancelReason;
+  const response = new Response(new ReadableStream({
+    cancel(value) {
+      cancelReason = value;
+    },
+    pull() {
+      return new Promise(() => undefined);
+    },
+  }, { highWaterMark: 0 }));
+  const pending = readBoundedResponseText(response, {
+    label: "caller-aborted response",
+    maximumBytes: 8,
+    maximumChunks: 2,
+    signal: controller.signal,
+  });
+
+  await Promise.resolve();
+  controller.abort(reason);
+  await assert.rejects(pending, (error) => error === reason);
+  assert.equal(cancelReason, reason);
+});
+
+test("response deadline propagates its abort signal through a stalled request", async () => {
+  let abortReason;
+  let observedSignal;
+
+  await assert.rejects(
+    withResponseDeadline({
+      label: "stalled request",
+      maximumMilliseconds: 20,
+    }, (signal) => {
+      observedSignal = signal;
+      return new Promise((_resolve, reject) => {
+        signal.addEventListener("abort", () => {
+          abortReason = signal.reason;
+          reject(signal.reason);
+        }, { once: true });
+      });
+    }),
+    /stalled request exceeds the 20-millisecond deadline/u,
+  );
+  assert.equal(observedSignal?.aborted, true);
+  assert.equal(abortReason, observedSignal?.reason);
+});
+
+test("response deadline aborts a stalled read with one stable error", async () => {
+  let cancelled = false;
+  let observedSignal;
+  const response = new Response(new ReadableStream({
+    cancel() {
+      cancelled = true;
+    },
+    pull() {
+      return new Promise(() => undefined);
+    },
+  }, { highWaterMark: 0 }));
+
+  await assert.rejects(
+    withResponseDeadline({
+      label: "stalled response",
+      maximumMilliseconds: 20,
+    }, (signal) => {
+      observedSignal = signal;
+      return readBoundedResponseText(response, {
+        label: "stalled response body",
+        maximumBytes: 8,
+        maximumChunks: 2,
+        signal,
+      });
+    }),
+    /stalled response exceeds the 20-millisecond deadline/u,
+  );
+  await Promise.resolve();
+  assert.equal(observedSignal?.aborted, true);
+  assert.equal(cancelled, true);
+});
+
+test("portal content applies byte-counted stream limits to both fetched assets", async () => {
+  const content = await readFile("app/portal-content.ts", "utf8");
+  assert.equal([...content.matchAll(/readBoundedResponseText\(response,/gu)].length, 1);
+  assert.equal([...content.matchAll(/loadPortalTextAsset\(portal(?:Document|Evidence)AssetLocation/gu)].length, 2);
+  assert.match(content, /maximumPortalDocumentBytes = 16 \* 1024 \* 1024/u);
+  assert.match(content, /maximumPortalEvidenceBytes = 512 \* 1024/u);
+  assert.match(content, /maximumPortalResponseChunks = 16_384/u);
+  assert.match(content, /maximumPortalResponseMilliseconds = 30_000/u);
+  assert.match(content, /fetch\(location, \{ signal \}\)/u);
+  assert.match(content, /maximumChunks: maximumPortalResponseChunks,[\s\S]*signal,/u);
+  assert.doesNotMatch(content, /response\.text\(\)/u);
 });
 
 test("untrusted fragments cannot corrupt or crash the generated locator", () => {
