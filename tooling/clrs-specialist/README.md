@@ -8,7 +8,9 @@ The process is only the candidate effect seam. It does not prove that a prompt
 belongs to the frozen 48-example dataset, record the controller's route
 decision, or run the separately held exact verifier. Those checks remain owned
 by `clrsfixture.ImportDataset`, each task's `BindDataset`, and
-`specialistcontrol.Runner` after the generator image and dataset exist.
+`specialistcontrol.Runner` when an outer runner binds supplied inputs to the
+candidate. The local Go development command below now supplies that outer path;
+it does not change the one-shot container or admit its image.
 The registry's `AdmissionSnapshot` projects the same six closed routes into
 that runner's typed admission boundary. The controller distinguishes
 `measured-fit`, `known-no-fit`, and `unknown`; `unknown` is never a match. A
@@ -27,10 +29,143 @@ older recorded binding when revalidation sees newer fit or readiness evidence.
 The one-shot container does not run a queue or a second controller, and this
 local construction observation is not evidence that a remote process or model
 is live, efficient or scientifically preferable.
-The container-only entry point is a narrow exception to the repository's
-single-`20w` command preference: it keeps this unprivileged scratch experiment
-process, its six solvers, and its CLRS provenance closure out of the general
-tooling image. Reusable behaviour remains in one internal Go package.
+The container-only entry point remains a narrow, unprivileged scratch candidate
+process. The outer development runner also links the same six Go solvers into
+`20w` and its general tooling image; neither binary is solver-free. Reusable
+behaviour stays in the existing internal packages. This dependency expansion
+is recorded in [decision 0079](../../decisions/0079-run-the-frozen-clrs-development-tree-through-20w.md);
+the dedicated specialist entry point and its image boundary do not change.
+
+## Run a frozen local development tree
+
+`20w experiment run-clrs-shakedown` connects the existing fixture importer,
+task bindings, six Go specialists, controller and held-reference verifiers. It
+runs the frozen six-task, 48-example tree once, sequentially. It does not
+generate inputs, use a model, invoke Docker or acquire an image.
+
+Before running, set `CLRS_DATASET_DIRECTORY` to an already-verified development
+tree and `CLRS_TREE_SHA256` to its independently retained raw tree SHA-256,
+such as the identity recorded by `compare-clrs-fixtures`. Use an absolute,
+real dataset path. The command rejects a changed tree, symlinked input or
+output paths, output within the fixture tree, and any existing output name.
+
+### Local tooling container
+
+This path builds the general `20w` tooling image from
+[`tooling/Dockerfile`](../Dockerfile), then runs the complete development tree
+inside it. It is separate from the one-request specialist image described
+under [Build and smoke](#build-and-smoke). The local development build is not
+a published or admitted CLRS image.
+
+From the repository root, build once and record its local image ID:
+
+```bash
+timeout --signal=TERM --kill-after=2s 600s \
+  docker buildx build --load --platform linux/amd64 \
+  --file tooling/Dockerfile --tag 20w-clrs-tooling:development \
+  --build-arg IMAGE_NAME=20w-clrs-tooling:development \
+  --build-arg IMAGE_VERSION=development \
+  --build-arg SOURCE_REVISION=unknown \
+  --build-arg SOURCE_TIMESTAMP=unknown \
+  --resource memory=2g --resource cpu-quota=200000 . && \
+  CLRS_IMAGE_ID="$(docker image inspect --format '{{.Id}}' 20w-clrs-tooling:development)"
+```
+
+Continue only after a successful build. It may download the pinned Go builder
+and locked modules; it is not an offline-build proof. The runtime uses that
+already-built image with `--pull never` and acquires neither images nor inputs.
+The `development`/`unknown` identity is deliberate for an uncommitted checkout.
+
+The following Bash example shares the limits between execution and checking.
+It creates a dedicated writable parent under the ignored `.workingdir2/`;
+`run-1` must not exist before execution. Set the dataset path and independently
+retained hash described above before running it.
+
+```bash
+mkdir -p .workingdir2
+CLRS_OUTPUT_PARENT="$(mktemp -d "$PWD/.workingdir2/clrs-container.XXXXXX")"
+CLRS_RUN_ID="${CLRS_OUTPUT_PARENT##*/}"
+CLRS_CONTAINER_NAME="20w-$CLRS_RUN_ID"
+clrs_container=(
+  --rm --name "$CLRS_CONTAINER_NAME" --pull never --platform linux/amd64
+  --network none --read-only --user "$(id -u):$(id -g)"
+  --cap-drop ALL --security-opt no-new-privileges
+  --cpus 1 --memory 128m --memory-swap 128m --pids-limit 64 --stop-timeout 5
+  --log-driver local --log-opt max-size=4m --log-opt max-file=1 --log-opt compress=false
+  --mount "type=bind,src=$PWD,dst=/repository,readonly"
+  --mount "type=bind,src=$CLRS_DATASET_DIRECTORY,dst=/dataset,readonly"
+)
+clrs_run=(
+  experiment run-clrs-shakedown --root /repository --dataset /dataset
+  --expected-tree "$CLRS_TREE_SHA256" --output /output/run-1
+  --run-id "$CLRS_RUN_ID" --json
+)
+timeout --signal=TERM --kill-after=2s 90s \
+  docker run "${clrs_container[@]}" \
+  --mount "type=bind,src=$CLRS_OUTPUT_PARENT,dst=/output" \
+  "$CLRS_IMAGE_ID" "${clrs_run[@]}" --execute
+```
+
+After execution exits zero, check the same bundle in a separate container with
+the output mount read-only too:
+
+```bash
+timeout --signal=TERM --kill-after=2s 45s \
+  docker run "${clrs_container[@]}" \
+  --mount "type=bind,src=$CLRS_OUTPUT_PARENT,dst=/output,readonly" \
+  "$CLRS_IMAGE_ID" "${clrs_run[@]}" --check
+```
+
+Both containers use 1 CPU, 128 MiB without swap and at most 64 PIDs; only the
+execution's dedicated output parent is writable. Keep the output bundle and
+each external exit status. `--rm` removes exited containers. If a timed-out
+Docker client leaves its named container running, use
+`docker container rm --force "$CLRS_CONTAINER_NAME"` to remove only that
+container, retaining the bundle.
+These containment limits do not measure energy or admit an experiment image.
+
+### Native Go alternative
+
+Set `CLRS_RUN_DIRECTORY` to a new output directory whose real parent already
+exists, then run from the repository root:
+
+```bash
+go -C tooling run ./cmd/20w experiment run-clrs-shakedown \
+  --root "$PWD" \
+  --dataset "$CLRS_DATASET_DIRECTORY" \
+  --expected-tree "$CLRS_TREE_SHA256" \
+  --output "$CLRS_RUN_DIRECTORY" \
+  --run-id local-go-development-001 --execute --json
+```
+
+Run the same command with `--check` instead of `--execute` to check the retained
+bundle without invoking a specialist or writing files. The checker requires
+the original input tree and run identity. It checks file identities and
+replays the existing admission, policy and held-reference verification rules;
+recomputed hashes alone cannot make an altered answer pass. Its
+`bundle-consistent-unadmitted` state describes consistency, not authenticated
+execution. Keep the external process exit status as well as the bundle.
+
+A successful execution writes `run-start.json`, 192 ordered decision,
+invocation, verification and terminal events under `events/`, and
+`receipt.json`. Failures after output creation retain partial evidence and
+return non-zero. The schema-1 receipt binds source records, fixture files,
+software build identity and executable bytes; an unsigned local receipt does
+not prove how those bytes were compiled or who ran them.
+
+The run has a 60-second cooperative deadline, a one-second limit per request,
+one active specialist and no retries. Journal limits are 256 events, 2 MiB per
+event and 16 MiB in total; each receipt is limited to 1 MiB. File-system calls
+cannot be forcibly interrupted by these Go deadlines. The Go process itself
+does not impose CPU or memory quotas; Docker supplies the limits above.
+Per-case elapsed times include controller and
+verification work but exclude the terminal journal write; they are diagnostic
+observations, not performance estimates. Whole-task energy is recorded as
+unavailable, with joules left null.
+
+All outputs remain `NO_RESULT`. This development path does not replace the
+licence, image, containment, power-measurement or research-review gates required
+for a released experiment or scientific comparison.
 
 ## Build and smoke
 

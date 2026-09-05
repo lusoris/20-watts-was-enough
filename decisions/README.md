@@ -83,3 +83,4 @@ than silently changing its outcome.
 | [0076](0076-separate-book-support-provenance-inventory.md) | Separate book support provenance from executable authority | accepted |
 | [0077](0077-separate-render-pair-and-image-build-proofs.md) | Separate render-pair and image-build proofs | accepted |
 | [0078](0078-reuse-verified-renderer-build-cache.md) | Reuse verified renderer build cache | accepted |
+| [0079](0079-run-the-frozen-clrs-development-tree-through-20w.md) | Run the frozen CLRS development tree through 20w | accepted |

@@ -107,6 +107,13 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- `run-clrs-shakedown` executes the frozen 48-example local Go development
+  tree through the existing controller, specialists and held verifiers. It
+  requires an independently retained input hash and preserves bounded,
+  no-overwrite event evidence. Its read-only checker replays the existing
+  policy and verification rules; both modes remain `NO_RESULT`, with energy
+  unavailable and image admission unchanged.
+
 - `prepare-clrs-loaded-image` connects a checked CLRS archive to an
   already-loaded local image and writes the original metadata and bounded
   receipt for managed generation. Docker checks are read-only; preparation

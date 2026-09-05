@@ -13,7 +13,7 @@ const supportInventoryPath = "scripts/book-support-sources.json";
 const maximumSupportInventoryBytes = 32 * 1024;
 const maximumSupportPaths = 256;
 const maximumSupportPathBytes = 512;
-const supportPathPattern = /^tooling\/internal\/(?:clrscontext|clrsfixture|experimentcli)\/[a-z][a-z0-9_]*\.go$/u;
+const supportPathPattern = /^tooling\/internal\/(?:clrscontext|clrsfixture|clrsshakedown|experimentcli)\/[a-z][a-z0-9_]*\.go$/u;
 
 async function readSupportInventory(projectRoot) {
   const bytes = await readStableOpenedFile(path.join(projectRoot, supportInventoryPath), {

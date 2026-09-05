@@ -390,6 +390,34 @@ test("support inventory binds its original bytes, selected source bytes and new 
   assert.equal(addition.files.filter((file) => file === added).length, 1);
 });
 
+test("support inventory binds the CLRS shakedown owner without admitting sibling packages or tests", async (t) => {
+  const root = await bookSourceFixture(t);
+  const prefix = "tooling/internal/clrsshakedown/";
+  const inventory = JSON.parse(await readFile(path.join(root, supportInventory), "utf8"));
+  const selected = inventory.paths.filter((source) => source.startsWith(prefix));
+  assert(selected.includes(`${prefix}run.go`));
+  const before = await bookSourceDigest(root);
+  for (const source of selected) {
+    assert.equal(before.files.filter((file) => file === source).length, 1, source);
+  }
+
+  const target = path.join(root, `${prefix}run.go`);
+  await writeFile(target, "changed shakedown source\n");
+  const changed = await bookSourceDigest(root);
+  assert.notEqual(changed.digest, before.digest);
+  assert.deepEqual(changed.files, before.files);
+  await rm(target);
+  await assert.rejects(bookSourceDigest(root), /run\.go/u);
+
+  for (const source of [
+    `${prefix}run_test.go`, `${prefix}nested/run.go`, `${prefix}../run.go`,
+    "tooling/internal/clrsrunner/registry.go", "tooling/internal/clrsshakedown_extra/run.go",
+  ]) {
+    await writeSupportPaths(root, [source]);
+    await assert.rejects(bookSourceFiles(root), /paths must be bounded, allowed, sorted and unique/u);
+  }
+});
+
 test("support inventory rejects malformed schema and unsafe source names", async (t) => {
   const root = await bookSourceFixture(t);
   const good = `${supportPrefix}compare.go`;
