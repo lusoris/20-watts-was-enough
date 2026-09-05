@@ -51,6 +51,12 @@
           - "scripts/*book*"
           - "scripts/*reader-artifacts*"
           - "THIRD_PARTY_NOTICES.txt"
+          - "tooling/cmd/20w/pdf_tools*.go"
+          - "tooling/internal/pdfrender/**"
+          - "tooling/internal/pdfrenderlock/**"
+          - "tooling/internal/pdftools/**"
+          - "tooling/pdf-renderer/**"
+          - "tooling/pdf-tools/**"
 
 "area:governance":
   - changed-files:
@@ -93,6 +99,10 @@
           - ".github/public-transport.json"
           - "renovate.json"
           - "scripts/*policy*"
+          - "tooling/internal/ciplan/**"
+          - "tooling/internal/pdfrender/**"
+          - "tooling/internal/pdfrenderlock/**"
+          - "tooling/pdf-renderer/**"
 
 dependencies:
   - changed-files:

@@ -7,6 +7,9 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Pull-request path labels now cover the Go PDF renderer, PDF-tools and CI
+  planner owners. Renderer-only changes retain their publication and CI labels
+  when the existing labeler synchronizes metadata.
 - The browser print regression now waits for Chrome's matching media-change
   event before inspecting overflow semantics, including the return to screen.
   Full-book pagination has its own bounded transition stage; the existing

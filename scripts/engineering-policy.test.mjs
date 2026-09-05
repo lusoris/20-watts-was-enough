@@ -1457,6 +1457,33 @@ test("repository metadata synchronization is manifest-triggered and least-privil
   ));
 });
 
+test("Go renderer and CI owners retain their path-derived pull-request labels", () => {
+  const rules = parse(readFileSync(new URL("../.github/labeler.yml", import.meta.url), "utf8"));
+  const labelsFor = (file) => Object.entries(rules).filter(([, groups]) => groups.some(
+    (group) => group["changed-files"].some((rule) => rule["any-glob-to-any-file"].some(
+      (pattern) => path.matchesGlob(file, pattern),
+    )),
+  )).map(([label]) => label).sort();
+  const rendererLabels = ["area:ci", "area:publication"];
+  for (const file of [
+    "tooling/internal/pdfrender/installed_dependencies.go",
+    "tooling/internal/pdfrender/installed_boundaries_test.go",
+    "tooling/internal/pdfrenderlock/lock.go",
+    "tooling/pdf-renderer/lock.json",
+  ]) assert.deepEqual(labelsFor(file), rendererLabels, file);
+  assert.deepEqual(labelsFor("tooling/internal/ciplan/plan_test.go"), ["area:ci"]);
+  for (const file of [
+    "tooling/internal/pdftools/candidate_output.go",
+    "tooling/pdf-tools/contract.json",
+    "tooling/cmd/20w/pdf_tools_test.go",
+  ]) assert.deepEqual(labelsFor(file), ["area:publication"], file);
+  for (const file of [
+    "tooling/internal/pdfrender-unrelated/example.go",
+    "tooling/internal/clrsfixture/image.go",
+    "tooling/cmd/20w/main.go",
+  ]) assert.deepEqual(labelsFor(file), [], file);
+});
+
 test("pull-request metadata uses only trusted main and explicit bounded authority", () => {
   const relativePath = ".github/workflows/labeler.yml";
   const valid = workflow("labeler");
