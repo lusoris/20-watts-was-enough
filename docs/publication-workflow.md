@@ -169,12 +169,14 @@ runtime expectations, notices, the Wolfi recipe-licence snapshot and
 source-retention metadata. Its offline Go validator prevents repository drift.
 Its local reproducer now requires two byte-identical final images and the
 bounded runtime observations. Given three explicit new output paths, the same
-successful run can retain one final OCI archive, the byte-identical apko SPDX document
-and a checksum-closed source bundle containing all 45 exact APKs and the pinned
-source and notice material. These files and their receipt remain `NO_RESULT`
-candidate inputs. Required semantic CI enforcement still waits for maintainer
-notice/source approval, publication, anonymous pull and exact-digest admission;
-ambient host Poppler remains non-authoritative.
+successful run can retain one final OCI archive, one byte-identical canonical
+apko SPDX document and a checksum-closed source bundle containing all 45 exact
+APKs and the pinned source and notice material. The receipt keeps the two raw
+SPDX identities separate; only their validated canonical documents must match.
+These files and their receipt remain `NO_RESULT` candidate inputs. Required
+semantic CI enforcement still waits for maintainer notice/source approval,
+publication, anonymous pull and exact-digest admission; ambient host Poppler
+remains non-authoritative.
 
 Container publication has a separate two-phase boundary. The build pushes a
 candidate under its canonical digest without a release tag. The workflow then

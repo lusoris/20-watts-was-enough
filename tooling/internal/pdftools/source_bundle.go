@@ -89,11 +89,15 @@ func candidateSourceEntries(
 	}
 	entries = append(entries, sourceBundleEntry{Path: authority.contract.SourceDelivery.BundleLayout.PopplerArchive, Body: body})
 	if int64(len(spdx.raw)) != spdx.RawSize || digestRaw(spdx.raw) != spdx.RawSHA256 ||
+		int64(len(spdx.canonical)) != spdx.CanonicalSize ||
+		digestRaw(spdx.canonical) != spdx.CanonicalSHA256 ||
 		spdx.CanonicalSize != authority.contract.BaseImage.SPDXCanonicalSize ||
 		spdx.CanonicalSHA256 != authority.contract.BaseImage.SPDXCanonicalSHA256 {
 		return nil, errors.New("candidate SPDX differs from the admitted canonical apko graph")
 	}
-	entries = append(entries, sourceBundleEntry{Path: authority.contract.SourceDelivery.BundleLayout.SPDX, Body: slices.Clone(spdx.raw)})
+	entries = append(entries, sourceBundleEntry{
+		Path: authority.contract.SourceDelivery.BundleLayout.SPDX, Body: slices.Clone(spdx.canonical),
+	})
 	if err := validateSourceBundleEntries(entries, authority.contract.Limits.SourceBundleBytes); err != nil {
 		return nil, err
 	}

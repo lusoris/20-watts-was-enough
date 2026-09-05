@@ -21,7 +21,7 @@ type ReproductionOptions struct {
 
 // ReproduceFinalImage builds and compares two complete local PDF-tools images.
 // When three explicit candidate paths are supplied, it also retains one exact
-// final archive, the byte-identical apko SPDX output, and a checksum-closed
+// final archive, the byte-identical canonical apko SPDX output, and a checksum-closed
 // source bundle. It never pushes, publishes, or grants scientific or release
 // authority.
 func ReproduceFinalImage(

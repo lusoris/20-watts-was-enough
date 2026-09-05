@@ -1,26 +1,125 @@
 package pdftools
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
-func TestStageCandidateOutputsRequiresByteIdenticalSPDX(t *testing.T) {
+func TestStageCandidateOutputsRetainsCanonicalSPDXAcrossRelationshipOrder(t *testing.T) {
 	t.Parallel()
-	bases := []baseBuild{{SPDX: spdxIdentity{raw: []byte("first")}}, {SPDX: spdxIdentity{raw: []byte("second")}}}
-	finals := make([]finalBuild, reproductionBuildCount)
-	_, err := stageCandidateOutputs(
-		context.Background(), checkedAuthority{}, &candidateOutputPlan{}, bases, finals,
-		func(context.Context, exactSource) ([]byte, error) {
-			t.Fatal("source fetch ran before SPDX equality check")
-			return nil, nil
-		},
+	first, err := canonicalizeSPDX(testSPDXDocument(t, false), 64*1024, 8, 8)
+	if err != nil {
+		t.Fatal(err)
+	}
+	second, err := canonicalizeSPDX(testSPDXDocument(t, true), 64*1024, 8, 8)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if first.RawSHA256 == second.RawSHA256 || !bytes.Equal(first.canonical, second.canonical) {
+		t.Fatal("relationship-order fixture does not isolate raw and canonical identities")
+	}
+	firstReceipt := reproductionSPDXReceipt(first)
+	secondReceipt := reproductionSPDXReceipt(second)
+	if firstReceipt.RawSHA256 == secondReceipt.RawSHA256 ||
+		firstReceipt.CanonicalSHA256 != secondReceipt.CanonicalSHA256 {
+		t.Fatal("build receipts did not preserve distinct raw and common canonical SPDX identities")
+	}
+
+	fixture := newCandidateSourceFixture(t)
+	fixture.authority.contract.BaseImage.SPDXCanonicalSHA256 = first.CanonicalSHA256
+	fixture.authority.contract.BaseImage.SPDXCanonicalSize = first.CanonicalSize
+	fixture.authority.contract.Limits.SPDXBytes = 64 * 1024
+	fixture.authority.contract.Limits.FinalArchiveBytes = 1024
+	fixture.authority.contract.SourceDateEpoch = 1_785_757_696
+	fixture.authority.contract.SourceDelivery.CandidateBundle = "sources.tar.gz"
+	fixture.authority.contract.SourceDelivery.BundleLayout.Root = "candidate-sources"
+	fixture.authority.contract.SourceDelivery.BundleLayout.ChecksumManifest = "SHA256SUMS"
+	plan, err := prepareCandidateOutputPlan(fixture.authority, &CandidateOutputOptions{
+		FinalArchivePath: "build/release-inputs/final.tar",
+		SPDXPath:         "build/release-inputs/canonical.spdx.json",
+		SourceBundlePath: "build/release-inputs/sources.tar.gz",
+	}, "build/evidence/receipt.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	archive := filepath.Join(fixture.authority.root, "reproduced-final.tar")
+	archiveBytes := []byte("final OCI archive")
+	if err := os.WriteFile(archive, archiveBytes, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	final := finalBuild{Archive: archive, Image: inspectedFinalImage{Identity: imageIdentity{
+		ArchiveSHA256: digestRaw(archiveBytes), ArchiveSize: int64(len(archiveBytes)),
+	}}}
+	staged, err := stageCandidateOutputs(
+		context.Background(), fixture.authority, plan,
+		[]baseBuild{{SPDX: first}, {SPDX: second}}, []finalBuild{final, final}, fixture.fetch,
 	)
-	if err == nil {
-		t.Fatal("stageCandidateOutputs() accepted differing exact SPDX bytes")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = staged.cleanup() })
+	retainedSPDX, err := os.ReadFile(staged.artifacts[1].temporary)
+	if err != nil || !bytes.Equal(retainedSPDX, first.canonical) || bytes.Equal(retainedSPDX, first.raw) {
+		t.Fatalf("retained SPDX is not the common canonical document: %v", err)
+	}
+	bundleBytes, err := os.ReadFile(staged.artifacts[2].temporary)
+	if err != nil {
+		t.Fatal(err)
+	}
+	files, _ := readSourceBundle(t, bundleBytes)
+	bundledSPDX := files["candidate-sources/"+fixture.authority.contract.SourceDelivery.BundleLayout.SPDX]
+	if !bytes.Equal(bundledSPDX, retainedSPDX) {
+		t.Fatal("source bundle and standalone candidate retained different canonical SPDX bytes")
+	}
+	candidate := staged.receipt(fixture.authority)
+	if !candidate.SPDXCanonicalBuildsMatch || candidate.CanonicalSPDX.SHA256 != first.CanonicalSHA256 {
+		t.Fatalf("candidate canonical SPDX identity = %#v", candidate)
+	}
+	receiptBytes, err := json.Marshal(candidate)
+	if err != nil || !bytes.Contains(receiptBytes, []byte(`"spdx_canonical_builds_match":true`)) ||
+		!bytes.Contains(receiptBytes, []byte(`"canonical_apko_spdx"`)) ||
+		bytes.Contains(receiptBytes, []byte(`"spdx_builds_match"`)) {
+		t.Fatalf("candidate receipt does not distinguish canonical SPDX identity: %s, %v", receiptBytes, err)
+	}
+}
+
+func TestStageCandidateOutputsRejectsCanonicalSPDXGraphOrContentDrift(t *testing.T) {
+	t.Parallel()
+	baselineBody := string(testSPDXDocument(t, false))
+	baseline, err := canonicalizeSPDX([]byte(baselineBody), 64*1024, 8, 8)
+	if err != nil {
+		t.Fatal(err)
+	}
+	mutations := map[string]string{
+		"graph":   strings.Replace(baselineBody, `"relationshipType":"CONTAINS"`, `"relationshipType":"VARIANT_OF"`, 1),
+		"content": strings.Replace(baselineBody, `"name":"test"`, `"name":"changed"`, 1),
+	}
+	for name, body := range mutations {
+		name, body := name, body
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			changed, err := canonicalizeSPDX([]byte(body), 64*1024, 8, 8)
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, err = stageCandidateOutputs(
+				context.Background(), checkedAuthority{}, &candidateOutputPlan{},
+				[]baseBuild{{SPDX: baseline}, {SPDX: changed}}, make([]finalBuild, reproductionBuildCount),
+				func(context.Context, exactSource) ([]byte, error) {
+					t.Fatal("source fetch ran before canonical SPDX equality check")
+					return nil, nil
+				},
+			)
+			if err == nil || !strings.Contains(err.Error(), "byte-identical canonical apko SPDX") {
+				t.Fatalf("stageCandidateOutputs() drift error = %v", err)
+			}
+		})
 	}
 }
 
@@ -232,9 +331,9 @@ func installedCandidateFixture(t *testing.T) (string, string, *stagedCandidate, 
 		t.Fatal(err)
 	}
 	candidate := &ReproductionCandidate{
-		FinalArchive: staged.artifacts[0].identity,
-		SPDX:         staged.artifacts[1].identity,
-		SourceBundle: ReproductionBundleArtifact{ReproductionArtifact: staged.artifacts[2].identity},
+		FinalArchive:  staged.artifacts[0].identity,
+		CanonicalSPDX: staged.artifacts[1].identity,
+		SourceBundle:  ReproductionBundleArtifact{ReproductionArtifact: staged.artifacts[2].identity},
 	}
 	return root, filepath.Join(receiptDirectory, "receipt.json"), staged, ReproductionReceipt{Candidate: candidate}
 }

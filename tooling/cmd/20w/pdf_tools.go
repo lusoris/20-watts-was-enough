@@ -41,7 +41,7 @@ func runPublicationReproducePDFToolsImage(arguments []string, stdout, stderr io.
 	root := flags.String("root", ".", "repository root")
 	receipt := flags.String("receipt", "", "new repository-relative NO_RESULT receipt")
 	finalArchive := flags.String("final-archive", "", "new repository-relative final OCI archive")
-	spdx := flags.String("spdx", "", "new repository-relative exact apko SPDX")
+	spdx := flags.String("spdx", "", "new repository-relative canonical apko SPDX")
 	sourceBundle := flags.String("source-bundle", "", "new repository-relative checksum-closed source bundle")
 	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 || *receipt == "" {
 		if *receipt == "" {
@@ -89,7 +89,7 @@ func runPublicationReproducePDFToolsImage(arguments []string, stdout, stderr io.
 			stdout,
 			"Candidate inputs prepared without publication: %s, %s and %s.\n",
 			result.Candidate.FinalArchive.Path,
-			result.Candidate.SPDX.Path,
+			result.Candidate.CanonicalSPDX.Path,
 			result.Candidate.SourceBundle.Path,
 		)
 	}

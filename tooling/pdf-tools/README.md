@@ -51,7 +51,7 @@ go -C tooling run ./cmd/20w publication reproduce-pdf-tools-image \
   --root .. \
   --receipt build/evidence/pdf-tools-candidate.json \
   --final-archive build/release-inputs/pdf-tools-final-linux-amd64.tar \
-  --spdx build/release-inputs/pdf-tools-apko-linux-amd64.spdx.json \
+  --spdx build/release-inputs/pdf-tools-canonical-apko-linux-amd64.spdx.json \
   --source-bundle build/release-inputs/20w-pdf-tools-26.08.0-r0-linux-amd64-sources.tar.gz
 ```
 
@@ -78,12 +78,17 @@ The three candidate-output flags are optional as a set. When present, the
 command downloads each of the 45 APKs and the Poppler archive from the exact
 URL in the authority, refuses redirects or transformed response bytes, and
 checks every size and SHA-256 digest. It retains one reproduced final OCI
-archive, the exact apko SPDX document after requiring both build outputs to
-match byte for byte, and the source bundle. The bundle contains that same SPDX
-document and the maintained config, lock, contract,
-retention manifest, notices, Wolfi recipe and recipe licence alongside those
-downloaded bytes. Its sorted `SHA256SUMS` covers every other bundle file; the
-receipt binds the checksum file and complete compressed archive.
+archive, one canonical apko SPDX document after requiring both validated
+canonical documents to match byte for byte, and the source bundle. SPDX
+canonicalisation preserves every field value and every array order except the
+validated `relationships` array, which it sorts; deterministic JSON encoding
+also fixes object-member order and whitespace. The receipt retains each
+build's separate raw SPDX size and SHA-256 for audit instead of claiming those
+raw documents matched. The bundle contains the retained canonical document and
+the maintained config, lock, contract, retention manifest, notices, Wolfi
+recipe and recipe licence alongside the downloaded bytes. Its sorted
+`SHA256SUMS` covers every other bundle file; the receipt binds the checksum file
+and complete compressed archive.
 
 Success places only the explicitly named new files and writes an atomic
 `authority: NO_RESULT` receipt. Existing paths, symlinked parents, path escape,

@@ -215,10 +215,12 @@ the exact diff; this file records why the project changed.
   new paths after the complete two-build and runtime checks pass. A bounded Go
   downloader retains the 45 exact APKs and Poppler source archive by URL, size
   and SHA-256; the deterministic source bundle adds the maintained authority,
-  notices, Wolfi recipe and licence, and byte-identical apko SPDX document under one
-  sorted `SHA256SUMS`. The atomic receipt binds that bundle and one final OCI
-  archive while keeping publication, digest admission, legal conclusions and
-  scientific use blocked under `NO_RESULT`. Receipt publication now pins the
+  notices, Wolfi recipe and licence, and one canonical apko SPDX document under
+  a sorted `SHA256SUMS`. Relationship order is the only admitted semantic
+  normalisation; the atomic receipt preserves both raw build identities and
+  binds the canonical document, source bundle and one final OCI archive while
+  keeping publication, digest admission, legal conclusions and scientific use
+  blocked under `NO_RESULT`. Receipt publication now pins the
   validated real parent directory with Go's `os.Root`, publishes by hard link,
   and removes only the inode it created. A parent replaced with an outside
   symlink during the write cannot redirect receipt bytes to that target.

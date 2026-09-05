@@ -1,6 +1,7 @@
 package pdftools
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"os"
@@ -19,8 +20,12 @@ func TestCandidateSourceEntriesContainTheDeclaredClosure(t *testing.T) {
 		t.Fatal(err)
 	}
 	paths := make([]string, len(entries))
+	var retainedSPDX []byte
 	for index, entry := range entries {
 		paths[index] = entry.Path
+		if entry.Path == fixture.authority.contract.SourceDelivery.BundleLayout.SPDX {
+			retainedSPDX = entry.Body
+		}
 	}
 	slices.Sort(paths)
 	want := []string{
@@ -30,6 +35,9 @@ func TestCandidateSourceEntriesContainTheDeclaredClosure(t *testing.T) {
 	}
 	if !slices.Equal(paths, want) {
 		t.Fatalf("candidate paths = %v, want %v", paths, want)
+	}
+	if !bytes.Equal(retainedSPDX, fixture.spdx.canonical) || bytes.Equal(retainedSPDX, fixture.spdx.raw) {
+		t.Fatal("candidate source closure did not retain the canonical SPDX document")
 	}
 }
 
@@ -107,7 +115,8 @@ func newCandidateSourceFixture(t *testing.T) candidateSourceFixture {
 		{Name: "a", URL: "https://packages.wolfi.dev/a.apk", Filename: "a.apk", Size: 1, SHA256: digestRaw([]byte("a"))},
 		{Name: "b", URL: "https://packages.wolfi.dev/b.apk", Filename: "b.apk", Size: 1, SHA256: digestRaw([]byte("b"))},
 	}
-	spdx := []byte("spdx\n")
+	spdxRaw := []byte("raw spdx\n")
+	spdxCanonical := []byte("canonical spdx\n")
 	poppler := []byte("poppler\n")
 	authority := checkedAuthority{
 		root: root,
@@ -116,7 +125,9 @@ func newCandidateSourceFixture(t *testing.T) candidateSourceFixture {
 				Config: "apko.yaml", ConfigSHA256: digestRaw(maintained["apko.yaml"]),
 				Lock: "apko.lock.json", LockSHA256: digestRaw(maintained["apko.lock.json"]),
 			},
-			BaseImage: BaseImage{SPDXCanonicalSize: int64(len(spdx)), SPDXCanonicalSHA256: digestRaw(spdx)},
+			BaseImage: BaseImage{
+				SPDXCanonicalSize: int64(len(spdxCanonical)), SPDXCanonicalSHA256: digestRaw(spdxCanonical),
+			},
 			Upstream: Upstream{
 				PopplerArchive: UpstreamArchive{URL: "https://poppler.freedesktop.org/poppler.tar.xz", Size: int64(len(poppler)), SHA256: digestRaw(poppler)},
 				WolfiRecipe: UpstreamRecipe{
@@ -142,8 +153,9 @@ func newCandidateSourceFixture(t *testing.T) candidateSourceFixture {
 		authority.contract.Upstream.PopplerArchive.URL: poppler,
 	}
 	spdxIdentity := spdxIdentity{
-		RawSHA256: digestRaw(spdx), RawSize: int64(len(spdx)),
-		CanonicalSHA256: digestRaw(spdx), CanonicalSize: int64(len(spdx)), raw: spdx,
+		RawSHA256: digestRaw(spdxRaw), RawSize: int64(len(spdxRaw)),
+		CanonicalSHA256: digestRaw(spdxCanonical), CanonicalSize: int64(len(spdxCanonical)),
+		raw: spdxRaw, canonical: spdxCanonical,
 	}
 	return candidateSourceFixture{authority: authority, downloads: downloads, spdx: spdxIdentity}
 }

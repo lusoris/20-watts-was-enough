@@ -143,15 +143,17 @@ type ReproductionSPDX struct {
 }
 
 // ReproductionCandidate records local release inputs without granting remote
-// publication, digest admission, legal, or scientific authority.
+// publication, digest admission, legal, or scientific authority. CanonicalSPDX
+// is the retained deterministic projection; BaseBuilds preserve both raw SPDX
+// identities separately for audit.
 type ReproductionCandidate struct {
-	State           string                     `json:"state"`
-	SPDXBuildsMatch bool                       `json:"spdx_builds_match"`
-	FinalArchive    ReproductionArtifact       `json:"final_oci_archive"`
-	SPDX            ReproductionArtifact       `json:"apko_spdx"`
-	SourceBundle    ReproductionBundleArtifact `json:"source_bundle"`
-	RetainedAPKs    int                        `json:"retained_apks"`
-	RetainedBytes   int64                      `json:"retained_apk_bytes"`
+	State                    string                     `json:"state"`
+	SPDXCanonicalBuildsMatch bool                       `json:"spdx_canonical_builds_match"`
+	FinalArchive             ReproductionArtifact       `json:"final_oci_archive"`
+	CanonicalSPDX            ReproductionArtifact       `json:"canonical_apko_spdx"`
+	SourceBundle             ReproductionBundleArtifact `json:"source_bundle"`
+	RetainedAPKs             int                        `json:"retained_apks"`
+	RetainedBytes            int64                      `json:"retained_apk_bytes"`
 }
 
 type ReproductionArtifact struct {

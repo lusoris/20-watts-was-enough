@@ -145,8 +145,8 @@ func stageCandidateOutputs(
 	if plan == nil || len(bases) != reproductionBuildCount || len(finals) != reproductionBuildCount {
 		return nil, errors.New("candidate staging requires one complete two-build comparison")
 	}
-	if !slices.Equal(bases[0].SPDX.raw, bases[1].SPDX.raw) {
-		return nil, errors.New("candidate preparation requires byte-identical apko SPDX outputs")
+	if !slices.Equal(bases[0].SPDX.canonical, bases[1].SPDX.canonical) {
+		return nil, errors.New("candidate preparation requires byte-identical canonical apko SPDX outputs")
 	}
 	entries, err := candidateSourceEntries(ctx, authority, bases[0].SPDX, fetch)
 	if err != nil {
@@ -170,8 +170,8 @@ func stageCandidateOutputs(
 	}
 	staged.artifacts = append(staged.artifacts, finalArtifact)
 	spdxArtifact, err := stageCandidateBytes(
-		bases[0].SPDX.raw, plan.spdx, authority.contract.Limits.SPDXBytes,
-		bases[0].SPDX.RawSHA256, authority.contract.SourceDateEpoch,
+		bases[0].SPDX.canonical, plan.spdx, authority.contract.Limits.SPDXBytes,
+		bases[0].SPDX.CanonicalSHA256, authority.contract.SourceDateEpoch,
 	)
 	if err != nil {
 		return nil, err
@@ -376,7 +376,7 @@ func (staged *stagedCandidate) verifyInstalled(root string, receipt *Reproductio
 	}
 	expected := []ReproductionArtifact{
 		receipt.FinalArchive,
-		receipt.SPDX,
+		receipt.CanonicalSPDX,
 		receipt.SourceBundle.ReproductionArtifact,
 	}
 	for index, artifact := range staged.artifacts {
@@ -473,10 +473,10 @@ func (staged *stagedCandidate) cleanup() error {
 
 func (staged *stagedCandidate) receipt(authority checkedAuthority) *ReproductionCandidate {
 	return &ReproductionCandidate{
-		State:           "prepared-not-published",
-		SPDXBuildsMatch: true,
-		FinalArchive:    staged.artifacts[0].identity,
-		SPDX:            staged.artifacts[1].identity,
+		State:                    "prepared-not-published",
+		SPDXCanonicalBuildsMatch: true,
+		FinalArchive:             staged.artifacts[0].identity,
+		CanonicalSPDX:            staged.artifacts[1].identity,
 		SourceBundle: ReproductionBundleArtifact{
 			ReproductionArtifact: staged.artifacts[2].identity,
 			Root:                 authority.contract.SourceDelivery.BundleLayout.Root,
