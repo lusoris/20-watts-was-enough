@@ -7,6 +7,17 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Local pre-commit checks follow changed contracts and downstream consumers,
+  with a full-gate fallback for unknown, unsafe or shared-authority scope.
+  Complete integration, merge, release and publication checks remain required.
+  Reusing earlier test evidence requires unchanged tested inputs and fresh
+  checks of the affected scope; it cannot establish an exact-tree full pass.
+
+- Frozen CLRS runner leaves select the existing container, Go and release
+  checks. Publication-inventory changes add site checks; shared or unknown
+  authority still selects the full gate. Its usage README also selects the
+  existing research checks, including notation validation of command examples.
+
 - Browser startup waits now report process termination signals and the last
   HTTP status or recognised fetch failure on timeout. Diagnostics omit URL
   credentials, queries, fragments and response bodies; the existing deadlines

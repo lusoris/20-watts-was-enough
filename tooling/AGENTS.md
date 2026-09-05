@@ -67,9 +67,14 @@ These instructions extend the repository-wide [`AGENTS.md`](../AGENTS.md) and
 - Tests use isolated temporary roots and cover success, malformed input,
   boundary exhaustion, path escape, symlink, duplicate, trailing-data, and
   deterministic-order cases where applicable.
-- Run the focused package tests during development, then `go test -race ./...`
-  from `tooling/`. Formatting and static analysis must be clean without blanket
-  suppressions.
+- During local development, test the changed packages and their affected
+  downstream consumers, including CLI and integration contracts; `go test`
+  does not select reverse-dependency tests automatically. Run race checks and
+  vet for that scope. At the complete Go integration/release gate, or when
+  scope is unknown, unsafe or shared authority, run `go test -race ./...` and
+  `go vet ./...` from `tooling/`, following
+  [decision 0080](../decisions/0080-impact-scope-local-validation.md).
+  Formatting and static analysis must be clean without blanket suppressions.
 - Keep `CGO_ENABLED=0` for release binaries unless a reviewed capability proves
   that native linkage is required. Publish only operating-system and
   architecture combinations exercised by the release gate.

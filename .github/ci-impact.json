@@ -193,6 +193,7 @@
     {
       "id": "go-experiment",
       "paths": [
+        "tooling/internal/clrsshakedown/**",
         "tooling/internal/experiment/**",
         "tooling/internal/experimentcli/**",
         "tooling/internal/nodeimage/**"
@@ -326,7 +327,8 @@
         "experiments/test-readiness-summary.json",
         "math/**",
         "research/**",
-        "sources/**"
+        "sources/**",
+        "tooling/clrs-specialist/README.md"
       ],
       "lanes": [
         "research",
