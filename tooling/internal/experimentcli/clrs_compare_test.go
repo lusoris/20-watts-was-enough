@@ -1,4 +1,4 @@
-package main
+package experimentcli
 
 import (
 	"bytes"
@@ -19,7 +19,7 @@ func TestCLRSComparisonCLIUsageFailures(t *testing.T) {
 		{"--root=", "--first", "one", "--second", "two"},
 	} {
 		var stdout, stderr bytes.Buffer
-		code := run(append([]string{"experiment", "compare-clrs-fixtures"}, args...), &stdout, &stderr)
+		code := runCommand(t, append([]string{"compare-clrs-fixtures"}, args...), &stdout, &stderr)
 		if code != 2 || stdout.Len() != 0 {
 			t.Fatalf("args %v: code=%d stdout=%q", args, code, stdout.String())
 		}
@@ -28,13 +28,13 @@ func TestCLRSComparisonCLIUsageFailures(t *testing.T) {
 
 func TestCLRSComparisonCLIReportsSuccessAndFailureJSON(t *testing.T) {
 	root := cliComparisonFixture(t)
-	args := []string{"experiment", "compare-clrs-fixtures", "--root", root, "--first", "first", "--second", "second"}
+	args := []string{"compare-clrs-fixtures", "--root", root, "--first", "first", "--second", "second"}
 	var stdout, stderr bytes.Buffer
-	if code := run(args, &stdout, &stderr); code != 0 || stderr.Len() != 0 || !strings.Contains(stdout.String(), "48 imported examples") || !strings.Contains(stdout.String(), "NO_RESULT") {
+	if code := runCommand(t, args, &stdout, &stderr); code != 0 || stderr.Len() != 0 || !strings.Contains(stdout.String(), "48 imported examples") || !strings.Contains(stdout.String(), "NO_RESULT") {
 		t.Fatalf("human result: %d %q %q", code, stdout.String(), stderr.String())
 	}
 	stdout.Reset()
-	if code := run(append(args, "--json"), &stdout, &stderr); code != 0 || stderr.Len() != 0 {
+	if code := runCommand(t, append(args, "--json"), &stdout, &stderr); code != 0 || stderr.Len() != 0 {
 		t.Fatalf("JSON result: %d %q", code, stderr.String())
 	}
 	var report clrsfixture.FixtureComparison
@@ -43,7 +43,7 @@ func TestCLRSComparisonCLIReportsSuccessAndFailureJSON(t *testing.T) {
 	}
 	first := append([]byte(nil), stdout.Bytes()...)
 	stdout.Reset()
-	if code := run(append(args, "--json"), &stdout, &stderr); code != 0 || !bytes.Equal(first, stdout.Bytes()) {
+	if code := runCommand(t, append(args, "--json"), &stdout, &stderr); code != 0 || !bytes.Equal(first, stdout.Bytes()) {
 		t.Fatal("JSON output changed between identical checks")
 	}
 	path := filepath.Join(root, "second/shakedown/insertion_sort.json")
@@ -56,28 +56,28 @@ func TestCLRSComparisonCLIReportsSuccessAndFailureJSON(t *testing.T) {
 	}
 	stdout.Reset()
 	stderr.Reset()
-	if code := run(append(args, "--json"), &stdout, &stderr); code != 1 || stderr.Len() == 0 {
+	if code := runCommand(t, append(args, "--json"), &stdout, &stderr); code != 1 || stderr.Len() == 0 {
 		t.Fatalf("mismatch result: %d %q", code, stderr.String())
 	}
 	if err := json.Unmarshal(stdout.Bytes(), &report); err != nil || report.State != "failed" || report.Error == "" || report.FirstExamples != 48 || report.SecondExamples != 48 {
 		t.Fatalf("failure report: %#v %v", report, err)
 	}
 	stdout.Reset()
-	if code := run(args, &stdout, &stderr); code != 1 || stdout.Len() != 0 {
+	if code := runCommand(t, args, &stdout, &stderr); code != 1 || stdout.Len() != 0 {
 		t.Fatal("human validation failure must not emit success stdout")
 	}
 }
 
 func TestCLRSComparisonCLIRejectsMissingPathsAndOutputFailure(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	args := []string{"experiment", "compare-clrs-fixtures", "--root", t.TempDir(), "--first", "missing", "--second", "also-missing", "--json"}
-	if code := run(args, &stdout, &stderr); code != 1 || !json.Valid(stdout.Bytes()) || stderr.Len() == 0 {
+	args := []string{"compare-clrs-fixtures", "--root", t.TempDir(), "--first", "missing", "--second", "also-missing", "--json"}
+	if code := runCommand(t, args, &stdout, &stderr); code != 1 || !json.Valid(stdout.Bytes()) || stderr.Len() == 0 {
 		t.Fatalf("missing path: %d %q %q", code, stdout.String(), stderr.String())
 	}
 	root := cliComparisonFixture(t)
-	args = []string{"experiment", "compare-clrs-fixtures", "--root", root, "--first", "first", "--second", "second", "--json"}
+	args = []string{"compare-clrs-fixtures", "--root", root, "--first", "first", "--second", "second", "--json"}
 	stderr.Reset()
-	if code := run(args, comparisonShortWriter{}, &stderr); code != 1 || !strings.Contains(stderr.String(), io.ErrShortWrite.Error()) {
+	if code := runCommand(t, args, comparisonShortWriter{}, &stderr); code != 1 || !strings.Contains(stderr.String(), io.ErrShortWrite.Error()) {
 		t.Fatalf("short output: %d %q", code, stderr.String())
 	}
 }

@@ -17,17 +17,15 @@ import (
 	"time"
 
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/buildinfo"
-	"github.com/lusoris/20-watts-was-enough/tooling/internal/ciplan"
-	"github.com/lusoris/20-watts-was-enough/tooling/internal/clrsfixture"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/ciplancli"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/docscheck"
-	"github.com/lusoris/20-watts-was-enough/tooling/internal/experiment"
+	"github.com/lusoris/20-watts-was-enough/tooling/internal/experimentcli"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubapi"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubissuelifecycle"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubissuemilestones"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githublabels"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubmilestones"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/githubprmetadata"
-	"github.com/lusoris/20-watts-was-enough/tooling/internal/nodeimage"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/ocimanifest"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/pdfrender"
 	"github.com/lusoris/20-watts-was-enough/tooling/internal/releasecheck"
@@ -52,17 +50,7 @@ func usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w ci project")
 	fmt.Fprintln(writer, "  20w ci run-workstation [--root <repository>]")
 	fmt.Fprintln(writer, "  20w validate docs [--root <repository>]")
-	fmt.Fprintln(writer, "  20w experiment list [--root <repository>] [--json]")
-	fmt.Fprintln(writer, "  20w experiment validate [--root <repository>]")
-	fmt.Fprintln(writer, "  20w experiment release-plan [--root <repository>] [--json]")
-	fmt.Fprintln(writer, "  20w experiment package-node-image --artifact <id> --output <directory> [--root <repository>]")
-	fmt.Fprintln(writer, "  20w experiment render-clrs-wheelhouse-manifest --wheelhouse <directory> --output <new.json> [--root <repository>]")
-	fmt.Fprintln(writer, "  20w experiment verify-clrs-wheelhouse --wheelhouse <directory> [--root <repository>]")
-	fmt.Fprintln(writer, "  20w experiment check-clrs-sbom-bundle --bundle <directory> --image-manifest <sha256:digest> --image-config <sha256:digest> [--root <repository>] [--json]")
-	fmt.Fprintln(writer, "  20w experiment reproduce-clrs-promise-wheel --output <directory> (--inputs <directory> | --check) [--root <repository>]")
-	fmt.Fprintln(writer, "  20w experiment materialize-clrs-context --wheelhouse <directory> --source-archive <tar.gz> --promise-source-root <frozen-repository> --promise-evidence <directory> --output <context.tar> [--root <repository>] [--check]")
-	fmt.Fprintln(writer, "  20w experiment compare-clrs-fixtures --first <dataset-root> --second <dataset-root> [--root <repository>] [--json]")
-	fmt.Fprintln(writer, "  20w experiment render-clrs-generation-program [--root <repository>] [--json]")
+	experimentcli.Usage(writer)
 	fmt.Fprintln(writer, "  20w publication render-pdf [--root <repository>] [--ref main|vMAJOR.MINOR.PATCH] [--revision <commit>] [--check]")
 	fmt.Fprintln(writer, "  20w publication verify-pdf-tools [--root <repository>]")
 	fmt.Fprintln(writer, "  20w publication reproduce-pdf-tools-image --receipt <new.json> [--candidate-bundle <new.tar> --final-archive <new.tar> --spdx <new.spdx.json> --source-bundle <new.tar.gz>] [--root <repository>]")
@@ -108,38 +96,8 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 			return runValidateDocs(arguments[2:], stdout, stderr)
 		}
 	case "experiment":
-		if len(arguments) >= 2 && arguments[1] == "list" {
-			return runExperimentList(arguments[2:], stdout, stderr)
-		}
-		if len(arguments) >= 2 && arguments[1] == "validate" {
-			return runExperimentValidate(arguments[2:], stdout, stderr)
-		}
-		if len(arguments) >= 2 && arguments[1] == "package-node-image" {
-			return runPackageNodeImage(arguments[2:], stdout, stderr)
-		}
-		if len(arguments) >= 2 && arguments[1] == "release-plan" {
-			return runExperimentReleasePlan(arguments[2:], stdout, stderr)
-		}
-		if len(arguments) >= 2 && arguments[1] == "render-clrs-wheelhouse-manifest" {
-			return runExperimentRenderCLRSWheelhouseManifest(arguments[2:], stdout, stderr)
-		}
-		if len(arguments) >= 2 && arguments[1] == "verify-clrs-wheelhouse" {
-			return runExperimentVerifyCLRSWheelhouse(arguments[2:], stdout, stderr)
-		}
-		if len(arguments) >= 2 && arguments[1] == "check-clrs-sbom-bundle" {
-			return runExperimentCheckCLRSSBOM(arguments[2:], stdout, stderr)
-		}
-		if len(arguments) >= 2 && arguments[1] == "reproduce-clrs-promise-wheel" {
-			return runExperimentReproducePromise(arguments[2:], stdout, stderr)
-		}
-		if len(arguments) >= 2 && arguments[1] == "materialize-clrs-context" {
-			return runExperimentCLRSContext(arguments[2:], stdout, stderr)
-		}
-		if len(arguments) >= 2 && arguments[1] == "compare-clrs-fixtures" {
-			return runExperimentCompareCLRSFixtures(arguments[2:], stdout, stderr)
-		}
-		if len(arguments) >= 2 && arguments[1] == "render-clrs-generation-program" {
-			return runExperimentRenderCLRSInvocation(arguments[2:], stdout, stderr)
+		if code, handled := experimentcli.Run(arguments[1:], stdout, stderr); handled {
+			return code
 		}
 	case "release":
 		if len(arguments) >= 2 && arguments[1] == "inspect-image" {
@@ -217,57 +175,11 @@ func run(arguments []string, stdout, stderr io.Writer) int {
 }
 
 func runCIProject(arguments []string, stdin io.Reader, stdout, stderr io.Writer) int {
-	if len(arguments) != 0 {
-		fmt.Fprintln(stderr, "ci project accepts a plan on standard input and no arguments")
-		return 2
-	}
-	projection, err := ciplan.ReadProjection(stdin)
-	if err != nil {
-		fmt.Fprintf(stderr, "Project bounded CI plan: %v\n", err)
-		return 1
-	}
-	if err := ciplan.WriteGitHubOutputs(stdout, projection); err != nil {
-		fmt.Fprintf(stderr, "Write bounded CI outputs: %v\n", err)
-		return 1
-	}
-	return 0
+	return ciplancli.RunProject(arguments, stdin, stdout, stderr)
 }
 
 func runCIPlan(arguments []string, stdout, stderr io.Writer) int {
-	flags := flag.NewFlagSet("ci plan", flag.ContinueOnError)
-	flags.SetOutput(stderr)
-	root := flags.String("root", ".", "repository root")
-	baseRevision := flags.String("base", "", "exact 40-character base commit")
-	headRevision := flags.String("head", "", "exact 40-character head commit")
-	forceFull := flags.Bool("full", false, "select the complete repository gate")
-	jsonOutput := flags.Bool("json", false, "write one stable JSON plan")
-	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
-		return 2
-	}
-	if (*baseRevision == "") != (*headRevision == "") {
-		fmt.Fprintln(stderr, "ci plan requires --base and --head together")
-		return 2
-	}
-	plan, err := ciplan.Build(context.Background(), ciplan.Options{
-		RepositoryRoot: *root,
-		BaseRevision:   *baseRevision,
-		HeadRevision:   *headRevision,
-		ForceFull:      *forceFull,
-	})
-	if err != nil {
-		fmt.Fprintf(stderr, "Build bounded CI plan: %v\n", err)
-		return 1
-	}
-	if *jsonOutput {
-		if err := json.NewEncoder(stdout).Encode(plan); err != nil {
-			fmt.Fprintf(stderr, "Write CI plan: %v\n", err)
-			return 1
-		}
-		return 0
-	}
-	fmt.Fprintf(stdout, "CI plan: %s (%s)\n", plan.Mode, plan.Reason)
-	fmt.Fprintf(stdout, "CI lanes: %s\n", strings.Join(plan.Lanes, ","))
-	return 0
+	return ciplancli.RunPlan(arguments, stdout, stderr)
 }
 
 func runCIWorkstation(arguments []string, stdout, stderr io.Writer) int {
@@ -890,31 +802,6 @@ func expectedLabels(values []string) (map[string]string, error) {
 	return labels, nil
 }
 
-func runPackageNodeImage(arguments []string, stdout, stderr io.Writer) int {
-	flags := flag.NewFlagSet("experiment package-node-image", flag.ContinueOnError)
-	flags.SetOutput(stderr)
-	root := flags.String("root", ".", "repository root")
-	artifact := flags.String("artifact", "", "supported experiment artifact")
-	output := flags.String("output", "", "new Docker build-context directory")
-	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
-		return 2
-	}
-	if *artifact == "" || *output == "" {
-		fmt.Fprintln(stderr, "experiment package-node-image requires --artifact and --output")
-		return 2
-	}
-	if err := nodeimage.Package(nodeimage.Options{
-		RepositoryRoot: *root,
-		OutputRoot:     *output,
-		Artifact:       *artifact,
-	}); err != nil {
-		fmt.Fprintf(stderr, "Package Node experiment image: %v\n", err)
-		return 1
-	}
-	fmt.Fprintf(stdout, "Packaged %s experiment image context at %s.\n", *artifact, *output)
-	return 0
-}
-
 func runValidateDocs(arguments []string, stdout, stderr io.Writer) int {
 	flags := flag.NewFlagSet("validate docs", flag.ContinueOnError)
 	flags.SetOutput(stderr)
@@ -945,144 +832,6 @@ func runValidateDocs(arguments []string, stdout, stderr io.Writer) int {
 		result.MarkdownFiles,
 		result.Chapters,
 		result.MermaidFiles,
-	)
-	return 0
-}
-
-func runExperimentList(arguments []string, stdout, stderr io.Writer) int {
-	flags := flag.NewFlagSet("experiment list", flag.ContinueOnError)
-	flags.SetOutput(stderr)
-	root := flags.String("root", ".", "repository root")
-	jsonOutput := flags.Bool("json", false, "write the catalogue as JSON")
-	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
-		return 2
-	}
-	catalog, err := experiment.LoadCatalog(*root)
-	if err != nil {
-		fmt.Fprintf(stderr, "Load experiment catalogue: %v\n", err)
-		return 1
-	}
-	if *jsonOutput {
-		encoder := json.NewEncoder(stdout)
-		encoder.SetIndent("", "  ")
-		if err := encoder.Encode(catalog); err != nil {
-			fmt.Fprintf(stderr, "Write experiment catalogue: %v\n", err)
-			return 1
-		}
-		return 0
-	}
-	for _, entry := range catalog {
-		fmt.Fprintf(stdout, "%s\t%s\t%s\n", entry.Artifact, entry.Readiness, entry.Distribution.State)
-	}
-	return 0
-}
-
-func runExperimentValidate(arguments []string, stdout, stderr io.Writer) int {
-	flags := flag.NewFlagSet("experiment validate", flag.ContinueOnError)
-	flags.SetOutput(stderr)
-	root := flags.String("root", ".", "repository root")
-	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
-		return 2
-	}
-	catalog, err := experiment.LoadCatalog(*root)
-	if err != nil {
-		fmt.Fprintf(stderr, "Validate experiment catalogue: %v\n", err)
-		return 1
-	}
-	plan, err := experiment.LoadReleasePlan(*root)
-	if err != nil {
-		fmt.Fprintf(stderr, "Validate experiment release plan: %v\n", err)
-		return 1
-	}
-	fmt.Fprintf(stdout, "Experiment catalogue validation passed: %d manifests, %d release images.\n", len(catalog), len(plan))
-	return 0
-}
-
-func runExperimentReleasePlan(arguments []string, stdout, stderr io.Writer) int {
-	flags := flag.NewFlagSet("experiment release-plan", flag.ContinueOnError)
-	flags.SetOutput(stderr)
-	root := flags.String("root", ".", "repository root")
-	jsonOutput := flags.Bool("json", false, "write the plan as JSON")
-	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 {
-		return 2
-	}
-	plan, err := experiment.LoadReleasePlan(*root)
-	if err != nil {
-		fmt.Fprintf(stderr, "Load experiment release plan: %v\n", err)
-		return 1
-	}
-	if *jsonOutput {
-		encoder := json.NewEncoder(stdout)
-		encoder.SetIndent("", "  ")
-		if err := encoder.Encode(plan); err != nil {
-			fmt.Fprintf(stderr, "Write experiment release plan: %v\n", err)
-			return 1
-		}
-		return 0
-	}
-	for _, entry := range plan {
-		fmt.Fprintf(stdout, "%s\t%s\t%s\n", entry.Artifact, entry.Distribution.Image, strings.Join(entry.Distribution.Platforms, ","))
-	}
-	return 0
-}
-
-func runExperimentRenderCLRSWheelhouseManifest(arguments []string, stdout, stderr io.Writer) int {
-	flags := flag.NewFlagSet("experiment render-clrs-wheelhouse-manifest", flag.ContinueOnError)
-	flags.SetOutput(stderr)
-	root := flags.String("root", ".", "repository root")
-	wheelhouse := flags.String("wheelhouse", "", "materialised wheel directory")
-	output := flags.String("output", "", "new candidate manifest path")
-	if err := flags.Parse(arguments); err != nil {
-		return 2
-	}
-	if flags.NArg() != 0 {
-		fmt.Fprintln(stderr, "experiment render-clrs-wheelhouse-manifest accepts no positional arguments")
-		return 2
-	}
-	if *wheelhouse == "" || *output == "" {
-		fmt.Fprintln(stderr, "experiment render-clrs-wheelhouse-manifest requires --wheelhouse and --output")
-		return 2
-	}
-	digest, size, err := clrsfixture.WriteGeneratorWheelhouseManifest(*root, *wheelhouse, *output)
-	if err != nil {
-		fmt.Fprintf(stderr, "Render CLRS generator wheelhouse manifest: %v\n", err)
-		return 1
-	}
-	fmt.Fprintf(
-		stdout,
-		"CLRS generator wheelhouse manifest rendered: sha256:%s, %d bytes, NO_RESULT.\n",
-		digest,
-		size,
-	)
-	return 0
-}
-
-func runExperimentVerifyCLRSWheelhouse(arguments []string, stdout, stderr io.Writer) int {
-	flags := flag.NewFlagSet("experiment verify-clrs-wheelhouse", flag.ContinueOnError)
-	flags.SetOutput(stderr)
-	root := flags.String("root", ".", "repository root")
-	wheelhouse := flags.String("wheelhouse", "", "materialised wheel directory")
-	if err := flags.Parse(arguments); err != nil {
-		return 2
-	}
-	if flags.NArg() != 0 {
-		fmt.Fprintln(stderr, "experiment verify-clrs-wheelhouse accepts no positional arguments")
-		return 2
-	}
-	if *wheelhouse == "" {
-		fmt.Fprintln(stderr, "experiment verify-clrs-wheelhouse requires --wheelhouse")
-		return 2
-	}
-	manifest, err := clrsfixture.VerifyGeneratorWheelhouse(*root, *wheelhouse)
-	if err != nil {
-		fmt.Fprintf(stderr, "Verify CLRS generator wheelhouse: %v\n", err)
-		return 1
-	}
-	fmt.Fprintf(
-		stdout,
-		"CLRS generator wheelhouse verified: %d artifacts, %d bytes, NO_RESULT.\n",
-		manifest.ArtifactCount,
-		manifest.TotalSizeBytes,
 	)
 	return 0
 }

@@ -7,6 +7,14 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- CI planning and the hosted PDF proof now use private Go drivers with tested
+  minimal dependency closures. They share argument handling with the public
+  command and reject failed or short output writes. Experiment help, dispatch
+  and handlers now have one package owner, selecting container, Go and release
+  checks without scheduling unrelated workstation or renderer work. Tagged
+  release proofs and full-gate authority remain unchanged; adding a book-bound
+  source still changes the shared inventory and selects the broad gate.
+
 - PDF reproducibility receipts now hash the actual image config bytes instead
   of assuming Docker's loaded image ID always names a config. Schema 4 retains
   exact proof bytes for both config-ID and manifest-ID Docker stores, while

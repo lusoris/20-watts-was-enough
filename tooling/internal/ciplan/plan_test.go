@@ -68,11 +68,16 @@ func TestRendererAuthorityPredicateCoversTheClosedExecutionBoundary(t *testing.T
 		"scripts/npm-runtime-lock.json",
 		"tooling/cmd/20w/main.go",
 		"tooling/cmd/20w/pdf_reproducibility.go",
+		"tooling/cmd/ci-plan/main.go",
+		"tooling/cmd/pdf-proof/main.go",
 		"tooling/go.mod",
 		"tooling/internal/ciplan/plan.go",
+		"tooling/internal/ciplancli/cli.go",
 		"tooling/internal/pdfrender/reproducibility.go",
 		"tooling/internal/pdfrender/installed_dependencies.go",
 		"tooling/internal/pdfrender/installed_inventory.go",
+		"tooling/internal/pdfrendercli/cli.go",
+		"tooling/internal/pdfrenderlock/lock.go",
 		"tooling/internal/strictjson/validate.go",
 		"tooling/pdf-renderer/lock.json",
 		"vite.pages.config.ts",
@@ -86,9 +91,39 @@ func TestRendererAuthorityPredicateCoversTheClosedExecutionBoundary(t *testing.T
 		"concept/00-overview.md",
 		"scripts/audit-prose-style.mjs",
 		"tooling/internal/githublabels/labels.go",
+		"tooling/cmd/ci-plan-unrelated/main.go",
+		"tooling/cmd/pdf-proof-unrelated/main.go",
+		"tooling/internal/ciplancli-unrelated/cli.go",
+		"tooling/internal/pdfrendercli-unrelated/cli.go",
 	} {
 		if isRendererAuthority(changedPath) {
 			t.Errorf("isRendererAuthority(%q) = true", changedPath)
+		}
+	}
+}
+
+func TestDeletedPrivateCommandAuthoritiesRetainFormerPathOwners(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	for _, test := range []struct {
+		path  string
+		mode  string
+		lanes []string
+	}{
+		{"tooling/cmd/ci-plan/main.go", "full", []string{"full", "renderer"}},
+		{"tooling/internal/ciplancli/cli.go", "full", []string{"full", "renderer"}},
+		{"tooling/cmd/pdf-proof/main.go", "impact", []string{"container", "go", "release", "renderer", "site"}},
+		{"tooling/internal/experimentcli/cli.go", "impact", []string{"container", "go", "release"}},
+		{"tooling/internal/pdfrendercli/cli.go", "impact", []string{"container", "go", "release", "renderer", "site"}},
+		{"unknown-root/deleted.go", "full", []string{"full", "renderer"}},
+	} {
+		paths, unsafe, err := parseRawDiff(rawRecord("100644", "000000", "D", test.path))
+		if err != nil || unsafe || !reflect.DeepEqual(paths, []string{test.path}) {
+			t.Fatalf("parse deletion %s: paths=%v unsafe=%t err=%v", test.path, paths, unsafe, err)
+		}
+		plan := selectTestPaths(t, root, testOptions(root), paths)
+		if plan.Mode != test.mode || !reflect.DeepEqual(plan.Lanes, test.lanes) {
+			t.Fatalf("deleted authority %s produced %#v, want %s/%v", test.path, plan, test.mode, test.lanes)
 		}
 	}
 }
@@ -109,6 +144,14 @@ func TestUnsafeChangeRendererSignalUsesBothPathsAndFailsClosedOnUnknowns(t *test
 		},
 		"renderer authority involved": {
 			paths: []string{"app/globals.css"},
+			want:  true,
+		},
+		"private selector authority involved": {
+			paths: []string{"app/old.tsx", "tooling/cmd/ci-plan/main.go"},
+			want:  true,
+		},
+		"private proof authority involved": {
+			paths: []string{"app/old.tsx", "tooling/cmd/pdf-proof/main.go"},
 			want:  true,
 		},
 		"rename enters unmapped path": {

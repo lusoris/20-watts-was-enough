@@ -248,8 +248,13 @@ func isRendererAuthority(changedPath string) bool {
 		}
 	}
 	for _, prefix := range []string{
+		"tooling/cmd/ci-plan/",
+		"tooling/cmd/pdf-proof/",
 		"tooling/internal/ciplan/",
+		"tooling/internal/ciplancli/",
 		"tooling/internal/pdfrender/",
+		"tooling/internal/pdfrendercli/",
+		"tooling/internal/pdfrenderlock/",
 		"tooling/internal/strictjson/",
 		"tooling/pdf-renderer/",
 	} {
@@ -294,7 +299,9 @@ func isSelectorAuthority(changedPath string) bool {
 		changedPath == "tooling/go.mod" ||
 		changedPath == "tooling/go.sum" ||
 		strings.HasPrefix(changedPath, "tooling/cmd/20w/") ||
+		strings.HasPrefix(changedPath, "tooling/cmd/ci-plan/") ||
 		strings.HasPrefix(changedPath, "tooling/internal/ciplan/") ||
+		strings.HasPrefix(changedPath, "tooling/internal/ciplancli/") ||
 		strings.HasPrefix(changedPath, "tooling/internal/strictjson/")
 }
 

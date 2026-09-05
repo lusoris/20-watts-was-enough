@@ -11,6 +11,12 @@ These instructions extend the repository-wide [`AGENTS.md`](../AGENTS.md) and
 - Prefer one coherent command with stable subcommands over a collection of
   one-file executables. A package owns one contract and exposes the smallest
   API needed by the command or another package.
+  The private `cmd/ci-plan` and `cmd/pdf-proof` drivers are the bounded
+  exception under [decision 0075](../decisions/0075-isolate-ci-driver-dependency-closures.md):
+  they share public CLI adapters and enforce minimal dependency closures for
+  their existing CI jobs. Do not add public commands or release artifacts there.
+  Experiment help, dispatch, handlers and command-specific tests belong in
+  `internal/experimentcli`; keep the public command's delegation stable.
 - Start with the standard library. Add a dependency only when it removes more
   parser, protocol, or security risk than it adds to the module graph. Verify
   its current upstream documentation, licence, maintenance state, and exact

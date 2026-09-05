@@ -1,4 +1,4 @@
-package main
+package experimentcli
 
 import (
 	"bytes"
@@ -17,17 +17,17 @@ import (
 func TestCLRSInvocationCLIUsageAndAuthorityFailures(t *testing.T) {
 	for _, arguments := range [][]string{{"--unknown"}, {"extra"}, {"--root"}, {"--root="}, {"--json=invalid"}} {
 		var stdout, stderr bytes.Buffer
-		if code := run(append([]string{"experiment", "render-clrs-generation-program"}, arguments...), &stdout, &stderr); code != 2 || stdout.Len() != 0 {
+		if code := runCommand(t, append([]string{"render-clrs-generation-program"}, arguments...), &stdout, &stderr); code != 2 || stdout.Len() != 0 {
 			t.Fatalf("arguments %v: status %d output %q", arguments, code, stdout.String())
 		}
 	}
 	for _, machine := range []bool{false, true} {
-		arguments := []string{"experiment", "render-clrs-generation-program", "--root", t.TempDir()}
+		arguments := []string{"render-clrs-generation-program", "--root", t.TempDir()}
 		if machine {
 			arguments = append(arguments, "--json")
 		}
 		var stdout, stderr bytes.Buffer
-		if code := run(arguments, &stdout, &stderr); code != 1 || stdout.Len() != 0 || stderr.Len() == 0 {
+		if code := runCommand(t, arguments, &stdout, &stderr); code != 1 || stdout.Len() != 0 || stderr.Len() == 0 {
 			t.Fatalf("invalid authority: status %d output %q error %q", code, stdout.String(), stderr.String())
 		}
 	}
@@ -42,13 +42,13 @@ func TestCLRSInvocationCLIExactProgramAndMetadata(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	arguments := []string{"experiment", "render-clrs-generation-program", "--root", root}
+	arguments := []string{"render-clrs-generation-program", "--root", root}
 	var stdout, stderr bytes.Buffer
-	if code := run(arguments, &stdout, &stderr); code != 0 || stdout.String() != want.Program || stderr.Len() != 0 {
+	if code := runCommand(t, arguments, &stdout, &stderr); code != 0 || stdout.String() != want.Program || stderr.Len() != 0 {
 		t.Fatalf("program: status %d error %q", code, stderr.String())
 	}
 	stdout.Reset()
-	if code := run(append(arguments, "--json"), &stdout, &stderr); code != 0 || stderr.Len() != 0 {
+	if code := runCommand(t, append(arguments, "--json"), &stdout, &stderr); code != 0 || stderr.Len() != 0 {
 		t.Fatalf("metadata: status %d error %q", code, stderr.String())
 	}
 	var report clrsInvocationReport
@@ -61,11 +61,11 @@ func TestCLRSInvocationCLIExactProgramAndMetadata(t *testing.T) {
 	}
 	first := append([]byte(nil), stdout.Bytes()...)
 	stdout.Reset()
-	if code := run(append(arguments, "--json"), &stdout, &stderr); code != 0 || !bytes.Equal(stdout.Bytes(), first) {
+	if code := runCommand(t, append(arguments, "--json"), &stdout, &stderr); code != 0 || !bytes.Equal(stdout.Bytes(), first) {
 		t.Fatal("identical authority did not yield identical output")
 	}
 	for _, writer := range []io.Writer{clrsInvocationErrorWriter{}, clrsInvocationShortWriter{}} {
-		if code := run(arguments, writer, &stderr); code != 1 {
+		if code := runCommand(t, arguments, writer, &stderr); code != 1 {
 			t.Fatalf("output failure returned %d", code)
 		}
 	}

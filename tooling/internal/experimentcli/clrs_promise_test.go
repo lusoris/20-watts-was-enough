@@ -1,4 +1,4 @@
-package main
+package experimentcli
 
 import (
 	"bytes"
@@ -12,8 +12,8 @@ func TestPromiseCommandCLIUsage(t *testing.T) {
 		{"--check", "--output", "x", "--inputs", "y"}, {"--output", "x", "positional"}, {"--unknown"},
 	} {
 		var stdout, stderr bytes.Buffer
-		full := append([]string{"experiment", "reproduce-clrs-promise-wheel"}, arguments...)
-		if code := run(full, &stdout, &stderr); code != 2 || stdout.Len() != 0 {
+		full := append([]string{"reproduce-clrs-promise-wheel"}, arguments...)
+		if code := runCommand(t, full, &stdout, &stderr); code != 2 || stdout.Len() != 0 {
 			t.Fatalf("%v: code=%d stdout=%s stderr=%s", arguments, code, &stdout, &stderr)
 		}
 	}
@@ -21,7 +21,7 @@ func TestPromiseCommandCLIUsage(t *testing.T) {
 
 func TestPromiseCommandCheckDoesNotRequireDocker(t *testing.T) {
 	var stdout, stderr bytes.Buffer
-	code := run([]string{"experiment", "reproduce-clrs-promise-wheel", "--check", "--output", t.TempDir(), "--root", t.TempDir()}, &stdout, &stderr)
+	code := runCommand(t, []string{"reproduce-clrs-promise-wheel", "--check", "--output", t.TempDir(), "--root", t.TempDir()}, &stdout, &stderr)
 	if code != 1 || stdout.Len() != 0 || strings.Contains(stderr.String(), "Docker CLI") {
 		t.Fatalf("code=%d stdout=%s stderr=%s", code, &stdout, &stderr)
 	}

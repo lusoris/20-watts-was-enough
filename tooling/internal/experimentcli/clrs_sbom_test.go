@@ -1,4 +1,4 @@
-package main
+package experimentcli
 
 import (
 	"bytes"
@@ -24,7 +24,7 @@ func TestCLRSSBOMCLIUsage(t *testing.T) {
 		append(append([]string{}, valid...), "--json=invalid"),
 	} {
 		var stdout, stderr bytes.Buffer
-		if code := run(append([]string{"experiment", "check-clrs-sbom-bundle"}, arguments...), &stdout, &stderr); code != 2 || stdout.Len() != 0 {
+		if code := runCommand(t, append([]string{"check-clrs-sbom-bundle"}, arguments...), &stdout, &stderr); code != 2 || stdout.Len() != 0 {
 			t.Fatalf("arguments %v: code=%d stdout=%q", arguments, code, stdout.String())
 		}
 	}
@@ -33,7 +33,7 @@ func TestCLRSSBOMCLIUsage(t *testing.T) {
 func TestCLRSSBOMCLIMissingAuthorityReportsFailureJSON(t *testing.T) {
 	digest := "sha256:" + strings.Repeat("a", 64)
 	var stdout, stderr bytes.Buffer
-	code := run([]string{"experiment", "check-clrs-sbom-bundle", "--root", t.TempDir(), "--bundle", "missing", "--image-manifest", digest, "--image-config", digest, "--json"}, &stdout, &stderr)
+	code := runCommand(t, []string{"check-clrs-sbom-bundle", "--root", t.TempDir(), "--bundle", "missing", "--image-manifest", digest, "--image-config", digest, "--json"}, &stdout, &stderr)
 	if code != 1 || stderr.Len() == 0 {
 		t.Fatalf("missing authority: code=%d stderr=%q", code, stderr.String())
 	}
