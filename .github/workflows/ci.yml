@@ -265,7 +265,29 @@ jobs:
         with:
           version: v0.36.1
           driver-opts: image=moby/buildkit:v0.32.2@sha256:28a898719c18a33f4e8000685287fa36fd0dd9560c6440227d3a732d79bb41d8
+      - name: Restore the PDF renderer build cache
+        id: pdf-renderer-cache
+        if: needs.impact-plan.outputs.renderer_proof == 'render-pair'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        timeout-minutes: 10
+        env:
+          SEGMENT_DOWNLOAD_TIMEOUT_MINS: "2"
+        with:
+          path: build/cache/pdf-renderer
+          key: pdf-renderer-buildkit-v1-linux-amd64-${{ hashFiles('tooling/pdf-renderer/lock.json', 'tooling/internal/pdfrender/**', 'tooling/internal/pdfrenderlock/**', 'tooling/internal/pdfrendercli/**', 'tooling/internal/strictjson/**', 'tooling/cmd/pdf-proof/**', 'tooling/go.mod', 'tooling/go.sum') }}
+      - name: Reject a non-exact PDF renderer cache restore
+        if: needs.impact-plan.outputs.renderer_proof == 'render-pair'
+        timeout-minutes: 1
+        env:
+          CACHE_MATCHED_KEY: ${{ steps.pdf-renderer-cache.outputs.cache-matched-key }}
+          CACHE_HIT: ${{ steps.pdf-renderer-cache.outputs.cache-hit }}
+        run: |-
+          if [ -n "$CACHE_MATCHED_KEY" ] && [ "$CACHE_HIT" != "true" ]; then
+            echo "::error::PDF renderer cache restore did not match the exact key"
+            exit 1
+          fi
       - name: Verify the selected PDF reproducibility proof
+        id: pdf-renderer-proof
         env:
           CGO_ENABLED: "0"
           GOOS: "linux"
@@ -280,7 +302,15 @@ jobs:
         run: >-
           go -C tooling run ./cmd/pdf-proof
           --root .. --ref main --proof "$RENDERER_PROOF"
+          --cache-dir build/cache/pdf-renderer
           --receipt build/evidence/pdf-renderer-reproducibility.json
+      - name: Save the verified PDF renderer build cache
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.pdf-renderer-proof.outcome == 'success' && steps.pdf-renderer-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        timeout-minutes: 10
+        with:
+          path: build/cache/pdf-renderer
+          key: pdf-renderer-buildkit-v1-linux-amd64-${{ hashFiles('tooling/pdf-renderer/lock.json', 'tooling/internal/pdfrender/**', 'tooling/internal/pdfrenderlock/**', 'tooling/internal/pdfrendercli/**', 'tooling/internal/strictjson/**', 'tooling/cmd/pdf-proof/**', 'tooling/go.mod', 'tooling/go.sum') }}
       - name: Retain the PDF renderer reproducibility evidence
         if: ${{ always() && !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7

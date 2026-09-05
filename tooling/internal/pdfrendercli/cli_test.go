@@ -45,9 +45,104 @@ func TestProofPreservesDefaultMainOptions(t *testing.T) {
 	}
 }
 
+func TestProofCachePreservesOptionsForBothProofModes(t *testing.T) {
+	for _, proof := range []string{"image-build", "render-pair"} {
+		t.Run(proof, func(t *testing.T) {
+			want := pdfrender.ReproducibilityOptions{
+				RepositoryRoot: "chosen-root",
+				SourceRef:      "main",
+				SourceRevision: strings.Repeat("a", 40),
+				ReceiptPath:    "build/evidence/proof.json",
+				RenderPairOnly: proof == "render-pair",
+				CacheDirectory: "build/cache/pdf-renderer",
+			}
+			calls := 0
+			var stdout, stderr bytes.Buffer
+			code := runVerifyReproducibility([]string{
+				"--root", want.RepositoryRoot, "--ref", want.SourceRef,
+				"--revision", want.SourceRevision, "--receipt", want.ReceiptPath,
+				"--proof", proof, "--cache-dir", want.CacheDirectory,
+			}, &stdout, &stderr, func(_ context.Context, got pdfrender.ReproducibilityOptions) (pdfrender.ReproducibilityReceipt, error) {
+				calls++
+				if !reflect.DeepEqual(got, want) {
+					t.Fatalf("options=%#v, want %#v", got, want)
+				}
+				return proofReceipt(), nil
+			})
+			if code != 0 || calls != 1 || stdout.Len() == 0 || stderr.Len() != 0 {
+				t.Fatalf("exit=%d calls=%d stdout=%q stderr=%q", code, calls, stdout.String(), stderr.String())
+			}
+		})
+	}
+}
+
+func TestProofEmptyCacheMatchesOmittedCache(t *testing.T) {
+	for _, test := range []struct{ ref, proof string }{
+		{"main", "image-build"}, {"main", "render-pair"}, {"v1.2.3", "image-build"},
+	} {
+		t.Run(test.ref+"/"+test.proof, func(t *testing.T) {
+			arguments := []string{"--receipt", "proof.json", "--ref", test.ref, "--revision", strings.Repeat("a", 40), "--proof", test.proof}
+			var options []pdfrender.ReproducibilityOptions
+			var output []string
+			for _, cacheArguments := range [][]string{nil, {"--cache-dir", ""}} {
+				var stdout, stderr bytes.Buffer
+				code := runVerifyReproducibility(append(append([]string(nil), arguments...), cacheArguments...), &stdout, &stderr, func(_ context.Context, got pdfrender.ReproducibilityOptions) (pdfrender.ReproducibilityReceipt, error) {
+					options = append(options, got)
+					return proofReceipt(), nil
+				})
+				if code != 0 || stderr.Len() != 0 {
+					t.Fatalf("cache args=%q exit=%d stderr=%q", cacheArguments, code, stderr.String())
+				}
+				output = append(output, stdout.String())
+			}
+			if len(options) != 2 || !reflect.DeepEqual(options[0], options[1]) || options[0].CacheDirectory != "" || output[0] != output[1] {
+				t.Fatalf("empty and omitted cache differ: options=%#v output=%q", options, output)
+			}
+		})
+	}
+}
+
+func TestProofRejectsInvalidCacheBeforeVerification(t *testing.T) {
+	for _, directory := range []string{
+		"cache", "/build/cache/pdf-renderer", "../build/cache/pdf-renderer",
+		"build/cache/other", "build/cache/pdf-renderer/", "./build/cache/pdf-renderer",
+		"build/cache/../cache/pdf-renderer", "build//cache/pdf-renderer", `build\cache\pdf-renderer`,
+		"build/cache/pdf-renderer,mode=max", " build/cache/pdf-renderer", "build/cache/pdf-renderer\n",
+	} {
+		t.Run(directory, func(t *testing.T) {
+			var stdout, stderr bytes.Buffer
+			code := runVerifyReproducibility([]string{"--receipt", "proof.json", "--cache-dir", directory}, &stdout, &stderr, func(context.Context, pdfrender.ReproducibilityOptions) (pdfrender.ReproducibilityReceipt, error) {
+				t.Fatal("invalid cache directory reached the verifier")
+				return pdfrender.ReproducibilityReceipt{}, nil
+			})
+			if code != 2 || stdout.Len() != 0 || !strings.Contains(stderr.String(), "cache-dir must be empty, or build/cache/pdf-renderer with --ref main") {
+				t.Fatalf("exit=%d stdout=%q stderr=%q", code, stdout.String(), stderr.String())
+			}
+		})
+	}
+}
+
+func TestProofRejectsReleaseCacheBeforeVerification(t *testing.T) {
+	for _, proof := range []string{"image-build", "render-pair"} {
+		t.Run(proof, func(t *testing.T) {
+			var stdout, stderr bytes.Buffer
+			code := runVerifyReproducibility([]string{
+				"--receipt", "proof.json", "--ref", "v1.2.3", "--revision", strings.Repeat("a", 40),
+				"--proof", proof, "--cache-dir", "build/cache/pdf-renderer",
+			}, &stdout, &stderr, func(context.Context, pdfrender.ReproducibilityOptions) (pdfrender.ReproducibilityReceipt, error) {
+				t.Fatal("release cache reached the verifier")
+				return pdfrender.ReproducibilityReceipt{}, nil
+			})
+			if code != 2 || stdout.Len() != 0 || !strings.Contains(stderr.String(), "with --ref main") {
+				t.Fatalf("exit=%d stdout=%q stderr=%q", code, stdout.String(), stderr.String())
+			}
+		})
+	}
+}
+
 func TestProofRejectsArgumentsBeforeVerification(t *testing.T) {
 	for _, args := range [][]string{
-		nil, {"--ref", "main"}, {"--receipt"}, {"--unknown"}, {"--help"},
+		nil, {"--ref", "main"}, {"--receipt"}, {"--unknown"}, {"--help"}, {"--receipt", "proof.json", "--cache-dir"},
 		{"--receipt", "proof.json", "extra"},
 		{"--receipt", "proof.json", "--ref", "release/latest"},
 		{"--receipt", "proof.json", "--ref", "v1.2.3"},
@@ -107,6 +202,19 @@ func TestPublicAdapterRejectsInvalidRootBeforeDocker(t *testing.T) {
 	code := RunVerifyReproducibility([]string{"--root", t.TempDir(), "--receipt", "proof.json"}, &stdout, &stderr)
 	if code != 1 || stdout.Len() != 0 || !strings.Contains(stderr.String(), "Verify PDF renderer reproducibility:") {
 		t.Fatalf("exit=%d stdout=%q stderr=%q", code, stdout.String(), stderr.String())
+	}
+}
+
+func TestPublicAdapterRejectsCacheUsageBeforeRepositoryInspection(t *testing.T) {
+	for _, arguments := range [][]string{
+		{"--cache-dir", "/build/cache/pdf-renderer"},
+		{"--cache-dir", "build/cache/pdf-renderer", "--ref", "v1.2.3", "--revision", strings.Repeat("a", 40)},
+	} {
+		var stdout, stderr bytes.Buffer
+		code := RunVerifyReproducibility(append([]string{"--root", t.TempDir(), "--receipt", "proof.json"}, arguments...), &stdout, &stderr)
+		if code != 2 || stdout.Len() != 0 || !strings.Contains(stderr.String(), "cache-dir must be empty, or build/cache/pdf-renderer with --ref main") {
+			t.Fatalf("args=%q exit=%d stdout=%q stderr=%q", arguments, code, stdout.String(), stderr.String())
+		}
 	}
 }
 

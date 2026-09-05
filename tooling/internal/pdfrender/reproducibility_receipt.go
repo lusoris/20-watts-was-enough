@@ -26,8 +26,8 @@ const (
 	maximumBuildMetadataBytes    int64 = 2 * 1024 * 1024
 )
 
-// ReproducibilityReceipt retains either a schema-4 two-builder comparison or
-// a schema-5 render-pair comparison with one actual build and two Renders.
+// ReproducibilityReceipt retains a schema-4 two-builder or schema-5 render-pair
+// comparison. Schema 6 additionally records explicit build-cache use.
 type ReproducibilityReceipt struct {
 	Schema           int                              `json:"schema"`
 	Status           string                           `json:"status"`
@@ -41,6 +41,7 @@ type ReproducibilityReceipt struct {
 	PublicationPair  ReproducibilityPublicationPair   `json:"publication_pair"`
 	Builds           []ReproducibilityBuild           `json:"builds"`
 	Renders          []ReproducibilityPair            `json:"renders,omitempty"`
+	BuildCache       *ReproducibilityCache            `json:"build_cache,omitempty"`
 	Comparison       ReproducibilityComparison        `json:"comparison"`
 	MismatchEvidence *ReproducibilityMismatchEvidence `json:"mismatch_evidence,omitempty"`
 }
