@@ -92,6 +92,11 @@ the exact diff; this file records why the project changed.
   counts without treating matching construction fixtures as a research result
   or admitting the generator image.
 
+- A read-only Go checker verifies retained CLRS scanner-bundle identities and
+  matches locked wheels to installed Python metadata. It reuses the original
+  scanner records without rerunning the scan or treating consistent metadata
+  as authenticated execution, licence approval or image admission.
+
 - A Go candidate-context command packages the pinned CLRS source, selected
   wheels and verified historical Promise evidence into a deterministic tar.
   Its read-only checker uses the same explicit inputs; offline-install

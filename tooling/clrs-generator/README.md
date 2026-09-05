@@ -238,6 +238,47 @@ contracted path. Context verification does not prove that an image builds,
 imports, contains installed licence material or obeys external runtime limits.
 Those remain the separate admission gates below.
 
+## Check a retained scanner bundle
+
+The read-only Go checker verifies a retained scanner bundle without starting
+Docker or scanning the image again. Supply the expected image manifest and raw
+config digests from a separately inspected image; the bundle cannot choose its
+own expected identity.
+
+```bash
+go -C tooling run ./cmd/20w experiment check-clrs-sbom-bundle \
+  --root .. --bundle /path/to/scanner-run/derived \
+  --image-manifest 'sha256:<64-lowercase-hex-characters>' \
+  --image-config 'sha256:<64-lowercase-hex-characters>' --json
+```
+
+Replace the digest placeholders before running. Relative bundle paths resolve
+against `--root`. The directory must contain exactly five regular files:
+`scanner-statement.intoto.json`, `image.spdx.json`, `supplied-binding.json`,
+`execution-record.json` and `derivation-receipt.json`. Links, extra files,
+ambiguous JSON, changed inputs and broken receipt cross-references fail.
+
+The original statement and predicate remain unchanged. The checker compares
+their exact bytes, validates recorded success and cleanup claims, and matches
+each locked wheel to its installed top-level Python metadata. Vendored or
+embedded package records cannot substitute for a required installed package.
+Extra top-level packages and the total inventory count remain visible.
+
+The JSON report is schema 1 and at most 64 KiB. Each SPDX document or statement
+is limited to 64 MiB, each execution or derivation receipt to 4 MiB, the supplied
+binding to 16 KiB, the whole bundle to 137 MiB and the inventory to 10,000
+packages. A 30-second context checks cancellation between bounded operations;
+it cannot interrupt a blocked filesystem operation or JSON decode. Exit codes
+are zero for consistent supplied evidence, one for validation or operational
+failure, and two for invalid arguments. `--json` also emits validation failures;
+argument errors do not emit a report.
+
+A passing check is not authenticated scanner execution. The retained statement
+has `subject: null`; the supplied bindings do not turn it into signed image
+provenance. The checker does not read the image, archive, scanner executable
+or command-log payloads, enforce container limits, approve licences or prove
+inventory completeness. Image admission remains blocked and `NO_RESULT`.
+
 ## Admission sequence
 
 The image stays blocked until one later, bounded change provides all of the
