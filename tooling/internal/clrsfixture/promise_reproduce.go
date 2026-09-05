@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	promiseProcedureVersion      = "promise-wheel-reproduction-v1"
+	promiseProcedureVersion      = "promise-wheel-reproduction-v2"
 	promiseMaximumReceiptBytes   = int64(64 << 10)
 	promiseMaximumRunOutputBytes = int64(1 << 20)
 	promiseMaximumOutputTarBytes = int64(128 << 10)

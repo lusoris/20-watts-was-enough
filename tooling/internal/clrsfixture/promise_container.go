@@ -51,6 +51,9 @@ func promiseContainerArguments(inputs promiseInputs, name, wheels string) []stri
 
 func promiseExecArguments(source GeneratorWheelSourceBuild, name, operation string, command []string) []string {
 	arguments := []string{"container", "exec", "--user=65532:65532"}
+	if operation == "copy-source" {
+		arguments = append(arguments, "--interactive")
+	}
 	if operation == "build" {
 		arguments = append(arguments, "--workdir", source.CandidateWorkingDirectory)
 	} else {
@@ -169,13 +172,13 @@ func runPromiseContainer(ctx context.Context, inputs promiseInputs, bundle *os.R
 	if _, err := log.execute(runContext, "start", []string{"container", "start", name}, nil, false); err != nil {
 		return receipt, err
 	}
-	if _, err := log.execute(runContext, "copy-source", []string{"container", "cp", "-a", "-", name + ":/work"}, inputs.sourceTar, false); err != nil {
+	if _, err := log.execute(runContext, "copy-source", promiseTransferArguments(inputs.manifest.SourceBuild, name, "copy-source"), inputs.sourceTar, false); err != nil {
 		return receipt, err
 	}
 	if err := executePromiseBuild(runContext, log, inputs.manifest.SourceBuild, name); err != nil {
 		return receipt, err
 	}
-	result, err = log.execute(runContext, "read-wheel", []string{"container", "cp", name + ":/output/.", "-"}, nil, false)
+	result, err = log.execute(runContext, "read-wheel", promiseTransferArguments(inputs.manifest.SourceBuild, name, "read-wheel"), nil, false)
 	if err != nil {
 		return receipt, err
 	}

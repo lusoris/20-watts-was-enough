@@ -216,7 +216,7 @@ func expectedPromiseArguments(entry promiseCommandEvidence, run promiseRunReceip
 	case "start":
 		return []string{"container", "start", run.Name}, nil
 	case "copy-source":
-		return []string{"container", "cp", "-a", "-", run.Name + ":/work"}, nil
+		return promiseTransferArguments(source, run.Name, "copy-source"), nil
 	case "bootstrap":
 		return promiseExecArguments(source, run.Name, "bootstrap", source.CandidateBootstrapCommand), nil
 	case "install":
@@ -224,7 +224,7 @@ func expectedPromiseArguments(entry promiseCommandEvidence, run promiseRunReceip
 	case "build":
 		return promiseExecArguments(source, run.Name, "build", source.CandidateBuildCommand), nil
 	case "read-wheel":
-		return []string{"container", "cp", run.Name + ":/output/.", "-"}, nil
+		return promiseTransferArguments(source, run.Name, "read-wheel"), nil
 	case "find-owned", "verify-absence":
 		return promiseListArguments(run.Name), nil
 	case "inspect-owner":

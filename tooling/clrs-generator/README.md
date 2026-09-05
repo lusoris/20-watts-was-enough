@@ -110,7 +110,15 @@ Before writing or invoking Docker, Go verifies all four input hashes and
 sizes, checks the source MIT text, and prepares a bounded canonical source
 archive. Each of two sequential runs gets a fresh container and private
 staging directory. Only the three read-only build wheels are host-mounted;
-Go streams the source archive into container storage. The requested container
+Go streams the source archive to a fixed Python materializer through direct
+`docker exec -i`. The materializer checks its exact size and SHA-256 before
+extraction into `/work`, then checks the fixed modes, timestamps and ownership.
+A fixed Python reader runs inside the same container, inspects at most two
+output directory entries, opens only the named regular wheel without following
+symlinks, and returns one bounded USTAR member. This accesses the running
+container's tmpfs; Docker's archive-copy API uses a
+[separate filesystem view](https://github.com/moby/moby/blob/6a43e3d5af/daemon/containerfs_linux.go#L26).
+The requested container
 configuration fixes UID/GID 65532, no network, a read-only root, one CPU,
 1 GiB memory without extra swap, 64 processes, and temporary filesystems of
 16 MiB at `/work`, 128 MiB at `/opt/build`, 1 MiB at `/output` and 16 MiB at
@@ -126,8 +134,8 @@ Each run retains at most 768 KiB of command output plus 64 KiB for cleanup;
 the encoded log is capped at 2 MiB. Private staged inputs are removed after
 the run. Failure leaves bounded diagnostics and no success receipt.
 
-A schema-1 `NO_RESULT` receipt requires two exact wheel hashes, independent
-embedded MIT checks and complete cleanup evidence. The read-only `--check`
+A schema-1 `NO_RESULT` receipt for procedure version 2 requires two exact wheel
+hashes, independent embedded MIT checks and complete cleanup evidence. The read-only `--check`
 path verifies both retained wheel files and command logs, reconstructs the
 fixed requested arguments, and rejects changed repository authority or
 procedure source files. It does not need Docker. The receipt records the
