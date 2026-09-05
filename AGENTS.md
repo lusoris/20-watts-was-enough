@@ -85,12 +85,21 @@ or consequential remote state.
 
 ## Working sequence
 
-1. Inspect the affected authority file and its reciprocal links.
+1. Inspect the affected authority file and its reciprocal links. Before commit,
+   inspect staged, unstaged and relevant untracked changes; tests execute the
+   working tree, not just the index.
 2. Make the smallest patch; do not rewrite nearby material for style alone.
-3. Run the most focused relevant test.
-4. Run `npm run check` before commit. Changes that affect the book source set
-   also require `npm run generate:book-pdf` and
-   `npm run validate:book-pdf`.
+3. Select local checks from the current `.github/ci-impact.json` ownership,
+   changed contracts and downstream consumers. Union mixed scopes; include
+   affected CLI, integration, fixture and generator checks, not just leaf tests.
+   Unknown, unsafe or shared-authority changes require the full local gate.
+4. Run the selected checks before commit. Run `npm run check` for the full
+   fallback and before marking a pull request ready, integrating into `main`,
+   merging or releasing. Changes to book source bytes or membership also
+   require `npm run generate:book-pdf` and `npm run validate:book-pdf`.
+   [Decision 0080](decisions/0080-impact-scope-local-validation.md) defines
+   scope selection and evidence reuse; complete integration and release gates
+   remain unchanged.
 5. Update `CHANGELOG.md` for a notable change. Add a decision record when an
    authority, architecture, policy, licensing, publication, or release rule
    changes durably.
@@ -108,8 +117,11 @@ npm run generate:book-pdf
 npm run validate:book-pdf
 ```
 
-Use targeted `test:workstation:*` scripts during development. The aggregate
-gate remains authoritative before a release or merge.
+Use targeted `test:workstation:*` scripts and affected Go package/consumer tests
+during development. Determine pending-change scope manually: `20w ci plan`
+compares committed base/head revisions, not staged, unstaged or untracked files.
+Its lane selection does not select individual Go packages. The aggregate gate
+remains authoritative at the integration and release boundaries above.
 
 ## File-specific instructions
 

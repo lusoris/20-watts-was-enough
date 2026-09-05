@@ -120,6 +120,63 @@ func TestRepositoryImpactMappingIsClosedAndRoutesRepresentativeChanges(t *testin
 	}
 }
 
+func TestCLRSShakedownLeavesRetainConsumersAndAuthorityFallback(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	const runner = "tooling/internal/clrsshakedown/run.go"
+	for _, test := range []struct {
+		name, mode, reason string
+		paths, lanes       []string
+	}{
+		{"run", "impact", "mapped-change-set", []string{runner}, []string{"container", "go", "release"}},
+		{"checker", "impact", "mapped-change-set", []string{"tooling/internal/clrsshakedown/check.go"}, []string{"container", "go", "release"}},
+		{"tests", "impact", "mapped-change-set", []string{"tooling/internal/clrsshakedown/run_test.go"}, []string{"container", "go", "release"}},
+		{"similar sibling", "full", "unmapped-path:tooling/internal/clrsshakedown-other/run.go", []string{"tooling/internal/clrsshakedown-other/run.go"}, []string{"full", "renderer"}},
+		{"fixture and CLI", "impact", "mapped-change-set", []string{runner, "tooling/internal/clrsfixture/tree.go", "tooling/internal/experimentcli/clrs_shakedown.go"}, []string{"container", "go", "release"}},
+		{"inventory parser", "full", "full-authority-changed", []string{runner, "scripts/book-source.mjs"}, []string{"full", "renderer"}},
+		{"strict JSON parser", "full", "selector-authority-changed", []string{runner, "tooling/internal/strictjson/validate.go"}, []string{"full", "renderer"}},
+		{"selector", "full", "selector-authority-changed", []string{runner, "tooling/internal/ciplan/plan.go"}, []string{"full", "renderer"}},
+		{"mapping authority", "full", "selector-authority-changed", []string{runner, ".github/ci-impact.json"}, []string{"full", "renderer"}},
+		{"public command", "full", "selector-authority-changed", []string{runner, "tooling/cmd/20w/main.go"}, []string{"full", "renderer"}},
+		{"unknown companion", "full", "unmapped-path:tooling/internal/unknown/new.go", []string{runner, "tooling/internal/unknown/new.go"}, []string{"full", "renderer"}},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			plan := selectTestPaths(t, root, testOptions(root), test.paths)
+			if plan.Mode != test.mode || plan.Reason != test.reason || !reflect.DeepEqual(plan.Lanes, test.lanes) {
+				t.Fatalf("runner scope %v produced %#v, want %s/%v/%s", test.paths, plan, test.mode, test.lanes, test.reason)
+			}
+		})
+	}
+}
+
+func TestCLRSSpecialistReadmeRetainsResearchConsumersAndAuthorityFallback(t *testing.T) {
+	t.Parallel()
+	root := filepath.Clean(filepath.Join("..", "..", ".."))
+	const readme = "tooling/clrs-specialist/README.md"
+	for _, test := range []struct {
+		name, mode, reason string
+		paths, lanes       []string
+	}{
+		{"readme", "impact", "mapped-change-set", []string{readme}, []string{"container", "go", "research", "site"}},
+		{"runtime stays narrow", "impact", "mapped-change-set", []string{"tooling/clrs-specialist/Dockerfile"}, []string{"container", "go"}},
+		{"non-Markdown sibling stays narrow", "impact", "mapped-change-set", []string{"tooling/clrs-specialist/README.md.old"}, []string{"container", "go"}},
+		{"similar sibling", "full", "unmapped-path:tooling/clrs-specialist-other/README.md", []string{"tooling/clrs-specialist-other/README.md"}, []string{"full", "renderer"}},
+		{"runner", "impact", "mapped-change-set", []string{readme, "tooling/internal/clrsshakedown/run.go"}, []string{"container", "go", "release", "research", "site"}},
+		{"publication inventory", "impact", "mapped-change-set", []string{readme, "scripts/book-support-sources.json"}, []string{"container", "go", "release", "research", "site"}},
+		{"inventory parser", "full", "full-authority-changed", []string{readme, "scripts/book-source.mjs"}, []string{"full", "renderer"}},
+		{"shared parser", "full", "selector-authority-changed", []string{readme, "tooling/internal/strictjson/validate.go"}, []string{"full", "renderer"}},
+		{"mapping authority", "full", "selector-authority-changed", []string{readme, ".github/ci-impact.json"}, []string{"full", "renderer"}},
+		{"unknown companion", "full", "unmapped-path:tooling/internal/unknown/new.go", []string{readme, "tooling/internal/unknown/new.go"}, []string{"full", "renderer"}},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			plan := selectTestPaths(t, root, testOptions(root), test.paths)
+			if plan.Mode != test.mode || plan.Reason != test.reason || !reflect.DeepEqual(plan.Lanes, test.lanes) {
+				t.Fatalf("specialist README scope %v produced %#v, want %s/%v/%s", test.paths, plan, test.mode, test.lanes, test.reason)
+			}
+		})
+	}
+}
+
 func TestBookSupportInventoryRetainsPublicationAndProtectedAuthorityLanes(t *testing.T) {
 	t.Parallel()
 	root := filepath.Clean(filepath.Join("..", "..", ".."))
@@ -131,6 +188,7 @@ func TestBookSupportInventoryRetainsPublicationAndProtectedAuthorityLanes(t *tes
 		{"inventory only", "", "impact", "mapped-change-set", []string{"release", "site"}},
 		{"context source", "tooling/internal/clrscontext/context.go", "impact", "mapped-change-set", []string{"container", "go", "release", "site"}},
 		{"fixture source", "tooling/internal/clrsfixture/generation_run.go", "impact", "mapped-change-set", []string{"container", "go", "release", "site"}},
+		{"shakedown runner", "tooling/internal/clrsshakedown/run.go", "impact", "mapped-change-set", []string{"container", "go", "release", "site"}},
 		{"experiment CLI source", "tooling/internal/experimentcli/clrs_generation.go", "impact", "mapped-change-set", []string{"container", "go", "release", "site"}},
 		{"inventory parser", "scripts/book-source.mjs", "full", "full-authority-changed", []string{"full", "renderer"}},
 		{"strict JSON parser", "scripts/lib/strict-json.mjs", "full", "full-authority-changed", []string{"full", "renderer"}},

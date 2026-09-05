@@ -1,4 +1,5 @@
 import { access, open } from "node:fs/promises";
+import { constants as osConstants } from "node:os";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
 
@@ -8,6 +9,11 @@ const pdfPrintAttemptLimit = 2;
 const maximumDevtoolsActivePortBytes = 512;
 const maximumBrowserWaitTimeoutMs = 300_000;
 const localFetchAttemptTimeoutMs = 2_000;
+const localFetchDiagnosticCodes = Object.freeze([
+  "ECONNREFUSED", "ECONNRESET", "EHOSTUNREACH", "ENETUNREACH", "ETIMEDOUT",
+  "EAI_AGAIN", "ENOTFOUND", "UND_ERR_CONNECT_TIMEOUT", "UND_ERR_HEADERS_TIMEOUT",
+  "UND_ERR_SOCKET", "UND_ERR_ABORTED",
+]);
 
 const defaultClock = Object.freeze({
   now: () => performance.now(),
@@ -159,34 +165,74 @@ export async function firstExistingChromium(paths = chromiumCandidates) {
   throw new Error("Chrome, Chromium, or Edge is required for rendered browser verification.");
 }
 
+function throwIfRequiredProcessExited(process) {
+  if (process?.signalCode !== null && process?.signalCode !== undefined) {
+    const signal = Object.hasOwn(osConstants.signals, process.signalCode)
+      ? process.signalCode : "unknown";
+    throw new Error(`Required process exited with signal ${signal}.`);
+  }
+  if (process?.exitCode !== null && process?.exitCode !== undefined) {
+    const code = Number.isSafeInteger(process.exitCode) ? process.exitCode : "unknown";
+    throw new Error(`Required process exited with code ${code}.`);
+  }
+}
+
+function localUrlDiagnosticLabel(url) {
+  try {
+    const endpoint = new URL(url);
+    if (endpoint.protocol === "http:" || endpoint.protocol === "https:") {
+      return `${endpoint.origin}${endpoint.pathname}`.slice(0, 240);
+    }
+  } catch {
+    // Invalid or non-HTTP URLs may contain credentials or inline body data.
+  }
+  return "local URL";
+}
+
+function localFetchFailure(error) {
+  const code = error?.cause?.code ?? error?.code;
+  if (localFetchDiagnosticCodes.includes(code)) return `fetch failed (${code})`;
+  if (error?.name === "TimeoutError") return "fetch timed out";
+  if (error?.name === "AbortError") return "fetch aborted";
+  if (error instanceof TypeError) return "fetch failed (TypeError)";
+  return "fetch failed (unclassified error)";
+}
+
 export async function waitForUrl(url, process, timeoutMs = 60_000, signal) {
   const timeout = boundedMilliseconds(
     timeoutMs, "Local URL wait timeout", maximumBrowserWaitTimeoutMs,
   );
   const deadline = Date.now() + timeout;
+  let lastFailure = "no completed HTTP attempt";
   while (Date.now() < deadline) {
     throwIfAborted(signal);
-    if (process?.exitCode !== null && process?.exitCode !== undefined) {
-      throw new Error(`Required process exited with code ${process.exitCode}.`);
-    }
+    throwIfRequiredProcessExited(process);
+    let response;
     try {
       const remaining = Math.max(1, deadline - Date.now());
       const attemptSignal = AbortSignal.timeout(
         Math.min(localFetchAttemptTimeoutMs, remaining),
       );
-      const response = await fetch(url, {
+      response = await fetch(url, {
         signal: signal ? AbortSignal.any([signal, attemptSignal]) : attemptSignal,
       });
       if (response.ok) return response;
+      lastFailure = Number.isSafeInteger(response.status) && response.status >= 100 && response.status <= 599
+        ? `HTTP ${response.status}` : "non-success HTTP response";
       await response.body?.cancel();
-    } catch {
+    } catch (error) {
       throwIfAborted(signal);
-      // The process or HTTP listener is still starting.
+      lastFailure = response
+        ? `${lastFailure}; response cleanup failed` : localFetchFailure(error);
     }
+    throwIfAborted(signal);
+    throwIfRequiredProcessExited(process);
     const remaining = deadline - Date.now();
     if (remaining > 0) await waitWithSignal(Math.min(350, remaining), signal);
   }
-  throw new Error(`Timed out waiting for ${url}.`);
+  throwIfAborted(signal);
+  throwIfRequiredProcessExited(process);
+  throw new Error(`Timed out waiting for ${localUrlDiagnosticLabel(url)}. Last attempt: ${lastFailure}.`);
 }
 
 export async function waitForDevtoolsPort(
