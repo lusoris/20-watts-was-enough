@@ -345,6 +345,16 @@
       ]
     },
     {
+      "id": "script-publication-support-inventory",
+      "paths": [
+        "scripts/book-support-sources.json"
+      ],
+      "lanes": [
+        "release",
+        "site"
+      ]
+    },
+    {
       "id": "script-release-tests",
       "paths": [
         "scripts/lib/chromium-cdp.test.mjs"

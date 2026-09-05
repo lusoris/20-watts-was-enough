@@ -3,11 +3,50 @@ import { readdir } from "node:fs/promises";
 import path from "node:path";
 
 import { readStableOpenedFile } from "./lib/opened-file.mjs";
+import { parseStrictJson } from "./lib/strict-json.mjs";
 
 export const bookPdfName = "20-watts-was-enough-full-concept-book.pdf";
 const maximumBookSourceBytes = 256 * 1024 * 1024;
 const maximumMarkdownInventoryDepth = 16;
 const maximumMarkdownInventoryEntries = 8_192;
+const supportInventoryPath = "scripts/book-support-sources.json";
+const maximumSupportInventoryBytes = 32 * 1024;
+const maximumSupportPaths = 256;
+const maximumSupportPathBytes = 512;
+const supportPathPattern = /^tooling\/internal\/(?:clrscontext|clrsfixture|experimentcli)\/[a-z][a-z0-9_]*\.go$/u;
+
+async function readSupportInventory(projectRoot) {
+  const bytes = await readStableOpenedFile(path.join(projectRoot, supportInventoryPath), {
+    label: supportInventoryPath,
+    containedBy: projectRoot,
+    maximumBytes: maximumSupportInventoryBytes,
+  });
+  const inventory = parseStrictJson(bytes, {
+    label: supportInventoryPath,
+    maximumDepth: 3,
+    maximumContainerEntries: maximumSupportPaths,
+  });
+  if (
+    inventory === null || typeof inventory !== "object" || Array.isArray(inventory)
+    || Object.keys(inventory).sort().join(",") !== "paths,schema_version"
+    || inventory.schema_version !== 1 || !Array.isArray(inventory.paths)
+    || inventory.paths.length < 1 || inventory.paths.length > maximumSupportPaths
+  ) {
+    throw new Error(`Invalid ${supportInventoryPath}: expected schema 1 and 1–256 paths.`);
+  }
+  let previous = "";
+  for (const source of inventory.paths) {
+    if (
+      typeof source !== "string" || Buffer.byteLength(source) > maximumSupportPathBytes
+      || !supportPathPattern.test(source) || source.endsWith("_test.go")
+      || source <= previous
+    ) {
+      throw new Error(`Invalid ${supportInventoryPath}: paths must be bounded, allowed, sorted and unique.`);
+    }
+    previous = source;
+  }
+  return { bytes, paths: inventory.paths };
+}
 
 function relativeSourcePaths(projectRoot, files) {
   return files.map((file) => path.relative(projectRoot, file).replaceAll("\\", "/"));
@@ -81,6 +120,7 @@ const bookSupportSourcePaths = [
   "public/og-v2.jpg",
   "research/field-coverage.md",
   "scripts/book-source.mjs",
+  supportInventoryPath,
   "scripts/generate-book-pdf.mjs",
   "scripts/install-locked-npm.mjs",
   "scripts/lib/atomic-file-pair.mjs",
@@ -113,46 +153,10 @@ const bookSupportSourcePaths = [
   "tooling/go.sum",
   "tooling/internal/buildinfo/buildinfo.go",
   "tooling/internal/ciplancli/cli.go",
-  "tooling/internal/clrscontext/context.go",
-  "tooling/internal/clrscontext/dockerfile.go",
-  "tooling/internal/clrscontext/files.go",
-  "tooling/internal/clrscontext/publish.go",
-  "tooling/internal/clrscontext/source.go",
-  "tooling/internal/clrscontext/tar.go",
-  "tooling/internal/clrsfixture/compare.go",
-  "tooling/internal/clrsfixture/compare_files.go",
-  "tooling/internal/clrsfixture/sbom.go",
-  "tooling/internal/clrsfixture/sbom_execution.go",
-  "tooling/internal/clrsfixture/sbom_files.go",
-  "tooling/internal/clrsfixture/sbom_inventory.go",
-  "tooling/internal/clrsfixture/sbom_receipt.go",
-  "tooling/internal/clrsfixture/invocation.go",
-  "tooling/internal/clrsfixture/invocation_payload.go",
-  "tooling/internal/clrsfixture/generation_run.go",
-  "tooling/internal/clrsfixture/generation_run_command.go",
-  "tooling/internal/clrsfixture/generation_run_container.go",
-  "tooling/internal/clrsfixture/generation_run_files.go",
-  "tooling/internal/clrsfixture/generation_run_image.go",
-  "tooling/internal/clrsfixture/generation_run_inputs.go",
-  "tooling/internal/clrsfixture/generation_run_inspection.go",
-  "tooling/internal/clrsfixture/generation_run_output.go",
-  "tooling/internal/clrsfixture/generation_run_payload.go",
-  "tooling/internal/clrsfixture/generation_run_publish.go",
-  "tooling/internal/clrsfixture/generation_run_receipt.go",
   "tooling/internal/docscheck/check.go",
   "tooling/internal/docscheck/mermaid-duplicate-baseline.json",
   "tooling/internal/docscheck/mermaid.go",
   "tooling/internal/experiment/catalog.go",
-  "tooling/internal/experimentcli/catalog.go",
-  "tooling/internal/experimentcli/cli.go",
-  "tooling/internal/experimentcli/clrs_compare.go",
-  "tooling/internal/experimentcli/clrs_context.go",
-  "tooling/internal/experimentcli/clrs_generation.go",
-  "tooling/internal/experimentcli/clrs_invocation.go",
-  "tooling/internal/experimentcli/clrs_promise.go",
-  "tooling/internal/experimentcli/clrs_sbom.go",
-  "tooling/internal/experimentcli/clrs_wheelhouse.go",
-  "tooling/internal/experimentcli/node_image.go",
   "tooling/internal/githubapi/client.go",
   "tooling/internal/githublabels/labels.go",
   "tooling/internal/nodeimage/package.go",
@@ -189,7 +193,8 @@ const bookSupportSourcePaths = [
   "vite.pages.config.ts",
 ];
 
-export async function bookSourceFiles(projectRoot) {
+async function bookSourceSnapshot(projectRoot) {
+  const inventory = await readSupportInventory(projectRoot);
   const conceptFiles = (await markdownFiles(path.join(projectRoot, "concept")))
     .filter((file) => path.basename(file) !== "README.md");
   const mathFiles = (await markdownFiles(path.join(projectRoot, "math")))
@@ -201,33 +206,45 @@ export async function bookSourceFiles(projectRoot) {
     ...await markdownFiles(path.join(projectRoot, "experiments", "candidates")),
     ...await markdownFiles(path.join(projectRoot, "experiments", "fixtures")),
   ];
-  const supportFiles = bookSupportSourcePaths.map((file) => path.join(projectRoot, file));
+  const supportFiles = [...bookSupportSourcePaths, ...inventory.paths]
+    .map((file) => path.join(projectRoot, file));
   const plotFiles = await readdir(path.join(projectRoot, "public", "plots"), {
     withFileTypes: true,
   });
-  return [...supportFiles, ...conceptFiles, ...mathFiles, ...evidenceAuthorityFiles, ...plotFiles
+  const files = [...supportFiles, ...conceptFiles, ...mathFiles, ...evidenceAuthorityFiles, ...plotFiles
     .filter((entry) => entry.isFile())
     .map((entry) => path.join(projectRoot, "public", "plots", entry.name))]
     .sort((left, right) => left.localeCompare(right));
+  if (new Set(files).size !== files.length) {
+    throw new Error("Book source inventory contains colliding paths.");
+  }
+  return { files, inventory };
+}
+
+export async function bookSourceFiles(projectRoot) {
+  return (await bookSourceSnapshot(projectRoot)).files;
 }
 
 export async function bookSourceDigest(projectRoot) {
-  const files = await bookSourceFiles(projectRoot);
+  const { files, inventory } = await bookSourceSnapshot(projectRoot);
   const relativeFiles = relativeSourcePaths(projectRoot, files);
   const hash = createHash("sha256");
   for (const [index, file] of files.entries()) {
     const relative = relativeFiles[index];
     hash.update(relative);
     hash.update("\0");
-    hash.update(await readStableOpenedFile(file, {
+    const bytes = relative === supportInventoryPath ? inventory.bytes : await readStableOpenedFile(file, {
       label: `book source ${relative}`,
       containedBy: projectRoot,
       maximumBytes: maximumBookSourceBytes,
-    }));
+    });
+    hash.update(bytes);
     hash.update("\0");
   }
-  const finalFiles = relativeSourcePaths(projectRoot, await bookSourceFiles(projectRoot));
-  if (JSON.stringify(finalFiles) !== JSON.stringify(relativeFiles)) {
+  const final = await bookSourceSnapshot(projectRoot);
+  const finalFiles = relativeSourcePaths(projectRoot, final.files);
+  if (!inventory.bytes.equals(final.inventory.bytes)
+    || JSON.stringify(finalFiles) !== JSON.stringify(relativeFiles)) {
     throw new Error("Book source inventory changed while its digest was computed.");
   }
   return {
