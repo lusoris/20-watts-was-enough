@@ -39,9 +39,6 @@ flowchart TD
     V --> I
 ```
 
-Editable source:
-[versioned-observation-contract.mmd](../../assets/diagrams/versioned-observation-contract.mmd).
-
 ## Mathematical boundary
 
 Let latent target parameters be $\theta$, nuisance state be $\eta$, raw

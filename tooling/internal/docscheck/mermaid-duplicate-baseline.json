@@ -49,19 +49,6 @@
       ]
     },
     {
-      "sha256": "2605941d01fd8f70455b42ca1a399c7f374e9b0bde7f1bd813539dad43a58267",
-      "occurrences": [
-        {
-          "path": "assets/diagrams/versioned-observation-contract.mmd",
-          "count": 1
-        },
-        {
-          "path": "experiments/candidates/014-versioned-observation-contract.md",
-          "count": 1
-        }
-      ]
-    },
-    {
       "sha256": "30e317d2b1ceb81ba2dd4917a582db9df0309c3d2bbe490155ef088aa4087205",
       "occurrences": [
         {

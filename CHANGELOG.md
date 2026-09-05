@@ -311,6 +311,9 @@ the exact diff; this file records why the project changed.
 
 ### Changed
 
+- Candidate 014's inline observation-chain diagram is now its sole editable
+  owner; the unused standalone copy and its exact-duplicate allowance are gone
+  without changing either candidate diagram or the experiment contract.
 - Workflow-policy checks now parse dynamic npm command prefixes with bounded,
   linear scans instead of one backtracking-prone expression. Long assignment
   and wrapper-flag prefixes remain covered, while variable arguments outside

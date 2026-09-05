@@ -68,9 +68,6 @@ scientific evidence.
 - `diagrams/deficit-capability-routing.mmd` separates upward unmet demand,
   downward scarcity context, local feasibility, allocation, and outcome
   calibration for Candidate 013.
-- `diagrams/versioned-observation-contract.mmd` preserves the chain from latent
-  source through response, selection, association, inference, follow-up, and
-  outcome-based revision for Candidate 014.
 - `diagrams/versioned-repairable-conventions.mmd` separates typed literal
   content, pragmatic hypotheses, recipient uptake, bounded repair, task outcome,
   convention tests, publication, expiry, and rollback for Candidate 015.
