@@ -1,9 +1,13 @@
-import { access } from "node:fs/promises";
+import { access, open } from "node:fs/promises";
+import path from "node:path";
 import { performance } from "node:perf_hooks";
 
 const maximumPdfPrintTimeoutMs = 300_000;
 const maximumPdfPrintRetryDelayMs = 10_000;
 const pdfPrintAttemptLimit = 2;
+const maximumDevtoolsActivePortBytes = 512;
+const maximumBrowserWaitTimeoutMs = 300_000;
+const localFetchAttemptTimeoutMs = 2_000;
 
 const defaultClock = Object.freeze({
   now: () => performance.now(),
@@ -43,6 +47,30 @@ function boundedMilliseconds(value, label, maximum) {
     throw new Error(`${label} must be an integer from 1 through ${maximum} milliseconds.`);
   }
   return value;
+}
+
+function abortError(signal) {
+  return signal?.reason instanceof Error
+    ? signal.reason
+    : new Error("Browser operation was aborted.");
+}
+
+function throwIfAborted(signal) {
+  if (signal?.aborted) throw abortError(signal);
+}
+
+function waitWithSignal(milliseconds, signal) {
+  throwIfAborted(signal);
+  return new Promise((resolve, reject) => {
+    const finish = (callback, value) => {
+      clearTimeout(timeout);
+      signal?.removeEventListener("abort", onAbort);
+      callback(value);
+    };
+    const onAbort = () => finish(reject, abortError(signal));
+    const timeout = setTimeout(() => finish(resolve), milliseconds);
+    signal?.addEventListener("abort", onAbort, { once: true });
+  });
 }
 
 function retryablePdfPrintFailure(error) {
@@ -131,26 +159,96 @@ export async function firstExistingChromium(paths = chromiumCandidates) {
   throw new Error("Chrome, Chromium, or Edge is required for rendered browser verification.");
 }
 
-export async function waitForUrl(url, process, timeoutMs = 60_000) {
-  const deadline = Date.now() + timeoutMs;
+export async function waitForUrl(url, process, timeoutMs = 60_000, signal) {
+  const timeout = boundedMilliseconds(
+    timeoutMs, "Local URL wait timeout", maximumBrowserWaitTimeoutMs,
+  );
+  const deadline = Date.now() + timeout;
   while (Date.now() < deadline) {
+    throwIfAborted(signal);
     if (process?.exitCode !== null && process?.exitCode !== undefined) {
       throw new Error(`Required process exited with code ${process.exitCode}.`);
     }
     try {
-      const response = await fetch(url);
+      const remaining = Math.max(1, deadline - Date.now());
+      const attemptSignal = AbortSignal.timeout(
+        Math.min(localFetchAttemptTimeoutMs, remaining),
+      );
+      const response = await fetch(url, {
+        signal: signal ? AbortSignal.any([signal, attemptSignal]) : attemptSignal,
+      });
       if (response.ok) return response;
+      await response.body?.cancel();
     } catch {
+      throwIfAborted(signal);
       // The process or HTTP listener is still starting.
     }
-    await new Promise((resolve) => setTimeout(resolve, 350));
+    const remaining = deadline - Date.now();
+    if (remaining > 0) await waitWithSignal(Math.min(350, remaining), signal);
   }
   throw new Error(`Timed out waiting for ${url}.`);
 }
 
-export async function devtoolsPage(browserProcess, debugPort) {
+export async function waitForDevtoolsPort(
+  profile,
+  browserProcess,
+  { signal, timeoutMs = 60_000 } = {},
+) {
+  if (typeof profile !== "string" || !path.isAbsolute(profile)) {
+    throw new Error("Chrome profile path must be absolute.");
+  }
+  const timeout = boundedMilliseconds(
+    timeoutMs, "DevTools port wait timeout", maximumBrowserWaitTimeoutMs,
+  );
+  const deadline = Date.now() + timeout;
+  const activePortPath = path.join(profile, "DevToolsActivePort");
+  while (Date.now() < deadline) {
+    throwIfAborted(signal);
+    if (processStopped(browserProcess)) {
+      throw new Error(`Required browser exited with code ${browserProcess?.exitCode}.`);
+    }
+    let handle;
+    try {
+      handle = await open(activePortPath, "r");
+      const information = await handle.stat();
+      if (!information.isFile() || information.size > maximumDevtoolsActivePortBytes) {
+        throw new Error("Chrome DevTools active-port file is invalid or oversized.");
+      }
+      const body = Buffer.alloc(maximumDevtoolsActivePortBytes + 1);
+      const { bytesRead } = await handle.read(body, 0, body.length, 0);
+      if (bytesRead > maximumDevtoolsActivePortBytes) {
+        throw new Error("Chrome DevTools active-port file exceeds its byte limit.");
+      }
+      const lines = body.subarray(0, bytesRead).toString("utf8").trimEnd().split(/\r?\n/u);
+      const port = Number.parseInt(lines[0] ?? "", 10);
+      if (
+        lines.length === 2
+        && /^(?:[1-9]\d{0,4})$/u.test(lines[0])
+        && port <= 65_535
+        && /^\/devtools\/browser\/[A-Za-z0-9-]{1,128}$/u.test(lines[1])
+      ) return port;
+    } catch (error) {
+      if (error?.code !== "ENOENT" && !String(error?.message).includes("active-port file")) {
+        throw error;
+      }
+      if (String(error?.message).includes("oversized") || String(error?.message).includes("byte limit")) {
+        throw error;
+      }
+    } finally {
+      await handle?.close();
+    }
+    const remaining = deadline - Date.now();
+    if (remaining > 0) await waitWithSignal(Math.min(100, remaining), signal);
+  }
+  throw new Error("Timed out waiting for Chrome to publish its DevTools port.");
+}
+
+export async function devtoolsPage(browserProcess, debugPort, { signal } = {}) {
+  if (!Number.isSafeInteger(debugPort) || debugPort < 1 || debugPort > 65_535) {
+    throw new Error("Chrome DevTools port must be an integer from 1 through 65535.");
+  }
   const endpoint = `http://127.0.0.1:${debugPort}/json/list`;
-  const response = await waitForUrl(endpoint, browserProcess);
+  const response = await waitForUrl(endpoint, browserProcess, 60_000, signal);
   const targets = await response.json();
   const page = targets.find((target) => target.type === "page");
   if (!page?.webSocketDebuggerUrl) {
@@ -159,17 +257,92 @@ export async function devtoolsPage(browserProcess, debugPort) {
   return page.webSocketDebuggerUrl;
 }
 
-export async function connectCdp(webSocketUrl) {
-  const socket = new WebSocket(webSocketUrl);
+export async function devtoolsPageFromProfile(browserProcess, profile, options = {}) {
+  const port = await waitForDevtoolsPort(profile, browserProcess, options);
+  return devtoolsPage(browserProcess, port, options);
+}
+
+export async function connectCdp(webSocketUrl, {
+  commandTimeoutMs = 240_000,
+  openTimeoutMs = 30_000,
+  signal,
+  webSocketFactory = (url) => new WebSocket(url),
+} = {}) {
+  const openTimeout = boundedMilliseconds(
+    openTimeoutMs, "Chrome DevTools connection timeout", maximumBrowserWaitTimeoutMs,
+  );
+  const commandTimeout = boundedMilliseconds(
+    commandTimeoutMs, "Chrome DevTools command timeout", maximumBrowserWaitTimeoutMs,
+  );
+  throwIfAborted(signal);
+  const socket = webSocketFactory(webSocketUrl);
   await new Promise((resolve, reject) => {
-    socket.addEventListener("open", resolve, { once: true });
-    socket.addEventListener("error", reject, { once: true });
+    const finish = (callback, value) => {
+      clearTimeout(timeout);
+      socket.removeEventListener("open", onOpen);
+      socket.removeEventListener("error", onError);
+      signal?.removeEventListener("abort", onAbort);
+      callback(value);
+    };
+    const onOpen = () => finish(resolve);
+    const onError = (event) => finish(
+      reject,
+      event?.error instanceof Error ? event.error : new Error("Chrome DevTools connection failed."),
+    );
+    const onAbort = () => {
+      try { socket.close(); } catch { /* The pending connection is already unusable. */ }
+      finish(reject, abortError(signal));
+    };
+    const timeout = setTimeout(() => {
+      try { socket.close(); } catch { /* The pending connection is already unusable. */ }
+      finish(reject, new Error("Chrome DevTools connection timed out."));
+    }, openTimeout);
+    socket.addEventListener("open", onOpen, { once: true });
+    socket.addEventListener("error", onError, { once: true });
+    signal?.addEventListener("abort", onAbort, { once: true });
   });
 
   let nextId = 0;
   const pending = new Map();
+  let terminalError = null;
+  const rejectPending = (error) => {
+    for (const { reject, timeout } of pending.values()) {
+      clearTimeout(timeout);
+      reject(error);
+    }
+    pending.clear();
+  };
+  const markTerminal = (error) => {
+    if (terminalError === null) terminalError = error;
+    rejectPending(terminalError);
+  };
+  const onAbort = () => {
+    markTerminal(abortError(signal));
+    try { socket.close(); } catch { /* The connection is already closing. */ }
+  };
+  const onClose = () => {
+    signal?.removeEventListener("abort", onAbort);
+    markTerminal(new Error("Chrome DevTools connection closed before a response arrived."));
+  };
+  const onSocketError = (event) => {
+    markTerminal(
+      event?.error instanceof Error
+        ? event.error
+        : new Error("Chrome DevTools connection failed after opening."),
+    );
+  };
+  signal?.addEventListener("abort", onAbort, { once: true });
+  socket.addEventListener("close", onClose, { once: true });
+  socket.addEventListener("error", onSocketError);
   socket.addEventListener("message", (event) => {
-    const message = JSON.parse(String(event.data));
+    let message;
+    try {
+      message = JSON.parse(String(event.data));
+    } catch {
+      markTerminal(new Error("Chrome DevTools returned an invalid JSON message."));
+      try { socket.close(); } catch { /* The connection is already closing. */ }
+      return;
+    }
     if (!message.id || !pending.has(message.id)) return;
     const { method, resolve, reject, timeout } = pending.get(message.id);
     clearTimeout(timeout);
@@ -178,19 +351,50 @@ export async function connectCdp(webSocketUrl) {
     else resolve(message.result);
   });
 
-  function send(method, params = {}, timeoutMs = 240_000) {
+  function send(method, params = {}, timeoutMs = commandTimeout) {
+    throwIfAborted(signal);
+    if (terminalError !== null) throw terminalError;
+    if (socket.readyState !== 1) {
+      throw new Error("Chrome DevTools connection is not open.");
+    }
+    const timeoutBound = boundedMilliseconds(
+      timeoutMs, "Chrome DevTools command timeout", maximumBrowserWaitTimeoutMs,
+    );
     return new Promise((resolve, reject) => {
       const id = ++nextId;
       const timeout = setTimeout(() => {
         pending.delete(id);
         reject(new Error(`Chrome DevTools command timed out: ${method}`));
-      }, timeoutMs);
+      }, timeoutBound);
       pending.set(id, { method, resolve, reject, timeout });
-      socket.send(JSON.stringify({ id, method, params }));
+      try {
+        socket.send(JSON.stringify({ id, method, params }));
+      } catch (error) {
+        clearTimeout(timeout);
+        pending.delete(id);
+        reject(error);
+      }
     });
   }
 
   return { socket, send };
+}
+
+export async function settleCleanupSteps(steps) {
+  if (!Array.isArray(steps) || steps.some((step) => typeof step !== "function")) {
+    throw new Error("Browser cleanup requires an ordered function list.");
+  }
+  const failures = [];
+  for (const step of steps) {
+    try {
+      await step();
+    } catch (error) {
+      failures.push(error);
+    }
+  }
+  if (failures.length > 0) {
+    throw new AggregateError(failures, "One or more browser cleanup steps failed.");
+  }
 }
 
 function processStopped(process) {

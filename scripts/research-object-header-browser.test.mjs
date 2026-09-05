@@ -1,18 +1,18 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { readFile, mkdtemp, rm } from "node:fs/promises";
-import { createServer as createTcpServer } from "node:net";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { createServer as createViteServer } from "vite";
 
 import {
   connectCdp,
-  devtoolsPage,
+  devtoolsPageFromProfile,
   firstExistingChromium,
+  settleCleanupSteps,
   stopProcess,
-  waitForUrl,
 } from "./lib/chromium-cdp.mjs";
 import { portalSourceDocuments } from "./lib/portal-documents.mjs";
 
@@ -27,20 +27,6 @@ const launchpadDocument = portalSourceDocuments(repositoryRoot).find(
 );
 assert.ok(launchpadDocument);
 const launchpadWords = launchpadDocument.words;
-
-async function reserveLocalPort() {
-  const server = createTcpServer();
-  await new Promise((resolve, reject) => {
-    server.once("error", reject);
-    server.listen(0, "127.0.0.1", resolve);
-  });
-  const address = server.address();
-  assert.equal(typeof address, "object");
-  await new Promise((resolve, reject) => server.close((error) => (
-    error ? reject(error) : resolve()
-  )));
-  return address.port;
-}
 
 async function navigate(cdp, url) {
   const result = await cdp.send("Page.navigate", { url });
@@ -360,37 +346,30 @@ async function assertHydratedBook(cdp, origin) {
 
 test("hydrated research objects and the book preserve the static Pages identity", {
   timeout: 120_000,
-}, async () => {
+}, async (t) => {
   const browser = await firstExistingChromium();
-  const vitePort = await reserveLocalPort();
-  const debugPort = await reserveLocalPort();
   const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "20w-object-parity-"));
   const profile = path.join(temporaryRoot, "chrome-profile");
-  let viteProcess;
+  const previousSourceRevision = process.env.GITHUB_SHA;
+  const previousPagesBasePath = process.env.PAGES_BASE_PATH;
+  process.env.GITHUB_SHA = sourceRevision;
+  process.env.PAGES_BASE_PATH = pagesBasePath;
+  let vite;
   let browserProcess;
   let cdp;
 
   try {
-    viteProcess = spawn(process.execPath, [
-      path.join(repositoryRoot, "node_modules", "vite", "bin", "vite.js"),
-      "--config", path.join(repositoryRoot, "vite.pages.config.ts"),
-      "--host", "127.0.0.1",
-      "--port", String(vitePort),
-      "--strictPort",
-    ], {
-      cwd: repositoryRoot,
-      env: {
-        ...process.env,
-        GITHUB_SHA: sourceRevision,
-        PAGES_BASE_PATH: pagesBasePath,
-        TMPDIR: temporaryRoot,
-        VITE_CACHE_DIR: path.join(temporaryRoot, "vite-cache"),
-      },
-      stdio: "ignore",
-      windowsHide: true,
+    vite = await createViteServer({
+      configFile: path.join(repositoryRoot, "vite.pages.config.ts"),
+      configLoader: "runner",
+      cacheDir: path.join(temporaryRoot, "vite-cache"),
+      logLevel: "silent",
+      server: { host: "127.0.0.1", port: 0 },
     });
-    const origin = `http://127.0.0.1:${vitePort}`;
-    await waitForUrl(`${origin}${pagesBasePath}`, viteProcess);
+    await vite.listen();
+    const address = vite.httpServer?.address();
+    assert.equal(typeof address, "object");
+    const origin = `http://127.0.0.1:${address.port}`;
 
     browserProcess = spawn(browser, [
       "--headless=new",
@@ -403,11 +382,14 @@ test("hydrated research objects and the book preserve the static Pages identity"
       "--no-first-run",
       "--no-default-browser-check",
       "--window-size=375,844",
-      `--remote-debugging-port=${debugPort}`,
+      "--remote-debugging-port=0",
       `--user-data-dir=${profile}`,
       "about:blank",
     ], { stdio: "ignore", windowsHide: true });
-    cdp = await connectCdp(await devtoolsPage(browserProcess, debugPort));
+    cdp = await connectCdp(
+      await devtoolsPageFromProfile(browserProcess, profile, { signal: t.signal }),
+      { signal: t.signal },
+    );
     await cdp.send("Page.enable");
     await cdp.send("Runtime.enable");
     await cdp.send("Emulation.setDeviceMetricsOverride", {
@@ -421,9 +403,17 @@ test("hydrated research objects and the book preserve the static Pages identity"
     await assertDenseResearchObjectReflow(cdp, origin);
     await assertHydratedBook(cdp, origin);
   } finally {
-    cdp?.socket.close();
-    await stopProcess(browserProcess);
-    await stopProcess(viteProcess);
-    await rm(temporaryRoot, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+    await settleCleanupSteps([
+      async () => cdp?.socket.close(),
+      async () => stopProcess(browserProcess),
+      async () => vite?.close(),
+      async () => rm(temporaryRoot, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 }),
+      async () => {
+        if (previousSourceRevision === undefined) delete process.env.GITHUB_SHA;
+        else process.env.GITHUB_SHA = previousSourceRevision;
+        if (previousPagesBasePath === undefined) delete process.env.PAGES_BASE_PATH;
+        else process.env.PAGES_BASE_PATH = previousPagesBasePath;
+      },
+    ]);
   }
 });

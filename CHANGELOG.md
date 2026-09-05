@@ -7,6 +7,15 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Decision 0072 runs the three independent site-browser contracts in three
+  process-isolated Node workers instead of one serial process. Every assertion,
+  viewport, route, source identity and deadline stays exact. Vite now binds all
+  three ephemeral listeners in-process with private caches and in-memory config
+  loading; Chrome owns each ephemeral debug port until shutdown. Test
+  cancellation reaches HTTP and DevTools waits, and ordered cleanup settles
+  every browser, server and profile step. The 301-second group from full-plan
+  run 33950189857 is the comparison baseline; issue 7 remains open until a
+  complete live gate proves the three-to-five-minute target.
 - PDF semantic baseline tests and their dedicated audit helper now select the
   release lane rather than expanding to full CI plus renderer reproducibility.
   Production PDF finalisation, the manual Poppler audit, unknown scripts and
