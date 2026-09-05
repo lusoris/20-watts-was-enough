@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	planSchema       = 1
+	planSchema       = 2
 	fullLane         = "full"
 	maximumPathBytes = 1024
 	maximumChanges   = 4096
@@ -56,7 +56,7 @@ func Build(ctx context.Context, options Options) (Plan, error) {
 		!revisionPattern.MatchString(options.HeadRevision) {
 		return newFullPlan(options, "missing-or-invalid-revision", nil, true), nil
 	}
-	changedPaths, nonAdditive, err := readGitChangedPaths(
+	changedPaths, requiresFull, err := readGitChangedPaths(
 		ctx,
 		root,
 		options.BaseRevision,
@@ -65,12 +65,12 @@ func Build(ctx context.Context, options Options) (Plan, error) {
 	if err != nil {
 		return newFullPlan(options, "git-diff-unavailable", nil, true), nil
 	}
-	if nonAdditive {
+	if requiresFull {
 		return newFullPlan(
 			options,
-			"rename-delete-copy-or-type-change",
+			"unsafe-change-shape",
 			changedPaths,
-			rendererRequiredForNonAdditive(mapping, changedPaths),
+			rendererRequiredForUnsafeChange(mapping, changedPaths),
 		), nil
 	}
 	selected := selectChangedPaths(mapping, options, changedPaths)
@@ -176,7 +176,7 @@ func rendererRequiredForPaths(changedPaths []string) bool {
 	return false
 }
 
-func rendererRequiredForNonAdditive(mapping Mapping, changedPaths []string) bool {
+func rendererRequiredForUnsafeChange(mapping Mapping, changedPaths []string) bool {
 	if rendererRequiredForPaths(changedPaths) {
 		return true
 	}

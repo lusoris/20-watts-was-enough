@@ -77,7 +77,7 @@ func TestRunCIPlanRequiresPairedRevisionArguments(t *testing.T) {
 
 func TestRunCIProjectWritesOnlyFixedValidatedOutputs(t *testing.T) {
 	t.Parallel()
-	plan := `{"schema":1,"mode":"impact","reason":"mapped-change-set",` +
+	plan := `{"schema":2,"mode":"impact","reason":"mapped-change-set",` +
 		`"base_revision":"1111111111111111111111111111111111111111",` +
 		`"head_revision":"2222222222222222222222222222222222222222",` +
 		`"changed_paths":["app/main.tsx"],"lanes":["site"]}`

@@ -275,7 +275,7 @@ func validateFullReasonPaths(reason string, changedPaths []string) error {
 		if len(changedPaths) != 0 {
 			return errors.New("empty-change-set plan must have no changed paths")
 		}
-	case "rename-delete-copy-or-type-change", "selector-authority-changed", "full-authority-changed":
+	case "unsafe-change-shape", "selector-authority-changed", "full-authority-changed":
 		if len(changedPaths) == 0 {
 			return fmt.Errorf("%s plan must identify changed paths", reason)
 		}
@@ -305,7 +305,7 @@ func validPlanReason(reason string) bool {
 	}
 	switch reason {
 	case "explicit-full", "missing-or-invalid-revision", "git-diff-unavailable",
-		"rename-delete-copy-or-type-change", "invalid-or-excessive-change-set",
+		"unsafe-change-shape", "invalid-or-excessive-change-set",
 		"selector-authority-changed", "empty-change-set", "full-authority-changed",
 		"empty-lane-selection", "mapped-change-set":
 		return true

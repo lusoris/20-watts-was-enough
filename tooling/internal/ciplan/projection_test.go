@@ -191,8 +191,9 @@ func TestProjectRejectsMalformedPlanCombinations(t *testing.T) {
 		Lanes:        []string{"site"},
 	}
 	tests := map[string]func(*Plan){
-		"unknown lane":   func(plan *Plan) { plan.Lanes = []string{"sitee"} },
-		"full in impact": func(plan *Plan) { plan.Lanes = []string{"full"} },
+		"previous schema": func(plan *Plan) { plan.Schema = 1 },
+		"unknown lane":    func(plan *Plan) { plan.Lanes = []string{"sitee"} },
+		"full in impact":  func(plan *Plan) { plan.Lanes = []string{"full"} },
 		"full mixed impact": func(plan *Plan) {
 			plan.Lanes = []string{"container", "full"}
 		},
@@ -289,8 +290,8 @@ func TestProjectWorkstationJobsRejectsInvalidMatrices(t *testing.T) {
 func TestReadProjectionRejectsAmbiguousAndUnknownJSON(t *testing.T) {
 	t.Parallel()
 	for name, body := range map[string]string{
-		"duplicate": `{"schema":1,"schema":1}`,
-		"unknown":   `{"schema":1,"mode":"full","reason":"explicit-full","changed_paths":[],"lanes":["full"],"extra":true}`,
+		"duplicate": `{"schema":2,"schema":2}`,
+		"unknown":   `{"schema":2,"mode":"full","reason":"explicit-full","changed_paths":[],"lanes":["full"],"extra":true}`,
 		"oversized": strings.Repeat(" ", maximumPlanBytes+1),
 	} {
 		t.Run(name, func(t *testing.T) {

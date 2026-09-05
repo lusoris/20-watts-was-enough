@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -22,6 +23,8 @@ const (
 var (
 	revisionPattern = regexp.MustCompile(`^[0-9a-f]{40}$`)
 	scorePattern    = regexp.MustCompile(`^[RC][0-9]{1,3}$`)
+	modePattern     = regexp.MustCompile(`^[0-7]{6}$`)
+	objectIDPattern = regexp.MustCompile(`^([0-9a-f]{40}|[0-9a-f]{64})$`)
 )
 
 func readGitChangedPaths(
@@ -40,8 +43,8 @@ func readGitChangedPaths(
 		diffContext,
 		gitExecutable,
 		"-C", root,
-		"diff", "--no-ext-diff", "--no-textconv", "--find-renames",
-		"--name-status", "-z", baseRevision+"..."+headRevision, "--",
+		"diff", "--no-ext-diff", "--no-textconv", "--find-renames", "--find-copies-harder",
+		"--raw", "--no-abbrev", "-z", baseRevision+"..."+headRevision, "--",
 	)
 	command.Env = boundedGitEnvironment()
 	command.Stdout = standardOutput
@@ -50,7 +53,7 @@ func readGitChangedPaths(
 	if err := command.Run(); err != nil {
 		return nil, false, fmt.Errorf("run bounded Git diff: %w", err)
 	}
-	return parseNameStatus(standardOutput.Bytes())
+	return parseRawDiff(standardOutput.Bytes())
 }
 
 func boundedGitEnvironment() []string {
@@ -69,24 +72,27 @@ func boundedGitEnvironment() []string {
 	return environment
 }
 
-func parseNameStatus(body []byte) ([]string, bool, error) {
+func parseRawDiff(body []byte) ([]string, bool, error) {
 	if len(body) == 0 {
 		return []string{}, false, nil
 	}
 	if body[len(body)-1] != 0 {
-		return nil, false, errors.New("Git name-status output is truncated")
+		return nil, false, errors.New("Git raw diff output is truncated")
 	}
 	tokens := bytes.Split(body[:len(body)-1], []byte{0})
 	paths := make(map[string]struct{})
 	requiresFull := false
 	for index := 0; index < len(tokens); {
-		status := string(tokens[index])
+		oldMode, newMode, status, err := parseRawHeader(string(tokens[index]))
 		index++
-		pathCount, nonAdditive, err := statusPathCount(status)
-		if err != nil || index+pathCount > len(tokens) {
-			return nil, false, errors.New("Git name-status output is malformed")
+		if err != nil {
+			return nil, false, errors.New("Git raw diff output is malformed")
 		}
-		requiresFull = requiresFull || nonAdditive
+		pathCount, identityChange, err := statusPathCount(status)
+		if err != nil || index+pathCount > len(tokens) {
+			return nil, false, errors.New("Git raw diff output is malformed")
+		}
+		requiresFull = requiresFull || identityChange || !regularFileTransition(status, oldMode, newMode)
 		for offset := 0; offset < pathCount; offset++ {
 			changedPath := string(tokens[index+offset])
 			if !validChangedPath(changedPath) {
@@ -103,11 +109,53 @@ func parseNameStatus(body []byte) ([]string, bool, error) {
 	return result, requiresFull, nil
 }
 
+func parseRawHeader(header string) (string, string, string, error) {
+	fields := strings.Fields(header)
+	if len(fields) != 5 || strings.Join(fields, " ") != header ||
+		len(fields[0]) != 7 || fields[0][0] != ':' {
+		return "", "", "", errors.New("raw diff header shape is invalid")
+	}
+	oldMode := fields[0][1:]
+	newMode := fields[1]
+	if !modePattern.MatchString(oldMode) || !modePattern.MatchString(newMode) ||
+		!objectIDPattern.MatchString(fields[2]) || !objectIDPattern.MatchString(fields[3]) ||
+		len(fields[2]) != len(fields[3]) ||
+		!modeMatchesObjectIdentity(oldMode, fields[2]) ||
+		!modeMatchesObjectIdentity(newMode, fields[3]) {
+		return "", "", "", errors.New("raw diff header identity is invalid")
+	}
+	return oldMode, newMode, fields[4], nil
+}
+
+func modeMatchesObjectIdentity(mode, objectID string) bool {
+	zeroObjectID := strings.Trim(objectID, "0") == ""
+	return (mode == "000000") == zeroObjectID
+}
+
+func regularFileTransition(status, oldMode, newMode string) bool {
+	isRegular := func(mode string) bool {
+		return mode == "100644" || mode == "100755"
+	}
+	switch status {
+	case "A":
+		return oldMode == "000000" && isRegular(newMode)
+	case "M":
+		return isRegular(oldMode) && isRegular(newMode)
+	case "D":
+		return isRegular(oldMode) && newMode == "000000"
+	default:
+		return false
+	}
+}
+
 func statusPathCount(status string) (int, bool, error) {
 	if status == "A" || status == "M" {
 		return 1, false, nil
 	}
-	if status == "D" || status == "T" {
+	if status == "D" {
+		return 1, false, nil
+	}
+	if status == "T" {
 		return 1, true, nil
 	}
 	if scorePattern.MatchString(status) {
