@@ -244,6 +244,43 @@ contracted path. Context verification does not prove that an image builds,
 imports, contains installed licence material or obeys external runtime limits.
 Those remain the separate admission gates below.
 
+## Inspect a retained candidate image archive
+
+The read-only Go command checks one supplied OCI archive without loading an
+image or starting Docker. Supply the archive's expected SHA-256 and byte count
+from a separate retained build record; the archive cannot select its own
+expected identity.
+
+```bash
+go -C tooling run ./cmd/20w experiment inspect-clrs-image-archive \
+  --root .. --archive /path/to/candidate.oci.tar \
+  --sha256 '<64-lowercase-hex-characters>' --bytes '<exact-byte-count>' --json
+```
+
+Replace both placeholders before running. Relative archive paths resolve
+against `--root`. The schema-1 report binds the whole archive, manifest, config
+and ordered layer/diff-ID bytes. `manifest_base64` and `config_base64` preserve
+the original metadata bytes; decode those fields directly when preparing the
+existing managed generation inputs. Reformatting their JSON changes their
+digests. The report does not supply or verify a Docker loaded-image ID.
+
+This closed single-image profile accepts OCI layout version 1.0.0, one Linux
+amd64 image manifest and uncompressed or gzip layers. It rejects extra blobs,
+ambiguous paths or metadata, unsupported encodings and observed input changes.
+Limits are 2 GiB for the archive, 4 GiB for all decoded layer tar streams,
+64 KiB per JSON member, 2,048 outer members, 64 layers and 256 KiB for the
+report. Repeated layer references count each time. The 180-second deadline
+checks cancellation between bounded operations; it cannot pre-empt a blocked
+filesystem call. Exit codes are zero for consistent bytes, one for validation
+or output failure and two for invalid arguments. `--json` includes validation
+failures, but argument errors do not emit a report.
+
+A passing report is `archive-consistent-unadmitted` and `NO_RESULT`. Decoded
+tar length is not extracted filesystem size. Installed files, sparse maps,
+whiteouts, licences, imports, builder provenance and independent-build history
+are outside this check. The command does not write files, authenticate a
+registry, admit an image or publish an experiment.
+
 ## Check a retained scanner bundle
 
 The read-only Go checker verifies a retained scanner bundle without starting
