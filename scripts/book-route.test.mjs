@@ -302,6 +302,15 @@ test("the full-book source identity includes the locked renderer dependency grap
   for (const source of requiredClosure) assert.equal(sources.includes(source), true, source);
 });
 
+test("the PDF source closure includes its cache and renderer-lock owners", async () => {
+  const sources = await bookSourceFiles(repositoryRoot);
+  for (const source of [
+    "tooling/internal/pdfrender/build_cache.go",
+    "tooling/internal/pdfrender/build_cache_inventory.go",
+    "tooling/internal/pdfrenderlock/lock.go",
+  ]) assert.equal(sources.includes(path.join(repositoryRoot, source)), true, source);
+});
+
 test("the PDF source digest changes with portal evidence authority", async (t) => {
   const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "20w-book-source-closure-"));
   t.after(() => rm(temporaryRoot, { recursive: true, force: true }));

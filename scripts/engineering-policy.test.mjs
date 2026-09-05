@@ -1035,6 +1035,89 @@ test("real PDF reproducibility acceptance stays in the renderer-selected and tag
   ), [releaseFinding]);
 });
 
+test("PDF build cache has one exact key, bounded restore and trusted successful-main save", async (t) => {
+  const finding = ".github/workflows/ci.yml: CI must run the exact selected PDF reproducibility proof only in its renderer-selected gate and retain its receipt plus mismatch bytes";
+  const step = (subject, name) => subject.jobs["pdf-renderer-reproducibility"].steps
+    .find((candidate) => candidate.name === name);
+  const restore = (subject) => step(subject, "Restore the PDF renderer build cache");
+  const guard = (subject) => step(subject, "Reject a non-exact PDF renderer cache restore");
+  const save = (subject) => step(subject, "Save the verified PDF renderer build cache");
+  const verify = (subject) => step(subject, "Verify the selected PDF reproducibility proof");
+  const mutations = {
+    "missing restore": (subject) => { restore(subject).name = "Missing restore"; },
+    "restore during independent build": (subject) => { delete restore(subject).if; },
+    "mutable action": (subject) => { restore(subject).uses = "actions/cache/restore@v6"; },
+    "new unreviewed action": (subject) => { restore(subject).uses = "actions/cache/restore@" + "a".repeat(40); },
+    "unbounded restore": (subject) => { delete restore(subject)["timeout-minutes"]; },
+    "unbounded download segment": (subject) => { delete restore(subject).env.SEGMENT_DOWNLOAD_TIMEOUT_MINS; },
+    "unexpected restore credentials": (subject) => { restore(subject).env.ACTIONS_RUNTIME_TOKEN = "${{ secrets.TOKEN }}"; },
+    "broad cache path": (subject) => { restore(subject).with.path = "build"; },
+    "partial restore keys": (subject) => { restore(subject).with["restore-keys"] = "pdf-renderer-buildkit-v1-"; },
+    "cross-platform archive": (subject) => { restore(subject).with.enableCrossOsArchive = true; },
+    "lookup without restoration": (subject) => { restore(subject).with["lookup-only"] = true; },
+    "fail on ordinary miss": (subject) => { restore(subject).with["fail-on-cache-miss"] = true; },
+    "incomplete input key": (subject) => { restore(subject).with.key = "pdf-renderer-" + "a".repeat(64); },
+    "missing exact-match guard": (subject) => { guard(subject).run = "true"; },
+    "ignored partial match": (subject) => { guard(subject)["continue-on-error"] = true; },
+    "unbound guard output": (subject) => { guard(subject).env.CACHE_HIT = "true"; },
+    "unbounded guard": (subject) => { delete guard(subject)["timeout-minutes"]; },
+    "guard after execution": (subject) => {
+      const steps = subject.jobs["pdf-renderer-reproducibility"].steps;
+      const index = steps.indexOf(guard(subject));
+      [steps[index], steps[index + 1]] = [steps[index + 1], steps[index]];
+    },
+    "duplicate restore identifier": (subject) => {
+      subject.jobs["pdf-renderer-reproducibility"].steps.push({ id: "pdf-renderer-cache", run: "true" });
+    },
+    "duplicate proof identifier": (subject) => {
+      subject.jobs["pdf-renderer-reproducibility"].steps.push({ id: "pdf-renderer-proof", run: "true" });
+    },
+    "missing cache argument": (subject) => { verify(subject).run = verify(subject).run.replace("--cache-dir build/cache/pdf-renderer ", ""); },
+    "changed proof identifier": (subject) => { verify(subject).id = "different-proof"; },
+    "save on pull requests": (subject) => { save(subject).if = "github.event_name == 'pull_request'"; },
+    "save after failed proof": (subject) => { save(subject).if = "always() && github.ref == 'refs/heads/main'"; },
+    "save from other branches": (subject) => { save(subject).if = save(subject).if.replace(" && github.ref == 'refs/heads/main'", ""); },
+    "save incomplete key": (subject) => { save(subject).with.key = restore(subject).with.key + "-fallback"; },
+    "unbounded save": (subject) => { delete save(subject)["timeout-minutes"]; },
+    "cache execution failure bypass": (subject) => { save(subject)["continue-on-error"] = true; },
+    "cache save elsewhere": (subject) => { subject.jobs["lane-release"].steps.push(structuredClone(save(subject))); },
+    "changed proof cache path": (subject) => { verify(subject).run = verify(subject).run.replace("build/cache/pdf-renderer", "tmp/cache"); },
+  };
+  for (const [name, mutate] of Object.entries(mutations)) {
+    await t.test(name, () => {
+      const subject = structuredClone(workflow("ci"));
+      mutate(subject);
+      assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(subject, ".github/workflows/ci.yml"), [finding]);
+    });
+  }
+});
+
+test("the executed PDF cache guard allows exact hits and cold misses but rejects partial matches", () => {
+  const guard = workflow("ci").jobs["pdf-renderer-reproducibility"].steps.find((step) => (
+    step.name === "Reject a non-exact PDF renderer cache restore"
+  ));
+  for (const [matched, hit, expected] of [
+    ["", "", 0], ["", "false", 0], ["exact-key", "true", 0],
+    ["partial-key", "false", 1], ["partial-key", "", 1], ["partial-key", "TRUE", 1],
+  ]) {
+    const child = spawnSync("/bin/bash", ["-c", guard.run], {
+      env: { CACHE_MATCHED_KEY: matched, CACHE_HIT: hit }, encoding: "utf8", timeout: 1000, maxBuffer: 1024,
+    });
+    assert.equal(child.error, undefined);
+    assert.equal(child.status, expected, JSON.stringify({ matched, hit, stderr: child.stderr }));
+    assert.equal(child.stdout.includes("did not match the exact key"), expected === 1);
+  }
+});
+
+test("tagged PDF proof never opts into the CI build cache", () => {
+  const subject = structuredClone(workflow("release"));
+  subject.jobs.verify.steps.find((step) => step.name === "Rebuild the final PDF renderer twice without cache")
+    .run += " --cache-dir build/cache/pdf-renderer";
+  assert.deepEqual(validatePDFRendererReproducibilityWorkflowObject(subject, ".github/workflows/release.yml"), [
+    ".github/workflows/release.yml: tagged releases must run the exact two-builder PDF reproducibility acceptance and checksum its receipt as a release input",
+  ]);
+});
+
 test("private CI executables retain their tested Go build configuration", () => {
   const expected = {
     CGO_ENABLED: "0", GOOS: "linux", GOARCH: "amd64", GOENV: "off", GOWORK: "off",

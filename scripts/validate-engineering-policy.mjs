@@ -70,6 +70,8 @@ const fixture019ImagePolicy = Object.freeze({
 
 const approvedActionPins = new Map([
   ["actions/attest-build-provenance", "4d101475d8b20a2381f78447822ac1eab6504dd8"],
+  ["actions/cache/restore", "55cc8345863c7cc4c66a329aec7e433d2d1c52a9"],
+  ["actions/cache/save", "55cc8345863c7cc4c66a329aec7e433d2d1c52a9"],
   ["actions/checkout", "3d3c42e5aac5ba805825da76410c181273ba90b1"],
   ["actions/configure-pages", "45bfe0192ca1faeb007ade9deae92b16b8254a0d"],
   ["actions/dependency-review-action", "a1d282b36b6f3519aa1f3fc636f609c47dddb294"],
@@ -960,8 +962,44 @@ function privateGoJobHasNoInheritedEnvironment(workflow, job) {
 const pdfReproducibilityCiCommand = [
   "go -C tooling run ./cmd/pdf-proof",
   '--root .. --ref main --proof "$RENDERER_PROOF"',
+  "--cache-dir build/cache/pdf-renderer",
   "--receipt build/evidence/pdf-renderer-reproducibility.json",
 ].join(" ");
+const pdfRendererCacheInputs = Object.freeze({
+  path: "build/cache/pdf-renderer",
+  key: "pdf-renderer-buildkit-v1-linux-amd64-${{ hashFiles('tooling/pdf-renderer/lock.json', 'tooling/internal/pdfrender/**', 'tooling/internal/pdfrenderlock/**', 'tooling/internal/pdfrendercli/**', 'tooling/internal/strictjson/**', 'tooling/cmd/pdf-proof/**', 'tooling/go.mod', 'tooling/go.sum') }}",
+});
+const pdfRendererCacheRestore = Object.freeze({
+  name: "Restore the PDF renderer build cache",
+  id: "pdf-renderer-cache",
+  if: "needs.impact-plan.outputs.renderer_proof == 'render-pair'",
+  uses: "actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9",
+  "timeout-minutes": 10,
+  env: { SEGMENT_DOWNLOAD_TIMEOUT_MINS: "2" },
+  with: pdfRendererCacheInputs,
+});
+const pdfRendererCacheGuard = Object.freeze({
+  name: "Reject a non-exact PDF renderer cache restore",
+  if: "needs.impact-plan.outputs.renderer_proof == 'render-pair'",
+  "timeout-minutes": 1,
+  env: {
+    CACHE_MATCHED_KEY: "${{ steps.pdf-renderer-cache.outputs.cache-matched-key }}",
+    CACHE_HIT: "${{ steps.pdf-renderer-cache.outputs.cache-hit }}",
+  },
+  run: [
+    'if [ -n "$CACHE_MATCHED_KEY" ] && [ "$CACHE_HIT" != "true" ]; then',
+    '  echo "::error::PDF renderer cache restore did not match the exact key"',
+    "  exit 1",
+    "fi",
+  ].join("\n"),
+});
+const pdfRendererCacheSave = Object.freeze({
+  name: "Save the verified PDF renderer build cache",
+  if: "github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.pdf-renderer-proof.outcome == 'success' && steps.pdf-renderer-cache.outputs.cache-hit != 'true'",
+  uses: "actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9",
+  "timeout-minutes": 10,
+  with: pdfRendererCacheInputs,
+});
 const pdfReproducibilityCiEvidence = [
   "build/evidence/pdf-renderer-reproducibility.json",
   "build/evidence/pdf-renderer-reproducibility-mismatch",
@@ -984,11 +1022,33 @@ function pdfReproducibilitySetupIsExact(step) {
     && step.with["driver-opts"] === pdfReproducibilityBuildKit;
 }
 
+function pdfRendererCacheStepIsExact(step, expected) {
+  if (!step || Object.keys(step).length !== Object.keys(expected).length) return false;
+  return Object.entries(expected).every(([key, value]) => (
+    typeof value === "object"
+      ? Object.keys(step[key] ?? {}).length === Object.keys(value).length
+        && propertiesMatch(step[key], value)
+      : step[key] === value
+  ));
+}
+
+function pdfRendererCacheStepsAreExact(steps, setupIndex, verifyIndex, receiptIndex) {
+  const locate = (expected) => steps.findIndex((step) => pdfRendererCacheStepIsExact(step, expected));
+  const restore = locate(pdfRendererCacheRestore);
+  const guard = locate(pdfRendererCacheGuard);
+  const save = locate(pdfRendererCacheSave);
+  return restore > setupIndex && guard === restore + 1 && verifyIndex === guard + 1
+    && save === verifyIndex + 1 && receiptIndex === save + 1
+    && steps.filter((step) => step?.id === "pdf-renderer-cache").length === 1
+    && steps.filter((step) => step?.id === "pdf-renderer-proof").length === 1;
+}
+
 function pdfReproducibilityCiJobIsExact(job) {
   const steps = job?.steps ?? [];
   const setupIndex = steps.findIndex(pdfReproducibilitySetupIsExact);
   const verifyIndex = steps.findIndex((step) => (
     step?.name === "Verify the selected PDF reproducibility proof"
+    && step?.id === "pdf-renderer-proof"
     && step?.run?.trim() === pdfReproducibilityCiCommand
     && Object.keys(step?.env ?? {}).length === Object.keys(privateGoCommandEnvironment).length + 1
     && propertiesMatch(step?.env, privateGoCommandEnvironment)
@@ -1009,6 +1069,7 @@ function pdfReproducibilityCiJobIsExact(job) {
     && setupIndex >= 0
     && verifyIndex > setupIndex
     && receiptIndex > verifyIndex
+    && pdfRendererCacheStepsAreExact(steps, setupIndex, verifyIndex, receiptIndex)
     && receipt?.if === "${{ always() && !cancelled() }}"
     && receipt?.uses === "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
     && continueOnErrorIsDisabled(receipt)
@@ -1024,6 +1085,8 @@ function pdfReproducibilityCiJobIsExact(job) {
 export function validatePDFRendererReproducibilityWorkflowObject(workflow, relativePath) {
   if (relativePath === ".github/workflows/ci.yml") {
     const jobs = workflow?.jobs ?? {};
+    const cacheActionCount = Object.values(jobs).flatMap((job) => job?.steps ?? [])
+      .filter((step) => step?.uses?.startsWith("actions/cache")).length;
     const broadJobsContainHeavyProof = ["quality-full", "lane-release"].some((jobName) => (
       (jobs[jobName]?.steps ?? []).some((step) => (
         String(step?.run ?? "").includes("publication verify-pdf-reproducibility")
@@ -1031,6 +1094,7 @@ export function validatePDFRendererReproducibilityWorkflowObject(workflow, relat
       ))
     ));
     return privateGoJobHasNoInheritedEnvironment(workflow, jobs["pdf-renderer-reproducibility"])
+      && cacheActionCount === 2
       && !broadJobsContainHeavyProof
       && pdfReproducibilityCiJobIsExact(jobs["pdf-renderer-reproducibility"])
       ? []

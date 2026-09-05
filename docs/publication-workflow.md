@@ -166,7 +166,20 @@ cache and compares two isolated renders from it. Its schema-5 receipt records
 one actual build and both render observations under
 `pdf-render-pair-reproducibility`; it does not establish independent image-build
 reproducibility. Default and tagged-release invocations retain schema 4 and two
-builds. Cross-run image reuse remains pending a verified acquisition path.
+builds.
+
+CI additionally enables the optional BuildKit layer cache under
+`build/cache/pdf-renderer`, governed by
+[decision 0078](../decisions/0078-reuse-verified-renderer-build-cache.md).
+Only render-pair proofs import it; image-build proofs retain two fresh
+cache-free builders and may export a seed. A warm build must reproduce the
+seed's image, original manifest and config identities before either render.
+Schema-6 receipts distinguish cache import from cache-free construction and
+retain the actual proof counts, including on mismatch. A missing cache falls
+back to cold construction. An invalid cache fails closed. Trusted main pushes
+alone save the exact source-keyed CI cache; partial key matches are rejected.
+Default local commands and tagged releases remain cache-free. This cache is
+disposable acceleration, not a published renderer image or release artifact.
 
 Script impact is classified by an exact executable consumer, not by the
 `scripts/` directory name. The browser reader regression therefore selects the

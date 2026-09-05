@@ -18,6 +18,7 @@ type ReproducibilityOptions struct {
 	SourceRevision string
 	ReceiptPath    string
 	RenderPairOnly bool
+	CacheDirectory string
 }
 
 // VerifyReproducibility records a non-publishing comparison. By default it
@@ -26,6 +27,9 @@ type ReproducibilityOptions struct {
 func VerifyReproducibility(ctx context.Context, options ReproducibilityOptions) (_ ReproducibilityReceipt, returnError error) {
 	if options.RenderPairOnly && options.SourceRef != "main" {
 		return ReproducibilityReceipt{}, errors.New("render-pair proof is restricted to main; releases require independent image builds")
+	}
+	if options.CacheDirectory != "" && (options.CacheDirectory != RendererCacheDirectory || options.SourceRef != "main") {
+		return ReproducibilityReceipt{}, errors.New("PDF renderer cache requires --ref main and build/cache/pdf-renderer")
 	}
 	configuration, err := Check(options.RepositoryRoot)
 	if err != nil {
@@ -39,7 +43,7 @@ func VerifyReproducibility(ctx context.Context, options ReproducibilityOptions) 
 	); err != nil {
 		return ReproducibilityReceipt{}, err
 	}
-	return verifyProofWithDependencies(
+	return verifyCachedProofWithDependencies(
 		ctx,
 		configuration,
 		options.SourceRef,
@@ -48,6 +52,7 @@ func VerifyReproducibility(ctx context.Context, options ReproducibilityOptions) 
 		remoteBuildContextPreparer{},
 		localReproducibilityExecutor{},
 		options.RenderPairOnly,
+		options.CacheDirectory,
 	)
 }
 
@@ -69,8 +74,23 @@ func verifyProofWithDependencies(
 	executor commandExecutor,
 	renderPairOnly bool,
 ) (_ ReproducibilityReceipt, returnError error) {
+	return verifyCachedProofWithDependencies(ctx, configuration, sourceRef, sourceRevision, receiptRelativePath, preparer, executor, renderPairOnly, "")
+}
+
+func verifyCachedProofWithDependencies(
+	ctx context.Context,
+	configuration Configuration,
+	sourceRef, sourceRevision, receiptRelativePath string,
+	preparer buildContextPreparer,
+	executor commandExecutor,
+	renderPairOnly bool,
+	cacheDirectory string,
+) (_ ReproducibilityReceipt, returnError error) {
 	if renderPairOnly && sourceRef != "main" {
 		return ReproducibilityReceipt{}, errors.New("render-pair proof is restricted to main; releases require independent image builds")
+	}
+	if cacheDirectory != "" && (cacheDirectory != RendererCacheDirectory || sourceRef != "main") {
+		return ReproducibilityReceipt{}, errors.New("PDF renderer cache requires --ref main and build/cache/pdf-renderer")
 	}
 	if err := ValidateSourceRevision(sourceRef, sourceRevision); err != nil {
 		return ReproducibilityReceipt{}, err
@@ -139,10 +159,11 @@ func verifyProofWithDependencies(
 	if err != nil {
 		return ReproducibilityReceipt{}, err
 	}
-	runIdentity, err := randomIdentity(8)
+	cache, err := prepareRendererBuildCache(acceptanceContext, configuration, contextIdentity, cacheDirectory, renderPairOnly)
 	if err != nil {
 		return ReproducibilityReceipt{}, err
 	}
+	defer func() { returnError = errors.Join(returnError, cache.close()) }()
 
 	ownedImageTags := make(map[string]struct{}, reproducibilityBuildCount)
 	cleanedImages := false
@@ -154,25 +175,9 @@ func verifyProofWithDependencies(
 			)
 		}
 	}()
-	builds := make([]ReproducibilityBuild, 0, reproducibilityBuildCount)
-	for index := 0; index < reproducibilityBuildCount; index++ {
-		if renderPairOnly && index == 1 {
-			render, err := reproducibilityRender(acceptanceContext, configuration, executor, temporaryRoot, sourceRef, sourceRevision, builds[0], index)
-			if err != nil {
-				return ReproducibilityReceipt{}, err
-			}
-			builds = append(builds, render)
-			continue
-		}
-		imageTag := fmt.Sprintf("20w-pdf-reproducibility:%s-%d", runIdentity, index+1)
-		ownedImageTags[imageTag] = struct{}{}
-		build, buildError := reproducibilityBuild(
-			acceptanceContext, configuration, executor, contextRoot, temporaryRoot, sourceRef, sourceRevision, imageTag, index,
-		)
-		if buildError != nil {
-			return ReproducibilityReceipt{}, buildError
-		}
-		builds = append(builds, build)
+	builds, err := collectProofBuilds(acceptanceContext, configuration, executor, contextRoot, temporaryRoot, sourceRef, sourceRevision, renderPairOnly, ownedImageTags, cache)
+	if err != nil {
+		return ReproducibilityReceipt{}, err
 	}
 	comparison := compareReproducibilityBuilds(builds[0], builds[1])
 	receipt := newReproducibilityReceipt(
@@ -187,6 +192,7 @@ func verifyProofWithDependencies(
 		receipt.Builds = builds[:1]
 		receipt.Renders = []ReproducibilityPair{builds[0].Pair, builds[1].Pair}
 	}
+	cache.describe(&receipt)
 	if receipt.Status != "pass" {
 		evidence, err := retainReproducibilityMismatch(
 			configuration.RepositoryRoot, receiptPath, builds, os.RemoveAll,
@@ -201,6 +207,11 @@ func verifyProofWithDependencies(
 	}
 	if err := checkAuthorityUnchanged(ctx, configuration); err != nil {
 		return ReproducibilityReceipt{}, err
+	}
+	if receipt.Status == "pass" {
+		if err := cache.observe(acceptanceContext, &receipt); err != nil {
+			return ReproducibilityReceipt{}, err
+		}
 	}
 	if err := writeReproducibilityReceipt(receiptPath, receipt); err != nil {
 		return ReproducibilityReceipt{}, err
@@ -217,7 +228,36 @@ func verifyProofWithDependencies(
 	if cleanupError == nil {
 		cleanedImages = true
 	}
+	if comparisonError == nil && cleanupError == nil {
+		if err := acceptanceContext.Err(); err != nil {
+			return receipt, fmt.Errorf("complete PDF renderer reproducibility proof: %w", err)
+		}
+		return receipt, cache.promote(acceptanceContext)
+	}
 	return receipt, errors.Join(comparisonError, cleanupError)
+}
+
+func collectProofBuilds(ctx context.Context, configuration Configuration, executor commandExecutor, contextRoot, temporaryRoot, sourceRef, sourceRevision string, renderPairOnly bool, ownedImageTags map[string]struct{}, cache *rendererBuildCache) ([]ReproducibilityBuild, error) {
+	runIdentity, err := randomIdentity(8)
+	if err != nil {
+		return nil, err
+	}
+	builds := make([]ReproducibilityBuild, 0, reproducibilityBuildCount)
+	for index := 0; index < reproducibilityBuildCount; index++ {
+		var build ReproducibilityBuild
+		if renderPairOnly && index == 1 {
+			build, err = reproducibilityRender(ctx, configuration, executor, temporaryRoot, sourceRef, sourceRevision, builds[0], index)
+		} else {
+			imageTag := fmt.Sprintf("20w-pdf-reproducibility:%s-%d", runIdentity, index+1)
+			ownedImageTags[imageTag] = struct{}{}
+			build, err = reproducibilityBuild(ctx, configuration, executor, contextRoot, temporaryRoot, sourceRef, sourceRevision, imageTag, index, cache)
+		}
+		if err != nil {
+			return nil, err
+		}
+		builds = append(builds, build)
+	}
+	return builds, nil
 }
 
 func reproducibilityBuild(
@@ -226,6 +266,7 @@ func reproducibilityBuild(
 	executor commandExecutor,
 	contextRoot, temporaryRoot, sourceRef, sourceRevision, imageTag string,
 	index int,
+	cache *rendererBuildCache,
 ) (result ReproducibilityBuild, returnError error) {
 	label := fmt.Sprintf("build-%d", index+1)
 	builderName, err := createLockedBuilder(ctx, configuration, executor)
@@ -245,9 +286,9 @@ func reproducibilityBuild(
 		directory:  configuration.RepositoryRoot,
 		timeout:    time.Duration(configuration.Lock.Limits.BuildSeconds) * time.Second,
 		outputSize: configuration.Lock.Limits.OutputBytes,
-		arguments: reproducibilityBuildArguments(
+		arguments: cache.buildArguments(reproducibilityBuildArguments(
 			configuration, builderName, contextRoot, iidPath, metadataPath, imageTag,
-		),
+		), index),
 	})
 	if err != nil {
 		return result, err
@@ -276,6 +317,9 @@ func reproducibilityBuild(
 	result.ManifestDigest = metadata.ManifestDigest
 	result.ConfigDigest = digestBytes(proof.Config)
 	result.ConfigProof = proof
+	if err := cache.verifyImage(result); err != nil {
+		return result, err
+	}
 	return reproducibilityRender(ctx, configuration, executor, temporaryRoot, sourceRef, sourceRevision, result, index)
 }
 

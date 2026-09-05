@@ -24,11 +24,16 @@ func runVerifyReproducibility(arguments []string, stdout, stderr io.Writer, veri
 	sourceRevision := flags.String("revision", "", "exact lowercase 40-character book source commit")
 	receiptPath := flags.String("receipt", "", "new repository-relative JSON receipt path")
 	proof := flags.String("proof", "image-build", "image-build (two builds) or render-pair (one build, two renders; main only)")
+	cacheDirectory := flags.String("cache-dir", "", "optional build/cache/pdf-renderer cache directory (main only)")
 	if err := flags.Parse(arguments); err != nil || flags.NArg() != 0 || *receiptPath == "" {
 		return 2
 	}
 	if (*proof != "image-build" && *proof != "render-pair") || (*proof == "render-pair" && *sourceRef != "main") {
 		fmt.Fprintln(stderr, "publication verify-pdf-reproducibility: proof must be image-build, or render-pair with --ref main")
+		return 2
+	}
+	if *cacheDirectory != "" && (*cacheDirectory != pdfrender.RendererCacheDirectory || *sourceRef != "main") {
+		fmt.Fprintln(stderr, "publication verify-pdf-reproducibility: cache-dir must be empty, or build/cache/pdf-renderer with --ref main")
 		return 2
 	}
 	if err := pdfrender.ValidateSourceRevision(*sourceRef, *sourceRevision); err != nil {
@@ -41,6 +46,7 @@ func runVerifyReproducibility(arguments []string, stdout, stderr io.Writer, veri
 		SourceRevision: *sourceRevision,
 		ReceiptPath:    *receiptPath,
 		RenderPairOnly: *proof == "render-pair",
+		CacheDirectory: *cacheDirectory,
 	})
 	if err != nil {
 		fmt.Fprintf(stderr, "Verify PDF renderer reproducibility: %v\n", err)
