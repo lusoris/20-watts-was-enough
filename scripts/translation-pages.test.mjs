@@ -14,6 +14,7 @@ import path from "node:path";
 import test from "node:test";
 
 import {
+  renderTranslationPage,
   translatedSourceDocuments,
   writeTranslationPages,
 } from "./lib/translation-pages.mjs";
@@ -61,6 +62,8 @@ async function translationFixture() {
         route: "/de/concept/00-source/",
         sourceSha256: createHash("sha256").update(source).digest("hex"),
         targetSha256: createHash("sha256").update(target).digest("hex"),
+        sourceRevision: "facac8c699a5c6e2ac258f30209a96ba06dca741",
+        reviewedAt: "2026-09-05T00:00:00Z",
         reviewers: ["reviewer-handle"],
       }],
     }, null, 2)}\n`,
@@ -82,6 +85,8 @@ test("a reviewed non-English manifest entry produces a static locale route", asy
   assert.equal(documents[0].route, "de/concept/00-source/");
   assert.equal(documents[0].language, "de");
   assert.equal(documents[0].canonicalSourcePath, "concept/00-source.md");
+  assert.equal(documents[0].sourceRevision, "facac8c699a5c6e2ac258f30209a96ba06dca741");
+  assert.equal(documents[0].reviewedAt, "2026-09-05T00:00:00Z");
   assert.deepEqual(
     writeTranslationPages({ outputRoot, template, documents, basePath: "/" }),
     ["de/concept/00-source/index.html"],
@@ -94,6 +99,19 @@ test("a reviewed non-English manifest entry produces a static locale route", asy
   assert.match(html, /rel="alternate" hreflang="de" href="https:\/\/www\.cordana\.dev\/de\/concept\/00-source\/"/u);
   assert.match(html, /<h1>Deutscher Titel<\/h1>/u);
   assert.match(html, /Geprüfter deutscher Text\./u);
+  assert.match(html, /<section class="translation-review-context" lang="en"/u);
+  assert.match(
+    html,
+    /blob\/facac8c699a5c6e2ac258f30209a96ba06dca741\/concept\/00-source\.md/u,
+  );
+  assert.match(
+    html,
+    /<code>facac8c6<wbr>99a5c6e2<wbr>ac258f30<wbr>209a96ba<wbr>06dca741<\/code>/u,
+  );
+  assert.match(
+    html,
+    /<time datetime="2026-09-05T00:00:00Z">2026-09-05T00:00:00Z<\/time>/u,
+  );
   assert.match(html, /<strong>Read this page<\/strong>/u);
   assert.match(html, /href="\/concept\/00-source\/">English<\/a>/u);
   assert.match(html, /<span aria-current="page"><span lang="de">Deutsch<\/span> · current<\/span>/u);
@@ -123,6 +141,31 @@ test("translated route generation rejects path aliases before writing", async (t
     }),
     /Unsafe translated publication route/,
   );
+});
+
+test("translation rendering rejects omitted maintained review provenance", async (t) => {
+  const root = await translationFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const [document] = translatedSourceDocuments(root);
+  const template = '<html lang="en"><head><!-- pages-seo:head --><!-- /pages-seo:head --></head><body><!-- pages-seo:fallback --><!-- /pages-seo:fallback --></body></html>';
+
+  for (const [field, pattern] of [
+    ["sourceRevision", /source revision is not an exact Git commit/u],
+    ["reviewedAt", /review time is not canonical UTC/u],
+  ]) {
+    const malformed = { ...document };
+    delete malformed[field];
+    assert.throws(
+      () => renderTranslationPage({
+        template,
+        document: malformed,
+        documents: [malformed],
+        basePath: "/",
+      }),
+      pattern,
+      field,
+    );
+  }
 });
 
 test("translation rendering rejects a pathname replacement during its reviewed read", async (t) => {

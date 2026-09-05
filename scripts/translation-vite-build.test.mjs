@@ -30,6 +30,8 @@ async function nonemptyManifestFixture(root) {
       route: "/de/concept/build-fixture/",
       sourceSha256: createHash("sha256").update(source).digest("hex"),
       targetSha256: createHash("sha256").update(target).digest("hex"),
+      sourceRevision: "facac8c699a5c6e2ac258f30209a96ba06dca741",
+      reviewedAt: "2026-09-05T00:00:00Z",
       reviewers: ["build-fixture-reviewer"],
     }],
   }, null, 2)}\n`);
@@ -73,6 +75,12 @@ test("a Vite Pages build publishes routes from a nonempty reviewed manifest", as
   assert.match(html, /<html lang="de">/u);
   assert.match(html, /property="og:locale" content="de_DE"/u);
   assert.match(html, /<h1>Geprüfte Übersetzung<\/h1>/u);
+  assert.match(html, /<h2 id="translation-review-context-heading">Translation review<\/h2>/u);
+  assert.match(
+    html,
+    /blob\/facac8c699a5c6e2ac258f30209a96ba06dca741\/concept\/build-fixture\.md/u,
+  );
+  assert.match(html, /datetime="2026-09-05T00:00:00Z"/u);
   assert.match(html, /<span aria-current="page"><span lang="de">Deutsch<\/span> · current<\/span>/u);
   assert.ok(html.includes(`href="${pagesBase}concept/build-fixture/">English</a>`));
   assert.match(html, /rel="alternate" hreflang="en" href="https:\/\/www\.cordana\.dev\/concept\/build-fixture\/"/u);

@@ -60,6 +60,8 @@ type TranslationSourceDocument = PortalSourceDocument & {
   canonicalSourceRoute: string;
   sourceSha256: string;
   targetSha256: string;
+  sourceRevision: string;
+  reviewedAt: string;
   reviewers: readonly string[];
 };
 

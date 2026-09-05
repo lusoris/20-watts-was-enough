@@ -329,6 +329,8 @@ test("translated Markdown resolves media and links from its canonical source", (
     route: `de/${source.route}`,
     sourceSha256: "a".repeat(64),
     targetSha256: "b".repeat(64),
+    sourceRevision: "facac8c699a5c6e2ac258f30209a96ba06dca741",
+    reviewedAt: "2026-09-05T00:00:00Z",
     reviewers: ["reviewer-handle"],
   };
   const translatedPeer = {
@@ -360,14 +362,24 @@ test("translated Markdown resolves media and links from its canonical source", (
   assert.match(fallback, /<nav lang="en" aria-label="Document sequence">/);
   assert.match(fallback, /<nav class="seo-language-access" lang="en" aria-label="Language availability">/);
   assert.match(fallback, /<span aria-current="page"><span lang="de">Deutsch<\/span> · current<\/span>/u);
+  assert.match(fallback, /aria-labelledby="translation-review-context-heading"/u);
+  assert.match(
+    fallback,
+    /blob\/facac8c699a5c6e2ac258f30209a96ba06dca741\/concept\//u,
+  );
+  assert.match(fallback, /datetime="2026-09-05T00:00:00Z"/u);
   assert.match(fallback, /<span lang="de">/);
   const issue = new URL(
     fallback.match(/href="([^"]+)">Report this translation<\/a>/u)?.[1].replaceAll("&amp;", "&") ?? "",
   );
   assert.equal(issue.searchParams.get("template"), "translation-problem.yml");
   assert.equal(issue.searchParams.get("language"), "de");
-  assert.match(issue.searchParams.get("source"), new RegExp(`^${source.path} at source SHA-256 `));
+  assert.equal(
+    issue.searchParams.get("source"),
+    `${source.path} at commit facac8c699a5c6e2ac258f30209a96ba06dca741 (source SHA-256 ${"a".repeat(64)})`,
+  );
   assert.match(issue.searchParams.get("detail"), new RegExp(`${translated.route}`));
+  assert.match(issue.searchParams.get("detail"), /Reviewed at: 2026-09-05T00:00:00Z/u);
   assert.match(issue.searchParams.get("competence"), /^Recorded reviewer\(s\): /u);
   assert.doesNotMatch(fallback, /template=site-documentation-problem\.yml/u);
 });

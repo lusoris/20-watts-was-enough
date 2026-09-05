@@ -41,6 +41,8 @@ async function fixture(t) {
     route: "/de/concept/00-source/",
     sourceSha256: createHash("sha256").update(source).digest("hex"),
     targetSha256: createHash("sha256").update(target).digest("hex"),
+    sourceRevision: "facac8c699a5c6e2ac258f30209a96ba06dca741",
+    reviewedAt: "2026-09-05T00:00:00Z",
     reviewers: ["reviewer-handle"],
   };
   const manifest = { schema: 2, sourceLanguage: "en-GB", documents: [entry] };
@@ -58,8 +60,59 @@ test("reviewed translations are tied to an exact mirrored source", async (t) => 
   const { root } = await fixture(t);
   const result = validateTranslationManifest(root);
   assert.equal(result.documents.length, 1);
+  assert.equal(
+    result.documents[0].sourceRevision,
+    "facac8c699a5c6e2ac258f30209a96ba06dca741",
+  );
+  assert.equal(result.documents[0].reviewedAt, "2026-09-05T00:00:00Z");
   assert.ok(Object.isFrozen(result));
+  assert.ok(Object.isFrozen(result.documents[0]));
   assert.ok(Object.isFrozen(result.documents[0].reviewers));
+});
+
+test("review provenance requires an exact commit and canonical UTC instant", async (t) => {
+  for (const field of ["sourceRevision", "reviewedAt"]) {
+    const { root, entry, manifest } = await fixture(t);
+    delete entry[field];
+    await writeManifest(root, manifest);
+    assert.throws(
+      () => validateTranslationManifest(root),
+      new RegExp(`fields are not closed: .*missing=\\[${field}\\]`, "u"),
+      `missing ${field}`,
+    );
+  }
+
+  for (const sourceRevision of [
+    "",
+    "FACAC8C699A5C6E2AC258F30209A96BA06DCA741",
+    "f".repeat(39),
+    "0".repeat(40),
+  ]) {
+    const { root, entry, manifest } = await fixture(t);
+    entry.sourceRevision = sourceRevision;
+    await writeManifest(root, manifest);
+    assert.throws(
+      () => validateTranslationManifest(root),
+      /source revision is not an exact Git commit/u,
+      sourceRevision,
+    );
+  }
+
+  for (const reviewedAt of [
+    "2026-09-05",
+    "2026-09-05T00:00:00+00:00",
+    "2026-09-05T00:00:00.000Z",
+    "2026-02-30T00:00:00Z",
+  ]) {
+    const { root, entry, manifest } = await fixture(t);
+    entry.reviewedAt = reviewedAt;
+    await writeManifest(root, manifest);
+    assert.throws(
+      () => validateTranslationManifest(root),
+      /review time is not canonical UTC/u,
+      reviewedAt,
+    );
+  }
 });
 
 test("the pre-target-digest manifest schema is rejected", async (t) => {

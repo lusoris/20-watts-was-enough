@@ -9,6 +9,7 @@ import {
   bookDocumentHeadingId,
   bookDocumentId,
 } from "../../app/lib/book-document-id.mjs";
+import { repositoryDocumentHref } from "../../app/lib/book-release-identity.mjs";
 import { openGraphLocaleForEuLanguage } from "../../app/lib/eu-languages.mjs";
 import {
   languageAlternateLinksForRoute,
@@ -19,6 +20,7 @@ import {
   publication,
   repositoryIssueUrl,
 } from "../../app/lib/publication.mjs";
+import { validateTranslationReviewMetadata } from "./translation-manifest.mjs";
 
 export const canonicalSite = publication.canonicalSite;
 const siteName = publication.siteName;
@@ -337,6 +339,20 @@ function renderPrimaryNavigation(basePath, label) {
   return `<nav aria-label="${label}"><a href="${withBase(basePath)}">Overview</a><a href="${withBase(basePath, "#research-system")}">Research system</a><a href="${withBase(basePath, "#library")}">Library</a><a href="${withBase(basePath, "book/")}">Book</a><a href="${repository}">GitHub <span aria-hidden="true">↗</span></a></nav>`;
 }
 
+export function renderTranslationReviewContext(document) {
+  const review = validateTranslationReviewMetadata(
+    document,
+    document.path ?? document.route ?? "translated document",
+  );
+  const source = repositoryDocumentHref(
+    review.sourceRevision,
+    document.canonicalSourcePath,
+  );
+  const revision = review.sourceRevision.match(/.{1,8}/gu)?.join("<wbr>")
+    ?? review.sourceRevision;
+  return `<section class="translation-review-context" lang="en" aria-labelledby="translation-review-context-heading"><h2 id="translation-review-context-heading">Translation review</h2><dl><div><dt>Canonical source</dt><dd><a href="${escapeAttribute(source)}">Open the bound source</a></dd></div><div><dt>Source revision</dt><dd><code>${revision}</code></dd></div><div><dt>Reviewed at</dt><dd><time datetime="${escapeAttribute(review.reviewedAt)}">${escapeAttribute(review.reviewedAt)}</time></dd></div></dl></section>`;
+}
+
 export function renderLanguageAvailability(route, translationDocuments, basePath) {
   const availability = languageAvailabilityForRoute(route, translationDocuments);
   const destinations = availability.available.map((destination) => {
@@ -403,8 +419,8 @@ export function renderDocumentFallback(
         `[Translation] ${document.language}: ${document.canonicalSourcePath}`,
         {
           language: document.language,
-          source: `${document.canonicalSourcePath} at source SHA-256 ${document.sourceSha256}`,
-          detail: `Published route: ${canonicalSite}${document.route}\nReviewed target SHA-256: ${document.targetSha256}`,
+          source: `${document.canonicalSourcePath} at commit ${document.sourceRevision} (source SHA-256 ${document.sourceSha256})`,
+          detail: `Published route: ${canonicalSite}${document.route}\nReviewed at: ${document.reviewedAt}\nReviewed target SHA-256: ${document.targetSha256}`,
           competence: `Recorded reviewer(s): ${document.reviewers.join(", ")}`,
         },
       )
@@ -420,7 +436,8 @@ export function renderDocumentFallback(
     translationDocuments,
     basePath,
   );
-  return `<main class="seo-static-page"><p${shellLanguage}><a href="${withBase(basePath)}">Research portal</a></p><header><p${shellLanguage}>${document.group} · ${document.words.toLocaleString(publication.locale)} words</p><h1>${escapeAttribute(document.title)}</h1><p>${escapeAttribute(document.description)}</p></header>${languages}${support}<article class="prose markdown-body">${renderMarkdown(document, documents, basePath)}</article><nav${shellLanguage} aria-label="Document sequence">${sequence}</nav></main>`;
+  const reviewContext = translated ? renderTranslationReviewContext(document) : "";
+  return `<main class="seo-static-page"><p${shellLanguage}><a href="${withBase(basePath)}">Research portal</a></p><header><p${shellLanguage}>${document.group} · ${document.words.toLocaleString(publication.locale)} words</p><h1>${escapeAttribute(document.title)}</h1><p>${escapeAttribute(document.description)}</p></header>${reviewContext}${languages}${support}<article class="prose markdown-body">${renderMarkdown(document, documents, basePath)}</article><nav${shellLanguage} aria-label="Document sequence">${sequence}</nav></main>`;
 }
 
 export function renderHelpFallback(document, documents, basePath) {

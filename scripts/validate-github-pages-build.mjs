@@ -21,6 +21,7 @@ import {
   renderBookFallback,
   renderRobots,
   renderSitemap,
+  renderTranslationReviewContext,
 } from "./lib/pages-seo.mjs";
 import {
   translatedSourceDocuments,
@@ -178,6 +179,17 @@ function validateSeoDocument(html, document, translationAvailability = []) {
   invariant(jsonLd.inLanguage === language, `${document.route} JSON-LD language is stale`);
   invariant(citationLanguage === language, `${document.route} citation language is stale`);
   invariant(htmlLanguage === language, `${document.route} HTML language is stale`);
+  if (language !== "en") {
+    invariant(
+      html.includes(renderTranslationReviewContext(document)),
+      `${document.route} translation review context is stale or incomplete`,
+    );
+  } else {
+    invariant(
+      !html.includes('class="translation-review-context"'),
+      `${document.route} canonical page claims translation review context`,
+    );
+  }
   invariant(
     JSON.stringify(declaredLanguageAlternates) === JSON.stringify(expectedLanguageAlternates),
     `${document.route} language alternates are stale, incomplete, or not reciprocal`,

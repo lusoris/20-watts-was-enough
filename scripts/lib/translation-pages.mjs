@@ -62,6 +62,8 @@ export function translatedSourceDocuments(repositoryRoot, { afterTargetRead } = 
     canonicalSourceRoute: withoutLeadingSlash(entry.sourceRoute),
     sourceSha256: entry.sourceSha256,
     targetSha256: entry.targetSha256,
+    sourceRevision: entry.sourceRevision,
+    reviewedAt: entry.reviewedAt,
     reviewers: entry.reviewers,
   })).sort((left, right) => (
     left.language.localeCompare(right.language)

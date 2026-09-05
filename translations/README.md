@@ -15,16 +15,23 @@ example `translations/de/concept/00-thesis-and-principles.md`. An entry in
 - one of the official EU language codes exposed by the reader;
 - the canonical and translated repository paths;
 - the canonical public route and translated public route;
+- `sourceRevision`, the exact lowercase 40-character Git commit whose
+  canonical file was reviewed;
 - the SHA-256 digest of the exact canonical file translated;
-- the SHA-256 digest of the exact translated file the reviewer accepted; and
+- the SHA-256 digest of the exact translated file the reviewer accepted;
+- `reviewedAt`, the review instant in canonical UTC-second form, such as
+  `2026-09-05T00:00:00Z`; and
 - at least one human reviewer who is competent in the target language and the
   affected research domain.
 
 `npm run validate:translations` uses bounded, stable regular-file reads and
 rejects ambiguous or open-ended manifest JSON, links, stale source or reviewed
-target digests, path aliases and escapes, duplicate routes, missing reviewers
-and missing files. A translation is not published merely because a machine
-produced a draft.
+target digests, malformed source revisions or review times, path aliases and
+escapes, duplicate routes, missing reviewers and missing files. The published
+page links the maintained commit and shows the maintained review instant. The
+validator does not infer either value from the build checkout: the named human
+reviewer and pull-request review remain accountable for that binding. A
+translation is not published merely because a machine produced a draft.
 Drafting tools must be disclosed in the pull request, and a reviewer remains
 accountable for meaning, terminology, equations, qualifications and links.
 
@@ -97,9 +104,8 @@ SHA-256 rather than requiring a `.git` directory. This permits work from a
 tagged source archive or release checkout. Validation and import both require
 the operator to repeat the expected source path and language, then compare the
 bundle with the current local source. The later pull request and reviewed
-manifest supply the Git revision and publication authority; the digest alone
-does not claim that a
-candidate came from `main`.
+manifest supply the exact Git revision, review instant and publication
+authority; the digest alone does not claim that a candidate came from `main`.
 
 After a competent human has checked meaning, terminology, negation,
 qualifications, equations, units, links and evidence status, copy the accepted

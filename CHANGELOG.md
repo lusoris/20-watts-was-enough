@@ -271,8 +271,11 @@ the exact diff; this file records why the project changed.
   Other EU languages use a separate source-bound contribution route instead of
   appearing as readable editions. Canonical and translated routes expose the
   same self-and-peer language metadata, and hydrated navigation retains an
-  explicit Pages subpath. This does not publish or assess a German translation;
-  that pilot still requires the review recorded in issue 51.
+  explicit Pages subpath. Schema-2 entries now also require an exact source
+  commit and canonical UTC review instant, and translated pages expose those
+  maintained values instead of inferring them from the build. This does not
+  publish or assess a German translation; that pilot still requires the human
+  language/domain review recorded in issue 51.
 - A failed two-builder PDF reproducibility check now retains both exact PDF and
   manifest pairs beside its comparison receipt. CI uploads the bounded mismatch
   bundle for 30 days, so a rare renderer disagreement can be byte-diffed without

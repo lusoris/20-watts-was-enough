@@ -8,12 +8,16 @@ import { parseStrictJson } from "./strict-json.mjs";
 
 const SOURCE = /^(?:concept|math)\/(?:[a-z0-9][a-z0-9-]*\/)*[a-z0-9][a-z0-9-]*\.md$/u;
 const SHA256 = /^[a-f0-9]{64}$/u;
+const SOURCE_REVISION = /^(?!0{40}$)[a-f0-9]{40}$/u;
+const REVIEWED_AT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/u;
 const topLevelFields = Object.freeze(["documents", "schema", "sourceLanguage"]);
 const documentFields = Object.freeze([
   "language",
+  "reviewedAt",
   "reviewers",
   "route",
   "source",
+  "sourceRevision",
   "sourceRoute",
   "sourceSha256",
   "target",
@@ -87,6 +91,30 @@ function validatedReviewers(reviewers, target) {
   return Object.freeze([...reviewers]);
 }
 
+export function validateTranslationReviewMetadata(entry, target) {
+  if (
+    typeof entry.sourceRevision !== "string"
+    || !SOURCE_REVISION.test(entry.sourceRevision)
+  ) {
+    throw new Error(`Translation source revision is not an exact Git commit: ${target}`);
+  }
+  const reviewInstant = typeof entry.reviewedAt === "string"
+    ? Date.parse(entry.reviewedAt)
+    : Number.NaN;
+  if (
+    typeof entry.reviewedAt !== "string"
+    || !REVIEWED_AT.test(entry.reviewedAt)
+    || !Number.isFinite(reviewInstant)
+    || new Date(reviewInstant).toISOString() !== `${entry.reviewedAt.slice(0, -1)}.000Z`
+  ) {
+    throw new Error(`Translation review time is not canonical UTC: ${target}`);
+  }
+  return Object.freeze({
+    sourceRevision: entry.sourceRevision,
+    reviewedAt: entry.reviewedAt,
+  });
+}
+
 function validateEntryShape(entry, index) {
   exactObject(entry, documentFields, `Translation manifest document ${index}`);
   if (
@@ -118,7 +146,10 @@ function validateEntryShape(entry, index) {
   if (typeof entry.targetSha256 !== "string" || !SHA256.test(entry.targetSha256)) {
     throw new Error(`Translation target digest is not SHA-256: ${entry.target}`);
   }
-  return validatedReviewers(entry.reviewers, entry.target);
+  return Object.freeze({
+    ...validateTranslationReviewMetadata(entry, entry.target),
+    reviewers: validatedReviewers(entry.reviewers, entry.target),
+  });
 }
 
 function validateEntryFiles(root, entry) {
@@ -155,7 +186,7 @@ function validatedDocuments(root, documents) {
   const identities = new Set();
   const routes = new Set();
   return Object.freeze(documents.map((entry, index) => {
-    const reviewers = validateEntryShape(entry, index);
+    const review = validateEntryShape(entry, index);
     const identity = `${entry.language}:${entry.source}`;
     if (identities.has(identity) || routes.has(entry.route)) {
       throw new Error(`Duplicate translation identity or route: ${identity}`);
@@ -171,7 +202,9 @@ function validatedDocuments(root, documents) {
       route: entry.route,
       sourceSha256: entry.sourceSha256,
       targetSha256: entry.targetSha256,
-      reviewers,
+      sourceRevision: review.sourceRevision,
+      reviewedAt: review.reviewedAt,
+      reviewers: review.reviewers,
     });
   }));
 }

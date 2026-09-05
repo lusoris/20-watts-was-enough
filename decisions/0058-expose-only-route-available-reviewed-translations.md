@@ -40,6 +40,10 @@ would misstate the public corpus.
 5. The Pages artifact validator compares each document's complete alternate
    set with the validated manifest projection. Missing, extra, asymmetric or
    stale language metadata blocks publication.
+6. Each reviewed-manifest entry records the exact lowercase 40-character Git
+   source commit and a canonical UTC review instant. The translated page shows
+   both maintained values and links its canonical source at that commit;
+   malformed or omitted review provenance blocks publication.
 
 This decision does not publish or assess a German translation. Issue 51 remains
 blocked until a competent human reviewer accepts a source-bound German pilot
@@ -52,6 +56,8 @@ under decision 0035.
   semantics.
 - Search metadata describes reviewed public editions without converting a
   translation request or draft into a publication claim.
+- A reader can inspect which immutable source revision was reviewed and when,
+  without trusting the build checkout as an inferred review record.
 - Decision 0035 remains authoritative for review competence, source and target
   digests, disclosure and publication admission.
 
@@ -60,9 +66,10 @@ under decision 0035.
 - [Google Search Central, *Tell Google about localized versions of your page*](https://developers.google.com/search/docs/specialty/international/localized-versions)
 - [W3C, *Authoring HTML: Language declarations*](https://www.w3.org/TR/i18n-html-tech-lang/)
 
-OpenAI Codex was materially used on 2026-09-04 for implementation, testing and
-drafting under maintainer direction. It is not an author or accountable
-approver. No translation was generated, reviewed or published by this change.
+OpenAI Codex was materially used on 2026-09-04 and 2026-09-05 for
+implementation, testing and drafting under maintainer direction. It is not an
+author or accountable approver. No translation was generated, reviewed or
+published by this change.
 
 ## Supersession
 
