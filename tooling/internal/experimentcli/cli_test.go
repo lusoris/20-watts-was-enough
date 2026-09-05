@@ -12,7 +12,8 @@ const expectedExperimentUsage = "  20w experiment list [--root <repository>] [--
 func TestUsageRetainsExactExperimentFragment(t *testing.T) {
 	var output bytes.Buffer
 	Usage(&output)
-	if output.String() != expectedExperimentUsage+"  20w experiment inspect-clrs-image-archive --archive <oci.tar> --sha256 <hex> --bytes <count> [--root <repository>] [--json]\n" {
+	if output.String() != expectedExperimentUsage+"  20w experiment inspect-clrs-image-archive --archive <oci.tar> --sha256 <hex> --bytes <count> [--root <repository>] [--json]\n"+
+		"  20w experiment prepare-clrs-loaded-image --archive <oci.tar> --sha256 <hex> --bytes <count> --output <new-directory> [--root <repository>] [--json]\n" {
 		t.Fatalf("experiment help changed:\n%s", output.String())
 	}
 }
@@ -28,7 +29,7 @@ func TestRunLeavesUnknownCommandsToPublicCaller(t *testing.T) {
 }
 
 func TestEveryExperimentHelpCommandIsHandledWithoutExecution(t *testing.T) {
-	for _, command := range []string{"list", "validate", "package-node-image", "release-plan", "render-clrs-wheelhouse-manifest", "verify-clrs-wheelhouse", "check-clrs-sbom-bundle", "reproduce-clrs-promise-wheel", "materialize-clrs-context", "compare-clrs-fixtures", "render-clrs-generation-program", "generate-clrs-fixtures", "inspect-clrs-image-archive"} {
+	for _, command := range []string{"list", "validate", "package-node-image", "release-plan", "render-clrs-wheelhouse-manifest", "verify-clrs-wheelhouse", "check-clrs-sbom-bundle", "reproduce-clrs-promise-wheel", "materialize-clrs-context", "compare-clrs-fixtures", "render-clrs-generation-program", "generate-clrs-fixtures", "inspect-clrs-image-archive", "prepare-clrs-loaded-image"} {
 		var stdout, stderr bytes.Buffer
 		code, handled := Run([]string{command, "--help"}, &stdout, &stderr)
 		if code != 2 || !handled || stdout.Len() != 0 || !strings.Contains(stderr.String(), "Usage of experiment "+command+":") {

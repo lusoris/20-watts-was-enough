@@ -21,6 +21,7 @@ func Usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w experiment render-clrs-generation-program [--root <repository>] [--json]")
 	fmt.Fprintln(writer, "  20w experiment generate-clrs-fixtures --output <directory> --image-id <sha256:id> --image-manifest <sha256:digest> --image-config <sha256:digest> --manifest-file <json> --config-file <json> (--execute | --check) [--root <repository>] [--json]")
 	fmt.Fprintln(writer, "  20w experiment inspect-clrs-image-archive --archive <oci.tar> --sha256 <hex> --bytes <count> [--root <repository>] [--json]")
+	fmt.Fprintln(writer, "  20w experiment prepare-clrs-loaded-image --archive <oci.tar> --sha256 <hex> --bytes <count> --output <new-directory> [--root <repository>] [--json]")
 }
 
 // Run dispatches one experiment subcommand. An unhandled command writes nothing,
@@ -56,6 +57,8 @@ func Run(arguments []string, stdout, stderr io.Writer) (exitCode int, handled bo
 		return runExperimentGenerateCLRSFixtures(arguments[1:], stdout, stderr), true
 	case "inspect-clrs-image-archive":
 		return runExperimentInspectCLRSOCI(arguments[1:], stdout, stderr), true
+	case "prepare-clrs-loaded-image":
+		return runExperimentPrepareCLRSLoadedImage(arguments[1:], stdout, stderr), true
 	}
 	return 2, false
 }
