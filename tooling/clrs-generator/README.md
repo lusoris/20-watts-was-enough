@@ -307,9 +307,9 @@ Python environment. It preserves the tested `ConfigDict` default binding,
 task order, seeds and generator options, checks the upstream source hash
 before and after generation, and requires a fresh `/output/dataset` child.
 That child matters because the upstream generator removes its output path.
-The image's default module entrypoint remains unchanged. A managed execution
-and extraction command is still needed before this preparation becomes a
-complete contributor-facing fixture run.
+The image's default module entrypoint remains unchanged. The
+[managed generation command](#run-or-check-one-fixture-generation) below uses
+this prepared program without introducing a second editable wrapper.
 
 ## Admission sequence
 
@@ -351,3 +351,75 @@ There is deliberately no `Dockerfile`, committed wheel payload, generated
 fixture, admitted image digest or publication step in this foundation.
 [Issue 12](https://github.com/lusoris/20-watts-was-enough/issues/12) tracks the
 remaining acceptance work.
+
+## Run or check one fixture generation
+
+`generate-clrs-fixtures` runs one development generation from an already-loaded
+candidate image, extracts the six expected files and validates their 48 examples
+with the Go importer. It derives the program, tasks, seeds and limits from the
+same source and image contracts as the preparation command. It does not acquire
+an image, retry a run or admit the result for publication.
+
+```bash
+go -C tooling run ./cmd/20w experiment generate-clrs-fixtures \
+  --root .. --output /path/to/new-generation \
+  --image-id 'sha256:<loaded-image-id>' \
+  --image-manifest 'sha256:<expected-manifest-digest>' \
+  --image-config 'sha256:<expected-config-digest>' \
+  --manifest-file /path/to/original-manifest.json \
+  --config-file /path/to/original-config.json --execute --json
+```
+
+Replace each digest placeholder with 64 lowercase hexadecimal characters.
+Obtain the expected manifest and config digests independently of the supplied
+JSON files. The command hashes their original bytes, checks the manifest's
+config descriptor and compares the loaded image's configuration with the
+runtime contract. The execution ID must equal the expected manifest or config
+digest; it is recorded separately because Docker image stores use different
+ID conventions. Do not reconstruct a config from `docker inspect` output or
+substitute that projection for the original config file. Each original JSON
+file is capped at 64 KiB; layer content is not authenticated by this check.
+
+Execution currently requires Linux `amd64`, Docker client and server 29.7.2,
+Linux cgroup v2 and the `runc` runtime. It uses the explicit local socket
+`unix:///var/run/docker.sock`; ambient Docker context variables do not select
+another daemon. The output parent must already exist, and the output child
+must be new. Relative paths resolve against `--root`. Keep the supplied source
+checkout and image metadata unchanged for later checking.
+
+The runner requests and inspects UID/GID 65532, no network, a read-only root,
+one CPU, 4 GiB memory without extra swap, 256 processes, 512 MiB temporary
+storage and 24 MiB output storage. It mounts no host path or Docker socket into
+the container. Work has a 300-second deadline; ownership-checked cleanup gets
+a separate 45 seconds and a five-second stop grace. Host subprocess pipes may
+need two more seconds to settle per command. There are at most 17 work and
+seven cleanup commands. These are development containment checks, not an
+independent proof of kernel enforcement or a performance measurement.
+
+The bundle retains original inputs, the derived program and procedure, a
+durable `run-start.json`, `commands.json`, `output.tar`, the imported `dataset/`
+and a final `receipt.json` when it can be published. The tar is capped at
+24 MiB plus 64 KiB framing; individual dataset files at 4 MiB, all six files
+together at 24 MiB, the command log at 40 MiB and the receipt at 4 MiB.
+Failures after bundle creation retain bounded diagnostics and any partial
+files. Do not treat them as a completed run or overwrite them for a retry.
+If interruption or daemon failure prevents cleanup, use the recorded name and
+ownership identity for a separately checked recovery; never remove containers
+by a broad name prefix.
+
+To check a retained successful bundle, use the same command and explicit
+inputs with `--check` in place of `--execute`. Exactly one mode is required.
+Checking is portable, has a 30-second cooperative deadline and neither starts
+Docker nor writes files. It verifies supplied command and cleanup records,
+source and image bindings, exact retained bytes and imported examples. A
+blocked filesystem operation is not pre-empted by that cooperative deadline.
+
+Execution returns `fixtures-generated-unadmitted`; checking returns
+`bundle-consistent-unadmitted`. Both remain `NO_RESULT`. Retain the external
+command's exit status as well as the bundle: a receipt records observations,
+not successful delivery of the command's final output. Exit codes are zero for
+completed execution or checking, one for validation, operation or output
+failure, and two for invalid arguments. `--json` emits a bounded schema-1
+report, including operational failures. A consistent supplied bundle does not
+authenticate a third party, prove image-layer or licence completeness, replace
+the two-generation comparison, or satisfy the separate image-admission gates.

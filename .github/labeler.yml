@@ -32,6 +32,7 @@
           - "tooling/internal/clrsfixture/invocation.go"
           - "tooling/internal/clrsfixture/invocation_payload.go"
           - "tooling/internal/clrsfixture/invocation_test.go"
+          - "tooling/internal/clrsfixture/generation_run*.go"
           - "tooling/internal/clrscontext/**"
 
 "area:math":

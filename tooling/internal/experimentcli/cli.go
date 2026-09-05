@@ -19,6 +19,7 @@ func Usage(writer io.Writer) {
 	fmt.Fprintln(writer, "  20w experiment materialize-clrs-context --wheelhouse <directory> --source-archive <tar.gz> --promise-source-root <frozen-repository> --promise-evidence <directory> --output <context.tar> [--root <repository>] [--check]")
 	fmt.Fprintln(writer, "  20w experiment compare-clrs-fixtures --first <dataset-root> --second <dataset-root> [--root <repository>] [--json]")
 	fmt.Fprintln(writer, "  20w experiment render-clrs-generation-program [--root <repository>] [--json]")
+	fmt.Fprintln(writer, "  20w experiment generate-clrs-fixtures --output <directory> --image-id <sha256:id> --image-manifest <sha256:digest> --image-config <sha256:digest> --manifest-file <json> --config-file <json> (--execute | --check) [--root <repository>] [--json]")
 }
 
 // Run dispatches one experiment subcommand. An unhandled command writes nothing,
@@ -50,6 +51,8 @@ func Run(arguments []string, stdout, stderr io.Writer) (exitCode int, handled bo
 		return runExperimentCompareCLRSFixtures(arguments[1:], stdout, stderr), true
 	case "render-clrs-generation-program":
 		return runExperimentRenderCLRSInvocation(arguments[1:], stdout, stderr), true
+	case "generate-clrs-fixtures":
+		return runExperimentGenerateCLRSFixtures(arguments[1:], stdout, stderr), true
 	}
 	return 2, false
 }

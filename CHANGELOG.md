@@ -94,6 +94,12 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- One explicit `generate-clrs-fixtures --execute` command runs the fixed CLRS
+  generator in an already-loaded local image, validates six files and 48
+  examples, and preserves bounded execution and cleanup evidence. Its portable
+  `--check` mode verifies a retained bundle without Docker or writes. Both
+  remain `NO_RESULT`; neither admits an image or authenticates external runs.
+
 - A Go command renders the fixed CLRS generation program directly from the
   existing source, grid and image contracts. It preserves the tested upstream
   configuration binding without maintaining a separate task or seed list;
