@@ -173,6 +173,80 @@ async function assertHydratedResearchObject(cdp, origin) {
   assert.ok(snapshot.scrollWidth <= snapshot.clientWidth, JSON.stringify(snapshot));
 }
 
+async function assertFocusedDocumentEntry(cdp, origin) {
+  await cdp.send("Emulation.setDeviceMetricsOverride", {
+    width: 390,
+    height: 844,
+    deviceScaleFactor: 1,
+    mobile: true,
+  });
+  await navigate(
+    cdp,
+    `${origin}${pagesBasePath}math/measurement-contract/`,
+  );
+  await waitForExpression(
+    cdp,
+    `document.readyState === "complete"
+      && document.querySelector('[data-research-object="focused-document"]')
+      && document.querySelector('.portal-prose p')?.getBoundingClientRect().height > 0`,
+  );
+
+  const snapshot = (await cdp.send("Runtime.evaluate", {
+    expression: `(() => {
+      const header = document.querySelector('[data-research-object="focused-document"]');
+      const firstParagraph = document.querySelector('.portal-prose p');
+      const firstParagraphStyle = getComputedStyle(firstParagraph);
+      const firstParagraphTop = firstParagraph.getBoundingClientRect().top;
+      const root = document.documentElement;
+      const labels = (selector) => [...header.querySelectorAll(selector)]
+        .map((node) => node.textContent.trim());
+      const headerActionLinks = [...header.querySelectorAll('.research-object-routes a')];
+      return {
+        bookPdfRoutes: labels('.research-object-routes a')
+          .filter((label) => label === 'Book' || label === 'PDF'),
+        clientWidth: root.clientWidth,
+        feedbackRoutes: labels('nav[aria-label="Research object feedback"] a'),
+        firstParagraphLineBottom:
+          firstParagraphTop + Number.parseFloat(firstParagraphStyle.lineHeight),
+        firstParagraphTop,
+        identityLabels: labels('dl > div > dt'),
+        minimumHeaderActionHeight: Math.min(...headerActionLinks.map(
+          (link) => link.getBoundingClientRect().height,
+        )),
+        recordRoutes: labels('nav[aria-label="Research object records"] a'),
+        scrollWidth: root.scrollWidth,
+        scrollY,
+        toolbarActionGroups: document.querySelectorAll(
+          '.portal-reader-toolbar nav[aria-label="Document actions"]',
+        ).length,
+        toolbarHeight: document.querySelector('.portal-reader-toolbar')
+          .getBoundingClientRect().height,
+        viewportHeight: innerHeight,
+      };
+    })()`,
+    returnByValue: true,
+  })).result?.value;
+
+  assert.equal(snapshot.scrollY, 0, JSON.stringify(snapshot));
+  assert.deepEqual(
+    snapshot.identityLabels,
+    ["Edition", "Source revision", "Extent", "Public route"],
+  );
+  assert.deepEqual(
+    snapshot.recordRoutes,
+    ["Source", "History", "Book", "PDF", "Cite", "Licence"],
+  );
+  assert.deepEqual(snapshot.bookPdfRoutes, ["Book", "PDF"]);
+  assert.deepEqual(snapshot.feedbackRoutes, ["Report clarity", "Correct evidence"]);
+  assert.ok(snapshot.minimumHeaderActionHeight >= 24, JSON.stringify(snapshot));
+  assert.ok(
+    snapshot.firstParagraphLineBottom <= snapshot.viewportHeight,
+    JSON.stringify(snapshot),
+  );
+  assert.equal(snapshot.toolbarActionGroups, 0, JSON.stringify(snapshot));
+  assert.ok(snapshot.scrollWidth <= snapshot.clientWidth, JSON.stringify(snapshot));
+}
+
 async function assertDenseResearchObjectReflow(cdp, origin) {
   await navigate(
     cdp,
@@ -400,6 +474,7 @@ test("hydrated research objects and the book preserve the static Pages identity"
     });
 
     await assertHydratedResearchObject(cdp, origin);
+    await assertFocusedDocumentEntry(cdp, origin);
     await assertDenseResearchObjectReflow(cdp, origin);
     await assertHydratedBook(cdp, origin);
   } finally {
