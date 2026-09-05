@@ -119,7 +119,25 @@ release acceptance rather than a mock-only unit check. It hashes one exact
 normalized schema-3 build context, builds it without cache in two separate
 builders pinned to the lock, compares the image, config and manifest identities,
 then byte-compares the complete PDF and `book-manifest.json` outputs. The
-command does not publish either render. It writes one new deterministic receipt
+schema-4 receipt retains the actual config bytes in base64. When Docker's
+execution ID names that config, its SHA-256 must match the exported bytes
+directly. When execution uses a manifest ID, the original Buildx manifest bytes
+must hash to that ID and bind the config's digest and size. A classic Docker
+export may reconstruct another OCI manifest; that reconstruction is never
+presented as the original build manifest. Its original manifest digest remains
+a separate Buildx-metadata observation.
+
+This acceptance command pins every Docker operation to the local Linux
+`unix:///var/run/docker.sock` endpoint, clearing inherited Docker and Buildx
+routing overrides. Ordinary `render-pdf` behaviour does not change. Each
+read-only image export has a 120-second deadline, 2-GiB stream cap, 128 physical
+tar-header cap, 64-KiB small-blob cap and 1-MiB aggregate small-blob buffer. It
+extracts no layers. Receipt proof covers config bytes and, for manifest-ID
+execution, their original descriptor link; it is not an independent layer-byte
+audit. [Decision 0074](../decisions/0074-verify-renderer-config-bytes-for-both-docker-stores.md)
+records the schema-3 correction and the two proof methods.
+
+The command does not publish either render. It writes one new deterministic receipt
 under the bounded evidence or release-input directories and removes only its
 own builder names and image tags. The dedicated renderer-selected CI gate
 retains the receipt for 30 days. If the renders disagree, the command first

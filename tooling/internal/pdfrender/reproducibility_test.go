@@ -13,7 +13,6 @@ import (
 )
 
 const (
-	testManifestDigest = "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 	testSecondImageID  = "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
 	testSecondManifest = "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
 )
@@ -42,9 +41,8 @@ func TestVerifyReproducibilityUsesTwoFreshNoCacheBuildersAndRetainsAReceipt(t *t
 	configuration := renderConfiguration(t)
 	receiptRelative := ".workingdir2/evidence/publication/pdf-reproducibility.json"
 	executor := &reproducibilityExecutor{
-		imageIDs:        []string{testImageID, testImageID},
+		imageIDs:        []string{testManifestDigest, testManifestDigest},
 		manifestDigests: []string{testManifestDigest, testManifestDigest},
-		configDigests:   []string{testImageID, testImageID},
 	}
 	sourceRevision := strings.Repeat("a", 40)
 
@@ -55,12 +53,16 @@ func TestVerifyReproducibilityUsesTwoFreshNoCacheBuildersAndRetainsAReceipt(t *t
 	if err != nil {
 		t.Fatalf("verifyReproducibilityWithDependencies() error = %v", err)
 	}
-	if receipt.Schema != 3 || receipt.Status != "pass" || !receipt.Comparison.AllMatch ||
+	if receipt.Schema != 4 || receipt.Status != "pass" || !receipt.Comparison.AllMatch ||
 		receipt.ScientificResult || receipt.MismatchEvidence != nil {
 		t.Fatalf("reproducibility receipt = %+v", receipt)
 	}
 	if receipt.SourceRef != "v1.2.3" || receipt.SourceRevision != sourceRevision {
 		t.Fatalf("reproducibility receipt lost release identity: %+v", receipt)
+	}
+	if receipt.Builds[0].ConfigDigest != testProofConfigDigest || receipt.Builds[0].ConfigDigest == receipt.Builds[0].ManifestDigest ||
+		receipt.Builds[0].ConfigProof.Method != "docker-save-original-manifest-config-v1" {
+		t.Fatal("containerd receipt did not separate the actual config from manifest execution identity")
 	}
 	if receipt.Renderer.LockSchema != 3 || !receipt.Renderer.NoCache ||
 		receipt.Renderer.FreshBuilderCount != 2 || !strings.HasPrefix(receipt.Context.SHA256, "sha256:") {
@@ -123,9 +125,8 @@ func TestVerifyReproducibilityWritesMismatchReceiptAndFails(t *testing.T) {
 	configuration := renderConfiguration(t)
 	receiptRelative := "build/evidence/pdf-reproducibility.json"
 	executor := &reproducibilityExecutor{
-		imageIDs:                []string{testImageID, testImageID},
+		imageIDs:                []string{testProofConfigDigest, testProofConfigDigest},
 		manifestDigests:         []string{testManifestDigest, testManifestDigest},
-		configDigests:           []string{testImageID, testImageID},
 		differentSecondManifest: true,
 	}
 
@@ -181,9 +182,8 @@ func TestVerifyReproducibilityRetainsMismatchBeforeImageCleanupFailure(t *testin
 	configuration := renderConfiguration(t)
 	receiptRelative := "build/evidence/pdf-reproducibility.json"
 	executor := &reproducibilityExecutor{
-		imageIDs:                []string{testImageID, testImageID},
+		imageIDs:                []string{testProofConfigDigest, testProofConfigDigest},
 		manifestDigests:         []string{testManifestDigest, testManifestDigest},
-		configDigests:           []string{testImageID, testImageID},
 		differentSecondManifest: true,
 		failImageCleanup:        true,
 	}
@@ -270,9 +270,8 @@ func TestVerifyReproducibilityRefusesExistingMismatchEvidence(t *testing.T) {
 		t.Fatal(err)
 	}
 	executor := &reproducibilityExecutor{
-		imageIDs:                []string{testImageID, testImageID},
+		imageIDs:                []string{testProofConfigDigest, testProofConfigDigest},
 		manifestDigests:         []string{testManifestDigest, testManifestDigest},
-		configDigests:           []string{testImageID, testImageID},
 		differentSecondManifest: true,
 	}
 
@@ -298,9 +297,8 @@ func TestVerifyReproducibilityRejectsMalformedMetadataAndCleansOwnedResources(t 
 	t.Parallel()
 	configuration := renderConfiguration(t)
 	executor := &reproducibilityExecutor{
-		imageIDs:        []string{testImageID},
+		imageIDs:        []string{testProofConfigDigest},
 		manifestDigests: []string{"malformed"},
-		configDigests:   []string{"malformed"},
 	}
 
 	_, err := verifyReproducibilityWithDependencies(
@@ -367,21 +365,21 @@ func TestNormalizedBuildContextIdentityIsIndependentOfItsTemporaryRoot(t *testin
 	}
 }
 
-func TestInspectLoadedImageConfigRequiresTheIIDFileIdentity(t *testing.T) {
+func TestInspectLoadedImageIDRequiresTheIIDFileIdentity(t *testing.T) {
 	t.Parallel()
 	configuration := renderConfiguration(t)
 	executor := &reproducibilityExecutor{loadedTags: map[string]string{
 		"20w-pdf-reproducibility:test-1": testSecondImageID,
 	}}
-	_, err := inspectLoadedImageConfig(
+	_, err := inspectLoadedImageID(
 		context.Background(),
 		configuration,
 		executor,
 		"20w-pdf-reproducibility:test-1",
-		testImageID,
+		testProofConfigDigest,
 	)
 	if err == nil || !strings.Contains(err.Error(), "disagree") {
-		t.Fatalf("inspectLoadedImageConfig() error = %v", err)
+		t.Fatalf("inspectLoadedImageID() error = %v", err)
 	}
 }
 
@@ -410,7 +408,7 @@ type reproducibilityExecutor struct {
 	requests                []commandRequest
 	imageIDs                []string
 	manifestDigests         []string
-	configDigests           []string
+	classicArchive          bool
 	differentSecondManifest bool
 	failImageCleanup        bool
 	buildCount              int
@@ -426,7 +424,7 @@ func (executor *reproducibilityExecutor) run(_ context.Context, request commandR
 	if len(request.arguments) > 1 && slices.Equal(request.arguments[:2], []string{"buildx", "build"}) {
 		index := executor.buildCount
 		executor.buildCount++
-		if index >= len(executor.imageIDs) || index >= len(executor.manifestDigests) || index >= len(executor.configDigests) {
+		if index >= len(executor.imageIDs) || index >= len(executor.manifestDigests) {
 			return nil, errors.New("missing injected reproducibility build identity")
 		}
 		if err := os.WriteFile(
@@ -439,8 +437,8 @@ func (executor *reproducibilityExecutor) run(_ context.Context, request commandR
 		}
 		executor.loadedTags[argumentAfterValue(request.arguments, "--tag")] = executor.imageIDs[index]
 		metadata := fmt.Sprintf(
-			"{\"containerimage.digest\":%q,\"containerimage.config.digest\":%q}\n",
-			executor.manifestDigests[index], executor.configDigests[index],
+			"{\"containerimage.digest\":%q}\n",
+			executor.manifestDigests[index],
 		)
 		if err := os.WriteFile(
 			argumentAfterValue(request.arguments, "--metadata-file"), []byte(metadata), 0o600,
@@ -499,7 +497,7 @@ func TestCompareReproducibilityBuildsRequiresEveryImageIdentity(t *testing.T) {
 		},
 	}
 	first := ReproducibilityBuild{
-		ImageID: testImageID, ManifestDigest: testManifestDigest, ConfigDigest: testImageID, Pair: pair,
+		ImageID: testProofConfigDigest, ManifestDigest: testManifestDigest, ConfigDigest: testProofConfigDigest, Pair: pair,
 	}
 	second := first
 	second.ImageID = testSecondImageID

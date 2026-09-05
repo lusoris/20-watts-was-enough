@@ -127,6 +127,10 @@ func (output *boundedOutput) result() ([]byte, bool) {
 }
 
 func (localCommandExecutor) run(ctx context.Context, request commandRequest) ([]byte, error) {
+	return runDockerCommand(ctx, request, nil)
+}
+
+func runDockerCommand(ctx context.Context, request commandRequest, environment []string) ([]byte, error) {
 	if request.timeout <= 0 || request.outputSize <= 0 || len(request.arguments) == 0 {
 		return nil, errors.New("invalid bounded subprocess request")
 	}
@@ -135,6 +139,7 @@ func (localCommandExecutor) run(ctx context.Context, request commandRequest) ([]
 	output := &boundedOutput{limit: request.outputSize}
 	command := exec.CommandContext(commandContext, "docker", request.arguments...)
 	command.Dir = request.directory
+	command.Env = environment
 	command.Stdout = output
 	command.Stderr = output
 	command.WaitDelay = maximumWaitDelay
