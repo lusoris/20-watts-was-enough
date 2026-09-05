@@ -50,10 +50,11 @@ type Limits = pdfrenderlock.Limits
 
 // Configuration is one validated renderer lock resolved beneath a repository.
 type Configuration struct {
-	RepositoryRoot string
-	LockPath       string
-	LockSHA256     string
-	Lock           Lock
+	RepositoryRoot              string
+	LockPath                    string
+	LockSHA256                  string
+	Lock                        Lock
+	installedDependenciesSHA256 string
 }
 
 // Check validates the local renderer authority without invoking Docker or the network.

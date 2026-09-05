@@ -16,6 +16,10 @@ the exact diff; this file records why the project changed.
   one complete line of canonical prose in the initial `390 x 844` viewport.
   The 320-pixel reflow boundary still keeps long revisions and routes inside
   the document width.
+- Both PDF commands now reject a stale or incomplete installed npm dependency
+  tree before image work, and stop if package metadata changes before rendering
+  or publication. This catches copied installs such as KaTeX 0.18.4 against a
+  0.18.5 lock without downloading packages or claiming payload-byte attestation.
 - Decision 0072 runs the three independent site-browser contracts in
   process-isolated Node workers with a concurrency ceiling of two instead of
   one serial process. The first live three-worker run exhausted its unchanged

@@ -152,6 +152,27 @@ dependency tree. Their byte comparison therefore tests deterministic rendering
 conditional on one clean `npm ci` realization; it does not independently
 reinstall or byte-bind two realized `node_modules` trees.
 
+Before either PDF command starts image work, Go checks the declared lock,
+npm's hidden installation lock and each installed package's name and version.
+It rejects stale identities, missing required packages, unexpected packages,
+unsafe paths and malformed metadata. Platform-optional packages and their
+optional dependency subtrees may be absent. Metadata is frozen for the command
+and rechecked before and after rendering, then before publishing the pair or
+acceptance receipt. These offline checks detect installation drift; they do
+not authenticate package payload bytes. A failure requires an explicit
+`npm ci --no-audit` with the locked toolchain, not a download during rendering.
+The check bounds each lock to 2 MiB, each package manifest to 1 MiB, combined
+metadata to 32 MiB, the inventory to 4,096 packages, paths to 16 components,
+each directory to 4,096 entries and each inspection to 30 seconds. npm shims,
+its separately checked hidden lock and known Vite/cache directories are
+outside the package inventory. Remove this check only when a replacement
+renderer binds its installed dependency inputs more strongly.
+
+npm's `inBundle` records may omit their own URL and integrity. The guard
+requires a containing locked package and its explicit `bundleDependencies`
+entry, or an already bundled parent; the enclosing archive supplies the
+binding. This includes the optional WASI subtree in the current lock.
+
 `node scripts/audit-book-pdf-semantics.mjs --evidence-dir
 .workingdir2/evidence/design/<new-directory-name>` captures plain `pdfinfo`,
 `pdfinfo -struct`, `pdfinfo -struct-text`, default text extraction and raw text

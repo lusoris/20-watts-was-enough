@@ -55,6 +55,10 @@ func verifyReproducibilityWithDependencies(
 	if err := ValidateSourceRevision(sourceRef, sourceRevision); err != nil {
 		return ReproducibilityReceipt{}, err
 	}
+	configuration, err := bindInstalledDependencies(ctx, configuration)
+	if err != nil {
+		return ReproducibilityReceipt{}, err
+	}
 	receiptPath, err := prepareReproducibilityReceiptPath(configuration.RepositoryRoot, receiptRelativePath)
 	if err != nil {
 		return ReproducibilityReceipt{}, err
@@ -158,6 +162,9 @@ func verifyReproducibilityWithDependencies(
 			configuration.RepositoryRoot, filepath.FromSlash(evidence.Root),
 		)
 	}
+	if err := checkAuthorityUnchanged(ctx, configuration); err != nil {
+		return ReproducibilityReceipt{}, err
+	}
 	if err := writeReproducibilityReceipt(receiptPath, receipt); err != nil {
 		return ReproducibilityReceipt{}, err
 	}
@@ -229,7 +236,7 @@ func reproducibilityBuild(
 		return result, err
 	}
 	builderActive = false
-	if err := checkAuthorityUnchanged(configuration); err != nil {
+	if err := checkAuthorityUnchanged(ctx, configuration); err != nil {
 		return result, err
 	}
 
@@ -250,7 +257,7 @@ func reproducibilityBuild(
 	result.ManifestDigest = metadata.ManifestDigest
 	result.ConfigDigest = configDigest
 	result.Pair = pair
-	return result, checkAuthorityUnchanged(configuration)
+	return result, checkAuthorityUnchanged(ctx, configuration)
 }
 
 func reproducibilityBuildArguments(
