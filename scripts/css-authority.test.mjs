@@ -133,13 +133,37 @@ test("authority validation rejects selector leaks, duplication, and missing meas
   assert.match(missingMeasure.errors.join("\n"), /\.portal-reader must keep --reading-measure/u);
 });
 
+test("authority validation rejects a fixed-height document canvas", () => {
+  const fixedCanvas = validateCssAuthority({
+    globalSource: globalSource.replace(
+      "html,\nbody {\n  min-height: 100%;",
+      "html,\nbody {\n  height: 100%;",
+    ),
+    portalSource,
+  });
+
+  assert.match(fixedCanvas.errors.join("\n"), /html must not fix the screen document canvas height/u);
+  assert.match(fixedCanvas.errors.join("\n"), /body must keep one root min-height: 100%/u);
+
+  const fixedPrintCanvas = validateCssAuthority({
+    globalSource: globalSource.replace(
+      "    min-height: auto;\n    background: #fff;",
+      "    background: #fff;",
+    ),
+    portalSource,
+  });
+  assert.match(fixedPrintCanvas.errors.join("\n"), /html must reset min-height to auto for print/u);
+  assert.match(fixedPrintCanvas.errors.join("\n"), /body must reset min-height to auto for print/u);
+});
+
 test("authority validation admits only the exact shared skip-link selectors", () => {
   const exactSharedSelectors = `
+html, body { min-height: 100%; }
 .portal-skip-link { inset: 0; }
 .portal-skip-link:focus { inset: auto; }
 .prose { line-height: 1.5; }
 .prose > p { max-width: 80ch; }
-@media print {}
+@media print { html, body { min-height: auto; } }
 `;
   const exact = validateCssAuthority({
     globalSource: exactSharedSelectors,

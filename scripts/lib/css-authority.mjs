@@ -166,6 +166,44 @@ function declarationsForSelector(root, selector, property) {
   return matches;
 }
 
+function declarationsForSelectorAtScope(root, selector, property, scope) {
+  const matches = [];
+  root.walkRules((rule) => {
+    if (ruleScope(rule) !== scope) return;
+    if (!rule.selectors.map(normalizedWhitespace).includes(selector)) return;
+    rule.walkDecls(property, (declaration) => matches.push(declaration));
+  });
+  return matches;
+}
+
+function requireExpandingDocumentCanvas(errors, root) {
+  for (const selector of ["html", "body"]) {
+    const fixedHeights = declarationsForSelectorAtScope(root, selector, "height", "root");
+    const minimumHeights = declarationsForSelectorAtScope(root, selector, "min-height", "root");
+    const printMinimumHeights = declarationsForSelectorAtScope(
+      root,
+      selector,
+      "min-height",
+      "@media print",
+    );
+    if (fixedHeights.length > 0) {
+      errors.push(`${selector} must not fix the screen document canvas height.`);
+    }
+    if (
+      minimumHeights.length !== 1
+      || normalizedWhitespace(minimumHeights[0].value) !== "100%"
+    ) {
+      errors.push(`${selector} must keep one root min-height: 100% declaration.`);
+    }
+    if (
+      printMinimumHeights.length !== 1
+      || normalizedWhitespace(printMinimumHeights[0].value) !== "auto"
+    ) {
+      errors.push(`${selector} must reset min-height to auto for print.`);
+    }
+  }
+}
+
 function requireBoundedCh(errors, root, selector, property, maximum) {
   const declarations = declarationsForSelector(root, selector, property);
   const values = declarations.map(({ value }) => value.match(/^([0-9]+(?:\.[0-9]+)?)ch$/u));
@@ -252,6 +290,7 @@ export function validateCssAuthority({ globalSource, portalSource }) {
   requireMinimumLeading(errors, portalInventory.root, ".portal-prose", 1.5);
   requireMinimumLeading(errors, portalInventory.root, ".help-intro > p:not(.portal-eyebrow)", 1.5);
   requireMinimumLeading(errors, globalInventory.root, ".prose", 1.5);
+  requireExpandingDocumentCanvas(errors, globalInventory.root);
 
   return {
     errors,
