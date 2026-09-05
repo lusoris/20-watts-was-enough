@@ -2037,6 +2037,8 @@ button {
   .book-prose > h2:first-child {
     margin-bottom: 8mm;
     font-size: 30pt;
+    /* Compressed tracking merges heading words in PDF text extraction. */
+    letter-spacing: normal;
     break-after: avoid;
   }
 

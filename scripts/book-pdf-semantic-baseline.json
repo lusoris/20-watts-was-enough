@@ -6,9 +6,9 @@
   "artifact": {
     "pdf": "public/downloads/20-watts-was-enough-full-concept-book.pdf",
     "manifest": "public/downloads/book-manifest.json",
-    "pdf_sha256": "387bca765e0ae4a675f5274a0f511a0644f1d26fd4f9b665fdeb9b64236ad454",
-    "manifest_sha256": "d520608d55211ecc52b5ce77cfa172aee34f5469ac0993c176412256b41999dc",
-    "size_bytes": 12782330,
+    "pdf_sha256": "5ee3fcff42e6bc13cc653be080c625496ea304a791011217902e92f5fa2a967d",
+    "manifest_sha256": "39b77b5b8ea8434b9b28f3a6c43b266dd192d4dcbeac14669a6ce5aaa0774b24",
+    "size_bytes": 12778636,
     "pages": 412,
     "page_size_name": "A4",
     "page_size_points": {
@@ -18,7 +18,7 @@
     "pdf_version": "1.4",
     "tagged": true,
     "source_ref": "main",
-    "source_digest": "ec7a51e67f29631a5aeeebfd15287e92eab5482f68e26296a23b08ea871b8505",
+    "source_digest": "1349f06d995455c98f0713ec51fb8c7277b0f740fb1f6044aec014676e73c3b9",
     "version": "0.3.0"
   },
   "tools": {
@@ -32,59 +32,59 @@
     }
   },
   "outputs": {
-    "metadata": {
+    "structure_text": {
       "exit_status": 0,
-      "stdout": {
-        "bytes": 627,
-        "sha256": "1c31404b1465afa9c1a506d18fbacb06bca0ec21073165f57d1795d0381349fd"
-      },
       "stderr": {
         "bytes": 0,
         "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 2457349,
+        "sha256": "1eae568db1f02a9eb49ff8201537d8bc84d816aa980755e6e97e1eacad7d8f4a"
+      }
+    },
+    "metadata": {
+      "exit_status": 0,
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 627,
+        "sha256": "41a3bcc9f8c74ea6a389340ce0b204c809425b53fd7cc6b91a15bdb827a2368b"
       }
     },
     "structure": {
       "exit_status": 0,
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
       "stdout": {
         "bytes": 1090516,
-        "sha256": "5e639e14138df3725a7bdc7d3a8dda80aa68e48e5cdd477b4de7412cbeb7d47c"
-      },
-      "stderr": {
-        "bytes": 0,
-        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-      }
-    },
-    "structure_text": {
-      "exit_status": 0,
-      "stdout": {
-        "bytes": 2457202,
-        "sha256": "3d0ad9a583de577c3998c2e5a097de9e63c3c7f3fa55a99f617efb60e3dfe034"
-      },
-      "stderr": {
-        "bytes": 0,
-        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        "sha256": "759505290505fa1d34a6d1fc07cf575d7b7a0cd3af10a27fc3002bfb5030e918"
       }
     },
     "default_text": {
       "exit_status": 0,
-      "stdout": {
-        "bytes": 1119254,
-        "sha256": "b17dbe504fa81a439cf082132dccb6f2f80e0ac6c2c4dc52aaf72d4689007dc8"
-      },
       "stderr": {
         "bytes": 0,
         "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1119276,
+        "sha256": "8ad88fc2b756bf5d3b374354768ef86f68eb0253b1b62a00b67ca264900e3918"
       }
     },
     "raw_text": {
       "exit_status": 0,
-      "stdout": {
-        "bytes": 1109783,
-        "sha256": "85f769cb64b8aadb3a04a6d070316fad9980bab62267440cadc258b5d2867944"
-      },
       "stderr": {
         "bytes": 0,
         "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stdout": {
+        "bytes": 1109947,
+        "sha256": "47b6dc4af95172d3fc63c38bfb56f59ca295b999600c238e83df55cbe7ca18b4"
       }
     }
   },
@@ -250,12 +250,12 @@
       ],
       "raw_fragments": [
         "APPENDIX A1",
-        "Globalfieldcoverage",
+        "Global field coverage",
         "Census date: 2026-08-27",
         "FIGURE 80"
       ],
-      "state": "known-debt",
-      "defect": "Content-stream extraction merges the appendix heading into Globalfieldcoverage."
+      "state": "clean",
+      "defect": "Resolved: content-stream extraction preserves the appendix heading as Global field coverage."
     }
   ]
 }

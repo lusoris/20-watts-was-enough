@@ -16,6 +16,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { bookSourceDigest } from "../book-source.mjs";
+import { bookPdfSemanticDebtMessage } from "../audit-book-pdf-semantics.mjs";
 import {
   auditBookPdfSemanticCaptures,
   assertBookPdfSemanticArtifactIdentity,
@@ -528,6 +529,19 @@ test("the tracked semantic baseline is closed and records failing debt", async (
   ));
   assert.equal(baseline.expected_outcome, "known-debt");
   assert.equal(baseline.sentinels.length, 6);
+  assert.equal(baseline.sentinels.filter(({ state }) => state === "known-debt").length, 5);
+  const headingSentinel = baseline.sentinels.find(
+    ({ id }) => id === "field-coverage-heading-merged",
+  );
+  assert.equal(headingSentinel?.state, "clean", "the repaired heading remains a positive sentinel");
+  assert.equal(headingSentinel.recorded_page, 386);
+  assert.deepEqual(headingSentinel.raw_fragments, [
+    "APPENDIX A1",
+    "Global field coverage",
+    "Census date: 2026-08-27",
+    "FIGURE 80",
+  ]);
+  assert.equal(headingSentinel.struct_text_fragments[0], "Global field coverage");
   const addedSentinel = baseline.sentinels.find(
     ({ id }) => id === "admissible-action-equation-late",
   );
@@ -582,6 +596,47 @@ test("recognized diagnostics with exit zero remain known debt, never a pass", ()
   assert.deepEqual(report.artifact.page_size_points, { width: 594.96, height: 841.92 });
   assert.equal(report.artifact.tagged, true);
   assert.equal(report.diagnostics.structure[0].count, 1);
+  assert.equal(
+    bookPdfSemanticDebtMessage(report),
+    "recognized semantic debt remains: 3 of 3 nonlinear sentinels; "
+      + "2 structure diagnostic occurrences across pdfinfo -struct and -struct-text",
+  );
+});
+
+test("semantic failure wording counts debt separately from the retained sentinel inventory", () => {
+  const fixture = semanticFixture("clean");
+  fixture.baseline.expected_outcome = "known-debt";
+  const debt = semanticSentinels("known-debt");
+  fixture.baseline.sentinels = [
+    ...debt,
+    ...debt.map((sentinel) => ({ ...sentinel, id: `${sentinel.id}-second` })),
+  ];
+  fixture.baseline.sentinels[5].state = "clean";
+  fixture.baseline.sentinels[5].defect = "The retained figure sentinel is clean.";
+  const report = auditBookPdfSemanticCaptures(fixture);
+  assert.equal(report.passed, false);
+  assert.equal(report.sentinels.length, 6);
+  assert.equal(
+    bookPdfSemanticDebtMessage(report),
+    "recognized semantic debt remains: 5 of 6 nonlinear sentinels; "
+      + "0 structure diagnostic occurrences across pdfinfo -struct and -struct-text",
+  );
+});
+
+test("semantic diagnostic wording never calls clean sentinels a clean audit", () => {
+  const fixture = semanticFixture();
+  fixture.baseline.sentinels = semanticSentinels("clean");
+  fixture.baseline.diagnostics.structure = [{ message: knownDiagnostic, count: 2 }];
+  fixture.captures.structure.stderr = Buffer.from(`${knownDiagnostic}\n`.repeat(2));
+  fixture.baseline.outputs.structure = summarizeBookPdfSemanticCapture(fixture.captures.structure);
+  const report = auditBookPdfSemanticCaptures(fixture);
+  assert.equal(report.passed, false);
+  assert.equal(report.sentinels.every(({ state }) => state === "clean"), true);
+  assert.equal(
+    bookPdfSemanticDebtMessage(report),
+    "recognized semantic debt remains: 0 of 3 nonlinear sentinels; "
+      + "3 structure diagnostic occurrences across pdfinfo -struct and -struct-text",
+  );
 });
 
 test("unknown, added, or silently removed structure diagnostics fail closed", () => {
