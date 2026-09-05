@@ -92,6 +92,10 @@ func renderWithDependencies(
 	if err := ValidateSourceRevision(sourceRef, sourceRevision); err != nil {
 		return Result{}, err
 	}
+	configuration, err := bindInstalledDependencies(ctx, configuration)
+	if err != nil {
+		return Result{}, err
+	}
 	if err := prepareWritableRenderPaths(configuration.RepositoryRoot); err != nil {
 		return Result{}, err
 	}
@@ -129,7 +133,7 @@ func renderWithDependencies(
 	if err := preparer.prepare(buildContext, configuration, contextRoot); err != nil {
 		return Result{}, fmt.Errorf("prepare PDF renderer build context: %w", err)
 	}
-	if err := checkAuthorityUnchanged(configuration); err != nil {
+	if err := checkAuthorityUnchanged(ctx, configuration); err != nil {
 		return Result{}, err
 	}
 	builderName, err := createLockedBuilder(buildContext, configuration, executor)
@@ -162,7 +166,7 @@ func renderWithDependencies(
 	if err := rejectTimestampRewriteWarnings(buildOutput); err != nil {
 		return Result{}, err
 	}
-	if err := checkAuthorityUnchanged(configuration); err != nil {
+	if err := checkAuthorityUnchanged(ctx, configuration); err != nil {
 		return Result{}, err
 	}
 	imageID, err := readImageID(iidPath)
@@ -182,15 +186,15 @@ func renderWithDependencies(
 		if err := runRendererOnce(ctx, configuration, executor, imageID, sourceRef, sourceRevision, outputDirectory, temporaryDirectory); err != nil {
 			return Result{}, err
 		}
-		if err := checkAuthorityUnchanged(configuration); err != nil {
-			return Result{}, err
-		}
 		renderDirectories[index] = outputDirectory
 	}
 	if err := removeBuilder(executor, builderName, configuration.Lock.Limits.OutputBytes); err != nil {
 		return Result{}, err
 	}
 	builderActive = false
+	if err := checkAuthorityUnchanged(ctx, configuration); err != nil {
+		return Result{}, err
+	}
 	if err := compareAndPublishRenderPairs(configuration.RepositoryRoot, renderDirectories[0], renderDirectories[1]); err != nil {
 		return Result{}, err
 	}
@@ -249,6 +253,9 @@ func runRendererOnce(
 	executor commandExecutor,
 	imageID, sourceRef, sourceRevision, outputDirectory, temporaryDirectory string,
 ) error {
+	if err := checkAuthorityUnchanged(ctx, configuration); err != nil {
+		return err
+	}
 	containerName, err := randomContainerName()
 	if err != nil {
 		return err
@@ -264,16 +271,17 @@ func runRendererOnce(
 	})
 	if err != nil {
 		cleanupContainer(executor, containerName, configuration.Lock.Limits.OutputBytes)
+		return err
 	}
-	return err
+	return checkAuthorityUnchanged(ctx, configuration)
 }
 
-func checkAuthorityUnchanged(configuration Configuration) error {
+func checkAuthorityUnchanged(ctx context.Context, configuration Configuration) error {
 	current, err := Check(configuration.RepositoryRoot)
 	if err != nil || current.LockSHA256 != configuration.LockSHA256 {
 		return errors.New("PDF renderer lock changed during the render operation")
 	}
-	return nil
+	return checkInstalledDependencies(ctx, configuration)
 }
 
 func buildArguments(configuration Configuration, builderName, contextRoot, iidPath string) []string {

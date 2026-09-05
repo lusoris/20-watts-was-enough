@@ -411,6 +411,7 @@ func renderConfiguration(t *testing.T) Configuration {
 			t.Fatal(err)
 		}
 	}
+	writeInstalledDependencyFixture(t, root)
 	configuration, err := Check(root)
 	if err != nil {
 		t.Fatal(err)

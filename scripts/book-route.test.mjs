@@ -230,6 +230,8 @@ test("the full-book source identity includes the locked renderer dependency grap
     "tooling/internal/nodeimage/package.go",
     "tooling/internal/ocimanifest/manifest.go",
     "tooling/internal/pdfrender/dockerfile.go",
+    "tooling/internal/pdfrender/installed_dependencies.go",
+    "tooling/internal/pdfrender/installed_inventory.go",
     "tooling/internal/pdfrender/publication.go",
     "tooling/internal/pdfrender/render.go",
     "tooling/internal/pdfrender/reproducibility.go",

@@ -133,6 +133,8 @@ export async function bookSourceFiles(projectRoot) {
     "tooling/internal/pdfrender/archive.go",
     "tooling/internal/pdfrender/command.go",
     "tooling/internal/pdfrender/dockerfile.go",
+    "tooling/internal/pdfrender/installed_dependencies.go",
+    "tooling/internal/pdfrender/installed_inventory.go",
     "tooling/internal/pdfrender/lock.go",
     "tooling/internal/pdfrender/publication.go",
     "tooling/internal/pdfrender/render.go",

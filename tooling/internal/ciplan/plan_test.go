@@ -71,6 +71,8 @@ func TestRendererAuthorityPredicateCoversTheClosedExecutionBoundary(t *testing.T
 		"tooling/go.mod",
 		"tooling/internal/ciplan/plan.go",
 		"tooling/internal/pdfrender/reproducibility.go",
+		"tooling/internal/pdfrender/installed_dependencies.go",
+		"tooling/internal/pdfrender/installed_inventory.go",
 		"tooling/internal/strictjson/validate.go",
 		"tooling/pdf-renderer/lock.json",
 		"vite.pages.config.ts",
