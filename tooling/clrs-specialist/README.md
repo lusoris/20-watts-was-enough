@@ -119,9 +119,13 @@ timeout --signal=TERM --kill-after=2s 45s \
 Both containers use 1 CPU, 128 MiB without swap and at most 64 PIDs; only the
 execution's dedicated output parent is writable. Keep the output bundle and
 each external exit status. `--rm` removes exited containers. If a timed-out
-Docker client leaves its named container running, use
-`docker container rm --force "$CLRS_CONTAINER_NAME"` to remove only that
-container, retaining the bundle.
+Docker client leaves its named container running, remove only that container,
+retaining the bundle:
+
+```bash
+docker container rm --force "$CLRS_CONTAINER_NAME"
+```
+
 These containment limits do not measure energy or admit an experiment image.
 
 ### Native Go alternative
