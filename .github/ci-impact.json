@@ -153,6 +153,7 @@
       "paths": [
         "tooling/internal/clrsbellmanford/**",
         "tooling/internal/clrsbinary/**",
+        "tooling/internal/clrscontext/**",
         "tooling/internal/clrsfixture/**",
         "tooling/internal/clrsinsertion/**",
         "tooling/internal/clrskmp/**",

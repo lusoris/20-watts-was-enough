@@ -86,6 +86,11 @@ the exact diff; this file records why the project changed.
 
 ### Added
 
+- A Go candidate-context command packages the pinned CLRS source, selected
+  wheels and verified historical Promise evidence into a deterministic tar.
+  Its read-only checker uses the same explicit inputs; offline-install
+  Dockerfile generation and no-replace publication leave image admission
+  blocked and preserve `NO_RESULT`.
 - A Go-owned candidate command reproduces the locked Promise 2.3 wheel in two
   bounded, offline containers, checks the exact wheel and embedded MIT bytes,
   and retains a source-bound receipt with a read-only consumer. Input

@@ -1473,12 +1473,20 @@ test("Go renderer and CI owners retain their path-derived pull-request labels", 
   ]) assert.deepEqual(labelsFor(file), rendererLabels, file);
   assert.deepEqual(labelsFor("tooling/internal/ciplan/plan_test.go"), ["area:ci"]);
   for (const file of [
+    "tooling/internal/clrscontext/context.go",
+    "tooling/internal/clrscontext/source_test.go",
+    "tooling/cmd/20w/clrs_context.go",
+    "tooling/cmd/20w/clrs_context_test.go",
+  ]) assert.deepEqual(labelsFor(file), ["area:ci", "area:experiment"], file);
+  for (const file of [
     "tooling/internal/pdftools/candidate_output.go",
     "tooling/pdf-tools/contract.json",
     "tooling/cmd/20w/pdf_tools_test.go",
   ]) assert.deepEqual(labelsFor(file), ["area:publication"], file);
   for (const file of [
     "tooling/internal/pdfrender-unrelated/example.go",
+    "tooling/internal/clrscontext-unrelated/example.go",
+    "tooling/cmd/20w/clrs_context_other.go",
     "tooling/internal/clrsfixture/image.go",
     "tooling/cmd/20w/main.go",
   ]) assert.deepEqual(labelsFor(file), [], file);
