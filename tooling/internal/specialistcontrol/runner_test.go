@@ -91,7 +91,8 @@ func TestRunnerSnapshotsRequestBeforeClockOrCallerAliasMutation(t *testing.T) {
 	boundRequest := request
 	boundRequest.Payload = append([]byte(nil), expectedPayload...)
 	targetID := "exact-" + string(request.Task)
-	expectedBinding := bindRequest(boundRequest, targetID, testNow)
+	admission := testAdmission(t, policy, testNow)
+	expectedBinding := bindRequest(boundRequest, targetID, testNow, testAdmissionDecision(policy, request.Task, testNow))
 	clockCalls := 0
 	now := func() time.Time {
 		clockCalls++
@@ -116,6 +117,7 @@ func TestRunnerSnapshotsRequestBeforeClockOrCallerAliasMutation(t *testing.T) {
 	})
 	runner, err := NewRunner(
 		policy,
+		admission,
 		recorderFunc(func(_ context.Context, decision Decision) error {
 			if decision.Binding != expectedBinding {
 				t.Fatalf("recorded binding = %x, want %x", decision.Binding, expectedBinding)
@@ -166,6 +168,211 @@ func TestRunnerRecorderFailurePreventsSpecialistEffects(t *testing.T) {
 	}
 }
 
+func TestRunnerRechecksRequestAgeImmediatelyBeforeSpecialistEffect(t *testing.T) {
+	t.Parallel()
+	limits := testLimits()
+	limits.MaxRequestAge = time.Second
+	policy := testPolicyWithLimits(t, limits)
+	request := testRequest(TaskInsertionSort)
+	targetID := "exact-" + string(request.Task)
+	invoked := false
+	specialists := testSpecialists(policy)
+	specialists[targetID] = specialistFunc(func(context.Context, Invocation) (SpecialistResult, error) {
+		invoked = true
+		return SpecialistResult{}, nil
+	})
+	clockCalls := 0
+	now := func() time.Time {
+		clockCalls++
+		if clockCalls >= 3 {
+			return testNow.Add(time.Nanosecond)
+		}
+		return testNow
+	}
+	var recorded []Decision
+	runner, err := NewRunner(
+		policy,
+		testAdmission(t, policy, testNow),
+		recorderFunc(func(_ context.Context, decision Decision) error {
+			recorded = append(recorded, decision)
+			return nil
+		}),
+		specialists,
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
+			t.Fatal("verifier ran after request-age expiry")
+			return Verification{}, nil
+		}),
+		now,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	run, runErr := runner.Run(context.Background(), request)
+	if runErr != nil || invoked || len(recorded) != 2 || recorded[0].State != DecisionInvoke ||
+		recorded[1].State != DecisionAbstain || recorded[1].Reason != ReasonStaleRequest ||
+		recorded[1].Admission.State != AdmissionAdmitted || run.Decision != recorded[1] ||
+		run.Outcome.State != OutcomeAbstained || run.Outcome.Reason != ReasonStaleRequest {
+		t.Fatalf("Run(request aged during record) = %#v, %v, recorded=%#v invoked=%t", run, runErr, recorded, invoked)
+	}
+}
+
+func TestRunnerBoundsDecisionRecorderContexts(t *testing.T) {
+	t.Parallel()
+	limits := testLimits()
+	limits.MaxDecisionRecord = 25 * time.Millisecond
+	policy := testPolicyWithLimits(t, limits)
+	request := testRequest(TaskBinarySearch)
+	targetID := "exact-" + string(request.Task)
+	invoked := false
+	specialists := testSpecialists(policy)
+	specialists[targetID] = specialistFunc(func(context.Context, Invocation) (SpecialistResult, error) {
+		invoked = true
+		return SpecialistResult{}, nil
+	})
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	records := 0
+	runner, err := NewRunner(
+		policy,
+		testAdmission(t, policy, testNow),
+		recorderFunc(func(recordContext context.Context, _ Decision) error {
+			records++
+			deadline, present := recordContext.Deadline()
+			remaining := time.Until(deadline)
+			if !present || remaining <= 0 || remaining > limits.MaxDecisionRecord+10*time.Millisecond {
+				t.Fatalf("record context %d deadline = %s/%t", records, remaining, present)
+			}
+			if records == 1 {
+				cancel()
+				return nil
+			}
+			if recordContext.Err() != nil {
+				t.Fatalf("detached terminal record context error = %v", recordContext.Err())
+			}
+			return nil
+		}),
+		specialists,
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
+			t.Fatal("verifier ran after recorder-triggered cancellation")
+			return Verification{}, nil
+		}),
+		fixedClock(testNow),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if budget := runner.decisionRecordBudget(Decision{
+		DecidedAt: testNow, Deadline: testNow.Add(5 * time.Millisecond),
+	}); budget != 5*time.Millisecond {
+		t.Fatalf("decisionRecordBudget() = %s, want request-bound 5ms", budget)
+	}
+
+	run, runErr := runner.Run(ctx, request)
+	if !errors.Is(runErr, context.Canceled) || invoked || records != 2 ||
+		run.Decision.State != DecisionAbstain || run.Decision.Reason != ReasonCancelled {
+		t.Fatalf("Run(cancelled after bounded record) = %#v, %v, invoked=%t records=%d", run, runErr, invoked, records)
+	}
+}
+
+func TestRunnerDurablyRecordsPreCancelledAdmissionWithDetachedBound(t *testing.T) {
+	t.Parallel()
+	policy := testPolicy(t)
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	records := 0
+	recorded := false
+	specialists := testSpecialists(policy)
+	for specialistID := range specialists {
+		specialists[specialistID] = specialistFunc(func(context.Context, Invocation) (SpecialistResult, error) {
+			t.Fatal("specialist ran for pre-cancelled admission")
+			return SpecialistResult{}, nil
+		})
+	}
+	runner := testRunner(
+		t,
+		policy,
+		recorderFunc(func(recordContext context.Context, decision Decision) error {
+			records++
+			if err := recordContext.Err(); err != nil {
+				return err
+			}
+			deadline, present := recordContext.Deadline()
+			remaining := time.Until(deadline)
+			if !present || remaining <= 0 || remaining > testLimits().MaxDecisionRecord+10*time.Millisecond {
+				t.Fatalf("detached terminal receipt bound = %s/%t", remaining, present)
+			}
+			if decision.State != DecisionAbstain || decision.Reason != ReasonCancelled ||
+				decision.Admission.Reason != AdmissionReasonCancelled {
+				t.Fatalf("detached terminal receipt = %#v", decision)
+			}
+			recorded = true
+			return nil
+		}),
+		specialists,
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
+			t.Fatal("verifier ran for pre-cancelled admission")
+			return Verification{}, nil
+		}),
+	)
+
+	run, err := runner.Run(ctx, testRequest(TaskInsertionSort))
+	if !errors.Is(err, context.Canceled) || records != 1 || !recorded || run.Outcome.Reason != ReasonCancelled {
+		t.Fatalf("Run(pre-cancelled) = %#v, %v, records=%d recorded=%t", run, err, records, recorded)
+	}
+}
+
+func TestRunnerGivesNearDeadlineCancellationACompleteDetachedRecordBudget(t *testing.T) {
+	limits := testLimits()
+	limits.MaxRequestAge = time.Second
+	limits.MaxExecution = 500 * time.Millisecond
+	limits.MaxDecisionRecord = 300 * time.Millisecond
+	policy := testPolicyWithLimits(t, limits)
+	issuedAt := time.Now()
+	request := testRequest(TaskInsertionSort)
+	request.IssuedAt = issuedAt
+	request.Deadline = issuedAt.Add(100 * time.Millisecond)
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	recorded := false
+	runner, err := NewRunner(
+		policy,
+		testAdmission(t, policy, issuedAt),
+		recorderFunc(func(recordContext context.Context, decision Decision) error {
+			recordDeadline, present := recordContext.Deadline()
+			if !present || !recordDeadline.After(request.Deadline) {
+				return errors.New("detached record budget ended at the request deadline")
+			}
+			timer := time.NewTimer(time.Until(request.Deadline.Add(20 * time.Millisecond)))
+			defer timer.Stop()
+			select {
+			case <-recordContext.Done():
+				return recordContext.Err()
+			case <-timer.C:
+			}
+			if decision.State != DecisionAbstain || decision.Reason != ReasonCancelled {
+				return errors.New("detached record lost the cancellation decision")
+			}
+			recorded = true
+			return nil
+		}),
+		testSpecialists(policy),
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
+			t.Fatal("verifier ran for pre-cancelled request")
+			return Verification{}, nil
+		}),
+		time.Now,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	run, runErr := runner.Run(ctx, request)
+	if !errors.Is(runErr, context.Canceled) || !recorded || run.Decision.Reason != ReasonCancelled {
+		t.Fatalf("Run(near-deadline cancellation) = %#v, %v, recorded=%t", run, runErr, recorded)
+	}
+}
+
 func TestRunnerSkipsVerifierForUnsafeOrAbstainedResults(t *testing.T) {
 	t.Parallel()
 	for name, result := range map[string]SpecialistResult{
@@ -213,7 +420,7 @@ func TestRunnerSnapshotsSpecialistResultBeforeClockCallback(t *testing.T) {
 	clockCalls := 0
 	now := func() time.Time {
 		clockCalls++
-		if clockCalls == 3 {
+		if clockCalls == 4 {
 			retainedPayload[0] = 'X'
 		}
 		return testNow
@@ -236,6 +443,7 @@ func TestRunnerSnapshotsSpecialistResultBeforeClockCallback(t *testing.T) {
 	})
 	runner, err := NewRunner(
 		policy,
+		testAdmission(t, policy, testNow),
 		recorderFunc(func(context.Context, Decision) error { return nil }),
 		specialists,
 		verifier,
@@ -313,6 +521,7 @@ func TestRunnerEnforcesLiveExecutionDeadline(t *testing.T) {
 	})
 	runner, err := NewRunner(
 		policy,
+		testAdmission(t, policy, request.IssuedAt),
 		recorderFunc(func(context.Context, Decision) error { return nil }),
 		specialists,
 		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
@@ -329,6 +538,57 @@ func TestRunnerEnforcesLiveExecutionDeadline(t *testing.T) {
 	if !errors.Is(runErr, context.DeadlineExceeded) || run.Outcome.State != OutcomeAbstained ||
 		run.Outcome.Reason != ReasonDeadlineElapsed {
 		t.Fatalf("Run() error/outcome = %v/%#v, want deadline abstention", runErr, run.Outcome)
+	}
+}
+
+func TestRunnerDoesNotExtendAbsoluteDeadlineAfterRevalidation(t *testing.T) {
+	limits := testLimits()
+	limits.MaxRequestAge = time.Second
+	limits.MaxExecution = 500 * time.Millisecond
+	policy := testPolicyWithLimits(t, limits)
+	issuedAt := time.Now()
+	request := testRequest(TaskBellmanFord)
+	request.IssuedAt = issuedAt
+	request.Deadline = issuedAt.Add(200 * time.Millisecond)
+	targetID := "exact-" + string(request.Task)
+	invoked := false
+	specialists := testSpecialists(policy)
+	specialists[targetID] = specialistFunc(func(context.Context, Invocation) (SpecialistResult, error) {
+		invoked = true
+		return SpecialistResult{}, nil
+	})
+	clockCalls := 0
+	sampledBeforeDeadline := false
+	now := func() time.Time {
+		clockCalls++
+		sampled := time.Now()
+		if clockCalls == 3 {
+			sampledBeforeDeadline = sampled.Before(request.Deadline)
+			if delay := time.Until(request.Deadline.Add(10 * time.Millisecond)); delay > 0 {
+				time.Sleep(delay)
+			}
+		}
+		return sampled
+	}
+	runner, err := NewRunner(
+		policy,
+		testAdmission(t, policy, issuedAt),
+		recorderFunc(func(context.Context, Decision) error { return nil }),
+		specialists,
+		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
+			t.Fatal("verifier ran after the absolute request deadline")
+			return Verification{}, nil
+		}),
+		now,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	run, runErr := runner.Run(context.Background(), request)
+	if !sampledBeforeDeadline || clockCalls < 3 || invoked ||
+		!errors.Is(runErr, context.DeadlineExceeded) || run.Outcome.Reason != ReasonDeadlineElapsed {
+		t.Fatalf("Run(delayed revalidation) = %#v, %v, calls=%d sampled-before=%t invoked=%t", run, runErr, clockCalls, sampledBeforeDeadline, invoked)
 	}
 }
 
@@ -389,6 +649,7 @@ func TestRunnerRechecksDerivedContextAfterSecondClock(t *testing.T) {
 	}
 	runner, err := NewRunner(
 		policy,
+		testAdmission(t, policy, testNow),
 		recorderFunc(func(context.Context, Decision) error { return nil }),
 		specialists,
 		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
@@ -422,13 +683,14 @@ func TestRunnerRefusesSecondClockRollback(t *testing.T) {
 	clockCalls := 0
 	now := func() time.Time {
 		clockCalls++
-		if clockCalls == 2 {
+		if clockCalls == 3 {
 			return testNow.Add(-time.Nanosecond)
 		}
 		return testNow
 	}
 	runner, err := NewRunner(
 		policy,
+		testAdmission(t, policy, testNow),
 		recorderFunc(func(context.Context, Decision) error { return nil }),
 		specialists,
 		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
@@ -462,7 +724,7 @@ func TestRunnerRechecksContextBeforeVerifierEffect(t *testing.T) {
 	clockCalls := 0
 	now := func() time.Time {
 		clockCalls++
-		if clockCalls == 3 {
+		if clockCalls == 4 {
 			cancel()
 		}
 		return testNow
@@ -470,6 +732,7 @@ func TestRunnerRechecksContextBeforeVerifierEffect(t *testing.T) {
 	verifierCalled := false
 	runner, err := NewRunner(
 		policy,
+		testAdmission(t, policy, testNow),
 		recorderFunc(func(context.Context, Decision) error { return nil }),
 		specialists,
 		verifierFunc(func(context.Context, Invocation, Candidate) (Verification, error) {
@@ -503,7 +766,7 @@ func TestRunnerRejectsExactVerificationAfterPolicyDeadline(t *testing.T) {
 	clockCalls := 0
 	now := func() time.Time {
 		clockCalls++
-		if clockCalls == 4 {
+		if clockCalls == 5 {
 			return request.Deadline
 		}
 		return testNow
@@ -511,6 +774,7 @@ func TestRunnerRejectsExactVerificationAfterPolicyDeadline(t *testing.T) {
 	verifierCalled := false
 	runner, err := NewRunner(
 		policy,
+		testAdmission(t, policy, testNow),
 		recorderFunc(func(context.Context, Decision) error { return nil }),
 		specialists,
 		verifierFunc(func(_ context.Context, _ Invocation, candidate Candidate) (Verification, error) {
@@ -574,7 +838,10 @@ func testRunner(
 	verifier ExactVerifier,
 ) Runner {
 	t.Helper()
-	runner, err := NewRunner(policy, recorder, specialists, verifier, func() time.Time { return testNow })
+	runner, err := NewRunner(
+		policy, testAdmission(t, policy, testNow), recorder, specialists, verifier,
+		func() time.Time { return testNow },
+	)
 	if err != nil {
 		t.Fatalf("NewRunner() error = %v", err)
 	}
@@ -590,4 +857,26 @@ func testSpecialists(policy Policy) map[string]Specialist {
 		})
 	}
 	return specialists
+}
+
+func testAdmission(t *testing.T, policy Policy, at time.Time) *Admission {
+	t.Helper()
+	observations := make([]ReadinessObservation, 0, len(policy.specialistIDs()))
+	for task, specialistIDs := range policy.routes {
+		for _, specialistID := range specialistIDs {
+			observations = append(observations, ReadinessObservation{
+				SpecialistID: specialistID, State: ReadinessReady,
+				ObservedAt: at.Add(-time.Second), ValidFor: time.Minute,
+				Fits: []RequestFit{{Task: task, State: FitTaskCompatible}},
+			})
+		}
+	}
+	admission, err := NewAdmission(policy, AdmissionLimits{
+		MaxObservationValidity: time.Minute, MaxQueueDepth: 8, MaxWait: time.Second,
+		MaxRetries: 2, MaxConcurrencyPerSpecialist: 1, MaxTotalPending: 48, MaxTotalActive: 6,
+	}, observations, at)
+	if err != nil {
+		t.Fatalf("NewAdmission() error = %v", err)
+	}
+	return admission
 }

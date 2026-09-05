@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-var testNow = time.Date(2026, time.August, 30, 18, 0, 0, 0, time.UTC)
+var testNow = time.Date(2099, time.August, 30, 18, 0, 0, 0, time.UTC)
 
 func TestPolicyRoutesTheAcceptedSixTaskSubsetDeterministically(t *testing.T) {
 	t.Parallel()
@@ -26,18 +26,71 @@ func TestPolicyRoutesTheAcceptedSixTaskSubsetDeterministically(t *testing.T) {
 	}
 	for _, task := range tasks {
 		request := testRequest(task)
-		first := policy.Decide(testNow, request)
-		second := policy.Decide(testNow, request)
+		first := policy.Decide(testNow, request, testAdmissionDecision(policy, task, testNow))
+		second := policy.Decide(testNow, request, testAdmissionDecision(policy, task, testNow))
 		if first != second || first.State != DecisionInvoke || first.Reason != ReasonReady {
 			t.Fatalf("Decide(%s) = %#v then %#v, want identical invoke decisions", task, first, second)
 		}
 		if first.Authority != ResultAuthority || first.SpecialistID != "exact-"+string(task) || first.Binding == (Binding{}) {
 			t.Fatalf("Decide(%s) identity = %#v, want bound NO_RESULT route", task, first)
 		}
-		later := policy.Decide(testNow.Add(time.Nanosecond), request)
+		measuredAdmission := testAdmissionDecision(policy, task, testNow)
+		measuredAdmission.Fit = FitMeasured
+		measuredAdmission.FitMeasurementBasis = "fit-probe:v1"
+		measuredAdmission.FitMeasuredAt = measuredAdmission.ObservedAt.Add(-time.Second)
+		measuredAdmission.FitValidUntil = measuredAdmission.FitMeasuredAt.Add(time.Minute)
+		measured := policy.Decide(testNow, request, measuredAdmission)
+		if measured.State != DecisionInvoke || measured.Reason != ReasonReady || measured.Admission.Fit != FitMeasured {
+			t.Fatalf("Decide(%s measured fit) = %#v, want invoke", task, measured)
+		}
+		changedBasis := measuredAdmission
+		changedBasis.FitMeasurementBasis = "fit-probe:v2"
+		if changed := policy.Decide(testNow, request, changedBasis); changed.State != DecisionInvoke ||
+			changed.Binding == measured.Binding {
+			t.Fatalf("Decide(%s changed measured basis) = %#v, want a distinct invoke binding", task, changed)
+		}
+		laterAt := testNow.Add(time.Nanosecond)
+		later := policy.Decide(laterAt, request, testAdmissionDecision(policy, task, laterAt))
 		if first.DecidedAt != testNow || later.DecidedAt == first.DecidedAt || later.Binding == first.Binding {
 			t.Fatalf("Decide(%s) decision-time binding = %s/%x then %s/%x", task, first.DecidedAt, first.Binding, later.DecidedAt, later.Binding)
 		}
+	}
+}
+
+func TestPolicyRejectsUnboundedOrMismatchedMeasuredFitEvidence(t *testing.T) {
+	t.Parallel()
+	policy := testPolicy(t)
+	request := testRequest(TaskInsertionSort)
+	valid := testAdmissionDecision(policy, request.Task, testNow)
+	valid.Fit = FitMeasured
+	valid.FitMeasurementBasis = "fit-probe:v1"
+	valid.FitMeasuredAt = valid.ObservedAt.Add(-time.Second)
+	valid.FitValidUntil = valid.FitMeasuredAt.Add(time.Minute)
+	tests := map[string]func(*AdmissionDecision){
+		"missing basis": func(admission *AdmissionDecision) { admission.FitMeasurementBasis = "" },
+		"measurement after view": func(admission *AdmissionDecision) {
+			admission.FitMeasuredAt = admission.ObservedAt.Add(time.Nanosecond)
+		},
+		"expired measurement": func(admission *AdmissionDecision) { admission.FitValidUntil = testNow },
+		"measurement outlives observation": func(admission *AdmissionDecision) {
+			admission.FitValidUntil = admission.ValidUntil.Add(time.Nanosecond)
+		},
+		"stray construction metadata": func(admission *AdmissionDecision) {
+			admission.Fit = FitTaskCompatible
+		},
+	}
+	for name, mutate := range tests {
+		name, mutate := name, mutate
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			admission := valid
+			mutate(&admission)
+			decision := policy.Decide(testNow, request, admission)
+			if decision.State != DecisionRefuse || decision.Reason != ReasonAdmissionRejected ||
+				decision.Binding != (Binding{}) {
+				t.Fatalf("Decide(%s) = %#v, want admission rejection", name, decision)
+			}
+		})
 	}
 }
 
@@ -71,6 +124,26 @@ func TestNewPolicyRejectsOpenOrAmbiguousRouteSets(t *testing.T) {
 	invalidLimits.MaxExecution = 0
 	if _, err := NewPolicy(invalidLimits, testRoutes()); err == nil {
 		t.Fatal("NewPolicy() error = nil, want positive execution-horizon rejection")
+	}
+	invalidLimits = testLimits()
+	invalidLimits.MaxDecisionRecord = 0
+	if _, err := NewPolicy(invalidLimits, testRoutes()); err == nil {
+		t.Fatal("NewPolicy() error = nil, want positive decision-record bound rejection")
+	}
+}
+
+func TestNewPolicyClosesTheRouteCandidateCount(t *testing.T) {
+	t.Parallel()
+	routes := testRoutes()
+	for _, task := range Tasks() {
+		routes = append(routes, Route{Task: task, SpecialistID: "alternate-" + string(task)})
+	}
+	if _, err := NewPolicy(testLimits(), routes); err != nil {
+		t.Fatalf("NewPolicy(maximum candidates) error = %v", err)
+	}
+	routes = append(routes, Route{Task: TaskInsertionSort, SpecialistID: "third-insertion-sort"})
+	if _, err := NewPolicy(testLimits(), routes); err == nil {
+		t.Fatal("NewPolicy(over route bound) error = nil")
 	}
 }
 
@@ -107,7 +180,7 @@ func TestPolicyTypesInvalidRequestTermination(t *testing.T) {
 			if at.IsZero() {
 				at = testNow
 			}
-			decision := policy.Decide(at, request)
+			decision := policy.Decide(at, request, testAdmissionDecision(policy, request.Task, at))
 			if decision.State != test.state || decision.Reason != test.reason || decision.Authority != ResultAuthority {
 				t.Fatalf("Decide() = %s/%s/%s, want %s/%s/%s", decision.State, decision.Reason, decision.Authority, test.state, test.reason, ResultAuthority)
 			}
@@ -115,11 +188,32 @@ func TestPolicyTypesInvalidRequestTermination(t *testing.T) {
 	}
 }
 
+func TestPolicyPreservesTypedFallbackWithoutCreatingAnInvokeBinding(t *testing.T) {
+	t.Parallel()
+	policy := testPolicy(t)
+	request := testRequest(TaskInsertionSort)
+	fallback := testAdmissionDecision(policy, request.Task, testNow)
+	fallback.State = AdmissionFallback
+	fallback.Reason = AdmissionReasonFitUnknown
+	fallback.Fit = FitUnknown
+	decision := policy.Decide(testNow, request, fallback)
+	if decision.State != DecisionAbstain || decision.Reason != ReasonFallback ||
+		decision.Admission != fallback || decision.SpecialistID != "" || decision.Binding != (Binding{}) {
+		t.Fatalf("Decide(fallback) = %#v, want explicit unbound fallback", decision)
+	}
+	forged := fallback
+	forged.Authority = "RESULT"
+	decision = policy.Decide(testNow, request, forged)
+	if decision.State != DecisionRefuse || decision.Reason != ReasonAdmissionRejected || decision.Binding != (Binding{}) {
+		t.Fatalf("Decide(forged fallback) = %#v, want admission rejection", decision)
+	}
+}
+
 func TestPolicyRefusesUnsafeSpecialistResultsBeforeVerification(t *testing.T) {
 	t.Parallel()
 	policy := testPolicy(t)
 	request := testRequest(TaskBinarySearch)
-	decision := policy.Decide(testNow, request)
+	decision := policy.Decide(testNow, request, testAdmissionDecision(policy, request.Task, testNow))
 	valid := SpecialistResult{
 		Binding:      decision.Binding,
 		SpecialistID: decision.SpecialistID,
@@ -171,7 +265,7 @@ func TestPolicyInspectResultRefusesInvalidObservationTimes(t *testing.T) {
 	t.Parallel()
 	policy := testPolicy(t)
 	request := testRequest(TaskBinarySearch)
-	decision := policy.Decide(testNow, request)
+	decision := policy.Decide(testNow, request, testAdmissionDecision(policy, request.Task, testNow))
 	result := SpecialistResult{
 		Binding:      decision.Binding,
 		SpecialistID: decision.SpecialistID,
@@ -199,7 +293,7 @@ func TestPolicyRejectsForgedOrMutatedRecordedDecisions(t *testing.T) {
 	t.Parallel()
 	policy := testPolicy(t)
 	request := testRequest(TaskInsertionSort)
-	validDecision := policy.Decide(testNow, request)
+	validDecision := policy.Decide(testNow, request, testAdmissionDecision(policy, request.Task, testNow))
 	validResult := SpecialistResult{
 		Binding:      validDecision.Binding,
 		SpecialistID: validDecision.SpecialistID,
@@ -214,6 +308,7 @@ func TestPolicyRejectsForgedOrMutatedRecordedDecisions(t *testing.T) {
 		"request":          func(decision *Decision) { decision.RequestID = "request-002" },
 		"task":             func(decision *Decision) { decision.Task = TaskBinarySearch },
 		"specialist":       func(decision *Decision) { decision.SpecialistID = "exact-other" },
+		"admission":        func(decision *Decision) { decision.Admission.DeclaredCost++ },
 		"decision time":    func(decision *Decision) { decision.DecidedAt = decision.DecidedAt.Add(time.Nanosecond) },
 		"deadline":         func(decision *Decision) { decision.Deadline = decision.Deadline.Add(time.Second) },
 		"max result bytes": func(decision *Decision) { decision.MaxResultBytes++ },
@@ -237,7 +332,7 @@ func TestPolicyFinaliseNeverPromotesConstructionOutput(t *testing.T) {
 	t.Parallel()
 	policy := testPolicy(t)
 	request := testRequest(TaskBellmanFord)
-	decision := policy.Decide(testNow, request)
+	decision := policy.Decide(testNow, request, testAdmissionDecision(policy, request.Task, testNow))
 	result := SpecialistResult{Binding: decision.Binding, SpecialistID: decision.SpecialistID, State: ResultCompleted, Payload: []byte("answer")}
 	checked := policy.InspectResult(testNow, request, decision, result)
 
@@ -308,10 +403,11 @@ func testPolicyWithLimits(t *testing.T, limits Limits) Policy {
 
 func testLimits() Limits {
 	return Limits{
-		MaxRequestBytes: 32,
-		MaxResultBytes:  16,
-		MaxRequestAge:   10 * time.Second,
-		MaxExecution:    2 * time.Minute,
+		MaxRequestBytes:   32,
+		MaxResultBytes:    16,
+		MaxRequestAge:     10 * time.Second,
+		MaxExecution:      2 * time.Minute,
+		MaxDecisionRecord: 100 * time.Millisecond,
 	}
 }
 
@@ -323,6 +419,18 @@ func testRoutes() []Route {
 		routes = append(routes, Route{Task: task, SpecialistID: "exact-" + string(task)})
 	}
 	return routes
+}
+
+func testAdmissionDecision(policy Policy, task TaskKind, at time.Time) AdmissionDecision {
+	routes := policy.routes[task]
+	if len(routes) == 0 {
+		return AdmissionDecision{}
+	}
+	return AdmissionDecision{
+		State: AdmissionAdmitted, Reason: AdmissionReasonReady, Authority: ResultAuthority,
+		SpecialistID: routes[0], Fit: FitTaskCompatible, Readiness: ReadinessReady,
+		ObservedAt: at.Add(-time.Second), ValidUntil: at.Add(time.Minute - time.Second), DecidedAt: at, Attempts: 1,
+	}
 }
 
 func testRequest(task TaskKind) Request {

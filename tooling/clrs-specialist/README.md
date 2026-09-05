@@ -9,6 +9,24 @@ belongs to the frozen 48-example dataset, record the controller's route
 decision, or run the separately held exact verifier. Those checks remain owned
 by `clrsfixture.ImportDataset`, each task's `BindDataset`, and
 `specialistcontrol.Runner` after the generator image and dataset exist.
+The registry's `AdmissionSnapshot` projects the same six closed routes into
+that runner's typed admission boundary. The controller distinguishes
+`measured-fit`, `known-no-fit`, and `unknown`; `unknown` is never a match. A
+`measured-fit` observation requires a caller-owned basis identifier,
+measurement time, and bounded expiry. This registry labels a successfully
+constructed local adapter with the additional construction-only
+`task-compatible` state and ready only for the caller-supplied observation
+window, at a neutral declared-cost rank. It does not claim measured per-request
+resource fit; policy and adapter limits still validate each packet.
+The development policy accepts at most two candidates for each frozen task;
+this registry supplies one. The caller still owns per-specialist and aggregate
+queue and active-work limits, wait and readiness-retry limits, and must
+re-observe changing runtime state. The controller capacity-matches eligible
+waiters in FIFO order across overlapping routes. It does not invoke under an
+older recorded binding when revalidation sees newer fit or readiness evidence.
+The one-shot container does not run a queue or a second controller, and this
+local construction observation is not evidence that a remote process or model
+is live, efficient or scientifically preferable.
 The container-only entry point is a narrow exception to the repository's
 single-`20w` command preference: it keeps this unprivileged scratch experiment
 process, its six solvers, and its CLRS provenance closure out of the general
