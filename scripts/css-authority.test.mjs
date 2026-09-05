@@ -145,11 +145,18 @@ test("authority validation rejects a fixed-height document canvas", () => {
   assert.match(fixedCanvas.errors.join("\n"), /html must not fix the screen document canvas height/u);
   assert.match(fixedCanvas.errors.join("\n"), /body must keep one root min-height: 100%/u);
 
+  const printCanvas = inventoryStylesheet(globalSource, "app/globals.css").root;
+  const printMinimumHeights = [];
+  printCanvas.walkRules((rule) => {
+    if (rule.parent.type !== "atrule" || rule.parent.name !== "media"
+        || normalizedMediaScope(rule.parent.params) !== "print") return;
+    if (!["html", "body"].every((selector) => rule.selectors.includes(selector))) return;
+    rule.walkDecls("min-height", (declaration) => printMinimumHeights.push(declaration));
+  });
+  assert.equal(printMinimumHeights.length, 1, "the tamper removes the shared print canvas minimum height");
+  printMinimumHeights[0].remove();
   const fixedPrintCanvas = validateCssAuthority({
-    globalSource: globalSource.replace(
-      "    min-height: auto;\n    background: #fff;",
-      "    background: #fff;",
-    ),
+    globalSource: printCanvas.toString(),
     portalSource,
   });
   assert.match(fixedPrintCanvas.errors.join("\n"), /html must reset min-height to auto for print/u);

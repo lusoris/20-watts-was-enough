@@ -1936,10 +1936,14 @@ button {
   body {
     height: auto;
     min-height: auto;
+  }
+
+  html {
     background: #fff;
   }
 
   body {
+    background: transparent;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
