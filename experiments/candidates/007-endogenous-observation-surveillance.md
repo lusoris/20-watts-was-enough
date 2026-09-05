@@ -55,9 +55,6 @@ flowchart LR
     verify -.-> decision
 ```
 
-Editable source:
-[`../../assets/diagrams/endogenous-observation-loop.mmd`](../../assets/diagrams/endogenous-observation-loop.mmd).
-
 Separate the hidden process and each observation channel:
 
 $$

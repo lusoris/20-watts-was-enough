@@ -44,9 +44,6 @@ scientific evidence.
 - `diagrams/physical-skill-compilation.mmd` keeps the frequent physical path,
   health gate, digital fallback, recompilation, and shadow validation visible
   for Candidate 006.
-- `diagrams/endogenous-observation-loop.mmd` separates hidden process state,
-  delayed partial sensing, intervention-altered observation, provenance, and
-  counterfactual or rebound verification for Candidate 007.
 - `diagrams/contestable-allocation-loop.mmd` separates private reports,
   allocation, withheld audits, real future opportunity consequences, entrant
   reserves, and replayable commitments for Candidate 008.
