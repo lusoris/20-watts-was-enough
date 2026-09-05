@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import postcss from "postcss";
 import {
   bookEditionIdentity,
   bookSurfaceFromLocation,
@@ -267,6 +268,28 @@ test("the book namespaces fragments beneath one title and exposes a web-only ski
   );
   assert.match(stylesheet, /\.book-prose > h2:first-child\s*\{[^}]*font-size:\s*clamp\(36px, 4\.2vw, 52px\)/s);
   assert.match(stylesheet, /@media print[\s\S]*\.book-prose > h2:first-child\s*\{[^}]*font-size:\s*30pt/s);
+});
+
+test("printed chapter headings preserve natural word separation and wrapping", async () => {
+  const stylesheet = postcss.parse(await source("app/globals.css"));
+  const printOwners = [];
+  stylesheet.walkRules(".book-prose > h2:first-child", (rule) => {
+    if (rule.parent.type === "atrule"
+        && rule.parent.name === "media"
+        && rule.parent.params === "print") printOwners.push(rule);
+  });
+  assert.equal(printOwners.length, 1, "one print owner controls chapter-title tracking");
+  const tracking = printOwners[0].nodes.filter(
+    (node) => node.type === "decl" && node.prop === "letter-spacing",
+  );
+  assert.equal(tracking.length, 1, "print must override compressed screen tracking explicitly");
+  assert.equal(tracking[0].value, "normal");
+  const wrapping = printOwners[0].nodes.filter(
+    (node) => node.type === "decl" && node.prop === "text-wrap",
+  );
+  assert.equal(wrapping.length, 0, "natural wrapping preserves literal hyphens in PDF extraction");
+  const appendix = await source("research/field-coverage.md");
+  assert.equal(appendix.split(/\r?\n/u)[0], "# Global field coverage");
 });
 
 test("the web book defers media work while PDF rendering stays eager", async () => {

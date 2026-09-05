@@ -46,6 +46,16 @@ function semanticFailureEnvelope(error, observed) {
   });
 }
 
+export function bookPdfSemanticDebtMessage(report) {
+  const knownDebt = report.sentinels.filter(({ state }) => state === "known-debt").length;
+  const diagnosticOccurrences = [
+    ...report.diagnostics.structure,
+    ...report.diagnostics.structure_text,
+  ].reduce((total, entry) => total + entry.count, 0);
+  return `recognized semantic debt remains: ${knownDebt} of ${report.sentinels.length} nonlinear sentinels; `
+    + `${diagnosticOccurrences} structure diagnostic occurrences across pdfinfo -struct and -struct-text`;
+}
+
 function parseArguments(arguments_) {
   let evidenceDirectory;
   for (let index = 0; index < arguments_.length; index += 1) {
@@ -132,9 +142,7 @@ async function main() {
   if (auditError) throw auditError;
   console.log(`${JSON.stringify(report, null, 2)}\n`);
   if (!report.passed) {
-    throw new Error(
-      `recognized ${report.expected_outcome} remains in ${report.sentinels.length} nonlinear sentinel classes`,
-    );
+    throw new Error(bookPdfSemanticDebtMessage(report));
   }
 }
 

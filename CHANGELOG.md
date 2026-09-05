@@ -7,6 +7,10 @@ the exact diff; this file records why the project changed.
 
 ### Fixed
 
+- Printed chapter titles preserve word separation without changing font size
+  or screen typography. Semantic audit failures
+  distinguish remaining debt from the full retained sentinel inventory.
+
 - CI planning and the hosted PDF proof now use private Go drivers with tested
   minimal dependency closures. They share argument handling with the public
   command and reject failed or short output writes. Experiment help, dispatch
