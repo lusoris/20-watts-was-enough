@@ -13,6 +13,8 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
+import { initialiseFixtureGitRepository } from "./lib/git-test-fixture.mjs";
+
 import {
   renderTranslationPage,
   translatedSourceDocuments,
@@ -48,6 +50,7 @@ async function translationFixture() {
   await mkdir(path.join(root, "concept"), { recursive: true });
   await mkdir(path.join(root, "translations", "de", "concept"), { recursive: true });
   await writeFile(path.join(root, "concept", "00-source.md"), source);
+  const sourceRevision = initialiseFixtureGitRepository(root, ["concept/00-source.md"]);
   await writeFile(path.join(root, "translations", "de", "concept", "00-source.md"), target);
   await writeFile(
     path.join(root, "translations", "manifest.json"),
@@ -62,17 +65,17 @@ async function translationFixture() {
         route: "/de/concept/00-source/",
         sourceSha256: createHash("sha256").update(source).digest("hex"),
         targetSha256: createHash("sha256").update(target).digest("hex"),
-        sourceRevision: "facac8c699a5c6e2ac258f30209a96ba06dca741",
+        sourceRevision,
         reviewedAt: "2026-09-05T00:00:00Z",
         reviewers: ["reviewer-handle"],
       }],
     }, null, 2)}\n`,
   );
-  return root;
+  return { root, sourceRevision };
 }
 
 test("a reviewed non-English manifest entry produces a static locale route", async (t) => {
-  const root = await translationFixture();
+  const { root, sourceRevision } = await translationFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const outputRoot = path.join(root, "dist");
   const template = `<!doctype html>
@@ -85,7 +88,7 @@ test("a reviewed non-English manifest entry produces a static locale route", asy
   assert.equal(documents[0].route, "de/concept/00-source/");
   assert.equal(documents[0].language, "de");
   assert.equal(documents[0].canonicalSourcePath, "concept/00-source.md");
-  assert.equal(documents[0].sourceRevision, "facac8c699a5c6e2ac258f30209a96ba06dca741");
+  assert.equal(documents[0].sourceRevision, sourceRevision);
   assert.equal(documents[0].reviewedAt, "2026-09-05T00:00:00Z");
   assert.deepEqual(
     writeTranslationPages({ outputRoot, template, documents, basePath: "/" }),
@@ -100,14 +103,10 @@ test("a reviewed non-English manifest entry produces a static locale route", asy
   assert.match(html, /<h1>Deutscher Titel<\/h1>/u);
   assert.match(html, /Geprüfter deutscher Text\./u);
   assert.match(html, /<section class="translation-review-context" lang="en"/u);
-  assert.match(
-    html,
-    /blob\/facac8c699a5c6e2ac258f30209a96ba06dca741\/concept\/00-source\.md/u,
-  );
-  assert.match(
-    html,
-    /<code>facac8c6<wbr>99a5c6e2<wbr>ac258f30<wbr>209a96ba<wbr>06dca741<\/code>/u,
-  );
+  assert.ok(html.includes(`/blob/${sourceRevision}/concept/00-source.md`));
+  assert.ok(html.includes(
+    `<code>${sourceRevision.match(/.{1,8}/gu).join("<wbr>")}</code>`,
+  ));
   assert.match(
     html,
     /<time datetime="2026-09-05T00:00:00Z">2026-09-05T00:00:00Z<\/time>/u,
@@ -127,7 +126,7 @@ test("a reviewed non-English manifest entry produces a static locale route", asy
 });
 
 test("translated route generation rejects path aliases before writing", async (t) => {
-  const root = await translationFixture();
+  const { root } = await translationFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const [document] = translatedSourceDocuments(root);
   const outputRoot = path.join(root, "dist");
@@ -144,7 +143,7 @@ test("translated route generation rejects path aliases before writing", async (t
 });
 
 test("translation rendering rejects omitted maintained review provenance", async (t) => {
-  const root = await translationFixture();
+  const { root } = await translationFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const [document] = translatedSourceDocuments(root);
   const template = '<html lang="en"><head><!-- pages-seo:head --><!-- /pages-seo:head --></head><body><!-- pages-seo:fallback --><!-- /pages-seo:fallback --></body></html>';
@@ -169,7 +168,7 @@ test("translation rendering rejects omitted maintained review provenance", async
 });
 
 test("translation rendering rejects a pathname replacement during its reviewed read", async (t) => {
-  const root = await translationFixture();
+  const { root } = await translationFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const movedPath = path.join(root, "translations", "de", "concept", "opened-original.md");
 
@@ -190,7 +189,7 @@ test("translation rendering rejects a pathname replacement during its reviewed r
 });
 
 test("translation rendering rejects same-inode mutation during its reviewed read", async (t) => {
-  const root = await translationFixture();
+  const { root } = await translationFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
 
   assert.throws(

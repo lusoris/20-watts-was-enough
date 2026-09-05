@@ -16,6 +16,12 @@ import {
   translationManifestLimits,
   validateTranslationManifest,
 } from "./lib/translation-manifest.mjs";
+import {
+  commitFixturePaths,
+  createUnrelatedFixtureCommit,
+  initialiseFixtureGitRepository,
+  runFixtureGit,
+} from "./lib/git-test-fixture.mjs";
 
 async function writeManifest(root, manifest) {
   await writeFile(
@@ -31,6 +37,7 @@ async function fixture(t) {
   await mkdir(path.join(root, "concept"), { recursive: true });
   await mkdir(path.join(root, "translations", "de", "concept"), { recursive: true });
   await writeFile(path.join(root, "concept", "00-source.md"), source);
+  const sourceRevision = initialiseFixtureGitRepository(root, ["concept/00-source.md"]);
   const target = Buffer.from("# Quelle\n");
   await writeFile(path.join(root, "translations", "de", "concept", "00-source.md"), target);
   const entry = {
@@ -41,13 +48,13 @@ async function fixture(t) {
     route: "/de/concept/00-source/",
     sourceSha256: createHash("sha256").update(source).digest("hex"),
     targetSha256: createHash("sha256").update(target).digest("hex"),
-    sourceRevision: "facac8c699a5c6e2ac258f30209a96ba06dca741",
+    sourceRevision,
     reviewedAt: "2026-09-05T00:00:00Z",
     reviewers: ["reviewer-handle"],
   };
   const manifest = { schema: 2, sourceLanguage: "en-GB", documents: [entry] };
   await writeManifest(root, manifest);
-  return { root, entry, manifest };
+  return { root, entry, manifest, sourceRevision };
 }
 
 async function replaceWithSymlink(file) {
@@ -57,17 +64,85 @@ async function replaceWithSymlink(file) {
 }
 
 test("reviewed translations are tied to an exact mirrored source", async (t) => {
-  const { root } = await fixture(t);
+  const { root, sourceRevision } = await fixture(t);
+  commitFixturePaths(root, ["translations"]);
   const result = validateTranslationManifest(root);
   assert.equal(result.documents.length, 1);
   assert.equal(
     result.documents[0].sourceRevision,
-    "facac8c699a5c6e2ac258f30209a96ba06dca741",
+    sourceRevision,
   );
   assert.equal(result.documents[0].reviewedAt, "2026-09-05T00:00:00Z");
   assert.ok(Object.isFrozen(result));
   assert.ok(Object.isFrozen(result.documents[0]));
   assert.ok(Object.isFrozen(result.documents[0].reviewers));
+});
+
+test("source revision resolves to the reviewed source in publication history", async (t) => {
+  {
+    const { root, entry, manifest } = await fixture(t);
+    entry.sourceRevision = "1".repeat(40);
+    await writeManifest(root, manifest);
+    assert.throws(
+      () => validateTranslationManifest(root),
+      /source revision is not an available exact commit/u,
+    );
+  }
+  {
+    const { root, entry, manifest } = await fixture(t);
+    const changed = Buffer.from("# Source\n\nDifferent canonical text.\n");
+    await writeFile(path.join(root, entry.source), changed);
+    entry.sourceSha256 = createHash("sha256").update(changed).digest("hex");
+    await writeManifest(root, manifest);
+    assert.throws(
+      () => validateTranslationManifest(root),
+      /source revision does not bind its recorded source/u,
+    );
+  }
+  {
+    const { root, entry, manifest } = await fixture(t);
+    entry.sourceRevision = createUnrelatedFixtureCommit(root);
+    await writeManifest(root, manifest);
+    assert.throws(
+      () => validateTranslationManifest(root),
+      /source revision is not an ancestor of the publication checkout/u,
+    );
+  }
+  {
+    const { root, entry, manifest } = await fixture(t);
+    entry.sourceRevision = runFixtureGit(root, ["rev-parse", `HEAD:${entry.source}`]);
+    await writeManifest(root, manifest);
+    assert.throws(
+      () => validateTranslationManifest(root),
+      /source revision is not an available exact commit/u,
+    );
+  }
+  {
+    const { root } = await fixture(t);
+    await rm(path.join(root, ".git"), { recursive: true, force: true });
+    assert.throws(
+      () => validateTranslationManifest(root),
+      /could not be verified in the local Git history/u,
+    );
+  }
+  {
+    const { root, entry, manifest } = await fixture(t);
+    const sourceBlob = runFixtureGit(root, ["rev-parse", `HEAD:${entry.source}`]);
+    runFixtureGit(root, [
+      "update-index",
+      "--cacheinfo",
+      `120000,${sourceBlob},${entry.source}`,
+    ]);
+    runFixtureGit(root, ["commit", "--quiet", "-m", "linked source fixture"]);
+    entry.sourceRevision = runFixtureGit(root, ["rev-parse", "HEAD"]);
+    runFixtureGit(root, ["add", "--", entry.source]);
+    runFixtureGit(root, ["commit", "--quiet", "-m", "regular source fixture"]);
+    await writeManifest(root, manifest);
+    assert.throws(
+      () => validateTranslationManifest(root),
+      /source at its reviewed commit is not a regular file/u,
+    );
+  }
 });
 
 test("review provenance requires an exact commit and canonical UTC instant", async (t) => {
@@ -103,6 +178,7 @@ test("review provenance requires an exact commit and canonical UTC instant", asy
     "2026-09-05T00:00:00+00:00",
     "2026-09-05T00:00:00.000Z",
     "2026-02-30T00:00:00Z",
+    "2026-09-05T24:00:00Z",
   ]) {
     const { root, entry, manifest } = await fixture(t);
     entry.reviewedAt = reviewedAt;

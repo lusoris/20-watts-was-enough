@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import path from "node:path";
 
@@ -32,6 +33,11 @@ export const translationManifestLimits = Object.freeze({
   reviewerCharacters: 160,
 });
 
+const gitValidationLimits = Object.freeze({
+  outputBytes: 2 * translationManifestLimits.manifestBytes,
+  timeoutMilliseconds: 10_000,
+});
+
 function inside(root, candidate) {
   const relative = path.relative(root, candidate);
   return relative !== "" && !relative.startsWith("..") && !path.isAbsolute(relative);
@@ -61,6 +67,110 @@ function readTranslationFile(root, file, label, maximumBytes) {
     containedBy: path.dirname(absolute),
     maximumBytes,
   });
+}
+
+function gitCommand(root, arguments_, input, label) {
+  const result = spawnSync("git", ["-C", root, ...arguments_], {
+    encoding: null,
+    env: {
+      GIT_NO_REPLACE_OBJECTS: "1",
+      GIT_OPTIONAL_LOCKS: "0",
+      LANG: "C",
+      LC_ALL: "C",
+      PATH: process.env.PATH ?? "",
+    },
+    input,
+    killSignal: "SIGKILL",
+    maxBuffer: gitValidationLimits.outputBytes,
+    timeout: gitValidationLimits.timeoutMilliseconds,
+    windowsHide: true,
+  });
+  if (result.error || result.signal !== null || result.status !== 0) {
+    throw new Error(`${label} could not be verified in the local Git history.`);
+  }
+  return Buffer.from(result.stdout ?? []);
+}
+
+function gitObjectRecords(root, specifications) {
+  const output = gitCommand(
+    root,
+    ["cat-file", "--batch-check=%(objectname)|%(objecttype)|%(objectsize)|%(objectmode)"],
+    Buffer.from(`${specifications.join("\n")}\n`),
+    "Translation source revisions",
+  ).toString("utf8");
+  const lines = output.endsWith("\n") ? output.slice(0, -1).split("\n") : [];
+  if (lines.length !== specifications.length) {
+    throw new Error("Translation source revision object inventory is incomplete.");
+  }
+  return lines.map((line) => {
+    const match = /^([a-f0-9]{40})\|([a-z]+)\|([0-9]+)\|([0-9]{6})?$/u.exec(line);
+    return match === null ? null : Object.freeze({
+      mode: match[4] ?? null,
+      oid: match[1],
+      type: match[2],
+    });
+  });
+}
+
+function validateSourceRevisionBindings(root, bindings) {
+  if (bindings.length === 0) return;
+  const sourceObjectOutput = gitCommand(
+    root,
+    ["hash-object", "--no-filters", "--stdin-paths"],
+    Buffer.from(`${bindings.map(({ source }) => source).join("\n")}\n`),
+    "Current translation sources",
+  ).toString("utf8");
+  const sourceObjectIds = sourceObjectOutput.endsWith("\n")
+    ? sourceObjectOutput.slice(0, -1).split("\n")
+    : [];
+  if (
+    sourceObjectIds.length !== bindings.length
+    || sourceObjectIds.some((oid) => !/^[a-f0-9]{40}$/u.test(oid))
+  ) {
+    throw new Error("Current translation source object inventory is incomplete.");
+  }
+  const specifications = bindings.flatMap(({ source, sourceRevision }) => [
+    sourceRevision,
+    `${sourceRevision}:${source}`,
+  ]);
+  const objects = gitObjectRecords(root, specifications);
+  for (const [index, binding] of bindings.entries()) {
+    const commit = objects[index * 2];
+    const source = objects[(index * 2) + 1];
+    if (
+      commit?.oid !== binding.sourceRevision
+      || commit.type !== "commit"
+    ) {
+      throw new Error(
+        `Translation source revision is not an available exact commit: ${binding.target}`,
+      );
+    }
+    if (source?.type !== "blob") {
+      throw new Error(
+        `Translation source does not exist at its reviewed commit: ${binding.source}`,
+      );
+    }
+    if (source.mode !== "100644" && source.mode !== "100755") {
+      throw new Error(
+        `Translation source at its reviewed commit is not a regular file: ${binding.source}`,
+      );
+    }
+    if (source.oid !== sourceObjectIds[index]) {
+      throw new Error(
+        `Translation source revision does not bind its recorded source: ${binding.source}`,
+      );
+    }
+  }
+  const revisions = [...new Set(bindings.map(({ sourceRevision }) => sourceRevision))];
+  const unreachable = gitCommand(
+    root,
+    ["rev-list", "--max-count=1", "--stdin"],
+    Buffer.from(`${revisions.join("\n")}\n^HEAD\n`),
+    "Translation source revision ancestry",
+  );
+  if (unreachable.length !== 0) {
+    throw new Error("Translation source revision is not an ancestor of the publication checkout.");
+  }
 }
 
 function validatedReviewers(reviewers, target) {
@@ -185,7 +295,8 @@ function validatedDocuments(root, documents) {
   }
   const identities = new Set();
   const routes = new Set();
-  return Object.freeze(documents.map((entry, index) => {
+  const bindings = [];
+  const validated = documents.map((entry, index) => {
     const review = validateEntryShape(entry, index);
     const identity = `${entry.language}:${entry.source}`;
     if (identities.has(identity) || routes.has(entry.route)) {
@@ -194,6 +305,11 @@ function validatedDocuments(root, documents) {
     identities.add(identity);
     routes.add(entry.route);
     validateEntryFiles(root, entry);
+    bindings.push({
+      source: entry.source,
+      sourceRevision: review.sourceRevision,
+      target: entry.target,
+    });
     return Object.freeze({
       language: entry.language,
       source: entry.source,
@@ -206,7 +322,9 @@ function validatedDocuments(root, documents) {
       reviewedAt: review.reviewedAt,
       reviewers: review.reviewers,
     });
-  }));
+  });
+  validateSourceRevisionBindings(root, bindings);
+  return Object.freeze(validated);
 }
 
 export function validateTranslationManifest(repositoryRoot) {

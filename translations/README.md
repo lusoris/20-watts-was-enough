@@ -26,12 +26,14 @@ example `translations/de/concept/00-thesis-and-principles.md`. An entry in
 
 `npm run validate:translations` uses bounded, stable regular-file reads and
 rejects ambiguous or open-ended manifest JSON, links, stale source or reviewed
-target digests, malformed source revisions or review times, path aliases and
-escapes, duplicate routes, missing reviewers and missing files. The published
-page links the maintained commit and shows the maintained review instant. The
-validator does not infer either value from the build checkout: the named human
-reviewer and pull-request review remain accountable for that binding. A
-translation is not published merely because a machine produced a draft.
+target digests, unavailable or non-ancestor source commits, a source digest
+that does not match the file at the named commit, malformed review times, path
+aliases and escapes, duplicate routes, missing reviewers and missing files.
+The published page links the verified commit and shows the maintained review
+instant. The validator cannot establish reviewer competence or that the named
+review happened at that instant: the named human reviewer and pull-request
+review remain accountable for those claims. A translation is not published
+merely because a machine produced a draft.
 Drafting tools must be disclosed in the pull request, and a reviewer remains
 accountable for meaning, terminology, equations, qualifications and links.
 

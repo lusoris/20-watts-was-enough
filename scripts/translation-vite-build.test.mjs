@@ -7,6 +7,7 @@ import test from "node:test";
 import { build } from "vite";
 
 import pagesConfig, { createSeoStaticPages } from "../vite.pages.config.ts";
+import { initialiseFixtureGitRepository } from "./lib/git-test-fixture.mjs";
 import { resolvePagesBase } from "./lib/pages-base.mjs";
 import { translatedSourceDocuments } from "./lib/translation-pages.mjs";
 
@@ -18,6 +19,7 @@ async function nonemptyManifestFixture(root) {
   await mkdir(path.join(root, "concept"), { recursive: true });
   await mkdir(path.join(root, "translations", "de", "concept"), { recursive: true });
   await writeFile(path.join(root, sourcePath), source);
+  const sourceRevision = initialiseFixtureGitRepository(root, [sourcePath]);
   await writeFile(path.join(root, targetPath), target);
   await writeFile(path.join(root, "translations", "manifest.json"), `${JSON.stringify({
     schema: 2,
@@ -30,11 +32,12 @@ async function nonemptyManifestFixture(root) {
       route: "/de/concept/build-fixture/",
       sourceSha256: createHash("sha256").update(source).digest("hex"),
       targetSha256: createHash("sha256").update(target).digest("hex"),
-      sourceRevision: "facac8c699a5c6e2ac258f30209a96ba06dca741",
+      sourceRevision,
       reviewedAt: "2026-09-05T00:00:00Z",
       reviewers: ["build-fixture-reviewer"],
     }],
   }, null, 2)}\n`);
+  return sourceRevision;
 }
 
 test("a Vite Pages build publishes routes from a nonempty reviewed manifest", async (t) => {
@@ -44,7 +47,7 @@ test("a Vite Pages build publishes routes from a nonempty reviewed manifest", as
     rm(fixtureRoot, { recursive: true, force: true }),
     rm(outputRoot, { recursive: true, force: true }),
   ]));
-  await nonemptyManifestFixture(fixtureRoot);
+  const sourceRevision = await nonemptyManifestFixture(fixtureRoot);
   const translations = translatedSourceDocuments(fixtureRoot);
   assert.equal(translations.length, 1);
 
@@ -76,10 +79,7 @@ test("a Vite Pages build publishes routes from a nonempty reviewed manifest", as
   assert.match(html, /property="og:locale" content="de_DE"/u);
   assert.match(html, /<h1>Geprüfte Übersetzung<\/h1>/u);
   assert.match(html, /<h2 id="translation-review-context-heading">Translation review<\/h2>/u);
-  assert.match(
-    html,
-    /blob\/facac8c699a5c6e2ac258f30209a96ba06dca741\/concept\/build-fixture\.md/u,
-  );
+  assert.ok(html.includes(`/blob/${sourceRevision}/concept/build-fixture.md`));
   assert.match(html, /datetime="2026-09-05T00:00:00Z"/u);
   assert.match(html, /<span aria-current="page"><span lang="de">Deutsch<\/span> · current<\/span>/u);
   assert.ok(html.includes(`href="${pagesBase}concept/build-fixture/">English</a>`));
