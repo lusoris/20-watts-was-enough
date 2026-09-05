@@ -177,11 +177,14 @@ docker run --rm --network none \
 Releases may also attach a verified native Go binary as a convenience. The
 containers are the portable public default and remain scoped per experiment.
 
-Before committing locally:
+Before a local commit, follow the [validation sequence](AGENTS.md#working-sequence):
+check the changed contracts and their downstream consumers, combining scopes
+for mixed changes. Unknown, unsafe or shared-authority scope requires the full
+gate.
 
-```bash
-npm run check
-```
+Run the [complete npm and Go gates](decisions/0080-impact-scope-local-validation.md#preserve-the-complete-gates)
+before marking a pull request ready, integrating into `main`, merging or
+releasing.
 
 Changes to book sources also require:
 
